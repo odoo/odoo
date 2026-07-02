@@ -617,11 +617,11 @@ class MrpWorkcenterCapacity(models.Model):
     _check_company_auto = True
 
     def _default_time_start(self):
-        workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')
+        workcenter_id = self.env.context.get('default_workcenter_id')
         return self.env['mrp.workcenter'].browse(workcenter_id).time_start if workcenter_id else 0.0
 
     def _default_time_stop(self):
-        workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')
+        workcenter_id = self.env.context.get('default_workcenter_id')
         return self.env['mrp.workcenter'].browse(workcenter_id).time_stop if workcenter_id else 0.0
 
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True, index=True)

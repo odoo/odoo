@@ -193,7 +193,7 @@ class Date(BaseDate[date]):
         """
         return value.strftime(DATE_FORMAT) if value else False
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         if not value:
             return None
         if isinstance(value, datetime):
@@ -302,7 +302,7 @@ class Datetime(BaseDate[datetime]):
 
         return getter
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         return self.to_datetime(value)
 
     def convert_to_export(self, value, record):

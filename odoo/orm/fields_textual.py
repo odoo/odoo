@@ -24,7 +24,7 @@ from .fields import Field, _logger
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, expand_ids
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Collection
     from .query import TableSQL
 
 
@@ -108,21 +108,21 @@ class BaseString(Field[str | typing.Literal[False]]):
             return PsycopgJson(value) if value else None
         return super().get_column_update(record)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         if value is None or value is False:
             return None
 
         if self.translate and isinstance(value, dict):
-            lang = record.env.lang or 'en_US'
+            lang = records.env.lang or 'en_US'
             value = value.get(lang, value.get('en_US', next(iter(value.values()))))
 
         value = value.decode() if isinstance(value, bytes) else str(value)
         value = value[:self.size]
         if validate:
-            return self._validated_cache_value(value, record)
+            return self._validated_cache_value(value, records.env)
         return value
 
-    def _validated_cache_value(self, value: str, record) -> str:
+    def _validated_cache_value(self, value: str, env) -> str:
         if callable(self.translate):
             # auto fix broken value
             value = self.translate(lambda t: None, value)  # pylint: disable=not-callable
@@ -646,11 +646,9 @@ class Html(BaseString):
     _description_strip_style = property(attrgetter('strip_style'))
     _description_strip_classes = property(attrgetter('strip_classes'))
 
-    def _validated_cache_value(self, value: str, record) -> str:
-        if not self.sanitize:
-            return value
-
-        sanitize_vals = {
+    @property
+    def sanitize_vals(self):
+        return {
             'silent': True,
             'sanitize_tags': self.sanitize_tags,
             'sanitize_attributes': self.sanitize_attributes,
@@ -662,12 +660,29 @@ class Html(BaseString):
             'strip_classes': self.strip_classes
         }
 
-        if self.sanitize_overridable:
-            if record.env.user.has_group('base.group_sanitize_override'):
-                return value
+    def write(self, records, value):
+        if self.sanitize_overridable and self.store and any(records._ids) and not records.env.user.has_group('base.group_sanitize_override'):
+            langs = value if self.translate and isinstance(value, dict) else None
+            self._check_sanitize_overridable(records, langs)
+        return super().write(records, value)
 
-            original_value = record[self.name]
-            if original_value:
+    def _check_sanitize_overridable(self, records, langs: Collection[str] | None = None):
+        assert self.sanitize_overridable
+        sanitize_vals = self.sanitize_vals
+        if langs is None:
+            langs = [records.env.lang]
+
+        if callable(self.translate) or len(langs) > 1:
+            records = records.with_context(prefetch_langs=True)
+
+        for record in records:
+            seen = set()
+            for lang in langs:
+                original_value = record.with_context(lang=lang)[self.name]
+                if not original_value or original_value in seen:
+                    continue
+                seen.add(original_value)
+
                 # Note that sanitize also normalize
                 original_value_sanitized = html_sanitize(original_value, **sanitize_vals)
                 original_value_normalized = html_normalize(original_value)
@@ -697,14 +712,17 @@ class Html(BaseString):
                     _logger.info(diff_str)
 
                     raise UserError(record.env._(
-                        "The field value you're saving (%(model)s %(field)s) includes content that is "
+                        "The field value you're saving (%(model)s %(field)s)(%(record)s) includes content that is "
                         "restricted for security reasons. It is possible that someone "
                         "with higher privileges previously modified it, and you are therefore "
                         "not able to modify it yourself while preserving the content.",
-                        model=record._description, field=self.string,
+                        model=record._description, field=self.string, record=record,
                     ))
 
-        return html_sanitize(value, **sanitize_vals)
+    def _validated_cache_value(self, value, env):
+        if not self.sanitize or (self.sanitize_overridable and env.user.has_group('base.group_sanitize_override')):
+            return value
+        return html_sanitize(value, **self.sanitize_vals)
 
     def convert_to_record(self, value, record):
         value = super().convert_to_record(value, record)

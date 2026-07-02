@@ -1322,6 +1322,7 @@ class BaseModel(metaclass=MetaModel):
         """
         defaults = {}
         parent_fields = defaultdict(list)
+        self = self.browse()  # noqa: PLW0642
         ir_defaults = self.env['ir.default']._get_model_defaults(self._name)
 
         for name in fields:

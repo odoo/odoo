@@ -32,7 +32,7 @@ class Integer(Field[int]):
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         if isinstance(value, dict):
             # special case, when an integer field is used as inverse for a one2many
             return value.get('id', None)
@@ -165,10 +165,10 @@ class Float(Field[float]):
             return value_float
         return value
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         value = float(value or 0.0)
-        digits = self.get_digits(record.env)
+        digits = self.get_digits(records.env)
         return float_round(value, precision_digits=digits[1]) if digits else value
 
     def convert_to_record(self, value, record):
@@ -267,17 +267,17 @@ class Monetary(Field[float]):
             return float_repr(currency.round(value), currency.decimal_places)
         return value
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         # cache format: float
         value = float(value or 0.0)
         if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            currency_field = self.get_currency_field(record)
+            currency_field = self.get_currency_field(records)
             # sudo and only fetch the currency record in case the user doesn't
             # have the read permission of the currency field.
-            currency = record.sudo().with_context(prefetch_fields=False)[currency_field]
-            currency = currency.with_env(record.env)
+            currency = records.sudo().with_context(prefetch_fields=False)[currency_field]
+            currency = currency.with_env(records.env)
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
             elif currency:
