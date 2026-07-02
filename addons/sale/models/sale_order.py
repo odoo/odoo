@@ -2581,32 +2581,20 @@ class SaleOrder(models.Model):
         }
 
     def _get_prepayment_required_amount(self):
-        """Return the minimum amount needed to automatically confirm the quotation.
-
-        Note: self.ensure_one()
-
-        :return: The minimum amount needed to automatically confirm the quotation.
-        :rtype: float
-        """
         self.ensure_one()
-
-        if self.prepayment_percent == 0:
-            return 0
-        return self.currency_id.round(self.amount_total * self.prepayment_percent)
+        return 0
 
     def _is_confirmation_amount_reached(self):
-        """Return whether `self.amount_paid` is higher than the prepayment required amount.
+        """Override: confirm SO on first payment regardless of prepayment rules.
 
-        Note: self.ensure_one()
-
-        :return: Whether `self.amount_paid` is higher than the prepayment required amount.
-        :rtype: bool
+        Default behavior requires `amount_paid` to reach a minimum threshold
+        based on `prepayment_percent`. This override relaxes that constraint
+        and confirms the Sales Order as soon as any payment (> 0) is received.
         """
         self.ensure_one()
-        amount_comparison = self.currency_id.compare_amounts(
-            self._get_prepayment_required_amount(), self.amount_paid
-        )
-        return amount_comparison <= 0
+
+        # Confirm SO on first successful payment (no minimum amount required)
+        return self.amount_paid > 0
 
     def _generate_downpayment_invoices(self):
         """Generate invoices as down payments for sale order.

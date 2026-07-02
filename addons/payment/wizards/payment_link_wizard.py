@@ -40,11 +40,6 @@ class PaymentLinkWizard(models.TransientModel):
                 wizard.warning_message = wizard.env._("There is nothing to be paid.")
             elif wizard.amount <= 0:
                 wizard.warning_message = wizard.env._("Please set a positive amount.")
-            elif wizard.amount > wizard.amount_max:
-                wizard.warning_message = wizard.env._(
-                    "Please set an amount lower than %s.",
-                    wizard.currency_id.format(wizard.amount_max),
-                )
 
     @api.depends("res_model", "res_id")
     def _compute_company_id(self):
