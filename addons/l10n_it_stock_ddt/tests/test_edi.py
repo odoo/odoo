@@ -4,7 +4,7 @@
 import logging
 from lxml import etree
 from freezegun import freeze_time
-from odoo import tools
+from odoo import Command, tools
 from odoo.tests import Form, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
@@ -133,6 +133,41 @@ class TestItEdiDDT(TestItEdi):
         result = etree.fromstring(invoice_xml)
         expected = etree.fromstring(expected_xml)
         self.assertXmlTreeEqual(result, expected)
+
+    @freeze_time('2020-02-02 09:00')
+    def test_invoice_without_ddt_number(self):
+        """ Export an invoice whose linked delivery carries no DDT number (its
+            picking type has no DDT sequence) and check the FatturaPA XML leaves
+            out the DatiDDT block rather than writing one without the mandatory
+            NumeroDDT.
+        """
+        product = self.products.filtered(lambda p: p.default_code == 'FURN_7777')
+        sale_order = self.env['sale.order'].with_company(self.company).create({
+            'partner_id': self.italian_partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 5,
+                    'price_unit': product.list_price,
+                    'tax_id': self.tax_22,
+                }),
+            ],
+            'pricelist_id': self.default_pricelist.id,
+        })
+        sale_order.action_confirm()
+
+        picking = sale_order.picking_ids
+        # Drop the DDT sequence so the delivery never gets a DDT number
+        picking.picking_type_id.l10n_it_ddt_sequence_id = False
+        picking.move_ids.write({'quantity': 5, 'picked': True})
+        picking.button_validate()
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        self.module = 'l10n_it_stock_ddt'
+        self._assert_export_invoice(invoice, 'invoice_without_ddt_number.xml')
 
     def _create_delivery(self, sale_order, qty=1):
         """ Create a picking of a limited quantity and create a backorder """

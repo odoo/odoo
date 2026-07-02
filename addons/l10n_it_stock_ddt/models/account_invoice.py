@@ -107,5 +107,12 @@ class AccountMove(models.Model):
 
     def _l10n_it_edi_get_values(self, pdf_values=None):
         template_values = super()._l10n_it_edi_get_values(pdf_values)
-        template_values['ddt_dict'] = self._get_ddt_values()
+        # FatturaPA requires NumeroDDT inside every DatiDDT block: keep only
+        # pickings that carry a DDT number so we never export an invalid
+        # element. The smart button still lists every linked delivery.
+        template_values['ddt_dict'] = {
+            picking: line_refs
+            for picking, line_refs in self._get_ddt_values().items()
+            if picking.l10n_it_ddt_number
+        }
         return template_values
