@@ -21,7 +21,7 @@ import {
 import { getOrderLineValues } from "./card_utils";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
 import { GeneratePrinterData } from "@point_of_sale/app/utils/printer/generate_printer_data";
-import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
+import { SnoozeTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 import { InfoPopup } from "@pos_self_order/app/components/info_popup/info_popup";
 import { ComboSuggestion } from "@point_of_sale/app/models/utils/combo_suggestion";
 import { session } from "@web/session";
@@ -80,7 +80,7 @@ export class SelfOrder extends Reactive {
         this.currentCategory = null;
         this.productByCategIds = {};
         this.availableCategories = [];
-        this.snoozedProductTracker = new SnoozedProductTracker();
+        this.snoozeTracker = new SnoozeTracker();
         this.pendingComboConversion = null;
 
         this.env.utils = {
@@ -104,15 +104,15 @@ export class SelfOrder extends Reactive {
         this.data.connectWebSocket("SNOOZE_CHANGED", async (payload) => {
             const { deleted_ids, records } = payload;
             if (deleted_ids) {
-                const snoozeModel = this.models["pos.product.template.snooze"];
+                const snoozeModel = this.models["pos.snooze"];
                 snoozeModel.deleteMany(
                     deleted_ids.map((id) => snoozeModel.get(id)).filter(Boolean)
                 );
             }
             if (records.length > 0) {
-                await this.models.connectNewData({ "pos.product.template.snooze": records });
+                await this.models.connectNewData({ "pos.snooze": records });
             }
-            this.snoozedProductTracker.setSnoozes(this.config.pos_snooze_ids);
+            this.snoozeTracker.setSnoozes(this.config.pos_snooze_ids);
         });
         this.data.connectWebSocket("PRODUCT_CHANGED", (payload) => {
             const productTemplateIds = payload["product.template"].map((tmpl) => tmpl.id);
@@ -664,7 +664,7 @@ export class SelfOrder extends Reactive {
     }
 
     initData() {
-        this.snoozedProductTracker.setSnoozes(this.config.pos_snooze_ids);
+        this.snoozeTracker.setSnoozes(this.config.pos_snooze_ids);
         this.initProducts();
         this._initLanguages();
         this.initHardware();
@@ -684,7 +684,11 @@ export class SelfOrder extends Reactive {
     }
 
     isProductSnoozed(product) {
-        return this.snoozedProductTracker.isProductSnoozed(product);
+        return this.snoozeTracker.isProductSnoozed(product);
+    }
+
+    get isSelfSnoozed() {
+        return this.snoozeTracker.getActiveSnooze("self-ordering");
     }
 
     async initKioskData() {
@@ -712,6 +716,7 @@ export class SelfOrder extends Reactive {
         if (this.config.self_ordering_mode !== "qr_code") {
             if (
                 this.access_token &&
+                !this.isSelfSnoozed &&
                 this.config.self_ordering_mode !== "consultation" &&
                 (this.session || this.models["pos.preset"].filter((p) => p.use_timing).length > 0)
             ) {

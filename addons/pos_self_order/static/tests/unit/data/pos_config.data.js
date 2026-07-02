@@ -8,6 +8,9 @@ patch(PosConfig.prototype, {
         records[0]._self_ordering_image_home_ids = [];
         return records;
     },
+    get_paid_self_order_count() {
+        return 0;
+    },
 });
 
 PosConfig._records = PosConfig._records.map((record) => ({

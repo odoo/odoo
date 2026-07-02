@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 from unittest.mock import patch
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -397,6 +397,10 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_table_transfer', login='pos_user')
+        # Self order should be snoozed for 1 hour
+        snoozed_item = self.env['pos.snooze'].search([], limit=1)
+        self.assertEqual(snoozed_item.type, "self-ordering")
+        self.assertEqual(snoozed_item.end_time - snoozed_item.start_time, timedelta(hours=1))
 
         orders = self.pos_config.current_session_id.order_ids
         self.assertEqual(len(orders), 2, "Expected exactly 2 orders: the transferred self-order and an empty placeholder")

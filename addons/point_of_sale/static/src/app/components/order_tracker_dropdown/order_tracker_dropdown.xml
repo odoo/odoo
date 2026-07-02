@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderTrackerDropdown">
+        <Dropdown>
+            <button class="order_tracker btn btn-light btn-lg lh-lg">
+                <span class="new-order-badge badge position-absolute top-0 end-0 p-1 m-1 rounded-3 text-bg-danger fw-bolder">
+                    <t t-out="this.pos.total_new_order"/>
+                </span>
+                <i class="oi oi-food-delivery fa-fw"/>
+            </button>
+            <t t-set-slot="content">
+                <div class="order_tracker_dropdown_container">
+                    <t t-foreach="this.externalOrderSummary" t-as="externalOrder" t-key="externalOrder_index">
+                        <DropdownItem>
+                            <div class="d-flex self-orders justify-content-between align-items-center px-1">
+                                <img class="me-1 provider-image rounded-3" height="50" width="50" t-att-src="externalOrder.imageUrl"/>
+                                <div class="state-container text-center d-grid w-100 p-1 gap-1">
+                                    <div t-att-class="this.getClass(externalOrder.type, 'NEW')" t-on-click="() => this.goToOrders(externalOrder.type, 'NEW', externalOrder.searchTerm)">
+                                        <div class="fw-semibold fs-3" t-out="externalOrder.new"/>
+                                        <div class="text-muted fw-bold small">New</div>
+                                    </div>
+                                    <div t-att-class="this.getClass(externalOrder.type, 'ONGOING')" t-on-click="() => this.goToOrders(externalOrder.type, 'ONGOING', externalOrder.searchTerm)">
+                                        <div class="fw-semibold fs-3" t-out="externalOrder.ongoing"/>
+                                        <div class="text-muted fw-bold small">Ongoing</div>
+                                    </div>
+                                    <div t-att-class="this.getClass(externalOrder.type, 'DONE')" t-on-click="() => this.goToOrders(externalOrder.type, 'DONE', externalOrder.searchTerm)">
+                                        <div class="fw-semibold fs-3" t-out="externalOrder.done"/>
+                                        <div class="text-muted fw-bold small">Done</div>
+                                    </div>
+                                </div>
+                                <div class="form-switch ms-4">
+                                    <input type="checkbox" class="form-check-input fs-4" t-att-checked="externalOrder.isChecked" t-on-click="() => externalOrder.onToggle()"/>
+                                </div>
+                            </div>
+                        </DropdownItem>
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

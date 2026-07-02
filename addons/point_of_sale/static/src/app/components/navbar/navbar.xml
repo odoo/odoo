@@ -43,6 +43,7 @@
                     getRef="(ref) => this.inputRef = ref"
                     t-if="this.pos.showSearchButton()"
                     isOpenCallback="(isOpen) => this.state.searchBarOpen = isOpen" />
+                    <OrderTrackerDropdown t-if="false"/>
                     <button class="btn btn-light btn-lg lh-lg" t-if="this.isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(this.pos.router.state.current) and !this.pos.config.module_pos_restaurant" t-on-click="this.onClickScan">
                         <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
                     </button>
