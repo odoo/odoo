@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
@@ -106,3 +108,33 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
         self.start_tour(
             combo_product.website_url, "website_sale.combo_configurator_single_configurable_item"
         )
+
+    def test_combo_item_tax_included_extra_price(self):
+        """Test that combo item extra prices in the website sale configurator include taxes when the
+        website is configured to display tax-inclusive prices.
+        """
+        self.website.show_line_subtotals_tax_selection = "tax_included"
+        tax_10 = self.env["account.tax"].create({"name": "Tax 10%", "amount": 10.0})
+
+        product = self._create_product(
+            name="Product", list_price=0.0, taxes_id=[Command.link(tax_10.id)]
+        )
+        combo = self.env["product.combo"].create({
+            "name": "Combo choice",
+            "combo_item_ids": [Command.create({"product_id": product.id, "extra_price": 10.0})],
+        })
+        combo_product = self._create_product(
+            name="Combo product", list_price=50.0, type="combo", combo_ids=[Command.link(combo.id)]
+        )
+
+        result = self.make_jsonrpc_request(
+            "/website_sale/combo_configurator/get_data",
+            {
+                "product_tmpl_id": combo_product.product_tmpl_id.id,
+                "quantity": 1,
+                "date": datetime(2026, 1, 1).isoformat(),
+            },
+        )
+
+        combo_item_data = result["combos"][0]["combo_items"][0]
+        self.assertAlmostEqual(combo_item_data["extra_price"], 11.0)
