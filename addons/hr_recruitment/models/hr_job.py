@@ -123,7 +123,7 @@ class Job(models.Model):
         users_by_company = dict(
             self.env["res.users"]._read_group(
                 domain=domain,
-                groupby=["company_id"],
+                groupby=["company_ids"],
                 aggregates=["id:recordset"],
             ),
         )
