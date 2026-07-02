@@ -13,3 +13,4 @@ from . import test_web_read
 from . import test_web_read_group
 from . import test_web_save
 from . import test_x2many
+from . import test_translate

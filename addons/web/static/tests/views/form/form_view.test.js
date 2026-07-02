@@ -9095,21 +9095,16 @@ test(`can save without any dirty translatable fields`, async () => {
 
 test(`translation dialog with right context and domain`, async () => {
     installLanguages({
+        en: "EN",
         CUST: "custom lang",
         CUST2: "second custom",
     });
 
-    onRpc("get_field_translations", ({ args, kwargs }) => {
-        expect.step(`translate args ${JSON.stringify(args)}`);
-        expect.step(`translate context ${JSON.stringify(kwargs.context)}`);
-        return [
-            [
-                { lang: "CUST", source: "yop", value: "yop" },
-                { lang: "CUST2", source: "yop", value: "valeur français" },
-            ],
-            { translation_type: "char", translation_show_source: false },
-        ];
+    onRpc("/web/translations/get_translation_for_field", async (request) => {
+        const { params } = await request.json();
+        expect.step(`translate args ${JSON.stringify(params)}`);
     });
+
     await mountView({
         resModel: "partner",
         type: "form",
@@ -9119,27 +9114,23 @@ test(`translation dialog with right context and domain`, async () => {
     await contains(".o_field_translate").click();
     await contains(`button.o_field_translate`).click();
     expect.verifySteps([
-        `translate args [[1],"name"]`,
-        `translate context {"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}`,
+        'translate args {"res_model":"partner","res_id":1,"field_name":"name","target_lang":"en","context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}}',
     ]);
     expect(`.modal`).toHaveCount(1);
-    expect(`.modal-title`).toHaveText("Translate: name");
+    expect(`.modal-title`).toHaveText(`Translate "Name"`);
 });
 
 test(`save new record before opening translate dialog`, async () => {
     installLanguages({
+        en: "EN",
         CUST: "custom lang",
         CUST2: "second custom",
     });
 
     onRpc("call_button", () => ({ context: {}, domain: [] }));
-    onRpc("get_field_translations", () => [
-        [
-            { lang: "CUST", source: "yop", value: "yop" },
-            { lang: "CUST2", source: "yop", value: "valeur français" },
-        ],
-        { translation_type: "char", translation_show_source: false },
-    ]);
+    onRpc("/web/translations/get_translation_for_field", async () => {
+        expect.step("get_translation_for_field");
+    });
     onRpc(({ method }) => expect.step(method));
     await mountView({
         resModel: "partner",
@@ -9151,13 +9142,14 @@ test(`save new record before opening translate dialog`, async () => {
 
     await contains(`.o_field_translate`).click();
     await contains(`button.o_field_translate`).click();
-    expect.verifySteps(["web_save", "get_field_translations"]);
+    expect.verifySteps(["web_save", "get_translation_for_field"]);
     expect(`.modal`).toHaveCount(1);
-    expect(`.modal-title`).toHaveText("Translate: name");
+    expect(`.modal-title`).toHaveText(`Translate "Name"`);
 });
 
 test(`translate event correctly handled with multiple controllers`, async () => {
     installLanguages({
+        en: "En",
         en_US: "English",
         fr_BE: "French (Belgium)",
     });
@@ -9178,15 +9170,8 @@ test(`translate event correctly handled with multiple controllers`, async () => 
     };
 
     onRpc("get_formview_id", () => false);
-    onRpc("get_field_translations", () => {
-        expect.step("get_field_translations");
-        return [
-            [
-                { lang: "en_US", source: "yop", value: "yop" },
-                { lang: "fr_BE", source: "yop", value: "valeur français" },
-            ],
-            { translation_type: "char", translation_show_source: false },
-        ];
+    onRpc("/web/translations/get_translation_for_field", async () => {
+        expect.step("get_translation_for_field");
     });
     await mountViewInDialog({
         type: "form",
@@ -9209,7 +9194,7 @@ test(`translate event correctly handled with multiple controllers`, async () => 
     expect(`.o_dialog:eq(1) button.o_field_translate`).toHaveCount(1);
 
     await contains(`.o_dialog:eq(1) button.o_field_translate`).click();
-    expect.verifySteps(["get_field_translations"]);
+    expect.verifySteps(["get_translation_for_field"]);
 });
 
 test.tags("desktop");

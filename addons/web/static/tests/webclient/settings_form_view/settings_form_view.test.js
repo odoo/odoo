@@ -20,6 +20,7 @@ import {
     fields,
     getService,
     hideTab,
+    installLanguages,
     makeServerError,
     mockService,
     models,
@@ -702,32 +703,14 @@ test("resIds should contains only 1 id", async () => {
     ResConfigSettings._fields.foo_text = fields.Char({
         translate: true,
     });
+    installLanguages({
+        en_US: "English",
+        fr_BE: "Frenglish",
+    });
 
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
-    onRpc("get_installed", () => [
-        ["en_US", "English"],
-        ["fr_BE", "French (Belgium)"],
-    ]);
-    onRpc("get_field_translations", () => [
-        [
-            {
-                lang: "en_US",
-                source: "My little Foo Value",
-                value: "My little Foo Value",
-            },
-            {
-                lang: "fr_BE",
-                source: "My little Foo Value",
-                value: "Valeur de mon petit Foo",
-            },
-        ],
-        {
-            translation_type: "char",
-            translation_show_source: true,
-        },
-    ]);
     onRpc("execute", ({ args }) => {
         expect(args[0].length).toBe(1);
         return true;

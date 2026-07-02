@@ -1,0 +1,42 @@
+.o_translation_dialog {
+    .o_input:not(:hover) {
+        --o-input-border-color: transparent;
+    }
+    .o_field_html .note-editable {
+        border: $input-border-width solid var(--o-input-border-color);
+        border-width: 0 0 $input-border-width 0;
+        &:not(:hover) {
+            --o-input-border-color: transparent;
+        }
+    }
+}
+
+.o-translate-full-xml {
+  --o-translate--translated-bg-color: rgba(120, 215, 110, 0.5);
+  --o-translate--to-translate-bg-color: rgba(255, 255, 90, 0.5);
+
+  .o-translate-lang-buttons {
+    background-color: var(--modal-bg);
+    padding-top: var(--modal-padding);
+    padding-bottom: var(--modal-padding);
+  }
+
+  padding: 0 var(--modal-padding) var(--modal-padding);
+  .o-translate--translatable-block[data-oe-translation-state] {
+    border: 0;
+    width: attr(data-width ch);
+    background-color: var(--o-translate-bg-color);
+    direction: var(--o-translate-dir);
+    &[data-oe-translation-state='translated'] {
+      --o-translate-bg-color: var(--o-translate--translated-bg-color);
+      --o-translate-dir: var(--translated-dir);
+    }
+    &[data-oe-translation-state='to_translate'] {
+      --o-translate-bg-color: var(--o-translate--to-translate-bg-color);
+      --o-translate-dir: var(--to-translate-dir);
+    }
+  }
+  .o-node-list {
+    list-style-type:none;
+  }
+}

@@ -13,6 +13,8 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
+import { installLanguages, xml_translate } from "@web/../tests/_framework/translation_test_helpers";
+
 class Currency extends models.Model {
     digits = fields.Integer();
     symbol = fields.Char({ string: "Currency Symbol" });
@@ -226,8 +228,30 @@ test("char field in editable list view", async () => {
 });
 
 test("char field translatable", async () => {
-    Partner._fields.name.translate = true;
+    installLanguages({
+        en_US: "English",
+        fr_BE: "Français",
+        es_ES: "Español",
+    });
 
+    onRpc("/web/translations/get_translation_for_field", async (request) => {
+        const { params } = await request.json();
+        expect.step(params);
+    });
+
+    onRpc("/web/translations/save_translation_for_field", async (request) => {
+        const { params } = await request.json();
+        expect.step(params);
+    });
+
+    Partner._fields.name.translate = true;
+    Partner._translations = {
+        "1,name": {
+            en_US: "yop",
+            fr_BE: "yop français",
+            es_ES: "yop español",
+        },
+    };
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
@@ -237,46 +261,6 @@ test("char field translatable", async () => {
         resId: 1,
     });
 
-    let callGetFieldTranslations = 0;
-    onRpc("res.lang", "get_installed", () => [
-        ["en_US", "English"],
-        ["fr_BE", "French (Belgium)"],
-        ["es_ES", "Spanish"],
-    ]);
-    onRpc("res.partner", "get_field_translations", () => {
-        if (callGetFieldTranslations++ === 0) {
-            return [
-                [
-                    { lang: "en_US", source: "yop", value: "yop" },
-                    { lang: "fr_BE", source: "yop", value: "yop français" },
-                    { lang: "es_ES", source: "yop", value: "yop español" },
-                ],
-                { translation_type: "char", translation_show_source: false },
-            ];
-        } else {
-            return [
-                [
-                    { lang: "en_US", source: "bar", value: "bar" },
-                    { lang: "fr_BE", source: "bar", value: "yop français" },
-                    { lang: "es_ES", source: "bar", value: "bar" },
-                ],
-                { translation_type: "char", translation_show_source: false },
-            ];
-        }
-    });
-    onRpc("res.partner", "update_field_translations", function ({ args, kwargs }) {
-        expect(args[2]).toEqual(
-            { en_US: "bar", es_ES: false },
-            {
-                message:
-                    "the new translation value should be written and the value false voids the translation",
-            }
-        );
-        for (const record of this.env["res.partner"].browse(args[0])) {
-            record[args[1]] = args[2][kwargs.context.lang];
-        }
-        return true;
-    });
     expect("[name=name] input").toHaveClass("o_field_translate");
     await contains("[name=name] input").click();
     expect(".o_field_char .btn.o_field_translate").toHaveCount(1, {
@@ -286,6 +270,21 @@ test("char field translatable", async () => {
         message: "the button should have as test the current language",
     });
     await contains(".o_field_char .btn.o_field_translate").click();
+    expect.verifySteps([
+        {
+            res_model: "res.partner",
+            res_id: 1,
+            field_name: "name",
+            target_lang: "en_US",
+            context: {
+                allowed_company_ids: [1],
+                lang: "en_US",
+                tz: "taht",
+                uid: 7,
+            },
+        },
+    ]);
+
     expect(".modal").toHaveCount(1, {
         message: "a translate modal should be visible",
     });
@@ -296,35 +295,75 @@ test("char field translatable", async () => {
     expect(translations[0]).toHaveValue("yop", {
         message: "English translation should be filled",
     });
-    expect(translations[1]).toHaveValue("yop français", {
-        message: "French translation should be filled",
-    });
-    expect(translations[2]).toHaveValue("yop español", {
+    expect(translations[1]).toHaveValue("yop español", {
         message: "Spanish translation should be filled",
+    });
+    expect(translations[2]).toHaveValue("yop français", {
+        message: "French translation should be filled",
     });
     await contains(translations[0]).edit("bar");
     await contains(translations[2]).clear();
     await contains("footer .btn.btn-primary").click();
+
+    expect.verifySteps([
+        {
+            res_model: "res.partner",
+            res_id: 1,
+            field_name: "name",
+            changes: {
+                en_US: "bar",
+                fr_BE: null,
+            },
+            context: {
+                allowed_company_ids: [1],
+                lang: "en_US",
+                tz: "taht",
+                uid: 7,
+            },
+        },
+    ]);
+
     expect(".o_field_widget.o_field_char input").toHaveValue("bar", {
         message: "the new translation should be transfered to modified record",
     });
     await fieldInput("name").edit("baz");
     await contains(".o_field_char .btn.o_field_translate").click();
 
+    expect.verifySteps([
+        {
+            res_model: "res.partner",
+            res_id: 1,
+            field_name: "name",
+            target_lang: "en_US",
+            context: {
+                allowed_company_ids: [1],
+                lang: "en_US",
+                tz: "taht",
+                uid: 7,
+            },
+        },
+    ]);
+
     translations = queryAll(".modal .o_translation_dialog .translation input");
     expect(translations[0]).toHaveValue("baz", {
         message: "Modified value should be used instead of translation",
     });
-    expect(translations[1]).toHaveValue("yop français", {
-        message: "French translation shouldn't be changed",
+    expect(translations[1]).toHaveValue("yop español", {
+        message: "Spanish translation shouldn't be changed",
     });
-    expect(translations[2]).toHaveValue("bar", {
-        message: "Spanish translation should fallback to the English translation",
+    expect(translations[2]).toHaveValue("baz", {
+        message: "French translation should fallback to the English translation",
     });
 });
 
 test("translation dialog should close if field is not there anymore", async () => {
     expect.assertions(4);
+    installLanguages({
+        en_US: "English",
+        fr_BE: "Français",
+        es_ES: "Español",
+    });
+
     // In this test, we simulate the case where the field is removed from the view
     // this can happen for example if the user click the back button of the browser.
     Partner._fields.name.translate = true;
@@ -346,19 +385,7 @@ test("translation dialog should close if field is not there anymore", async () =
             </sheet>
         </form>`,
     });
-    onRpc("res.lang", "get_installed", () => [
-        ["en_US", "English"],
-        ["fr_BE", "French (Belgium)"],
-        ["es_ES", "Spanish"],
-    ]);
-    onRpc("res.partner", "get_field_translations", () => [
-        [
-            { lang: "en_US", source: "yop", value: "yop" },
-            { lang: "fr_BE", source: "yop", value: "valeur français" },
-            { lang: "es_ES", source: "yop", value: "yop español" },
-        ],
-        { translation_type: "char", translation_show_source: false },
-    ]);
+
     expect("[name=name] input").toHaveClass("o_field_translate");
     await contains("[name=name] input").click();
     await contains(".o_field_char .btn.o_field_translate").click();
@@ -376,76 +403,87 @@ test("translation dialog should close if field is not there anymore", async () =
 });
 
 test("html field translatable", async () => {
-    expect.assertions(5);
-    Partner._fields.name.translate = true;
+    installLanguages({
+        en_US: "English",
+        fr_BE: "Français",
+    });
+
+    Partner._fields.name.translate = xml_translate;
+    Partner._translations = {};
+
+    onRpc("/web/translations/get_translation_for_field", async (request) => {
+        const { params } = await request.json();
+        expect.step(`get_translation_for_field ${params.target_lang}`);
+    });
+
+    onRpc("/web/translations/save_translation_for_field", async (request) => {
+        const { params } = await request.json();
+        expect.step(params);
+    });
 
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
-    onRpc("res.lang", "get_installed", () => [
-        ["en_US", "English"],
-        ["fr_BE", "French (Belgium)"],
-    ]);
-    onRpc("res.partner", "get_field_translations", () => [
-        [
-            {
-                lang: "en_US",
-                source: "first paragraph",
-                value: "first paragraph",
-            },
-            {
-                lang: "en_US",
-                source: "second paragraph",
-                value: "second paragraph",
-            },
-            {
-                lang: "fr_BE",
-                source: "first paragraph",
-                value: "premier paragraphe",
-            },
-            {
-                lang: "fr_BE",
-                source: "second paragraph",
-                value: "deuxième paragraphe",
-            },
-        ],
-        {
-            translation_type: "char",
-            translation_show_source: true,
-        },
-    ]);
-    onRpc("res.partner", "update_field_translations", ({ args }) => {
-        expect(args[2]).toEqual(
-            { en_US: { "first paragraph": "first paragraph modified" } },
-            { message: "the new translation value should be written" }
-        );
-        return true;
-    });
-
     // this will not affect the translate_fields effect until the record is
     // saved but is set for consistency of the test
     await fieldInput("name").edit("<p>first paragraph</p><p>second paragraph</p>");
     await contains(".o_field_char .btn.o_field_translate").click();
+    expect.verifySteps(["get_translation_for_field en_US"]);
+
     expect(".modal").toHaveCount(1, {
         message: "a translate modal should be visible",
     });
-    expect(".modal .o_translation_dialog .translation").toHaveCount(4, {
-        message: "four rows should be visible",
-    });
-    const enField = queryFirst(".modal .o_translation_dialog .translation input");
+
+    expect(".modal .o_translation_dialog .o-translate--translatable-block").toHaveCount(2);
+    const enField = queryFirst(".modal .o_translation_dialog .o-translate--translatable-block");
     expect(enField).toHaveValue("first paragraph", {
         message: "first part of english translation should be filled",
     });
-    await contains(enField).edit("first paragraph modified");
+    await contains(enField).edit("first paragraph English");
+
+    await contains(".modal .o-translate-lang-buttons button:contains(Français)").click();
+    expect.verifySteps(["get_translation_for_field fr_BE"]);
+    expect(".modal .o_translation_dialog .o-translate--translatable-block").toHaveCount(2);
+    const frField = queryFirst(".modal .o_translation_dialog .o-translate--translatable-block");
+    expect(frField).toHaveValue("first paragraph", {
+        message: "first part of english translation should be filled",
+    });
+    await contains(frField).edit("first paragraph Français");
     await contains(".modal button.btn-primary").click();
     expect(".o_field_char input[type='text']").toHaveValue(
-        "<p>first paragraph</p><p>second paragraph</p>",
-        {
-            message: "the new partial translation should not be transfered",
-        }
+        "<p>first paragraph English</p><p>second paragraph</p>"
     );
+
+    expect.verifySteps([
+        {
+            res_model: "res.partner",
+            res_id: 1,
+            field_name: "name",
+            changes: {
+                en_US: {
+                    0: "first paragraph English",
+                },
+                fr_BE: {
+                    0: "first paragraph Français",
+                },
+            },
+            context: {
+                lang: "en_US",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+            },
+        },
+    ]);
+
+    expect(Partner._translations).toEqual({
+        "1,name": {
+            en_US: "<p>first paragraph English</p><p>second paragraph</p>",
+            fr_BE: "<p>first paragraph Français</p><p>second paragraph</p>",
+        },
+    });
 });
 
 test("char field translatable in create mode", async () => {
@@ -939,8 +977,10 @@ test("edit a char field should display the status indicator buttons without flic
 });
 
 test("translating a char field inside one2many saves the parent record", async () => {
-    Partner._fields.type_id = fields.Many2one({
-        relation: "partner.type",
+    installLanguages({
+        en_US: "English",
+        fr_BE: "Français",
+        es_ES: "Español",
     });
     PartnerType._fields.partner_ids = fields.One2many({
         string: "Partners",
@@ -953,22 +993,6 @@ test("translating a char field inside one2many saves the parent record", async (
 
     serverState.lang = "en_US";
     serverState.multiLang = true;
-
-    onRpc("res.lang", "get_installed", () => [
-        ["en_US", "English"],
-        ["fr_BE", "French (Belgium)"],
-    ]);
-
-    onRpc("res.partner", "get_field_translations", () => [
-        [
-            { lang: "en_US", source: "move things", value: "move things" },
-            { lang: "fr_BE", source: "move things", value: "breakfast" },
-        ],
-        {
-            translation_type: "char",
-            translation_show_source: false,
-        },
-    ]);
 
     onRpc("web_save", ({ model }) => {
         expect.step(model);
@@ -996,27 +1020,16 @@ test("translating a char field inside one2many saves the parent record", async (
 });
 
 test("translation dialog opens in editable list when the required field is set", async () => {
+    installLanguages({
+        en_US: "EN",
+        fr_BE: "Belge",
+    });
+
     Partner._fields.name.translate = true;
     Partner._fields.name.required = true;
 
     serverState.lang = "en_US";
     serverState.multiLang = true;
-
-    onRpc("res.lang", "get_installed", () => [
-        ["en_US", "English"],
-        ["fr_BE", "French (Belgium)"],
-    ]);
-
-    onRpc("res.partner", "get_field_translations", () => [
-        [
-            { lang: "en_US", source: "Hello", value: "Hello" },
-            { lang: "fr_BE", source: "Hello", value: "Hii" },
-        ],
-        {
-            translation_type: "char",
-            translation_show_source: false,
-        },
-    ]);
 
     await mountView({
         type: "list",
