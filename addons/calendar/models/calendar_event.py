@@ -437,6 +437,16 @@ class CalendarEvent(models.Model):
                 meeting.start_date = False
                 meeting.stop_date = False
 
+    def add_notified_attendee_log_message(self, log_message):
+        self.ensure_one()
+        print(self.env.cr.precommit.data)
+        if self.env.cr.precommit.data.setdefault(f'mail.tracking.message.{self._name}', {}):
+            print("yes it find the track")
+            self._track_set_log_message(log_message)
+        else:
+            print("there is no track")
+            self._message_log(body=log_message)
+
     @api.depends('stop', 'start')
     def _compute_duration(self):
         for event in self:
@@ -989,6 +999,7 @@ class CalendarEvent(models.Model):
                 )._notify_attendees(
                     self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False),
                     force_send=True,
+                    notified_attendees_log_message=(_('An update of the date has been sent to:'), False)
                 )
 
         # Change base event when the main base event is archived. If it isn't done when trying to modify
