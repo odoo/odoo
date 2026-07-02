@@ -1,4 +1,5 @@
-import { useComponent, useEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useEffect } from "@odoo/owl";
+import { useComponent, useEnv } from "@web/owl2/utils";
 import { DROPDOWN_GROUP } from "@web/core/dropdown/dropdown_group";
 
 /**
@@ -26,7 +27,7 @@ export function useDropdownGroup() {
 
     if (group.isInGroup) {
         const dropdown = useComponent();
-        useLayoutEffect(() => {
+        useEffect(() => {
             env[DROPDOWN_GROUP].add(dropdown.state);
             return () => env[DROPDOWN_GROUP].delete(dropdown.state);
         });
