@@ -3451,6 +3451,69 @@ input[value*="data-oe-translation-source-sha"] {
     border-right-width: 0;
 }
 
+@function border-side-width($side-width) {
+    @return $side-width or $input-border-width;
+}
+
+// Show focus box-shadow only on sides that have a visible border.
+// If all sides have borders, the default Bootstrap focus ring is used.
+// Otherwise, inset shadows are applied per-side to match the active borders.
+.form-control:focus, .form-select:focus {
+    $-top: border-side-width($input-border-top-width);
+    $-right: border-side-width($input-border-right-width);
+    $-bottom: border-side-width($input-border-bottom-width);
+    $-left: border-side-width($input-border-left-width);
+
+    $-all-same: ($-top == $-right) and ($-right == $-bottom) and ($-bottom == $-left);
+
+    @if $-all-same {
+        box-shadow: $input-btn-focus-box-shadow;
+    } @else {
+        $-focus-width: $input-btn-focus-width;
+        $-focus-color: $input-btn-focus-color;
+
+        // Active side flags
+        $-top-active: $-top != 0;
+        $-right-active: $-right != 0;
+        $-bottom-active: $-bottom != 0;
+        $-left-active: $-left != 0;
+
+        // Count active sides
+        $-active-count: 0;
+        @if $-top-active { $-active-count: $-active-count + 1; }
+        @if $-right-active { $-active-count: $-active-count + 1; }
+        @if $-bottom-active { $-active-count: $-active-count + 1; }
+        @if $-left-active { $-active-count: $-active-count + 1; }
+
+        @if ($-top-active and $-bottom-active and not $-right-active and not $-left-active)
+        or ($-right-active and $-left-active and not $-top-active and not $-bottom-active) {
+
+        // Opposite pairs -> two separate shadows
+        $-shadow-first:  if($-top-active,
+            0 (-$-focus-width) 0 0 $-focus-color,
+            (-$-focus-width) 0 0 0 $-focus-color); // top + left
+        $-shadow-second: if($-bottom-active,
+            0 $-focus-width  0 0 $-focus-color,
+            $-focus-width 0 0 0 $-focus-color); // bottom + right
+        box-shadow: $-shadow-first, $-shadow-second;
+
+        } @else {
+        $-offset-x: if($-right-active and not $-left-active, $-focus-width,
+                    if($-left-active and not $-right-active, -$-focus-width, 0));
+
+        $-offset-y: if($-top-active  and not $-bottom-active, -$-focus-width,
+                    if($-bottom-active and not $-top-active, $-focus-width, 0));
+
+        // spread: 1 side -> 0 | 2 adjacent -> focus-width/2 | 3 or more sides -> focus-width
+        $-spread: 0;
+        @if $-active-count == 2 { $-spread: $-focus-width * 0.5; }
+        @else if $-active-count >= 3 { $-spread: $-focus-width; }
+
+        box-shadow: if($-active-count > 0, $-offset-x $-offset-y 0 $-spread $-focus-color, none);
+        }
+    }
+}
+
 // The `nav-link` and `btn` classes do not induce the same padding and border
 // radius. However, in some cases, we need to apply these properties of `btn`
 // with the color of `nav-link` (e.g. for the "Sign In" button of the "sidebar"
