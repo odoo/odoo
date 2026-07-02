@@ -340,8 +340,10 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
         })
         self.env.flush_all()
         self.env['account.invoice.report'].invalidate_model()
-        report = self.env['account.invoice.report'].search(
+        report = self.env['account.invoice.report'].formatted_read_group(
             [('move_id', '=', invoice.id)],
+            [],
+            ['inventory_value:sum_currency', 'price_margin:sum_currency'],
         )
-        self.assertEqual(report.inventory_value, -1600)
-        self.assertEqual(report.price_margin, -100)
+        self.assertEqual(report[0]['inventory_value:sum_currency'], -1600)
+        self.assertEqual(report[0]['price_margin:sum_currency'], -100)
