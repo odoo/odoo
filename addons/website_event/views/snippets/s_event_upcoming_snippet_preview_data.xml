@@ -1,5 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Carousel preview -->
+    <template id="s_event_upcoming_snippet_preview_data_carousel" name="Events Carousel Preview Data">
+        <t t-call="website.s_dynamic_snippet_carousel_preview_data">
+            <div class="carousel-item active" style="min-height: 357.875px;">
+                <div class="row">
+                    <div class="col-12 col-lg-4">
+                        <t t-call="website_event.s_events_carousel_preview_card" cover_img="'/website_event/static/src/img/event_previews/event_1.jpg'" title="'Innovations in Technology and Society'" datetime="'2024-08-05 07:00:00'" date_label="'August 5, 2024'" time_label="'07:00 AM'" tz="'Europe/Brussels'"/>
+                    </div>
+                    <div class="col-12 col-lg-4 d-none d-lg-block">
+                        <t t-call="website_event.s_events_carousel_preview_card" cover_img="'/website_event/static/src/img/event_previews/event_2.jpg'" title="'Excellence in Achievement Awards'" datetime="'2024-08-10 08:00:00'" date_label="'August 10, 2024'" time_label="'08:00 AM'" tz="'Europe/Brussels'"/>
+                    </div>
+                    <div class="col-12 col-lg-4 d-none d-lg-block">
+                        <t t-call="website_event.s_events_carousel_preview_card" cover_img="'/website_event/static/src/img/event_previews/event_3.jpg'" title="'Harmony Under the Stars'" datetime="'2024-11-08 20:15:00'" date_label="'November 08, 2024'" time_label="'08:15 PM'" tz="'Europe/Brussels'"/>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item" style="min-height: 357.875px;">
+                <div class="row">
+                    <div class="col-12 col-lg-4">
+                        <t t-call="website_event.s_events_carousel_preview_card" cover_img="'/website_event/static/src/img/event_cover_1.jpg'" title="'Hot Air Balloon Festival'" datetime="'2003-08-30 21:15:00'" date_label="'August 30, 2003'" time_label="'09:15 PM'" tz="'Kutch, Gujarat, India'"/>
+                    </div>
+                    <div class="col-12 col-lg-4 d-none d-lg-block">
+                        <t t-call="website_event.s_events_carousel_preview_card" cover_img="'/website_event/static/src/img/event_cover_3.jpg'" title="'Arijit Singh Concert'" datetime="'2026-12-31 23:00:00'" date_label="'December 31, 2026'" time_label="'11:00 PM'" tz="'Sonaiya, Gujarat, India'"/>
+                    </div>
+                    <div class="col-12 col-lg-4 d-none d-lg-block">
+                        <t t-call="website_event.s_events_carousel_preview_card" cover_img="'/website_event/static/src/img/event_cover_4.jpg'" title="'Talk on Tech'" datetime="'2026-01-01 17:00:00'" date_label="'January 01, 2026'" time_label="'05:00 PM'" tz="'Dakor, Gujarat, India'"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="s_events_carousel_preview_card" name="Events Carousel Preview Card">
+        <div class="s_events_event w-100">
+            <a class="s_events_event_cover position-relative d-flex align-items-center rounded overflow-hidden text-decoration-none ratio ratio-1x1" href="#">
+                <div class="o_record_cover_container d-flex flex-column o_colored_level o_cc h-100 w-100 bg-600 position-absolute">
+                    <div class="o_record_cover_component o_record_cover_image" t-attf-style="background-image: url('{{cover_img}}');"/>
+                    <div class="o_record_cover_component o_record_cover_filter oe_black" style="opacity: 0.4;"/>
+                </div>
+                <div class="text-center w-100 h-100 px-3 d-flex flex-column justify-content-center flex-grow-1">
+                    <h3 class="text-white" t-out="title"/>
+                    <time class="text-white" t-att-datetime="datetime">
+                        <span t-out="date_label"/>
+                        <span class="s_events_event_time">
+                            - <span t-out="time_label"/>
+                            (<t t-out="tz"/>)
+                        </span>
+                    </time>
+                </div>
+            </a>
+        </div>
+    </template>
     <!-- Multi record preview -->
     <template id="s_event_upcoming_snippet_preview_data" name="Events Picture Preview Data">
         <div class="s_dialog_preview row g-3">

@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 
 export class DynamicSnippetEventsOptionPlugin extends Plugin {
     static id = "dynamicSnippetEventsOption";
-    static dependencies = ["dynamicSnippetOption"];
+    static dependencies = ["dynamicSnippetCarouselOption", "dynamicSnippetOption"];
     static shared = ["getModelNameFilter"];
     modelNameFilter = "event.event";
     resources = {
@@ -14,9 +14,12 @@ export class DynamicSnippetEventsOptionPlugin extends Plugin {
         return this.modelNameFilter;
     }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(".s_event_upcoming_snippet")) {
+        if (snippetEl.matches(".s_event_upcoming_snippet, .s_events_carousel")) {
             setDatasetIfUndefined(snippetEl, "numberOfRecords", 3);
-            await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
+            const optionKey = snippetEl.matches(".s_event_upcoming_snippet")
+                ? "dynamicSnippetOption"
+                : "dynamicSnippetCarouselOption";
+            await this.dependencies[optionKey].setOptionsDefaultValues(
                 snippetEl,
                 this.modelNameFilter
             );
