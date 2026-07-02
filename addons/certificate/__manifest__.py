@@ -13,5 +13,5 @@
         'views/res_config_settings_view.xml',
     ],
     'depends': ['base_setup'],
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
 }

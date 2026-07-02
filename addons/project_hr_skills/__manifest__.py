@@ -13,5 +13,5 @@
     'data': [
         'views/project_task_views.xml',
     ],
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
 }

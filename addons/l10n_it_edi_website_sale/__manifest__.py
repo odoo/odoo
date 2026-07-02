@@ -16,7 +16,7 @@ Contains features for Italian eCommerce eInvoicing
     ],
     'installable': True,
     'auto_install': True,
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
     'assets': {
         'web.assets_frontend': [
             '/l10n_it_edi_website_sale/static/src/js/l10n_it_edi_website_sale.js',
