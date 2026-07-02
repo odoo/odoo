@@ -35,5 +35,10 @@ Activates:
     'demo': [
         'demo/demo_company.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_tr/static/src/js/dynamic_list.js',
+        ],
+    },
     'license': 'LGPL-3',
 }
