@@ -32,6 +32,16 @@ class TestRecruitmentAllowedUserIds(TransactionCase):
             'company_id': self.company_b.id,
         })
 
+        # User allowed in both companies
+        self.user_c = self.env['res.users'].create({
+            'name': 'User C',
+            'login': 'userc@test.com',
+            'email': 'userc@test.com',
+            'share': False,
+            'company_ids': [self.company_a.id, self.company_b.id],
+            'company_id': self.company_b.id,
+        })
+
     def test_recruiter_allowed_user_ids_with_company(self):
         job = self.env['hr.job'].create({
             'name': 'Job Position Company A',
@@ -43,6 +53,7 @@ class TestRecruitmentAllowedUserIds(TransactionCase):
 
         self.assertIn(self.user_a, matched_users)
         self.assertNotIn(self.user_b, matched_users)
+        self.assertIn(self.user_c, matched_users)
 
         job = self.env['hr.job'].create({
             'name': 'Job Position Company B',
@@ -54,6 +65,7 @@ class TestRecruitmentAllowedUserIds(TransactionCase):
 
         self.assertIn(self.user_b, matched_users)
         self.assertNotIn(self.user_a, matched_users)
+        self.assertIn(self.user_c, matched_users)
 
     def test_recruiter_allowed_user_ids_without_company(self):
         job = self.env['hr.job'].create({
