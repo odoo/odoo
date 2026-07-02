@@ -1164,6 +1164,7 @@ registry
             ].flat(),
     });
 
+<<<<<<< 6c45c951201feacaa8665eb4716f8d4506d33a10
 registry.category("web_tour.tours").add("test_only_existing_lots", {
     steps: () =>
         [
@@ -1177,6 +1178,41 @@ registry.category("web_tour.tours").add("test_only_existing_lots", {
             }),
             Chrome.endTour(),
         ].flat(),
+||||||| f6148e408abfe112127d116000a30a9a47055872
+registry.category("web_tour.tours").add("test_only_existing_lots", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product with existing lots"),
+            ProductScreen.selectNthLotNumber(1),
+            ProductScreen.selectedOrderlineHas("Product with existing lots", "1.0"),
+            inLeftSide({
+                trigger: ".order-container .orderline .lot-number:contains('Lot Number 1001')",
+            }),
+            Chrome.endTour(),
+        ].flat(),
+=======
+function existingLotsTour(expectedLot) {
+    return [
+        Chrome.startPoS(),
+        Dialog.confirm("Open Register"),
+        ProductScreen.clickDisplayedProduct("Product with existing lots"),
+        ProductScreen.selectedOrderlineHas("Product with existing lots", "1.0"),
+        inLeftSide({
+            trigger: `.order-container .orderline .lot-number:contains('Lot Number ${expectedLot}')`,
+        }),
+        Chrome.endTour(),
+    ].flat();
+}
+
+registry.category("web_tour.tours").add("test_only_existing_lots_fifo", {
+    steps: () => existingLotsTour("1001"),
+});
+
+registry.category("web_tour.tours").add("test_only_existing_lots_lifo", {
+    steps: () => existingLotsTour("1002"),
+>>>>>>> 137a4ee33bfc48bcc66fa18a72e5b25b28661c7d
 });
 
 registry.category("web_tour.tours").add("test_delete_line", {
