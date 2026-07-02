@@ -19,7 +19,7 @@ export function clickMenuOption(name, options) {
         waitForMenuButtons(),
         clickMenuButton(),
         waitForMenuOptionsToOpen(),
-        clickMenuDropdownOption(name, options),
+        clickMenuDialogOption(name, options),
     ];
 }
 export function waitForMenuButtons() {
@@ -31,15 +31,22 @@ export function waitForMenuButtons() {
 export function waitForMenuOptionsToOpen() {
     return {
         content: `Wait for the menu options to be available`,
-        trigger: `span.dropdown-item`,
+        trigger: `.o_pos_burger_menu_buttons > button.btn`,
     };
 }
-export function clickMenuDropdownOption(name, { expectUnloadPage = false } = {}) {
+export function clickMenuDialogOption(name, { expectUnloadPage = false } = {}) {
     return {
         content: `click on something in the burger menu`,
-        trigger: `span.dropdown-item:contains(${name})`,
+        trigger: `.o_pos_burger_menu_buttons > button.btn:contains(${name})`,
         run: "click",
         expectUnloadPage,
+    };
+}
+export function closeBurgerMenu() {
+    return {
+        content: "close the burger menu dialog",
+        trigger: `.modal:not(.o_inactive_modal) .modal-header button[aria-label="Close"]`,
+        run: "click",
     };
 }
 export function existMenuOption(name) {
@@ -47,18 +54,20 @@ export function existMenuOption(name) {
         clickMenuButton(),
         {
             content: `check that ${name} exists in the burger menu`,
-            trigger: `span.dropdown-item:contains(${name})`,
+            trigger: `.o_pos_burger_menu_buttons > button.btn:contains(${name})`,
         },
-        clickMenuButton(),
+        closeBurgerMenu(),
     ];
 }
 export function notExistMenuOption(name) {
     return [
         clickMenuButton(),
+        waitForMenuOptionsToOpen(),
         {
             content: `check that ${name} doesn't exist in the burger menu`,
-            trigger: negate(`span.dropdown-item:contains(${name})`),
+            trigger: negate(`.o_pos_burger_menu_buttons > button.btn:contains(${name})`),
         },
+        closeBurgerMenu(),
     ];
 }
 export function isCashMoveButtonHidden() {
@@ -309,7 +318,7 @@ export function clickOnScanButton() {
 export function ClickOnCustomerDisplayButton() {
     return {
         content: "Click on the customer display button inside the burger menu",
-        trigger: "span i.fa-desktop",
+        trigger: "button i.fa-desktop",
         run: "click",
     };
 }
@@ -418,4 +427,11 @@ export function closePrintingWarning() {
             timeout: 15000,
         },
     ];
+}
+
+export function closeRegisterPopupIsShown() {
+    return {
+        content: "Check that the close register popup is shown",
+        trigger: ".modal .close-pos-popup",
+    };
 }

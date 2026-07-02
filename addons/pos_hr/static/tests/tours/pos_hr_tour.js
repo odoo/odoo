@@ -136,14 +136,19 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
             CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
             Dialog.confirm("Open Register"),
             Chrome.clickMenuButton(),
+            Chrome.waitForMenuOptionsToOpen(),
             {
-                trigger: negate(`span.dropdown-item:contains("Close Register")`),
+                trigger: negate(
+                    `.o_pos_burger_menu_buttons > button.btn:contains("Close Register")`
+                ),
             },
+            Dialog.cancel(),
             PosHr.clickCashierName(),
             CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Chrome.clickMenuButton(),
+            Chrome.waitForMenuOptionsToOpen(),
             {
-                trigger: `span.dropdown-item:contains("Close Register")`,
+                trigger: `.o_pos_burger_menu_buttons > button.btn:contains("Close Register")`,
             },
         ].flat(),
 });

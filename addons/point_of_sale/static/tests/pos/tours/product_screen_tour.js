@@ -519,7 +519,7 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
 
             // Check that the product form is shown.
             Chrome.clickMenuButton(),
-            Chrome.clickMenuDropdownOption("Create Product"),
+            Chrome.clickMenuDialogOption("Create Product"),
             Dialog.is({ title: "New Product" }),
             Dialog.cancel(),
 
