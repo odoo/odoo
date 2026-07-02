@@ -3,6 +3,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
 
+from collections import defaultdict
 from datetime import date
 import json
 
@@ -154,6 +155,8 @@ class AccountPartialReconcile(models.Model):
 
     def _get_to_update_payments(self, from_state):
         to_update = []
+        group_payments = defaultdict(float)
+        moves_in_group_payment = list()
         for partial in self:
             matched_payments = (partial.credit_move_id | partial.debit_move_id).move_id.matched_payment_ids
             to_check_payments = matched_payments.filtered(lambda payment: not payment.outstanding_account_id and payment.state == from_state)
@@ -165,7 +168,26 @@ class AccountPartialReconcile(models.Model):
                 if not payment.currency_id.compare_amounts(payment.amount_signed, amount):
                     to_update.append(payment)
                     break
+<<<<<<< f3db2ad7f0cb40fb8487f51dac902ed87a03a95a
         return self.env['account.payment'].union(to_update)
+||||||| 22602fb30ac4341a879eee380dc1a0261c991669
+        return self.env['account.payment'].union(*to_update)
+=======
+            # Group payments are not handled because the partial amount never matches the payment amount. It matches the invoice amount instead.
+            # If the partial amount matches the amount of an invoice linked to a group payment, the payment is set aside to potentially be set
+            # as "to update" when the total amount of the group payment will be covered.
+            if len(to_check_payments) == 1 and to_check_payments not in to_update and len(to_check_payments.invoice_ids) > 1 and (
+                moves := to_check_payments.invoice_ids.filtered(
+                    lambda m: m not in moves_in_group_payment and not to_check_payments.currency_id.compare_amounts(m.amount_total_signed, amount)
+                )
+            ):
+                moves_in_group_payment.append(moves[0])
+                group_payments[to_check_payments] += amount
+
+                if not to_check_payments.currency_id.compare_amounts(to_check_payments.amount_signed, group_payments[to_check_payments]):
+                    to_update.append(to_check_payments)
+        return self.env['account.payment'].union(*to_update)
+>>>>>>> 0117a38781454b9e72a8454c550256f736a0ab20
 
     @api.model
     def _update_matching_number(self, amls):
