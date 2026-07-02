@@ -252,6 +252,7 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             allowChecklist: false,
+            allowTextColumnResize: false,
             record: this.props.record,
             mobileBreakpoint: "md",
             defaultImageMimetype: "image/png",

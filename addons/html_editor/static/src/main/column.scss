@@ -1,32 +1,49 @@
-.o_text_columns > .row {
-    margin: 0 !important;
-    flex-wrap: nowrap !important;
+body:not(.editor_enable) .odoo-editor-editable {
+    .o_text_columns {
+        overflow-x: auto !important;
 
-    > [class*="col-"] {
-        box-sizing: border-box;
-        border-left: 2px solid transparent;
-        border-right: 2px solid transparent;
+        > .row {
+            margin: 0 !important;
+            flex-wrap: nowrap !important;
 
-        &:first-child {
-            border-left-width: 4px;
-        }
+            > [class*="col-"] {
+                box-sizing: border-box;
+                // Invisible left/right resize handle placeholders
+                box-shadow: inset 2px 0 0 transparent, inset -2px 0 0 transparent;
 
-        &:last-child {
-            border-right-width: 4px;
-        }
+                // Wider left edge for first column
+                &:first-child {
+                    box-shadow: inset 4px 0 0 transparent, inset -2px 0 0 transparent;
+                }
 
-        &.o_resize_handle {
-            // current hovered column
-            border-color: $o-gray-300 !important;
-            // next column → left border
-            + [class*="col-"] {
-                border-left-color: $o-gray-300 !important;
+                // Wider right edge for last column
+                &:last-child {
+                    box-shadow: inset 2px 0 0 transparent, inset -4px 0 0 transparent;
+                }
+
+                // Hovered column: show both edges
+                &.o_resize_handle {
+                    box-shadow: inset 2px 0 0 $o-gray-300, inset -2px 0 0 $o-gray-300 !important;
+
+                    &:first-child {
+                        box-shadow: inset 4px 0 0 $o-gray-300, inset -2px 0 0 $o-gray-300 !important;
+                    }
+
+                    &:last-child {
+                        box-shadow: inset 2px 0 0 $o-gray-300, inset -4px 0 0 $o-gray-300 !important;
+                    }
+
+                    // Next column: show left edge to continue hovered col's right border
+                    + [class*="col-"] {
+                        box-shadow: inset 2px 0 0 $o-gray-300, inset -2px 0 0 transparent !important;
+                    }
+                }
+
+                // Previous column: show right edge to continue hovered col's left border
+                &:has(+ .o_resize_handle) {
+                    box-shadow: inset 2px 0 0 transparent, inset -2px 0 0 $o-gray-300 !important;
+                }
             }
-        }
-
-        // previous column → right border
-        &:has(+ .o_resize_handle) {
-            border-right-color: $o-gray-300 !important;
         }
     }
 }

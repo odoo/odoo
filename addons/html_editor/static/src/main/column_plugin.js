@@ -34,6 +34,9 @@ function columnIsAvailable(numberOfColumns) {
 export class ColumnPlugin extends Plugin {
     static id = "column";
     static dependencies = ["baseContainer", "selection", "history", "dom"];
+    static defaultConfig = {
+        allowTextColumnResize: true,
+    };
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -89,15 +92,17 @@ export class ColumnPlugin extends Plugin {
             },
         ],
         /** Resizing Parameters */
-        resizing_parameters: [
-            {
-                resizableElementsSelector: "div[class^='col-']",
-                parentContainerSelector: ".o_text_columns .row",
-                allowedEdges: ["left", "right"],
-                minSize: 44,
-                hoverClass: "o_resize_handle",
-            },
-        ],
+        ...(this.config.allowTextColumnResize && {
+            resizing_parameters: [
+                {
+                    resizableElementsSelector: "div[class^='col-']",
+                    parentContainerSelector: ".o_text_columns .row",
+                    allowedEdges: ["left", "right"],
+                    minSize: 44,
+                    hoverClass: "o_resize_handle",
+                },
+            ],
+        }),
         is_node_removable_predicates: (node, root) => {
             if (isUnremovableColumn(node, root)) {
                 return false;
