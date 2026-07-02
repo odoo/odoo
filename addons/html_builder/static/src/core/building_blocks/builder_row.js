@@ -168,8 +168,7 @@ function refreshSublevelLines(rowEl) {
 // Recompute the vertical connector line for nested rows:
 // - Clear any previous offset on all rows.
 // - Skip hidden rows to avoid zero-size measurements.
-// - When a row comes back to a shallower level after deeper rows, stretch its
-//   line up to the last visible sibling of the same level.
+// - When needed, stretch a row line up to the previous row it should connect to.
 function alignSublevelLines(optionsContainerEl) {
     const rowEls = [...optionsContainerEl.querySelectorAll(".hb-row")];
     if (!rowEls.length) {
@@ -179,43 +178,99 @@ function alignSublevelLines(optionsContainerEl) {
     for (const rowEl of rowEls) {
         const labelEl = rowEl.querySelector(":scope > .hb-row-label");
         if (labelEl) {
+            labelEl.style.removeProperty("--o-hb-row-sublevel-base-offset");
             labelEl.style.removeProperty("--o-hb-row-sublevel-top");
+            labelEl.style.removeProperty("--o-hb-row-sublevel-offset");
         }
-        if (getComputedStyle(rowEl).display !== "none") {
-            visibleRowEls.push(rowEl);
-        }
-    }
-    for (let index = 0; index < visibleRowEls.length; index++) {
-        const rowEl = visibleRowEls[index];
-        const level = getRowLevel(rowEl);
-        if (!level) {
+        const rowStyle = getComputedStyle(rowEl);
+        if (rowStyle.display === "none") {
             continue;
         }
-        const previousRowEl = visibleRowEls[index - 1];
-        if (!previousRowEl || getRowLevel(previousRowEl) <= level) {
+        const level = getRowLevel(rowEl);
+        const rowRect = rowEl.getBoundingClientRect();
+        const labelRect = labelEl?.getBoundingClientRect();
+        const baseSublevelOffset = getBaseSublevelOffset(rowStyle, rowRect, labelRect);
+        if (labelEl && level) {
+            labelEl.style.setProperty("--o-hb-row-sublevel-base-offset", `${baseSublevelOffset}px`);
+        }
+        const labelTextCenter =
+            labelEl && level ? getLabelTextCenter(labelEl, labelRect) : undefined;
+        const sublevelOffset =
+            labelTextCenter === undefined
+                ? 0
+                : applySublevelOffset(labelEl, rowRect, baseSublevelOffset, labelTextCenter);
+        visibleRowEls.push({
+            labelEl,
+            rowRect,
+            labelRect,
+            level,
+            baseSublevelOffset,
+            sublevelOffset,
+        });
+    }
+    for (let index = 0; index < visibleRowEls.length; index++) {
+        const rowData = visibleRowEls[index];
+        const previousRowData = visibleRowEls[index - 1];
+        const { level } = rowData;
+        if (!level || !previousRowData) {
+            continue;
+        }
+        if (previousRowData.level <= level) {
+            applyLineOffset(rowData, previousRowData);
             continue;
         }
         for (let previousIndex = index - 1; previousIndex >= 0; previousIndex--) {
-            if (getRowLevel(visibleRowEls[previousIndex]) === level) {
+            const previousSameLevelRowData = visibleRowEls[previousIndex];
+            if (previousSameLevelRowData.level === level) {
                 // Stretch the line up to the previous sibling of the same level.
-                applyLineOffset(rowEl, visibleRowEls[previousIndex]);
+                applyLineOffset(rowData, previousSameLevelRowData);
                 break;
             }
         }
     }
 }
 
-function applyLineOffset(rowEl, previousRowEl) {
-    const labelEl = rowEl.querySelector(":scope > .hb-row-label");
-    const previousLabelEl = previousRowEl.querySelector(":scope > .hb-row-label");
-    if (!labelEl || !previousLabelEl) {
+function applyLineOffset(rowData, previousRowData) {
+    const { labelEl, rowRect, baseSublevelOffset } = rowData;
+    const { rowRect: previousRowRect } = previousRowData;
+    if (!labelEl || !rowRect || !previousRowRect) {
         return;
     }
-    const offset =
-        previousLabelEl.getBoundingClientRect().bottom - labelEl.getBoundingClientRect().top;
-    if (offset < 0) {
+    const previousRowCenter = previousRowRect.top + previousRowRect.height * 0.5;
+    const offset = previousRowCenter - rowRect.top - baseSublevelOffset;
+    if (offset) {
         labelEl.style.setProperty("--o-hb-row-sublevel-top", `${offset}px`);
     }
+}
+
+function getLabelTextCenter(labelEl, labelRect) {
+    const labelTextEl = labelEl.querySelector(":scope > .text-nowrap");
+    if (!labelTextEl) {
+        return;
+    }
+    const textRect = labelTextEl.getBoundingClientRect();
+    return textRect.bottom - textRect.height * 0.5;
+}
+
+function applySublevelOffset(labelEl, rowRect, baseSublevelOffset, textCenter) {
+    const bottomLine = rowRect.bottom + baseSublevelOffset;
+    if (textCenter === undefined) {
+        return 0;
+    }
+    // Align the connector "bottom line" with the text center.
+    const offset = textCenter - bottomLine;
+    if (offset) {
+        labelEl.style.setProperty("--o-hb-row-sublevel-offset", `${offset}px`);
+    }
+    return offset;
+}
+
+function getBaseSublevelOffset(rowStyle, rowRect, labelRect) {
+    if (rowRect && labelRect) {
+        return labelRect.top + labelRect.height * 0.5 - rowRect.bottom;
+    }
+    const cssOffset = parseFloat(rowStyle.getPropertyValue("--o-hb-row-sublevel-base-offset"));
+    return Number.isFinite(cssOffset) ? cssOffset : 0;
 }
 
 function getRowLevel(rowEl) {
