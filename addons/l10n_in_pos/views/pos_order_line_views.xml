@@ -5,7 +5,7 @@
         <field name="model">pos.order</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='lines']/list/field[@name='product_id']" position="after">
+            <xpath expr="//list[@name='order_line_list']/field[@name='is_edited']" position="before">
                 <field name="l10n_in_hsn_code" optional="hide"/>
             </xpath>
         </field>
