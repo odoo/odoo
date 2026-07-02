@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="resource.WorkingScheduleDialog">
+        <div class="modal d-block o_dialog">
+            <div class="modal-dialog">
+                <div class="modal-content p-3">
+
+                    <h3 class="mb-2">Working schedule update ?</h3>
+
+                    <p>
+                        This working schedule is linked to
+                        other employees. Are you sure you want to modify it?
+                    </p>
+
+                    <div class="d-flex justify-content-end gap-2 mt-3">
+
+                        <button class="btn btn-primary"
+                                t-on-click="this.props.confirmUpdate">
+                            Update
+                        </button>
+
+                        <button class="btn btn-secondary"
+                                t-on-click="this.props.createNew">
+                            Create new
+                        </button>
+
+                        <button class="btn btn-light"
+                                t-on-click="this.props.cancel">
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
