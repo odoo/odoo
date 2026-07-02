@@ -114,6 +114,11 @@ class ProductTemplate(models.Model):
         product_tmpl_attr_value = product_tmpls.attribute_line_ids.product_template_value_ids
         product_tmpl_attr_value_read = product_tmpl_attr_value._load_pos_data_read(product_tmpl_attr_value, config)
 
+        # product.attribute loading — include archived attributes so that archived attribute lines
+        # (kept for referential integrity when used in a sale order) resolve correctly on the frontend
+        product_attr = product_tmpl_attr_line.attribute_id
+        product_attr_read = product_attr._load_pos_data_read(product_attr, config)
+
         # product.template.attribute.exclusion loading
         product_tmpl_excl = self.env['product.template.attribute.exclusion']
         product_tmpl_exclusion = product_tmpl_attr_value.exclude_for + product_tmpl_excl.search([
@@ -150,6 +155,7 @@ class ProductTemplate(models.Model):
         return {
             **pricelists,
             'account.tax': tax_read,
+            'product.attribute': product_attr_read,
             'product.product': product_read,
             'product.template': product_tmpl_read,
             'product.uom': packaging_read,

@@ -2269,6 +2269,49 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
 
+    def test_settle_so_archived_attribute(self):
+        attr = self.env['product.attribute'].create({
+            'name': 'Archived Size',
+            'create_variant': 'no_variant',
+        })
+        attr_values = self.env['product.attribute.value'].create([
+            {'name': 'S', 'attribute_id': attr.id},
+            {'name': 'M', 'attribute_id': attr.id},
+        ])
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Archived Attr Product',
+            'available_in_pos': True,
+            'type': 'service',
+            'list_price': 10.0,
+            'taxes_id': [],
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attr.id,
+                'value_ids': [Command.set(attr_values.ids)],
+            })],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [Command.create({
+                'product_id': product_tmpl.product_variant_ids[0].id,
+                'product_uom_qty': 1,
+                'price_unit': 10.0,
+            })],
+        })
+        sale_order.action_confirm()
+
+        # Simulate what Odoo does when you delete an attribute line that is already
+        # referenced by a sale order: it archives the line instead of deleting it.
+        attr_line = product_tmpl.with_context(active_test=False).attribute_line_ids
+        attr_line.write({'active': False})
+
+        # Also archive the product.attribute itself (worst case: triggers the crash
+        # because the archived attribute won't be loaded at PoS startup).
+        attr.write({'active': False})
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_settle_so_archived_attribute', login="accountman")
+
     def test_amount_unpaid_with_refund_pos_order(self):
         product = self.env['product.product'].create({
             'name': 'Refund Test Product',
