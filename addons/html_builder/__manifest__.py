@@ -18,6 +18,7 @@
         ],
         'web.assets_backend': [
             'html_builder/static/src/utils/keyboard_navigation.js',
+            'html_builder/static/src/utils/keyboard_reorder.js',
         ],
         # this bundle is lazy loaded when the editor is ready
         'html_builder.assets': [

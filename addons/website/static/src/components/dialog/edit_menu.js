@@ -1,8 +1,20 @@
+import { useKeyboardReorder } from "@html_builder/utils/keyboard_reorder";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, onWillStart, proxy, signal, useApp, useEffect } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    onPatched,
+    Plugin,
+    providePlugins,
+    proxy,
+    signal,
+    useApp,
+    useEffect,
+    usePlugin,
+} from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
@@ -154,6 +166,13 @@ export class MenuDialog extends Component {
     }
 }
 
+class MenuKeyboardReorderPlugin extends Plugin {
+    initHandlers({ onHandleKeyDown, restoreFocus }) {
+        this.onHandleKeyDown = onHandleKeyDown;
+        this.restoreFocus = restoreFocus;
+    }
+}
+
 class MenuRow extends Component {
     static template = "website.MenuRow";
     static props = {
@@ -165,6 +184,11 @@ class MenuRow extends Component {
     static components = {
         MenuRow,
     };
+
+    setup() {
+        this.keyboardReorderPlugin = usePlugin(MenuKeyboardReorderPlugin);
+        onPatched(() => this.keyboardReorderPlugin.restoreFocus());
+    }
 
     edit() {
         this.props.edit(this.props.menu.fields["id"]);
@@ -179,15 +203,164 @@ class MenuRow extends Component {
     }
 }
 
+function getMenuIdForElement(element) {
+    const menuIdStr = element.dataset.menuId;
+    const menuId = parseInt(menuIdStr);
+    return isNaN(menuId) ? menuIdStr : menuId;
+}
+
+class MenuEditorList extends Component {
+    static template = "website.MenuEditorList";
+    static components = { MenuRow };
+    static props = {
+        rootMenu: Object,
+        edit: Function,
+        delete: Function,
+        createPage: Function,
+        moveMenu: Function,
+    };
+
+    listRef = signal.ref();
+
+    setup() {
+        providePlugins([MenuKeyboardReorderPlugin]);
+        usePlugin(MenuKeyboardReorderPlugin).initHandlers(
+            useKeyboardReorder({
+                getList: (menuId) =>
+                    [...this._getLiForMenuId(menuId).parentElement.children].map(
+                        getMenuIdForElement
+                    ),
+                insertAfter: (menuId, previousMenuId) => {
+                    const liEl = this._getLiForMenuId(menuId);
+                    this.props.moveMenu({
+                        element: liEl,
+                        parent: liEl.parentElement.closest("li"),
+                        previous: previousMenuId && this._getLiForMenuId(previousMenuId),
+                    });
+                },
+                onNest: (menuId, direction) => this._nestMenu(menuId, direction),
+                getHandle: (menuId) =>
+                    this._getLiForMenuId(menuId)?.querySelector(
+                        ":scope > .input-group > .o_drag_handle"
+                    ),
+            })
+        );
+
+        useNestedSortable({
+            ref: this.listRef,
+            handle: "div",
+            nest: true,
+            maxLevels: 2,
+            onDrop: (move) => this.props.moveMenu(move),
+            isAllowed: this._isAllowedMove.bind(this),
+            useElementSize: true,
+            /**
+             * @param {DOMElement} element - moved element
+             * @param {DOMElement} parent - parent element of where the element
+             *      was moved
+             * @param {DOMElement} placeholder - hint element showing the
+             *      current position
+             */
+            onMove: ({ element, placeholder, parent }) => {
+                // Adapt the dragged menu item to match the width and position
+                // of the placeholder.
+                element.style.width = getComputedStyle(placeholder).width;
+                element.style.marginLeft =
+                    parent && element.parentElement === this.listRef() ? "2rem" : "";
+            },
+            // Prevent starting a drag from the action buttons (edit, delete),
+            // but not from the drag handle itself, which is also a button.
+            preventDrag: (el) => el.querySelector(":scope > button:not(.o_drag_handle)"),
+        });
+    }
+
+    _isAllowedMove(current, elementSelector) {
+        const currentIsMegaMenu = current.element.dataset.isMegaMenu === "true";
+        if (!currentIsMegaMenu) {
+            return (
+                current.placeHolder.parentNode.closest(
+                    `${elementSelector}[data-is-mega-menu="true"]`
+                ) === null
+            );
+        }
+        const isDropOnRoot = current.placeHolder.parentNode.closest(elementSelector) === null;
+        return currentIsMegaMenu && isDropOnRoot;
+    }
+
+    _getLiForMenuId(menuId) {
+        return this.listRef().querySelector(`li[data-menu-id="${menuId}"]`);
+    }
+
+    /**
+     * Nests (1) or un-nests (-1) a menu, with the same restrictions as the drag
+     * and drop (see `_isAllowedMove`).
+     *
+     * @param {number|string} menuId
+     * @param {1|-1} direction
+     * @returns {boolean} whether the menu moved
+     */
+    _nestMenu(menuId, direction) {
+        const liEl = this._getLiForMenuId(menuId);
+        const move =
+            liEl && (direction === 1 ? this._getNestMove(liEl) : this._getUnnestMove(liEl));
+        if (!move) {
+            return false;
+        }
+        this.props.moveMenu(move);
+        return true;
+    }
+
+    /**
+     * Moves a menu as the last child of its previous sibling.
+     *
+     * @param {HTMLElement} liEl
+     * @returns {Object|null} null if the nesting is not allowed
+     */
+    _getNestMove(liEl) {
+        const siblings = [...liEl.parentElement.children];
+        const prevSiblingLi = siblings[siblings.indexOf(liEl) - 1];
+        // Mega menus stay at the root and the tree is limited to `maxLevels`.
+        if (
+            !prevSiblingLi ||
+            liEl.dataset.isMegaMenu === "true" ||
+            prevSiblingLi.dataset.isMegaMenu === "true" ||
+            liEl.querySelector(":scope > ul > li") ||
+            liEl.parentElement.closest("li")
+        ) {
+            return null;
+        }
+        return {
+            element: liEl,
+            parent: prevSiblingLi,
+            previous: prevSiblingLi.querySelector(":scope > ul")?.lastElementChild || null,
+        };
+    }
+
+    /**
+     * Moves a menu after its parent menu.
+     *
+     * @param {HTMLElement} liEl
+     * @returns {Object|null} null if the menu is already at the root
+     */
+    _getUnnestMove(liEl) {
+        const parentLi = liEl.parentElement.closest("li");
+        return (
+            parentLi && {
+                element: liEl,
+                parent: parentLi.parentElement.closest("li"),
+                previous: parentLi,
+            }
+        );
+    }
+}
+
 export class EditMenuDialog extends Component {
     static template = "website.EditMenuDialog";
     static components = {
-        MenuRow,
+        MenuEditorList,
         WebsiteDialog,
     };
     static props = ["rootID?", "close", "save?"];
-
-    menuEditor = signal.ref();
 
     setup() {
         this.orm = useService("orm");
@@ -208,29 +381,6 @@ export class EditMenuDialog extends Component {
             this.map = new Map();
             this.populate(this.map, this.state.rootMenu);
             this.toDelete = [];
-        });
-
-        useNestedSortable({
-            ref: this.menuEditor,
-            handle: "div",
-            nest: true,
-            maxLevels: 2,
-            onDrop: this._moveMenu.bind(this),
-            isAllowed: this._isAllowedMove.bind(this),
-            useElementSize: true,
-            /**
-             * @param {DOMElement} element - moved element
-             * @param {DOMElement} parent - parent element of where the element was moved
-             * @param {DOMElement} placeholder - hint element showing the current position
-             */
-            onMove: ({ element, placeholder, parent }) => {
-                // Adapt the dragged menu item to match the width and position
-                // of the placeholder.
-                element.style.width = getComputedStyle(placeholder).width;
-                element.style.marginLeft =
-                    parent && element.parentElement === this.menuEditor() ? "2rem" : "";
-            },
-            preventDrag: (el) => el.querySelector(":scope > button"),
         });
     }
 
@@ -254,27 +404,8 @@ export class EditMenuDialog extends Component {
         );
     }
 
-    _isAllowedMove(current, elementSelector) {
-        const currentIsMegaMenu = current.element.dataset.isMegaMenu === "true";
-        if (!currentIsMegaMenu) {
-            return (
-                current.placeHolder.parentNode.closest(
-                    `${elementSelector}[data-is-mega-menu="true"]`
-                ) === null
-            );
-        }
-        const isDropOnRoot = current.placeHolder.parentNode.closest(elementSelector) === null;
-        return currentIsMegaMenu && isDropOnRoot;
-    }
-
-    _getMenuIdForElement(element) {
-        const menuIdStr = element.dataset.menuId;
-        const menuId = parseInt(menuIdStr);
-        return isNaN(menuId) ? menuIdStr : menuId;
-    }
-
     _moveMenu({ element, parent, previous }) {
-        const menuId = this._getMenuIdForElement(element);
+        const menuId = getMenuIdForElement(element);
         const menu = this.map.get(menuId);
 
         // Remove element from parent's children (since we are moving it, this is the mandatory first step)
@@ -284,14 +415,14 @@ export class EditMenuDialog extends Component {
 
         // Determine next parent
         const menuParentId = parent
-            ? this._getMenuIdForElement(parent.closest("li"))
+            ? getMenuIdForElement(parent.closest("li"))
             : this.state.rootMenu.fields["id"];
         parentMenu = this.map.get(menuParentId);
         menu.fields["parent_id"] = parentMenu.fields["id"];
 
         // Determine at which position we should place the element
         if (previous) {
-            const previousMenu = this.map.get(this._getMenuIdForElement(previous));
+            const previousMenu = this.map.get(getMenuIdForElement(previous));
             const index = parentMenu.children.findIndex((menu) => menu === previousMenu);
             parentMenu.children.splice(index + 1, 0, menu);
         } else {
