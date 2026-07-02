@@ -9,7 +9,7 @@ import { TranslateSetupEditorPlugin } from "./plugins/translate_setup_editor_plu
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -45,6 +45,7 @@ import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
+import { router } from "@web/core/browser/router";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -107,6 +108,47 @@ export class WebsiteBuilder extends Component {
             }
             this.websiteEditService?.clearRpcCache();
         });
+        useEffect(
+            () => {
+                // Initialize a unique history guard for this mount, track
+                // whether it still needs cleanup, and cancel any pending
+                // cleanup from a previous mount to avoid unintended navigation.
+                this.historyGuardId = Date.now();
+                this.isGuardActive = true;
+                browser.clearTimeout(this.pendingHistoryCleanup);
+                this.pushHistoryState();
+                return () => {
+                    // If the guard entry is still on top (e.g. save path, not
+                    // back-navigation path), pop it so the user doesn't need to
+                    // press back twice after leaving edit mode.
+                    if (this.isGuardActive) {
+                        // Delay cleanup to avoid race with remount/router;
+                        // Ensures we only remove our own guard and don’t
+                        // trigger incorrect or extra navigation.
+                        this.pendingHistoryCleanup = browser.setTimeout(() => {
+                            if (
+                                history.state?.websiteBuilderHistoryGuardId === this.historyGuardId
+                            ) {
+                                router.skipLoad = true;
+                                history.back();
+                            }
+                            this.pendingHistoryCleanup = null;
+                        });
+                    }
+                };
+            },
+            () => []
+        );
+    }
+
+    pushHistoryState() {
+        const state = {
+            skipRouteChange: true,
+            websiteBuilderHistoryGuardId: this.historyGuardId,
+        };
+        history.state?.websiteBuilderHistoryGuardId
+            ? history.replaceState(state, "")
+            : history.pushState(state, "");
     }
 
     discard() {
@@ -150,8 +192,15 @@ export class WebsiteBuilder extends Component {
                     },
                 });
             });
-            return continueProcess;
+            if (continueProcess) {
+                this.isGuardActive = false;
+                this.props.builderProps.closeEditor();
+            } else {
+                this.pushHistoryState();
+            }
+            return false;
         }
+        this.isGuardActive = false;
         return true;
     }
 
