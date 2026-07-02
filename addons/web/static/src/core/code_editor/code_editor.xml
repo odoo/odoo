@@ -3,7 +3,7 @@
 
     <t t-name="web.CodeEditor">
         <div
-            t-custom-ref="editorRef"
+            t-ref="this.editorRef"
             class="w-100"
             t-att-class="this.props.class"
             t-att-data-mode="this.state.activeMode"

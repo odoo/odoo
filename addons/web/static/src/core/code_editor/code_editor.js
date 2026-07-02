@@ -1,5 +1,15 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillStart, markRaw, props, status, t, proxy } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    markRaw,
+    props,
+    status,
+    t,
+    proxy,
+    signal,
+    useEffect,
+    untrack,
+} from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { isMarkup } from "@web/core/utils/html";
 import { useDebounced } from "../utils/timing";
@@ -87,7 +97,7 @@ export class CodeEditor extends Component {
     });
 
     setup() {
-        this.editorRef = useRef("editorRef");
+        this.editorRef = signal.ref(HTMLDivElement);
         this.state = proxy({
             activeMode: undefined,
         });
@@ -120,12 +130,16 @@ export class CodeEditor extends Component {
             onCursorChange();
         };
 
-        useLayoutEffect(
-            (el) => {
-                if (!el) {
-                    return;
-                }
+        useEffect(() => {
+            const el = this.editorRef();
+            if (!el) {
+                return;
+            }
 
+            // The props read below must stay untracked: this effect should only
+            // re-run when the editor element (de)mounts, not on every prop change.
+            // Prop-driven updates are handled by the dedicated effects further down.
+            return untrack(() => {
                 // keep in closure
                 const aceEditor = window.ace.edit(el);
                 this.aceEditor = aceEditor;
@@ -174,68 +188,60 @@ export class CodeEditor extends Component {
                     }
                     aceEditor.destroy();
                 };
-            },
-            () => [this.editorRef.el]
-        );
+            });
+        });
 
-        useLayoutEffect(
-            (theme) => this.aceEditor.setTheme(theme ? `ace/theme/${theme}` : ""),
-            () => [this.props.theme]
-        );
+        useEffect(() => {
+            this.aceEditor.setTheme(this.props.theme ? `ace/theme/${this.props.theme}` : "");
+        });
 
-        useLayoutEffect(
-            (readonly, showLineNumbers) => {
-                this.aceEditor.setOptions({
-                    readOnly: readonly,
-                    highlightActiveLine: !readonly,
-                    highlightGutterLine: !readonly,
-                });
+        useEffect(() => {
+            const readonly = this.props.readonly;
+            this.aceEditor.setOptions({
+                readOnly: readonly,
+                highlightActiveLine: !readonly,
+                highlightGutterLine: !readonly,
+            });
 
-                this.aceEditor.renderer.setOptions({
-                    displayIndentGuides: !readonly,
-                    showGutter: !readonly && showLineNumbers,
-                });
+            this.aceEditor.renderer.setOptions({
+                displayIndentGuides: !readonly,
+                showGutter: !readonly && this.props.showLineNumbers,
+            });
 
-                this.aceEditor.renderer.$cursorLayer.element.style.display = readonly
-                    ? "none"
-                    : "block";
-            },
-            () => [this.props.readonly, this.props.showLineNumbers]
-        );
+            this.aceEditor.renderer.$cursorLayer.element.style.display = readonly
+                ? "none"
+                : "block";
+        });
 
-        useLayoutEffect(
-            (sessionId, mode, value) => {
-                let session = sessions[sessionId];
-                if (session) {
-                    if (session.getValue() !== value) {
-                        ignoredAceChange = true;
-                        session.setValue(value);
-                        ignoredAceChange = false;
-                    }
-                } else {
-                    session = new window.ace.EditSession(value);
-                    session.setUndoManager(new window.ace.UndoManager());
-                    session.setOptions({
-                        useWorker: false,
-                        tabSize: 2,
-                        useSoftTabs: true,
-                    });
-                    session.on("change", onChange);
-                    sessions[sessionId] = session;
+        useEffect(() => {
+            const sessionId = this.props.sessionId;
+            const value = this.props.value;
+            let session = sessions[sessionId];
+            if (session) {
+                if (session.getValue() !== value) {
+                    ignoredAceChange = true;
+                    session.setValue(value);
+                    ignoredAceChange = false;
                 }
+            } else {
+                session = new window.ace.EditSession(value);
+                session.setUndoManager(new window.ace.UndoManager());
+                session.setOptions({
+                    useWorker: false,
+                    tabSize: 2,
+                    useSoftTabs: true,
+                });
+                session.on("change", onChange);
+                sessions[sessionId] = session;
+            }
 
-                session.setMode(this.aceMode);
-                this.aceEditor.setSession(session);
-            },
-            () => [this.props.sessionId, this.props.mode, this.props.value]
-        );
+            session.setMode(this.aceMode);
+            this.aceEditor.setSession(session);
+        });
 
-        useLayoutEffect(
-            (cursorPosition) => {
-                this.setCursorPosition(cursorPosition);
-            },
-            () => [this.props.cursorPosition]
-        );
+        useEffect(() => {
+            this.setCursorPosition(this.props.cursorPosition);
+        });
     }
 
     get aceMode() {
