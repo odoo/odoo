@@ -3,7 +3,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, waitFor } from "@odoo/hoot-dom";
-import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 test("Unsplash is inserted in the Media Dialog", async () => {
     const imageRecord = {
@@ -45,8 +45,7 @@ test("Unsplash is inserted in the Media Dialog", async () => {
     onRpc("/web_unsplash/attachment/add", (args) => [
         { ...imageRecord, description: "unsplash_image" },
     ]);
-    const env = await makeMockEnv();
-    const { editor } = await setupEditor(`<p>[]</p>`, { env });
+    const { editor } = await setupEditor(`<p>[]</p>`);
     await expectElementCount(".o-we-powerbox", 0);
     await insertText(editor, "/image");
     await animationFrame();
@@ -80,8 +79,7 @@ test("Unsplash error is displayed when there is no key", async () => {
             error: "key_not_found",
         };
     });
-    const env = await makeMockEnv();
-    const { editor } = await setupEditor(`<p>[]</p>`, { env });
+    const { editor } = await setupEditor(`<p>[]</p>`);
     await expectElementCount(".o-we-powerbox", 0);
     await insertText(editor, "/image");
     await animationFrame();
@@ -106,8 +104,7 @@ test("Document tab does not crash with FileSelector extension", async () => {
             public: true,
         },
     ]);
-    const env = await makeMockEnv();
-    const { editor } = await setupEditor("<p>a[]</p>", { env });
+    const { editor } = await setupEditor("<p>a[]</p>");
     await insertText(editor, "/image");
     await animationFrame();
     await press("enter");

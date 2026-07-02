@@ -568,9 +568,7 @@ test("replace an image with a caption", async () => {
             public: true,
         },
     ]);
-    const env = await makeMockEnv();
     await testEditor({
-        env,
         config: configWithEmbeddedCaption,
         contentBefore: unformat(
             `<figure>
@@ -644,9 +642,7 @@ test("edit caption after replacing image", async () => {
             public: true,
         },
     ]);
-    const env = await makeMockEnv();
     await testEditor({
-        env,
         config: configWithEmbeddedCaption,
         contentBefore: unformat(
             `<figure>
@@ -694,9 +690,7 @@ test("after replacing a captioned image, undo should revert to the original imag
             public: true,
         },
     ]);
-    const env = await makeMockEnv();
     await testEditor({
-        env,
         config: configWithEmbeddedCaption,
         contentBefore: unformat(
             `<figure>

@@ -12,8 +12,8 @@ import {
 import {
     contains,
     destroyApp,
+    getMockEnv,
     getService,
-    makeMockEnv,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -298,16 +298,15 @@ describe("useBus", () => {
             }
         }
 
-        const { bus } = await makeMockEnv();
         await mountWithCleanup(Parent);
 
-        bus.trigger("test-event");
+        getMockEnv().bus.trigger("test-event");
         expect.verifySteps(["callback"]);
 
         state.child = false;
         await animationFrame();
 
-        bus.trigger("test-event");
+        getMockEnv().bus.trigger("test-event");
         expect.verifySteps([]);
     });
 });

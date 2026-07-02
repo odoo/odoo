@@ -2,16 +2,18 @@ import { afterEach, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { Component, proxy, xml } from "@odoo/owl";
 import {
+    allowTranslations,
+    clearRegistry,
+    makeMockEnv,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+
+import {
     WithLazyGetterTrap,
     clearGettersCache,
     createLazyGetter,
 } from "@point_of_sale/lazy_getter";
-import {
-    allowTranslations,
-    clearRegistry,
-    mountWithCleanup,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
 import { onWillRender } from "@web/owl2/utils";
@@ -164,8 +166,8 @@ test("each getter should only be called once and only when needed", async () => 
     });
 
     const store = proxy(new AppStore());
+    await makeMockEnv({ store });
     await mountWithCleanup(Root, {
-        env: { store },
         noMainContainer: true,
     });
 
@@ -207,8 +209,8 @@ test("only dependent components rerender", async () => {
     });
 
     const store = proxy(new AppStore());
+    await makeMockEnv({ store });
     await mountWithCleanup(Root, {
-        env: { store },
         noMainContainer: true,
     });
 

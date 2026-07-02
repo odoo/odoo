@@ -1,5 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { makeServerError, mockService, serverState, fields } from "@web/../tests/web_test_helpers";
+import {
+    makeServerError,
+    mockService,
+    serverState,
+    fields,
+    getService,
+} from "@web/../tests/web_test_helpers";
 import { user } from "@web/core/user";
 
 import {
@@ -298,14 +304,14 @@ test("Can use property fields", async () => {
     });
     Partner._fields.partner_properties = propertyField;
 
-    const { model, env } = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData: { models: data },
     });
 
     const columns = [];
     for (const col of Object.keys(propertiesValues)) {
         const path = `partner_properties.${col}`;
-        const fieldInfo = await env.services.field.loadPath("partner", path);
+        const fieldInfo = await getService("field").loadPath("partner", path);
         columns.push({ name: path, string: fieldInfo.modelsInfo.at(-1).fieldDefs[col].string });
     }
 

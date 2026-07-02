@@ -1,6 +1,6 @@
 import { describe, expect, test, getFixture, beforeEach } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { makeMockEnv, contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { DefaultDateValue } from "@spreadsheet/global_filters/components/default_date_value/default_date_value";
 
@@ -17,13 +17,12 @@ beforeEach(() => {
  *
  * @param {{ model: Model, filter: object}} props
  */
-async function mountDefaultDateValue(env, props) {
-    await mountWithCleanup(DefaultDateValue, { props, env });
+async function mountDefaultDateValue(props) {
+    await mountWithCleanup(DefaultDateValue, { props });
 }
 
 test("Default date filter without initial value", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: undefined,
         update: () => {},
     });
@@ -31,8 +30,7 @@ test("Default date filter without initial value", async function () {
 });
 
 test("Date filter with relative value", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: "last_7_days",
         update: () => {},
     });
@@ -40,8 +38,7 @@ test("Date filter with relative value", async function () {
 });
 
 test("Default date with this_month", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: "this_month",
         update: () => {},
     });
@@ -49,8 +46,7 @@ test("Default date with this_month", async function () {
 });
 
 test("Default date with this_quarter", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: "this_quarter",
         update: () => {},
     });
@@ -58,8 +54,7 @@ test("Default date with this_quarter", async function () {
 });
 
 test("Default date with this_year", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: "this_year",
         update: () => {},
     });
@@ -67,8 +62,7 @@ test("Default date with this_year", async function () {
 });
 
 test("All the options should be displayed", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: undefined,
         update: () => {},
     });
@@ -91,8 +85,7 @@ test("All the options should be displayed", async function () {
 });
 
 test("Can select a relative period", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: undefined,
         update: (value) => {
             expect(value).toBe("last_30_days");
@@ -106,8 +99,7 @@ test("Can select a relative period", async function () {
 });
 
 test("Can select this month", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: undefined,
         update: (value) => {
             expect(value).toBe("this_month");
@@ -122,8 +114,7 @@ test("Can select this month", async function () {
 
 test("Can select all time", async function () {
     mockDate("2022-07-14 00:00:00");
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: "last_7_days",
         update: (value) => {
             expect(value).toBe(undefined);
@@ -137,8 +128,7 @@ test("Can select all time", async function () {
 });
 
 test("Input value is correct for the current value", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: "last_30_days",
         update: () => {},
     });
@@ -148,8 +138,7 @@ test("Input value is correct for the current value", async function () {
 });
 
 test("Input value is correct for all time", async function () {
-    const env = await makeMockEnv();
-    await mountDefaultDateValue(env, {
+    await mountDefaultDateValue({
         value: undefined,
         update: () => {},
     });

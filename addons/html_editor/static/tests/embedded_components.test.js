@@ -726,10 +726,9 @@ describe("Mount processing", () => {
             }
         }
 
-        const rootEnv = await makeMockEnv();
+        await makeMockEnv({ somevalue: 1 });
         await setupEditor(`<p><span data-embedded="counter"></span></p>`, {
             config: getConfig([embedding("counter", Test)]),
-            env: Object.assign(rootEnv, { somevalue: 1 }),
         });
         expect(env.somevalue).toBe(1);
     });
