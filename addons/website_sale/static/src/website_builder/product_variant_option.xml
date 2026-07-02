@@ -6,11 +6,12 @@
         <BuilderButton id="'o_wsale_add_images'" type="'success'" className="'flex-grow-1'" action="'productAddImage'">Add</BuilderButton>
     </BuilderRow>
     <BuilderRow label.translate="Tags">
-        <BasicMany2Many
-            model="this.state.searchModel"
-            selection="this.domState.selection"
-            setSelection="this.setSelection.bind(this)"
-            create="this.create.bind(this)"
+        <ModelMany2Many
+            baseModel="this.domState.model"
+            m2oField="this.domState.field"
+            recordId="this.domState.productId"
+            action="'setTagsAction'"
+            createAction="'createTagAction'"
         />
     </BuilderRow>
 </t>

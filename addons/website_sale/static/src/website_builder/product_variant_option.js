@@ -18,13 +18,11 @@ export class ProductVariantOption extends ProductTemplateOption {
             const model = hasVariants ? "product.product" : "product.template";
             const field = hasVariants ? "additional_product_tag_ids" : "product_tag_ids";
             const productId = hasVariants ? variantId : templateId;
-            const selection = this.modelEdit && this.modelEdit.has(field) ? this.modelEdit.get(field) : [];
 
             return {
                 model,
                 field,
                 productId,
-                selection,
             };
         });
     }

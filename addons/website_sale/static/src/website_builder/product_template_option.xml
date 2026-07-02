@@ -3,11 +3,12 @@
 
 <t t-name="website_sale.ProductTemplateOption">
     <BuilderRow label.translate="Tags">
-        <BasicMany2Many
-            model="this.state.searchModel"
-            selection="this.domState.selection"
-            setSelection="this.setSelection.bind(this)"
-            create="this.create.bind(this)"
+        <ModelMany2Many
+            baseModel="this.domState.model"
+            m2oField="this.domState.field"
+            recordId="this.domState.productId"
+            action="'setTagsAction'"
+            createAction="'createTagAction'"
         />
     </BuilderRow>
 </t>
