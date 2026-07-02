@@ -39,12 +39,15 @@ class PosSelfOrderController(http.Controller):
             del o['email']
             del o['mobile']
 
-        return {
+        result = {
             'pos.order': orders,
             'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
             'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
         }
+        if config.self_ordering_mode == 'mobile':
+            result['pos.payment.method'] = self.env['pos.payment.method']._load_pos_self_data_read(order.payment_ids.payment_method_id, config)
+        return result
 
     def _verify_line_price(self, lines, pos_config, preset_id):
         lines.order_id.recompute_prices()
