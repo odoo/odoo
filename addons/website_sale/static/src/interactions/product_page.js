@@ -94,6 +94,26 @@ export class ProductPage extends Interaction {
             // Trigger `onChangeAddQuantity`.
             input.dispatchEvent(new Event('change', { bubbles: true }));
         }
+        this._updateMinusButtonTitle(input);
+    }
+
+    /**
+     * Update the minus button's title/aria-label to explain why decreasing the quantity is
+     * blocked, when it is blocked by the minimum quantity required to purchase the product.
+     *
+     * @param {HTMLInputElement} input
+     */
+    _updateMinusButtonTitle(input) {
+        const minusButton = input.closest('.input-group')?.querySelector('button[name="minus_button"]');
+        if (!minusButton) {
+            return;
+        }
+        const min = parseFloat(input.dataset.min || 0);
+        const qty = parseFloat(input.value || 0);
+        const minQtyMessage = minusButton.dataset.minQtyMessage;
+        const title = qty <= min && minQtyMessage ? minQtyMessage : _t("Remove one");
+        minusButton.title = title;
+        minusButton.ariaLabel = title;
     }
 
     /**
@@ -402,6 +422,26 @@ export class ProductPage extends Interaction {
         parent.querySelectorAll('#add_to_cart_wrap button[name="add_to_cart"]').forEach(
             el => el.disabled = !isCombinationPossible
         );
+    }
+
+    /**
+     * Update the minimum quantity of the product based on the selected combination
+     *
+     * @param {Element} parent
+     * @param {Object} combination
+     */
+    _updateMinimumQuantity(parent, combination) {
+        const addQtyInput = parent.querySelector('input[name="add_qty"]');
+        const minimumQty = combination.minimum_qty || 1;
+        addQtyInput.dataset.min = minimumQty;
+        if (addQtyInput.value < minimumQty) {
+            addQtyInput.value = minimumQty;
+        }
+        const minusButton = parent.querySelector('button[name="minus_button"]');
+        if (minusButton) {
+            minusButton.dataset.minQtyMessage = combination.minimum_qty_reached_message || '';
+        }
+        this._updateMinusButtonTitle(addQtyInput);
     }
 
     /**
@@ -746,6 +786,7 @@ export class ProductPage extends Interaction {
             }
         });
 
+        this._updateMinimumQuantity(parent, combination);
         this._toggleDisable(parent, isCombinationPossible && this.el.dataset.hasAvailableUoms);
 
         // Only update the images, tags and packaging selector if the product has changed.
@@ -799,7 +840,10 @@ export class ProductPage extends Interaction {
         if (!combination.allow_out_of_stock_order) {
             const unavailableQty = await this.waitFor(this._getUnavailableQty(combination));
             combination.free_qty -= unavailableQty;
-            if (combination.free_qty < 0) {
+            if (
+                combination.free_qty < 0
+                || ('minimum_qty' in combination && combination.free_qty < combination.minimum_qty)
+            ) {
                 combination.free_qty = 0;
             }
             if (addQtyInput) {

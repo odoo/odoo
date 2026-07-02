@@ -858,20 +858,23 @@
                 t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_sale'] else 'd-inline-flex order-first'}} align-middle border"
                 contenteditable="false"
             >
+                <t t-set="minus_button_title"><t t-if="combination_info.get('minimum_qty_reached_message')" t-out="combination_info['minimum_qty_reached_message']"/><t t-else="">Remove one</t></t>
                 <button
                     name="minus_button"
                     class="btn btn-link pe-2 border-0"
-                    aria-label="Remove one"
-                    title="Remove one"
+                    t-att-aria-label="minus_button_title"
+                    t-att-title="minus_button_title"
+                    t-att-data-min-qty-message="combination_info.get('minimum_qty_reached_message')"
                 >
                     <i class="oi text-600" data-icon="remove"/>
                 </button>
+                <t t-set="minimum_qty" t-value="combination_info.get('minimum_qty') or 1"/>
                 <input
                     type="text"
                     t-attf-class="form-control quantity text-center border-0"
-                    data-min="1"
+                    t-att-data-min="minimum_qty"
                     name="add_qty"
-                    t-att-value="1"
+                    t-att-value="minimum_qty"
                     aria-label="Quantity"
                 />
                 <button

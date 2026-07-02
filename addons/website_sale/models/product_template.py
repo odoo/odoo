@@ -127,6 +127,7 @@ class ProductTemplate(models.Model):
     website_size_x = fields.Integer(string="Size X", default=1)
     website_size_y = fields.Integer(string="Size Y", default=1)
     website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name="product.ribbon")
+    minimum_quantity = fields.Integer(string="Minimum Quantity")
     website_sequence = fields.Integer(
         string="Website Sequence",
         help="Determine the display order in the Website E-commerce",
@@ -222,6 +223,12 @@ class ProductTemplate(models.Model):
                 RARE_DELIMITER,
             )
         )
+
+    # === CONSTRAINTS === #
+
+    _minimum_quantity_non_negative = models.Constraint(
+        "CHECK(minimum_quantity >= 0)", "The minimum quantity must be greater than or equal to 0."
+    )
 
     # === COMPUTE METHODS ===#
 
@@ -957,6 +964,18 @@ class ProductTemplate(models.Model):
 
         if not self.env.context.get("website_sale_product_page"):
             return combination_info
+
+        if product_or_template.minimum_quantity and product_or_template.is_product_variant:
+            product_sudo = product_or_template.sudo()
+            minimum_quantity = request.cart._get_remaining_minimum_qty(product_sudo, uom=uom)
+            if minimum_quantity > 1:
+                combination_info.update({
+                    "minimum_qty": minimum_quantity,
+                    "minimum_qty_reached_message": self.env._(
+                        "The minimum quantity to purchase this product is %(min_qty)s.",
+                        min_qty=minimum_quantity,
+                    ),
+                })
 
         if product_or_template.type == "combo":
             # The max quantity of a combo product is the max quantity of its combo with the lowest
