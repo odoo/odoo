@@ -105,6 +105,7 @@ export class GeneratePrinterData {
                 sold: processData(saleDetails.products),
                 refund: processData(saleDetails.refund_products),
                 payments: processedPayments,
+                date: new Date().toLocaleString(),
             },
         };
     }
