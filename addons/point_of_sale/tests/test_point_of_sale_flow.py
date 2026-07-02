@@ -2996,3 +2996,92 @@ class TestPointOfSaleFlow(CommonPosTest):
         used_accounts = current_session.move_id.line_ids.mapped('account_id')
         self.assertIn(mapped_expense, used_accounts)
         self.assertNotIn(default_expense, used_accounts)
+
+    def test_pos_return_valuation_avco(self):
+        """
+        Test that a PoS return correctly values the incoming stock move at the
+        historical cost of the original sale, even if the product's AVCO
+        standard_price has changed in the meantime.
+        """
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+
+        categ_avco = self.env['product.category'].create({
+            'name': 'AVCO Category',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+
+        product_avco = self.env['product.product'].create({
+            'name': 'AVCO Product',
+            'is_storable': True,
+            'categ_id': categ_avco.id,
+            'standard_price': 10.0,
+            'lst_price': 30.0,
+            'available_in_pos': True,
+        })
+
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product_avco.id,
+            'inventory_quantity': 10,
+            'location_id': stock_location.id,
+        }).action_apply_inventory()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'pricelist_id': self.pos_config_usd.pricelist_id.id,
+            'lines': [Command.create({
+                'name': "OL/0001",
+                'product_id': product_avco.id,
+                'price_unit': 30.0,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': [],
+                'price_subtotal': 30.0,
+                'price_subtotal_incl': 30.0,
+            })],
+            'amount_tax': 0.0,
+            'amount_total': 30.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}'
+        })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        out_move = order.picking_ids.move_ids
+        self.assertEqual(abs(out_move.value), 10.0, "Outgoing move should be valued at $10.")
+
+        # simulate an AVCO cost increase (e.g., new purchase of 10 units at $30)
+        product_avco.sudo().write({'standard_price': 20.0})
+
+        refund_action = order.refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        refund_payment.with_context(**payment_context).check()
+
+        in_move = refund.picking_ids.move_ids
+
+        self.assertEqual(
+            in_move.origin_returned_move_id.id,
+            out_move.id,
+            "The return move must be linked to the original outgoing move via origin_returned_move_id."
+        )
+
+        self.assertEqual(
+            abs(in_move.value),
+            10.0,
+            "The return move should be valued at the historical cost of the original sale ($10), not the current standard price ($20)."
+        )
