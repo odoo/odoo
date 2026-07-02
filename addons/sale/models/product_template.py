@@ -57,10 +57,9 @@ class ProductTemplate(models.Model):
         relation="product_optional_rel",
         column1="src_id",
         column2="dest_id",
-        string="Optional Products",
-        help="Optional Products are suggested "
-        "whenever the customer hits *Add to Cart* (cross-sell strategy, "
-        "e.g. for computers: warranty, software, etc.).",
+        string="Options",
+        help="Options are suggested whenever the customer hits *Add to Cart* "
+        "(cross-sell strategy, e.g. for computers: warranty, software, etc.).",
         check_company=True,
     )
     sale_delay = fields.Integer(
