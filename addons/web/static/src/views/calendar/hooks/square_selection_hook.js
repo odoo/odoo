@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useComponent, useRef } from "@web/owl2/utils";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";
@@ -205,18 +205,7 @@ export function useSquareSelection() {
         component.props.onSquareSelection([...allSelectedCells]);
     };
 
-    useLayoutEffect(
-        (el, hasMultiCreate) => {
-            if (!hasMultiCreate) {
-                return;
-            }
-            el && el.addEventListener("click", onClick);
-            return () => {
-                el && el.removeEventListener("click", onClick);
-            };
-        },
-        () => [ref.el, component.props.model.hasMultiCreate]
-    );
+    useListener(() => (component.props.model.hasMultiCreate ? ref.el : null), "click", onClick);
 
     let ctrlPressed = false;
     let shiftPressed = false;
