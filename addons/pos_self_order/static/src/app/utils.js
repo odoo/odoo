@@ -3,13 +3,8 @@ export const formatProductName = (product) => {
     return attributes ? `${product.name} (${attributes})` : product.name;
 };
 
-export const shouldShowMissingDetails = (product, selectedValues, scrollContainerRef) => {
-    if (!product || !product.attribute_line_ids.length) {
-        return false;
-    }
-
-    const scrollContainerEl = scrollContainerRef?.el;
-    if (!scrollContainerEl) {
+export const shouldShowMissingDetails = (product, selectedValues, scrollContainerEl) => {
+    if (!product || !product.attribute_line_ids.length || !scrollContainerEl) {
         return false;
     }
 

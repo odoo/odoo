@@ -56,7 +56,7 @@
                         </button>
                     </div>
                     <div data-tooltip="Import orders" data-tooltip-delay="0">
-                        <button t-custom-ref="import-order-input" class="btn btn-danger btn-sm text-nowrap">
+                        <button t-ref="this.importOrderInput" class="btn btn-danger btn-sm text-nowrap">
                             <i class="fa fa-upload" aria-hidden="true" /> Import data
                         </button>
                         <input t-on-change="this.importData" type="file" class="d-none" id="import-order-input" />

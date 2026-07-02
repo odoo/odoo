@@ -1,12 +1,10 @@
-import { useRef } from "@web/owl2/utils";
 import { onMounted, onWillUnmount, onPatched, useListener } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { normDeg } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 
 const MARGIN = 26;
 
-export function useActionMenu(refName, containerRef, getTarget, onPositionChanged) {
-    const actionMenuRef = useRef(refName);
+export function useActionMenu(actionMenuRef, containerRef, getTarget, onPositionChanged) {
     let hidden = false;
 
     function hide() {
@@ -14,8 +12,9 @@ export function useActionMenu(refName, containerRef, getTarget, onPositionChange
             return;
         }
         hidden = true;
-        if (actionMenuRef.el) {
-            actionMenuRef.el.style.display = "none";
+        const actionMenuEl = actionMenuRef();
+        if (actionMenuEl) {
+            actionMenuEl.style.display = "none";
         }
     }
 
@@ -112,13 +111,13 @@ export function useActionMenu(refName, containerRef, getTarget, onPositionChange
     }
 
     function positionMenu() {
-        const menuEl = actionMenuRef.el;
+        const menuEl = actionMenuRef();
         const { domElement: targetEl, floorElement } = getTarget();
         if (!menuEl || !targetEl || hidden || !floorElement) {
             return;
         }
 
-        const containerEl = containerRef.el;
+        const containerEl = containerRef();
         const containerRect = containerEl.getBoundingClientRect();
         const targetRect = targetEl.getBoundingClientRect();
         const menuRect = menuEl.getBoundingClientRect();
@@ -185,9 +184,10 @@ export function useActionMenu(refName, containerRef, getTarget, onPositionChange
 
     const scrollDebounced = useDebounced(() => {
         positionMenu();
-        if (actionMenuRef.el) {
-            actionMenuRef.el.style.opacity = "1";
-            actionMenuRef.el.style.pointerEvents = "auto";
+        const actionMenuEl = actionMenuRef();
+        if (actionMenuEl) {
+            actionMenuEl.style.opacity = "1";
+            actionMenuEl.style.pointerEvents = "auto";
         }
     }, 150);
 
@@ -196,9 +196,10 @@ export function useActionMenu(refName, containerRef, getTarget, onPositionChange
             return;
         }
 
-        if (actionMenuRef.el) {
-            actionMenuRef.el.style.opacity = "0";
-            actionMenuRef.el.style.pointerEvents = "none";
+        const actionMenuEl = actionMenuRef();
+        if (actionMenuEl) {
+            actionMenuEl.style.opacity = "0";
+            actionMenuEl.style.pointerEvents = "none";
         }
 
         scrollDebounced();
@@ -213,11 +214,11 @@ export function useActionMenu(refName, containerRef, getTarget, onPositionChange
     useListener(window, "resize", useDebounced(handleResize, 150));
 
     onMounted(() => {
-        containerRef.el?.addEventListener("scroll", handleScroll);
+        containerRef()?.addEventListener("scroll", handleScroll);
     });
 
     onWillUnmount(() => {
-        containerRef.el?.removeEventListener("scroll", handleScroll);
+        containerRef()?.removeEventListener("scroll", handleScroll);
     });
 
     onPatched(() => {
@@ -231,8 +232,9 @@ export function useActionMenu(refName, containerRef, getTarget, onPositionChange
                 return;
             }
             hidden = false;
-            if (actionMenuRef.el) {
-                actionMenuRef.el.style.display = "";
+            const actionMenuEl = actionMenuRef();
+            if (actionMenuEl) {
+                actionMenuEl.style.display = "";
             }
             positionMenu();
         },

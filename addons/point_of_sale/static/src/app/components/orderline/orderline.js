@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { useTimedPress } from "@point_of_sale/app/utils/use_timed_press";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -21,7 +20,7 @@ export class Orderline extends Component {
     });
 
     setup() {
-        this.root = useRef("root");
+        this.root = signal.ref();
         if (this.props.mode === "display") {
             useTimedPress(this.root, [
                 {

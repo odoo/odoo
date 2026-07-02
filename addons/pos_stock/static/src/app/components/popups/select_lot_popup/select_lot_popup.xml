@@ -7,7 +7,7 @@
                     <span t-out="this.props.title"/> <span class="fst-italic" t-out="this.props.name"/>
                 </h4>
             </t>
-            <div t-custom-ref="root" class="lot-container" t-on-keydown="this.onKeyDown">
+            <div t-ref="this.rootContainerRef" class="lot-container" t-on-keydown="this.onKeyDown">
                 <t t-if="!this.props.isSingleItem" t-foreach="this.state.values" t-as="v" t-key="v.id">
                     <div class="lot-item input-group mb-2">
                         <span class="form-control" t-out="v.text"/>

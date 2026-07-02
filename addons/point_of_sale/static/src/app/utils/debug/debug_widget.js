@@ -1,7 +1,7 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -18,7 +18,7 @@ export class DebugWidget extends Component {
         this.notification = useService("notification");
         this.numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
-        this.importOrderInput = useRef("import-order-input");
+        this.importOrderInput = signal.ref();
         this.state = proxy({
             isOpen: false,
             barcodeInput: "",
@@ -33,16 +33,10 @@ export class DebugWidget extends Component {
 
         useBus(this.numberBuffer, "buffer-update", this._onBufferUpdate);
         onMounted(() => {
-            if (!this.importOrderInput || !this.importOrderInput.el) {
-                return;
-            }
-
-            this.importOrderInput.el.addEventListener("click", this.handleFileOrderImport);
+            this.importOrderInput()?.addEventListener("click", this.handleFileOrderImport);
         });
         onWillDestroy(() => {
-            if (this.importOrderInput?.el) {
-                this.importOrderInput.el.removeEventListener("click", this.handleFileOrderImport);
-            }
+            this.importOrderInput()?.removeEventListener("click", this.handleFileOrderImport);
         });
 
         useLayoutEffect(

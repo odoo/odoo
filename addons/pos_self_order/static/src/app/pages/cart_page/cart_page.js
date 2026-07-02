@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
@@ -19,6 +19,7 @@ export class CartPage extends Component {
     static components = { OrderWidget };
     static props = {};
 
+    scrollContainerRef = signal.ref();
     setup() {
         this.selfOrder = useSelfOrder();
         this.dialog = useService("dialog");
@@ -28,7 +29,7 @@ export class CartPage extends Component {
             skipComboSuggestion: false,
         });
 
-        this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
+        this.scrollShadow = useScrollShadow(this.scrollContainerRef);
         useLayoutEffect(
             () => this.selfOrder.ensureDeliveryLine(),
             () => {

@@ -100,14 +100,14 @@ export class Navbar extends Component {
             this.checkInput(event);
         } else if (event.key === "Enter") {
             this.checkInput(event);
-            if (event.target === this.inputRef?.el) {
+            if (event.target === this.inputRef?.()) {
                 this.pos.searchProductsFromDB();
             }
         } else {
             if (!isSpecialKey) {
                 this.bufferedInput += event.key;
             }
-            if (document.activeElement == this.inputRef?.el) {
+            if (document.activeElement == this.inputRef?.()) {
                 this.checkInput(event);
             } else {
                 this.timeout = setTimeout(() => {
@@ -118,17 +118,18 @@ export class Navbar extends Component {
     }
 
     checkInput(event) {
+        const inputEl = this.inputRef?.();
         if (
             !this.ui.isSmall &&
-            this.inputRef?.el &&
-            document.activeElement !== this.inputRef.el &&
+            inputEl &&
+            document.activeElement !== inputEl &&
             !this.pos.getOrder()?.getSelectedOrderline() &&
             this.noOpenDialogs() &&
             event.key?.length == 1 &&
             this.bufferedInput.length < 3
         ) {
-            this.inputRef.el.focus();
-            this.inputRef.el.value = this.bufferedInput;
+            inputEl.focus();
+            inputEl.value = this.bufferedInput;
             event.preventDefault();
         }
         this.bufferedInput = "";

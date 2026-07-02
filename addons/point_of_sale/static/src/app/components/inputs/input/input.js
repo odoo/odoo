@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { onPatched, props, proxy, t } from "@odoo/owl";
+import { onPatched, props, proxy, signal, t } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input";
@@ -31,14 +30,15 @@ export const inputProps = {
 export class Input extends TModelInput {
     static template = "point_of_sale.input";
     props = props(inputProps);
+    inputRef = signal.ref();
     setup() {
         this.state = proxy({ isOpen: false });
         // Bind setValue to ensure that 'this' remains the component instance.
         this.setValue = debounce(this.setValue.bind(this), this.props.debounceMillis);
         const ref =
             (this.props.autofocus &&
-                useAutofocus({ refName: "input", mobile: this.props.autofocusMobile })) ||
-            useRef("input");
+                useAutofocus({ ref: this.inputRef, mobile: this.props.autofocusMobile })) ||
+            this.inputRef;
         this.props.getRef?.(ref);
         onPatched(() => {
             this.setValue.cancel(true);

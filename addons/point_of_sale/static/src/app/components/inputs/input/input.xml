@@ -19,7 +19,7 @@
                     <input class="o_input border-0 mx-2 text-body" type="text" style="min-width: 60px;"
                         t-on-focus="ev=>ev.target.select()"
                         t-att-placeholder="this.props.placeholder"
-                        t-custom-ref="input"
+                        t-ref="this.inputRef"
                         t-att-value="this.getValue()"
                         t-on-input="(event) => this.setValue(event.target.value)"
                         t-att-readonly="this.props.readonly"

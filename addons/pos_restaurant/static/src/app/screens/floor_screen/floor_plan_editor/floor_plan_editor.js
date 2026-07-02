@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { onMounted, onWillUnmount, useListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, onWillUnmount, signal, useListener } from "@odoo/owl";
 import { EditDecorProperties } from "./edit_decor/edit_decor";
 import { EditTableProperties } from "./edit_table/edit_table";
 import { EditFloorProperties } from "./edit_floor/edit_floor";
@@ -45,7 +45,7 @@ export class FloorPlanEditor extends FloorPlanBase {
 
     setup() {
         super.setup();
-        this.snapGuidesRef = useRef("snapGuides");
+        this.snapGuidesRef = signal.ref();
         this.dialog = useService("dialog");
         this.ui = useService("ui");
 
@@ -68,9 +68,9 @@ export class FloorPlanEditor extends FloorPlanBase {
 
         onMounted(() => {
             this.snapping = new Snapping(
-                this.snapGuidesRef.el,
+                this.snapGuidesRef(),
                 this.floorPlanStore,
-                this.containerRef.el
+                this.containerRef()
             );
             this.textEditHandler = new TextEditHandler({
                 canvasRef: this.canvasRef,
@@ -129,8 +129,9 @@ export class FloorPlanEditor extends FloorPlanBase {
             () => [this.floorPlanStore.elementEditMode]
         );
 
+        this.actionMenuRef = signal.ref();
         this.actionMenu = useActionMenu(
-            "actionMenu",
+            this.actionMenuRef,
             this.containerRef,
             () => ({ domElement: this.selectedDOMElement, floorElement: this.selectedElement }),
             (direction) => {
@@ -176,9 +177,9 @@ export class FloorPlanEditor extends FloorPlanBase {
         }
 
         if (
-            e.target === this.canvasRef.el ||
-            e.target === this.snapGuidesRef.el ||
-            e.target === this.containerRef.el
+            e.target === this.canvasRef() ||
+            e.target === this.snapGuidesRef() ||
+            e.target === this.containerRef()
         ) {
             this.floorPlanStore.selectElementByUuid(null);
             this.endEditFloor();
@@ -319,9 +320,10 @@ export class FloorPlanEditor extends FloorPlanBase {
     }
 
     getCenterPosition(width, height) {
-        const containerRect = this.containerRef.el.getBoundingClientRect();
-        const scrollLeft = this.containerRef.el.scrollLeft;
-        const scrollTop = this.containerRef.el.scrollTop;
+        const containerEl = this.containerRef();
+        const containerRect = containerEl.getBoundingClientRect();
+        const scrollLeft = containerEl.scrollLeft;
+        const scrollTop = containerEl.scrollTop;
 
         // Calculate the center point of the viewport
         const viewportCenterX = scrollLeft + containerRect.width / 2;
@@ -338,7 +340,7 @@ export class FloorPlanEditor extends FloorPlanBase {
         if (tables.length === 0) {
             return { left: TABLE_START_X, top: TABLE_START_Y };
         }
-        const canvasWidth = this.canvasRef.el.clientWidth;
+        const canvasWidth = this.canvasRef().clientWidth;
         const maxRight = canvasWidth - TABLE_SPACING;
         let currentRow = 0;
         while (currentRow < 100) {
@@ -447,7 +449,7 @@ export class FloorPlanEditor extends FloorPlanBase {
         // If element has transparent area, check if click is on border
         const transparentInfo = element.getTransparentAreaInfo();
         const borderInfo = element.getTransparentAreaBorderInfo();
-        const canvasRect = this.canvasRef.el.getBoundingClientRect();
+        const canvasRect = this.canvasRef().getBoundingClientRect();
 
         // Convert canvas coordinates to screen coordinates
         // transparentInfo.left/top are relative to canvas, canvasRect gives us canvas position in viewport
@@ -615,8 +617,9 @@ export class FloorPlanEditor extends FloorPlanBase {
 
         if (this.ui.size > SIZES.XS) {
             const bounds = this.selectedElement.getBounds();
-            const containerRect = this.containerRef.el.getBoundingClientRect();
-            const scrollLeft = this.containerRef.el.scrollLeft;
+            const containerEl = this.containerRef();
+            const containerRect = containerEl.getBoundingClientRect();
+            const scrollLeft = containerEl.scrollLeft;
             const elementRightInViewport = bounds.left + bounds.width - scrollLeft;
             let spaceLeft = 0;
             if (elementRightInViewport < containerRect.width) {
@@ -726,7 +729,7 @@ export class FloorPlanEditor extends FloorPlanBase {
         let maxW = floorSize.width;
         let maxH = floorSize.height;
 
-        const scrollContainerEl = this.containerRef.el;
+        const scrollContainerEl = this.containerRef();
 
         if (scrollContainerEl) {
             const containerWidth = scrollContainerEl.clientWidth;
@@ -750,8 +753,8 @@ export class FloorPlanEditor extends FloorPlanBase {
             el: this.getDOMFloorElement(this.floorPlanStore.selectedElementUuid),
             floorElement: this.floorPlanStore.getSelectedElement(),
             floorPlanStore: this.floorPlanStore,
-            canvasEl: this.canvasRef.el,
-            scrollContainerEl: this.containerRef.el,
+            canvasEl: this.canvasRef(),
+            scrollContainerEl: this.containerRef(),
             snapping: this.snapping,
             handles: this.handles,
             actionMenu: this.actionMenu,

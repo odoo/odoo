@@ -31,7 +31,7 @@
                     </t>
                     <t t-set="customValue" t-value="this.getCustomSelectedValue(attribute)"/>
                     <div t-if="customValue">
-                        <input type="text" t-custom-model="this.selectedValues.getCustomValue(attribute,customValue).custom_value" class="form-control px-3 py-3 rounded-4 bg-white shadow-sm mt-2" t-custom-ref="customValueInput" placeholder="Enter your custom value" />
+                        <input type="text" t-custom-model="this.selectedValues.getCustomValue(attribute,customValue).custom_value" class="form-control px-3 py-3 rounded-4 bg-white shadow-sm mt-2" placeholder="Enter your custom value" />
                     </div>
                 </div>
             </t>

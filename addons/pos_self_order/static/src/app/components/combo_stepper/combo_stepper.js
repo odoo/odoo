@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onPatched } from "@odoo/owl";
+import { Component, onMounted, onPatched, signal } from "@odoo/owl";
 import { useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
 import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";
@@ -9,8 +8,8 @@ export class Stepper extends Component {
     static props = ["steps", "selectedStep?", "onStepClicked"];
 
     setup() {
-        this.containerRef = useRef("stepperContainer");
-        this.scrollContainerRef = useRef("stepperScroll");
+        this.containerRef = signal.ref();
+        this.scrollContainerRef = signal.ref();
         useHorizontalScrollShadow(this.scrollContainerRef, this.containerRef);
         useDraggableScroll(this.scrollContainerRef);
 

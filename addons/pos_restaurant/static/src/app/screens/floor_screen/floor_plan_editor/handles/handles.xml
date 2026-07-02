@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.floor_editor.handle_overlay">
-        <div class="o_fp_handles position-absolute" t-custom-ref="handles"  t-att-class="{'d-none': !this.props.floorElement, 'o_fp_strict_mode': this.isStrictMode}"  style="display:none" t-on-mousedown.stop="this.startDrag" t-on-touchstart.stop="this.startDrag"  >
+        <div class="o_fp_handles position-absolute" t-ref="this.handleRef"  t-att-class="{'d-none': !this.props.floorElement, 'o_fp_strict_mode': this.isStrictMode}"  style="display:none" t-on-mousedown.stop="this.startDrag" t-on-touchstart.stop="this.startDrag"  >
 
             <t t-if="!this.resizeLineEnds and !this.resizeSides">
                  <div class="o_fp_handle o_fp_side o_fp_side_y n cursor-default" />
