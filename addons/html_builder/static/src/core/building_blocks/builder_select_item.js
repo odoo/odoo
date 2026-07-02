@@ -42,7 +42,6 @@ const builderSelectItemProps = {
     title: t.string().optional(),
     label: t.string().optional(),
     className: t.string().optional(),
-    slots: t.object().optional(),
 };
 
 export class BuilderSelectItemInternal extends Component {
@@ -115,7 +114,6 @@ export class BuilderSelectItem extends BuilderSelectableWrapperComponent {
     props = props({
         ltrRtlMapping: t.string().optional(),
         isLabelLinkedToContent: t.boolean().optional(),
-        slots: t.object().optional(),
         ...builderSelectItemProps,
     });
 }

@@ -28,11 +28,6 @@ export class SearchBarMenu extends Component {
         PropertiesGroupByItem,
     };
     props = props({
-        slots: t
-            .object({
-                default: t.any().optional(),
-            })
-            .optional(),
         dropdownState: dropdownProps.state,
         popoverWillCloseOnClickAway: t.function().optional(() => () => true),
     });

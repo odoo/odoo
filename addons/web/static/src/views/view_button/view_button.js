@@ -50,7 +50,6 @@ export const viewButtonProps = {
     title: t.any().optional(),
     style: t.any().optional(),
     string: t.any().optional(),
-    slots: t.any().optional(),
     onClick: t.any().optional(),
 };
 

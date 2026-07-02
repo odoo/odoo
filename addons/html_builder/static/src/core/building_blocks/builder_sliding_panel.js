@@ -30,7 +30,6 @@ export class BuilderSlidingPanel extends Component {
         fullHeight: t.boolean().optional(false),
         darkBackground: t.boolean().optional(false),
         openByDefault: t.boolean().optional(false),
-        slots: t.object().optional(),
     });
 
     setup() {

@@ -30,7 +30,6 @@ export class ControlPanel extends Component {
     };
     props = props({
         display: t.object().optional(DEFAULT_DISPLAY),
-        slots: t.object().optional(),
     });
 
     setup() {

@@ -5,7 +5,6 @@ export class BuilderNumberInputBase extends BuilderInputBase {
     static template = "html_builder.BuilderNumberInputBase";
     props = props({
         // BuilderInputBase props (converted inline)
-        slots: t.object().optional(),
         inputRef: t.function().optional(),
         // textInputBasePassthroughProps (converted inline)
         action: t.string().optional(),

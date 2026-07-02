@@ -33,7 +33,6 @@ export const autoCompleteProps = {
     dropdown: t.boolean().optional(true),
     autofocus: t.boolean().optional(),
     class: t.string().optional(),
-    slots: t.object().optional(),
     menuPositionOptions: t.object().optional({}),
     menuCssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
     selectOnBlur: t.boolean().optional(),

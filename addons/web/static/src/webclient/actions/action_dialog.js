@@ -8,6 +8,9 @@ export class ActionDialog extends Dialog {
     static template = "web.ActionDialog";
     static props = {
         ...dialogProps,
+        // ActionDialog renders `actionProps.ActionComponent` in place of the
+        // default slot, so unlike the base Dialog it may receive no slots.
+        // Override the required `dialogProps.slots` to make it optional.
         slots: t.any().optional(),
         withBodyPadding: t.boolean().optional(false),
     };

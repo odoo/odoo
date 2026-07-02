@@ -125,7 +125,6 @@ export const resizablePanelProps = {
     initialWidth: t.number().optional(),
     minWidth: t.number().optional(400),
     class: t.string().optional(""),
-    slots: t.object(),
     handleSide: t.selection(["start", "end"]).optional("end"),
 };
 

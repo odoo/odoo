@@ -30,7 +30,6 @@ export const formRendererProps = {
     readonly: t.boolean().optional(),
     saveRecord: t.function().optional(),
     setFieldAsDirty: t.function().optional(),
-    slots: t.object().optional(),
 };
 
 export class FormRenderer extends Component {
