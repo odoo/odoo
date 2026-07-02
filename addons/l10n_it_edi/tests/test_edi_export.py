@@ -176,6 +176,35 @@ class TestItEdiExport(TestItEdi):
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_non_latin_and_latin.xml')
 
+    def test_simplified_invoice_with_multiple_taxes_with_natura(self):
+        self.default_tax.write({'l10n_it_exempt_reason': 'N3.1'})
+        natura_tax = self.env['account.tax'].with_company(self.company).create({
+            'name': 'Exempt tax',
+            'amount_type': 'percent',
+            'amount': 4,
+        })
+
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.italian_partner_no_address_codice.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line_with_multiple_taxes',
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set((self.default_tax + natura_tax).ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        xml = invoice._l10n_it_edi_render_xml()
+        xml_root = etree.fromstring(xml)
+
+        natura_node = xml_root.xpath('.//DatiBeniServizi/Natura', namespaces={'p': 'http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0'})
+
+        self.assertTrue(natura_node, "The exported simplified invoice should contain a Natura node.")
+        self.assertEqual(natura_node[0].text, "N3.1")
+
     def test_invoice_below_400_codice_simplified(self):
         invoice = self.env['account.move'].with_company(self.company).create({
             'move_type': 'out_invoice',
