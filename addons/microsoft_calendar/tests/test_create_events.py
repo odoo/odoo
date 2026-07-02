@@ -565,6 +565,23 @@ class TestCreateEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     @patch.object(MicrosoftCalendarService, 'insert')
+    def test_discuss_videocall_synced_in_description(self, mock_insert, mock_get_events):
+        """ Outlook cannot render an Odoo Discuss meeting natively, so its join link must be
+        exposed in the event body sent to Outlook. """
+        discuss_url = f"{self.env['calendar.event'].get_base_url()}/{self.env['calendar.event'].DISCUSS_ROUTE}/azerty"
+        record = self.env["calendar.event"].with_user(self.organizer_user).create({
+            **self.simple_event_values,
+            'videocall_location': discuss_url,
+        })
+        mock_insert.return_value = ('123', '456')
+        mock_get_events.return_value = (MicrosoftEvent([]), None)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+        mock_insert.assert_called_once()
+        self.assertIn(record.videocall_location, mock_insert.call_args[0][0]['body']['content'])
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
     def test_no_videocall_hr_holidays(self, mock_insert, mock_get_events):
         """
         Test HR holidays synchronization with Microsoft Calendar, ensuring no online meetings
