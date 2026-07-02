@@ -1,4 +1,4 @@
-import { WORKER_STATE } from "@bus/services/worker_service";
+import { WORKER_STATE } from "@bus/services/worker_plugin";
 
 import { editComposer } from "@im_livechat/../tests/tours/livechat_tour_utils";
 

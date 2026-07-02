@@ -1100,7 +1100,10 @@ MISC_WHITELIST = {
 }
 # serviceName: [PluginClass, ImportPath]
 SERVICES_MAPPING = {
+    "bus.parameters": ['BusParametersPlugin', '@bus/bus_parameters_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
+    "multi_tab": ['MultiTabPlugin', '@bus/multi_tab_service'],
+    "worker_service": ['WorkerPlugin', '@bus/services/worker_plugin'],
 }
 
 

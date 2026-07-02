@@ -115,7 +115,7 @@ export const busService = {
             await workerService.ensureWorkerStarted();
             await workerService.registerHandler(handleMessage);
             workerService.send("BUS:INITIALIZE_CONNECTION", {
-                websocketURL: `${params.serverURL.replace("http", "ws")}/websocket?version=${
+                websocketURL: `${params.serverURL().replace("http", "ws")}/websocket?version=${
                     session.websocket_worker_version
                 }`,
                 db: session.db,
