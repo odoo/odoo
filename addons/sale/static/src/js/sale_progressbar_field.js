@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { progressBarField, ProgressBarField } from "@web/views/fields/progress_bar/progress_bar_field";
@@ -20,9 +19,9 @@ export class SaleProgressBarField extends ProgressBarField {
         this.actionService = useService("action");
         this.orm = useService("orm");
 
-        useLayoutEffect(() => {
-            this.state.isInvoicingTargetDefined = this.props.record.data[this.props.maxValueField];
-        });
+        // useLayoutEffect(() => {
+        //     this.state.isInvoicingTargetDefined = this.props.record.data[this.props.maxValueField];
+        // });
     }
 
     /**
