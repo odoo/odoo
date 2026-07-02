@@ -71,4 +71,16 @@ patch(TicketScreen.prototype, {
         }
         return super.onClickOrderline(...arguments);
     },
+    getRefundLinesDetails(refundDetail, destinationOrder) {
+        const refundLine = refundDetail.line;
+        const res = super.getRefundLinesDetails(...arguments);
+        Object.assign(res, {
+            is_reward_line: refundLine.is_reward_line,
+            reward_id: refundLine.reward_id,
+            coupon_id: refundLine.coupon_id,
+            points_cost: 0,
+            _reward_product_id: refundLine.reward_id?.reward_product_id,
+        });
+        return res;
+    },
 });

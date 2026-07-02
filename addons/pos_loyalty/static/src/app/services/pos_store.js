@@ -7,13 +7,13 @@ import { Domain, InvalidDomainError } from "@web/core/domain";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { Mutex } from "@web/core/utils/concurrency";
 import { serializeDate } from "@web/core/l10n/dates";
-import { omit } from "@web/core/utils/objects";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+const CONSOLE_COLOR = "#F5B427";
 
 let nextId = -1;
 const mutex = new Mutex();
 const updateRewardsMutex = new Mutex();
 const updateProgramsMutex = new Mutex();
-const pointsForProgramsCountedRules = {};
 const { DateTime } = luxon;
 
 export function loyaltyIdsGenerator() {
@@ -27,7 +27,7 @@ function inverted(fn) {
 patch(PosStore.prototype, {
     async setup() {
         this.couponByLineUuidCache = {};
-        this.rewardProductByLineUuidCache = {};
+        this.generatedCouponByOrderUuidCache = {};
         await super.setup(...arguments);
         await this.updateOrder(this.getOrder());
     },
@@ -55,6 +55,7 @@ patch(PosStore.prototype, {
     async resetPrograms() {
         const order = this.getOrder();
         order._resetPrograms();
+        this._resetLinkedCouponPoints(order);
         await this.orderUpdateLoyaltyPrograms();
         await this.updateRewards();
     },
@@ -109,11 +110,16 @@ patch(PosStore.prototype, {
         }
         // This type of coupons don't need to really exist up until validating the order, so no need to cache
         return this.models["loyalty.card"].create({
-            id: loyaltyIdsGenerator(),
             code: null,
             program_id: program,
             partner_id: order.partner_id,
             points: 0,
+            source_pos_order_id: order,
+            expiration_date:
+                program.program_type !== "loyalty" && program.date_to
+                    ? serializeDate(program.date_to)
+                    : null,
+            program_type: program.program_type,
         });
     },
     /**
@@ -132,27 +138,25 @@ patch(PosStore.prototype, {
         if (!order || order.delivery_provider_id) {
             return;
         }
-        const changesPerProgram = {};
+        const couponsPerProgram = {};
         const programsToCheck = new Set();
         // By default include all programs that are considered 'applicable'
         for (const program of this.models["loyalty.program"].getAll()) {
             if (order._programIsApplicable(program)) {
-                programsToCheck.add(program.id);
+                programsToCheck.add(program);
             }
         }
-        for (const pe of Object.values(order.uiState.couponPointChanges)) {
-            if (!changesPerProgram[pe.program_id]) {
-                changesPerProgram[pe.program_id] = [];
-                programsToCheck.add(pe.program_id);
+        for (const card of order.loyalty_card_ids) {
+            if (!couponsPerProgram[card.program_id.id]) {
+                couponsPerProgram[card.program_id.id] = [];
+                programsToCheck.add(card.program_id);
             }
-            changesPerProgram[pe.program_id].push(pe);
+            couponsPerProgram[card.program_id.id].push(card);
         }
         for (const coupon of order._code_activated_coupon_ids) {
-            programsToCheck.add(coupon.program_id.id);
+            programsToCheck.add(coupon.program_id);
         }
-        const programs = [...programsToCheck].map((programId) =>
-            this.models["loyalty.program"].get(programId)
-        );
+        const programs = [...programsToCheck];
         const pointsAddedPerProgram = order.pointsForPrograms(programs);
         for (const program of this.models["loyalty.program"].getAll()) {
             // Future programs may split their points per unit paid (gift cards for example), consider a non applicable program to give no points
@@ -164,33 +168,75 @@ patch(PosStore.prototype, {
             if (program.is_nominative && !pointsAdded.length && order.getPartner()) {
                 pointsAdded.push({ points: 0 });
             }
-            const oldChanges = changesPerProgram[program.id] || [];
+            const oldCards = couponsPerProgram[program.id] || [];
             // Update point changes for those that exist
-            for (
-                let idx = 0;
-                idx < Math.min(pointsAdded.length, oldChanges.length) && !oldChanges[idx].manual;
-                idx++
+            pointsAdded.sort((a, b) => (a.code || "").localeCompare(b.code || ""));
+            oldCards.sort((a, b) => (a.code || "").localeCompare(b.code || ""));
+            if (pointsAdded.length === oldCards.length) {
+                for (let idx = 0; idx < pointsAdded.length; idx++) {
+                    const card = oldCards[idx];
+                    card?.update({
+                        points: card.points
+                            ? parseFloat(card.points) -
+                              parseFloat(card._temp_points || 0) +
+                              parseFloat(pointsAdded[idx].points)
+                            : parseFloat(card.points) + parseFloat(pointsAdded[idx].points),
+                        _temp_points: parseFloat(pointsAdded[idx].points),
+                    });
+                }
+            } else if (
+                pointsAdded.length < oldCards.length ||
+                !order._programIsApplicable(program)
             ) {
-                Object.assign(oldChanges[idx], pointsAdded[idx]);
-            }
-            if (pointsAdded.length < oldChanges.length || !order._programIsApplicable(program)) {
-                const removedIds = oldChanges.map((pe) => pe.coupon_id);
-                order.uiState.couponPointChanges = Object.fromEntries(
-                    Object.entries(order.uiState.couponPointChanges).filter(
-                        ([k, pe]) => !removedIds.includes(pe.coupon_id)
-                    )
-                );
-            } else if (pointsAdded.length > oldChanges.length) {
+                // Handle case where points entries have been reduced or program is no longer applicable
+                // This block removes loyalty cards that are no longer needed and updates coupon point changes
+                // Identify coupon IDs that should be removed (old entries not in the new points list)
+                const removedCards = [];
+
+                // Count of points (entries without a code) for matching
+                const autoPointCounts = pointsAdded
+                    .filter((pa) => !pa.code)
+                    .reduce((acc, pa) => {
+                        acc[pa.points] = (acc[pa.points] || 0) + 1;
+                        return acc;
+                    }, {});
+
+                // Collect all manual gift card codes from the new points
+                const giftCodes = pointsAdded.filter((pa) => pa.code).map((pa) => pa.code);
+
+                // Track matched points to ensure correct count during filtering
+                const matchedAutoPoints = {};
+
+                for (const card of oldCards) {
+                    if (card.program_type === "gift_card" && card.code) {
+                        if (giftCodes.includes(card.code)) {
+                            continue;
+                        } else {
+                            removedCards.push(card);
+                        }
+                    } else {
+                        const matchedCount = matchedAutoPoints[card._temp_points] || 0;
+                        const availableCount = autoPointCounts[card._temp_points] || 0;
+                        if (matchedCount < availableCount) {
+                            matchedAutoPoints[card._temp_points] = matchedCount + 1;
+                        } else {
+                            removedCards.push(card);
+                        }
+                    }
+                }
+                order.loyalty_card_ids = [["unlink", ...removedCards]];
+            } else if (pointsAdded.length > oldCards.length) {
+                // Handle case where new points entries have been added
                 const pointsCount = pointsAdded.reduce((acc, pointObj) => {
-                    const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}_${barcode}` : `${points}`;
+                    const { points, code = "" } = pointObj;
+                    const key = code ? `${points}_${code}` : `${points}`;
                     acc[key] = (acc[key] || 0) + 1;
                     return acc;
                 }, {});
 
-                oldChanges.forEach((pointObj) => {
-                    const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}_${barcode}` : `${points}`;
+                oldCards.forEach((card) => {
+                    const { points, code = "" } = card;
+                    const key = code ? `${points}_${code}` : `${points}`;
                     if (pointsCount[key] && pointsCount[key] > 0) {
                         pointsCount[key]--;
                     }
@@ -199,32 +245,27 @@ patch(PosStore.prototype, {
                 // Get new points added which are not in oldChanges
                 const newPointsAdded = [];
                 Object.keys(pointsCount).forEach((key) => {
-                    const [points, barcode = ""] = key.split("_");
+                    const [points, code = ""] = key.split("_");
                     while (pointsCount[key] > 0) {
-                        newPointsAdded.push({ points: Number(points), barcode });
+                        newPointsAdded.push({ points: Number(points), code });
                         pointsCount[key]--;
                     }
                 });
 
                 for (const pa of newPointsAdded) {
                     const coupon = await this.couponForProgram(program);
-                    const couponPointChange = {
-                        points: pa.points,
-                        program_id: program.id,
-                        coupon_id: coupon.id,
-                        barcode: pa.barcode,
-                        appliedRules: pointsForProgramsCountedRules[program.id],
-                    };
+                    order.loyalty_card_ids = [["link", coupon]];
+                    coupon.update({
+                        code: pa.code || coupon.code,
+                        partner_id: order.getPartner(),
+                        points: coupon.points + pa.points,
+                        _temp_points: pa.points,
+                    });
                     if (program && program.program_type === "gift_card") {
-                        couponPointChange.product_id = order.getSelectedOrderline()?.product_id.id;
-                        couponPointChange.expiration_date = serializeDate(
+                        coupon.expiration_date = serializeDate(
                             luxon.DateTime.now().plus({ year: 1 })
                         );
-                        couponPointChange.code = order.getSelectedOrderline()?.gift_code;
-                        couponPointChange.partner_id = order.getPartner()?.id;
                     }
-
-                    order.uiState.couponPointChanges[coupon.id] = couponPointChange;
                 }
             }
         }
@@ -355,11 +396,6 @@ patch(PosStore.prototype, {
                 return;
             }
             order.invalidCoupons = false;
-            order.uiState.couponPointChanges = Object.fromEntries(
-                Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) =>
-                    this.models["loyalty.card"].get(pe.coupon_id)
-                )
-            );
         });
     },
     async applyDiscount(percent, type = "percent", order = this.getOrder()) {
@@ -501,10 +537,14 @@ patch(PosStore.prototype, {
         if (!order) {
             return result;
         }
-        const allCouponPrograms = Object.values(order.uiState.couponPointChanges)
-            .map((pe) => ({
-                program_id: pe.program_id,
-                coupon_id: pe.coupon_id,
+        const excludedCouponIds = order.loyalty_card_ids
+            .filter((lc) => lc.program_type === "gift_card" && lc.code)
+            .map((lc) => lc.id);
+        const allCouponPrograms = order.loyalty_card_ids
+            .filter((lc) => !excludedCouponIds.includes(lc.id))
+            .map((lc) => ({
+                program_id: lc.program_id.id,
+                coupon_id: lc.id,
             }))
             .concat(
                 order._code_activated_coupon_ids.map((coupon) => ({
@@ -666,24 +706,40 @@ patch(PosStore.prototype, {
      */
     async fetchLoyaltyCard(programId, partnerId) {
         const coupon = this.models["loyalty.card"].find(
-            (c) => c.partner_id?.id === partnerId && c.program_id?.id === programId
+            (c) => c.partner_id?.id === partnerId && c.program_id?.id === programId && c.active
         );
         if (coupon) {
             return coupon;
         }
-        const fetchedCoupons = await this.fetchCoupons([
-            ["partner_id", "=", partnerId],
-            ["program_id", "=", programId],
-        ]);
+        let fetchedCoupons = [];
+        try {
+            fetchedCoupons = await this.fetchCoupons([
+                ["partner_id", "=", partnerId],
+                ["program_id", "=", programId],
+            ]);
+        } catch (error) {
+            logPosMessage(
+                "Store",
+                "fetchLoyaltyCard",
+                "Error while fetching coupons",
+                CONSOLE_COLOR,
+                [error]
+            );
+        }
         let dbCoupon = fetchedCoupons.length > 0 ? fetchedCoupons[0] : null;
         if (!dbCoupon) {
+            const program = this.models["loyalty.program"].get(programId);
             dbCoupon = await this.models["loyalty.card"].create({
-                id: loyaltyIdsGenerator(),
                 code: null,
-                program_id: this.models["loyalty.program"].get(programId),
+                program_id: program,
                 partner_id: this.models["res.partner"].get(partnerId),
                 points: 0,
-                expiration_date: null,
+                expiration_date:
+                    program.program_type !== "loyalty" && program.date_to
+                        ? serializeDate(program.date_to)
+                        : null,
+                source_pos_order_id: this.getOrder(),
+                program_type: program.program_type,
             });
         }
         return dbCoupon;
@@ -691,190 +747,124 @@ patch(PosStore.prototype, {
     getLoyaltyCards(partner) {
         const loyaltyCards = [];
         if (this.partnerId2CouponIds[partner.id]) {
-            this.partnerId2CouponIds[partner.id].forEach((couponId) =>
-                loyaltyCards.push(this.models["loyalty.card"].get(couponId))
-            );
+            this.partnerId2CouponIds[partner.id].forEach((couponId) => {
+                const loyaltyCard = this.models["loyalty.card"].getBy(
+                    typeof couponId === "number" ? "id" : "uuid",
+                    couponId
+                );
+                if (loyaltyCard) {
+                    loyaltyCards.push(loyaltyCard);
+                }
+            });
         }
         return loyaltyCards;
     },
     /**
-     * IMPROVEMENT: It would be better to update the local order object instead of creating a new one.
-     *   - This way, we don't need to remember the lines linked to negative coupon ids and relink them after pushing the order.
+     * Caches loyalty reward lines and cards before syncing orders to the server.
      */
     async preSyncAllOrders(orders) {
         await super.preSyncAllOrders(orders);
 
         for (const order of orders) {
-            Object.assign(
-                this.couponByLineUuidCache,
-                order.lines.reduce((agg, line) => {
-                    if (line.coupon_id && line.coupon_id.id < 0) {
-                        return { ...agg, [line.uuid]: line.coupon_id.id };
-                    } else {
-                        return agg;
-                    }
-                }, {})
+            if (order.state !== "draft") {
+                continue;
+            }
+            const rewardLines = order._get_reward_lines();
+
+            if (!rewardLines.length && !order.loyalty_card_ids.length) {
+                continue;
+            }
+            this.couponByLineUuidCache[order.uuid] = rewardLines.map((l) => l.uuid);
+            rewardLines.forEach((line) => {
+                line.order_id = false;
+                line.course_id = false;
+            });
+
+            this.generatedCouponByOrderUuidCache[order.uuid] = order.loyalty_card_ids.map(
+                (lc) => lc.uuid
             );
-            Object.assign(
-                this.rewardProductByLineUuidCache,
-                order.lines.reduce((agg, line) => {
-                    if (line._reward_product_id) {
-                        return { ...agg, [line.uuid]: line._reward_product_id.id };
-                    } else {
-                        return agg;
-                    }
-                }, {})
-            );
+            order.loyalty_card_ids = [];
         }
     },
+    /**
+     * Restores cached loyalty data to orders after sync and processes post-sync operations.
+     */
     async postSyncAllOrders(orders) {
         super.postSyncAllOrders(orders);
-
         for (const order of orders) {
-            for (const line of order.lines) {
-                if (line.uuid in this.couponByLineUuidCache) {
-                    line.coupon_id = this.models["loyalty.card"].get(
-                        this.couponByLineUuidCache[line.uuid]
-                    );
-                }
+            if (order.state !== "draft") {
+                order.uiState.validFinalizedSyncCount++;
             }
-            for (const line of order.lines) {
-                if (line.uuid in this.rewardProductByLineUuidCache) {
-                    line._reward_product_id = this.models["product.product"].get(
-                        this.rewardProductByLineUuidCache[line.uuid]
-                    );
-                }
+            const orderUuid = order.uuid;
+
+            if (this.couponByLineUuidCache[orderUuid]) {
+                this.models["pos.order.line"]
+                    .filter((line) => this.couponByLineUuidCache[orderUuid].includes(line.uuid))
+                    ?.forEach((line) => (line.order_id = order));
             }
 
-            if (!["draft", "cancel"].includes(order.state)) {
-                await this.postProcessLoyalty(order);
+            if (this.generatedCouponByOrderUuidCache[orderUuid]) {
+                const loyaltyCards = this.models["loyalty.card"].filter((lc) =>
+                    this.generatedCouponByOrderUuidCache[orderUuid].includes(lc.uuid)
+                );
+                order.loyalty_card_ids = ["link", ...loyaltyCards];
+            }
+
+            if (["draft", "cancel"].includes(order.state)) {
+                continue;
+            }
+            await this._postProcessLoyalty(order);
+        }
+    },
+    /**
+     * Prepares coupon information and prints loyalty reports for the completed order.
+     */
+    async _postProcessLoyalty(order) {
+        order.new_coupon_info = order.loyalty_card_ids
+            .filter(
+                ({ program_id }) =>
+                    program_id &&
+                    program_id.applies_on === "future" &&
+                    !["gift_card", "ewallet"].includes(program_id.program_type)
+            )
+            .map(({ program_id, expiration_date, code, _barcode_base64 }) => ({
+                program_name: program_id.name,
+                expiration_date,
+                code,
+                barcode_base64: _barcode_base64,
+            }));
+        if (order.uiState.validFinalizedSyncCount === 1) {
+            const reportPerCoupons = order.loyalty_card_ids.reduce((acc, { id, program_id }) => {
+                const reportId = program_id?.pos_report_print_id;
+                if (!reportId) {
+                    return acc;
+                }
+                if (acc[reportId]) {
+                    acc[reportId].push(id);
+                } else {
+                    acc[reportId] = [id];
+                }
+                return acc;
+            }, {});
+            for (const [actionId, active_ids] of Object.entries(reportPerCoupons)) {
+                await this.env.services.report.doAction(actionId, active_ids);
             }
         }
     },
-    async postProcessLoyalty(order) {
-        // Compile data for our function
-        const ProgramModel = this.models["loyalty.program"];
-        const rewardLines = order._get_reward_lines();
-        const partner = order.getPartner();
-        let couponData = Object.values(order.uiState.couponPointChanges).reduce((agg, pe) => {
-            const netPoints =
-                pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id));
-            agg[pe.coupon_id] = Object.assign({}, pe, {
-                points: netPoints,
-                won: netPoints,
-                spent: 0,
-            });
-            const program = ProgramModel.get(pe.program_id);
-            if (
-                (program.is_nominative || program.program_type == "next_order_coupons") &&
-                partner
-            ) {
-                agg[pe.coupon_id].partner_id = partner.id;
-            }
-            if (program.program_type != "loyalty") {
-                agg[pe.coupon_id].expiration_date = program.date_to || pe.expiration_date;
-            }
-            return agg;
-        }, {});
-        for (const line of rewardLines) {
-            const reward = line.reward_id;
-            const couponId = line.coupon_id.id;
-            if (!couponData[couponId]) {
-                couponData[couponId] = {
-                    points: 0,
-                    spent: 0,
-                    won: 0,
-                    program_id: reward.program_id.id,
-                    coupon_id: couponId,
-                    barcode: false,
-                };
-                if (reward.program_type != "loyalty") {
-                    couponData[couponId].expiration_date = reward.program_id.date_to;
-                }
-            }
-            if (!couponData[couponId].line_codes) {
-                couponData[couponId].line_codes = [];
-            }
-            if (!couponData[couponId].line_codes.includes(line.reward_identifier_code)) {
-                !couponData[couponId].line_codes.push(line.reward_identifier_code);
-            }
-            couponData[couponId].points -= line.points_cost;
-            couponData[couponId].spent += line.points_cost;
-        }
-        // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
-        couponData = Object.fromEntries(
-            Object.entries(couponData)
-                .filter(([key, value]) => {
-                    const program = ProgramModel.get(value.program_id);
-                    if (program.applies_on === "current") {
-                        return value.line_codes && value.line_codes.length;
-                    }
-                    return true;
-                })
-                .map(([key, value]) => [key, omit(value, "appliedRules")])
-        );
-        if (Object.keys(couponData || {}).length > 0) {
-            const payload = await this.data.call("pos.order", "confirm_coupon_programs", [
-                order.id,
-                couponData,
-            ]);
-            if (payload.coupon_updates) {
-                for (const couponUpdate of payload.coupon_updates) {
-                    // The following code is a workaround to update the id of an existing record.
-                    // It's so ugly.
-                    // FIXME: Find a better way of updating the id of an existing record.
-                    // It would be better if we can do this:
-                    // const coupon = this.models["loyalty.card"].get(couponUpdate.old_id);
-                    // coupon.update({ id: couponUpdate.id, points: couponUpdate.points })
-
-                    if (couponUpdate.old_id == couponUpdate.id) {
-                        // just update the points
-                        const coupon = this.models["loyalty.card"].get(couponUpdate.id);
-
-                        if (!coupon) {
-                            await this.data.read("loyalty.card", [couponUpdate.id]);
-                        } else {
-                            coupon.points = couponUpdate.points;
-                        }
-                    } else {
-                        // create a new coupon and delete the old one
-                        const coupon = this.models["loyalty.card"].create({
-                            id: couponUpdate.id,
-                            code: couponUpdate.code,
-                            program_id: this.models["loyalty.program"].get(couponUpdate.program_id),
-                            partner_id: this.models["res.partner"].get(couponUpdate.partner_id),
-                            points: couponUpdate.points,
-                        });
-
-                        // Before deleting the old coupon, update the order lines that use it.
-                        for (const line of order.lines) {
-                            if (line.coupon_id?.id == couponUpdate.old_id) {
-                                line.coupon_id = coupon;
-                            }
-                        }
-
-                        this.models["loyalty.card"].get(couponUpdate.old_id)?.delete();
-                    }
-                }
-            }
-            // Update the usage count since it is checked based on local data
-            if (payload.program_updates) {
-                for (const programUpdate of payload.program_updates) {
-                    const program = ProgramModel.get(programUpdate.program_id);
-                    if (program) {
-                        program.total_order_count = programUpdate.usages;
-                    }
-                }
-            }
-            if (payload.coupon_report && Object.keys(payload.coupon_report).length > 0) {
-                for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
-                    await this.env.services.report.doAction(actionId, active_ids);
-                }
-                order.has_pdf_gift_card = Object.keys(payload.coupon_report).length > 0;
-            }
-            if (payload.new_coupon_info?.length) {
-                order.new_coupon_info = payload.new_coupon_info;
+    _resetLinkedCouponPoints(order) {
+        for (const loyaltyCard of order.loyalty_card_ids) {
+            loyaltyCard.points -= loyaltyCard._temp_points || 0;
+            loyaltyCard._temp_points = 0;
+            if (!loyaltyCard.points) {
+                loyaltyCard.delete();
             }
         }
+    },
+    async beforeDeleteOrder(order, options) {
+        const res = await super.beforeDeleteOrder(...arguments);
+        if (res) {
+            this._resetLinkedCouponPoints(order);
+        }
+        return res;
     },
 });

@@ -12,23 +12,10 @@ patch(PosOrderline, {
             type: "many2one",
             local: true,
         },
-        gift_code: {
+        _gift_code: {
             model: "pos.order.line",
-            name: "gift_code",
+            name: "_gift_code",
             type: "char",
-            local: true,
-        },
-        _gift_barcode: {
-            model: "pos.order.line",
-            name: "_gift_barcode",
-            type: "char",
-            local: true,
-        },
-        _gift_card_id: {
-            model: "pos.order.line",
-            name: "_gift_card_id",
-            relation: "loyalty.card",
-            type: "many2one",
             local: true,
         },
         _reward_product_id: {
@@ -45,12 +32,6 @@ patch(PosOrderline.prototype, {
     setOptions(options) {
         if (options.eWalletGiftCardProgram) {
             this._e_wallet_program_id = options.eWalletGiftCardProgram;
-        }
-        if (options.giftBarcode) {
-            this._gift_barcode = options.giftBarcode;
-        }
-        if (options.giftCardId) {
-            this._gift_card_id = options.giftCardId;
         }
         return super.setOptions(...arguments);
     },
@@ -91,7 +72,8 @@ patch(PosOrderline.prototype, {
     canBeMergedWith(orderline) {
         return (
             super.canBeMergedWith(...arguments) &&
-            this._e_wallet_program_id === orderline._e_wallet_program_id
+            this._e_wallet_program_id === orderline._e_wallet_program_id &&
+            this._gift_code === orderline._gift_code
         );
     },
     isServiceFeeApplicable() {

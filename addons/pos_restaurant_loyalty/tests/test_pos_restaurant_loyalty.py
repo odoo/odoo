@@ -52,6 +52,10 @@ class TestPoSRestaurantLoyalty(TestFrontend):
                 'discount_applicability': 'order',
             })],
         })
+        self.pos_config.write({
+            'preparation_printer_ids': False,
+            'other_devices': False,
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_loyalty_reward_with_courses')
         orders = self.pos_config.current_session_id.order_ids

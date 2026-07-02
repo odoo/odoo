@@ -24,6 +24,7 @@ export class LoyaltyProgram extends models.ServerModel {
             "trigger_product_ids",
             "rule_ids",
             "reward_ids",
+            "total_order_count",
         ];
     }
 
@@ -39,7 +40,7 @@ export class LoyaltyProgram extends models.ServerModel {
             date_to: false,
             limit_usage: false,
             max_usage: 0,
-            is_nominative: false,
+            is_nominative: true,
             portal_visible: true,
             portal_point_name: "Points",
             trigger_product_ids: [],
@@ -78,8 +79,8 @@ export class LoyaltyProgram extends models.ServerModel {
             is_nominative: false,
             portal_visible: true,
             portal_point_name: "Gift Card Points",
-            trigger_product_ids: [],
-            rule_ids: [1],
+            trigger_product_ids: [1],
+            rule_ids: [5],
             reward_ids: [],
         },
         {
