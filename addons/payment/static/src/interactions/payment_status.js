@@ -1,4 +1,5 @@
 import { rpc } from "@web/core/network/rpc";
+import { redirect } from "@web/core/utils/urls";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 
@@ -16,7 +17,7 @@ export class PaymentStatus extends Interaction {
 
         // Redirect automatically after 10 seconds to avoid waiting for post-processing forever.
         this.redirectTimeout = this.waitForTimeout(() => {
-            this.redirectToLandingPage();
+            this.redirectToLandingPage(this.el.dataset.landingRoute);
         }, 10000);
     }
 
@@ -38,25 +39,25 @@ export class PaymentStatus extends Interaction {
         const postProcessingData = await rpc(
             "/payment/post_process", { csrf_token: odoo.csrf_token }
         );
-        const { provider_code, state, is_post_processed } = postProcessingData;
+        const { provider_code, state, is_post_processed, landing_route } = postProcessingData;
         if (is_post_processed && PaymentStatus.getFinalStates(provider_code).has(state)) {
-            this.redirectToLandingPage();
+            this.redirectToLandingPage(landing_route);
         }
     }
 
     /**
      * Clean up bus subscriptions and the timer and redirect to the landing route.
-     *
+     * @param {string} landingRoute - The landing route to be redirected to.
      * @returns {void}
      */
-    redirectToLandingPage() {
+    redirectToLandingPage(landingRoute) {
         // Cleanup before leaving the page, make sure bus listener is disposed properly on redirect.
         clearTimeout(this.redirectTimeout);
         this.busService.unsubscribe(this.notificationType, this.onProcessingCompleteBind);
         this.busService.deleteChannel(this.notificationChannel);
 
         // Redirect the user to the landing route
-        window.location = this.el.dataset.landingRoute;
+        redirect(landingRoute);
     }
 
     /**
