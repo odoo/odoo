@@ -28,8 +28,6 @@ export class ProductToCartAction extends BuilderAction {
     static id = "productToCart";
     static dependencies = ["builderActions"];
     apply({ editingElement, value }) {
-        const classAction = this.dependencies.builderActions.getAction("classAction");
-
         const { id, type, product_variant_ids } = JSON.parse(value);
 
         editingElement.dataset.productTemplate = id;
@@ -46,10 +44,7 @@ export class ProductToCartAction extends BuilderAction {
         } else {
             delete buttonEl.dataset.productId;
         }
-        classAction.clean({
-            editingElement: buttonEl,
-            params: { mainParam: "disabled" },
-        });
+        buttonEl.removeAttribute("disabled");
         if (!oneVariant) {
             this.dependencies.builderActions
                 .getAction("addToCartAction")
@@ -57,7 +52,6 @@ export class ProductToCartAction extends BuilderAction {
         }
     }
     clean({ editingElement }) {
-        const classAction = this.dependencies.builderActions.getAction("classAction");
         delete editingElement.dataset.productTemplate;
         delete editingElement.dataset.productType;
         delete editingElement.dataset.variants;
@@ -66,10 +60,7 @@ export class ProductToCartAction extends BuilderAction {
         delete buttonEl.dataset.productTemplateId;
         delete buttonEl.dataset.productType;
         delete buttonEl.dataset.productId;
-        classAction.apply({
-            editingElement: buttonEl,
-            params: { mainParam: "disabled" },
-        });
+        buttonEl.setAttribute("disabled", "");
         this.dependencies.builderActions
             .getAction("addToCartAction")
             .resetDefaultAction(editingElement);
