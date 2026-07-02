@@ -1,7 +1,9 @@
 import logging
 import uuid
+import zlib
 from base64 import b64decode
 from datetime import timedelta
+from io import BytesIO
 from json import JSONDecodeError
 from urllib.parse import quote, urlencode, urlparse
 
@@ -58,6 +60,12 @@ class AccountMove(models.Model):
         help="This is the unique identifier (UUID) used to link this Odoo document with the Nilvera system. \n"
         "This record ensures every new document has its own unique ID for tracking.",
     )
+    l10n_tr_nilvera_draft_sync_hash = fields.Char(
+        copy=False,
+        readonly=True,
+        help="Hash of the UBL XML last uploaded to the Nilvera draft. Compared when "
+             "sending to detect edits that still need to be pushed to the portal.",
+    )
 
     l10n_tr_nilvera_send_status = fields.Selection(
         selection=[
@@ -71,6 +79,7 @@ class AccountMove(models.Model):
             ('commercial_approved', "Approved"),
             ('commercial_answered_automatically', "Approved Automatically"),
             ('commercial_rejected', "Rejected"),
+            ('draft_sent', "Sent as Draft"),
         ],
         string="Nilvera Status",
         readonly=True,
@@ -85,7 +94,9 @@ class AccountMove(models.Model):
              "- Error: The submission failed (check chatter for details). \n"
              "- Approved: Commercial Invoice is approved by recipient.\n"
              "- Approved Automatically: Commercial Invoice is automatically approved after 8 days without a response.\n"
-             "- Rejected: Commercial Invoice is rejected by recipient.",
+             "- Rejected: Commercial Invoice is rejected by recipient.\n"
+             "- Sent as Draft: Uploaded to Nilvera as a draft."
+             "It is approved and transmitted to GİB when the invoice is sent.",
     )
     l10n_tr_gib_invoice_scenario = fields.Selection(
         selection=[
@@ -327,7 +338,7 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type in {'out_invoice', 'in_invoice'}):
             if move.l10n_tr_nilvera_send_status == 'error':
                 move.message_post(body=_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
-            elif move.l10n_tr_nilvera_send_status not in {"not_sent", "commercial_rejected"}:
+            elif move.l10n_tr_nilvera_send_status not in {'not_sent', 'draft_sent', 'commercial_rejected'}:
                 raise UserError(_("You cannot reset to draft an entry that has been sent/received from Nilvera."))
         return super().button_draft()
 
@@ -390,6 +401,199 @@ class AccountMove(models.Model):
             xml_file=xml_file,
             endpoint="/earchive/Send/Xml",
         )
+
+    def _l10n_tr_nilvera_check_draft_precondition(self):
+        self.ensure_one()
+        if not (
+            self.country_code == 'TR'
+            and self.move_type == 'out_invoice'
+            and self.l10n_tr_is_export_invoice
+            and self.l10n_tr_nilvera_customer_status in {'einvoice', 'earchive'}
+            and self.state == 'draft'
+        ):
+            raise UserError(self.env._(
+                "Sending as draft is only available for export invoices in Draft state "
+                "whose customer's Nilvera status has been verified."
+            ))
+
+        if missing_ctsp := self.invoice_line_ids.filtered(
+            lambda ln: ln.display_type not in {"line_note", "line_section"} and not ln.l10n_tr_ctsp_number
+        ):
+            raise UserError(self.env._(
+                "Each export invoice line must have a CTSP (GTİP) Number before it can be sent as a draft.\n"
+                "Missing on: %s",
+                ", ".join(line.name or line.product_id.display_name or 'Unnamed Line' for line in missing_ctsp),
+            ))
+
+    def _l10n_tr_nilvera_get_series_prefix(self):
+        """Return the 3-character invoice series for an unnamed draft.
+
+        A draft has no sequence number yet. The series is derived from the last sequence
+        used on this journal/period, falling back to the journal code; if neither yields
+        a usable value, it is left empty.
+        """
+        self.ensure_one()
+        last_sequence = self._get_last_sequence() or self._get_last_sequence(relaxed=True)
+        if last_sequence:
+            _, parts = self._get_sequence_format_param(last_sequence)
+            prefix = parts['prefix1'][:3]
+        else:
+            prefix = self.journal_id.code or ''
+        return prefix
+
+    def _l10n_tr_nilvera_build_draft_xml(self):
+        """Generate the UBL-TR XML for this move as an uploadable file-like object."""
+        self.ensure_one()
+        builder = self.env['account.edi.xml.ubl.tr']
+        xml_content, errors = builder._export_invoice(self)
+        if errors:
+            raise UserError(self.env._(
+                "The invoice could not be converted to the Nilvera format:\n%s",
+                "\n".join(errors),
+            ))
+        xml_file = BytesIO(xml_content)
+        xml_file.name = builder._export_invoice_filename(self)
+        return xml_file
+
+    def _l10n_tr_nilvera_draft_xml_hash(self, xml_bytes):
+        """Checksum of the uploaded XML, used to detect edits still to be pushed."""
+        return '%08x' % zlib.crc32(xml_bytes)
+
+    def _l10n_tr_nilvera_detach_pdf(self):
+        """Release the cached Nilvera PDF without deleting the attachment.
+
+        ``l10n_tr_nilvera_pdf_file`` is a ``Binary(attachment=True)``, so assigning
+        ``False`` would delete the backing ir.attachment — which is also the one
+        posted to the chatter, making previously fetched PDFs disappear from the
+        history. Instead, clear the attachment's ``res_field`` so it lives on as a
+        regular chatter attachment while the binary field reads empty, letting a
+        fresh PDF be fetched.
+        """
+        self.ensure_one()
+        if self.l10n_tr_nilvera_pdf_id:
+            self.l10n_tr_nilvera_pdf_id.res_field = False
+            self.invalidate_recordset(['l10n_tr_nilvera_pdf_id', 'l10n_tr_nilvera_pdf_file'])
+
+    def _l10n_tr_nilvera_upload_draft(self, xml_file, customer_alias):
+        """Upload the UBL XML as a Nilvera draft, creating or updating it.
+
+        The first upload creates the draft with ``POST /{channel}/Upload``. A
+        later upload of the same document (same ETTN/UUID) must update it with
+        ``PUT /{channel}/Upload/{UUID}`` instead — re-posting the same ETTN is
+        rejected by Nilvera because it is already registered as a draft.
+
+        Stores the UUID returned by Nilvera and the hash of the uploaded XML so a
+        later change can be detected and re-pushed before the draft is sent.
+        """
+        self.ensure_one()
+        base_endpoint = '/einvoice/Upload' if customer_alias else '/earchive/Upload'
+        # A prior successful upload leaves a hash; that draft must be updated, not recreated.
+        is_update = bool(self.l10n_tr_nilvera_draft_sync_hash and self.l10n_tr_nilvera_uuid)
+        method = "PUT" if is_update else "POST"
+        endpoint = '%s/%s' % (base_endpoint, quote(self.l10n_tr_nilvera_uuid)) if is_update else base_endpoint
+        xml_file.seek(0)
+        with _get_nilvera_client(self.env._, self.env.company) as client:
+            response = client.request(
+                method,
+                endpoint,
+                files={'file': (xml_file.name, xml_file, 'application/xml')},
+                handle_response=False,
+            )
+            try:
+                data = response.json()
+                if "Errors" in data:
+                    messages = (f"{data['Message']}\n" if data.get('Message') else "") + \
+                    "\n".join([f"{e.get('Description')}: {e.get('Detail')}" for e in data['Errors']])
+                    raise UserError(messages)
+            except JSONDecodeError:
+                raise UserError(self.env._("An error occurred. Try again later."))
+            if 400 <= response.status_code < 500:
+                error_message, _ = client._get_error_message_with_codes_from_response(response)
+                raise UserError(error_message)
+        if data.get('UUID'):
+            self.l10n_tr_nilvera_uuid = data['UUID']
+        self.l10n_tr_nilvera_draft_sync_hash = self._l10n_tr_nilvera_draft_xml_hash(xml_file.getvalue())
+        # The draft just changed on Nilvera, so any previously fetched PDF is stale;
+        # detach it so the next fetch re-downloads the updated document.
+        self._l10n_tr_nilvera_detach_pdf()
+
+    def _l10n_tr_nilvera_confirm_and_send_draft(self, customer_alias, register_series=True):
+        """Approve the uploaded draft and transmit it to GİB (ConfirmAndSend)."""
+        self.ensure_one()
+        if customer_alias:
+            endpoint = '/einvoice/Draft/ConfirmAndSend'
+            body = [{'Alias': customer_alias, 'UUID': self.l10n_tr_nilvera_uuid}]
+            series_endpoint = '/einvoice/Series'
+        else:
+            endpoint = '/earchive/Draft/ConfirmAndSend'
+            body = [self.l10n_tr_nilvera_uuid]
+            series_endpoint = '/earchive/Series'
+        with _get_nilvera_client(self.env._, self.env.company) as client:
+            response = client.request('POST', endpoint, json=body, handle_response=False)
+            if 400 <= response.status_code < 500 and register_series and self.sequence_prefix:
+                error_message, error_codes = client._get_error_message_with_codes_from_response(response)
+                if 3009 in error_codes:
+                    client.request('POST', series_endpoint, json={
+                        'Name': self.sequence_prefix.split('/', 1)[0],
+                        'IsActive': True,
+                        'IsDefault': False,
+                    })
+                    self._l10n_tr_nilvera_confirm_and_send_draft(customer_alias, register_series=False)
+                else:
+                    raise UserError(error_message)
+            elif response.status_code != 200:
+                raise UserError(_("Server error from Nilvera, please try again later."))
+
+    def _l10n_tr_nilvera_approve_and_send_draft(self, xml_file, customer_alias):
+        """Send flow for an invoice already uploaded as a draft.
+
+        Push the current XML if it changed since the last upload (posting assigns
+        the final invoice number, so this normally re-uploads once), then approve
+        the draft and transmit it to GİB.
+        """
+        self.ensure_one()
+        if self._l10n_tr_nilvera_draft_xml_hash(xml_file.getvalue()) != self.l10n_tr_nilvera_draft_sync_hash:
+            self._l10n_tr_nilvera_upload_draft(xml_file, customer_alias)
+        self._l10n_tr_nilvera_confirm_and_send_draft(customer_alias)
+        self.is_move_sent = True
+        self.l10n_tr_nilvera_send_status = 'sent'
+        # Any draft PDF fetched earlier is now superseded by the finalized GİB
+        # document; detach it so the finalized PDF is fetched once the invoice
+        # reaches 'succeed' (otherwise the stale draft PDF blocks the re-fetch).
+        self._l10n_tr_nilvera_detach_pdf()
+        self.message_post(body=self.env._("The draft has been approved and sent to Nilvera."))
+
+    def l10n_tr_nilvera_action_send_as_draft(self):  # noqa: RET503
+        """Upload the invoice to Nilvera as a draft (or update an existing draft).
+
+        The Odoo invoice stays in Draft; it is approved and transmitted to GİB
+        later, when it is sent with Send & Print.
+        """
+        self.ensure_one()
+        self._l10n_tr_nilvera_check_draft_precondition()
+        if self.l10n_tr_nilvera_send_status not in {'not_sent', 'draft_sent'}:
+            raise UserError(self.env._("This invoice has already been sent to Nilvera."))
+        # The UBL XML embeds the Nilvera UUID, so it must exist before we build it.
+        if not self.l10n_tr_nilvera_uuid:
+            self.l10n_tr_nilvera_uuid = str(uuid.uuid4())
+        xml_file = self._l10n_tr_nilvera_build_draft_xml()
+        # Nothing to push if the draft already reflects the current invoice.
+        if (
+            self.l10n_tr_nilvera_draft_sync_hash
+            and self._l10n_tr_nilvera_draft_xml_hash(xml_file.getvalue()) == self.l10n_tr_nilvera_draft_sync_hash
+        ):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'info',
+                    'message': self.env._("This invoice is already up to date on Nilvera."),
+                    'sticky': False,
+                },
+            }
+        self._l10n_tr_nilvera_upload_draft(xml_file, self._get_partner_l10n_tr_nilvera_customer_alias_name())
+        self.l10n_tr_nilvera_send_status = 'draft_sent'
+        self.message_post(body=self.env._("The invoice has been uploaded to Nilvera as a draft."))
 
     def _l10n_tr_nilvera_submit_document(self, xml_file, endpoint, post_series=True):
         """
@@ -614,11 +818,10 @@ class AccountMove(models.Model):
 
         return move
 
-    def _l10n_tr_nilvera_add_pdf_to_invoice(self, client, invoice, document_uuid, document_category="Purchase", invoice_channel="einvoice"):
-        response = client.request(
-            "GET",
-            f"/{invoice_channel}/{quote(document_category)}/{quote(document_uuid)}/pdf",
-        )
+    def _l10n_tr_nilvera_add_pdf_to_invoice(self, client, invoice, document_uuid, document_category="Purchase", invoice_channel="einvoice", is_draft=False):
+        category = "Draft" if is_draft else quote(document_category)
+        url = f"/{invoice_channel}/{category}/{quote(document_uuid)}/pdf"
+        response = client.request('GET', url)
 
         filename = f'{invoice.ref}.pdf' if invoice.ref else invoice._get_invoice_nilvera_pdf_report_filename()
 
@@ -707,7 +910,7 @@ class AccountMove(models.Model):
         customer status. Refreshes status of pending invoices before attempting the fetch.
         Returns the set of invoices whose fetch failed due to error/pending status.
         """
-        successful_invoice_ids = []
+        successful_and_draft_invoice_ids = []
         pending_invoices_ids = []
         failed_invoices_ids = []
         for invoice in self:
@@ -718,30 +921,30 @@ class AccountMove(models.Model):
             ):
                 continue
             status = invoice.l10n_tr_nilvera_send_status
-            if status == 'succeed':
-                successful_invoice_ids.append(invoice.id)
+            if status in {'succeed', 'draft_sent'}:
+                successful_and_draft_invoice_ids.append(invoice.id)
             elif status in {'sent', 'waiting'}:
                 pending_invoices_ids.append(invoice.id)
             elif status == 'error':
                 failed_invoices_ids.append(invoice.id)
-        successful_invoices = self.browse(successful_invoice_ids)
+        successful_and_draft_invoices = self.browse(successful_and_draft_invoice_ids)
         pending_invoices = self.browse(pending_invoices_ids)
         failed_invoices = self.browse(failed_invoices_ids)
-
         # Update pending invoices to catch any that succeeded since the last check.
         if pending_invoices:
             pending_invoices._l10n_tr_nilvera_get_submitted_document_status()
             newly_succeed = pending_invoices.filtered(lambda i: i.l10n_tr_nilvera_send_status == 'succeed')
-            successful_invoices |= newly_succeed
+            successful_and_draft_invoices |= newly_succeed
             failed_invoices |= pending_invoices - newly_succeed
 
         with _get_nilvera_client(self.env._, self.env.company) as client:
-            for invoice in successful_invoices:
+            for invoice in successful_and_draft_invoices:
                 invoice._l10n_tr_nilvera_add_pdf_to_invoice(
                     client,
                     invoice,
                     invoice.l10n_tr_nilvera_uuid,
                     document_category="Sale",
+                    is_draft=invoice.l10n_tr_nilvera_send_status == 'draft_sent',
                     invoice_channel=invoice.l10n_tr_nilvera_customer_status,
                 )
 
