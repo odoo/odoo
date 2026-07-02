@@ -13,7 +13,7 @@ import {
     getParsedWeight,
     ThemeFontWeightOption,
 } from "./theme_font_weight_option";
-import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
+import { getNumericAndUnit, setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -28,7 +28,11 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { ImageSize } from "@html_builder/plugins/image/image_size";
+import {
+    BORDER_RADIUS_MULTIPLIERS,
+    isBorderRadiusCustomized,
+    ThemeWebsiteSettingsOption,
+} from "./theme_website_settings_option";
 
 /**
  * @typedef { Object } ThemeTabShared
@@ -57,8 +61,9 @@ export const OPTION_POSITIONS = {
     BUTTON: 50,
     LINK: 60,
     INPUT: 70,
-    SHADOW: 80,
-    ADVANCED: 90,
+    CARD: 80,
+    SHADOW: 90,
+    ADVANCED: 100,
 };
 
 const FONT_WEIGHT_OPTIONS = [
@@ -120,6 +125,8 @@ export class ThemeTabPlugin extends Plugin {
             CustomizeWebsiteFontWeightAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
+            CustomizeBorderRadiusVariableAction,
+            ResetBorderRadiusAction,
         },
         theme_options: [
             withSequence(
@@ -127,13 +134,7 @@ export class ThemeTabPlugin extends Plugin {
                 this.getThemeOptionBlock(
                     "website-settings",
                     "",
-                    [
-                        ThemeColorsOption,
-                        class ThemeWebsiteSettingsOption extends BaseOptionComponent {
-                            static template = "website.ThemeWebsiteSettingsOption";
-                            static components = { ImageSize };
-                        },
-                    ],
+                    [ThemeColorsOption, ThemeWebsiteSettingsOption],
                     this.document.querySelector("#wrapwrap"),
                     true
                 )
@@ -174,6 +175,16 @@ export class ThemeTabPlugin extends Plugin {
                     _t("Input Fields"),
                     class ThemeInputOption extends BaseOptionComponent {
                         static template = "website.ThemeInputOption";
+                    }
+                )
+            ),
+            withSequence(
+                OPTION_POSITIONS.CARD,
+                this.getThemeOptionBlock(
+                    "theme-card",
+                    _t("Card"),
+                    class ThemeCardOption extends BaseOptionComponent {
+                        static template = "website.ThemeCardOption";
                     }
                 )
             ),
@@ -425,6 +436,45 @@ export class ConfigureApiKeyAction extends BuilderAction {
     }
     apply() {
         this.dependencies.googleMapsOption.configureGMapsAPI("", true);
+    }
+}
+
+export class CustomizeBorderRadiusVariableAction extends BuilderAction {
+    static id = "customizeBorderRadiusVariable";
+    static dependencies = ["customizeWebsite"];
+    setup() {
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+    }
+    getValue() {
+        const currentValue =
+            this.dependencies.customizeWebsite.getWebsiteVariableValue("border-radius");
+        return currentValue;
+    }
+    apply({ value: rawRadiusInput }) {
+        const [baseRadius, unit] = getNumericAndUnit(rawRadiusInput) || [0, "px"];
+        const scaledVariables = {};
+
+        for (const [varName, multiplier] of Object.entries(BORDER_RADIUS_MULTIPLIERS)) {
+            if (!isBorderRadiusCustomized(varName, this.document)) {
+                const computedValue = baseRadius * multiplier;
+                scaledVariables[varName] = `${computedValue}${unit}`;
+            }
+        }
+        return this.dependencies.customizeWebsite.customizeWebsiteVariables(scaledVariables);
+    }
+}
+
+export class ResetBorderRadiusAction extends CustomizeWebsiteVariableAction {
+    static id = "resetBorderRadius";
+    static dependencies = ["customizeWebsite"];
+    apply({ params: { mainParam: variable } }) {
+        const baseRadius =
+            this.dependencies.customizeWebsite.getWebsiteVariableValue("border-radius");
+        const [baseRadiusVal, unit] = getNumericAndUnit(baseRadius) || [0, "px"];
+
+        const normalizedVariableVal = baseRadiusVal * BORDER_RADIUS_MULTIPLIERS[variable];
+        const normalizedVariable = `${normalizedVariableVal}${unit}`;
+        return super.apply({ params: { mainParam: variable }, value: normalizedVariable });
     }
 }
 

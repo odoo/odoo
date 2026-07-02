@@ -3,7 +3,13 @@ import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { expect, test } from "@odoo/hoot";
 import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    models,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -121,4 +127,43 @@ test("Elements with withBSClass = false don't reset their style when width is ch
     expect(":iframe .s_hr hr").toHaveStyle({
         "border-top": "10px dotted rgb(255, 255, 255)",
     });
+});
+test("round corner option suggestion list matches roundness values in theme tab", async () => {
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
+        make_scss_customization(_, changes) {
+            const iframeDoc = queryOne(":iframe").documentElement;
+            for (const [variable, value] of Object.entries(changes)) {
+                iframeDoc.style.setProperty(`--${variable}`, value);
+            }
+        }
+    }
+    defineModels([WebsiteAssets]);
+
+    onRpc("/website/theme_customize_bundle_reload", (request) => {
+        expect.step("asset reload");
+        return "";
+    });
+
+    await setupWebsiteBuilder(`
+        <section>
+            <div class="row">
+                <div>
+                    Test suggestion
+                </div>
+            </div>
+        </section>`);
+
+    await contains("#theme-tab").click();
+
+    // Change the border-radius variable
+    await contains("[data-action-id='customizeBorderRadiusVariable'] input[type='number']").edit(
+        10
+    );
+    await expect.waitForSteps(["asset reload"]);
+
+    // Check if the suggestion list contains the updated value of border-radius
+    await contains(":iframe section .row > div").click();
+    await contains(".options-container [data-label='Round Corners'] input").click();
+    expect(".o-hb-border-radius-item:has(:contains('Normal')) > :first-child").toHaveText("10");
 });

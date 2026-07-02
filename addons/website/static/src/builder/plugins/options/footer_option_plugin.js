@@ -1,8 +1,10 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { WebsiteBorderConfigurator } from "@website/builder/plugins/options/website_border_configurator_option";
 import { FooterTemplateChoice } from "./footer_template_option";
 import { _t } from "@web/core/l10n/translation";
 
@@ -139,4 +141,13 @@ export class WebsiteConfigFooterAction extends BuilderAction {
     }
 }
 
+export class FooterBorderOption extends BaseOptionComponent {
+    static id = "footer_border_option";
+    static components = {
+        WebsiteBorderConfigurator,
+    };
+    static template = "website.FooterBorder";
+}
+
 registry.category("website-plugins").add(FooterOptionPlugin.id, FooterOptionPlugin);
+registry.category("website-options").add(FooterBorderOption.id, FooterBorderOption);

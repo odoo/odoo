@@ -1,0 +1,43 @@
+.o-hb-border-radius {
+    --o-hb-border-radius-bg: #{$o-we-item-clickable-bg};
+    --o-hb-border-radius-color: #{$o-we-fg-light};
+    --o-hb-border-radius-bg-hover: #{$o-we-bg-lighter};
+    --o-hb-border-radius-color-hover: #{$o-we-fg-lighter};
+    --o-hb-border-radius-border-color: #{$o-we-bg-darker};
+
+    --border-color: var(--o-hb-border-radius-border-color);
+
+    font-family: $o-we-font-family;
+    font-size: $o-we-font-size;
+    border-color: var(--border-color);
+    background-color: var(--o-hb-border-radius-bg) !important;
+    padding: 0;
+
+    &-dropdown {
+        flex: 0 1 calc(50% - calc(var(--hb-row-content-gap) * 0.5));
+    }
+
+    .o-hb-border-radius-item {
+        --dropdown-item-padding-y: 0;
+
+        color: var(--o-hb-border-radius-color, $white) !important;
+        line-height: 2rem;
+        border-bottom: $o-we-border-width solid var(--border-color);
+
+        &.focus {
+            background-color: var(--o-hb-border-radius-bg-hover) !important;
+            color: var(--o-hb-border-radius-color-hover) !important;
+
+            .o-hb-border-radius-badge {
+                color: var(--o-hb-border-radius-bg-hover) !important;
+                background-color: var(--o-hb-border-radius-color-hover) !important;
+            }
+        }
+    }
+
+    .o-hb-border-radius-badge {
+        color: var(--o-hb-border-radius-bg-hover) !important;
+        background-color: var(--o-hb-border-radius-color, $white) !important;
+        vertical-align: middle;
+    }
+}

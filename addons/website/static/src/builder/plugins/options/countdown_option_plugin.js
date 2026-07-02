@@ -5,9 +5,13 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
+import { WebsiteBorderConfigurator } from "@website/builder/plugins/options/website_border_configurator_option";
 
 export class CountdownOption extends BaseOptionComponent {
     static id = "countdown_option";
+    static components = {
+        WebsiteBorderConfigurator,
+    };
     static template = "website.CountdownOption";
     static cleanForSave = (editingEl) => {
         editingEl.classList.remove("s_countdown_enable_preview");

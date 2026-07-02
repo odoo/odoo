@@ -46,7 +46,7 @@
     </BuilderRow>
 
     <BuilderContext applyTo="'.s_avatars_avatar'">
-        <BorderConfigurator withRoundCorner="false" label.translate="Border"/>
+        <WebsiteBorderConfigurator withRoundCorner="false" label.translate="Border"/>
         <BuilderRow label.translate="Roundness" tooltip.translate="Applies to all avatars">
             <BuilderRange action="'setClassRange'"
                           actionParam="['rounded-0','rounded-1','rounded-2','rounded-3','rounded-4','rounded-5', 'rounded-circle']"
@@ -70,7 +70,6 @@
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <avatars_option
-            template="website.AvatarsOption"
             selector=".s_avatars"/>
     </xpath>
 </t>

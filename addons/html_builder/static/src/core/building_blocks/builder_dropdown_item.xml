@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderDropdownItem">
+    <BuilderComponent>
+        <DropdownItem class="this.props.class" onSelected="this.onSelected.bind(this)">
+            <t t-call-slot="default"/>
+        </DropdownItem>
+    </BuilderComponent>
+</t>
+
+</templates>

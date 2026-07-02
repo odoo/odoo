@@ -22,7 +22,7 @@
                 step="1"
                 withNumberInput="true"/>
         </BuilderRow>
-        <BorderConfigurator label.translate="Border" withBSClass="false" action="'setStylePortalCard'"/>
+        <WebsiteBorderConfigurator label.translate="Border" withBSClass="false" action="'setStylePortalCard'"/>
     </t>
 
     <t t-name="website.PortalCardDisplayOption">
@@ -37,7 +37,6 @@
     <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
         <xpath expr="//t[@id='snippet_specific_options']" position="after">
             <portal_option
-                template="website.PortalOption"
                 selector=".o_portal_index_card > a"
                 editableOnly="false"
                 groups='["website.group_website_designer"]'/>

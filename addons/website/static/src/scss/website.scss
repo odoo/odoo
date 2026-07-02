@@ -70,6 +70,11 @@ $-seen-urls: ();
         $i: $i + 1;
     }
 
+    // Global border radius values
+    @include print-variable('border-radius-sm', $border-radius-sm);
+    @include print-variable('border-radius', $border-radius);
+    @include print-variable('border-radius-lg', $border-radius-lg);
+
     // Note: font-size are not needed as already added by web_editor for the
     // font-size dropdown
     @include print-variable('paragraph-margin-top', $paragraph-margin-top);
@@ -186,6 +191,8 @@ $-seen-urls: ();
     @include print-variable('input-border-radius', $input-border-radius);
     @include print-variable('input-border-radius-sm', $input-border-radius-sm);
     @include print-variable('input-border-radius-lg', $input-border-radius-lg);
+
+    @include print-variable('card-border-radius', $card-border-radius);
 
     @include print-variable('color-palettes-name', $o-original-color-palette-name);
 

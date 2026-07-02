@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.WebsiteBorderConfiguratorOption" t-inherit="html_builder.BorderConfiguratorOption">
+    <xpath expr="//BuilderRow[@label.translate=&quot;Round Corners&quot;]/BuilderNumberInput" position="replace">
+        <BuilderContext action="this.props.action" actionParam="{ mainParam: this.getStyleActionParam('radius'), extraClass: this.props.withBSClass and 'rounded' }">
+            <Dropdown state="this.dropdownState" menuClass="'o-hb-border-radius'">
+                <div t-ref="this.inputRef" class="o-hb-border-radius-dropdown">
+                    <BuilderNumberInput unit="'px'" min="0" composable="true"/>
+                    <t t-set-slot="content">
+                        <t t-foreach="this.roundCorners.suggestions" t-as="suggestion" t-key="suggestion.variable">
+                            <BuilderDropdownItem class="'o-hb-border-radius-item'" actionValue="`${suggestion.value}px`">
+                                <span class="d-inline-block w-25">
+                                    <t t-out="suggestion.value"/>
+                                </span>
+                                <span class="badge rounded-pill ms-3 o-hb-border-radius-badge">
+                                    <t t-out="suggestion.label"/>
+                                </span>
+                            </BuilderDropdownItem>
+                        </t>
+                    </t>
+                </div>
+            </Dropdown>
+        </BuilderContext>
+    </xpath>
+</t>
+
+</templates>
