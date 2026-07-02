@@ -116,10 +116,14 @@ if hasattr(NameObject, 'renumber_table'):
 
 
 class BrandedFileWriter(PdfWriter):
+    def __init__(self, *args, producer="Odoo", **kwargs):
+        super().__init__(*args, **kwargs)
+        self._producer = producer
+
     def write_stream(self, *args, **kwargs):
         self.add_metadata({
             '/Creator': "Odoo",
-            '/Producer': "Odoo",
+            '/Producer': self._producer,
         })
         super().write_stream(*args, **kwargs)
 
@@ -570,10 +574,9 @@ class OdooPdfFileWriter(PdfFileWriter):
         struct_tree_root = DictionaryObject({NameObject("/Type"): NameObject("/StructTreeRoot")})
         self._root_object[NameObject("/StructTreeRoot")] = struct_tree_root
 
-        # Set odoo as producer
         self.addMetadata({
             '/Creator': "Odoo",
-            '/Producer': "Odoo",
+            '/Producer': self._producer,
         })
         self.is_pdfa = True
 

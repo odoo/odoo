@@ -30,7 +30,7 @@ class IrActionsReport(models.Model):
                     reader = OdooPdfFileReader(reader_buffer, strict=False)
 
                     # Post-process and embed the additional files.
-                    writer = OdooPdfFileWriter()
+                    writer = OdooPdfFileWriter(producer=self._get_pdf_producer(self._get_pdf_engine(self._get_report(report_ref))))
                     writer.clone_reader_document_root(reader)
                     for edi_document in to_embed:
                         # The attachements on the edi documents are only system readable
