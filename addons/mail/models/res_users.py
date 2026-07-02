@@ -296,7 +296,7 @@ class Users(models.Model):
         for model_name, activities in activities_by_model_name.items():
             Model = self.env[model_name]
             module = Model._original_module
-            icon = module and modules.module.get_module_icon(module)
+            icon = (module and modules.module.get_module_icon(module)) or "/base/static/description/icon.png"
             model = self.env["ir.model"]._get(model_name).with_prefetch(model_ids)
             user_activities[model_name] = {
                 "id": model.id,
