@@ -211,7 +211,10 @@ class MrpStockReport(models.TransientModel):
 
         context = dict(self.env.context)
         if context.get('active_id') and context.get('active_model'):
-            rcontext['reference'] = self.env[context.get('active_model')].browse(int(context.get('active_id'))).display_name
+            active_record = self.env[context.get('active_model')].browse(int(context.get('active_id')))
+            rcontext['reference'] = active_record.display_name
+            if 'company_id' in active_record._fields and active_record.company_id:
+                rcontext['company_id'] = active_record.company_id
 
         body = self.env['ir.ui.view'].with_context(context)._render_template(
             "stock.report_stock_inventory_print",
