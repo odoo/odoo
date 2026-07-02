@@ -177,7 +177,7 @@ class PrinterDriver(PrinterDriverBase):
             if error.winerror == 87:
                 self.send_status(status='success')
             else:
-                _logger.exception('Win32 error occurred while querying print job')
+                _logger.warning('Win32 error occurred while querying print job')
             self.job_ids.remove(job_id)
             self._recent_action_ids.pop(self.job_action_ids.pop(job_id, None), None)
 

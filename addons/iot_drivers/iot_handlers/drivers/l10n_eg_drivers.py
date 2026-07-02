@@ -57,8 +57,8 @@ class EtaUsbController(http.Controller):
                 'certificate': base64.b64encode(cert_bytes).decode()
             }
             return json.dumps(payload)
-        except Exception as ex:
-            _logger.exception('Error while getting ETA certificate')
+        except Exception as ex:  # noqa: BLE001
+            _logger.warning('Error while getting ETA certificate')
             return self._get_error_template(str(ex))
         finally:
             session.logout()
@@ -95,7 +95,7 @@ class EtaUsbController(http.Controller):
             }
             return json.dumps(payload)
         except Exception as ex:
-            _logger.exception('Error while signing invoices')
+            _logger.warning('Error while signing invoices')
             return self._get_error_template(str(ex))
         finally:
             session.logout()

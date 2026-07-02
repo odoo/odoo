@@ -189,7 +189,7 @@ class Toledo8217Driver(ScaleDriver):
         except serial.serialutil.SerialTimeoutException:
             pass
         except Exception:
-            _logger.exception('Error while probing %s with protocol %s', device, protocol.name)
+            _logger.warning('Error while probing %s with protocol %s', device, protocol.name)
         return False
 
     @staticmethod
