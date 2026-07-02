@@ -2,6 +2,7 @@
 
 import logging
 from datetime import datetime
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import tagged
@@ -212,14 +213,26 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
             data['frontend_data'] = frontend_data
             data['backend_data'] = backend_data
 
+<<<<<<< d30b46a35707fb5f036fd50b447765ae0f028a33
         # Add function to model
         order_model = self.env.registry.models['pos.order']
         order_model.get_order_frontend_receipt_data = get_order_frontend_receipt_data
         self.start_pos_tour("test_receipt_data")
         self.compare_receipt_data(data['frontend_data'], data['backend_data'])
+||||||| c3017429fca1bce6099efc0cfcfa69b7666c640f
+        # Add function to model
+        order_model = self.env.registry.models['pos.order']
+        order_model.get_order_frontend_receipt_data = get_order_frontend_receipt_data
+        self.start_receipt_data_tour()
+        self.compare_receipt_data(data['frontend_data'], data['backend_data'])
+=======
+        with patch.object(self.env.registry['pos.order'], 'get_order_frontend_receipt_data', get_order_frontend_receipt_data, create=True):
+            self.start_receipt_data_tour()
+            self.compare_receipt_data(data['frontend_data'], data['backend_data'])
+>>>>>>> 708f1a3c20376b30a16401ef11d3b8f7741d74de
 
-        logo_image = data['backend_data']['image']['logo']
-        self.assertTrue(logo_image.startswith('data:image/svg+xml;base64,'))
+            logo_image = data['backend_data']['image']['logo']
+            self.assertTrue(logo_image.startswith('data:image/svg+xml;base64,'))
 
     def compare_change_receipt_data(self, frontend, backend):
         for key, value in frontend.items():
