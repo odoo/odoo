@@ -951,6 +951,7 @@ class Website(models.Model):
             # once.
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
+                sale_order._portal_ensure_token()
                 template = self.env.ref("website_sale.mail_template_sale_cart_recovery")
                 # fallback email_vals in case partner_to,email_to were emptied or default recipients
                 # is false

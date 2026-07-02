@@ -114,15 +114,6 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
             expectUnloadPage: true,
         },
         {
-            trigger: 'p:contains("This is your current cart")',
-        },
-        {
-            content: "check the page is working, click on restore",
-            trigger: 'p:contains("restore") a:contains("Click here")',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
             content: "check product is in restored cart",
             trigger: 'div>a>h6:contains("Acoustic Bloc Screens")',
         },
