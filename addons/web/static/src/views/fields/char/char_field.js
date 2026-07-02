@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -8,7 +8,7 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component, props, t, useListener } from "@odoo/owl";
+import { Component, onMounted, onPatched, props, t, useListener } from "@odoo/owl";
 
 export const charFieldProps = {
     ...standardFieldProps,
@@ -31,11 +31,12 @@ export class CharField extends Component {
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder(this.input);
             useListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
-            useLayoutEffect(() =>
+            const updateModel = () =>
                 this.dynamicPlaceholder.updateModel(
                     this.props.dynamicPlaceholderModelReferenceField
-                )
-            );
+                );
+            onMounted(updateModel);
+            onPatched(updateModel);
         }
         useInputField({
             getValue: () => this.props.record.data[this.props.name] || "",
