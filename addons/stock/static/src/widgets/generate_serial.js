@@ -63,12 +63,13 @@ export class GenerateDialog extends Component {
                 currentId,
             ]));
         }
-        lines.records.push(...newlines);
-        lines._commands.push(...newlines.map((record) => [
-            x2ManyCommands.CREATE,
-            record._virtualId,
-        ]));
-        lines._currentIds.push(...newlines.map((record) => record._virtualId));
+        for (const record of newlines) {
+            lines._commands.push([x2ManyCommands.CREATE, record._virtualId]);
+            lines._currentIds.push(record._virtualId);
+        }
+        lines.count = lines._currentIds.length;
+        lines.config.offset = 0;
+        lines.records = lines._currentIds.slice(0, lines.limit).map((id) => lines._cache[id]);
         await lines._onUpdate();
         this.props.close();
     }
