@@ -27,6 +27,9 @@ Forms
     "data": [
         "data/form_vat001.xml",
         "data/form_wht001.xml",
+        "views/report_invoice.xml",
+        "views/res_partner_views.xml",
+        "views/res_company_views.xml",
     ],
     "demo": [
         "demo/demo_company.xml",
