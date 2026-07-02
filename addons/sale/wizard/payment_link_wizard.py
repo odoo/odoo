@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urljoin
+
 from odoo import api, fields, models
 
 
@@ -41,7 +43,7 @@ class PaymentLinkWizard(models.TransientModel):
     def _prepare_url(self, base_url, related_document):
         """Override of `payment` to use the portal page URL of sales orders."""
         if self.res_model == "sale.order":
-            return f"{base_url}{related_document.get_portal_url()}"
+            return urljoin(base_url, related_document.get_portal_url())
         return super()._prepare_url(base_url, related_document)
 
     def _prepare_query_params(self, *args):

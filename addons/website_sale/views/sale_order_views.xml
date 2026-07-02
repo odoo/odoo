@@ -141,7 +141,7 @@
         <field name="inherit_id" ref="sale.sale_order_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="before">
-                <field name="website_id" groups="website.group_multi_website" optional="show"/>
+                <field name="assigned_website_id" groups="website.group_multi_website" optional="show"/>
             </field>
         </field>
     </record>
@@ -295,7 +295,7 @@
                 }</attribute>
             </field>
             <field name="team_id" position="after">
-                <field name="website_id" invisible="not website_id" groups="website.group_multi_website"/>
+                <field name="assigned_website_id" groups="website.group_multi_website" readonly="website_id"/>
             </field>
         </field>
     </record>

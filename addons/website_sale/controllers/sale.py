@@ -1,9 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.http import request, route
+
 from odoo.addons.sale.controllers import portal as sale_portal
 
 
 class CustomerPortal(sale_portal.CustomerPortal):
+    @route()
+    def portal_order_page(self, *args, **kw):
+        order_id = kw.get("order_id")
+        if website := self.env["sale.order"].sudo().browse(order_id).assigned_website_id:
+            request.update_context(website_id=website.id)
+            website._force()
+
+        return super().portal_order_page(*args, **kw)
+
     def _get_payment_values(self, order_sudo, website_id=None, **kwargs):
         """Override of `sale` to inject the `website_id` into the kwargs.
 
