@@ -12,6 +12,7 @@ class TestOrmPartnerCommon(BaseCommon):
         cls.partners = cls.env['test_orm.partner'].create([
             {
                 'name': 'Inner Works',
+                'category_id': cls.partner_category,
                 'state_id': cls.env['test_orm.country.state'].create({'name': 'Alabama'}).id,
                 'child_ids': [
                     Command.create({'name': 'Sheila Ruiz'}),
@@ -31,14 +32,13 @@ class TestOrmPartnerCommon(BaseCommon):
                 'state_id': cls.env['test_orm.country.state'].create({'name': 'Arizona'}).id,
                 'child_ids': [
                     Command.create({'name': 'Pedro Boyd'}),
-                    Command.create({
-                        'name': 'Landon Roberts',
-                    }),
+                    Command.create({'name': 'Landon Roberts'}),
                     Command.create({'name': 'Leona Shelton'}),
                     Command.create({'name': 'Scott Kim'}),
                 ],
             }, {
                 'name': 'Urban Trends',
+                'category_id': cls.partner_category,
                 'state_id': cls.env['test_orm.country.state'].create({'name': 'Arkansas'}).id,
                 'child_ids': [
                     Command.create({'name': 'Louella Jacobs'}),

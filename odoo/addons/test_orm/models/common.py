@@ -1,3 +1,5 @@
+from random import randint
+
 from odoo import api, fields, models
 
 
@@ -90,9 +92,15 @@ class TestOrmMixedComputes(models.Model):
 class TestOrmPartnerCategory(models.Model):
     _name = 'test_orm.partner.category'
     _description = 'Test ORM Partner Category'
+    _parent_store = True
+
+    def _get_default_color(self):
+        return randint(1, 11)
 
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean(default=True)
+    color = fields.Integer(default=_get_default_color)
+    parent_path = fields.Char(index=True)
     parent_id = fields.Many2one('test_orm.partner.category')
     child_ids = fields.One2many('test_orm.partner.category', 'parent_id')
     partner_ids = fields.Many2many('test_orm.partner', column1='category_id', column2='partner_id')
