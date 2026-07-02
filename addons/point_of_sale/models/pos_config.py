@@ -1019,6 +1019,9 @@ class PosConfig(models.Model):
                 return pm
         return False
 
+    def _get_allowed_payment_methods(self):
+        return self.payment_method_ids
+
     def _get_special_products(self):
         default_tip = self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
         default_fee = self.env.ref('point_of_sale.product_product_service_fee', raise_if_not_found=False) or self.env['product.product']

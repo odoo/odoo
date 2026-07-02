@@ -1,12 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import uuid
+from freezegun import freeze_time
+
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import format_date
-from odoo.addons.payment.tests.common import PaymentCommon
+
+from odoo.addons.account_payment.tests.common import AccountPaymentCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-import uuid
 
 
 class TestPoSSale(TestPointOfSaleHttpCommon):
@@ -16,6 +19,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         cls.pos_user.write({
             'group_ids': [
                 (4, cls.env.ref('sales_team.group_sale_salesman_all_leads').id),
+                (4, cls.env.ref('account.group_account_invoice').id),
             ]
         })
 
@@ -1503,7 +1507,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env["pos.config"].with_company(branch).create({
             "name": "Branch Point of Sale"
         })
-        self.env['pos.config']._ensure_default_products()
+        self.env['pos.config']._ensure_default_configurations()
 
     def test_amount_unpaid_with_refund_pos_order(self):
         product = self.env['product.product'].create({
@@ -1598,7 +1602,16 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
 
 @tagged('post_install', '-at_install')
-class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
+class TestPoSSalePayment(TestPointOfSaleHttpCommon, AccountPaymentCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.pos_user.write({
+            'group_ids': [
+                (4, cls.env.ref('account.group_account_invoice').id),
+            ]
+        })
+        cls.enable_post_process_patcher = False
 
     def test_pos_settle_so_with_downpayment(self):
         """Ensure that the POS correctly handles Sale Orders where a down payment was processed
@@ -1687,3 +1700,38 @@ class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
         so_downpayment_lines = invoice.invoice_line_ids.filtered('is_downpayment')
         self.assertTrue(so_downpayment_lines.is_downpayment)
         self.assertEqual(so_downpayment_lines.account_id.id, account.id)
+
+    @freeze_time('2007-07-07')
+    def test_pos_settle_pre_paid_so(self):
+        """Ensure that the POS correctly handles Sale Orders when it was already been paid."""
+        self.product_a.available_in_pos = True
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': self.product_a.lst_price,
+            })],
+            'require_payment': True,
+        })
+        # Online payment transaction
+        tx = self._create_transaction(
+            flow='direct',
+            amount=sale_order.amount_total,
+            sale_order_ids=[sale_order.id],
+            state='done',
+            reference='Test Transaction',
+        )
+        self._run_post_processing(tx)
+        self.main_pos_config.open_ui()
+        self.assertEqual(sale_order.amount_unpaid, 0.0)
+        self.start_pos_tour('test_pos_settle_pre_paid_so', login='accountman')
+
+        pos_order = self.env['pos.order'].search([])
+        payment = pos_order.payment_ids
+        self.assertEqual(len(payment), 1)
+        self.assertTrue(payment.payment_method_id.use_sale_order_payment)
+        self.assertEqual(payment.payment_method_id.id, self.main_pos_config.sale_order_payment_method_id.id)
+        self.assertTrue(payment.online_account_payment_id.ids, sale_order.transaction_ids.payment_id.ids)
+        self.assertEqual(sale_order.pos_order_count, 1)

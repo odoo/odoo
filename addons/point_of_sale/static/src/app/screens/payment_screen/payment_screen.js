@@ -47,12 +47,16 @@ export class PaymentScreen extends Component {
         return this.pos.config.paymentMethods;
     }
 
+    get allowedPaymentMethodIds() {
+        return this.pos.config.payment_method_ids.map((pm) => pm.id);
+    }
+
     onMounted() {
         const order = this.pos.getOrder();
 
+        const allowedPMIds = this.allowedPaymentMethodIds;
         for (const payment of order.payment_ids) {
-            const pmid = payment.payment_method_id.id;
-            if (!this.pos.config.payment_method_ids.map((pm) => pm.id).includes(pmid)) {
+            if (!allowedPMIds.includes(payment.payment_method_id.id)) {
                 payment.delete({ backend: true });
             }
         }

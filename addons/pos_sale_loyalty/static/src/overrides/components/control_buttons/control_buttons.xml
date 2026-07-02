@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_sale.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath expr="//t[@name='o_loyalty_code_button']" position="attributes">
+            <attribute name="disabled" add="this.pos.getOrder().hasPrePaidSOLine" separator=" or " />
+        </xpath>
+        <xpath expr="//t[@name='o_reward_button']" position="attributes">
+            <attribute name="disabled" add="this.pos.getOrder().hasPrePaidSOLine" separator=" or " />
+        </xpath>
+    </t>
+</templates>

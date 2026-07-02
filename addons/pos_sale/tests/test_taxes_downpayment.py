@@ -14,6 +14,7 @@ class TestTaxesDownPaymentPOS(TestTaxCommonPOS, TestTaxCommonSale, TestTaxesDown
         cls.pos_user.write({
             'group_ids': [
                 Command.link(cls.env.ref('sales_team.group_sale_salesman_all_leads').id),
+                Command.link(cls.env.ref('account.group_account_invoice').id),
             ],
         })
         cls.main_pos_config.down_payment_product_id = cls.env['product.product'].create({

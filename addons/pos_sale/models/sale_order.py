@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import math
 
@@ -26,7 +25,7 @@ class SaleOrder(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['name', 'state', 'user_id', 'order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed', 'amount_unpaid',
-            'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date', 'amount_paid']
+            'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date', 'amount_paid', 'transaction_ids']
 
     def load_sale_order_from_pos(self, config_id):
         product_ids = self.order_line.product_id.ids
@@ -34,22 +33,20 @@ class SaleOrder(models.Model):
             config_id,
             [('product_variant_ids.id', 'in', product_ids)]
         )
-        sale_order_fields = self._load_pos_data_fields(config_id)
-        sale_order_read = self.read(sale_order_fields, load=False)
-        sale_order_line_fields = self.order_line._load_pos_data_fields(config_id)
-        sale_order_line_read = self.order_line.read(sale_order_line_fields, load=False)
-        sale_order_fp_fields = self.env['account.fiscal.position']._load_pos_data_fields(config_id)
-        sale_order_fp_read = self.fiscal_position_id.read(sale_order_fp_fields, load=False)
-        partner_fields = self.env['res.partner']._load_pos_data_fields(config_id)
-
+        config = self.env['pos.config'].browse(config_id).exists()
+        transactions = self.sudo().transaction_ids
         return {
-            'sale.order': sale_order_read,
-            'sale.order.line': sale_order_line_read,
-            'account.fiscal.position': sale_order_fp_read,
-            'res.partner': self.partner_id.read(partner_fields, load=False),
+            'sale.order': self._load_pos_data_read(self, config),
+            'sale.order.line': self.env['sale.order.line']._load_pos_data_read(self.order_line, config),
+            'account.fiscal.position': self.env['account.fiscal.position']._load_pos_data_read(self.fiscal_position_id, config),
+            'res.partner': self.env['res.partner']._load_pos_data_read(self.partner_id, config),
+            'payment.transaction': self.env['payment.transaction']._load_pos_data_read(transactions, config),
+            'account.payment': self.env['account.payment']._load_pos_data_read(transactions.payment_id, config),
+            'account.move': self.env['account.move']._load_pos_data_read(transactions.payment_id.move_id, config),
             **product_tmpls,
         }
 
+    @api.depends('pos_order_line_ids')
     def _count_pos_order(self):
         for order in self:
             linked_orders = order.pos_order_line_ids.mapped('order_id')

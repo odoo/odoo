@@ -19,6 +19,7 @@ export class SaleOrder extends models.ServerModel {
             "amount_unpaid",
             "partner_shipping_id",
             "partner_invoice_id",
+            "transaction_ids",
             "date_order",
             "write_date",
         ];
@@ -38,6 +39,7 @@ export class SaleOrder extends models.ServerModel {
             amount_unpaid: 650,
             partner_shipping_id: 3,
             partner_invoice_id: 3,
+            transaction_ids: [],
             date_order: "2025-07-03 17:04:14",
             write_date: "2025-07-03 17:04:14",
         },
@@ -54,6 +56,7 @@ export class SaleOrder extends models.ServerModel {
             amount_unpaid: 500,
             partner_shipping_id: 3,
             partner_invoice_id: 3,
+            transaction_ids: [],
             date_order: "2025-07-03 17:04:14",
             write_date: "2025-07-03 17:04:14",
         },
@@ -77,22 +80,29 @@ export class SaleOrder extends models.ServerModel {
 
     async load_sale_order_from_pos(id, config_id) {
         const order = this.env["sale.order"].find((order) => order.id === id);
-        const orderLines = this.env["sale.order.line"].filter((line) =>
-            order.order_line.includes(line.id)
+        const getRecords = (modelName, recIds) =>
+            this.env[modelName].filter((rec) => recIds.includes(rec.id));
+
+        const orderLines = getRecords("sale.order.line", order.order_line);
+        const productProducts = getRecords(
+            "product.product",
+            orderLines.map((line) => line.product_id)
         );
-        const partner = this.env["res.partner"].find((partner) => partner.id === order.partner_id);
-        const productProducts = this.env["product.product"].filter((product) =>
-            orderLines.map((line) => line.product_id).includes(product.id)
-        );
-        const productTemplates = this.env["product.template"].filter((template) =>
-            productProducts.map((p) => p.product_tmpl_id).includes(template.id)
-        );
+        const transactions = getRecords("payment.transaction", order.transaction_ids);
         return {
             "sale.order": [order],
             "sale.order.line": orderLines,
-            "res.partner": [partner],
+            "res.partner": getRecords("res.partner", [order.partner_id]),
             "product.product": productProducts,
-            "product.template": productTemplates,
+            "product.template": getRecords(
+                "product.template",
+                productProducts.map((p) => p.product_tmpl_id)
+            ),
+            "payment.transaction": transactions,
+            "account.payment": getRecords(
+                "account.payment",
+                transactions.map((txn) => txn.payment_id)
+            ),
         };
     }
 }

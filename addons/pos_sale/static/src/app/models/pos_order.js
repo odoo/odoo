@@ -10,4 +10,13 @@ patch(PosOrder.prototype, {
         }
         return productIds;
     },
+    get hasPrePaidSOLine() {
+        return this.payment_ids.some((payment) => payment.payment_method_id.use_sale_order_payment);
+    },
+    selectOrderline(line) {
+        if (line?.sale_order_origin_id?.amount_unpaid === 0) {
+            return super.selectOrderline();
+        }
+        return super.selectOrderline(line);
+    },
 });
