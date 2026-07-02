@@ -654,3 +654,21 @@ test("toggle bold on a selection that is only a formatted space", async () => {
         contentAfter: `<p>A[ ]B</p>`,
     });
 });
+
+test("bold on list item should not make its nested list items bold", async () => {
+    await testEditor({
+        contentBefore: "<ul><li><p>[A]</p><ul><li>B</li></ul></li></ul>",
+        stepFunction: bold,
+        contentAfter:
+            '<ul><li style="font-weight: bolder;"><p>[A]</p><ul style="font-weight: normal;"><li>B</li></ul></li></ul>',
+    });
+});
+
+test("removing bold on list item should remove neutral style from its nested list", async () => {
+    await testEditor({
+        contentBefore:
+            '<ul><li style="font-weight: bolder;"><p>[A]</p><ul style="font-weight: normal;"><li>B</li></ul></li></ul>',
+        stepFunction: bold,
+        contentAfter: "<ul><li><p>[A]</p><ul><li>B</li></ul></li></ul>",
+    });
+});
