@@ -176,12 +176,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'journal': invoice.journal_id,
 
             'use_company_currency': False,  # If true, use the company currency for the amounts instead of the invoice currency
-            'fixed_taxes_as_allowance_charges': True,  # If true, include fixed taxes as AllowanceCharges on lines instead of as taxes
         })
 
-    def _dispatch_base_lines_recycling_contribution_taxes(self, base_lines, company, vals):
-        """ Extract recycling contribution taxes such as RECUPEL, AUVIBEL, etc from the current base lines.
-        Instead, add them under 'base_line' -> '_ubl_values' -> 'recycling_contribution_data' to be reported
+    def _dispatch_base_lines_allowance_charge_taxes(self, base_lines, company, vals):
+        """ Extract allowance/charge taxes such as RECUPEL, AUVIBEL, etc from the current base lines.
+        Instead, add them under 'base_line' -> '_ubl_values' -> 'allowance_charge_data' to be reported
         as allowances/charges.
 
         From a 'base_line' having
@@ -190,51 +189,35 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             total_excluded_currency = 99
             total_included_currency = 121
             taxes_data = [1, 21]
-            recycling_contribution_data = []
+            allowance_charge_data = []
         ... turn it to:
             price_unit = 99
             tax_ids = 21% tax
             total_excluded_currency = 99
             total_included_currency = 121
             taxes_data = [21]
-            recycling_contribution_data = [1]
+            allowance_charge_data = [1]
 
         :param base_lines:  The original 'base_lines' of the document.
         :param company:     The company owning the 'base_lines'.
         :param vals:        Some custom data.
         """
-        if not vals['fixed_taxes_as_allowance_charges']:
-            return
-
-        # Turn recycling contribution taxes into allowance/charge.
-        # To distinguish them from emptying taxes, we know that one is taxed and not the other.
-        def is_recycling_contribution(tax_data):
-            if not tax_data:
-                return
-
-            tax = tax_data['tax']
-            return tax.amount_type == 'fixed' and tax.include_base_amount
 
         for base_line in base_lines:
             tax_details = base_line['tax_details']
             taxes_data = tax_details['taxes_data']
-            recycling_contribution_taxes_data = base_line['_ubl_values']['recycling_contribution_taxes_data']
+            allowance_charge_data = base_line['_ubl_values']['allowance_charge_data']
 
             new_taxes_data = tax_details['taxes_data'] = []
             for tax_data in taxes_data:
-                if is_recycling_contribution(tax_data):
-                    recycling_contribution_taxes_data.append({'tax_data': tax_data})
+                if self._ubl_is_allowance_charge_tax(tax_data):
+                    allowance_charge_data.append({'tax_data': tax_data})
                     tax_details['raw_total_excluded_currency'] += tax_data['raw_tax_amount_currency']
                     tax_details['raw_total_excluded'] += tax_data['raw_tax_amount']
                     tax_details['total_excluded_currency'] += tax_data['tax_amount_currency']
                     tax_details['total_excluded'] += tax_data['tax_amount']
                 else:
                     new_taxes_data.append(tax_data)
-
-    def _turn_emptying_taxes_as_new_base_lines(self, base_lines, company, vals):
-        if not vals['fixed_taxes_as_allowance_charges']:
-            return base_lines
-        return self._ubl_turn_emptying_taxes_as_new_base_lines(base_lines, company, vals)
 
     def _add_invoice_base_lines_vals(self, vals):
         invoice = vals['invoice']
@@ -252,14 +235,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
             # Allow retrieving some custom values coming from manipulations of base lines.
             base_line['_ubl_values'] = {
-                'recycling_contribution_taxes_data': [],
+                'allowance_charge_data': [],
             }
 
-        # Manage taxes for recycling contribution such as RECUPEL / AUVIBEL.
-        self._dispatch_base_lines_recycling_contribution_taxes(base_lines, company, vals)
+        # Manage taxes for allowance/charge
+        self._dispatch_base_lines_allowance_charge_taxes(base_lines, company, vals)
 
         # Manage taxes for emptying.
-        base_lines = self._turn_emptying_taxes_as_new_base_lines(base_lines, company, vals)
+        base_lines = self._ubl_turn_emptying_taxes_as_new_base_lines(base_lines, company, vals)
 
         # Extract cash rounding lines.
         vals['base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] != 'cash_rounding']
@@ -554,8 +537,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_document_monetary_total_vals(self, vals):
         # Compute the monetary totals for the document
-        def fixed_total_grouping_function(base_line, tax_data):
-            if vals['fixed_taxes_as_allowance_charges'] and tax_data and tax_data['tax'].amount_type == 'fixed':
+        def allowance_charge_total_grouping_function(base_line, tax_data):
+            if tax_data and tax_data['tax'].ubl_cii_type == 'allowance_charge':
                 return vals['total_grouping_function'](base_line, tax_data)
 
         for currency_suffix in ['', '_currency']:
@@ -563,7 +546,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 vals[f'{key}{currency_suffix}'] = 0.0
 
         for base_line in vals['base_lines']:
-            aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, fixed_total_grouping_function)
+            aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, allowance_charge_total_grouping_function)
 
             for currency_suffix in ['', '_currency']:
                 base_line_total_excluded = \
@@ -588,12 +571,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 + vals[f'total_charge{currency_suffix}'] \
                 - vals[f'total_allowance{currency_suffix}']
 
-        def non_fixed_total_grouping_function(base_line, tax_data):
-            if vals['fixed_taxes_as_allowance_charges'] and tax_data and tax_data['tax'].amount_type == 'fixed':
-                return None
-            return vals['total_grouping_function'](base_line, tax_data)
+        def tax_total_grouping_function(base_line, tax_data):
+            if tax_data and tax_data['tax'].ubl_cii_type == 'tax':
+                return vals['total_grouping_function'](base_line, tax_data)
 
-        base_lines_aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_tax_details(vals['base_lines'], non_fixed_total_grouping_function)
+        base_lines_aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_tax_details(vals['base_lines'], tax_total_grouping_function)
         aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_aggregated_values(base_lines_aggregated_tax_details)
         for currency_suffix in ['', '_currency']:
             vals[f'total_tax_amount{currency_suffix}'] = sum(
@@ -908,34 +890,36 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _add_document_line_total_vals(self, vals):
         base_line = vals['base_line']
 
-        def fixed_total_grouping_function(base_line, tax_data):
-            if vals['fixed_taxes_as_allowance_charges'] and tax_data and tax_data['tax'].amount_type == 'fixed':
+        def allowance_charge_total_grouping_function(base_line, tax_data):
+            if tax_data and tax_data['tax'].ubl_cii_type == 'allowance_charge':
                 return vals['total_grouping_function'](base_line, tax_data)
 
-        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, fixed_total_grouping_function)
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, allowance_charge_total_grouping_function)
 
         for currency_suffix in ['', '_currency']:
-            vals[f'total_fixed_taxes{currency_suffix}'] = sum(
+            total_allowance_charge_taxes = sum(
                 tax_details[f'tax_amount{currency_suffix}']
                 for grouping_key, tax_details in aggregated_tax_details.items()
                 if grouping_key
             )
 
-            vals[f'total_excluded{currency_suffix}'] = \
-                base_line['tax_details'][f'total_excluded{currency_suffix}'] \
-                + base_line['tax_details'][f'delta_total_excluded{currency_suffix}'] \
-                + vals[f'total_fixed_taxes{currency_suffix}']
+            vals[f'total_excluded{currency_suffix}'] = (
+                base_line['tax_details'][f'total_excluded{currency_suffix}']
+                + base_line['tax_details'][f'delta_total_excluded{currency_suffix}']
+                + total_allowance_charge_taxes
+            )
 
     def _add_document_line_gross_subtotal_and_discount_vals(self, vals):
         base_line = vals['base_line']
         company_currency = vals['company_currency_id']
 
+        # Remove allowance/charge tax effect from tax_details
         raw_total_excluded_currency = base_line['tax_details']['raw_total_excluded_currency']
         raw_total_excluded = base_line['tax_details']['raw_total_excluded']
         total_excluded_currency = base_line['tax_details']['total_excluded_currency']
         total_excluded = base_line['tax_details']['total_excluded']
-        for recycling_contribution_tax_data in base_line.get('_ubl_values', {}).get('recycling_contribution_taxes_data', []):
-            tax_data = recycling_contribution_tax_data['tax_data']
+        for allowance_charge_data in base_line.get('_ubl_values', {}).get('allowance_charge_data', []):
+            tax_data = allowance_charge_data['tax_data']
             raw_total_excluded_currency -= tax_data['raw_tax_amount_currency']
             raw_total_excluded -= tax_data['raw_tax_amount']
             total_excluded_currency -= tax_data['tax_amount_currency']
@@ -1023,7 +1007,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             line_node['cac:AllowanceCharge'] = []
             if node := self._get_line_discount_allowance_charge_node(vals):
                 line_node['cac:AllowanceCharge'].append(node)
-            line_node['cac:AllowanceCharge'].extend(self._get_line_fixed_tax_allowance_charge_nodes(vals))
+            line_node['cac:AllowanceCharge'].extend(self._get_line_allowance_charge_nodes(vals))
 
     def _get_line_discount_allowance_charge_node(self, vals):
         currency_suffix = vals['currency_suffix']
@@ -1042,21 +1026,36 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             },
         }
 
-    def _get_line_fixed_tax_allowance_charge_nodes(self, vals):
+    def _get_line_allowance_charge_nodes(self, vals):
         base_line = vals['base_line']
         currency_suffix = vals['currency_suffix']
 
         allowance_charge_nodes = []
-        for recycling_contribution_tax_data in base_line.get('_ubl_values', {}).get('recycling_contribution_taxes_data', []):
-            tax_data = recycling_contribution_tax_data['tax_data']
+        for allowance_charge_data in base_line.get('_ubl_values', {}).get('allowance_charge_data', []):
+            tax_data = allowance_charge_data['tax_data']
             tax = tax_data['tax']
+            tax_amount = tax_data[f'tax_amount{currency_suffix}']
+            base_amount = tax_data[f'base_amount{currency_suffix}']
+            is_charge = tax.ubl_cii_is_charge
             allowance_charge_nodes.append({
-                'cbc:ChargeIndicator': {'_text': 'true' if tax_data[f'tax_amount{currency_suffix}'] > 0 else 'false'},
-                'cbc:AllowanceChargeReasonCode': {'_text': 'AEO' if tax_data[f'tax_amount{currency_suffix}'] > 0 else '100'},
-                'cbc:AllowanceChargeReason': {'_text': tax.name},
+                'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
+                'cbc:AllowanceChargeReasonCode': {
+                    '_text': tax.ubl_cii_charge_reason_code if is_charge else tax.ubl_cii_allowance_reason_code
+                },
+                'cbc:AllowanceChargeReason': {'_text': tax.ubl_cii_allowance_charge_reason},
+                # cbc:MultiplierFactorNumeric is required to predict tax during import
+                'cbc:MultiplierFactorNumeric': {'_text': abs(tax.amount)} if tax.amount_type == 'percent' else None,
+                # Only keep cbc:BaseAmount in conjunction with cbc:MultiplierFactorNumeric
+                'cbc:BaseAmount': {
+                    '_text': self.format_float(
+                        abs(base_amount),
+                        vals['currency_dp'],
+                    ),
+                    'currencyID': vals['currency_name'],
+                } if tax.amount_type == 'percent' else None,
                 'cbc:Amount': {
                     '_text': self.format_float(
-                        abs(tax_data[f'tax_amount{currency_suffix}']),
+                        abs(tax_amount),
                         vals['currency_dp'],
                     ),
                     'currencyID': vals['currency_name'],
@@ -1243,6 +1242,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'allowance_charge_amount': './{*}Amount',
             'allowance_charge_reason': './{*}AllowanceChargeReason',
             'allowance_charge_reason_code': './{*}AllowanceChargeReasonCode',
+            'allowance_charge_percent': './{*}MultiplierFactorNumeric',
+            'allowance_charge_base_amount': './{*}BaseAmount',
             'line_total_amount': './{*}LineExtensionAmount',
             'name': [
                 './cac:Item/cbc:Description',
@@ -1288,7 +1289,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 tax_percent = float(percentage.text)
                 # Compare the result with our tax total on the invoice, and apply correction if needed.
                 # First look for taxes matching the percentage in the xml.
-                taxes = invoice.line_ids.tax_line_id.filtered(lambda tax: tax.amount == tax_percent)
+                # Avoid allowance/charge tax for false positive (see - `test_ubl_allowance_charge_correct_import_amount_tax`).
+                taxes = invoice.line_ids.tax_line_id.filtered(lambda tax: tax.amount == tax_percent and tax.ubl_cii_type == 'tax')
                 # If we found taxes with the correct amount, look for a tax line using it, and correct it as needed.
                 if taxes:
                     tax_total = document_amount_sign * float(amount.text)

@@ -343,13 +343,22 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         self.assertEqual(new_so.order_line[0].product_id, self.place_prdct)
 
     def test_so_import_line_allowance_charges(self):
+        charge_tax = self.env['account.tax'].with_company(self.customer_company).create({
+            'name': 'Purchase Charge Tax',
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'type_tax_use': 'purchase',
+            'ubl_cii_type': 'allowance_charge',
+            'ubl_cii_is_charge': True,
+            'ubl_cii_charge_reason_code': 'AA',
+            'include_base_amount': True,
+        })
         po_line_vals = [{
             'product_id': self.place_prdct.id,
             'price_unit': 30.0,
             'uom_id': self.uom_units.id,
             'product_qty': 10.0,
-            'tax_ids': self.purchase_tax.ids,
-            'discount': -10.0,
+            'tax_ids': self.purchase_tax.ids + charge_tax.ids,
         }]
         xml_attachment = self.get_purchase_xml(po_line_vals)
 
@@ -362,12 +371,21 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         }])
 
     def test_po_import_line_allowance_charges(self):
+        charge_tax = self.env['account.tax'].with_company(self.supplier_company).create({
+            'name': 'Sale Charge Tax',
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'type_tax_use': 'sale',
+            'ubl_cii_type': 'allowance_charge',
+            'ubl_cii_is_charge': True,
+            'ubl_cii_charge_reason_code': 'AA',
+            'include_base_amount': True,
+        })
         so_line_vals = [{
             'product_id': self.place_prdct.id,
             'product_uom_id': self.uom_units.id,
             'product_uom_qty': 10.0,
-            'tax_ids': self.sale_tax.ids,
-            'discount': -10.0,
+            'tax_ids': self.sale_tax.ids + charge_tax.ids,
         }]
         xml_attachment = self.get_sale_xml(so_line_vals)
 

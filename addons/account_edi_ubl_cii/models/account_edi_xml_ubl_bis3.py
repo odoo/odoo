@@ -152,6 +152,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'line_node': line_node,
             'base_line': vals['line_vals']['base_line'],
         }
+        # Allowance/Charge from taxes with type 'allowance_charge' (includes recycling contribution taxes, excises).
         self._ubl_add_line_allowance_charge_nodes(sub_vals)
 
     def _add_invoice_line_amount_nodes(self, line_node, vals):
