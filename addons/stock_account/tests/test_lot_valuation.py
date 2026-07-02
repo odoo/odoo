@@ -663,3 +663,19 @@ class TestLotValuation(TestStockValuationCommon):
         self.product.standard_price = 12
         self.assertEqual(self.product.standard_price, 12)
         self.assertEqual(self.lot1.standard_price, 12)
+
+    def test_fifo_lot_valuated(self):
+        """ Check that the lots standard_price are correctly computed
+        when the product is fifo, the moves include multiple lots and they
+        have different values
+        """
+        self.product.categ_id = self.category_fifo
+        # 20 in lot1 @ 100, 20 in lot3 @100
+        self._make_in_move(self.product, 40, 100, lot_ids=[self.lot1, self.lot3])
+        # 5 in lot1 @ 10, 5 in lot2 @ 10, 5 in lot3 @ 10
+        self._make_in_move(self.product, 15, 10, lot_ids=[self.lot1, self.lot2, self.lot3])
+        # lot1 standard price should be : 20 * 100 (from move1) + 5 * 10 (from move 2) / 25 = 2050 / 25 = 82
+        self.assertEqual(self.lot1.standard_price, 82)
+        self.assertEqual(self.lot2.standard_price, 10)
+        # product's standard price should be 4150 / 55 = 75.45
+        self.assertAlmostEqual(self.product.standard_price, 75.45, places=2)
