@@ -79,6 +79,18 @@ class StoreVersion:
         """
         self.__model_to_field_to_ids[model_name][fname].update(record_ids)
 
+    def get_written_record_ids(self, model_name):
+        """Return the ids of ``model_name`` records that had at least one field written (and
+        flushed) in the current transaction, as tracked by :meth:`mark_field_as_written`.
+
+        Unlike the ORM dirty fields, this survives flushes, which makes it usable at commit
+        time to tell whether a row is locked by the current transaction.
+        """
+        written_ids = OrderedSet()
+        for record_ids in self.__model_to_field_to_ids.get(model_name, {}).values():
+            written_ids.update(record_ids)
+        return written_ids
+
     def get_formatted_version(self):
         """Get the version metadata, used by the client to determine if an incoming
         store insert is newer than what it already knows.

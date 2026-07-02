@@ -16,7 +16,7 @@ from odoo.tools.sql import SQL
 
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import Store, StoreVersion
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
@@ -589,10 +589,15 @@ class DiscussChannel(models.Model):
         case, as it should be updated by the concurrent flow. This explains why
         pg_try_advisory_xact_lock is used rather than FOR UPDATE NOWAIT or ON CONFLICT DO NOTHING.
 
-        Important note: this method is meant to be called only in flows where no other writes on
-        channel occur on the main transaction, as this would create a guaranteed concurrency issue.
-        This constraint is acceptable, as if there was another write that locks the channel row in
-        the same flow, it would imply the goal of allowing concurrent posts would not be achieved.
+        Important note: the separate transaction must not be used when the channel row is also
+        written in the main transaction, as the main transaction locks the row and the separate
+        transaction would then block on it until timeout (it would not even be detected as a
+        deadlock, as the main transaction is not itself waiting on anything). The actual update is
+        therefore deferred to a precommit hook, which runs once all other writes of the transaction
+        have been flushed: at that point, whether the channel row was written by the main
+        transaction can be reliably determined (see _update_last_interest_dt_precommit), and if so
+        last_interest_dt is written on the main transaction instead, whose row is already locked so
+        there is nothing to gain from a separate transaction anyway.
 
         Using a separate transaction allows to quickly release the lock, which reduces situations
         where an old transaction could keep the lock for a long time and prevent newer transactions
@@ -613,7 +618,36 @@ class DiscussChannel(models.Model):
             # sudo: discuss.channel - can update last interest in controlled flows
             self.sudo().last_interest_dt = date
             return
-        for channel in self:
+        self.env.cr.precommit.data.setdefault("mail.discuss_channel.last_interest_dt", {}).update(
+            dict.fromkeys(self.ids, date)
+        )
+        self.env.cr.precommit.add(self._update_last_interest_dt_precommit)
+
+    def _update_last_interest_dt_precommit(self):
+        """Perform the last_interest_dt updates registered by _update_last_interest_dt.
+
+        Runs at precommit, i.e. after all other writes of the transaction, so that channels whose
+        row was written (and thus locked) by the main transaction can be told apart from the others.
+        Their update is done on the main transaction (the row is already locked, so a separate
+        transaction would only block on it), while the others are updated in a separate transaction
+        to release the lock quickly. The written channels are looked up through the store version,
+        which tracks all written fields of the transaction and, unlike the dirty fields, survives the
+        flushes; the transaction is flushed first so this record is complete.
+        """
+        id_to_date = self.env.cr.precommit.data.pop("mail.discuss_channel.last_interest_dt", {})
+        if not id_to_date:
+            return
+        # Flush first so that every channel write of the transaction is recorded in the store
+        # version (done on flush) before it is checked, including writes from other precommit hooks
+        # that ran before this one: such a write locks the row the separate transaction would block on.
+        self.env.flush_all()
+        written_ids = StoreVersion.ensure_version(self.env).get_written_record_ids(self._name)
+        for channel in self.browse(id_to_date):
+            date = id_to_date[channel.id]
+            if channel.id in written_ids:
+                # sudo: discuss.channel - can update last interest in controlled flows
+                channel.sudo().last_interest_dt = date
+                continue
             with self.env.registry.cursor() as cr:
                 cr.execute(
                     SQL(
