@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
 from markupsafe import Markup
 import json
 
@@ -97,65 +96,70 @@ class StockPicking(models.Model):
         # However, since a UserError of any of the picking will cause a rollback of the entire batch
         # on Odoo's side and since pickings that were already processed on the carrier's side must
         # stay validated, UserErrors might need to be replaced by activity warnings.
-
-        processed_carrier_picking = False
-
-        for pick in self:
-            try:
-                if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
-                    pick.sudo().send_to_shipper()
-                if pick.carrier_id:
-                    processed_carrier_picking = True
-            except (UserError) as e:
-                if processed_carrier_picking:
-                    # We can not raise a UserError at this point
-                    exception_message = str(e)
-                    pick.message_post(body=exception_message, message_type='notification')
-                    pick.sudo().activity_schedule(
-                        'mail.mail_activity_data_warning',
-                        date.today(),
-                        note=pick._carrier_exception_note(exception_message),
-                        user_id=pick.user_id.id or self.env.uid,
-                        )
-                else:
-                    raise e
-
+        def do_ship(pick):
+            return pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label
+        self.filtered(do_ship).send_to_shipper()
         return super(StockPicking, self)._send_confirmation_email()
 
     def send_to_shipper(self):
-        self.ensure_one()
-        res = self.carrier_id.send_shipping(self)[0]
-        if self.carrier_id.free_over and self.sale_id:
-            amount_without_delivery = self.sale_id._compute_amount_total_without_delivery()
-            if self.carrier_id._compute_currency(self.sale_id, amount_without_delivery, 'pricelist_to_company') >= self.carrier_id.amount:
-                res['exact_price'] = 0.0
-        self.carrier_price = self.carrier_id._apply_margins(res['exact_price'], self.sale_id)
-        if res['tracking_number']:
-            related_pickings = self.env['stock.picking'] if self.carrier_tracking_ref and res['tracking_number'] in self.carrier_tracking_ref else self
-            accessed_moves = previous_moves = self.move_ids.move_orig_ids
-            while previous_moves:
-                related_pickings |= previous_moves.picking_id
-                previous_moves = previous_moves.move_orig_ids - accessed_moves
-                accessed_moves |= previous_moves
-            accessed_moves = next_moves = self.move_ids.move_dest_ids
-            while next_moves:
-                related_pickings |= next_moves.picking_id
-                next_moves = next_moves.move_dest_ids - accessed_moves
-                accessed_moves |= next_moves
-            without_tracking = related_pickings.filtered(lambda p: not p.carrier_tracking_ref)
-            without_tracking.carrier_tracking_ref = res['tracking_number']
-            for p in related_pickings - without_tracking:
-                p.carrier_tracking_ref += "," + res['tracking_number']
-        order_currency = self.sale_id.currency_id or self.company_id.currency_id
-        msg = _("Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s",
-                carrier_name=self.carrier_id.name,
-                ref=self.carrier_tracking_ref) + \
-              Markup("<br/>") + \
-              _("Cost: %(price).2f %(currency)s",
-                price=self.carrier_price,
-                currency=order_currency.name)
-        self.message_post(body=msg)
-        self._add_delivery_cost_to_so()
+        results = self.carrier_id.send_shipping(self)
+        self._update_tracking_number_and_price(results)
+        self._post_shipping_information(results)
+
+    def _update_tracking_number_and_price(self, results):
+        for res in results:
+            picking = self.env['stock.picking'].browse(res["picking_id"])
+            if picking.carrier_id.free_over and picking.sale_id:
+                amount_without_delivery = picking.sale_id._compute_amount_total_without_delivery()
+                if picking.carrier_id._compute_currency(picking.sale_id, amount_without_delivery, 'pricelist_to_company') >= picking.carrier_id.amount:
+                    res['exact_price'] = 0.0
+            picking.carrier_price = picking.carrier_id._apply_margins(res['exact_price'], picking.sale_id)
+            if res['tracking_number']:
+                related_pickings = picking.env['stock.picking'] if picking.carrier_tracking_ref and res['tracking_number'] in picking.carrier_tracking_ref else picking
+                accessed_moves = previous_moves = picking.move_ids.move_orig_ids
+                while previous_moves:
+                    related_pickings |= previous_moves.picking_id
+                    previous_moves = previous_moves.move_orig_ids - accessed_moves
+                    accessed_moves |= previous_moves
+                accessed_moves = next_moves = picking.move_ids.move_dest_ids
+                while next_moves:
+                    related_pickings |= next_moves.picking_id
+                    next_moves = next_moves.move_dest_ids - accessed_moves
+                    accessed_moves |= next_moves
+                without_tracking = related_pickings.filtered(lambda p: not p.carrier_tracking_ref)
+                without_tracking.carrier_tracking_ref = res['tracking_number']
+                for p in related_pickings - without_tracking:
+                    p.carrier_tracking_ref += "," + res['tracking_number']
+            picking._add_delivery_cost_to_so()
+
+    def _post_shipping_information(self, results, target=None):
+        for res in results:
+            picking = self.env['stock.picking'].browse(res["picking_id"])
+            message_target = target if target else picking
+            order_currency = picking.sale_id.currency_id or picking.company_id.currency_id
+            carrier_name = picking.carrier_id.name
+            msg = Markup(_("Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s<br/>Cost: %(price).2f %(currency)s")) % {
+                'carrier_name': carrier_name,
+                'ref': picking.carrier_tracking_ref,
+                'price': picking.carrier_price,
+                'currency': order_currency.name,
+            }
+            message_target.message_post(body=msg)
+            if res["delivery_label"]:
+                logmessage = Markup(_("Shipment created into %(carrier_name)s<br/> <b>Tracking Number: </b>%(tracking_number)s")) % {
+                    'carrier_name': carrier_name,
+                    'tracking_number': res["tracking_number"],
+                }
+                message_target.message_post(body=logmessage, attachments=res["delivery_label"])
+            if res["delivery_doc"]:
+                logmessage = _("%(carrier_name)s Shipment Documents", carrier_name=carrier_name)
+                message_target.message_post(body=logmessage, attachments=res["delivery_doc"])
+            if res["return_label"]:
+                logmessage = Markup(_("Return created into %(carrier_name)s<br/> <b>Tracking Number: </b>%(tracking_number)s")) % {
+                    'carrier_name': carrier_name,
+                    'tracking_number': res["tracking_number"],
+                }
+                message_target.message_post(body=logmessage, attachments=res["return_label"])
 
     def print_return_label(self):
         self.ensure_one()

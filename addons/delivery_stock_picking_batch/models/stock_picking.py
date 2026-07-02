@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.fields import Domain
 
 
@@ -27,6 +28,51 @@ class StockPickingType(models.Model):
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
+
+    def send_to_shipper(self):
+        single_pickings = self.env["stock.picking"]
+        batch_pickings_ids = defaultdict(list)
+        for picking in self:
+            if picking.batch_id:
+                batch_pickings_ids[picking.batch_id.id].append(picking)
+            else:
+                single_pickings |= picking
+
+        if not batch_pickings_ids:
+            super().send_to_shipper()
+            return
+
+        for batch_id, pickings in batch_pickings_ids.items():
+            if self._do_bundle_batch(pickings):
+                results = self.carrier_id.send_shipping(pickings[0])
+                self._update_tracking_number_and_price(results)
+                for picking in pickings[1:]:
+                    for result in results:
+                        result['picking_id'] = picking.id
+                    self._update_tracking_number_and_price(results)
+                self._post_shipping_information(results, self.env['stock.picking.batch'].browse(batch_id))
+            else:
+                single_pickings |= self.env["stock.picking"].browse([b.id for b in pickings])
+        super(StockPicking, single_pickings).send_to_shipper()
+
+    def _do_bundle_batch(self, pickings):
+        do_bundle = True
+        if not pickings:
+            return False
+        ref = pickings[0]
+        do_bundle &= len(ref.batch_id.move_line_ids.filtered(lambda move_line: move_line.result_package_id)) == len(ref.batch_id.move_line_ids)
+        if not do_bundle:
+            return False
+        packages = set(ref.batch_id.move_line_ids.mapped(lambda move_line: move_line.result_package_id.name))
+        do_bundle &= len(packages) == 1
+        # Remember: picking.packages_count
+        for picking in pickings[1:]:
+            do_bundle &= ref.partner_id == picking.partner_id
+            do_bundle &= ref.location_id == picking.location_id
+            do_bundle &= ref.location_dest_id == picking.location_dest_id
+            do_bundle &= ref.delivery_type == picking.delivery_type
+            do_bundle &= ref.carrier_id == picking.carrier_id
+        return do_bundle
 
     def _get_possible_pickings_domain(self):
         domain = super()._get_possible_pickings_domain()

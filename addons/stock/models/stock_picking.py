@@ -1467,8 +1467,6 @@ class StockPicking(models.Model):
         # if incoming/internal moves make other confirmed/partially_available moves available, assign them
         done_incoming_moves = self.filtered(lambda p: p.picking_type_id.code in ('incoming', 'internal')).move_ids.filtered(lambda m: m.state == 'done')
         done_incoming_moves._trigger_assign()
-
-        self._send_confirmation_email()
         return True
 
     def _send_confirmation_email(self):
@@ -1651,6 +1649,7 @@ class StockPicking(models.Model):
                     'anotherAction': another_action,
                 }
             }
+        self._send_confirmation_email()
         return True
 
     def action_split_transfer(self):
