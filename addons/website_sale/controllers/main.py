@@ -768,9 +768,19 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not document or not document.active:
             return request.redirect(SHOP_PATH)
 
-        if not document.shown_on_product_page or not (
-            document.res_id == product_template.id and document.res_model == "product.template"
-        ):
+        if document.attached_on_sale != "shown_on_product_page":
+            return request.redirect(SHOP_PATH)
+
+        if document.res_model == "product.template":
+            if document.res_id != product_template.id:
+                return request.redirect(SHOP_PATH)
+        elif document.res_model == "product.product":
+            if (
+                request.env["product.product"].browse(document.res_id).product_tmpl_id.id
+                != product_template.id
+            ):
+                return request.redirect(SHOP_PATH)
+        else:
             return request.redirect(SHOP_PATH)
 
         return (

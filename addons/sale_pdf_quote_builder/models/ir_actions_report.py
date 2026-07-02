@@ -34,9 +34,26 @@ class IrActionsReport(models.Model):
                 quotation_documents = order.quotation_document_ids
                 headers = quotation_documents.filtered(lambda doc: doc.document_type == "header")
                 footers = quotation_documents - headers
-                has_product_document = any(line.product_document_ids for line in order.order_line)
+                product_documents_before_quote = []
+                product_documents_after_quote = []
 
-                if not headers and not has_product_document and not footers:
+                for line in order.order_line:
+                    documents_before_quote, documents_after_quote = (
+                        self._get_product_documents_before_and_after_quote(
+                            line.product_document_ids
+                        )
+                    )
+                    if documents_before_quote:
+                        product_documents_before_quote.append((line, documents_before_quote))
+                    if documents_after_quote:
+                        product_documents_after_quote.append((line, documents_after_quote))
+
+                if (
+                    not headers
+                    and not product_documents_before_quote
+                    and not product_documents_after_quote
+                    and not footers
+                ):
                     continue
 
                 form_fields_values_mapping = {}
@@ -46,28 +63,19 @@ class IrActionsReport(models.Model):
                     use_babel=True, lang=order._get_lang() or self.env.user.lang
                 )
 
-                if headers:
-                    for header in headers:
-                        prefix = f"quotation_document_id_{header.id}__"
-                        self_with_order_context._update_mapping_and_add_pages_to_writer(
-                            writer, header, form_fields_values_mapping, prefix, order
-                        )
-                if has_product_document:
-                    for line in order.order_line:
-                        for doc in line.product_document_ids:
-                            # Use both the id of the line and the doc as variants could use the same
-                            # document.
-                            prefix = f"sol_id_{line.id}_product_document_id_{doc.id}__"
-                            self_with_order_context._update_mapping_and_add_pages_to_writer(
-                                writer, doc, form_fields_values_mapping, prefix, order, line
-                            )
+                self_with_order_context._add_documents_to_writer(
+                    writer, [(None, headers)], form_fields_values_mapping, order
+                )
+                self_with_order_context._add_documents_to_writer(
+                    writer, product_documents_before_quote, form_fields_values_mapping, order
+                )
                 self._add_pages_to_writer(writer, initial_stream.getvalue())
-                if footers:
-                    for footer in footers:
-                        prefix = f"quotation_document_id_{footer.id}__"
-                        self_with_order_context._update_mapping_and_add_pages_to_writer(
-                            writer, footer, form_fields_values_mapping, prefix, order
-                        )
+                self_with_order_context._add_documents_to_writer(
+                    writer, product_documents_after_quote, form_fields_values_mapping, order
+                )
+                self_with_order_context._add_documents_to_writer(
+                    writer, [(None, footers)], form_fields_values_mapping, order
+                )
                 pdf.fill_form_fields_pdf(writer, form_fields=form_fields_values_mapping)
                 with io.BytesIO() as _buffer:
                     writer.write(_buffer)
@@ -75,6 +83,39 @@ class IrActionsReport(models.Model):
                 result[order.id].update({"stream": stream})
 
         return result
+
+    @api.model
+    def _get_product_documents_before_and_after_quote(self, documents):
+        documents_before_quote = documents.filtered(
+            lambda doc: doc.attached_on_sale in {"hidden", "shown_on_product_page"}
+        )
+        return documents_before_quote, documents - documents_before_quote
+
+    @api.model
+    def _add_documents_to_writer(
+        self, writer, line_documents_pairs, form_fields_values_mapping, order
+    ):
+        """Add multiple documents to the writer, updating the form fields mapping.
+
+        :param PdfFileWriter writer: the writer to which pages needs to be added
+        :param list line_documents_pairs: list of (order_line_or_None, documents) tuples. When
+                                          order_line is None, the documents are quotation documents
+                                          (headers/footers); otherwise they are product documents
+                                          linked to the given sale order line.
+        :param dict form_fields_values_mapping: the existing prefixed form field names - values
+                                                mapping to update
+        :param recordset order: the sale order
+        :return: None
+        """
+        for line, documents in line_documents_pairs:
+            for doc in documents:
+                if line:
+                    prefix = f"sol_id_{line.id}_product_document_id_{doc.id}__"
+                else:
+                    prefix = f"quotation_document_id_{doc.id}__"
+                self._update_mapping_and_add_pages_to_writer(
+                    writer, doc, form_fields_values_mapping, prefix, order, line
+                )
 
     @api.model
     def _update_mapping_and_add_pages_to_writer(

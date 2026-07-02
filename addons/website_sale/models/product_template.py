@@ -1241,6 +1241,13 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return [self] + list(self.product_template_image_ids)
 
+    def _get_product_page_documents(self, variant=None):
+        self.ensure_one()
+        docs = self.sudo().product_document_ids
+        if variant:
+            docs |= variant.sudo().product_document_ids
+        return docs.filtered(lambda d: d.attached_on_sale == "shown_on_product_page")
+
     def _get_attribute_value_domain(self, attribute_value_dict):  # noqa: PLR6301
         return [
             [("attribute_line_ids.value_ids", "in", attribute_value_ids)]

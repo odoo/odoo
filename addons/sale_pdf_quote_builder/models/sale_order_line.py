@@ -40,7 +40,9 @@ class SaleOrderLine(models.Model):
     def _compute_available_product_document_ids(self):
         available_documents_ordered = self.env["product.document"]._read_group(
             [
-                ("attached_on_sale", "=", "inside"),
+                ("type", "=", "binary"),
+                ("file_size", ">", 0),
+                ("mimetype", "=", "application/pdf"),
                 "|",
                 "&",
                 ("res_model", "=", "product.product"),
