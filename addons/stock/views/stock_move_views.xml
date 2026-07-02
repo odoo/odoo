@@ -410,6 +410,7 @@
                     <filter string="Scrapped" name="scrapped" domain="[('is_scrap', '=', True)]" invisible="context.get('from_scrap_menu')"/>
                     <separator/>
                     <filter string="Date" name="today" date="date" help="Scheduled or processing date"/>
+                    <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date', '&gt;=', '-30d'), ('date', '&lt;', 'now')]" invisible="1"/>
                     <group>
                         <filter string="Product" name="by_product" domain="[]"  context="{'group_by': 'product_id'}"/>
                         <filter string="Operation Type" name="groupby_picking_type_id" domain="[]"  context="{'group_by': 'picking_type_id'}"/>
@@ -453,7 +454,8 @@
             <field name="context">{
                 'search_default_done': 1,
                 'search_default_groupby_location_id': 2,
-                'search_default_incoming': 3
+                'search_default_incoming': 3,
+                'search_default_filter_last_30_days': 1,
             }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -475,7 +477,8 @@
             <field name="context">{
                 'search_default_done': 1,
                 'search_default_groupby_location_id': 2,
-                'search_default_outgoing': 3
+                'search_default_outgoing': 3,
+                'search_default_filter_last_30_days': 1,
             }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

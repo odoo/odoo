@@ -372,6 +372,7 @@
                     <filter string="No Bank Transaction" domain="[('statement_line_id', '=', False), ('payment_id', '=', False)]" name="no_st_line_id" invisible="1"/>
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
+                    <filter string="Last 30 Days" name="last_30_days" domain="[('date', '&gt;=', 'today -30d'), ('date', '&lt;=', 'today')]" invisible="1"/>
                     <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
                     <separator/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>

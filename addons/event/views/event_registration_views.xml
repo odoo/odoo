@@ -381,6 +381,27 @@
         </field>
     </record>
 
+    <record id="action_event_registration" model="ir.actions.act_window">
+        <field name="name">Attendees</field>
+        <field name="res_model">event.registration</field>
+        <field name="view_mode">graph,pivot,kanban,list,form</field>
+        <field name="search_view_id" ref="view_registration_search"/>
+        <field name="context">{
+                'search_default_filter_last_month_creation': 1,
+                'search_default_taken': 1,
+                'search_default_group_by_create_date_day': 1,
+                'registration_view_hide_group_by_create_date_week': 1,
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Attendees yet!
+            </p><p>
+                From this dashboard you can report, analyze and detect trends regarding your event registrations.
+            </p>
+        </field>
+    </record>
+
     <menuitem name="Attendees"
         id="menu_action_registration"
         parent="event.menu_reporting_events"

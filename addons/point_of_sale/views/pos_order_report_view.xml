@@ -55,6 +55,7 @@
                     <filter string="Not Cancelled" name="not_cancelled" domain="[('state','!=','cancel')]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
+                    <filter string="Last 30 Days" name="last_30_days" domain="[('date', '&gt;=', '-30d'), ('date', '&lt;', 'now')]" invisible="1"/>
                     <field name="config_id"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
@@ -95,6 +96,24 @@
             </field>
         </record>
 
+        <record id="action_report_pos_sale" model="ir.actions.act_window">
+            <field name="name">Orders Analysis</field>
+            <field name="res_model">report.pos.order</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="domain">[('state', 'not in', ['draft', 'cancel'])]</field>
+            <field name="search_view_id" ref="view_report_pos_order_search"/>
+            <field name="context">{
+                'search_default_not_invoiced': 1,
+                'search_default_last_30_days': 1,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p><p>
+                    Create a new POS order
+                </p>
+            </field>
+        </record>
 
         <record id="action_report_pos_details" model="ir.actions.act_window">
             <field name="name">Sales Details</field>

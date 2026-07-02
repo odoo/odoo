@@ -62,6 +62,7 @@
                     <separator />
                     <filter string="Contract Start" name="contract_date_start" date="contract_date_start"/>
                     <filter string="Contract End" name="contract_date_end" date="contract_date_end"/>
+                    <filter string="Newly Hired" name="newly_hired" domain="[('newly_hired', '=', True)]" invisible="1"/>
                     <separator />
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group>
@@ -855,6 +856,20 @@
             <field name="view_mode">form,list</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
+        </record>
+
+        <record id="action_employee_newly_hired" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">graph,kanban,list,form,pivot</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_employee_filter"/>
+            <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+            <field name="context">{
+                'searchpanel_default_company_id': allowed_company_ids[0],
+                'chat_icon': True,
+                'search_default_newly_hired': 1,
+            }</field>
         </record>
 
         <record id="action_hr_employee_all_activities" model="ir.actions.act_window">

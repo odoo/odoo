@@ -20,6 +20,8 @@ class DigestDigest(models.Model):
     def _get_kpi_custom_settings(self, company, user):
         res = super()._get_kpi_custom_settings(company, user)
         menu_id = self.env.ref('hr.menu_hr_root').id
-        res['kpi_action']['kpi_hr_recruitment_new_colleagues'] = f'hr.open_view_employee_list_my?menu_id={menu_id}'
+        res['kpi_action']['kpi_hr_recruitment_new_colleagues'] = (
+            f'hr.action_employee_newly_hired?menu_id={menu_id}'
+        )
         res['kpi_sequence']['kpi_hr_recruitment_new_colleagues'] = 12500
         return res
