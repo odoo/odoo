@@ -659,11 +659,10 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         this.$dropdownMenus.attr('data-bs-popper', 'none');
         if (uiUtils.getSize() >= SIZES.LG) {
             this.$dropdownMenus.css('margin-top', '0');
-            this.$dropdownMenus.css('top', 'unset');
         } else {
             this.$dropdownMenus.css('margin-top', '');
-            this.$dropdownMenus.css('top', '');
         }
+        this.$dropdownMenus.css('top', '');
     },
     /**
      * Hides all opened dropdowns.
@@ -801,6 +800,7 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
             }
             megaMenuToggleEl.parentElement.querySelector(".o_mega_menu")?.remove();
         });
+        this.$megaMenus = this.$el.find('.o_mega_menu');
 
         return this._super(...arguments);
     },
@@ -867,6 +867,19 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
      */
     _onMegaMenuHover(ev) {
         const megaMenuToggleEl = ev.currentTarget;
+        const currentHeader = getComputedStyle(this.el.closest("body"))
+            .getPropertyValue("--header-template")
+            .replaceAll("'", "");
+        const specialHeaders = ["sales_one", "sales_four"];
+        if (
+            !megaMenuToggleEl.closest(".o_header_mobile") &&
+            specialHeaders.includes(currentHeader)
+        ) {
+            const alternateRelativeEl = megaMenuToggleEl.closest(".o_main_nav .container");
+            const newTop = alternateRelativeEl.getBoundingClientRect().bottom;
+            this.$megaMenus.css('top', `${newTop}px`);
+        }
+        // debugger
         // Ignore the event if the menus are not hoverable or if we are in
         // mobile view (again, the hoverable menus are clicked on mobile view).
         if (!this.el.classList.contains("o_hoverable_dropdown")
@@ -874,6 +887,18 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
             return;
         }
         this._moveMegaMenu(megaMenuToggleEl);
+        // const menusContainerEl = megaMenuToggleEl.closest(
+        //     specialHeaders.includes(currentHeader) ? ".o_main_nav .container" : ".navbar"
+        // );
+        const menusContainerEl = megaMenuToggleEl.closest(".navbar");
+
+        // The bridge is anchored to the bottom of the menus container (where the mega
+        // menu opens), so its height is the distance from the toggle's bottom
+        // edge down to the menus container's bottom edge.
+        const toggleBottom = megaMenuToggleEl.getBoundingClientRect().bottom;
+        const menusContainerBottom = menusContainerEl.getBoundingClientRect().bottom;
+        const bridgeHeight = Math.max(0, Math.round(menusContainerBottom - toggleBottom));
+        megaMenuToggleEl.style.setProperty("--o-mega-menu-bridge-height", `${bridgeHeight}px`);
     },
     /**
      * Called when the extra menu (+) dropdown is clicked/key pressed.
