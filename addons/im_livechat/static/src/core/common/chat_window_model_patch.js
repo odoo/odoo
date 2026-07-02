@@ -1,5 +1,6 @@
 import { ChatWindow } from "@mail/core/common/chat_window_model";
 
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").ChatWindow} */
@@ -31,14 +32,23 @@ const chatWindowPatch = {
     },
     async _onBeforeClose() {
         const canClose = await super._onBeforeClose(...arguments);
+        if (!this.exists() || this.isTransient || this.feedbackDoneResolver || !canClose) {
+            return canClose;
+        }
         if (
             this.exists() &&
             this.channel?.channel_type === "livechat" &&
             this.channel.livechatVisitorMember?.persona?.notEq(this.store.self)
         ) {
             await this.channel.leaveChannelRpc();
+            return canClose;
         }
-        return canClose;
+        rpc("/im_livechat/visitor_leave_session", { channel_id: this.channel.id });
+        this.channel.chatbot?.stop();
+        this.feedbackDoneResolver = Promise.withResolvers();
+        return await this.feedbackDoneResolver.promise.finally(
+            () => (this.feedbackDoneResolver = null)
+        );
     },
 };
 patch(ChatWindow.prototype, chatWindowPatch);

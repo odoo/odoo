@@ -8,6 +8,7 @@ const messagePatch = {
     setup() {
         super.setup(...arguments);
         this.chatbotStep = fields.One("ChatbotStep", { inverse: "message" });
+        this.disableChatbotAnswers = false;
     },
     canReplyTo(thread) {
         if (thread?.channel?.channel_type === "livechat") {
@@ -22,6 +23,15 @@ const messagePatch = {
                 this.channel_id?.channel_type === "livechat" &&
                 this.store.self_user?.share === false)
         );
+    },
+    get notificationHidden() {
+        if (
+            this.notificationType === "channel-left" &&
+            this.channel_id?.self_member_id?.livechat_member_type === "visitor"
+        ) {
+            return true;
+        }
+        return super.notificationHidden;
     },
 };
 patch(Message.prototype, messagePatch);
