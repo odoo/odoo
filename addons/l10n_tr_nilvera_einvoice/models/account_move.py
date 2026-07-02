@@ -373,6 +373,10 @@ class AccountMove(models.Model):
         invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachment.ids)
 
     def l10n_tr_nilvera_get_pdf(self):
+        invoices_to_refresh = self.filtered(lambda inv: inv.l10n_tr_nilvera_send_status in {'waiting', 'sent', 'unknown'})
+        if invoices_to_refresh:
+            invoices_to_refresh._l10n_tr_nilvera_get_submitted_document_status()
+
         with _get_nilvera_client(self.env.company) as client:
             for invoice in self:
                 if (
@@ -441,7 +445,7 @@ class AccountMove(models.Model):
 
     def _l10n_tr_nilvera_company_get_documents(self, invoice_channel, category, journal_type):
         for company in self.env.companies:
-            if company.country_code != "TR" or not company.l10n_tr_nilvera_api_key:
+            if company.country_code != "TR" or not company.sudo().l10n_tr_nilvera_api_key:
                 continue
             self.with_company(company)._l10n_tr_nilvera_get_documents(invoice_channel, category, journal_type)
 
