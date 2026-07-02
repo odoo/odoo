@@ -9,7 +9,6 @@ from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsComm
 from freezegun import freeze_time
 
 
-@skip('Temporary to fast merge new valuation')
 class TestStockValuationLCCommon(TestStockLandedCostsCommon):
 
     @classmethod
@@ -140,6 +139,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
 
 
 @tagged('-at_install', 'post_install')
+@skip('Temporary to fast merge new valuation')
 class TestStockValuationLCFIFO(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):
@@ -271,6 +271,7 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
 
 
 @tagged('-at_install', 'post_install')
+@skip('Temporary to fast merge new valuation')
 class TestStockValuationLCAVCO(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):
@@ -358,6 +359,7 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         self.assertEqual(product.standard_price, 15)
 
 @tagged('-at_install', 'post_install')
+@skip('Temporary to fast merge new valuation')
 class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):
@@ -666,6 +668,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
 
 @tagged('-at_install', 'post_install')
+@skip('Temporary to fast merge new valuation')
 class TestAccountInvoicingWithCOA(TestStockValuationLCCommon):
     def setUp(self):
         self.usd = self.env.ref('base.USD')
