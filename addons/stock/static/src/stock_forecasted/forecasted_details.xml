@@ -65,18 +65,17 @@
                                 <span t-else="" class="text-muted">Not Available</span>
                             </td>
                         </t>
-                        <td name="quantity_cell" class="text-end"><t t-attf-class="#{(!line.replenishment_filled and 'text-danger')" t-out="this._formatFloat(line.quantity)"/> <t t-out="line.uom_id.display_name"/></td>
-                        <td class="border-end-0 o_forecasted_details_line_button" t-attf-class="#{(!line.replenishment_filled and 'table-danger') or (line.is_matched and 'table-info')}" name="usedby_cell">
+                        <td name="quantity_cell" class="text-end"><t t-out="this._formatFloat(line.quantity)"/> <t t-out="line.uom_id.display_name"/></td>
+                        <td class="border-end-0 o_forecasted_details_line_button" t-attf-class="#{(!line.replenishment_filled and 'table-danger') or (line.is_matched and 'table-info') or ''}" name="usedby_cell">
                             <button t-if="line.move_out and line.move_out.picking_id"
                                 t-attf-class="o_priority o_priority_star me-1 fa fa-star#{line.move_out.picking_id.priority=='1' ? '' : '-o'}"
                                 t-on-click="() => this._onClickChangePriority('stock.picking', line.move_out.picking_id)"
                                 name="change_priority_link"/>
                             <a t-if="line.document_out"
                                 href="#"
-                                t-attf-class="#{line.is_matched and 'fst-italic'}"
+                                t-attf-class="fw-bold #{line.is_matched ? 'fst-italic' : ''}"
                                 t-on-click.prevent="() => this.props.openView(line.document_out._name, 'form', line.document_out.id)"
-                                t-out="line.document_out.name"
-                                class="fw-bold"/>
+                                t-out="line.document_out.name"/>
                         </td>
                         <td class="p-0 text-center border-start-0">
                             <t t-if="this.displayReserve(line)">
@@ -96,9 +95,23 @@
                                     </t>
                                 </button>
                             </t>
+                            <t t-elif="this.displayAllocation(line)">
+                                <a t-if="this.displayUnassign(line)"
+                                    href="#"
+                                    name="unassign_link"
+                                    t-on-click="() => this._unallocate(line)">
+                                    Unassign
+                                </a>
+                                <a t-else=""
+                                    href="#"
+                                    name="assign_link"
+                                    t-on-click="() => this._allocate(line)">
+                                    Assign
+                                </a>
+                            </t>
                         </td>
                         <td t-out="line.delivery_date or ''"
-                            t-attf-class="#{line.delivery_late and 'text-danger'}"/>
+                            t-attf-class="#{line.delivery_late ? 'text-danger' : ''}"/>
                     </tr>
                     <t t-if="line_index === last_line_index or line.product.id !== this.lines[line_index + 1].product.id">
                         <!-- Check in progress with DALA

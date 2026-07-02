@@ -231,7 +231,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
         return line
 
     def _get_report_moves_fields(self):
-        return ['id', 'date']
+        return ['id', 'date', 'move_orig_ids']
 
     def _get_quant_domain(self, location_ids, products):
         return [('location_id', 'in', location_ids), ('quantity', '>', 0), ('product_id', 'in', products.ids)]

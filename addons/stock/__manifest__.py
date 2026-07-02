@@ -97,6 +97,7 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.report_assets_common': [
+            'stock/static/src/scss/report_stock_reception_labels.scss',
             'stock/static/src/scss/report_stock_rule.scss',
             'stock/static/src/scss/report_stockpicking_operations.scss',
         ],

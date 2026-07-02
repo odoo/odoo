@@ -179,6 +179,32 @@ export class ForecastedDetails extends Component {
         );
     }
 
+    displayAllocation(line) {
+        return Boolean(line.move_in && line.move_out);
+    }
+
+    displayUnassign(line) {
+        return Boolean(line.move_out && line.move_out.move_orig_ids.length);
+    }
+
+    async _allocate(line) {
+        await this.orm.call(
+            "stock.allocation.report",
+            "action_assign",
+            [[line.move_in.id], [line.move_out.id], line.quantity],
+        );
+        this.props.reloadReport();
+    }
+
+    async _unallocate(line) {
+        await this.orm.call(
+            "stock.allocation.report",
+            "action_unassign",
+            [[line.move_in.id], [line.move_out.id], line.quantity],
+        );
+        this.props.reloadReport();
+    }
+
     displayReserve(line){
         let splittedLine = true;
         if(this.line_index - 1 >= 0){

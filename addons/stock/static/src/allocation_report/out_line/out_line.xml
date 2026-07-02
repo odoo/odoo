@@ -1,6 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="stock.AllocationReport.OutLine">
+        <t t-if="this.props.isSmall" t-call="stock.AllocationReport.OutLine.MobileContent"/>
+        <t t-else="" t-call="stock.AllocationReport.OutLine.Content"/>
+    </t>
+
+    <t t-name="stock.AllocationReport.OutLine.MobileContent">
+        <div class="row border bg-white py-3">
+            <div class="o_quantity col"
+                t-att-class="this.quantityCSSClass">
+                <t t-if="this.quantityToDisplay &amp;&amp; this.quantityToDisplay != this.demandQuantity()">
+                    <t t-out="this.quantityToDisplay"/> /
+                </t>
+                <t t-out="this.demandQuantity()"/> <t t-out="this.props.productUom.display_name"/>
+            </div>
+            <div class="o_reserved col text-center">
+                <CheckBox t-props="this.getCheckBoxProps(this.line, this.out_line)"/>
+            </div>
+            <div class="o_allocation_for col">
+                <div class="o_source_operation">
+                    <t t-if="this.picking">
+                        <span t-if="this.favorite()" class="o_priority">
+                            <span
+                                class="o_priority_star fa fa-star"
+                                tabindex="0"
+                                t-att-checked="this.favorite()"
+                            />
+                        </span>
+                        <a href="#" view-type="form"
+                            t-on-click.prevent="() => this.env.bus.trigger('open_record', this.picking)">
+                            <t t-out="this.picking.display_name"/>
+                            <t t-if="this.source || this.partner">
+                                <br/>
+                                <t t-if="this.source"> (<t t-out="this.source.display_name"/>)</t>
+                                <t t-if="this.partner">:
+                                    <span class="o_partner" t-out="this.partner.display_name"/>
+                                </t>
+                            </t>
+                        </a>
+                    </t>
+                    <t t-elif="this.source">
+                        <span class="o_priority">
+                            <span
+                                class="o_priority_star fa fa-star"
+                                t-att-class="this.favorite() ? '' : 'opacity-0'"
+                                tabindex="0"
+                                t-att-checked="this.favorite()"
+                            />
+                        </span>
+                        <t t-call="stock.AllocationReport.OutLine.SourceLink"/>
+                    </t>
+                </div>
+                <div t-attf-class="o_date {{this.dateColor()}}">
+                    <span t-if="this.date()" t-out="this.displayDate(this.date())"/>
+                </div>
+            </div>
+            <div class="col">
+                <button t-if="this.props.allocatedQuantity()"
+                        class="btn btn-secondary fa fa-print"
+                        t-on-click.prevent="() => this.onPrintLabels()"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="stock.AllocationReport.OutLine.Content">
         <td class="o_quantity ps-3"
             t-att-class="this.quantityCSSClass">
             <t t-if="this.quantityToDisplay &amp;&amp; this.quantityToDisplay != this.demandQuantity()">
@@ -24,31 +87,33 @@
             </span>
             <span class="o_source_operation">
                 <t t-if="this.picking">
-                    <a href="#" view-type="form" t-out="this.picking.display_name"
-                        t-on-click.prevent="() => this.env.bus.trigger('open_record', this.picking)"/>
-                    <t t-if="this.source"> (<t t-call="stock.AllocationReport.OutLine.SourceLink"/>)</t>
+                    <a href="#" view-type="form"
+                        t-on-click.prevent="() => this.env.bus.trigger('open_record', this.picking)">
+                        <t t-out="this.picking.display_name"/>
+                        <t t-if="this.source"> (<t t-out="this.source.display_name"/>)</t>
+                        <t t-if="this.partner">:
+                            <span class="o_partner" t-out="this.partner.display_name"/>
+                        </t>
+                    </a>
                 </t>
                 <t t-elif="this.source" t-call="stock.AllocationReport.OutLine.SourceLink"/>
             </span>
-            <t t-if="this.partner">:
-                <a href="#" view-type="form" class="o_partner" t-out="this.partner.display_name"
-                    t-on-click.prevent="() => this.env.bus.trigger('open_record', this.partner)"/>
-            </t>
         </td>
         <td t-attf-class="o_date {{this.dateColor()}}">
             <span t-if="this.date()" t-out="this.displayDate(this.date())"/>
         </td>
         <td>
-            <button t-attf-class="btn btn-secondary {{this.props.reservedQuantity() ? '' : 'opacity-0 pe-none'}}"
+            <button t-attf-class="btn btn-secondary {{this.props.allocatedQuantity() ? '' : 'opacity-0 pe-none'}}"
                     t-on-click.prevent="() => this.onPrintLabels()">
                 Print Labels
             </button>
-            <!-- Dummy invisible button to occupy the same space even when there is no button to display -->
         </td>
     </t>
 
     <t t-name="stock.AllocationReport.OutLine.SourceLink">
         <a href="#" view-type="form" t-out="this.source.display_name"
-           t-on-click.prevent="() => this.env.bus.trigger('open_record', this.source)"/>
+           t-on-click.prevent="() => this.env.bus.trigger('open_record', this.source)">
+            <t t-if="this.partner">: <span class="o_partner" t-out="this.partner.display_name"/></t>
+        </a>
     </t>
 </templates>
