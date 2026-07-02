@@ -43,8 +43,11 @@
 <t t-name="website.MenuRow">
     <li class="mb-1" t-att-data-menu-id="this.props.menu.fields['id']" t-att-data-is-mega-menu="this.props.menu.fields['is_mega_menu'] ? 'true' : undefined">
         <div class="input-group mb-1">
-            <span class="input-group-text bg-view oi align-content-center p-2 border-end-0 text-muted"
-                data-icon="drag_indicator" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+            <button type="button" class="btn o_drag_handle input-group-text bg-view d-flex align-items-stretch p-0 border border-end-0 text-muted transition-none"
+                aria-label="Drag or use the arrow keys to reorder" title="Drag or use the arrow keys to reorder"
+                t-on-keydown="(ev) => this.keyboardReorderPlugin.onHandleKeyDown(ev, this.props.menu.fields['id'])">
+                <i class="oi d-flex align-items-center p-2" data-icon="drag_indicator" aria-hidden="true"/>
+            </button>
             <span class="form-control d-flex align-items-center bg-view ms-0 border-start-0 border-end-0">
                 <span t-on-dblclick="this.edit" class="js_menu_label o_text_overflow flex-grow-1">
                     <t t-out="this.props.menu.fields['name']"/>
@@ -73,21 +76,32 @@
     </li>
 </t>
 
+<t t-name="website.MenuEditorList">
+    <ul t-ref="this.listRef" tabindex="0" class="oe_menu_editor list-unstyled">
+        <t t-foreach="this.props.rootMenu.children" t-as="menu" t-key="menu.fields['id']">
+            <MenuRow menu="menu" edit="this.props.edit" delete="this.props.delete" createPage="this.props.createPage"/>
+        </t>
+    </ul>
+</t>
+
 <t t-name="website.EditMenuDialog">
     <WebsiteDialog close="this.props.close" title.translate="Edit Menu" primaryTitle.translate="Save" primaryClick="() => this.onClickSave()">
-        <ul t-ref="this.menuEditor" class="oe_menu_editor list-unstyled">
-            <t t-foreach="this.state.rootMenu.children" t-as="menu" t-key="menu.fields['id']">
-                <MenuRow menu="menu" edit="(id) => this.editMenu(id)" delete="(id) => this.deleteMenu(id)" createPage="(id) => this.createPage(id)"/>
-            </t>
-        </ul>
+        <MenuEditorList rootMenu="this.state.rootMenu" moveMenu="(move) => this._moveMenu(move)"
+            edit="(id) => this.editMenu(id)" delete="(id) => this.deleteMenu(id)" createPage="(id) => this.createPage(id)"/>
         <div class="d-flex mt-4 justify-content-between align-items-end">
             <div class="d-flex flex-column">
                 <a href="#" t-on-click="this.addMenu">
                     <i class="oi me-1" data-icon="add_circle"/> Add Menu Item
                 </a>
             </div>
-            <small class="text-muted">
-                <i class="oi me-1" data-icon="info"/> Drag to the right to get a submenu
+            <small class="text-muted d-flex flex-column">
+                <div>
+                    <i class="oi me-1" data-icon="info"/> Drag to the right to get a submenu
+                </div>
+                <!-- TODO: change the text here as per PO -->
+                <div>
+                    <i class="oi me-1" data-icon="info"/> Reorder items with arrow keys
+                </div>
             </small>
         </div>
     </WebsiteDialog>
