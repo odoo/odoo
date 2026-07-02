@@ -125,13 +125,13 @@ test("'Author' field's type stays selected when you modify the option list", asy
     );
 
     await contains(":iframe section span:contains(Author)").click();
-    await contains(".hb-row[data-label='Type'] button.o-dropdown-caret:contains('Author')").click();
-    expect(".o_popover [data-action-value='author_id']").toHaveClass("active");
+    await contains(".hb-row[data-label='Type'] button:contains('Author')").click();
+    expect(".o_popover [data-choice-index]:contains('Author')").toHaveClass("selected");
     await contains(".o_select_menu button.o-hb-selectMany2X-toggle:contains('Add')").click();
     await contains(".o_select_menu_menu .o-dropdown-item").click();
     // check that the author is still marked as selected
-    await contains(".hb-row[data-label='Type'] button.o-dropdown-caret:contains('Author')").click();
-    expect(".o_popover [data-action-value='author_id']").toHaveClass("active");
+    await contains(".hb-row[data-label='Type'] button:contains('Author')").click();
+    expect(".o_popover [data-choice-index]:contains('Author')").toHaveClass("selected");
 });
 
 test("undo redo add form field", async () => {
@@ -739,8 +739,9 @@ test("Only state fields have data-link-state-to-country attr", async () => {
 
     // Other 'select' elements shouldn't have this attribute
     await contains(".options-container .btn[title='Add some content after this field']").click();
+    await contains("span.o-dropdown-item:contains('Field')").click();
     await contains(".hb-row[data-label='Type'] .dropdown-toggle").click();
-    await contains(".o-hb-select-dropdown-item:contains('Selection')").click();
+    await contains(".o_popover [data-choice-index]:contains('Selection')").click();
     expect(":iframe .s_website_form_field:last-child select").not.toHaveAttribute(
         "data-link-state-to-country"
     );
@@ -1116,16 +1117,16 @@ test("other option attributes are preserved when switching between radio and sel
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-label");
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-placeholder");
 
-    await contains("button[id='type_opt']").click();
-    await contains("[data-action-value='selection']").click();
+    await contains(".hb-row[data-label='Type'] .dropdown-toggle").click();
+    await contains(".o_popover [data-choice-index]:contains('Selection')").click();
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-allowed", "true");
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-label");
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-placeholder");
 
-    await contains("button[id='type_opt']").click();
-    await contains("[data-action-value='selection']").click();
+    await contains(".hb-row[data-label='Type'] .dropdown-toggle").click();
+    await contains(".o_popover [data-choice-index]:contains('Selection')").click();
     await contains(".options-container [data-label='Type'] button").click();
-    await contains(".o_popover [data-action-value='one2many']").click();
+    await contains(".o_popover [data-choice-index]:contains('Multiple Checkboxes')").click();
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-allowed");
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-label");
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-placeholder");

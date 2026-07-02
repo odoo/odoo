@@ -110,33 +110,8 @@
 
 <t t-name="website.s_website_form_field_option">
     <BuilderRow label.translate="Type">
-        <BuilderSelect t-if="!this.domState.elClassList.includes('s_website_form_model_required')"
-            id="'type_opt'" preview="false"
-        >
-            <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Custom Field</div>
-            <BuilderContext action="'customField'">
-                <BuilderSelectItem actionValue="'char'">Text</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'text'">Long Text</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'email'">Email</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'tel'">Telephone</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'url'">Url</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'integer'">Number</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'float'">Decimal Number</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'boolean'" id="'custom_field_boolean_opt'">Checkbox</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'one2many'">Multiple Checkboxes</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'selection'">Radio Buttons</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'many2one'">Selection</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'date'">Date</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'datetime'">Date &amp; Time</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'binary'">File Upload</BuilderSelectItem>
-            </BuilderContext>
-            <t t-if="this.state.availableFields.length">
-                <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Existing fields</div>
-                <t t-foreach="this.state.availableFields" t-as="field" t-key="field.name">
-                    <BuilderSelectItem action="'existingField'" actionValue="field.name" t-out="field.string"/>
-                </t>
-            </t>
-        </BuilderSelect>
+        <BuilderSearchSelect t-if="!this.domState.elClassList.includes('s_website_form_model_required')"
+            groups="this.state.fieldTypeItems" preview="false"/>
     </BuilderRow>
     <BuilderRow label.translate="Input Type">
         <BuilderSelect t-if="!this.domState.elClassList.includes('s_website_form_custom') and ['char', 'email', 'tel', 'url'].includes(this.domState.elDataset.type) and !this.domState.elClassList.includes('s_website_form_model_required')"
