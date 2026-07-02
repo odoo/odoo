@@ -203,19 +203,25 @@ export class CartService {
             });
         }
 
-        const shouldShowProductConfigurator = await this.rpc(
-            '/website_sale/should_show_product_configurator',
-            {
-                product_template_id: productTemplateId,
-                is_product_configured: isConfigured,
-            }
-        );
-        if (shouldShowProductConfigurator) {
+        const ptavIds = ptavs.concat(noVariantAttributeValues);
+        const configDataParams = {
+            product_template_id: productTemplateId,
+            quantity: quantity,
+            ptav_ids: ptavIds,
+            product_uom_id: uomId,
+            so_date: serializeDateTime(DateTime.now()),
+            is_product_configured: isConfigured,
+            ...rest
+        };
+
+        const result = await this.rpc('/website_sale/product_configurator/get_values', configDataParams);
+        if (result.products) {
+            const { products, optional_products, currency_id } = result;
             return this._openProductConfigurator(
                 productTemplateId,
-                quantity,
-                uomId,
-                ptavs.concat(noVariantAttributeValues),
+                products,
+                optional_products,
+                currency_id,
                 productCustomAttributeValues,
                 {
                     isBuyNow: isBuyNow,
@@ -334,9 +340,9 @@ export class CartService {
      */
     async _openProductConfigurator(
         productTemplateId,
-        quantity,
-        uomId,
-        combination,
+        products,
+        optionalProducts,
+        currencyId,
         productCustomAttributeValues,
         options,
         additionalData
@@ -344,13 +350,13 @@ export class CartService {
         return await new Promise((resolve) => {
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: productTemplateId,
-                ptavIds: combination,
+                products: products,
+                optionalProducts: optionalProducts,
+                currencyId: currencyId,
                 customPtavs: productCustomAttributeValues.map(customPtav => ({
                     id: customPtav.custom_product_template_attribute_value_id,
                     value: customPtav.custom_value,
                 })),
-                quantity: quantity,
-                productUOMId: uomId,
                 soDate: serializeDateTime(DateTime.now()),
                 edit: false,
                 isFrontend: true,

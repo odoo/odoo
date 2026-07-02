@@ -8,32 +8,42 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController, WebsiteSale):
     @route(
-        route="/website_sale/should_show_product_configurator",
+        route="/website_sale/product_configurator/get_values",
         type="jsonrpc",
         auth="public",
         website=True,
         readonly=True,
     )
-    def website_sale_should_show_product_configurator(
-        self, product_template_id, is_product_configured
+    def website_sale_product_configurator_get_values(self, *args, **kwargs):
+        self._populate_currency_and_pricelist(kwargs)
+        return super().sale_product_configurator_get_values(*args, **kwargs)
+
+    def should_show_product_configurator(
+        self, single_product_variant_dict, product_template, is_product_configured=False, **kwargs
     ):
         """Return whether the product configurator dialog should be shown.
 
-        :param int product_template_id: The product being checked, as a `product.template` id.
+        :param dict single_product_variant_dict: Information about the single product variant.
+        :param recordset product_template: The product.template record being checked.
         :param bool is_product_configured: Whether the product is already configured.
         :rtype: bool
         :return: Whether the product configurator dialog should be shown.
         """
-        product_template = self.env["product.template"].browse(product_template_id)
+        if not request.is_frontend:
+            return super().should_show_product_configurator(
+                single_product_variant_dict,
+                product_template,
+                is_product_configured=is_product_configured,
+                **kwargs,
+            )
         if product_template._is_donation():
             return False
-        single_product_variant = product_template.get_single_product_variant()
         has_optional_products = bool(
             product_template.optional_product_ids.filtered(self._should_show_product)
         )
         return (
             has_optional_products
-            or not (single_product_variant.get("product_id") or is_product_configured)
+            or not (single_product_variant_dict.get("product_id") or is_product_configured)
             or (len(product_template._get_available_uoms()) > 1 and not is_product_configured)
         )
 
@@ -51,17 +61,6 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             ]):
                 return self.env["product.template"].sudo().browse(product_template_id)
         return super()._get_product_template(product_template_id)
-
-    @route(
-        route="/website_sale/product_configurator/get_values",
-        type="jsonrpc",
-        auth="public",
-        website=True,
-        readonly=True,
-    )
-    def website_sale_product_configurator_get_values(self, *args, **kwargs):
-        self._populate_currency_and_pricelist(kwargs)
-        return super().sale_product_configurator_get_values(*args, **kwargs)
 
     @route(
         route="/website_sale/product_configurator/create_product",

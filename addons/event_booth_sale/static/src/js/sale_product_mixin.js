@@ -15,7 +15,7 @@ const eventBoothSaleProductMixin = () => ({
     get hasConfigurationButton() {
         return super.hasConfigurationButton || this.isEventBooth;
     },
-    onEditConfiguration() {
+    async onEditConfiguration() {
         if (this.isEventBooth) {
             this._openEventBoothConfigurator(true);
         } else {
