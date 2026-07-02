@@ -21,8 +21,8 @@
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>
                 <field name="worked_hours" string="Worked Hours" widget="float_time"/>
-                <field name="overtime_hours" string="Worked Extra Hours" optional="show" widget="float_time"/>
-                <field name="validated_overtime_hours" string="Extra Hours" optional="show" widget="float_time"/>
+                <field name="overtime_hours" optional="show" widget="float_time"/>
+                <field name="validated_overtime_hours" optional="show" widget="float_time"/>
                 <field name="overtime_status" optional="hidden" widget="badge" decoration-warning="overtime_status == 'to_approve'" decoration-success="overtime_status == 'approved'" decoration-danger="overtime_status == 'refused'"/>
                 <field name="in_mode" string="Input Mode (In)" optional="hidden"/>
                 <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
@@ -106,7 +106,7 @@
                             </group>
                             <group col="2">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
-                                <field name="overtime_hours" widget="float_time" string="Worked Extra Hours" invisible="overtime_hours == validated_overtime_hours"/>
+                                <field name="overtime_hours" widget="float_time" invisible="overtime_hours == validated_overtime_hours"/>
                                 <label for="validated_overtime_hours"/>
                                 <div>
                                     <field
@@ -256,8 +256,8 @@
                 <field name="check_in" type="col" interval="month"/>
                 <field name="worked_hours" type="measure" widget="float_time"/>
                 <field name="expected_hours" type="measure" widget="float_time"/>
-                <field name="overtime_hours" string="Difference" type="measure" widget="float_time"/>
-                <field name="validated_overtime_hours" string="Balance" type="measure" widget="float_time"/>
+                <field name="overtime_hours" type="measure" widget="float_time"/>
+                <field name="validated_overtime_hours" type="measure" widget="float_time"/>
             </pivot>
         </field>
     </record>
@@ -402,8 +402,8 @@
                 <field name="check_in" readonly="1"/>
                 <field name="check_out" readonly="1"/>
                 <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
-                <field name="overtime_hours" string="Worked Extra Hours" widget="float_time"/>
-                <field name="validated_overtime_hours" readonly="overtime_status == 'refused'" string="Extra Hours" widget="float_time"/>
+                <field name="overtime_hours" widget="float_time"/>
+                <field name="validated_overtime_hours" readonly="overtime_status == 'refused'" widget="float_time"/>
                 <button
                     class="oe_stat_button"
                     string="Approve"
