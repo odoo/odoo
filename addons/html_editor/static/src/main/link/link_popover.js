@@ -47,6 +47,7 @@ export const linkPopoverProps = {
     allowStripDomain: t.boolean().optional(),
     publicAttachments: t.boolean().optional(),
     advancedAttributeOptions: t.array().optional(),
+    autoLinkAttributePredicates: t.array().optional([]),
 };
 
 export class LinkPopover extends Component {
@@ -72,6 +73,8 @@ export class LinkPopover extends Component {
             linkElement.hash?.length && this.isAbsoluteURLInCurrentDomain(linkElement.href)
                 ? "_self"
                 : "_blank";
+        const initialUrl = linkElement.getAttribute("href") || this.deduceUrl(textContent);
+        this.appliedAutoAttributes = this.getAutoCheckedAttributes(initialUrl);
         const advancedAttributeOptions = this.props.advancedAttributeOptions.reduce(
             (result, option) => {
                 const attrValue = linkElement.getAttribute(option.attribute);
@@ -142,6 +145,46 @@ export class LinkPopover extends Component {
         this.state.showAdvancedOptions = !this.state.showAdvancedOptions;
     }
 
+    /**
+     * Returns the set of `attribute:value` pairs that should be enabled by
+     * default for the given URL, based on the registered predicates (e.g.
+     * internal Documents links default to `rel:nofollow`).
+     *
+     * @param {string} url
+     * @returns {Set<string>}
+     */
+    getAutoCheckedAttributes(url) {
+        const result = new Set();
+        if (!url) {
+            return result;
+        }
+        for (const { attribute, value, predicate } of this.props.autoLinkAttributePredicates) {
+            if (predicate(url)) {
+                result.add(`${attribute}:${value}`);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Enable advanced options whose predicate starts matching the current URL.
+     * Only acts on a *transition* into a matching state (an option that wasn't
+     * matched the previous time this ran): this auto-enables defaults when the
+     * user enters a matching URL, while never re-forcing an option the user
+     * manually unticked as long as the URL keeps matching. Never turns options
+     * off.
+     */
+    applyAutoLinkAttributes() {
+        const autoChecked = this.getAutoCheckedAttributes(this.state.url);
+        for (const opt of Object.values(this.state.advancedAttributeOptions)) {
+            const key = `${opt.attribute}:${opt.value}`;
+            if (autoChecked.has(key) && !this.appliedAutoAttributes.has(key)) {
+                opt.isChecked = true;
+            }
+        }
+        this.appliedAutoAttributes = autoChecked;
+    }
+
     toggleAdvancedAttr(attr) {
         const option = this.state.advancedAttributeOptions[attr];
         option.isChecked = !option.isChecked;
@@ -185,6 +228,9 @@ export class LinkPopover extends Component {
     }
 
     onChange() {
+        // Auto-enable options bound to the current URL (e.g. nofollow for
+        // internal Documents links), then build the params from the options.
+        this.applyAutoLinkAttributes();
         // Apply changes to update the link preview.
         const params = this.prepareLinkParams();
         this.props.onChange(params);
@@ -193,6 +239,7 @@ export class LinkPopover extends Component {
     onClickApply() {
         this.state.editing = false;
         this.applyDeducedUrl();
+        this.applyAutoLinkAttributes();
         const params = this.prepareLinkParams();
         this.props.onApply(params);
     }
