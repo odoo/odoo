@@ -6,7 +6,7 @@
         <record id="profile_developer" model="job.match.profile">
             <field name="name">Software Developer</field>
             <field name="sequence">1</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/softwareontwikkelaar-1</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?search=software&amp;order=name+asc&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You love building things and solving problems with code.</p>
             </field>
@@ -15,7 +15,7 @@
         <record id="profile_product_owner" model="job.match.profile">
             <field name="name">Product Owner</field>
             <field name="sequence">2</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/product-owner-271</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?search=product&amp;order=name+asc&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You shape products, prioritise features and keep the vision on track.</p>
             </field>
@@ -24,7 +24,7 @@
         <record id="profile_web_designer" model="job.match.profile">
             <field name="name">Web Designer</field>
             <field name="sequence">3</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/web-designer-600</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?search=web+design&amp;order=name+asc&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You design and create beautiful, effective web experiences.</p>
             </field>
@@ -33,7 +33,7 @@
         <record id="profile_partner_manager" model="job.match.profile">
             <field name="name">Partner Manager</field>
             <field name="sequence">4</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/partner-manager-9</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?search=partner+manager&amp;order=name+asc&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You guide partner companies and build long-term relationships.</p>
             </field>
@@ -42,7 +42,7 @@
         <record id="profile_business_analyst" model="job.match.profile">
             <field name="name">Business Analyst</field>
             <field name="sequence">5</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/business-analyst-16</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?search=business+analyst&amp;order=name+asc&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You analyse business flows and configure solutions that fit clients.</p>
             </field>
@@ -51,7 +51,7 @@
         <record id="profile_account_manager" model="job.match.profile">
             <field name="name">Account Manager</field>
             <field name="sequence">6</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/account-manager-264</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?search=account+manager&amp;order=name+asc&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You follow up on clients and grow long-term accounts.</p>
             </field>
@@ -69,7 +69,7 @@
         <record id="profile_bizdev_nordic" model="job.match.profile">
             <field name="name">Business Developer - Nordic Languages</field>
             <field name="sequence">8</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/business-development-representative-nordic-languages-antwerp-2555</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?search=nordic&amp;order=name+asc&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You develop business in the Nordics and speak a Nordic language.</p>
             </field>
@@ -87,7 +87,7 @@
         <record id="profile_bizdev_horeca" model="job.match.profile">
             <field name="name">Business Developer Horeca (Internship)</field>
             <field name="sequence">10</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/business-developer-horeca-stage-2245</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?department_id=263&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You kick-start your sales career in the Horeca sector as an intern.</p>
             </field>
@@ -96,7 +96,7 @@
         <record id="profile_dev_intern" model="job.match.profile">
             <field name="name">Software Development Internship</field>
             <field name="sequence">11</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/software-development-intern-48</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?department_id=263&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You learn to build software with our development teams.</p>
             </field>
@@ -105,7 +105,7 @@
         <record id="profile_bizdev_intern" model="job.match.profile">
             <field name="name">Business Developer Internship</field>
             <field name="sequence">12</field>
-            <field name="posting_url">https://www.odoo.com/nl_NL/jobs/junior-business-developer-internship-2269</field>
+            <field name="posting_url">https://www.odoo.com/nl_NL/jobs?department_id=263&amp;country_id=20</field>
             <field name="description" type="html">
                 <p>You start a business development career as a junior intern.</p>
             </field>
@@ -145,7 +145,6 @@
             <field name="job_match_jobs_url">https://www.odoo.com/nl_NL/jobs?all_countries=1</field>
             <field name="job_match_no_match_message" type="html">
                 <p>Sorry, we don't have a role for you in our Belgian offices right now. Feel free to explore our website and look for a role in one of our international offices or with one of our partners!</p>
-                <p>Thanks for playing!</p>
             </field>
         </record>
 
@@ -249,7 +248,45 @@
         <record id="e_q1_b_hr" model="job.match.answer.weight">
             <field name="answer_id" ref="q1_b"/><field name="profile_id" ref="profile_hr"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
         </record>
-        <!-- "A student job" (q1_c) ends the game on its own result page (no weights). -->
+        <record id="e_q1_b_web" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_b"/><field name="profile_id" ref="profile_web_designer"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <!-- Q1 eliminations: "A student job" rules out every non-internship role;
+             the internships survive as recommendations and a custom result message
+             (job_match_result_message on q1_c) is shown after them. -->
+        <record id="e_q1_c_dev" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_developer"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_po" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_product_owner"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_web" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_web_designer"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_pm" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_partner_manager"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_ba" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_business_analyst"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_am" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_account_manager"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_bdr" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_bizdev_rep"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_bdn" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_bizdev_nordic"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_csa" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_support_analyst"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_mkt" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_marketing"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q1_c_hr" model="job.match.answer.weight">
+            <field name="answer_id" ref="q1_c"/><field name="profile_id" ref="profile_hr"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
 
         <!-- ==================================================================
              Q4: What languages can you work in?  (language knockouts + bonuses)
@@ -336,10 +373,46 @@
             <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_bizdev_nordic"/><field name="points">5</field>
         </record>
         <record id="w_q2_e_csa" model="job.match.answer.weight">
-            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_support_analyst"/><field name="points">5</field>
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_support_analyst"/><field name="points">3</field>
         </record>
         <record id="w_q2_e_pm" model="job.match.answer.weight">
-            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_partner_manager"/><field name="points">5</field>
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_partner_manager"/><field name="points">3</field>
+        </record>
+        <!-- Q2 "English &amp; Nordic languages" also rules out roles requiring another
+             local language (only Software developer, Product Owner and the Nordic
+             role itself survive). -->
+        <record id="e_q2_d_web" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_web_designer"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_pm" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_partner_manager"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_ba" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_business_analyst"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_am" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_account_manager"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_bdr" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_bizdev_rep"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_csa" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_support_analyst"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_horeca" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_bizdev_horeca"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_dint" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_dev_intern"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_bint" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_bizdev_intern"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_mkt" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_marketing"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_d_hr" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_d"/><field name="profile_id" ref="profile_hr"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
         </record>
         <!-- Q2 "None of the options above" eliminates every profile -> no-match screen -->
         <record id="e_q2_f_dev" model="job.match.answer.weight">

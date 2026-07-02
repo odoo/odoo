@@ -10,14 +10,10 @@
 
         <!-- Show the best match card with a "match meter" and a link to the posting. -->
         <xpath expr="//h1[hasclass('o_survey_main_title')]" position="after">
-            <!-- A chosen answer with its own dedicated message ends the game here. -->
-            <t t-if="survey.is_job_match and job_match_result_message">
-                <div class="o_survey_job_match_result_message my-4">
-                    <div t-out="job_match_result_message"/>
-                </div>
-            </t>
-
-            <t t-if="survey.is_job_match and not job_match_result_message and job_match_results">
+            <!-- Recommendations: shown whenever at least one profile survived the
+                 eliminations. A custom answer message (e.g. the student-job answer)
+                 does not hide them; it is appended below the recommendations. -->
+            <t t-if="survey.is_job_match and job_match_results">
                 <t t-set="best" t-value="job_match_results[0]"/>
                 <div class="o_survey_job_match my-4">
                     <p class="text-muted mb-2">Your best match is</p>
@@ -66,8 +62,9 @@
                 </div>
             </t>
 
-            <!-- No-match screen: every profile eliminated by a hard requirement. -->
-            <t t-if="survey.is_job_match and not job_match_result_message and answer.job_match_all_eliminated">
+            <!-- No-match screen: every profile eliminated by a hard requirement and
+                 no chosen answer carries its own message to show instead. -->
+            <t t-if="survey.is_job_match and not job_match_results and not job_match_result_message and answer.job_match_all_eliminated">
                 <div class="o_survey_job_match_no_match my-4">
                     <div t-field="survey.job_match_no_match_message" class="mb-3"/>
                     <a t-if="survey.job_match_jobs_url"
@@ -75,6 +72,14 @@
                         t-att-href="survey.job_match_jobs_url" target="_blank">
                         Browse our open roles <i class="fa fa-arrow-right ms-1" aria-hidden="true"/>
                     </a>
+                </div>
+            </t>
+
+            <!-- Custom message set on a chosen answer (e.g. the student-job answer):
+                 shown after any recommendations as a dedicated closing page. -->
+            <t t-if="survey.is_job_match and job_match_result_message">
+                <div class="o_survey_job_match_result_message my-4">
+                    <div t-out="job_match_result_message"/>
                 </div>
             </t>
         </xpath>

@@ -30,9 +30,10 @@ class SurveyUserInput(models.Model):
     def _get_job_match_result_message(self):
         """ Custom result message set on a chosen answer, if any.
 
-        Lets a specific answer end the game on its own dedicated page (e.g. the
-        student-job answer that redirects to internships) rather than showing a
-        job match. Returns the first such message, or ``False``.
+        Lets a specific answer add a dedicated closing message on the result
+        page, shown below any surviving recommendations (e.g. the student-job
+        answer that keeps the internships as recommendations and then redirects
+        to them). Returns the first such message, or ``False``.
         """
         self.ensure_one()
         if not self.survey_id.is_job_match:
