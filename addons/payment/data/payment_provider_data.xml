@@ -378,6 +378,24 @@
         />
     </record>
 
+    <record id="payment_provider_payu" model="payment.provider">
+        <field name="name">PayU</field>
+        <field name="image_128" type="base64" file="payment_payu/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_payu"/>
+        <!-- https://docs.payu.in/docs/checkout-plus-integration#supported-payment-modes -->
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([
+                ref('payment.payment_method_card'),
+                ref('payment.payment_method_emi_india'),
+                ref('payment.payment_method_netbanking'),
+                ref('payment.payment_method_paylater_india'),
+                ref('payment.payment_method_upi'),
+                ref('payment.payment_method_wallets_india'),
+            ])]"
+        />
+    </record>
+
     <record id="payment_provider_razorpay" model="payment.provider">
         <field name="name">Razorpay</field>
         <field name="image_128" type="base64" file="payment_razorpay/static/description/icon.png"/>
