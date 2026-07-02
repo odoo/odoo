@@ -64,9 +64,10 @@ class ResUsers(models.Model):
             if not key or not request.env['auth_totp.device']._check_credentials_for_uid(
                     scope="browser", key=key, uid=user.id):
                 # 2FA enabled but not a trusted device
-                user._notify_security_setting_update(
-                    subject=_('New Connection to your Account'),
-                    content=_('A new device was used to sign in to your account.'),
+                user_lang = user.lang or self.env.lang or 'en_US'
+                user.with_context(lang=user_lang)._notify_security_setting_update(
+                    subject=self.with_context(lang=user_lang).env._('New Connection to your Account'),
+                    content=self.with_context(lang=user_lang).env._('A new device was used to sign in to your account.'),
                 )
                 _logger.info("New device alert email sent for user <%s> to <%s>", user.login, user.email)
 
