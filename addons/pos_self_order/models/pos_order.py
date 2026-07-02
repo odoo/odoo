@@ -195,14 +195,14 @@ class PosOrder(models.Model):
         existing_order = pos_config.env['pos.order']._get_open_order(order)
         if not existing_order.exists():
             pos_reference, tracking_number = pos_config._get_next_order_refs()
-            prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
+            prefix = "K" if device_type == "kiosk" else "S"
+            tracking_number = f"{prefix}{pos_config.id}-{tracking_number}"
 
-            if device_type == 'kiosk':
-                floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
-            elif not floating_order_name:
-                floating_order_name = f"Self-Order T {table.table_number}" if table else f"Self-Order {tracking_number}"
-
-            tracking_number = f"{prefix}{tracking_number}"
+            if not floating_order_name:
+                if device_type == 'kiosk':
+                    floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
+                else:
+                    floating_order_name = f"Self-Order T {table.table_number}" if table else f"Self-Order {tracking_number}"
         else:
             pos_reference = existing_order.pos_reference
             floating_order_name = existing_order.floating_order_name
