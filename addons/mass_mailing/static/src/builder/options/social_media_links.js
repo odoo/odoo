@@ -1,5 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
+import { useKeyboardReorder } from "@html_builder/utils/keyboard_reorder";
 import { onWillStart, signal } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { user } from "@web/core/user";
@@ -82,41 +83,54 @@ export class SocialMediaLinks extends BaseOptionComponent {
                 companyId: editingElement.dataset.companyId,
             };
         });
+        this.keyboardReorder = useKeyboardReorder({
+            getList: () => this.domState.medias.map(([platform]) => platform),
+            insertAfter: (platform, previousPlatform) => this.moveMedia(platform, previousPlatform),
+            getHandle: (platform) =>
+                this.rootRef()?.querySelector(`[data-sortable-platform="${platform}"]`),
+        });
+
         useSortable({
             ref: this.rootRef,
             elements: ".hb-row",
             handle: ".o_drag_handle",
             cursor: "grabbing",
             placeholderClasses: ["d-table-row"],
-            onDrop: ({ next, element }) => {
-                let nextPlatform = next?.querySelector("[data-sortable-platform]")?.dataset
-                    .sortablePlatform;
+            onDrop: ({ previous, element }) => {
+                const previousPlatform = previous?.querySelector("[data-sortable-platform]")
+                    ?.dataset.sortablePlatform;
                 const elementPlatform = element.querySelector("[data-sortable-platform]").dataset
                     .sortablePlatform;
-                const index = this.getIndex(elementPlatform, false);
-                const [media] = this.domState.medias.splice(index, 1);
-                let nextIndex = this.getIndex(nextPlatform, false);
-                this.domState.medias.splice(nextIndex, 0, media);
-                if (!media[1].active && !media[1].custom) {
-                    return;
-                }
-
-                if (!this.domState.medias.at(++nextIndex)?.[1].active) {
-                    do {
-                        ++nextIndex;
-                    } while (
-                        this.domState.medias[nextIndex] &&
-                        !this.domState.medias[nextIndex]?.[1].active
-                    );
-                    nextPlatform = this.domState.medias.at(nextIndex)?.[0];
-                }
-
-                this.dependencies.massMailingSocialMediaOptionPlugin.reorderSocialMediaLinks({
-                    editingElement: this.env.getEditingElement(),
-                    platform: elementPlatform,
-                    platformAfter: nextPlatform,
-                });
+                this.moveMedia(elementPlatform, previousPlatform);
             },
+        });
+    }
+
+    /**
+     * Moves a media after another one, in the panel and in the DOM.
+     *
+     * @param {string} elementPlatform
+     * @param {string|undefined} previousPlatform undefined = first position
+     */
+    moveMedia(elementPlatform, previousPlatform) {
+        const index = this.getIndex(elementPlatform, false);
+        const [media] = this.domState.medias.splice(index, 1);
+        const insertIndex = previousPlatform ? this.getIndex(previousPlatform, false) + 1 : 0;
+        this.domState.medias.splice(insertIndex, 0, media);
+        const [, mediaInfo] = media;
+        if (!mediaInfo.active && !mediaInfo.custom) {
+            return;
+        }
+
+        let nextIndex = insertIndex + 1;
+        while (this.domState.medias[nextIndex] && !this.domState.medias[nextIndex][1].active) {
+            nextIndex++;
+        }
+
+        this.dependencies.massMailingSocialMediaOptionPlugin.reorderSocialMediaLinks({
+            editingElement: this.env.getEditingElement(),
+            platform: elementPlatform,
+            platformAfter: this.domState.medias.at(nextIndex)?.[0],
         });
     }
 
