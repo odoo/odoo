@@ -49,9 +49,13 @@ class TestPage(common.TransactionCase):
 
     def test_copy_page(self):
         website_id = self.ref('base.default_website')
-        View = self.env['ir.ui.view'].with_context(website_id=website_id)
-        Page = self.env['website.page'].with_context(website_id=website_id)
-        Menu = self.env['website.menu'].with_context(website_id=website_id)
+        # Backend RPCs (e.g. the page-duplicate call) reach the server with the
+        # current website as ``host_id`` in context, not ``website_id`` (see
+        # website's ir_http._match). Mirror that here so the clone is exercised
+        # under a realistic context.
+        View = self.env['ir.ui.view'].with_context(host_id=website_id)
+        Page = self.env['website.page'].with_context(host_id=website_id)
+        Menu = self.env['website.menu'].with_context(host_id=website_id)
         # Specific page
         self.specific_view = View.create({
             'name': 'Base',
@@ -93,17 +97,47 @@ class TestPage(common.TransactionCase):
         total_pages = Page.search_count([])
         total_menus = Menu.search_count([])
 
-        # Copying a generic page should create a specific page with same URL
-        Page.clone_page(self.page_1.id, clone_menu=True)
-        cloned_generic_page = Page.search([('url', '=', '/page_1'), ('id', '!=', self.page_1.id), ('website_id', '!=', False)])
-        self.assertEqual(len(cloned_generic_page), 1, "A generic page being cloned should create a specific one for the current website")
-        self.assertEqual(cloned_generic_page.url, self.page_1.url, "The URL of the cloned specific page should be the same as the generic page it has been cloned from")
-        self.assertEqual(Page.search_count([]), total_pages + 1, "Should have cloned the generic page as a specific page for this website")
-        self.assertEqual(Menu.search_count([]), total_menus, "It should not create a new menu as the generic page's menu belong to another website")
-        # Except if the URL already exists for this website (its the case now that we already cloned it once)
-        Page.clone_page(self.page_1.id, clone_menu=True)
-        cloned_generic_page_2 = Page.search([('url', '=', '/page_1-1'), ('id', '!=', self.page_1.id)])
-        self.assertEqual(len(cloned_generic_page_2), 1, "A generic page being cloned should create a specific page with a new URL if there is already a specific page with that URL")
+        # Cloning a generic page keeps the clone generic, with a URL that is
+        # unique among generic pages (not shadowing the source's /page_1).
+        first_clone_url = Page.clone_page(self.page_1.id, clone_menu=True)
+        self.assertEqual(first_clone_url, '/page_1-1',
+                         "Cloning a generic page should get a unique URL among generic pages")
+        cloned_generic_page = Page.search([('url', '=', '/page_1-1'), ('website_id', '=', False)])
+        self.assertEqual(len(cloned_generic_page), 1, "A generic page being cloned should stay generic")
+        self.assertEqual(Page.search_count([]), total_pages + 1, "Should have cloned the generic page")
+        self.assertEqual(Menu.search_count([]), total_menus + 1,
+                         "Cloning a generic page (same website) should also clone its menu")
+        # Cloning again keeps incrementing the suffix instead of reusing a URL
+        self.assertEqual(Page.clone_page(self.page_1.id, clone_menu=False), '/page_1-2',
+                         "A second generic clone must get the next suffixed URL")
+
+    def test_clone_page_url_unique_on_source_website(self):
+        """ A clone keeps the source page's website, so its URL must be unique
+        within that website, not the current one. """
+        Page = self.env['website.page']
+        website_2 = self.env['website'].create({'name': 'Website 2'})
+
+        def make_page(url, key):
+            view = self.env['ir.ui.view'].create({
+                'name': 'W2',
+                'type': 'qweb',
+                'arch': '<div>x</div>',
+                'key': key,
+                'website_id': website_2.id,
+            })
+            return Page.create({'view_id': view.id, 'url': url, 'website_id': website_2.id})
+        source = make_page('/source', 'test.w2_source')
+        make_page('/target', 'test.w2_target')  # pre-existing URL on website 2
+        # The current website has no '/target', but website 2 does: the clone
+        # must be suffixed against website 2 (not silently shadow '/target').
+        clone_url = Page.clone_page(source.id, page_name='target')
+        self.assertEqual(clone_url, '/target-1',
+                         "Clone URL must be unique within the source page's website")
+        clone = Page.search([('url', '=', clone_url)])
+        self.assertEqual(clone.website_id, website_2, "Clone must stay on the source page's website")
+        self.assertEqual(
+            Page.search_count([('url', '=', '/target'), ('website_id', '=', website_2.id)]), 1,
+            "Cloning must not create a second page at the same URL on the website")
 
     def test_clone_page_edited_in_default_language(self):
         self.env['res.lang']._activate_lang('fr_FR')

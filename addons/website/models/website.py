@@ -1326,15 +1326,18 @@ class Website(models.CachedModel):
             result['menu_id'] = menu.id
         return result
 
-    def get_unique_path(self, page_url):
+    def get_unique_path(self, page_url, website_id=None):
         """ Given an url, return that url suffixed by counter if it already exists
             :param page_url : the url to be checked for uniqueness
+            :param website_id : The website whose pages should be checked for
+                uniqueness. Defaults to the current website when not provided.
         """
         inc = 0
         # we only want a unique_path for website specific.
         # we need to be able to have /url for website=False, and /url for website=1
         # in case of duplicate, page manager will allow you to manage this case
-        website_id = self.env.context.get('website_id') or self.env.context.get('host_id') or False
+        if website_id is None:
+            website_id = self.env.context.get('website_id') or self.env.context.get('host_id') or False
         domain_static = [('website_id', '=', website_id)]  # .website_domain()
         page_temp = page_url
         while self.env['website.page'].with_context(active_test=False).sudo().search([('url', '=', page_temp)] + domain_static):
