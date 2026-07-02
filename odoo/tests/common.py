@@ -1683,7 +1683,7 @@ class ChromeBrowser:
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
             time.sleep(CHECK_BROWSER_SLEEP)
-            if port_file.is_file() and port_file.stat().st_size > 5:
+            if port_file.is_file() and port_file.stat().st_size >= 5:
                 with port_file.open('r', encoding='utf-8') as f:
                     return proc, int(f.readline())
 
@@ -1698,6 +1698,11 @@ class ChromeBrowser:
             'Chrome headless failed to start:\n%s',
             self.read_log().decode(),
         )
+        if port_file.is_file():
+            content = port_file.read_text('utf-8')
+            _logger.warning('DevToolsActivePort content: %r', content)
+        else:
+            _logger.warning('DevToolsActivePort not found')
         self.stop()
 
         raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
