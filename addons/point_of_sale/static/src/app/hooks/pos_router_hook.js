@@ -1,12 +1,13 @@
-import { useComponent } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { usePos, usePosRouter } from "./pos_hook";
 
-export const useRouterParamsChecker = () => {
-    const component = useComponent();
+/**
+ * @param {string} pageName
+ */
+export function useRouterParamsChecker(pageName) {
     const router = usePosRouter();
     const pos = usePos();
-    const routeParams = registry.category("pos_pages").get(component.constructor.name);
+    const routeParams = registry.category("pos_pages").get(pageName);
     const params = routeParams.params;
 
     if (params.orderUuid && Object.keys(params).includes("orderFinalized")) {
@@ -16,4 +17,4 @@ export const useRouterParamsChecker = () => {
             pos.navigate(defaultPage.page, defaultPage.params);
         }
     }
-};
+}

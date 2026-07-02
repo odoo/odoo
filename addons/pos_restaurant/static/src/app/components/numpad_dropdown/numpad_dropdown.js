@@ -12,7 +12,6 @@ import {
 
 export class NumpadDropdown extends Component {
     static template = "pos_restaurant.NumpadDropdown";
-    static props = {};
     static components = { Numpad };
 
     setup() {

@@ -728,7 +728,7 @@ describe("pos_store.js", () => {
 
         const fakeState = { buffer: "", toStartOver: false, lastSet: false };
         numberBuffer.bufferHolderStack.push({
-            component: {},
+            scope: {},
             state: fakeState,
             config: { decimalPoint: false },
         });

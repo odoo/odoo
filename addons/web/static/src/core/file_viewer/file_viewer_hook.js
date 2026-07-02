@@ -1,13 +1,12 @@
 import { onWillDestroy } from "@odoo/owl";
-import { FileViewer } from "./file_viewer";
-import { useService } from "../utils/hooks";
-import { useComponent } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
+import { useService } from "../utils/hooks";
+import { FileViewer } from "./file_viewer";
 
 const fileViewerService = {
     dependencies: ["overlay"],
     start(_env, { overlay }) {
-        return (owner) => {
+        return function createFileViewer() {
             let closeFn;
             /**
              * @param {import("@web/core/file_viewer/file_viewer").File} file
@@ -21,15 +20,11 @@ const fileViewerService = {
                 if (files.length > 0) {
                     const viewableFiles = files.filter((file) => file.isViewable);
                     const index = viewableFiles.indexOf(file);
-                    closeFn = overlay.add(
-                        FileViewer,
-                        {
-                            files: viewableFiles,
-                            startIndex: index,
-                            close: () => closeFn?.(),
-                        },
-                        { rootId: owner?.root?.el?.getRootNode()?.host?.id }
-                    );
+                    closeFn = overlay.add(FileViewer, {
+                        files: viewableFiles,
+                        startIndex: index,
+                        close: () => closeFn?.(),
+                    });
                 }
             }
             return { open, close: () => closeFn?.() };
@@ -39,9 +34,8 @@ const fileViewerService = {
 registry.category("services").add("fileViewer", fileViewerService);
 
 export function useFileViewer() {
-    const owner = useComponent();
     const createFileViewer = useService("fileViewer");
-    const { open, close } = createFileViewer(owner);
+    const { open, close } = createFileViewer();
     onWillDestroy(close);
     return { open, close };
 }

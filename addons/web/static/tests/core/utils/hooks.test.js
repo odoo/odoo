@@ -17,7 +17,6 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { render } from "@web/owl2/utils";
 
 import { Component, onMounted, props, proxy, signal, types as t, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
@@ -30,7 +29,6 @@ import {
     useChildRef,
     useForwardRefToParent,
     useService,
-    useServiceProtectMethodHandling,
     useSpellCheck,
 } from "@web/core/utils/hooks";
 
@@ -40,7 +38,6 @@ describe("useAutofocus", () => {
         const state = proxy({ text: "" });
 
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                 <span>
                     <input type="text" t-custom-ref="autofocus" t-att-value="this.state.text" />
@@ -68,7 +65,6 @@ describe("useAutofocus", () => {
         const state = proxy({ counter: 0 });
 
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                 <span>
                     <input type="number" t-custom-ref="autofocus" t-att-value="this.state.counter" />
@@ -96,7 +92,6 @@ describe("useAutofocus", () => {
         const state = proxy({ showInput: true });
 
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                 <span>
                     <input t-if="this.state.showInput" type="text" t-custom-ref="autofocus" />
@@ -135,7 +130,6 @@ describe("useAutofocus", () => {
                     <input type="text" t-custom-ref="autofocus" />
                 </span>
             `;
-            static props = ["*"];
             setup() {
                 const inputRef = useAutofocus();
                 onMounted(() => {
@@ -150,7 +144,6 @@ describe("useAutofocus", () => {
 
     test("works when screen has touch and you provide mobile param", async () => {
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                 <span>
                     <input type="text" t-custom-ref="autofocus" />
@@ -180,7 +173,6 @@ describe("useAutofocus", () => {
         const state = proxy({ showSecond: true });
 
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                 <span>
                     <input type="text" t-custom-ref="first" />
@@ -215,7 +207,6 @@ describe("useAutofocus", () => {
     test.tags("desktop");
     test("can select its content", async () => {
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                 <span>
                     <input type="text" value="input content" t-custom-ref="autofocus" />
@@ -241,7 +232,6 @@ describe("useAutofocus", () => {
         });
 
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                     <div>
                         <input type="text" t-custom-ref="autofocus" t-att-value="this.state.text" />
@@ -278,7 +268,6 @@ describe("useBus", () => {
         const state = proxy({ child: true });
 
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 useBus(this.env.bus, "test-event", this.myCallback);
@@ -290,7 +279,6 @@ describe("useBus", () => {
 
         class Parent extends Component {
             static components = { MyComponent };
-            static props = ["*"];
             static template = xml`<MyComponent t-if="this.state.child" />`;
 
             setup() {
@@ -315,7 +303,6 @@ describe("useBus", () => {
 describe("useService", () => {
     test("unavailable service", async () => {
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 useService("toy_service");
@@ -330,7 +317,6 @@ describe("useService", () => {
     test("service that returns null", async () => {
         let toyService;
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 toyService = useService("toy_service");
@@ -348,7 +334,6 @@ describe("useService", () => {
     });
 
     test("async service with protected methods", async () => {
-        useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.original;
         const state = proxy({ child: true });
         let nbCalls = 0;
         let def = Promise.withResolvers();
@@ -356,7 +341,6 @@ describe("useService", () => {
         let functionService;
 
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`<div/>`;
 
             setup() {
@@ -367,7 +351,6 @@ describe("useService", () => {
 
         class Parent extends Component {
             static components = { MyComponent };
-            static props = ["*"];
             static template = xml`<MyComponent t-if="this.state.child" />`;
 
             setup() {
@@ -432,7 +415,6 @@ describe("useService", () => {
         await expect(functionService()).rejects.toThrow("Component is destroyed");
         await expect(functionService.call("boundThis")).rejects.toThrow("Component is destroyed");
         expect(nbCalls).toBe(8);
-        useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked;
     });
 });
 
@@ -440,7 +422,6 @@ describe("useSpellCheck", () => {
     test("ref is on the textarea", async () => {
         // To understand correctly the test, refer to the MDN documentation of spellcheck.
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`<div><textarea t-custom-ref="spellcheck" class="textArea"/></div>`;
             setup() {
                 useSpellCheck();
@@ -471,7 +452,6 @@ describe("useSpellCheck", () => {
 
     test("use a different refName", async () => {
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`<div><textarea t-custom-ref="myreference" class="textArea"/></div>`;
             setup() {
                 useSpellCheck({ refName: "myreference" });
@@ -497,7 +477,6 @@ describe("useSpellCheck", () => {
 
     test("ref is on the root element and two editable elements", async () => {
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                 <div t-custom-ref="spellcheck">
                     <textarea class="textArea"/>
@@ -550,7 +529,6 @@ describe("useSpellCheck", () => {
 
     test("ref is on the root element and one element has disabled the spellcheck", async () => {
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                 <div t-custom-ref="spellcheck">
                     <textarea class="textArea"/>
@@ -603,7 +581,6 @@ describe("useSpellCheck", () => {
 
     test("ref is on an element with contenteditable attribute", async () => {
         class MyComponent extends Component {
-            static props = ["*"];
             static template = xml`
                 <div t-custom-ref="spellcheck"  contenteditable="true" class="editableDiv" />`;
             setup() {
@@ -627,7 +604,6 @@ describe("useChildRef and useForwardRefToParent", () => {
         let parentRef;
 
         class Child extends Component {
-            static props = ["*"];
             static template = xml`<span t-custom-ref="someRef" class="my_span">Hello</span>`;
             setup() {
                 childRef = useForwardRefToParent("someRef");
@@ -635,7 +611,6 @@ describe("useChildRef and useForwardRefToParent", () => {
         }
 
         class Parent extends Component {
-            static props = ["*"];
             static template = xml`<div><Child someRef="this.someRef"/></div>`;
             static components = { Child };
             setup() {
@@ -651,7 +626,6 @@ describe("useChildRef and useForwardRefToParent", () => {
 
     test("in a conditional child", async () => {
         class Child extends Component {
-            static props = ["*"];
             static template = xml`<span t-custom-ref="someRef" class="my_span">Hello</span>`;
             setup() {
                 useForwardRefToParent("someRef");
@@ -659,7 +633,6 @@ describe("useChildRef and useForwardRefToParent", () => {
         }
 
         class Parent extends Component {
-            static props = ["*"];
             static template = xml`<div><Child t-if="this.state.hasChild" someRef="this.someRef"/></div>`;
             static components = { Child };
             setup() {
@@ -692,7 +665,6 @@ describe("useBackButton", () => {
     test("simple usecase ", async () => {
         mockUserAgent("android");
         class DummyComponent extends Component {
-            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 useBackButton(() => expect.step("callback"));
@@ -713,28 +685,28 @@ describe("useBackButton", () => {
     test.tags("mobile");
     test("`shouldEnable` callback function pushes/clears trap history entry", async () => {
         mockUserAgent("android");
-        let backBtnAvailable = false;
+
+        const backBtnAvailable = signal(false);
         class DummyComponent extends Component {
-            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
-                useBackButton(
-                    () => null,
-                    () => backBtnAvailable
-                );
+                useBackButton(() => null, backBtnAvailable);
             }
         }
 
         history.pushState({ sentinel: 1 }, "", "/");
         history.pushState({ sentinel: 2 }, "", "/other");
-        const dummy = await mountWithCleanup(DummyComponent);
+
+        await mountWithCleanup(DummyComponent);
+
         expect(history.state.sentinel).toBe(2);
-        backBtnAvailable = true;
-        render(dummy);
+
+        backBtnAvailable.set(true);
         await animationFrame();
+
         expect(history.state.trapState).toBe(true);
-        backBtnAvailable = false;
-        render(dummy);
+
+        backBtnAvailable.set(false);
         await animationFrame();
         expect(history.state.sentinel).toBe(2);
     });
@@ -748,7 +720,7 @@ describe("useBackButton", () => {
             props = props({ name: t.string() });
 
             setup() {
-                useBackButton(this.onBack);
+                useBackButton(this.onBack.bind(this));
             }
 
             onBack() {
