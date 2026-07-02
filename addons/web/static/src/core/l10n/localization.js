@@ -29,7 +29,7 @@ export const localization = new Proxy(
         get: (target, p) => {
             // "then" can be called implicitly if the object is returned in an
             // `async` function, so we need to allow it.
-            if (p in target || p === "then") {
+            if (p in target || p === "then" || typeof p === "symbol") {
                 return Reflect.get(target, p);
             }
             throw new Error(
