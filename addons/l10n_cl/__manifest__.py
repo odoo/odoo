@@ -3,7 +3,7 @@
     'name': 'Chile - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['cl'],
-    'version': '3.1',
+    'version': '3.2',
     'description': """
 Chilean accounting chart and tax localization.
 Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.
@@ -44,7 +44,7 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.
     ],
     'demo': [
         'demo/partner_demo.xml',
-        'demo/demo_company.xml',
+        'demo/company_demo.xml',
     ],
     'license': 'LGPL-3',
 }
