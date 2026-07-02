@@ -2765,5 +2765,19 @@ test("properties: Create a property with an onchange methods", async () => {
     await toggleActionMenu();
     await contains(".o_popover span .fa-cogs").click();
     await runAllTimers();
+<<<<<<< e097899f8b93d0b9e4a14ed2eb78e8ca21d57252
     expect.verifySteps(["onPropertyCreate", "on_change_called", "_openPropertyDefinition"]);
 });
+||||||| bab1f256eaec4c3e1a44b2bcb557d18ab2c38e5d
+    expect.verifySteps(["onPropertyCreate", "on_change_called", "_openPropertyDefinition"]);
+});
+=======
+    await closePopover();
+    expect.verifySteps([
+        "onPropertyCreate",
+        "on_change_called",
+        "_openPropertyDefinition",
+        "on_change_called",
+    ]);
+});
+>>>>>>> 37190d0d94b7f0b4e604ce3d25b9e5ff6f83397c
