@@ -89,3 +89,19 @@ class TestMultiCompany(TestHrCommon):
 
         # user A should still read hr_presence_state even if he does not have access to the company of the employee
         self.employee_b.with_user(self.user_a).with_company(self.company_a).hr_presence_state
+
+    def test_channel_auto_subscribe_multi_company_department(self):
+        department = self.env['hr.department'].create({'name': "RD", 'company_id': False})
+
+        employees = self.employee_a | self.employee_b
+        employees.department_id = department
+        employees.invalidate_recordset(["department_id"])
+        self.assertEqual(department.member_ids.user_id.partner_id, employees.user_id.partner_id)
+
+        channel = self.env['discuss.channel'].with_user(self.user_a).create({
+            'name': "RD Department",
+            'subscription_department_ids': [(4, department.id)],
+        })
+        self.assertEqual(
+            channel.channel_partner_ids, department.member_ids.user_id.partner_id,
+        )
