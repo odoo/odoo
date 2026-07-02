@@ -687,9 +687,9 @@ class TestChannelInternals(MailCommon, HttpCase):
         When a partner leaves a group, the system will help post a message under
         that partner's name in the group to notify others if `email_sent` is set `False`.
         The message should only be posted when the partner is still a member of the group
-        before method `_action_unfollow()` is called.
+        before the member is unlinked.
         If the partner has been removed earlier, no more messages will be posted
-        even if `_action_unfollow()` is called again.
+        even if unlink is called again.
         '''
         test_group = self.env['discuss.channel'].create({
             'name': 'Private Channel',
@@ -706,7 +706,8 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertFalse(messages_0)
 
         # a message should be posted to notify others when a partner is about to leave
-        test_group._action_unfollow(self.test_partner)
+        member = test_group.channel_member_ids.filtered(lambda m: m.partner_id == self.test_partner)
+        member.unlink()
         messages_1 = self.env['mail.message'].search([
             ('model', '=', 'discuss.channel'),
             ('res_id', '=', test_group.id),
@@ -715,7 +716,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(len(messages_1), 1)
 
         # no more messages should be posted if the partner has been removed before.
-        test_group._action_unfollow(self.test_partner)
+        test_group.channel_member_ids.filtered(lambda m: m.partner_id == self.test_partner).unlink()
         messages_2 = self.env['mail.message'].search([
             ('model', '=', 'discuss.channel'),
             ('res_id', '=', test_group.id),
@@ -729,7 +730,8 @@ class TestChannelInternals(MailCommon, HttpCase):
         channel.with_user(self.test_user)._add_members(partners=self.test_partner)
 
         # no message should be posted to notify others when a partner is joined and left
-        channel._action_unfollow(self.test_partner)
+        member = channel.channel_member_ids.filtered(lambda m: m.partner_id == self.test_partner)
+        member.unlink()
         messages = self.env['mail.message'].search([
             ('model', '=', 'discuss.channel'),
             ('res_id', '=', channel.id),

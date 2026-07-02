@@ -664,37 +664,9 @@ class DiscussChannel(models.Model):
 
     def action_unfollow(self):
         if self.channel_type in self._types_allowing_unfollow():
-            self._action_unfollow(self.env.user.partner_id)
+            self.self_member_id.unlink()
         else:
             self.self_member_id.unpin_dt = fields.Datetime.now()
-
-    def _action_unfollow(self, partner=None, guest=None, post_leave_message=True):
-        self.ensure_one()
-        if partner is None:
-            partner = self.env["res.partner"]
-        if guest is None:
-            guest = self.env["mail.guest"]
-        self.message_unsubscribe(partner.ids)
-        member = self.env["discuss.channel.member"].search(
-            [
-                ("channel_id", "=", self.id),
-                ("partner_id", "=", partner.id) if partner else ("guest_id", "=", guest.id),
-            ]
-        )
-        for bus_channel in ((member or partner or guest)._bus_channels()):
-            custom_store = Store(bus_channel=bus_channel)
-            custom_store.add(self, {"close_chat_window": True, "isLocallyPinned": False})
-        if not member:
-            return
-        if self.channel_type != "channel" and post_leave_message:
-            notification = Markup('<div class="o_mail_notification" data-oe-type="channel-left">%s</div>') % _(
-                "left the channel"
-            )
-            # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
-            member.channel_id.sudo().message_post(
-                body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
-            )
-        member.unlink()
 
     def _add_members(
         self,
@@ -1101,9 +1073,18 @@ class DiscussChannel(models.Model):
 
     def _message_receive_bounce(self, email, partner):
         # Override bounce management to unsubscribe bouncing addresses
-        for p in partner:
-            if p.message_bounce >= self.MAX_BOUNCE_LIMIT:
-                self._action_unfollow(p)
+        for p in partner.filtered(lambda p: p.message_bounce >= self.MAX_BOUNCE_LIMIT):
+            member = self.env["discuss.channel.member"].search(
+                [("channel_id", "=", self.id), ("partner_id", "=", p.id)],
+                limit=1,
+            )
+            if member:
+                member.unlink()
+            else:
+                self.message_unsubscribe(p.ids)
+                for bus_channel in p._bus_channels():
+                    custom_store = Store(bus_channel=bus_channel)
+                    custom_store.add(self, {"close_chat_window": True, "isLocallyPinned": False})
         return super()._message_receive_bounce(email, partner)
 
     def _get_allowed_message_params(self):

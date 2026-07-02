@@ -960,19 +960,6 @@ class DiscussChannel(models.Model):
     def _types_allowing_unfollow(self):
         return super()._types_allowing_unfollow() + ["livechat"]
 
-    def _action_unfollow(self, partner=None, guest=None, post_leave_message=True):
-        super()._action_unfollow(partner, guest, post_leave_message)
-        # sudo - discuss.channel: user just left but we need to close the live
-        # chat if the last operator left.
-        channel_sudo = self.sudo()
-        if (
-            channel_sudo.channel_type == "livechat"
-            and not channel_sudo.livechat_end_dt
-            and channel_sudo.member_count == 1
-        ):
-            # sudo: discuss.channel - last operator left the conversation, state must be updated.
-            channel_sudo.livechat_end_dt = fields.Datetime.now()
-
     def livechat_join_channel_needing_help(self):
         """Join a live chat for which help was requested.
 
@@ -1036,7 +1023,9 @@ class DiscussChannel(models.Model):
                 users=human_operator,
                 skip_chatbot_current_step_reset=True,
             )
-            channel_sudo._action_unfollow(partner=bot_partner_id, post_leave_message=False)
+            channel_sudo.channel_member_ids.filtered(
+                lambda m: m.partner_id == bot_partner_id
+            ).with_context(post_leave_message=False).unlink()
 
             # finally, rename the channel to include the operator's name
             channel_sudo._update_forwarded_channel_data(

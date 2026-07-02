@@ -292,6 +292,21 @@ class DiscussChannelMember(models.Model):
             res.one("channel_id", "_store_channel_fields", predicate=lambda m: m.is_pinned)
 
     def unlink(self):
+        post_leave_message = self.env.context.get("post_leave_message", True)
+        for member in self:
+            channel = member.channel_id
+            channel.message_unsubscribe(member.partner_id.ids)
+            for bus_channel in member._bus_channels():
+                custom_store = Store(bus_channel=bus_channel)
+                custom_store.add(channel, {"close_chat_window": True, "isLocallyPinned": False})
+            if channel.channel_type != "channel" and post_leave_message:
+                notification = Markup('<div class="o_mail_notification" data-oe-type="channel-left">%s</div>') % _(
+                    "left the channel"
+                )
+                # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
+                channel.sudo().message_post(
+                    body=notification, subtype_xmlid="mail.mt_comment", author_id=member.partner_id.id
+                )
         # sudo: discuss.channel.rtc.session - cascade unlink of sessions for self member
         self.sudo().rtc_session_ids.unlink()  # ensure unlink overrides are applied
         # always unlink members of sub-channels as well
@@ -304,8 +319,9 @@ class DiscussChannelMember(models.Model):
             ]
             for member in self
         ]
-        for member in self.env["discuss.channel.member"].search(Domain.OR(domains)):
-            member.channel_id._action_unfollow(partner=member.partner_id, guest=member.guest_id)
+        sub_channel_members = self.env["discuss.channel.member"].search(Domain.OR(domains))
+        if sub_channel_members:
+            sub_channel_members.unlink()
         # sudo - discuss.channel: allowed to access channels to update member-based naming
         name_members_by_channel = {
             channel: channel.channel_name_member_ids for channel in self.channel_id
