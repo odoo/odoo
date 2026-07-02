@@ -4,13 +4,6 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Message} */
 const messagePatch = {
-    get notificationHidden() {
-        if (this.thread.channel?.channel_type !== "livechat" || !this.notificationType) {
-            return super.notificationHidden;
-        }
-        return this.notificationType === "channel-left";
-    },
-
     get canCopyMessageText() {
         return super.canCopyMessageText && !this.isWelcomeMessage;
     },
