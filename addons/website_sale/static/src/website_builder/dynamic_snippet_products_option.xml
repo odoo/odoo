@@ -7,16 +7,22 @@
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="attributes">
         <attribute name="t-if">filteredTemplates.length &gt; 1</attribute>
     </xpath>
-    <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
-
+    <BuilderRow id="arrow_position_opt" position="replace"/>
+    <BuilderRow id="scroll_opt" position="replace"/>
+    <BuilderRow id="filter_opt_row" position="before">
         <ProductsDesignPanel
             label.translate="Cards Design"
             recordName="'shop_opt_products_design_classes'"
             showLists="false"
             showSecondaryImage="true"
         />
-
-        <BuilderRow label.translate="Category" t-if="!this.domState.isAlternative and !isSingleMode">
+    </BuilderRow>
+    <BuilderRow id="filter_opt_row" position="after">
+        <BuilderRow
+            label.translate="Category"
+            t-if="!this.domState.isAlternative and !isSingleMode"
+            level="1"
+        >
             <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
                 <BuilderSelectItem dataAttributeActionValue="'all'">All Products</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'current'">Current Category or All</BuilderSelectItem>
@@ -25,35 +31,73 @@
                 </t>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Tags" preview="false" t-if="!this.domState.isAlternative and !isSingleMode">
+        <BuilderRow
+            label.translate="Tags"
+            t-if="!this.domState.isAlternative and !isSingleMode"
+            preview="false"
+            level="1"
+        >
 	        <BuilderMany2Many id="'product_tag_opt'" model="'product.tag'" limit="10"
 	            dataAttributeAction="'productTagIds'"
 	        />
 	    </BuilderRow>
         <BuilderRow
+            label.translate="Name"
             t-if="!this.domState.isAlternative and !isSingleMode"
-            label.translate="Ribbons"
             preview="false"
+            level="1"
         >
-	        <BuilderMany2Many
-                id="'product_ribbon_opt'"
-                model="'product.ribbon'"
-                dataAttributeAction="'productRibbonIds'"
-	        />
-	    </BuilderRow>
-<!-- TODO when many2many is fully supported
-                    data-allow-delete="true"
-                    data-fakem2m="true"
--->
-        <BuilderRow label.translate="Show variants" preview="false">
-            <BuilderCheckbox dataAttributeAction="'showVariants'" dataAttributeActionValue="'true'"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Product Names" preview="false" t-if="!this.domState.isAlternative and !isSingleMode">
-            <BuilderTextInput dataAttributeAction="'productNames'" id="'product_names_opt'"
+            <BuilderTextInput
+                dataAttributeAction="'productNames'"
+                id="'product_names_opt'"
                 placeholder.translate="e.g. lamp,bin"
                 title.translate="Comma-separated list of parts of product names, barcodes or internal reference"
             />
         </BuilderRow>
-    </xpath>
+<!-- TODO when many2many is fully supported
+                    data-allow-delete="true"
+                    data-fakem2m="true"
+-->
+        <BuilderRow label.translate="Split variants" preview="false" level="1">
+            <BuilderCheckbox
+                dataAttributeAction="'splitVariants'"
+                dataAttributeActionValue="'true'"
+            />
+        </BuilderRow>
+    </BuilderRow>
+</t>
+
+<t
+    t-name="website_sale.DynamicSnippetProductsGridOption"
+    t-inherit="website_sale.DynamicSnippetProductsOption"
+>
+    <BuilderRow id="section_title" position="after">
+        <BuilderRow
+            label.translate="Desktop"
+            t-if="!isSingleMode"
+            level="1"
+        >
+            <BuilderSelect action="'gridColumns'" id="'o_wsale_grid_columns'">
+                <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
+                <BuilderSelectItem actionValue="3">3 Columns</BuilderSelectItem>
+                <BuilderSelectItem actionValue="4">4 Columns</BuilderSelectItem>
+                <BuilderSelectItem actionValue="5">5 Columns</BuilderSelectItem>
+                <BuilderSelectItem actionValue="6">6 Columns</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow
+            label.translate="Mobile"
+            t-if="!isSingleMode"
+            level="1"
+        >
+            <BuilderSelect action="'mobileColumns'" id="'o_wsale_mobile_columns'">
+                <BuilderSelectItem actionValue="1">1 Column</BuilderSelectItem>
+                <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderRow>
+    <BuilderRow id="style_opt" position="replace"/>
+    <BuilderRow id="color_opt" position="replace"/>
+    <BuilderRow id="speed_opt" position="replace"/>
 </t>
 </templates>

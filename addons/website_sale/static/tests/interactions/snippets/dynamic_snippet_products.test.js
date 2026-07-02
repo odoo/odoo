@@ -72,7 +72,7 @@ test("dynamic snippet products loads items and displays them through template", 
                   data-name="Products"
                   data-filter-id="3"
                   data-product-category-id="current"
-                  data-show-variants="true"
+                  data-split-variants="true"
                   data-custom-template-data="{}"
                   data-number-of-records="16"
                   data-template-key="website_sale.dynamic_filter_template_product_product_products_item"
@@ -103,14 +103,14 @@ test("dynamic snippet products loads items and displays them through template", 
     expect(itemEls[2]).toHaveAttribute("data-test-param", "test3");
     expect(itemEls[3]).toHaveAttribute("data-test-param", "test4");
     expect(itemEls[4]).toHaveAttribute("data-test-param", "test5");
-    expect(itemEls[3].closest(".carousel-item")).toHaveClass("active");
-    expect(itemEls[4].closest(".carousel-item")).not.toHaveClass("active");
+    expect(itemEls[0].closest(".carousel-item")).toHaveClass("active");
+    expect(itemEls[1].closest(".carousel-item")).not.toHaveClass("active");
     await animationFrame();
     await click(".carousel-control-next .oi");
     await animationFrame();
     await advanceTime(1000); // Slide duration.
-    expect(itemEls[3].closest(".carousel-item")).not.toHaveClass("active");
-    expect(itemEls[4].closest(".carousel-item")).toHaveClass("active");
+    expect(itemEls[0].closest(".carousel-item")).not.toHaveClass("active");
+    expect(itemEls[1].closest(".carousel-item")).toHaveClass("active");
     // Make sure element interactions are started.
     expect(itemEls[0]).toHaveAttribute("data-started", "*test*");
     expect(itemEls[1]).toHaveAttribute("data-started", "*test2*");

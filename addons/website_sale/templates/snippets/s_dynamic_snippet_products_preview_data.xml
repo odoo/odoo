@@ -1,96 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="website_sale.s_dynamic_snippet_products_preview_data" name="Products Preview Data">
-        <div class="carousel slide s_dialog_preview">
-            <div class="carousel-inner row w-100 mx-auto">
-                <div role="group" aria-roledescription="slide" class="carousel-item active" style="min-height: 357.875px;">
-                    <div class="row">
-                        <div class="d-flex flex-grow-0 flex-shrink-0 col-6 col-lg-3">
-                            <div class="o_carousel_product_card bg-transparent w-100 card border-0">
-                                <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" href="#">
-                                    <div class="overflow-hidden rounded">
-                                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" src="/website_sale/static/src/img/product_previews/product_1.jpg"/>
-                                    </div>
-                                </a>
-                                <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                                    <div class="h6 card-title">Three-Seat Sofa</div>
-                                    <div>
-                                        <div class="mt-2">
-                                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                                <span class="oe_currency_value">1,500.00</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    <template
+        name="Products Preview Cards"
+        id="website_sale.s_dynamic_snippet_products_preview_cards"
+    >
+        <t t-foreach="products" t-as="product">
+            <div t-att-class="product['item_classes']">
+                <div class="o_carousel_product_card bg-transparent w-100 card border-0">
+                    <a
+                        class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link"
+                        href="#"
+                    >
+                        <div class="overflow-hidden rounded">
+                            <img
+                                class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                loading="lazy"
+                                t-att-src="product['image_src']"
+                            />
                         </div>
-                        <div class="d-flex flex-grow-0 flex-shrink-0 col-6 col-lg-3">
-                            <div class="o_carousel_product_card bg-transparent w-100 card border-0">
-                                <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" href="#">
-                                    <div class="overflow-hidden rounded">
-                                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" src="/website_sale/static/src/img/product_previews/product_2.jpg" alt="Warranty (2 year)"/>
-                                    </div>
-                                </a>
-                                <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                                    <div class="h6 card-title">Customizable Desk</div>
-                                    <div>
-                                        <div class="mt-2">
-                                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                                <span class="oe_currency_value">750.00</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-md-flex flex-grow-0 flex-shrink-0 col-6 col-lg-3 d-none d-md-block">
-                            <div class="o_carousel_product_card bg-transparent w-100 card border-0">
-                                <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" href="#">
-                                    <div class="overflow-hidden rounded">
-                                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" src="/website_sale/static/src/img/product_previews/product_3.jpg" alt="Warranty (2 year)"/>
-                                    </div>
-                                </a>
-                                <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                                    <div class="h6 card-title">Conference Chair</div>
-                                    <div>
-                                        <div class="mt-2">
-                                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                                <span class="oe_currency_value">33.00</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-md-flex flex-grow-0 flex-shrink-0 col-6 col-lg-3 d-none d-md-block">
-                            <div class="o_carousel_product_card bg-transparent w-100 card border-0">
-                                <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" href="#">
-                                    <div class="overflow-hidden rounded">
-                                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" src="/website_sale/static/src/img/product_previews/product_4.jpg" alt="Warranty (2 year)"/>
-                                    </div>
-                                </a>
-                                <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                                    <div class="h6 card-title">Cabinet with Doors</div>
-                                    <div>
-                                        <div class="mt-2">
-                                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                                <span class="oe_currency_value">140.00</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                    </a>
+                    <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
+                        <div class="h6 card-title" t-out="product['product_name']"/>
+                        <div>
+                            <div class="mt-2">
+                                <span
+                                    name="product_price"
+                                    class="fw-bold"
+                                    data-oe-type="monetary"
+                                    data-oe-expression="data['price']"
+                                >
+                                    <span class="oe_currency_value" t-out="product['price']"/>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </t>
+    </template>
+
+    <template
+        name="Products Carousel Preview Data"
+        id="website_sale.s_dynamic_snippet_products_preview_data"
+    >
+        <div class="carousel slide s_dialog_preview">
+            <div class="carousel-inner row w-100 mx-auto">
+                <div role="group" aria-roledescription="slide" class="carousel-item active" style="min-height: 357.875px;">
+                    <div class="row">
+                        <t
+                            t-set="products"
+                            t-value="[
+                                {
+                                    'product_name': 'Three-Seat Sofa',
+                                    'image_src': '/website_sale/static/src/img/product_previews/product_1.jpg',
+                                    'item_classes': 'd-flex flex-grow-0 flex-shrink-0 col-6 col-lg-3',
+                                    'price': '1,500.00'
+                                },
+                                {
+                                    'product_name': 'Customizable Desk',
+                                    'image_src': '/website_sale/static/src/img/product_previews/product_2.jpg',
+                                    'item_classes': 'd-flex flex-grow-0 flex-shrink-0 col-6 col-lg-3',
+                                    'price': '750.00'
+                                },
+                                {
+                                    'product_name': 'Conference Chair',
+                                    'image_src': '/website_sale/static/src/img/product_previews/product_3.jpg',
+                                    'item_classes': 'd-md-flex flex-grow-0 flex-shrink-0 col-6 col-lg-3 d-none d-md-block',
+                                    'price': '33.00'
+                                },
+                                {
+                                    'product_name': 'Cabinet with Doors',
+                                    'image_src': '/website_sale/static/src/img/product_previews/product_4.jpg',
+                                    'item_classes': 'd-md-flex flex-grow-0 flex-shrink-0 col-6 col-lg-3 d-none d-md-block',
+                                    'price': '140.00'
+                                },
+                            ]"
+                        />
+                        <t t-call="website_sale.s_dynamic_snippet_products_preview_cards"/>
+                    </div>
+                </div>
+            </div>
             <a class="carousel-control-prev" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous" href="#s_dynamic_snippet_1">
-                <span class="fa fa-chevron-circle-left fa-2x"></span>
+                <span class="fa fa-chevron-circle-left fa-2x"/>
             </a>
             <a class="carousel-control-next" data-bs-slide="next" role="button" aria-label="Next" title="Next" href="#s_dynamic_snippet_1">
-                <span class="fa fa-chevron-circle-right fa-2x"></span>
+                <span class="fa fa-chevron-circle-right fa-2x"/>
             </a>
+        </div>
+    </template>
+
+    <template
+        name="Products Grid Preview Data"
+        id="website_sale.s_dynamic_snippet_products_grid_preview_data"
+    >
+        <div
+            class="s_dialog_preview s_dynamic_snippet_grid_container py-3"
+            data-grid-columns="2"
+            data-mobile-columns="2"
+        >
+            <t
+                t-set="products"
+                t-value="[
+                    {
+                        'product_name': 'Three-Seat Sofa',
+                        'image_src': '/website_sale/static/src/img/product_previews/product_1.jpg',
+                        'item_classes': '',
+                        'price': '1,500.00'
+                    },
+                    {
+                        'product_name': 'Customizable Desk',
+                        'image_src': '/website_sale/static/src/img/product_previews/product_2.jpg',
+                        'item_classes': '',
+                        'price': '750.00'
+                    },
+                    {
+                        'product_name': 'Conference Chair',
+                        'image_src': '/website_sale/static/src/img/product_previews/product_3.jpg',
+                        'item_classes': '',
+                        'price': '33.00'
+                    },
+                    {
+                        'product_name': 'Cabinet with Doors',
+                        'image_src': '/website_sale/static/src/img/product_previews/product_4.jpg',
+                        'item_classes': '',
+                        'price': '140.00'
+                    },
+                ]"
+            />
+            <t t-call="website_sale.s_dynamic_snippet_products_preview_cards"/>
         </div>
     </template>
 
