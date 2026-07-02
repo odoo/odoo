@@ -36,10 +36,10 @@ class AccountMoveLine(models.Model):
             ("purchase_b2c_regular", "B2C Regular"),  # will be removed in master
             ("purchase_b2b_rcm", "B2B RCM"),
             ("purchase_b2c_rcm", "B2C RCM"),
-            ("purchase_imp_services", "IMP(service)"),
+            ("purchase_imp_services", "IMP(services-RCM)"),
             ("purchase_imp_goods", "IMP(goods)"),
             ("purchase_cdnr_regular", "CDNR Regular"),
-            ("purchase_cdnur_regular", "CDNUR Regular"),
+            ("purchase_cdnur_regular", "CDNUR Regular"),  # will be removed in master
             ("purchase_cdnr_rcm", "CDNR RCM"),
             ("purchase_cdnur_rcm", "CDNUR RCM"),
             ("purchase_nil_rated", "Nil Rated"),
@@ -245,6 +245,12 @@ class AccountMoveLine(models.Model):
             if gst_treatment == 'composition' and not line.tax_ids and not line.tax_line_id and get_transaction_type(move) == 'intra_state':
                 return 'purchase_composition_supplies'
 
+            # export service type products purchases
+            if gst_treatment == 'overseas' and any(tax.tax_scope == 'service' for tax in line.tax_ids | line.tax_line_id) and tags_have_categ(line_tags, ['igst', 'cess']):
+                if is_reverse_charge_tax(line):
+                    return 'purchase_imp_services'
+                return 'purchase_out_of_scope'
+
             # If no relevant tags are found, or the tags do not match any category, mark as out of scope
             if not line_tags or not tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']):
                 return 'purchase_out_of_scope'
@@ -266,10 +272,6 @@ class AccountMoveLine(models.Model):
                 if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
                     return 'purchase_b2c_rcm'
 
-                # export service type products purchases
-                if gst_treatment == 'overseas' and any(tax.tax_scope == 'service' for tax in line.tax_ids | line.tax_line_id) and tags_have_categ(line_tags, ['igst', 'cess']):
-                    return 'purchase_imp_services'
-
                 # export goods type products purchases
                 if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess']) and not is_reverse_charge_tax(line):
                     return 'purchase_imp_goods'
@@ -285,13 +287,11 @@ class AccountMoveLine(models.Model):
                 if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
                     return 'purchase_cdnur_rcm'
 
-                if not is_reverse_charge_tax(line):
-                    if gst_treatment == 'deemed_export' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess'])\
-                        or gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess']):
-                        return 'purchase_cdnr_regular'
-
-                    if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess']):
-                        return 'purchase_cdnur_regular'
+                if not is_reverse_charge_tax(line) and (
+                    gst_treatment == 'deemed_export' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess'])
+                    or gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess'])
+                ):
+                    return 'purchase_cdnr_regular'
 
             # If none of the above match, default to out of scope
             return 'purchase_out_of_scope'
