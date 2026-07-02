@@ -64,12 +64,6 @@ export class Thread extends Component {
     /** @type {number} */
     smoothScrollingTimeout;
     isSmoothScrolling = false;
-    /**
-     * Bumped by every `reset()`. Used as a dependency of the effect mirroring
-     * `isLoaded` into `mountedAndLoaded` so the mirror is re-synced after a
-     * reset without making `mountedAndLoaded` depend on itself.
-     */
-    resetCount = 0;
 
     setup() {
         super.setup();
@@ -84,6 +78,12 @@ export class Thread extends Component {
         this.state = useState({
             isReplyingTo: false,
             mountedAndLoaded: false,
+            /**
+             * Bumped by `reset()`. Used as a dependency of the effect mirroring
+             * `isLoaded` into `mountedAndLoaded` so the mirror is re-synced after a
+             * reset without making `mountedAndLoaded` depend on itself.
+             */
+            resetCount: 0,
             showJumpPresent: false,
             scrollTop: null,
         });
@@ -222,7 +222,7 @@ export class Thread extends Component {
              * Depend on `resetCount`, bumped by `reset()`, so every reset
              * re-syncs `mountedAndLoaded` with `isLoaded`.
              */
-            () => [this.props.thread.isLoaded, this.resetCount]
+            () => [this.props.thread.isLoaded, this.state.resetCount]
         );
         useEffect(
             () => {
@@ -560,8 +560,16 @@ export class Thread extends Component {
     }
 
     reset() {
-        this.resetCount++;
         this.state.mountedAndLoaded = false;
+        // Bump `resetCount` (a mirror-effect dependency) so the effect re-runs
+        // and re-syncs `mountedAndLoaded`. Only when loaded: while `!isLoaded`,
+        // `applyScroll` resets on every patch, so an unconditional bump would
+        // spin the render loop until the fetch resolves. When loaded the bump
+        // re-renders once, the mirror sets `mountedAndLoaded` true and
+        // `applyScroll` stops resetting, so it converges.
+        if (this.props.thread.isLoaded) {
+            this.state.resetCount++;
+        }
         this.loadOlderState.ready = false;
         this.loadNewerState.ready = false;
         this.lastSetValue = undefined;
@@ -659,6 +667,8 @@ export class Thread extends Component {
     }
 
     get orderedMessages() {
+        // ensure rendering observes resetCount to re-trigger the effect when reset() is called
+        void this.state.resetCount;
         const messages = this.state.mountedAndLoaded
             ? this.props.thread.messages
             : this.props.thread.phantomMessages;
