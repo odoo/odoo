@@ -8,7 +8,7 @@ export class CarouselEdit extends Interaction {
     // the slide overlay) + See "CarouselItem" option.
     dynamicContent = {
         ".carousel-control-prev, .carousel-control-next, .carousel-indicators": {
-            "t-on-click": this.throttled(this.onControlClick),
+            "t-on-click": this.onControlClick,
             "t-att-class": () => ({ o_we_no_overlay: true }),
         },
         ".carousel-control-prev, .carousel-control-next": {

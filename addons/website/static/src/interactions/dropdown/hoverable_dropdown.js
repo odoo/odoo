@@ -7,8 +7,8 @@ export class HoverableDropdown extends Interaction {
     static selector = "header.o_hoverable_dropdown";
     dynamicContent = {
         ".dropdown": {
-            "t-on-mouseenter.withTarget": this.onMouseEnter,
-            "t-on-mouseleave.withTarget": this.onMouseLeave,
+            "t-on-mouseenter": this.onMouseEnter,
+            "t-on-mouseleave": this.onMouseLeave,
         },
         ".nav:not(.o_mega_menu_is_offcanvas) .o_mega_menu": {
             "t-att-style": () => ({
@@ -49,16 +49,15 @@ export class HoverableDropdown extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onMouseEnter(ev, currentTargetEl) {
+    onMouseEnter(ev) {
         const focusedEl =
             this.el.ownerDocument.querySelector(":focus") ||
             window.frameElement?.ownerDocument.querySelector(":focus");
 
         // The user must click on the dropdown if he is on mobile (no way to
         // hover) or if the dropdown is the (or in the) extra menu ('+').
-        this.updateDropdownVisibility(currentTargetEl, true);
+        this.updateDropdownVisibility(ev.currentTarget, true);
 
         // Keep the focus on the previously focused element if any, otherwise do
         // not focus the dropdown on hover.
@@ -74,10 +73,9 @@ export class HoverableDropdown extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onMouseLeave(ev, targelEl) {
-        this.updateDropdownVisibility(targelEl, false);
+    onMouseLeave(ev) {
+        this.updateDropdownVisibility(ev.currentTarget, false);
     }
 
     onResize() {

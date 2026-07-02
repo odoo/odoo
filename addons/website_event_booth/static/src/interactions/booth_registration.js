@@ -10,16 +10,16 @@ export class BoothRegistration extends Interaction {
     static selector = ".o_wbooth_registration";
     dynamicContent = {
         "input[name='booth_category_id']": {
-            "t-on-change.prevent.withTarget": this.onBoothTypeChange,
+            "t-on-change.prevent": this.onBoothTypeChange,
         },
         ".form-check > input[type='checkbox']": {
-            "t-on-change.withTarget": this.onBoothChange,
+            "t-on-change": this.onBoothChange,
         },
         ".o_wbooth_registration_submit": {
             "t-on-click.prevent": this.onSubmitClick,
         },
         ".o_wbooth_registration_confirm": {
-            "t-on-click.prevent.stop.withTarget": this.onConfirmClick,
+            "t-on-click.prevent.stop": this.onConfirmClick,
         },
         ".o_wbooth_registration_error_section": {
             "t-att-class": () => ({
@@ -170,19 +170,17 @@ export class BoothRegistration extends Interaction {
 
     /**
      * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onBoothTypeChange(ev, currentTargetEl) {
-        this.activeBoothCategoryId = parseInt(currentTargetEl.value);
+    onBoothTypeChange(ev) {
+        this.activeBoothCategoryId = parseInt(ev.currentTarget.value);
         this.updateAvailableBoothsUI();
     }
 
     /**
      * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onBoothChange(ev, currentTargetEl) {
-        currentTargetEl.closest(".form-check").classList.remove("text-danger");
+    onBoothChange(ev) {
+        ev.currentTarget.closest(".form-check").classList.remove("text-danger");
         this.isSelectionEmpty = !!this.countSelectedBooths();
     }
 
@@ -197,11 +195,11 @@ export class BoothRegistration extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    async onConfirmClick(ev, currentTargetEl) {
-        currentTargetEl.classList.add("disabled");
-        currentTargetEl.disabled = true;
+    async onConfirmClick(ev) {
+        const currentTarget = ev.currentTarget;
+        currentTarget.classList.add("disabled");
+        currentTarget.disabled = true;
 
         const formEl = this.el.querySelector("#o_wbooth_contact_details_form");
         if (this.checkConfirmationForm(formEl)) {
@@ -224,8 +222,8 @@ export class BoothRegistration extends Interaction {
             }
         }
 
-        currentTargetEl.classList.remove("disabled");
-        currentTargetEl.removeAttribute("disabled");
+        currentTarget.classList.remove("disabled");
+        currentTarget.removeAttribute("disabled");
     }
 }
 

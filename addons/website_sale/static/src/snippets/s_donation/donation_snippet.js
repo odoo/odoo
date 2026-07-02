@@ -11,7 +11,7 @@ export class DonationSnippet extends Interaction {
     static selector = ".s_donation";
     dynamicContent = {
         ".s_donation_btn": {
-            "t-on-click.withTarget": this.onPrefilledClick,
+            "t-on-click": this.onPrefilledClick,
             "t-att-class": (el) => ({ "active": el === this.activeButtonEl }),
         },
         ".s_donation_donate_btn": {
@@ -97,12 +97,11 @@ export class DonationSnippet extends Interaction {
 
     /**
      * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onPrefilledClick(ev, currentTargetEl) {
-        this.activeButtonEl = currentTargetEl;
+    onPrefilledClick(ev) {
+        this.activeButtonEl = ev.currentTarget;
         const amountInputEl = this.el.querySelector("#s_donation_amount_input");
-        if (!currentTargetEl.classList.contains("s_donation_custom_btn") && amountInputEl) {
+        if (!ev.currentTarget.classList.contains("s_donation_custom_btn") && amountInputEl) {
             this.el.querySelector(".o_donation_custom_btn_warning")?.classList.add("d-none");
             amountInputEl.value = "";
         }

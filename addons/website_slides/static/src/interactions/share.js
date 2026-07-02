@@ -6,7 +6,7 @@ import { SlideShareDialog } from '../js/public/components/slide_share_dialog/sli
 export class Share extends Interaction {
     static selector = ".o_wslides_share";
     dynamicContent = {
-        _root: { "t-on-click.prevent.stop.withTarget": this.onClick },
+        _root: { "t-on-click.prevent.stop": this.onClick },
     }
 
     setup() {
@@ -28,12 +28,11 @@ export class Share extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onClick(ev, currentTargetEl) {
-        const slide = this.isFullscreen() ? this.slide : currentTargetEl.dataset;
+    onClick(ev) {
+        const slide = this.isFullscreen() ? this.slide : ev.currentTarget.dataset;
         const isDocumentSlide = slide.category === "document";
-        const embedUrl = isDocumentSlide && slide.embedCode ? 
+        const embedUrl = isDocumentSlide && slide.embedCode ?
             this.isFullscreen() ? slide.embedUrl : slide.embedCode.slice(
                 slide.embedCode.indexOf('src="') + 5,
                 slide.embedCode.indexOf('"', slide.embedCode.indexOf('src="') + 5)

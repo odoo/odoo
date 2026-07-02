@@ -5,9 +5,9 @@ export class MegaMenuDropdown extends Interaction {
     static selector = "header#top";
     dynamicContent = {
         ".o_mega_menu_toggle": {
-            "t-on-mouseenter.withTarget": this.onHoverMegaMenu,
-            "t-on-mousedown.withTarget": this.onTriggerMegaMenu,
-            "t-on-keyup.withTarget": this.onTriggerMegaMenu,
+            "t-on-mouseenter": this.onHoverMegaMenu,
+            "t-on-mousedown": this.onTriggerMegaMenu,
+            "t-on-keyup": this.onTriggerMegaMenu,
         },
         _root: {
             "t-on-mousedown": this.onTriggerExtraMenu, // delegated to ".o_extra_menu_items"
@@ -97,33 +97,31 @@ export class MegaMenuDropdown extends Interaction {
 
     /**
      * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onTriggerMegaMenu(ev, currentTargetEl) {
+    onTriggerMegaMenu(ev) {
         // Hoverable menus are clicked in mobile view
         if (
             this.el.classList.contains("o_hoverable_dropdown") &&
-            !currentTargetEl.closest(".o_header_mobile") &&
+            !ev.currentTarget.closest(".o_header_mobile") &&
             ev.type !== "keyup"
         ) {
             return;
         }
-        this.moveMegaMenu(currentTargetEl);
+        this.moveMegaMenu(ev.currentTarget);
     }
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onHoverMegaMenu(ev, currentTargetEl) {
+    onHoverMegaMenu(ev) {
         // Hoverable menus are clicked in mobile view
         if (
             !this.el.classList.contains("o_hoverable_dropdown") ||
-            currentTargetEl.closest(".o_header_mobile")
+            ev.currentTarget.closest(".o_header_mobile")
         ) {
             return;
         }
-        this.moveMegaMenu(currentTargetEl);
+        this.moveMegaMenu(ev.currentTarget);
     }
 
     /**

@@ -15,11 +15,11 @@ export class WebsiteBlog extends Interaction {
             "t-on-keydown": this.onNextBlogKeydown,
         },
         "#o_wblog_post_content_jump": {
-            "t-on-click.prevent.withTarget": this.onContentAnchorClick,
+            "t-on-click.prevent": this.onContentAnchorClick,
         },
         ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete":
             {
-                "t-on-click.prevent.withTarget": this.onShareArticleClick,
+                "t-on-click.prevent": this.onShareArticleClick,
             },
     };
 
@@ -61,11 +61,10 @@ export class WebsiteBlog extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    async onContentAnchorClick(ev, currentTargetEl) {
+    async onContentAnchorClick(ev) {
         ev.stopImmediatePropagation();
-        const scrollTargetEl = document.querySelector(currentTargetEl.hash);
+        const scrollTargetEl = document.querySelector(ev.currentTarget.hash);
 
         await this.forumScrollAction(
             scrollTargetEl,
@@ -76,13 +75,12 @@ export class WebsiteBlog extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onShareArticleClick(ev, currentTargetEl) {
+    onShareArticleClick(ev) {
         let url = "";
         const blogPostTitle = document.querySelector(".o_wblog_post_name").textContent || "";
         const articleURL = browser.location.href;
-        if (currentTargetEl.classList.contains("o_twitter")) {
+        if (ev.currentTarget.classList.contains("o_twitter")) {
             const tweetText = _t("Amazing blog article: %(title)s! Check it live: %(url)s", {
                 title: blogPostTitle,
                 url: articleURL,
@@ -90,9 +88,9 @@ export class WebsiteBlog extends Interaction {
             url =
                 "https://twitter.com/intent/tweet?tw_p=tweetbutton&text=" +
                 encodeURIComponent(tweetText);
-        } else if (currentTargetEl.classList.contains("o_facebook")) {
+        } else if (ev.currentTarget.classList.contains("o_facebook")) {
             url = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(articleURL);
-        } else if (currentTargetEl.classList.contains("o_linkedin")) {
+        } else if (ev.currentTarget.classList.contains("o_linkedin")) {
             url =
                 "https://www.linkedin.com/sharing/share-offsite/?url=" +
                 encodeURIComponent(articleURL);

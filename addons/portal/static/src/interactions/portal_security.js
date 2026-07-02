@@ -20,13 +20,13 @@ export class PortalSecurity extends Interaction {
             "t-on-click.prevent": this.onRemoveApiKeyClick,
         },
         _modal: {
-            "t-on-hide.bs.modal.withTarget": (event, currentTargetEl) => {
+            "t-on-hide.bs.modal": (ev) => {
                 // Remove the error messages when we close the modal,
                 // so when we re-open it again we get a fresh new form
-                for (const el of currentTargetEl.querySelectorAll(".alert, .invalid-feedback")) {
+                for (const el of ev.currentTarget.querySelectorAll(".alert, .invalid-feedback")) {
                     el.remove();
                 }
-                for (const el of currentTargetEl.querySelectorAll(".is-invalid")) {
+                for (const el of ev.currentTarget.querySelectorAll(".is-invalid")) {
                     el.classList.remove("is-invalid");
                 }
             },

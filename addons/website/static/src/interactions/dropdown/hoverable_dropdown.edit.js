@@ -5,13 +5,12 @@ const HoverableDropdownEdit = (I) =>
     class extends I {
         /**
          * @param {MouseEvent} ev
-         * @param {HTMLElement} currentTargetEl
          */
-        onMouseEnter(ev, currentTargetEl) {
+        onMouseEnter(ev) {
             if (this.el.querySelector(".dropdown-toggle.show")) {
                 return;
             } else {
-                super.onMouseEnter(ev, currentTargetEl);
+                super.onMouseEnter(ev);
             }
         }
 

@@ -92,6 +92,16 @@ export class Interaction {
      *
      * Accepted directives include: t-on-, t-att-, t-out and t-component
      *
+     * t-on- directives accept several suffix qualifiers:
+     *  - `.prevent`: calls event.preventDefault()
+     *  - `.stop`: calls event.stopPropagation()
+     *  - `.capture`: sets { capture: true }
+     *  - `.once`: sets { once: true }
+     *  - `.noUpdate`: the dynamicContent will not be reevaluated after the
+     *                 handler, generally because `updateContent` is called
+     *                 explicitly.
+     * They can be combined. (e.g. `t-on-click.prevent.stop.once`)
+     *
      * A falsy value on a class or style property will remove it.
      * On others attributes:
      * - `false`, `undefined` or `null` remove it

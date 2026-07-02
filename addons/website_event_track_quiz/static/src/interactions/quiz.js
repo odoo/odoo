@@ -17,7 +17,7 @@ export class Quiz extends Interaction {
     static selector = ".o_quiz_main";
     dynamicContent = {
         ".o_quiz_quiz_answer": {
-            "t-on-click.prevent.withTarget": this.onAnswerClick,
+            "t-on-click.prevent": this.onAnswerClick,
         },
         ".o_quiz_js_quiz_submit": {
             "t-on-click": this.onSubmitQuizClick,
@@ -215,11 +215,10 @@ export class Quiz extends Interaction {
     /**
      * When clicking on an answer, this one should be marked as "checked".
      * @param OdooEvent ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onAnswerClick(ev, currentTargetEl) {
+    onAnswerClick(ev) {
         if (!this.track.completed) {
-            currentTargetEl.querySelector("input[type=radio]").checked = true;
+            ev.currentTarget.querySelector("input[type=radio]").checked = true;
         }
     }
 

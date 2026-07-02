@@ -12,14 +12,14 @@ export class WebsiteEventTrackReminder extends Interaction {
     dynamicContent = {
         ".o_wetrack_js_reminder_bell": {
             "t-on-click.prevent.stop": this.debounced(this.onReminderToggleClick, 500, true),
-            "t-on-mouseover.withTarget": (ev, targetEl) => {
+            "t-on-mouseover": (ev) => {
                 if (!this.reminderOn){
-                    targetEl.classList.replace("fa-bell-o", "fa-bell");
+                    ev.currentTarget.classList.replace("fa-bell-o", "fa-bell");
                 }
             },
-            "t-on-mouseout.withTarget": (ev, targetEl) => {
+            "t-on-mouseout": (ev) => {
                 if (!this.reminderOn){
-                    targetEl.classList.replace("fa-bell", "fa-bell-o");
+                    ev.currentTarget.classList.replace("fa-bell", "fa-bell-o");
                 }
             },
         },
