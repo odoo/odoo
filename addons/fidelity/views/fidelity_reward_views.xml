@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fidelity_reward_view_list" model="ir.ui.view">
+        <field name="name">fidelity.reward.view.list</field>
+        <field name="model">fidelity.reward</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name" string="Rewards" />
+            </list>
+        </field>
+    </record>
+
+    <record id="fidelity_reward_view_form" model="ir.ui.view">
+        <field name="name">fidelity.reward.view.form</field>
+        <field name="model">fidelity.reward</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Reward">
+                            <field name="type" widget="selection" force_save="1"/>
+                            <field name="amount_max" />
+                            <field name="quantity" invisible="type != 'free'"/>
+                            <field name="amount" invisible="type != 'discount'"/>
+                            <field name="amount_type" invisible="type != 'discount'"/>
+                            <field name="amount_applicability" invisible="type != 'discount'" widget="radio" />
+                        </group>
+                        <group string="Points">
+                            <field name="required_points" />
+                            <field name="clear_wallet" string="Clear points" />
+                        </group>
+                    </group>
+                    <group string="Among" invisible="amount_applicability  == 'order' and type == 'discount'">
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="product_category_ids" widget="many2many_tags"/>
+                        <field name="product_tag_ids" widget="many2many_tags"/>
+                        <field name="nb_products" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fidelity_reward_view_kanban" model="ir.ui.view">
+        <field name="name">fidelity.reward.view.kanban</field>
+        <field name="model">fidelity.reward</field>
+        <field name="arch" type="xml">
+            <kanban js_class="fidelity_rule_reward_kanban_view">
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_card_body d-flex justify-content-between h-100">
+                            <div class="d-flex flex-column">
+                                <h3>Conditions</h3>
+                                <div class="d-flex flex-column" invisible="type != 'discount'">
+                                    <span>
+                                        <span>Amount </span>
+                                        <field name="amount" />
+                                        <span invisible="amount_type != 'percent'"> %</span>
+                                        <span invisible="amount_type != 'fixed'"> currency</span>
+                                    </span>
+                                    <span>
+                                        <span>Applicable on </span>
+                                        <span invisible="amount_applicability != 'order'">Order Total</span>
+                                        <span invisible="amount_applicability != 'products'">Specific Products</span>
+                                        <span invisible="amount_applicability != 'cheapest'">Cheapest Product</span>
+                                    </span>
+                                </div>
+                                <span invisible="type != 'free'">Quantity <field name="quantity"/></span>
+                                <span>Available products count <field name="nb_products"/></span>
+                                <span invisible="not amount_max">Maximum discount <field name="amount_max"/></span>
+                            </div>
+                            <div class="d-flex flex-column text-end">
+                                <h3>Required Points</h3>
+                                <span invisible="clear_wallet"><field name="required_points"/> <field name="point_unit"/></span>
+                                <span invisible="not clear_wallet">All points on card</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fidelity_program_money" model="fidelity.program">
+        <field name="name">Fidelity Program</field>
+        <field name="type">fidelity_card</field>
+        <field name="trigger">manual</field>
+        <field name="point_unit">Fidelity point(s)</field>
+    </record>
+
+    <record id="fidelity_program_money_rule" model="fidelity.rule">
+        <field name="minimum_amount">1</field>
+        <field name="minimum_qty">0</field>
+        <field name="reward_point_amount">1</field>
+        <field name="reward_point_mode">money</field>
+        <field name="program_id" ref="fidelity.fidelity_program_money"/>
+    </record>
+
+    <record id="fidelity_program_money_reward" model="fidelity.reward">
+        <field name="type">discount</field>
+        <field name="required_points">50</field>
+        <field name="discount_amount">5</field>
+        <field name="discount_amount_type">percent</field>
+        <field name="discount_amount_applicability">order</field>
+        <field name="program_id" ref="fidelity.fidelity_program_money"/>
+    </record>
+
+    <!-- Grant some transactions to the fidelity card example -->
+    <record id="fidelity_program_money_balance_example_1" model="fidelity.balance">
+        <field name="card_id" ref="fidelity.fidelity_card_example_1"/>
+        <field name="program_id" ref="fidelity.fidelity_program_money"/>
+    </record>
+
+    <record id="fidelity_transaction_fidelity_program_money_1" model="fidelity.transaction">
+        <field name="balance_id" ref="fidelity_program_money_balance_example_1"/>
+        <field name="program_id" ref="fidelity.fidelity_program_money"/>
+        <field name="rule_id" ref="fidelity.fidelity_program_money_rule"/>
+        <field name="issued">33.5</field>
+        <field name="state">done</field>
+    </record>
+
+    <record id="fidelity_transaction_fidelity_program_money_2" model="fidelity.transaction">
+        <field name="balance_id" ref="fidelity_program_money_balance_example_1"/>
+        <field name="program_id" ref="fidelity.fidelity_program_money"/>
+        <field name="rule_id" ref="fidelity.fidelity_program_money_rule"/>
+        <field name="issued">36.5</field>
+        <field name="state">done</field>
+    </record>
+
+    <record id="fidelity_transaction_fidelity_program_money_3" model="fidelity.transaction">
+        <field name="balance_id" ref="fidelity_program_money_balance_example_1"/>
+        <field name="program_id" ref="fidelity.fidelity_program_money"/>
+        <field name="rule_id" ref="fidelity.fidelity_program_money_rule"/>
+        <field name="issued">102.5</field>
+        <field name="state">pending</field>
+    </record>
+</odoo>
