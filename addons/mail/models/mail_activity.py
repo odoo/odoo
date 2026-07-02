@@ -11,6 +11,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet, is_html_empty
+from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.tools.translate import LazyTranslate
 from odoo.addons.base.models.ir_attachment import condition_values
@@ -408,14 +409,38 @@ class MailActivity(models.Model):
                 records = records[:limit]
             return records._as_query(ordered=bool(order))
 
-        # searching for all messages or a subset of models
+        # searching for a subset of models
         res_model_names = condition_values(self, 'res_model', domain) or ()
-        if not (0 < len(res_model_names) <= MAX_COMODELS_FOR_DOMAIN):
-            query = super()._search(domain, offset, limit, order, **kwargs)
-            records = self._fetch_query(query, [self._fields[f] for f in SECURITY_FIELDS])
-            return records._filtered_access('read')._as_query(ordered=bool(order))
+        if 0 < len(res_model_names) <= MAX_COMODELS_FOR_DOMAIN:
+            return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
 
-        return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
+        self_sudo = self.sudo().with_context(active_test=kwargs.get('active_test', self.env.context.get('active_test', True)))
+        ordered = bool(order)
+        if limit is None:
+            records = self_sudo.search_fetch(
+                domain, SECURITY_FIELDS, order=order).sudo(False)
+            return records._filtered_access('read')[offset:]._as_query(ordered)
+        # Fetch by small batches
+        looping_offset = 0
+        limit += offset
+        result = []
+        if not ordered:
+            # By default, order by model to batch access checks.
+            order = 'res_model nulls first, id'
+        while len(result) < limit:
+            records = self_sudo.search_fetch(
+                domain,
+                SECURITY_FIELDS,
+                offset=looping_offset,
+                limit=PREFETCH_MAX,
+                order=order,
+            ).sudo(False)
+            result.extend(records._filtered_access('read')._ids)
+            if len(records) < PREFETCH_MAX:
+                # There are no more records
+                break
+            looping_offset += PREFETCH_MAX
+        return self.browse(result[offset:limit])._as_query(ordered)
 
     def _search_res_access(self, operation, domain_operator):
         assert self.env.su

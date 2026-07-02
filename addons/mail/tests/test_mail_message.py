@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.models import mail_message as mail_message_module
 from odoo.addons.mail.tests import common
 from odoo.tests import HttpCase, new_test_user, tagged, users
+
+from unittest.mock import patch
 
 
 @tagged("mail_message")
@@ -46,6 +49,30 @@ class TestMailMessage(common.MailCommon, HttpCase):
         )
         self.assertIn(message_c1, search_result)
         self.assertNotIn(message_c2, search_result)
+
+    def test_mail_message_read_access_search_with_limit(self):
+        ids = []
+        ids += self._add_messages(self.env.company, "Accessible notes", count=5).ids
+        ids += self._add_messages(self.company_2, "Inccessible notes", count=5).ids
+        ids += self._add_messages(self.env.company, "Accessible notes", count=5).ids
+        messages = (self.env["mail.message"]
+            .with_user(self.user_employee)
+            .with_context(allowed_company_ids=[self.env.company.id])
+        ).browse(ids)
+        accessible = messages._filtered_access('read')
+        self.assertEqual(len(accessible), 10)
+        domain = [('id', 'in', ids)]
+
+        self.assertEqual(messages.search(domain, limit=100), accessible)
+        self.assertEqual(messages.sudo().search(domain, limit=100), messages)
+
+        Message = self.registry[messages._name]
+        with (
+            patch.object(mail_message_module, 'PREFETCH_MAX', 3),
+            patch.object(Message, '_search', autospec=True, side_effect=Message._search) as search_func,
+        ):
+            self.assertEqual(messages.search(domain, limit=100), accessible)
+            self.assertGreaterEqual(search_func.call_count, 4)
 
     @users("employee")
     def test_unlink_failure_message_notify_author(self):

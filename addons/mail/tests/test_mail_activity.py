@@ -1,8 +1,11 @@
 from freezegun import freeze_time
 
 from odoo import exceptions
+from odoo.addons.mail.models import mail_activity as mail_activity_module
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.tests import tagged, HttpCase
+
+from unittest.mock import patch
 
 
 @tagged("mail_activity")
@@ -69,3 +72,32 @@ class TestMailActivityIntegrity(ActivityScheduleCase):
             meeting.unlink()
         with self.assertRaises(exceptions.UserError):
             todo.unlink()
+
+    def test_mail_activity_read_access_search_with_limit(self):
+        record = self.user_employee.partner_id.with_user(self.user_employee)
+        ids = [record.activity_schedule(summary="test").id for _ in range(15)]
+        activity_model = self.env['ir.model']._get("mail.activity")
+        self.env['ir.rule'].create({
+            'name': "No one allowed to view the created partner",
+            'model_id': activity_model.id,
+            'domain_force': [('id', 'not in', ids[5:10])],
+        })
+        self.env.transaction.invalidate_access_cache()
+
+        activities = (self.env["mail.activity"]
+            .with_user(self.user_employee)
+        ).browse(ids)
+        accessible = activities._filtered_access('read')
+        self.assertEqual(len(accessible), 10)
+        domain = ['|', ('id', 'in', ids), ('id', '<', 0)]  # added dummy constraint do avoid ids optimization
+
+        self.assertEqual(activities.search(domain, limit=100), accessible)
+        self.assertEqual(activities.sudo().search(domain, limit=100), activities)
+
+        Activity = self.registry[activities._name]
+        with (
+            patch.object(mail_activity_module, 'PREFETCH_MAX', 3),
+            patch.object(Activity, '_search', autospec=True, side_effect=Activity._search) as search_func,
+        ):
+            self.assertEqual(activities.search(domain, limit=100), accessible)
+            self.assertGreaterEqual(search_func.call_count, 4)
