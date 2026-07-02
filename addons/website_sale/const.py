@@ -310,7 +310,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
 }
 
 _COMMON_PRODUCT_SNIPPET = {
-    "filter_xmlid": "website_sale.dynamic_filter_newest_products",
+    "filter_xmlid": "website_sale.dynamic_filter_newest_arrivals",
     "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
     "data_attributes": {
         "product-category-id": "all",
