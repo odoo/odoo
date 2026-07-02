@@ -1603,6 +1603,8 @@ export class Configurator extends Component {
         });
         const redirectUrl = await this.orm.call("website", "configurator_skip");
         this.clearStorage();
+        redirectUrl.params.path = "/website/lang/default?r=/";
+        redirectUrl.params.enable_editor = true;
         // Here the website service goToWebsite method is not used because
         // the web client needs to be reloaded after the configurator has
         // updated the website.
