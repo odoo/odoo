@@ -21,7 +21,7 @@ import {
     contains,
     defineParams,
     getMockEnv,
-    makeMockEnv,
+    makeTestApp,
     mockService,
     mountWithCleanup,
     patchWithCleanup,
@@ -1576,7 +1576,7 @@ test("multi-level dropdown: unsubscribe all keynav when root destroyed", async (
         keySet.clear();
     }
 
-    await makeMockEnv();
+    await makeTestApp();
     mockService("hotkey", {
         add(key) {
             const remove = super.add(...arguments);

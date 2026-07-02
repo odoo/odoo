@@ -5,7 +5,7 @@ import { Component, xml } from "@odoo/owl";
 import {
     assignTestEnv,
     getService,
-    makeMockEnv,
+    makeTestApp,
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
@@ -45,7 +45,7 @@ test("shadow DOM overlays are visible when registered before main component is m
     getFixture().appendChild(root);
 
     assignTestEnv({ rootId: "my-root-id" });
-    await makeMockEnv();
+    await makeTestApp();
     getService("overlay").add(MyComp, {}, { rootId: "my-root-id" });
     await mountWithCleanup(MainComponentsContainer, {
         target: root.shadowRoot,

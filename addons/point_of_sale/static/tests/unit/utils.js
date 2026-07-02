@@ -3,7 +3,7 @@ import {
     assignDialogTestEnv,
     contains,
     getService,
-    makeMockEnv,
+    makeTestApp,
     mountWithCleanup,
     patchWithCleanup,
     onRpc,
@@ -28,7 +28,7 @@ export const setupPosEnv = async () => {
     };
 
     assignDialogTestEnv();
-    await makeMockEnv();
+    await makeTestApp();
     onRpc("/css", () => "");
     const store = getService("pos");
     store.setCashier(store.user);

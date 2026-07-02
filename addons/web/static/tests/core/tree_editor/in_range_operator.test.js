@@ -1,7 +1,7 @@
 import { describe, expect, queryFirst, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 
-import { makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { makeTestApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Domain } from "@web/core/domain";
 import { condition, connector, expression } from "@web/core/tree_editor/condition_tree";
@@ -167,7 +167,7 @@ test(`"in range" operator: no introduction if condition negated or "|" or differ
 
 test(`"in range" operator: introduction/elimination for datetime fields (generateSmartDates=false)`, async () => {
     mockDate("2025-07-03 16:20:00");
-    await makeMockEnv();
+    await makeTestApp();
     const toTest = [
         {
             tree_py: and([condition("dt_1", ">=", DATE_START), condition("dt_1", "<=", DATE_END)]),
@@ -320,7 +320,7 @@ test(`"in range" operator: introduction/elimination for datetime fields (generat
 
 test(`"in range" operator: introduction/elimination for date fields (generateSmartDates=false)`, async () => {
     mockDate("2025-07-03 16:20:00");
-    await makeMockEnv();
+    await makeTestApp();
     const toTest = [
         {
             tree_py: and([
@@ -551,7 +551,7 @@ test(`"in range" operator: no introduction if condition negated or "|" or differ
 });
 
 test(`"in range" operator: introduction/elimination for datetime fields`, async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const toTest = [
         {
             tree_py: and([condition("dt_1", ">=", DATE_START), condition("dt_1", "<=", DATE_END)]),
@@ -652,7 +652,7 @@ test(`"in range" operator: introduction/elimination for datetime fields`, async 
 });
 
 test(`"in range" operator: introduction/elimination for date fields`, async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const toTest = [
         {
             tree_py: and([
@@ -758,7 +758,6 @@ test(`"in range" operator: introduction/elimination for date fields`, async () =
 
 test(`"in range" operator: date range tooltips on dropdown`, async () => {
     mockDate("2025-07-03 16:20:00");
-    await makeMockEnv();
 
     await mountWithCleanup(Select, {
         props: { value: "last7Days", update: () => {}, options: InRange.options },

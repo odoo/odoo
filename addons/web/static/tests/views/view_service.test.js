@@ -2,7 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     defineModels,
     getService,
-    makeMockEnv,
+    makeTestApp,
     models,
     onRpc,
 } from "@web/../tests/web_test_helpers";
@@ -27,7 +27,7 @@ test("stores calls in cache in success", async () => {
     onRpc("get_views", () => {
         expect.step("get_views");
     });
-    await makeMockEnv();
+    await makeTestApp();
     await getService("view").loadViews(
         {
             resModel: "take.five",
@@ -53,7 +53,7 @@ test("stores calls in cache when failed", async () => {
         expect.step("get_views");
         throw new Error("my little error");
     });
-    await makeMockEnv();
+    await makeTestApp();
     await expect(
         getService("view").loadViews(
             {
@@ -80,7 +80,7 @@ test("clear cache when updating ir.ui.view", async () => {
     onRpc("get_views", () => {
         expect.step("get_views");
     });
-    await makeMockEnv();
+    await makeTestApp();
     const loadView = () =>
         getService("view").loadViews(
             {

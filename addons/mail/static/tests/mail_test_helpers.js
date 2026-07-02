@@ -22,13 +22,12 @@ import {
     defineParams,
     getMockEnv,
     getService,
-    makeMockEnv,
     makeMockServer,
+    makeTestApp,
     mountWithCleanup,
     onRpc,
     parseViewProps,
     patchWithCleanup,
-    restoreRegistry,
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
@@ -393,10 +392,8 @@ export async function start(options) {
         });
         registerDebugInfo("session.storeData", session.storeData);
     }
-    let env;
     if (options?.asTab) {
         discussAsTabId++;
-        restoreRegistry(registry);
         const rootTarget = target;
         target = document.createElement("div");
         target.classList.add("o-mail-Discuss-asTabContainer");
@@ -405,7 +402,7 @@ export async function start(options) {
         addSwitchTabDropdownItem(rootTarget, target);
         const selector = `.o-mail-Discuss-asTabContainer[data-as-tab-id="${target.dataset.asTabId}"]`;
         assignTestEnv({ discussAsTabId, selector });
-        env = await makeMockEnv(null, { makeNew: true });
+        await makeTestApp({ forceNew: true });
     }
     patchWithCleanup(SoundEffects.prototype, {
         _setAudioSrc(audio, srcPath) {
@@ -414,19 +411,18 @@ export async function start(options) {
     });
     await Promise.all([
         options?.waitUntilSubscribe === false ? Promise.resolve() : waitUntilSubscribe(),
-        mountWithCleanup(WebClient, { env, target }),
+        mountWithCleanup(WebClient, { target }),
     ]);
     // Note that loading the emojis cannot be called before setting up the env because
     // it depends on translations being loaded.
     await emojiLoader.load();
-    env ||= getMockEnv();
-    const storeService = env.services["mail.store"];
-    const popoutService = env.services["mail.popout"];
+    const storeService = getService("mail.store");
+    const popoutService = getService("mail.popout");
     after(() => {
         storeService._runDisposeFns();
         popoutService.resetAll();
     });
-    return Object.assign(env, { ...options?.env, target });
+    return Object.assign(Object.create(getMockEnv()), { target });
 }
 
 export async function startServer() {

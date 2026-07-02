@@ -5,7 +5,8 @@ import {
     defineActions,
     defineMenus,
     getMockEnv,
-    makeMockEnv,
+    getTestApp,
+    makeTestApp,
     onRpc,
 } from "@web/../tests/web_test_helpers";
 import { setCellContent } from "./commands";
@@ -84,8 +85,8 @@ export async function makeSpreadsheetMockEnv(params = {}) {
     if (params.serverData?.views) {
         addViewsFromServerData(params.serverData);
     }
-    if (!getMockEnv()) {
-        await makeMockEnv();
+    if (!getTestApp()) {
+        await makeTestApp();
     }
 }
 

@@ -129,7 +129,7 @@ export function clearTestEnv() {
 }
 
 /**
- * @param {App} [app]
+ * @param {App | null} [app]
  */
 export function destroyApp(app = currentApp) {
     if (app && !app.destroyed) {
@@ -179,19 +179,6 @@ export function getService(name) {
 
 export function getTestApp() {
     return currentApp;
-}
-
-/**
- * Makes a mock environment along with a mock server
- *
- * @param {Partial<OdooEnv>} [_partialEnv]
- * @param {{
- *  makeNew?: boolean;
- * }} [options]
- */
-export async function makeMockEnv(_partialEnv, options) {
-    const app = await makeTestApp({ ...options });
-    return app.env;
 }
 
 /**

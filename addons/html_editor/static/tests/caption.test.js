@@ -9,7 +9,7 @@ import {
     waitForNone,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
@@ -1402,7 +1402,6 @@ test("Should be able to revert image replace", async () => {
         },
     ]);
 
-    await makeMockEnv();
     const captionText = "caption";
 
     const { el } = await setupEditorWithEmbeddedCaption(

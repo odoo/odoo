@@ -2,12 +2,12 @@ import { expect, queryRect, test } from "@odoo/hoot";
 import { click, hover, leave, waitFor } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
-import { getService, makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, makeTestApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
 
 test("can display a basic notification", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -20,7 +20,7 @@ test("can display a basic notification", async () => {
 });
 
 test("can display a notification with a className", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -31,7 +31,7 @@ test("can display a notification with a className", async () => {
 });
 
 test("message are escaped by default", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -43,7 +43,7 @@ test("message are escaped by default", async () => {
 });
 
 test("can display a notification with markup content", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -55,7 +55,7 @@ test("can display a notification with markup content", async () => {
 });
 
 test("can display a notification with title and markup content", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -72,7 +72,7 @@ test("can display a notification with title and markup content", async () => {
 });
 
 test("can display a notification of type danger", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -85,7 +85,7 @@ test("can display a notification of type danger", async () => {
 });
 
 test("can display a notification with a button", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -110,7 +110,7 @@ test("can display a notification with a button", async () => {
 });
 
 test("can display a notification with a callback when closed", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -130,7 +130,7 @@ test("can display a notification with a callback when closed", async () => {
 });
 
 test("notifications aren't sticky by default", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -145,7 +145,7 @@ test("notifications aren't sticky by default", async () => {
 });
 
 test("can display a sticky notification", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -159,7 +159,7 @@ test("can display a sticky notification", async () => {
 });
 
 test("can close sticky notification", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -187,7 +187,7 @@ test("can close sticky notification", async () => {
 
 // The timeout have to be done by the one that uses the notification service
 test.skip("can close sticky notification with wait", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -210,7 +210,7 @@ test.skip("can close sticky notification with wait", async () => {
 });
 
 test("can close a non-sticky notification", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -231,7 +231,7 @@ test("can close a non-sticky notification", async () => {
 
 test.tags("desktop");
 test("can refresh the duration of a non-sticky notification", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -255,7 +255,7 @@ test("can refresh the duration of a non-sticky notification", async () => {
 });
 
 test("close a non-sticky notification while another one remains", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -283,7 +283,7 @@ test("close a non-sticky notification while another one remains", async () => {
 });
 
 test("notification coming when NotificationManager not mounted yet", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -294,7 +294,7 @@ test("notification coming when NotificationManager not mounted yet", async () =>
 });
 
 test("notification autocloses after a specified delay", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -315,7 +315,7 @@ test("notification autocloses after a specified delay", async () => {
 });
 
 test("no spam notifications", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -332,7 +332,7 @@ test("no spam notifications", async () => {
 });
 
 test("no spam markup'd notifications", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -350,7 +350,7 @@ test("no spam markup'd notifications", async () => {
 
 test.tags("mobile");
 test("notification must be on the bottom of the screen in mobile", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -371,7 +371,7 @@ test("notification must be on the bottom of the screen in mobile", async () => {
 
 test.tags("mobile");
 test("notification with multilines must be limited to 2 lines in mobile", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -400,7 +400,7 @@ test("notification with multilines must be limited to 2 lines in mobile", async 
 
 test.tags("mobile");
 test("notification with button on mobile", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
@@ -412,7 +412,10 @@ test("notification with button on mobile", async () => {
     await animationFrame();
     // Check if both the text and the button are on the same line
     expect(
-        Math.abs(queryRect(".o_notification_content").bottom - queryRect(".o_notification_buttons").bottom)
+        Math.abs(
+            queryRect(".o_notification_content").bottom -
+                queryRect(".o_notification_buttons").bottom
+        )
     ).toBeWithin(0, 1);
     await click(".o_notification .o_notification_close");
     await animationFrame();

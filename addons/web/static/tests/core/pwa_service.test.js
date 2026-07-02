@@ -1,5 +1,5 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { getService, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, makeTestApp, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
 
@@ -14,7 +14,7 @@ const mountManifestLink = (href) => {
 };
 
 test("PWA service fetches the manifest found in the page", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     mountManifestLink("/web/manifest.webmanifest");
     onRpc("/*", (request) => {
         expect.step(new URL(request.url).pathname);
@@ -35,7 +35,7 @@ test("PWA installation process", async () => {
     beforeInstallPromptEvent.preventDefault = () => {};
     beforeInstallPromptEvent.prompt = async () => ({ outcome: "accepted" });
     browser.BeforeInstallPromptEvent = beforeInstallPromptEvent;
-    await makeMockEnv();
+    await makeTestApp();
     mountManifestLink("/web/manifest.scoped_app_manifest");
     onRpc("/*", (request) => {
         expect.step(new URL(request.url).pathname);

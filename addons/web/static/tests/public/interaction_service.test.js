@@ -3,14 +3,14 @@ import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
 import { Component, xml } from "@odoo/owl";
-import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
+import { getService, makeTestApp } from "@web/../tests/web_test_helpers";
 import { Interaction } from "@web/public/interaction";
 import { startInteraction } from "./helpers";
 
 describe.current.tags("interaction_dev");
 
 test("properly fallback to body when we have no match for wrapwrap", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     expect(getService("public.interactions").el).toBe(document.querySelector("body"));
 });
 

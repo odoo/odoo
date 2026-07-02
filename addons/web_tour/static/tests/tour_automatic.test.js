@@ -5,7 +5,7 @@ import { advanceTime, animationFrame, queryFirst } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import {
     getService,
-    makeMockEnv,
+    makeTestApp,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -78,7 +78,7 @@ test("Step Tour validity", async () => {
     tourRegistry.add("tour1", {
         steps: () => steps,
     });
-    await makeMockEnv();
+    await makeTestApp();
     await getService("tour_service").startTour("tour1");
     await animationFrame();
     expect.verifySteps([
@@ -244,7 +244,7 @@ test("empty run function is rejected", async () => {
         null,
         2
     )}`;
-    await makeMockEnv();
+    await makeTestApp();
     await getService("tour_service").startTour("tour_reject_empty_run");
     await animationFrame();
     expect.verifySteps([expectedError, expectedError, expectedError]);
@@ -443,7 +443,6 @@ test("automatic tour with invisible element", async () => {
         warn: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
-    await makeMockEnv();
 
     class Root extends Component {
         static components = {};
@@ -495,7 +494,6 @@ test("automatic tour with invisible element but use :not(:visible))", async () =
         warn: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
-    await makeMockEnv();
 
     class Root extends Component {
         static components = {};

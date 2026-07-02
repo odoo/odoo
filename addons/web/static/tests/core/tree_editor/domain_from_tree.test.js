@@ -1,12 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { makeTestApp } from "@web/../tests/web_test_helpers";
 
 import { condition } from "@web/core/tree_editor/condition_tree";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
 
 test("domainFromTree", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const toTest = [
         {
             tree: condition("foo", "=", false),

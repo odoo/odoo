@@ -321,12 +321,8 @@ export function lockWebsocketConnect() {
     return patchWithCleanup(window, { WebSocket: LockedWebSocket });
 }
 
-/**
- * @param {OdooEnv} [env]
- */
-export async function startBusService(env) {
-    const busService = env ? env.services.bus_service : getService("bus_service");
-    busService.start();
+export async function startBusService() {
+    getService("bus_service").start();
     await runAllTimers();
 }
 

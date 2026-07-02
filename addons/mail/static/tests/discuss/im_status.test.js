@@ -11,14 +11,7 @@ import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, freezeTime } from "@odoo/hoot-dom";
 
-import {
-    makeMockEnv,
-    mockService,
-    patchWithCleanup,
-    restoreRegistry,
-    serverState,
-} from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { getService, makeTestApp, mockService, serverState } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 beforeEach(freezeTime);
@@ -126,26 +119,25 @@ test("new tab update presence when user comes back from away", async () => {
     localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], { im_status: "offline" });
-    const tabEnv_1 = await makeMockEnv();
-    patchWithCleanup(tabEnv_1.services.bus_service, {
+    await makeTestApp({ forceNew: true });
+    mockService("bus_service", {
         send: (type) => {
             if (type === "update_presence") {
                 expect.step("update_presence");
             }
         },
     });
-    tabEnv_1.services.bus_service.start();
+    getService("bus_service").start();
     await expect.waitForSteps(["update_presence"]);
-    restoreRegistry(registry);
-    const tabEnv_2 = await makeMockEnv(null, { makeNew: true });
-    patchWithCleanup(tabEnv_2.services.bus_service, {
+    await makeTestApp({ forceNew: true });
+    mockService("bus_service", {
         send: (type) => {
             if (type === "update_presence") {
                 expect.step("update_presence");
             }
         },
     });
-    tabEnv_2.services.bus_service.start();
+    getService("bus_service").start();
     await expect.waitForSteps([]);
     localStorage.setItem("presence.lastPresence", Date.now()); // Simulate user presence.
     await expect.waitForSteps(["update_presence", "update_presence"]);

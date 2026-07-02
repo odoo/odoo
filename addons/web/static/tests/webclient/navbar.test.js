@@ -16,7 +16,7 @@ import {
     defineMenus,
     destroyApp,
     getService,
-    makeMockEnv,
+    makeTestApp,
     mockService,
     mountWithCleanup,
     patchWithCleanup,
@@ -118,7 +118,7 @@ test("many sublevels in app menu items", async () => {
         { id: 8, children: [9], name: "My submenu 6" },
         { id: 9, name: "My submenu 7" },
     ]);
-    await makeMockEnv();
+    await makeTestApp();
     getService("menu").setCurrentMenu(1);
     await mountWithCleanup(NavBar);
     await contains(".o_menu_sections .o-dropdown").click();
@@ -303,7 +303,7 @@ test("can adapt with 'more' menu sections behavior", async () => {
         isSmall: false,
         getActiveElementOf: () => document.activeElement,
     }));
-    await makeMockEnv();
+    await makeTestApp();
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
@@ -377,7 +377,6 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
         isSmall: false,
         getActiveElementOf: () => document.activeElement,
     }));
-    await makeMockEnv();
 
     const navbar = await mountWithCleanup(MyNavbar);
 
@@ -485,7 +484,7 @@ test("'more' menu sections properly updated on app change", async () => {
         isSmall: false,
         getActiveElementOf: () => document.activeElement,
     }));
-    await makeMockEnv();
+    await makeTestApp();
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
@@ -532,7 +531,7 @@ test("Do not execute adapt when navbar is destroyed", async () => {
         }
     }
 
-    await makeMockEnv();
+    await makeTestApp();
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
@@ -615,7 +614,7 @@ test("navbar adapts app brand and menu sections on resize from mobile to desktop
     // Start with mobile width
     await resize({ width: 500 });
 
-    await makeMockEnv();
+    await makeTestApp();
     getService("menu").setCurrentMenu(1);
     await mountWithCleanup(NavBar);
 

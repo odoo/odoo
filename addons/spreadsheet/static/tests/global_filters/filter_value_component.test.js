@@ -6,7 +6,7 @@ import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import {
     contains,
     getMockEnv,
-    makeMockEnv,
+    makeTestApp,
     mountWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
@@ -69,7 +69,7 @@ async function mountFilterValueComponent(props) {
 }
 
 test("basic text filter", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -89,7 +89,7 @@ test("basic text filter", async function () {
 });
 
 test("can clear a text filter value", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -115,7 +115,7 @@ test("can clear a text filter value", async function () {
 });
 
 test("text filter with range", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -154,7 +154,7 @@ test("text filter with range", async function () {
 });
 
 test("cannot edit text filter input with range", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -181,7 +181,7 @@ test("cannot edit text filter input with range", async function () {
 });
 
 test("text filter cannot have the same value twice", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -203,7 +203,7 @@ test("text filter cannot have the same value twice", async function () {
 });
 
 test("text filter have a placeholder", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -225,7 +225,7 @@ test("relational filter with domain", async function () {
         expect.step("name_search");
         expect(kwargs.domain).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", []]]);
     });
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -244,7 +244,7 @@ test("relational filter with domain", async function () {
 });
 
 test("Filter with showClear should display the clear icon", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -264,7 +264,7 @@ test("Filter with showClear should display the clear icon", async function () {
 });
 
 test("Filter without showClear should not display the clear icon", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -292,7 +292,7 @@ test("relational filter with a contextual domain", async function () {
             ["id", "in", []],
         ]);
     });
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -311,7 +311,7 @@ test("relational filter with a contextual domain", async function () {
 });
 
 test("selection filter", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }
@@ -333,7 +333,7 @@ test("selection filter", async function () {
 });
 
 test("numeric filter", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model(
         {},
         { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } }

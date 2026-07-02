@@ -17,7 +17,7 @@ import {
     contains,
     destroyApp,
     getService,
-    makeMockEnv,
+    makeTestApp,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -29,7 +29,7 @@ import { useRef } from "@web/owl2/utils";
 const getOverlays = () => queryAllTexts(".o_web_hotkey_overlay");
 
 test("register / unregister", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const hotkey = getService("hotkey");
 
     const key = "q";
@@ -48,7 +48,7 @@ test("register / unregister", async () => {
 });
 
 test("should ignore when IME is composing", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const hotkey = getService("hotkey");
     const key = "enter";
     hotkey.add(key, () => expect.step(key));
@@ -64,7 +64,7 @@ test("hotkey handles wrongly formed KeyboardEvent", async () => {
     // When filling a form with the autofill feature of Chrome, a keyboard event without any
     // key set on it is triggered. This seems to be a bug on Chrome's side, since the spec
     //doesn't mention that field may be unset. (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key).
-    await makeMockEnv();
+    await makeTestApp();
 
     const hotkey = getService("hotkey");
 
@@ -278,7 +278,7 @@ test("hook", async () => {
 });
 
 test("non-MacOS usability", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const hotkey = getService("hotkey");
     const key = "q";
 
@@ -397,7 +397,7 @@ test("overlays can be toggled multiple times in a row", async () => {
 
 test("MacOS usability", async () => {
     mockUserAgent("mac");
-    await makeMockEnv();
+    await makeTestApp();
 
     const hotkey = getService("hotkey");
     const key = "q";
@@ -448,7 +448,7 @@ test("[data-hotkey] alt is required", async () => {
 });
 
 test("registration allows repeat if specified", async () => {
-    await makeMockEnv();
+    await makeTestApp();
 
     const allowRepeatKey = "a";
     const disallowRepeatKey = "b";
@@ -503,7 +503,7 @@ test("[data-hotkey] never allow repeat", async () => {
 });
 
 test("hotkeys evil 👹", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const hotkey = getService("hotkey");
 
     expect(() => hotkey.add()).toThrow(/must specify an hotkey/);
@@ -762,7 +762,7 @@ test("protects editable elements: an editable can allow hotkeys", async () => {
 });
 
 test("ignore numpad keys", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const key = "1";
     getService("hotkey").add(`alt+${key}`, () => expect.step(key));
     await animationFrame();
@@ -777,7 +777,7 @@ test("ignore numpad keys", async () => {
 });
 
 test("within iframes", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     getService("hotkey").add("enter", () => expect.step("called"));
     await animationFrame();
 

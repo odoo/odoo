@@ -16,7 +16,7 @@ import {
 } from "@spreadsheet/../tests/helpers/date_domain";
 import {
     getMockEnv,
-    makeMockEnv,
+    makeTestApp,
     allowTranslations,
     mockService,
 } from "@web/../tests/web_test_helpers";
@@ -577,7 +577,7 @@ test("getFacetInfo for relation values", async () => {
     mockService("name", {
         loadDisplayNames: (_resModel, ids) => ids.map((id) => `Name ${id}`),
     });
-    await makeMockEnv();
+    await makeTestApp();
     expect(await getFacetInfo(getMockEnv(), filter, { operator: "in", ids: [1] })).toEqual({
         title: "Relation Filter",
         id: "1",
@@ -603,7 +603,7 @@ test("getFacetInfo for selection values", async () => {
         resModel: "res.currency",
         selectionField: "position",
     };
-    await makeMockEnv();
+    await makeTestApp();
     expect(
         await getFacetInfo(getMockEnv(), filter, { operator: "in", selectionValues: ["after"] })
     ).toEqual({

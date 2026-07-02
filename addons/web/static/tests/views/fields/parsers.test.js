@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { clearMemoizeCaches } from "@web/core/utils/functions";
-import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { makeTestApp, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { localization } from "@web/core/l10n/localization";
 import { nbsp } from "@web/core/utils/strings";
@@ -12,7 +12,7 @@ import {
     parsePercentage,
 } from "@web/views/fields/parsers";
 
-beforeEach(makeMockEnv);
+beforeEach(() => makeTestApp());
 
 test("parseFloat", () => {
     expect(parseFloat("")).toBe(0);

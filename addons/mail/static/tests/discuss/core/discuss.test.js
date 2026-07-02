@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, makeTestApp, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -36,8 +36,8 @@ test("subscribe to presence channels according to store data", async () => {
             return api;
         },
     });
-    const env = await makeMockEnv();
-    const store = env.services["mail.store"];
+    await makeTestApp();
+    const store = getService("mail.store");
     onWebsocketEvent("subscribe", (data) => expect.step(`subscribe - [${data.channels}]`));
     // Should not subscribe to presences as bus service is not started.
     store["res.partner"].insert({ id: 1, name: "Partner 1", user_ids: [1] });

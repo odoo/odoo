@@ -9,7 +9,7 @@ import {
     fields,
     getMockEnv,
     getService,
-    makeMockEnv,
+    makeTestApp,
     mockService,
     models,
     mountWithCleanup,
@@ -1156,7 +1156,7 @@ test("react to prop 'domain' changes", async function () {
 ////////////////////////////////////////////////////////////////////////////
 
 test("Cache: refresh with debug mode", async () => {
-    await makeMockEnv();
+    await makeTestApp();
 
     onRpc("get_views", ({ kwargs }) => {
         expect.step("Fetch, debug = " + !!kwargs.options.debug);

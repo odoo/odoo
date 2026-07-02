@@ -3,7 +3,7 @@ import {
     defineModels,
     fields,
     getService,
-    makeMockEnv,
+    makeTestApp,
     models,
     onRpc,
 } from "@web/../tests/web_test_helpers";
@@ -34,13 +34,13 @@ defineModels([Dev, PO]);
 describe.current.tags("headless");
 
 test("single loadDisplayNames", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const displayNames = await getService("name").loadDisplayNames("dev", [1, 2, 3]);
     expect(displayNames).toEqual({ 1: "Julien", 2: "Pierre", 3: "Paul" });
 });
 
 test("loadDisplayNames is done in silent mode", async () => {
-    await makeMockEnv();
+    await makeTestApp();
 
     const onRPCRequest = ({ detail }) => {
         const silent = detail.settings.silent ? "(silent)" : "";
@@ -54,7 +54,7 @@ test("loadDisplayNames is done in silent mode", async () => {
 });
 
 test("single loadDisplayNames following addDisplayNames", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
@@ -66,7 +66,7 @@ test("single loadDisplayNames following addDisplayNames", async () => {
 });
 
 test("single loadDisplayNames following addDisplayNames (2)", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
@@ -78,7 +78,7 @@ test("single loadDisplayNames following addDisplayNames (2)", async () => {
 });
 
 test("loadDisplayNames in batch", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
@@ -95,7 +95,7 @@ test("loadDisplayNames in batch", async () => {
 });
 
 test("loadDisplayNames on different models", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
@@ -113,7 +113,7 @@ test("loadDisplayNames on different models", async () => {
 });
 
 test("invalid id", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     try {
         await getService("name").loadDisplayNames("dev", ["a"]);
     } catch (error) {
@@ -122,7 +122,7 @@ test("invalid id", async () => {
 });
 
 test("inaccessible or missing id", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
@@ -133,7 +133,7 @@ test("inaccessible or missing id", async () => {
 });
 
 test("batch + inaccessible/missing", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });

@@ -4,7 +4,7 @@ import {
     allowTranslations,
     clearRegistry,
     getService,
-    makeMockEnv,
+    makeTestApp,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
@@ -45,7 +45,7 @@ function registerService(name, dependencies, factory) {
 
 test(`can start a service`, async () => {
     registerService("test", [], () => 17);
-    await makeMockEnv();
+    await makeTestApp();
     expect(getService("test")).toBe(17);
 });
 
@@ -53,14 +53,14 @@ test(`crashing service start causes startService to crash`, async () => {
     registerService("ouch", [], () => {
         throw new Error("boom");
     });
-    await expect(makeMockEnv()).rejects.toThrow("boom");
+    await expect(makeTestApp()).rejects.toThrow("boom");
 });
 
 test(`crashing async service start causes startService to crash`, async () => {
     registerService("ouch", [], async () => {
         throw new Error("boom");
     });
-    await expect(makeMockEnv()).rejects.toThrow("boom");
+    await expect(makeTestApp()).rejects.toThrow("boom");
 });
 
 test(`can start an asynchronous service`, async () => {
@@ -72,21 +72,21 @@ test(`can start an asynchronous service`, async () => {
         return result;
     });
 
-    const envCreationPromise = makeMockEnv();
+    const appCreationPromise = makeTestApp();
     await tick(); // wait for startServices
     expect.verifySteps(["before"]);
 
     deferred.resolve(15);
-    const env = await envCreationPromise;
+    await appCreationPromise;
     expect.verifySteps(["after"]);
-    expect(env.services.test).toBe(15);
+    expect(getService("test")).toBe(15);
 });
 
 test(`can start a service with a dependency`, async () => {
     registerService("aang", ["appa"], () => expect.step("aang"));
     registerService("appa", [], () => expect.step("appa"));
 
-    await makeMockEnv();
+    await makeTestApp();
     expect.verifySteps(["appa", "aang"]);
 });
 
@@ -100,7 +100,7 @@ test(`get an object containing dependencies as second arg`, async () => {
         return "flying bison";
     });
 
-    await makeMockEnv();
+    await makeTestApp();
     expect.verifySteps(["appa", "aang"]);
 });
 
@@ -121,7 +121,7 @@ test(`can start two sequentially dependant asynchronous services`, async () => {
         expect.step("test3");
     });
 
-    const envCreationPromise = makeMockEnv();
+    const appCreationPromise = makeTestApp();
     await tick();
     expect.verifySteps(["test1"]);
 
@@ -133,7 +133,7 @@ test(`can start two sequentially dependant asynchronous services`, async () => {
     await tick();
     expect.verifySteps(["test2", "test3"]);
 
-    await envCreationPromise;
+    await appCreationPromise;
 });
 
 test(`can start two independant asynchronous services in parallel`, async () => {
@@ -153,7 +153,7 @@ test(`can start two independant asynchronous services in parallel`, async () => 
         expect.step("test3");
     });
 
-    const envCreationPromise = makeMockEnv();
+    const appCreationPromise = makeTestApp();
     await tick();
     expect.verifySteps(["test1", "test2"]);
 
@@ -165,7 +165,7 @@ test(`can start two independant asynchronous services in parallel`, async () => 
     await tick();
     expect.verifySteps(["test3"]);
 
-    await envCreationPromise;
+    await appCreationPromise;
 });
 
 test(`startServices: throws if all dependencies are not met in the same microtick as the call`, async () => {

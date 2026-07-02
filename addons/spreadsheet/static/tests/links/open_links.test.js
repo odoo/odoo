@@ -5,7 +5,7 @@ import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
 import {
     getMockEnv,
-    makeMockEnv,
+    makeTestApp,
     mockService,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -27,7 +27,7 @@ test("click a web link", async () => {
             expect.step(href.toString());
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
     const data = {
         sheets: [
             {

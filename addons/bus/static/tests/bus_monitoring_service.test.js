@@ -8,7 +8,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, runAllTimers } from "@odoo/hoot-dom";
 import {
     getService,
-    makeMockEnv,
+    makeTestApp,
     MockServer,
     mockService,
     patchWithCleanup,
@@ -37,7 +37,7 @@ test("connection considered as lost after failed reconnect attempt", async () =>
         ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
         ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
     );
-    await makeMockEnv();
+    await makeTestApp();
     await expect.waitForSteps(["isConnectionLost - false", "BUS:CONNECT"]);
     const unlockWebsocket = lockWebsocketConnect();
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
@@ -56,7 +56,7 @@ test("brief disconect not considered lost", async () => {
         ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")],
         ["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")]
     );
-    await makeMockEnv();
+    await makeTestApp();
     await expect.waitForSteps(["isConnectionLost - false", "BUS:CONNECT"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED);
     await expect.waitForSteps(["BUS:DISCONNECT"]);
@@ -71,7 +71,7 @@ test("computer sleep doesn't mark connection as lost", async () => {
         ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")],
         ["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")]
     );
-    await makeMockEnv();
+    await makeTestApp();
     await expect.waitForSteps(["isConnectionLost - false", "BUS:CONNECT"]);
     const unlockWebsocket = lockWebsocketConnect();
     patchWithCleanup(navigator, { onLine: false });

@@ -9,7 +9,7 @@ import {
 import { Component, onWillStart, props, xml } from "@odoo/owl";
 import {
     assignTestEnv,
-    makeMockEnv,
+    makeTestApp,
     mockService,
     mountWithCleanup,
     patchWithCleanup,
@@ -29,7 +29,7 @@ const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
 
 test("can handle rejected promise errors with a string as reason", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     errorHandlerRegistry.add(
         "__test_handler__",
         (env, err, originalError) => {
@@ -72,7 +72,7 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
             expect.step("dialog.add");
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
 
     expect.errors(1);
     Promise.reject(error);
@@ -114,7 +114,7 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
             expect.step("dialog.add");
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
     errorDialogRegistry.add("strange_error", CustomDialog);
 
     expect.errors(1);
@@ -161,7 +161,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
             expect.step("dialog.add");
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
     errorDialogRegistry.add("strange_error", CustomDialog);
     errorDialogRegistry.add("normal_error", NormalDialog);
 
@@ -174,7 +174,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
 
 test("will let handlers from the registry handle errors first", async () => {
     assignTestEnv({ someValue: 14 });
-    await makeMockEnv();
+    await makeTestApp();
     errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
         expect(originalError).toBe(error);
         expect(env.someValue).toBe(14);
@@ -254,7 +254,7 @@ test("handle uncaught promise errors", async () => {
             expect.step("dialog.add");
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
 
     expect.errors(1);
     Promise.reject(error);
@@ -277,7 +277,7 @@ test("handle uncaught client errors", async () => {
             expect.step("dialog.add");
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
 
     expect.errors(1);
     setTimeout(() => {
@@ -298,7 +298,7 @@ test("don't show dialog for errors in third-party scripts", async () => {
             throw new Error("should not pass here");
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
 
     expect.errors(1);
     // Error events from errors in third-party scripts have no colno, no lineno and no filename
@@ -320,7 +320,7 @@ test("show dialog for errors in third-party scripts in debug mode", async () => 
             return () => {};
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
 
     expect.errors(1);
     // Error events from errors in third-party scripts have no colno, no lineno and no filename
@@ -331,7 +331,7 @@ test("show dialog for errors in third-party scripts in debug mode", async () => 
 });
 
 test("lazy loaded handlers", async () => {
-    await makeMockEnv();
+    await makeTestApp();
 
     expect.errors(2);
     Promise.reject(new Error("error"));
@@ -384,7 +384,7 @@ describe("Error Service Logs", () => {
         error.cause = new Error("This is a second wrapper error");
         error.cause.cause = new Error("This is the original error");
 
-        await makeMockEnv();
+        await makeTestApp();
         const errorEvent = new PromiseRejectionEvent("unhandledrejection", {
             reason: error,
             promise: null,
@@ -413,7 +413,7 @@ describe("Error Service Logs", () => {
         error.cause = new Error("This is a second wrapper error");
         error.cause.cause = new Error("This is the original error");
 
-        await makeMockEnv();
+        await makeTestApp();
         const errorEvent = new Event("error", {
             promise: null,
             cancelable: true,
@@ -448,7 +448,7 @@ describe("Error Service Logs", () => {
             },
         });
 
-        await makeMockEnv();
+        await makeTestApp();
         let errorEvent = new Event("error", {
             promise: null,
             cancelable: true,

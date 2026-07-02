@@ -3,7 +3,7 @@ import { animationFrame } from "@odoo/hoot-dom";
 import {
     defineModels,
     getService,
-    makeMockEnv,
+    makeTestApp,
     models,
     onRpc,
 } from "@web/../tests/web_test_helpers";
@@ -27,7 +27,7 @@ test("reload currencies when updating a res.currency", async () => {
     onRpc(({ model, method }) => {
         expect.step([model, method]);
     });
-    await makeMockEnv();
+    await makeTestApp();
     expect.verifySteps([]);
     await getService("orm").read("res.currency", [32]);
     expect.verifySteps([["res.currency", "read"]]);
@@ -45,7 +45,7 @@ test("do not reload webclient when updating a res.currency, but there is an erro
     onRpc("get_all_currencies", ({ method }) => {
         expect.step(method);
     });
-    await makeMockEnv();
+    await makeTestApp();
     expect.verifySteps([]);
     rpcBus.trigger("RPC:RESPONSE", {
         data: { params: { model: "res.currency", method: "write" } },

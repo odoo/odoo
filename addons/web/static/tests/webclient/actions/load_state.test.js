@@ -18,7 +18,7 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
     serverState,
-    makeMockEnv,
+    makeTestApp,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -300,7 +300,7 @@ describe(`new urls`, () => {
         logHistoryInteractions();
         stepAllNetworkCalls();
 
-        await makeMockEnv();
+        await makeTestApp();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
         await mountWithCleanup(WebClient);
@@ -322,7 +322,7 @@ describe(`new urls`, () => {
         });
         stepAllNetworkCalls();
 
-        await makeMockEnv();
+        await makeTestApp();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
         await mountWithCleanup(WebClient);
@@ -343,7 +343,7 @@ describe(`new urls`, () => {
         logHistoryInteractions();
         stepAllNetworkCalls();
 
-        await makeMockEnv();
+        await makeTestApp();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
         await mountWithCleanup(WebClient);
@@ -1263,7 +1263,7 @@ describe(`new urls`, () => {
         logHistoryInteractions();
         stepAllNetworkCalls();
 
-        await makeMockEnv();
+        await makeTestApp();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
         await mountWithCleanup(WebClient);
@@ -2057,7 +2057,7 @@ describe(`legacy urls`, () => {
         redirect("/web#action=1001");
         stepAllNetworkCalls();
 
-        await makeMockEnv();
+        await makeTestApp();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
         await mountWebClient();
@@ -2068,7 +2068,7 @@ describe(`legacy urls`, () => {
         redirect("/web#action=__test__client__action__");
         stepAllNetworkCalls();
 
-        await makeMockEnv();
+        await makeTestApp();
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
 
         await mountWebClient();

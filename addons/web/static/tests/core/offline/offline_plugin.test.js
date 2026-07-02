@@ -7,7 +7,7 @@ import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { advanceTime, animationFrame, expect, runAllTimers, test, tick } from "@odoo/hoot";
 import {
     getService,
-    makeMockEnv,
+    makeTestApp,
     mockOffline,
     mountWithCleanup,
     onRpc,
@@ -19,7 +19,7 @@ test("RPC:RESPONSE: rpc returning a status 502", async () => {
 
     onRpc("/rpc/offline", () => new Response("", { status: 502 }), { pure: true });
 
-    await makeMockEnv();
+    await makeTestApp();
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
     rpc("/rpc/offline");
@@ -34,7 +34,7 @@ test("RPC:RESPONSE: rpc returning a status 502", async () => {
 test("RPC:RESPONSE: any succesfull rpc turns offline off", async () => {
     onRpc("/rpc/thatworks", () => true);
 
-    await makeMockEnv();
+    await makeTestApp();
     getService(OfflinePlugin).setOffline(true);
     await tick();
     expect(getService(OfflinePlugin).isOffline()).toBe(true);
@@ -57,7 +57,7 @@ test("'offline' and 'online' events fired on window", async () => {
         { pure: true }
     );
 
-    await makeMockEnv();
+    await makeTestApp();
 
     offline = true;
     browser.dispatchEvent(new Event("offline"));
@@ -75,7 +75,7 @@ test("'offline' and 'online' events fired on window", async () => {
 test("'offline' and 'online' events fired on window (false positive)", async () => {
     onRpc("/web/webclient/version_info", () => expect.step("version_info"));
 
-    await makeMockEnv();
+    await makeTestApp();
 
     // "online" event triggered when we're online
     browser.dispatchEvent(new Event("online"));
@@ -201,7 +201,7 @@ test("Repeatedly check connection when going offline", async () => {
     };
     onRpc("/web/webclient/version_info", mockVersionInfoRpc, { pure: true });
 
-    await makeMockEnv();
+    await makeTestApp();
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
     // go offline
@@ -217,7 +217,7 @@ test("Repeatedly check connection when going offline", async () => {
 });
 
 test("isAvailableOffline", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
     await getService(OfflinePlugin).setAvailableOffline(1, "list", { search: { key: 1 } });
@@ -239,7 +239,7 @@ test("isAvailableOffline", async () => {
 });
 
 test("getAvailableSearches", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const offline = getService(OfflinePlugin);
     expect(offline.isOffline()).toBe(false);
 
@@ -259,7 +259,7 @@ test("getAvailableSearches", async () => {
 });
 
 test("getAvailableSearches (searches order)", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const offline = getService(OfflinePlugin);
     expect(offline.isOffline()).toBe(false);
 
@@ -291,7 +291,7 @@ test("scheduleORM", async () => {
     onRpc("partner", "modify", ({ model, method, args, kwargs }) => {
         expect.step({ model, method, args, kwargs: JSON.stringify(kwargs) });
     });
-    await makeMockEnv();
+    await makeTestApp();
     const offline = getService(OfflinePlugin);
     expect(offline.isOffline()).toBe(false);
 
@@ -390,7 +390,7 @@ test("syncORM ConnectionLost", async () => {
         throw Error("This shouldn't be called");
     });
 
-    await makeMockEnv();
+    await makeTestApp();
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
 
     // go offline

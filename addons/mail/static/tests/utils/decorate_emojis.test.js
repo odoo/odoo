@@ -4,7 +4,7 @@ import { decorateEmojis } from "@mail/utils/common/format";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { markup } from "@odoo/owl";
 
-import { makeMockEnv, preloadBundle } from "@web/../tests/web_test_helpers";
+import { makeTestApp, preloadBundle } from "@web/../tests/web_test_helpers";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
 const Markup = markup().constructor;
@@ -13,7 +13,7 @@ defineMailModels();
 preloadBundle("web.assets_emoji");
 
 beforeEach(async () => {
-    await makeMockEnv();
+    await makeTestApp();
     await emojiLoader.load();
 });
 

@@ -8,7 +8,7 @@ import {
     defineParams,
     getMockEnv,
     mountWithCleanup,
-    makeMockEnv,
+    makeTestApp,
     serverState,
 } from "@web/../tests/web_test_helpers";
 import {
@@ -82,7 +82,7 @@ test("default params", async () => {
 test("minDate: correct days/month/year/decades are disabled", async () => {
     serverState.lang = "en-US";
     // necessary to configure the lang before minDate/maxDate are created
-    await makeMockEnv();
+    await makeTestApp();
 
     await mountWithCleanup(DateTimePicker, {
         props: {
@@ -327,7 +327,7 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
 test("min+max date: correct days/month/year/decades are disabled", async () => {
     serverState.lang = "en-US";
     // necessary to configure the lang before minDate/maxDate are created
-    await makeMockEnv();
+    await makeTestApp();
 
     await mountWithCleanup(DateTimePicker, {
         props: {

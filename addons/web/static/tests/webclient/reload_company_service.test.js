@@ -2,7 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import {
     defineModels,
     getService,
-    makeMockEnv,
+    makeTestApp,
     mockService,
     models,
 } from "@web/../tests/web_test_helpers";
@@ -22,7 +22,7 @@ test("reload webclient when updating a res.company", async () => {
             expect.step(action);
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
     expect.verifySteps([]);
     await getService("orm").read("res.company", [32]);
     expect.verifySteps([]);
@@ -38,7 +38,7 @@ test("do not reload webclient when updating a res.company, but there is an error
             expect.step(action);
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
     expect.verifySteps([]);
     rpcBus.trigger("RPC:RESPONSE", {
         data: { params: { model: "res.company", method: "write" } },

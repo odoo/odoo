@@ -237,7 +237,6 @@ export async function mountView(params) {
     actionManagerEl.classList.add("o_action_manager");
     getFixture().appendChild(actionManagerEl);
     return mountWithCleanup(View, {
-        env: params.env,
         componentEnv: { config: params.config },
         props: parseViewProps(params),
         target: actionManagerEl,

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { makeTestApp } from "@web/../tests/web_test_helpers";
 
 import { condition, connector, expression } from "@web/core/tree_editor/condition_tree";
 import {
@@ -23,7 +23,7 @@ const options = {
 };
 
 test("between operator: introduction/elimination", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const toTest = [
         {
             tree_py: connector("&", [condition("int_1", ">=", 1), condition("int_1", "<=", 2)]),

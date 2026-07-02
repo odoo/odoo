@@ -3,7 +3,7 @@ import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import {
     contains,
     getMockEnv,
-    makeMockEnv,
+    makeTestApp,
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
@@ -52,7 +52,7 @@ const relationalGlobalFilter = {
 };
 
 beforeEach(async () => {
-    await makeMockEnv();
+    await makeTestApp();
     model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(getMockEnv()) } });
 });
 

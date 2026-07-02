@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { makeMockEnv, serverState } from "@web/../tests/web_test_helpers";
+import { makeTestApp, serverState } from "@web/../tests/web_test_helpers";
 
 import { formatCurrency } from "@web/core/currency";
 
 describe.current.tags("headless");
 
 beforeEach(async () => {
-    await makeMockEnv(); // To start the localization service
+    await makeTestApp(); // To start the localization service
 });
 
 test("formatCurrency", async () => {

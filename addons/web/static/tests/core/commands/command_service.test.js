@@ -4,7 +4,7 @@ import { advanceFrame, advanceTime, animationFrame, mockUserAgent } from "@odoo/
 import {
     contains,
     getService,
-    makeMockEnv,
+    makeTestApp,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -44,7 +44,7 @@ beforeEach(async () => {
             commandSetupRegistry.remove(key);
         }
     });
-    await makeMockEnv();
+    await makeTestApp();
     const commandCategoryRegistry = registry.category("command_categories");
     // Adding default last. The order of insertion of categories matters
     commandCategoryRegistry.remove("default");

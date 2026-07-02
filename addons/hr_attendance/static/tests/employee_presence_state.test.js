@@ -9,7 +9,7 @@ import {
     defineModels,
     mountView,
     models,
-    makeMockEnv,
+    makeTestApp,
     getService,
     getMockEnv,
 } from "@web/../tests/web_test_helpers";
@@ -34,7 +34,7 @@ class HrEmployee extends models.ServerModel {
 defineModels({ ...hrModels, HrEmployee });
 
 test("Check presence status state", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const channel = "hr.employee_22";
 
     getService("bus_service").addChannel(channel);

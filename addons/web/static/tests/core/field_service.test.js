@@ -3,7 +3,7 @@ import {
     defineModels,
     fields,
     getService,
-    makeMockEnv,
+    makeTestApp,
     MockServer,
     models,
     mountWithCleanup,
@@ -96,7 +96,7 @@ class Species extends models.Model {
 defineModels([Tortoise, Location, Species]);
 
 test("loadPath", async () => {
-    await makeMockEnv();
+    await makeTestApp();
 
     const toTest = [
         {
@@ -220,7 +220,7 @@ test("loadPath", async () => {
 });
 
 test("loadPath follow relational properties", async () => {
-    await makeMockEnv();
+    await makeTestApp();
 
     const toTest = [
         {
@@ -351,7 +351,7 @@ test("store loadFields calls in cache in success", async () => {
         expect.step("fields_get");
     });
 
-    await makeMockEnv();
+    await makeTestApp();
 
     await getService("field").loadFields("tortoise");
     await getService("field").loadFields("tortoise");
@@ -365,7 +365,7 @@ test("does not store loadFields calls in cache when failed", async () => {
         throw "my little error";
     });
 
-    await makeMockEnv();
+    await makeTestApp();
     await expect(getService("field").loadFields("take.five")).rejects.toThrow(/my little error/);
     await expect(getService("field").loadFields("take.five")).rejects.toThrow(/my little error/);
 

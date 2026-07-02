@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { makeTestApp } from "@web/../tests/web_test_helpers";
 
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -26,7 +26,7 @@ function domainFromExpression(expression, options) {
 describe.current.tags("headless");
 
 test("constructDomainFromTree . constructTreeFromDomain", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     const toTest = [
         {
             domain: `[("foo", "=", False)]`,

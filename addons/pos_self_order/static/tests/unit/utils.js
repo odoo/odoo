@@ -6,7 +6,7 @@ import {
     patchWithCleanup,
     MockServer,
     mountWithCleanup,
-    makeMockEnv,
+    makeTestApp,
 } from "@web/../tests/web_test_helpers";
 import { session } from "@web/session";
 import { registry } from "@web/core/registry";
@@ -91,7 +91,7 @@ export const setupSelfPosEnv = async (
 
     initMockRpc();
     assignDialogTestEnv();
-    await makeMockEnv();
+    await makeTestApp();
     const store = getService("self_order");
 
     store.config.self_ordering_mode = mode;

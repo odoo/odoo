@@ -3,7 +3,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
-    makeMockEnv,
+    makeTestApp,
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
@@ -25,7 +25,6 @@ test("Installation page displays the app info correctly", async () => {
     beforeInstallPromptEvent.preventDefault = () => {};
     beforeInstallPromptEvent.prompt = async () => ({ outcome: "accepted" });
     browser.BeforeInstallPromptEvent = beforeInstallPromptEvent;
-    await makeMockEnv();
     patchWithCleanup(browser.location, {
         replace: (url) => {
             expect(url.searchParams.get("app_name")).toBe("%3COtto%26", {
@@ -34,6 +33,7 @@ test("Installation page displays the app info correctly", async () => {
             expect.step("URL replace");
         },
     });
+    await makeTestApp();
     mountManifestLink("/web/manifest.scoped_app_manifest");
     onRpc("/*", (request) => {
         expect.step(new URL(request.url).pathname);
@@ -80,7 +80,7 @@ test("Installation page displays the app info correctly", async () => {
 
 test("Installation page displays the error message when browser is not supported", async () => {
     delete browser.BeforeInstallPromptEvent;
-    await makeMockEnv();
+    await makeTestApp();
     mountManifestLink("/web/manifest.scoped_app_manifest");
     onRpc("/*", (request) => {
         expect.step(new URL(request.url).pathname);

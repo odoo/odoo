@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
+import { getService, makeTestApp } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
 
 let titleService;
 
 beforeEach(async () => {
-    await makeMockEnv();
+    await makeTestApp();
     titleService = getService("title");
 });
 

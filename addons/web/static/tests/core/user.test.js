@@ -1,13 +1,13 @@
 import { test, expect, describe } from "@odoo/hoot";
 import { _makeUser, user } from "@web/core/user";
-import { makeMockEnv, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { makeTestApp, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
 
 describe.current.tags("headless");
 
 test("successive calls to hasGroup", async () => {
     serverState.uid = 7;
-    await makeMockEnv();
+    await makeTestApp();
     const groups = ["x"];
     onRpc("has_group", (args) => {
         expect.step(`${args.model}/${args.method}/${args.args[1]}`);
@@ -25,7 +25,7 @@ test("successive calls to hasGroup", async () => {
 });
 
 test("set user settings do not override old valid keys", async () => {
-    await makeMockEnv();
+    await makeTestApp();
     patchWithCleanup(user, _makeUser({ user_settings: { a: 1, b: 2 } }));
     onRpc("set_res_users_settings", (args) => {
         expect.step(args.kwargs.new_settings);

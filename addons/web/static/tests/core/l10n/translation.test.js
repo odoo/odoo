@@ -4,7 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, markup, xml } from "@odoo/owl";
 import {
     defineParams,
-    makeMockEnv,
+    makeTestApp,
     mountWithCleanup,
     onRpc,
     patchTranslations,
@@ -49,7 +49,7 @@ class TestComponent extends Component {
  */
 async function mockLang(lang) {
     serverState.lang = lang;
-    await makeMockEnv();
+    await makeTestApp();
 }
 
 test.tags("headless");
@@ -73,7 +73,7 @@ test("lang is given by an attribute on the DOM root node", async () => {
     after(() => {
         document.documentElement.removeAttribute("lang");
     });
-    await makeMockEnv();
+    await makeTestApp();
     expect.verifySteps(["fr_FR"]);
 });
 
@@ -86,7 +86,7 @@ test("url is given by the session", async () => {
         expect.step("/get_translations");
         return this.loadTranslations(request);
     });
-    await makeMockEnv();
+    await makeTestApp();
     expect.verifySteps(["/get_translations"]);
 });
 

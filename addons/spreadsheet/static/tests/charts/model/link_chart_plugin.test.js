@@ -6,7 +6,7 @@ import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot"
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithList } from "../../helpers/list";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { getMockEnv, makeMockEnv } from "@web/../tests/web_test_helpers";
+import { getMockEnv, makeTestApp } from "@web/../tests/web_test_helpers";
 
 import { Model } from "@odoo/o-spreadsheet";
 
@@ -17,7 +17,7 @@ describe.current.tags("headless");
 defineSpreadsheetModels();
 
 test("Links between charts and ir.menus are correctly imported/exported", async function () {
-    await makeMockEnv();
+    await makeTestApp();
     const model = new Model({}, { custom: { env: getMockEnv() } });
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {

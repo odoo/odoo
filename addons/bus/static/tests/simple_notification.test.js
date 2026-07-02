@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor } from "@odoo/hoot-dom";
 import {
-    makeMockEnv,
+    makeTestApp,
     MockServer,
     mockService,
     mountWithCleanup,
@@ -39,7 +39,7 @@ test("receive and display simple notification as sticky", async () => {
             expect.step("add notification");
         },
     });
-    await makeMockEnv();
+    await makeTestApp();
     MockServer.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
         message: "simple notification",
         sticky: true,

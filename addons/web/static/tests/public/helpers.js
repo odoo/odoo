@@ -2,7 +2,7 @@ import { getFixture, after } from "@odoo/hoot";
 import {
     clearRegistry,
     getService,
-    makeMockEnv,
+    makeTestApp,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
@@ -59,7 +59,7 @@ export async function startInteractions(
             }
         }
     }
-    await makeMockEnv();
+    await makeTestApp();
     const core = getService("public.interactions");
     if (options.waitForStart) {
         await core.isReady;
