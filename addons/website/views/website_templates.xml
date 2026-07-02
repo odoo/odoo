@@ -3478,6 +3478,17 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
     </xpath>
 </template>
 
+<template id="mobile_filter_offcanvas_footer" name="Mobile Filter Offcanvas Footer">
+    <div class="offcanvas-footer border-top p-3 d-flex gap-2">
+        <button type="button" class="btn btn-primary w-50 o_mobile_filter_apply">
+            Apply
+        </button>
+        <button type="button" class="btn btn-light w-50 o_mobile_filter_clear">
+            Clear
+        </button>
+    </div>
+</template>
+
 <!-- Extra element : Text -->
 <template id="website.placeholder_header_text_element" name="Placeholder Header Text element"/>
 <template id="website.header_text_element" inherit_id="website.placeholder_header_text_element" name="Header Text element" active="True">

@@ -217,6 +217,53 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             meta = event.get_website_meta()
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.jpg')
 
+    def test_website_event_mobile_filter_offcanvas(self):
+        """
+        UI test for the mobile offcanvas filter on the /event page.
+        Requires at least 3 published event tags across published events
+        so the tour can select 3 checkboxes.
+        """
+        category = self.env["event.tag.category"].create({
+            "name": "Topic",
+            "is_published": True,
+        })
+        tag_culture, tag_tech, tag_business = self.env["event.tag"].create([
+            {"name": "Culture", "category_id": category.id},
+            {"name": "Tech", "category_id": category.id},
+            {"name": "Business", "category_id": category.id},
+        ])
+
+        now = fields.Datetime.now()
+        self.env["event.event"].create([
+            {
+                "name": "Culture Night",
+                "date_begin": now + timedelta(days=1),
+                "date_end": now + timedelta(days=2),
+                "website_published": True,
+                "tag_ids": [tag_culture.id],
+            },
+            {
+                "name": "Tech Summit",
+                "date_begin": now + timedelta(days=3),
+                "date_end": now + timedelta(days=4),
+                "website_published": True,
+                "tag_ids": [tag_tech.id],
+            },
+            {
+                "name": "Business Forum",
+                "date_begin": now + timedelta(days=5),
+                "date_end": now + timedelta(days=6),
+                "website_published": True,
+                "tag_ids": [tag_business.id],
+            },
+        ])
+
+        self.start_tour(
+            self.env["website"].get_client_action_url("/event"),
+            "test_website_event_mobile_filter_offcanvas",
+            login="admin"
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
