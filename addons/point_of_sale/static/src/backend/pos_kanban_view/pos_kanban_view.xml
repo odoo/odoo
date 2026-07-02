@@ -9,7 +9,7 @@
     <t t-name="point_of_sale.PosKanbanRenderer">
         <div class="d-flex flex-column">
             <t t-call="web.KanbanRenderer" />
-            <div class="position-relative container" t-att-class="{ 'border-top mt-2': this.showTopBorder() }" t-if="this.posState.show_predefined_scenarios">
+            <div class="position-relative container" t-att-class="{ 'border-top mt-2': this.showTopBorder() }" t-if="this.showPredefinedScenarios">
                 <div class="flex-grow-1 mb-3 text-center" t-att-class="{ 'disable-buttons': !this.posState.has_chart_template || this.loadScenario.status === 'loading' }">
                     <h1 class="mt-4" t-if="!this.posState.has_pos_config">Choose your store</h1>
                     <p t-if="!this.posState.has_chart_template" class="h2 m-3">

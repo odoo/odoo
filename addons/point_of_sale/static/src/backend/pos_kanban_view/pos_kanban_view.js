@@ -1,4 +1,3 @@
-import { onWillRender } from "@web/owl2/utils";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
@@ -60,8 +59,6 @@ export class PosKanbanRenderer extends KanbanRenderer {
                     }
                 })
         );
-
-        onWillRender(() => this.checkDisplayedResult());
     }
 
     async clickLoadScenario(item) {
@@ -71,8 +68,8 @@ export class PosKanbanRenderer extends KanbanRenderer {
         }
     }
 
-    checkDisplayedResult() {
-        this.posState.show_predefined_scenarios = this.props.list.count === 0;
+    get showPredefinedScenarios() {
+        return this.props.list.count === 0;
     }
 
     get isDarkTheme() {
