@@ -111,6 +111,14 @@ class DiscussChannelWebclientController(WebclientController):
     def store_get_discuss_channel_messages(self, store: Store, channel_id, fetch_params=None):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if channel:
+            initial_fetch = fetch_params.pop("initial_fetch", False) if fetch_params else False
+            if initial_fetch:
+                new_message_separator = channel.self_member_id.new_message_separator
+                if new_message_separator:
+                    fetch_params = {
+                        **(fetch_params or {}),
+                        "around": new_message_separator,
+                    }
             messages = self._resolve_messages(
                 store,
                 thread=channel,

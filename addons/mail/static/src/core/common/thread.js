@@ -512,8 +512,16 @@ export class Thread extends Component {
         return this.env.messageFetchRouteParams;
     }
 
-    fetchInitialMessages() {
-        this.props.thread.fetchNewMessages({ routeParams: this.messageFetchRouteParams });
+    shouldFetchInitialMessages() {
+        return this.messageFetchRouteParams !== this.props.thread.initialMessageFetchParams;
+    }
+
+    async fetchInitialMessages() {
+        if (!this.shouldFetchInitialMessages()) {
+            return;
+        }
+        this.props.thread.initialMessageFetchParams = this.messageFetchRouteParams;
+        await this.props.thread.fetchNewMessages({ routeParams: this.messageFetchRouteParams });
     }
 
     get viewportEl() {

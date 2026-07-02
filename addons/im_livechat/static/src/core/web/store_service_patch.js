@@ -27,15 +27,15 @@ const storePatch = {
             eager: true,
         });
     },
-    /**
-     * @override
-     */
-    initialize() {
-        super.initialize(...arguments);
-        if (this.discuss.isActive && this.has_access_livechat) {
-            this.livechatChannels.fetch();
-            this.livechatSelfExpertises.fetch();
+    initialPromises() {
+        const promises = super.initialPromises(...arguments);
+        if (this.discuss.isActive && this.store.has_access_livechat) {
+            promises.push(
+                this.store.livechatChannels.fetch(),
+                this.store.livechatSelfExpertises.fetch()
+            );
         }
+        return promises;
     },
     goToOldestUnreadLivechatThread() {
         const [oldestUnreadConversation] = this.discuss.livechats
