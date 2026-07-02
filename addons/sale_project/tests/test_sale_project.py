@@ -609,16 +609,18 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             ],
         })
         expected_analytic_distribution = {
-            f"{self.analytic_account_1.id},{self.analytic_account_2.id},{project.account_id.id}": 100,
-            f"{self.analytic_account_sale.id},{project.account_id.id}": 100,
+            f"{self.analytic_account_sale.id},{self.analytic_account_1.id},{self.analytic_account_2.id},{project.account_id.id}": 100,
         }
         self.assertEqual(sale_order.order_line.analytic_distribution, expected_analytic_distribution)
 
         # If the project is removed from the SO, only the analytic distribution is still in the line
         sale_order.project_id = None
+        expected_analytic_distribution_no_project = {
+            f"{self.analytic_account_sale.id},{self.analytic_account_1.id},{self.analytic_account_2.id}": 100
+        }
         self.assertEqual(
             sale_order.order_line.analytic_distribution,
-            distribution_model_product.analytic_distribution | distribution_model_partner.analytic_distribution
+            expected_analytic_distribution_no_project
         )
 
         # If project is added and the SO is confirmed, both analytic distributions are in the line

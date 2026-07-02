@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.tools import SQL
 from odoo.exceptions import UserError
+from collections import defaultdict
 
 
 class AccountAnalyticDistributionModel(models.Model):
@@ -64,12 +65,21 @@ class AccountAnalyticDistributionModel(models.Model):
         applicable_models = self._get_applicable_models({k: v for k, v in vals.items() if k != 'related_root_plan_ids'})
 
         res = {}
+        percent2accounts = defaultdict(list)
         applied_plans = vals.get('related_root_plan_ids', self.env['account.analytic.plan'])
         for model in applicable_models:
             # ignore model if it contains an account having a root plan that was already applied
             if not applied_plans & model.distribution_analytic_account_ids.root_plan_id:
-                res |= model.analytic_distribution or {}
                 applied_plans += model.distribution_analytic_account_ids.root_plan_id
+                for dist_key, dist_value in (model.analytic_distribution or {}).items():
+                    if dist_value in percent2accounts:
+                        percent2accounts[dist_value].append(dist_key)
+                    else:
+                        percent2accounts[dist_value] = [dist_key]
+        for percent, accounts in percent2accounts.items():
+            newkey = ",".join(accounts)
+            res[newkey] = percent
+
         return res
 
     @api.model
