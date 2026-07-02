@@ -2,3 +2,4 @@
 
 from . import legacy
 from . import main
+from . import portal

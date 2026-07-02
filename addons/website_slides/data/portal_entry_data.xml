@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_slides_client" model="portal.entry">
+        <field name="name">Courses</field>
+        <field name="description">Access all your e-learning courses</field>
+        <field name="url">/slides</field>
+        <field name="image" type="bytes" file="website_slides/static/src/img/courses.svg"/>
+        <field name="placeholder_count">slide_channel_count</field>
+        <field name="category">client_category</field>
+        <field name="sequence" eval="70"/>
+    </record>
+</odoo>
