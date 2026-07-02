@@ -30,7 +30,8 @@ registry.category("web_tour.tours").add("test_use_product_catalog_on_invoice", {
         },
         {
             content: "Ensure product is added",
-            trigger: ".o_field_product_label_section_and_note_cell:contains(Test Product)",
+            trigger: ".o_field_product_label_section_and_note_cell:contains(Test Product)," +
+                     ".o_account_label_text_cell:contains(Test Product)",
         },
     ],
 });
