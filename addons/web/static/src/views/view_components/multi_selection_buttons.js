@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, toRaw, proxy } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, toRaw, proxy, untrack, useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -40,12 +40,22 @@ export class MultiSelectionButtons extends Component {
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
         this.state = proxy({ isReady: false });
-        onWillRender(() => {
-            if (this.props.reactive.visible && !this.state.isReady) {
-                this.loadMultiCreateView().then(() => {
-                    this.state.isReady = true;
-                });
+        this.loadingMultiCreateViewPromise = null;
+        useEffect(() => {
+            if (
+                !this.props.reactive.visible ||
+                this.state.isReady ||
+                this.loadingMultiCreateViewPromise
+            ) {
+                return;
             }
+            this.loadingMultiCreateViewPromise = untrack(() => this.loadMultiCreateView())
+                .then(() => {
+                    this.state.isReady = true;
+                })
+                .finally(() => {
+                    this.loadingMultiCreateViewPromise = null;
+                });
         });
 
         this.multiCreateValues = this.props.reactive.multiCreateValues;
