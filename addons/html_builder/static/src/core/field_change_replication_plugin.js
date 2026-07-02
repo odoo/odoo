@@ -47,8 +47,6 @@ export class FieldChangeReplicationPlugin extends Plugin {
                 );
             })
             .filter(Boolean)
-            // Do not forward "unstyled" copies to other nodes.
-            .filter((fieldEl) => !fieldEl.classList.contains("o_translation_without_style"))
             .forEach((fieldEl) => this.fieldsToReplicate.add(fieldEl));
     }
 
@@ -106,19 +104,9 @@ export class FieldChangeReplicationPlugin extends Plugin {
                 this.dependencies.dom.removeSystemProperties(cloneEl);
                 this.processThrough("clean_for_save_processors", cloneEl);
                 for (const targetEl of targetEls) {
-                    if (targetEl.classList.contains("o_translation_without_style")) {
-                        // For generated elements such as the navigation
-                        // labels of website's table of content, only the
-                        // text of the referenced translation must be used.
-                        if (targetEl.innerText !== cloneEl.innerText) {
-                            targetEl.innerText = cloneEl.innerText;
-                            touchedEls.add(targetEl);
-                        }
-                    } else {
-                        if (targetEl.innerHTML !== cloneEl.innerHTML) {
-                            targetEl.replaceChildren(...cloneEl.cloneNode(true).childNodes);
-                            touchedEls.add(targetEl);
-                        }
+                    if (targetEl.innerHTML !== cloneEl.innerHTML) {
+                        targetEl.replaceChildren(...cloneEl.cloneNode(true).childNodes);
+                        touchedEls.add(targetEl);
                     }
                     this.trigger("on_replicated_handlers", { sourceEl, targetEl });
                 }

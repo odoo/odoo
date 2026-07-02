@@ -1,4 +1,4 @@
-html[lang] > body.editor_enable [data-oe-translation-state] {
+html[lang] > body.editor_enable [data-oe-translation-state]:is(.o_savable, .o_savable_attribute):not(.o_not_editable *) {
     --text-translate-highlight-color: #{rgba($o-we-content-to-translate-color, 0.5)};
 
     &[data-oe-translation-state="translated"],
@@ -19,13 +19,6 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 .s_website_form {
     textarea:not(.o_translatable_attribute):not(.o_translatable_text) {
         pointer-events: none;
-    }
-}
-
-.s_share, .s_social_media {
-    > span[data-oe-translation-state] > * {
-        display: inline-block;
-        vertical-align: middle;
     }
 }
 
