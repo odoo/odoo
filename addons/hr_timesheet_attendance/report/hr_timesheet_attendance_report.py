@@ -21,7 +21,15 @@ class HrTimesheetAttendanceReport(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE OR REPLACE VIEW %s AS (
+        attendance_cost_sql = self.env['hr.employee']._get_historical_cost_sql(
+            tools.SQL('hr_attendance.employee_id'),
+            tools.SQL('hr_attendance.check_in::date'),
+        )
+        timesheet_cost_sql = self.env['hr.employee']._get_historical_cost_sql(
+            tools.SQL('ts.employee_id'),
+            tools.SQL('ts.date'),
+        )
+        self.env.cr.execute(tools.SQL("""CREATE OR REPLACE VIEW %s AS (
             SELECT
                 max(id) AS id,
                 t.employee_id,
@@ -36,7 +44,7 @@ class HrTimesheetAttendanceReport(models.Model):
             FROM (
                 SELECT
                     -hr_attendance.id AS id,
-                    hr_employee.hourly_cost AS emp_cost,
+                   %s AS emp_cost,
                     hr_attendance.employee_id AS employee_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
@@ -54,7 +62,7 @@ class HrTimesheetAttendanceReport(models.Model):
             UNION ALL
                 SELECT
                     ts.id AS id,
-                    hr_employee.hourly_cost AS emp_cost,
+                    %s AS emp_cost,
                     ts.employee_id AS employee_id,
                     NULL AS attendance,
                     ts.unit_amount AS timesheet,
@@ -68,7 +76,7 @@ class HrTimesheetAttendanceReport(models.Model):
             GROUP BY t.employee_id, t.date, t.company_id, t.emp_cost
             ORDER BY t.date
         )
-        """ % self._table)
+        """, tools.SQL.identifier(self._table), attendance_cost_sql, timesheet_cost_sql))
 
     @api.model
     def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
