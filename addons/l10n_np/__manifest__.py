@@ -12,6 +12,7 @@
     ],
     'data': [
         'data/account_chart_template_data.xml',
+        'data/account.account.tag.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
