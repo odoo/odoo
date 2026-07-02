@@ -8,7 +8,6 @@ import { useService } from "@web/core/utils/hooks";
 import { InputConfirmationDialog } from "./input_confirmation_dialog";
 import { fuzzyLevenshteinLookup, fuzzyLookup } from "@web/core/utils/search";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { Image } from "@html_builder/core/img";
 
 export class SnippetViewer extends Component {
     static template = "html_builder.SnippetViewer";
@@ -49,39 +48,7 @@ export class SnippetViewer extends Component {
      * @returns {PrefixIconInfo[]}
      */
     getPrefixIcons(snippetContentEl) {
-        /** @type {PrefixIconInfo[]} */
-        const icons = [];
-        const styleProps = { style: "height: 1em", attrs: { fill: "var(--body-color)" } };
-        if (snippetContentEl.matches(".o_snippet_desktop_invisible")) {
-            icons.push({
-                keyClass: "o_prefix_desktop_invisible",
-                title: "Invisible on desktop",
-                Component: Image,
-                props: {
-                    src: "/html_builder/static/img/options/desktop_invisible.svg",
-                    ...styleProps,
-                },
-            });
-        }
-        if (snippetContentEl.matches(".o_snippet_mobile_invisible")) {
-            icons.push({
-                keyClass: "o_prefix_mobile_invisible",
-                title: "Invisible on mobile",
-                Component: Image,
-                props: {
-                    src: "/html_builder/static/img/options/mobile_invisible.svg",
-                    ...styleProps,
-                },
-            });
-        }
-        if (snippetContentEl.matches(".o_conditional_hidden")) {
-            icons.push({
-                keyClass: "o_prefix_conditional",
-                title: "Conditionally visible",
-                content: markup`<span class="fa fa-eye-slash"/>`,
-            });
-        }
-        return icons;
+        return [];
     }
 
     getRenameBtnLabel(snippetName) {

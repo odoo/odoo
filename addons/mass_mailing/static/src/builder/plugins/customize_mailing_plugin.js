@@ -28,7 +28,7 @@ export class CustomizeMailingPlugin extends Plugin {
             CustomizeMailingVariable,
         },
         clean_for_save_processors: (root) => this.cleanForSave(root),
-        snippet_preview_dialog_stylesheets_processors: (params) => {
+        snippet_preview_dialog_iframe_processors: (params) => {
             const { iframe } = params;
             const styleSheet = this.extractStylesheetForPreview(iframe.contentDocument);
             iframe.contentDocument.adoptedStyleSheets.push(styleSheet);

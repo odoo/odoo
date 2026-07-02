@@ -2506,7 +2506,7 @@ $ribbon-padding: 100px;
 }
 
 // Conditional visibility
-.o_conditional_hidden {
+body:not(.o_conditional_visibility_ready) [data-visibility="conditional"] {
     display: none !important;
 }
 

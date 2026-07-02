@@ -4,7 +4,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
-    static dependencies = ["anchor", "visibility", "domObserver", "popupVisibilityPlugin"];
+    static dependencies = ["anchor"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -33,7 +33,6 @@ export class PopupOptionPlugin extends Plugin {
         },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        on_will_remove_handlers: this.onWillRemove.bind(this),
         no_parent_containers: ".s_popup",
         anchor_excluded_selectors: ".s_popup",
     };
@@ -47,27 +46,7 @@ export class PopupOptionPlugin extends Plugin {
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
             this.assignUniqueID(snippetEl);
-            this.dependencies.domObserver.stageCustomMutation({
-                apply: () => {
-                    this.dependencies.visibility.toggleTargetVisibility(snippetEl, true);
-                },
-                revert: () => {
-                    this.dependencies.visibility.toggleTargetVisibility(snippetEl, false);
-                },
-            });
         }
-    }
-
-    onWillRemove(el) {
-        this.dependencies.visibility.toggleTargetVisibility(el, false);
-        this.dependencies.domObserver.stageCustomMutation({
-            apply: () => {
-                this.dependencies.visibility.toggleTargetVisibility(el, false);
-            },
-            revert: () => {
-                this.dependencies.visibility.toggleTargetVisibility(el, true);
-            },
-        });
     }
 
     assignUniqueID(editingElement) {
