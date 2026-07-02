@@ -21,7 +21,7 @@
     <BuilderRow id="this.filter_opt_row" position="after">
         <BuilderRow
             label.translate="Category"
-            t-if="!this.domState.isAlternative and !isSingleMode"
+            t-if="!isSingleMode"
             level="1"
         >
             <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
@@ -34,7 +34,7 @@
         </BuilderRow>
         <BuilderRow
             label.translate="Ribbons"
-            t-if="!this.domState.isAlternative and !isSingleMode"
+            t-if="!isSingleMode"
             preview="false"
             level="1"
         >
@@ -46,7 +46,7 @@
 	    </BuilderRow>
         <BuilderRow
             label.translate="Tags"
-            t-if="!this.domState.isAlternative and !isSingleMode"
+            t-if="!isSingleMode"
             preview="false"
             level="1"
         >
@@ -56,7 +56,7 @@
 	    </BuilderRow>
         <BuilderRow
             label.translate="Name"
-            t-if="!this.domState.isAlternative and !isSingleMode"
+            t-if="!isSingleMode"
             preview="false"
             level="1"
         >

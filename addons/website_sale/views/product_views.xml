@@ -133,12 +133,12 @@
                 <field name="accessory_product_ids" widget="many2many_tags"
                        domain="[('sale_ok', '=', True)]"
                        invisible="not sale_ok"
-                       placeholder="Suggested accessories in the eCommerce cart"/>
+                       placeholder="Suggested in the cart overview"/>
                 <field name="alternative_product_ids" widget="many2many_tags"
                        domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                        context="{'search_product_product': True}"
                        invisible="not sale_ok"
-                       placeholder="Displayed in bottom of product pages"/>
+                       placeholder="Showcased on product page"/>
                 <field name="description_ecommerce" invisible="1" />         <!-- Adding this field as we needed in product_barcodelookup module to store value in this field -->
             </group>
             <field name="description_sale" position="attributes">

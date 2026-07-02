@@ -1221,6 +1221,24 @@ class Website(models.Model):
         query = urlencode([*parse_qsl(parsed.query), ("subject", subject)])
         return parsed._replace(query=query).geturl()
 
+    def _get_shop_products_design_classes(self):
+        """Return the website's design classes for the product cards, as configured on the
+        shop page, falling back to the default catalog layout if not yet configured.
+        """
+        design_classes = self.shop_opt_products_design_classes or ""
+        if "o_wsale_products_opt_layout_catalog" not in design_classes:
+            return (
+                "o_wsale_products_opt_name_color_regular "
+                "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
+                "o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_cc1 "
+                "o_wsale_products_opt_rounded_2 o_wsale_products_opt_layout_catalog "
+                "o_wsale_products_opt_design_thumbs o_wsale_products_opt_has_description "
+                "o_wsale_products_opt_name_size_body o_wsale_products_opt_actions_onhover "
+                "o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_actions_theme "
+                "o_wsale_products_opt_has_cta"
+            )
+        return design_classes
+
     def _get_product_image_ratio_classes(self):
         """Return the classes defining the product image aspect ratio from the website's design
         classes.
