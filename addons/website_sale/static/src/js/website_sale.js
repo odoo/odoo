@@ -761,6 +761,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     disabledInEditableMode: false,
     events: {
         'wheel .o_carousel_product_indicators': '_onMouseWheel',
+        'slide.bs.carousel': '_onSlideCarouselProductVideo',
     },
 
     /**
@@ -771,6 +772,10 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
         this._updateCarouselPosition();
         this.throttleOnResize = throttleForAnimation(this._onSlideCarouselProduct.bind(this));
         extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
+        for (const iframe of this.$el.find('.carousel-item:not(.active) iframe')) {
+            iframe.dataset.src = iframe.getAttribute('src');
+            iframe.removeAttribute('src');
+        }
         if (this.$el.find('.carousel-indicators').length > 0) {
             this.$el.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
             $(window).on('resize.carousel_product_slider', this.throttleOnResize);
@@ -844,6 +849,19 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
             if (($indicatorsDiv.children().last().position().left + this.$el.find('li').outerWidth()) < $indicatorsDiv.outerWidth()) {
                 $indicatorsDiv.css('justify-content', 'center');
             }
+        }
+    },
+    /**
+     * Load the video of the slide the carousel is sliding to.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSlideCarouselProductVideo: function (ev) {
+        const iframe = ev.relatedTarget?.querySelector('iframe[data-src]');
+        if (iframe) {
+            iframe.setAttribute('src', iframe.dataset.src);
+            delete iframe.dataset.src;
         }
     },
     /**
