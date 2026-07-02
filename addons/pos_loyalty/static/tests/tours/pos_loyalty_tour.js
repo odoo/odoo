@@ -10,7 +10,7 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Notification from "@point_of_sale/../tests/tours/utils/generic_components/notification_util";
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
-import { scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
+import { refresh, scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("PosLoyaltyTour1", {
     steps: () =>
@@ -328,6 +328,21 @@ registry.category("web_tour.tours").add("PosLoyaltyTour11.1", {
             ProductScreen.totalAmountIs("150.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.finalizeOrder("Cash", "150"),
+            refresh(),
+            Chrome.clickMenuOption("Orders"),
+            TicketScreen.selectFilter("Paid"),
+            Chrome.waitRequest(),
+            {
+                trigger: "body",
+                run: () => {
+                    const order = posmodel.data.models["pos.order"]
+                        .getAll()
+                        .filter((o) => o.state === "paid")[0];
+                    if (!order.new_coupon_info && !order.raw.new_coupon_info) {
+                        throw Error("Next order coupon is missing");
+                    }
+                },
+            },
         ].flat(),
 });
 

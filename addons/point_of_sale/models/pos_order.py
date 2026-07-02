@@ -1383,6 +1383,9 @@ class PosOrder(models.Model):
         totalCount = self.search_count(real_domain)
         return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
 
+    def get_ticket_screen_order_data(self):
+        return self.read_pos_data([], self.config_id[:1].id)
+
     def _send_order(self):
         # This function is made to be overriden by pos_self_order_preparation_display
         pass
