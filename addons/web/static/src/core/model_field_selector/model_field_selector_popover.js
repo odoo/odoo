@@ -1,5 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
-import { Component, onWillStart, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import { Component, computed, onWillStart, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -126,6 +125,16 @@ export class ModelFieldSelectorPopover extends Component {
     static template = "web.ModelFieldSelectorPopover";
     props = useProps(modelFieldSelectorPopoverProps);
     rootRef = signal.ref();
+    followRelationFn = computed(() => {
+        const { followRelation } = this.props;
+        if (followRelation instanceof Function) {
+            return followRelation;
+        }
+        if (followRelation) {
+            return () => {};
+        }
+        return () => false;
+    });
 
     setup() {
         this.fieldService = useService("field");
@@ -135,17 +144,6 @@ export class ModelFieldSelectorPopover extends Component {
 
         onWillStart(async () => {
             this.state.page = await this.loadPages(this.props.resModel, this.props.path);
-        });
-
-        onWillRender(() => {
-            const followRelation = this.props.followRelation;
-            if (followRelation instanceof Function) {
-                this._followRelation = followRelation;
-            } else if (followRelation) {
-                this._followRelation = () => {};
-            } else {
-                this._followRelation = () => false;
-            }
         });
 
         let focusedPage;
@@ -184,7 +182,7 @@ export class ModelFieldSelectorPopover extends Component {
         if (fieldDef.type === "properties") {
             return true;
         }
-        return this._followRelation?.({ fieldDef }) ?? fieldDef.relation;
+        return this.followRelationFn()({ fieldDef }) ?? fieldDef.relation;
     }
 
     filter(fieldDefs, path, resModel) {

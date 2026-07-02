@@ -1,5 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { Component, computed, onWillStart, usePlugin, proxy, signal, t, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -56,19 +55,20 @@ export class OfflineSearchBar extends Component {
             limit: INITIAL_SEARCH_LIMIT,
         });
 
+        this.currentSearch = computed(() => {
+            const currentSearch = this.env.searchModel.getCurrentSearch();
+            return (
+                this.allSearches.find((search) => search.key === currentSearch.key) || currentSearch
+            );
+        });
+        useBus(this.env.searchModel, "update", () => signal.trigger(this.currentSearch));
+
         const offlinePlugin = usePlugin(OfflinePlugin);
         onWillStart(async () => {
             const { actionId, viewType } = this.env.config;
             this.allSearches = await offlinePlugin.getAvailableSearches(actionId, viewType);
             this.emptySearch = this.allSearches.find((search) => !search.facets.length) || null;
             this.state.searches = this.allSearches;
-        });
-
-        onWillRender(() => {
-            const currentSearch = this.env.searchModel.getCurrentSearch();
-            this.currentSearch =
-                this.allSearches.find((search) => search.key === currentSearch.key) ||
-                currentSearch;
         });
     }
 
@@ -79,10 +79,11 @@ export class OfflineSearchBar extends Component {
     }
 
     canRemoveSearch() {
+        const currentSearch = this.currentSearch();
         return (
-            this.currentSearch.facets.length &&
+            currentSearch.facets.length &&
             (this.emptySearch ||
-                (this.allSearches.length && this.currentSearch.key !== this.allSearches[0].key))
+                (this.allSearches.length && currentSearch.key !== this.allSearches[0].key))
         );
     }
 
