@@ -249,7 +249,7 @@ test("clicking save manually after changing signature should change the unique o
                 <field name="sign" widget="signature" />
             </form>`,
     });
-    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("0017b464");
 
     await fillSignatureField(0, 2);
     await click(".o_field_widget[name='foo'] input");
@@ -258,12 +258,12 @@ test("clicking save manually after changing signature should change the unique o
     await animationFrame();
     await clickSave();
     expect.verifySteps(["web_save"]);
-    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659692220000");
+    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("001828c3");
 
     await fillSignatureField(2, 0);
     await clickSave();
     expect.verifySteps(["web_save"]);
-    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659695820000");
+    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("001828c3");
 });
 
 test("save record with signature field modified by onchange", async () => {
@@ -298,7 +298,7 @@ test("save record with signature field modified by onchange", async () => {
                 <field name="sign" widget="signature" />
             </form>`,
     });
-    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("0017b464");
     await click("[name='foo'] input");
     await edit("grrr", { confirm: "Enter" });
     await runAllTimers();
@@ -306,7 +306,7 @@ test("save record with signature field modified by onchange", async () => {
     expect(queryFirst("div[name=sign] img").dataset.src).toBe(`data:image/png;base64,${MYB64}`);
 
     await clickSave();
-    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659692220000");
+    expect(getUnique(queryFirst(".o_field_signature img"))).toBe("001828c3");
     expect.verifySteps(["web_save"]);
 });
 

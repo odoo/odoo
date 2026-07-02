@@ -483,6 +483,20 @@ function getViewKey(viewType, viewId) {
 }
 
 /**
+ * @param {string} data 
+ * @returns {string}
+ */
+function simpleHash(data) {
+    let hash = 0;
+    for (let i = 0; i < data.length; i++) {
+        hash = ((hash << 5) - hash) + data.charCodeAt(i);
+        hash |= 0; // Convert to 32-bit integer
+    }
+    // unsigned hex
+    return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+/**
  * @param {FieldDefinition | FieldType} field
  */
 function isDateField(field) {
@@ -3454,6 +3468,10 @@ export class Model extends Array {
                     }
                     if (load != 'web') {
                         result[field.name].content = content;
+                    }
+                    if (content) {
+                        // the hash function does not really matter, use a simple one
+                        result[field.name].checksum = simpleHash(content);
                     }
                 } else if (field.type === "properties") {
                     const container = this._getPropertyContainer(field, record);

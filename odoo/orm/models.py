@@ -3074,6 +3074,7 @@ class BaseModel(metaclass=MetaModel):
                     if include_content:
                         res['content'] = value.to_base64()
                     res['size'] = value.size
+                    res['checksum'] = value.checksum
                     return res
                 convert = binary_convert
 

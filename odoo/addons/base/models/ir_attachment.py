@@ -142,13 +142,12 @@ class IrAttachment(models.Model):
         # we use '/' in the db (even on windows)
         return sha[:2] + '/' + sha
 
-    @api.model
-    def _file_read(self, fname: str) -> BinaryValue:
-        assert isinstance(self, IrAttachment)
+    def _file_read(self) -> BinaryValue:
+        assert isinstance(self, IrAttachment) and self.store_fname
         try:
-            return LocalBinaryFile(fname, self)
+            return LocalBinaryFile(self)
         except OSError:
-            full_path = self._full_path(fname)
+            full_path = self._full_path(self.store_fname)
             _logger.info("_file_read reading %s", full_path, exc_info=True)
             return EMPTY_BINARY
 
@@ -378,9 +377,7 @@ class IrAttachment(models.Model):
     def _compute_raw(self):
         for attach in self:
             if attach.store_fname:
-                raw = attach._file_read(attach.store_fname)
-                if isinstance(raw, LocalBinaryFile):
-                    raw.filename = attach.name
+                raw = attach._file_read()
             else:
                 raw = BinaryBytes(attach.db_datas, filename=attach.name)
             attach.raw = raw
@@ -1163,23 +1160,24 @@ class IrAttachment(models.Model):
 
 class LocalBinaryFile(BinaryValue):
     """Lazily loaded file."""
-    __slots__ = ('__content', '__mimetype', '__path', '__stat', 'filename')
+    __slots__ = ('__checksum', '__content', '__mimetype', '__path', '__stat', 'filename')
 
-    def __init__(self, path: str, model: IrAttachment):
+    def __init__(self, record: IrAttachment):
         """ Open a file as a binary value.
 
         :param path: absolute path to the file
         :param model: model to check the path
         :raise OSError: if the file cannot be opened
         """
-        path = model._full_path(path)
+        path = record._full_path(record.store_fname)
         self.__path = path
         self.__stat = os.stat(path)  # checks that the file exists
         if not stat.S_ISREG(self.__stat.st_mode):
             raise FileNotFoundError(f"Path is not a regular file: {path}")
+        self.__checksum: str = record.checksum
         self.__content: bytes | None = None
         self.__mimetype: str | None = None
-        self.filename = ''  # mutable property
+        self.filename = record.name
 
     def open(self):
         assert isinstance(self, LocalBinaryFile)
@@ -1204,6 +1202,10 @@ class LocalBinaryFile(BinaryValue):
     @property
     def size(self):
         return self.__stat.st_size
+
+    @property
+    def checksum(self):
+        return self.__checksum
 
     def __repr__(self):
         return f"LocalBinaryFile({self.__path!r})"

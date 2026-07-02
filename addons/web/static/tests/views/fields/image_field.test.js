@@ -188,7 +188,7 @@ test("ImageField on a many2one", async () => {
     expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("alt", "first record");
 });
 
-test("url should not use the record last updated date when the field is related", async () => {
+test("url should use the checksum when the field is related", async () => {
     Partner._fields.related = fields.Binary({ related: "parent_id.document" });
     Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
     Partner._records[1].parent_id = 1;
@@ -208,7 +208,7 @@ test("url should not use the record last updated date when the field is related"
 
     expect('div[name="related"] img').toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/2/related`
+        `${getOrigin()}/web/image/partner/2/related?unique=4e095659`
     );
 
     await click(".o_field_widget[name='foo'] input");
@@ -217,7 +217,7 @@ test("url should not use the record last updated date when the field is related"
 
     expect('div[name="related"] img').toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/2/related`
+        `${getOrigin()}/web/image/partner/2/related?unique=4e095659`
     );
 
     await click("input[type=file]", { visible: false });
@@ -239,11 +239,11 @@ test("url should not use the record last updated date when the field is related"
 
     expect('div[name="related"] img').toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/2/related`
+        `${getOrigin()}/web/image/partner/2/related?unique=4e095659`
     );
 });
 
-test("url should use the record last updated date when the field is related on the same model", async () => {
+test("url should use the checksum when the field is related on the same model", async () => {
     Partner._fields.related = fields.Binary({ related: "document" });
     Partner._records[0].write_date = "2017-02-04 10:00:00"; // 1486202400000
     Partner._records[0].document = PRODUCT_IMAGE;
@@ -259,7 +259,7 @@ test("url should use the record last updated date when the field is related on t
     });
     expect('div[name="related"] img').toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/1/related?unique=1486202400000`
+        `${getOrigin()}/web/image/partner/1/related?unique=4e095659`
     );
 });
 
@@ -279,7 +279,7 @@ test("ImageField is correctly replaced when given an incorrect value", async () 
 
     expect(`div[name="document"] img`).toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/1/document?unique=1552296600000`, // FIXME incorrect unique
+        `${getOrigin()}/web/image/partner/1/document?unique=4edd60db`,
         {
             message: "the image has the invalid src by default",
         }
@@ -339,7 +339,7 @@ test("ImageField preview is updated when an image is uploaded", async () => {
 
     expect('div[name="document"] img').toHaveAttribute(
         "data-src",
-        "https://www.hoot.test/web/image/partner/1/document?unique=1552296600000",
+        "https://www.hoot.test/web/image/partner/1/document?unique=e9365700",
         { message: "the image should have the initial src" }
     );
     // Whitebox: replace the event target before the event is handled by the field so that we can modify
@@ -380,7 +380,7 @@ test("clicking save manually after uploading new image should change the unique 
             </form>
         `,
     });
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
 
     await click("input[type=file]", { visible: false });
     await setFiles(
@@ -404,7 +404,7 @@ test("clicking save manually after uploading new image should change the unique 
     );
 
     await clickSave();
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659692220000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("001828c3");
 
     // Change the image again. After clicking save, it should have the correct new url.
     await click("input[type=file]", { visible: false });
@@ -421,7 +421,7 @@ test("clicking save manually after uploading new image should change the unique 
     );
 
     await clickSave();
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659695820000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("001828c3");
 });
 
 test("save record with image field modified by onchange", async () => {
@@ -452,7 +452,7 @@ test("save record with image field modified by onchange", async () => {
             </form>
         `,
     });
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
     await click("[name='foo'] input");
     await edit("grrr", { confirm: "enter" });
     await animationFrame();
@@ -462,7 +462,7 @@ test("save record with image field modified by onchange", async () => {
     );
 
     await clickSave();
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659692220000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
 });
 
 test("ImageField: option accepted_file_extensions", async () => {
@@ -543,7 +543,7 @@ test("ImageField: zoom and zoom_delay options (readonly)", async () => {
     // data-tooltip attribute is used by the tooltip service
     expect(".o_field_image img").toHaveAttribute(
         "data-tooltip-info",
-        `{"url":"${getOrigin()}/web/image/partner/1/document?unique=1552296600000"}`,
+        `{"url":"${getOrigin()}/web/image/partner/1/document?unique=9497c82b"}`,
         { message: "shows a tooltip on hover" }
     );
     expect(".o_field_image img").toHaveAttribute("data-tooltip-delay", "600", {
@@ -568,7 +568,7 @@ test("ImageField: zoom and zoom_delay options (edit)", async () => {
 
     expect(".o_field_image img").toHaveAttribute(
         "data-tooltip-info",
-        `{"url":"${getOrigin()}/web/image/partner/1/document?unique=1659688620000"}`,
+        `{"url":"${getOrigin()}/web/image/partner/1/document?unique=4e095659"}`,
         { message: "tooltip show the full image from the field value" }
     );
     expect(".o_field_image img").toHaveAttribute("data-tooltip-delay", "600", {
@@ -592,7 +592,7 @@ test("ImageField displays the right images with zoom and preview_image options (
     });
     expect(".o_field_image img").toHaveAttribute(
         "data-tooltip-info",
-        `{"url":"${getOrigin()}/web/image/partner/1/document?unique=1659688620000"}`,
+        `{"url":"${getOrigin()}/web/image/partner/1/document?unique=4e095659"}`,
         { message: "tooltip show the full image from the field value" }
     );
     expect(".o_field_image img").toHaveAttribute("data-tooltip-delay", "600", {
@@ -632,7 +632,7 @@ test("ImageField in subviews is loaded correctly", async () => {
 
     expect("img").toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/1/document?unique=1486548000000`,
+        `${getOrigin()}/web/image/partner/1/document?unique=9497c82b`,
         { message: "shows a tooltip on hover" }
     );
     expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(1);
@@ -644,7 +644,7 @@ test("ImageField in subviews is loaded correctly", async () => {
 
     expect(".modal img").toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner.type/12/image?unique=1552296600000`,
+        `${getOrigin()}/web/image/partner.type/12/image?unique=4e095659`,
         { message: "shows a tooltip on hover" }
     );
 });
@@ -674,7 +674,7 @@ test("ImageField in x2many list is loaded correctly", async () => {
     });
     expect("tr.o_data_row img").toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner.type/12/image?unique=1552296600000`,
+        `${getOrigin()}/web/image/partner.type/12/image?unique=4e095659`,
     );
 });
 
@@ -775,26 +775,26 @@ test("unique in url doesn't change on onchange", async () => {
     });
 
     expect.verifySteps(["get_views", "web_read"]);
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
 
     expect.verifySteps([]);
     // same unique as before
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
 
     await click(".o_field_widget[name='foo'] input");
     await edit("grrr", { confirm: "enter" });
     await animationFrame();
     expect.verifySteps(["onchange"]);
     // also same unique
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
 
     await clickSave();
     expect.verifySteps(["web_save"]);
 
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659692220000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
 });
 
-test("unique in url change on record change", async () => {
+test("unique in url remains the same for the same image on record change", async () => {
     const rec = Partner._records.find((rec) => rec.id === 1);
     rec.document = PRODUCT_IMAGE;
     rec.write_date = "2022-08-05 08:37:00";
@@ -815,9 +815,9 @@ test("unique in url change on record change", async () => {
         `,
     });
 
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
     await pagerNext();
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659692220000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
 });
 
 test("unique in url does not change on record change if reload option is set to false", async () => {
@@ -837,12 +837,12 @@ test("unique in url does not change on record change if reload option is set to 
             </form>
         `,
     });
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
     await contains("div[name='write_date'] button").click();
     await edit("2022-08-05 08:39:00", { confirm: "enter" });
     await animationFrame();
     await clickSave();
-    expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
+    expect(getUnique(queryFirst(".o_field_image img"))).toBe("4e095659");
 });
 
 test("convert image to webp", async () => {
