@@ -2,10 +2,7 @@ import { useService } from "@web/core/utils/hooks";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
 
 export class ProjectCalendarCommonPopover extends CalendarCommonPopover {
-    static subTemplates = {
-        ...CalendarCommonPopover.subTemplates,
-        footer: "project.ProjectCalendarCommonPopover.footer",
-    };
+    static defaultFooterButtonsTemplate = "project.ProjectCalendarCommonPopover.footer";
 
     setup() {
         super.setup();

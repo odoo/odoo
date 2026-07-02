@@ -2,21 +2,18 @@ import { plugin, providePlugins, useScope } from "@odoo/owl";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { deserializeDate, serializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
-import { addFieldDependencies } from "@web/model/relational_model/utils";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
 
 export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
     /**
      * @override
      */
-    setup(params, { notification }) {
+    setup() {
         super.setup(...arguments);
         if (!useScope().pluginManager.getPluginById(ResourceCalendarPlugin.id)) {
             providePlugins([ResourceCalendarPlugin]);
         }
         this.resourceCalendarPlugin = plugin(ResourceCalendarPlugin);
-        const { fields, activeFields } = this.meta;
-        addFieldDependencies(activeFields, fields, [{ name: "recurrency", type: "boolean" }]);
     }
 
     _combineDate(date, floatTime) {
@@ -41,7 +38,7 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
                 [this.meta.context.default_calendar_id],
                 serializeDate(data.range.start),
                 serializeDate(data.range.end),
-                [...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)])],
+                fieldNames,
                 domain,
             ],
             { context }

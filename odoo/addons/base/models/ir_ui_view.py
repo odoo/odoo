@@ -2175,7 +2175,7 @@ actual arch.
                 self._log_view_warning(msg, node)
 
     def _is_qweb_based_view(self, view_type):
-        return view_type == 'kanban' or view_type == 'card'
+        return view_type == 'kanban' or view_type == 'card' or view_type == 'calendar'
 
     def _validate_attributes(self, node, name_manager, node_info):
         """ Generic validation of node attributes. """

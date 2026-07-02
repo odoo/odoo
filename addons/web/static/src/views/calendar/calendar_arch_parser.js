@@ -57,12 +57,14 @@ export class CalendarArchParser {
         const showUnusualDays = exprToBoolean(xmlDoc.getAttribute("show_unusual_days"));
 
         const popoverFieldNodes = {};
+        const popoverTemplates = {};
+        const popoverFieldNames = [];
         const filtersInfo = {};
         visitXML(xmlDoc, (node) => {
             switch (node.tagName) {
                 case "field": {
                     const fieldName = node.getAttribute("name");
-                    fieldNames.add(fieldName);
+                    popoverFieldNames.push(fieldName);
 
                     const fieldInfo = Field.parseFieldNode(
                         node,
@@ -73,37 +75,42 @@ export class CalendarArchParser {
                     );
                     popoverFieldNodes[fieldName] = fieldInfo;
 
-                    if (!node.hasAttribute("invisible") || node.hasAttribute("filters")) {
-                        if (
-                            node.hasAttribute("avatar_field") ||
-                            node.hasAttribute("write_model") ||
-                            node.hasAttribute("write_field") ||
-                            node.hasAttribute("color") ||
-                            node.hasAttribute("filters")
-                        ) {
-                            const field = fields[fieldName];
-                            filtersInfo[fieldName] = filtersInfo[fieldName] || {
-                                avatarFieldName: null,
-                                colorFieldName: null,
-                                context: fieldInfo.context || "{}",
-                                fieldName,
-                                filterFieldName: null,
-                                label: node.getAttribute("string") || field.string,
-                                resModel: field.relation,
-                                writeFieldName: null,
-                                writeResModel: null,
-                            };
-                            const filterInfo = filtersInfo[fieldName];
-                            filterInfo.avatarFieldName = node.getAttribute("avatar_field") || null;
-                            filterInfo.colorFieldName =
-                                (node.hasAttribute("filters") && node.getAttribute("color")) ||
-                                null;
-                            filterInfo.filterFieldName = node.getAttribute("filter_field") || null;
-                            filterInfo.writeFieldName = node.getAttribute("write_field") || null;
-                            filterInfo.writeResModel = node.getAttribute("write_model") || null;
-                        }
+                    if (
+                        node.hasAttribute("avatar_field") ||
+                        node.hasAttribute("write_model") ||
+                        node.hasAttribute("write_field") ||
+                        node.hasAttribute("color") ||
+                        node.hasAttribute("filters")
+                    ) {
+                        const field = fields[fieldName];
+                        filtersInfo[fieldName] = filtersInfo[fieldName] || {
+                            avatarFieldName: null,
+                            colorFieldName: null,
+                            context: fieldInfo.context || "{}",
+                            fieldName,
+                            filterFieldName: null,
+                            label: node.getAttribute("string") || field.string,
+                            resModel: field.relation,
+                            writeFieldName: null,
+                            writeResModel: null,
+                        };
+                        const filterInfo = filtersInfo[fieldName];
+                        filterInfo.avatarFieldName = node.getAttribute("avatar_field") || null;
+                        filterInfo.colorFieldName =
+                            (node.hasAttribute("filters") && node.getAttribute("color")) || null;
+                        filterInfo.filterFieldName = node.getAttribute("filter_field") || null;
+                        filterInfo.writeFieldName = node.getAttribute("write_field") || null;
+                        filterInfo.writeResModel = node.getAttribute("write_model") || null;
                     }
                     break;
+                }
+                case "templates": {
+                    for (const childNode of node.children) {
+                        if (childNode.hasAttribute("t-name")) {
+                            popoverTemplates[childNode.getAttribute("t-name")] = childNode;
+                        }
+                    }
+                    return false;
                 }
             }
         });
@@ -140,7 +147,11 @@ export class CalendarArchParser {
             isDateHidden,
             isTimeHidden,
             monthOverflow,
-            popoverFieldNodes,
+            popover: {
+                fields: popoverFieldNames,
+                fieldNodes: popoverFieldNodes, // temporarily kept for backward compatibility
+                templates: popoverTemplates,
+            },
             scale,
             scales,
             showUnusualDays,

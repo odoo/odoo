@@ -1,75 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+    <t t-name="web.CalendarCardRenderer">
+        <div t-if="this.templates[this.constructor.HEADER_ATTRIBUTE]"
+            class="o_popover_header d-flex justify-content-between p-3 fs-4 fw-bold border-bottom">
+            <t t-call="{{ this.templates[this.constructor.HEADER_ATTRIBUTE] }}"
+                t-call-context="this.renderingContext"/>
+        </div>
+        <div class="o_popover_body p-3 o_cw_body">
+            <t t-call="web.CardRenderer"/>
+        </div>
+        <div class="o_popover_footer d-flex gap-1 p-3 border-top">
+            <t t-call-slot="defaultFooter"/>
+            <t t-if="this.templates[this.constructor.FOOTER_ATTRIBUTE]">
+                <t t-call="{{ this.templates[this.constructor.FOOTER_ATTRIBUTE] }}"
+                    t-call-context="this.renderingContext"/>
+            </t>
+        </div>
+    </t>
+
     <t t-name="web.CalendarCommonPopover">
         <t t-if="this.env.isSmall">
-            <Dialog title="this.props.record.title" contentClass="'o_calendar_color_'+ this.props.record.colorIndex">
-                <t t-call="{{ this.constructor.subTemplates.body }}" />
-                <t t-set-slot="footer">
-                    <t t-call="{{ this.constructor.subTemplates.footer }}" />
-                </t>
+            <Dialog title="this.title">
+                <CalendarCard t-props="this.cardProps">
+                    <t t-set-slot="defaultFooter">
+                        <t t-if="this.displayDefaultFooter"
+                            t-call="{{ this.constructor.defaultFooterButtonsTemplate }}"/>
+                    </t>
+                </CalendarCard>
             </Dialog>
         </t>
         <t t-else="">
-            <t t-call="{{ this.constructor.subTemplates.popover }}" />
+            <div class="position-relative">
+                <div class="p-1 cursor-pointer d-flex justify-content-center position-absolute top-0 end-0"
+                    t-on-click.stop="this.props.close">
+                    <i class="oi oi-close"></i>
+                </div>
+                <CalendarCard t-props="this.cardProps">
+                    <t t-set-slot="defaultFooter">
+                        <t t-if="this.displayDefaultFooter"
+                            t-call="{{ this.constructor.defaultFooterButtonsTemplate }}"/>
+                    </t>
+                </CalendarCard>
+            </div>
         </t>
     </t>
 
-    <t t-name="web.CalendarCommonPopover.popover">
-        <div class="card-header d-flex justify-content-between py-2 pe-2">
-            <span class="popover-header border-0 text-truncate">
-                <i t-if="this.props.record.titleIcon" t-attf-class="me-2 {{this.props.record.titleIcon}}"/>
-                <span t-out="this.props.record.title" t-att-data-tooltip="this.props.record.title"/>
-            </span>
-            <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => this.props.close()">
-                <i class="fc-close fc-icon fc-icon-x" />
-            </span>
-        </div>
-        <div class="o_cw_body">
-            <t t-call="{{ this.constructor.subTemplates.body }}" />
-            <div t-if="this.hasFooter" class="card-footer d-flex gap-1 border-top">
-                <t t-call="{{ this.constructor.subTemplates.footer }}" />
-            </div>
-        </div>
-    </t>
-
-    <t t-name="web.CalendarCommonPopover.body">
-        <ul class="list-group list-group-flush">
-            <li t-if="this.date" class="list-group-item">
-                <i class="fa fa-fw fa-calendar text-400" />
-                <span class="fw-bold ms-2" t-out="this.date" /> <small t-if="this.dateDuration != 'All day'"><b t-out="this.dateDuration" /></small>
-            </li>
-            <li t-if="this.time" class="list-group-item">
-                <i class="fa fa-fw fa-clock-o text-400" />
-                <span class="fw-bold ms-2" t-out="this.time" /> <small t-if="this.timeDuration"><b t-out="`(${this.timeDuration})`" /></small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-flush o_cw_popover_fields_secondary">
-            <Record resModel="this.props.model.resModel" resId="this.props.record.id" fields="this.props.model.fields" activeFields="this.activeFields" mode="'readonly'" values="this.props.record.rawRecord" t-slot-scope="slot">
-                <t t-foreach="Object.keys(this.props.model.popoverFieldNodes)" t-as="fieldId" t-key="fieldId">
-                    <t t-set="fieldInfo" t-value="this.props.model.popoverFieldNodes[fieldId]"/>
-                    <t t-set="fieldType" t-value="this.props.model.fields[fieldId].type"/>
-                    <t t-if="!this.isInvisible(fieldInfo, slot.record)">
-                        <li class="list-group-item d-flex text-nowrap" t-att-class="fieldInfo.attrs.class"  t-att-data-tooltip="['html', 'boolean'].includes(fieldType) ? '' : this.getFormattedValue(fieldId, slot.record)">
-                            <span class="fw-bold me-2" t-if="!fieldInfo.options.noLabel and fieldInfo.type !== 'properties'">
-                                <t t-if="fieldInfo.options.icon">
-                                    <i t-attf-class="fa-fw {{fieldInfo.options.icon}} text-400" />
-                                </t>
-                                <t t-else="">
-                                    <t t-out="fieldInfo.string" />
-                                </t>
-                            </span>
-                            <div class="flex-grow-1 o_cw_popover_field overflow-hidden">
-                                <Field name="fieldInfo.name" record="slot.record" class="fieldInfo.attrs.class" fieldInfo="fieldInfo" type="fieldInfo.widget" />
-                            </div>
-                        </li>
-                    </t>
-                </t>
-            </Record>
-        </ul>
-    </t>
-
-    <t t-name="web.CalendarCommonPopover.footer">
+    <t t-name="web.CalendarCommonPopover.DefaultFooterButtons">
         <t t-if="this.isEventEditable or this.isEventViewable">
             <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="this.onEditEvent">
                 <t t-if="this.isEventEditable">Edit</t>

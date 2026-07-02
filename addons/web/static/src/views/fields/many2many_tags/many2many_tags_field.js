@@ -388,5 +388,5 @@ export const many2ManyTagsField = {
 };
 
 registry.category("fields").add("many2many_tags", many2ManyTagsField);
-registry.category("fields").add("calendar.one2many", many2ManyTagsField);
-registry.category("fields").add("calendar.many2many", many2ManyTagsField);
+registry.category("fields").add("card.one2many", many2ManyTagsField);
+registry.category("fields").add("card.many2many", many2ManyTagsField);

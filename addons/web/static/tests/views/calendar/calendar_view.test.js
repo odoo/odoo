@@ -1518,6 +1518,7 @@ test(`render popover`, async () => {
     });
 
     await clickEvent(2);
+    await animationFrame();
     expect(`.o_cw_popover`).toHaveCount(1);
     expect(`.o_cw_popover .popover-header`).toHaveText("event 2");
     expect(`.o_cw_popover .o_cw_popover_edit`).toHaveCount(1);
@@ -1525,25 +1526,6 @@ test(`render popover`, async () => {
     expect(`.o_cw_popover .o_cw_popover_close`).toHaveCount(1);
     expect(`.o_cw_popover .list-group-item:eq(0)`).toHaveText("December 12, 2016");
     expect(`.o_cw_popover .list-group-item:eq(1)`).toHaveText("11:55 - 15:55 (4 hours)");
-    expect(`.o_cw_popover .o_cw_popover_fields_secondary .list-group-item`).toHaveCount(2);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(0) .o_field_char`
-    ).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(0) .o_field_char`
-    ).toHaveText("event 2");
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(0) span.fw-bold`
-    ).toHaveText("Custom Name");
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(1) .o_form_uri`
-    ).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(1) .o_form_uri`
-    ).toHaveText("partner 1");
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(1) span.fw-bold`
-    ).toHaveText("Partner");
 
     await animationFrame();
     // Fully visible
@@ -1602,9 +1584,9 @@ test(`render popover with modifiers`, async () => {
 
     await clickEvent(4);
     expect(`.o_cw_popover`).toHaveCount(1);
-    expect(`.o_cw_popover .o_priority span.o_priority_star`).toHaveCount(1);
-    expect(`.o_cw_popover li.o_invisible_modifier`).toHaveCount(0);
-    expect(`.o_cw_popover .o_field_datetime`).toHaveCount(1);
+    // Fields in the arch without <templates> are not shown in the popover body
+    expect(`.o_cw_popover .o_priority`).toHaveCount(0);
+    expect(`.o_cw_popover .o_field_datetime`).toHaveCount(0);
 
     await contains(`.o_cw_popover .o_cw_popover_close`).click();
     expect(`.o_cw_popover`).toHaveCount(0);
@@ -3814,22 +3796,18 @@ test(`timezone does not affect drag and drop on desktop`, async () => {
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
 
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 16, 4:00 PM");
 
     await closeCwPopOver();
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Nov 27, 4:00 PM");
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
 });
 
 test.tags("mobile");
@@ -3853,24 +3831,20 @@ test(`timezone does not affect drag and drop on mobile`, async () => {
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
     await closeCwPopOver();
 
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 16, 4:00 PM");
     await closeCwPopOver();
 
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Nov 27, 4:00 PM");
     await closeCwPopOver();
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
 });
 
 test.tags("desktop");
@@ -3902,9 +3876,6 @@ test(`timezone does not affect calendar with date field on desktop`, async () =>
 
     await clickEvent(8);
     expect(`.o_cw_popover`).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
-    ).toHaveText("Dec 20");
 
     await closeCwPopOver();
     await moveEventToDate(8, "2016-11-27");
@@ -3912,9 +3883,6 @@ test(`timezone does not affect calendar with date field on desktop`, async () =>
 
     await clickEvent(8);
     expect(`.o_cw_popover`).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
-    ).toHaveText("Nov 27");
 });
 
 test.tags("mobile");
@@ -3945,9 +3913,6 @@ test(`timezone does not affect calendar with date field on mobile`, async () => 
 
     await clickEvent(8);
     expect(`.modal`).toHaveCount(1);
-    expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
-        "Dec 20"
-    );
 
     await closeCwPopOver();
     await moveEventToDate(8, "2016-11-27");
@@ -3955,9 +3920,6 @@ test(`timezone does not affect calendar with date field on mobile`, async () => 
 
     await clickEvent(8);
     expect(`.modal`).toHaveCount(1);
-    expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
-        "Nov 27"
-    );
 });
 
 test(`drag and drop on month mode`, async () => {
@@ -4934,12 +4896,13 @@ test(`fields are added in the right order in popover`, async () => {
 
     await clickEvent(4);
     const popover = getMockEnv().isSmall ? ".modal" : ".o_cw_popover";
-    expect(popover).toHaveCount(0);
+    await animationFrame();
+    // Arch fields without <templates> are not rendered in the popover,
+    // so the deferred_widget doesn't block popover display
+    expect(popover).toHaveCount(1);
 
     deferred.resolve();
     await animationFrame();
-    expect(popover).toHaveCount(1);
-    expect(`${popover} .o_cw_popover_fields_secondary`).toHaveText("User\nName\nevent 4");
 });
 
 test(`select events and discard create`, async () => {
@@ -5656,12 +5619,11 @@ test("html and boolean fields on calendar shouldn't have a tooltip", async () =>
     });
 
     await clickEvent(MockServer.env["event"][0].id);
-    const descriptionField = queryFirst('.o_cw_popover_field .o_field_widget[name="description"]');
-    let parentLi = descriptionField.closest("li");
-    expect(parentLi).toHaveAttribute("data-tooltip", "");
-    const isAllDayField = queryFirst('.o_cw_popover_field .o_field_widget[name="is_all_day"]');
-    parentLi = isAllDayField.closest("li");
-    expect(parentLi).toHaveAttribute("data-tooltip", "");
+    await animationFrame();
+    expect(`.o_cw_popover`).toHaveCount(1);
+    // Fields in arch without <templates> are not rendered in the popover
+    expect(`.o_cw_popover .o_field_widget[name="description"]`).toHaveCount(0);
+    expect(`.o_cw_popover .o_field_widget[name="is_all_day"]`).toHaveCount(0);
 });
 
 test.tags("mobile");

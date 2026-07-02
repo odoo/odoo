@@ -18,7 +18,7 @@ const DEFAULT_ARCH_RESULTS = {
         date_start: "start_date",
         date_stop: "start_date",
     },
-    fieldNames: ["start_date"],
+    fieldNames: ["display_name", "start_date"],
     filtersInfo: {},
     formViewId: false,
     hasEditDialog: false,
@@ -28,7 +28,7 @@ const DEFAULT_ARCH_RESULTS = {
     isTimeHidden: false,
     monthOverflow: true,
     multiCreateView: null,
-    popoverFieldNodes: {},
+    popover: { fields: [], templates: {} },
     scale: "week",
     scales: ["day", "week", "month", "year"],
     showUnusualDays: false,
@@ -205,6 +205,27 @@ test("scales", () => {
     expect(() =>
         parseArch(`<calendar date_start="start_date" scales="month" mode="day"/>`)
     ).toThrow();
+});
+
+test("popover templates", () => {
+    const result = parseArch(`
+        <calendar date_start="start_date">
+            <templates>
+                <t t-name="popover-body">
+                    <field name="name"/>
+                </t>
+                <t t-name="popover-header">
+                    <field name="description"/>
+                </t>
+            </templates>
+        </calendar>
+    `);
+    expect(result.popover.templates["popover-body"]).toBeTruthy();
+    expect(result.popover.templates["popover-header"]).toBeTruthy();
+    expect(result.popover.templates["popover-body"].getAttribute("t-name")).toBe("popover-body");
+    expect(result.popover.templates["popover-header"].getAttribute("t-name")).toBe(
+        "popover-header"
+    );
 });
 
 test("showUnusualDays", () => {

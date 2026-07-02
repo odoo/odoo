@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { unique } from "@web/core/utils/arrays";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { subTaskDeleteConfirmationMessage } from "@project/views/project_task_form/project_task_form_controller";
 
@@ -9,6 +10,14 @@ export class ProjectTaskCalendarController extends CalendarController {
         ...ProjectTaskCalendarController.components,
         CalendarSidePanel: ProjectTaskCalendarSidePanel,
     };
+
+    get modelParams() {
+        const modelParams = super.modelParams;
+        // add the `state` field to the list of fields to read as we need it
+        // to compute the `o_past_event` classname
+        const fieldNames = unique(modelParams.fieldNames.concat(["state"]));
+        return { ...modelParams, fieldNames };
+    }
 
     get editRecordDefaultDisplayText() {
         return _t("New Task");

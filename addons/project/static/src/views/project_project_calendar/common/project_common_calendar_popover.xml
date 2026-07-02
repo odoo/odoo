@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="project.ProjectCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary">
+    <t t-name="project.ProjectCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.DefaultFooterButtons" t-inherit-mode="primary">
         <xpath expr="//t[@t-if='this.isEventDeletable']" position="before">
             <a href="#" class="btn btn-secondary" t-on-click="this.onClickViewTasks">View Tasks</a>
         </xpath>

@@ -262,11 +262,12 @@ export class CalendarCommonRenderer extends Component {
     }
     getPopoverProps(record) {
         return {
-            record,
             model: this.props.model,
-            createRecord: this.props.createRecord,
-            deleteRecord: this.props.deleteRecord,
-            editRecord: this.props.editRecord,
+            record,
+            context: this.props.model.meta.context,
+            openRecord: () => this.props.editRecord(record),
+            deleteRecord: () => this.props.deleteRecord(record),
+            reloadOnClose: () => this.props.model.load(),
         };
     }
     openPopover(target, record) {
@@ -416,21 +417,17 @@ export class CalendarCommonRenderer extends Component {
         if (info.oldEvent.allDay !== info.event.allDay) {
             forceAllDay = true;
         }
-        this.props.model
-            .updateRecord(this.fcEventToRecord(info.event, forceAllDay))
-            .catch((e) => {
-                info.revert();
-                throw e;
-            });
+        this.props.model.updateRecord(this.fcEventToRecord(info.event, forceAllDay)).catch((e) => {
+            info.revert();
+            throw e;
+        });
     }
     onEventResize(info) {
         this.fc.api.unselect();
-        this.props.model
-            .updateRecord(this.fcEventToRecord(info.event))
-            .catch((e) => {
-                info.revert();
-                throw e;
-            });
+        this.props.model.updateRecord(this.fcEventToRecord(info.event)).catch((e) => {
+            info.revert();
+            throw e;
+        });
     }
     async onEventScheduled(info) {
         const original = info.event;
@@ -440,7 +437,7 @@ export class CalendarCommonRenderer extends Component {
         original.remove();
     }
     /**
-     * 
+     *
      * @param {object} event fullcalendar event
      * @param {boolean} forceAllDay if true, set the all_day to the value of allDay, otherwise keep the original record value
      * @returns {object} odoo record values
@@ -475,7 +472,10 @@ export class CalendarCommonRenderer extends Component {
                     // [X, 2000-01-01 16:00] -> [X, 2000-01-02[ -> [X, 2000-01-01 16:00]
                     // [X, 2000-01-02 00:00] -> [X, 2000-01-02[ -> [X, 2000-01-02 00:00]
                     // [X, 2000-01-02 00:01] -> [X, 2000-01-03[ -> [X, 2000-01-02 00:01]
-                    if (existingRecord.end.toMillis() !== existingRecord.end.startOf("day").toMillis()) {
+                    if (
+                        existingRecord.end.toMillis() !==
+                        existingRecord.end.startOf("day").toMillis()
+                    ) {
                         res.end = res.end.minus({ days: 1 });
                     }
                     res.end = res.end.set({
