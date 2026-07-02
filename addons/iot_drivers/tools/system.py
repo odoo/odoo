@@ -180,6 +180,14 @@ def is_remote_debug_enabled():
     return p.returncode == 0
 
 
+def format_hostname() -> str:
+    """Get hostname containing associated database and identifier"""
+    hostname = get_conf('remote_server') or 'iotbox'
+    return re.sub(r'^https?://|/|:', '', hostname + "-" + IOT_IDENTIFIER).replace(
+        ".", "-",
+    )
+
+
 def toggle_remote_debug(auth_key=""):
     """Enable/disable remote connection to the IoT Box using tailscale.
 
@@ -188,11 +196,9 @@ def toggle_remote_debug(auth_key=""):
     """
     _logger.info("%s remote access", 'enabling' if auth_key else 'disabling')
 
-    hostname = get_conf('remote_server') or 'iotbox'
-    server_url = re.sub(r'^https?://|/|:', '', hostname + "-" + IOT_IDENTIFIER)
     args = ['sudo', 'tailscale', 'up' if auth_key else 'logout']
     if auth_key:
-        args.extend([f'--auth-key={auth_key.strip()}', f'--hostname={server_url}'])
+        args.extend([f'--auth-key={auth_key.strip()}', f'--hostname={format_hostname()}'])
     p = subprocess.run(args, check=False)
     if auth_key and p.returncode == 0:
         # Tailscale stores its state in /var, we need to copy it in the root filesystem to persist after reboot

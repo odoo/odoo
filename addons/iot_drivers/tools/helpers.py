@@ -1,29 +1,33 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from enum import Enum
-from functools import cache, wraps
-from ipaddress import ip_address
+import contextlib
 import inspect
 import io
 import logging
-from pathlib import Path
-import requests
 import socket
-from urllib.parse import parse_qs
-import urllib3.util
 import threading
 import time
 import zipfile
+from enum import Enum
+from functools import cache, wraps
+from ipaddress import ip_address
+from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
+
+import requests
+import sentry_sdk
+import urllib3.util
 from werkzeug.exceptions import Locked
 
 from odoo import service
+
 from odoo.addons.iot_drivers.tools import system
 from odoo.addons.iot_drivers.tools.system import (
     IOT_IDENTIFIER,
-    IS_RPI,
-    IS_WINDOWS,
     IOT_RPI_CHAR,
     IOT_WINDOWS_CHAR,
+    IS_RPI,
+    IS_WINDOWS,
 )
 
 _logger = logging.getLogger(__name__)
@@ -364,3 +368,34 @@ def toggle_custom_handlers(enable: bool):
         # Reset to the default handlers and restart
         system.git("clean", "-dfx")  # remove only non-standard handlers
         odoo_restart()
+
+
+@require_db
+def init_sentry(server_url: str = ""):
+    """Setup Sentry using DSN fetched from database.
+
+    We don't initialize if no db or if db is local (private IP).
+
+    :param server_url: url of the associated db (provided by decorator).
+    """
+    if sentry_sdk.is_initialized():
+        return
+
+    with contextlib.suppress(ValueError):
+        host = urlsplit(server_url).hostname
+        if host and (
+            ip_address(host).is_private
+            or ("runbot" in host and host.endswith(".odoo.com"))
+        ):
+            _logger.info("Local database, not initializing Sentry")
+            return
+
+    sentry_sdk.init(
+        dsn="https://7e68ee5a4977e68047d56d64d19e2585@o11005.ingest.us.sentry.io/4511624592162816",
+        server_name=system.format_hostname(),
+    )
+    global_scope = sentry_sdk.get_global_scope()
+    global_scope.set_tags({
+        "iot_version": system.get_version(detailed_version=True),
+        "database": server_url,
+    })
