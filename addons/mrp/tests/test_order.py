@@ -35,7 +35,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
     def test_mrp_plan_and_unplan_reset_date_start(self):
         past_date = fields.Datetime.now() - timedelta(days=1)
         mo = self.env['mrp.production'].create({
-            'product_id': self.bom_2.product_id.id,
+            'product_id': self.bom_3.product_id.id,
             'product_uom_qty': 1.0,
             'date_start': past_date,
         })
@@ -44,6 +44,20 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_plan()
         self.env.cr.flush()
         self.assertEqual(past_date, mo.previous_date_start)
+
+    def test_mrp_plan_without_workorders_keeps_date_start(self):
+        past_date = fields.Datetime.now() - timedelta(days=1)
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_1.product_id.id,
+            'product_uom_qty': 1.0,
+            'date_start': past_date,
+        })
+        mo.action_confirm()
+        self.assertFalse(mo.workorder_ids)
+        mo.button_plan()
+        self.assertTrue(mo.is_planned)
+        self.assertEqual(past_date, mo.date_start)
+        self.assertFalse(mo.previous_date_start)
 
     def test_access_rights_manager(self):
         """ Checks an MRP manager can create, confirm and cancel a manufacturing order. """

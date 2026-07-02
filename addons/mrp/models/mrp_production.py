@@ -1773,7 +1773,7 @@ class MrpProduction(models.Model):
         orders_to_confirm = orders_to_plan.filtered(lambda mo: mo.state == 'draft')
         orders_to_confirm.action_confirm()
         for order in orders_to_plan:
-            if as_soon_as_possible:
+            if as_soon_as_possible and order.workorder_ids:
                 order.date_start = fields.Datetime.now()
             order._plan_workorders()
             order.message_post(body=self.env._("The manufacturing order has been planned."), subtype_id=self.env.ref('mrp.mt_mo_state').id)

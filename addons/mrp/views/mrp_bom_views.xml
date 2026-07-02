@@ -38,7 +38,7 @@
                 <form string="Bill of Material">
                     <sheet>
                         <div class="oe_button_box" name="button_box" invisible="context.get('parent_production_id')">
-                            <button name="%(action_mrp_routing_time)d" type="action" class="oe_stat_button" icon="fa-clock-o" groups="mrp.group_mrp_routings">
+                            <button name="%(action_mrp_routing_time)d" type="action" class="oe_stat_button" icon="fa-clock-o" groups="mrp.group_mrp_routings" invisible="operation_ids.length == 0">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Operations<br/>Performance</span>
                                 </div>
