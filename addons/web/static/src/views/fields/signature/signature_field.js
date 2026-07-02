@@ -35,6 +35,9 @@ export class SignatureField extends Component {
     }
 
     get rawCacheKey() {
+        if (!this.props.previewImage && this.value?.checksum) {
+            return this.value?.checksum;
+        }
         return this.props.record.data.write_date;
     }
 

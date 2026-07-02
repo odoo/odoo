@@ -141,7 +141,10 @@ class TestHttpWebJson_1(TestHttpBase):
     def test_webjson_form(self):
         self.authenticate_demo()
         res = self.url_open_json(f'/test_http.stargate/{self.earth.id}')
-        gizeh = {'size': len(self.gizeh_data)}
+        gizeh = {'size': len(self.gizeh_data), 'checksum': '0126381835cceaf2d113bdbbcb4d7851dcc1c721'}
+        # because definitions of BinaryValue.checksum differ between implementations,
+        # a different checksum can be returned for the same data
+        gizeh_inline = {**gizeh, 'checksum': '2fbf1497a555e7cf1084f5232d612ddeff93677f66e97d27397cbfe1da2d627e'}
         self.assertEqual(res.json(), {
             'id': self.earth.id,
             'name': self.earth.name,
@@ -149,7 +152,7 @@ class TestHttpWebJson_1(TestHttpBase):
             'galaxy_id': {'id': self.earth.galaxy_id.id,
                           'display_name': self.earth.galaxy_id.name},
             'glyph_attach': gizeh,
-            'glyph_inline': gizeh,
+            'glyph_inline': gizeh_inline,
         })
 
     def test_webjson_form_subtree(self):

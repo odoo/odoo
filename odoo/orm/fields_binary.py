@@ -395,6 +395,10 @@ class BinaryValueAttachment(BinaryValue):
         # if we don't have a size, read raw to be consistent
         return self.__attachment.file_size or super().size
 
+    @property
+    def checksum(self):
+        return self.__checksum
+
     def open(self):
         self._check_concurrent_modification()
         return self.__attachment.raw.open()

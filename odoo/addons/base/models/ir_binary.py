@@ -96,7 +96,7 @@ class IrBinary(models.AbstractModel):
         return Stream(
             type='data',
             data=data,
-            etag=record.env['ir.attachment']._compute_checksum(data),
+            etag=value.checksum,
             last_modified=record.write_date if record._log_access else None,
             size=len(data),
             public=record.env.user._is_public(),  # good enough

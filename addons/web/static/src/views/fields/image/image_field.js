@@ -137,7 +137,7 @@ export class ImageField extends Component {
                 this.props.record.resModel,
                 this.props.record.resId,
                 imageFieldName,
-                { unique: this.rawCacheKey }
+                { unique: data?.checksum || this.rawCacheKey }
             );
         } else {
             // Use magic-word technique for detecting image type

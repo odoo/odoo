@@ -1,4 +1,5 @@
 import base64
+import hashlib
 import io
 from collections.abc import Buffer
 
@@ -64,15 +65,21 @@ class BinaryValue(Buffer):
         """Decode the raw contents to a string."""
         return self.content.decode(encoding, errors)
 
+    @property
+    def checksum(self) -> str:
+        """Unique value for this attachment. Changes with the value."""
+        return hashlib.sha256(self).hexdigest()
+
 
 class BinaryBytes(BinaryValue):
     """Static binary value."""
-    __slots__ = ('__data', '__filename')
+    __slots__ = ('__checksum', '__data', '__filename')
 
     def __init__(self, data: Buffer, filename: str = ''):
         # force bytes
         self.__data = bytes(data)
         self.__filename = str(filename or '')
+        self.__checksum = None
 
     @property
     def content(self):
@@ -81,6 +88,12 @@ class BinaryBytes(BinaryValue):
     @property
     def filename(self):
         return self.__filename
+
+    @property
+    def checksum(self):
+        if self.__checksum is None:
+            self.__checksum = super().checksum
+        return self.__checksum
 
     def __bool__(self):
         return bool(self.__data)
