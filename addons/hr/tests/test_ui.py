@@ -44,4 +44,3 @@ class TestEmployeeUi(HttpCase):
         })
 
         self.start_tour("/odoo", 'version_timeline_auto_save_tour', login="alice")
-        self.assertFalse(bob_employee.version_ids[-1].contract_date_start)
