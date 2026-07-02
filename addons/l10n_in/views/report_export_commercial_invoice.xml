@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_export_commercial_invoice_doc">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; color: black; font-size: 12px;">
+
+                        <table border="0" cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 20px; border: none !important; border-collapse: collapse !important;">
+                            <tbody style="border: none !important;">
+                                <tr style="border: none !important;">
+                                    <td style="width: 25%; vertical-align: top; border: none !important;"></td>
+
+                                    <td style="width: 50%; text-align: center; vertical-align: top; border: none !important;">
+                                        <h4 style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">COMMERCIAL INVOICE</h4>
+
+                                        <div style="font-size: 10px; text-transform: uppercase;">
+                                            <t t-if="o.fiscal_position_id and not is_html_empty(o.fiscal_position_id.note)">
+                                                <span t-field="o.fiscal_position_id.note"/>
+                                            </t>
+                                        </div>
+                                    </td>
+
+                                    <td style="width: 25%; text-align: right; vertical-align: top; border: none !important;">
+                                        <t t-if="'l10n_in_edi_status' in o._fields and o.l10n_in_edi_status == 'sent'">
+                                            <t t-set="edi_json" t-value="o._get_l10n_in_edi_response_json()"/>
+                                            <t t-if="edi_json and edi_json.get('SignedQRCode')">
+                                                <img t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=75&amp;height=75&amp;quiet=0' % edi_json['SignedQRCode']" alt="QR Code" style="width: 75px; height: 75px; margin-bottom: 2px;"/>
+                                                <div style="font-size: 9px; word-break: break-all; line-height: 1.1;">
+                                                    IRN:<span t-out="edi_json.get('Irn', '')"/>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <strong>Exporter</strong><br/>
+                                <span t-field="o.company_id.name"/><br/>
+                                <span t-field="o.company_id.street"/><t t-if="o.company_id.street2">, <span t-field="o.company_id.street2"/></t><br/>
+                                <span t-field="o.company_id.city"/>, <span t-field="o.company_id.state_id.name"/>, <span t-field="o.company_id.country_id.name"/><br/>
+                                Ph: <span t-field="o.company_id.phone"/><br/>
+                                GSTIN: <span t-field="o.company_id.vat"/>
+                            </div>
+                            <div class="col-4">
+                                <strong>Buyer</strong><br/>
+                                <span t-field="o.partner_id.name"/><br/>
+                                <span t-field="o.partner_id.street"/><t t-if="o.partner_id.street2">, <span t-field="o.partner_id.street2"/></t><br/>
+                                <span t-field="o.partner_id.city"/>, <span t-field="o.partner_id.country_id.name"/><br/>
+                                Place of Supply - <span t-field="o.l10n_in_state_id.name"/>
+                            </div>
+                            <div class="col-4">
+                                <strong>Consignee</strong><br/>
+                                <span t-field="o.partner_shipping_id.name"/><br/>
+                                <span t-field="o.partner_shipping_id.street"/><t t-if="o.partner_shipping_id.street2">, <span t-field="o.partner_shipping_id.street2"/></t><br/>
+                                <span t-field="o.partner_shipping_id.city"/>, <span t-field="o.partner_shipping_id.country_id.name"/>
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <strong><span t-field="o.name"/></strong>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-2">
+                                <strong>Invoice Date</strong><br/>
+                                <span t-field="o.invoice_date"/>
+                            </div>
+                            <div class="col-2">
+                                <strong>Due Date</strong><br/>
+                                <span t-field="o.invoice_date_due"/>
+                            </div>
+                            <div class="col-2">
+                                <strong>Acknowledgement</strong><br/>
+                                <span t-if="'l10n_in_edi_status' in o._fields and o.l10n_in_edi_status == 'sent'" t-out="o._get_l10n_in_edi_response_json().get('AckNo', '')"/>
+                            </div>
+                            <div class="col-2">
+                                <t t-if="'l10n_in_ewaybill_ids' in o._fields and o.l10n_in_ewaybill_ids">
+                                    <strong>Eway Bill</strong><br/>
+                                    <span t-field="o.l10n_in_ewaybill_name"/>
+                                </t>
+                            </div>
+                            <div class="col-2">
+                                <strong>Shipping Bill No.</strong><br/>
+                                <span t-field="o.l10n_in_shipping_bill_number"/>
+                            </div>
+                            <div class="col-2">
+                                <t t-if="o.invoice_incoterm_id">
+                                    <strong>Incoterm</strong><br/>
+                                    <span t-field="o.invoice_incoterm_id.code"/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-3">
+                                <strong>Port Code</strong><br/>
+                                <span t-field="o.l10n_in_shipping_port_code_id.code"/>
+                            </div>
+                            <div class="col-3">
+                                <t t-if="'l10n_in_ewaybill_ids' in o._fields and o.l10n_in_ewaybill_ids">
+                                    <strong>Mode</strong><br/>
+                                    <span t-field="o.l10n_in_ewaybill_ids[0].mode"/>
+                                </t>
+                            </div>
+                            <div class="col-6">
+                                <t t-if="'l10n_in_ewaybill_ids' in o._fields and o.l10n_in_ewaybill_ids">
+                                    <t t-set="transport_mode" t-value="o.l10n_in_ewaybill_ids[0].mode"/>
+                                    <strong>
+                                        <t t-if="transport_mode == '3'">Airway Bill No.</t>
+                                        <t t-elif="transport_mode == '4'">Bill of Lading</t>
+                                        <t t-elif="transport_mode == '2'">RR No.</t>
+                                        <t t-else="">Tracking No.</t>
+                                    </strong><br/>
+                                    <span t-field="o.l10n_in_ewaybill_ids[0].transportation_doc_no"/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <style>
+                            .border-table, .border-table th, .border-table td {
+                                border: 1px solid black !important;
+                                border-collapse: collapse !important;
+                            }
+                            .border-table th {
+                                text-transform: uppercase;
+                                font-size: 10px;
+                            }
+                        </style>
+
+                        <table class="table border-table table-sm w-100 mb-0">
+                            <thead>
+                                <tr class="text-center">
+                                    <th class="text-start">DESCRIPTION</th>
+                                    <th>HSN</th>
+                                    <th>QUANTITY</th>
+                                    <th>UNIT PRICE</th>
+                                    <th>WEIGHT</th>
+                                    <th>TOTAL WEIGHT</th>
+                                    <th class="text-end">AMOUNT (<span t-field="o.currency_id.name"/>)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')" t-as="line">
+                                    <tr class="text-center">
+                                        <td class="text-start"><span t-field="line.name"/></td>
+                                        <td><span t-field="line.l10n_in_hsn_code"/></td>
+                                        <td><span t-out="int(line.quantity)"/></td>
+                                        <td><span t-field="line.price_unit"/></td>
+                                        <td><span t-out="line.product_id.weight"/> <span t-field="line.product_id.weight_uom_name"/></td>
+                                        <td><span t-out="line.product_id.weight * line.quantity"/> <span t-field="line.product_id.weight_uom_name"/></td>
+                                        <td class="text-end"><span t-field="line.price_subtotal"/></td>
+                                    </tr>
+                                </t>
+                                
+                                <tr>
+                                    <td colspan="5" style="border-right: 0px !important;"></td>
+                                    <td><strong>Untaxed Amount</strong></td>
+                                    <td class="text-end"><span t-field="o.amount_untaxed"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" style="border-right: 0px !important;"></td>
+                                    <td><strong>IGST</strong></td>
+                                    <td class="text-end"><span t-field="o.amount_tax"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" style="border-right: 0px !important;"></td>
+                                    <td><strong>TOTAL</strong></td>
+                                    <td class="text-end text-primary"><strong><span t-field="o.amount_total"/></strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="text-end mt-1 text-primary" style="font-size: 11px;">
+                            Total Amount in words:<br/>
+                            <span t-out="o.currency_id.amount_to_text(o.amount_total)"/>
+                        </div>
+
+                        <t t-set="related_deliveries" t-value="False"/>
+                        <t t-if="'sale_line_ids' in o.invoice_line_ids._fields">
+                            <t t-set="related_deliveries" t-value="o.invoice_line_ids.mapped('sale_line_ids.order_id.picking_ids').filtered(lambda p: p.state == 'done')"/>
+                        </t>
+
+                        <t t-set="delivery_pkg_type" t-value="'Box'"/>
+                        <t t-if="related_deliveries and 'package_ids' in related_deliveries._fields and related_deliveries.mapped('package_ids.package_type_id')">
+                            <t t-set="delivery_pkg_type" t-value="', '.join(set(related_deliveries.mapped('package_ids.package_type_id.name')))"/>
+                        </t>
+
+                        <t t-set="calc_net_weight" t-value="sum([line.product_id.weight * line.quantity for line in o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')])"/>
+
+                        <t t-set="delivery_net_weight" t-value="sum(related_deliveries.mapped('weight')) if related_deliveries and 'weight' in related_deliveries._fields and sum(related_deliveries.mapped('weight')) > 0 else calc_net_weight"/>
+                        <t t-set="delivery_gross_weight" t-value="sum(related_deliveries.mapped('shipping_weight')) if related_deliveries and 'shipping_weight' in related_deliveries._fields and sum(related_deliveries.mapped('shipping_weight')) > 0 else delivery_net_weight"/>
+
+                        <div class="row mt-4">
+                            <div class="col-8">
+                                <table class="table border-table table-sm w-100">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th>Package Type</th>
+                                            <th>Total Net Weight</th>
+                                            <th>Total Gross Weight</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="text-center">
+                                            <td><span t-out="delivery_pkg_type"/></td>
+                                            <td><span t-out="delivery_net_weight"/> kg</td>
+                                            <td><span t-out="delivery_gross_weight"/> kg</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 20px;"></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
