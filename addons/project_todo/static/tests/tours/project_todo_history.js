@@ -59,25 +59,23 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         content: "Go back to kanban view of todos. this step is added because it takes some time to save the changes, so it's a sort of timeout to wait a bit for the save",
         trigger: ".o_back_button a",
         run: "click",
-    },
-    {
+    }, {
         content: "Open Test Todo",
         trigger: ".o_kanban_view .o_kanban_record:contains(Test History Todo)",
         run: "click",
-    },
-    {
+    }, {
+        content: "ensure record is loaded",
+        trigger: `div.note-editable.odoo-editor-editable .o-paragraph:contains(${baseDescriptionContent} 3)`,
+    }, {
         content: "Open History Dialog",
         trigger: ".o_form_view .o_cp_action_menus i.fa-cog",
         run: "click",
-    },
-    {
+    }, {
         trigger: ".dropdown-menu",
-    },
-    {
+    }, {
         content: "Open History Dialog",
         trigger: ".o_menu_item i.fa-history",
         run: "click",
-
     }, {
         trigger: ".modal .html-history-dialog.html-history-loaded",
     }, {
