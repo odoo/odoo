@@ -167,4 +167,53 @@
         </t>
     </template>
 
+    <template id="report_self_invoice">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
+                    <t t-call="l10n_in.report_self_invoice_document" t-lang="lang"/>
+                </t>
+            </t>
+    </template>
+
+
+    <template id="report_self_invoice_document" inherit_id="l10n_in.l10n_in_report_invoice_document_inherit" primary="True">
+
+            <xpath expr="//t[@name='address_same_as_shipping']/address" position="before">
+                <strong class="d-block mb-1">Bill From:</strong>
+            </xpath>
+
+            <t name="vendor_bill_title" position="replace">
+                <t name="vendor_bill_title">Tax Invoice</t>
+            </t>
+
+            <xpath expr="//t[@t-call='account.document_tax_totals']" position="attributes">
+                <attribute name="tax_totals">o._l10n_in_get_invoice_totals_for_self_invoice()</attribute>
+            </xpath>
+
+            <xpath expr="//span[@t-field='o.amount_total_words']" position="replace">
+                <span t-out="o._l10n_in_get_amount_total_words_for_report()"/>
+            </xpath>
+
+            <xpath expr="//div[p[@name='payment_communication']]" position="attributes">
+                <attribute name="t-if" add="o.journal_id.l10n_in_enable_self_invoice" separator=" or "/>
+            </xpath>
+
+            <xpath expr="//p[@name='payment_communication']/span[@t-field='o.payment_reference']" position="replace">
+                <span t-if="o.journal_id.l10n_in_enable_self_invoice" class="fw-bold" t-out="o.name"/>
+                <span t-else="" class="fw-bold" t-field="o.payment_reference">INV/2023/00001</span>
+            </xpath>
+
+            <xpath expr="//div[p[@name='payment_communication']]" position="after">
+                <div class="text-muted mt-2">
+                    <p class="mb-0">THE SUPPLY IS SUBJECT TO REVERSE CHARGE MECHANISM, SO THE RECIPIENT IS RESPONSIBLE FOR PAYING TAX.</p>
+                    <p class="mb-0">THIS SELF TAX INVOICE IS ISSUED UNDER SEC 31(3)(f) OF CGST ACT 2017.</p>
+                </div>
+            </xpath>
+
+            <xpath expr="//t[@t-set='hsn_summary']" position="attributes">
+                <attribute name="t-value">o._l10n_in_get_hsn_summary_table_for_self_invoice()</attribute>
+            </xpath>
+    </template>
+
 </odoo>

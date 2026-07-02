@@ -166,3 +166,19 @@ class AccountChartTemplate(models.AbstractModel):
             if company.l10n_in_tcs_feature:
                 company._activate_l10n_in_taxes(['tcs_it_act_25_group'], company)
         return res
+
+    @template('in', 'account.journal')
+    def _get_in_account_journal(self):
+        """
+        Creates a 'Self Invoice' purchase journal default mapped to the 210700 expense account.
+        """
+        return {
+            'self_invoice': {
+                'name': 'Self Invoice',
+                'type': 'purchase',
+                'code': 'SLF/INV',
+                'sequence': 7,
+                'default_account_id': 'p2107',
+                'l10n_in_enable_self_invoice': True,
+            },
+        }

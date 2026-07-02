@@ -11,6 +11,9 @@
             <field name="loss_account_id" position="attributes">
                 <attribute name="invisible">country_code != 'IN' and type != 'cash' or country_code == 'IN' and type not in ['bank', 'cash', 'sale', 'purchase']</attribute>
             </field>
+            <xpath expr="//page[@name='advanced_settings']//field[@name='is_self_billing']" position="after">
+                <field name="l10n_in_enable_self_invoice" invisible="type != 'purchase'"/>
+            </xpath>
         </field>
     </record>
 </odoo>

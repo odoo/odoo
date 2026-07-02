@@ -1,4 +1,5 @@
 import logging
+import copy
 import re
 
 from contextlib import contextmanager
@@ -67,6 +68,14 @@ class AccountMove(models.Model):
     l10n_in_warning = fields.Json(compute="_compute_l10n_in_warning")
     l10n_in_is_gst_registered_enabled = fields.Boolean(related='company_id.l10n_in_is_gst_registered')
     l10n_in_tds_deduction = fields.Selection(related='commercial_partner_id.l10n_in_pan_entity_id.tds_deduction', string="TDS Deduction")
+
+    # self - invoice related fields
+    l10n_in_is_self_invoice = fields.Boolean(
+        string="Is Self Invoice applicable",
+        compute='_compute_l10n_in_is_self_invoice',
+        compute_sql='_compute_sql_l10n_in_is_self_invoice',
+        compute_sudo=False,
+    )
 
     # withholding related fields
     l10n_in_is_withholding = fields.Boolean(
@@ -346,6 +355,37 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_withholding_line_ids = False
 
+    @api.depends('invoice_line_ids.l10n_in_gstr_section')
+    def _compute_l10n_in_is_self_invoice(self):
+        for move in self:
+            move.l10n_in_is_self_invoice = any(
+                line.l10n_in_gstr_section == 'purchase_b2c_rcm'
+                for line in move.invoice_line_ids
+            ) and move.journal_id.l10n_in_enable_self_invoice
+
+    def _compute_sql_l10n_in_is_self_invoice(self, table):
+        """
+        SQL equivalent of '_compute_l10n_in_is_self_invoice' for use in domains.
+        """
+        return SQL(
+            """(
+                EXISTS (
+                    SELECT 1
+                    FROM account_move_line
+                    WHERE move_id = %s
+                      AND l10n_in_gstr_section = 'purchase_b2c_rcm'
+                )
+                AND EXISTS (
+                    SELECT 1
+                    FROM account_journal
+                    WHERE id = %s
+                      AND l10n_in_enable_self_invoice = TRUE
+                )
+            )""",
+            table.id,
+            table.journal_id,
+        )
+
     def _compute_l10n_in_total_withholding_amount(self):
         for move in self:
             if self.env.company.l10n_in_tds_feature:
@@ -356,6 +396,82 @@ class AccountMove(models.Model):
                 )
             else:
                 move.l10n_in_total_withholding_amount = 0.0
+
+    def _l10n_in_get_invoice_totals_for_self_invoice(self):
+        """
+        Returns a customized tax_totals dictionary for the PDF report.
+        For Self Invoices (Reverse Charge), the net tax is 0. This method injects
+        the positive side of the tax and adjusts the Total so it prints
+        correctly on the PDF, without affecting the actual accounting move.
+        """
+        self.ensure_one()
+
+        if not self.tax_totals or not self.l10n_in_is_self_invoice:
+            return self.tax_totals
+
+        tax_totals = copy.deepcopy(self.tax_totals)
+        rc_tax_currency_to_add = 0.0
+        rc_tax_balance_to_add = 0.0
+
+        for subtotal in tax_totals.get('subtotals', []):
+            for tax_group in subtotal.get('tax_groups', []):
+                tax_lines = self.line_ids.filtered(
+                    lambda line: line.tax_group_id.id == tax_group['id'] and line.tax_line_id,
+                )
+
+                if tax_lines and any(tax.l10n_in_reverse_charge for tax in tax_lines.tax_line_id):
+                    # Because it's Reverse Charge, there is a Debit (+100) and Credit (-100).
+                    # We sum only the positive amounts to get the gross tax value to display.
+                    positive_tax_currency = sum(line.amount_currency for line in tax_lines if line.amount_currency > 0)
+                    positive_tax_balance = sum(line.balance for line in tax_lines if line.balance > 0)
+
+                    if positive_tax_currency:
+                        tax_group['tax_amount_currency'] = positive_tax_currency
+                        tax_group['tax_amount'] = positive_tax_balance
+
+                        rc_tax_currency_to_add += positive_tax_currency
+                        rc_tax_balance_to_add += positive_tax_balance
+
+        if rc_tax_currency_to_add:
+            tax_totals['total_amount_currency'] += rc_tax_currency_to_add
+            tax_totals['total_amount'] += rc_tax_balance_to_add
+
+        return tax_totals
+
+    def _l10n_in_get_amount_total_words_for_report(self):
+        self.ensure_one()
+        if self.l10n_in_is_self_invoice:
+            total_to_show_on_self_inv = (
+                self._l10n_in_get_invoice_totals_for_self_invoice().get(
+                    'total_amount_currency', self.amount_total,
+                )
+            )
+            return self.currency_id.amount_to_text(total_to_show_on_self_inv).replace(',', '')
+
+        return self.amount_total_words
+
+    def _l10n_in_get_hsn_summary_table_for_self_invoice(self):
+        self.ensure_one()
+
+        if self.l10n_in_is_self_invoice:
+            base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
+            for base_line in base_lines:
+                taxes_data = base_line.get('tax_details', {}).get('taxes_data', [])
+
+                for tax_data in taxes_data:
+                    # Keep only the positive side of RC taxes
+                    if tax_data['is_reverse_charge']:
+                        tax_data['tax_amount_currency'] = 0.0
+                        tax_data['tax_amount'] = 0.0
+
+            return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, self.env.user.has_group('uom.group_uom'))
+        return None
+
+    def _get_starting_sequence(self):
+        self.ensure_one()
+        if self.journal_id.l10n_in_enable_self_invoice:
+            return f"{self.journal_id.code}/0000"
+        return super()._get_starting_sequence()
 
     def action_l10n_in_withholding_entries(self):
         self.ensure_one()
