@@ -90,7 +90,7 @@ class AccountMove(models.Model):
     def _compute_l10n_rs_tax_date_obligations_code(self):
         for move in self:
             if move.country_code == 'RS':
-                move.l10n_rs_tax_date_obligations_code = '3'
+                move.l10n_rs_tax_date_obligations_code = '35'
 
     @api.depends('l10n_rs_edi_state')
     def _compute_show_reset_to_draft_button(self):
