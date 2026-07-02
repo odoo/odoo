@@ -21232,3 +21232,29 @@ test("apply a filter with list_optional_show property containing an unknown fiel
     expect("th[data-name='bar']").toHaveCount(1);
     expect("th[data-name='unknown_field']").toHaveCount(0);
 });
+
+test(`optional columns toggle button is highlighted when a hidden field is invalid`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="top">
+                <field name="int_field"/>
+                <field name="foo" required="1" optional="show"/>
+            </list>
+        `,
+    });
+
+    expect(`.o_invalid_optional_columns_button`).toHaveCount(0);
+
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`[name=foo] input`).edit("", { confirm: false });
+    await contains(".o_list_button_save").click();
+    expect(`.o_field_invalid`).toHaveCount(1);
+    expect(`.o_invalid_optional_columns_button`).toHaveCount(0);
+    await contains(`.o_optional_columns_dropdown button`).click();
+    await contains(`.o-dropdown--menu span.dropdown-item [name=foo]`).click();
+    await animationFrame();
+    expect(`.o_invalid_optional_columns_button`).toHaveCount(1);
+    expect(`.o-dropdown--menu .o_invalid_dropdown_item`).toHaveCount(1);
+});

@@ -379,6 +379,24 @@ export class ListRenderer extends Component {
         );
     }
 
+    get hasInvalidOptionalFields() {
+        return this.optionalFieldGroups.some((group) => {
+            return group.optionalFields
+                .filter((field) => !this.optionalActiveFields[field.name])
+                .some((field) => {
+                    return this.props.list.records.some((record) => {
+                        return record.isFieldInvalid(field.name);
+                    });
+                });
+        });
+    }
+
+    getOptionalDropdownItemClass(field) {
+        return !this.optionalActiveFields[field.name] && this.props.list.records.some((record) => {
+            return record.isFieldInvalid(field.name);
+        }) ? 'o_invalid_dropdown_item' : '';
+    }
+    
     add(params) {
         if (this.canCreate) {
             this.props.onAdd(params);
