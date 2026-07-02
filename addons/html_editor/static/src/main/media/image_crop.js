@@ -43,6 +43,7 @@ export class ImageCrop extends Component {
         this.elRef = useRef("el");
         this.cropperWrapper = useRef("cropperWrapper");
         this.imageRef = useRef("imageRef");
+        this.cropButtons = useRef("cropButton");
         this.isCropperActive = false;
 
         // We use capture so that the handler is called before other editor handlers
@@ -182,15 +183,22 @@ export class ImageCrop extends Component {
         offset.left += parseInt(this.media.style.paddingLeft || 0);
         offset.top += parseInt(this.media.style.paddingRight || 0);
         const frameElement = this.media.ownerDocument.defaultView.frameElement;
-        if (frameElement) {
-            const frameRect = frameElement.getBoundingClientRect();
-            offset.left += frameRect.left;
-            offset.top += frameRect.top;
-        }
+        const frameRect = frameElement ? frameElement.getBoundingClientRect() : { left: 0, top: 0 };
+
+        offset.left += frameRect.left;
+        offset.top += frameRect.top;
 
         this.cropperWrapper.el.style.left = `${offset.left}px`;
         this.cropperWrapper.el.style.top = `${offset.top}px`;
 
+        const editableRect = this.props.editable.getBoundingClientRect();
+        const cropButtonsWidth = this.cropButtons.el.offsetWidth;
+        const adjustedLeft = editableRect.left + frameRect.left;
+        const adjustedRight = editableRect.right + frameRect.left;
+        // Compute the left position that centers the crop buttons within the editable.
+        const centeredLeft = (adjustedLeft + adjustedRight) / 2 - cropButtonsWidth / 2;
+
+        this.cropButtons.el.style.left = Math.max(centeredLeft, adjustedLeft) + "px";
         await loadImage(this.originalSrc, cropperImage);
         if (status(this) !== "mounted") {
             return;
