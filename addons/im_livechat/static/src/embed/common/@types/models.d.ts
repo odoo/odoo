@@ -1,13 +1,8 @@
 declare module "models" {
     export interface DiscussChannel {
-        _toggleChatbot: boolean;
         hasWelcomeMessage: Readonly<boolean>;
-        isLastMessageFromCustomer: Readonly<unknown>;
         livechatWelcomeMessage: Message;
         storeAsActiveVisitorLivechats: Store;
-    }
-    export interface Message {
-        disableChatbotAnswers: boolean;
     }
     export interface Store {
         activeVisitorLivechats: DiscussChannel[];
@@ -16,7 +11,6 @@ declare module "models" {
         livechat_rule: LivechatChannelRule;
     }
     export interface Thread {
-        _prevComposerDisabled: boolean;
         readyToSwapPromise: Promise<void>;
         resolveReadyToSwap: (value: unknown) => void;
     }

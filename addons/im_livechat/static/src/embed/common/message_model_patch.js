@@ -6,19 +6,11 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     setup() {
         super.setup(...arguments);
-        this.disableChatbotAnswers = false;
         this.isWelcomeMessage = this.computed(
             () =>
                 this.thread?.channel?.hasWelcomeMessage &&
                 this.eq(this.thread.channel.livechatWelcomeMessage)
         );
-    },
-
-    get notificationHidden() {
-        if (this.thread.channel?.channel_type !== "livechat" || !this.notificationType) {
-            return super.notificationHidden;
-        }
-        return this.notificationType === "channel-left";
     },
 
     get canCopyMessageText() {

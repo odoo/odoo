@@ -32,10 +32,12 @@ declare module "models" {
         chatbot_step: ChatbotStep;
     }
     export interface DiscussChannel {
+        _toggleChatbot: boolean;
         chatbot: Chatbot;
         chatbot_current_step_id: ChatbotScriptStep;
         chatbotTriggerFailedError: import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined;
         country_id: Country;
+        isLastMessageFromCustomer: Readonly<unknown>;
         livechat_agent_history_ids: LivechatChannelMemberHistory[];
         livechat_bot_history_ids: LivechatChannelMemberHistory[];
         livechat_channel_id: LivechatChannel;
@@ -60,6 +62,7 @@ declare module "models" {
     }
     export interface Message {
         chatbotStep: ChatbotStep;
+        disableChatbotAnswers: boolean;
     }
     export interface ResPartner {
         invite_by_self_count: number|undefined;
@@ -90,6 +93,9 @@ declare module "models" {
         "im_livechat.channel.member.history": StaticMailRecord<LivechatChannelMemberHistory, typeof LivechatChannelMemberHistoryClass>;
         "im_livechat.channel.rule": StaticMailRecord<LivechatChannelRule, typeof LivechatChannelRuleClass>;
         "im_livechat.expertise": StaticMailRecord<LivechatExpertise, typeof LivechatExpertiseClass>;
+    }
+    export interface Thread {
+        _prevComposerDisabled: boolean;
     }
 
     export interface Models {

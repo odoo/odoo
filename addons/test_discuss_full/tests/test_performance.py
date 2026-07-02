@@ -255,7 +255,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         # create groups
         self.channel_group_1 = Channel._create_group(self.users[0] + self.users[12])
         # create livechats
-        self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
+        self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', "review_link": "https://www.odoo.com", 'user_ids': [Command.link(self.users[0].id)]})
         self.env['mail.presence']._update_presence(self.users[0])
         self.authenticate('test1', self.password)
         self.channel_livechat_1 = Channel.browse(
@@ -1386,7 +1386,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {}
 
     def _expected_result_for_livechat_channel(self):
-        return {"id": self.im_livechat_channel.id, "name": "support"}
+        return {"id": self.im_livechat_channel.id, "name": "support", "review_link": "https://www.odoo.com"}
 
     def _expected_result_for_livechat_member_history(self, channel):
         member_0 = channel.with_user(self.users[0]).self_member_id

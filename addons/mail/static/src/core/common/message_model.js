@@ -504,6 +504,14 @@ export class Message extends Record {
         );
     }
 
+    get canTogglePin() {
+        return (
+            this.store.self_user &&
+            this.thread &&
+            (!this.channel_id || this.channel_id.canSelfInteractWithChannel)
+        );
+    }
+
     get hasAttachments() {
         return this.attachment_ids?.length > 0;
     }
