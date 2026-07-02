@@ -2,6 +2,7 @@
 from odoo import Command
 from odoo.tests import Form
 
+from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
 
@@ -281,3 +282,75 @@ class TestMrpCommon(TestStockCommon):
             (0, 0, {'dayofweek': '5', 'hour_from': 0, 'hour_to': 24}),
             (0, 0, {'dayofweek': '6', 'hour_from': 0, 'hour_to': 24}),
         ]})
+
+
+class TestBomCostCommon(BaseCommon):
+
+    @classmethod
+    def _create_product(cls, name, price):
+        vals = {
+            'name': name,
+            'is_storable': True,
+            'standard_price': price
+        }
+        return cls.Product.create(vals)
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Product = cls.env['product.product']
+        cls.Bom = cls.env['mrp.bom']
+
+        # Products.
+        cls.dining_table = cls._create_product('Dining Table', 1000)
+        cls.table_head = cls._create_product('Table Head', 300)
+        cls.screw = cls._create_product('Screw', 10)
+
+        # Unit of Measure.
+        cls.uom = cls.env.ref('uom.product_uom_unit')
+        cls.dozen = cls.env.ref('uom.product_uom_dozen')
+
+        # Bills Of Materials.
+        # -------------------------------------------------------------------------------
+        # Cost of BoM (Dining Table 1 Unit)
+        # Component Cost =  Table Head   1 Unit * 300 = 300 (318.75 from it's components)
+        #                   Screw        5 Unit *  10 =  50
+        # Total = 350 [368.75 if components of Table Head considered] (for 1 Unit)
+        # -------------------------------------------------------------------------------
+
+        # Table Head's components.
+        cls.plywood_sheet = cls._create_product('Plywood Sheet', 200)
+        cls.corner_slide = cls._create_product('Corner Slide', 25)
+
+        # -----------------------------------------------------------------
+        # Cost of BoM (Table Head 1 Dozen)
+        # Component Cost =  Plywood Sheet   12 Unit * 200 = 2400
+        #                   Corner Slide    57 Unit * 25  = 1425
+        #                                           Total = 3825
+        #                          1 Unit price (3825/12) =  318.75
+        # -----------------------------------------------------------------
+
+        cls.bom_1, cls.bom_2 = cls.Bom.create([
+            {
+                'product_id': cls.dining_table.id,
+                'product_tmpl_id': cls.dining_table.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'uom_id': cls.uom.id,
+                'type': 'normal',
+                'bom_line_ids': [
+                    Command.create({'product_id': cls.table_head.id, 'product_qty': 1}),
+                    Command.create({'product_id': cls.screw.id, 'product_qty': 5}),
+                ],
+            },
+            {
+                'product_id': cls.table_head.id,
+                'product_tmpl_id': cls.table_head.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'uom_id': cls.dozen.id,
+                'type': 'phantom',
+                'bom_line_ids': [
+                    Command.create({'product_id': cls.plywood_sheet.id, 'product_qty': 12}),
+                    Command.create({'product_id': cls.corner_slide.id, 'product_qty': 57}),
+                ],
+            },
+        ])

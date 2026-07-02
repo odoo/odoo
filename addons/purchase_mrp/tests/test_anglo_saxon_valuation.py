@@ -24,7 +24,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             'categ_id': self.avco_category.id,
         } for name, price in [('Kit', 0), ('Compo 01', 10), ('Compo 02', 20)]])
 
-        self.env['mrp.bom'].create({
+        bom = self.env['mrp.bom'].create({
             'product_tmpl_id': kit.product_tmpl_id.id,
             'type': 'phantom',
             'bom_line_ids': [(0, 0, {
@@ -32,7 +32,8 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
                 'product_qty': 1,
             }) for p in [compo01, compo02]]
         })
-        kit.button_bom_cost()
+        bom.action_update_product_cost_from_bom()
+        kit.standard_price = bom.unit_cost
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.vendor01

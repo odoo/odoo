@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, fields
+from odoo import Command
 from odoo.tests import Form, tagged
-from odoo.tools.float_utils import float_round, float_compare
 
-from odoo.addons.mrp_account.tests.common import TestBomPriceCommon
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
@@ -262,85 +260,3 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
         # Check that no account move line are created if there is no production account
         self.assertFalse(amls)
-
-
-class TestSubcontractingBOMCost(TestBomPriceCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.partner = cls.env['res.partner'].create({
-            'name': 'A name can be a Many2one...'
-        })
-        (cls.bom_1 | cls.bom_2).write({
-            'type': 'subcontract',
-            'subcontractor_ids': [Command.link(cls.partner.id)],
-        })
-
-    def test_01_compute_price_subcontracting_cost(self):
-        """Test calculation of bom cost with subcontracting."""
-        suppliers = self.env['product.supplierinfo'].create([
-            {
-                'partner_id': self.partner.id,
-                'product_tmpl_id': self.dining_table.product_tmpl_id.id,
-                'price': 150.0,
-            }, {
-                'partner_id': self.partner.id,
-                'product_tmpl_id': self.table_head.product_tmpl_id.id,
-                'price': 120.0,
-                'uom_id': self.dozen.id,
-            },
-        ])
-        self.assertEqual(suppliers.mapped('is_subcontractor'), [True, True])
-
-        # -----------------------------------------------------------------
-        # Cost of BoM (Dining Table 1 Unit)
-        # -----------------------------------------------------------------
-        # Component Cost =  Table Head     1 Unit * 300 = 300 (478.75 from it's components)
-        #                   Screw          5 Unit *  10 =  50
-        #                   Leg            4 Unit *  25 = 100
-        #                   Glass          1 Unit * 100 = 100
-        #                   Subcontracting 1 Unit * 150 = 150
-        # Total = 700 [878.75 if components of Table Head considered] (for 1 Unit)
-        # -----------------------------------------------------------------
-        self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
-        self.dining_table.button_bom_cost()
-        self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 700.0, "After computing price from BoM price should be 700")
-
-        # Cost of BoM (Table Head 1 Dozen)
-        # -----------------------------------------------------------------
-        # Component Cost =  Plywood Sheet   12 Unit * 200 = 2400
-        #                   Bolt            60 Unit *  10 =  600
-        #                   Colour          12 Unit * 100 = 1200
-        #                   Corner Slide    57 Unit * 25  = 1425
-        #                   Subcontracting  1 Dozen * 120 =  120
-        #                                           Total = 5745
-        #                          1 Unit price (5745/12) =  478.75
-        # -----------------------------------------------------------------
-
-        self.assertEqual(self.table_head.standard_price, 300, "Initial price of the Product should be 300")
-        self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
-        self.assertEqual(float_compare(self.table_head.standard_price, 478.75, precision_digits=2), 0, "After computing price from BoM price should be 878.75")
-        self.assertEqual(float_compare(self.dining_table.standard_price, 878.75, precision_digits=2), 0, "After computing price from BoM price should be 878.75")
-
-    def test_02_compute_price_subcontracting_cost(self):
-        """Test calculation of bom cost with subcontracting and supplier in different currency."""
-        currency_a = self.env['res.currency'].create({
-            'name': 'ZEN',
-            'symbol': 'Z',
-            'rounding': 0.01,
-            'currency_unit_label': 'Zenny',
-            'rate_ids': [Command.create({
-                'name': fields.Date.subtract(fields.Date.today(), days=1),
-                'company_rate': 0.5,
-            })],
-        })
-
-        self.env['product.supplierinfo'].create([{
-                'partner_id': self.partner.id,
-                'product_tmpl_id': self.dining_table.product_tmpl_id.id,
-                'price': 120.0,
-                'currency_id': currency_a.id,
-        }])
-        self.assertEqual(self.dining_table.standard_price, 1000)
-        self.dining_table.button_bom_cost()
-        self.assertEqual(self.dining_table.standard_price, 790)

@@ -3,10 +3,12 @@
 
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+
+from odoo.addons.mrp.tests.test_bom import TestBomCostCommon
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
 from odoo.tests import tagged
@@ -1753,3 +1755,85 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         ])
         receipt.button_validate()
         self.assertEqual(receipt.move_line_ids.lot_id, mo._get_subcontract_move().lot_ids)
+
+
+class TestSubcontractingBomCost(TestBomCostCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        (cls.bom_1 | cls.bom_2).write({
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.link(cls.partner.id)],
+        })
+
+    def test_01_compute_price_subcontracting_cost(self):
+        """Test calculation of bom cost with subcontracting."""
+        suppliers = self.env['product.supplierinfo'].create([
+            {
+                'partner_id': self.partner.id,
+                'product_tmpl_id': self.dining_table.product_tmpl_id.id,
+                'price': 150.0,
+            },
+            {
+                'partner_id': self.partner.id,
+                'product_tmpl_id': self.table_head.product_tmpl_id.id,
+                'price': 120.0,
+                'uom_id': self.dozen.id,
+            },
+        ])
+        self.assertEqual(suppliers.mapped('is_subcontractor'), [True, True])
+
+        # -----------------------------------------------------------------
+        # Cost of BoM (Dining Table 1 Unit)
+        # -----------------------------------------------------------------
+        # Component Cost =  Table Head     1 Unit * 300 = 300 (328.75 from it's components)
+        #                   Screw          5 Unit *  10 =  50
+        #                   Subcontracting 1 Unit * 150 = 150
+        # Total = 500 [528.75 if components of Table Head considered] (for 1 Unit)
+        # -----------------------------------------------------------------
+
+        self.assertEqual(self.bom_1.unit_cost, 0, "Initial cost of the Product should be 0")
+        self.bom_1.action_update_product_cost_from_bom()
+        self.assertEqual(self.bom_1.unit_cost, 500.0, "The cost computed from the BoM should be 500.0")
+
+        # Cost of BoM (Table Head 1 Dozen)
+        # -----------------------------------------------------------------
+        # Component Cost =  Plywood Sheet   12 Unit * 200 = 2400
+        #                   Corner Slide    57 Unit * 25  = 1425
+        #                   Subcontracting  1 Dozen * 120 =  120
+        #                                           Total = 3945
+        #                          1 Unit price (3945/12) =  328.75
+        # -----------------------------------------------------------------
+
+        self.assertEqual(self.bom_2.unit_cost, 0, "Initial cost of the Product should be 0")
+        (self.bom_1 | self.bom_2).action_update_product_cost_from_bom()
+        self.assertEqual(self.bom_2.unit_cost, 328.75, "The cost computed from the BoM should be 328.75")
+        self.assertEqual(self.bom_1.unit_cost, 528.75, "The cost computed from the BoM should be 528.75")
+
+    def test_02_compute_price_subcontracting_cost(self):
+        """Test calculation of bom cost with subcontracting and supplier in different currency."""
+        currency_a = self.env['res.currency'].create({
+            'name': 'ZEN',
+            'symbol': 'Z',
+            'rounding': 0.01,
+            'currency_unit_label': 'Zenny',
+            'rate_ids': [
+                Command.create({
+                    'name': fields.Date.subtract(fields.Date.today(), days=1),
+                    'company_rate': 0.5,
+                }),
+            ],
+        })
+
+        self.env['product.supplierinfo'].create([{
+            'partner_id': self.partner.id,
+            'product_tmpl_id': self.dining_table.product_tmpl_id.id,
+            'price': 120.0,
+            'currency_id': currency_a.id,
+        }])
+        self.assertEqual(self.bom_1.unit_cost, 0, "Initial cost of the Product should be 0")
+        self.bom_1.action_update_product_cost_from_bom()
+        # 120 Zen = 240 USD (120 * 2)
+        # cost = 240 + 350 (BoM Cost of Dining Table) = 590
+        self.assertEqual(self.bom_1.unit_cost, 590.0, "The cost computed from the BoM should be 590")

@@ -8,7 +8,7 @@ from odoo.fields import Command
 from odoo.tests import Form, HttpCase, freeze_time
 from odoo.tools import float_compare, float_repr, float_round, format_date
 
-from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.addons.mrp.tests.common import TestMrpCommon, TestBomCostCommon
 
 
 @freeze_time(fields.Date.today())
@@ -3025,3 +3025,89 @@ class TestTourBoM(HttpCase):
                     Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
             ],
         })
+
+
+class TestBomCost(TestBomCostCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.workcenter = cls.env['mrp.workcenter'].create({
+            'name': 'Workcenter',
+            'time_efficiency': 80,
+            'oee_target': 100,
+            'time_start': 15,
+            'time_stop': 15,
+            'costs_hour': 100
+        })
+        cls.env['mrp.workcenter.capacity'].create({
+            'product_id': cls.dining_table.id,
+            'workcenter_id': cls.workcenter.id,
+            'time_start': 17,
+            'time_stop': 16,
+        })
+
+        # -----------------------------------------------------------------
+        # Dinning Table Operation Cost(1 Unit)
+        # -----------------------------------------------------------------
+        # Operation cost calculate for 1 units
+        # Cutting        (15 + 15 + (20 * 100/80) / 60) * 100 =   91.67
+        # Table Capacity (1 operation * (2 + 1)  / 60) * 100 =     5.00
+        # ----------------------------------------
+        # Operation Cost  1 unit = 96.67
+        # -----------------------------------------------------------------
+
+        # --------------------------------------------------------------------------
+        # Table Head Operation Cost (1 Dozen)
+        # --------------------------------------------------------------------------
+        # Operation cost calculate for 1 dozens
+        # Cutting        (15 + 15 + (20 * 1 * 100/80) / 60) * 100 =   91.67
+        # ----------------------------------------
+        # Operation Cost 1 dozen (91.67 per dozen) and 7.64 for 1 Unit
+        # --------------------------------------------------------------------------
+
+        operation_vals = {
+            'name': 'Cutting',
+            'workcenter_id': cls.workcenter.id,
+            'time_mode': 'manual',
+            'time_cycle_manual': 20,
+        }
+
+        for bom in (cls.bom_1, cls.bom_2):
+            bom.write({
+                'operation_ids': [
+                    Command.create(operation_vals),
+                ],
+            })
+
+        # byproduct
+        cls.scrap_wood = cls._create_product('Scrap Wood', 30)
+
+        # different byproduct line uoms => 20 total units with a total of 13% of cost share
+        cls.bom_1.write({
+            'byproduct_ids': [
+                Command.create({
+                    'product_id': cls.scrap_wood.id,
+                    'uom_id': cls.uom.id,
+                    'product_qty': 8,
+                    'cost_share': 1,
+                }),
+                Command.create({
+                    'product_id': cls.scrap_wood.id,
+                    'uom_id': cls.dozen.id,
+                    'product_qty': 1,
+                    'cost_share': 12,
+                }),
+            ],
+        })
+
+    def test_01_compute_price_operation_cost(self):
+        self.assertEqual(self.bom_1.unit_cost, 0, "Initial cost of the Product should be 0")
+        self.bom_1.action_update_product_cost_from_bom()
+        # Total cost of Dining Table = (350) + Total cost of operations (96.67) = 446.67
+        # byproduct have 1%+12% of cost share so the final cost is 388.60
+        self.assertEqual(self.bom_1.unit_cost, 388.60, "The cost of the computed from the bom should be 388.60")
+        (self.bom_1 | self.bom_2).action_update_product_cost_from_bom()
+        # Total cost of Dining Table = (368.75) + Total cost of all operations (96.67 + 7.64) = 473.06
+        # byproduct have 1%+12% of cost share so the final cost is 411.56
+        self.assertEqual(self.bom_1.unit_cost, 411.56, "The cost of the computed from the bom should be 411.56")
