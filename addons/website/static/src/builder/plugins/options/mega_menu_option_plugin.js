@@ -1,15 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-/**
- * @typedef { Object } MegaMenuOptionShared
- * @property { MegaMenuOptionPlugin['getTemplatePrefix'] } getTemplatePrefix
- */
-
 export class MegaMenuOptionPlugin extends Plugin {
     static id = "megaMenuOptionPlugin";
-    static dependencies = [];
-    static shared = ["getTemplatePrefix"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -31,10 +24,6 @@ export class MegaMenuOptionPlugin extends Plugin {
             }
         },
     };
-
-    getTemplatePrefix() {
-        return "website.";
-    }
 
     async saveMegaMenuClasses() {
         const proms = [];

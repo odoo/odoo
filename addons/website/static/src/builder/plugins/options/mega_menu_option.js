@@ -1,20 +1,11 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { registry } from "@web/core/registry";
 
 export class MegaMenuOption extends BaseOptionComponent {
     static id = "mega_menu_option";
     static template = "website.MegaMenuOption";
-    static dependencies = ["megaMenuOptionPlugin"];
-
-    setup() {
-        super.setup();
-        const { getTemplatePrefix } = this.dependencies.megaMenuOptionPlugin;
-        this.state = useDomState((el) => ({
-            templatePrefix: getTemplatePrefix(el),
-        }));
-    }
+    static dependencies = [];
 
     hasHeaderTemplates(headerTemplates) {
         const currentHeaderTemplate = getCSSVariableValue(

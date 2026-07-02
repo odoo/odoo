@@ -644,7 +644,7 @@ export class WebsiteBuilderClientAction extends Component {
     async addWelcomeMessage() {
         if (this.websiteService.isRestrictedEditor && !this.state.isEditing) {
             const wrapEl = this.websiteContent.el.contentDocument.querySelector(
-                "#wrapwrap.homepage #wrap"
+                "#wrapwrap.homepage main #wrap"
             );
             if (wrapEl && !wrapEl.innerHTML.trim()) {
                 this.welcomeMessageEl = renderToElement("website.homepage_editor_welcome_message");

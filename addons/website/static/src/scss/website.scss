@@ -1791,9 +1791,6 @@ $-transition-duration: 200ms;
             width: 100%;
             flex: auto;
         }
-        > .o_mega_menu_container_size {
-            transform: unset;
-        }
     }
 }
 
@@ -2139,24 +2136,6 @@ header {
     }
 }
 
-.dropdown-menu.o_mega_menu_container_size {
-    $-header-template: o-website-value('header-template');
-    @if not index(('sidebar', 'hamburger'), $-header-template) {
-        $bp: if($-header-template == 'minimalist', md, lg);
-        @include media-breakpoint-up($bp) {
-            left: 50%;
-            transform: translateX(-50%);
-        }
-    }
-
-    $-mm-max-widths: ();
-    @each $k, $v in $container-max-widths {
-        $-mm-max-widths: map-merge($-mm-max-widths, (
-            #{$k}: $v - $grid-gutter-width,
-        ));
-    }
-    @include make-container-max-widths($-mm-max-widths);
-}
 
 // The design of some of the new mega menu templates required a column with
 // an overlay that would overflow until the end of the container. For
