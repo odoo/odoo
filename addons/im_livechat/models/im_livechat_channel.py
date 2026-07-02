@@ -693,7 +693,7 @@ class Im_LivechatChannelRule(models.Model):
                 if not re.search(rule.regex_url or "", url or ""):
                     continue
                 if rule.chatbot_script_id and (
-                    not rule.chatbot_script_id.active or not rule.chatbot_script_id.script_step_ids
+                    not rule.chatbot_script_id.active or not rule.chatbot_script_id._get_welcome_steps()
                 ):
                     continue
                 if (
