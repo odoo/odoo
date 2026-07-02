@@ -74,7 +74,7 @@ export class EmojiPlugin extends Plugin {
      * @param {InputEvent} ev
      */
     onInput(ev) {
-        if (!emojiLoader.loaded) {
+        if (!emojiLoader.loaded || ev.inputType === "deleteContentBackward") {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
