@@ -128,11 +128,34 @@ export class SplitBillScreen extends Component {
             }
         }
     }
+<<<<<<< 45818c8ead21af0f819efe71bb79a90a611a40de
     async _createNewSplitOrder(originalOrder, newOrderName, curOrderUuid) {
         const newOrder = this.pos.createNewOrder({
             preset_id: originalOrder.preset_id,
             preset_time: originalOrder.preset_time,
         });
+||||||| f6148e408abfe112127d116000a30a9a47055872
+    async createSplittedOrder() {
+        const curOrderUuid = this.currentOrder.uuid;
+        const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
+        const originalOrderName = this._getOrderName(originalOrder);
+        const newOrderName = this._getSplitOrderName(originalOrderName);
+
+        const newOrder = this.pos.createNewOrder();
+=======
+    async createSplittedOrder() {
+        const curOrderUuid = this.currentOrder.uuid;
+        const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
+        const originalOrderName = this._getOrderName(originalOrder);
+        const newOrderName = this._getSplitOrderName(originalOrderName);
+
+        const newOrder = this.pos.createNewOrder({
+            preset_id: originalOrder.preset_id,
+            preset_time: originalOrder.preset_time,
+            fiscal_position_id: originalOrder.fiscal_position_id,
+        });
+        newOrder.setPricelist(originalOrder.pricelist_id);
+>>>>>>> b9ef180e1978748ecc925394235d69405b89324e
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         originalOrder.uiState.splittedOrderUuid = newOrder.uuid;
