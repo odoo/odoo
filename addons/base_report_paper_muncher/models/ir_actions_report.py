@@ -125,7 +125,7 @@ class IrActionsReport(models.Model):
                 wsgi_environ['HTTP_X_ODOO_DATABASE'] = self.env.cr.dbname
 
             with PaperMuncherServer(
-                args=[paper_muncher().bin, *names, '-o', 'pipe:/paper-muncher/output.pdf', *extra_args],
+                args=[paper_muncher().bin, *names, '-o', 'pipe:/paper-muncher/output.pdf', '--sandboxed', *extra_args],
                 os_env=os_env,
                 wsgi_environ=wsgi_environ,
             ) as server:
