@@ -1071,6 +1071,10 @@ class HrEmployee(models.Model):
                     working_now += res_employee_ids.ids
         return working_now
 
+    def _is_working_now(self):
+        employee = self.sudo()
+        return employee.is_in_contract and employee.id in employee._get_employee_working_now()
+
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):
         """
