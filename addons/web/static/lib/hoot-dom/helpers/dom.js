@@ -426,21 +426,19 @@ function isChar(char) {
 }
 
 /**
- * @template T
- * @param {T} object
- * @returns {T extends Document ? true : false}
+ * @param {any} object
+ * @returns {object is Document}
  */
 function isDocument(object) {
-    return object?.nodeType === Node.DOCUMENT_NODE;
+    return isNode(object) && object.nodeType === Node.DOCUMENT_NODE;
 }
 
 /**
- * @template T
- * @param {T} object
- * @returns {T extends Element ? true: false}
+ * @param {any} object
+ * @returns {object is Element}
  */
 function isElement(object) {
-    return object?.nodeType === Node.ELEMENT_NODE;
+    return isNode(object) && object.nodeType === Node.ELEMENT_NODE;
 }
 
 /**
@@ -505,12 +503,16 @@ function isShadowRoot(el) {
 }
 
 /**
- * @template T
- * @param {T} object
- * @returns {T extends Window ? true : false}
+ * @param {any} object
+ * @returns {object is Window}
  */
 function isWindow(object) {
-    return object?.window === object && object.constructor.name === "Window";
+    try {
+        return object?.window === object && object.constructor.name === "Window";
+    } catch {
+        // Covers property getter errors
+        return false;
+    }
 }
 
 /**
@@ -1363,16 +1365,20 @@ export function isEmpty(value) {
 /**
  * Returns whether the given object is an {@link EventTarget}.
  *
- * @template T
- * @param {T} object
- * @returns {T extends EventTarget ? true : false}
+ * @param {any} object
+ * @returns {object is EventTarget}
  * @example
  *  isEventTarget(window); // true
  * @example
  *  isEventTarget(new App()); // false
  */
 export function isEventTarget(object) {
-    return object && typeof object.addEventListener === "function";
+    try {
+        return !!object && typeof object.addEventListener === "function";
+    } catch {
+        // Covers property getter errors
+        return false;
+    }
 }
 
 /**
@@ -1380,12 +1386,18 @@ export function isEventTarget(object) {
  * Note that it is independant from the {@link Node} class itself to support
  * cross-window checks.
  *
- * @template T
- * @param {T} object
- * @returns {T extends Node ? true : false}
+ * @param {any} object
+ * @returns {object is Node}
  */
 export function isNode(object) {
-    return object && typeof object.nodeType === "number" && typeof object.nodeName === "string";
+    try {
+        return (
+            !!object && typeof object.nodeName === "string" && typeof object.nodeType === "number"
+        );
+    } catch {
+        // Covers property getter errors
+        return false;
+    }
 }
 
 /**

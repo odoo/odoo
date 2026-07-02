@@ -63,8 +63,11 @@ function makeInteractorFn(type, fn, name, alias) {
     }[alias || name];
 }
 
+/**
+ * @param {unknown} value
+ */
 function polyfillIsError(value) {
-    return $toString.call(value) === "[object Error]";
+    return safeToString(value) === "[object Error]";
 }
 
 const GRAYS = {
@@ -304,10 +307,15 @@ Array.isArray;
 
 /**
  * @param {any} instance
- * @returns {instance is Promise<any>}
+ * @returns {instance is Promise}
  */
 export function isPromise(instance) {
-    return instance && typeof instance.then === "function";
+    try {
+        return !!instance && typeof instance.then === "function";
+    } catch {
+        // Covers property getter errors
+        return false;
+    }
 }
 
 /**
@@ -340,10 +348,16 @@ export function isInstanceOf(instance, ...classes) {
         if (targetName === "Error") {
             return isError(instance);
         }
-        if ($toString.call(instance) === `[object ${targetName}]`) {
+        if (safeToString(instance) === `[object ${targetName}]`) {
             return true;
         }
-        let { constructor } = instance;
+        let constructor;
+        try {
+            constructor = instance.constructor;
+        } catch {
+            // Covers property getter errors
+            continue;
+        }
         while (constructor) {
             if (constructor.name === targetName) {
                 return true;
@@ -357,13 +371,18 @@ export function isInstanceOf(instance, ...classes) {
 /**
  * Returns whether the given object is iterable (*excluding strings*).
  *
- * @template T
- * @template {T | Iterable<T>} V
- * @param {V} object
- * @returns {V extends Iterable<T> ? true : false}
+ * @param {any} object
+ * @returns {object is Iterable}
  */
 export function isIterable(object) {
-    return !!(object && typeof object === "object" && object[Symbol.iterator]);
+    try {
+        return (
+            !!object && typeof object === "object" && typeof object[Symbol.iterator] === "function"
+        );
+    } catch {
+        // Covers property getter errors
+        return false;
+    }
 }
 
 /**
@@ -387,6 +406,21 @@ export function parseRegExp(value, options) {
         }
     }
     return value;
+}
+
+/**
+ * Function used to call 'Object.prototype.toString' safely; as some objects like
+ * proxies can throw errors upon accessing any properties at all, even `Symbol.toStringTag`
+ * which is used internally when calling `toString`.
+ *
+ * @param {unknown} value
+ */
+export function safeToString(value) {
+    try {
+        return $toString.call(value);
+    } catch {
+        return "";
+    }
 }
 
 /**

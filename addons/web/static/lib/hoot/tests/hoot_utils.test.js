@@ -19,21 +19,47 @@ import {
 } from "../hoot_utils";
 import { mountForTest, parseUrl } from "./local_helpers";
 
-const recursive = {};
-recursive.self = recursive;
+const circular = {};
+circular.self = circular;
+
+const explosive = new Proxy(
+    {},
+    {
+        get() {
+            throw new Error("boom!");
+        },
+        has() {
+            throw new Error("boom!");
+        },
+    }
+);
+
+const unstable = new Proxy(
+    { safe: "safe" },
+    {
+        get(target, p) {
+            if (p === "safe") {
+                return Reflect.get(target, p);
+            }
+            throw new Error("boom!");
+        },
+    }
+);
 
 describe(parseUrl(import.meta.url), () => {
     test("deepCopy", () => {
         expect(deepCopy(true)).toEqual(true);
         expect(deepCopy(false)).toEqual(false);
         expect(deepCopy(null)).toEqual(null);
-        expect(deepCopy(recursive)).toEqual({ self: S_CIRCULAR });
+        expect(deepCopy(circular)).toEqual({ self: S_CIRCULAR });
         expect(deepCopy(new Date(0))).toEqual(new Date(0));
         expect(deepCopy({ a: 1, b: 2 })).toEqual({ a: 1, b: 2 });
         expect(deepCopy({ o: { a: [{ b: 1 }] } })).toEqual({ o: { a: [{ b: 1 }] } });
         expect(deepCopy(Symbol.for("a"))).toEqual(Symbol.for("a"));
         expect(deepCopy(document.createElement("div"))).toEqual(document.createElement("div"));
         expect(deepCopy([1, 2, 3])).toEqual([1, 2, 3]);
+        expect(deepCopy(unstable)).toEqual(unstable);
+        expect(deepCopy(explosive)).toEqual(explosive);
     });
 
     test("deepEqual", () => {
@@ -41,7 +67,9 @@ describe(parseUrl(import.meta.url), () => {
             [true, true],
             [false, false],
             [null, null],
-            [recursive, recursive],
+            [circular, circular],
+            [unstable, unstable],
+            [explosive, explosive],
             [new Date(0), new Date(0)],
             [
                 { b: 2, a: 1 },
@@ -58,7 +86,7 @@ describe(parseUrl(import.meta.url), () => {
         const FALSY_CASES = [
             [true, false],
             [null, undefined],
-            [recursive, { ...recursive, a: 1 }],
+            [circular, { ...circular, a: 1 }],
             [
                 [1, 2, 3],
                 [3, 1, 2],
@@ -167,6 +195,9 @@ describe(parseUrl(import.meta.url), () => {
             )
         ).toBe(`{ allowed: true }`);
         expect(formatHumanReadable(window)).toBe(`Window {  }`);
+        expect(formatHumanReadable(circular)).toBe(`{ self: … }`);
+        expect(formatHumanReadable(unstable)).toBe(`{ safe: "safe" }`);
+        expect(formatHumanReadable(explosive)).toBe(`{  }`);
         // Nodes
         expect(formatHumanReadable(document.createElement("div"))).toBe("<div>");
         expect(formatHumanReadable(document.createTextNode("some text"))).toBe("#text");

@@ -9,6 +9,7 @@ import {
     isPromise,
     parseRegExp,
     R_WHITE_SPACE,
+    safeToString,
     toSelector,
 } from "@web/../lib/hoot-dom/hoot_dom_utils";
 
@@ -366,9 +367,6 @@ function _deepEqual(a, b, ignoreOrder, partial, cache) {
  * @returns {[string, number]}
  */
 function _formatHumanReadable(value, length, cache) {
-    if (!isSafe(value)) {
-        return `<cannot read value of ${getConstructor(value).name}>`;
-    }
     // Primitives
     switch (typeof value) {
         case "function": {
@@ -398,6 +396,10 @@ function _formatHumanReadable(value, length, cache) {
     }
     cache.add(value);
 
+    if (isNode(value)) {
+        return value.nodeType === Node.ELEMENT_NODE ? `<${toSelector(value)}>` : toSelector(value);
+    }
+
     // Generic objects
     const serialize = getGenericSerializer(value);
     if (serialize) {
@@ -412,7 +414,8 @@ function _formatHumanReadable(value, length, cache) {
             return _formatHumanReadable(values[0], length, cache);
         }
         const constructor = getConstructor(value);
-        const constructorPrefix = constructor.name === "Array" ? "" : `${constructor.name} `;
+        const constructorPrefix =
+            !constructor.name || constructor.name === "Array" ? "" : `${constructor.name} `;
         const content = [];
         if (values.length) {
             const bitSize = $max(
@@ -435,7 +438,8 @@ function _formatHumanReadable(value, length, cache) {
     // Non-iterable objects
     const keys = $keys(value);
     const constructor = getConstructor(value);
-    const constructorPrefix = constructor.name === "Object" ? "" : `${constructor.name} `;
+    const constructorPrefix =
+        !constructor.name || constructor.name === "Object" ? "" : `${constructor.name} `;
     const content = [];
     if (constructor.name !== "Window" && keys.length) {
         const bitSize = $max(
@@ -470,9 +474,6 @@ function _formatHumanReadable(value, length, cache) {
  * @returns {string}
  */
 function _formatTechnical(value, depth, isObjectValue, cache) {
-    if (!isSafe(value)) {
-        return `<cannot read value of ${getConstructor(value).name}>`;
-    }
     if (value === S_ANY || value === S_NONE) {
         // Special case: internal symbols
         return "";
@@ -500,6 +501,10 @@ function _formatTechnical(value, depth, isObjectValue, cache) {
         return `${baseIndent}${$isArray(value) ? `[${ELLIPSIS}]` : `{ ${ELLIPSIS} }`}`;
     }
     cache.add(value);
+
+    if (isNode(value)) {
+        return value.nodeType === Node.ELEMENT_NODE ? `<${toSelector(value)}>` : toSelector(value);
+    }
 
     const startIndent = " ".repeat((depth + 1) * 2);
     const endIndent = " ".repeat(depth * 2);
@@ -583,7 +588,6 @@ const GENERIC_SERIALIZERS = new Map([
     [Boolean, (v) => v.valueOf()],
     [Date, (v) => v.toISOString()],
     [Error, (v) => v.toString()],
-    [Node, (v) => (v.nodeType === Node.ELEMENT_NODE ? `<${toSelector(v)}>` : toSelector(v))],
     [Number, (v) => v.valueOf()],
     [RegExp, (v) => v.toString()],
     [String, (v) => v.valueOf()],
@@ -607,7 +611,6 @@ const R_NAMED_FUNCTION = /^\s*(async\s+)?function/;
 const R_INVISIBLE_CHARACTERS = /[\u00a0\u200b-\u200d\ufeff]/g;
 const R_OBJECT = /^\[object ([\w-]+)\]$/;
 
-const destroyed = new WeakSet();
 /** @type {(KeyboardEventInit & { callback: (ev: KeyboardEvent) => any })[]} */
 const hootKeys = [];
 const labelObjects = new WeakSet();
@@ -853,7 +856,12 @@ export function exposeMethod(object, method) {
  * @returns {string}
  */
 export function formatHumanReadable(value) {
-    return _formatHumanReadable(value, 0, makeObjectCache());
+    const cache = makeObjectCache();
+    try {
+        return _formatHumanReadable(value, 0, cache);
+    } catch {
+        return `<cannot display ${getConstructor(value).name || "unknown object"}>`;
+    }
 }
 
 /**
@@ -861,7 +869,12 @@ export function formatHumanReadable(value) {
  * @returns {string}
  */
 export function formatTechnical(value) {
-    return _formatTechnical(value, 0, false, makeObjectCache());
+    const cache = makeObjectCache();
+    try {
+        return _formatTechnical(value, 0, false, cache);
+    } catch {
+        return `<cannot display ${getConstructor(value).name || "unknown object"}>`;
+    }
 }
 
 /**
@@ -954,11 +967,16 @@ export function generateSeed() {
  * @param {unknown} value
  */
 export function getConstructor(value) {
-    const { constructor } = value;
+    let constructor;
+    try {
+        constructor = value.constructor;
+    } catch {
+        return EMPTY_CONSTRUCTOR;
+    }
     if (constructor !== Object) {
         return constructor || EMPTY_CONSTRUCTOR;
     }
-    const str = value.toString();
+    const str = safeToString(value);
     const match = str.match(R_OBJECT);
     if (!match || match[1] === "Object") {
         return constructor;
@@ -1146,20 +1164,6 @@ export function isOfType(value, type) {
         default:
             return typeof value === type;
     }
-}
-
-/**
- * @param {unknown} value
- */
-export function isSafe(value) {
-    if (value && typeof value.valueOf === "function") {
-        try {
-            value.valueOf();
-        } catch {
-            return false;
-        }
-    }
-    return true;
 }
 
 /**
