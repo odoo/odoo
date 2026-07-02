@@ -368,12 +368,17 @@
             </t>
         </t>
 
-        <t t-set="header_bg_color" t-value="'header_color' in main_object and main_object.sudo().header_color or ''"/>
-        <t t-set="header_bg_color_is_class" t-value="'bg-' in header_bg_color"/>
-        <t t-set="header_bg_color_class" t-value="header_bg_color_is_class and header_bg_color or ''"/>
-        <t t-set="header_bg_color_style" t-value="(not header_bg_color_is_class) and header_bg_color or ''"/>
+        <t t-set="header_overlay" t-value="'header_overlay' in main_object and main_object.sudo().header_overlay"/>
+        <t t-set="header_bg_color" t-value="header_overlay and 'header_color' in main_object and main_object.sudo().header_color or ''"/>
+        <t t-set="header_bg_color_parts" t-value="header_bg_color.split('|', 1)"/>
+        <t t-set="header_bg_color_class_part" t-value="header_bg_color_parts[0]"/>
+        <t t-set="header_bg_color_style_part" t-value="len(header_bg_color_parts) > 1 and header_bg_color_parts[1] or ''"/>
+        <t t-set="header_bg_color_cc_class" t-value="' '.join(className for className in header_bg_color_class_part.split() if className.startswith('o_cc') and className != 'o_cc')"/>
+        <t t-set="header_bg_color_is_bg_class" t-value="header_bg_color_class_part.startswith('bg-')"/>
+        <t t-set="header_bg_color_class" t-value="header_bg_color_is_bg_class and header_bg_color_class_part or header_bg_color_cc_class and ('o_colored_level o_cc %s' % header_bg_color_cc_class) or ''"/>
+        <t t-set="header_bg_color_style" t-value="header_bg_color_style_part or ((not header_bg_color_is_bg_class and not header_bg_color_cc_class) and header_bg_color_class_part or '')"/>
 
-        <t t-set="header_text_color" t-value="'header_text_color' in main_object and main_object.sudo().header_text_color or ''"/>
+        <t t-set="header_text_color" t-value="header_overlay and 'header_text_color' in main_object and main_object.sudo().header_text_color or ''"/>
         <t t-set="header_text_color_is_class" t-value="'text-' in header_text_color"/>
         <t t-set="header_text_color_class" t-value="header_text_color_is_class and header_text_color or ''"/>
         <t t-set="header_text_color_style" t-value="(not header_text_color_is_class) and header_text_color or ''"/>
