@@ -910,7 +910,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         })
         sale_order.action_confirm()
         payment_params = {
-            "advance_payment_method": "percentage",
+            "advance_payment_method": "fixed",
             "amount": 30,
             "sale_order_ids": [Command.set(sale_order.ids)],
         }

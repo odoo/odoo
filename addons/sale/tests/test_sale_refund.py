@@ -653,7 +653,7 @@ class TestSaleRefund(TestSaleCommon):
             self
             .env["sale.advance.payment.inv"]
             .with_context(so_context)
-            .create({"advance_payment_method": "percentage", "amount": 50})
+            .create({"advance_payment_method": "fixed", "amount": 50})
         )
         downpayment.create_invoices()
         # order_line[1] is the down payment section
