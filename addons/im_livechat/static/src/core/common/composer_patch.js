@@ -5,9 +5,9 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Composer.prototype, {
     get placeholder() {
-        if (this.thread?.channel?.channel_type !== "livechat") {
-            return super.placeholder;
+        if (this.thread?.channel?.self_member_id?.livechat_member_type === "visitor") {
+            return _t("Say something...");
         }
-        return _t("Say something...");
+        return super.placeholder;
     },
 });
