@@ -3458,6 +3458,7 @@ class AccountEdiUBL(models.AbstractModel):
                 'name': pdf_filename + '.pdf',
                 'res_id': invoice.id,
                 'res_model': 'account.move',
+                'res_field': 'invoice_pdf_report_file',
                 'raw': pdf_raw,
                 'type': 'binary',
                 'mimetype': 'application/pdf',
@@ -3471,7 +3472,7 @@ class AccountEdiUBL(models.AbstractModel):
     def _import_ubl_invoice_post_processing(self, collected_values):
         # During the import, fill 'ubl_cii_xml_file' to be retrieved later if necessary.
         invoice = collected_values['invoice']
-        if collected_values['file_data']['attachment'] and invoice.is_purchase_document(include_receipts=True):
+        if collected_values['file_data']['attachment']:
             collected_values['file_data']['attachment'].write({
                 'res_field': 'ubl_cii_xml_file',
                 'res_model': invoice._name,

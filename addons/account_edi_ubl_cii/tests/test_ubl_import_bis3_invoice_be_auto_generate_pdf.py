@@ -28,9 +28,14 @@ class TestUblImportBis3InvoiceBEAutoGeneratePDF(TestUblImportBis3InvoiceBE):
                 )
 
             self.assertTrue(bill.ubl_cii_xml_id)  # Original XML
-            self.assertEqual(len(bill.attachment_ids), int(should_generate_pdf))  # Generated PDF
+            generated_pdf = self.env['ir.attachment'].search([
+                ('res_model', '=', 'account.move'),
+                ('res_id', '=', bill.id),
+                ('res_field', '=', 'invoice_pdf_report_file'),
+            ])
+            self.assertEqual(len(generated_pdf), int(should_generate_pdf))  # Generated PDF
             if should_generate_pdf:
-                self.assertTrue(bill.attachment_ids.mimetype, 'pdf')
+                self.assertTrue('pdf' in generated_pdf.mimetype)
 
         # Default behaviour -> Creates PDF
         _import_and_assert(True)
@@ -41,3 +46,29 @@ class TestUblImportBis3InvoiceBEAutoGeneratePDF(TestUblImportBis3InvoiceBE):
 
         # Return default behaviour
         _set_pdf_param(False)
+
+    def test_generated_pdf_still_deletable_after_reset_to_draft(self):
+        def _run_wkhtmltopdf(*args, **kwargs):
+            _filename, file_content = self._import_file_content(
+                'test_import_invoice_auto_generate_pdf',
+                'pdf',
+            )
+            return file_content
+
+        with patch.object(self.env.registry['ir.actions.report'], '_run_wkhtmltopdf', _run_wkhtmltopdf):
+            bill = self._import_invoice_as_attachment_on(
+                test_name='test_import_without_embedded_attachment',
+                journal=self.company_data["default_journal_purchase"].with_context(force_report_rendering=True),
+            )
+
+        generated_pdf = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', bill.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+
+        bill.action_post()
+        bill.button_draft()
+
+        generated_pdf.unlink()
+        self.assertFalse(generated_pdf.exists())

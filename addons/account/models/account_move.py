@@ -4143,7 +4143,7 @@ class AccountMove(models.Model):
 
     def unlink(self):
         self._update_sequence_made_gap(invalidate_current=True)
-        self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
+        self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True, account_edi_ubl_cii_skip_protected_attachments=True)  # no need to sync to delete everything
         logger_message = self._get_unlink_logger_message()
         self.line_ids.remove_move_reconcile()
         self.line_ids.unlink()
