@@ -2,6 +2,8 @@
 import odoo.tests
 from odoo.tests import HttpCase
 
+from odoo.addons.website.tests.common import all_sitemap_urls
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestSitemap(HttpCase):
@@ -28,12 +30,12 @@ class TestSitemap(HttpCase):
         response = self.url_open("/fr_FR")
         self.assertIn('/fr/contactus', response.text)
 
-        # Access the sitemap
-        response = self.url_open("/sitemap.xml")
+        # Search the union of all sub-sitemaps (index only lists the sub-sitemaps)
+        sitemap = all_sitemap_urls(self)
 
         # Ensure the sitemap content is still in English as it's the default language
         if self.blog_post:
-            self.assertIn(self.blog_post.website_url, response.text)
+            self.assertIn(self.blog_post.website_url, sitemap)
 
     def test_02_sitemap_language(self):
         """Ensure sitemap is in the default language"""
@@ -41,10 +43,10 @@ class TestSitemap(HttpCase):
         # Set the default language to French
         self.website.default_lang_id = self.env['res.lang'].sudo()._activate_lang('fr_FR')
 
-        # Access the sitemap
-        response = self.url_open("/sitemap.xml")
+        # Search the union of all sub-sitemaps (index only lists the sub-sitemaps)
+        sitemap = all_sitemap_urls(self)
 
         # Ensure the sitemap content is in French
         if self.blog_post:
             translated_url = self.blog_post.with_context(lang='fr_FR').website_url
-            self.assertIn(translated_url, response.text)
+            self.assertIn(translated_url, sitemap)

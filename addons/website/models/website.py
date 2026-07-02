@@ -1634,7 +1634,7 @@ class Website(models.CachedModel):
         for page in pages:
             if ignore_custom_homepage and homepage_url == page['url']:
                 continue
-            record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
+            record = {'loc': page['url'], 'id': page['id'], 'name': page['name'], 'group': 'website'}
             if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             last_dates = [d for d in (page.write_date, page.view_write_date) if d]
@@ -1665,6 +1665,43 @@ class Website(models.CachedModel):
                 return f.__func__
             return f
 
+        # Sitemap group (sub-sitemap section) a route belongs to. A route may name
+        # its own group with @route(sitemap_group="products"); this is the public,
+        # stable section name and takes priority. Otherwise the group is derived
+        # from the owning addon module, with the 'website-' prefix dropped for
+        # readability ('website_blog' -> 'blog').
+        #
+        # For the derived name, prefer the sitemap function's module over the route
+        # handler's: a downstream module may override the handler with a bare
+        # @route() (which changes endpoint.func's module) while inheriting the same
+        # sitemap function, so the handler is not a stable name -- website_sale's
+        # /shop would otherwise drift to 'sale-renting'/'sale-subscription' on a
+        # full install. Routes that auto-enumerate (no sitemap function) fall back
+        # to the handler's module.
+        def _route_module(rule):
+            group = rule.endpoint.routing.get('sitemap_group')
+            if group:
+                return group
+            sitemap_func = rule.endpoint.routing.get('sitemap')
+            func = _unwrap_callable(sitemap_func) if callable(sitemap_func) else rule.endpoint.func
+            parts = (func.__module__ or '').split('.')
+            if len(parts) > 2 and parts[1] == 'addons':
+                module = parts[2].replace('_', '-')
+                return module[len('website-'):] if module.startswith('website-') else module
+            return 'website'
+
+        # Collect modules that have a "record" route: a route with a model in its
+        # path, like /shop/<product> or /event/<event>. Such a module renders one
+        # page per record, so it is a real content section and gets its own sitemap
+        # group. Modules with only static pages (e.g. account's /terms) are skipped.
+        record_route_modules = set()
+        for rule in router.iter_rules():
+            sitemap_func = rule.endpoint.routing.get('sitemap')
+            if sitemap_func is False:
+                continue
+            if rule._converters and (callable(sitemap_func) or self.rule_is_enumerable(rule)):
+                record_route_modules.add(_route_module(rule))
+
         for rule in router.iter_rules():
             sitemap_func = rule.endpoint.routing.get('sitemap')
             if sitemap_func is False:
@@ -1682,13 +1719,19 @@ class Website(models.CachedModel):
                         ', '.join(rule.endpoint.routing['routes']),
                     )
 
+            # Pick the sitemap group for this route. An explicit sitemap_group, a
+            # record route, or any route whose module has one, uses that name. Lone
+            # static pages (e.g. /terms, /) go to the shared 'website' group.
+            explicit = rule.endpoint.routing.get('sitemap_group')
+            module = _route_module(rule)
+            group = module if (explicit or rule._converters or module in record_route_modules) else 'website'
             if callable(sitemap_func):
                 func_key = _unwrap_callable(sitemap_func)
                 if func_key in sitemap_endpoint_done:
                     continue
                 sitemap_endpoint_done.add(func_key)
                 for loc in sitemap_func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
-                    loc_norm = {**loc, 'loc': _norm(loc['loc'])}
+                    loc_norm = {'group': group, **loc, 'loc': _norm(loc['loc'])}
                     url = loc_norm['loc']
                     if url not in url_set:
                         yield loc_norm
@@ -1737,7 +1780,7 @@ class Website(models.CachedModel):
                 url = _norm(url)
                 pattern = query_string and '*%s*' % "*".join(query_string.split('/'))
                 if not query_string or fnmatch.fnmatch(url.lower(), pattern):
-                    page = {'loc': url}
+                    page = {'loc': url, 'group': group}
                     if url in url_set:
                         continue
                     url_set.add(url)

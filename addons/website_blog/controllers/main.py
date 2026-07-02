@@ -195,7 +195,7 @@ class WebsiteBlog(http.Controller):
         '''/blog/<model("blog.blog"):blog>/page/<int:page>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>''',
-    ], type='http', auth="public", website=True, sitemap=sitemap_blog, list_as_website_content=_lt("Blogs"))
+    ], type='http', auth="public", website=True, sitemap=sitemap_blog, sitemap_group="blog", list_as_website_content=_lt("Blogs"))
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
         blogs = tools.lazy(lambda: Blog.search(self.env.website.website_domain(), order="sequence"))
@@ -232,7 +232,7 @@ class WebsiteBlog(http.Controller):
 
         return request.render("website_blog.blog_post_short", values)
 
-    @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=True)
+    @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=True, sitemap_group="blog")
     def blog_feed(self, blog, limit='15', **kwargs):
         v = {}
         v['blog'] = blog
@@ -271,7 +271,7 @@ class WebsiteBlog(http.Controller):
 
     @http.route([
         '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
-    ], type='http', auth="public", website=True, sitemap=sitemap_blog_post)
+    ], type='http', auth="public", website=True, sitemap=sitemap_blog_post, sitemap_group="blog")
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
 

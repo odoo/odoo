@@ -299,6 +299,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         website=True,
         list_as_website_content=_lt("Shop"),
         sitemap=sitemap_shop,
+        sitemap_group="shop",
         # Return a 404 instead of a 403 error in case of an access error.
         handle_params_access_error=lambda e, **_kwargs: NotFound.code,  # noqa: ARG005
     )
@@ -715,6 +716,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         auth="public",
         website=True,
         sitemap=sitemap_products,
+        sitemap_group="shop",
         # Return a 404 instead of a 403 error in case of an access error.
         handle_params_access_error=lambda e, **_kwargs: NotFound.code,  # noqa: ARG005
     )

@@ -45,7 +45,7 @@ class WebsiteEventController(http.Controller):
             f'/{base}/tags/<string:slug_tags>',
             f'/{base}/tags/<string:slug_tags>/page/<int:page>',
         ]
-    ], type='http', auth="public", website=True, sitemap=sitemap_event, list_as_website_content=_lt("Events"))
+    ], type='http', auth="public", website=True, sitemap=sitemap_event, sitemap_group="events", list_as_website_content=_lt("Events"))
     def events(self, page=1, slug_tags=None, **searches):
         if (slug_tags or searches.get('tags', '[]').count(',') > 0) and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
@@ -241,7 +241,7 @@ class WebsiteEventController(http.Controller):
 
             yield {'loc': final_url}
 
-    @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=sitemap_events, readonly=True)
+    @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=sitemap_events, sitemap_group="events", readonly=True)
     def event(self, event, **post):
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url

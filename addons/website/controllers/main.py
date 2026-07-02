@@ -9,6 +9,7 @@ import re
 import urllib.parse
 import zipfile
 from hashlib import md5, sha256
+from collections import defaultdict
 from io import BytesIO
 from itertools import islice
 from textwrap import shorten
@@ -48,7 +49,7 @@ logger = logging.getLogger(__name__)
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
-SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
+SITEMAP_CACHE_TIME = datetime.timedelta(seconds=5)  # for testing in dev mode
 MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
 FORCE_SHOW_FIELDS = ['name', 'search_item_metadata', 'tags']
@@ -383,41 +384,43 @@ class Website(Home):
             sitemaps = Attachment.search(dom)
             sitemaps.unlink()
 
-            pages = 0
             locs = self.env.website.with_user(self.env.website.user_id)._enumerate_pages(ignore_custom_homepage=True)
-            while True:
-                values = {
-                    'locs': islice(locs, 0, LOC_PER_SITEMAP),
-                    'url_root': url_root[:-1],
-                }
-                urls = self.env.website._render_template('website.sitemap_locs', values)
-                if urls.strip():
+            # _enumerate_pages already tags each URL with a 'group': a module name
+            # for content sections (e.g. 'website-sale'), 'pages' for CMS pages, or
+            # 'website' for lone static pages. Build one sub-sitemap per group.
+            groups = defaultdict(list)
+            for loc in locs:
+                groups[loc.get('group') or 'website'].append(loc)
+
+            index_ids = []
+            for group in sorted(groups):
+                glocs = iter(groups[group])
+                chunk_no = 0
+                while True:
+                    values = {
+                        'locs': islice(glocs, 0, LOC_PER_SITEMAP),
+                        'url_root': url_root[:-1],
+                    }
+                    urls = self.env.website._render_template('website.sitemap_locs', values)
+                    if not urls.strip():
+                        break
                     content = self.env.website._render_template('website.sitemap_xml', {'content': urls})
-                    pages += 1
-                    last_sitemap = create_sitemap('%s-%d.xml' % (sitemap_base_url, pages), content)
-                else:
-                    break
+                    chunk_no += 1
+                    suffix = '%s-%d' % (group, chunk_no)
+                    create_sitemap('%s-%s.xml' % (sitemap_base_url, suffix), content)
+                    # TODO: in master/saas-15, move current_website_id in template directly
+                    index_ids.append('%d-%s-%s' % (self.env.website.id, hashed_url_root, suffix))
 
-            if not pages:
+            if not index_ids:
                 return request.not_found()
-            elif pages == 1:
-                # rename the -id-page.xml => -id.xml
-                last_sitemap.write({
-                    'url': "%s.xml" % sitemap_base_url,
-                    'name': "%s.xml" % sitemap_base_url,
-                })
-            else:
-                # TODO: in master/saas-15, move current_website_id in template directly
-                pages_with_website = ["%d-%s-%d" % (self.env.website.id, hashed_url_root, p) for p in range(1, pages + 1)]
 
-                # Sitemaps must be split in several smaller files with a sitemap index
-                content = self.env.website._render_template('website.sitemap_index_xml', {
-                    'pages': pages_with_website,
-                    # URLs inside the sitemap index have to be on the same
-                    # domain as the sitemap index itself
-                    'url_root': url_root,
-                })
-                create_sitemap('%s.xml' % sitemap_base_url, content)
+            content = self.env.website._render_template('website.sitemap_index_xml', {
+                'pages': index_ids,
+                # URLs inside the sitemap index have to be on the same
+                # domain as the sitemap index itself
+                'url_root': url_root,
+            })
+            create_sitemap('%s.xml' % sitemap_base_url, content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
 

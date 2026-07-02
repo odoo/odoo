@@ -22,7 +22,7 @@ class WebsiteHrRecruitment(WebsiteForm):
     @http.route([
         '/jobs',
         '/jobs/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_jobs, list_as_website_content=_lt("Jobs"))
+    ], type='http', auth="public", website=True, sitemap=sitemap_jobs, sitemap_group="jobs", list_as_website_content=_lt("Jobs"))
     def jobs(self, country_id=None, all_countries=False, department_id=None, office_id=None, employee_type_id=None,
              is_remote=False, is_other_department=False, is_untyped=None,  industry_id=None, is_industry_untyped=False,
              noFuzzy=False, page=1, search=None, **kwargs):
@@ -176,12 +176,12 @@ class WebsiteHrRecruitment(WebsiteForm):
             if not qs or qs.lower() in f'/jobs/{slug(job)}':
                 yield {'loc': f'/jobs/{slug(job)}'}
 
-    @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=sitemap_jobs_detail)
+    @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=sitemap_jobs_detail, sitemap_group="jobs")
     def jobs_detail(self, job, **kwargs):
         redirect_url = f"/jobs/{request.env['ir.http']._slug(job)}"
         return request.redirect(redirect_url, code=301)
 
-    @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
+    @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True, sitemap_group="jobs")
     def job(self, job, **kwargs):
         return request.render("website_hr_recruitment.detail", {
             'structured_data': job._render_jsonld(is_detail_page=True),
@@ -189,7 +189,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             'main_object': job,
         })
 
-    @http.route('''/jobs/apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
+    @http.route('''/jobs/apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True, sitemap_group="jobs")
     def jobs_apply(self, job, **kwargs):
         error = {}
         default = {}

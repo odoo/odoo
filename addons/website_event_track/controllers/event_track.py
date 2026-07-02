@@ -359,7 +359,7 @@ class EventTrackController(http.Controller):
     # ------------------------------------------------------------
 
     @http.route('''/event/<model("event.event", "[('website_track', '=', True)]"):event>/track/<model("event.track", "[('event_id', '=', event.id)]"):track>''',
-                type='http', auth="public", website=True, sitemap=True, readonly=True)
+                type='http', auth="public", website=True, sitemap=True, sitemap_group="events", readonly=True)
     def event_track_page(self, event, track, **options):
         track = self._fetch_track(track.id, allow_sudo=False)
 

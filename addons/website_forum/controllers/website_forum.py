@@ -73,7 +73,7 @@ class WebsiteForum(WebsiteProfile):
             if not qs or qs.lower() in '/forum':
                 yield {'loc': '/forum'}
 
-    @http.route(['/forum'], type='http', auth="public", website=True, sitemap=sitemap_forum, readonly=True, list_as_website_content=_lt("Forum"))
+    @http.route(['/forum'], type='http', auth="public", website=True, sitemap=sitemap_forum, sitemap_group="forum", readonly=True, list_as_website_content=_lt("Forum"))
     def forum(self, **kwargs):
         domain = self.env.website.website_domain()
         forums = request.env['forum.forum'].search(domain)
@@ -116,7 +116,7 @@ class WebsiteForum(WebsiteProfile):
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
-                 ], type='http', auth="public", website=True, sitemap=sitemap_forum_all, readonly=True)
+                 ], type='http', auth="public", website=True, sitemap=sitemap_forum_all, sitemap_group="forum", readonly=True)
     def questions(
         self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='',
         create_uid=False, include_answers=False, **post,
@@ -320,7 +320,7 @@ class WebsiteForum(WebsiteProfile):
         return values
 
     @http.route('/forum/<model("forum.forum"):forum>/<model("forum.post"):question>',
-                type='http', auth="public", website=True, sitemap=sitemap_forum_post)
+                type='http', auth="public", website=True, sitemap=sitemap_forum_post, sitemap_group="forum")
     def question(self, forum, question, **post):
         if not forum.active:
             return request.render("website_forum.header", {'forum': forum})
