@@ -243,6 +243,10 @@ export class EmojiPicker extends Component {
             () => [this.state.categoryId, this.state.searchTerm]
         );
         useEffect(
+            () => this.adaptNavbar(),
+            () => [this.hasRecentCategory]
+        );
+        useEffect(
             (el) => {
                 const gridEl = this.gridRef?.el;
                 const activeEl = gridEl?.querySelector(".o-Emoji.o-active");
@@ -349,6 +353,12 @@ export class EmojiPicker extends Component {
 
     get itemsNumber() {
         return this.recentEmojis.length + this.getEmojis().length;
+    }
+
+    get hasRecentCategory() {
+        return Object.keys(this.state.recent).some((codepoints) =>
+            Boolean(this.emojiByCodepoints?.[codepoints])
+        );
     }
 
     get recentEmojis() {
@@ -486,7 +496,7 @@ export class EmojiPicker extends Component {
 
     getAllCategories() {
         const res = [...this.categories];
-        if (this.recentEmojis.length > 0) {
+        if (this.hasRecentCategory) {
             res.unshift(this.recentCategory);
         }
         return res;
