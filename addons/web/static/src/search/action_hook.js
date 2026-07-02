@@ -97,6 +97,9 @@ export function useSetupAction(params = {}) {
         const scrolling = state && state[scrollSymbol];
         if (scrolling) {
             const rootEl = getRootEl();
+            if (!rootEl) {
+                return;
+            }
             if (ui.isSmall) {
                 rootEl.scrollTop = (scrolling.root && scrolling.root.top) || 0;
                 rootEl.scrollLeft = (scrolling.root && scrolling.root.left) || 0;
@@ -119,6 +122,9 @@ export function useSetupAction(params = {}) {
             }
             if (rootRef) {
                 const rootEl = getRootEl();
+                if (!rootEl) {
+                    return state;
+                }
                 if (ui.isSmall) {
                     state[scrollSymbol] = {
                         root: { left: rootEl.scrollLeft, top: rootEl.scrollTop },
