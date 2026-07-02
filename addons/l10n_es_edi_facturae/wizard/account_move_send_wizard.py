@@ -9,8 +9,9 @@ class AccountMoveSendWizard(models.TransientModel):
         for wizard in self:
             checkboxes = wizard.extra_edi_checkboxes or {}
             if 'es_facturae' in checkboxes:
-                # Set 'checked' status for the 'es_facturae' checkbox
-                checkboxes['es_facturae']['checked'] = wizard.move_id._l10n_es_edi_facturae_get_default_enable()
+                # Set 'checked' status for the 'es_facturae' checkbox if partner uses facturae
+                checkboxes['es_facturae']['checked'] = wizard.move_id.commercial_partner_id.invoice_edi_format == 'es_facturae'
+                wizard.extra_edi_checkboxes = checkboxes
 
     def action_send_and_print(self, allow_fallback_pdf=False):
         checkboxes = self.extra_edi_checkboxes or {}
