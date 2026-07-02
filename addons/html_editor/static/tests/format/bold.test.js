@@ -16,6 +16,8 @@ import {
 } from "../_helpers/user_actions";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
+import { Plugin } from "@html_editor/plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -207,7 +209,7 @@ test("should not format non-editable text (bold)", async () => {
     await testEditor({
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: bold,
-        contentAfter: `<p><strong>[a</strong></p><p contenteditable="false">b</p><p><strong>c]</strong></p>`,
+        contentAfter: `<p><strong>[a</strong></p><p contenteditable="false" style="font-weight: bolder;">b</p><p><strong>c]</strong></p>`,
     });
 });
 
@@ -509,7 +511,7 @@ test("Should properly apply bold format if closest element is bold but not close
         {
             styleContent: `
                 blockquote {
-                    font-weight: 300;   
+                    font-weight: 300;
                 }
             `,
         }
@@ -591,6 +593,52 @@ test("should not apply bold formatting for partial selection inside contentedita
         `<p data-selection-placeholder=""><br></p><p contenteditable="false">T[e]st</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
     );
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
+});
+
+test("should apply bold formatting to a formattable contenteditable false node", async () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            is_formattable_node_predicates: (node) => {
+                if (node.matches?.(".o-formattable")) {
+                    return true;
+                }
+            },
+        };
+    }
+    const { editor, el } = await setupEditor(
+        `<p><span class="o-formattable" contenteditable="false">[Test]</span></p>`,
+        { config: { Plugins: [...MAIN_PLUGINS, TestPlugin] } }
+    );
+
+    bold(editor);
+
+    expect(getContent(el)).toBe(
+        `<p>[<span class="o-formattable" contenteditable="false" style="font-weight: bolder;">Test</span>]</p>`
+    );
+});
+
+test("should apply bold formatting to a partially selected formattable contenteditable false node", async () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            is_formattable_node_predicates: (node) => {
+                if (node.matches?.(".o-formattable")) {
+                    return true;
+                }
+            },
+        };
+    }
+    const { editor, el } = await setupEditor(
+        `<p><span class="o-formattable" contenteditable="false">T[e]st</span></p>`,
+        { config: { Plugins: [...MAIN_PLUGINS, TestPlugin] } }
+    );
+
+    bold(editor);
+
+    expect(getContent(el)).toBe(
+        `<p>[<span class="o-formattable" contenteditable="false" style="font-weight: bolder;">Test</span>]</p>`
+    );
 });
 
 test("should toggle bold around non editable", async () => {

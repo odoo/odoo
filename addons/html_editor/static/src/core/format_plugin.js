@@ -44,6 +44,7 @@ const NOT_A_NUMBER = /[^\d]/g;
  * @typedef {Object} FormatShared
  * @property { FormatPlugin['canFormatContent'] } canFormatContent
  * @property { FormatPlugin['getOrCreateZws'] } getOrCreateZws
+ * @property { FormatPlugin['isNodeFormattable'] } isNodeFormattable
  * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
  * @property { FormatPlugin['removeSelectionFormats'] } removeSelectionFormats
  * @property { FormatPlugin['requestFormat'] } requestFormat
@@ -93,6 +94,7 @@ export class FormatPlugin extends Plugin {
         "areSimilarElements",
         "canFormatContent",
         "getOrCreateZws",
+        "isNodeFormattable",
         "mergeAdjacentInlines",
         "removeSelectionFormats",
         "requestFormat",
@@ -375,26 +377,65 @@ export class FormatPlugin extends Plugin {
      */
     getFormattableNodes(targetedNodes = this.dependencies.selection.getTargetedNodes()) {
         const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
-        return targetedNodes.filter((node) => {
-            const predicatesResult = this.checkPredicates("is_formattable_node_predicates", node);
-            if (predicatesResult !== undefined) {
-                return predicatesResult;
-            }
+        const formattableNodes = new Set();
+        for (const node of targetedNodes) {
             if (systemNodesSelector && closestElement(node, systemNodesSelector)) {
-                return false;
+                continue;
+            }
+            const formattableNonEditable = this.getFormattableNonEditable(node);
+            if (formattableNonEditable) {
+                formattableNodes.add(formattableNonEditable);
+                continue;
+            }
+            if (!this.isNodeFormattable(node)) {
+                continue;
             }
             if (!this.dependencies.selection.isNodeEditable(node)) {
-                return false;
+                formattableNodes.add(node);
+                continue;
             }
             if (isTextNode(node)) {
-                return isVisibleTextNode(node) || isZWS(node);
+                if (isVisibleTextNode(node) || isZWS(node)) {
+                    formattableNodes.add(node);
+                }
+                continue;
             }
             if (node.nodeName === "BR") {
                 const prevLeaf = previousLeaf(node, closestBlock(node));
-                return !prevLeaf || prevLeaf.nodeName === "BR";
+                if (!prevLeaf || prevLeaf.nodeName === "BR") {
+                    formattableNodes.add(node);
+                }
             }
-            return false;
-        });
+        }
+        return [...formattableNodes].filter(
+            (node) => ![...formattableNodes].some((other) => other !== node && other.contains(node))
+        );
+    }
+
+    /**
+     * Some nodes allow style changes while keeping their contents protected.
+     * Predicates can explicitly allow or deny formattability; editable nodes
+     * are formattable by default when no predicate applies.
+     */
+    isNodeFormattable(node) {
+        return (
+            this.checkPredicates("is_formattable_node_predicates", node) ??
+            this.dependencies.selection.isNodeEditable(node)
+        );
+    }
+
+    getFormattableNonEditable(node) {
+        let element = closestElement(node);
+        while (element && element !== this.editable) {
+            if (
+                !element.isContentEditable &&
+                this.isNodeFormattable(element) &&
+                this.dependencies.selection.areNodeContentsFullySelected(element)
+            ) {
+                return element;
+            }
+            element = element.parentElement;
+        }
     }
 
     /**
@@ -436,15 +477,13 @@ export class FormatPlugin extends Plugin {
     }
 
     hasAnyFormat(targetedNodes) {
-        const editableTargetedNodes = targetedNodes.filter(
-            this.dependencies.selection.isNodeEditable
-        );
+        const formattableTargetedNodes = this.getFormattableNodes(targetedNodes);
         for (const spec of this.formatSpecs) {
-            if (spec.removeStyle && this.hasFormat(spec.id, editableTargetedNodes)) {
+            if (spec.removeStyle && this.hasFormat(spec.id, formattableTargetedNodes)) {
                 return true;
             }
         }
-        return editableTargetedNodes.some(
+        return formattableTargetedNodes.some(
             (node) => this.checkPredicates("has_format_predicates", node) ?? false
         );
     }
@@ -932,7 +971,12 @@ export class FormatPlugin extends Plugin {
         }
         const { anchorNode, focusNode } = selection;
         if (anchorNode === focusNode && !isContentEditable(anchorNode)) {
-            return false;
+            return Boolean(
+                closestElement(
+                    anchorNode,
+                    (element) => !element.isContentEditable && this.isNodeFormattable(element)
+                )
+            );
         }
         return isHtmlContentSupported(selection);
     }

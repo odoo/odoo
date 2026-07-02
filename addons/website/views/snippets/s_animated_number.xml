@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_animated_number" name="Animated Number">
+    <div class="s_animated_number o_animable d-flex" data-name="Animated Number"
+         data-start-value="0" data-end-value="1000" style="animation-duration: 1s">
+        <div class="s_animated_number_content d-flex flex-column mx-auto">
+            <div class="s_animated_number_label oe_unremovable" style="text-align: center;">
+                <span class="h2-fs">Clients</span>
+            </div>
+            <!-- Keep the value and its affixes in the same inline context for text formatting. -->
+            <div class="s_animated_number_display" style="text-align: center;"><span class="s_animated_number_value h2-fs oe_unremovable o_not_editable" style="font-weight: bolder;" contenteditable="false">0</span></div>
+        </div>
+    </div>
+</template>
+
+</odoo>

@@ -200,10 +200,10 @@ export class ColorPlugin extends Plugin {
                 let max = 40;
                 const hasAnySelectedNodeColor = (mode) => {
                     const nodes = new Set();
-                    const editableTargetedNodes = this.dependencies.selection
+                    const formattableTargetedNodes = this.dependencies.selection
                         .getTargetedNodes()
-                        .filter(this.dependencies.selection.isNodeEditable);
-                    for (const node of editableTargetedNodes) {
+                        .filter((node) => this.dependencies.format.isNodeFormattable(node));
+                    for (const node of formattableTargetedNodes) {
                         for (const getColorNode of colorNodeProviders) {
                             const colorNode = getColorNode(node);
                             if (colorNode) {
@@ -283,7 +283,7 @@ export class ColorPlugin extends Plugin {
                 .getTargetedNodes()
                 .filter(
                     (node) =>
-                        this.dependencies.selection.isNodeEditable(node) && node.nodeName !== "T"
+                        this.dependencies.format.isNodeFormattable(node) && node.nodeName !== "T"
                 );
             if (isEmptyBlock(selection.endContainer)) {
                 targetedNodes.push(selection.endContainer, ...descendants(selection.endContainer));
@@ -304,7 +304,9 @@ export class ColorPlugin extends Plugin {
                 (node) =>
                     !coloredNodes.has(node) &&
                     !(systemNodesSelector && closestElement(node, systemNodesSelector)) &&
-                    (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
+                    (selection.isCollapsed ||
+                        this.dependencies.selection.areNodeContentsFullySelected(node)) &&
+                    this.dependencies.format.isNodeFormattable(node)
             )
             .map((node) => findTopMostDecoration(node));
 
