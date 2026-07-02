@@ -25,9 +25,15 @@
                     <group>
                         <group>
                             <field name="parent_id"/>
-                            <field name="default_applicability"
-                                   invisible="parent_id" required="True"/>
-                        <field name="color" widget="color_picker"/>
+                            <label for="default_applicability" invisible="parent_id"/>
+                            <div class="o_row" invisible="parent_id">
+                                <field name="default_applicability" required="True" nolabel="1"/>
+                                <span class="fa fa-lg fa-building-o ms-2"
+                                   title="This setting is company-specific."
+                                   groups="base.group_multi_company"
+                                   aria-label="Company-specific setting"/>
+                            </div>
+                            <field name="color" widget="color_picker"/>
                         </group>
                         <group>
                         </group>
