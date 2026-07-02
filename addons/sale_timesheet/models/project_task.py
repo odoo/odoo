@@ -40,7 +40,8 @@ class ProjectTask(models.Model):
         #      in the task From View.
         timesheets = self.timesheet_ids.filtered(lambda t: t.task_id.sale_line_id in (t.so_line, t._origin.so_line) and t.so_line.remaining_hours_available)
 
-        mapped_remaining_hours = {task._origin.id: task.sale_line_id and task.sale_line_id.remaining_hours or 0.0 for task in self}
+        mapped_remaining_hours = {task._origin.id: task.sale_line_id and task.sale_line_id.state == 'sale' and
+                                                   task.sale_line_id.remaining_hours or 0.0 for task in self}
         uom_hour = self.env.ref('uom.product_uom_hour')
         for timesheet in timesheets:
             delta = 0
@@ -53,6 +54,11 @@ class ProjectTask(models.Model):
 
         for task in self:
             task.remaining_hours_so = mapped_remaining_hours[task._origin.id]
+
+    @api.depends('timesheet_ids')
+    def _compute_portal_timesheet_ids(self):
+        for task in self:
+            task.portal_timesheet_ids = task.timesheet_ids.filtered(lambda ts: not ts.so_line or ts.so_line.state == 'sale')
 
     @api.model
     def _search_remaining_hours_so(self, operator, value):
@@ -92,6 +98,16 @@ class ProjectTask(models.Model):
         for task in self:
             task.has_multi_sol = task.timesheet_ids and task.timesheet_ids.so_line != task.sale_line_id
 
+    def _get_domain_effective_hours(self):
+        return Domain.AND([
+            super()._get_domain_effective_hours(),
+            [
+                '|',
+                    ('so_line', '=', False),
+                    ('so_line.state', '=', 'sale')
+            ],
+        ])
+
     def _get_last_sol_of_customer_domain(self):
         # Get the domain of the last SOL made for the customer in the current task where we need to compute
         self.ensure_one()
@@ -104,6 +120,7 @@ class ProjectTask(models.Model):
                 ('company_id', '=?', self.company_id.id),
                 ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id),
                 ('remaining_hours', '>', 0),
+                ('state', '=', 'sale'),
             ],
         ])
         if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.partner_id.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:

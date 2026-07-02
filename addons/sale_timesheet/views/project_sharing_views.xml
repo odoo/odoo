@@ -7,10 +7,10 @@
         <field name="priority">600</field>
         <field name="inherit_id" ref="hr_timesheet.project_sharing_inherit_project_task_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='timesheet_ids']/list" position="attributes">
+            <xpath expr="//field[@name='portal_timesheet_ids']/list" position="attributes">
                 <attribute name="decoration-muted">reinvoice_move_id != False</attribute>
             </xpath>
-            <xpath expr="//field[@name='timesheet_ids']/list/field[@name='unit_amount']" position="before">
+            <xpath expr="//field[@name='portal_timesheet_ids']/list/field[@name='unit_amount']" position="before">
                 <field name="reinvoice_move_id" column_invisible="True"/>
                 <field name="so_line" widget="so_line_field"
                     column_invisible="not parent.allow_billable"
@@ -27,7 +27,7 @@
             </xpath>
             <xpath expr="//div[@id='remaining_hours_div']" position="after">
                 <div class="row align-items-center mb-2" 
-                    invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available">
+                    invisible="not allow_billable or not show_sale_order_info or not remaining_hours_available">
                     <field name="allow_billable" invisible="1" />
                     <field name="remaining_hours_available" invisible="1"/>
                     <field name="sale_order_id" invisible="1"/>

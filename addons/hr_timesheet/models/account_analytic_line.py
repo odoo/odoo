@@ -80,6 +80,8 @@ class AccountAnalyticLine(models.Model):
     color = fields.Integer(related="project_id.color")
     sequence = fields.Integer(string='Sequence', export_string_translation=False, default=10)
 
+    display_timesheet = fields.Boolean(compute='_compute_display_timesheet', compute_sudo=True)
+
     def _search_message_partner_ids(self, operator, value):
         followed_ids_by_model = dict(self.env['mail.followers']._read_group([
             ('partner_id', operator, value),
@@ -108,6 +110,9 @@ class AccountAnalyticLine(models.Model):
                 analytic_line.display_name = f"{analytic_line.project_id.sudo().display_name} - {analytic_line.task_id.sudo().display_name}"
             else:
                 analytic_line.display_name = analytic_line.project_id.display_name
+
+    def _compute_display_timesheet(self):
+        self.display_timesheet = True
 
     def _is_readonly(self):
         self.ensure_one()

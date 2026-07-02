@@ -1199,7 +1199,7 @@ class TestSaleProject(TestSaleProjectCommon):
         project = _create_project_on_fly()
         self.assertListEqual(
             [project.partner_id, project.reinvoiced_sale_order_id.id, project.sale_line_id.id],
-            [sale_order.partner_id, False, False],
+            [sale_order.partner_id, sale_order.id, sale_order.order_line[0].id],
         )
 
         sale_order.action_confirm()

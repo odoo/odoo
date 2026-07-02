@@ -98,6 +98,11 @@ class AccountAnalyticLine(models.Model):
     def _compute_project_id(self):
         super(AccountAnalyticLine, self.filtered(lambda t: t._is_not_billed()))._compute_project_id()
 
+    @api.depends('so_line')
+    def _compute_display_timesheet(self):
+        for timesheet in self:
+            timesheet.display_timesheet = not timesheet.so_line or timesheet.so_line.state == 'sale'
+
     def _is_readonly(self):
         return super()._is_readonly() or not self._is_not_billed()
 
@@ -154,9 +159,11 @@ class AccountAnalyticLine(models.Model):
         """ Only the timesheets with a product invoiced on delivered quantity are concerned.
             since in ordered quantity, the timesheet quantity is not invoiced,
             thus there is no meaning of showing invoice with ordered quantity.
+            The timesheet linked to a draft Sol are also excluded.
         """
         domain = super()._timesheet_get_portal_domain()
-        return Domain.AND([domain, [('billable_type', 'in', ['04_billable_time', '09_non_billable', '02_billable_fixed', '08_billable_manual', '06_billable_milestones'])]])
+        return Domain.AND([domain, [('billable_type', 'in', ['04_billable_time', '09_non_billable', '02_billable_fixed', '08_billable_manual', '06_billable_milestones']),
+                                    '|', ('so_line', '=', False), ('so_line.state', '=', 'sale')]])
 
     @api.model
     def _timesheet_get_sale_domain(self, order_lines_ids, invoice_ids):

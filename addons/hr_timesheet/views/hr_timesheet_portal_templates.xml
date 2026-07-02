@@ -103,13 +103,15 @@
               </tr>
             </thead>
             <tr t-foreach="timesheets" t-as="timesheet" valign="middle">
-                <td><t t-out="timesheet.date" t-options='{"widget": "date"}'/></td>
-                <td t-attf-title="#{timesheet.employee_id.name}"><t t-out="timesheet.employee_id.name"/></td>
-                <td><t t-out="timesheet.name"/></td>
-                <td class="text-end">
-                    <span t-if="is_uom_day" t-out="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
-                    <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
-                </td>
+                <t t-if="timesheet.display_timesheet">
+                    <td><t t-out="timesheet.date" t-options='{"widget": "date"}'/></td>
+                    <td t-attf-title="#{timesheet.employee_id.name}"><t t-out="timesheet.employee_id.name"/></td>
+                    <td><t t-out="timesheet.name"/></td>
+                    <td class="text-end">
+                        <span t-if="is_uom_day" t-out="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
+                        <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
+                    </td>
+                </t>
             </tr>
         </table>
     </template>
