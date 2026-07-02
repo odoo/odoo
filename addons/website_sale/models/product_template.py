@@ -81,7 +81,7 @@ class ProductTemplate(models.Model):
     )
 
     alternative_product_ids = fields.Many2many(
-        string="Alternative Products",
+        string="Similar Products",
         help="Suggest alternatives to your customer (upsell strategy)."
         " Those products show up on the product page.",
         comodel_name="product.template",
@@ -91,7 +91,7 @@ class ProductTemplate(models.Model):
         check_company=True,
     )
     accessory_product_ids = fields.Many2many(
-        string="Accessory Products",
+        string="Accessories",
         help="Accessories show up when the customer reviews the cart before payment"
         " (cross-sell strategy).",
         comodel_name="product.product",
@@ -109,14 +109,14 @@ class ProductTemplate(models.Model):
     )
     # Whether a cron should automatically fill accessory products.
     suggest_accessory_products = fields.Boolean(
-        string="Suggest Accessory Products",
+        string="Suggest Accessories",
         compute="_compute_suggest_accessory_products",
         readonly=False,
         store=True,
     )
     # Whether a cron should automatically fill alternative products.
     suggest_alternative_products = fields.Boolean(
-        string="Suggest Alternative Products",
+        string="Suggest Similar Products",
         compute="_compute_suggest_alternative_products",
         readonly=False,
         store=True,

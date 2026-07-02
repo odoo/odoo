@@ -1,5 +1,4 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { useDomState } from "@html_builder/core/utils";
 import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_hook";
 import { onWillStart, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -22,12 +21,6 @@ export class DynamicSnippetProductsOption extends BaseOptionComponent {
         this.state = proxy({
             categories: [],
         });
-        this.domState = useDomState((el) => ({
-            isAlternative: el.classList.contains("o_wsale_alternative_products"),
-        }));
-        this.dynamicOptionParams.showFilterOption = () =>
-            Object.values(this.dynamicOptionParams.dynamicFilters).length > 1 &&
-            !this.domState.isAlternative;
         onWillStart(async () => {
             this.state.categories.push(...(await fetchCategories()));
         });
