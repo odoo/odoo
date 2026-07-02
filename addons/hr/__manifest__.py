@@ -44,7 +44,6 @@
         'views/res_partner_bank_views.xml',
         'views/discuss_channel_views.xml',
         'views/res_users.xml',
-        'views/hr_invitation_link_views.xml',
         'views/auth_signup_templates.xml',
         'views/hr_templates.xml',
         'views/resource_resource_views.xml',
@@ -69,10 +68,6 @@
             "hr/static/src/core/web/**/*",
             'hr/static/src/**/*',
             ('remove', 'hr/static/src/views/hr_employee_hierarchy/*'),
-            # employee_invite.js extends the employee kanban/list views, so it
-            # must load after them: drop it from the glob and re-add it last.
-            ('remove', 'hr/static/src/views/employee_invite.js'),
-            'hr/static/src/views/employee_invite.js',
         ],
         'web.assets_backend_lazy': [
             'hr/static/src/views/hr_employee_hierarchy/*',

@@ -18,28 +18,6 @@ class TestLiteUserCore(TransactionCase):
         super().setUpClass()
         cls.group_user_light = cls.env.ref('base.group_user')
 
-    def test_provision_no_email_synthetic_login(self):
-        emp = self.env['hr.employee'].create({'name': 'No Email'})
-        self.assertTrue(emp.user_id, "an active employee must be provisioned with a user")
-        self.assertTrue(emp.user_id.login.startswith('__emp_'),
-                        "a userless, emailless employee gets a synthetic login")
-        self.assertFalse(emp.user_id.share, "the provisioned user is an internal user")
-        self.assertIn(self.group_user_light, emp.user_id.all_group_ids,
-                      "a Light user is a an internal user")
-        self.assertEqual(emp.user_id.role, 'group_user',
-                         "with no extra access, the provisioned user is a Light user")
-
-    def test_provision_no_email_logins_are_unique(self):
-        """Several emailless employees each get a distinct synthetic login, even
-        in a non-default company (the login sequence must be company-global)."""
-        company = self.env['res.company'].create({'name': 'Other Co'})
-        emps = self.env['hr.employee'].with_company(company).create([
-            {'name': 'No Email A'}, {'name': 'No Email B'}])
-        logins = emps.user_id.mapped('login')
-        self.assertEqual(len(set(logins)), 2, "synthetic logins must be unique")
-        self.assertNotIn('__emp_False', logins,
-                         "the synthetic login sequence must resolve in any company")
-
     def test_provision_with_email(self):
         emp = self.env['hr.employee'].create({'name': 'Mailed', 'work_email': 'mailed@example.com'})
         self.assertEqual(emp.user_id.login, 'mailed@example.com')

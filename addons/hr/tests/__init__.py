@@ -2,7 +2,6 @@
 
 from . import test_attendances
 from . import test_departure
-from . import test_invitation_link
 from . import test_lite_user_core
 from . import test_calendar_sync
 from . import test_hr_employee

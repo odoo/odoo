@@ -509,17 +509,6 @@ class TestHrEmployee(TestHrCommon):
             employee_form.job_id = first_job
             self.assertEqual(employee_form.job_title, first_job.name)
 
-    def test_user_creation_from_employee_with_invalid_email(self):
-        # An unparseable work email no longer blocks creation: the employee still
-        # gets a self-service user, with a synthetic (non-email) login.
-        employee = self.env['hr.employee'].create({
-            'name': 'Test Employee',
-            'work_email': 'not-an-email',
-        })
-        self.assertTrue(employee.user_id)
-        self.assertTrue(employee.user_id.login.startswith('__emp_'))
-        self.assertEqual(employee.user_id.role, 'group_user')
-
     def test_user_creation_from_employee_emails(self):
         # A new email creates a lite user with that login.
         new_emp = self.env['hr.employee'].create({
@@ -549,7 +538,7 @@ class TestHrEmployee(TestHrCommon):
 
         # No email at all still yields a user with a synthetic login (no crash).
         no_email_emp = self.env['hr.employee'].create({'name': 'No Email'})
-        self.assertTrue(no_email_emp.user_id.login.startswith('__emp_'))
+        self.assertFalse(no_email_emp.user_id)
 
     def test_user_contact_phone_sync(self):
         partner = self.env['res.partner'].create({'name': 'Partner Test'})

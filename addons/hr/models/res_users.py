@@ -5,9 +5,8 @@ import ast
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError
 from odoo.fields import Domain
-from odoo.tools.mail import email_normalize_all
 from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -393,34 +392,3 @@ class ResUsers(models.Model):
         super()._store_im_status_fields(res)
         # sudo: res.users - internal users can access employee information for the IM status
         res.many("all_employee_ids", "_store_im_status_fields", sudo=True)
-
-    @api.model
-    def _signup_from_invitation(self, values, link_id):
-        link = self.env['hr.invitation.link'].sudo().browse(link_id).exists()
-        if not link:
-            raise UserError(_("This invitation link is no longer valid."))
-        ok, reason = link._is_valid()
-        if not ok:
-            raise UserError(reason)
-        login = values.get('login')
-        if not link._is_email_domain_allowed(login):
-            raise UserError(_("Registrations from this email address are not allowed for this invitation link."))
-        emails = email_normalize_all(login)
-        if self.sudo().with_context(active_test=False).search_count([
-                '|', '|', ('login', '=', login),
-                          ('login', 'in', emails),
-                          ('email_normalized', 'in', emails)]):
-            raise UserError(_("An account already exists for this email address. Please log in instead."))
-        # Reserve one use (row-locked, raises if the quota is now full) before
-        # creating anything, so concurrent signups cannot exceed max_uses.
-        link._consume()
-        # Creating the employee auto-provisions a brand-new Light self-service
-        # user (the email was just verified to belong to no existing account).
-        employee = self.env['hr.employee'].sudo().with_company(link.company_id).create({
-            'name': values.get('name') or login,
-            'work_email': login,
-            'company_id': link.company_id.id,
-        })
-        user = employee.user_id
-        user.write({'login': login, 'password': values.get('password')})
-        return login, values.get('password')

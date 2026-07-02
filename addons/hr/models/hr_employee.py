@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-import uuid
 from collections import defaultdict
 from datetime import UTC, date, datetime, time, timedelta
 from random import choice
@@ -112,7 +111,9 @@ class HrEmployee(models.Model):
         check_company=True,
         precompute=True,
         index='btree_not_null',
-        ondelete='restrict')
+        ondelete='restrict',
+        copy=False
+    )
     user_partner_id = fields.Many2one(related="user_id.partner_id", related_sudo=False, string="User's partner")
     share = fields.Boolean(related="user_id.share")
     phone = fields.Char(related="user_id.phone")
@@ -1223,10 +1224,7 @@ class HrEmployee(models.Model):
 
     def action_send_invitation(self):
         """Send (or resend) the self-service invitation e-mail to the user."""
-        self.ensure_one()
-        if not self.user_id:
-            raise UserError(self.env._("This employee has no user to invite."))
-        return self.user_id.action_reset_password()
+        raise NotImplementedError()
 
     def action_reset_password(self):
         """Send a password-reset e-mail to the linked user."""
@@ -1566,16 +1564,14 @@ class HrEmployee(models.Model):
             vals['tz'] = user.tz
         return vals
 
-    def _get_or_create_self_service_user(self, vals):
-        """Resolve or create the self-service ("lite") user for an employee.
+    def _get_or_create_light_user(self, vals):
+        """Resolve or create the light user for an employee.
 
         Called while building an employee's create values so the employee is
         born already linked to its user (keeping the active/user_id constraint
         satisfied without a mid-create flush). Reuses, in order, the resource's
         user, the work contact's user, or an existing user matching the work
-        email; otherwise creates a lite (non-billable) user. With no usable email
-        a unique, non-deliverable login is drawn from a sequence, so the invariant
-        is always satisfiable without inventing a fake email address.
+        email; otherwise creates a light (less-billable) user.
         """
         ResUsers = self.env['res.users'].sudo()
         resource = self.env['resource.resource'].browse(vals.get('resource_id')).exists()
@@ -1585,34 +1581,38 @@ class HrEmployee(models.Model):
         emails = tools.mail.email_normalize_all(
             work_contact.email or vals.get('work_email') or resource.email)
         login = emails[0] if emails else False
-        company_id = vals.get('company_id') or self.env.company.id
+        company_id = self.company_id or self.env.company.id
         # 1. reuse the work contact's user, or an existing user matching the work
         #    email (by login or email address) to avoid creating a duplicate user
         user = work_contact.user_ids[:1]
-        if not user and emails:
-            user = ResUsers.search(
-                ['|', ('login', 'in', emails), ('email_normalized', 'in', emails)], limit=1)
-        if user and not user.employee_ids.filtered(lambda e: e.company_id.id == company_id):
-            if user.share:
-                # Upgrade a portal user in place rather than archiving it
-                # (which would destroy their existing portal access): grant the
-                # internal-user group, which makes it a Light user.
-                user.write({'group_ids': [Command.link(self.env.ref('base.group_user').id)]})
+        # Try to search for an existing user.
+        if not user and login:
+            user = ResUsers.with_context(active_test=False).search(
+                ['|', ('login', '=', login), ('email_normalized', '=', login)], limit=1, order='active')
+        if user:
+            # If archived user or employee of the same company linked to that user...
+            if not user.active:
+                raise UserError(self.env._(f'An inactive user already exist with the following login: {login}. '
+                                           f'User Name: {user.name}.'))
+            existing_employee = user.employee_ids.filtered(lambda e: e.company_id.id == company_id)
+            if existing_employee:
+                raise UserError(self.env._(f'A user with the same login ({login}) already has an employee in this company. '
+                                           f'User Name: {user.name} / Employee Name: {existing_employee.name}'))
+            elif user.share:
+                raise UserError(self.env._(f'A portal user already exist with the following login: {login}. '
+                                           f'User Name: {user.name}. You should set another email address on the employee.'))
             return user
-        # 2. create a fresh Light user, falling back to a synthetic login. The
-        #    sequence is company-global; guard against it being unavailable so two
-        #    emailless employees can never collide on a '__emp_False' login.
         if not login:
-            sequence = self.env['ir.sequence'].sudo().next_by_code('hr.employee.user.login')
-            login = '__emp_%s' % (sequence or uuid.uuid4().hex)
+            # if not possible to create a user, skip creation. The employee form will have a warning.
+            return ResUsers
         # Reimplement default_groups just to test.
         groups = ResUsers._default_groups(group='user')
         return ResUsers.create({
-            'name': vals.get('name') or login,
+            'name': self.name,
             'login': login,
-            'email': emails[0] if emails else False,
-            'phone': vals.get('work_phone') or vals.get('mobile_phone') or work_contact.phone,
-            'partner_id': work_contact.id or False,
+            'email': login,
+            'phone': self.work_phone or self.mobile_phone or self.work_contact_id.phone,
+            'partner_id': self.work_contact_id.id or False,
             'company_id': company_id,
             'company_ids': [Command.set([company_id])],
             'group_ids': [Command.set(groups.ids)],
@@ -1714,11 +1714,9 @@ class HrEmployee(models.Model):
                 vals['name'] = vals.get('name', user.name)
                 self._remove_work_contact_id(user, vals.get('company_id'))
             elif (vals.get('active', True)
-                  and vals.get('provision_user', True)
                   and not self.env.context.get('salary_simulation')):
-                # An active employee must be backed by a user: provision a
-                # self-service (lite) one now so it is set at creation time.
-                user = self._get_or_create_self_service_user(vals)
+                # An active employee must have a light user.
+                user = self._get_or_create_light_user(vals)
                 vals['user_id'] = user.id
                 if not vals.get('work_contact_id'):
                     vals['work_contact_id'] = user.partner_id.id
@@ -1738,6 +1736,7 @@ class HrEmployee(models.Model):
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
         if self.env.context.get('salary_simulation'):
             return employees
+        # TODO DBE: Or create user here? so we can benefit from the created work_contact.
         for employee_sudo in employees.sudo():
             # creating 'svg/xml' attachments requires specific rights
             if not employee_sudo.image_1920 and self.env['ir.ui.view'].sudo(False).has_access('write'):
