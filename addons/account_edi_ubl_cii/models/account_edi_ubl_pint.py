@@ -108,7 +108,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         super()._ubl_add_buyer_reference_node(vals)
 
         customer = vals['customer']
-        if customer_ref := customer.commercial_partner_id.ref:
+        if customer_ref := customer.ref or customer.commercial_partner_id.ref:
             vals['document_node']['cbc:BuyerReference']['_text'] = customer_ref
 
     def _ubl_add_billing_reference_nodes(self, vals):
