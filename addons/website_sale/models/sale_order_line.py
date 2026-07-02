@@ -165,6 +165,26 @@ class SaleOrderLine(models.Model):
         donation_lines.discount = 0.0
         super(SaleOrderLine, self - donation_lines)._compute_discount()
 
+    def _get_minimum_line_quantity(self):
+        """Return the lowest quantity this line can be set to without breaking the minimum
+        quantity required to purchase the product, considering the other lines of the same
+        product in the cart.
+        """
+        self.ensure_one()
+        return self.order_id._get_remaining_minimum_qty(
+            self.product_id, exclude_line=self, uom=self.product_uom_id
+        )
+
+    def _get_minimum_qty_reached_message(self):
+        """Return the message to display when the minimum quantity required to purchase the product
+        is not reached.
+        """
+        self.ensure_one()
+        return self.env._(
+            "The minimum quantity to purchase for this product is %(min_qty)s.",
+            min_qty=self.product_id.minimum_quantity,
+        )
+
     def _get_max_line_qty(self):
         max_quantity = self._get_max_available_qty()
         return self.product_uom_qty + max_quantity if (max_quantity is not None) else None
@@ -196,6 +216,16 @@ class SaleOrderLine(models.Model):
             available=available_quantity,
         )
 
+    def _get_shop_warning_minimum_qty(self, remaining_min_qty):
+        self.ensure_one()
+        return self.env._(
+            "%(product_name)s requires a minimum of %(min_qty)g; please add %(missing_qty)g more"
+            " to your cart.",
+            product_name=self.product_id.display_name,
+            min_qty=self.product_id.minimum_quantity,
+            missing_qty=remaining_min_qty,
+        )
+
     def _check_availability(self):
         """Check there is sufficient stock to fulfill the cart quantity for the product in the
         current line.
@@ -211,6 +241,20 @@ class SaleOrderLine(models.Model):
             if cart_qty > avl_qty:
                 self._add_warning_alert(self._get_shop_warning_stock(cart_qty, max(avl_qty, 0)))
                 return False
+        return True
+
+    def _check_minimum_qty(self):
+        """Check that the line's quantity meets the minimum quantity required to purchase the
+        product in the current line.
+
+        :return: True if the quantity is valid, False otherwise.
+        :rtype: bool
+        """
+        self.ensure_one()
+        remaining_min_qty = self.order_id._get_remaining_minimum_qty(self.product_id)
+        if remaining_min_qty > 0:
+            self._add_warning_alert(self._get_shop_warning_minimum_qty(remaining_min_qty))
+            return False
         return True
 
     def _show_line_in_cart(self):
