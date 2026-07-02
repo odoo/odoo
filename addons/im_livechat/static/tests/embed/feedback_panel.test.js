@@ -5,7 +5,7 @@ import {
     loadDefaultEmbedConfig,
     postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { RATING } from "@im_livechat/embed/common/livechat_service";
+import { RATING } from "@im_livechat/core/common/feedback_panel";
 import {
     click,
     contains,

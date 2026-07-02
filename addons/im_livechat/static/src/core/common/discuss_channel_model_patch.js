@@ -51,6 +51,8 @@ const discussChannelPatch = {
         /** @type {"in_progress"|"need_help"|undefined} */
         this.livechat_status = undefined;
         this.livechat_end_dt = fields.Datetime();
+        /** @type {"1"|"3"|"5"|false|undefined} */
+        this.livechat_rating = undefined;
         this.livechat_operator_id = fields.One("res.partner");
         /** @type {string|undefined} */
         this.livechat_outcome = undefined;
@@ -76,6 +78,17 @@ const discussChannelPatch = {
         });
         /** @type {import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined} */
         this.chatbotTriggerFailedError = undefined;
+        this.onChange(
+            () => [this.hasActiveChatbot],
+            function onChangeHasActiveChatbot(hasActiveChatbot) {
+                if (!hasActiveChatbot) {
+                    return;
+                }
+                this.isLoadedPromise.then(() => this.channel.chatbot.start());
+                return () => this.isLoadedPromise.then(() => this.channel?.chatbot?.stop());
+            },
+            { immediate: true }
+        );
     },
     get allowDescriptionTypes() {
         return [...super.allowDescriptionTypes, "livechat"];
@@ -88,6 +101,29 @@ const discussChannelPatch = {
     },
     get allowedToLeaveChannelTypes() {
         return [...super.allowedToLeaveChannelTypes, "livechat"];
+    },
+    get avatarUrl() {
+        if (this.channel_type === "livechat" && this.selfMemberType === "visitor") {
+            let bestScore = -1;
+            let bestMemberHistory;
+            // Agents are preferred over bots, current members over former members, and higher IDs over lower IDs
+            for (const memberHistory of [...this.livechat_channel_member_history_ids].sort(
+                (a, b) => b.id - a.id
+            )) {
+                if (memberHistory.livechat_member_type === "visitor") {
+                    continue;
+                }
+                const score =
+                    (memberHistory.livechat_member_type === "agent" ? 4 : 0) +
+                    (memberHistory.member_id ? 2 : 0);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMemberHistory = memberHistory;
+                }
+            }
+            return bestMemberHistory?.partner_id?.avatarUrl || super.avatarUrl;
+        }
+        return super.avatarUrl;
     },
     /** @override */
     _computeCanHide() {
@@ -102,12 +138,9 @@ const discussChannelPatch = {
         if (this.channel_type !== "livechat") {
             return super.computedDisplayName;
         }
-        const selfMemberType = this.isTransient
-            ? "visitor"
-            : this.self_member_id?.livechat_member_type;
         let memberNames = this.correspondents
             .filter((m) => {
-                if (selfMemberType === "visitor") {
+                if (this.selfMemberType === "visitor") {
                     return m.livechat_member_type === "agent";
                 }
                 return m.livechat_member_type === "visitor";
@@ -115,7 +148,7 @@ const discussChannelPatch = {
             .map((m) => m.name);
         if (!memberNames.length) {
             let histories = this.livechat_customer_history_ids;
-            if (selfMemberType === "visitor") {
+            if (this.selfMemberType === "visitor") {
                 histories = this.livechat_agent_history_ids.length
                     ? this.livechat_agent_history_ids
                     : this.livechat_bot_history_ids;
@@ -128,11 +161,24 @@ const discussChannelPatch = {
             ? formatList(memberNames, { style: "standard-narrow" })
             : super.computedDisplayName;
     },
+    get hasActiveChatbot() {
+        return Boolean(
+            this.selfMemberType === "visitor" &&
+            this.chatbot &&
+            !this.chatbot.completed &&
+            !this.livechat_end_dt
+        );
+    },
     get isHideUntilNewMessageSupported() {
         if (this.livechat_end_dt) {
             return false;
         }
         return super.isHideUntilNewMessageSupported;
+    },
+    get isLastCommentFromVisitor() {
+        return this.newestPersistentCommentOfAllMessages?.author?.eq(
+            this.livechatVisitorMember?.persona
+        );
     },
     get livechatShouldAskLeaveConfirmation() {
         if (
@@ -146,7 +192,7 @@ const discussChannelPatch = {
         const hasOtherAgent = this.channel_member_ids.some(
             (m) => m.livechat_member_type === "agent" && m.notEq(this.self_member_id)
         );
-        return this.self_member_id.livechat_member_type === "visitor" || !hasOtherAgent;
+        return this.selfMemberType === "visitor" || !hasOtherAgent;
     },
     get typesAllowingCalls() {
         return [...super.typesAllowingCalls, "livechat"];
@@ -160,6 +206,9 @@ const discussChannelPatch = {
     get memberListTypes() {
         return [...super.memberListTypes, "livechat"];
     },
+    get selfMemberType() {
+        return this.isTransient ? "visitor" : this.self_member_id?.livechat_member_type;
+    },
     get showCorrespondentCountry() {
         if (this.channel_type === "livechat") {
             return (
@@ -170,7 +219,7 @@ const discussChannelPatch = {
         return super.showCorrespondentCountry;
     },
     get showImStatus() {
-        if (this.self_member_id?.livechat_member_type === "visitor") {
+        if (this.selfMemberType === "visitor") {
             return false;
         }
         return (this.channel_type === "livechat" && this.correspondent) || super.showImStatus;
@@ -179,10 +228,17 @@ const discussChannelPatch = {
         return this.channel_type === "livechat" || super.allow_invite_by_email;
     },
     get composerHidden() {
-        if (this.channel?.channel_type === "livechat") {
-            return !!this.livechat_end_dt;
+        if (this.channel_type !== "livechat") {
+            return super.composerHidden;
         }
-        return super.composerHidden;
+        if (this.selfMemberType === "visitor") {
+            return (
+                super.composerHidden ||
+                this.livechat_end_dt ||
+                (this.chatbot?.completed && !this.livechat_agent_history_ids.length)
+            );
+        }
+        return !!this.livechat_end_dt;
     },
 
     get composerHiddenText() {

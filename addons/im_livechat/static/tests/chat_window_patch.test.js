@@ -1,6 +1,8 @@
+import { RATING } from "@im_livechat/core/common/feedback_panel";
 import {
     click,
     contains,
+    insertText,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -13,9 +15,10 @@ import {
     actionPanel,
 } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { test, waitFor, waitForNone } from "@odoo/hoot";
+import { expect, test, waitFor, waitForNone } from "@odoo/hoot";
+import { waitUntil } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 import { defineLivechatModels } from "./livechat_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
@@ -330,4 +333,83 @@ test("Change livechat status from the actions menu of the chat window", async ()
         ".o-dropdown--menu button[name='livechat-status'] .o-mail-ActionList-actionLabel:text('In progress'):count(1)"
     );
     await waitForNone(actionPanel("Information"));
+});
+
+test("internal user as visitor has access only to visitor thread actions", async () => {
+    const pyEnv = await startServer();
+    const agentId = pyEnv["res.partner"].create({ name: "Agent" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [
+            Command.create({ partner_id: agentId, livechat_member_type: "agent" }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "visitor" }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        res_id: channelId,
+        author_id: agentId,
+        body: "How can I help you?",
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button", { count: 2 });
+    await contains(".o-mail-ChatWindow-header button[title='Fold']");
+    await contains(".o-mail-ChatWindow-header button[title*='Close Chat Window']");
+    await click(".o-mail-ChatWindow-moreActions");
+    await contains(".o-dropdown-item", { count: 2 });
+    await contains(".o-dropdown-item:text('Mute Conversation')");
+    await contains(".o-dropdown-item:text('Close Conversation')");
+});
+
+test("internal user as visitor can submit feedback and close a reopened chat without feedback", async () => {
+    const pyEnv = await startServer();
+    const agentId = pyEnv["res.partner"].create({ name: "Agent" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [
+            Command.create({ partner_id: agentId, livechat_member_type: "agent" }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "visitor" }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        res_id: channelId,
+        author_id: agentId,
+        body: "How can I help you?",
+    });
+    onRpcBefore((route, args) => {
+        if (route === "/im_livechat/visitor_leave_session") {
+            expect.step(route);
+        }
+        if (route === "/im_livechat/feedback") {
+            expect(args.rate).toBe(RATING.OK);
+            expect(args.reason).toBe("Good job!");
+            expect.step(route);
+        }
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-Message-content:text('How can I help you?')");
+    await click("[title*='Close Chat Window']");
+    await click(".o-livechat-CloseConfirmation-leave");
+    await contains("p:text('Did we correctly answer your question?')");
+    await expect.waitForSteps(["/im_livechat/visitor_leave_session"]);
+    await click(`img[alt="${RATING.OK}"]`);
+    await insertText("textarea[placeholder='Explain your note']", "Good job!");
+    await click("button:contains(Send):enabled");
+    await contains("p:text('Thank you for your feedback')");
+    await expect.waitForSteps(["/im_livechat/feedback"]);
+    const channel = getService("mail.store")["discuss.channel"].get(channelId);
+    await waitUntil(() => channel.livechat_rating === String(RATING.OK));
+    await click(".o-livechat-FeedbackPanel-close");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
+    await click(".o-mail-NotificationItem:has(:text('Agent'))");
+    await contains(".o-mail-ChatWindow");
+    await click("[title*='Close Chat Window']");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    expect.verifySteps([]);
 });

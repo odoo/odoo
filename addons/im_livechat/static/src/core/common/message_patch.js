@@ -12,6 +12,16 @@ patch(Message.prototype, {
         this.url = url;
     },
 
+    get showChatbotAnswers() {
+        const chatbotStep = this.props.message.chatbotStep;
+        const channel = this.props.message.channel_id;
+        return (
+            chatbotStep?.answer_ids.length > 0 &&
+            channel?.selfMemberType === "visitor" &&
+            !(chatbotStep.selectedAnswerEver || channel.chatbot?.completed)
+        );
+    },
+
     /**
      * @param {import("@im_livechat/core/common/chatbot_step_model").StepAnswer} answer
      */
