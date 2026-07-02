@@ -127,5 +127,9 @@ from . import phase11_capping
 from . import phase12_deal_start_date
 
 # Phase 14 v3 — Salesforce-style Report Builder (mv.report + RPC)
+# Phase 14 v4 — Report Types (multi-model reports with defined joins);
+# must load BEFORE phase14_reports because mv.report references
+# mv.report.type via Many2one.
+from . import phase14_report_types
 from . import phase14_reports
 from . import phase14_reports_rpc

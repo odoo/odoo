@@ -83,7 +83,11 @@
           </div>
           <group>
             <group>
-              <field name="model_id" options="{'no_create': True}"/>
+              <!-- v4: Report Type replaces the raw model picker.
+                   model_id is now a related field derived from
+                   report_type_id.base_model_id, shown read-only. -->
+              <field name="report_type_id" options="{'no_create': True}"/>
+              <field name="model_id" readonly="1" string="Base Model"/>
               <field name="owner_id" readonly="1"/>
             </group>
             <group>
@@ -128,8 +132,8 @@
     <field name="search_view_id" ref="view_mv_report_search"/>
     <field name="help" type="html">
       <p class="o_view_nocontent_smiling_face">Create your first saved report.</p>
-      <p>Pick any mv.* model, drag fields into Columns / Filters / Groups,
-         see a live 20-row preview, then Run for the full report.</p>
+      <p>Pick a Report Type, drag fields into Columns / Filters /
+         Groups, then Run.</p>
     </field>
   </record>
 

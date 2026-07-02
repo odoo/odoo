@@ -1,13 +1,19 @@
 /** @odoo-module **/
-/* Phase 14 v3 - Salesforce-style 4-panel Report Builder.
+/* Phase 14 v4 - Salesforce-style Report Builder over Report Types.
  *
  * Layout:
- *   [ Data Sources ] [ Available Fields ] [ Builder Canvas ] [ Live Preview ]
+ *   [ Data Sources ]  <- Report Types (not raw models any more)
+ *   [ Available Fields ]  <- grouped by node (Base + each Joined model)
+ *   [ Builder Canvas ]  <- Selected Columns / Filters / Group By / Sort
+ *   [ Live Preview ]
  *
- * The component talks to mv.report's RPC methods (see
- * models/phase14_reports_rpc.py) for everything. Drag-and-drop uses
- * the native HTML5 DnD API - we set the dragged field id in
- * dataTransfer and let drop handlers route it to the right list. */
+ * v4 key differences vs. v3:
+ *   - state.reportTypes replaces state.models.
+ *   - state.fieldNodes replaces state.fields; it's a list of node
+ *     descriptors each with its own fields[]. Preserves grouping and
+ *     path prefixes end-to-end.
+ *   - Every selection (column/filter/group/sort) stores an absolute
+ *     `path` string. The backend uses the path to walk/join relations. */
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -22,53 +28,53 @@ export class MvReportBuilder extends Component {
         this.action = useService("action");
         this.notification = useService("notification");
 
-        // Static-action route passes the id via context; ad-hoc Python
-        // return passes it via params. Accept either.
         const a = this.props.action || {};
         this.reportId = (a.params && a.params.report_id)
                      || (a.context && (a.context.report_id || a.context.active_id))
                      || null;
+
         this.state = useState({
             loaded: false,
             saving: false,
             previewLoading: false,
-            // Saved-report fields the planner is editing.
             report: {
                 id: this.reportId,
                 name: "",
                 description: "",
+                report_type_id: null,
+                report_type_name: "",
                 model_id: null,
-                model_name: "",
                 model_tech: "",
                 is_public: false,
                 columns: [], filters: [], groups: [], sorts: [],
             },
             // Sidebar
-            models: [],          // [{ id, name, tech, field_count }]
-            selectedModelId: null,
-            modelSearch: "",
-            fields: [],          // [{ id, name, label, ttype, relation }]
+            reportTypes: [],       // [{ id, name, description, base_model_tech, ... }]
+            reportTypeSearch: "",
+            selectedReportTypeId: null,
+            // Fields (grouped by node)
+            fieldNodes: [],        // [{ node_id, label, model_tech, path_prefix, fields: [...] }]
             fieldSearch: "",
-            // Preview state
+            // Preview
             preview: { columns: [], rows: [], total: 0, limit: 20, offset: 0 },
-            // Drag state - which field id is being dragged + from which zone
-            dragField: null,
-            dragSource: null,    // "fields" | "columns" | "filters" | "groups" | "sorts"
-            dragIdx: null,       // for reorder within a zone
+            // Drag state
+            dragField: null,       // in v4 this holds the full field dict {id, name, label, ttype, path, node_id}
+            dragSource: null,      // "fields" | "columns" | "filters" | "groups" | "sorts"
+            dragIdx: null,
         });
 
         onWillStart(async () => {
-            const [models, loaded] = await Promise.all([
-                this.orm.call("mv.report", "report_get_models", []),
+            const [types, loaded] = await Promise.all([
+                this.orm.call("mv.report", "report_type_get_all", []),
                 this.orm.call("mv.report", "report_load", [this.reportId]),
             ]);
-            this.state.models = models || [];
+            this.state.reportTypes = types || [];
             if (loaded) {
                 Object.assign(this.state.report, loaded);
-                this.state.selectedModelId = loaded.model_id;
+                this.state.selectedReportTypeId = loaded.report_type_id || null;
             }
-            if (this.state.selectedModelId) {
-                await this._loadFields(this.state.selectedModelId);
+            if (this.state.selectedReportTypeId) {
+                await this._loadFieldsForType(this.state.selectedReportTypeId);
             }
             this.state.loaded = true;
             await this._refreshPreview();
@@ -76,20 +82,18 @@ export class MvReportBuilder extends Component {
     }
 
     // ---- Data fetch -----------------------------------------------
-    async _loadFields(modelId) {
-        const fields = await this.orm.call(
-            "mv.report", "report_get_fields", [modelId],
+    async _loadFieldsForType(rtId) {
+        const data = await this.orm.call(
+            "mv.report", "report_type_get_fields", [rtId],
         );
-        this.state.fields = fields || [];
+        this.state.fieldNodes = (data && data.nodes) || [];
     }
 
     async _refreshPreview() {
         if (!this.reportId) return;
         this.state.previewLoading = true;
         try {
-            // Persist transient state first so the backend sees what
-            // the user has on screen (silent save).
-            await this._save(/*silent=*/true);
+            await this._save(true);
             const data = await this.orm.call(
                 "mv.report", "report_preview",
                 [this.reportId, this.state.preview.limit, this.state.preview.offset],
@@ -108,7 +112,7 @@ export class MvReportBuilder extends Component {
                 {
                     name: this.state.report.name,
                     description: this.state.report.description,
-                    model_id: this.state.report.model_id,
+                    report_type_id: this.state.report.report_type_id,
                     is_public: this.state.report.is_public,
                     columns: this.state.report.columns,
                     filters: this.state.report.filters,
@@ -137,14 +141,7 @@ export class MvReportBuilder extends Component {
         this.action.doAction(action);
     }
     async onClose() {
-        // 'ir.actions.act_window_close' only closes overlay dialogs.
-        // The Report Builder is a top-level client action, so use the
-        // browser history to step back one breadcrumb (which is the
-        // form view of mv.report the user came from). Fall back to
-        // the reports list if there's no history to pop.
-        try {
-            await this._save(/*silent=*/true);
-        } catch (e) { /* don't block close on a save failure */ }
+        try { await this._save(true); } catch (e) { /* don't block close */ }
         if (window.history.length > 1) {
             window.history.back();
         } else {
@@ -152,35 +149,45 @@ export class MvReportBuilder extends Component {
         }
     }
 
-    // ---- Model picker ----------------------------------------------
-    async selectModel(modelId) {
-        this.state.selectedModelId = modelId;
-        const m = this.state.models.find((m) => m.id === modelId);
-        this.state.report.model_id = modelId;
-        this.state.report.model_name = m ? m.name : "";
-        this.state.report.model_tech = m ? m.tech : "";
-        // Clear previous selections - they reference fields from the
-        // old model. Planner has to rebuild for the new source.
-        this.state.report.columns = [];
-        this.state.report.filters = [];
-        this.state.report.groups = [];
-        this.state.report.sorts = [];
-        await this._loadFields(modelId);
+    // ---- Report Type picker ---------------------------------------
+    async selectReportType(rtId) {
+        // v4 semantics: switching Report Type PRESERVES the current
+        // columns / filters / groups / sorts (they'll be re-evaluated
+        // against the new type's fields on the next preview). This is
+        // the whole point of Report Types - fields are keyed by
+        // absolute path, so they stay valid as long as the path still
+        // resolves in the new type.
+        this.state.selectedReportTypeId = rtId;
+        const rt = this.state.reportTypes.find((r) => r.id === rtId);
+        this.state.report.report_type_id = rtId;
+        this.state.report.report_type_name = rt ? rt.name : "";
+        this.state.report.model_id = rt ? rt.base_model_id : null;
+        this.state.report.model_tech = rt ? rt.base_model_tech : "";
+        await this._loadFieldsForType(rtId);
         await this._refreshPreview();
     }
-    get filteredModels() {
-        const q = (this.state.modelSearch || "").toLowerCase().trim();
-        if (!q) return this.state.models;
-        return this.state.models.filter(
-            (m) => m.name.toLowerCase().includes(q) || m.tech.toLowerCase().includes(q),
+    get filteredReportTypes() {
+        const q = (this.state.reportTypeSearch || "").toLowerCase().trim();
+        if (!q) return this.state.reportTypes;
+        return this.state.reportTypes.filter(
+            (r) => r.name.toLowerCase().includes(q)
+                || r.base_model_tech.toLowerCase().includes(q)
+                || (r.description || "").toLowerCase().includes(q),
         );
     }
-    get filteredFields() {
+    get filteredFieldNodes() {
         const q = (this.state.fieldSearch || "").toLowerCase().trim();
-        if (!q) return this.state.fields;
-        return this.state.fields.filter(
-            (f) => f.label.toLowerCase().includes(q) || f.name.toLowerCase().includes(q),
-        );
+        if (!q) return this.state.fieldNodes;
+        return this.state.fieldNodes
+            .map((node) => ({
+                ...node,
+                fields: node.fields.filter(
+                    (f) => f.label.toLowerCase().includes(q)
+                        || f.name.toLowerCase().includes(q)
+                        || f.path.toLowerCase().includes(q),
+                ),
+            }))
+            .filter((node) => node.fields.length > 0);
     }
 
     // ---- DnD: source = fields panel --------------------------------
@@ -191,14 +198,11 @@ export class MvReportBuilder extends Component {
         ev.dataTransfer.setData("text/plain", String(field.id));
     }
 
-    // ---- DnD: drop zones (columns, filters, groups, sorts) ---------
+    // ---- DnD: drop zones -------------------------------------------
     onDropColumn(ev) {
         ev.preventDefault();
         const f = this.state.dragField;
         if (!f) return;
-        // If reorder (drag from columns zone) and the drop landed in
-        // the zone background (not on a chip), move the dragged chip
-        // to the end. Drop-on-chip is handled by onColumnDropOnItem.
         if (this.state.dragSource === "columns") {
             const from = this.state.dragIdx;
             const cols = this.state.report.columns;
@@ -212,12 +216,17 @@ export class MvReportBuilder extends Component {
             }
             return;
         }
-        if (this.state.report.columns.some((c) => c.field_id === f.id)) return;
+        // Dedupe by full path (not just field_id, since the same
+        // terminal field can appear at different paths in a multi-
+        // node report type).
+        if (this.state.report.columns.some((c) => c.path === f.path)) return;
         this.state.report.columns.push({
             field_id: f.id,
             field_name: f.name,
             label: f.label,
             ttype: f.ttype,
+            path: f.path,
+            node_id: f.node_id || false,
             aggregation: "none",
         });
         this._endDrag();
@@ -233,6 +242,8 @@ export class MvReportBuilder extends Component {
             field_name: f.name,
             label: f.label,
             ttype: f.ttype,
+            path: f.path,
+            node_id: f.node_id || false,
             operator: f.ttype === 'char' ? 'ilike' : '=',
             value: "",
             logical_op: "and",
@@ -244,9 +255,10 @@ export class MvReportBuilder extends Component {
         ev.preventDefault();
         const f = this.state.dragField;
         if (!f || this.state.dragSource === "groups") return;
-        if (this.state.report.groups.some((g) => g.field_id === f.id)) return;
+        if (this.state.report.groups.some((g) => g.path === f.path)) return;
         this.state.report.groups.push({
             field_id: f.id, field_name: f.name, label: f.label,
+            path: f.path, node_id: f.node_id || false,
         });
         this._endDrag();
         this._refreshPreview();
@@ -255,18 +267,17 @@ export class MvReportBuilder extends Component {
         ev.preventDefault();
         const f = this.state.dragField;
         if (!f || this.state.dragSource === "sorts") return;
-        if (this.state.report.sorts.some((s) => s.field_id === f.id)) return;
+        if (this.state.report.sorts.some((s) => s.path === f.path)) return;
         this.state.report.sorts.push({
-            field_id: f.id, field_name: f.name, label: f.label, direction: "asc",
+            field_id: f.id, field_name: f.name, label: f.label,
+            path: f.path, node_id: f.node_id || false,
+            direction: "asc",
         });
         this._endDrag();
         this._refreshPreview();
     }
     onDragOver(ev) { ev.preventDefault(); ev.dataTransfer.dropEffect = "copy"; }
 
-    // Per-chip dragover for the Columns zone - shows a drop indicator
-    // on the chip being hovered, and sets dropEffect=move so the OS
-    // cursor shows the move icon rather than copy.
     onColumnDragOverItem(idx, ev) {
         ev.preventDefault();
         if (this.state.dragSource === "columns") {
@@ -283,8 +294,6 @@ export class MvReportBuilder extends Component {
     }
 
     _endDrag(ev) {
-        // Clear lingering drop-target highlights AND the dragging-dim
-        // class that we put on directly in onColumnDragStart.
         document.querySelectorAll(".mv-rb__chip--drop-target").forEach(
             (el) => el.classList.remove("mv-rb__chip--drop-target"),
         );
@@ -297,25 +306,11 @@ export class MvReportBuilder extends Component {
     }
 
     // ---- Item operations ------------------------------------------
-    removeColumn(idx) {
-        this.state.report.columns.splice(idx, 1);
-        this._refreshPreview();
-    }
-    removeFilter(idx) {
-        this.state.report.filters.splice(idx, 1);
-        this._refreshPreview();
-    }
-    removeGroup(idx) {
-        this.state.report.groups.splice(idx, 1);
-        this._refreshPreview();
-    }
-    removeSort(idx) {
-        this.state.report.sorts.splice(idx, 1);
-        this._refreshPreview();
-    }
-    onColumnLabelInput(idx, ev) {
-        this.state.report.columns[idx].label = ev.target.value;
-    }
+    removeColumn(idx) { this.state.report.columns.splice(idx, 1); this._refreshPreview(); }
+    removeFilter(idx) { this.state.report.filters.splice(idx, 1); this._refreshPreview(); }
+    removeGroup(idx) { this.state.report.groups.splice(idx, 1); this._refreshPreview(); }
+    removeSort(idx) { this.state.report.sorts.splice(idx, 1); this._refreshPreview(); }
+    onColumnLabelInput(idx, ev) { this.state.report.columns[idx].label = ev.target.value; }
     onColumnAggSelect(idx, ev) {
         this.state.report.columns[idx].aggregation = ev.target.value;
         this._refreshPreview();
@@ -333,48 +328,31 @@ export class MvReportBuilder extends Component {
         this._refreshPreview();
     }
 
-    // ---- Reorder within a zone (column drag + drop) -----------------
+    // ---- Reorder within columns zone ------------------------------
     onColumnDragStart(idx, ev) {
         this.state.dragField = this.state.report.columns[idx];
         this.state.dragSource = "columns";
         this.state.dragIdx = idx;
         ev.dataTransfer.effectAllowed = "move";
-        // Firefox requires setData on dragstart - without it, no
-        // subsequent drop event fires anywhere. The actual payload
-        // doesn't matter because the drop handlers read from state.
         ev.dataTransfer.setData("text/plain", String(idx));
-        // The drag source is the ⋮⋮ handle, not the chip itself.
-        // Walk up to the chip to apply the dragging-dim class AND
-        // to use the chip as the visible drag preview (otherwise
-        // the browser shows just the tiny handle).
         const handle = ev.currentTarget;
         const chip = handle && handle.closest
             ? handle.closest(".mv-rb__chip")
             : null;
         if (chip) {
             chip.classList.add("mv-rb__chip--dragging");
-            // setDragImage requires a DOM node currently visible in
-            // the document. The chip qualifies. Offset to roughly
-            // where the user grabbed.
             try {
                 const rect = chip.getBoundingClientRect();
                 ev.dataTransfer.setDragImage(
                     chip, ev.clientX - rect.left, ev.clientY - rect.top,
                 );
-            } catch (e) { /* setDragImage not supported - ignore */ }
+            } catch (e) { /* ignore */ }
         }
     }
     onColumnDropOnItem(targetIdx, ev) {
         ev.preventDefault();
-        // Clear hover highlight on the target chip.
         const tgt = ev.currentTarget;
         if (tgt) tgt.classList.remove("mv-rb__chip--drop-target");
-        // CRITICAL: only stopPropagation when we actually handle the
-        // event ourselves (i.e., this is a column-to-column reorder).
-        // For a NEW field being dropped on an existing chip, we must
-        // let the drop bubble up to the zone's onDropColumn so it can
-        // add the field as a new column. Stopping propagation here
-        // would silently swallow every drop after the first one.
         if (this.state.dragSource !== "columns") return;
         ev.stopPropagation();
         const from = this.state.dragIdx;
@@ -384,14 +362,12 @@ export class MvReportBuilder extends Component {
         }
         const cols = this.state.report.columns;
         const [moved] = cols.splice(from, 1);
-        // Trello-style: drop A onto C => A takes C's position, C
-        // shifts. splice(targetIdx,0,moved) gives that behavior.
         cols.splice(targetIdx, 0, moved);
         this._endDrag();
         this._refreshPreview();
     }
 
-    // ---- Preview pagination ----------------------------------------
+    // ---- Preview pagination ---------------------------------------
     async previewPrev() {
         if (this.state.preview.offset <= 0) return;
         this.state.preview.offset = Math.max(

@@ -29,42 +29,60 @@
       <!-- ============== 4-PANEL BODY ============== -->
       <div class="mv-rb__body" t-if="state.loaded">
 
-        <!-- Panel 1: Data Sources -->
+        <!-- Panel 1: Data Sources = Report Types -->
         <aside class="mv-rb__panel mv-rb__sources">
-          <div class="mv-rb__panel-title">Data Sources</div>
-          <input class="mv-rb__search" placeholder="Search models…"
-                 t-att-value="state.modelSearch"
-                 t-on-input="(ev) => state.modelSearch = ev.target.value"/>
+          <div class="mv-rb__panel-title">Report Types</div>
+          <input class="mv-rb__search" placeholder="Search report types…"
+                 t-att-value="state.reportTypeSearch"
+                 t-on-input="(ev) => state.reportTypeSearch = ev.target.value"/>
           <div class="mv-rb__model-list">
-            <button t-foreach="filteredModels" t-as="m" t-key="m.id"
-                    t-att-class="'mv-rb__model' + (m.id === state.selectedModelId ? ' mv-rb__model--active' : '')"
-                    t-on-click="() => this.selectModel(m.id)">
-              <span class="mv-rb__model-name" t-esc="m.name"/>
-              <span class="mv-rb__model-count" t-esc="m.field_count + ' fields'"/>
+            <button t-foreach="filteredReportTypes" t-as="rt" t-key="rt.id"
+                    t-att-class="'mv-rb__model' + (rt.id === state.selectedReportTypeId ? ' mv-rb__model--active' : '')"
+                    t-on-click="() => this.selectReportType(rt.id)"
+                    t-att-title="rt.description || ''">
+              <span class="mv-rb__model-name" t-esc="rt.name"/>
+              <span class="mv-rb__model-count"
+                    t-esc="rt.node_count + (rt.node_count === 1 ? ' join' : ' joins')"/>
             </button>
+            <div t-if="filteredReportTypes.length === 0" class="mv-rb__empty">
+              No report types yet. Ask an admin to create one under
+              Marathon Ventures → Report Types.
+            </div>
           </div>
         </aside>
 
-        <!-- Panel 2: Available Fields -->
+        <!-- Panel 2: Available Fields, grouped by NODE -->
         <aside class="mv-rb__panel mv-rb__fields">
           <div class="mv-rb__panel-title">
             Fields
-            <span class="mv-rb__panel-sub" t-esc="state.report.model_name || ''"/>
+            <span class="mv-rb__panel-sub"
+                  t-esc="state.report.report_type_name || ''"/>
           </div>
           <input class="mv-rb__search" placeholder="Search fields…"
                  t-att-value="state.fieldSearch"
                  t-on-input="(ev) => state.fieldSearch = ev.target.value"/>
           <div class="mv-rb__field-list">
-            <div t-foreach="filteredFields" t-as="f" t-key="f.id"
-                 class="mv-rb__field"
-                 draggable="true"
-                 t-on-dragstart="(ev) => this.onFieldDragStart(f, ev)">
-              <span class="mv-rb__field-icon" t-esc="f.ttype === 'integer' or f.ttype === 'float' or f.ttype === 'monetary' ? '#' : (f.ttype === 'date' or f.ttype === 'datetime' ? '📅' : (f.ttype === 'boolean' ? '☐' : 'Aa'))"/>
-              <span class="mv-rb__field-label" t-esc="f.label"/>
-              <span class="mv-rb__field-type" t-esc="f.ttype"/>
+            <div t-foreach="filteredFieldNodes" t-as="node"
+                 t-key="'nd-' + (node.node_id || 'base')"
+                 class="mv-rb__field-group">
+              <div class="mv-rb__field-group-header"
+                   t-att-title="node.path_prefix ? 'Path: ' + node.path_prefix : 'Base model'">
+                <span class="mv-rb__field-group-label" t-esc="node.label"/>
+                <span class="mv-rb__field-group-count"
+                      t-esc="node.fields.length + ' fields'"/>
+              </div>
+              <div t-foreach="node.fields" t-as="f" t-key="f.path"
+                   class="mv-rb__field"
+                   draggable="true"
+                   t-on-dragstart="(ev) => this.onFieldDragStart(f, ev)">
+                <span class="mv-rb__field-icon"
+                      t-esc="f.ttype === 'integer' or f.ttype === 'float' or f.ttype === 'monetary' ? '#' : (f.ttype === 'date' or f.ttype === 'datetime' ? '📅' : (f.ttype === 'boolean' ? '☐' : 'Aa'))"/>
+                <span class="mv-rb__field-label" t-esc="f.label"/>
+                <span class="mv-rb__field-type" t-esc="f.ttype"/>
+              </div>
             </div>
-            <div t-if="filteredFields.length === 0" class="mv-rb__empty">
-              No fields. Pick a model first.
+            <div t-if="filteredFieldNodes.length === 0" class="mv-rb__empty">
+              Pick a Report Type first.
             </div>
           </div>
         </aside>
@@ -80,17 +98,6 @@
               <span class="mv-rb__zone-hint">drag fields here · drag chips to reorder</span>
             </div>
             <div class="mv-rb__zone-list">
-              <!-- Static class - DO NOT bind to drag state here. Owl
-                   would re-render the draggable node mid-drag and
-                   kill the operation before drop can fire. The
-                   dragging-dim effect is applied via direct
-                   classList.add/remove in onColumnDragStart /
-                   _endDrag instead. -->
-              <!-- Drop target (chip) is separate from drag source
-                   (handle). Inputs/selects/buttons inside the chip
-                   no longer interfere with starting a drag, because
-                   they aren't on the drag path: only the ⋮⋮ handle
-                   has draggable=true. -->
               <div t-foreach="state.report.columns" t-as="c" t-key="'col-' + c_index"
                    class="mv-rb__chip mv-rb__chip--col"
                    t-on-dragover="(ev) => this.onColumnDragOverItem(c_index, ev)"
@@ -100,14 +107,11 @@
                       draggable="true"
                       t-on-dragstart="(ev) => this.onColumnDragStart(c_index, ev)"
                       t-on-dragend="(ev) => this._endDrag(ev)">⋮⋮</span>
-                <!-- draggable="false" on the inner controls: the chip
-                     is the drag source, but mousedown on these would
-                     otherwise initiate a text-selection drag on the
-                     input or a no-op drag attempt on the select,
-                     which can defeat the chip-level drag. -->
                 <input class="mv-rb__chip-label" t-att-value="c.label"
                        draggable="false"
                        t-on-input="(ev) => this.onColumnLabelInput(c_index, ev)"/>
+                <span class="mv-rb__chip-path" t-if="c.path and c.path !== c.field_name"
+                      t-esc="c.path"/>
                 <select class="mv-rb__chip-agg"
                         draggable="false"
                         t-on-change="(ev) => this.onColumnAggSelect(c_index, ev)">

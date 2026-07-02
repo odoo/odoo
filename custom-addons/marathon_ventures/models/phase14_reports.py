@@ -31,10 +31,19 @@ class MvReport(models.Model):
     description = fields.Text(string='Description')
     sequence = fields.Integer(default=10)
 
-    model_id = fields.Many2one(
-        'ir.model', string='Primary Model', required=True,
+    # Phase 14 v4: reports are anchored on a Report Type, which
+    # defines the base model + joined models. model_id is now a
+    # derived convenience for legacy code that still needs "which is
+    # the primary model" (== report_type_id.base_model_id).
+    report_type_id = fields.Many2one(
+        'mv.report.type', string='Report Type',
         ondelete='cascade',
-        domain="[('model', '=like', 'mv.%')]",
+        help='The Report Type provides the base model + joined models. '
+             'Fields for the Report Builder are drawn from all of them.',
+    )
+    model_id = fields.Many2one(
+        'ir.model', string='Primary Model',
+        related='report_type_id.base_model_id', store=True, readonly=True,
     )
     model_name = fields.Char(related='model_id.model', store=True, readonly=True)
 
@@ -214,6 +223,19 @@ class MvReportColumn(models.Model):
                               help='Override label shown in the report. '
                                    'Leave empty to use the field\'s default.')
     sequence = fields.Integer(default=10)
+    # Phase 14 v4: dotted path from the report's base model to this
+    # field. Empty/blank means the field lives on the base model.
+    # E.g. 'advertiser_id.name' means "advertiser (m2o from base) . name".
+    path = fields.Char(
+        string='Path',
+        help='Dotted access path from the base model to this field '
+             '(e.g. advertiser_id.name). Empty = base-model field.',
+    )
+    node_id = fields.Many2one(
+        'mv.report.type.node', string='From Node', ondelete='set null',
+        help='The Report Type node this field was drawn from. '
+             'Blank = base model.',
+    )
 
     # Aggregation - stub for now. UI will surface a Selection dropdown
     # next iteration; backend just stores the choice.
@@ -240,6 +262,12 @@ class MvReportFilter(models.Model):
     field_id = fields.Many2one('ir.model.fields', required=True,
                                ondelete='cascade')
     field_name = fields.Char(related='field_id.name', store=True, readonly=True)
+    # Phase 14 v4: dotted path from the report's base model.
+    path = fields.Char(string='Path')
+    node_id = fields.Many2one(
+        'mv.report.type.node', string='From Node',
+        ondelete='set null',
+    )
     operator = fields.Selection([
         ('=', 'Equals'),
         ('!=', 'Not Equals'),
@@ -310,6 +338,11 @@ class MvReportGroup(models.Model):
     field_id = fields.Many2one('ir.model.fields', required=True,
                                ondelete='cascade')
     field_name = fields.Char(related='field_id.name', store=True, readonly=True)
+    # Phase 14 v4: dotted path from the report's base model.
+    path = fields.Char(string='Path')
+    node_id = fields.Many2one(
+        'mv.report.type.node', string='From Node', ondelete='set null',
+    )
     sequence = fields.Integer(default=10)
 
 
@@ -325,6 +358,11 @@ class MvReportSort(models.Model):
     field_id = fields.Many2one('ir.model.fields', required=True,
                                ondelete='cascade')
     field_name = fields.Char(related='field_id.name', store=True, readonly=True)
+    # Phase 14 v4: dotted path from the report's base model.
+    path = fields.Char(string='Path')
+    node_id = fields.Many2one(
+        'mv.report.type.node', string='From Node', ondelete='set null',
+    )
     direction = fields.Selection([('asc', 'Ascending'), ('desc', 'Descending')],
                                  string='Direction', default='asc', required=True)
     sequence = fields.Integer(default=10)

@@ -88,6 +88,28 @@
 
 /* ----- FIELDS PANEL ----- */
 .mv-rb__field-list { flex: 1 1 auto; overflow-y: auto; padding: 4px 8px; }
+/* Group header (Base / joined node) - visually distinct from the
+   field rows so the user immediately sees which model a field
+   comes from. */
+.mv-rb__field-group { margin-bottom: 8px; }
+.mv-rb__field-group-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 4px 6px; margin: 6px 0 3px 0;
+    background: #f3f4f6; border-radius: 3px;
+    font-size: 10px; font-weight: 700; color: #1f2937;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    position: sticky; top: 0; z-index: 1;
+}
+.mv-rb__field-group-label { flex: 1; }
+.mv-rb__field-group-count { color: #9ca3af; font-weight: 500; font-size: 9px; }
+/* Chip path suffix (shown when a column's path is multi-hop, e.g.
+   advertiser_id.name) - lets the user see where a field came from
+   without needing to hover. */
+.mv-rb__chip-path {
+    font-size: 9px; color: #6b7280; font-style: italic;
+    background: rgba(0,0,0,0.03); padding: 0 4px; border-radius: 2px;
+    margin-right: 2px;
+}
 .mv-rb__field {
     display: flex; align-items: center; gap: 6px;
     padding: 5px 6px; margin-bottom: 2px; border-radius: 4px;

@@ -119,6 +119,7 @@
         'views/phase10_deal_line_views.xml',
         'views/phase11_capping_tab.xml',
         'views/phase13_layout_views.xml',
+        'views/phase14_report_types_views.xml',
         'views/phase14_reports_views.xml',
         'views/menus_root_action.xml',
     ],
@@ -142,4 +143,7 @@
     'installable': True,
     'application': True,
     'auto_install': False,
+    # Phase 14 v4: backfill report_type_id on legacy mv.report rows
+    # so the v3 -> v4 migration doesn't strand any data.
+    'post_init_hook': 'post_init_hook',
 }
