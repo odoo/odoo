@@ -1,9 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { HeaderTemplateChoice } from "./header_template_option";
+import { HeaderTemplateChoice, isHeaderBgBlurAvailable } from "./header_template_option";
 import { HeaderTopOptions } from "./header_top_options";
-import { WebsiteConfigAction } from "../../customize_website_plugin";
+import { CustomizeWebsiteColorAction, WebsiteConfigAction } from "../../customize_website_plugin";
+import { isColorGradient } from "@web/core/utils/colors";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 
@@ -26,7 +28,11 @@ export class HeaderOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_actions: { HeaderTemplateConfigAction },
+        builder_actions: {
+            HeaderTemplateConfigAction,
+            CustomizeHeaderBackgroundAction,
+            CustomizeHeaderBgBlurAction,
+        },
         builder_header_middle_buttons: [
             {
                 Component: HeaderTopOptions,
@@ -109,6 +115,61 @@ export class HeaderOptionPlugin extends Plugin {
 
     getHeaderTemplates() {
         return this.headerTemplates;
+    }
+}
+
+export class CustomizeHeaderBackgroundAction extends CustomizeWebsiteColorAction {
+    static id = "customizeHeaderBackground";
+    static dependencies = [...super.dependencies, "builderActions"];
+
+    setup() {
+        super.setup();
+        this.websiteConfigAction = this.dependencies.builderActions.getAction("websiteConfig");
+    }
+
+    async apply(context) {
+        const updatedColors = {};
+        if (isColorGradient(context.value)) {
+            updatedColors[context.params.gradientColor] = context.value;
+            updatedColors[context.params.mainParam] = "";
+        } else {
+            updatedColors[context.params.mainParam] = context.value;
+            updatedColors[context.params.gradientColor] = "";
+        }
+        const htmlStyle = getHtmlStyle(this.document);
+        const headerBlurValue = parseFloat(getCSSVariableValue("header-bg-blur", htmlStyle));
+        // Check that the blur classes are active on the header nav.
+        const headerNavEl = this.document.querySelector("#wrapwrap header > nav");
+        const hasBlurClasses =
+            headerNavEl &&
+            (headerNavEl.classList.contains("o_bg_blur_option") ||
+                headerNavEl.classList.contains("o_bg_blur_no_enhance"));
+        // If the background is no longer transparent, remove the blur.
+        if (
+            (headerBlurValue || hasBlurClasses) &&
+            !isHeaderBgBlurAvailable(htmlStyle, updatedColors)
+        ) {
+            await this.websiteConfigAction.apply({
+                params: {
+                    views: ["!website.header_bg_blur", "!website.header_bg_blur_no_enhance"],
+                    vars: { "header-bg-blur": 0 },
+                },
+            });
+        }
+        return super.apply(context);
+    }
+}
+
+export class CustomizeHeaderBgBlurAction extends WebsiteConfigAction {
+    static id = "customizeHeaderBgBlur";
+
+    getValue() {
+        return this.dependencies.customizeWebsite.getWebsiteVariableValue("header-bg-blur");
+    }
+
+    apply(context) {
+        context.params = { ...context.params, vars: { "header-bg-blur": context.value } };
+        return super.apply(context);
     }
 }
 

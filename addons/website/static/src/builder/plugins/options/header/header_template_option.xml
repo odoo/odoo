@@ -14,7 +14,7 @@
                 enabledTabs="['theme', 'custom', 'gradient']"
                 preview="false"
                 defaultColor="''"
-                action="'customizeWebsiteColor'"
+                action="'customizeHeaderBackground'"
                 actionParam="{
                     mainParam: 'menu-custom',
                     gradientColor: 'menu-gradient',
@@ -66,7 +66,7 @@
                     nullValue: 'NULL',
                 }"/>
         </BuilderRow>
-
+        <HeaderBgBlurOption level="2"/>
         <t t-set="noPreviewOptionsContentWidth" t-value="[
             'header_search_opt',
             'header_sales_one_opt',
@@ -183,4 +183,13 @@
             <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="this.props.imgSrc"/>
         </BuilderSelectItem>
     </t>
+
+    <t t-name="website.HeaderBgBlurOption">
+        <BuilderRow label.translate="Blur" level="this.props.level" t-if="this.blurState.show">
+            <BuilderRange action="'customizeHeaderBgBlur'" actionParam="{ views: ['website.header_bg_blur'] }" min="0" max="10" step="0.5" />
+            <BuilderButton action="'websiteConfig'" inverseAction="true" actionParam="{ views: ['website.header_bg_blur_no_enhance'] }"
+                title.translate="Enhance contrast and brightness" className="'ms-1 px-2 fa fa-adjust ' + (this.blurState.hasBlur ? '' : 'disabled')" />
+        </BuilderRow>
+    </t>
+
 </templates>

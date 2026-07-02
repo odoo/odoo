@@ -956,12 +956,28 @@ font[class*='bg-'] {
 
 // Background blur option
 .o_bg_blur_option {
-    backdrop-filter: contrast(MIN(calc(1 + var(--o-bg-blur) * .05), var(--o-bg-blur-enhance, 1.25)))
-                     brightness(MIN(calc(1 + var(--o-bg-blur) * .05), var(--o-bg-blur-enhance, 1.25)))
-                     blur(calc(var(--o-bg-blur, 0) * 1px));
+    &, .o_navbar_mobile {
+        --o-blur-factor: MIN(calc(1 + var(--o-bg-blur) * .05), var(--o-bg-blur-enhance, 1.25));
+        backdrop-filter: contrast(var(--o-blur-factor)) brightness(var(--o-blur-factor)) blur(calc(var(--o-bg-blur, 0) * 1px));
+    }
 
     &.o_bg_blur_no_enhance {
-        --o-bg-blur-enhance: 1;
+        &, .o_navbar_mobile {
+            --o-bg-blur-enhance: 1;
+        }
+    }
+}
+
+header nav.o_bg_blur_option {
+    // We want to share the header nav's blur with the mobile navbar.
+    &, .o_navbar_mobile {
+        --o-bg-blur: #{o-website-value('header-bg-blur')};
+    }
+
+    // Avoid nested backdrop-filter conflict: nav blur hides the mobile
+    // offcanvas blur when it's open.
+    &:has(.o_navbar_mobile.o_top_menu_collapse_shown) {
+        backdrop-filter: none;
     }
 }
 
