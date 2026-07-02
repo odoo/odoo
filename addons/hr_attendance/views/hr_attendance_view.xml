@@ -235,6 +235,62 @@
         </field>
     </record>
 
+    <record id="hr_attendance_create_view_form" model="ir.ui.view">
+        <field name="name">hr.attendance.create.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <separator position="attributes">
+                <attribute name="invisible">True</attribute>
+            </separator>
+            <separator name="check_out_separator" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </separator>
+            <group name="check_in_group" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </group>
+            <group name="check_out_group" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </group>
+            <notebook position="attributes">
+                <attribute name="invisible">True</attribute>
+            </notebook>
+            <form position="inside">
+                <footer>
+                    <button
+                        string="Save &amp; Close"
+                        special="save"
+                        data-hotkey="s"
+                        class="btn btn-primary"
+                        close="1"
+                        invisible="not can_edit"/>
+                    <button
+                        special="cancel"
+                        data-hotkey="j"
+                        class="btn-secondary"
+                        close="1"
+                        invisible="not can_edit"/>
+                    <button
+                        string="Delete"
+                        name="unlink"
+                        type="object"
+                        data-hotkey="x"
+                        class="btn btn-danger ms-auto"
+                        close="1"
+                        invisible="not id or not is_manager"/>
+                    <button
+                        string="Close"
+                        special="cancel"
+                        data-hotkey="j"
+                        class="btn-secondary"
+                        close="1"
+                        invisible="is_manager or is_own"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
     <record id="hr_attendance_view_graph" model="ir.ui.view">
         <field name="name">hr.attendance.graph</field>
         <field name="model">hr.attendance</field>
