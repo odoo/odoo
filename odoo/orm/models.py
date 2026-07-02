@@ -1379,7 +1379,7 @@ class BaseModel(metaclass=MetaModel):
                             self.env[field.comodel_name].browse(cmd[1]).check_access('unlink')
                         elif command_code == Command.UPDATE or (field.type == 'one2many' and command_code in (Command.UNLINK, Command.LINK)):
                             self.env[field.comodel_name].browse(cmd[1]).check_access('write')
-                value = field.convert_to_cache(value, self, validate=False)
+                value = field.convert_to_cache(value, self)
                 defaults[fname] = field.convert_to_write(value, self)
 
         # add default values for inherited fields

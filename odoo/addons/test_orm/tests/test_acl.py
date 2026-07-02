@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from lxml import etree
 
 from odoo.exceptions import AccessError
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.fields import Command
 from odoo.tests.common import tagged
 from odoo.tools.misc import mute_logger
-from odoo import Command
+
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -106,6 +106,7 @@ class TestACL(TransactionCaseWithUserDemo):
         self.assertFalse(has_group_test, "`demo` user should not belong to the restricted group")
         self.assertTrue(partner.read(['bank_ids']))
         self.assertTrue(partner.write({'bank_ids': []}))
+        some_bank = partner.bank_ids.create({'account_number': '1234', 'partner_id': partner.id})
 
         # Now restrict access to the field and check it's forbidden
         self._set_field_groups(partner, 'bank_ids', self.TEST_GROUP)
@@ -118,6 +119,13 @@ class TestACL(TransactionCaseWithUserDemo):
             partner.read(['bank_ids'])
         with self.assertRaises(AccessError):
             partner.write({'bank_ids': []})
+        with self.assertRaises(AccessError):
+            partner.write({'bank_ids': [Command.create({'account_number': 'TEST 1234', 'holder_name': 'test'})]})
+        with self.assertRaises(AccessError):
+            partner.create({'name': 'create bank', 'bank_ids': [Command.create({'account_number': 'TEST 1234', 'holder_name': 'test'})]})
+        with self.assertRaises(AccessError):
+            partner.write({'bank_ids': [Command.delete(some_bank.id)]})
+        self.assertTrue(some_bank.exists())
 
         # Add the restricted group, and check that it works again
         self.test_group.user_ids += self.user_demo
@@ -125,6 +133,55 @@ class TestACL(TransactionCaseWithUserDemo):
         self.assertTrue(has_group_test, "`demo` user should now belong to the restricted group")
         self.assertTrue(partner.read(['bank_ids']))
         self.assertTrue(partner.write({'bank_ids': []}))
+
+    @mute_logger('odoo.models')
+    def test_field_on_comodel_restriction(self):
+        partner = self.env['res.partner'].browse(1).with_user(self.user_demo)
+        has_group_test = self.user_demo.has_group(self.TEST_GROUP)
+        self.assertFalse(has_group_test, "`demo` user should not belong to the restricted group")
+
+        partner.write({'bank_ids': [Command.clear(), Command.create({'partner_id': partner.id, 'account_number': '1234'})]})
+        bank = partner.bank_ids
+        bank.ensure_one()
+
+        self._set_field_groups(bank, 'holder_name', self.TEST_GROUP)
+        with self.assertRaises(AccessError):
+            partner.write({'bank_ids': [Command.create({'account_number': 'TEST 1234', 'holder_name': 'test'})]})
+        with self.assertRaises(AccessError):
+            partner.write({'bank_ids': [Command.update(bank.id, {'holder_name': 'test'})]})
+
+        with self.assertRaises(AccessError):
+            partner.create({'name': 'ok', 'bank_ids': [Command.create({'account_number': 'TEST 1234', 'holder_name': 'test'})]})
+        with self.assertRaises(AccessError):
+            partner.create({'name': 'ok', 'bank_ids': [Command.update(bank.id, {'holder_name': 'test'})]})
+
+        with self.assertRaises(AccessError):
+            partner.with_context(default_bank_ids=[Command.create({'account_number': 'TEST 1234', 'holder_name': 'test'})]).create({'name': 'ok'})
+        with self.assertRaises(AccessError):
+            partner.with_context(default_bank_ids=[Command.update(bank.id, {'holder_name': 'test'})]).create({'name': 'ok'})
+
+    @mute_logger('odoo.models')
+    def test_create_comodel_restriction(self):
+        partner = self.env['res.partner'].browse(1).with_user(self.user_demo)
+        self.env['res.partner'].create({
+            'name': 'New Guy',
+            'bank_ids': [Command.create({'account_number': '9876'})]
+        })
+
+        # check we can create partners
+        partner.create({'name': 'ok'})
+
+        partner.write({'bank_ids': [Command.clear(), Command.create({'partner_id': partner.id, 'account_number': '1234'})]})
+        bank = partner.bank_ids
+        bank.ensure_one()
+
+        self._set_field_groups(bank, 'holder_name', self.TEST_GROUP)
+        with self.assertRaises(AccessError):
+            partner.write({'bank_ids': [Command.create({'account_number': 'TEST 1234', 'holder_name': 'test'})]})
+        with self.assertRaises(AccessError):
+            partner.write({'bank_ids': [Command.update(bank.id, {'holder_name': 'test'})]})
+        with self.assertRaises(AccessError):
+            partner.write({'bank_ids': [Command.delete(bank.id)]})
 
     @mute_logger('odoo.models')
     def test_fields_browse_restriction(self):
