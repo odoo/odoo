@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OptionalProductPage">
+        <t t-set="product" t-value="this.productTemplate"/>
+        <ProductInterface class="'o_self_optional_product_page'" productTemplate="product" goBack.bind="this.goBack">
+            <t t-set-slot="content">
+                <!-- Optional Products -->
+                <div class="o_self_optional_product_list o_self_product_list_page overflow-y-auto o_self_fade position-relative">
+                    <h1 class="text-center fw-semibold my-4 text-primary">Options</h1>
+                    <div class="product_container container o_self_container product_list d-flex flex-wrap justify-content-center gap-sm-4"
+                        t-att-class="{'pt-sm-3 pt-lg-4': this.selfOrder.kioskMode, 'pb-2': !this.selfOrder.kioskMode}">
+                        <div
+                            t-foreach="this.optionalProducts"
+                            t-as="optionalProduct"
+                            t-key="optionalProduct.id"
+                            class="o_self_product_box rounded-4 p-3 p-lg-0 shadow-sm shadow-lg-none"
+                        >
+                            <ProductCard
+                                product="optionalProduct"
+                                onClickCallback.bind="this.onClickOptionalProduct"
+                                qty="this.state.optionalProductQtyById[optionalProduct.id]"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-set-slot="footer">
+                <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
+                    <button class="ms-auto btn btn-lg btn-primary text-truncate ps-auto back-btn to-order" t-on-click="this.goBack">
+                        <t t-if="this.isOptionalProductSelected">Continue</t>
+                        <t t-else="">No Thanks</t>
+                    </button>
+                </div>
+            </t>
+        </ProductInterface>
+    </t>
+</templates>

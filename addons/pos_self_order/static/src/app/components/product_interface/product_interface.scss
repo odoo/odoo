@@ -1,0 +1,30 @@
+.o_self_product_interface {
+    .o_self_product_header{
+        .o_self_product_name{
+            left: 3.2rem;
+            right: 3.2rem;
+        }
+    }
+
+    --product-image-offset: 5rem;
+
+    .o_self_product_image {
+        margin-bottom: calc(-1.25 * var(--product-image-offset));
+        max-width: 250px;
+    }
+
+    @include media-breakpoint-down(sm) {
+      .product_img {
+          max-width: 200px;
+      }
+    }
+}
+
+
+@include o-kiosk-portrait(){
+   .o_self_product_interface {
+        .o_self_product_image {
+            max-width: 350px;
+        }
+   }
+}

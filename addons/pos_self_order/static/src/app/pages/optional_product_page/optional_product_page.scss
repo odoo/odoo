@@ -1,0 +1,17 @@
+.o_self_optional_product_page {
+    .o_self_optional_product_list {
+        margin-top: var(--product-image-offset);
+    }
+
+    .o_self_product_box {
+        flex: 0 0 calc(25% - 0.75rem);
+
+        @include media-breakpoint-down(lg) {
+            flex: 0 0 calc(50% - 0.5rem);
+        }
+
+        @include media-breakpoint-down(md) {
+            flex: 0 0 100%;
+        }
+    }
+}

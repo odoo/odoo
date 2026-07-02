@@ -45,4 +45,11 @@ patch(SelfOrder.prototype, {
         );
         return this.models["pos.order.line"].create(values);
     },
+
+    selectProduct(product, opts = {}) {
+        if (!product._event_id) {
+            return super.selectProduct(product, opts);
+        }
+        this.router.navigate("event_page", { id: product._event_id });
+    },
 });

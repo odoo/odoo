@@ -19,43 +19,28 @@ class ProductTemplate(models.Model):
     def _load_pos_self_data_read(self, data, config):
         domain = self._load_pos_self_data_domain(data, config)
         fields = set(self._load_pos_self_data_fields(config))
-        products = self.search_read(
+        products = self.search(
             domain,
-            fields,
             limit=config.get_limited_product_count(),
             order='is_favorite DESC,pos_sequence,name',
-            load=False
         )
-
-        combo_products = self.browse(p['id'] for p in products if p["type"] == "combo")
-        combo_products_choice = self.search_read(
-            [("id", 'in', combo_products.combo_ids.combo_item_ids.product_id.product_tmpl_id.ids), ("id", "not in", [p['id'] for p in products])],
-            fields,
-            limit=config.get_limited_product_count(),
-            order='is_favorite DESC,pos_sequence,name',
-            load=False
-        )
-        products.extend(combo_products_choice)
-
-        # Always include delivery product templates, even if the limit cut them off
-        loaded_ids = {p['id'] for p in products}
-        delivery_tmpl_ids = self.env['pos.preset'].sudo().search([
+        combo_products = products.combo_ids.combo_item_ids.product_id.product_tmpl_id
+        additional_products = (combo_products + products.pos_optional_product_ids).filtered_domain([
+            ('self_order_available', '=', True),
+        ])
+        presets = self.env['pos.preset'].sudo().search([
+            '|',
             ('delivery_product_id', '!=', False),
-        ]).delivery_product_id.product_tmpl_id.ids
-        missing_delivery = [tid for tid in delivery_tmpl_ids if tid not in loaded_ids]
-        if missing_delivery:
-            products.extend(self.browse(missing_delivery).read(fields, load=False))
-
-        service_fee_tmpl_ids = self.env['pos.preset'].sudo().search([
             ('service_fee_product_id', '!=', False),
-        ]).service_fee_product_id.product_tmpl_id.ids
-        missing_service_fee = [tid for tid in service_fee_tmpl_ids if tid not in loaded_ids]
-        if missing_service_fee:
-            products.extend(self.browse(missing_service_fee).read(fields, load=False))
-
-        self._process_pos_self_ui_products(products)
-
-        return products
+        ])
+        preset_product_tmpls = (
+            presets.delivery_product_id.product_tmpl_id
+            | presets.service_fee_product_id.product_tmpl_id
+        )
+        all_products = additional_products | preset_product_tmpls | products
+        read_products = all_products.read(fields, load=False)
+        self._process_pos_self_ui_products(read_products)
+        return read_products
 
     def _process_pos_self_ui_products(self, products):
         self._add_archived_combinations(products)

@@ -1,10 +1,9 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
-import { useScrollShadow } from "../../utils/scroll_shadow_hook";
-import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_observer";
+import { ProductInterface } from "@pos_self_order/app/components/product_interface/product_interface";
 import {
     getProductVariantByAttributes,
     getAttributeValues,
@@ -14,7 +13,7 @@ import { shouldShowMissingDetails } from "../../utils";
 
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
-    static components = { AttributeSelection };
+    static components = { AttributeSelection, ProductInterface };
     static props = ["productTemplate"];
 
     setup() {
@@ -33,17 +32,7 @@ export class ProductPage extends Component {
         this.state = proxy({
             qty: editedLine ? editedLine.qty : 1,
             selectedValues: this.env.selectedValues,
-            topShadowOpacity: 0,
-            bottomShadowOpacity: 0,
-            showStickyTitle: false,
         });
-        this.productNameRef = useRef("productName");
-        this.scrollContainerRef = useRef("scrollContainer");
-        this.scrollShadow = useScrollShadow(this.scrollContainerRef);
-        useStickyTitleObserver(
-            "productName",
-            (isSticky) => (this.state.showStickyTitle = isSticky)
-        );
     }
 
     get productTemplate() {
@@ -51,11 +40,7 @@ export class ProductPage extends Component {
     }
 
     shouldShowMissingDetails() {
-        return shouldShowMissingDetails(
-            this.productTemplate,
-            this.state.selectedValues,
-            this.scrollContainerRef
-        );
+        return shouldShowMissingDetails(this.productTemplate, this.state.selectedValues);
     }
 
     changeQuantity(increase) {
@@ -162,10 +147,23 @@ export class ProductPage extends Component {
             this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues()
         );
 
+        const historyState = history.state || {};
+        if (this.productTemplate.pos_optional_product_ids.length && !historyState.redirectPage) {
+            return this.router.navigate("optional_product", { id: this.productTemplate.id });
+        }
+
+        const qtys = historyState.state?.optionalProductQtys;
+        if (qtys) {
+            qtys[this.productTemplate.id] = (qtys[this.productTemplate.id] || 0) + this.state.qty;
+        }
         this.goBack();
     }
 
     goBack() {
+        if (history.state?.redirectPage) {
+            const { redirectPage, params, state } = history.state;
+            return this.router.navigate(redirectPage, params, state);
+        }
         this.router.navigate("product_list");
     }
 
@@ -178,15 +176,4 @@ export class ProductPage extends Component {
             .getElementById(missingAttribute?.attribute_id?.id)
             ?.scrollIntoView({ behavior: "smooth" });
     }
-
-    /*
-    // TODO
-    get editableProductLine() {
-        const order = this.selfOrder.currentOrder;
-        return !(
-            this.selfOrder.editedLine &&
-            this.selfOrder.editedLine.uuid &&
-            order.lastChangesSent[this.selfOrder.editedLine.uuid]
-        );
-    }*/
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductInterface">
+        <t t-set="product" t-value="this.props.productTemplate"/>
+        <div class="o_self_product_interface d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade" t-att-class="this.props.class">
+            <!-- Header -->
+            <div class="o_self_product_header text-bg-primary" t-att-class="{'o_self_shadow_top': this.scrollShadow.top}">
+                <div class="container o_self_container py-3 d-flex align-items-center position-relative" >
+                    <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-0" t-on-click="this.props.goBack">
+                        <i class="oi oi-close fa-fw" aria-hidden="true"/>
+                        <span  t-att-class="{'invisible': this.state.showStickyTitle}">Discard</span>
+                    </button>
+                    <h2 class="o_self_product_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !this.state.showStickyTitle}" t-out="product.name"/>
+                </div>
+            </div>
+
+            <!-- Scroll -->
+            <div id="o-self-scroll-container" class="d-flex flex-column overflow-y-auto h-100 position-relative" t-ref="this.scrollContainerRef">
+                <div class="flex-grow-1">
+                    <div class="py-3 text-bg-primary">
+                        <div class="container o_self_container ">
+                            <!-- Name & Image -->
+                            <div class="d-flex flex-column align-items-center">
+                                <h1 class="mt-kiosk-p-3 mb-3 " t-out="product.name" t-ref="this.productNameRef"/>
+                                <div class="o_self_product_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
+                                    <img class="rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <t t-call-slot="content" />
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="o_self_footer bg-white border-top py-3"  t-att-class="{'o_self_shadow_bottom': this.scrollShadow.bottom}">
+                <div class="container o_self_container">
+                    <t t-call-slot="footer" />
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

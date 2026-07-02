@@ -4,12 +4,11 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelectionHelper } from "@pos_self_order/app/components/attribute_selection/attribute_selection_helper";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
-import { ProductNameWidget } from "@pos_self_order/app/components/product_name_widget/product_name_widget";
+import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
 import { Stepper } from "@pos_self_order/app/components/combo_stepper/combo_stepper";
 import { computeTotalComboPrice } from "../../services/card_utils";
-import { useScrollShadow } from "../../utils/scroll_shadow_hook";
-import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_observer";
 import { formatProductName, shouldShowMissingDetails } from "../../utils";
+import { ProductInterface } from "@pos_self_order/app/components/product_interface/product_interface";
 
 export class ComboPage extends Component {
     static template = "pos_self_order.ComboPage";
@@ -17,7 +16,8 @@ export class ComboPage extends Component {
     static components = {
         AttributeSelection,
         Stepper,
-        ProductNameWidget,
+        ProductCard,
+        ProductInterface,
     };
 
     setup() {
@@ -34,19 +34,10 @@ export class ComboPage extends Component {
             showResume: false,
             qty: 1,
             selectedValues: this.env.selectedValues,
-            comboPrice: 0,
-            topShadowOpacity: 0,
-            bottomShadowOpacity: 1,
         });
         this.onAttributeSelection = this.onAttributeSelection.bind(this);
 
-        this.productNameRef = useRef("productName");
         this.scrollContainerRef = useRef("scrollContainer");
-        this.scrollShadow = useScrollShadow(this.scrollContainerRef);
-        useStickyTitleObserver(
-            "productName",
-            (isSticky) => (this.state.showStickyTitle = isSticky)
-        );
 
         if (history.state?.selectedCombos?.length) {
             this.applyPreselectedCombos(history.state.selectedCombos);
@@ -176,11 +167,7 @@ export class ComboPage extends Component {
 
     shouldShowMissingDetails() {
         const product = this.currentChoiceState.displayAttributesOfItem?.product_id;
-        return shouldShowMissingDetails(
-            product,
-            this.state.selectedValues,
-            this.scrollContainerRef
-        );
+        return shouldShowMissingDetails(product, this.state.selectedValues);
     }
 
     selectItem(item) {
@@ -521,8 +508,9 @@ export class ComboPage extends Component {
         // Ensure the section below the large image is visible to minimize excessive scrolling for the user
         setTimeout(() => {
             const el = window.document.getElementById("k-combo-scroll-target");
+            const scrollContainerEl = document.getElementById("o-self-scroll-container");
             if (el) {
-                this.scrollContainerRef.el?.scrollTo({ top: el.offsetTop - 20 });
+                scrollContainerEl?.scrollTo({ top: el.offsetTop - 20 });
             }
         }, 1);
     }
@@ -593,8 +581,9 @@ export class ComboPage extends Component {
     }
 
     addToCart() {
+        const productTemplate = this.props.productTemplate;
         this.selfOrder.addToCart(
-            this.props.productTemplate,
+            productTemplate,
             this.state.qty,
             "",
             {},
@@ -602,6 +591,17 @@ export class ComboPage extends Component {
             this.getComboSelection()
         );
         this.selfOrder.applyPendingComboConversion();
+        const historyState = history.state || {};
+        if (productTemplate.pos_optional_product_ids.length && !historyState.redirectPage) {
+            this.router.navigate("optional_product", { id: productTemplate.id });
+            return;
+        }
+
+        const optionalProductQtys = historyState.state?.optionalProductQtys;
+        if (optionalProductQtys) {
+            optionalProductQtys[productTemplate.id] =
+                (optionalProductQtys[productTemplate.id] || 0) + this.state.qty;
+        }
         this.goBack();
     }
 
@@ -618,7 +618,11 @@ export class ComboPage extends Component {
         if (this.selfOrder.pendingComboConversion) {
             this.selfOrder.pendingComboConversion = null;
         }
-        this.router.navigate(history.state?.redirectPage || "product_list");
+        if (history.state?.redirectPage) {
+            const { redirectPage, params, state } = history.state;
+            return this.router.navigate(redirectPage, params, state);
+        }
+        this.router.navigate("product_list");
     }
 
     scrollUpToRequired() {
@@ -635,15 +639,4 @@ export class ComboPage extends Component {
     formatProductName(product) {
         return formatProductName(product);
     }
-
-    /*
-     // TODO
-     get editableProductLine() {
-        const order = this.selfOrder.currentOrder;
-        return !(
-            this.selfOrder.editedLine &&
-            this.selfOrder.editedLine.uuid &&
-            order.lastChangesSent[this.selfOrder.editedLine.uuid]
-        );
-    }*/
 }
