@@ -80,6 +80,17 @@ class IrModule(models.Model):
                     env.company,
                 )
             self.env.registry._auto_install_template = try_loading
+            # Execute via precommit so the chart template (and its journals)
+            # are created at the end of this module's loading cycle, before
+            # subsequent modules that may depend on them (e.g. point_of_sale
+            # demo data needs a bank journal).
+            env = self.env
+
+            def _precommit_auto_install_template():
+                if hasattr(env.registry, '_auto_install_template'):
+                    env.registry._auto_install_template(env)    # noqa: PY031
+                    del env.registry._auto_install_template     # noqa: PY031
+            self.env.cr.precommit.add(_precommit_auto_install_template)
         return res
 
     def _load_module_terms(self, modules, langs, overwrite=False, imported_module=False):
