@@ -1,12 +1,16 @@
-import { RATING } from "@im_livechat/embed/common/livechat_service";
 import { TranscriptSender } from "@im_livechat/core/common/transcript_sender";
 
 import { Component, proxy, t, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { session } from "@web/session";
 import { url } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
+
+export const RATING = Object.freeze({
+    GOOD: 5,
+    OK: 3,
+    BAD: 1,
+});
 
 /**
  * @typedef {Object} Props
@@ -30,13 +34,15 @@ export class FeedbackPanel extends Component {
     RATING = RATING;
 
     setup() {
-        this.session = session;
-        this.livechatService = useService("im_livechat.livechat");
         this.store = useService("mail.store");
         this.state = proxy({
             step: this.STEP.RATING,
             rating: null,
             feedback: "",
+        });
+        this.props = useProps({
+            onClickClose: t.function().optional(),
+            thread: t.instanceOf(this.store["mail.thread"]),
         });
         this.url = url;
     }
@@ -48,13 +54,6 @@ export class FeedbackPanel extends Component {
         this.state.rating = rating;
     }
 
-    get allowNewSession() {
-        return (
-            this.store.livechat_rule?.action !== "hide_button" &&
-            this.livechatService.options.channel_id
-        );
-    }
-
     onClickSendFeedback() {
         rpc("/im_livechat/feedback", {
             reason: this.state.feedback,
@@ -62,7 +61,7 @@ export class FeedbackPanel extends Component {
             channel_id: this.props.thread.id,
         });
         this.state.step = this.STEP.THANKS;
-        const link = this.livechatService.options.review_link;
+        const link = this.props.thread.channel?.livechat_channel_id?.review_link;
         if (this.state.rating === this.RATING.GOOD && link) {
             window.open(link, "_blank", "noopener");
         }
