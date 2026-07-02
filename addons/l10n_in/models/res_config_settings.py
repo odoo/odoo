@@ -44,10 +44,6 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_in_tcs_feature',
         readonly=False
     )
-    l10n_in_withholding_account_id = fields.Many2one(
-        related='company_id.l10n_in_withholding_account_id',
-        readonly=False
-    )
     l10n_in_withholding_journal_id = fields.Many2one(
         related='company_id.l10n_in_withholding_journal_id',
         readonly=False

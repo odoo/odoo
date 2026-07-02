@@ -4,12 +4,10 @@ import re
 from contextlib import contextmanager
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.tools.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
-from odoo.tools import SQL
-from odoo.tools.date_utils import get_month
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 
 EDI_CANCEL_REASON = {
@@ -69,41 +67,6 @@ class AccountMove(models.Model):
     l10n_in_tds_deduction = fields.Selection(related='commercial_partner_id.l10n_in_pan_entity_id.tds_deduction', string="TDS Deduction")
 
     # withholding related fields
-    l10n_in_is_withholding = fields.Boolean(
-        string="Is Indian TDS Entry",
-        copy=False,
-        help="Technical field to identify Indian withholding entry"
-    )
-    l10n_in_withholding_ref_move_id = fields.Many2one(
-        comodel_name='account.move',
-        string="Indian TDS Ref Move",
-        readonly=True,
-        index='btree_not_null',
-        copy=False,
-        help="Reference move for withholding entry",
-    )
-    l10n_in_withholding_ref_payment_id = fields.Many2one(
-        comodel_name='account.payment',
-        string="Indian TDS Ref Payment",
-        index='btree_not_null',
-        readonly=True,
-        copy=False,
-        help="Reference Payment for withholding entry",
-    )
-    l10n_in_withhold_move_ids = fields.One2many(
-        'account.move', 'l10n_in_withholding_ref_move_id',
-        string="Indian TDS Entries"
-    )
-    l10n_in_withholding_line_ids = fields.One2many(
-        'account.move.line', 'move_id',
-        string="Indian TDS Lines",
-        compute='_compute_l10n_in_withholding_line_ids',
-    )
-    l10n_in_total_withholding_amount = fields.Monetary(
-        string="Total Indian TDS Amount",
-        compute='_compute_l10n_in_total_withholding_amount',
-        help="Total withholding amount for the move",
-    )
     l10n_in_tds_feature_enabled = fields.Boolean(related='company_id.l10n_in_tds_feature')
     l10n_in_tcs_feature_enabled = fields.Boolean(related='company_id.l10n_in_tcs_feature')
 
@@ -243,24 +206,6 @@ class AccountMove(models.Model):
             company = move.company_id
             action_name = _("Journal Item(s)")
             action_text = _("View Journal Item(s)")
-            if company.l10n_in_tcs_feature or company.l10n_in_tds_feature:
-                invalid_tax_lines = move._get_l10n_in_invalid_tax_lines()
-                if company.l10n_in_tcs_feature and invalid_tax_lines:
-                    warnings['lower_tcs_tax'] = {
-                        'message': _("As the Partner's PAN missing/invalid apply TCS at the higher rate."),
-                        'actions': invalid_tax_lines.with_context(tax_validation=True)._get_records_action(
-                            name=action_name,
-                            views=[(_xmlid_to_res_id("l10n_in.view_move_line_tree_hsn_l10n_in"), "list")],
-                            domain=[('id', 'in', invalid_tax_lines.ids)],
-                        ),
-                        'action_text': action_text,
-                    }
-
-                if applicable_sections := move._get_l10n_in_tds_tcs_applicable_sections():
-                    warnings['tds_tcs_threshold_alert'] = {
-                        'message': applicable_sections._get_warning_message(),
-                    }
-
             if (
                 company.l10n_in_is_gst_registered
                 and company.l10n_in_hsn_code_digit
@@ -336,167 +281,6 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_partner_gstin_status = False
                 move.l10n_in_gstin_verified_date = False
-
-    @api.depends('line_ids', 'l10n_in_is_withholding')
-    def _compute_l10n_in_withholding_line_ids(self):
-        # Compute the withholding lines for the move
-        for move in self:
-            if move.l10n_in_is_withholding:
-                move.l10n_in_withholding_line_ids = move.line_ids.filtered('tax_ids')
-            else:
-                move.l10n_in_withholding_line_ids = False
-
-    def _compute_l10n_in_total_withholding_amount(self):
-        for move in self:
-            if self.env.company.l10n_in_tds_feature:
-                move.l10n_in_total_withholding_amount = sum(
-                    move.l10n_in_withhold_move_ids.filtered(
-                        lambda m: m.state == 'posted'
-                    ).l10n_in_withholding_line_ids.mapped('l10n_in_withhold_tax_amount')
-                )
-            else:
-                move.l10n_in_total_withholding_amount = 0.0
-
-    def action_l10n_in_withholding_entries(self):
-        self.ensure_one()
-        return {
-            'name': "TDS Entries",
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'view_mode': 'list,form',
-            'domain': [('id', 'in', self.l10n_in_withhold_move_ids.ids)],
-        }
-
-    def _get_l10n_in_invalid_tax_lines(self):
-        self.ensure_one()
-        if self.country_code == 'IN' and not self.commercial_partner_id.l10n_in_pan_entity_id:
-            lines = self.env['account.move.line']
-            for line in self.invoice_line_ids:
-                for tax in line.tax_ids:
-                    if (
-                        tax.l10n_in_tax_type == 'tcs'
-                        and tax.amount != max(
-                            tax.l10n_in_section_id.with_context(active_test=False).l10n_in_section_tax_ids,
-                            key=lambda t: abs(t.amount),
-                        ).amount
-                    ):
-                        lines |= line._origin
-            return lines
-
-    def _get_sections_aggregate_sum_by_pan(self, section_alert, commercial_partner_id):
-        self.ensure_one()
-        month_start_date, month_end_date = get_month(self.date)
-        company_fiscalyear_dates = self.company_id.sudo().compute_fiscalyear_dates(self.date)
-        fiscalyear_start_date, fiscalyear_end_date = company_fiscalyear_dates['date_from'], company_fiscalyear_dates['date_to']
-        default_domain = [
-            ('account_id.l10n_in_tds_tcs_section_id', '=', section_alert.id),
-            ('move_id.move_type', '!=', 'entry'),
-            ('company_id.l10n_in_tds_feature', '!=', False),
-            ('company_id.l10n_in_tan', '=', self.company_id.l10n_in_tan),
-            ('parent_state', '=', 'posted')
-        ]
-        if commercial_partner_id.l10n_in_pan_entity_id:
-            default_domain += [('move_id.commercial_partner_id.l10n_in_pan_entity_id', '=', commercial_partner_id.l10n_in_pan_entity_id.id)]
-        else:
-            default_domain += [('move_id.commercial_partner_id', '=', commercial_partner_id.id)]
-        frequency_domains = {
-            'monthly': [('date', '>=', month_start_date), ('date', '<=', month_end_date)],
-            'fiscal_yearly': [('date', '>=', fiscalyear_start_date), ('date', '<=', fiscalyear_end_date)],
-        }
-        aggregate_result = {}
-        for frequency, frequency_domain in frequency_domains.items():
-            query = self.env['account.move.line']._search(default_domain + frequency_domain, bypass_access=True, active_test=False)
-            result = self.env.execute_query_dict(SQL(
-                """
-                SELECT COALESCE(sum(account_move_line.balance), 0) as balance,
-                       COALESCE(sum(account_move_line.price_total * am.invoice_currency_rate), 0) as price_total
-                  FROM %s
-                  JOIN account_move AS am ON am.id = account_move_line.move_id
-                 WHERE %s
-                """,
-                query.from_clause,
-                query.where_clause)
-            )
-            aggregate_result[frequency] = result[0]
-        return aggregate_result
-
-    def _l10n_in_is_warning_applicable(self, section_id):
-        self.ensure_one()
-        match section_id.tax_source_type:
-            case 'tcs':
-                return self.company_id.l10n_in_tcs_feature and self.journal_id.type == 'sale'
-            case 'tds':
-                return (
-                    self.company_id.l10n_in_tds_feature
-                    and self.journal_id.type == 'purchase'
-                    and section_id not in self.l10n_in_withhold_move_ids.filtered(lambda m:
-                        m.state == 'posted'
-                    ).mapped('line_ids.tax_ids.l10n_in_section_id')
-                )
-            case _:
-                return False
-
-    def _get_l10n_in_tds_tcs_applicable_sections(self):
-        def _group_by_section_alert(invoice_lines):
-            group_by_lines = {}
-            for line in invoice_lines:
-                group_key = line.account_id.l10n_in_tds_tcs_section_id
-                if group_key and not line.company_currency_id.is_zero(line.price_total):
-                    group_by_lines.setdefault(group_key, [])
-                    group_by_lines[group_key].append(line)
-            return group_by_lines
-
-        def _is_section_applicable(section_alert, threshold_sums, invoice_currency_rate, lines):
-            lines_total = sum(
-                (line.price_total * invoice_currency_rate) if section_alert.consider_amount == 'total_amount' else line.balance
-                for line in lines
-            )
-            if section_alert.is_aggregate_limit:
-                aggregate_period_key = section_alert.consider_amount == 'total_amount' and 'price_total' or 'balance'
-                aggregate_total = threshold_sums.get(section_alert.aggregate_period, {}).get(aggregate_period_key)
-                if self.state == 'draft':
-                    aggregate_total += lines_total
-                if aggregate_total > section_alert.aggregate_limit:
-                    return True
-            return (
-                section_alert.is_per_transaction_limit
-                and lines_total > section_alert.per_transaction_limit
-            )
-
-        if self.country_code == 'IN' and self.move_type in ['in_invoice', 'out_invoice']:
-            warning = set()
-            commercial_partner_id = self.commercial_partner_id
-            if commercial_partner_id.l10n_in_pan_entity_id.tds_deduction == 'no':
-                invoice_lines = self.invoice_line_ids.filtered(lambda l: l.account_id.l10n_in_tds_tcs_section_id.tax_source_type != 'tds')
-            else:
-                invoice_lines = self.invoice_line_ids
-            existing_section = (
-                self.l10n_in_withhold_move_ids.line_ids + self.line_ids
-            ).tax_ids.l10n_in_section_id
-            for section_alert, lines in _group_by_section_alert(invoice_lines).items():
-                if (
-                    (section_alert not in existing_section
-                    or self._get_tcs_applicable_lines(lines))
-                    and self._l10n_in_is_warning_applicable(section_alert)
-                    and _is_section_applicable(
-                        section_alert,
-                        self._get_sections_aggregate_sum_by_pan(
-                            section_alert,
-                            commercial_partner_id
-                        ),
-                        self.invoice_currency_rate,
-                        lines
-                    )
-                ):
-                    warning.add(section_alert.id)
-            return self.env['l10n_in.section.alert'].browse(warning)
-
-    def _get_tcs_applicable_lines(self, lines):
-        tcs_applicable_lines = set()
-        for line in lines:
-            if line.l10n_in_tds_tcs_section_id not in line.tax_ids.l10n_in_section_id:
-                tcs_applicable_lines.add(line.id)
-        return self.env['account.move.line'].browse(tcs_applicable_lines)
 
     def l10n_in_verify_partner_gstin_status(self):
         self.ensure_one()

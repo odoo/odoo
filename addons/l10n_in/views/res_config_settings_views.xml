@@ -14,7 +14,7 @@
                 <div id="india_integration_section">
                     <block title="Indian Integration" id="india_localization" invisible="country_code != 'IN'">
                         <setting name="l10n_in_tds"
-                                 help="Enable this to activate the Tax Deducted at Source (TDS) feature and the account-based TDS section suggestion."
+                                 help="Enable this to activate the Tax Deducted at Source (TDS) feature."
                                  company_dependent="1"
                                  string="TDS"
                                  documentation="/applications/finance/fiscal_localizations/india.html">
@@ -27,7 +27,7 @@
                             </div>
                         </setting>
                         <setting name="l10n_in_tcs"
-                                 help="Enable this to activate the Tax Collected at Source (TCS) feature and the account-based TCS section suggestion."
+                                 help="Enable this to activate the Tax Collected at Source (TCS) feature."
                                  company_dependent="1"
                                  string="TCS"
                                  documentation="/applications/finance/fiscal_localizations/india.html">
@@ -135,20 +135,17 @@
                     <field name="l10n_in_enet_vendor_batch_payment_feature" widget="upgrade_boolean"/>
                 </setting>
             </block>
-            <block id="default_accounts" position="inside">
-                <setting string="India TDS Control:" invisible="not l10n_in_tds_feature">
-                    <div class="content-group">
-                        <div class="row mt8">
-                            <label for="l10n_in_withholding_journal_id" class="col-lg-5 o_light_label" string="Journal"/>
-                            <field name="l10n_in_withholding_journal_id" domain="[('type', '=', 'general')]"/>
-                        </div>
-                        <div class="row mt8">
-                            <label for="l10n_in_withholding_account_id" class="col-lg-5 o_light_label" string="Account"/>
-                            <field name="l10n_in_withholding_account_id"/>
-                        </div>
-                    </div>
-                </setting>
-            </block>
+            <xpath expr="//block[@id='default_accounts']//setting[@id='withholding']" position="attributes">
+                <attribute name="string">India TDS Control:</attribute>
+                <attribute name="invisible">not l10n_in_tds_feature</attribute>
+            </xpath>
+            <xpath expr="//label[@for='withholding_tax_base_account_id']" position="before">
+                <label for="l10n_in_withholding_journal_id" class="col-lg-5 o_light_label"/>
+                <field name="l10n_in_withholding_journal_id" domain="[('type', '=', 'general')]"/>
+            </xpath>
+            <xpath expr="//label[@for='withholding_tax_base_account_id']" position="attributes">
+                <attribute name="string">TDS Control Account</attribute>
+            </xpath>
             <xpath expr="//setting[@id='qr_code_invoices']" position="attributes">
                 <attribute name="invisible">country_code == 'IN'</attribute>
             </xpath>
