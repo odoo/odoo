@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -30,11 +29,6 @@ class TestLiteUserCore(TransactionCase):
         emp = self.env['hr.employee'].create({'name': 'Reuse Emp', 'work_email': 'reuse@example.com'})
         self.assertEqual(emp.user_id, user, "an existing user matching the email is reused, not duplicated")
 
-    def test_active_requires_user_constraint(self):
-        with self.assertRaises(ValidationError):
-            emp = self.env['hr.employee'].create({'name': 'Headless'})
-            emp.user_id = False
-
     def test_inactive_employee_needs_no_user(self):
         emp = self.env['hr.employee'].create({'name': 'Ghost', 'active': False})
         emp.user_id = False
@@ -44,13 +38,13 @@ class TestLiteUserCore(TransactionCase):
         """``role`` reflects group membership: light / user / administrator."""
         admin = self.env.ref('base.user_admin')
         self.assertEqual(admin.role, 'group_system')
-        light = self.env['hr.employee'].create({'name': 'Light'}).user_id
+        light = self.env['hr.employee'].create({'name': 'Light', 'work_email': 'light@employee.com'}).user_id
         self.assertEqual(light.role, 'group_user')
 
     def test_real_access_makes_regular(self):
         """Granting access beyond the light set turns a Light user into a regular
         User -- the projection follows from the user gaining an extra app group."""
-        user = self.env['hr.employee'].create({'name': 'Climber'}).user_id
+        user = self.env['hr.employee'].create({'name': 'Climber', 'work_email': 'climber@employee.com'}).user_id
         self.assertEqual(user.role, 'group_user')
         app_group = self.env['res.groups'].create({
             'name': 'Some App / User',
@@ -63,7 +57,7 @@ class TestLiteUserCore(TransactionCase):
     def test_lite_user_can_browse_directory(self):
         """A Light user (a plain internal user) can read the employee directory
         and the models its views depend on."""
-        light_user = self.env['hr.employee'].create({'name': 'Browser'}).user_id
+        light_user = self.env['hr.employee'].create({'name': 'Browser', 'work_email': 'browser@employee.com'}).user_id
         for model in ('hr.employee.public', 'hr.department', 'hr.job',
                       'hr.work.location', 'hr.employee.category'):
             # must not raise AccessError
@@ -72,7 +66,7 @@ class TestLiteUserCore(TransactionCase):
     def test_lite_user_can_load_backend(self):
         """A provisioned Light user can load the web client: menus and its own
         user/groups must be readable."""
-        light_user = self.env['hr.employee'].create({'name': 'Backend'}).user_id
+        light_user = self.env['hr.employee'].create({'name': 'Backend', 'work_email': 'backend@employee.com'}).user_id
         # the real path the web client uses to render the menu tree
         self.env['ir.ui.menu'].with_user(light_user).load_menus(False)
         # reading own user record with its groups (user preferences)

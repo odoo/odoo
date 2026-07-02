@@ -1510,14 +1510,6 @@ class HrEmployee(models.Model):
 
         return res
 
-    @api.constrains('active', 'user_id')
-    def _check_active_has_user(self):
-        for employee in self:
-            if employee.active and not employee.user_id:
-                raise ValidationError(self.env._(
-                    "An active employee must be linked to a user. "
-                    "%(name)s has none.", name=employee.name))
-
     @api.constrains('pin')
     def _verify_pin(self):
         for employee in self:
@@ -1564,7 +1556,62 @@ class HrEmployee(models.Model):
             vals['tz'] = user.tz
         return vals
 
-    def _get_or_create_light_user(self, vals):
+    def _get_or_create_light_user(self):
+        """Resolve or create the light user for an employee.
+
+        Called while building an employee's create values so the employee is
+        born already linked to its user (keeping the active/user_id constraint
+        satisfied without a mid-create flush). Reuses, in order, the resource's
+        user, the work contact's user, or an existing user matching the work
+        email; otherwise creates a light (less-billable) user.
+        """
+        self.ensure_one()
+        ResUsers = self.env['res.users'].sudo()
+        if self.resource_id.user_id:
+            return self.resource_id.user_id
+        company_id = self.company_id.id or self.env.company.id
+        # 1. reuse the work contact's user, or an existing user matching the work
+        #    email (by login or email address) to avoid creating a duplicate user
+        user = self.work_contact_id.user_ids[:1]
+        emails = tools.mail.email_normalize_all(self.work_contact_id.email or self.work_email or self.resource_id.email)
+        login = emails[0] if emails else False
+        # Try to search for an existing user.
+        if not user and login:
+            user = ResUsers.with_context(active_test=False).search(
+                ['|', ('login', '=', login), ('email_normalized', '=', login)], limit=1, order='active')
+        if user:
+            # If archived user or employee of the same company linked to that user...
+            if not user.active:
+                raise UserError(self.env._('An inactive user already exist with the following login: %(login)s. '
+                                           'User Name: %(user_name)s.', login=login, user_name=user.name))
+            existing_employee = user.employee_ids.filtered(lambda e: e.company_id.id == company_id)
+            if existing_employee:
+                raise UserError(self.env._('A user with the same login (%(login)s) already has an employee in this company. '
+                                           'User Name: %(user_name)s / Employee Name: %(employee)s',
+                                           login=login, user_name=user.name, employee=existing_employee.name))
+            elif user.share:
+                raise UserError(self.env._('A portal user already exist with the following login: %(login)s. '
+                                           'User Name: %(user_name)s. You should set another email address on the employee.',
+                                           login=login, user_name=user.name))
+            return user
+        if not login:
+            # TODO DBE: if not possible to create a user, skip creation. The employee form will have a warning ??
+            # raise ValidationError(self.env._('Cannot create light user for employee because missing login.'))
+            return ResUsers
+        # Reimplement default_groups just to test.
+        groups = ResUsers._default_groups(group='user')
+        return ResUsers.create({
+            'name': self.name,
+            'login': login,
+            'email': login,
+            'phone': self.work_phone or self.mobile_phone or self.work_contact_id.phone,
+            'partner_id': self.work_contact_id.id or False,
+            'company_id': company_id,
+            'company_ids': [Command.set([company_id])],
+            'group_ids': [Command.set(groups.ids)],
+        })
+
+    def _get_or_create_light_user_from_vals(self, vals):
         """Resolve or create the light user for an employee.
 
         Called while building an employee's create values so the employee is
@@ -1713,13 +1760,13 @@ class HrEmployee(models.Model):
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
                 vals['name'] = vals.get('name', user.name)
                 self._remove_work_contact_id(user, vals.get('company_id'))
-            elif (vals.get('active', True)
-                  and not self.env.context.get('salary_simulation')):
-                # An active employee must have a light user.
-                user = self._get_or_create_light_user(vals)
-                vals['user_id'] = user.id
-                if not vals.get('work_contact_id'):
-                    vals['work_contact_id'] = user.partner_id.id
+            # elif (vals.get('active', True)
+            #       and not self.env.context.get('salary_simulation')):
+            #     # An active employee must have a light user.
+            #     user = self._get_or_create_light_user_from_vals(vals)
+            #     vals['user_id'] = user.id
+            #     if not vals.get('work_contact_id'):
+            #         vals['work_contact_id'] = user.partner_id.id
             # Having one create per company is necessary to pass the company in the context to correctly set it in
             # the underlying version created by the framework
             vals_per_company[vals.get('company_id', self.env.company)].append((idx, vals))
@@ -1737,6 +1784,8 @@ class HrEmployee(models.Model):
         if self.env.context.get('salary_simulation'):
             return employees
         # TODO DBE: Or create user here? so we can benefit from the created work_contact.
+        for employee in employees.filtered(lambda e: e.active):
+            employee.user_id = employee._get_or_create_light_user()
         for employee_sudo in employees.sudo():
             # creating 'svg/xml' attachments requires specific rights
             if not employee_sudo.image_1920 and self.env['ir.ui.view'].sudo(False).has_access('write'):

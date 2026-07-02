@@ -10,7 +10,7 @@ from odoo.fields import Domain
 from odoo.tests import Form, users, new_test_user, HttpCase, tagged, TransactionCase
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
-from odoo.exceptions import ValidationError, AccessError
+from odoo.exceptions import ValidationError, AccessError, UserError
 from psycopg2.errors import NotNullViolation
 
 
@@ -524,12 +524,11 @@ class TestHrEmployee(TestHrCommon):
             'name': 'Linked', 'work_email': 'free@example.com'})
         self.assertEqual(linked_emp.user_id, free_user)
 
-        # An email matching a user that already backs an employee does not reuse
-        # it: a separate user is provisioned for the new employee.
-        other_emp = self.env['hr.employee'].create({
-            'name': 'Other', 'work_email': 'free@example.com'})
-        self.assertTrue(other_emp.user_id)
-        self.assertNotEqual(other_emp.user_id, free_user)
+        # An email matching a user that already backs an employee does not reuse it:
+        # it cannot create the employee.
+        with self.assertRaises(UserError):
+            self.env['hr.employee'].create({
+                'name': 'Other', 'work_email': 'free@example.com'})
 
         # A multi/RFC-formatted email uses the first address as the login.
         multi_emp = self.env['hr.employee'].create({
