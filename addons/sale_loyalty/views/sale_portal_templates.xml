@@ -20,29 +20,50 @@
 
     <template id="sale_purchased_gift_card">
         <t t-set="gift_cards" t-value="order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type == 'gift_card').coupon_id"/>
-        <div class="card mt-3 " t-if="gift_cards and order.state in ('sale', 'done')">
+        <div class="card mt-3" t-if="gift_cards and order.state in ('sale', 'done')">
             <div class="card-body">
-                <span t-if="not hide_intro">You will find below your gift cards code. An email has been sent with it. You can use it starting right now.</span>
-                <table class="table text-center table-borderless">
-                    <thead>
-                        <tr>
-                            <th class="fw-normal">Gift Card Code</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="range(len(gift_cards))" t-as="gift_card_idx">
-                            <t t-set="gift_card" t-value="gift_cards[gift_card_idx]"/>
-                            <td class="o_purchased_gift_card">
-                                Gift #<t t-out="gift_card_idx + 1"/>
-                                (<span t-out="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>)
-                                <strong t-out="gift_card.code"/>
-                                <button class="btn btn-sm btn-secondary copy-to-clipboard" t-att-data-clipboard-text="gift_card.code">
-                                    <span class="fa fa-clipboard"/> Copy
+                <h6 t-if="not hide_intro" class="mb-3">
+                    Your gift card<t t-if="len(gift_cards) > 1">s are</t><t t-else=""> is</t> ready to use
+                </h6>
+                <div class="o_purchased_gift_cards row row-cols-2">
+                    <t t-foreach="gift_cards" t-as="gift_card">
+                        <small t-attf-class="o_purchased_gift_card_label col-12 mb-1 text-muted #{' mt-4' if not gift_card_first else ''}">
+                            Gift card <t t-out="gift_card_index + 1"/>:
+                            <span class="fw-bold" t-out="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>
+                        </small>
+                        <div class="o_purchased_gift_card col-12 col-md-4 col-lg-5 col-xl-4 gap-2 pe-md-0">
+                            <div class="d-flex align-items-center justify-content-between border px-2 pe-0 rounded">
+                                <span class="mb-0 fs-6 text-nowrap opacity-50" t-out="gift_card.code"/>
+                                <button
+                                    type="button"
+                                    class="copy-to-clipboard btn m-1 border-0 p-0"
+                                    t-att-data-clipboard-text="gift_card.code"
+                                    title="Copy code"
+                                    aria-label="Copy code"
+                                >
+                                    <i class="fa fa-clone"/>
                                 </button>
-                            </td>
-                        </t>
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+                        <form class="o_gift_card_send_form col-12 col-md mt-2 mt-md-0">
+                            <input
+                                type="hidden"
+                                name="code"
+                                t-att-value="gift_card.code"
+                            />
+                            <div class="input-group h-100">
+                                <input
+                                    name="email"
+                                    class="form-control"
+                                    type="email"
+                                    placeholder="Email Address"
+                                    required="required"
+                                />
+                                <button type="submit" class="btn btn-primary text-nowrap">Send as gift</button>
+                            </div>
+                        </form>
+                    </t>
+                </div>
             </div>
         </div>
     </template>

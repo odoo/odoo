@@ -19,6 +19,12 @@
         "views/sale_loyalty_menus.xml",
         'security/ir.access.csv',
     ],
+    "assets": {
+        "web.assets_frontend": [
+            "sale_loyalty/static/src/scss/gift_card.scss",
+            "sale_loyalty/static/src/interactions/gift_card.js",
+        ]
+    },
     "uninstall_hook": "uninstall_hook",
     "author": "Odoo S.A.",
     "license": "LGPL-3",

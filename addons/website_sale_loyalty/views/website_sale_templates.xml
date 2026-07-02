@@ -216,9 +216,9 @@
         id="website_sale_loyalty.website_sale_purchased_gift_card"
         inherit_id="website_sale.confirmation"
     >
-        <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
+        <t t-call="website_sale.payment_confirmation_status" position="after">
             <t t-call="sale_loyalty.sale_purchased_gift_card"/>
-        </xpath>
+        </t>
     </template>
 
     <template
