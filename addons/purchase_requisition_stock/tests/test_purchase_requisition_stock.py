@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
 from odoo.tests import Form
 from odoo import Command
@@ -315,3 +316,40 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
         alt_po = self.env['purchase.order'].browse(alt_po_id)
         self.assertEqual(alt_po.reference_ids, orig_po.reference_ids)
+
+
+class TestPurchaseRequisitionStockAccount(AccountTestInvoicingCommon, TestPurchaseRequisitionCommon):
+
+    def test_cancel_requisition_only_cancels_po_without_active_picking_or_invoice(self):
+        """ Only POs with no active picking and no active invoice are cancelled when the requisition is cancelled. """
+        def _make_po():
+            return self.env['purchase.order'].create({
+                'requisition_id': self.bo_requisition.id,
+                'partner_id': self.res_partner_1.id,
+                'order_line': [(0, 0, {
+                    'product_id': self.bo_requisition.product_id.id,
+                })],
+            })
+
+        # PO 1: draft, no picking, no invoice → should be cancelled
+        po_no_picking_no_invoice = _make_po()
+
+        # PO 2: confirmed → has active picking, no invoice → should NOT be cancelled
+        po_with_picking = _make_po()
+        po_with_picking.button_confirm()
+        self.assertEqual(po_with_picking.picking_ids.state, 'assigned', 'Confirmed PO should have an active picking')
+
+        # PO 3: confirmed + received + invoiced → should NOT be cancelled
+        po_with_invoice = _make_po()
+        po_with_invoice.button_confirm()
+        receipt = po_with_invoice.picking_ids
+        receipt.button_validate()
+        po_with_invoice.action_create_invoice()
+        self.assertEqual(po_with_invoice.invoice_ids.state, 'draft', 'PO should have a non-cancelled invoice')
+
+        # Cancel the requisition
+        self.bo_requisition.action_cancel()
+        self.assertEqual(self.bo_requisition.state, 'cancel')
+        self.assertEqual(po_no_picking_no_invoice.state, 'cancel', 'Draft PO with no picking and no invoice should be cancelled')
+        self.assertEqual(po_with_picking.state, 'purchase', 'PO with an active picking should not be cancelled')
+        self.assertEqual(po_with_invoice.state, 'purchase', 'PO with an active invoice should not be cancelled')

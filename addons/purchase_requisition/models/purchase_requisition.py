@@ -120,10 +120,15 @@ class PurchaseRequisition(models.Model):
         for requisition in self:
             for requisition_line in requisition.line_ids:
                 requisition_line.supplier_info_ids.sudo().unlink()
-            requisition.purchase_ids.button_cancel()
-            for po in requisition.purchase_ids:
+            cancellable_pos = requisition._get_cancellable_purchase_orders()
+            cancellable_pos.button_cancel()
+            for po in cancellable_pos:
                 po.message_post(body=_('Cancelled by the agreement associated to this quotation.'))
         self.state = 'cancel'
+
+    def _get_cancellable_purchase_orders(self):
+        self.ensure_one()
+        return self.purchase_ids.filtered(lambda po: not po.invoice_ids.filtered(lambda inv: inv.state != 'cancel'))
 
     def action_confirm(self):
         self.ensure_one()
