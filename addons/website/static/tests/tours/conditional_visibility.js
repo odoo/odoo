@@ -176,6 +176,11 @@ registry.category("web_tour.tours").add("conditional_visibility_4", {
             trigger: ".o_overlay_options button.fa-angle-down",
             run: "click",
         },
+        {
+            content: "Check that Banner is now before Text - Image in the panel",
+            trigger:
+                ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Banner') ~ .o_we_invisible_entry:contains('Text - Image')",
+        },
         ...checkEyesIconAfterSave(),
         {
             content: "Check the order on the 'Invisible Elements' panel",
@@ -201,6 +206,11 @@ registry.category("web_tour.tours").add("conditional_visibility_4", {
             trigger: ".o_overlay_options button.o_move_handle",
             run: "drag_and_drop :iframe #wrapwrap footer",
         },
+        {
+            content: "Check that Text - Image is now before Banner in the panel",
+            trigger:
+                ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Text - Image') ~ .o_we_invisible_entry:contains('Banner')",
+        },
         ...checkEyesIconAfterSave(false),
         {
             content: "Check the order on the 'Invisible Elements' panel",
@@ -210,7 +220,6 @@ registry.category("web_tour.tours").add("conditional_visibility_4", {
 });
 
 registry.category("web_tour.tours").add("conditional_visibility_5", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         waitForEditMode,
         {
