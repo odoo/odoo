@@ -195,12 +195,10 @@ class IrHttp(models.AbstractModel):
                 return slugify_lib.slugify(value, max_length=max_length)
             except TypeError:
                 pass
-        uni = unicodedata.normalize('NFKD', value)
+        uni = unicodedata.normalize('NFKC', value)
 
-        # Strip combining marks (so accents like 'é' become 'e' instead of 'e-')
-        cleaned = ''.join(c for c in uni if unicodedata.category(c) != 'Mn')
         # Replace all non-word chars AND underscores with a single dash
-        slug = re.sub(r'[\W_]+', '-', cleaned).strip('-').lower()
+        slug = re.sub(r'[\W_]+', '-', uni).strip('-').lower()
         slugified_str = unicodedata.normalize('NFC', slug)
         return slugified_str[:max_length]
 

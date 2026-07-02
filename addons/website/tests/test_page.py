@@ -684,6 +684,52 @@ class WithContext(HttpCase):
         self.assertEqual(self.env['website.page'].with_context({'lang': 'en_US'}).search([('url', '=', '/page_1')]).arch, '''<t name="Homepage" t-name="test.base_view">BIDULE EN !</t>''')
         self.assertEqual(self.env['website.page'].with_context({'lang': lang_fr.code}).search([('url', '=', '/page_1')]).arch, '''<t name="Homepage" t-name="test.base_view">BIDULE FR !</t>''')
 
+    def test_url_unicity(self):
+        website = self.env.ref('base.default_website')
+        website.write({
+            'name': 'Test Website',
+            'domain': self.base_url(),
+            'homepage_url': False,
+        })
+
+        cafe_url = "/cafe"
+        cafe_url_full = website.domain + cafe_url
+        test_cafe_page = self.env['website.page'].with_context(website_id=website.id).create({
+            'name': 'Cafe',
+            'type': 'qweb',
+            'arch': '<div>CafeTest</div>',
+            'key': 'test.cafe_page_test',
+            'url': "/temp_url",
+            'is_published': True,
+            'website_id': website.id
+        })
+        # Ensure the url goes through slugify and get_unique_path
+        with MockRequest(self.env, website=website):
+            test_cafe_page.url = cafe_url
+        r1 = self.url_open(cafe_url)
+        self.assertEqual(r1.status_code, 200)
+        self.assertURLEqual(r1.url, cafe_url_full)
+
+        cafe_with_accent_url = '/café'
+        expected_cafe_with_accent_url_full = website.domain + "/café-1"
+        test_cafe_with_accent_page = self.env['website.page'].with_context(website_id=website.id).create({
+            'name': 'CaféWithAccent',
+            'type': 'qweb',
+            'arch': '<div>CaféWithAccentTest</div>',
+            'key': 'test.cafe_with_accent_page_test',
+            'url': "/temp_url",
+            'is_published': True,
+            'website_id': website.id
+        })
+        # Ensure the url goes through slugify and get_unique_path
+        with MockRequest(self.env, website=website):
+            test_cafe_with_accent_page.url = cafe_with_accent_url
+        r2 = self.url_open(cafe_with_accent_url)
+        self.assertEqual(r2.status_code, 404, "Cannot have both '/cafe' and '/café' (unicity)")
+        r3 = self.url_open(expected_cafe_with_accent_url_full)
+        self.assertEqual(r3.status_code, 200)
+        self.assertURLEqual(test_cafe_with_accent_page.url, expected_cafe_with_accent_url_full)
+
 
 @tagged('-at_install', 'post_install')
 class TestNewPage(common.TransactionCase):
