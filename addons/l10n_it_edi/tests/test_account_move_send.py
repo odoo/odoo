@@ -87,47 +87,38 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         self.assertFalse(invoice2.is_being_sent)
 
     def test_invoice_with_cig_or_cup_or_both(self):
-            
-            self.italian_partner_a.write({'l10n_it_pa_index': '1234567'})
+        self.italian_partner_a.write({'l10n_it_pa_index': '1234567'})
 
-            invoice_valid = self._create_invoice_it()
-            invoice_cig_only = self._create_invoice_it()
-            invoice_cup_only = self._create_invoice_it()
-            invoice_cig_cup = self._create_invoice_it()
-
-            invoice_valid.write({
+        for test_data in [
+            {
                 'l10n_it_cig': '1234567',
                 'l10n_it_cup': '7654321',
-                'l10n_it_origin_document_type': 'purchase_order'
-            }) 
-            
-            invoice_cig_only.write({
+                'l10n_it_origin_document_type': 'purchase_order',
+                'error': False,
+            }, {
                 'l10n_it_cig': '1234567',
                 'l10n_it_cup': False,
-                'l10n_it_origin_document_type': False
-            }) 
-            
-            invoice_cup_only.write({
+                'l10n_it_origin_document_type': False,
+                'error': True,
+            }, {
                 'l10n_it_cig': False,
                 'l10n_it_cup': '7654321',
-                'l10n_it_origin_document_type': False
-            })
-            
-            invoice_cig_cup.write({
+                'l10n_it_origin_document_type': False,
+                'error': True,
+            }, {
                 'l10n_it_cig': '1234567',
                 'l10n_it_cup': '7654321',
-                'l10n_it_origin_document_type': False
-            }) 
-
-            valid = invoice_valid._l10n_it_edi_base_export_check()
-            cig = invoice_cig_only._l10n_it_edi_base_export_check()
-            cup = invoice_cup_only._l10n_it_edi_base_export_check()
-            cig_cup = invoice_cig_cup._l10n_it_edi_base_export_check()
-
-            self.assertNotIn('move_missing_origin_document_field', valid)
-            self.assertIn('move_missing_origin_document_field', cig)
-            self.assertIn('move_missing_origin_document_field', cup)
-            self.assertIn('move_missing_origin_document_field', cig_cup)
+                'l10n_it_origin_document_type': False,
+                'error': True
+            },
+        ]:
+            with self.subTest(**test_data):
+                error = test_data.pop('error')
+                invoice = self._create_invoice_it(**test_data)
+                self.assertEqual(
+                    error,
+                    'l10n_it_edi_move_missing_origin_document' in invoice._l10n_it_edi_export_data_check()
+                )
 
     def test_invoice_send_with_multiple_company(self):
         second_company = self.company_data['company']

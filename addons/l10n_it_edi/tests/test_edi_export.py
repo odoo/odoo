@@ -227,7 +227,7 @@ class TestItEdiExport(TestItEdi):
                 }),
             ],
         })
-        self.assertEqual(['l10n_it_edi_partner_address_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
+        self.assertEqual(['l10n_it_edi_partner_config_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
 
     def test_invoice_non_domestic_simplified(self):
         invoice = self.env['account.move'].with_company(self.company).create({
@@ -243,7 +243,7 @@ class TestItEdiExport(TestItEdi):
                 }),
             ],
         })
-        self.assertEqual(['l10n_it_edi_partner_address_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
+        self.assertEqual(['l10n_it_edi_partner_config_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
 
     def test_bill_refund_no_reconcile(self):
         Move = self.env['account.move'].with_company(self.company)
