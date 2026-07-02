@@ -609,7 +609,9 @@ patch(PosStore.prototype, {
     },
     async reprintOrder() {
         const order = this.getOrder();
-        await this.sendOrderInPreparation(order, { explicitReprint: true });
+        order.uiState.isReprinting = true;
+        await this.sendOrderInPreparation(order);
+        order.uiState.isReprinting = false;
         this.showDefault();
     },
     async _askForPreparation() {

@@ -38,7 +38,16 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
     const noteUpdate = {};
     let changesCount = 0;
     let changeAbsCount = 0;
-
+    if (order.uiState.isReprinting) {
+        return {
+            nbrOfChanges: 0,
+            noteUpdate: {},
+            orderlines: oldChanges,
+            count: 0,
+            general_customer_note: order.last_order_preparation_change.general_customer_note,
+            internal_note: order.last_order_preparation_change.internal_note,
+        };
+    }
     const hasPreparationCategory = (product) => {
         if (!product) {
             return false;
