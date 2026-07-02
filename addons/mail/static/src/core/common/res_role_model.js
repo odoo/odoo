@@ -6,7 +6,11 @@ export class ResRole extends Record {
     /** @type {number} */
     id;
     /** @type {string} */
+    color;
+    /** @type {string} */
     name;
+    /** @type {number} */
+    sequence;
 }
 
 ResRole.register();

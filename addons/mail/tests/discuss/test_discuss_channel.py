@@ -147,6 +147,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "is_company": False,
                                     "main_user_id": self.env.user.id,
                                     "name": "Ernest Employee",
+                                    "user_ids": [self.env.user.id],
                                     "write_date": emp_partner_write_date,
                                 },
                             ),
@@ -154,6 +155,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 {
                                     "id": self.env.user.id,
                                     "partner_id": self.env.user.partner_id.id,
+                                    "role_ids": [],
                                     "share": False,
                                 },
                             ),
