@@ -87,6 +87,9 @@
                             </tbody>
                         </table>
                         <t t-call="point_of_sale.company_info_receipt" />
+                        <div t-if="extra_data['date']" class="w-100 text-normal mt-2" name="print_date">
+                            <t t-out="extra_data['date']" />
+                        </div>
                     </div>
                 </body>
             </html>
