@@ -80,7 +80,7 @@ export function instanceofMarkup(value) {
  */
 export function canRenderAsHTML(value) {
     if (!value) {
-        return false;
+        return value === "";
     }
     const domParser = new DOMParser();
     const xml = domParser.parseFromString(value, "text/xml");
