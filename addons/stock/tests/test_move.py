@@ -2724,6 +2724,50 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(move_stock_stock_1.state, 'assigned')
         self.assertEqual(move_stock_stock_2.state, 'waiting')
 
+    def test_link_assign_mto_reserve_from_child_location(self):
+        """Reserve a chained move from a child location when the origin line points to its parent."""
+        product = self.env['product.product'].create({
+            'name': 'Product MTO Child Location',
+            'is_storable': True,
+        })
+        move_supp_stock = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': product.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move_supp_stock._action_confirm()
+        move_supp_stock._action_assign()
+        move_supp_stock.move_line_ids.quantity = 2.0
+        move_supp_stock.picked = True
+        move_supp_stock._action_done()
+
+        move_stock_customer = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'procure_method': 'make_to_order',
+            'move_orig_ids': [Command.link(move_supp_stock.id)],
+        })
+        move_supp_stock.move_dest_ids = [Command.link(move_stock_customer.id)]
+        move_stock_customer._action_confirm()
+
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location, -2.0)
+        self.env['stock.quant']._update_available_quantity(product, self.shelf_1, 2.0)
+
+        move_stock_customer._action_assign()
+
+        self.assertEqual(move_stock_customer.state, 'assigned')
+        self.assertRecordValues(move_stock_customer.move_line_ids, [{
+            'location_id': self.shelf_1.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product.id,
+            'quantity': 2.0,
+        }])
+
     def test_link_assign_7(self):
         # create pickings and moves for a pick -> pack mto scenario
         picking_stock_pack = self.env['stock.picking'].create({

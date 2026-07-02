@@ -1890,6 +1890,25 @@ Please change the quantity done or the rounding precision in your settings.""",
                     move_line_vals.append(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
         return move_line_vals, taken_quantity
 
+    def _update_reserved_quantity_vals_mto(self, need, location_id, lot_id=None, package_id=None, owner_id=None):
+        """Reserve chained quantities from the exact origin location, then from its children."""
+        self.ensure_one()
+        move_line_vals, taken_quantity = self._update_reserved_quantity_vals(
+            need, location_id, lot_id, package_id, owner_id, strict=True)
+        remaining_quantity = need - taken_quantity
+        if self.product_id.uom_id.is_zero(remaining_quantity):
+            return move_line_vals, taken_quantity
+
+        for child_location_id in location_id.child_internal_location_ids - location_id:
+            child_move_line_vals, child_taken_quantity = self._update_reserved_quantity_vals(
+                remaining_quantity, child_location_id, lot_id, package_id, owner_id, strict=True)
+            move_line_vals += child_move_line_vals
+            taken_quantity += child_taken_quantity
+            remaining_quantity -= child_taken_quantity
+            if self.product_id.uom_id.is_zero(remaining_quantity):
+                break
+        return move_line_vals, taken_quantity
+
     def _add_serial_move_line_to_vals_list(self, reserved_quant, quantity):
         return [self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant) for i in range(int(quantity))]
 
@@ -2083,7 +2102,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                     all_move_line_vals = []
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
-                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True)
+                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals_mto(
+                            min(quantity, need), location_id, lot_id, package_id, owner_id)
                         all_move_line_vals += move_line_vals
                         if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
                             taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
