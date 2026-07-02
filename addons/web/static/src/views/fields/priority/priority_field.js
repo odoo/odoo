@@ -59,10 +59,19 @@ export class PriorityField extends Component {
             : this.options.findIndex((o) => o[0] === this.props.record.data[this.props.name]);
     }
 
-    getTooltip(value) {
-        return this.tooltipLabel && this.tooltipLabel !== value
-            ? `${this.tooltipLabel}: ${value}`
-            : value;
+    getTooltip(value, label) {
+        if (!this.tooltipLabel || this.tooltipLabel === label) {
+            return label;
+        }
+        const currentValue = this.props.record.data[this.props.name];
+        const currentOption = this.options.find(([optionValue]) => optionValue === currentValue);
+        if (this.props.readonly) {
+            return currentOption ? currentOption[1] : label;
+        }
+        return _t("Set %(tooltipLabel)s: %(label)s", {
+            tooltipLabel: this.tooltipLabel,
+            label: currentValue === value ? this.options[0][1] : label,
+        });
     }
     /**
      * @param {string} value
