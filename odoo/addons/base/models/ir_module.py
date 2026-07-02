@@ -6,6 +6,7 @@ import platform
 import shutil
 import warnings
 from collections import OrderedDict, defaultdict
+from contextlib import suppress
 from textwrap import dedent
 
 import lxml.html
@@ -15,6 +16,7 @@ from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
 from markupsafe import Markup
+from polib import unescape as po_unescape
 
 import odoo
 from odoo import _, api, fields, models, modules, tools
@@ -1000,6 +1002,73 @@ class IrModuleModule(models.Model):
                     _logger.info('module %s: no translation for language %s', module_name, lang)
 
         translation_importer.save(overwrite=overwrite)
+
+    @api.model
+    def _load_manifest_terms(self, langs):
+        """Load module manifest translations for all non-installed modules."""
+
+        def get_manifest_translations(po_path, module_name):
+            """Extract the relevant field translations from the manifest PO file, and return them as a dictionary.
+
+            :param str po_path: Path to the PO file.
+            :param str module_name: Name of the module.
+            :return dict: Dictionary mapping field names to their translated value.
+            """
+            PREFIX = b'#: model:ir.module.module,'
+            SUFFIX = f':base.module_{module_name}'.encode()
+
+            translations = {}
+            current_field = None
+            is_reading_msgstr = False
+            msgstr_lines = []
+
+            with file_open(po_path, 'rb') as po_file, suppress(FileNotFoundError):
+                for line in po_file:
+                    stripped_line = line.strip()
+                    if not stripped_line:
+                        if current_field and msgstr_lines:
+                            msgstr = po_unescape(b"".join(msgstr_lines).decode('utf-8').strip('"'))
+                            if msgstr:
+                                translations[current_field] = msgstr
+                        current_field = None
+                        is_reading_msgstr = False
+                        msgstr_lines = []
+                        continue
+
+                    if line.startswith(PREFIX) and line.endswith(SUFFIX):
+                        current_field = line[len(PREFIX):-len(SUFFIX)].decode('utf-8')
+                    elif current_field and stripped_line.startswith(b'msgstr '):
+                        is_reading_msgstr = True
+                        msgstr_lines.append(stripped_line[len(b'msgstr '):])
+                    elif is_reading_msgstr and stripped_line.startswith(b'"'):
+                        msgstr_lines.append(stripped_line)
+                    elif not current_field and line.startswith(b'msgid "') and not line.startswith(b'msgid ""'):
+                        # If we encounter a valid msgid without finding the relevant field, it means that the manifest
+                        # terms have all been found, or are not present in the PO file (they should appear first).
+                        # In both cases, we can stop parsing the file.
+                        break
+
+                if current_field and msgstr_lines:
+                    msgstr = po_unescape(b"".join(msgstr_lines).decode('utf-8').strip('"'))
+                    if msgstr:
+                        translations[current_field] = msgstr
+
+            return translations
+
+        if not langs or (len(langs) == 1 and langs[0] in ('en_US', 'en')):
+            return
+
+        uninstalled_modules = self.search([('state', '!=', 'installed')])
+
+        for module in uninstalled_modules:
+            for lang in langs:
+                for po_path in get_po_paths(module.name, lang):
+                    _logger.info('module %s: loading manifest translation file %s for language %s', module.name, po_path, lang)
+                    translations = get_manifest_translations(po_path, module.name)
+                    if not translations:
+                        _logger.info('module %s: no manifest translations for language %s', module.name, lang)
+                        continue
+                    module.with_context(lang=lang).write(translations)
 
     @api.model
     def _extract_resource_attachment_translations(self, module, lang):

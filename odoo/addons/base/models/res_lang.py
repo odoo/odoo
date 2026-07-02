@@ -379,6 +379,7 @@ class ResLang(models.CachedModel):
             active_lang = activated.mapped('code')
             mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
             mods._update_translations(active_lang)
+            self.env['ir.module.module']._load_manifest_terms(active_lang)
         return res
 
     @api.model_create_multi
