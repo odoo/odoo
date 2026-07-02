@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_inherit_l10n_ph_pos" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.l10n_ph_pos</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='identification_group']" position="after">
+                <group string="Philippines" name="l10n_ph_pos_employee_identification_group" invisible="company_country_code != 'PH'">
+                    <field name="l10n_ph_pos_allow_self_line_void"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

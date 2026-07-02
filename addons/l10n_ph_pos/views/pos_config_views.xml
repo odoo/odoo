@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_pos_config_list_inherit_l10n_ph" model="ir.ui.view">
+        <field name="name">pos.config.view.list.inherit.l10n_ph</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='last_session_closing_cash']" position="after">
+                <field name="l10n_ph_accumulated_total_sales" readonly="1" widget="monetary" options="{'currency_field': 'company_currency_id'}" optional="show"/>
+                <field name="l10n_ph_machine_identification_number" optional="show"/>
+                <field name="l10n_ph_machine_serial_number" optional="show"/>
+                <field name="l10n_ph_void_counter" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
