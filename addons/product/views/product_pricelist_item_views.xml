@@ -120,7 +120,7 @@
                     groups="uom.group_uom"
                     invisible="display_applied_on != '1_product'"
                     options="{'product_field': 'product_tmpl_id'}"
-                    optional="show"
+                    optional="hide"
                 />
                 <field name="currency_id" column_invisible="True"/>
                 <field name="date_start" optional="show"/>
@@ -311,6 +311,56 @@
                 <attribute name="readonly">1</attribute>
                 <attribute name="force_save">1</attribute>
             </field>
+        </field>
+    </record>
+
+    <record id="product_pricelist_item_form_multi_create" model="ir.ui.view">
+        <field name="name">product.pricelist.item.multi.create</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="priority">999</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <group name="date_range" position="replace"/>
+            <group name="min_quantity" position="replace"/>
+            <sheet position="attributes">
+                <!--
+                    The view is rendered inside the calendar multi create popover,
+                    which frames and pads its content already. The class scopes the
+                    scss dropping the sheet's own padding and border.
+                -->
+                <attribute name="class">o_pricelist_rule_multi_create</attribute>
+            </sheet>
+            <group name="pricelist_rule_computation" position="attributes">
+                <attribute name="col">1</attribute>
+            </group>
+            <group name="pricelist_rule_method" position="before">
+                <div name="pricelist_rule_limits" position="move"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="product_pricelist_item_calendar" model="ir.ui.view">
+        <field name="name">product.pricelist.item.calendar</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <calendar
+                string="Daily Rates"
+                js_class="daily_rates_calendar"
+                date_start="date_start"
+                date_stop="date_end"
+                mode="month"
+                scales="month"
+                color="compute_price"
+                event_open_popup="1"
+                show_date_picker="0"
+                multi_create_view="product.product_pricelist_item_form_multi_create"
+            >
+                <field name="pricelist_id"/>
+                <field name="product_tmpl_id"/>
+                <field name="price"/>
+            </calendar>
         </field>
     </record>
 

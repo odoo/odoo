@@ -164,7 +164,7 @@ class ProductPricelistItem(models.Model):
         compute='_compute_name',
         help="Explicit rule name for this pricelist line.")
     price = fields.Char(
-        string="Unit Price",
+        string="Price",
         compute='_compute_price_label',
         help="Explicit rule name for this pricelist line.")
     rule_tip = fields.Char(compute='_compute_rule_tip')
@@ -206,6 +206,11 @@ class ProductPricelistItem(models.Model):
                 item.name = item.env._("All Categories")
             else:
                 item.name = item.env._("All Products")
+
+    @api.depends('name', 'price')
+    def _compute_display_name(self):
+        for item in self:
+            item.display_name = f"{item.price} - {item.name}"
 
     def _get_price_label_base_str(self):
         """This method allows you to extend it to other modules with other
