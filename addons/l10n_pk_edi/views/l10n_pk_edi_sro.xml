@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pk_edi_sro_view_list" model="ir.ui.view">
+        <field name="name">l10n_pk_edi.sro.list</field>
+        <field name="model">l10n_pk_edi.sro</field>
+        <field name="arch" type="xml">
+            <list string="Statutory Regulatory OrderSchedules" multi_edit="1">
+                <field name="name"/>
+                <field name="l10n_pk_edi_sale_type"/>
+                <field name="sro_item_ids"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_pk_edi_sro_view_form" model="ir.ui.view">
+        <field name="name">l10n_pk_edi.sro.form</field>
+        <field name="model">l10n_pk_edi.sro</field>
+        <field name="arch" type="xml">
+            <form string="Statutory Regulatory Order Schedule">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="l10n_pk_edi_sale_type"/>
+                        </group>
+                        <notebook>
+                            <page name="sro_items" string="Statutory Regulatory Order Items">
+                                <field name="sro_item_ids" widget="product_label_section_and_note_field_o2m">
+                                    <list editable="bottom" default_order="id">
+                                        <field name="name"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_pk_edi_sro" model="ir.actions.act_window">
+        <field name="name">Statutory Regulatory Order</field>
+        <field name="res_model">l10n_pk_edi.sro</field>
+        <field name="view_id" ref="l10n_pk_edi_sro_view_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Statutory Regulatory Order Schedule
+            </p>
+        </field>
+    </record>
+</odoo>

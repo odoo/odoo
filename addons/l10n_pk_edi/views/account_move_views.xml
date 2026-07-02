@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_pk_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_pk_edi_status_message">
+                    <div class="p-0 m-0">
+                        <span class="mx-1"><b>Warning</b>: this invoice cannot be sent to FBR.</span>
+                        <a name="download_l10n_pk_edi_json_response" type="object" groups="base.group_no_one" class="float-end">Download JSON</a>
+                    </div>
+                    <field name="l10n_pk_edi_status_message"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="l10n_pk_edi_testing_scenario_type" groups="base.group_system" invisible="country_code != 'PK' or not l10n_pk_edi_enable or not l10n_pk_edi_test_environment or move_type != 'out_invoice'" readonly="state in ['cancel', 'posted']"/>
+            </xpath>
+            <xpath expr="//group[@id='other_tab_group']" position="inside">
+                <group string="FBR" invisible="country_code != 'PK' or move_type != 'out_invoice'">
+                    <field name="l10n_pk_edi_reference"/>
+                    <field name="l10n_pk_edi_reference"/>
+                    <field name="l10n_pk_edi_refund_reason" invisible="debit_origin_id == False"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']//list//field[@name='tax_ids']" position="after">
+                <field name="l10n_pk_edi_sale_type" invisible="parent.country_code != 'PK' or parent.move_type != 'out_invoice'"/>
+                <field name="l10n_pk_edi_sro_id" domain="[('l10n_pk_edi_sale_type','=',l10n_pk_edi_sale_type)]" invisible="parent.country_code != 'PK' or parent.move_type != 'out_invoice'" optional="hide"/>
+                <field name="l10n_pk_edi_sro_item_id" domain="[('id','in',l10n_pk_edi_filter_sro_item_ids)]" invisible="parent.country_code != 'PK' or parent.move_type != 'out_invoice'" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

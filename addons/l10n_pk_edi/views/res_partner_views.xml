@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.form.l10n_pk_edi</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='accounting']/group" position="inside">
+                    <group string="FBR" invisible="not l10n_pk_edi_enable">
+                        <label for="l10n_pk_edi_fbr_customer_status" string="Registration Status"/>
+                        <div class="row">
+                            <div class="col-4">
+                                <field name="l10n_pk_edi_fbr_customer_status"/>
+                            </div>
+                            <div class="col-8 pt-0">
+                                <button name="button_check_fbr_customer_registration" type="object" class="btn btn-link p-0" title="Fetch Status">
+                                    <i role="img" aria-label="Fetch now" class="fa fa-fw fa-refresh"/>
+                                </button>
+                            </div>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="partner_action_verify_fbr" model="ir.actions.server">
+            <field name="name">Check FBR Registration Status</field>
+            <field name="model_id" ref="l10n_pk_edi.model_res_partner"/>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="state">code</field>
+            <field name="code">
+                for record in records:
+                    record.button_check_fbr_customer_registration()
+            </field>
+        </record>
+    </data>
+</odoo>
