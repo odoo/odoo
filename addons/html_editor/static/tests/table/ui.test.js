@@ -1535,8 +1535,8 @@ test("reset table size to remove custom width", async () => {
     expect(getContent(el)).toBe(
         unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table style="width: 150px;">
-            <tbody>
+            <table>
+            <tbody style="width: 150px;">
             <tr><td style="width: 100px;" class="a">1[]</td></tr>
             <tr><td style="width: 50px;" class="b">2</td></tr>
             </tbody>
@@ -1684,8 +1684,8 @@ test("should redistribute excess width from current column to smaller columns", 
     expect(getContent(el)).toBe(
         unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table" style="width: 500px">
-                <tbody>
+            <table class="table table-bordered o_table">
+                <tbody style="width: 500px;">
                     <tr>
                         <td style="" class="a">1</td>
                         <td style="" class="b">2</td>
@@ -1745,8 +1745,8 @@ test("should redistribute excess width from larger columns to current column", a
     expect(getContent(el)).toBe(
         unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table" style="width: 700px">
-                <tbody>
+            <table class="table table-bordered o_table">
+                <tbody style="width: 700px;">
                     <tr>
                         <td style="width: 120px;" class="a">1</td>
                         <td style="width: 80px;" class="b">2</td>
