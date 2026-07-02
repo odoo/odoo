@@ -21,6 +21,7 @@ For the creation of API username and password please ref this document: <https:/
         'views/account_move_views.xml',
         'views/edi_pdf_report.xml',
         'views/res_config_settings_views.xml',
+        'views/account_journal_dashboard_views.xml',
         'wizard/l10n_in_edi_cancel_views.xml',
         'security/ir.access.csv',
     ],
