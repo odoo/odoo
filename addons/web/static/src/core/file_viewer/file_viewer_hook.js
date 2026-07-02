@@ -9,8 +9,9 @@ export function createFileViewer() {
     /**
      * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files[]} file
      * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files} files
+     * @param {Function} [onClose]
      */
-    function open(file, files = [file]) {
+    function open(file, files = [file], onClose) {
         close();
         if (!file.isViewable) {
             return;
@@ -20,13 +21,16 @@ export function createFileViewer() {
             const index = viewableFiles.indexOf(file);
             registry.category("main_components").add(fileViewerId, {
                 Component: FileViewer,
-                props: { files: viewableFiles, startIndex: index, close },
+                props: { files: viewableFiles, startIndex: index, close, onClose },
             });
         }
     }
 
-    function close() {
+    function close(onClose) {
         registry.category("main_components").remove(fileViewerId);
+        if (onClose) {
+            onClose();
+        }
     }
     return { open, close };
 }
