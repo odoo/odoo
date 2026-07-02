@@ -46,6 +46,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
         reorder_items_processors: this.reorderGalleryItems.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
         on_media_replaced_handlers: ({ newMediaEl }) => this.updateCarouselThumbnail(newMediaEl),
         on_image_updated_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_image_saved_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
@@ -458,6 +459,19 @@ export class ImageGalleryOptionPlugin extends Plugin {
             this.setImages(this.imageRemovedGalleryElement, mode, images);
             this.imageRemovedGalleryElement = undefined;
         }
+    }
+
+    cleanForSave(rootEl) {
+        // A gallery emptied through "Remove all" is kept during edition (to let
+        // the user add media back) but must not be saved as an empty snippet.
+        const mediaSelector =
+            "img, a.o_link_readonly, span.oi.object-fit-cover, div.media_iframe_video";
+        for (const galleryEl of rootEl.querySelectorAll(".s_image_gallery")) {
+            if (!galleryEl.querySelector(mediaSelector)) {
+                galleryEl.remove();
+            }
+        }
+        return rootEl;
     }
 
     updateCarouselThumbnail(mediaEl) {

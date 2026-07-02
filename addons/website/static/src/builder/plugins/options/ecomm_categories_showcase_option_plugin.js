@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { _t } from "@web/core/l10n/translation";
 
 export class EcommCategoriesShowcaseOptionPlugin extends Plugin {
     static id = "ecommCategoriesShowcaseOption";
@@ -29,6 +30,11 @@ export class EcommCategoriesShowcaseOptionPlugin extends Plugin {
         dropzone_selectors: {
             selector: ".s_ecomm_categories_showcase_block",
             dropNear: ".s_ecomm_categories_showcase_block",
+        },
+        remove_disabled_reason_providers: (el) => {
+            if (el.matches(".s_ecomm_categories_showcase_block:only-child")) {
+                return _t("You cannot remove the last item.");
+            }
         },
     };
 

@@ -147,6 +147,22 @@ test.skip("Remove all images in gallery", async () => {
     expect(".o_select_media_dialog").toHaveCount(1);
 });
 
+test("Empty image gallery is removed on save", async () => {
+    const resultSave = [];
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        resultSave.push(args[1]);
+        return true;
+    });
+    await setupWebsiteBuilderWithSnippet("s_image_gallery");
+    await contains(":iframe .s_image_gallery").click();
+    await unfoldAllOptionsGroups();
+    await contains("[data-action-id='removeAllImages']").click();
+    expect(":iframe .s_image_gallery img:not(.o_carousel_controllers img)").toHaveCount(0);
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(resultSave.length).toBe(1);
+    expect(resultSave[0]).not.toInclude("s_image_gallery");
+});
+
 test("Rapidly remove an image from the gallery", async () => {
     await setupWbsiteBuilderWithImageWall();
     const initialCount = queryAll(":iframe .o_masonry_col img").length;
