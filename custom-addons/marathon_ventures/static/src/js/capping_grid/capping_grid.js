@@ -143,9 +143,13 @@ export class MvCappingGrid extends Component {
     }
 
     get selectedRowIds() {
+        // Phase 15: row.id is now a signature string like
+        // '1111100|100.00|v_06_00a|v_09_00a|0' (not a deal_line
+        // integer id). parseInt() on that returns 1111100, which
+        // silently corrupts every bulk-action payload (Set cap %,
+        // Ghost all, LTC, ...). Return the object keys verbatim.
         return Object.keys(this.state.selected)
-            .filter((k) => this.state.selected[k])
-            .map((k) => parseInt(k, 10) || k);
+            .filter((k) => this.state.selected[k]);
     }
 
     clearSelection() {
@@ -183,25 +187,23 @@ export class MvCappingGrid extends Component {
         let pct = opt.pct;
         if (!Number.isFinite(pct)) pct = 100;
         pct = Math.max(0, Math.min(100, pct));
-        // Resolve a matching cap Selection value for the picked pct
-        // so the local cells render the dropdown with the right option
-        // selected. If the pct doesn't match any option exactly, leave
-        // the existing cap field alone.
-        let pctCap = null;
-        for (const o of this.capOptions) {
-            if (o.pct === pct && o.value !== 'ghost') { pctCap = o.value; break; }
-        }
         for (const rid of ids) {
-            this.state.edits.row_cap_pct.push({ row_id: rid, cap_pct: pct });
-            // Update local row cells too for instant feedback
+            // Send BOTH pct and the picklist selection. Without the
+            // explicit `cap`, ghost (pct=0) and v_0 (pct=0) collide
+            // and the backend would reverse-map both to 'v_0' via
+            // _cap_pct_to_value.
+            this.state.edits.row_cap_pct.push({
+                row_id: rid, cap_pct: pct, cap: capValue,
+            });
             const row = this.state.payload.rows.find((r) => r.id === rid);
             if (row) {
                 for (const c of row.cells) {
                     if (c.state === 'hatched' || c.state === 'dashed') continue;
                     c.cap_pct = pct;
-                    if (pctCap) c.cap = pctCap;
+                    c.cap = capValue;
                     c.units_effective = Math.round((c.units_booked || 0) * pct / 100 * 100) / 100;
-                    if (pct >= 100) c.state = 'green';
+                    if (capValue === 'ghost') c.state = 'gray';
+                    else if (pct >= 100) c.state = 'green';
                     else if (pct === 0) c.state = 'gray';
                     else c.state = 'amber';
                     c.dirty = true;

@@ -227,6 +227,11 @@ class MvDealCappingRpc(models.Model):
         for ru in edits.get('row_cap_pct') or []:
             sig = ru.get('row_id')
             pct = ru.get('cap_pct')
+            # Explicit picklist choice from the frontend. When the
+            # user picks "Ghost" from the Set Cap % dropdown, pct=0
+            # AND cap='ghost' are both sent; without this we'd
+            # reverse-map 0 -> 'v_0' and lose the ghost distinction.
+            cap_explicit = ru.get('cap')
             if pct is None or not sig:
                 continue
             if isinstance(sig, str) and sig.startswith('tmp:'):
@@ -235,7 +240,9 @@ class MvDealCappingRpc(models.Model):
             scheds = self._capping_schedules_for_sig(sig, active_only=True)
             if scheds:
                 vals = {'cap_pct': pct}
-                cap_value = self._cap_pct_to_value(pct)
+                # Prefer the caller-supplied cap value; only reverse-
+                # map from pct as a fallback.
+                cap_value = cap_explicit or self._cap_pct_to_value(pct)
                 if cap_value is not None:
                     vals['cap'] = cap_value
                 scheds.write(vals)
