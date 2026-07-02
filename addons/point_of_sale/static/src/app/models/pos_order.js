@@ -120,7 +120,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get presetTime() {
-        return this.preset_time && this.preset_time.isValid
+        return this.preset_id && this.preset_time && this.preset_time.isValid
             ? this.formatDateOrTime("preset_time", "time")
             : false;
     }
