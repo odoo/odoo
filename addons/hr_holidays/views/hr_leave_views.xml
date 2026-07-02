@@ -423,7 +423,7 @@
                                                     ('virtual_remaining_leaves', '>', 0),
                                                     ('allows_negative', '=', False),
                                 ]"
-                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
+                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to, 'leave_date_from': date_from}"
                                 options="{'no_create': True, 'request_type': 'leave'}"
                                 readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"
                                 placeholder="eg. Sickness, Paid time off, Unpaid, ..."/>
