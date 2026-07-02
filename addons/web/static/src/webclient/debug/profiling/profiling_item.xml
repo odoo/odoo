@@ -39,21 +39,12 @@
                                 <input type="number" class="form-control" t-on-click.stop.prevent="" t-on-change="(ev) => this.changeParam('time_limit', ev)" t-att-value="profiling.state.params.time_limit || '0'" placeholder="None"/>
                             </div>
                         </div>
-                        <span class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('memory')">
-                            <input type="checkbox" class="form-check-input" id="profile_memory"
-                                t-att-checked="this.profiling.isCollectorEnabled('memory')"/>
-                            <label class="form-check-label" for="profile_memory">Record memory</label>
-                        </span>
-                        <div t-if="this.profiling.isCollectorEnabled('memory')" class="input-group input-group-sm mt-2" t-on-click.stop.prevent="">
-                            <div class="input-group-text">Interval</div>
-                            <select class="profile_param form-select" t-on-change="(ev) => this.changeParam('memory_interval', ev)">
-                                <t t-set="interval" t-value="this.profiling.state.params.memory_interval"/>
-                                <option value="">Default</option>
-                                <option value="0.01" t-att-selected="interval === '0.01'">0.01</option>
-                                <option value="0.1" t-att-selected="interval === '0.1'">0.1</option>
-                                <option value="1" t-att-selected="interval === '1'">1</option>
-                                <option value="5" t-att-selected="interval === '5'">5</option>
-                            </select>
+                        <div t-if="profiling.isCollectorEnabled('traces_async')" class="input-group input-group-sm mt-2" t-on-click.stop.prevent="">
+                            <span class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="() => this.toggleParam('memory_profile')">
+                                <input type="checkbox" class="form-check-input" id="memory_profile"
+                                    t-att-checked="profiling.state.params.memory_profile"/>
+                                <label class="form-check-label" for="memory_profile">Record memory</label>
+                            </span>
                         </div>
                         <div class="input-group input-group-sm mt-2">
                             <div class="input-group-text">Entry Count</div>
