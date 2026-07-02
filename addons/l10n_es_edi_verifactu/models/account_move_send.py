@@ -81,7 +81,12 @@ class AccountMoveSend(models.AbstractModel):
                 substituted_move = invoice.l10n_es_edi_verifactu_substituted_entry_id
                 msg = _("There is no Veri*Factu document for the reversal of the substituted record.")
                 action = invoice._l10n_es_edi_verifactu_action_go_to_journal_entry(substituted_move.reversal_move_ids)
-            elif vals['verifactu_move_type'] in ('correction_incremental', 'reversal_for_substitution') and not vals['refunded_document']:
+            elif vals['verifactu_move_type'] == 'reversal_for_substitution' and not vals['refunded_document']:
+                reversed_move = invoice.reversed_entry_id
+                msg = _("There is no Veri*Factu document for the refunded record.")
+                action = invoice._l10n_es_edi_verifactu_action_go_to_journal_entry(reversed_move)
+            elif (vals['verifactu_move_type'] == 'correction_incremental' and not vals['refunded_document']
+                  and not vals['has_external_credited_reference']):
                 reversed_move = invoice.reversed_entry_id
                 msg = _("There is no Veri*Factu document for the refunded record.")
                 action = invoice._l10n_es_edi_verifactu_action_go_to_journal_entry(reversed_move)
