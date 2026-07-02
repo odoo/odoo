@@ -353,6 +353,46 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 2760.0,
         })
 
+    def test_in_invoice_line_keep_tax_removed_on_account_change(self):
+        """
+        A tax removed by the user before changing the account must not be put back by the account default taxes.
+        """
+        tax_price_include = self.env['account.tax'].create({
+            'name': '21% incl',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 21,
+            'price_include': True,
+        })
+        account_with_tax = self.company_data['default_account_expense'].copy()
+        account_with_tax.tax_ids = [Command.set(tax_price_include.ids)]
+        account_without_tax = self.company_data['default_account_expense'].copy()
+        account_without_tax.tax_ids = [Command.clear()]
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'price_unit': 100.0,
+                'account_id': account_without_tax.id,
+                'tax_ids': [],
+            })],
+        })
+        line = invoice.invoice_line_ids
+        self.assertFalse(line.tax_ids)
+
+        # JS side only send a write command with the account_id when a user manually deletes the tax before saving
+        line.write({'account_id': account_with_tax.id})
+
+        self.assertFalse(line.tax_ids, "The tax removed by the user must stay removed")
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 100.0,
+            'amount_tax': 0.0,
+            'amount_total': 100.0,
+        }])
+
     def test_in_invoice_line_onchange_product_2_with_fiscal_pos_2(self):
         ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 110.0.
         The price_unit should be 120.0 after applying the fiscal position.
