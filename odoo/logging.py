@@ -55,7 +55,7 @@ class JSONFormatter(logging.Formatter):
                 from .modules import module  # noqa: PLC0415
                 if module.current_test:
                     with contextlib.suppress(Exception):
-                        record_json[key] = module.current_test.get_log_metadata()
+                        record_json[key] = module.current_test.get_log_metadata(record)
             else:
                 value = getattr(record, key, None)
                 if value is not None:
@@ -64,4 +64,4 @@ class JSONFormatter(logging.Formatter):
         return json.dumps(record_json, default=str)
 
     def _get_default_record_keys(self, record):
-        return list(record.__dict__.keys() | {'message'} - self.ignore_record_keys)
+        return list(record.__dict__.keys() | {'message'} | {'test'} - self.ignore_record_keys)
