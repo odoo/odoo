@@ -995,7 +995,13 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     await contains("button[title='Stop camera']");
     await contains("button[title='Stop camera'].o-tag-DANGER");
     await contains("button[title='Stop camera'].o-tag-WARNING_BADGE");
+<<<<<<< a0862ac082c7aef81461ced2c7b93158f97898a0
     await click("button[title='Exit Fullscreen']");
+||||||| 9d18f138824b9ba35c5766df662b3783f8ec2e78
+
+=======
+    await contains(".o-mail-Meeting[data-active]"); // wait for startMeeting (incl. enterFullscreen) to fully settle
+>>>>>>> 45875b72f8ca41b6147ebab3a6bc5b213356ed88
     await click(".o-mail-DiscussSidebarChannel:text('General')");
     await click("[title='Join Call']");
     await contains("button[title='Turn camera on']");
