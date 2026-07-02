@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+import pytz
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 
@@ -128,10 +129,14 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             })
             allocation.action_validate()
 
+        tz = pytz.timezone(self.employee_emp.tz or 'UTC')
+        check_in = tz.localize(datetime.datetime(2024, 4, 1, 22, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None)
+        check_out = tz.localize(datetime.datetime(2024, 4, 2, 7, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None)
+
         self.env['hr.attendance'].create({
             'employee_id': self.employee_emp.id,
-            'check_in': datetime.datetime(2024, 4, 1, 22, 0, 0),
-            'check_out': datetime.datetime(2024, 4, 2, 7, 0, 0),
+            'check_in': check_in,
+            'check_out': check_out,
         })
 
         with freeze_time(datetime.datetime(2024, 4, 2, 20, 0, 0)):
@@ -173,10 +178,14 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             })
             allocation.action_validate()
 
+        tz = pytz.timezone(self.employee_emp.tz or 'UTC')
+        check_in = tz.localize(datetime.datetime(2024, 4, 1, 22, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None)
+        check_out = tz.localize(datetime.datetime(2024, 4, 2, 7, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None)
+
         self.env['hr.attendance'].create({
             'employee_id': self.employee_emp.id,
-            'check_in': datetime.datetime(2024, 4, 1, 22, 0, 0),  # In Tokyo: 2024/04/02, 7h
-            'check_out': datetime.datetime(2024, 4, 2, 7, 0, 0),  # In Tokyo: 2024/04/02, 16h
+            'check_in': check_in,  # In Tokyo: 2024/04/02, 7h
+            'check_out': check_out,  # In Tokyo: 2024/04/02, 16h
         })
 
         with freeze_time(datetime.datetime(2024, 4, 2, 20, 0, 0)):
@@ -185,6 +194,160 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             self.assertEqual(allocation.number_of_days, 0.25)  # 2 / 8 = 0.25
 
         with freeze_time(datetime.datetime(2024, 4, 3, 20, 0, 0)):
-            # Counts the whole attendance: 9 hours - 1h of lunchtime = 8h
+            # Counts the whole attendance: 9 hours
             allocation._update_accrual()
-            self.assertEqual(allocation.number_of_days, 1.0)  # 8 / 8 = 1.0
+            self.assertEqual(allocation.number_of_days, 1.125)  # 9 / 8 = 1.125
+
+    def test_accrual_allocation_excludes_unapproved_overtime(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'added_value': 0.1,
+                'added_value_type': 'day',
+                'frequency': 'hourly',
+                'frequency_hourly_source': 'attendance',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+            })]
+        })
+
+        with freeze_time("2024-04-01"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 4, 2, 8, 0, 0),
+            'check_out': datetime.datetime(2024, 4, 2, 19, 0, 0),
+        })
+
+        attendance.write({
+            'validated_overtime_hours': 0,
+        })
+
+        with freeze_time(datetime.datetime(2024, 4, 3, 20, 0, 0)):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 0.8)
+
+        attendance2 = self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 4, 3, 8, 0, 0),
+            'check_out': datetime.datetime(2024, 4, 3, 19, 0, 0),
+        })
+
+        attendance2.write({
+            'validated_overtime_hours': 1,
+        })
+
+        with freeze_time(datetime.datetime(2024, 4, 4, 20, 0, 0)):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 1.7)
+
+    def test_accrual_allocation_multiple_attendances_same_day(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'added_value': 0.1,
+                'added_value_type': 'day',
+                'frequency': 'hourly',
+                'frequency_hourly_source': 'attendance',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+            })]
+        })
+
+        with freeze_time("2024-02-01"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+
+        # Attendance 1: 5 hours normal work with 1 hour lunch break
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 2, 1, 8, 0, 0),
+            'check_out': datetime.datetime(2024, 2, 1, 13, 0, 0),
+        })
+
+        # Attendance 2: 5 hours with 2 hours overtime refused
+        attendance2 = self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 2, 1, 14, 0, 0),
+            'check_out': datetime.datetime(2024, 2, 1, 19, 0, 0),
+        })
+
+        attendance2.write({
+            'overtime_hours': 2,
+            'validated_overtime_hours': 0,
+        })
+
+        with freeze_time(datetime.datetime(2024, 2, 2, 20, 0, 0)):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 0.7)
+
+    def test_accrual_allocation_cross_midnight_overtime_only_counted_once(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'added_value': 0.1,
+                'added_value_type': 'day',
+                'frequency': 'hourly',
+                'frequency_hourly_source': 'attendance',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+            })]
+        })
+
+        with freeze_time("2024-04-01"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+
+        calendar = self.employee_emp.resource_calendar_id or self.employee_emp.company_id.resource_calendar_id
+        tz = pytz.timezone(calendar.tz or 'UTC')
+        check_in = tz.localize(datetime.datetime(2024, 4, 1, 22, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None)
+        check_out = tz.localize(datetime.datetime(2024, 4, 2, 7, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None)
+
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': check_in,
+            'check_out': check_out,
+        })
+        attendance.write({
+            'overtime_hours': 2,
+            'validated_overtime_hours': 0,
+        })
+
+        with freeze_time(datetime.datetime(2024, 4, 2, 20, 0, 0)):
+            allocation._update_accrual()
+
+        with freeze_time(datetime.datetime(2024, 4, 3, 20, 0, 0)):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 0.7)
