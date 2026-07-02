@@ -129,7 +129,7 @@ class ResConfigSettings(models.TransientModel):
     terms_type = fields.Selection(
         related='company_id.terms_type', readonly=False)
     display_invoice_amount_total_words = fields.Boolean(
-        string="Total amount of invoice in letters",
+        string="Total amount of invoice in words",
         related='company_id.display_invoice_amount_total_words',
         readonly=False
     )

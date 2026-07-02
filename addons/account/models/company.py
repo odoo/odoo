@@ -151,7 +151,7 @@ class ResCompany(models.Model):
     qr_code = fields.Boolean(string='Display QR-code on invoices', compute='_compute_qr_code', store=True, readonly=False)
     link_qr_code = fields.Boolean(string='Display Link QR-code')
 
-    display_invoice_amount_total_words = fields.Boolean(string='Total amount of invoice in letters')
+    display_invoice_amount_total_words = fields.Boolean(string='Total amount of invoice in words')
     display_invoice_tax_company_currency = fields.Boolean(
         string="Taxes in company currency",
         default=True,
