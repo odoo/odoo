@@ -207,7 +207,9 @@ if records:
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
             <button name="action_force_register_payment" position="after">
-                <button name="l10n_tr_nilvera_get_pdf" type="object" string="Fetch Nilvera e-Invoice PDF"/>
+                <button name="l10n_tr_nilvera_get_pdf" type="object" string="Fetch Nilvera e-Invoice PDF"
+                        groups="account.group_account_invoice"
+                        invisible="country_code != 'TR'"/>
             </button>
             <xpath expr="//field[@name='abnormal_date_warning']" position="after">
                 <field name="l10n_tr_nilvera_send_status"
