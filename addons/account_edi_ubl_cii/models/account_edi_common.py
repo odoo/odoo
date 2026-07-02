@@ -305,8 +305,11 @@ class AccountEdiCommon(models.AbstractModel):
             if customer.zip[:2] in ('51', '52'):
                 return 'M'  # Ceuta & Mellila
 
-        if self._is_cocontractant_fiscal_position(self.env.context.get('tax_exemption_reason_invoice'), customer, supplier):
-            return 'AE'
+        cocontractant_note = self._get_belgian_cocontractant_note(customer, supplier)
+        if cocontractant_note:
+            if not tax.amount:
+                return 'AE'
+            raise UserError(_("Invalid Tax Setup for Co-Contractor. Please apply the standard co-contractor tax, or ensure your custom tax uses a tax amount of 0"))
 
         if supplier.country_id == customer.country_id:
             if not tax or tax.amount == 0:
