@@ -92,3 +92,12 @@ class CrmActivityReport(models.Model):
             )
         """ % (self._table, self._select(), self._from(), self._join(), self._where())
         )
+
+    def action_open_lead(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'crm.lead',
+            'res_id': self.lead_id.id,
+        }

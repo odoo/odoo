@@ -27,7 +27,10 @@
             <field name="name">crm.activity.report.list</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
-                <list default_order="date desc">
+                <list default_order="date desc"
+                      action="action_open_lead"
+                      type="object"
+                >
                     <field name="date"/>
                     <field name="author_id" widget="many2one_avatar"/>
                     <field name="mail_activity_type_id"/>
