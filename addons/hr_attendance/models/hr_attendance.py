@@ -171,7 +171,10 @@ class HrAttendance(models.Model):
             if isinstance(attendance.id, models.NewId):
                 # We ignore NewId records here as we want to make sure a new value means it has been manually set by the user.
                 continue
-            attendance.validated_overtime_hours = attendance.overtime_hours
+            if attendance.overtime_status == 'refused':
+                attendance.validated_overtime_hours = 0
+            else:
+                attendance.validated_overtime_hours = attendance.overtime_hours
 
     @api.depends('validated_overtime_hours')
     def _compute_no_validated_overtime_hours(self):
