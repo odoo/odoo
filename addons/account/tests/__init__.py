@@ -50,6 +50,7 @@ from . import test_account_incoming_supplier_invoice
 from . import test_payment_term
 from . import test_account_payment_items
 from . import test_account_payment_register
+from . import test_payment_receipt
 from . import test_account_report
 from . import test_account_section_and_subsection
 from . import test_tour

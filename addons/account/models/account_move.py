@@ -5734,6 +5734,119 @@ class AccountMove(models.Model):
                 exchange_diff_moves.append(partial.exchange_move_id.id)
         return invoice_partials, exchange_diff_moves
 
+    def _get_payment_term_epd_info(self):
+        ''' Return the payment term line and cash discount account that drive
+        early payment discount detection on this invoice, or empty recordsets
+        when the invoice has no early-discount payment term.
+        '''
+        self.ensure_one()
+        if not self.invoice_payment_term_id.early_discount:
+            return self.env['account.move.line'], self.env['account.account']
+        payment_term_line = self.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        if self.is_inbound(include_receipts=True):
+            cash_discount_account = self.company_id.account_journal_early_pay_discount_loss_account_id
+        else:
+            cash_discount_account = self.company_id.account_journal_early_pay_discount_gain_account_id
+        return payment_term_line, cash_discount_account
+
+    def _is_early_payment_discount_applied(self, payment_move, amount, payment_term_line, cash_discount_account):
+        self.ensure_one()
+        total_discount = sum(
+            line.amount_currency
+            for line in payment_move.line_ids
+            if line.account_id == cash_discount_account or line.tax_repartition_line_id  # tax_repartition_line_id for tax discounts due to early_pay_discount_computation
+        )
+        epd_discount = payment_term_line.amount_currency - payment_term_line.discount_amount_currency
+        return bool(
+            payment_term_line.discount_date
+            and cash_discount_account
+            and payment_move.date <= payment_term_line.discount_date
+            and self.currency_id.compare_amounts(total_discount, epd_discount) == 0  # Don't consider write-offs on a cash discount account an EPD
+            and self.currency_id.compare_amounts(amount, self.amount_total) == 0  # EPD only applies on full payments
+        )
+
+    def _get_reconciled_invoices_partials_for_receipt(self):
+        ''' Similar to _get_reconciled_invoices_partials(), but includes early payment discounts.
+
+        :return: A list of row dicts, each representing a line on the payment
+            receipt report.
+        '''
+        self.ensure_one()
+        invoice_partials, _ = self._get_reconciled_invoices_partials()
+
+        sign = 1 if self.is_inbound(include_receipts=True) else -1
+        payment_term_line, cash_discount_account = self._get_payment_term_epd_info()
+
+        rows = []
+        for partial, amount, counterpart_line in invoice_partials:
+            payment_move = counterpart_line.move_id
+            counterpart_amount = (
+                partial.debit_amount_currency
+                if counterpart_line == partial.debit_move_id
+                else partial.credit_amount_currency
+            )
+            payment_row = {
+                'date': payment_move.date,
+                'name': payment_move.name,
+                'ref': counterpart_line.payment_id.memo,
+                'amount_invoice': sign * amount,
+                'amount_payment': sign * counterpart_amount,
+                'currency_invoice': self.currency_id,
+                'currency_payment': counterpart_line.currency_id,
+            }
+
+            # Put an early payment discount on a separate line to avoid a situation where the payment amount doesn't
+            # match the line in the report (e.g. $96 payment with a $4 EPD) would show as $96 in the report header but
+            # $100 on the line.
+            if self._is_early_payment_discount_applied(payment_move, amount, payment_term_line, cash_discount_account):
+                payment_row['amount_invoice'] = payment_term_line.discount_amount_currency
+                rows.append(payment_row)
+                rows.append({
+                    'date': False,
+                    'name': self.env._("Early Payment Discount"),
+                    'ref': False,
+                    'amount_invoice': sign * (payment_term_line.discount_amount_currency - payment_term_line.amount_currency),
+                    'amount_payment': False,
+                    'currency_invoice': self.currency_id,
+                    'currency_payment': False,
+                })
+                continue
+
+            # Put any write-off amount on a separate line for the same reasons as the EPD line. A payment either applies
+            # an early payment discount or books a write-off, never both.
+            if counterpart_line.payment_id and self.payment_state in ('in_payment', 'paid'):
+                payment = counterpart_line.payment_id
+                _, _, write_off_lines = payment._seek_for_lines()
+                is_epd_payment = any(
+                    invoice._is_early_payment_discount_applied(payment_move, invoice.amount_total, *invoice._get_payment_term_epd_info())
+                    for invoice in payment.reconciled_invoice_ids | payment.reconciled_bill_ids
+                )
+                if not is_epd_payment and write_off_lines:
+                    write_off_line = write_off_lines[:1]
+                    payment_total = -sign * counterpart_line.amount_currency
+
+                    # amount and counterpart_amount are the same but in different currencies, so their ratio is this partial's exchange rate.
+                    partial_exchange_rate = amount / counterpart_amount  # exchange rate to go from payment to invoice currency
+                    write_off_payment = write_off_line.amount_currency * (counterpart_amount / payment_total)
+                    write_off_invoice = write_off_payment * partial_exchange_rate
+                    payment_row['amount_invoice'] = sign * amount - write_off_invoice
+                    payment_row['amount_payment'] = sign * counterpart_amount - write_off_payment
+                    rows.append(payment_row)
+                    rows.append({
+                        'date': False,
+                        'name': write_off_line.name,
+                        'ref': False,
+                        'amount_invoice': -sign * write_off_invoice,
+                        'amount_payment': False,
+                        'currency_invoice': self.currency_id,
+                        'currency_payment': False,
+                    })
+                    continue
+
+            rows.append(payment_row)
+
+        return rows
+
     def _reconcile_reversed_moves(self, reverse_moves, move_reverse_cancel):
         ''' Reconciles moves in self and reverse moves
         :param move_reverse_cancel: parameter used when lines are reconciled
