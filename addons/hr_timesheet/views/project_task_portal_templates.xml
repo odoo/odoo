@@ -69,9 +69,12 @@
                             </t>
                         </t>
                         <t t-else="">
-                            <t t-out="total_effective_hours" t-options='{"widget": "float_time"}'/>
+                            <t t-if="total_effective_hours">
+                                <t t-out="tasks._format_portal_hours(total_effective_hours)"/>
+                            </t>
+                            <t t-else=""> 0h </t>
                             <t t-if="total_allocated_hours"> /
-                                <t t-out="total_allocated_hours" t-options='{"widget": "float_time"}'/>
+                                <t t-out="tasks._format_portal_hours(total_allocated_hours)"/>
                             </t>
                         </t>
                     </span>
@@ -86,10 +89,13 @@
                         <span t-if="task.allocated_hours > 0"> / <t t-out="timesheet_ids._convert_hours_to_days(task.allocated_hours)"/></span>
                     </t>
                     <t t-else="">
-                        <span t-field="task.total_hours_spent" t-options='{"widget": "float_time"}'/>
+                        <t t-if="task.total_hours_spent">
+                            <span t-out="tasks._format_portal_hours(task.total_hours_spent)"/>
+                        </t>
+                        <t t-else=""> 0h </t>
                         <t t-if="task.allocated_hours > 0">
                             /
-                            <span t-field="task.allocated_hours" t-options='{"widget": "float_time"}'/>
+                            <span t-out="tasks._format_portal_hours(task.allocated_hours)"/>
                         </t>
                     </t>
                 </t>

@@ -232,7 +232,15 @@
                                         <strong>Priority:</strong>
                                         <t t-call="project.portal_my_tasks_priority_widget_template"/>
                                     </div>
-                                    <div t-if="task.date_deadline"><strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "datetime"}'/></div>
+                                    <div t-if="task.date_deadline"><strong>Deadline:</strong>
+                                        <t t-if="task.date_deadline.year == datetime.date.today().year">
+                                            <span t-field="task.date_deadline" t-options='{"widget": "datetime", "format": "MMM d", "date_only": True}'/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-field="task.date_deadline" t-options='{"widget": "datetime", "format": "medium", "date_only": True}'/>
+                                        </t>,
+                                        <span t-field="task.date_deadline" t-options='{"widget": "datetime", "time_only": True, "format": "short"}'/>
+                                    </div>
                                     <div name="portal_my_task_allocated_hours">
                                         <strong t-if="task.allocated_hours > 0">Allocated Time:</strong>
                                         <t t-call="project.portal_my_task_allocated_hours_template"/>
@@ -284,6 +292,6 @@
 
     <template id="portal_my_task_allocated_hours_template">
         <strong t-if="task.allocated_hours > 0" class="d-none">Allocated Time:</strong>
-        <span t-out="task.allocated_hours" t-options='{"widget": "float_time"}'/>
+        <span t-out="task._format_portal_hours(task.allocated_hours)"/>
     </template>
 </odoo>
