@@ -3098,6 +3098,7 @@ class AccountMove(models.Model):
                 )
             ):
                 round_from_tax_lines = False
+                old_tax_lines = new_tax_lines
             else:
                 round_from_tax_lines = AccountTax._sync_tax_lines_compare_tax_lines(company, old_tax_lines, new_tax_lines)['manually_edited']
 

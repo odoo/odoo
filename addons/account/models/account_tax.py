@@ -3172,6 +3172,7 @@ class AccountTax(models.Model):
                     base_line['price_unit'],
                     base_line['quantity'],
                     base_line['discount'],
+                    flat_taxes,
                 )
                 values = base_line_tracked_values[frozendict(grouping_key)]
                 values['base_lines'].append(base_line)
@@ -3337,14 +3338,14 @@ class AccountTax(models.Model):
 
         tax_lines_to_delete = []
         for tax_line in tax_results['tax_lines_to_delete']:
-            if compare_tax_lines['manually_edited'] or not base_line_tax_rep_grouping_key_mapping:
+            if compare_tax_lines['manually_edited']:
                 continue
             tax_lines_to_delete.append(tax_line)
         tax_results['tax_lines_to_delete'] = tax_lines_to_delete
 
         tax_lines_to_add = []
         for tax_line in tax_results['tax_lines_to_add']:
-            if compare_tax_lines['manually_edited'] or not base_line_tax_rep_grouping_key_mapping:
+            if compare_tax_lines['manually_edited']:
                 continue
             tax_lines_to_add.append(tax_line)
         tax_results['tax_lines_to_add'] = tax_lines_to_add
