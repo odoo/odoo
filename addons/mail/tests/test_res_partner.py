@@ -448,6 +448,23 @@ class TestPartner(MailCommon):
                     'partner_ids': partner.ids,
                 })
 
+    def test_message_get_default_recipients_root(self):
+        """ Don't propose odoobot as a default recipient unless its email is shared with another partner """
+        self.assertEqual(self.partner_root._message_get_default_recipients()[self.partner_root.id],
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+        )
+
+        # create partner with email matching root partner
+        partners = self.partner_root + self.env['res.partner'].create({
+            'name': 'PartnerMatchingRoot', 'email': self.partner_root.email,
+        })
+        # root partner is now a valid default recipient alongside with the new partner
+        defaults = partners._message_get_default_recipients()
+        for partner in partners:
+            self.assertEqual(defaults[partner.id], {
+                'email_cc': '', 'email_to': '', 'partner_ids': partner.ids,
+            })
+
     def test_message_get_suggested_recipients(self):
         """ Specific use case: partner should contact himself """
         partners = self.env['res.partner'].create([
