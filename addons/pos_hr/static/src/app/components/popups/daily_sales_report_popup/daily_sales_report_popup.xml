@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.DailySalesReportPopup">
+        <Dialog size="props.size" title="props.title">
+            <div class="form-check form-switch ps-0 d-flex justify-content-between align-items-center">
+                <label class="form-check-label" for="add_report_per_employee">
+                    Add a report per each employee
+                </label>
+                <input class="form-check-input mt-0" type="checkbox" role="switch" id="add_report_per_employee" t-att-checked="state.add_report_per_employee" t-on-change="onChange" />
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary btn-lg lh-lg" t-on-click="confirm">Print</button>
+                <button class="btn btn-secondary btn-lg lh-lg" t-on-click="cancel"><t t-esc="props.closePopup" /></button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
