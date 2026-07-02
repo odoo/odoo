@@ -769,3 +769,80 @@ registry.category("web_tour.tours").add("test_race_conditions_update_program", {
             },
         ].flat(),
 });
+<<<<<<< e097899f8b93d0b9e4a14ed2eb78e8ca21d57252
+||||||| 7e6004233fc9c8f946e7f8a1ad6f1adf51f76049
+
+registry.category("web_tour.tours").add("test_loyalty_in_trusted_pos_make_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1", "100"),
+            PosLoyalty.hasRewardLine("10% on Whiteboard Pen", "-10.00"),
+            PosLoyalty.pointsAwardedAre("90"),
+            ProductScreen.saveOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_in_trusted_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Orders"),
+            TicketScreen.selectOrder("-0001"),
+            TicketScreen.loadSelectedOrder(),
+            PosLoyalty.hasRewardLine("10% on Whiteboard Pen", "-10.00"),
+            PosLoyalty.pointsAwardedAre("90"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+=======
+
+registry.category("web_tour.tours").add("test_loyalty_in_trusted_pos_make_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1", "100"),
+            PosLoyalty.hasRewardLine("10% on Whiteboard Pen", "-10.00"),
+            PosLoyalty.pointsAwardedAre("90"),
+            ProductScreen.saveOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_in_trusted_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Orders"),
+            TicketScreen.selectOrder("-0001"),
+            TicketScreen.loadSelectedOrder(),
+            PosLoyalty.hasRewardLine("10% on Whiteboard Pen", "-10.00"),
+            PosLoyalty.pointsAwardedAre("90"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_reward_line_tax_grouping_key", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1.00"),
+            ProductScreen.totalAmountIs("82.78"),
+            ProductScreen.checkTaxAmount("14.37"),
+        ].flat(),
+});
+>>>>>>> 54b528f207d5df200b9eda78d7f3d9d2161e9ac8
