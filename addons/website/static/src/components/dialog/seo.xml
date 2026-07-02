@@ -79,11 +79,11 @@
         <h4 class="border-bottom pb-2">
             Images Optimization
         </h4>
-        <t t-if="!this.state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
+        <t t-if="!this.seoContext.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
             <p><i class="fa fa-check text-success me-2"></i>No warning on images</p>
         </t>
         <div class="row">
-            <t t-foreach="this.state.altAttributes" t-as="img" t-key="img.id">
+            <t t-foreach="this.seoContext.altAttributes" t-as="img" t-key="img.id">
                 <div class="col-lg-6 col-sm-12 d-flex mb-3">
                     <div class="me-3">
                         <img class="o-img-thumbnail" alt="Preview image" t-att-src="img.src"></img>
@@ -176,7 +176,15 @@
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page description">D</abbr></th>
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page content">C</abbr></th>
                         <th title="Most searched topics related to your keyword, ordered by importance">Content ideas based on Google searches</th>
-                        <th class="text-center"></th>
+                        <th></th>
+                        <th class="text-center">
+                            <button class="border-0 oe_remove text-danger bg-transparent"
+                                    t-on-click="() => this.removeAllKeywords()"
+                                    t-att-title="'Remove all keywords'"
+                                    t-att-aria-label="'Remove all keywords'">
+                                <i class="fa fa-trash" aria-hidden="true"/>
+                            </button>
+                        </th>
                     </tr>
                 </thead>
                 <t t-foreach="this.seoContext.keywords" t-as="keyword" t-key="keyword">
@@ -185,15 +193,18 @@
             </table>
         </div>
         <div role="form" class="input-group w-50">
-            <t t-set="placeholderRemove">Remove a keyword first</t>
+            <t t-set="placeholderAvoidAdd">Avoid too many keywords</t>
             <t t-set="placeholderAdd">Add your keyword</t>
-            <input t-custom-model="this.state.keyword" type="text" class="form-control" t-att-placeholder="this.isFull ? placeholderRemove : placeholderAdd" t-att-readonly="this.isFull" t-on-keyup="this.onKeyup"/>
-            <button t-on-click="() => this.addKeyword(this.state.keyword)" t-att-disabled="this.isFull" class="btn btn-primary" type="button">Add</button>
-            <button t-if="!this.seoContext.keywords.length" t-on-click="this.provideKeywords" class="btn btn-secondary" type="button">
+            <input t-custom-model="this.state.keyword" type="text" t-att-class="{ 'form-control': true, 'is-invalid' : this.seoContext.errorMessage }" t-att-placeholder="this.hasTooManyKeywords ? placeholderAvoidAdd : placeholderAdd" t-on-keyup="this.onKeyup"/>
+            <button t-on-click="() => this.addKeyword(this.state.keyword)" class="btn btn-primary" type="button">Add</button>
+            <button t-if="!this.seoContext.generated" t-on-click="this.provideKeywords" class="btn btn-secondary" type="button">
                 Generate keywords
             </button>
         </div>
-        <div t-if="this.state.errorMessage" class="alert alert-warning" t-out="this.state.errorMessage"></div>
+        <span t-if="this.seoContext.errorMessage" class="me-2 small text-danger">
+            <i class="fa fa-close me-1" aria-hidden="true"/>
+            <t t-out="this.seoContext.errorMessage"/>
+        </span>
     </section>
 </t>
 
@@ -240,6 +251,17 @@
 <t t-name="website.TitleDescription">
     <section>
         <div class="row">
+            <t t-if="this.props.visibility !== 'public' || !this.props.isPublished || !this.props.isIndexed">
+                <div class="col-12 px-0">
+                    <div class="alert alert-warning py-2 rounded-0 border-0 mb-0">
+                        <span class="text-info">This page is unpublished, restricted, or not indexed, preventing visitor and search engine access.</span>
+                        <button class="btn btn-link ps-1" t-on-click="this.openPagePropertiesDialog">
+                            <i class="oi oi-fw oi-arrow-right me-1"/>
+                            <span>Go to page properties</span>
+                        </button>
+                    </div>
+                </div>
+            </t>
             <div class="col-12 px-0">
                 <div class="alert alert-info py-2 rounded-0 border-0">
                     <span class="text-info">Need help to optimize?</span>
@@ -318,7 +340,10 @@
             isIndexed="this.isIndexed"
             defaultTitle="this.defaultTitle"
             previewDescription="this.previewDescription"
-            url="this.url"/>
+            url="this.url"
+            isPublished="this.isPublished"
+            visibility="this.visibility"
+            save="this.save.bind(this)"/>
         <ImageSelector t-if="this.canEditSeo" previewDescription="this.socialPreviewDescription"
             defaultTitle="this.defaultTitle"
             hasSocialDefaultImage="this.hasSocialDefaultImage"

@@ -8,6 +8,7 @@ import { escapeRegExp } from "@web/core/utils/strings";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { isVisible } from "@web/core/utils/ui";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { getMimetype } from "@html_editor/utils/image";
 import { WebsiteDialog } from "./dialog";
@@ -28,6 +29,9 @@ export const seoContext = proxy({
     defaultTitle: "",
     updatedAlts: [],
     brokenLinks: [],
+    generated: false,
+    altAttributes: [],
+    errorMessage: null,
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -66,6 +70,7 @@ const checkLinkStatus = async (url, { useNoCorsFallback = false } = {}) => {
 };
 
 const getSeo = async (self, onlyKeywords = false) => {
+    self.seoContext.errorMessage = null;
     const pageTextContentEl =
         self.website.pageDocument.documentElement.querySelector("#wrap, main, body");
     const lang = self.state.language || "en";
@@ -170,12 +175,34 @@ const getSeo = async (self, onlyKeywords = false) => {
 
     const keywords = extractKeywords();
     if (keywords.length) {
-        self.seoContext.keywords = keywords;
+        self.seoContext.keywords.push(
+            ...keywords.filter((kw) => !self.seoContext.keywords.includes(kw))
+        );
     }
     if (!onlyKeywords) {
         self.seoContext.title = htmlToTextContentInline(self.seoContext.defaultTitle);
         self.seoContext.description = extractDescription();
+        await Promise.all(
+            self.seoContext.altAttributes.map(async (img) => {
+                if (img.alt || img.decorative) {
+                    return;
+                }
+
+                const response = await fetch(img.src, { method: "HEAD" });
+                const contentDisposition = response.headers.get("Content-Disposition");
+
+                if (contentDisposition) {
+                    const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (filenameMatch?.[1]) {
+                        img.alt = filenameMatch[1];
+                        img.updated = true;
+                    }
+                }
+            })
+        );
     }
+    self.seoContext.updatedAlts = self.seoContext.altAttributes.filter((img) => img.updated);
+    self.seoContext.generated = true;
 };
 
 class MetaImage extends Component {
@@ -445,20 +472,38 @@ class MetaKeywords extends Component {
         );
     }
 
-    get isFull() {
+    get hasTooManyKeywords() {
         return this.seoContext.keywords.length >= this.maxKeywords;
     }
 
     addKeyword(keyword) {
         keyword = keyword.replaceAll(/,\s*/gi, " ").trim();
-        if (keyword && !this.isFull && !this.seoContext.keywords.includes(keyword)) {
-            this.seoContext.keywords.push(keyword);
-            this.state.keyword = "";
+        if (!keyword) {
+            return;
         }
+        if (this.seoContext.keywords.includes(keyword)) {
+            this.seoContext.errorMessage = _t('The keyword "%(keyword)s" already exists.', {
+                keyword,
+            });
+            return;
+        }
+        this.seoContext.keywords.push(keyword);
+        this.state.keyword = "";
+        this.seoContext.errorMessage = null;
     }
 
     removeKeyword(keyword) {
         this.seoContext.keywords = this.seoContext.keywords.filter((kw) => kw !== keyword);
+        if (!this.seoContext.keywords.length) {
+            this.seoContext.generated = false;
+        }
+        this.seoContext.errorMessage = null;
+    }
+
+    removeAllKeywords() {
+        this.seoContext.keywords = [];
+        this.seoContext.generated = false;
+        this.seoContext.errorMessage = null;
     }
 }
 
@@ -556,6 +601,9 @@ export class TitleDescription extends Component {
         defaultTitle: String,
         previewDescription: String,
         url: String,
+        isPublished: Boolean,
+        visibility: String,
+        save: Function,
     };
     static components = {
         SEOPreview,
@@ -564,6 +612,8 @@ export class TitleDescription extends Component {
     setup() {
         this.seoContext = proxy(seoContext);
         this.website = useService("website");
+        this.dialogs = useService("dialog");
+        this.websiteCustomMenus = useService("website_custom_menus");
         useAutofocus();
 
         this.state = proxy({
@@ -660,6 +710,23 @@ export class TitleDescription extends Component {
 
     autoFill() {
         getSeo(this);
+    }
+
+    openPagePropertiesDialog() {
+        const saveAndOpen = async () => {
+            await this.props.save(false);
+            this.websiteCustomMenus.open({
+                xmlid: "website.menu_page_properties",
+            });
+        };
+        this.dialogs.add(ConfirmationDialog, {
+            title: _t("Unsaved changes"),
+            body: _t("You made changes to your page's SEO settings, do you want to save them?"),
+            confirmLabel: _t("Save and go to Page Properties"),
+            cancelLabel: _t("Go back"),
+            confirm: saveAndOpen,
+            cancel: () => {},
+        });
     }
 
     /**
@@ -768,7 +835,6 @@ export class SeoChecks extends Component {
         } = this.website.currentWebsite;
         this.object = seoObject || mainObject;
         this.state = proxy({
-            altAttributes: [],
             checkingLinks: false,
             checkedLinks: false,
             counterLinks: 0,
@@ -776,7 +842,7 @@ export class SeoChecks extends Component {
         });
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
-            this.state.altAttributes = await this.getAltAttributes();
+            this.seoContext.altAttributes = await this.getAltAttributes();
             this.seoContext.updatedAlts = [];
         });
         onMounted(() => {
@@ -786,7 +852,7 @@ export class SeoChecks extends Component {
 
     imgUpdated(img) {
         img.updated = true;
-        this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
+        this.seoContext.updatedAlts = this.seoContext.altAttributes.filter((img) => img.updated);
     }
 
     async getAltAttributes() {
@@ -983,6 +1049,13 @@ export class OptimizeSEODialog extends Component {
 
             // If website.page, hide the google preview & tell user his page is currently unindexed
             this.isIndexed = "website_indexed" in this.data ? this.data.website_indexed : true;
+            this.isPublished = this.website.currentWebsite.metadata.isPublished;
+            this.visibility =
+                mainObject.model === "website.page"
+                    ? (await this.orm.read("website.page", [mainObject.id], ["visibility"]))[0]
+                          ?.visibility
+                    : (await this.orm.read("ir.ui.view", [mainObject.id], ["visibility"]))[0]
+                          ?.visibility;
             this.seoNameHelp = _t(
                 "This value will be escaped to be compliant with all major browsers and used in url. Keep it empty to use the default name of the record."
             );
@@ -1023,6 +1096,7 @@ export class OptimizeSEODialog extends Component {
             } else {
                 seoContext.keywords = [];
             }
+            seoContext.generated = seoContext.keywords.length > 0;
         });
     }
 
@@ -1072,7 +1146,7 @@ export class OptimizeSEODialog extends Component {
         return el && el.content;
     }
 
-    async save() {
+    async save(refresh = true) {
         const data = {};
         if (this.canEditTitle) {
             data.website_meta_title = seoContext.title;
@@ -1142,11 +1216,13 @@ export class OptimizeSEODialog extends Component {
 
         await Promise.all(rpcCalls);
 
-        this.website.goToWebsite({
-            path: this.url.replace(
-                this.previousSeoName || this.seoNameDefault,
-                seoContext.seoName || this.seoNameDefault
-            ),
-        });
+        if (refresh) {
+            this.website.goToWebsite({
+                path: this.url.replace(
+                    this.previousSeoName || this.seoNameDefault,
+                    seoContext.seoName || this.seoNameDefault
+                ),
+            });
+        }
     }
 }
