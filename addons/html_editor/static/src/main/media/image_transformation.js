@@ -63,6 +63,16 @@ export class ImageTransformation extends Component {
             }
         });
         useHotkey("escape", () => this.props.destroy());
+        useExternalListener(
+            this.document,
+            "blur",
+            (ev) => {
+                this.props.destroy();
+            },
+            {
+                capture: true,
+            }
+        );
         usePositionHook({ el: this.props.editable }, this.document, () => {
             if (!this.isCurrentlyTransforming) {
                 this.resetHandlers();

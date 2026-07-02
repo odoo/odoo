@@ -69,7 +69,13 @@ export class ImageCropPlugin extends Plugin {
 
         registry.category("main_components").add("ImageCropping", {
             Component: ImageCrop,
-            props: { ...this.imageCropProps, onClose, onSave, document: this.document },
+            props: {
+                ...this.imageCropProps,
+                onClose,
+                onSave,
+                document: this.document,
+                editable: this.editable,
+            },
         });
     }
 }

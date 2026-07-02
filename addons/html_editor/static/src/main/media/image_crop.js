@@ -22,6 +22,7 @@ export class ImageCrop extends Component {
     static template = "html_editor.ImageCrop";
     static props = {
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
+        editable: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         media: { optional: true },
         mimetype: { type: String, optional: true },
         onClose: { type: Function, optional: true },
@@ -53,6 +54,9 @@ export class ImageCrop extends Component {
             capture: true,
         });
         useExternalListener(this.document, "keydown", this.onDocumentKeydown, {
+            capture: true,
+        });
+        useExternalListener(this.document, "blur", this.onBlur, {
             capture: true,
         });
         useExternalListener(
@@ -349,5 +353,12 @@ export class ImageCrop extends Component {
         // Wait for the zoom event to be fully processed before reseting.
         await new Promise((res) => setTimeout(res, 0));
         this.resetCropBox();
+    }
+
+    async onBlur(ev) {
+        if (this.cropButtons.el.contains(ev.relatedTarget)) {
+            return;
+        }
+        return this.closeCropper();
     }
 }
