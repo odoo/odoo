@@ -9,6 +9,7 @@ import {
     useOnChange,
     useVisible,
 } from "@mail/utils/common/hooks";
+import { incrementFn } from "@mail/utils/common/signal";
 
 import {
     Component,
@@ -50,12 +51,6 @@ export class Thread extends Component {
     /** @type {number} */
     smoothScrollingTimeout;
     isSmoothScrolling = false;
-    /**
-     * Bumped by every `reset()`. Used as a dependency of the effect mirroring
-     * `isLoaded` into `mountedAndLoaded` so the mirror is re-synced after a
-     * reset without making `mountedAndLoaded` depend on itself.
-     */
-    resetCount = 0;
 
     setup() {
         super.setup();
@@ -90,6 +85,13 @@ export class Thread extends Component {
             showJumpPresent: false,
             scrollTop: null,
         });
+        /**
+         * Bumped by `reset()`. Used as a dependency of the effect mirroring
+         * `isLoaded` into `mountedAndLoaded` so the mirror is re-synced after a
+         * reset without making `mountedAndLoaded` depend on itself.
+         */
+        this.resetCount = signal(0);
+        this.incrementResetCount = incrementFn(this.resetCount);
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
         this.ui = useService("ui");
@@ -226,7 +228,7 @@ export class Thread extends Component {
              * `reset()`, so every reset re-syncs `mountedAndLoaded` with
              * `isLoaded`.
              */
-            () => [this.props.thread.isLoaded, this.resetCount]
+            () => [this.props.thread.isLoaded, this.resetCount()]
         );
         useLayoutEffect(
             () => {
@@ -608,8 +610,16 @@ export class Thread extends Component {
     }
 
     reset() {
-        this.resetCount++;
         this.state.mountedAndLoaded = false;
+        // Bump `resetCount` (a mirror-effect dependency) so the effect re-runs
+        // and re-syncs `mountedAndLoaded`. Only when loaded: while `!isLoaded`,
+        // `applyScroll` resets on every patch, so an unconditional bump would
+        // spin the render loop until the fetch resolves. When loaded the bump
+        // re-renders once, the mirror sets `mountedAndLoaded` true and
+        // `applyScroll` stops resetting, so it converges.
+        if (this.props.thread.isLoaded) {
+            this.incrementResetCount();
+        }
         this.loadOlderState.ready = false;
         this.loadNewerState.ready = false;
         this.lastSetValue = undefined;
@@ -704,6 +714,8 @@ export class Thread extends Component {
     }
 
     get orderedMessages() {
+        // ensure rendering observes resetCount to re-trigger the effect when reset() is called
+        void this.resetCount();
         const messages = this.state.mountedAndLoaded
             ? this.props.thread.messages
             : this.props.thread.phantomMessages;
