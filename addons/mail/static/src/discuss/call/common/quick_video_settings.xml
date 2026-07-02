@@ -3,7 +3,7 @@
 
     <t t-name="discuss.QuickVideoSettings">
         <div class="o-discuss-QuickVideoSettings d-flex flex-column">
-            <DeviceSelect label.translate="Camera" kind="'videoinput'"/>
+            <DeviceSelect label.translate="Camera" kind="'videoinput'" menuClass="this.store.discussDropdownMenuClass(this) + (this.env.inMeetingView ? ' o-discuss-CallActionList-menu o-discuss-CallActionList-submenu' : '')"/>
             <t t-if="!this.isBrowserSafari()">
                 <hr class="mx-2 my-1 o-discuss-separator"/>
                 <div class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="() => this.store.settings.useBlur = !this.store.settings.useBlur">

@@ -1,5 +1,6 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { UseThreadActions } from "@mail/core/common/thread_actions";
+import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { Component, props, types } from "@odoo/owl";
 
@@ -52,6 +53,9 @@ export class MeetingSideActions extends Component {
                     partitionedActions.other,
                     ...partitionedActions.group,
                 ],
+                dropdownMenuClass: attClassObjectToString({
+                    "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
+                }),
             })
         );
         this.actions = actions;

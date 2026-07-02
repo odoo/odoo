@@ -87,7 +87,10 @@ export const quickActionSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVoiceSettings,
-    dropdownMenuClass: "p-1 overflow-x-hidden",
+    dropdownMenuClass: ({ owner }) =>
+        owner.env.inMeetingView
+            ? "o-discuss-CallActionList-menu overflow-x-hidden"
+            : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
     icon: "oi oi-chevron-up o-xsmaller",
     name: _t("Voice Settings"),
@@ -151,7 +154,10 @@ export const quickVideoSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVideoSettings,
-    dropdownMenuClass: "p-1 overflow-x-hidden",
+    dropdownMenuClass: ({ owner }) =>
+        owner.env.inMeetingView
+            ? "o-discuss-CallActionList-menu overflow-x-hidden"
+            : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
     icon: "oi oi-chevron-up o-xsmaller",
     name: _t("Video Settings"),

@@ -1,5 +1,76 @@
-.o-discuss-CallActionList .o-mail-ActionList-button{
-    zoom: 1.2;
+$o-call-menu-item-border-radius: 10px;
+$o-call-menu-item-padding: 9px 12px;
+
+.o-discuss-CallActionList.o-inMeetingView {
+    --#{$prefix}border-radius-lg: #{$o-call-button-border-radius};
+
+    .o-mail-ActionList-button {
+        font-size: 1.2em;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: $o-call-button-size;
+    }
+
+    .o-mail-ActionList-button:not(.rounded-circle):not(:has(i.o-xsmaller)) {
+        min-width: $o-call-button-size;
+    }
+
+    .o-mail-ActionList-button:has(i.o-xsmaller) {
+        min-width: 2.1rem; // 1.75rem × 1.2
+    }
+
+    .o-mail-ActionList-group + span {
+        margin-left: map-get($spacers, 2) !important;
+        margin-right: map-get($spacers, 2) !important;
+    }
+}
+
+.o-discuss-CallActionList-menu {
+    min-width: 246px;
+    padding: 7px;
+    border-radius: 15px;
+
+    .btn {
+        padding: $o-call-menu-item-padding !important;
+        border-radius: $o-call-menu-item-border-radius !important;
+        font-size: 15px;
+        font-weight: $font-weight-semibold;
+    }
+
+    hr.o-discuss-separator {
+        margin: 5px map-get($spacers, 2) !important;
+    }
+
+    .form-check.form-switch {
+        min-height: auto;
+        padding-left: 0;
+
+        .form-check-input {
+            width: 40px;
+            height: 23px;
+            margin-top: 0;
+        }
+    }
+
+    .fa-gear {
+        font-size: 17px !important;
+    }
+
+    &.o-discuss-CallActionList-callLayout .o-mail-ActionList-button {
+        gap: 13px;
+
+        i {
+            font-size: 19px !important;
+        }
+    }
+}
+
+.o-discuss-CallActionList-submenu .dropdown-item {
+    padding: $o-call-menu-item-padding !important;
+    border-radius: $o-call-menu-item-border-radius;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
 }
 
 .o-discuss-CallActionList-callLayout {

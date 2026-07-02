@@ -1,0 +1,16 @@
+.o-mail-MeetingSideActions {
+    --#{$prefix}border-radius-lg: #{$o-call-button-border-radius};
+
+    .o-mail-ActionList-button {
+        // See call_action_list.scss: replace `zoom: 1.2` with em-based scaling.
+        font-size: 1.2em;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: $o-call-button-size;
+
+        &:not(.rounded-circle):not(:has(i.o-xsmaller)) {
+            min-width: $o-call-button-size;
+        }
+    }
+}

@@ -86,7 +86,7 @@
     <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inline and this.env.inMeetingView and !this.env.inComposer and !this.env.inDiscussActionPanel and this.store.rtc.isFullscreen"/>
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         [btnClass]: true,
-        'px-2 o-py-2_5': inMeetingViewCallButtonsFullscreen,
+        'px-1 py-2': inMeetingViewCallButtonsFullscreen,
         'o-px-1_5 py-1': this.props.inline   and  ((this.hasBtnBg and !isInlineCircleButton and !this.env.inMeetingView) or (!this.hasBtnBg and this.env.inComposer)),
         'o-p-1_5':       this.props.inline   and  !this.env.inMeetingView and this.hasBtnBg and isInlineCircleButton and !this.env.inChatWindow,
         'o-px-0_5':      this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.action.icon,

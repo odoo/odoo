@@ -3,7 +3,7 @@
 
     <t t-name="discuss.QuickVoiceSettings">
         <div class="o-discuss-QuickVoiceSettings d-flex flex-column">
-            <DeviceSelect label.translate="Microphone" kind="'audioinput'"/>
+            <DeviceSelect label.translate="Microphone" kind="'audioinput'" menuClass="this.store.discussDropdownMenuClass(this) + (this.env.inMeetingView ? ' o-discuss-CallActionList-menu o-discuss-CallActionList-submenu' : '')"/>
             <t t-if="!this.isMobile()">
                 <hr class="mx-2 my-1 o-discuss-separator"/>
                 <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="() => this.store.settings.usePushToTalk = !this.store.settings.usePushToTalk">
@@ -18,7 +18,7 @@
                 </button>
             </t>
             <hr class="mx-2 my-1 o-discuss-separator"/>
-            <DeviceSelect label.translate="Speakers" kind="'audiooutput'"/>
+            <DeviceSelect label.translate="Speakers" kind="'audiooutput'" menuClass="this.store.discussDropdownMenuClass(this) + (this.env.inMeetingView ? ' o-discuss-CallActionList-menu o-discuss-CallActionList-submenu' : '')"/>
             <t t-if="this.store.rtc.selfSession">
                 <hr class="mx-2 my-1 o-discuss-separator"/>
                 <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="() => this.store.rtc.toggleDeafen()">

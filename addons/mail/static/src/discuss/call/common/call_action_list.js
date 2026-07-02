@@ -54,7 +54,12 @@ export class CallActionList extends Component {
                               this.callActionsParams,
                               {
                                   actions: moreActions,
-                                  dropdownMenuClass: "m-0 mb-1 overflow-x-hidden",
+                                  dropdownMenuClass: attClassObjectToString({
+                                      "m-0 mb-1 overflow-x-hidden": true,
+                                      "o-discuss-CallActionList-menu": Boolean(
+                                          this.env.inMeetingView
+                                      ),
+                                  }),
                                   dropdownPosition: "top-end",
                                   name: this.MORE,
                               },
@@ -87,8 +92,12 @@ export class CallActionList extends Component {
                                             CALL_PROMOTE_FULLSCREEN.ACTIVE
                                     ),
                                 }),
-                            dropdownMenuClass:
-                                "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden",
+                            dropdownMenuClass: attClassObjectToString({
+                                "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
+                                "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
+                                    this.env.inMeetingView
+                                ),
+                            }),
                             dropdownPosition: "top-end",
                             id: "call-layout",
                             name: this.MORE,
