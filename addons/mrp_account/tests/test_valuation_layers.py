@@ -2,6 +2,7 @@
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon
+from odoo import fields
 from odoo.tests import Form, tagged
 
 PRICE = 718.75 - 100  # total price minus glass
@@ -359,8 +360,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.table_head.action_bom_cost()
         self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 0}])
         self.assertEqual(old_stock_value, sum(self.env.company.stock_value().values()))
-        action = self.env['stock.quantity.history'].create({}).open_at_date()
-        products = self.env[action['res_model']].with_context(action['context']).search(action['domain'])
+        products = self.table_head.with_context(to_date=fields.Datetime.now())
         self.assertRecordValues(
             products & self.table_head,
             [{
