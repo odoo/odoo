@@ -286,6 +286,27 @@ class Website(models.Model):
         check_company=True,
     )
 
+    show_category_title = fields.Boolean(
+        string="Show Category Title",
+        default=False,
+        help="Display the category title on the shop page. Corresponds to the 'Show Title' editor"
+        " option.",
+    )
+
+    show_category_description = fields.Boolean(
+        string="Show Category Description",
+        default=True,
+        help="Display the category description on the shop page. Corresponds to the"
+        " 'Show Description' editor option.",
+    )
+
+    align_category_content = fields.Boolean(
+        string="Align Category Content",
+        default=False,
+        help="Align the category content on the shop page. Corresponds to the 'Center Content'"
+        " editor option.",
+    )
+
     # === COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
@@ -369,14 +390,12 @@ class Website(models.Model):
 
         website = self.env["website"].browse(res["website_id"])
         website_settings = {}
-        category_settings = {}
         views_to_disable = []
         views_to_enable = []
         ThemeUtils = self.env["theme.utils"].with_context(website_id=website.id)
 
         def parse_style_config(style_config_):
             website_settings.update(style_config_["website_fields"])
-            category_settings.update(style_config_.get("category_fields", {}))
             views_to_disable.extend(style_config_["views"]["disable"])
             views_to_enable.extend(style_config_["views"]["enable"])
 
@@ -393,10 +412,6 @@ class Website(models.Model):
         # Apply eCommerce page style configurations.
         if website_settings:
             website.write(website_settings)
-        if category_settings:
-            self.env["product.public.category"].search(website.website_domain()).write(
-                category_settings
-            )
         for xml_id in views_to_disable:
             ThemeUtils.disable_view(xml_id)
         for xml_id in views_to_enable:
@@ -1159,8 +1174,11 @@ class Website(models.Model):
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
-        """ Provides a list of settings that should always be set on the default
+        """Provides a list of settings that should always be set on the default
         website. When the default website changes, a check is performed. If some
         of these settings are not already set on the new default website, they
         are copied from the previous default website."""
-        return super()._get_settings_to_copy_onto_new_default_website() + ['salesperson_id', 'salesteam_id']
+        return super()._get_settings_to_copy_onto_new_default_website() + [
+            "salesperson_id",
+            "salesteam_id",
+        ]
