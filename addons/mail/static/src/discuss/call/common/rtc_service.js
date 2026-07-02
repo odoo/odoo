@@ -738,12 +738,13 @@ export class Rtc extends Record {
      * @param {any} param0.id
      * @param {string} param0.text
      * @param {number} [param0.delay]
+     * @param {"bottom"|"top"} [param0.position="bottom"] Corner of the call view the notification is anchored to.
      */
-    addCallNotification({ id, text, delay = 3000 }) {
+    addCallNotification({ id, text, delay = 3000, position = "bottom" }) {
         if (this.notifications.has(id)) {
             return;
         }
-        this.notifications.set(id, { id, text });
+        this.notifications.set(id, { id, position, text });
         this.timeouts.set(
             id,
             browser.setTimeout(() => {
@@ -895,6 +896,24 @@ export class Rtc extends Record {
             return;
         }
         await this.exitFullscreen();
+    }
+
+    /**
+     * Leave the meeting overlay the way pressing ESC does: from browser fullscreen it drops back to
+     * the windowed overlay (or its origin), and from the windowed overlay it returns to the Discuss
+     * layout or small window the call was opened from.
+     *
+     * @returns {Promise<void>}
+     */
+    async minimize() {
+        if (!this.isFullscreen) {
+            return;
+        }
+        if (this.isBrowserFullscreen) {
+            await this.exitBrowserFullscreen();
+        } else {
+            await this.exitFullscreen();
+        }
     }
 
     /**

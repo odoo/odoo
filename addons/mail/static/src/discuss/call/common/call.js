@@ -285,6 +285,18 @@ export class Call extends Component {
         );
     }
 
+    get bottomNotifications() {
+        return this.hasCallNotifications
+            ? [...this.rtc.notifications.values()].filter((notif) => notif.position !== "top")
+            : [];
+    }
+
+    get topNotifications() {
+        return this.hasCallNotifications
+            ? [...this.rtc.notifications.values()].filter((notif) => notif.position === "top")
+            : [];
+    }
+
     get isControllerFloating() {
         return this.rtc.isFullscreen || (this.channel.activeRtcSession && !this.ui.isSmall);
     }

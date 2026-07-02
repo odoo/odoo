@@ -282,13 +282,14 @@ export class CallPreview extends Component {
         this.state.videoStream = await navigator.mediaDevices.getUserMedia({
             video: this.store.settings.cameraConstraints,
         });
-        if (!this.videoRef.el) {
-            return;
-        }
         if (status(this) === "destroyed") {
             closeStream(this.state.videoStream);
             return;
         }
+        // The <video> element only renders once `videoStream` is set, so it may not be in the DOM
+        // yet on this pass (e.g. camera auto-enabled on granted permission); the layout effect binds
+        // the stream when it mounts. Notify the parent unconditionally so the preview camera state
+        // is not lost when the camera is enabled before the element exists.
         if (this.videoRef.el) {
             this.videoRef.el.srcObject = this.state.videoStream;
         }
