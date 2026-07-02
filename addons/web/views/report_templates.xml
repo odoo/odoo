@@ -443,7 +443,8 @@
                 company.report_tables_id == 'boxed' and 'o_report_layout_boxed o_table_boxed' or
                 company.report_tables_id == 'striped' and 'o_report_layout_striped o_table_striped' or
                 company.report_tables_id == 'bubble' and 'o_report_layout_bubble o_table_boxed-rounded' or
-                company.report_tables_id == 'column' and 'o_report_layout_column o_table_column' or ''
+                company.report_tables_id == 'column' and 'o_report_layout_column o_table_column' or
+                company.report_tables_id == 'compact' and 'o_report_layout_compact o_table_compact' or ''
             "
         />
         <div
@@ -741,6 +742,33 @@
                 is_tagline_footer="True"
                 footer_content_classes="(report_type != 'pdf' and 'mx-5' or '')"
             />
+        </div>
+    </template>
+
+    <template id="external_layout_compact">
+        <div t-attf-class="o_company_#{company.id}_layout header">
+            <table class="w-100 table-borderless">
+                <tr>
+                    <td class="align-top" style="width: 33.33%;">
+                        <t t-call="web.company_address_list"/>
+                    </td>
+                    <td class="align-top text-center" style="width: 33.33%;">
+                        <img t-if="company.logo" class="o_company_logo_mid mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                        <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
+                    </td>
+                    <td class="align-top text-end" style="width: 33.33%;">
+                        <t t-call="web.address_layout" custom_layout_address="True" information_block="False" custom_address_spacing="'mb-0'"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
+            <div class="mb-2" t-if="information_block" t-out="information_block"/>
+            <h2 t-out="layout_document_title"/>
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <t t-call="web.external_layout_footer_content" footer_content_classes="'border-top pt-2'"/>
         </div>
     </template>
 

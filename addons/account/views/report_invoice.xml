@@ -222,7 +222,7 @@
                                                 <t t-set="line_colspan" t-value="3 + (1 if display_discount else 0) + (1 if display_taxes and not line.tax_ids else 0)"/>
                                                 <t t-if="is_product" name="account_invoice_line_accountable">
                                                     <td class="w-100" name="account_invoice_line_name" t-att-style="padding_style">
-                                                        <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
+                                                        <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}" class="d-inline-block w-100 lh-sm">Bacon Burger</span>
                                                     </td>
                                                     <td name="td_quantity" class="o_td_quantity text-end">
                                                         <span t-field="line.quantity" class="text-nowrap">3.00</span>
