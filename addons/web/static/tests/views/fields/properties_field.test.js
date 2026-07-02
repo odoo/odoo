@@ -2973,6 +2973,63 @@ test("properties definition: test display and edit", async () => {
 });
 
 test.tags("desktop");
+test("properties definition: add property button persists after pager navigation", async () => {
+    ResCompany._records.push({
+        id: 38,
+        name: "Company 2",
+        definitions: [
+            {
+                name: "property_c2_1",
+                string: "Company 2 Char",
+                type: "char",
+            },
+        ],
+    });
+    onRpc("has_access", () => true);
+
+    await mountView({
+        type: "form",
+        resModel: "res.company",
+        resId: 37,
+        resIds: [37, 38],
+        arch: /* xml */ `
+            <form js_class="properties_definition_form">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="id" invisible="1"/>
+                        <field name="definitions" widget="properties_definition"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    // Initial state: first record should have 4 definitions and an Add Property button
+    expect(".o_property_field").toHaveCount(4, {
+        message: "4 property fields should be present for the first record.",
+    });
+    expect(".o_field_property_add button").toHaveCount(1, {
+        message: "Add Property button should be visible on the first record.",
+    });
+
+    // Navigate to the second record
+    await contains(".o_pager_next").click();
+    expect(".o_property_field").toHaveCount(1, {
+        message: "1 property field should be present for the second record.",
+    });
+
+    // Navigate back to the first record
+    await contains(".o_pager_previous").click();
+    expect(".o_property_field").toHaveCount(4, {
+        message: "4 property fields should be present after navigating back.",
+    });
+    expect(".o_field_property_add button").toHaveCount(1, {
+        message: "Add Property button should still be visible after navigating back.",
+    });
+});
+
+test.tags("desktop");
 test("many2one property in list view", async () => {
     ResCompany._records[0].definitions.push({
         name: "m2o_property",
