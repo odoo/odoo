@@ -13,6 +13,7 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one(domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('has_template_ancestor', '=', False), ('is_timeoff_task', '=', False)]")
 
     _timeoff_timesheet_idx = models.Index('(task_id) WHERE (global_leave_id IS NOT NULL OR holiday_id IS NOT NULL) AND project_id IS NOT NULL')
+    _is_timeoff_task_idx = models.Index('(task_id, holiday_id, global_leave_id) WHERE project_id IS NOT NULL')
 
     def _get_redirect_action(self):
         leave_form_view_id = self.env.ref('hr_holidays.hr_leave_view_form').id
