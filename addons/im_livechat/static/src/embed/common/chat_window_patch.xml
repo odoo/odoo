@@ -11,7 +11,7 @@
             <t t-if="!this.channel.chatbot">$0</t>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-ChatWindow-header')]" position="attributes">
-            <attribute name="t-attf-style" add="color: {{ this.livechatService.options.title_color }}; --o-mail-livechat-btn-color: {{ this.livechatService.options.title_color }}; background-color: {{ this.livechatService.options.header_background_color }} !important;" separator=" "/>
+            <attribute name="t-attf-style" add="color: {{ this.livechatService.options.widget_text_color }}; --o-mail-livechat-btn-color: {{ this.livechatService.options.widget_text_color }}; background-color: {{ this.livechatService.options.widget_background_color }} !important;" separator=" "/>
         </xpath>
         <xpath expr="//*[@t-custom-ref='composerHiddenContainer']" position="inside">
             <button t-if="this.showGiveFeedbackBtn" class="btn btn-link p-0" title="Give your feedback" t-on-click="() => this.props.chatWindow.requestClose()">Continue</button>
