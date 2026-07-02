@@ -300,6 +300,9 @@ class StockAllocationReport(models.AbstractModel):
         # Always try to auto-assign to prevent other moves from reserving the
         # quant if incoming move is done.
         all_out_moves._action_assign()
+        # Check if source moves can be merged to group the ones going to the allocated location.
+        merged_src_moves = src_moves._merge_moves()
+        merged_src_moves.move_line_ids._merge_lines()
         return {
             'in_moves': (src_moves | new_src_moves).ids,
             'out_moves': [self._get_out_move_values(out_move) for out_move in all_out_moves],
@@ -353,7 +356,9 @@ class StockAllocationReport(models.AbstractModel):
         # Try to merge only free source moves.
         moves_to_merge = src_moves.filtered(lambda mv: not mv.move_dest_ids)
         src_moves -= moves_to_merge
-        src_moves += freed_src_moves._merge_moves(merge_into=moves_to_merge)
+        merged_moves = freed_src_moves._merge_moves(merge_into=moves_to_merge)
+        merged_moves.move_line_ids._merge_lines()
+        src_moves += merged_moves
 
         # Handle annoying use cases where we need to split the out move:
         # 1. batch reserved + individual picking unreserved

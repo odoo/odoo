@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter, defaultdict
 from ast import literal_eval
+from operator import itemgetter
 
 from odoo import _, api, fields, models
 from odoo.addons.web.controllers.utils import clean_action
@@ -1238,6 +1238,38 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         moves = self.picking_id.move_ids.filtered(lambda x: x.product_id == self.product_id)
         return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+
+    @api.model
+    def _prepare_merge_distinct_fields(self):
+        return [
+            'location_dest_id', 'location_id', 'lot_id', 'lot_name', 'move_id', 'owner_id',
+            'package_id', 'picked', 'product_id', 'result_package_id', 'uom_id'
+        ]
+
+    def _merge_lines(self):
+        """ This method will try to sum move lines into a single one.
+        :return: Recordset of move lines passed to this method. If some of them were merged
+        into another existing one, return this one and not the (now unlinked) original.
+        """
+        distinct_fields = self._prepare_merge_distinct_fields()
+        lines_to_unlink = self.env['stock.move.line']  # Move lines to remove after merge.
+        merge_getter = itemgetter(*distinct_fields)
+
+        candidate_lines = self.filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
+        for __, g in groupby(candidate_lines, key=merge_getter):
+            lines = self.env['stock.move.line'].concat(g)
+            # Merge grouped move lines together.
+            if len(lines) > 1:
+                # Sum all quantity on first move line and delete the others.
+                sum_qty = sum(line.quantity for line in lines)
+                lines[0].quantity = sum_qty
+                lines_to_unlink |= lines[1:]
+
+        if lines_to_unlink:
+            lines_to_unlink.sudo().unlink()
+
+        set_ids = set(self.ids) - set(lines_to_unlink)
+        return self.env['stock.move.line'].browse(set_ids)
 
     def _should_display_put_in_pack_wizard(self, package_id, package_type_id, package_name, from_package_wizard):
         define_package_type = self._should_set_package()
