@@ -83,6 +83,13 @@ class StockPicking(models.Model):
             'location_dest_id': self.location_dest_id.id,
             'company_id': self.company_id.id,
             'never_product_template_attribute_value_ids': first_line.attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant == 'no_variant'),
+            'origin_returned_move_id': order_lines.mapped(
+                'refunded_orderline_id.order_id.picking_ids.move_ids'
+            ).filtered(
+                lambda m: m.product_id == first_line.product_id
+                and m.state == 'done'
+                and m.picking_type_id.code == 'outgoing'
+            )[:1].id or False,
         }
 
     def _create_move_from_pos_order_lines(self, lines):
