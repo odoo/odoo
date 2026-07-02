@@ -69,15 +69,19 @@
                         </div>
                     </div>
                     <!-- hover information (not for mobile view) -->
-                    <div t-if="!this.isMobileOS" class="o-mail-Attachment-hover position-absolute top-0 bottom-0 start-0 end-0 p-2 d-flex align-items-end o-opacity-hoverable opacity-100-hover opacity-0 rounded-3" t-att-class="{ 'o-bgTranslucent': attachment.isImage or attachment.isVideo }">
-                        <div class="d-flex flex-row align-items-start gap-2">
-                            <img t-if="attachment.isImage" src="/mail/static/src/img/image_icon.png" class="mw-100 mh-100 rounded o-mt-0_5" draggable="false"/>
-                            <div t-else="" class="o-mail-Attachment-hover-image o_image flex-shrink-0" t-att-data-mimetype="attachment.mimetype"/>
-                            <div t-if="attachment.name" class="o-mail-Attachment-hoverImageText o_line_clamp fw-bold text-break lh-sm" t-att-class="{ 'o-text-white': attachment.isImage }" t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
-                        </div>
-                        <div t-if="attachment.file_size" class="ms-4 o-mt-0_5" t-att-class="{ 'ps-1': !attachment.isImage }">
-                            <span class="opacity-75" t-att-class="{ 'o-text-white': attachment.isImage }"><t t-out="Math.round(attachment.file_size / 1024, 4)"/>KB</span>
-                        </div>
+                    <div t-if="!this.isMobileOS" class="o-mail-Attachment-hover position-absolute top-0 bottom-0 start-0 end-0 p-2 d-flex align-items-end o-opacity-hoverable opacity-100-hover opacity-0 rounded-3" t-att-class="{ 'o-bgTranslucent': attachment.isImage or attachment.isVideo or attachment.isPdf }">
+                        <t t-if="!attachment.isPdf">
+                            <div class="d-flex flex-row align-items-start gap-2">
+                                <img t-if="attachment.isImage" src="/mail/static/src/img/image_icon.png" class="mw-100 mh-100 rounded o-mt-0_5" draggable="false" />
+                                <div t-else="" class="o-mail-Attachment-hover-image o_image flex-shrink-0" t-att-data-mimetype="attachment.mimetype" />
+                                <div t-if="attachment.name" class="o-mail-Attachment-hoverImageText o_line_clamp fw-bold text-break lh-sm" t-att-class="{ 'o-text-white': attachment.isImage }" t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name" />
+                            </div>
+                            <div t-if="attachment.file_size" class="ms-4 o-mt-0_5" t-att-class="{ 'ps-1': !attachment.isImage }">
+                                <span class="opacity-75" t-att-class="{ 'o-text-white': attachment.isImage }">
+                                    <t t-out="Math.round(attachment.file_size / 1024, 4)" /> KB
+                                </span>
+                            </div>
+                        </t>
                         <!-- buttons on hover -->
                         <div class="o-mail-AttachmentButtons btn-group position-absolute top-0 end-0 p-2">
                             <a t-if="!attachment.isImage and attachment.type === 'url'" class="btn btn-secondary" t-att-href="attachment.url" target='_blank' title="Open Link">
