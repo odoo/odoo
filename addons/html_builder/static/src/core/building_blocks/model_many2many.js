@@ -1,7 +1,7 @@
 import { Component, onWillStart, useEffect, props, proxy, status, t } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { useDomState } from "@html_builder/core/utils";
+import { useDomState, getAllActionsAndOperations } from "@html_builder/core/utils";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { BuilderComponent } from "./builder_component";
 import { BasicMany2Many } from "./basic_many2many";
@@ -10,6 +10,8 @@ export class ModelMany2Many extends Component {
     static template = "html_builder.ModelMany2Many";
     props = props({
         //...basicContainerBuilderComponentProps,
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
         baseModel: t.string(),
         recordId: t.number(),
         m2oField: t.string(),
@@ -47,6 +49,11 @@ export class ModelMany2Many extends Component {
         });
     }
     async handleProps(props) {
+        const { callOperation } = getAllActionsAndOperations(this);
+        this.callOperation = callOperation;
+        this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
+            this.callApply.bind(this)
+        );
         const [record] = await this.cachedModel.ormRead(
             props.baseModel,
             [props.recordId],
@@ -80,17 +87,46 @@ export class ModelMany2Many extends Component {
             this.modelEdit.init(props.m2oField, [...storedSelection]);
         }
         this.domState.selection = this.modelEdit.get(props.m2oField);
+        if (this.props.createAction) {
+            try {
+                this.createAction = this.env.editor.shared.builderActions.getAction(
+                    this.props.createAction
+                );
+            } catch {
+                this.createAction = undefined;
+            }
+        }
+    }
+    callApply(applySpecs) {
+        const proms = [];
+        for (const applySpec of applySpecs) {
+            proms.push(
+                applySpec.action.apply({
+                    editingElement: applySpec.editingElement,
+                    params: { ...applySpec.actionParam, oldSelection: this.oldSelection },
+                    value: applySpec.actionValue,
+                    loadResult: applySpec.loadResult,
+                    dependencyManager: this.env.dependencyManager,
+                })
+            );
+        }
+        return proms;
     }
     setSelection(newSelection) {
+        this.oldSelection = this.modelEdit.get(this.props.m2oField);
         this.modelEdit.set(this.props.m2oField, newSelection);
+        this.callOperation(this.applyOperation.commit, {
+            userInputValue: JSON.stringify(newSelection),
+        });
         this.env.editor.shared.history.commit();
     }
-    create(name) {
+    async create(name) {
         // TODO maybe this can be in base layer
+        const loadResult = await this.createAction?.load?.({ value: name });
         this.setSelection([
             ...this.domState.selection,
             {
-                id: `new-${uniqueId()}`,
+                id: loadResult || `${uniqueId()}`,
                 name: name,
                 display_name: name,
                 model: this.state.searchModel,
