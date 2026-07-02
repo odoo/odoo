@@ -117,7 +117,7 @@
                                            invisible="not can_edit_wizard or can_group_payments and not group_payment"
                                            groups="base.group_multi_currency"/>
                                 </div>
-                                <div name="currency_conversion_div" class="d-flex gap-1 text-muted" invisible="currency_id == company_currency_id == source_currency_id">
+                                <div name="currency_conversion_div" class="d-flex gap-1 text-muted" invisible="currency_id == company_currency_id">
                                     <span>1</span>
                                     <field name="company_currency_id" readonly="1" options="{'no_open': True}"/>
                                     <span>=</span>
