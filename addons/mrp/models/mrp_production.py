@@ -598,7 +598,13 @@ class MrpProduction(models.Model):
         for production in self:
             if not production.state or not production.uom_id or not (production.id or production._origin.id):
                 production.state = 'draft'
-            elif production.state == 'cancel' or (production.move_finished_ids and all(move.state == 'cancel' for move in production.move_finished_ids)):
+            elif (
+                production.state == 'cancel'
+                or (
+                    (production.move_finished_ids | production.move_raw_ids)
+                    and all(move.state == 'cancel' for move in (production.move_finished_ids | production.move_raw_ids))
+                )
+            ):
                 production.state = 'cancel'
             elif (
                 production.state == 'done'
@@ -2557,7 +2563,12 @@ class MrpProduction(models.Model):
         def _render_note_exception_quantity_mo(rendering_context):
             visited_objects = []
             order_exceptions = {}
+            context = self.env.context
+            exception_on_picking = context.get('exception_on_picking')
             for exception in rendering_context:
+                if exception_on_picking:
+                    order_exceptions.update(exception)
+                    continue
                 order_exception, visited = exception
                 order_exceptions.update(order_exception)
                 visited_objects += visited
@@ -2571,8 +2582,12 @@ class MrpProduction(models.Model):
                 'production_order': self,
                 'order_exceptions': order_exceptions,
                 'impacted_object': impacted_object,
-                'cancel': cancel
+                'cancel': cancel,
+                'is_child_mo_unlink': context.get('is_child_mo_unlink'),
+                'exception_on_picking': exception_on_picking,
             }
+            if exception_on_picking:
+                values['moves_information'] = [(move, info[1]) for move, info in order_exceptions.items()]
             return self.env['ir.qweb']._render('mrp.exception_on_mo', values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)

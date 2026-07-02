@@ -221,6 +221,44 @@ class StockMove(models.Model):
             if move.raw_material_production_id and move.uom_id.compare(move.quantity, 0) < 0:
                 raise ValidationError(_("Please enter a positive quantity."))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_draft_or_cancel(self):
+        component_moves = self.filtered(lambda m: m.state != 'draft' and (m.raw_material_production_id or m.created_production_id))
+        if not component_moves:
+            return super()._unlink_if_draft_or_cancel()
+
+        def _unlink_child_mos(move, parent_mo, child_mos):
+            for child_mo in child_mos:
+                finished_move = child_mo.move_finished_ids.filtered(lambda m: m.product_id == child_mo.product_id)
+                documents = {(child_mo, parent_mo.user_id): [({finished_move: (child_mo, (finished_move.product_uom_qty, 0))}, [])]}
+                parent_mo.with_context(is_child_mo_unlink=True)._log_manufacture_exception(documents)
+                move.production_group_id.child_ids = [Command.unlink(child_mo.production_group_id.id)]
+
+        move_to_check = self.env['stock.move']
+        for move in component_moves:
+            parent_mo = move.raw_material_production_id
+            pickings = move.move_orig_ids.picking_id.filtered(lambda p: p.state != 'done' and p.move_ids - move.move_orig_ids)
+            if pickings:
+                documents = {(picking, picking.user_id): [{move: (parent_mo, (0, move.product_uom_qty))}] for picking in pickings}
+                parent_mo.with_context(exception_on_picking=True)._log_manufacture_exception(documents)
+            child_mos = move.move_orig_ids.production_id or move.move_orig_ids.created_production_id
+            if not child_mos and move.warehouse_id.manufacture_steps != 'mrp_one_step' and parent_mo.mrp_production_child_count:
+                child_mos = self.env['mrp.production'].search([
+                    ('production_group_id', 'in', move.production_group_id.child_ids.ids),
+                    ('product_id', '=', move.product_id.id),
+                    ('state', '!=', 'done'),
+                ])
+            if child_mos or (parent_mo and move.move_orig_ids):
+                if child_mos and parent_mo:
+                    _unlink_child_mos(move, parent_mo, child_mos)
+                moves_to_unlink = move | move.move_orig_ids
+                moves_to_unlink.move_orig_ids = [Command.unlink(m) for m in moves_to_unlink.ids]
+                moves_to_unlink.filtered(lambda move: move.state != 'done').unlink()
+            else:
+                move_to_check |= move
+            pickings.filtered(lambda p: not p.move_ids).unlink()
+        return super(StockMove, move_to_check)._unlink_if_draft_or_cancel()
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Enforce consistent values (i.e. match _get_move_raw_values/_get_move_finished_values) for:
