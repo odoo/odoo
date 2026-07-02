@@ -41,6 +41,7 @@ const scssErrorNotificationService = {
                         title: _t("Style error"),
                         sticky: true,
                         type: "danger",
+                        className: "o_line_clamp_3"
                     });
                     console.log(
                         lastRule.style.content
