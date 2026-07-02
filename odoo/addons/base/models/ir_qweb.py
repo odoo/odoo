@@ -530,6 +530,48 @@ def keep_query(*keep_params, **additional_params):
     return werkzeug.urls.url_encode(params)
 
 
+def parse_CSS_style_properties(value):
+    # directly adapted from https://github.com/odoo/owl/commit/e032e7e9ec6e6ec8838ca664b22428c0d8fc26df
+    i, len_val = 0, len(value)
+    while i < len_val:
+        start = i
+        depth = 0
+        quote = None
+        while i < len_val:
+            c = value[i]
+            if quote:
+                if c == "\\":
+                    i += 2
+                    continue
+                if c == quote:
+                    quote = None
+            elif c in ("'", '"'):
+                quote = c
+            elif c == "(":
+                depth += 1
+            elif c == ")":
+                if depth > 0:
+                    depth -= 1
+            elif c == ";" and depth == 0:
+                break
+            i += 1
+
+        part = value[start:i]
+        i += 1
+        if not part:
+            continue
+        colonIdx = part.find(":")
+        if colonIdx == -1:
+            continue
+        if prop := part[0:colonIdx]:
+            yield prop, part[colonIdx + 1:].strip()
+
+
+def parse_classes(string):
+    for cls in string.split():
+        yield cls, True
+
+
 ####################################
 ###             QWeb             ###
 ####################################
@@ -1979,6 +2021,88 @@ class IrQweb(models.AbstractModel):
     def _compile_directive_consumed_options(self, el, compile_context, level):
         raise SyntaxError('the t-options must be on the same tag as a directive that consumes it (for example: t-out, t-field, t-call)')
 
+    def _compile_mergeable_attributes(self, el, compile_context, level):
+        """
+        For attributes class, styles and their respective dynamic counterparts
+        creates and returns the necessary code that merges all those values together
+
+        The compiled template would endup looking like:
+        '''
+        attrs["class"] = self._merge_class(
+            value_of_class,
+            value_of_t-tattf-class,
+            value_of_t-tatt-class,
+            attrs
+        )
+        '''
+        """
+        codes = []
+        for raw_attr in ("class", "style"):
+            values = None
+            for index, variation in enumerate((raw_attr, f"t-attf-{raw_attr}", f"t-att-{raw_attr}")):
+                if variation in el.attrib:
+                    arg = el.attrib.pop(variation)
+                    if values is None:
+                        values = ["None"] * 3
+                    if variation.startswith("t-att-"):
+                        arg = self._compile_expr(arg)
+                    elif variation.startswith("t-attf-"):
+                        arg = self._compile_format(arg)
+                    else:
+                        arg = repr(arg)
+                    values[index] = arg
+            if values is None:
+                continue
+            if "t-att" in el.attrib:
+                values.append("attrs")
+            codes.append(f"attrs[{raw_attr!r}] = self._merge_{raw_attr}({", ".join(values)})")
+        return codes
+
+    def _merge_class(self, cls=None, t_attf_val=None, t_att_val=None, t_atts=None):
+        if t_attf_val or t_att_val or (t_atts and "class" in t_atts):
+            classes = {}
+            if cls:
+                classes.update(parse_classes(cls))
+            if t_attf_val:
+                classes.update(parse_classes(t_attf_val))
+            if attrs_class := (t_atts and t_atts.get("class")):
+                if isinstance(attrs_class, dict):
+                    classes.update(attrs_class)
+                else:
+                    classes.update(parse_classes(attrs_class))
+            if t_att_val:
+                if isinstance(t_att_val, dict):
+                    classes.update(t_att_val)
+                else:
+                    classes.update(parse_classes(t_att_val))
+            return " ".join(k for k, v in classes.items() if v) or None
+        elif cls:
+            return cls
+
+    def _merge_style(self, style=None, t_attf_val=None, t_att_val=None, t_atts=None):
+        if t_attf_val or t_att_val or (t_atts and "style" in t_atts):
+            styles = {}
+            if style:
+                styles.update(parse_CSS_style_properties(style))
+            if t_attf_val:
+                styles.update(parse_CSS_style_properties(t_attf_val))
+            if attrs_style := (t_atts and t_atts.get("style")):
+                if isinstance(attrs_style, dict):
+                    styles.update(attrs_style)
+                else:
+                    styles.update(parse_CSS_style_properties(attrs_style))
+            if t_att_val:
+                if isinstance(t_att_val, dict):
+                    styles.update(t_att_val)
+                else:
+                    styles.update(parse_CSS_style_properties(t_att_val))
+            lines = [":".join(item) for item in styles.items() if item[1]]
+            if lines:
+                lines.append("")
+            return ";".join(lines) or None
+        elif style:
+            return style
+
     def _compile_directive_att(self, el, compile_context, level):
         """ Compile the attributes of the given elements.
 
@@ -2020,6 +2144,9 @@ class IrQweb(models.AbstractModel):
                     key = f'xmlns:{ns_prefix}'
                 code.append(indent_code(f'attrs[{key!r}] = {ns_definition!r}', level))
 
+        # Extract class, styles and dynamic variations from el to merge them
+        mergeable_attributes = self._compile_mergeable_attributes(el, compile_context, level)
+
         # Compile the static attributes of the given element.
         #
         # Etree will also remove the ns prefixes indirection in the
@@ -2060,10 +2187,12 @@ class IrQweb(models.AbstractModel):
                         attrs.update(dict(atts_value))
                     """, level))
 
+        for merge_code in mergeable_attributes:
+            code.append(indent_code(merge_code, level))
+
         if code:
             code = [indent_code("attrs = {}", level)] + code
             compile_context['qweb_attrs_created'] = True
-
         return code
 
     def _compile_directive_tag_open(self, el, compile_context, level):
