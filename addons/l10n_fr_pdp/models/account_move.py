@@ -159,7 +159,7 @@ class AccountMove(models.Model):
             if move.peppol_move_state != 'error' and (response_status := move._pdp_get_response_status()):
                 move.peppol_move_state = response_status
 
-    @api.depends('peppol_response_ids', 'peppol_response_ids.peppol_state', 'peppol_response_ids.response_code')
+    @api.depends('peppol_message_uuid', 'peppol_move_state', 'peppol_response_ids', 'peppol_response_ids.peppol_state', 'peppol_response_ids.response_code')
     def _compute_pdp_ppf_state(self):
         for move in self:
             processed = move.peppol_move_state and move.peppol_move_state not in ('ready', 'to_send', 'processing', 'error')
