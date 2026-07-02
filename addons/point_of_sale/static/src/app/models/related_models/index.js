@@ -686,10 +686,19 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 mapObj(processedModelDefs, (modelName) => new Model(modelName))
             );
             this[STORE_SYMBOL] = store;
+            this._syncId = null;
         }
 
         get commands() {
             return commands;
+        }
+
+        generateSyncId() {
+            this._syncId = uuidv4();
+            return this._syncId;
+        }
+        clearSyncId() {
+            this._syncId = null;
         }
 
         /**
@@ -789,15 +798,20 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         if (!isUpdate) {
                             createdIds.push(record.id);
                         } else {
-                            modelEvents.triggerEvents("update", {
-                                id: record.id,
-                                fields: Object.keys(rawData),
-                            });
+                            const params = { id: record.id, fields: Object.keys(vals) };
+                            if (this._syncId) {
+                                params.syncId = this._syncId;
+                            }
+                            modelEvents.triggerEvents("update", params);
                         }
                         resultsArray.push(record);
                     }
                     if (createdIds.length) {
-                        modelEvents.triggerEvents("create", { ids: createdIds });
+                        const params = { ids: createdIds };
+                        if (this._syncId) {
+                            params.syncId = this._syncId;
+                        }
+                        modelEvents.triggerEvents("create", params);
                     }
                 }
                 return finalResults;

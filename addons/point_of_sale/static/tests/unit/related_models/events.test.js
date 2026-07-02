@@ -40,40 +40,35 @@ describe(`Related models Events`, () => {
         let orderCreates = [];
         let orderUpdates = [];
 
-        models["pos.order"].addEventListener("create", (data) => {
-            orderCreates.push(data);
-        });
+        models["pos.order"].addEventListener("create", (data) => orderCreates.push(data));
+        models["pos.order"].addEventListener("update", (data) => orderUpdates.push(data));
 
         const order1 = models["pos.order"].create({});
-        models["pos.order"].addEventListener("update", (data) => {
-            orderUpdates.push(data);
-        });
-
-        expect(orderUpdates.length).toBe(0);
-        expect(orderCreates.length).toBe(1);
-        expect(orderCreates[0].ids).toEqual([order1.id]);
+        expect(orderCreates).toEqual([{ ids: [order1.id] }]);
 
         orderCreates = [];
         orderUpdates = [];
 
         models.connectNewData({
-            "pos.order": [
-                {
-                    id: 1,
-                    uuid: order1.uuid, //Update
-                },
-                {
-                    id: 2,
-                },
-                {
-                    id: 3,
-                },
-            ],
+            "pos.order": [{ id: 1, uuid: order1.uuid }, { id: 2 }, { id: 3 }],
         });
 
-        expect(orderUpdates.length).toBe(1);
-        expect(orderCreates.length).toBe(1);
-        expect(orderCreates[0].ids).toEqual([2, 3]);
+        expect(orderUpdates).toEqual([{ id: order1.id, fields: ["id", "uuid"] }]);
+        expect(orderCreates).toEqual([{ ids: [2, 3] }]);
+
+        orderCreates = [];
+        orderUpdates = [];
+
+        models._syncId = "test-sync-id";
+        models.connectNewData({
+            "pos.order": [{ id: 1, uuid: order1.uuid }, { id: 4 }],
+        });
+
+        expect(orderUpdates).toEqual([
+            { id: order1.id, fields: ["id", "uuid"], syncId: "test-sync-id" },
+        ]);
+        expect(orderCreates).toEqual([{ ids: [4], syncId: "test-sync-id" }]);
+        models._syncId = null;
     });
 
     test("Connecting new data", async () => {
@@ -108,6 +103,30 @@ describe(`Related models Events`, () => {
         expect(orderUpdates.length).toBe(1); // The new line is connected to the order and updates it
         expect(lineUpdates.length).toBe(0);
         expect(lineCreates.length).toBe(1);
+    });
+
+    test("generateSyncId", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
+        expect(models._syncId).toBe(null);
+
+        const id = models.generateSyncId();
+
+        expect(typeof id).toBe("string");
+        expect(id).toHaveLength(36);
+        expect(models._syncId).toBe(id);
+        models._syncId = null;
+    });
+
+    test("clearSyncId", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
+        models._syncId = "test-sync-id";
+
+        models.clearSyncId();
+
+        expect(models._syncId).toBe(null);
+        models._syncId = null;
     });
 
     test("Delete record", async () => {

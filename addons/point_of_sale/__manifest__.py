@@ -133,6 +133,7 @@
             'web/static/src/core/errors/error_handlers.js',
             'web/static/src/core/dialog/dialog.scss',
             'point_of_sale/static/src/backend/views/**/*',
+            'point_of_sale/static/src/customer_display/customer_display_data_service.js',
         ],
         'web.assets_unit_tests': [
             'point_of_sale/static/tests/unit/**/*',
@@ -213,7 +214,6 @@
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
-            'point_of_sale/static/src/customer_display/utils.js',
             ('include', 'point_of_sale.payment_terminals'),
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
@@ -263,6 +263,7 @@
             "point_of_sale/static/src/app/components/price_formatter/**/*",
             "point_of_sale/static/src/app/components/validation_animation/**/*",
             "point_of_sale/static/src/app/components/feedback_payment_summary/**/*",
+            "point_of_sale/static/src/app/webrtc/**/*",
         ],
         'point_of_sale.customer_display_assets_dark': [
             ('include', 'point_of_sale.customer_display_assets'),

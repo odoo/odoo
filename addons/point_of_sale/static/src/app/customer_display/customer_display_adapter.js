@@ -1,7 +1,4 @@
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
-import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
-
-const CONSOLE_COLOR = "#FF8269";
 
 /**
  * This module provides functions to format order and order line data for customer display.
@@ -9,32 +6,30 @@ const CONSOLE_COLOR = "#FF8269";
  */
 
 export class CustomerDisplayPosAdapter {
-    constructor() {
-        this.setup();
-    }
-
-    setup() {
+    constructor(webrtc) {
         this.data = {};
-        this.channel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
+        this.webrtc = webrtc;
+
+        this.webrtc.registerSnapshot("update_customer_display", {
+            build: (peer) => {
+                if (
+                    this.webrtc.group === "terminal" &&
+                    peer.group === "customer_display" &&
+                    peer.deviceUuid === this.webrtc._deviceUuid
+                ) {
+                    return this.data;
+                }
+                return null;
+            },
+            apply: () => {},
+        });
     }
 
-    dispatch(pos) {
-        this.channel.postMessage(JSON.parse(JSON.stringify(this.data)));
-        pos.data
-            .call("pos.config", "update_customer_display", [
-                [pos.config.id],
-                this.data,
-                localStorage.getItem("device_uuid"),
-            ])
-            .catch((error) => {
-                logPosMessage(
-                    "CustomerDisplay",
-                    "dispatch",
-                    "Failed to update customer display",
-                    CONSOLE_COLOR,
-                    [error]
-                );
-            });
+    dispatch() {
+        this.webrtc.pushMessage("update_customer_display", [this.data], {
+            group: "customer_display",
+        });
+        this.webrtc.debounceSendMessages();
     }
 
     displayScreenSaver() {

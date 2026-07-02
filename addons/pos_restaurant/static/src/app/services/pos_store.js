@@ -8,7 +8,6 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
-import { isSamePosDevice } from "@point_of_sale/app/utils/devices_synchronisation";
 
 patch(PosStore.prototype, {
     /**
@@ -464,7 +463,6 @@ patch(PosStore.prototype, {
         return super.getDefaultSearchDetails();
     },
     async setTable(table, orderUuid = null) {
-        this.deviceSync.readDataFromServer();
         let currentOrder = table
             .getOrders()
             .find((order) => (orderUuid ? order.uuid === orderUuid : !order.finalized));
@@ -946,7 +944,8 @@ patch(PosStore.prototype, {
 
     async onFloorPlanUpdate(payload) {
         const { session_id, device_identifier } = payload;
-        const isSameDevice = isSamePosDevice(session_id, device_identifier, this);
+        const isSameDevice =
+            odoo.pos_session_id != session_id || device_identifier == this.device.identifier;
         logPosMessage(
             "Synchronisation",
             "FLOOR_PLAN_UPD",
