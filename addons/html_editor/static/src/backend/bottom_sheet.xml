@@ -5,11 +5,12 @@
             <attribute name="data-prevent-closing-overlay">true</attribute>
         </xpath>
         <xpath expr="//div[hasclass('o_bottom_sheet_rail')]" position="before">
+            <div t-out="this.htmlEditorProps.withUnfocus ? 'unfocus' : 'no unfocus'"/>
             <t t-if="this.htmlEditorProps.withUnfocus">
                 <!-- Hidden iframe to put cursor -->
                 <iframe t-on-load="this.onIframeLoad"
                     style="opacity: 0"
-                    srcdoc="&lt;input&gt;"
+                    srcdoc="&lt;input value&quot;a&quot;&gt;"
                 />
             </t>
         </xpath>

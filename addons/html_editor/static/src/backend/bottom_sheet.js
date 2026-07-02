@@ -33,8 +33,13 @@ patch(BottomSheet.prototype, {
             const iframeDoc = ev.target.contentDocument;
             if (!iframeDoc.hasFocus()) {
                 const defaultActiveElement = doc.activeElement;
+                defaultActiveElement?.blur();
                 const inputEl = iframeDoc.querySelector("input");
-                inputEl.focus();
+                setTimeout(() => {
+                    inputEl.focus();
+                    inputEl.select();
+                    inputEl.focus();
+                });
                 // Somehow this does not display the keyboard - which is what we want.
                 // If we disable the field, some phones keep displaying the selection widgets.
                 if (defaultActiveElement) {
