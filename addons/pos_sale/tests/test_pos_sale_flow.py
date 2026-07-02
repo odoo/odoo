@@ -391,6 +391,46 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_import_lot_groupable_and_non_groupable', login="accountman")
 
+    def test_settle_delivered_order_non_groupable_uom(self):
+        """
+        Settling a fully delivered sale order loads its lines with zero quantity.
+        Lines of products whose UoM is not groupable in the POS must be kept with
+        zero quantity as well, instead of being removed by the line splitting logic.
+        """
+        non_groupable_uom = self.env['uom.uom'].create({
+            'name': 'Non groupable',
+            'is_pos_groupable': False,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Non Groupable Delivered Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10.0,
+            'uom_id': non_groupable_uom.id,
+            'taxes_id': False,
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 1)
+
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                    'name': product.name,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_ids.picked = True
+        picking.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, 1)
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_delivered_order_non_groupable_uom', login="accountman")
+
     def test_customer_notes(self):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
             and we need to make sure that all the picking are cancelled if the order is fully delivered.
