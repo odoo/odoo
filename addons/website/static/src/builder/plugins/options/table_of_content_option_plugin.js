@@ -133,6 +133,15 @@ export class TableOfContentOptionPlugin extends Plugin {
             return;
         }
 
+        // Remove stale TOC ids from non-heading elements (e.g. a heading converted
+        // back to a paragraph
+        for (const el of tableOfContentMain.querySelectorAll(
+            "[id^='table_of_content_heading_']"
+        )) {
+            if (!el.matches("h1, h2, h3, h4, h5, h6")) {
+                el.removeAttribute("id");
+            }
+        }
         const headingIds = currentHeadingItems.map(({ el }) => getTocAndHeadingId(el).headingId);
         let maxHeadingIds = Math.max(0, ...headingIds);
 

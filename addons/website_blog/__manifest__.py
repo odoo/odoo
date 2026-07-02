@@ -47,6 +47,7 @@
         'web.assets_frontend': [
             'website_blog/static/src/interactions/**/*',
             'website_blog/static/src/scss/website_blog.scss',
+            'website_blog/static/src/scss/blog_table_of_content.scss',
             'website_blog/static/src/snippets/**/*.js',
         ],
         'website.assets_editor': [

@@ -51,7 +51,7 @@ export function closestScrollable(element) {
  * @param {Document} [doc=document]
  * @returns {number}
  */
-function scrollFixedOffset(doc = document) {
+export function scrollFixedOffset(doc = document) {
     let size = 0;
     const elements = doc.querySelectorAll(".o_top_fixed_element");
 

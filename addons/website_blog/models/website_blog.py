@@ -38,6 +38,31 @@ class BlogBlog(models.Model):
     content = fields.Html('Content', translate=html_translate, sanitize=False)
     blog_post_ids = fields.One2many('blog.post', 'blog_id', 'Blog Posts')
     blog_post_count = fields.Integer("Posts", compute='_compute_blog_post_count')
+    # Per-blog display overrides
+    # Both fields are optional (default=False = inherit from global website settings).
+    # When set, they override the website-level ir.ui.view toggles for that specific blog.
+    # The website builder writes them via /blog/config when editing a specific blog page.
+    blog_page_container = fields.Selection(
+        selection=[
+            ('regular', "Regular"),
+            ('fluid', "Full"),
+        ],
+        default=False,
+        help="Container width override for this specific blog. When not set, the global website container setting is used.",
+    )
+    blog_layout = fields.Selection(
+        selection=[
+            ('grid', "Grid"),
+            ('bordered_grid', "Bordered Grid"),
+            ('split_grid', "Split Grid"),
+            ('simple_list', "Simple List"),
+            ('compact_list', "Compact List"),
+            ('list', "List"),
+            ('large_list', "Large List"),
+        ],
+        default=False,
+        help="Posts layout override for this specific blog. When not set, the global website layout setting is used.",
+    )
 
     def _compute_website_url(self):
         super()._compute_website_url()
@@ -187,7 +212,7 @@ class BlogPost(models.Model):
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')
     author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
-    author_name = fields.Char(related='author_id.display_name', string="Author Name", readonly=False, store=True)
+    author_name = fields.Char(related='author_id.name', string="Author Name", readonly=False, store=True)
     active = fields.Boolean('Active', default=True)
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, index=True, ondelete='cascade', default=lambda self: self.env['blog.blog'].search([], limit=1))
     recommended_next_post_id = fields.Many2one('blog.post', string="Recommended Next Post",

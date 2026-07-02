@@ -232,6 +232,32 @@ class WebsiteBlog(http.Controller):
 
         return request.render("website_blog.blog_post_short", values)
 
+    @http.route('/blog/config', type='jsonrpc', auth='user', website=True)
+    def blog_config(self, blog_id=False, **kwargs):
+        """Save per-blog display configuration.
+
+        Called by the website builder on document save when the user customizes
+        a specific blog's layout or container width from its own page.
+        Only fields listed in `allowed_fields` can be written, as a safety
+        measure against arbitrary field writes from the client.
+        """
+        # Guard: no blog_id means we are on the all-blogs homepage;
+        # layout there is managed globally via websiteConfig (ir.ui.view toggles).
+        if not blog_id:
+            return {}
+        blog = request.env['blog.blog'].browse(int(blog_id))
+        # Guard: invalid or deleted blog id.
+        if not blog.exists():
+            return {}
+        # Whitelist of fields this endpoint is allowed to write.
+        # Add future per-blog overrides here as needed.
+        allowed_fields = {'blog_layout', 'blog_page_container'}
+        # Keep only allowed keys from the JSON payload, silently drop the rest.
+        values = {k: v for k, v in kwargs.items() if k in allowed_fields}
+        if values:
+            blog.sudo().write(values)
+        return {}
+
     @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=True)
     def blog_feed(self, blog, limit='15', **kwargs):
         v = {}
