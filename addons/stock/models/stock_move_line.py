@@ -692,23 +692,27 @@ class StockMoveLine(models.Model):
             if package_history_vals:
                 self.env['stock.package.history'].create(package_history_vals)
 
+        moves_to_check_pack = set()
         for ml in mls_todo.with_context(quants_cache=quants_cache):
             # if this move line is force assigned, unreserve elsewhere if needed
             ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
             available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
             ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
             if available_qty < 0:
-                ml.with_context(quants_cache=None, bypass_entire_pack=True)._free_reservation(
+                moves_to_check = ml.with_context(quants_cache=None, bypass_entire_pack=True)._free_reservation(
                     ml.product_id, ml.location_id,
                     abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
-                    owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
+                    owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore).ids
+                if moves_to_check:
+                    moves_to_check_pack.update(moves_to_check)
             ml_ids_to_ignore.add(ml.id)
 
         if not self.env.context.get('ignore_dest_packages'):
             mls_todo.result_package_id._apply_dest_to_package()
 
         # Reset the reserved quantity as we just moved it to the destination location.
-        affected_pickings = mls_todo.mapped('picking_id')
+        other_pickings = self.env['stock.move'].browse(moves_to_check_pack).picking_id
+        affected_pickings = mls_todo.picking_id | other_pickings
         if affected_pickings:
             affected_pickings._check_entire_pack()
         mls_todo.write({
@@ -807,7 +811,7 @@ class StockMoveLine(models.Model):
         ml_ids_to_ignore |= self.ids
 
         if self.move_id._should_bypass_reservation(location_id):
-            return
+            return self.env['stock.move']
 
         # We now have to find the move lines that reserved our now unavailable quantity. We
         # take care to exclude ourselves and the move lines were work had already been done.
@@ -857,6 +861,7 @@ class StockMoveLine(models.Model):
             })
         move_line_to_unlink.unlink()
         move_to_reassign[::-1]._action_assign()
+        return move_to_reassign
 
     def _get_aggregated_properties(self, move_line=False, move=False):
         move = move or move_line.move_id
