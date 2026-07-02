@@ -9,8 +9,10 @@ from werkzeug.exceptions import NotFound
 from werkzeug.test import EnvironBuilder
 
 import odoo
+from odoo import _
+from odoo.exceptions import ValidationError
 from odoo.tests.common import HttpCase, HOST
-from odoo.tools.misc import hmac, DotDict, frozendict
+from odoo.tools.misc import hmac, DotDict, frozendict, verify_hash_signed
 
 
 @contextlib.contextmanager
@@ -239,3 +241,31 @@ def add_form_signature(html_fragment, env_sudo):
             hash_value += ':email_cc'
         hash_node = etree.Element('input', attrib={'type': "hidden", 'value': hash_value, 'class': "form-control s_website_form_input s_website_form_custom", 'name': "website_form_signature"})
         form_values['email_to'].addnext(hash_node)
+
+
+def assert_form_signature(form_data: dict, model: odoo.models.BaseModel) -> None:
+    assert model._name == 'ir.model'
+
+    signature = form_data.pop('__sign__', None)
+    if signature is None:
+        raise ValidationError(_("The form must be signed to be valid"))
+
+    signed_data, model_name = verify_hash_signed(model.sudo().env, 'website_form_sign', signature)
+
+    if model.sudo().model != model_name:
+        raise ValidationError(_("The form's integrity is not verified (the model is not correct: %s)", model_name))
+
+    fields = model.env[model_name]._fields
+
+    for name, value in form_data.items():
+        if name not in fields:
+            continue
+        if name not in signed_data:
+            raise ValidationError(_("The form's integrity is not verified (%s is not allowed)", name))
+        if signed_data[name] is not None and value != signed_data[name]:
+            raise ValidationError(_("The form's integrity is not verified (%s has been modified)", name))
+        signed_data.pop(name)
+
+    if any(value is not None for value in signed_data.values()):
+        missing_names = [name for name, value in signed_data.items() if value is not None]
+        raise ValidationError(_("The form's integrity is not verified (%s missing)", ', '.join(missing_names)))
