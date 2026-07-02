@@ -41,7 +41,7 @@ describe("onClickLine", () => {
                     [
                         {
                             combo_item_id: comboItem1,
-                            qty: 1,
+                            qty: 2,
                         },
                         {
                             combo_item_id: comboItem2,
@@ -59,10 +59,11 @@ describe("onClickLine", () => {
         expect(line.combo_line_ids.length).toBe(2);
         expect(line.combo_line_ids[0].product_id.id).toBe(comboItem1.product_id.id);
         expect(line.combo_line_ids[1].product_id.id).toBe(comboItem2.product_id.id);
+        expect(line.combo_line_ids[0].getQuantity()).toBe(2);
         const screen = await mountWithCleanup(SplitBillScreen, {});
         screen.onClickLine(order.lines[0]);
         expect(screen.qtyTracker[order.lines[0].uuid]).toBe(1);
-        expect(screen.qtyTracker[order.lines[1].uuid]).toBe(1);
+        expect(screen.qtyTracker[order.lines[1].uuid]).toBe(2);
         expect(screen.qtyTracker[order.lines[2].uuid]).toBe(1);
     });
 });
