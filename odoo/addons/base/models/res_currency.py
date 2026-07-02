@@ -317,8 +317,10 @@ class ResCurrency(models.CachedModel):
     def _get_conversion_rate(self, from_currency, to_currency, company=None, date=None):
         if from_currency == to_currency:
             return 1
-        company = company or self.env.company
-        if company.root_id in self.env['res.company'].browse(self.env.user._get_company_ids()).root_id:
+        # rates only ever live on the root company (see _get_rates / rate's
+        # _check_company_id), so for branches always resolve against the root
+        company = (company or self.env.company).root_id
+        if company in self.env['res.company'].browse(self.env.user._get_company_ids()).root_id:
             from_currency = from_currency.sudo()
         date = date or fields.Date.context_today(self)
         return from_currency.with_company(company).with_context(to_currency=to_currency.id, date=str(date)).inverse_rate
