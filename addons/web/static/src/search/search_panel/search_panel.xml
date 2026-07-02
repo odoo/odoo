@@ -51,7 +51,7 @@
 <t t-name="web.SearchPanelContent">
     <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 px-2 bg-view overflow-auto position-relative"
          t-att-class="this.env.searchModel.searchPanelInfo.className"
-         t-custom-ref="root">
+         t-ref="this.root">
         <div t-if="!this.env.isSmall" class="d-flex align-items-center pt-2">
             <button class="btn btn-light btn-sm ms-auto" t-on-click="this.toggleSidebar">
                 <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
@@ -147,7 +147,7 @@
 <t t-name="web.SearchPanel.Small">
     <div
         class="o_search_panel w-100 overflow-visible"
-        t-custom-ref="root"
+        t-ref="this.root"
         >
         <div class="d-flex overflow-auto align-items-center px-2 border-top">
             <div t-if="!this.sections or this.sections.length === 0" class="o_search_panel_empty_state me-3">
