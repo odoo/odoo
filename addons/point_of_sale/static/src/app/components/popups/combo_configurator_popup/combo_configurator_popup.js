@@ -100,13 +100,36 @@ export class ComboConfiguratorPopup extends Component {
     get configurationFromValues() {
         const values = this.props.values;
         const conf = {};
+        const order = this.pos.getOrder();
+        // Track already processed order lines
+        order._usedComboLineUuids ||= new Set();
+        order._comboLineUuidsToRemainingQty ||= new Map();
         for (const comboId in values) {
             for (const lineUuid in values[comboId]) {
                 if (lineUuid === "upsell") {
                     continue;
                 }
                 const line = this.pos.models["pos.order.line"].getBy("uuid", lineUuid);
-                conf[values[comboId][lineUuid].combo_item.id] = {
+                const remainingQty =
+                    line.qty - (order._comboLineUuidsToRemainingQty.get(lineUuid) || 0);
+                order._comboLineUuidsToRemainingQty.set(lineUuid, remainingQty);
+            }
+        }
+        for (const comboId in values) {
+            for (const lineUuid in values[comboId]) {
+                if (lineUuid === "upsell" || order._usedComboLineUuids.has(lineUuid)) {
+                    continue;
+                }
+                const line = this.pos.models["pos.order.line"].getBy("uuid", lineUuid);
+                let remainingQty = order._comboLineUuidsToRemainingQty.get(lineUuid) || 0;
+                remainingQty -= values[comboId][lineUuid].qty;
+                order._comboLineUuidsToRemainingQty.set(lineUuid, remainingQty);
+                if (remainingQty <= 0) {
+                    order._usedComboLineUuids.add(lineUuid);
+                }
+                // Preserve distinct configurations when multiple lines reference the
+                // same combo item but have different configuration details.
+                conf[`${values[comboId][lineUuid].combo_item.id}_${lineUuid}`] = {
                     attribute_value_ids: line.attribute_value_ids.map((a) => a.id),
                     attribute_custom_values: Object.fromEntries(
                         line.custom_attribute_value_ids.map((c) => [
@@ -168,6 +191,7 @@ export class ComboConfiguratorPopup extends Component {
         const itemsIncluded = [];
         const itemsExtra = [];
         const comboFreeQtyTracker = {};
+        const configurationKeys = Object.keys(this.state.configuration);
         Object.values(this.state.qty).forEach((comboItems) => {
             Object.entries(comboItems)
                 .filter(([, qty]) => qty > 0)
@@ -180,24 +204,57 @@ export class ComboConfiguratorPopup extends Component {
                         comboFreeQtyTracker[comboId] = 0;
                     }
 
-                    const remainingFreeQty = comboFreeQty - comboFreeQtyTracker[comboId];
-                    if (remainingFreeQty > 0) {
-                        const includedQty = Math.min(qty, remainingFreeQty);
-                        itemsIncluded.push({
-                            combo_item_id: comboItemId,
-                            configuration: this.state.configuration[comboItemId.id],
-                            qty: includedQty,
-                        });
-                        comboFreeQtyTracker[comboId] += includedQty;
-                        qty -= includedQty;
+                    const idStr = String(comboItemId.id);
+                    const comboConfigurationsKeys = configurationKeys.filter((key) =>
+                        String(key).startsWith(idStr)
+                    );
+                    if (comboConfigurationsKeys.length === 0) {
+                        comboConfigurationsKeys.push(comboItemId.id);
                     }
 
-                    if (qty > 0) {
-                        itemsExtra.push({
-                            combo_item_id: comboItemId,
-                            configuration: this.state.configuration[comboItemId.id],
-                            qty: qty,
-                        });
+                    // Build a map of qty per configuration key from values prop
+                    const qtyPerKey = {};
+                    if (this.props.values && comboConfigurationsKeys.length > 1) {
+                        const values = this.props.values[comboId] || {};
+                        for (const key of comboConfigurationsKeys) {
+                            const lineUuid = String(key).substring(idStr.length + 1);
+                            qtyPerKey[key] = values[lineUuid]?.qty || 0;
+                        }
+                    } else {
+                        // Single configuration: all qty belongs to it
+                        qtyPerKey[comboConfigurationsKeys[0]] = qty;
+                    }
+
+                    let remainingFreeQty = comboFreeQty - comboFreeQtyTracker[comboId];
+                    for (const key of comboConfigurationsKeys) {
+                        const keyQty = qtyPerKey[key] || 0;
+                        if (keyQty <= 0) {
+                            continue;
+                        }
+                        if (remainingFreeQty > 0) {
+                            const includedQty = Math.min(keyQty, remainingFreeQty);
+                            itemsIncluded.push({
+                                combo_item_id: comboItemId,
+                                configuration: this.state.configuration[key],
+                                qty: includedQty,
+                            });
+                            comboFreeQtyTracker[comboId] += includedQty;
+                            remainingFreeQty -= includedQty;
+                            const extraQty = keyQty - includedQty;
+                            if (extraQty > 0) {
+                                itemsExtra.push({
+                                    combo_item_id: comboItemId,
+                                    configuration: this.state.configuration[key],
+                                    qty: extraQty,
+                                });
+                            }
+                        } else {
+                            itemsExtra.push({
+                                combo_item_id: comboItemId,
+                                configuration: this.state.configuration[key],
+                                qty: keyQty,
+                            });
+                        }
                     }
                 });
         });
