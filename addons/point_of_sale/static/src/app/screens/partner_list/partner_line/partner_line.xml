@@ -10,17 +10,20 @@
                         <b t-out="this.props.partner.name or ''" />
                         <div class="company-field text-bg-muted" t-out="this.props.partner.parent_name or ''" />
                     </div>
-                    <Dropdown t-if="this.pos.cashier._role !== 'minimal'">
-                        <button class="btn btn-ligth fa fa-bars" />
-                        <t t-set-slot="content">
-                            <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
-                                Edit Details
-                            </DropdownItem>
-                            <DropdownItem onSelected="() => this.props.onClickOrders(this.props.partner)">
-                                All Orders
-                            </DropdownItem>
-                        </t>
-                    </Dropdown>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="partner-line-balance-mobile" t-if="this.props.isBalanceDisplayed" />
+                        <Dropdown t-if="this.pos.cashier._role !== 'minimal'">
+                            <button class="btn btn-ligth fa fa-bars" />
+                            <t t-set-slot="content">
+                                <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
+                                    Edit Details
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => this.props.onClickOrders(this.props.partner)">
+                                    All Orders
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+                    </div>
                 </div>
                 <div class="partner-line-adress p-1" t-if="this.props.partner.address" t-out="this.props.partner.address" />
                 <div class="partner-line-email p-1">
@@ -31,7 +34,7 @@
                         <i class="fa fa-fw fa-paper-plane-o me-2 lh-base flex-shrink-0" /><t t-out="this.props.partner.email" />
                     </div>
                 </div>
-                <div class="p-1">
+                <div class="p-1 d-flex align-items-center">
                     <button t-if="this.props.isSelected" t-on-click.stop="this.props.onClickUnselect" class="unselect-tag-mobile d-inline-block d-lg-none btn btn-light border">
                         <i class="fa fa-times me-1"></i>
                         <span>UNSELECT</span>
@@ -57,7 +60,6 @@
                         <i class="fa fa-fw fa-paper-plane-o me-2 lh-base flex-shrink-0"/><span class="text-break" t-out="this.props.partner.email" />
                     </div>
                 </td>
-                <!-- FIXME: this should be in pos_settle_due, not here -->
                 <td class="partner-line-balance" t-if="this.props.isBalanceDisplayed"></td>
                 <td class="edit-partner-button-cell align-middle pe-0">
                     <button t-if="this.props.isSelected" t-on-click.stop="this.props.onClickUnselect" class="unselect-tag fs-5 btn btn-light lh-lg border d-inline-flex align-items-center">
