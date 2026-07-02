@@ -48,6 +48,12 @@ DEFAULT_CDN_FILTERS = [
 
 DEFAULT_WEBSITE_ENDPOINT = 'https://website.api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
+WEBSITE_TYPE_MODULES = {
+    'eCommerce': 'website_sale',
+    'blog': 'website_blog',
+    'event': 'website_event',
+    'elearning': 'website_slides',
+}
 
 DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
     'youtu.be', 'youtube.com', 'youtube-nocookie.com',
@@ -725,7 +731,7 @@ class Website(models.CachedModel):
             if (manifest := get_manifest(theme_name))
         }
         theme_catalog = {
-            theme_name: manifest.get('summary', '')
+            theme_name: manifest.get('description', '')
             for theme_name, manifest in manifests.items()
         }
 
@@ -768,7 +774,7 @@ class Website(models.CachedModel):
             return []
         try:
             catalog_desc = "\n".join(
-                f"- {name}: {summary}" for name, summary in theme_catalog.items() if summary
+                f"- {name}: {description}" for name, description in theme_catalog.items() if description
             )
             prompt = (
                 f"I'm building {website_type or 'a'} website for a {industry_name} business "
@@ -826,7 +832,7 @@ class Website(models.CachedModel):
                 '/api/website/2/configurator/custom_resources/%s' % industry_id,
                 {'theme': theme or ''},
             )
-        except AccessError as e:
+        except (AccessError, RequestException) as e:
             logger.warning(
                 "Failed to fetch configurator images for industry %s: %s",
                 industry_id,
@@ -845,6 +851,17 @@ class Website(models.CachedModel):
         theme_name = kwargs['theme_name']
         theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
         redirect_url = theme.button_choose_theme()
+
+        module = self.env['ir.module.module'].search([
+            ('name', '=', WEBSITE_TYPE_MODULES.get(kwargs.get('website_type'))),
+            ('state', '!=', 'installed'),
+        ])
+        if module:
+            module.button_immediate_install()
+
+        # Refresh the environment of the website after module installs to use
+        # addon overrides for the rest of the configurator.
+        website = self.env['website'].browse(website.id)
 
         website.configurator_done = True
 
@@ -918,9 +935,6 @@ class Website(models.CachedModel):
         # Extension hook: allows installed modules to perform additional setup
         # steps on the generated website.
         website.configurator_addons_apply(**kwargs)
-
-        # Refresh the environment of the website to use addon overrides.
-        website = self.env['website'].browse(website.id)
 
         # Update footers links after addon setup to go through module overrides
         # of `configurator_get_footer_links`.

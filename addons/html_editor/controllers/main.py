@@ -4,7 +4,7 @@ import uuid
 from base64 import b64decode
 from datetime import datetime
 from os.path import join as opj
-from urllib.parse import urlparse, urlsplit, urljoin
+from urllib.parse import unquote, urlparse, urlsplit, urljoin
 
 import requests
 import werkzeug.exceptions
@@ -736,16 +736,21 @@ class HTML_Editor(Controller):
         image = stream.read()
         return self._make_shaped_image(svg, image, record.mimetype, kwargs)
 
-    def _is_allowed_shape_image_url(self, image_url):
-        if image_url.startswith(API_WEBSITE_IMAGES_URL):
-            return True
+    def _get_static_shape_image_path(self, image_url):
         splited_url = urlsplit(image_url)
         splited_base_url = urlsplit(request.httprequest.host_url)
-        return (
+        if not (
             splited_url.scheme in ('http', 'https')
             and splited_url.netloc == splited_base_url.netloc
-            and re.match(r'^/[^/]+/static/', splited_url.path) is not None
-        )
+        ):
+            return None
+        image_path = unquote(splited_url.path)
+        if (
+            '..' in image_path.split('/')
+            or re.match(r'^/[^/]+/static/', image_path) is None
+        ):
+            return None
+        return image_path.lstrip('/')
 
     @route('/html_editor/image_shape_url/<module>/<path:filename>', type='http', auth="user", website=True)
     def image_shape_url(self, module, filename, image_url=None, **kwargs):
@@ -757,19 +762,38 @@ class HTML_Editor(Controller):
         :return: HTTP response containing the generated SVG
         :rtype: :class:`werkzeug.wrappers.Response`
         """
-        if not image_url or not self._is_allowed_shape_image_url(image_url):
+        if not image_url:
             raise werkzeug.exceptions.BadRequest()
+
+        image_path = self._get_static_shape_image_path(image_url)
+        if not image_path and not image_url.startswith(API_WEBSITE_IMAGES_URL):
+            raise werkzeug.exceptions.BadRequest()
+
         svg = self._get_shape_svg(module, 'image_shapes', filename)
 
-        try:
-            response = requests.get(image_url, timeout=10)
-            response.raise_for_status()
-        except requests.RequestException as exc:
-            raise werkzeug.exceptions.NotFound() from exc
-        mimetype = response.headers.get('Content-Type', '')
+        if image_path:
+            try:
+                with file_open(
+                    image_path,
+                    'rb',
+                    filter_ext=tuple(SUPPORTED_IMAGE_MIMETYPES.values()),
+                ) as file:
+                    image = file.read()
+            except FileNotFoundError as exc:
+                raise werkzeug.exceptions.NotFound() from exc
+            except ValueError as exc:
+                raise werkzeug.exceptions.BadRequest() from exc
+            mimetype = guess_mimetype(image)
+        else:
+            try:
+                response = requests.get(image_url, timeout=10)
+                response.raise_for_status()
+            except requests.RequestException as exc:
+                raise werkzeug.exceptions.NotFound() from exc
+            mimetype = response.headers.get('Content-Type', '')
+            image = response.content
         if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
             raise werkzeug.exceptions.BadRequest()
-        image = response.content
         return self._make_shaped_image(svg, image, mimetype, kwargs)
 
     @route(["/web_editor/generate_text", "/html_editor/generate_text"], type="jsonrpc", auth="user")

@@ -28,6 +28,7 @@ from odoo.http import request
 from odoo.http.router import serve_ir_http
 from odoo.http.session import SessionExpiredException
 from odoo.http.stream import STATIC_CACHE_LONG
+from odoo.modules.module import get_manifest
 from odoo.tools import OrderedSet, py_to_js_locale
 from odoo.tools import html_escape as escape
 from odoo.tools.image import hex_to_rgb
@@ -104,6 +105,34 @@ CONFIGURATOR_PREVIEW_FALLBACK_IMAGES = {
         ('s_banner_connected_default_image', 's_cover_default_image'),
     ]
 }
+
+
+def _get_theme_preview_image_urls(theme_name):
+    """Map theme attachment keys to their static URLs for preview rendering.
+
+    Theme previews are rendered without installing the theme, so the
+    website-specific ``ir.attachment`` records do not exist yet.
+    """
+    image_urls = {}
+    manifest = get_manifest(theme_name) or {}
+    for data_path in manifest.get('data', []):
+        data_path_lower = data_path.lower()
+        if not data_path_lower.endswith('.xml') or not re.search(r'images?|shapes?', data_path_lower):
+            continue
+        try:
+            with tools.file_open(f'{theme_name}/{data_path}', 'rb') as file:
+                tree = etree.parse(file)
+        except (FileNotFoundError, etree.ParserError, etree.XMLSyntaxError):
+            continue
+        for record in tree.xpath("//record[@model='theme.ir.attachment']"):
+            key_el = record.find("field[@name='key']")
+            url_el = record.find("field[@name='url']")
+            if (
+                key_el is not None and key_el.text
+                and url_el is not None and url_el.text
+            ):
+                image_urls[key_el.text] = url_el.text
+    return image_urls
 
 
 class QueryURL:
@@ -530,7 +559,7 @@ class Website(Home):
                         continue
         return None
 
-    def _get_configurator_preview_image_url(self, theme_name, images_map, image_name):
+    def _get_configurator_preview_image_url(self, theme_name, images_map, image_name, theme_image_urls=None):
         """Return the replacement URL for a preview image.
 
         :param str theme_name: name of the previewed theme
@@ -545,6 +574,8 @@ class Website(Home):
         image_url = images_map.get(image_name)
         if image_url:
             return image_url.replace('/small/', '/')
+        if image_url := (theme_image_urls or {}).get(image_name):
+            return image_url
         return self._get_theme_static_preview_image_url(theme_name, image_name)
 
     def _apply_configurator_preview_images(self, final_html, theme_name, images_map):
@@ -556,18 +587,25 @@ class Website(Home):
         :return: preview HTML with updated image URLs
         :rtype: str
         """
-        for image_url in set(re.findall(r'/web/image/[^"\'\s,)]+', final_html)):
+        theme_image_urls = _get_theme_preview_image_urls(theme_name)
+
+        def replace_image_url(match):
+            image_url = match.group(0)
             mapped_image_url = self._get_configurator_preview_image_url(
                 theme_name,
                 images_map,
                 image_url.replace('/web/image/', '', 1),
+                theme_image_urls,
             )
-            if mapped_image_url:
-                final_html = final_html.replace(image_url, mapped_image_url)
+            return mapped_image_url or image_url
+
+        final_html = re.sub(r'/web/image/[^"\'\s,)]+', replace_image_url, final_html)
 
         shape_urls = set(re.findall(r'/html_editor/image_shape/([^/"\']+)/([^"\'\s)]+)', final_html))
         for image_name, shape_path in shape_urls:
-            mapped_image_url = self._get_configurator_preview_image_url(theme_name, images_map, image_name)
+            mapped_image_url = self._get_configurator_preview_image_url(
+                theme_name, images_map, image_name, theme_image_urls
+            )
             if not mapped_image_url:
                 continue
             if (

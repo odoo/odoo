@@ -3,6 +3,9 @@ import { translatedTermsGlobal } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
 
+const themeSelectionCard =
+    ".o_theme_selection_screen:not(.o_wsale_configurator_screen) .theme_preview .button_area";
+
 function runConfiguratorFlow(industrySearchText) {
     return [
         // Description screen
@@ -38,15 +41,30 @@ function runConfiguratorFlow(industrySearchText) {
             run: "click",
         },
         {
+            content: "Wait for theme selection or loader",
+            trigger: `.o_website_loader_container, .o_configurator_screen:contains(online catalog) .button_area, ${themeSelectionCard}`,
+            timeout: 60000,
+        },
+        {
+            content: "Choose a theme",
+            trigger: themeSelectionCard,
+            run: "click",
+            isActive: [themeSelectionCard],
+        },
+        {
             id: "loader",
             content: "Loader should be shown",
             trigger: ".o_website_loader_container",
             expectUnloadPage: true,
         },
         {
-            content: "Wait until the configurator is finished",
+            content: "Wait for the editor to load after redirect",
             trigger: ":iframe [data-view-xmlid='website.homepage']",
-            timeout: 30000,
+        },
+        {
+            content: "Check that the editor, not translation mode, is opened",
+            trigger:
+                ":iframe html[data-editable='1']:not([data-translatable='1'][data-edit_translations='1'])",
         },
     ];
 }
