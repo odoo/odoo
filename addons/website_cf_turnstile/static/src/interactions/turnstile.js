@@ -1,3 +1,4 @@
+import { uniqueId } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 import { session } from "@web/session";
 
@@ -7,12 +8,18 @@ export class TurnStile {
     constructor(action) {
         const cf = new URLSearchParams(window.location.search).get("cf");
         const mode = cf == "show" ? "always" : "interaction-only";
+
+        // each turnstile widget has unique callback closures so they can act on their own container
+        const id = uniqueId("turnstile_");
+        const successCbName = `turnstileSuccess_${id}`;
+        const becomeVisibleCbName = `turnstileBecomeVisible_${id}`;
+
         const turnstileContainer = renderToElement("website_cf_turnstile.turnstile_container", {
             action: action,
             appearance: mode,
-            beforeInteractiveGlobalCallback: "turnstileBecomeVisible",
+            beforeInteractiveGlobalCallback: becomeVisibleCbName,
             errorGlobalCallback: "throwTurnstileErrorCode",
-            executeGlobalCallback: "turnstileSuccess",
+            executeGlobalCallback: successCbName,
             sitekey: session.turnstile_site_key,
             style: "display: none;",
         });
@@ -24,9 +31,8 @@ export class TurnStile {
             error.code = code;
             throw error;
         };
-        // `this` is bound to the turnstile widget calling the callback
-        globalThis.turnstileSuccess = function () {
-            const form = this.wrapper.closest("form") || this.wrapper.parentElement.parentElement;
+        globalThis[successCbName] = function () {
+            const form = turnstileContainer.closest("form") || turnstileContainer.parentElement;
             const buttons = form.querySelectorAll(".cf_form_disabled");
             for (const button of buttons) {
                 button.classList.remove("disabled", "cf_form_disabled");
@@ -38,8 +44,7 @@ export class TurnStile {
             inputValidation.required = false;
         };
         // unhide if interaction is needed
-        globalThis.turnstileBecomeVisible = function () {
-            const turnstileContainer = this.wrapper.parentElement;
+        globalThis[becomeVisibleCbName] = function () {
             turnstileContainer.style.display = "";
         };
         // avoid modifying shape of return, for stable compatibility
