@@ -11,6 +11,7 @@ from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID, _, _lt
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
+from odoo.addons.website.tools import assert_html_form_data
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
@@ -147,6 +148,7 @@ class WebsiteForm(http.Controller):
 
     # Extract all data sent by the form and sort its on several properties
     def extract_data(self, model, values):
+        assert_html_form_data(values, model)
         dest_model = request.env[model.sudo().model]
 
         data = {

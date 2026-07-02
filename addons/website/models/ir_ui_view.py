@@ -7,7 +7,7 @@ import werkzeug
 
 from odoo import api, fields, models
 from odoo import tools
-from odoo.addons.website.tools import add_form_signature
+from odoo.addons.website.tools import add_form_signature, sign_html_form
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
@@ -443,7 +443,8 @@ class View(models.Model):
             values = {}
         if 'main_object' not in values:
             values['main_object'] = view
-        return super()._render_template(template, values=values)
+        html_str = super()._render_template(template, values=values)
+        return sign_html_form(html_str, view.env)
 
     @api.model
     def get_default_lang_code(self):

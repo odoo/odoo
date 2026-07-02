@@ -1,16 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import ast
 import contextlib
 import re
 import werkzeug.urls
-from lxml import etree
+from lxml import etree, html
+from markupsafe import Markup
 from unittest.mock import Mock, MagicMock, patch
 
 from werkzeug.exceptions import NotFound
 from werkzeug.test import EnvironBuilder
 
 import odoo
+from odoo import _
+from odoo.exceptions import ValidationError
 from odoo.tests.common import HttpCase, HOST
-from odoo.tools.misc import hmac, DotDict, frozendict
+from odoo.tools.misc import DotDict, hash_sign, hmac, frozendict, verify_hash_signed
 
 
 @contextlib.contextmanager
@@ -239,3 +243,77 @@ def add_form_signature(html_fragment, env_sudo):
             hash_value += ':email_cc'
         hash_node = etree.Element('input', attrib={'type': "hidden", 'value': hash_value, 'class': "form-control s_website_form_input s_website_form_custom", 'name': "website_form_signature"})
         form_values['email_to'].addnext(hash_node)
+
+
+def sign_html_form(html_str: Markup, env_sudo) -> Markup:
+    # Skip if there is no frontend form
+    if not env_sudo.context.get('website_id') or '<form' not in html_str:
+        return html_str
+
+    doc: etree._Element = html.fromstring(html_str)
+
+    forms = doc.xpath("//form[contains(@action, '/website/form/')]")
+    if not forms:
+        return html_str
+
+    for form in forms:
+        existing_token_el = form.find('.//input[@type="hidden"][@name="__token__"]')
+        if existing_token_el is not None:
+            existing_token_el.getparent().remove(existing_token_el)
+
+        # Get the target model name
+        model_name = form.get('data-model_name')  # Used model (>< `data-force_action`)
+
+        # Get the fields which cannot be modified
+        values_rendered = {}
+        data_to_sign = {}
+
+        if form_id := form.get('id'):
+            for span in doc.xpath('.//*[@data-for=$form_id]', form_id=form_id):
+                raw_values = span.get('data-values', '{}')
+                with contextlib.suppress(Exception):
+                    for k, v in ast.literal_eval(raw_values).items():
+                        values_rendered[k] = str(v)
+
+        for input_el in form.xpath('.//input[@name and @type="hidden"]'):
+            input_name = input_el.get('name')
+            rendered_value = values_rendered.get(input_name)
+            data_to_sign[input_name] = rendered_value if rendered_value is not None else input_el.get('value', '')
+
+        token = hash_sign(env_sudo, 'website_form_token', (model_name, data_to_sign))
+
+        token_el = html.Element('input', type='hidden', name='__token__', value=token)
+        form.append(token_el)
+
+    # Force doctype to avoid "quirks mode"
+    html_bytes = html.tostring(
+        doc,
+        doctype='<!DOCTYPE html>' if doc.tag == 'html' else None,
+        encoding='utf-8',
+    )
+    return Markup(html_bytes.decode('utf-8'))
+
+
+def assert_html_form_data(form_data: dict, model: odoo.models.BaseModel) -> None:
+    assert model._name == 'ir.model'
+    model_su = model.sudo()
+
+    token = form_data.pop('__token__', None)
+    if token is None:
+        raise ValidationError(_("The form must be signed to be valid"))
+
+    payload = verify_hash_signed(model_su.env, 'website_form_token', token)
+    if payload is None:
+        raise ValidationError(_("The form is expired"))
+
+    model_name, data = payload
+
+    if model_name != model_su.model:
+        raise ValidationError(_("The form target model is not correct (%s instead of %s)", model_name, model_su.model))
+
+    mismatched_data = [
+        name for name, expected_value in data.items()
+        if name not in form_data or form_data[name] != expected_value
+    ]
+    if mismatched_data:
+        raise ValidationError(mismatched_data)
