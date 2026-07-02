@@ -86,6 +86,16 @@
         </field>
     </record>
 
+    <record id="view_pos_category_search" model="ir.ui.view">
+        <field name="name">pos.category.search.view</field>
+        <field name="model">pos.category</field>
+        <field name="arch" type="xml">
+            <search string="Point of Sale Product Categories">
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="product_pos_category_action" model="ir.actions.act_window">
         <field name="name">PoS Product Categories</field>
         <field name="res_model">pos.category</field>

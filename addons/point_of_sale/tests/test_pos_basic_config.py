@@ -1444,13 +1444,13 @@ class TestPoSBasicConfig(TestPoSCommon):
 
     def test_archive_delete_special_product(self):
         special_product = self.env.ref('point_of_sale.product_product_tip')
-        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+        with self.assertRaisesRegex(UserError, "a special product in a Point of Sale configuration"):
             special_product.action_archive()
-        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+        with self.assertRaisesRegex(UserError, "a special product in a Point of Sale configuration"):
             special_product.product_variant_ids[0].action_archive()
-        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+        with self.assertRaisesRegex(UserError, "a special product in a Point of Sale configuration"):
             special_product.unlink()
-        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+        with self.assertRaisesRegex(UserError, "a special product in a Point of Sale configuration"):
             special_product.product_variant_ids[0].unlink()
 
     def test_pos_invoice_not_to_review_pos_only_user(self):
@@ -1475,3 +1475,47 @@ class TestPoSBasicConfig(TestPoSCommon):
         orders.with_user(pos_only_user)._generate_pos_order_invoice()
 
         self.assertEqual(orders.account_move.review_state, 'no_review')
+
+    def test_delete_archive_product_pos_category_with_active_pos_session(self):
+        self.env['pos.session'].search([('state', '!=', 'closed')]).state = "closed"
+        category1 = self.env['pos.category'].create({'name': 'Category 1'})
+        category2 = self.env['pos.category'].create({'name': 'Category 2'})
+
+        product1 = self.create_product('Product 1', self.categ_basic, 0.0, 0.0)
+        product2 = self.create_product('Product 2', self.categ_basic, 0.0, 0.0)
+
+        product1.pos_categ_ids = [(6, 0, [category1.id])]
+        product2.pos_categ_ids = [(6, 0, [category2.id])]
+
+        # Open unrestricted session -> everything protected.
+        self.basic_config.open_ui()
+        self.basic_config.iface_available_categ_ids = []
+
+        with self.assertRaisesRegex(UserError, "active Point of Sale session"):
+            product2.action_archive()
+
+        with self.assertRaisesRegex(UserError, "active Point of Sale session"):
+            category2.unlink()
+
+        # Open restricted session for category1 only.
+        self.basic_config.iface_available_categ_ids = [(6, 0, [category1.id])]
+
+        # category1/product1 still protected.
+        with self.assertRaisesRegex(UserError, "active Point of Sale session"):
+            product1.product_variant_id.action_archive()
+
+        with self.assertRaisesRegex(UserError, "currently in use in a point of sale"):
+            category1.action_archive()
+
+        # category2/product2 no longer protected.
+        product2.action_archive()
+        product2.unlink()
+
+        category2.action_archive()
+        category2.unlink()
+
+        # After session close, only config protection remains.
+        self.basic_config.current_session_id.state = 'closed'
+
+        with self.assertRaisesRegex(UserError, "currently in use in a point of sale"):
+            category1.unlink()

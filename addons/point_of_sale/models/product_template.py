@@ -275,35 +275,31 @@ class ProductTemplate(models.Model):
             product['_archived_combinations'].extend(excluded.items())
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_open_session(self):
-        product_ctx = dict(self.env.context or {}, active_test=False)
-        if self.with_context(product_ctx).search_count([('id', 'in', self.ids), ('available_in_pos', '=', True)]):
-            if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
-                raise UserError(_(
-                    "To delete a product, make sure all point of sale sessions are closed.\n\n"
-                    "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
-                ))
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_special_product(self):
+    def _unlink_except_active_pos_session_or_special_product(self):
         self._check_is_special_product()
+        self._ensure_unused_in_pos()
 
     def _ensure_unused_in_pos(self):
-        if any(self.mapped('available_in_pos')) and self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
-            raise UserError(_(
-                "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
-                "Make sure to close all sessions first to avoid any issues.",
-            ))
+        if products_in_pos := self.filtered(lambda p: p.available_in_pos):
+            if products_in_pos.pos_categ_ids._check_linked_active_pos_session():
+                raise UserError(_(
+                    "You cannot archive/delete product(s) that are available in an active Point of Sale session.\n\n"
+                    "Archiving/Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
+                ))
 
     def _check_is_special_product(self):
         special_products = self.env['pos.config'].sudo()._get_special_products().product_tmpl_id
         for product in self:
             if product in special_products:
-                raise UserError(_("You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."))
+                raise UserError(_(
+                    "You cannot archive/delete a product that is set as a special "
+                    "product in a Point of Sale configuration. Please change "
+                    "the configuration first.",
+                ))
 
     def action_archive(self):
-        self._ensure_unused_in_pos()
         self._check_is_special_product()
+        self._ensure_unused_in_pos()
         return super().action_archive()
 
     @api.onchange('sale_ok')
