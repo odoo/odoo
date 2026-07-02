@@ -14,6 +14,19 @@
                 </a>
         </t>
         </xpath>
+        <xpath expr="//ul[hasclass('list-group')][1]" position="inside">
+            <Record resModel="this.props.model.resModel" resId="this.props.record.id" fields="this.props.model.fields" activeFields="this.activeFields" mode="'readonly'" values="this.props.record.rawRecord" t-slot-scope="slot">
+                <t t-set="fieldInfo" t-value="this.props.model.popoverFieldNodes['partner_id']"/>
+                <li class="list-group-item d-flex text-nowrap" t-att-data-tooltip="['html', 'boolean'].includes(this.props.model.fields['partner_id'].type) ? '' : this.getFormattedValue('partner_id', slot.record)">
+                    <span class="fw-bold me-2">
+                        <i t-attf-class="fa-fw fa fa-user-o text-400" />
+                    </span>
+                    <div class="flex-grow-1 o_cw_popover_field overflow-hidden">
+                        <Field name="fieldInfo.name" record="slot.record" class="fieldInfo.attrs.class" fieldInfo="fieldInfo" type="fieldInfo.widget" />
+                    </div>
+                </li>
+            </Record>
+        </xpath>
     </t>
 
     <t t-name="calendar.AttendeeCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary">
