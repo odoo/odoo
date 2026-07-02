@@ -142,18 +142,7 @@ export const websiteEditService = {
                         return (...args) => domObserverCallbacks.ignore(() => fn(...args));
                     },
                     addListener(target, event, fn, options) {
-                        const boundFn = fn.bind(this.interaction);
-                        if (event.startsWith("slide.bs.carousel")) {
-                            // Never allow cancelling this event in edit mode.
-                            fn = (...args) => {
-                                const ev = args[0];
-                                ev.preventDefault = () => {};
-                                ev.stopPropagation = () => {};
-                                return boundFn(...args);
-                            };
-                        } else {
-                            fn = boundFn;
-                        }
+                        fn = fn.bind(this.interaction);
                         let stealth = true;
                         const parts = event.split(".");
                         if (parts.includes("keepInHistory") || options?.keepInHistory) {
@@ -346,18 +335,7 @@ registry.category("services").add("website_edit", websiteEditService);
 
 patch(Colibri.prototype, {
     addListener(target, event, fn, options) {
-        const boundFn = fn.bind(this.interaction);
-        if (event.startsWith("slide.bs.carousel")) {
-            // Never allow cancelling this event in edit mode.
-            fn = (...args) => {
-                const ev = args[0];
-                ev.preventDefault = () => {};
-                ev.stopPropagation = () => {};
-                return boundFn(...args);
-            };
-        } else {
-            fn = boundFn;
-        }
+        fn = fn.bind(this.interaction);
         const parts = event.split(".");
         if (parts.includes("keepInHistory") || options?.keepInHistory) {
             event = parts.filter((part) => part !== "keepInHistory").join(".");
