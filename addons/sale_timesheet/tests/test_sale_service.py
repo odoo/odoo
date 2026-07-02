@@ -995,3 +995,68 @@ class TestSaleService(TestCommonSaleTimesheet):
         product_form.service_policy = 'delivered_timesheet'
         product = product_form.save()
         self.assertEqual(product.uom_id, uom_day, "time UoM default was not respected")
+
+    def test_prepaid_service_unit_uom_qty_delivered_method(self):
+        """Prepaid service SOL with non-time UoM and no accessible timesheet
+        mechanism should have qty_delivered_method='manual' so the delivered
+        quantity can be set manually on the sale order line.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        product_prepaid_unit = self.env['product.product'].create({
+            'name': 'Prepaid Service (Unit UoM)',
+            'type': 'service',
+            'service_type': 'timesheet',
+            'service_tracking': 'no',
+            'uom_id': uom_unit.id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'order_id': self.sale_order.id,
+            'product_id': product_prepaid_unit.id,
+            'product_uom_qty': 3,
+            'product_uom_id': uom_unit.id,
+        })
+
+        # Case 1: prepaid + Unit UoM + no project/task
+        self.assertEqual(
+            sol.qty_delivered_method, 'manual',
+            "Prepaid service with Unit UoM and no project should allow manual qty update",
+        )
+
+        # Case 2: Unit UoM + project with allow_timesheets=True
+        sol.project_id = self.project_global
+        self.assertEqual(
+            sol.qty_delivered_method, 'timesheet',
+            "Prepaid service with Unit UoM linked to a timesheets-enabled project "
+            "should keep qty_delivered_method='timesheet'",
+        )
+
+        # Case 3: prepaid + Hour UoM
+        sol_hour_uom = self.env['sale.order.line'].create({
+            'order_id': self.sale_order.id,
+            'product_id': self.product_order_timesheet1.id,
+            'product_uom_qty': 5,
+        })
+        self.assertEqual(
+            sol_hour_uom.qty_delivered_method, 'timesheet',
+            "Prepaid service with Hour UoM should keep qty_delivered_method='timesheet'",
+        )
+
+        # Case 4: same SOL, disable timesheets on the project
+        sol.project_id.allow_timesheets = False
+        self.assertEqual(
+            sol.qty_delivered_method, 'manual',
+            "Prepaid service with Unit UoM linked to a timesheets-disabled project "
+            "should fall back to qty_delivered_method='manual'",
+        )
+
+        # Case 5: same SOL, project created from the Sale Order
+        sol.project_id = False
+        self.sale_order.project_id = self.project_global
+        self.project_global.allow_timesheets = True
+        sol.invalidate_recordset(['qty_delivered_method'])
+
+        self.assertEqual(
+            sol.qty_delivered_method, 'timesheet',
+            "Prepaid service should keep qty_delivered_method='timesheet' when a "
+            "timesheet-enabled project is created from the sale order",
+        )
