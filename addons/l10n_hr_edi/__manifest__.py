@@ -31,5 +31,5 @@ e-invoicing for Croatia
     'installable': True,
     'post_init_hook': 'post_init',
     'website': 'https://www.odoo.com/app/accounting',
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
 }
