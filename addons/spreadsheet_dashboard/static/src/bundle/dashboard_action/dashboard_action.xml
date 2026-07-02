@@ -7,7 +7,7 @@
                 <t t-set="status" t-value="this.loader.getActiveDashboard() and this.loader.getActiveDashboard().status"/>
                 <div class="d-flex flex-wrap w-100">
                     <DashboardSearchBar t-if="status === this.Status.Loaded and this.loader.getActiveDashboard().model.getters.getGlobalFilters().length"
-                                        t-key="this.activeDashboardId"
+                                        t-key="this.activeDashboardId()"
                                         model="this.loader.getActiveDashboard().model"
                                         toggler="this.searchBarToggler"
                     />
@@ -21,7 +21,7 @@
                         activeDashboard="dashboard"
                         groups="this.getDashboardGroups()"/>
                 </t>
-                <SpreadsheetShareButton t-key="this.activeDashboardId" model="this.loader.getActiveDashboard()?.model" onSpreadsheetShared.bind="this.shareSpreadsheet" togglerClass="'btn-light'"/>
+                <SpreadsheetShareButton t-key="this.activeDashboardId()" model="this.loader.getActiveDashboard()?.model" onSpreadsheetShared.bind="this.shareSpreadsheet" togglerClass="'btn-light'"/>
                 <a
                     t-if="this.loader.getActiveDashboard()"
                     title="Toggle favorite"
