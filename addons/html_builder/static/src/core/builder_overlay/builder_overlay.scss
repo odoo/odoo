@@ -128,9 +128,9 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     margin: auto;
                     border: solid $o-we-handle-border-width $o-we-handles-accent-color;
                     border-radius: $o-we-handles-btn-size;
-                    background: $o-we-fg-lighter;
-                    outline: $o-we-handle-inside-line-width solid $o-we-fg-lighter;
-                    outline-offset: -($o-we-handles-btn-size * 0.5);
+                    background-color: $o-we-fg-lighter;
+                    outline: $o-we-handle-border-width solid $o-we-fg-lighter;
+                    outline-offset: -($o-we-handle-border-width * 2);
                     transition: $transition-base;
 
                     &::before {
@@ -222,7 +222,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
         &.o_handlers_idle .o_handle:hover, .o_handle:active {
 
             .o_handle_indicator {
-                outline-color: $o-we-handles-accent-color;
+                background-color: $o-we-handles-accent-color;
             }
         }
 
