@@ -35,7 +35,12 @@
                             </DropdownItem>
                         </t>
 
-                        <t t-set="currentGroup" t-value="null"/>
+                        <!--
+                            Initialize `currentGroup` with the first element's group to avoid accessing
+                            an undefined value during the first iteration. Could be unrelated to this commit
+                            purpose but useful for future maintenance.
+                        -->
+                        <t t-set="currentGroup" t-value="this.cogItems?.at(0)?.groupNumber || null"/>
                         <t t-foreach="this.cogItems" t-as="item" t-key="item.key">
                             <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                                 <div role="separator" class="dropdown-divider"/>
@@ -48,7 +53,8 @@
                                 class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': this.offline.offline and !(item.availableOffline and !this.env.model.root.isNew) }"
                                 onSelected="() => this.onItemSelected(item)"
                             >
-                                <i t-if="item.icon" t-att-class="item.icon" class="fa-fw oi-fw me-1"/>
+                                <!-- <i t-if="item.icon" t-att-class="item.icon" class="fa-fw oi-fw me-1"/> -->
+                                <i t-if="this.groupsWithIcons.has(item.groupNumber)" t-att-class="item.icon ?? 'fa'" class="fa-fw oi-fw me-1"/>
                                 <t t-out="item.description"/>
                             </DropdownItem>
 

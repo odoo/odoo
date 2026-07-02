@@ -5,6 +5,7 @@ import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { browser } from "@web/core/browser/browser";
+import { isVisible } from "../utils/ui";
 
 export const ACTIVE_ELEMENT_CLASS = "focus";
 const throttledFocus = throttleForAnimation((el) => el?.focus());
@@ -42,7 +43,7 @@ class NavigationItem {
         this.el = el;
         if (this._options.shouldFocusChildInput) {
             const subInput = el.querySelector(":scope input, :scope button, :scope textarea");
-            this.target = subInput || el;
+            this.target = (isVisible(subInput) && subInput) || el;
         } else {
             this.target = el;
         }

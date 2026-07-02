@@ -1,6 +1,7 @@
 import { registry } from '@web/core/registry';
 import { exprToBoolean } from "@web/core/utils/strings";
 import { DocumentFileUploader } from '@account/components/document_file_uploader/document_file_uploader';
+import { DropdownItem } from '@web/core/dropdown/dropdown_item';
 
 const cogMenuRegistry = registry.category('cogMenu');
 
@@ -11,7 +12,11 @@ const cogMenuRegistry = registry.category('cogMenu');
  */
 export class QuotationRequestUploader extends DocumentFileUploader {
     static template = 'upload_rfq_cog_menu.QuotationRequestUploader';
-
+    static components = {
+        ...DocumentFileUploader.components,
+        DropdownItem,
+    }
+    
     getResModel() {
         return 'sale.order';
     }
@@ -24,6 +29,7 @@ export const quotationUploaderMenuItem = {
         searchModel.resModel === 'sale.order'
         && ['list', 'kanban'].includes(config.viewType)
         && exprToBoolean(config.viewArch.getAttribute('create'), true),
+    
 };
 
 cogMenuRegistry.add('quotation-upload-menu', quotationUploaderMenuItem);

@@ -1979,7 +1979,7 @@ test("properties: form view and falsy domain, properties are empty", async () =>
 
     // create the first property
     await toggleActionMenu();
-    await click(".o-dropdown--menu span .fa-cogs");
+    await click(".o-dropdown--menu span:contains(Edit Properties)");
     await animationFrame();
     expect(".o_test_properties_not_empty").toHaveCount(1);
 });
@@ -3171,7 +3171,7 @@ test("properties: Create a property with an onchange methods", async () => {
         actionMenus: {},
     });
     await toggleActionMenu();
-    await contains(".o_popover span .fa-cogs").click();
+    await contains(".o_popover span:contains(Edit Properties)").click();
     await runAllTimers();
     await addPropertyDefinition();
     expect.verifySteps([

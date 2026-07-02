@@ -576,7 +576,6 @@ export class FormController extends Component {
             addPropertyFieldValue: {
                 isAvailable: () => activeActions.addPropertyFieldValue,
                 sequence: 10,
-                icon: "fa fa-cogs",
                 description: this.propertiesState.editable
                     ? _t("Save Properties")
                     : _t("Edit Properties"),

@@ -79,6 +79,16 @@ export class CogMenu extends ActionMenus {
         );
     }
 
+    get groupsWithIcons() {
+        const groups = new Set();
+        for (const item of this.cogItems) {
+            if (Object.prototype.hasOwnProperty.call(item, "icon")) {
+                groups.add(item.groupNumber);
+            }
+        }
+        return groups;
+    }
+
     getPrintItemAriaLabel(item) {
         return _t("Print report: %s", item.description);
     }
