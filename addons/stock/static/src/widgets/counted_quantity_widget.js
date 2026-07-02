@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useListener } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { registry } from "@web/core/registry";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -10,21 +11,8 @@ export class CountedQuantityWidgetField extends FloatField {
 
         const inputRef = useRef("numpadDecimal");
 
-        useLayoutEffect(
-            (inputEl) => {
-                if (inputEl) {
-                    const boundOnKeydown = this.onKeydown.bind(this);
-                    const boundOnBlur = this.onBlur.bind(this);
-                    inputEl.addEventListener("keydown", boundOnKeydown);
-                    inputEl.addEventListener("blur", boundOnBlur);
-                    return () => {
-                        inputEl.removeEventListener("keydown", boundOnKeydown);
-                        inputEl.removeEventListener("blur", boundOnBlur);
-                    };
-                }
-            },
-            () => [inputRef.el]
-        );
+        useListener(() => inputRef.el, "keydown", this.onKeydown.bind(this));
+        useListener(() => inputRef.el, "blur", this.onBlur.bind(this));
     }
 
     updateValue(ev){
