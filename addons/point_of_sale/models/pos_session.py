@@ -8,7 +8,7 @@ import logging
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_is_zero, frozendict, plaintext2html
+from odoo.tools import float_is_zero, frozendict, plaintext2html, float_compare
 
 _logger = logging.getLogger(__name__)
 
@@ -1004,6 +1004,22 @@ class PosSession(models.Model):
         })
         return data
 
+    def _get_rounding_difference_vals(self, amount, amount_converted):
+        if not self.config_id.cash_rounding:
+            return {}
+
+        compare_result = float_compare(0.0, amount, precision_rounding=self.currency_id.rounding)
+        if not compare_result:
+            return {}
+
+        partial_args = {'name': 'Rounding line', 'move_id': self.move_id.id}
+        if compare_result > 0:    # loss
+            partial_args['account_id'] = self.config_id.rounding_method.loss_account_id.id
+            return self._debit_amounts(partial_args, -amount, -amount_converted)
+
+        partial_args['account_id'] = self.config_id.rounding_method.profit_account_id.id
+        return self._credit_amounts(partial_args, amount, amount_converted)
+
     def _create_non_reconciliable_move_lines(self, data):
         # Create account.move.line records for
         #   - sales
@@ -1012,6 +1028,7 @@ class PosSession(models.Model):
         #   - non-cash combine receivables (not for automatic reconciliation)
         taxes = data.get('taxes')
         sales = data.get('sales')
+        rounding_difference = data.get('rounding_difference')
         MoveLine = data.get('MoveLine')
 
         tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount_converted']) for key, amounts in taxes.items()]
@@ -1024,7 +1041,11 @@ class PosSession(models.Model):
                 ', '.join(tax_names_no_account)
             ))
 
-        MoveLine.create(tax_vals)
+        rounding_vals = []
+        if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
+            rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
+
+        MoveLine.create(tax_vals + rounding_vals)
         move_line_ids = MoveLine.create(list(starmap(self._get_sale_vals, sales.items())))
         for key, ml_id in zip(sales.keys(), move_line_ids.ids):
             sales[key]['move_line_id'] = ml_id
