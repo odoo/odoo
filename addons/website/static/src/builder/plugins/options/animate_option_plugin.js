@@ -14,11 +14,14 @@ import { EmphasizeAnimatedText } from "./emphasize_animated_text";
 import { handleImagesIfDataset } from "@html_builder/utils/image";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
+const ANIMATION_REPLAY_STEP_INFO_PREFIX = "wanimReplayElementId:";
+
 /**
  * @typedef { Object } AnimateOptionShared
  * @property { AnimateOptionPlugin['forceAnimation'] } forceAnimation
  * @property { AnimateOptionPlugin['getDirectionsItems'] } getDirectionsItems
  * @property { AnimateOptionPlugin['getEffectsItems'] } getEffectsItems
+ * @property { AnimateOptionPlugin['markAnimationReplayForElement'] } markAnimationReplayForElement
  */
 
 /**
@@ -37,6 +40,7 @@ export class AnimateOptionPlugin extends Plugin {
         "forceAnimation",
         "getDirectionsItems",
         "getEffectsItems",
+        "markAnimationReplayForElement",
         "hasAnimationEffect",
         "canHaveHoverEffect",
     ];
@@ -59,7 +63,8 @@ export class AnimateOptionPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        system_classes: ["o_animating"],
+        system_classes: ["o_animating", "o_wanim_overflow_xy_hidden"],
+        system_style_properties: ["animation-name"],
         builder_actions: {
             SetAnimationModeAction,
             SetAnimateIntensityAction,
@@ -68,6 +73,8 @@ export class AnimateOptionPlugin extends Plugin {
         },
         normalize_handlers: this.normalize.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        post_undo_handlers: this.replayAnimationAfterHistoryStep.bind(this),
+        post_redo_handlers: this.replayAnimationAfterHistoryStep.bind(this),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_animated_text"),
         collapsed_selection_toolbar_predicate: (selectionData) =>
             !!closestElement(
@@ -190,6 +197,30 @@ export class AnimateOptionPlugin extends Plugin {
                 },
                 { once: true }
             );
+        }
+    }
+
+    /**
+     * Mark the current history step as an intentional animation change.
+     * The "Animation" interaction is not always restarted after undo/redo, and
+     * the temporary mutations used to force a replay are not in the history.
+     *
+     * @param {HTMLElement} editingElement the animated element
+     */
+    markAnimationReplayForElement(editingElement) {
+        this.dependencies.history.setStepExtra(ANIMATION_REPLAY_STEP_INFO_PREFIX, editingElement);
+    }
+
+    /**
+     * Replay animations after undo/redo only for steps that were explicitly
+     * marked through `markAnimationReplayForElement`.
+     *
+     * @param { HistoryStep } revertedStep
+     */
+    replayAnimationAfterHistoryStep(revertedStep) {
+        const animatedEl = revertedStep?.extraStepInfos[ANIMATION_REPLAY_STEP_INFO_PREFIX];
+        if (animatedEl && animatedEl.isConnected && animatedEl.classList.contains("o_animate")) {
+            this.forceAnimation(animatedEl);
         }
     }
 
@@ -483,7 +514,8 @@ export class SetAnimationModeAction extends BuilderAction {
             await this.getResource("set_hover_effect_handlers")[0](editingElement);
         }
         if (forceAnimation) {
-            this.dependencies.animateOption.forceAnimation(editingElement);
+            this.dependencies.animateOption.markAnimationReplayForElement(editingElement);
+            await this.dependencies.animateOption.forceAnimation(editingElement);
         }
     }
     /**
@@ -529,9 +561,10 @@ export class SetAnimateIntensityAction extends BuilderAction {
         );
         return intensity;
     }
-    apply({ editingElement, value }) {
+    async apply({ editingElement, value }) {
         editingElement.style.setProperty("--wanim-intensity", `${value}`);
-        this.dependencies.animateOption.forceAnimation(editingElement);
+        this.dependencies.animateOption.markAnimationReplayForElement(editingElement);
+        await this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }
 export class ForceAnimationAction extends BuilderAction {
@@ -541,8 +574,9 @@ export class ForceAnimationAction extends BuilderAction {
     isActive() {
         return true;
     }
-    apply({ editingElement }) {
-        this.dependencies.animateOption.forceAnimation(editingElement);
+    async apply({ editingElement }) {
+        this.dependencies.animateOption.markAnimationReplayForElement(editingElement);
+        await this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }
 export class SetAnimationEffectAction extends BuilderAction {
@@ -566,12 +600,17 @@ export class SetAnimationEffectAction extends BuilderAction {
             }
         }
     }
-    apply({ editingElement, params: { mainParam: directionClassName }, value: effectClassName }) {
+    async apply({
+        editingElement,
+        params: { mainParam: directionClassName },
+        value: effectClassName,
+    }) {
         if (directionClassName) {
             editingElement.classList.add(directionClassName);
         }
         editingElement.classList.add(effectClassName);
-        this.dependencies.animateOption.forceAnimation(editingElement);
+        this.dependencies.animateOption.markAnimationReplayForElement(editingElement);
+        await this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }
 

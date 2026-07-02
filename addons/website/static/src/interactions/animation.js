@@ -188,6 +188,7 @@ export class Animation extends Interaction {
         } else {
             if (visible && this.playState === "paused") {
                 el.classList.add("o_visible");
+                this.registerCleanup(() => this.el.classList.remove("o_visible"));
                 this.startAnimation();
             } else if (!visible && el.classList.contains("o_animate_both_scroll") && this.playState === "running") {
                 el.classList.remove("o_visible");
