@@ -205,6 +205,41 @@ class Website(Home):
 
         raise request.not_found()
 
+    def system_page_http_error(self):
+        template_codes = ['403', '404']
+        debug_mode = request and request.session.debug
+        if debug_mode:
+            template_codes += ['4xx', '400', '415', '422']
+
+        # Templates are stored in http_routing, check before rendering for safe execution
+        templates = self['ir.ui.view'].search([
+            ('key', 'in', [f'http_routing.{code}' for code in template_codes])
+        ])
+
+        existing_codes = {
+            template.key.removeprefix('http_routing.')
+            for template in templates
+        }
+
+        return [
+            {
+                'route_title': _lt("Error Page %s", code),
+                'route_url': f'/website/http_error/{code}',
+            }
+            for code in template_codes
+            if code in existing_codes
+        ]
+
+    @http.route("/website/http_error/<string:status_code>", type="http", auth="public", website=True, list_as_website_content=system_page_http_error)
+    def website_http_error_page(self, status_code, **kwargs):
+        """
+        Generic error page renderer for 4xx, 403, 404, 500, etc.
+        """
+        template = f"http_routing.{status_code}"
+        if not request.env.ref(template, raise_if_not_found=False):
+            template = "http_routing.404"
+        return request.render(template)
+
     @http.route('/website/force/<int:website_id>', type='http', auth="user", website=True, sitemap=False, multilang=False, readonly=True)
     def website_force(self, website_id, path='/', isredir=False, **kw):
         """ To switch from a website to another, we need to force the website in
