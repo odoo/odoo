@@ -455,8 +455,10 @@ export interface SignalOptions<T> {
 declare function triggerSignal(signal: Signal<any>): void;
 declare function signalRef(): Signal<HTMLElement | null>;
 declare function signalRef<T extends Constructor<HTMLElement>>(type: T): Signal<InstanceType<T> | null>;
+declare function signalArray<T>(): Signal<T[]>;
 declare function signalArray<T>(initialValue: T[]): Signal<T[]>;
 declare function signalArray<T>(initialValue: NoInfer<T>[], options: SignalOptions<T>): Signal<T[]>;
+declare function signalObject<T extends Record<PropertyKey, any>>(): Signal<T>;
 declare function signalObject<T extends Record<PropertyKey, any>>(initialValue: T): Signal<T>;
 declare function signalObject<T extends Record<PropertyKey, any>>(initialValue: NoInfer<T>, options: SignalOptions<T>): Signal<T>;
 export interface MapSignalOptions<K, V> {
@@ -464,8 +466,10 @@ export interface MapSignalOptions<K, V> {
 	keyType?: K;
 	valueType?: V;
 }
+declare function signalMap<K, V>(): Signal<Map<K, V>>;
 declare function signalMap<K, V>(initialValue: Map<K, V>): Signal<Map<K, V>>;
 declare function signalMap<K, V>(initialValue: NoInfer<Map<K, V>>, options: MapSignalOptions<K, V>): Signal<Map<K, V>>;
+declare function signalSet<T>(): Signal<Set<T>>;
 declare function signalSet<T>(initialValue: Set<T>): Signal<Set<T>>;
 declare function signalSet<T>(initialValue: Set<NoInfer<T>>, options: SignalOptions<T>): Signal<Set<T>>;
 export declare function signal<T>(value: T): Signal<T>;
@@ -602,6 +606,7 @@ declare class Fiber {
 }
 declare class RootFiber extends Fiber {
 	counter: number;
+	renderCount: number;
 	willPatch: Fiber[];
 	patched: Fiber[];
 	mounted: Fiber[];
@@ -763,6 +768,7 @@ declare class Scheduler {
 	 */
 	flush(): void;
 	processTasks(): void;
+	processCancelledNodes(): void;
 }
 export interface TemplateSetConfig {
 	dev?: boolean;
