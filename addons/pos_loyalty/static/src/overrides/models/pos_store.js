@@ -155,6 +155,20 @@ patch(PosStore.prototype, {
         if (!order || order.delivery_provider_id) {
             return;
         }
+
+        // For refund orders, compute loyalty point deductions directly from the
+        // original order's couponPointChanges instead of running pointsForPrograms()
+        // (which skips negative quantities due to minimum_qty checks).
+        const isRefundOrder = order.lines.some((l) => l.refunded_orderline_id);
+        if (isRefundOrder) {
+            await this._updateProgramsForRefund(order);
+            return;
+        }
+
+        return this.__updateProgramsOriginal(order);
+    },
+
+    async __updateProgramsOriginal(order) {
         const changesPerProgram = {};
         const programsToCheck = new Set();
         // By default include all programs that are considered 'applicable'
@@ -283,6 +297,57 @@ patch(PosStore.prototype, {
             })
         );
         order.update({ _code_activated_coupon_ids: [["unlink", ...toUnlink]] });
+    },
+
+    /**
+     * For refund orders, compute loyalty point deductions by looking at the
+     * original order's couponPointChanges and negating them proportionally.
+     * This bypasses the minimum_qty check in pointsForPrograms() that would
+     * otherwise produce 0 points for negative-quantity lines.
+     */
+    async _updateProgramsForRefund(order) {
+        // Find the original order by looking at refunded_orderline_id on any line
+        const originalOrderLine = order.lines.find((l) => l.refunded_orderline_id);
+        const originalOrder = originalOrderLine?.refunded_orderline_id?.order_id;
+
+        if (!originalOrder || !originalOrder.uiState?.couponPointChanges) {
+            order.uiState.couponPointChanges = {};
+            return;
+        }
+
+        const originalChanges = originalOrder.uiState.couponPointChanges;
+
+        // Compute partial refund ratio
+        const originalTotal = Math.abs(originalOrder.get_total_with_tax());
+        const refundTotal = Math.abs(order.get_total_with_tax());
+        const ratio = originalTotal > 0 ? Math.min(refundTotal / originalTotal, 1) : 1;
+
+        const newCouponPointChanges = {};
+
+        for (const pointChange of Object.values(originalChanges)) {
+            const program = this.models["loyalty.program"].get(pointChange.program_id);
+            if (!program) {
+                continue;
+            }
+            // Skip gift_card / ewallet — those are blocked from refund
+            if (["gift_card", "ewallet"].includes(program.program_type)) {
+                continue;
+            }
+            const pointsToReverse = parseFloat((pointChange.points * ratio).toFixed(2));
+            if (pointsToReverse === 0) {
+                continue;
+            }
+
+            newCouponPointChanges[pointChange.coupon_id] = {
+                points: -pointsToReverse,
+                program_id: pointChange.program_id,
+                coupon_id: pointChange.coupon_id,
+                barcode: pointChange.barcode || false,
+                appliedRules: pointChange.appliedRules || [],
+            };
+        }
+
+        order.uiState.couponPointChanges = newCouponPointChanges;
     },
     async activateCode(code) {
         const order = this.get_order();
@@ -813,6 +878,35 @@ patch(PosStore.prototype, {
             }
             if (!["draft", "cancel"].includes(order.state)) {
                 await this._postProcessLoyalty(order);
+                // After processing, refresh loyalty card balances that were
+                // updated server-side by _reverse_loyalty_points_for_refund().
+                const isRefundOrder = order.lines.some((l) => l.refunded_orderline_id);
+                if (isRefundOrder) {
+                    await this._refreshLoyaltyCardsAfterRefund(order);
+                }
+            }
+        }
+    },
+
+    /**
+     * After a refund order is synced, refresh the loyalty card points from the
+     * server so the local cache reflects the deduction made server-side.
+     */
+    async _refreshLoyaltyCardsAfterRefund(order) {
+        const couponPointChanges = order.uiState?.couponPointChanges || {};
+        const couponIds = Object.values(couponPointChanges)
+            .map((pe) => pe.coupon_id)
+            .filter((id) => id > 0);
+
+        if (!couponIds.length) {
+            return;
+        }
+        // Re-read the loyalty cards from the server to get updated points
+        const updatedCards = await this.data.read("loyalty.card", couponIds);
+        for (const cardData of updatedCards) {
+            const card = this.models["loyalty.card"].get(cardData.id);
+            if (card) {
+                card.update({ points: cardData.points });
             }
         }
     },
@@ -821,6 +915,7 @@ patch(PosStore.prototype, {
         const ProgramModel = this.models["loyalty.program"];
         const rewardLines = order._get_reward_lines();
         const partner = order.get_partner();
+
         let couponData = Object.values(order.uiState.couponPointChanges).reduce((agg, pe) => {
             const earnedPoints =
                 pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id));
@@ -874,6 +969,13 @@ patch(PosStore.prototype, {
             Object.entries(couponData)
                 .filter(([key, value]) => {
                     const program = ProgramModel.get(value.program_id);
+                    // For refund orders, loyalty/coupon programs are handled server-side
+                    // by _reverse_loyalty_points_for_refund(). Exclude them here to avoid
+                    // double-deduction via confirm_coupon_programs.
+                    const isRefundOrder = order.lines.some((l) => l.refunded_orderline_id);
+                    if (isRefundOrder && !["gift_card", "ewallet"].includes(program.program_type)) {
+                        return false;
+                    }
                     if (program.applies_on === "current") {
                         return value.line_codes && value.line_codes.length;
                     }

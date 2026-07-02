@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from odoo import _, models
-from odoo.tools import float_compare
+from odoo import _, fields, models
+from odoo.tools import float_compare, float_is_zero
 import base64
 
 class PosOrder(models.Model):
@@ -55,6 +55,7 @@ class PosOrder(models.Model):
     def add_loyalty_history_lines(self, coupon_data, coupon_updates):
         id_mapping = {item['old_id']: int(item['id']) for item in coupon_updates}
         history_lines_create_vals = []
+        is_refund = self.amount_total < 0
         for coupon in coupon_data:
             card_id = id_mapping.get(int(coupon['card_id']), False) or int(coupon['card_id'])
             if not self.env['loyalty.card'].browse(card_id).exists():
@@ -62,11 +63,12 @@ class PosOrder(models.Model):
             issued = coupon['won']
             cost = coupon['spent']
             if (issued or cost) and card_id > 0:
+                description = _('Refund %s', self.display_name) if is_refund else _('Onsite %s', self.display_name)
                 history_lines_create_vals.append({
                     'card_id': card_id,
                     'order_model': self._name,
                     'order_id': self.id,
-                    'description': _('Onsite %s', self.display_name),
+                    'description': description,
                     'used': cost,
                     'issued': issued,
                 })
@@ -230,6 +232,93 @@ class PosOrder(models.Model):
         fields = super(PosOrder, self)._get_fields_for_order_line()
         fields.extend(['is_reward_line', 'reward_id', 'coupon_id', 'reward_identifier_code', 'points_cost'])
         return fields
+
+    def action_pos_order_paid(self):
+        """Override to reverse loyalty points when a refund order is paid."""
+        res = super().action_pos_order_paid()
+        self._reverse_loyalty_points_for_refund()
+        return res
+
+    def _reverse_loyalty_points_for_refund(self):
+        """
+        When a POS refund order is paid, find the original order's loyalty history
+        and deduct the proportional points from the customer's loyalty card.
+
+        Edge cases handled:
+        - Partial refund: deducts proportional points based on refund/original ratio
+        - Customer already spent points: deducts only up to current balance (no negative)
+        - Customer has 0 points: skips deduction, still logs history
+        - Expired card: skips deduction (card is no longer active)
+        - Double-processing: idempotency guard via existing history check
+        - No original loyalty history: skips silently
+        """
+        self.ensure_one()
+        if self.amount_total >= 0:
+            return
+        original_order = self.refunded_order_id
+        if not original_order:
+            return
+
+        original_history = self.env['loyalty.history'].search([
+            ('order_model', '=', self._name),
+            ('order_id', '=', original_order.id),
+        ])
+        if not original_history:
+            return
+
+        # Idempotency: skip if refund history already exists for this order
+        already_processed = self.env['loyalty.history'].search_count([
+            ('order_model', '=', self._name),
+            ('order_id', '=', self.id),
+        ])
+        if already_processed:
+            return
+
+        # Partial refund ratio
+        original_total = abs(original_order.amount_total)
+        refund_total = abs(self.amount_total)
+        ratio = min(refund_total / original_total, 1.0) if original_total else 1.0
+
+        today = fields.Date.today()
+        history_to_create = []
+
+        for history_line in original_history:
+            card = history_line.card_id
+
+            # Edge case: card deleted or archived
+            if not card.exists() or not card.active:
+                continue
+
+            # Edge case: expired card — skip entirely.
+            # The card is already dead so there's nothing meaningful to deduct,
+            # and we shouldn't touch the customer's other active cards.
+            if card.expiration_date and card.expiration_date < today:
+                continue
+
+            # Skip gift_card / ewallet — handled separately
+            if card.program_id.program_type in ('gift_card', 'ewallet'):
+                continue
+
+            points_to_reverse = round(history_line.issued * ratio, 2)
+            if float_is_zero(points_to_reverse, precision_digits=2):
+                continue
+
+            # Always deduct the full amount even if it pushes the balance negative.
+            # This prevents the fraud pattern: earn points → spend on reward → refund
+            # the purchase → keep the reward for free.
+            card.sudo().points -= points_to_reverse
+
+            history_to_create.append({
+                'card_id': card.id,
+                'order_model': self._name,
+                'order_id': self.id,
+                'description': _('Refund %s', self.display_name),
+                'used': points_to_reverse,
+                'issued': 0,
+            })
+
+        if history_to_create:
+            self.env['loyalty.history'].create(history_to_create)
 
     def _add_mail_attachment(self, name, ticket, basic_receipt):
         attachment = super()._add_mail_attachment(name, ticket, basic_receipt)
