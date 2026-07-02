@@ -209,18 +209,29 @@ class Cart(PaymentPortal):
         positive_added_qty_per_line = {
             line_id: qty for line_id, qty in added_qty_per_line.items() if qty > 0
         }
-
-        return {
+        # Build and return cart values.
+        cart_values = {
             'cart_quantity': order_sudo.cart_quantity,
-            'notification_info': {
-                **self._get_cart_notification_information(
-                    order_sudo, positive_added_qty_per_line
-                ),
-                'warning': warning,
-            },
-            'quantity': values.pop('quantity', 0),
-            'tracking_info': self._get_tracking_information(order_sudo, line_ids.values()),
+            'quantity': quantity,
         }
+        # When coming from /reorder route, add information to compute tracking_information later on.
+        if kwargs.get('add_reorder_info'):
+            cart_values.update({
+                'tracking_info': {
+                    'line_values': line_ids.values()
+                }
+            })
+        else:
+            cart_values.update({
+                'notification_info': {
+                    **self._get_cart_notification_information(
+                        order_sudo, positive_added_qty_per_line
+                    ),
+                    'warning': warning,
+                },
+                'tracking_info': self._get_tracking_information(order_sudo, line_ids.values()),
+            })
+        return cart_values
 
     @route(
         route='/shop/cart/quick_add', type='jsonrpc', auth='user', methods=['POST'], website=True
