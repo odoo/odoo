@@ -13,7 +13,7 @@ import {
     queryFirst,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
+import { animationFrame, mockDate, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import {
     SELECTORS,
@@ -42,6 +42,7 @@ import {
     removeFacet,
     serverState,
     toggleMenuItem,
+    toggleMenuItemOption,
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
@@ -1522,6 +1523,133 @@ test("edit a filter with context: context is kept after edition", async () => {
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([`Foo = abc`, `Foo = abc`]);
     expect(searchBar.env.searchModel.context.specialKey).toBe("abc");
+});
+
+test("navigation: shifting a relative filter into the past updates the domain and label", async () => {
+    mockDate("2017-03-22T01:00:00"); // Wednesday
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Birthday" name="date_filter" date="birthday"/>
+            </search>
+        `,
+    });
+
+    // Activate a relative date option to get a facet of type "relative"
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Birthday");
+    await toggleMenuItemOption("Birthday", "This Month");
+    expect(getFacetTexts()).toEqual(["Birthday: This Month"]);
+    // offset 0 must use the same locale-aware boundaries as the shifted periods
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =1d"],
+        ["birthday", "<", "today =1d +1m"],
+    ]);
+
+    // Relative facets render prev/next navigation buttons instead of an editable label
+    expect(`.o_searchview_facet .o_date_nav_btn`).toHaveCount(2);
+
+    // Shift one period into the past
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Last month"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =1d -1m"],
+        ["birthday", "<", "today =1d"],
+    ]);
+    // Navigating the period must NOT open the editor dialog
+    expect(`.modal`).toHaveCount(0);
+
+    // Shift another period into the past
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: 2 months ago"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =1d -2m"],
+        ["birthday", "<", "today =1d -1m"],
+    ]);
+    expect(`.modal`).toHaveCount(0);
+});
+
+test("navigation: shifting a relative filter into the future updates the domain and label", async () => {
+    mockDate("2017-03-22T01:00:00"); // Wednesday
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Birthday" name="date_filter" date="birthday"/>
+            </search>
+        `,
+    });
+
+    // Activate a relative date option to get a facet of type "relative"
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Birthday");
+    await toggleMenuItemOption("Birthday", "This Month");
+    expect(getFacetTexts()).toEqual(["Birthday: This Month"]);
+
+    // Shift one period into the future
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Next month"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =1d +1m"],
+        ["birthday", "<", "today =1d +2m"],
+    ]);
+    // Navigating the period must NOT open the editor dialog
+    expect(`.modal`).toHaveCount(0);
+
+    // Shift another period into the future
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: in 2 months"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =1d +2m"],
+        ["birthday", "<", "today =1d +3m"],
+    ]);
+    expect(`.modal`).toHaveCount(0);
+});
+
+test("navigation: consecutive weeks share the same locale-aware boundary (no gap)", async () => {
+    mockDate("2017-03-22T01:00:00"); // Wednesday
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Birthday" name="date_filter" date="birthday"/>
+            </search>
+        `,
+    });
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Birthday");
+    await toggleMenuItemOption("Birthday", "This Week");
+    expect(getFacetTexts()).toEqual(["Birthday: This Week"]);
+    // "This Week" must be anchored on week_start (not the ISO-Monday `option.domain`),
+    // so its lower bound matches "Last week"'s upper bound below.
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =week_start"],
+        ["birthday", "<", "today =week_start +1w"],
+    ]);
+
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Last week"]);
+    // Upper bound "today =week_start" == This Week's lower bound: the periods are
+    // contiguous, so no day (e.g. Sunday in a Sunday-start locale) falls in neither.
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =week_start -1w"],
+        ["birthday", "<", "today =week_start"],
+    ]);
 });
 
 test("edit a favorite", async () => {

@@ -477,12 +477,17 @@ export class Clickbot {
         this.state.testedFilters += filterMenuItems.length;
         for (const filter of filterMenuItems) {
             if (filter.classList.contains("o_accordion")) {
-                this.currentFilter = filter.innerText.trim();
-                await this._triggerClick(
-                    filter.querySelector(".o_accordion_toggle"),
-                    () => true,
-                    `filter "${this.currentFilter}"`
-                );
+                const toggle = filter.querySelector(".o_accordion_toggle");
+                // Read the label from the toggle only: when the accordion is
+                // unfolded, `filter.innerText` also contains every option label.
+                this.currentFilter = toggle.innerText.trim();
+                // The accordion may already be unfolded (e.g. when a relative
+                // date filter is active). Only click the toggle to unfold it;
+                // clicking an already-open accordion would fold it back and
+                // hide its options.
+                if (toggle.getAttribute("aria-expanded") !== "true") {
+                    await this._triggerClick(toggle, () => true, `filter "${this.currentFilter}"`);
+                }
                 // If a filter has options, it will simply unfold and show all options.
                 // We then click on the first one.
                 const firstOption = filter.querySelector(

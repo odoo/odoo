@@ -225,8 +225,8 @@
                     <separator invisible="context.get('default_is_template')"/>
                     <filter string="Late Milestones" name="late_milestones" domain="[('is_milestone_exceeded', '=', True)]" groups="project.group_project_milestone" invisible="context.get('default_is_template') or not context.get('allow_milestones', True)"/>
                     <separator invisible="context.get('default_is_template')"/>
-                    <filter string="Start Date" name="start_date" date="date_start" end_month="1" end_year="1"/>
-                    <filter string="End Date" name="end_date" date="date" end_month="1" end_year="1"/>
+                    <filter string="Start Date" name="start_date" date="date_start"/>
+                    <filter string="End Date" name="end_date" date="date"/>
                     <separator/>
                     <filter string="Templates"
                         context="{'render_project_templates': True, 'default_is_template': True}"

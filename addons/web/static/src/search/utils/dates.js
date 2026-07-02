@@ -4,6 +4,8 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { clamp, range } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
+import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
+import { makeRelativeRange } from "@web/core/tree_editor/virtual_operators";
 
 export const QUARTERS = {
     1: { description: _t("Q1"), coveredMonths: [1, 2, 3] },
@@ -44,6 +46,13 @@ export const QUARTER_OPTIONS = {
 };
 
 export const DEFAULT_INTERVAL = "month";
+
+// Relative offsets (in months/years from the reference moment) defining the
+// range of month and year period options generated for a date filter.
+const START_MONTH = -2;
+const END_MONTH = 0;
+const START_YEAR = -2;
+const END_YEAR = 0;
 
 /**
  * Time interval options that users can select in the views.
@@ -198,9 +207,9 @@ export function getOptionsWithDescriptions(OPTIONS) {
  */
 export function getPeriodOptions(referenceMoment, optionsParams) {
     return [
-        ...getMonthPeriodOptions(referenceMoment, optionsParams),
-        ...getQuarterPeriodOptions(optionsParams),
-        ...getYearPeriodOptions(referenceMoment, optionsParams),
+        ...getMonthPeriodOptions(referenceMoment),
+        ...getQuarterPeriodOptions(),
+        ...getYearPeriodOptions(referenceMoment),
         ...getCustomPeriodOptions(optionsParams),
     ];
 }
@@ -214,18 +223,14 @@ export function toGeneratorId(unit, offset) {
     return `${unit}${sep}${val}`;
 }
 
-function getMonthPeriodOptions(referenceMoment, optionsParams) {
-    const { startYear, endYear, startMonth, endMonth } = optionsParams;
-    return range(startMonth, endMonth + 1)
+function getMonthPeriodOptions(referenceMoment) {
+    return range(START_MONTH, END_MONTH + 1)
         .map((months) => {
-            const date = referenceMoment.plus({
-                months,
-                years: clamp(0, startYear, endYear),
-            });
+            const date = referenceMoment.plus({ months });
             const yearOffset = date.year - referenceMoment.year;
             return {
                 id: toGeneratorId("month", months),
-                defaultYearId: toGeneratorId("year", clamp(yearOffset, startYear, endYear)),
+                defaultYearId: toGeneratorId("year", clamp(yearOffset, START_YEAR, END_YEAR)),
                 description: date.toFormat("MMMM"),
                 granularity: "month",
                 groupNumber: 1,
@@ -235,18 +240,16 @@ function getMonthPeriodOptions(referenceMoment, optionsParams) {
         .reverse();
 }
 
-function getQuarterPeriodOptions(optionsParams) {
-    const { startYear, endYear } = optionsParams;
-    const defaultYearId = toGeneratorId("year", clamp(0, startYear, endYear));
+function getQuarterPeriodOptions() {
+    const defaultYearId = toGeneratorId("year", 0);
     return Object.values(QUARTER_OPTIONS).map((quarter) => ({
         ...quarter,
         defaultYearId,
     }));
 }
 
-function getYearPeriodOptions(referenceMoment, optionsParams) {
-    const { startYear, endYear } = optionsParams;
-    return range(startYear, endYear + 1)
+function getYearPeriodOptions(referenceMoment) {
+    return range(START_YEAR, END_YEAR + 1)
         .map((years) => {
             const date = referenceMoment.plus({ years });
             return {
@@ -335,4 +338,65 @@ export function sortPeriodOptions(options) {
  */
 export function yearSelected(selectedOptionIds) {
     return selectedOptionIds.some((optionId) => optionId.startsWith("year"));
+}
+
+/**  ----------------------- RELATIVE DATE FILTERS -----------------------
+ * Relative filters are search bar menu filters, created from the xml with
+ * the syntax <filter ... date="invoice_date">, that can be toggled in the
+ * search bar itself, changing their domain dynamically (eg. with filter
+ * "Today", clicking `>` will change the domain to tomorrow)
+ */
+
+// Keyed by option id; each option only needs its label and granularity.
+export const RELATIVE_FILTER_OPTIONS = {
+    today: { description: _t("Today"), granularity: "day" },
+    thisWeek: { description: _t("This Week"), granularity: "week" },
+    thisMonth: { description: _t("This Month"), granularity: "month" },
+    thisQuarter: { description: _t("This Quarter"), granularity: "quarter" },
+    thisYear: { description: _t("This Year"), granularity: "year" },
+};
+
+const SCALE_LABELS = {
+    day: _t("days"),
+    week: _t("weeks"),
+    month: _t("months"),
+    year: _t("years"),
+};
+const LAST_PERIOD_LABELS = {
+    week: _t("Last week"),
+    month: _t("Last month"),
+    quarter: _t("Last quarter"),
+    year: _t("Last year"),
+};
+const NEXT_PERIOD_LABELS = {
+    week: _t("Next week"),
+    month: _t("Next month"),
+    quarter: _t("Next quarter"),
+    year: _t("Next year"),
+};
+
+export function getRelativeFilterOptions() {
+    // The domain is computed on demand from the granularity and the active offset (see constructRelativeDateDomain)
+    return Object.entries(RELATIVE_FILTER_OPTIONS).map(([id, option]) => ({ id, ...option }));
+}
+
+export function constructRelativeDateDomain(searchItem, option, offset) {
+    const { fieldName, fieldType } = searchItem;
+    return domainFromTree(makeRelativeRange(fieldName, offset, option.granularity, fieldType));
+}
+
+export function getRelativeDateLabel(option, offset) {
+    const isDay = option.granularity === "day";
+    if (offset === 0) {
+        return option.description;
+    } else if (offset === -1) {
+        return isDay ? _t("Yesterday") : LAST_PERIOD_LABELS[option.granularity];
+    } else if (offset === 1) {
+        return isDay ? _t("Tomorrow") : NEXT_PERIOD_LABELS[option.granularity];
+    }
+    const subs = {
+        offset: Math.abs(offset),
+        unit: SCALE_LABELS[option.granularity],
+    };
+    return offset < 0 ? _t("%(offset)s %(unit)s ago", subs) : _t("in %(offset)s %(unit)s", subs);
 }

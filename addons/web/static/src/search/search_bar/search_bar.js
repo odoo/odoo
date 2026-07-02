@@ -4,7 +4,6 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useChildRef, useService } from "@web/core/utils/hooks";
-import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
 import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
@@ -615,27 +614,23 @@ export class SearchBar extends Component {
     // Handlers
     //---------------------------------------------------------------------
 
-    onFacetLabelClick(target, facet) {
-        const { domain, groupId } = facet;
-        if ((this.env.searchModel.canOrderByCount && facet.type === "groupBy") || !domain) {
+    onFacetLabelClick(facet) {
+        if (
+            (this.env.searchModel.canOrderByCount && facet.type === "groupBy") ||
+            !facet.domain ||
+            facet.type === "relative"
+        ) {
             return;
         }
-        const { resModel } = this.env.searchModel;
-        this.dialogService.add(DomainSelectorDialog, {
-            resModel,
-            domain,
-            context: this.env.searchModel.domainEvalContext,
-            onConfirm: (nextDomain) => {
-                if (nextDomain !== domain) {
-                    this.env.searchModel.splitAndAddDomain(nextDomain, groupId);
-                }
-            },
-            disableConfirmButton: (domain) => domain === `[]`,
-            title: _t("Custom Filter"),
-            confirmButtonText: _t("Search"),
-            discardButtonText: _t("Discard"),
-            isDebugMode: this.env.searchModel.isDebugMode,
-        });
+        this.env.searchModel.spawnCustomFilterDialog(false, facet.domain, facet.groupId);
+    }
+
+    onPrevDateFacetClick(_target, facet) {
+        this.env.searchModel.shiftRelativeFilter(facet.groupId, -1);
+    }
+
+    onNextDateFacetClick(_target, facet) {
+        this.env.searchModel.shiftRelativeFilter(facet.groupId, 1);
     }
 
     /**

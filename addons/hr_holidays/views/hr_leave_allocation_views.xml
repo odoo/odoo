@@ -56,7 +56,7 @@
                 <filter string="My Department" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
                 <separator/>
                 <filter string="My Allocations" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
-                <filter string="Validity Start" name="validity_start" date="date_from" start_month="0" end_month="2" start_year="-1" end_year="1"/>
+                <filter string="Validity Start" name="validity_start" date="date_from"/>
                 <separator/>
                 <filter invisible="1" string="My Activities" name="filter_activities_my"
                     domain="[('activity_user_id', '=', uid)]"/>

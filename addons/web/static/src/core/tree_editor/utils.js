@@ -69,6 +69,8 @@ export function getRelativeDateExpr(type, delta) {
 
 const BOUNDS_SMART_DATES = [
     ["today", "today", "today +1d"],
+    ["thisMonth", "today =1d", "today =1d +1m"],
+    ["thisYear", "today =1m =1d", "today =1m =1d +1y"],
     ["last7Days", "today -7d", "today"],
     ["last30Days", "today -30d", "today"],
     ["monthToDate", "today =1d", "today +1d"],
@@ -78,6 +80,14 @@ const BOUNDS_SMART_DATES = [
 ];
 const DELTAS = [
     ["today", "", "days = 1"],
+    ["thisWeek", "days=-context_today().weekday()", "days=7-context_today().weekday()"],
+    ["thisMonth", "day = 1", "day = 1, months = 1"],
+    [
+        "thisQuarter",
+        "month=(context_today().month-1)//3*3+1, day=1",
+        "month=(context_today().month-1)//3*3+1, day=1, months=3",
+    ],
+    ["thisYear", "day = 1, month = 1", "day = 1, month = 1, years = 1"],
     ["last7Days", "days = -7", ""],
     ["last30Days", "days = -30", ""],
     ["monthToDate", "day = 1", "days = 1"],

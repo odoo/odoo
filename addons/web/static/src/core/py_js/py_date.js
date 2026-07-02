@@ -322,6 +322,13 @@ export class PyDate {
     toordinal() {
         return ymd2ord(this.year, this.month, this.day);
     }
+
+    /**
+     * @returns {integer} 0 (Monday) ... 6 (Sunday), matching Python's date.weekday()
+     */
+    weekday() {
+        return (this.toordinal() + 6) % 7;
+    }
 }
 
 export class PyDateTime {
@@ -497,6 +504,13 @@ export class PyDateTime {
         );
         const timedelta = PyTimeDelta.create({ minutes: d.getTimezoneOffset() });
         return this.add(timedelta);
+    }
+
+    /**
+     * @returns {integer} 0 (Monday) ... 6 (Sunday), matching Python's datetime.weekday()
+     */
+    weekday() {
+        return (ymd2ord(this.year, this.month, this.day) + 6) % 7;
     }
 }
 
