@@ -717,9 +717,9 @@ test("Can right-click on message to opens message actions dropdown", async () =>
             expect.step("Message.onContextMenu");
             super.onContextMenu(...arguments);
         },
-        showRightClickMessageActions() {
-            expect.step("Message.showRightClickMessageActions");
-            super.showRightClickMessageActions(...arguments);
+        onOpenRightClickMenu() {
+            expect.step("Message.onOpenRightClickMenu");
+            super.onOpenRightClickMenu(...arguments);
         },
     });
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
@@ -768,7 +768,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await contains(".o-mail-Message", { count: 3 });
     await rightClick(".o-mail-Message:eq(0)");
     await animationFrame();
-    await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
+    await expect.waitForSteps(["Message.onContextMenu", "Message.onOpenRightClickMenu"]);
     expect(lastOnContextMenuEv.defaultPrevented).toBe(true);
     await contains(".o-dropdown-item", { count: 7 });
     await contains(".o-dropdown-item:contains('Add a Reaction')");
