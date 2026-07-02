@@ -11,11 +11,21 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     purchase_id = fields.Many2one(
-        'purchase.order', related='move_ids.purchase_line_id.order_id',
+        'purchase.order', compute='_compute_purchase_id',
         string="Purchase Orders", readonly=True)
 
     days_to_arrive = fields.Datetime(compute='_compute_effective_date', search="_search_days_to_arrive", copy=False)
     delay_pass = fields.Datetime(compute='_compute_date_order', search="_search_delay_pass", index=True, copy=False)
+
+    @api.depends('move_ids.purchase_line_id', 'move_ids.move_orig_ids')
+    def _compute_purchase_id(self):
+        for picking in self:
+            po_line_ids = (move._get_purchase_line_and_partner_from_chain()[0] for move in picking.move_ids)
+            first_valid_id = next((pid for pid in po_line_ids if pid), False)
+            if first_valid_id:
+                picking.purchase_id = self.env['purchase.order.line'].browse(first_valid_id).order_id
+            else:
+                picking.purchase_id = False
 
     @api.depends('state', 'location_dest_id.usage', 'date_done')
     def _compute_effective_date(self):
@@ -52,6 +62,17 @@ class StockPicking(models.Model):
     def _action_done(self):
         self.purchase_id.sudo().action_acknowledge()
         return super()._action_done()
+
+    def action_view_purchase_order(self):
+        self.ensure_one()
+        if self.purchase_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'purchase.order',
+                'res_id': self.purchase_id.id,
+                'view_mode': 'form',
+            }
+        return False
 
     def _log_less_quantities_than_expected(self, moves):
         moves_information = [(k, v) for k, v in moves.items()]
