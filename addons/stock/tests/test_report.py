@@ -750,7 +750,8 @@ class TestReports(TestReportsCommon):
         """ Create some transfer for two different warehouses and check the
         report display the good moves according to the selected warehouse.
         """
-        # Warehouse config.
+        # Warehouses config.
+        wh_1 = self.picking_type_in.warehouse_id
         wh_2 = self.wh_2
         picking_type_out_2 = self.env['stock.picking.type'].search([
             ('code', '=', 'outgoing'),
@@ -767,7 +768,10 @@ class TestReports(TestReportsCommon):
             move_line.product_uom_qty = 5
         delivery = delivery_form.save()
 
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_1.id},
+        )
         draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(draft_picking_qty['out'], 5)
@@ -782,7 +786,10 @@ class TestReports(TestReportsCommon):
 
         # Confirm the delivery -> The report still have 1 line.
         delivery.action_confirm()
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_1.id},
+        )
         draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
@@ -807,7 +814,10 @@ class TestReports(TestReportsCommon):
             move_line.product_uom_qty = 8
         delivery_2 = delivery_form.save()
 
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_1.id},
+        )
         draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
@@ -823,7 +833,10 @@ class TestReports(TestReportsCommon):
         self.assertEqual(draft_picking_qty['out'], 8)
         # Confirm the second delivery -> The report must now have 1 line.
         delivery_2.action_confirm()
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_1.id},
+        )
         draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
@@ -898,7 +911,8 @@ class TestReports(TestReportsCommon):
         """ Create transfers for two different companies and check report
         display the right transfers.
         """
-        # Configure second warehouse.
+        # Warehouses config.
+        wh_1 = self.picking_type_in.warehouse_id
         company_2 = self.env['res.company'].create({'name': 'Aperture Science'})
         wh_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)])
         wh_2_picking_type_in = wh_2.in_type_id
@@ -923,7 +937,10 @@ class TestReports(TestReportsCommon):
             move_line.product_uom_qty = 5
         wh_2_receipt = receipt_form.save()
 
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_1.id},
+        )
         draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(draft_picking_qty['in'], 2)
@@ -942,7 +959,10 @@ class TestReports(TestReportsCommon):
         wh_1_receipt.action_confirm()
         wh_2_receipt.action_confirm()
 
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_1.id},
+        )
         self.assertEqual(len(lines), 2, "Must have 2 lines.")
         self.assertEqual(lines[1]['document_in']['id'], wh_1_receipt.id)
         self.assertEqual(lines[1]['quantity'], 2)

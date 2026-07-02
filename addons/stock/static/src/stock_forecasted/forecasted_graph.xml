@@ -4,5 +4,8 @@
         <xpath expr="//canvas[@t-custom-ref='canvas']" position="attributes">
             <attribute name="height">300</attribute>
         </xpath>
+        <xpath expr="//t[@t-call='{{ this.props.buttonTemplate }}']" position="attributes">
+            <attribute name="t-if" add="!this.model.useSampleModel"/>
+        </xpath>
     </t>
 </templates>
