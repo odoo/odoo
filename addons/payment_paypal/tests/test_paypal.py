@@ -25,7 +25,10 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     def test_order_payload_values_for_public_user(self):
         """If a payment is made with the public user we need to make sure that the email address is
         not sent to PayPal and that we provide the country code of the company instead."""
-        tx = self._create_transaction(flow="direct", partner_id=self.public_user.partner_id.id)
+        paypal_pm = self.env.ref("payment_paypal.payment_method_paypal").id
+        tx = self._create_transaction(
+            flow="direct", partner_id=self.public_user.partner_id.id, payment_method_id=paypal_pm
+        )
         payload = tx._paypal_prepare_order_payload()
         customer_payload = payload["payment_source"]["paypal"]
         self.assertTrue("email_address" not in customer_payload)
@@ -98,7 +101,10 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             "partner_id": self.partner.id,
             "order_line": [Command.create({"product_id": product.id})],
         })
-        tx = self._create_transaction(flow="direct", sale_order_ids=[Command.set(order.ids)])
+        paypal_pm = self.env.ref("payment_paypal.payment_method_paypal").id
+        tx = self._create_transaction(
+            flow="direct", sale_order_ids=[Command.set(order.ids)], payment_method_id=paypal_pm
+        )
 
         payload = tx._paypal_prepare_order_payload()
         self.assertEqual(

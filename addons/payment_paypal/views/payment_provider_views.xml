@@ -6,18 +6,69 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="provider_credentials" position="inside">
+            <header position="inside">
+                <button
+                    string="Connect/Create a PayPal account"
+                    type="object"
+                    name="action_start_onboarding"
+                    invisible="paypal_client_id and paypal_client_secret"
+                    class="btn-primary"
+                    colspan="2"
+                />
+                <button
+                    name="action_reset_credentials"
+                    string="Disconnect"
+                    confirm="Are you sure you want to disconnect?"
+                    type="object"
+                    invisible="not paypal_client_id or not paypal_client_secret"
+                    class="btn-secondary"
+                    colspan="2"
+                />
+            </header>
+            <sheet position="before">
+                <div class="alert alert-danger mb-2" role="alert"
+                    invisible="code != 'paypal' or not paypal_is_isu_onboarded or paypal_primary_email_confirmed">
+                    <i class="fa fa-ban me-2" title="Restricted"/>
+                    <strong>Attention:</strong> Please confirm your email address on PayPal in order to receive payments.
+                </div>
+                <div class="alert alert-danger mb-2" role="alert"
+                    invisible="code != 'paypal' or not paypal_is_isu_onboarded or paypal_payments_receivable">
+                    <i class="fa fa-ban me-2" title="Restricted"/>
+                    <strong>Attention:</strong> You currently cannot receive payments due to a possible restriction on your PayPal account. Please reach out to PayPal Customer Support.
+                    <button type="object"
+                        name="action_paypal_check_onboarding_status"
+                        class="btn btn-link p-0 fw-bold ms-1 align-baseline text-decoration-none">
+                    <i class="fa fa-refresh me-1"/>Recheck Status
+                    </button>
+                </div>
+            </sheet>
+            <group name="provider_credentials" position='inside'>
+                <div colspan="2" class="text-muted mb-2" invisible="not paypal_client_id and not paypal_client_secret">
+                    This provider is linked with your PayPal account.
+                </div>
                 <field
                     string="Email"
                     name="paypal_email_account"
                     invisible="code != 'paypal'"
                     required="is_live"
+                    readonly="paypal_is_isu_onboarded"
+                    groups="base.group_no_one"
+                />
+                <field
+                    string="Account ID"
+                    name="paypal_account_id"
+                    invisible="code != 'paypal'"
+                    required="is_live"
+                    readonly="paypal_is_isu_onboarded"
+                    groups="base.group_no_one"
                 />
                 <field
                     string="Client ID"
                     name="paypal_client_id"
                     invisible="code != 'paypal'"
                     required="is_live"
+                    readonly="paypal_is_isu_onboarded"
+                    groups="base.group_no_one"
                 />
                 <field
                     string="Client Secret"
@@ -25,16 +76,28 @@
                     invisible="code != 'paypal'"
                     required="is_live"
                     widget="password"
+                    readonly="paypal_is_isu_onboarded"
+                    groups="base.group_no_one"
                 />
-                <label string="Webhook ID" for="paypal_webhook_id" invisible="code != 'paypal'"/>
+                <label
+                    string="Webhook ID"
+                    for="paypal_webhook_id"
+                    invisible="code != 'paypal'"
+                    groups="base.group_no_one"
+                />
                 <div invisible="code != 'paypal'" class="o_row" col="2">
-                    <field name="paypal_webhook_id"/>
+                    <field
+                        name="paypal_webhook_id"
+                        readonly="paypal_is_isu_onboarded"
+                        groups="base.group_no_one"
+                    />
                     <button
                         string="Generate your webhook"
                         type="object"
                         name="action_paypal_create_webhook"
                         invisible="paypal_webhook_id"
                         class="btn-primary"
+                        groups="base.group_no_one"
                     />
                 </div>
             </group>

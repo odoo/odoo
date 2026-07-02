@@ -52,7 +52,6 @@ class PaymentTransaction(models.Model):
         :return: The requested payload to create a Paypal order.
         :rtype: dict
         """
-        partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
         if self.partner_id.is_public:
             invoice_address_vals = {"address": {"country_code": self.company_id.country_code}}
             shipping_address_vals = {}
@@ -61,6 +60,9 @@ class PaymentTransaction(models.Model):
             shipping_address_vals = paypal_utils.format_shipping_address(self)
         shipping_preference = "SET_PROVIDED_ADDRESS" if shipping_address_vals else "NO_SHIPPING"
 
+        if self.payment_method_code == "card":
+            invoice_address_vals["billing_address"] = invoice_address_vals.pop("address")
+
         # See https://developer.paypal.com/docs/api/orders/v2/#orders_create!ct=application/json
         payload = {
             "intent": "CAPTURE",
@@ -68,7 +70,7 @@ class PaymentTransaction(models.Model):
                 {
                     "reference_id": self.reference,
                     "description": f"{self.company_id.name}: {self.reference}",
-                    "amount": {"currency_code": self.currency_id.name, "value": self.amount},
+                    "amount": {"currency_code": self.currency_id.name, "value": str(self.amount)},
                     "payee": {
                         "display_data": {"brand_name": self.provider_id.company_id.name},
                         "email_address": self.provider_id.paypal_email_account,
@@ -77,10 +79,15 @@ class PaymentTransaction(models.Model):
                 }
             ],
             "payment_source": {
-                "paypal": {
+                self.payment_method_code: {
                     "experience_context": {"shipping_preference": shipping_preference},
-                    "name": {"given_name": partner_first_name, "surname": partner_last_name},
+                    "name": self.partner_name,
                     **invoice_address_vals,
+                    **(
+                        {"attributes": {"verification": {"method": "SCA_WHEN_REQUIRED"}}}
+                        if self.payment_method_code == "card"
+                        else {}
+                    ),
                 }
             },
         }
