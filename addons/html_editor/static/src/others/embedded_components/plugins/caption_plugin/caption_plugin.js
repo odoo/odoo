@@ -12,6 +12,7 @@ import {
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
@@ -35,13 +36,13 @@ export class CaptionPlugin extends Plugin {
             },
         ],
         toolbar_items: [
-            {
+            withSequence(20, {
                 id: "image_caption",
                 description: _t("Add/remove a caption"),
-                groupId: "image_actions",
+                groupId: "image_modifiers",
                 commandId: "toggleImageCaption",
                 isActive: () => this.hasImageCaption(this.dependencies.image.getTargetedImage()),
-            },
+            }),
         ],
         clean_for_save_processors: this.cleanForSave.bind(this),
         on_will_mount_component_handlers: this.setupNewCaption.bind(this),

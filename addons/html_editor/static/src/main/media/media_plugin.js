@@ -72,13 +72,13 @@ export class MediaPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_groups: withSequence(31, { id: "image_actions", namespaces: ["image"] }),
+        toolbar_groups: withSequence(31, { id: "image_replace", namespaces: ["image"] }),
         toolbar_items: [
-            withSequence(40, {
+            {
                 id: "replace_image",
-                groupId: "image_actions",
+                groupId: "image_replace",
                 commandId: "replaceImage",
-            }),
+            },
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
         ...(this.config.allowImage && {
