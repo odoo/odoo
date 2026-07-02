@@ -2277,9 +2277,9 @@ class MailThread(models.AbstractModel):
             forbidden_names={'model', 'res_id', 'subtype'}
         )
         if self._name == 'mail.thread' or not self.id:
-            raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
+            raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to a user."))
         if message_type == 'user_notification':
-            raise ValueError(_("Use message_notify to send a notification to an user."))
+            raise ValueError(_("Use message_notify to send a notification to a user."))
         if message_type != 'tracking' and tracking_values:
             raise ValueError(_('Posting with tracking should be done using tracking message type'))
         if attachments:

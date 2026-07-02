@@ -248,7 +248,7 @@ export class PresetInfoPopup extends Component {
             const timingOptions = this.selfOrder.getTimingOptions(preset);
             const result = await makeAwaitable(this.dialog, PillsSelectionPopup, {
                 options: timingOptions,
-                title: _t("Select a hour"),
+                title: _t("Select an hour"),
                 subtitle: _t("Please choose a time slot for your order."),
                 selectionType: "time",
             });

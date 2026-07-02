@@ -296,7 +296,7 @@ export class CartPage extends Component {
             if (useTiming) {
                 result = await makeAwaitable(this.dialog, PillsSelectionPopup, {
                     options: this.presetTimingOptions,
-                    title: _t("Select a hour"),
+                    title: _t("Select an hour"),
                     subtitle: _t("Please choose a time slot for your order."),
                     selectionType: "time",
                 });

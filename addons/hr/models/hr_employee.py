@@ -1219,7 +1219,7 @@ class HrEmployee(models.Model):
     def action_create_user(self):
         self.ensure_one()
         if self.user_id:
-            raise ValidationError(self.env._("This employee already has an user."))
+            raise ValidationError(self.env._("This employee already has a user."))
         return {
             'name': self.env._('Create User'),
             'type': 'ir.actions.act_window',
@@ -1775,7 +1775,7 @@ class HrEmployee(models.Model):
             }
             message = Markup('<b>%(title)s</b> %(text)s %(onboarding_plan_link)s?') % {
                 'title': self.env._('Congratulations!'),
-                'text': self.env._('May I recommend you to setup an'),
+                'text': self.env._('May I recommend setting up an'),
                 'onboarding_plan_link': link,
             }
             onboarding_notes_bodies[employee.id] = message

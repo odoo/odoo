@@ -20,12 +20,12 @@ patch(Thread.prototype, {
         }
         const userLocale = { locale: user.lang };
         if (offlineSince.hasSame(DateTime.now(), "day")) {
-            return _t("Visitor is disconnected since %(time)s", {
+            return _t("Visitor has been disconnected since %(time)s", {
                 time: offlineSince.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
             });
         }
         if (offlineSince.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
-            return _t("Visitor is disconnected since yesterday at %(time)s", {
+            return _t("Visitor has been disconnected since yesterday at %(time)s", {
                 time: offlineSince.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
             });
         }
