@@ -7,12 +7,16 @@
     >
         <BuilderRow id="this.template_opt_row" position="replace"/>
         <BuilderRow id="this.number_of_records_opt_row" position="replace"/>
-        <BuilderRow id="this.filter_opt_row" position="replace">
+        <BuilderRow id="this.filter_opt_row" position="replace"/>
+        <BuilderRow label.translate="Section Title" position="after">
             <BuilderRow label.translate="Columns">
                 <BuilderRange dataAttributeAction="'columns'" min="2" max="5"/>
             </BuilderRow>
             <BuilderRow label.translate="Spacing">
                 <BuilderRange dataAttributeAction="'gap'" min="0" max="5"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Roundness">
+                <BuilderRange dataAttributeAction="'rounded'" min="0" max="5"/>
             </BuilderRow>
             <BuilderRow label.translate="Size">
                 <BuilderSelect dataAttributeAction="'size'">
@@ -83,25 +87,31 @@
             </BuilderRow>
             <BuilderRow
                 t-if="this.isActiveItem('clickable_items_opt')"
-                label.translate="Darken overlay"
+                label.translate="Color Filter"
                 level="1"
             >
-                <BuilderCheckbox
-                    classAction="'s_dynamic_category_no_overlay'"
-                    inverseAction="true"
+                <BuilderColorPicker
+                    dataAttributeAction="'overlayGradient'"
+                    defaultOpacity="50"
+                    enabledTabs="['custom', 'gradient']"
+                    grayscales="{
+                        'transparent': [
+                            'black-75',
+                            'black-50',
+                            'black-25',
+                            'black-15',
+                            'white-25',
+                            'white-50',
+                            'white-75',
+                            'white-85'
+                        ],
+                        'solid': [],
+                    }"
                 />
             </BuilderRow>
             <BuilderRow label.translate="Button" t-if="!this.isActiveItem('clickable_items_opt')">
                 <BuilderTextInput dataAttributeAction="'button'"/>
             </BuilderRow>
-            <BuilderContext>
-                <hr class="mx-3"/>
-                <div class="h6 px-3 text-reset">Blocks Design</div>
-                <div class="mb-2 px-3 opacity-75 small">Global options for all inner blocks.</div>
-                <BuilderRow label.translate="Roundness">
-                    <BuilderRange dataAttributeAction="'rounded'" min="0" max="5"/>
-                </BuilderRow>
-            </BuilderContext>
         </BuilderRow>
     </t>
     <t t-name="website_sale.dynamicSnippetCategoryItemOptions" name="Category">

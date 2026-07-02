@@ -7,7 +7,7 @@ import {
 } from '@website/js/tours/tour_utils';
 import { goToCart } from '@website_sale/js/tours/tour_utils';
 
-const productsSnippet = { id: "s_dynamic_snippet_products", name: "Products", groupName: "Catalog" };
+const productsSnippet = { id: "s_dynamic_snippet_products", name: "Products", groupName: "eCommerce" };
 
 registerWebsitePreviewTour(
     'website_sale.snippet_products',

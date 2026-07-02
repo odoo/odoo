@@ -1,6 +1,11 @@
 .s_dynamic_snippet_category {
     .o_category_container {
         grid-template-columns: repeat(var(--DynamicCategory-columns), 1fr);
+        margin-top: 1rem;
+    }
+
+    .s_dynamic_snippet_title {
+        padding-bottom: 1rem !important;
     }
 
     &:not([data-columns="2"]) .o_category_container {
