@@ -277,6 +277,7 @@ class Website(models.CachedModel):
                 vals['user_id'] = company._get_public_user().id if company else self.env.ref('base.public_user').id
 
         websites = super().create(vals_list)
+        websites._ensure_logo_media_attachment()
         websites.company_id._compute_website_id()
         for website in websites:
             website._bootstrap_homepage()
@@ -327,6 +328,9 @@ class Website(models.CachedModel):
 
         result = super(Website, self - public_user_to_change_websites).write(values)
 
+        if 'logo' in values:
+            self._ensure_logo_media_attachment()
+
         if any(key in values for key in ["cdn_activated", "cdn_url", "cdn_filters", "domain"]):
             # invalidate the caches from static node at compile time
             if any(self._ids):
@@ -340,6 +344,35 @@ class Website(models.CachedModel):
             self._ensure_default_website_consistency()
 
         return result
+
+    def _ensure_logo_media_attachment(self):
+        """ Clone the bound logo as a media-library attachment so it shows up
+        in the media manager, which hides res_field rows. """
+        Attachment = self.env['ir.attachment']
+        default_logo_checksum = Attachment._compute_checksum(self._default_logo())
+        bounds = Attachment.search([
+            ('res_model', '=', 'website'),
+            ('res_field', '=', 'logo'),
+            ('res_id', 'in', self.ids),
+            ('checksum', '!=', default_logo_checksum),
+        ])
+        if not bounds:
+            return
+        mirrored = {
+            (res_id, checksum)
+            for res_id, checksum in Attachment._read_group(
+                [
+                    ('res_model', '=', 'website'),
+                    ('res_field', '=', False),
+                    ('res_id', 'in', self.ids),
+                    ('checksum', 'in', bounds.mapped('checksum')),
+                ],
+                groupby=['res_id', 'checksum'],
+            )
+        }
+        bounds.filtered(
+            lambda b: (b.res_id, b.checksum) not in mirrored,
+        ).copy({'res_field': False})
 
     @api.model
     def _handle_create_write(self, vals):
@@ -857,11 +890,8 @@ class Website(models.CachedModel):
         company = website.company_id
         attachment = self.env['ir.attachment'].browse(logo_attachment_id).exists() if logo_attachment_id else False
         if attachment:
-            attachment.write({
-                'res_model': 'website',
-                'res_field': 'logo',
-                'res_id': website.id,
-            })
+            website.logo = attachment.raw
+            attachment.unlink()
         elif not company.uses_default_logo:
             website.logo = BinaryBytes(company.logo.content)
 
