@@ -13,6 +13,7 @@ class TestPaymentCaptureWizard(PaymentCommon):
 
         wizard = self.env["payment.capture.wizard"].create({"transaction_ids": source_tx.ids})
         wizard.amount_to_capture = 511.11
+        wizard.void_remaining_amount = False
         wizard.action_capture()
 
         child_tx_1 = source_tx.child_transaction_ids

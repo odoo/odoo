@@ -7,9 +7,13 @@
         <field name="arch" type="xml">
             <form string="Payment Transactions" create="false" edit="false">
                 <header>
-                    <button type="object" name="action_capture" invisible="state != 'authorized'" string="Capture Transaction" class="oe_highlight"/>
-                    <button type="object" name="action_void" invisible="state != 'authorized'" string="Void Transaction"
-                            confirm="Are you sure you want to void the authorized transaction? This action can't be undone."/>
+                    <button
+                        type="object"
+                        name="action_capture"
+                        invisible="state != 'authorized'"
+                        string="Capture Payment"
+                        class="oe_highlight"
+                    />
                     <button
                         string="Post-process"
                         help="Run the post-processing step for this transaction."

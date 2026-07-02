@@ -38,14 +38,14 @@
                            invisible="support_partial_capture != 'full_only'"
                            title="Some of the transactions you intend to capture can only be captured in full. Handle the transactions individually to capture a partial amount."/>
                     </div>
-                    <field name="void_remaining_amount" readonly="not has_remaining_amount"/>
+                    <field name="void_remaining_amount" invisible="not has_remaining_amount"/>
                 </group>
                 <div id="alert_amount_to_capture_above_authorized_amount"
-                     role="alert"
-                     class="alert alert-warning mb-2"
-                     invisible="is_amount_to_capture_valid">
-                    <strong>Warning!</strong> You can not capture a negative amount nor more
-                    than <field name='available_amount' class='oe_inline' widget='monetary'/>.
+                    role="alert"
+                    class="alert alert-warning mb-2"
+                    invisible="is_amount_to_capture_valid">
+                    You can not capture more than
+                    <field name='available_amount' class='oe_inline' widget='monetary'/>.
                 </div>
                 <footer>
                     <button string="Capture" type="object" name="action_capture" class="btn-primary"/>
