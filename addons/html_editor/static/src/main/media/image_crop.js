@@ -54,6 +54,9 @@ export class ImageCrop extends Component {
         useExternalListener(this.document, "keydown", this.onDocumentKeydown, {
             capture: true,
         });
+        useExternalListener(this.document, "blur", () => this.closeCropper(), {
+            capture: true,
+        });
         useExternalListener(
             this.document,
             "selectionchange",
