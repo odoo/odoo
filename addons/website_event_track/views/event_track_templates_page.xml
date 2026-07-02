@@ -70,8 +70,9 @@
                 </span>
                 <span t-else="">
                     starts on
-                    <span t-field="track.event_id.with_context(tz=track.event_id.date_tz).date_begin"
-                        t-options="{'format': 'medium', 'tz_name': track.event_id.date_tz, 'hide_seconds': True}"/>
+                    <t t-set="date_begin" t-value="track.event_id.date_begin"/>
+                    <span t-out="date_begin" t-options="{'widget': 'datetime', 'format': 'medium', 'date_only': True, 'tz_name': track.event_id.date_tz}"/>,
+                    <span t-out="date_begin" t-options="{'widget': 'datetime', 'time_only': True, 'hide_seconds': True, 'tz_name': track.event_id.date_tz}"/>
                     (<span t-out="track.event_id.date_tz"/>)
                 </span>
             </div>
@@ -101,10 +102,10 @@
                         </t>
                         <t t-if="track.date">
                             <span t-field="track.date"
-                                t-options='{"hide_seconds":"True", "format": "short", "tz_name": event.date_tz}'/>
+                                t-options='{"hide_seconds":"True", "tz_name": event.date_tz}'/>
                             -
                             <span t-field="track.date_end"
-                                t-options='{"hide_seconds":"True", "format": "short", "tz_name": event.date_tz}'/>
+                                t-options='{"hide_seconds":"True", "tz_name": event.date_tz}'/>
                             <t t-if="event.date_tz and website_visitor_timezone != event.date_tz">
                                 (<span t-out="event.date_tz"/>)
                             </t>
