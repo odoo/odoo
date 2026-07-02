@@ -72,6 +72,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False
     )
     l10n_in_gst_efiling_feature = fields.Boolean(string="GST Reports & E-Filing")
+    l10n_in_is_b2c_hsn_reporting = fields.Boolean(related='company_id.l10n_in_is_b2c_hsn_reporting', readonly=False)
     l10n_in_fetch_vendor_edi_feature = fields.Boolean(string="Fetch Vendor E-Invoiced Document")
     l10n_in_enet_vendor_batch_payment_feature = fields.Boolean(string="ENet Vendor Batch Payment")
 

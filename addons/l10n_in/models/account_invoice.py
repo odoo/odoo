@@ -265,6 +265,7 @@ class AccountMove(models.Model):
                 company.l10n_in_is_gst_registered
                 and company.l10n_in_hsn_code_digit
                 and (filtered_lines := move.invoice_line_ids.filtered(line_filter_func))
+                and (company.l10n_in_is_b2c_hsn_reporting or move.l10n_in_gst_treatment not in ['unregistered', 'consumer', 'overseas'])
             ):
                 lines = self.env['account.move.line']
                 for line in filtered_lines:
