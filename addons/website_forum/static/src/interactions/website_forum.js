@@ -497,7 +497,9 @@ export class WebsiteForum extends Interaction {
         const forumIntroEl = this.el.querySelector(".forum_intro");
         forumIntroEl.style.height = getComputedStyle(forumIntroEl).height;
         forumIntroEl.classList.add("overflow-hidden");
-        forumIntroEl.style.transition = "height 1s";
+        forumIntroEl.style.transition = "height 1s, padding 1s";
+        forumIntroEl.style.setProperty("padding-top", "0", "important");
+        forumIntroEl.style.setProperty("padding-bottom", "0", "important");
         forumIntroEl.classList.add("h-0");
         return true;
     }
