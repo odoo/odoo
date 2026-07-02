@@ -257,11 +257,13 @@ export class ChannelInvitation extends Component {
                 })
             );
         }
-        if (this.state.selectedEmails.length) {
+        const emails = [
+            ...this.state.selectedEmails,
+            ...this.selectedPartners.filter((p) => p.partner_share).map((p) => p.email),
+        ];
+        if (emails.length) {
             invitePromises.push(
-                this.orm.call("discuss.channel", "invite_by_email", [channelId], {
-                    emails: this.state.selectedEmails,
-                })
+                this.orm.call("discuss.channel", "invite_by_email", [channelId], { emails })
             );
         }
         await Promise.all(invitePromises);

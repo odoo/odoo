@@ -61,7 +61,7 @@
                     <div style="width: 100%; font-size: 14px; line-height: 1.5; text-align: left;">
                         <t t-out="mail_body"/>
                         <p style="text-align: center; margin: 24px 0;">
-                            <a t-attf-href="{{base_url}}{{channel.invitation_url}}?email_token={{email_token}}"
+                            <a t-attf-href="{{base_url}}{{invitation_url}}"
                                t-attf-style="background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; padding: 8px 12px; border-radius: 4px; display: inline-block; font-weight: bold;"
                             >
                                 Join Channel
