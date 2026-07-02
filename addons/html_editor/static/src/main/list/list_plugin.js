@@ -1231,9 +1231,6 @@ export class ListPlugin extends Plugin {
     }
 
     postFormatAppliedOnList(node, formatSpec, applyStyle) {
-        if (formatSpec.id !== "fontSize") {
-            return;
-        }
         const listsSet = new Set();
         if (isListItem(node)) {
             const sublists = childNodes(node).filter(isListElement);
@@ -1246,8 +1243,10 @@ export class ListPlugin extends Plugin {
             }
             listsSet.add(node.parentElement);
         }
-        for (const list of listsSet) {
-            this.adjustListPadding(list);
+        if (formatSpec.id === "fontSize") {
+            for (const list of listsSet) {
+                this.adjustListPadding(list);
+            }
         }
     }
 
