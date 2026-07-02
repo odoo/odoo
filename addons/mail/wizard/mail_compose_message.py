@@ -881,6 +881,17 @@ class MailComposeMessage(models.TransientModel):
         """ Send in comment mode. It calls message_post on model, or the generic
         implementation of it if not available (as message_notify). """
         self.ensure_one()
+        # Handle editing an existing message via the full composer
+        if self.env.context.get('default_message_id'):
+            message = self.env['mail.message'].browse(self.env.context['default_message_id'])
+            record = self.env[message.model].browse(message.res_id)
+            record._message_update_content(
+                message,
+                body=self.body or None,
+                attachment_ids=self.attachment_ids.ids,
+                partner_ids=self.partner_ids.ids,
+            )
+            return message
         post_values_all = self._manage_mail_values(self._prepare_mail_values(res_ids))
         ActiveModel = self.env[self.model] if self.model and hasattr(self.env[self.model], 'message_post') else self.env['mail.thread']
         if self.composition_batch:

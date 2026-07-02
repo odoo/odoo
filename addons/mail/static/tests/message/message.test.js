@@ -10,6 +10,7 @@ import {
     hover,
     insertText,
     listenStoreFetch,
+    mailModels,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -53,6 +54,7 @@ const { DateTime } = luxon;
 
 describe.current.tags("desktop");
 defineMailModels();
+mailModels.MailComposeMessage._views = {};
 
 test(
     "Chatter message actions should be invisible when not mouse-hovered",
@@ -364,6 +366,45 @@ test("Reply to inbox message with full composer shows a notification", async () 
     await expect.waitForSteps(["notification"]); // only notif from 'Send', not 'Discard'
 });
 
+test("edit message via full composer should update message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    mockService("action", {
+        doAction(action) {
+            if (action.res_model === "mail.compose.message") {
+                expect(action.context.default_res_ids).toEqual([partnerId]);
+                action.context.default_res_ids = JSON.stringify(action.context.default_res_ids);
+            }
+            return super.doAction(...arguments);
+        },
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await contains(".o-mail-Composer");
+    await click(".o-mail-Composer button[title='More Actions']");
+    await click(".dropdown-item:contains('Open Full Composer')");
+
+    const paragraph = await waitFor(".modal .odoo-editor-editable .o-paragraph");
+    setSelection({
+        anchorNode: paragraph.firstChild,
+        anchorOffset: paragraph.textContent.length,
+    });
+    await contains(".modal .o_form_view");
+    const editor = { document, editable: document.querySelector(".modal .odoo-editor-editable") };
+    await htmlInsertText(editor, " updated");
+    await click(".modal button:contains('Send')");
+    await contains(".o-mail-Message-content:text('original message updated')");
+});
+
 test("Basic list of edit message actions in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
@@ -380,8 +421,9 @@ test("Basic list of edit message actions in chatter", async () => {
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
     await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");
-    await contains(".dropdown-menu .dropdown-item", { count: 1 });
+    await contains(".dropdown-menu .dropdown-item", { count: 2 });
     await contains(".dropdown-menu .dropdown-item:has(:text('Attach Files'))");
+    await contains(".dropdown-menu .dropdown-item:has(:text('Open Full Composer'))");
 });
 
 test("Cursor is at end of composer input on edit", async () => {

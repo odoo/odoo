@@ -5057,8 +5057,9 @@ class MailThread(models.AbstractModel):
                 if len(children) > 0:  # body is a valid html
                     # If the last element is a div or p, add the edited span inside it to avoid the edit markup
                     # to be on its own line. Otherwise, append it to the end of the last element.
+                    target_index = -2 if not message.email_add_signature and len(children) >= 2 else -1
                     last_div_element = (
-                        children[-1] if children[-1].tag in ["div", "p"] else tree
+                        children[target_index] if children[target_index].tag in ["div", "p"] else tree
                     )
                     last_div_element.text = (last_div_element.text or '') + (' ' if last_div_element.text else '')
                     etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited", "data-o-datetime": fields.Datetime.to_string(fields.Datetime.now())})
