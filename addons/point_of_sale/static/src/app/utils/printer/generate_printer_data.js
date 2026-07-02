@@ -362,15 +362,18 @@ export class GeneratePrinterData {
             const data = this.generatePreparationReceipts(change, categoryIdsSet);
 
             for (const changeData of data) {
+                const orderName =
+                    order.floating_order_name || order.tracking_number || order.pos_reference;
                 receipts.push({
                     changes: changeData,
                     order: order.raw,
                     config: this.config.raw,
                     company: this.company.raw,
-                    partner: order.partner_id ? order.partner_id.raw : false,
                     preset: order.preset_id ? order.preset_id.raw : false,
                     extra_data: {
                         ...this.commonExtraData,
+                        order_name_prefix: _t("Order"),
+                        order_name: orderName,
                         reprint: Boolean(reprint),
                         time: DateTime.now().toFormat("HH:mm"),
                         internal_note: getStrNotes(change.internal_note) || false,
@@ -379,7 +382,8 @@ export class GeneratePrinterData {
                         preset_time: order.presetDateTime || false,
                     },
                     conditions: {
-                        module_pos_restaurant: this.config.module_pos_restaurant,
+                        show_tracking_number: orderName !== order.tracking_number,
+                        show_pos_reference: orderName !== order.pos_reference,
                     },
                     _rawChange: reprint ? null : changes[0],
                 });

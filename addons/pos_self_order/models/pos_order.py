@@ -183,7 +183,7 @@ class PosOrder(models.Model):
 
             if not floating_order_name:
                 if device_type == 'kiosk':
-                    floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
+                    floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else f"Kiosk Order {tracking_number}"
                 elif table:
                     floating_order_name = f"Self-Order T {table.table_number}"
                 else:
