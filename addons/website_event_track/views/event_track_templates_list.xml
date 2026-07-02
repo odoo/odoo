@@ -366,7 +366,7 @@
                     </span>
                     <span class="fw-bold" t-elif="not track.is_track_done and not track.is_track_soon"
                         t-out="track.date"
-                        t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': event.date_tz}"/>
+                        t-options="{'widget': 'datetime', 'time_only': True, 'hide_seconds': True, 'tz_name': event.date_tz}"/>
                     <span t-else="" class="alert alert-dark px-2 py-1 small">Finished</span>
                 </div>
                 <span t-if="tracks_date and today_tz &lt;= tracks_date and track.location_id">-</span>

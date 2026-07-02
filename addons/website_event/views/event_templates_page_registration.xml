@@ -172,7 +172,7 @@
         <div t-elif="not event.event_registrations_started and not event.event_registrations_sold_out" class="alert alert-info mb-3 small" role="status">
             Registrations will open on
             <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM dd, y'}"/>, at
-            <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'h:mm a'}"/>
+            <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
             <small t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/> time)</small>
         </div>
         <!-- Sold Out -->
@@ -225,7 +225,7 @@
                                         #{'bg-danger text-white' if slot.is_sold_out else 'btn-light'}">
                                         <span t-if="slot.is_sold_out" class="lh-1">Sold Out</span>
                                         <time t-else="" t-out="slot.start_datetime" t-att-datetime="slot.start_datetime" class="lh-1"
-                                            t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                                            t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
                                     </button>
                                 </div>
                             </div>
@@ -244,9 +244,9 @@
                 <time t-out="event.date_begin" t-att-datetime="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}"/>
                 <div class="small">
                     <time t-out="event.date_begin" t-att-datetime="event.date_begin" class="d-block lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}"/>
-                    <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                    <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
                     <i class="fa fa-long-arrow-right mx-1 text-muted" role="img"/>
-                    <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                    <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
                     <span t-if="website_visitor_timezone != event.date_tz" class="d-block lh-1" t-out="event.date_tz"/>
                 </div>
             </div>
@@ -259,7 +259,7 @@
                             <time t-out="event.date_begin" t-att-datetime="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}"/>
                             <div class="small">
                                 <time t-out="event.date_begin" t-att-datetime="event.date_begin" class="d-block lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}"/>
-                                <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                                <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
                                 <small t-if="website_visitor_timezone != event.date_tz" class="d-block lh-1" t-out="event.date_tz"/>
                             </div>
                         </div>
@@ -270,7 +270,7 @@
                             <time t-out="event.date_end" t-att-datetime="event.date_end" class="o_wevent_day_header_number lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}"/>
                             <div class="small">
                                 <time t-out="event.date_end" t-att-datetime="event.date_end" class="d-block lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}"/>
-                                <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                                <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
                                 <small t-if="website_visitor_timezone != event.date_tz" class="d-block lh-1" t-out="event.date_tz"/>
                             </div>
                         </div>
@@ -401,8 +401,9 @@
                             <b>Start</b>
                         </div>
                         <div class="col-auto ps-0">
-                            <span t-out="slot.start_datetime if event.is_multi_slots else event.date_begin"
-                                t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                            <t t-set="date_begin" t-value="slot.start_datetime if event.is_multi_slots else event.date_begin"/>
+                            <span t-out="date_begin" t-options='{"widget": "datetime", "date_only": "true", "format": "medium", "tz_name": event.date_tz}'/>,
+                            <span t-out="date_begin" t-options='{"widget": "datetime", "time_only": "true", "hide_seconds": "true", "tz_name": event.date_tz}'/>
                         </div>
                     </div>
                     <div class="row">
@@ -410,8 +411,9 @@
                             <b>End</b>
                         </div>
                         <div class="col-auto ps-0">
-                            <span t-out="slot.end_datetime if event.is_multi_slots else event.date_end"
-                                t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                            <t t-set="date_end" t-value="slot.end_datetime if event.is_multi_slots else event.date_end"/>
+                            <span t-out="date_end" t-options='{"widget": "datetime", "date_only": "true", "format": "medium", "tz_name": event.date_tz}'/>,
+                            <span t-out="date_end" t-options='{"widget": "datetime", "time_only": "true", "hide_seconds": "true", "tz_name": event.date_tz}'/>
                         </div>
                     </div>
                     <div class="row">
@@ -501,14 +503,15 @@
                                     </t>
                                     <small t-if="ticket.end_sale_datetime and ticket.sale_available and not ticket.is_expired"
                                         class="text-muted me-3">Sales end on
-                                        <span t-out="ticket.end_sale_datetime"
-                                        t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                        <span t-out="ticket.end_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'date_only': 'true'}"/>,
+                                        <span t-out="ticket.end_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
                                         <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                     </small>
                                     <small t-if="ticket.start_sale_datetime and not ticket.sale_available and not ticket.is_expired"
                                         class="text-muted me-3">
                                         Sales start on <span t-out="ticket.start_sale_datetime"
-                                        t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                        t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'date_only': 'true'}"/>,
+                                        <span t-out="ticket.end_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
                                         <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                     </small>
                                 </div>
@@ -690,8 +693,10 @@
                                 <button type="button" t-foreach="slots[date]" t-as="slot" class="o_wevent_slot_btn btn btn-sm btn-light"
                                     t-att-data-slot-id="slot.id" t-att-data-event-tz="event.date_tz"
                                     t-att-data-slot-start="slot.start_datetime" t-att-data-slot-end="slot.end_datetime">
-                                    <time t-out="slot.start_datetime" class="lh-1"
-                                        t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                                    <time t-out="slot.start_datetime" class="lh-1" name="slot_start"
+                                        t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
+                                    <time t-out="slot.end_datetime" class="d-none" name="slot_end"
+                                        t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'hide_seconds': 'true'}"/>
                                 </button>
                             </div>
                         </div>

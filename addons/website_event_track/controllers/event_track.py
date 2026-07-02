@@ -15,8 +15,8 @@ from odoo import _, fields, http, tools
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.stream import content_disposition
-from odoo.tools import is_html_empty, plaintext2html
-from odoo.tools.misc import babel_locale_parse
+from odoo.tools import is_html_empty, plaintext2html, posix_to_ldml
+from odoo.tools.misc import get_lang
 
 
 class EventTrackController(http.Controller):
@@ -212,7 +212,8 @@ class EventTrackController(http.Controller):
         number of rows (15 min slots). """
         event = event.with_context(tz=event.date_tz or 'UTC')
         local_tz = ZoneInfo(event.date_tz or 'UTC')
-        lang_code = request.env.context.get('lang')
+        lang = self.env['res.lang'].browse(get_lang(self.env).id)
+        lang_short_time_format = posix_to_ldml(lang.time_format, locale=lang.code).replace(':ss', '')
 
         base_track_domain = Domain.AND([
             self._get_event_tracks_agenda_domain(event),
@@ -244,8 +245,8 @@ class EventTrackController(http.Controller):
             for time_slot, duration in time_slots.items():
                 tracks_by_rounded_times[time_slot][track.location_id][track] = {
                     'rowspan': duration,  # rowspan
-                    'start_date': self._get_locale_time(start_date, lang_code),
-                    'end_date': self._get_locale_time(end_date, lang_code),
+                    'start_date': self._get_locale_time(start_date, lang_short_time_format, lang.code),
+                    'end_date': self._get_locale_time(end_date, lang_short_time_format, lang.code),
                     'occupied_cells': self._get_occupied_cells(track, duration, locations, local_tz)
                 }
 
@@ -265,7 +266,7 @@ class EventTrackController(http.Controller):
             current_time_slot = start_time_slot
             for _i in range(0, time_slots_count + 1):
                 global_time_slots_by_day[day][current_time_slot] = tracks_by_rounded_times.get(current_time_slot, {})
-                global_time_slots_by_day[day][current_time_slot]['formatted_time'] = self._get_locale_time(current_time_slot, lang_code)
+                global_time_slots_by_day[day][current_time_slot]['formatted_time'] = self._get_locale_time(current_time_slot, lang_short_time_format, lang.code)
                 current_time_slot = current_time_slot + timedelta(minutes=15)
 
         # count the number of tracks by days
@@ -288,14 +289,14 @@ class EventTrackController(http.Controller):
             'locations': locations  # TODO: clean me in master, kept for retro-compatibility
         }
 
-    def _get_locale_time(self, dt_time, lang_code):
+    def _get_locale_time(self, dt_time, format, lang_code):
         """ Get locale time from datetime object
 
             :param dt_time: datetime object
+            :param format: one of "full", "long", "medium", "short", or a custom LDML time pattern
             :param lang_code: language code (eg. en_US)
         """
-        locale = babel_locale_parse(lang_code)
-        return babel.dates.format_time(dt_time, format='short', locale=locale)
+        return babel.dates.format_time(dt_time, format=format, locale=lang_code)
 
     def time_slot_rounder(self, time, rounded_minutes):
         """ Rounds to nearest hour by adding a timedelta hour if minute >= rounded_minutes
