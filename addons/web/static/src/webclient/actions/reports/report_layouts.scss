@@ -1,5 +1,15 @@
 // This file regroups all the styles applied on each external layout.
 
+// external_layout_light
+.o_report_layout_standard {
+    h2 {
+        margin-bottom: map-get($spacers, 2) !important;
+    }
+    #informations {
+        margin-bottom: map-get($spacers, 2) !important;
+    }
+}
+
 // external_layout_bubble
 .o_report_layout_bubble {
     #informations {
@@ -79,5 +89,15 @@
         p {
             margin-bottom: 0;
         }
+    }
+}
+
+// external_layout_compact
+.o_report_layout_compact {
+    h2 {
+        margin-bottom: map-get($spacers, 1) !important;
+    }
+    #informations {
+        margin-bottom: map-get($spacers, 1) !important;
     }
 }

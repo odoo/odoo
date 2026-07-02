@@ -36,7 +36,8 @@ div#total {
 // Table styling of the reports, apply the styling class .o_table_x
 // to the .article bloc of the report to change the table style.
 
-.o_table_standard {
+.o_table_standard,
+.o_table_compact {
     table:not(.o_ignore_layout_styling) {
         thead {
             border-bottom: $border-width solid $o-gray-900;
@@ -49,11 +50,37 @@ div#total {
         th:last-child, td:last-child {
             padding-right: map-get($spacers, 1);
         }
+
+        td, th {
+            padding-top: $table-cell-padding-y * .5;
+            padding-bottom: $table-cell-padding-y * .5;
+        }
     }
 
     .o_total_table:not(.o_ignore_layout_styling),
     .o_total_table:not(.o_ignore_layout_styling) .o_total {
         border-top: $border-width solid $border-color;
+    }
+}
+
+.o_table_compact {
+    table:not(.o_ignore_layout_styling) {
+        th:first-child, td:first-child {
+            padding-left: 0;
+        }
+
+        th:last-child, td:last-child {
+            padding-right: 0;
+        }
+
+        td, th {
+            padding-top: $table-cell-padding-y * .25;
+            padding-bottom: $table-cell-padding-y * .25;
+        }
+
+        td {
+            font-size: $font-size-sm;
+        }
     }
 }
 

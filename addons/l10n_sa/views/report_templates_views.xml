@@ -50,4 +50,10 @@
             <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
     </template>
+    <template id="l10n_sa_external_layout_compact" inherit_id="web.external_layout_compact">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
 </odoo>
