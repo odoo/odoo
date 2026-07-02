@@ -239,3 +239,21 @@ test("should not add history commit for italic on collapsed selection", async ()
     undo(editor);
     expect(getContent(el)).toBe(`<p>abcd[]</p>`);
 });
+
+test("italic on list item should not make its nested list items italic", async () => {
+    await testEditor({
+        contentBefore: "<ul><li><p>[A]</p><ul><li>B</li></ul></li></ul>",
+        stepFunction: italic,
+        contentAfter:
+            '<ul><li style="font-style: italic;"><p>[A]</p><ul style="font-style: normal;"><li>B</li></ul></li></ul>',
+    });
+});
+
+test("removing italic on list item should remove neutral style from its nested list", async () => {
+    await testEditor({
+        contentBefore:
+            '<ul><li style="font-style: italic;"><p>[A]</p><ul style="font-style: normal;"><li>B</li></ul></li></ul>',
+        stepFunction: italic,
+        contentAfter: "<ul><li><p>[A]</p><ul><li>B</li></ul></li></ul>",
+    });
+});
