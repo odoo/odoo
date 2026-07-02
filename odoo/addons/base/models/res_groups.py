@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
@@ -235,13 +237,39 @@ class ResGroups(models.Model):
         if any(self._ids):
             self.env['ir.access']._clear_caches()
 
+        if 'user_ids' in vals:
+            old_user_ids = {group.id: group.user_ids.ids for group in self}
+
         res = super().write(vals)
+
+        if 'user_ids' in vals:
+            self._log_user_changes(vals, old_user_ids)
 
         # invalidate caches after the write (if not su) because we check access
         # when writing
         if any(self._ids) and not self.env.su:
             self.env['ir.access']._clear_caches()
         return res
+
+    def _log_user_changes(self, vals, old_user_ids):
+        group_changes = defaultdict(lambda: {'added': set(), 'removed': set()})
+        for group in self:
+            old = set(old_user_ids[group.id])
+            new = set(group.user_ids.ids)
+            for user_id in new - old:
+                group_changes[user_id]['added'].add(group.id)
+            for user_id in old - new:
+                group_changes[user_id]['removed'].add(group.id)
+        users = self.env['res.users'].browse(group_changes.keys())
+        # sudo is likely not necessary here since only the admin can write to res.groups but permission errors should not stop the logging process
+        # base.res_users._log_group_changes specifically avoids any permission checks to always log in the console first
+        new_group_ids = {user.id: user.group_ids.ids for user in users.sudo()}
+        old_group_ids = {}
+        for user_id, changes in group_changes.items():
+            old_groups = set(new_group_ids[user_id]).union(changes['removed'])
+            old_groups -= changes['added']
+            old_group_ids[user_id] = old_groups
+        users._log_group_changes(vals, old_group_ids, self.ids)
 
     def _ensure_xml_id(self):
         """Return the groups external identifiers, creating the external identifier for groups missing one"""

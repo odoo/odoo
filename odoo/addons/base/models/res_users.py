@@ -37,6 +37,8 @@ from odoo.tools.date_utils import all_timezones
 
 _logger = logging.getLogger(__name__)
 
+NO_GROUP_LOG = object()
+
 
 class CryptContext:
     def __init__(self, *args, **kwargs):
@@ -597,7 +599,14 @@ class ResUsers(models.Model):
             # reset before the call to super to ensure `_check_company` sees the right company
             self._reset_cached_properties()
 
+        if 'group_ids' in vals:
+            old_group_ids = {user.id: user.group_ids.ids for user in self.sudo()}
+
         res = super().write(vals)
+
+        if 'group_ids' in vals:
+            # After write to make sure permission check passes
+            self._log_group_changes(vals, old_group_ids)
 
         if 'company_id' in vals:
             for user in self:
@@ -772,6 +781,22 @@ class ResUsers(models.Model):
         _logger.info("Login successful for login:%s from %s", login, ip)
 
         return auth_info
+
+    def _log_group_changes(self, vals, old_group_ids, editing_groups=None):
+        if self.env.context.get('no_group_log') is NO_GROUP_LOG:
+            return True
+        ip_addr = request.httprequest.remote_addr if request else 'unknown'
+        for user in self:
+            if editing_groups:
+                _logger.info(
+                    "Group change: user %d with IP %s changed groups of user %d who belonged to %s by editing res.groups %s with %s",
+                    self.env.user.id, ip_addr, user.id, old_group_ids[user.id], editing_groups, vals['user_ids'],
+                )
+            else:
+                _logger.info(
+                    "Group change: user %d with IP %s changed groups of user %d who belonged to %s with changes %s",
+                    self.env.user.id, ip_addr, user.id, old_group_ids[user.id], vals['group_ids'],
+                )
 
     def authenticate(self, credential, user_agent_env):
         """Verifies and returns the user ID corresponding to the given
