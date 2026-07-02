@@ -459,12 +459,7 @@ class TestPricelist(ProductVariantsCommon):
             4,
         )
 
-        with patch.object(
-            self.env.registry['product.template'],
-            '_duplicate_pricelist_rules_on_copy',
-            return_value=True,
-        ):
-            sofa_copy = self.product_template_sofa.copy()
+        sofa_copy = self.product_template_sofa.copy()
 
         product_sofa_red_copy = sofa_copy.product_variant_ids.filtered(
             lambda pp:
