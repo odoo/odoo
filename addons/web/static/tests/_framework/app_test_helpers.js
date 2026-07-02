@@ -1,4 +1,11 @@
-import { after, afterEach, animationFrame, beforeEach, registerDebugInfo } from "@odoo/hoot";
+import {
+    after,
+    afterEach,
+    animationFrame,
+    beforeEach,
+    getCurrent,
+    registerDebugInfo,
+} from "@odoo/hoot";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { App } from "@odoo/owl";
 import { startRouter } from "@web/core/browser/router";
@@ -27,6 +34,10 @@ import { patchWithCleanup } from "./patch_test_helpers";
 // Internals
 //-----------------------------------------------------------------------------
 
+class TestApp extends App {
+    test = true;
+}
+
 /**
  * TODO: remove when services do not have side effects anymore
  * This forsaken block of code ensures that all are properly cleaned up after each
@@ -45,10 +56,7 @@ const registerRegistryForCleanup = (registry) => {
 
 const registriesContent = new WeakMap();
 /**
- * Current main test App instance. It is assigned via a patch of `App.apps.set`
- * becaue the app can be instantiated either from the test helpers, or by the production
- * code itself. As the latter cannot be tracked by a direct 'App.constructor' patch,
- * the 'apps' set is used to track the active app.
+ * Current main test App instance.
  * @type {App | null}
  */
 let currentApp = null;
@@ -66,11 +74,10 @@ afterEach(function restoreMainRegistry() {
 beforeEach(() => {
     patchWithCleanup(App.apps, {
         add(app) {
-            if (!currentApp) {
-                currentApp = app;
-                registerDebugInfo("app", app);
+            registerDebugInfo("app", app);
+            if (!(app instanceof TestApp)) {
+                after(() => destroyApp(app));
             }
-            after(() => destroyApp(app));
             return super.add(app);
         },
     });
@@ -170,33 +177,8 @@ export function getService(name) {
     }
 }
 
-/**
- * @param {{
- *  env?: any;
- *  makeNew?: boolean;
- *  name?: string;
- * }} [options]
- */
-export function getTestApp(options) {
-    if (currentApp && !options?.makeNew) {
-        if (options?.name) {
-            currentApp.name = options.name;
-        }
-        return currentApp;
-    }
-    return new App({
-        // @ts-ignore
-        env: options?.env,
-        customDirectives,
-        dev: false,
-        getTemplate,
-        globalValues,
-        name: options?.name || "TEST",
-        plugins: services,
-        test: true,
-        translatableAttributes: ["data-tooltip"],
-        translateFn: appTranslateFn,
-    });
+export function getTestApp() {
+    return currentApp;
 }
 
 /**
@@ -208,10 +190,19 @@ export function getTestApp(options) {
  * }} [options]
  */
 export async function makeMockEnv(_partialEnv, options) {
-    if (currentApp && !options?.makeNew) {
-        throw new Error(
-            `cannot create mock environment: a mock environment has already been declared`
-        );
+    const app = await makeTestApp({ ...options });
+    return app.env;
+}
+
+/**
+ * @param {{ forceNew?: boolean }} [options]
+ */
+export async function makeTestApp(options) {
+    if (currentApp) {
+        if (!options?.forceNew) {
+            throw new Error(`cannot create test app: a test app has already been declared`);
+        }
+        restoreRegistry(registry);
     }
 
     if (!MockServer.current) {
@@ -224,10 +215,25 @@ export async function makeMockEnv(_partialEnv, options) {
 
     const env = makeEnv();
     Object.assign(env, testEnv, createDebugContext(env)); // This is needed if the views are in debug mode
-    const app = getTestApp({ ...options, env });
+
+    const app = new TestApp({
+        customDirectives,
+        dev: false,
+        env,
+        getTemplate,
+        globalValues,
+        name: getCurrent().test?.fullName || "TEST",
+        plugins: services,
+        test: true,
+        translatableAttributes: ["data-tooltip"],
+        translateFn: appTranslateFn,
+    });
     await app.pluginManager.ready;
 
-    return env;
+    currentApp = app;
+    after(() => destroyApp(app));
+
+    return app;
 }
 
 /**

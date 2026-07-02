@@ -3,7 +3,7 @@ import { App, Component, onWillDestroy, xml } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
 import { patch } from "@web/core/utils/patch";
-import { getMockEnv, getTestApp, makeMockEnv } from "./app_test_helpers";
+import { getMockEnv, getTestApp, makeTestApp } from "./app_test_helpers";
 import { patchWithCleanup } from "./patch_test_helpers";
 
 import { makeMockServer, MockServer } from "./mock_server/mock_server";
@@ -100,14 +100,13 @@ export function getDropdownMenu(togglerSelector) {
  * @param {AppConfig & {
  *  componentEnv?: Partial<OdooEnv>;
  *  containerEnv?: Partial<OdooEnv>;
- *  env?: E;
  *  noMainContainer?: boolean;
  *  props?: P;
  *  target?: Target;
  * }} [options]
  */
 export async function mountWithCleanup(ComponentClass, options) {
-    const { componentEnv, containerEnv, env, name, noMainContainer, props, target } = options || {};
+    const { componentEnv, containerEnv, noMainContainer, props, target } = options || {};
 
     // Fixture
     const fixture = getFixture();
@@ -128,8 +127,8 @@ export async function mountWithCleanup(ComponentClass, options) {
         await makeMockServer();
     }
 
-    const commonEnv = env || getMockEnv() || (await makeMockEnv());
-    const app = getTestApp({ name: name || `TEST: ${ComponentClass.name}`, env });
+    const app = getTestApp() || (await makeTestApp());
+    const commonEnv = getMockEnv();
 
     const componentRoot = app.createRoot(ComponentClass, {
         env: Object.assign(Object.create(commonEnv), componentEnv),
