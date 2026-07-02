@@ -535,6 +535,14 @@ export class Composer extends Component {
         );
     }
 
+    async unlinkAttachment(attachment) {
+        if (this.message && attachment.in(this.message.attachment_ids)) {
+            this.props.composer.attachments.delete(attachment);
+            return;
+        }
+        await this.attachmentUploader.unlink(attachment);
+    }
+
     get hasSuggestions() {
         return Boolean(this.suggestion?.search.results);
     }
@@ -945,10 +953,7 @@ export class Composer extends Component {
     }
 
     get askDeleteFromEdit() {
-        return (
-            !this.props.composer.composerText &&
-            this.props.composer.message.attachment_ids.length === 0
-        );
+        return !this.props.composer.composerText && this.props.composer.attachments.length === 0;
     }
 
     onClickInsertCannedResponse(ev) {

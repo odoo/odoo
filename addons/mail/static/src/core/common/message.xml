@@ -138,7 +138,7 @@
                                 </div>
                                 <div class="position-relative">
                                     <AttachmentList
-                                        t-if="this.message.extra_body_attachment_ids.length > 0"
+                                        t-if="this.message.extra_body_attachment_ids.length > 0 and !this.isEditing"
                                         attachments="this.message.extra_body_attachment_ids"
                                         unlinkAttachment.bind="this.onClickAttachmentUnlink"
                                         messageSearch="this.props.messageSearch"/>

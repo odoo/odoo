@@ -1019,7 +1019,7 @@ class TestAPI(ThreadRecipients):
             ticket_record._message_update_content(
                 message,
                 body=Markup("<div>New Body</div>"),
-                attachment_ids=new_attachments.ids,
+                attachment_ids=(attachments + new_attachments).ids,
             )
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
         self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
