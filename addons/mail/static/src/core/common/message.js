@@ -45,6 +45,7 @@ import {
     propComputed,
     useForwardRefsToParent,
     useLongPress,
+    useRightClickMenu,
 } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
@@ -80,13 +81,6 @@ export class Message extends Component {
 
     app = useApp();
 
-    /**
-     * @type {boolean} Whether the right-click drodpown is being closed.
-     * Useful to detect when close comes from another right-click on the same message,
-     * in order to show the browser right-click instead.
-     */
-    isRightClickDropdownOngoingClose = false;
-
     setup() {
         super.setup();
         this.nbsp = nbsp;
@@ -116,20 +110,13 @@ export class Message extends Component {
             expandOptions: false,
             emailHeaderOpen: false,
         });
-        this.rightClickDropdownState = useDropdownState({
-            onClose: async () => {
-                if (this.isRightClickDropdownOngoingClose) {
-                    return; // onClose can be called more than once. Limiting to a single onClose to prevent race-condition in tests.
-                }
-                this.props.messageSelection?.clearSelected();
-                this.isRightClickDropdownOngoingClose = true;
-                await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
-                this.isRightClickDropdownOngoingClose = false;
-                delete this.rootRef().dataset.rightClicking;
-            },
-        });
-        this.rightClickAnchor = signal.ref();
         this.rootRef = signal.ref(HTMLDivElement);
+        this.rightClickMenu = useRightClickMenu({
+            rootRef: this.rootRef,
+            extraMenuProps: () => ({ message: this.message, thread: this.props.thread }),
+            onClose: () => this.props.messageSelection?.clearSelected(),
+            onContextMenu: (...args) => this.onContextMenu(...args),
+        });
         if (isMobileOS()) {
             useLongPress(this.rootRef, {
                 action: () => this.openMobileActions(),
@@ -502,22 +489,16 @@ export class Message extends Component {
             ev.composedPath()[0].closest("a") ||
             !this.props.hasActions ||
             this.isEditing ||
-            this.rightClickDropdownState.isOpen ||
-            this.isRightClickDropdownOngoingClose
+            this.rightClickMenu.isOpen ||
+            this.rightClickMenu.isOngoingClose
         ) {
             return;
         }
-        this.showRightClickMessageActions(ev);
+        this.rightClickMenu.open(ev, () => this.onOpenRightClickMenu(ev));
     }
 
-    showRightClickMessageActions(ev) {
-        this.rootRef().dataset.rightClicking = true;
-        const el = this.rightClickAnchor();
-        el.style.left = ev.clientX + "px";
-        el.style.top = ev.clientY + "px";
-        this.rightClickDropdownState.open();
+    onOpenRightClickMenu() {
         this.props.messageSelection?.setSelected(this.props.message);
-        ev.preventDefault();
     }
 
     /** @param {HTMLElement} bodyEl */

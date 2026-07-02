@@ -2711,16 +2711,16 @@ test("context menu should not open on right-click when editing a message", async
             expect.step("Message.onContextMenu");
             super.onContextMenu(...arguments);
         },
-        showRightClickMessageActions() {
-            expect.step("Message.showRightClickMessageActions");
-            super.showRightClickMessageActions(...arguments);
+        onOpenRightClickMenu() {
+            expect.step("Message.onOpenRightClickMenu");
+            super.onOpenRightClickMenu(...arguments);
         },
     });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await rightClick(".o-mail-Message");
-    await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
+    await expect.waitForSteps(["Message.onContextMenu", "Message.onOpenRightClickMenu"]);
     await click(".o-dropdown-item:contains('Edit')");
     await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Batman" });
     await rightClick(".o-mail-Message");
