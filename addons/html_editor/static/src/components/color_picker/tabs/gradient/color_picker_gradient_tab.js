@@ -26,6 +26,7 @@ export class ColorPickerGradientTab extends Component {
     static components = { GradientPicker };
     props = useProps({
         applyColor: t.function(),
+        close: t.function().optional(),
         onColorClick: t.function(),
         onColorPreview: t.function(),
         onColorPointerOver: t.function(),

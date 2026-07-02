@@ -601,6 +601,51 @@ test("select hex color and apply it (mobile)", async () => {
     expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
 });
 
+test.tags("mobile");
+test("apply button of the custom tab applies the color and closes the picker (mobile)", async () => {
+    mockUserAgent("android");
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".o_font_color_selector .dropdown-toggle");
+    await waitFor(".o_bottom_sheet_body .o-dropdown-item");
+    await click(".o-dropdown-item:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await click(hexInputEl);
+    await waitFor(".o_font_color_selector");
+    await edit("#017E84"); // === rgb(1, 126, 132)
+    await animationFrame();
+
+    await click(".o_font_color_selector .o_color_mobile_apply");
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+});
+
+test.tags("mobile");
+test("apply button of the custom gradient closes the picker (mobile)", async () => {
+    mockUserAgent("android");
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect(".o_font_color_selector .o_color_mobile_apply").toHaveCount(1);
+
+    await click(".o_font_color_selector .o_color_mobile_apply");
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
+    expect("font.text-gradient").toHaveStyle({
+        backgroundImage: "linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%)",
+    });
+});
+
 test.tags("desktop");
 test("should be able to apply hex color with opacity component", async () => {
     const { el } = await setupEditor(`<p>[test]</p>`);
