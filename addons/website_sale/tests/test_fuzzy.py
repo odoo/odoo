@@ -2,6 +2,7 @@
 
 from odoo.tests import tagged
 
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.product.tests.common import ProductVariantsCommon
 
 
@@ -69,3 +70,32 @@ class TestFuzzy(ProductVariantsCommon):
             "product_template", "Sofa", 0, 5, "name asc", options
         )
         self.assertIn(self.product_template_sofa, results[0]["results"])
+
+    def test_search_product_tags(self):
+        """ Tests that when searching a product by its tags, we only fetch the tags visible to customers"""
+        website = self.env.ref("base.default_website")
+        tag1, tag2 = self.env['product.tag'].create([
+            {'name': 'Some tag1'},
+            {'name': 'Some tag2', 'visible_to_customers': False},
+        ])
+        self.product_template_sofa.product_tag_ids = tag1 + tag2
+        options = {'display_currency': self.env.ref('base.EUR'), 'allowFuzzy': False}
+        result_count, _, _ = website._search_with_fuzzy('product_template', 'Some tag1', 0, 5, 'name asc', options)
+        self.assertEqual(result_count, 1)
+        result_count, _, _ = website._search_with_fuzzy('product_template', 'Some tag2', 0, 5, 'name asc', options)
+        self.assertEqual(result_count, 0)
+
+        result_count, results, _ = website.with_context(website_id=website.id)._search_with_fuzzy('product_template', 'Some tag', 0, 5, 'name asc', options)
+        self.assertEqual(result_count, 1)
+        # Needed because `_get_additionnal_combination_info` uses request.pricelist & request.fiscal_position
+        with MockRequest(self.env, website=website) as request:
+            request.pricelist = self.env['product.pricelist'].create({
+                'name': 'Some pricelist',
+            })
+            request.fiscal_position = self.env['account.fiscal.position'].create({
+                'name': 'Some fiscal postion'
+            })
+            results = website._search_render_results(results, 5)
+            result_tags = results[0]['results_data'][0]['product_tag_ids']
+            self.assertEqual(len(result_tags), 1)
+            self.assertEqual(result_tags[0]['name'], 'Some tag1')
