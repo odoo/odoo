@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
-from odoo.fields import Command
 
 
 class CloudStorageMigrationSettings(models.TransientModel):
@@ -15,6 +14,7 @@ class CloudStorageMigrationSettings(models.TransientModel):
         'ir.model',
         string="Message Attachments",
         help="Migrate Models' Message Attachments",
+        compute='_compute_cloud_storage_migration_message_model_ids',
         inverse='_inverse_cloud_storage_migration_message_model_ids',
         store=False
     )
@@ -25,6 +25,7 @@ class CloudStorageMigrationSettings(models.TransientModel):
         'ir.model',
         string="All Attachments",
         help="Migrate Models' All Attachments",
+        compute='_compute_cloud_storage_migration_all_model_ids',
         inverse='_inverse_cloud_storage_migration_all_model_ids',
         store=False
     )
@@ -36,16 +37,26 @@ class CloudStorageMigrationSettings(models.TransientModel):
     def get_values(self):
         res = super().get_values()
         res['cloud_storage_migration_progress'] = self.env['cloud.storage.migration.report'].get_progress()
-        message_model_names = self.env['ir.config_parameter'].get_str('cloud_storage_migration_message_models').split(',')
-        message_model_names = tuple(m_ for m in message_model_names if (m_ := m.strip()) and m_ in self.env)
-        res['cloud_storage_migration_message_model_ids'] = [Command.set(self.env['ir.model'].search([('model', 'in', message_model_names)]).ids)]
-        all_model_names = self.env['ir.config_parameter'].get_str('cloud_storage_migration_all_models').split(',')
-        all_model_names = tuple(m_ for m in all_model_names if (m_ := m.strip()) and m_ in self.env)
-        res['cloud_storage_migration_all_model_ids'] = [Command.set(self.env['ir.model'].search([('model', 'in', all_model_names)]).ids)]
         return res
+
+    def _compute_cloud_storage_migration_message_model_ids(self):
+        if not self.cloud_storage_migration_message_models:
+            self.cloud_storage_migration_message_model_ids = False
+            return
+        message_model_names = self.cloud_storage_migration_message_models.split(',')
+        message_model_names = tuple(m_ for m in message_model_names if (m_ := m.strip()) and m_ in self.env)
+        self.cloud_storage_migration_message_model_ids = self.env['ir.model'].search([('model', 'in', message_model_names)])
 
     def _inverse_cloud_storage_migration_message_model_ids(self):
         self.cloud_storage_migration_message_models = ','.join(self.cloud_storage_migration_message_model_ids.mapped('model'))
+
+    def _compute_cloud_storage_migration_all_model_ids(self):
+        if not self.cloud_storage_migration_all_models:
+            self.cloud_storage_migration_all_model_ids = False
+            return
+        all_model_names = self.cloud_storage_migration_all_models.split(',')
+        all_model_names = tuple(m_ for m in all_model_names if (m_ := m.strip()) and m_ in self.env)
+        self.cloud_storage_migration_all_model_ids = self.env['ir.model'].search([('model', 'in', self.cloud_storage_migration_all_models.split(','))])
 
     def _inverse_cloud_storage_migration_all_model_ids(self):
         self.cloud_storage_migration_all_models = ','.join(self.cloud_storage_migration_all_model_ids.mapped('model'))
