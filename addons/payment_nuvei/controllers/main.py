@@ -29,8 +29,10 @@ class NuveiController(http.Controller):
         _logger.info("Handling redirection from Nuvei with data:\n%s", pprint.pformat(data))
         if tx_ref and error_access_token:
             _logger.warning("Nuvei errored on transaction: %s.", tx_ref)
-
-        tx_data = data or {"invoice_id": tx_ref}
+            payment_data = {}
+        else:
+            payment_data = data
+        tx_data = payment_data or {"invoice_id": tx_ref}
         tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("nuvei", tx_data)
         if tx_sudo:
             if error_access_token:  # The access token is not included when the payment goes through
@@ -42,10 +44,10 @@ class NuveiController(http.Controller):
             else:  # The payment went through.
                 received_signature = data.get("advanceResponseChecksum")
                 expected_signature = tx_sudo.provider_id._nuvei_calculate_signature(
-                    data, incoming=True
+                    payment_data, incoming=True
                 )
                 payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._record(data)
+            tx_sudo._record(payment_data)
         return request.redirect("/payment/status")
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
