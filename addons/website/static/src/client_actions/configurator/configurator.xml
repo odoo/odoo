@@ -173,6 +173,7 @@
                         <div t-attf-class="dropdown d-inline-block o_configurator_purpose_dd {{this.state.selectedPositioning ? 'o_step_completed' : 'o_step_todo'}}"
                             t-on-focusout="this.onDropdownFocusout">
                             <button id="selectPurposeToggle"
+                                    t-ref="this.positioningDropdownRef"
                                     class="o_btn_reset w-100 px-2"
                                     data-bs-toggle="dropdown"
                                     aria-haspopup="true"
