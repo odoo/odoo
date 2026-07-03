@@ -23,7 +23,7 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
@@ -1124,6 +1124,32 @@ export class LinkPlugin extends Plugin {
             (ev.inputType === "insertText" && ev.data === " ")
         ) {
             this.convertToLink = this.prepareConvertToLink();
+            if (this.convertToLink && ev.inputType === "insertText" && isBrowserSafari()) {
+                // The splitText calls in prepareConvertToLink leave Safari's
+                // native selection anchored on an empty text node, so letting
+                // the browser insert the space would put it in the wrong node
+                // and leave the selection with an out-of-range offset
+                // (IndexSizeError). Instead, take over: cancel the native
+                // insertion and perform the conversion, the space insertion
+                // and the selection placement ourselves.
+                ev.preventDefault();
+                // prepareConvertToLink left the selection collapsed on the
+                // text node following the future link.
+                const { anchorNode } = this.dependencies.selection.getEditableSelection();
+                // Use a non-breaking space: a regular space at the end of a
+                // block would be collapsed by the HTML whitespace rules.
+                anchorNode.textContent = "\u00a0" + anchorNode.textContent;
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset: 1,
+                });
+                // Two steps, so that undo reverts the link conversion but
+                // keeps the typed space, as with the native insertion.
+                this.dependencies.history.addStep();
+                this.convertToLink();
+                this.dependencies.history.addStep();
+                delete this.convertToLink;
+            }
         }
     }
 
@@ -1229,7 +1255,9 @@ export class LinkPlugin extends Plugin {
             ].pop();
 
             if (match) {
-                selection.anchorNode.splitText(selection.anchorOffset);
+                const nodeForSelectionRestore = selection.anchorNode.splitText(
+                    selection.anchorOffset
+                );
                 let url;
                 if (!EMAIL_REGEX.test(match[0])) {
                     url = match[2] ? match[0] : "https://" + match[0];
@@ -1244,6 +1272,16 @@ export class LinkPlugin extends Plugin {
                 // split the text node and replace the url text with the link
                 const textNodeToReplace = selection.anchorNode.splitText(startOffset);
                 textNodeToReplace.splitText(match[0].length);
+                // The splitText calls above leave Safari's native selection
+                // anchored on an empty text node with stale offsets. Anything
+                // reading the selection afterwards (e.g. splitBlock when
+                // converting through Enter) would then throw an
+                // IndexSizeError. Re-anchor the selection at the caret
+                // position, right after the future link.
+                this.dependencies.selection.setSelection(
+                    { anchorNode: nodeForSelectionRestore, anchorOffset: 0 },
+                    { normalize: false }
+                );
                 const link = this.createLink(url, text);
                 return () => {
                     textNodeToReplace.splitText(match[0].length); // this will keep the space (that will have been added in the meantime)
