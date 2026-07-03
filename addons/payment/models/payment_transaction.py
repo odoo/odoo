@@ -1250,12 +1250,14 @@ class PaymentTransaction(models.Model):
                 ("last_state_change", ">=", retry_limit_date),
             ])
         for tx in txs_to_post_process:
+            tx = tx.with_prefetch()  # Restrict pre-fetching before cache invalidation
             try:
-                tx.with_context(
-                    # Post-processing is idempotent and can be rolled back in case of failure
-                    payment_safe_write=True
-                )._post_process()
-                self.env.cr.commit()
+                if not tx.is_post_processed:  # No other flow post-processed the tx since the search
+                    tx.with_context(
+                        # Post-processing is idempotent and can be rolled back in case of failure
+                        payment_safe_write=True
+                    )._post_process()
+                    self.env.cr.commit()
             except psycopg2.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
             except Exception:
