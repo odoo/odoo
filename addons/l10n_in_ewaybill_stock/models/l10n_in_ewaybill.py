@@ -30,6 +30,23 @@ class L10nInEwaybill(models.Model):
         readonly=False
     )
 
+    duplicate_ewaybill_ids = fields.Many2many(
+        'l10n.in.ewaybill',
+        compute='_compute_duplicate_ewaybill_ids'
+    )
+
+    @api.depends('account_move_id', 'picking_id')
+    def _compute_duplicate_ewaybill_ids(self):
+        for ewaybill in self:
+            duplicates = self.env['l10n.in.ewaybill']
+            if ewaybill.account_move_id:
+                if 'sale_line_ids' in ewaybill.account_move_id.line_ids._fields:
+                    duplicates = ewaybill.account_move_id.line_ids.sale_line_ids.order_id.picking_ids.l10n_in_ewaybill_ids
+            else:
+                if 'sale_id' in ewaybill.picking_id._fields:
+                    duplicates = ewaybill.picking_id.sale_id.invoice_ids.l10n_in_ewaybill_ids
+            ewaybill.duplicate_ewaybill_ids = duplicates.filtered(lambda ewb: ewb.state in ('generated', 'challan'))
+
     @api.depends('name', 'state')
     def _compute_display_name(self):
         challan = self.filtered(lambda ewb: ewb.state == 'challan')
@@ -142,6 +159,14 @@ class L10nInEwaybill(models.Model):
             ))
 
         return self._generate_and_attach_pdf(_("Challan"))
+
+    def action_open_duplicate_ewaybills(self):
+        self.ensure_one()
+        if self.picking_id:
+            title = self.env._("Duplicated e-Waybills (Invoice)")
+        else:
+            title = self.env._("Duplicated e-Waybills (Delivery)")
+        return self.duplicate_ewaybill_ids._get_records_action(name=title)
 
     def _check_lines(self):
         if self.picking_id:
