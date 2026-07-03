@@ -57,12 +57,15 @@ class StockAllocationReport(models.AbstractModel):
 
     @api.model
     def _get_docs(self, res_model, ids):
+        domain = Domain([
+            ('id', 'in', ids),
+            ('picking_type_code', '!=', 'outgoing'),
+            ('state', '!=', 'cancel'),
+        ])
         if res_model == 'stock.picking':
-            return self.env['stock.picking'].search([
-                ('id', 'in', ids),
-                ('picking_type_code', '!=', 'outgoing'),
-                ('state', '!=', 'cancel'),
-            ])
+            return self.env['stock.picking'].search(domain)
+        elif res_model == 'stock.picking.batch':
+            return self.env['stock.picking.batch'].search(domain)
         return False
 
     @api.model
@@ -72,6 +75,8 @@ class StockAllocationReport(models.AbstractModel):
 
     @api.model
     def _get_docs_type(self, docs):
+        if docs._name == 'stock.picking.batch':
+            return self.env._("batches")
         return self.env._("transfers")
 
     def _get_product_lines(self, records):
@@ -143,7 +148,7 @@ class StockAllocationReport(models.AbstractModel):
         return product_lines
 
     def _get_moves(self, records):
-        if records._name == 'stock.picking':
+        if records._name == 'stock.picking' or records._name == 'stock.picking.batch':
             return records.move_ids.filtered(
                 lambda m: m.product_id.is_storable and m.state != 'cancel'
             )

@@ -235,6 +235,8 @@ class DeliveryCarrier(models.Model):
             c.debug_logging = not c.debug_logging
 
     def install_more_provider(self):
+        # TODO: to check if we need to simply remove `delivery_stock_picking_batch` or if we have to
+        # replace it by `stock_delivery` (with additional condition on `group_stock_picking_batch` ?)
         exclude_apps = ["delivery_barcode", "delivery_stock_picking_batch", "delivery_iot"]
         return {
             "name": self.env._("New Providers"),

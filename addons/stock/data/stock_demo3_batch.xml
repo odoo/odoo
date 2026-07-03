@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <!--
+        Those demo data are created to test batch feature. If the feature is disabled,
+        those batches won't be visible and those pickings should work as any unbatched picking.
+    -->
+    <!-- Add pickings -->
+    <record id="Picking_A" model="stock.picking">
+        <field name="move_type">one</field>
+        <field name="priority">1</field>
+        <field name="user_id" eval="False"/>
+        <field name="state">draft</field>
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+    <record id="Picking_B" model="stock.picking">
+        <field name="move_type">one</field>
+        <field name="priority">0</field>
+        <field name="user_id" eval="False"/>
+        <field name="state">draft</field>
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+    <record id="Picking_C" model="stock.picking">
+        <field name="move_type">one</field>
+        <field name="priority">0</field>
+        <field name="user_id" eval="False"/>
+        <field name="state">draft</field>
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+    <record id="Picking_D" model="stock.picking">
+        <field name="move_type">one</field>
+        <field name="priority">1</field>
+        <field name="user_id" eval="False"/>
+        <field name="state">draft</field>
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Add batch pickings -->
+    <record id="stock_picking_batch_1" model="stock.picking.batch">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="picking_ids" eval="[(6, 0, [ref('stock.Picking_C'), ref('stock.Picking_D')])]"/>
+    </record>
+    <record id="stock_picking_batch_2" model="stock.picking.batch">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="picking_ids" eval="[(6, 0, [ref('stock.Picking_A'), ref('stock.Picking_B')])]"/>
+    </record>
+
+    <!-- Add stock move -->
+    <record id="stock_move1" model="stock.move">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="picking_id" ref="Picking_A"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="product_uom_qty">10</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.consu_delivery_01"/>
+    </record>
+    <record id="stock_move2" model="stock.move">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="picking_id" ref="Picking_A"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="product_uom_qty">10</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.consu_delivery_02"/>
+    </record>
+    <record id="stock_move3" model="stock.move">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="picking_id" ref="Picking_B"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="product_uom_qty">10</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.consu_delivery_03"/>
+    </record>
+    <record id="stock_move4" model="stock.move">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="picking_id" ref="Picking_C"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="product_uom_qty">4</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.consu_delivery_03"/>
+    </record>
+    <record id="stock_move5" model="stock.move">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="picking_id" ref="Picking_D"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="product_uom_qty">2</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.product_product_10"/>
+    </record>
+    <record id="stock_move6" model="stock.move">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="picking_id" ref="Picking_D"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="product_uom_qty">3</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.product_product_25"/>
+    </record>
+
+    <!-- Confirm Batch Pickings -->
+    <function model="stock.picking.batch" name="action_confirm">
+        <value eval="ref('stock_picking_batch_1')"/>
+    </function>
+    <function model="stock.picking.batch" name="action_confirm">
+        <value eval="ref('stock_picking_batch_2')"/>
+    </function>
+    <!-- Reserve -->
+    <function model="stock.picking.batch" name="action_assign">
+        <value eval="ref('stock_picking_batch_1')"/>
+    </function>
+    <function model="stock.picking.batch" name="action_assign">
+        <value eval="ref('stock_picking_batch_2')"/>
+    </function>
+</data></odoo>

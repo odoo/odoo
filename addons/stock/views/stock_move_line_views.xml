@@ -34,18 +34,63 @@
                        decoration-muted="state == 'draft'"
                        decoration-success="state == 'done'"
                        decoration-warning="state not in ('draft','cancel','done','assigned')"/>
+                <field name="batch_id" optional="hide" groups="stock.group_stock_picking_batch"/>
                 <field name="write_uid" string="Done By" widget="many2one_avatar_user" optional="hide"/>
             </list>
         </field>
     </record>
+
+    <record id="stock_move_line_view_list_from_batch" model="ir.ui.view">
+        <field name="name">stock.move.line.view.list.batch</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <list string="Move Lines" editable="top" decoration-muted="state == 'cancel'" default_order="location_id">
+                <header>
+                    <button class="btn-primary" name="action_put_in_pack" type="object" string="Put in Pack" groups="stock.group_tracking_lot"/>
+                </header>
+                <field name="tracking" column_invisible="True"/>
+                <field name="state" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="id"/>
+                <field name="picking_id" required="1" readonly="id"
+                    options="{'no_create_edit': True}" domain="[('id', 'in', context.get('picking_ids', []))]"/>
+                <field name="lot_id"   groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']" column_invisible="context.get('picking_code') != 'incoming' or context.get('show_lots_text')"/>
+                <field name="lot_name" string="Lot/Serial Number" groups="stock.group_production_lot"
+                       readonly="tracking not in ['lot', 'serial']" column_invisible="context.get('picking_code') != 'incoming' or not context.get('show_lots_text')"/>
+                <field name="package_id" groups="stock.group_tracking_lot" column_invisible="True" context="{'show_src_package': 1}"/>
+                <field name="quant_id" column_invisible="context.get('picking_code') == 'incoming'"
+                        domain="[('product_id', '=', product_id), ('location_id', 'child_of', picking_location_id)]"
+                        context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'list_view_ref': 'stock.view_stock_quant_tree_simple', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': False, 'show_src_package': 1}"
+                        readonly="state in ('done', 'cancel') and is_locked"
+                        widget="pick_from"
+                        options="{'no_open': True}"/>
+                <field name="location_id" column_invisible="True"/>
+                <field name="location_dest_id"/>
+                <field name="result_package_id" groups="stock.group_tracking_lot" widget="package_m2o" context="{'show_dest_package': 1}"/>
+                <field name="quantity"/>
+                <field name="uom_id" options="{'no_create': True}" widget="many2one_uom"
+                    groups="uom.group_uom" readonly="1" force_save="1"/>
+                <field name="company_id" groups="base.group_multi_company" force_save="1"/>
+                <field name="is_locked" column_invisible="True"/>
+                <field name="picking_location_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
     <record id="view_move_line_tree_detailed" model="ir.ui.view">
         <field name="name">stock.move.line.list.detailed</field>
         <field name="model">stock.move.line</field>
         <field name="priority">25</field>
         <field name="arch" type="xml">
             <list string="Move Lines" create="0" default_order="date" action="action_open_reference" type="object">
+                <header>
+                    <button name="action_open_add_to_wave"
+                            type="object" string="Add to Wave"
+                            groups="stock.group_stock_picking_batch"/>
+                </header>
                 <field name="date" string="Scheduled Date"/>
                 <field name="picking_id"/>
+                <field name="batch_id" optional="show" groups="stock.group_stock_picking_batch"/>
                 <field name="picking_partner_id"/>
                 <field name="product_id"/>
                 <field name="lot_id" groups="stock.group_production_lot" optional="hide"/>
@@ -160,6 +205,7 @@
                     <filter string="Transfers" name="by_picking" domain="[]" context="{'group_by': 'picking_id'}"/>
                     <filter string="Location" name="by_location" domain="[]" context="{'group_by': 'location_id'}"/>
                     <filter string="Category" name="by_category" domain="[]" context="{'group_by': 'product_category_id'}"/>
+                    <filter string="Batch Transfer" name="by_batch_id" context="{'group_by': 'batch_id'}" groups="stock.group_stock_picking_batch"/>
                 </group>
             </search>
         </field>

@@ -4,7 +4,7 @@
     'description': """
 E-Transport implementation for Romania
     """,
-    'depends': ['stock_delivery', 'l10n_ro_edi', 'stock_picking_batch'],
+    'depends': ['stock_delivery', 'l10n_ro_edi'],
     'assets': {
         'web.assets_backend': [
             'l10n_ro_edi_stock/static/src/components/**/*',
@@ -14,10 +14,12 @@ E-Transport implementation for Romania
         'data/template_etransport.xml',
 
         'views/res_config_settings_views.xml',
+        'views/stock_picking_batch_views.xml',
         'views/stock_picking_views.xml',
         'views/delivery_carrier_views.xml',
 
         'report/report_deliveryslip.xml',
+        'report/report_picking_batch.xml',
     ],
     'author': 'Odoo S.A.',
     'license': "LGPL-3",

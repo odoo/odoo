@@ -7,6 +7,10 @@ access_stock_location_all_user,stock.location.all.user,stock.location,base.group
 stock_location_comp_rule,Location multi-company,stock.location,,crud,"[('company_id', 'in', company_ids + [False])]"
 access_stock_picking_user,stock.picking user,stock.picking,stock.group_stock_user,crud,
 stock_picking_rule,stock_picking multi-company,stock.picking,,crud,"[('company_id', 'in', company_ids)]"
+access_stock_picking_batch,stock.picking.batch stock users,stock.picking.batch,stock.group_stock_user,crud,
+stock_picking_batch_multicompany_rule,stock.picking.batch multi-company,stock.picking.batch,,crud,"[('company_id', 'in', company_ids)]"
+access_stock_picking_to_batch,access.stock.picking.to.batch,stock.picking.to.batch,stock.group_stock_user,cru,
+access_stock_add_to_wave,access.stock.picking.to.wave,stock.add.to.wave,stock.group_stock_user,cru,
 access_stock_picking_type_all,stock.picking.type all users,stock.picking.type,base.group_user,r,
 access_stock_picking_type_manager,stock.picking.type manager,stock.picking.type,stock.group_stock_manager,crud,
 stock_picking_type_rule,Stock Operation Type multi-company,stock.picking.type,,crud,"[('company_id','in', company_ids)]"

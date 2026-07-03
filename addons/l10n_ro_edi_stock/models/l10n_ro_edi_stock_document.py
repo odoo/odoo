@@ -12,6 +12,7 @@ class L10nRoEdiStockDocument(models.Model):
 
     invoice_id = fields.Many2one(required=False)
     picking_id = fields.Many2one(comodel_name='stock.picking')
+    batch_id = fields.Many2one(comodel_name='stock.picking.batch')
 
     state = fields.Selection(selection_add=DOCUMENT_STATES, ondelete={k: 'cascade' for k, v in DOCUMENT_STATES})
     message = fields.Char(string="Message", copy=False)

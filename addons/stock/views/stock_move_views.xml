@@ -93,6 +93,35 @@
             </field>
         </record>
 
+        <record id="stock_move_view_list_from_batch" model="ir.ui.view">
+            <field name="name">stock.move.view.list.from.batch</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_picking_move_tree"/>
+            <field name="mode">primary</field>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="delete">0</attribute>
+                    <attribute name="create">false</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="picking_id"
+                        required="1"
+                        readonly="id"
+                        domain="[('id', 'in', parent.picking_ids)]"
+                        options="{'no_create_edit': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='picked']" position="attributes">
+                    <attribute name="column_invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='uom_id']" position="after">
+                    <field name="picked" optional="hide"/>
+                    <button name="action_show_details" type="object" title="Details"
+                        string="Details" context="{'show_picking': True}" invisible="not show_details_visible"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_move_kandan" model="ir.ui.view">
             <field name="name">stock.move.kanban</field>
             <field name="model">stock.move</field>
@@ -154,6 +183,7 @@
                                 <span><field name="product_uom_qty" readonly="state != 'draft'" nolabel="1"/></span>
                                 <span><field name="uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" nolabel="1" options="{'no_open': True}"/></span>
                             </div>
+                            <field name="picking_id" string="Transfer:" readonly="True" invisible="not context.get('show_picking')"/>
                         </group>
                         <div>
                             <div class="mt-1 mb-2 ms-auto d-flex flex-row flex-lg-column gap-2 w-lg-50"

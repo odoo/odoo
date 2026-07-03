@@ -14,7 +14,7 @@
     <record id="stock_picking_tree_inherit_stock_fleet" model="ir.ui.view">
         <field name="name">stock.picking.list.inherit.stock.transport</field>
         <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock_picking_batch.stock_picking_view_batch_tree_ref"/>
+        <field name="inherit_id" ref="stock.stock_picking_view_batch_tree_ref"/>
         <field name="arch" type="xml">
             <field name="zip" position="attributes">
                 <attribute name="optional">show</attribute>
