@@ -1,10 +1,10 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 export class ThemeColorsPalettePreviewPopover extends Component {
     static template = "website.ThemeColorsPalettePreviewPopover";
-    static props = {
-        palette: Object,
-        close: { type: Function, optional: true },
-    };
+    props = props({
+        palette: t.object(),
+        close: t.function().optional(),
+    });
 }
 
