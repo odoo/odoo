@@ -756,11 +756,15 @@ export class Thread extends Component {
         this.saveScroll();
     }
 
+    get startMessageChannelTypes() {
+        return ["channel", "group", "chat"];
+    }
+
     get showStartMessage() {
         return (
             this.state.mountedAndLoaded &&
             !this.props.thread.loadOlder &&
-            ["channel", "group", "chat"].includes(this.channel?.channel_type)
+            this.startMessageChannelTypes.includes(this.channel?.channel_type)
         );
     }
 
