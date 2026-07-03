@@ -11,6 +11,7 @@
         # Views
         'views/stock_picking_type_views.xml',
         'views/stock_picking_views.xml',
+        'views/stock_picking_batch_views.xml',
         # Reports
         'views/report_delivery_guide.xml',
     ],

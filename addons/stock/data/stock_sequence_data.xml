@@ -22,6 +22,23 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <!-- Sequences for batch pickings -->
+        <record id="seq_picking_batch" model="ir.sequence">
+            <field name="name">Batch Transfer</field>
+            <field name="code">picking.batch</field>
+            <field name="prefix">BATCH/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_picking_wave" model="ir.sequence">
+            <field name="name">Wave Transfer</field>
+            <field name="code">picking.wave</field>
+            <field name="prefix">WAVE/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
         <!-- Sequences from tracking numbers -->
         <record id="sequence_production_lots" model="ir.sequence">
             <field name="name">Serial Numbers</field>
