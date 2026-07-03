@@ -5,7 +5,6 @@ import { delay } from "@web/core/utils/concurrency";
 const macroSchema = t.strictObject({
     name: t.string().optional(),
     timeout: t.number().optional(),
-    allowDelayToRemove: t.boolean().optional(),
     steps: t.array(
         t.customValidator(
             t.object({
@@ -43,14 +42,11 @@ async function performAction(trigger, action) {
     }
 }
 
-async function waitForTrigger(trigger, waitDelay = false) {
+async function waitForTrigger(trigger) {
     if (!trigger) {
         return;
     }
     try {
-        if (waitDelay) {
-            await delay(50);
-        }
         return await waitUntil(() => {
             if (typeof trigger === "function") {
                 return trigger();
@@ -121,7 +117,7 @@ export class Macro {
             const timeoutDelay = step.timeout || this.timeout || 10000;
             const executeStep = async () => {
                 // To be remove ASAP because it allows non deterministic behaviors.
-                const trigger = await waitForTrigger(step.trigger, this.allowDelayToRemove);
+                const trigger = await waitForTrigger(step.trigger);
                 const result = await performAction(trigger, step.action);
                 await this.onStep({ step, trigger, index: this.currentIndex });
                 return result;

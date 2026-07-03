@@ -63,7 +63,6 @@ const stepSchemaDebug = {
 
 const tourSchema = {
     steps: t.function(),
-    undeterministicTour_doNotCopy: t.boolean().optional(),
 };
 
 const tourRegistry = registry.category("web_tour.tours");
@@ -321,7 +320,6 @@ export class TourService {
             showPointerDuration: 0,
             debug: false,
             redirect: true,
-            allowDelayToRemove: tour.undeterministicTour_doNotCopy,
             ...options,
         };
 
