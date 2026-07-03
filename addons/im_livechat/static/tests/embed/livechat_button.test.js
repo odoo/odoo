@@ -9,7 +9,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { storeHandlerRegistry } from "@mail/../tests/mock_server/store_handler";
 import { describe, test } from "@odoo/hoot";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { openClosePersistedChannel } from "./im_livechat_embed_shared_tests";
@@ -34,9 +34,9 @@ test("open/close persisted channel", openClosePersistedChannel);
 test("livechat not available", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
-    patchWithCleanup(mailDataHelpers, {
-        _process_request_for_all(store) {
-            super._process_request_for_all(...arguments);
+    patchWithCleanup(storeHandlerRegistry.handlers, {
+        store_init_livechat(store) {
+            super.store_init_livechat(...arguments);
             store.add_global_values({ livechat_available: false });
         },
     });
@@ -51,9 +51,9 @@ test("clicking on notification opens the chat", async () => {
     const btnAndTextRuleId = pyEnv["im_livechat.channel.rule"].create({
         action: "display_button_and_text",
     });
-    patchWithCleanup(mailDataHelpers, {
-        _process_request_for_all(store) {
-            super._process_request_for_all(...arguments);
+    patchWithCleanup(storeHandlerRegistry.handlers, {
+        store_init_livechat(store) {
+            super.store_init_livechat(...arguments);
             store.add(pyEnv["im_livechat.channel.rule"].browse(btnAndTextRuleId), {
                 action: "display_button_and_text",
             });

@@ -50,8 +50,10 @@ const StorePatch = {
     },
     initialize() {
         super.initialize(...arguments);
-        this.fetchStoreData("failures");
-        this.fetchStoreData("systray_get_activities");
+        if (this.self_user?.share === false) {
+            this.fetchStoreData("failures");
+            this.fetchStoreData("systray_get_activities");
+        }
     },
     onStarted() {
         super.onStarted(...arguments);

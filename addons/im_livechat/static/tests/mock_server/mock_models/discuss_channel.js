@@ -73,6 +73,8 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         ];
     }
 
+    _store_livechat_extra_fields(res) {}
+
     _store_channel_fields(res) {
         super._store_channel_fields(res);
 

@@ -16,7 +16,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
@@ -47,6 +47,7 @@ test("The name of the conversation changes based on the agents' names", async ()
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
+    const operatorUserId = serverState.userId;
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow-header", { text: "MitchellOp" });
@@ -69,10 +70,15 @@ test("The name of the conversation changes based on the agents' names", async ()
         name: "James",
         user_ids: [userId],
     });
-    await getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
-        channel_id: channelId,
-        user_ids: [userId],
-    });
+    // Adding a member is reserved to logged-in users: simulate the operator adding the agent,
+    // which notifies the visitor through the bus (a guest cannot call add_members themselves).
+    await withUser(operatorUserId, () =>
+        rpc("/mail/store", {
+            fetch_params: [
+                ["/discuss/channel/add_members", { channel_id: channelId, user_ids: [userId] }],
+            ],
+        })
+    );
     await contains(".o-mail-ChatWindow-header", { text: "MitchellOp, James" });
 });
 

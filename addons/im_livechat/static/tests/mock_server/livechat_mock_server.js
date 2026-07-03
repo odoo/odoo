@@ -1,12 +1,7 @@
-import {
-    mailDataHelpers,
-    parseRequestParams,
-    registerRoute,
-} from "@mail/../tests/mock_server/mail_mock_server";
+import { parseRequestParams, registerRoute } from "@mail/../tests/mock_server/mail_mock_server";
 import { Store } from "@mail/../tests/mock_server/store";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
-import { patch } from "@web/core/utils/patch";
 
 /**
  * @template [T={}]
@@ -218,41 +213,3 @@ async function livechat_conversation_create_and_link_expertise(request) {
     }
     DiscussChannel.write(channel_id, { livechat_expertise_ids: [Command.link(expertiseId)] });
 }
-
-patch(mailDataHelpers, {
-    _process_request_for_all(store, name, params) {
-        const ResPartner = this.env["res.partner"];
-        const ResUsers = this.env["res.users"];
-        super._process_request_for_all(...arguments);
-        store.add_global_values({ livechat_available: true });
-        if (name === "init_livechat") {
-            if (this.env.user && !ResUsers._is_public(this.env.uid)) {
-                store.add(ResPartner.browse(this.env.user.partner_id), ["email"]);
-            }
-        }
-    },
-    _process_request_for_internal_user(store, name, params) {
-        super._process_request_for_internal_user(...arguments);
-        if (name === "im_livechat.channel") {
-            const LivechatChannel = this.env["im_livechat.channel"];
-            store.add(LivechatChannel.browse(LivechatChannel.search([])), [
-                "are_you_inside",
-                "name",
-            ]);
-            return;
-        }
-        if (name === "/im_livechat/looking_for_help") {
-            const DiscussChannel = this.env["discuss.channel"];
-            store.add(
-                DiscussChannel.browse(
-                    DiscussChannel.search([["livechat_status", "=", "need_help"]])
-                ),
-                "_store_channel_fields"
-            );
-        }
-        if (name === "/im_livechat/fetch_self_expertise") {
-            const ResUsers = this.env["res.users"];
-            store.add(ResUsers.browse(serverState.userId), ["livechat_expertise_ids"]);
-        }
-    },
-});

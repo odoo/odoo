@@ -94,7 +94,7 @@ class WebclientController(ThreadController):
             if self._get_thread_with_access(message.model, message.res_id, mode="read"):
                 store.add(opt_sudo.vote_ids, "_store_vote_fields")
 
-    @store_handler("failures", audience="logged_in")
+    @store_handler("failures")
     def store_get_failures(self, store: Store):
         domain = [
             ("author_id", "=", request.env.user.partner_id.id),
@@ -156,10 +156,8 @@ class WebclientController(ThreadController):
             if not request.env.user._is_public():
                 messages.set_message_done()
 
-    @store_handler("systray_get_activities", audience="logged_in")
+    @store_handler("systray_get_activities")
     def store_systray_get_activities(self, store: Store):
-        if not self.env.user._is_internal():
-            return
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
         groups = request.env["res.users"]._get_activity_groups()

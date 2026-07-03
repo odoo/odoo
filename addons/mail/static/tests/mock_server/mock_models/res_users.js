@@ -78,6 +78,9 @@ export class ResUsers extends webModels.ResUsers {
         const adminId = Number.isInteger(users?.[0]) ? users?.[0] : users?.[0]?.id;
         return this.env.cookie.get("authenticated_user_sid") === adminId;
     }
+    _is_internal(id) {
+        return !this._is_public(id) && !this.read(id)[0]?.share;
+    }
     systray_get_activities() {
         /** @type {import("mock_models").MailActivity} */
         const MailActivity = this.env["mail.activity"];

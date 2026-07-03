@@ -5,7 +5,7 @@ import {
 import { contains, setupChatHub, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { storeHandlerRegistry } from "@mail/../tests/mock_server/store_handler";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -36,9 +36,9 @@ test("rule received in init", async () => {
         auto_popup_timer: 0,
         action: "auto_popup",
     });
-    patchWithCleanup(mailDataHelpers, {
-        _process_request_for_all(store) {
-            super._process_request_for_all(...arguments);
+    patchWithCleanup(storeHandlerRegistry.handlers, {
+        store_init_livechat(store) {
+            super.store_init_livechat(...arguments);
             store.add(pyEnv["im_livechat.channel.rule"].browse(autopopupRuleId), {
                 action: "auto_popup",
                 auto_popup_timer: 0,
