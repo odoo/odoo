@@ -368,7 +368,7 @@ export function useOnBottomScrolled(refOrName, callback, threshold = 1) {
  */
 export function useVisible(refOrName, cb, { ready = true } = {}) {
     const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
-    const getEl = () => ("el" in ref ? ref.el : ref());
+    const getEl = () => resolveRefEl(ref);
     const state = proxy({
         isVisible: undefined,
         ready,
