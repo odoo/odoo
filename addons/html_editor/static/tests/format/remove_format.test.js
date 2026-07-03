@@ -1235,3 +1235,19 @@ test("should remove format on content with colored icon element", async () => {
     execCommand(editor, "removeFormat");
     expect(el.querySelector("i.fa").classList.contains("bg-o-color-1")).toBe(false);
 });
+
+test("should remove format around unsplittable if fully selected", async () => {
+    await testEditor({
+        contentBefore: '<p>a[b<i>c<a href="a.com">de</a>f</i>g]h</p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: '<p>a[bc<a href="a.com">de</a>fg]h</p>',
+    });
+});
+
+test("should not remove format around unsplittable if partially selected", async () => {
+    await testEditor({
+        contentBefore: '<p>ab<u>c<a href="a.com">d[e</a>f</u>g]h</p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: '<p>ab<u>c<a href="a.com">d[e</a></u>fg]h</p>',
+    });
+});
