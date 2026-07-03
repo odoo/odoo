@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 from odoo.addons.stock_landed_costs.tests.test_stockvaluationlayer import TestStockValuationLCCommon
+from odoo.fields import Command
 from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestStockLandedCostsBranches(TestStockValuationLCCommon):
 
     @classmethod
@@ -27,28 +25,21 @@ class TestStockLandedCostsBranches(TestStockValuationLCCommon):
 
     def test_create_lc_from_branch(self):
         """
-        From a company's branch, create a LC and ensure it impacts the SVL
+        From a company's branch, create a LC and ensure it impacts the product valuation
         """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.branch.id)], limit=1)
-        supplier_location = self.env.ref('stock.stock_location_suppliers')
-
-        receipt = self.env['stock.picking'].create({
-            'location_id': supplier_location.id,
-            'location_dest_id': warehouse.lot_stock_id.id,
-            'picking_type_id': warehouse.in_type_id.id,
-            'move_ids': [(0, 0, {
-                'location_id': supplier_location.id,
-                'location_dest_id': warehouse.lot_stock_id.id,
-                'picking_type_id': warehouse.in_type_id.id,
+        po = self.env['purchase.order'].create({
+            'partner_id': self.vendor1.id,
+            'order_line': [Command.create({
                 'product_id': self.product1.id,
-                'product_uom_qty': 1,
-                'product_uom': self.product1.uom_id.id,
+                'product_qty': 1,
                 'price_unit': 10,
+                'tax_ids': [Command.clear()],
             })],
         })
-        receipt.action_confirm()
-        receipt.action_assign()
-        receipt.move_line_ids.quantity = 1
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 1
         receipt.button_validate()
 
         lc_form = Form(self.env['stock.landed.cost'])
@@ -61,8 +52,8 @@ class TestStockLandedCostsBranches(TestStockValuationLCCommon):
         lc.button_validate()
 
         self.assertEqual(lc.company_id, self.branch)
-        self.assertEqual(self.product1.value_svl, 15)
-        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.total_value, 15)
+        self.assertEqual(self.product1.qty_available, 1)
         self.assertEqual(self.product1.standard_price, 15)
 
     def test_lc_generated_from_bill(self):
@@ -97,6 +88,6 @@ class TestStockLandedCostsBranches(TestStockValuationLCCommon):
         lc.button_validate()
 
         self.assertEqual(lc.company_id, self.branch)
-        self.assertEqual(self.product1.value_svl, 15)
-        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.total_value, 15)
+        self.assertEqual(self.product1.qty_available, 1)
         self.assertEqual(self.product1.standard_price, 15)
