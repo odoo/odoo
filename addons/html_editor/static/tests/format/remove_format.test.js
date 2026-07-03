@@ -1207,6 +1207,7 @@ describe("typography classes", () => {
         });
     });
 });
+<<<<<<< 7fd64a738c207abdca9d86462e84ed3bf7e16067
 
 test("remove format on a collapsed cursor removes format from next typed char", async () => {
     const { editor, el } = await setupEditor(`<p><strong>ab[]cd</strong></p>`);
@@ -1222,3 +1223,22 @@ test("remove format discards a pending format intent", async () => {
     await insertText(editor, "x");
     expect(getContent(el)).toBe(`<p>abx[]cd</p>`);
 });
+||||||| 9a5e99b1025209de2a2cfe467720141f3f06a2dc
+=======
+
+test("should remove format around unsplittable if fully selected", async () => {
+    await testEditor({
+        contentBefore: '<p>a[b<i>c<a href="a.com">de</a>f</i>g]h</p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: '<p>a[bc<a href="a.com">de</a>fg]h</p>',
+    });
+});
+
+test("should not remove format around unsplittable if partially selected", async () => {
+    await testEditor({
+        contentBefore: '<p>ab<u>c<a href="a.com">d[e</a>f</u>g]h</p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: '<p>ab<u>c<a href="a.com">d[e</a></u>fg]h</p>',
+    });
+});
+>>>>>>> 8867260a1d4e8d7afec0e961a2707cee4dec5c29

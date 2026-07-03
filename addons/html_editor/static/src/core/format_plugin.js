@@ -658,11 +658,198 @@ export class FormatPlugin extends Plugin {
                 this.dependencies.selection.areNodeContentsFullySelected(parentNode) &&
                 !isContentEditableAncestor(parentNode)
             ) {
+<<<<<<< 7fd64a738c207abdca9d86462e84ed3bf7e16067
                 // Special case: if the parent node is unsplittable and
                 // fully selected, we should make sure the span is applied
                 // outside of it.
                 inlineAncestor = parentNode;
                 break;
+||||||| 9a5e99b1025209de2a2cfe467720141f3f06a2dc
+                inlineAncestors.push(parentNode);
+            }
+
+            while (
+                parentNode &&
+                !isBlock(parentNode) &&
+                !this.dependencies.split.isUnsplittable(parentNode) &&
+                (parentNode.classList.length === 0 || isClassListSplittable(parentNode.classList))
+            ) {
+                const isUselessZws =
+                    parentNode.tagName === "SPAN" &&
+                    parentNode.hasAttribute("data-oe-zws-empty-inline") &&
+                    parentNode.getAttributeNames().length === 1;
+
+                if (isUselessZws) {
+                    cursor.update(callbacksForCursorUpdate.unwrap(parentNode));
+                    unwrapContents(parentNode);
+                } else {
+                    const newLastAncestorInlineFormat = this.dependencies.split.splitAroundUntil(
+                        currentNode,
+                        parentNode
+                    );
+                    removeFormat(newLastAncestorInlineFormat, formatSpec, cursor);
+                    if (["setFontSizeClassName", "fontSize"].includes(formatName) && applyStyle) {
+                        removeClass(newLastAncestorInlineFormat, "o_default_font_size");
+                    }
+                    if (newLastAncestorInlineFormat.isConnected) {
+                        inlineAncestors.push(newLastAncestorInlineFormat);
+                        currentNode = newLastAncestorInlineFormat;
+                    }
+                }
+
+                parentNode = currentNode.parentElement;
+            }
+
+            const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
+            if (firstBlockOrClassHasFormat && !applyStyle) {
+                const isParentNodeBlockAndCompletelySelected =
+                    isBlock(parentNode) &&
+                    this.dependencies.selection.areNodeContentsFullySelected(parentNode);
+                if (
+                    isParentNodeBlockAndCompletelySelected &&
+                    formatName === "setFontSizeClassName"
+                ) {
+                    for (const node of [parentNode, ...descendants(parentNode).filter(isElement)]) {
+                        removeFormat(node, formatSpec, cursor);
+                    }
+                } else {
+                    formatSpec.addNeutralStyle &&
+                        formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors, cursor));
+                }
+            } else if (
+                (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
+                applyStyle
+            ) {
+                const tag = formatSpec.tagName && this.document.createElement(formatSpec.tagName);
+                if (tag) {
+                    cursor.update(callbacksForCursorUpdate.after(node, tag));
+                    node.after(tag);
+                    cursor.update(callbacksForCursorUpdate.append(tag, node));
+                    tag.append(node);
+
+                    if (!formatSpec.isFormatted(tag, formatProps)) {
+                        cursor.remapNode(tag, node);
+                        tag.after(node);
+                        tag.remove();
+                        formatSpec.addStyle(
+                            getOrCreateSpan(node, inlineAncestors, cursor),
+                            formatProps
+                        );
+                    }
+                } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
+                    formatSpec.addStyle(
+                        getOrCreateSpan(node, inlineAncestors, cursor),
+                        formatProps
+                    );
+                }
+            }
+        }
+
+        if (zws) {
+            const siblings = [...zws.parentElement.childNodes];
+            if (
+                !isBlock(zws.parentElement) &&
+                unformattedTextNodes.includes(siblings[0]) &&
+                unformattedTextNodes.includes(siblings[siblings.length - 1])
+            ) {
+                zws.parentElement.setAttribute("data-oe-zws-empty-inline", "");
+=======
+                inlineAncestors.push(parentNode);
+            }
+
+            while (parentNode && !isBlock(parentNode)) {
+                const isNodeUnsplittable = this.dependencies.split.isUnsplittable(parentNode);
+                const isClassSplittable =
+                    parentNode.classList.length === 0 ||
+                    isClassListSplittable(parentNode.classList);
+                if (!isNodeUnsplittable && isClassSplittable) {
+                    const isUselessZws =
+                        parentNode.tagName === "SPAN" &&
+                        parentNode.hasAttribute("data-oe-zws-empty-inline") &&
+                        parentNode.getAttributeNames().length === 1;
+                    if (isUselessZws) {
+                        cursor.update(callbacksForCursorUpdate.unwrap(parentNode));
+                        unwrapContents(parentNode);
+                    } else {
+                        const newLastAncestorInlineFormat =
+                            this.dependencies.split.splitAroundUntil(currentNode, parentNode);
+                        removeFormat(newLastAncestorInlineFormat, formatSpec, cursor);
+                        if (newLastAncestorInlineFormat.isConnected) {
+                            inlineAncestors.push(newLastAncestorInlineFormat);
+                            currentNode = newLastAncestorInlineFormat;
+                        }
+                    }
+                } else {
+                    if (["setFontSizeClassName", "fontSize"].includes(formatName) && applyStyle) {
+                        removeClass(parentNode, "o_default_font_size");
+                    }
+                    if (
+                        !applyStyle &&
+                        isNodeUnsplittable &&
+                        this.dependencies.selection.areNodeContentsFullySelected(parentNode)
+                    ) {
+                        currentNode = currentNode.parentElement;
+                    } else {
+                        break;
+                    }
+                }
+                parentNode = currentNode.parentElement;
+            }
+
+            const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
+            if (firstBlockOrClassHasFormat && !applyStyle) {
+                const isParentNodeBlockAndCompletelySelected =
+                    isBlock(parentNode) &&
+                    this.dependencies.selection.areNodeContentsFullySelected(parentNode);
+                if (
+                    isParentNodeBlockAndCompletelySelected &&
+                    formatName === "setFontSizeClassName"
+                ) {
+                    for (const node of [parentNode, ...descendants(parentNode).filter(isElement)]) {
+                        removeFormat(node, formatSpec, cursor);
+                    }
+                } else {
+                    formatSpec.addNeutralStyle &&
+                        formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors, cursor));
+                }
+            } else if (
+                (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
+                applyStyle
+            ) {
+                const tag = formatSpec.tagName && this.document.createElement(formatSpec.tagName);
+                if (tag) {
+                    cursor.update(callbacksForCursorUpdate.after(node, tag));
+                    node.after(tag);
+                    cursor.update(callbacksForCursorUpdate.append(tag, node));
+                    tag.append(node);
+
+                    if (!formatSpec.isFormatted(tag, formatProps)) {
+                        cursor.remapNode(tag, node);
+                        tag.after(node);
+                        tag.remove();
+                        formatSpec.addStyle(
+                            getOrCreateSpan(node, inlineAncestors, cursor),
+                            formatProps
+                        );
+                    }
+                } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
+                    formatSpec.addStyle(
+                        getOrCreateSpan(node, inlineAncestors, cursor),
+                        formatProps
+                    );
+                }
+            }
+        }
+
+        if (zws) {
+            const siblings = [...zws.parentElement.childNodes];
+            if (
+                !isBlock(zws.parentElement) &&
+                unformattedTextNodes.includes(siblings[0]) &&
+                unformattedTextNodes.includes(siblings[siblings.length - 1])
+            ) {
+                zws.parentElement.setAttribute("data-oe-zws-empty-inline", "");
+>>>>>>> 8867260a1d4e8d7afec0e961a2707cee4dec5c29
             } else {
                 break;
             }
