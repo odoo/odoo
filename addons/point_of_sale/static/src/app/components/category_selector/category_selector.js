@@ -25,7 +25,9 @@ export class CategorySelector extends Component {
     }
 
     getCategoriesAndSub() {
-        const rootCategories = [...this.pos.rootCategories].sort((a, b) => a.sequence - b.sequence);
+        const rootCategories = [...this.pos.rootCategories].sort(
+            (a, b) => a.sequence - b.sequence || a.name.localeCompare(b.name)
+        );
         const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
         const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
         return this.getCategoriesList(rootCategories, allParents, 0)
