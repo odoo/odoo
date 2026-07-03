@@ -77,6 +77,9 @@ export class KanbanQuickCreateController extends Component {
         this.rootRef = useRef("root");
         this.state = proxy({ disabled: false });
         this.addDialog = useOwnedDialogs();
+        this.formInDialog = 0;
+        useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:ADD", () => this.formInDialog++);
+        useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE", () => this.formInDialog--);
 
         const { activeFields, fields } = extractFieldsFromArchInfo(
             this.props.archInfo,
@@ -184,7 +187,7 @@ export class KanbanQuickCreateController extends Component {
     }
 
     beforeVisibilityChange() {
-        if (document.visibilityState === "hidden") {
+        if (document.visibilityState === "hidden" && this.formInDialog === 0) {
             return this.validate("close");
         }
     }
