@@ -1741,6 +1741,58 @@ test("quick create record: cancel when modal is opened", async () => {
     });
 });
 
+test.tags("desktop");
+test("quick create record: hiding tab doesn't close it while a dialog it opened is still open", async () => {
+    Partner._views["form,some_view_ref"] = `
+        <form>
+            <field name="product_id"/>
+            <field name="foo"/>
+        </form>
+    `;
+    Product._views.form = '<form><field name="name"/></form>';
+
+    onRpc("partner", "web_save", () => {
+        throw new Error("should not save/close the quick create while the dialog is open");
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        groupBy: ["bar"],
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    // click to add an element
+    await quickCreateKanbanRecord();
+    expect(".o_kanban_quick_create").toHaveCount(1);
+
+    await press("t");
+    await press("e");
+    await press("s");
+    await press("t");
+    await runAllTimers();
+    await click(".o_m2o_dropdown_option_create_edit"); // open create and edit dialog
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+
+    // simulate a tab switch while the "create and edit" dialog is open
+    await hideTab();
+    await animationFrame();
+    expect(".o_kanban_quick_create").toHaveCount(1, {
+        message: "quick create should stay open while a dialog it opened is still open",
+    });
+    expect(".o_dialog").toHaveCount(1, {
+        message: "the dialog opened from the quick create should not be closed either",
+    });
+});
+
 test("quick create record: cancel when dirty", async () => {
     await mountView({
         type: "kanban",
