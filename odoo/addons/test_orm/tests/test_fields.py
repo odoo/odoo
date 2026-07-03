@@ -3506,9 +3506,6 @@ class TestX2many(TransactionExpressionCase):
             ],
         })
         child_a, child_b = parent.with_context(active_test=False).relatives_ids
-        # TODO all_relatives_ids is empty, because it is another fields using
-        # the same backend table as relative_ids
-        Model.invalidate_model(['all_relatives_ids'])
 
         # a many2many field without context does not match its inactive children
         self.assertIn(parent, self._search(Model, [('relatives_ids.name', '=', 'A')]))
@@ -3548,6 +3545,36 @@ class TestX2many(TransactionExpressionCase):
         self.assertEqual(parent.relatives_ids, child_a)
         parent.relatives_ids = child_a  # should leave the ids unchanged
         self.assertEqual(parent.with_context(active_test=False).relatives_ids, child_a + child_b)
+
+    def test_14_cache_update_many2many_write(self):
+        Model = self.env['test_orm.model_active_field']
+        parent = Model.create({
+            'all_relatives_ids': [
+                Command.create({'name': 'A', 'active': True}),
+                Command.create({'name': 'B', 'active': False}),
+                Command.create({'name': 'C', 'active': True}),
+                Command.create({'name': 'Z', 'active': True}),
+            ],
+        })
+        child_a, child_b, child_c, child_z = parent.all_relatives_ids
+        self.assertEqual(parent.a_relatives_ids, child_a)
+        self.assertEqual(parent.z_relatives_ids, child_z)
+
+        child_aa = child_a.create({'name': 'AA', 'active': True})
+        parent.all_relatives_ids = child_a + child_b + child_c + child_aa
+        self.assertEqual(parent.a_relatives_ids, child_a + child_aa)
+        self.assertEqual(parent.z_relatives_ids, child_z.browse())  # removed
+
+        self.assertEqual(parent.all_relatives_ids, child_a + child_b + child_c + child_aa)
+        child_aaa = child_a.create({'name': 'AAA', 'active': True})
+        parent.a_relatives_ids = child_aa + child_aaa
+        parent.z_relatives_ids = child_z
+        self.assertEqual(parent.all_relatives_ids, child_aa + child_aaa + child_b + child_c + child_z)
+
+        child_zz = child_z.create({'name': 'ZZ', 'active': False})
+        parent.z_relatives_ids += child_zz
+        self.assertEqual(parent.all_relatives_ids, child_aa + child_aaa + child_b + child_c + child_z + child_zz)
+        self.assertEqual(parent.relatives_ids, child_aa + child_aaa + child_c + child_z)
 
     def test_search_many2many(self):
         """ Tests search on many2many fields. """

@@ -1722,6 +1722,11 @@ class Many2many(_RelationalMulti):
         assert records._name == self.model_name and comodel._name == self.comodel_name
         registry = records.pool
         inverse_fields = registry.field_inverses[self]
+        sibling_fields = [
+            field
+            for model_name, field_name in registry.many2many_relations[self.relation, self.column1, self.column2]
+            if (field := registry[model_name]._fields[field_name]) is not self
+        ]
 
         if add_pairs:
             if inverse_fields:
@@ -1742,6 +1747,21 @@ class Many2many(_RelationalMulti):
                             invf._update_cache(corecord, ids1)
                         except KeyError:
                             pass
+            if sibling_fields:
+                x_to_ys = defaultdict(OrderedSet)
+                for x, y in add_pairs:
+                    x_to_ys[x].add(y)
+                for field in sibling_fields:
+                    domain = field.get_comodel_domain(records).optimize_dynamic(comodel)
+                    field_cache = field._get_cache(records.env)
+                    for x, ys in x_to_ys.items():
+                        record = records.browse((x,))
+                        try:
+                            ids0 = field_cache[record.id]
+                            ids1 = tuple(OrderedSet(ids0) | comodel.browse(ys).filtered_domain(domain)._ids)
+                            field._update_cache(record, ids1)
+                        except KeyError:
+                            pass
 
         if remove_pairs:
             if inverse_fields:
@@ -1758,9 +1778,23 @@ class Many2many(_RelationalMulti):
                             invf._update_cache(corecord, ids1)
                         except KeyError:
                             pass
+            if sibling_fields:
+                x_to_ys = defaultdict(OrderedSet)
+                for x, y in remove_pairs:
+                    x_to_ys[x].add(y)
+                for field in sibling_fields:
+                    field_cache = field._get_cache(records.env)
+                    for x, ys in x_to_ys.items():
+                        record = records.browse((x,))
+                        try:
+                            ids0 = field_cache[record.id]
+                            ids1 = tuple(id_ for id_ in ids0 if id_ not in ys)
+                            field._update_cache(record, ids1)
+                        except KeyError:
+                            pass
 
         # trigger the recomputation of fields that depend on the inverse
-        # fields of self on the modified corecords
+        # fields of self on the modified corecords and on sibling fields
         if inverse_fields:
             corecords = comodel.browse(unique(itertools.chain(
                 (y for _x, y in add_pairs),
@@ -1770,6 +1804,16 @@ class Many2many(_RelationalMulti):
                 invf.name
                 for invf in inverse_fields
                 if invf.model_name == self.comodel_name
+            ])
+        if sibling_fields:
+            sibling_records = records.browse(unique(itertools.chain(
+                (x for x, _y in add_pairs),
+                (x for x, _y in remove_pairs),
+            )))
+            sibling_records.modified([
+                f.name
+                for f in sibling_fields
+                if f.model_name == self.model_name
             ])
 
     def join(self, table: TableSQL, kind='LEFT JOIN', *, only_ids: bool = False) -> TableSQL:

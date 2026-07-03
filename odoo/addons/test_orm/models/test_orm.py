@@ -1252,6 +1252,16 @@ class TestOrmModel_Active_Field(models.Model):
         'model_active_field_relatives_rel', 'source_id', 'dest_id',
         context={'active_test': False},
     )
+    a_relatives_ids = fields.Many2many(
+        'test_orm.model_active_field',
+        'model_active_field_relatives_rel', 'source_id', 'dest_id',
+        domain=[('name', '=ilike', 'a%')],
+    )
+    z_relatives_ids = fields.Many2many(
+        'test_orm.model_active_field',
+        'model_active_field_relatives_rel', 'source_id', 'dest_id',
+        domain=[('name', '=ilike', 'z%')],
+    )
     parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
 
 
