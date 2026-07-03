@@ -3029,3 +3029,29 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             {'location_id': warehouse.wh_output_stock_loc_id.id, 'location_dest_id': warehouse2.lot_stock_id.id, 'product_uom_qty': 2},
             {'location_id': warehouse.lot_stock_id.id, 'location_dest_id': warehouse.wh_output_stock_loc_id.id, 'product_uom_qty': 2},
         ])
+
+    def test_change_linked_sale_order_on_delivery(self):
+        """Check that relinking a delivery to another sales order gives each order its own delivery."""
+        warehouse = self.company_data['default_warehouse']
+        customer_location = self.env.ref('stock.stock_location_customers')
+        sale_orders = self._get_new_sale_order(product=self.new_product) | self._get_new_sale_order(product=self.new_product)
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.out_type_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.new_product.id,
+                'product_uom_qty': 1,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.sale_id = sale_orders[0]
+        delivery.action_confirm()
+        delivery.sale_id = sale_orders[1]
+        sale_orders.action_confirm()
+        self.assertEqual(sale_orders[1].picking_ids, delivery)
+        self.assertEqual(delivery.move_ids.sale_line_id.order_id, sale_orders[1])
+        self.assertRecordValues(sale_orders[0].picking_ids, [
+            {'picking_type_code': 'outgoing', 'sale_id': sale_orders[0].id},
+        ])
