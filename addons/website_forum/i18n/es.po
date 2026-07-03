@@ -13,10 +13,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-12-20 09:48+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 23:15+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
 "website_forum/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1338,30 +1338,6 @@ msgid "Chief Commentator"
 msgstr "Comentarista jefe"
 
 #. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click here to accept this answer."
-msgstr "Haga clic aquí para aceptar esta respuesta."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your answer."
-msgstr "Haga clic para publicar su respuesta."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your question."
-msgstr "Haga clic para publicar su pregunta."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to reply."
-msgstr "Haga clic para responder."
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
 msgid "Close"
@@ -1533,12 +1509,6 @@ msgstr "Fecha de Creación"
 #: model_terms:ir.actions.act_window,help:website_forum.forum_post_action
 msgid "Create a new forum post"
 msgstr "Crear una publicación nueva en el foro"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Create a new post in this forum by clicking on the button."
-msgstr "Cree una nueva publicación en este foro haciendo clic en el botón."
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1757,6 +1727,11 @@ msgstr "Voto en contra"
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Downvote for posting offensive contents"
 msgstr "Votar en contra por publicar contenido ofensivo"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Drag blocks here to add them on all forum"
+msgstr ""
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
@@ -2085,6 +2060,9 @@ msgstr "Etiquetas del foro"
 
 #. module: website_forum
 #. odoo-javascript
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #: code:addons/website_forum/static/src/website_builder/forum_searchbar_option.xml:0
 #: model:ir.actions.act_window,name:website_forum.forum_forum_action
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
@@ -2106,12 +2084,6 @@ msgstr "Reciba una notificación cuando haya actividad en esta publicación"
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "Get notified when this tag is used"
 msgstr "Reciba una notificación cuando se use esta etiqueta"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Give your post title."
-msgstr "Indique el título de su publicación."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2342,12 +2314,6 @@ msgstr "Imagen 512"
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "Inappropriate and unacceptable statements"
 msgstr "Comentarios inapropiados e inaceptables"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Insert tags related to your question."
-msgstr "Inserte las etiquetas relacionadas con su pregunta."
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -2962,18 +2928,6 @@ msgstr ""
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
 msgstr "Experto"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your answer here."
-msgstr "Responda aquí."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your question here."
-msgstr "Haga su pregunta aquí."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
@@ -3922,21 +3876,11 @@ msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
-msgid "Website Messages"
-msgstr "Mensajes del sitio web"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_url
 msgid "Website URL"
 msgstr "URL del sitio web"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
-msgid "Website communication history"
-msgstr "Historial de comunicación del sitio web"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
@@ -4419,3 +4363,36 @@ msgstr "se puede ver su biografía como información"
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "your email..."
 msgstr "su correo electrónico..."
+
+#~ msgid "Click here to accept this answer."
+#~ msgstr "Haga clic aquí para aceptar esta respuesta."
+
+#~ msgid "Click to post your answer."
+#~ msgstr "Haga clic para publicar su respuesta."
+
+#~ msgid "Click to post your question."
+#~ msgstr "Haga clic para publicar su pregunta."
+
+#~ msgid "Click to reply."
+#~ msgstr "Haga clic para responder."
+
+#~ msgid "Create a new post in this forum by clicking on the button."
+#~ msgstr "Cree una nueva publicación en este foro haciendo clic en el botón."
+
+#~ msgid "Give your post title."
+#~ msgstr "Indique el título de su publicación."
+
+#~ msgid "Insert tags related to your question."
+#~ msgstr "Inserte las etiquetas relacionadas con su pregunta."
+
+#~ msgid "Put your answer here."
+#~ msgstr "Responda aquí."
+
+#~ msgid "Put your question here."
+#~ msgstr "Haga su pregunta aquí."
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensajes del sitio web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historial de comunicación del sitio web"

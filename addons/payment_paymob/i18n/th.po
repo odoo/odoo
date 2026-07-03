@@ -1,42 +1,74 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_paymob
+# * payment_paymob
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-09-11 13:58+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 01:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
+"payment_paymob/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
 msgid "API Key"
+msgstr "API Key"
+
+#. module: payment_paymob
+#: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
+msgid "Account Country"
+msgstr "ประเทศที่ลงทะเบียนเปิดบัญชี"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_aman
+msgid "Aman"
 msgstr ""
 
 #. module: payment_paymob
-#: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-msgid "Account Country"
+#: model:payment.method,name:payment_paymob.payment_method_amex
+msgid "American Express"
 msgstr ""
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "An error occurred during the processing of your payment (%(msg)s). Please "
 "try again."
+msgstr "เกิดข้อผิดพลาดในระหว่างการประมวลผลการชำระเงินของคุณ (%(msg)s) กรุณาลองอีกครั้ง"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_installments_eg
+msgid "Bank Installments"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_card
+msgid "Card"
 msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__code
+#, fuzzy
 msgid "Code"
+msgstr "โค้ด"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_contact
+msgid "Contact"
 msgstr ""
 
 #. module: payment_paymob
@@ -48,18 +80,46 @@ msgstr ""
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_transaction__display_name
+#, fuzzy
 msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_easypaisa
+msgid "EasyPaisa"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_forsa
+msgid "Forsa"
 msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
 msgid "HMAC Key"
+msgstr "รหัส HMAC"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_halan
+msgid "Halan"
 msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_transaction__id
+#, fuzzy
 msgid "ID"
+msgstr "ไอดี"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_jazzcash
+msgid "JazzCash"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_kiosk
+msgid "Kiosk"
 msgstr ""
 
 #. module: payment_paymob
@@ -68,9 +128,24 @@ msgid "Make the payment methods compatible with the Paymob portal."
 msgstr ""
 
 #. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_mobile_wallet_eg
+msgid "Mobile Wallets Egypt"
+msgstr ""
+
+#. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
 msgid "Not all enabled payment methods were found on your account."
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_omannet
+msgid "OmanNet"
 msgstr ""
 
 #. module: payment_paymob
@@ -87,13 +162,15 @@ msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model,name:payment_paymob.model_payment_provider
+#, fuzzy
 msgid "Payment Provider"
-msgstr ""
+msgstr "ผู้ให้บริการชำระเงิน"
 
 #. module: payment_paymob
 #: model:ir.model,name:payment_paymob.model_payment_transaction
+#, fuzzy
 msgid "Payment Transaction"
-msgstr ""
+msgstr "ธุรกรรมสำหรับการชำระเงิน"
 
 #. module: payment_paymob
 #. odoo-python
@@ -109,8 +186,9 @@ msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model.fields.selection,name:payment_paymob.selection__payment_provider__code__paymob
+#, fuzzy
 msgid "Paymob"
-msgstr ""
+msgstr "Paymob"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_api_key
@@ -138,13 +216,30 @@ msgid "Paymob Secret Key"
 msgstr ""
 
 #. module: payment_paymob
-#: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-msgid "Public Key"
+#: model:payment.method,name:payment_paymob.payment_method_premium_card
+msgid "Premium Card"
 msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
+msgid "Public Key"
+msgstr "คีย์สาธารณะ"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_stcpay
+msgid "STCPay"
+msgstr ""
+
+#. module: payment_paymob
+#: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
 msgid "Secret Key"
+msgstr "คีย์ลับ"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_souhoola
+msgid "Souhoola"
 msgstr ""
 
 #. module: payment_paymob
@@ -154,8 +249,23 @@ msgid "Successfully synchronized with Paymob"
 msgstr ""
 
 #. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_sympl
+msgid "Sympl"
+msgstr ""
+
+#. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
 msgid "Synchronize With Paymob"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_tabby
+msgid "Tabby"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_tamara
+msgid "Tamara"
 msgstr ""
 
 #. module: payment_paymob
@@ -173,5 +283,16 @@ msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model.fields,help:payment_paymob.field_payment_provider__code
+#, fuzzy
 msgid "The technical code of this payment provider."
+msgstr "รหัสทางเทคนิคของผู้ให้บริการชำระเงินรายนี้"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_valu
+msgid "ValU"
 msgstr ""

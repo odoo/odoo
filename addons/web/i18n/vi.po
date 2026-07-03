@@ -17,17 +17,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:40+0000\n"
-"PO-Revision-Date: 2026-04-13 19:34+0000\n"
-"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 10:18+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
 "web/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: web
 #. odoo-javascript
@@ -644,6 +644,12 @@ msgstr "Kích hoạt chế độ nhà phát triển (có kiểm thử assets)"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Active"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Activities"
 msgstr "Hoạt động"
@@ -912,6 +918,7 @@ msgstr "Bảo Bình"
 #: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 msgid "Archive"
@@ -932,6 +939,7 @@ msgstr "Bạn có chắc bạn muốn lưu trữ tất cả dữ liệu đã ch�
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 msgid "Are you sure that you want to archive this record?"
 msgstr "Bạn có chắc muốn lưu trữ dữ liệu này?"
@@ -1032,6 +1040,7 @@ msgstr "Đính kèm"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
+#: model:ir.model,name:web.model_ir_attachment
 msgid "Attachment"
 msgstr "Tệp đính kèm"
 
@@ -1370,6 +1379,12 @@ msgstr "Ma Kết"
 #. odoo-javascript
 #: code:addons/web/static/src/public/caps_lock_warning.xml:0
 msgid "Caps Lock is on!"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_record.js:0
+msgid "Card: no action for type: %(type)s"
 msgstr ""
 
 #. module: web
@@ -1716,8 +1731,6 @@ msgid "Confirm"
 msgstr "Xác nhận"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.check_identity
 msgid "Confirm access"
 msgstr ""
@@ -1884,6 +1897,12 @@ msgstr "Giới hạn số lượng"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/debug_items.js:0
+msgid "Count LoC"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/debug_items.js:0
 msgid "Count lines of code (%s billable)"
 msgstr ""
 
@@ -1985,12 +2004,6 @@ msgstr "Tiền tệ"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Currency field"
 msgstr "Trường tiền tệ"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/tabs/color_picker_custom_tab.js:0
-msgid "Custom"
-msgstr "Tùy chỉnh"
 
 #. module: web
 #. odoo-javascript
@@ -2307,6 +2320,12 @@ msgstr "Developer Tools"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Dial Field"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/float_toggle/float_toggle_field.js:0
 msgid "Digits"
@@ -2402,6 +2421,7 @@ msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:web.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:web.field_ir_http__display_name
 #: model:ir.model.fields,field_description:web.field_ir_model__display_name
 #: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__display_name
@@ -2776,6 +2796,8 @@ msgid "Enter your email"
 msgstr ""
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Enter your password"
 msgstr ""
@@ -3143,6 +3165,12 @@ msgstr ""
 "nghìn, làm tròn,..."
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Formatted Field"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames"
 msgstr "Khung"
@@ -3279,12 +3307,6 @@ msgid "Handle"
 msgstr "Xử lý"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
-msgid "Having problems ?"
-msgstr ""
-
-#. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Văn bản trong phần header được hiển thị ở đầu tất cả báo cáo."
@@ -3412,12 +3434,6 @@ msgstr "Làm thế nào để có được ứng dụng"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Hue"
-msgstr "Tông màu"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "I want to update data (import-compatible export)"
 msgstr ""
@@ -3426,6 +3442,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
+#: model:ir.model.fields,field_description:web.field_ir_attachment__id
 #: model:ir.model.fields,field_description:web.field_ir_http__id
 #: model:ir.model.fields,field_description:web.field_ir_model__id
 #: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__id
@@ -3987,12 +4004,6 @@ msgstr "Ví dụ Kanban"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_record.js:0
-msgid "Kanban: no action for type: %(type)s"
-msgstr "Kanban: không có tác vụ nào cho kiểu: %(type)s"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Label"
 msgstr "Nhãn"
@@ -4532,12 +4543,6 @@ msgstr "Chế độ"
 #: model:ir.model,name:web.model_ir_model
 msgid "Model"
 msgstr "Mô hình"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/debug_items.js:0
-msgid "Model Record Rules"
-msgstr "Quy tắc dữ liệu của đối tượng"
 
 #. module: web
 #. odoo-javascript
@@ -5276,12 +5281,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Opacity"
-msgstr "Độ trong suốt"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Open"
@@ -5872,12 +5871,6 @@ msgstr "Bản ghi"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/debug_items.js:0
-msgid "Record Rules"
-msgstr "Quy tắc truy cập"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Record memory"
 msgstr ""
@@ -6080,12 +6073,6 @@ msgstr "Bắt buộc:"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Reset"
-msgstr "Đặt lại"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/offline_action_helper.xml:0
 msgid "Reset Filters"
 msgstr ""
@@ -6207,18 +6194,6 @@ msgstr "Ông già Noel"
 #: code:addons/web/static/src/views/widgets/week_days/week_days.js:0
 msgid "Sat"
 msgstr "Thứ 7"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "Saturation and brightness color picker."
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.js:0
-msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6718,12 +6693,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/session/check_identity.xml:0
-msgid "Signed in as"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Single date"
 msgstr ""
@@ -6749,12 +6718,6 @@ msgstr "Nhỏ"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Smileys & Emotion"
 msgstr "Mặt cười & cảm xúc"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/tabs/color_picker_solid_tab.js:0
-msgid "Solid"
-msgstr "Rắn"
 
 #. module: web
 #. odoo-javascript
@@ -7319,6 +7282,12 @@ msgstr "Thời gian"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Time Limit (seconds)"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Time interval"
 msgstr "Khoảng thời gian"
@@ -7458,6 +7427,12 @@ msgstr "Di chuyển & địa điểm"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Triton"
 msgstr "Triton"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Trouble signing in?"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7793,18 +7768,6 @@ msgstr "Sử dụng bộ lọc này theo mặc định khi mở chế độ xem 
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid ""
-"Use up and down arrow keys to adapt the brightness. Use left and right arrow "
-"keys to adapt the saturation. Press the Control or Command key at the same "
-"time to have finer control."
-msgstr ""
-"Sử dụng phím mũi tên lên và xuống để điều chỉnh độ sáng. Dùng phím mũi tên "
-"trái và phải để điều chỉnh độ bão hòa màu. Nhấn đồng thời phím Control hoặc "
-"Command để có độ chính xác cao hơn khi điều chỉnh."
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/session/check_identity.xml:0
 msgid "Use your password"
 msgstr ""
@@ -7909,6 +7872,12 @@ msgstr "Giá trị"
 #: code:addons/web/static/src/views/form/setting/setting.xml:0
 msgid "Values set here are company-specific."
 msgstr "Giá trị được đặt ở đây là dành riêng cho công ty."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Verify your identity"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -15482,12 +15451,6 @@ msgstr "hero"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "heroine"
 msgstr "heroine"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
-msgid "hex"
-msgstr "hex"
 
 #. module: web
 #. odoo-javascript
@@ -27348,6 +27311,42 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
+
+#~ msgid "Custom"
+#~ msgstr "Tùy chỉnh"
+
+#~ msgid "Hue"
+#~ msgstr "Tông màu"
+
+#~ msgid "Kanban: no action for type: %(type)s"
+#~ msgstr "Kanban: không có tác vụ nào cho kiểu: %(type)s"
+
+#~ msgid "Model Record Rules"
+#~ msgstr "Quy tắc dữ liệu của đối tượng"
+
+#~ msgid "Opacity"
+#~ msgstr "Độ trong suốt"
+
+#~ msgid "Record Rules"
+#~ msgstr "Quy tắc truy cập"
+
+#~ msgid "Reset"
+#~ msgstr "Đặt lại"
+
+#~ msgid "Solid"
+#~ msgstr "Rắn"
+
+#~ msgid ""
+#~ "Use up and down arrow keys to adapt the brightness. Use left and right "
+#~ "arrow keys to adapt the saturation. Press the Control or Command key at "
+#~ "the same time to have finer control."
+#~ msgstr ""
+#~ "Sử dụng phím mũi tên lên và xuống để điều chỉnh độ sáng. Dùng phím mũi "
+#~ "tên trái và phải để điều chỉnh độ bão hòa màu. Nhấn đồng thời phím "
+#~ "Control hoặc Command để có độ chính xác cao hơn khi điều chỉnh."
+
+#~ msgid "hex"
+#~ msgstr "hex"
 
 #~ msgid "Autosave"
 #~ msgstr "Lưu tự động"

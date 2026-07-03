@@ -9,22 +9,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-11-13 13:20+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-06-19 17:39+0000\n"
+"PO-Revision-Date: 2026-06-21 21:16+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-19/payment_razorpay/zh_Hans/>\n"
+"projects/odoo-master/payment_razorpay/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Account ID"
 msgstr "账户识别码"
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_amex
+msgid "American Express"
+msgstr ""
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.authorization_error
@@ -54,6 +59,11 @@ msgid "Back to the Razorpay provider"
 msgstr "返回 Razorpay 服务商"
 
 #. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__code
 msgid "Code"
 msgstr "代码"
@@ -70,8 +80,18 @@ msgid "Could not find Razorpay provider with id %s"
 msgstr "找不到 Razorpay 服务商符合识别码 %s"
 
 #. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_diners
+msgid "Diners Club International"
+msgstr ""
+
+#. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Disconnect"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_discover
+msgid "Discover"
 msgstr ""
 
 #. module: payment_razorpay
@@ -82,9 +102,19 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_emi_india
+msgid "EMI"
+msgstr ""
+
+#. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Enable recurring payments on Razorpay"
 msgstr "在 Razorpay 上启用重复付款"
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_fpx
+msgid "FPX"
+msgstr ""
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -109,10 +139,35 @@ msgid "Key Secret"
 msgstr "密钥"
 
 #. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_maestro
+msgid "Maestro"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_netbanking
+msgid "Netbanking"
+msgstr ""
+
+#. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid "Other Payment Providers"
 msgstr "其他支付提供商"
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_paylater_india
+msgid "Pay Later"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_paynow
+msgid "PayNow"
+msgstr ""
 
 #. module: payment_razorpay
 #: model:ir.model,name:payment_razorpay.model_payment_provider
@@ -233,6 +288,11 @@ msgid "Received incomplete refund data."
 msgstr "收到不完整的退款数据。"
 
 #. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_rupay
+msgid "RuPay"
+msgstr ""
+
+#. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
 msgid "The key solely used to identify the account with Razorpay."
 msgstr "用于识别 Razorpay 账户的唯一密钥。"
@@ -264,6 +324,21 @@ msgstr "此服务商已与 Razorpay 账户关联。"
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Transactions processed by Razorpay can't be manually voided from Odoo."
 msgstr "由 Razorpay 处理的交易无法在 Odoo 中手动取消。"
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_upi
+msgid "UPI"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:payment.method,name:payment_razorpay.payment_method_wallets_india
+msgid "Wallets India"
+msgstr ""
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay

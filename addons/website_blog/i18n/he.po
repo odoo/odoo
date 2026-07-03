@@ -20,10 +20,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
-"PO-Revision-Date: 2025-11-08 21:57+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 07:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-master/"
 "website_blog/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_blog
 #. odoo-python
@@ -638,6 +638,8 @@ msgstr "כותרת פוסט הבלוג"
 
 #. module: website_blog
 #. odoo-javascript
+#. odoo-python
+#: code:addons/website_blog/models/website_blog.py:0
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
 #: model:ir.model.fields,field_description:website_blog.field_res_partner__blog_post_ids
@@ -944,6 +946,21 @@ msgid "Drag blocks here to add them on all blogs"
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "Drag blocks here to customize the \"Filter Results\" page header"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "Drag blocks here to customize the Blog page header"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "Drag blocks here to customize the header of the \"{{0}}\" category."
+msgstr ""
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
 msgid "East Maui"
 msgstr "האי מאוואי"
@@ -962,21 +979,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 msgid "Edit in backend"
 msgstr "ערוך מתוך המערכת"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "Edit the 'All Blogs' page header."
-msgstr "ערוך את הכותרת העליונה של הדף 'כל הבלוגים'."
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "Edit the 'Filter Results' page header."
-msgstr "ערוך את הכותרת העליונה של הדף 'תוצאות מסנן'."
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "Edit the '{{0}}' page header."
-msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -1797,7 +1799,7 @@ msgid "Read Now <i class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_card
 msgid "Read more <i class=\"oi oi-chevron-right ms-2\"/>"
 msgstr ""
 
@@ -2532,12 +2534,6 @@ msgid "Website Blogs"
 msgstr ""
 
 #. module: website_blog
-#: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_message_ids
-#: model:ir.model.fields,field_description:website_blog.field_blog_post__website_message_ids
-msgid "Website Messages"
-msgstr "הודעות מאתר האינטרנט"
-
-#. module: website_blog
 #: model:ir.model,name:website_blog.model_website_snippet_filter
 msgid "Website Snippet Filter"
 msgstr "מסנן קטעי אתר"
@@ -2547,12 +2543,6 @@ msgstr "מסנן קטעי אתר"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_url
 msgid "Website URL"
 msgstr "כתובת אתר אינטרנט"
-
-#. module: website_blog
-#: model:ir.model.fields,help:website_blog.field_blog_blog__website_message_ids
-#: model:ir.model.fields,help:website_blog.field_blog_post__website_message_ids
-msgid "Website communication history"
-msgstr "היסטורית התקשרויות מאתר האינטרנט"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_meta_description
@@ -2711,3 +2701,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
 msgid "• Travel"
 msgstr ""
+
+#~ msgid "Edit the 'All Blogs' page header."
+#~ msgstr "ערוך את הכותרת העליונה של הדף 'כל הבלוגים'."
+
+#~ msgid "Edit the 'Filter Results' page header."
+#~ msgstr "ערוך את הכותרת העליונה של הדף 'תוצאות מסנן'."
+
+#~ msgid "Website Messages"
+#~ msgstr "הודעות מאתר האינטרנט"
+
+#~ msgid "Website communication history"
+#~ msgstr "היסטורית התקשרויות מאתר האינטרנט"

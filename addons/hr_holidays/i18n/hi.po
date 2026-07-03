@@ -8,17 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2025-11-17 13:32+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 04:50+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-master/"
 "hr_holidays/hi/>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -292,12 +292,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "(s)."
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "(valid until"
 msgstr ""
 
 #. module: hr_holidays
@@ -1021,8 +1015,10 @@ msgid "Approve"
 msgstr "अनुमति दें"
 
 #. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/report/holidays_summary_report.py:0
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_side_panel/calendar_side_panel.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__approved
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__state__validate
@@ -1555,7 +1551,6 @@ msgstr "हर दिन"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_days_off_dashboard_calendar
-#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
 msgid "Dashboard"
 msgstr "डैशबोर्ड"
 
@@ -1796,7 +1791,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/resource.py:0
+#: code:addons/hr_holidays/models/resource_calendar_leaves.py:0
 msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
@@ -1806,7 +1801,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/resource.py:0
+#: code:addons/hr_holidays/models/resource_calendar_leaves.py:0
 msgid ""
 "Due to a change in global time offs, this leave no longer has the required "
 "amount of available allocation and has been set to refused. Please review "
@@ -1817,7 +1812,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/resource.py:0
+#: code:addons/hr_holidays/models/resource_calendar_leaves.py:0
 msgid ""
 "Due to a change in global time offs, you have been granted %s day(s) back."
 msgstr "वैश्विक छुट्टी में बदलाव के कारण, आपको %s दिन वापस दिए गए हैं।"
@@ -2103,6 +2098,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__group_days_leave
 msgid "Group Time Off"
 msgstr "ग्रुप टाइम ऑफ़"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__hr_responsible_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_version__hr_responsible_id
+msgid "HR Responsible"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
@@ -2447,7 +2448,6 @@ msgstr "लीव"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__leave_date_to
-#: model:ir.model.fields,field_description:hr_holidays.field_resource_resource__leave_date_to
 msgid "Leave Date To"
 msgstr "छुट्टी की खत्म होने की तारीख"
 
@@ -2703,7 +2703,13 @@ msgid "My Team"
 msgstr "मेरी टीम"
 
 #. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
+msgid "My Time"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_report_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Time Off"
@@ -2780,6 +2786,12 @@ msgstr "समूह के लिए नई छुट्टी"
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 msgid "New Milestone"
 msgstr "नया माइलस्टोन"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
+msgid "New Request"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3087,8 +3099,8 @@ msgstr "खास जानकारी"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
-msgid "Pending Requests"
-msgstr "पेंडिंग अनुरोध"
+msgid "Pending Allocations"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3103,8 +3115,9 @@ msgid "Period"
 msgstr "समयावधि"
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
-msgid "Personal"
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee__hr_responsible_id
+#: model:ir.model.fields,help:hr_holidays.field_hr_version__hr_responsible_id
+msgid "Person responsible for validating the employee's contracts."
 msgstr ""
 
 #. module: hr_holidays
@@ -4060,6 +4073,7 @@ msgid "Time Off: Cancel invalid leaves"
 msgstr "छुट्टी: अमान्य छुट्टियों को रद्द करें"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_work_entry_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__work_entry_type_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__work_entry_type_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__work_entry_type_id
@@ -4229,7 +4243,7 @@ msgstr "साल में दो बार"
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/resource.py:0
+#: code:addons/hr_holidays/models/resource_calendar_leaves.py:0
 msgid ""
 "Two public holidays cannot overlap each other for the same working hours."
 msgstr "दो सार्वजनिक छुट्टियाँ एक ही काम के घंटों के लिए एक-दूसरे से ओवरलैप नहीं हो सकतीं।"
@@ -4384,16 +4398,16 @@ msgid "Validate"
 msgstr "पुष्टि करें"
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/views/calendar/calendar_side_panel/calendar_side_panel.xml:0
-msgid "Validated"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__validation_type
 msgid "Validation Type"
 msgstr "पुष्टि का प्रकार"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+msgid "Validity"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -4456,18 +4470,6 @@ msgid "Waiting for Approval"
 msgstr "मंज़ूरी का इंतज़ार"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__website_message_ids
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__website_message_ids
-msgid "Website Messages"
-msgstr "वेबसाइट मैसेज"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave__website_message_ids
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__website_message_ids
-msgid "Website communication history"
-msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"
-
-#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__2
 msgid "Wednesday"
 msgstr "बुधवार"
@@ -4528,11 +4530,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Why do you want to cancel this approved time off ?"
 msgstr "आप मंज़ूर की गई इस छुट्टी को क्यों रद्द करना चाहते हैं ?"
-
-#. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_work_entry_type
-msgid "Work Entry Type"
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__work_entry_type_increases_duration
@@ -4907,6 +4904,11 @@ msgid "Your time off has been cancelled."
 msgstr "आपकी छुट्टी रद्द कर दी गई है।"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_resource__leave_date_to
+msgid "__default__"
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "allocation date"
@@ -4918,12 +4920,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "और"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "available"
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
@@ -5135,12 +5131,6 @@ msgid "start of the year"
 msgstr ""
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "taken"
-msgstr ""
-
-#. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "the accruated amount is insufficient for that duration."
@@ -5170,15 +5160,18 @@ msgid "undefined"
 msgstr ""
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "valid until"
-msgstr ""
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "मान्य"
+
+#~ msgid "Pending Requests"
+#~ msgstr "पेंडिंग अनुरोध"
+
+#~ msgid "Website Messages"
+#~ msgstr "वेबसाइट मैसेज"
+
+#~ msgid "Website communication history"
+#~ msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"
 
 #~ msgid "<span class=\"mx-2\">up to</span>"
 #~ msgstr "<span class=\"mx-2\">तक</span>"

@@ -21,10 +21,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
-"PO-Revision-Date: 2025-11-08 19:18+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 20:27+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-master/"
 "hr_expense/sl/>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -870,6 +870,12 @@ msgstr "Stroški %(employee)s"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expenses of Your Team Member"
 msgstr "Stroški vašega člana ekipe"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "Expenses similar to %(other_expense_name)s"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_to_approve
@@ -2027,6 +2033,12 @@ msgstr ""
 "Trenutni uporabnik nima sorodnega zaposlenega. Prosimo, ustvarite enega."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/res_company.py:0
+msgid "The employee expense journal must be a purchase journal."
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
 "The first word of the email subject did not correspond to any product code. "
@@ -2266,16 +2278,6 @@ msgid "Waiting Reimbursement"
 msgstr "Povračilo stroškov čakanja"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
-msgid "Website Messages"
-msgstr "Sporočila iz spletne strani"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense__website_message_ids
-msgid "Website communication history"
-msgstr "Kronologija komunikacij spletne strani"
-
-#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "When the cost of an expense product is different than 0, then the "
@@ -2483,5 +2485,16 @@ msgstr "uporabite OCR za izpolnjevanje podatkov s slike računa"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "with the same category, date, amount, and employee already exists."
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "z istim računom že obstaja."
+
+#~ msgid "Website Messages"
+#~ msgstr "Sporočila iz spletne strani"
+
+#~ msgid "Website communication history"
+#~ msgstr "Kronologija komunikacij spletne strani"

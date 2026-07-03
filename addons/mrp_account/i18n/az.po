@@ -5,22 +5,22 @@
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2022
 # erpgo translator <jumshud@erpgo.az>, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:36+0000\n"
-"PO-Revision-Date: 2025-11-08 19:20+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-21 20:07+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-master/"
 "mrp_account/az/>\n"
 "Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp_account
 #. odoo-python
@@ -95,11 +95,6 @@ msgid "Account Move Line"
 msgstr ""
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Acme Corp."
-msgstr ""
-
-#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Analitik Hesab"
@@ -148,8 +143,9 @@ msgstr "Kateqoriya"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "Şirkət"
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -168,6 +164,11 @@ msgid ""
 msgstr ""
 "Yalnız istehsal olunan məhsullar üçün məhsullardan və əlaqədar məhsul "
 "reseptləri əməliyyatlarından istifadə edərək məhsulun qiymətini hesablayın."
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_currency_id
+msgid "Consolidation Currency"
+msgstr ""
 
 #. module: mrp_account
 #. odoo-javascript
@@ -305,11 +306,6 @@ msgid "Label"
 msgstr "Etiket"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Laptop"
-msgstr ""
-
-#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_uid
 msgid "Last Updated by"
@@ -417,8 +413,8 @@ msgid "Production Account"
 msgstr ""
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "REF123"
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_rate
+msgid "Rate"
 msgstr ""
 
 #. module: mrp_account
@@ -498,11 +494,6 @@ msgstr "Ümumi Kredit"
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Debit"
 msgstr "Ümumi Debet"
-
-#. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Units"
-msgstr "Ədəd"
 
 #. module: mrp_account
 #. odoo-python
@@ -605,3 +596,6 @@ msgstr "İş mərkəzinin Məhsuldarlığı Jurnalı"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr ""
+
+#~ msgid "Units"
+#~ msgstr "Ədəd"

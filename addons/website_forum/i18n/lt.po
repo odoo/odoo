@@ -27,10 +27,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-11-09 15:11+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-18 17:17+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-master/"
 "website_forum/lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
 "1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1265,30 +1265,6 @@ msgid "Chief Commentator"
 msgstr "Vyriausias komentatorius"
 
 #. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click here to accept this answer."
-msgstr "Paspauskite čia, norėdami priimti atsakymą"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your answer."
-msgstr "Paskelbti savo atsakymą."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your question."
-msgstr "Paskelbti savo klausimą."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to reply."
-msgstr ""
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
 msgid "Close"
@@ -1460,12 +1436,6 @@ msgstr "Sukūrimo data"
 #: model_terms:ir.actions.act_window,help:website_forum.forum_post_action
 msgid "Create a new forum post"
 msgstr "Sukurkite naują forumo įrašą"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Create a new post in this forum by clicking on the button."
-msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1681,6 +1651,11 @@ msgstr "Neigiamas įvertinimas"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Downvote for posting offensive contents"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Drag blocks here to add them on all forum"
 msgstr ""
 
 #. module: website_forum
@@ -1998,6 +1973,9 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-javascript
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #: code:addons/website_forum/static/src/website_builder/forum_searchbar_option.xml:0
 #: model:ir.actions.act_window,name:website_forum.forum_forum_action
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
@@ -2018,12 +1996,6 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "Get notified when this tag is used"
-msgstr ""
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Give your post title."
 msgstr ""
 
 #. module: website_forum
@@ -2246,12 +2218,6 @@ msgstr "Paveikslėlis 512"
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "Inappropriate and unacceptable statements"
 msgstr ""
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Insert tags related to your question."
-msgstr "Įterpti žymas, susijusias su jūsų klausimu."
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -2860,18 +2826,6 @@ msgstr ""
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
 msgstr "Ekspertas"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your answer here."
-msgstr "Atsakykite čia."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your question here."
-msgstr "Klauskite čia."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
@@ -3796,21 +3750,11 @@ msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
-msgid "Website Messages"
-msgstr "Interneto svetainės žinutės"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_url
 msgid "Website URL"
 msgstr "Svetainės nuoroda"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
-msgid "Website communication history"
-msgstr "Svetainės komunikacijos istorija"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
@@ -4279,3 +4223,27 @@ msgstr "jūsų biografija gali būti matoma kaip paaiškinimas"
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "your email..."
 msgstr "jūsų el. paštas..."
+
+#~ msgid "Click here to accept this answer."
+#~ msgstr "Paspauskite čia, norėdami priimti atsakymą"
+
+#~ msgid "Click to post your answer."
+#~ msgstr "Paskelbti savo atsakymą."
+
+#~ msgid "Click to post your question."
+#~ msgstr "Paskelbti savo klausimą."
+
+#~ msgid "Insert tags related to your question."
+#~ msgstr "Įterpti žymas, susijusias su jūsų klausimu."
+
+#~ msgid "Put your answer here."
+#~ msgstr "Atsakykite čia."
+
+#~ msgid "Put your question here."
+#~ msgstr "Klauskite čia."
+
+#~ msgid "Website Messages"
+#~ msgstr "Interneto svetainės žinutės"
+
+#~ msgid "Website communication history"
+#~ msgstr "Svetainės komunikacijos istorija"

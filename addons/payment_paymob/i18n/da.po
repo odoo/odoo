@@ -1,177 +1,318 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_paymob
+# * payment_paymob
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-09-11 13:58+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 21:07+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-master/"
+"payment_paymob/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
 msgid "API Key"
+msgstr "API nøgle"
+
+#. module: payment_paymob
+#: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
+msgid "Account Country"
+msgstr "Kontoens land"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_aman
+msgid "Aman"
 msgstr ""
 
 #. module: payment_paymob
-#: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-msgid "Account Country"
+#: model:payment.method,name:payment_paymob.payment_method_amex
+msgid "American Express"
 msgstr ""
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "An error occurred during the processing of your payment (%(msg)s). Please "
 "try again."
 msgstr ""
+"Der opstod en fejl under behandlingen af din betaling (%(msg)s). Prøv "
+"venligst igen."
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_installments_eg
+msgid "Bank Installments"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_card
+msgid "Card"
+msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__code
+#, fuzzy
 msgid "Code"
+msgstr "Kode"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_contact
+msgid "Contact"
 msgstr ""
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
+#, fuzzy
 msgid "Could not generate a new access token."
-msgstr ""
+msgstr "Kunne ikke generere et nyt adgangstoken."
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_transaction__display_name
+#, fuzzy
 msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_easypaisa
+msgid "EasyPaisa"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_forsa
+msgid "Forsa"
 msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
 msgid "HMAC Key"
+msgstr "HMAC-nøgle"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_halan
+msgid "Halan"
 msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_transaction__id
+#, fuzzy
 msgid "ID"
+msgstr "ID"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_jazzcash
+msgid "JazzCash"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_kiosk
+msgid "Kiosk"
 msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
 msgid "Make the payment methods compatible with the Paymob portal."
+msgstr "Gør betalingsformerne kompatible med Paymob-portalen."
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_mobile_wallet_eg
+msgid "Mobile Wallets Egypt"
 msgstr ""
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
+#, fuzzy
 msgid "Not all enabled payment methods were found on your account."
+msgstr "Ikke alle aktiverede betalingsformer blev fundet på din konto."
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_omannet
+msgid "OmanNet"
 msgstr ""
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
+#, fuzzy
 msgid "Only currencies supported by Paymob can be selected."
-msgstr ""
+msgstr "Kun valutaer, der understøttes af Paymob, kan vælges."
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
+#, fuzzy
 msgid "Only one currency can be selected per Paymob account."
-msgstr ""
+msgstr "Der kan kun vælges én valuta pr. Paymob-konto."
 
 #. module: payment_paymob
 #: model:ir.model,name:payment_paymob.model_payment_provider
+#, fuzzy
 msgid "Payment Provider"
-msgstr ""
+msgstr "Betalingsudbyder"
 
 #. module: payment_paymob
 #: model:ir.model,name:payment_paymob.model_payment_transaction
+#, fuzzy
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Betalingstransaktion"
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
+#, fuzzy
 msgid "Payment methods have been successfully set up!"
-msgstr ""
+msgstr "Betalingsformerne er nu konfigureret!"
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
+#, fuzzy
 msgid "Payment methods not found"
-msgstr ""
+msgstr "Betalingsformer ikke fundet"
 
 #. module: payment_paymob
 #: model:ir.model.fields.selection,name:payment_paymob.selection__payment_provider__code__paymob
+#, fuzzy
 msgid "Paymob"
-msgstr ""
+msgstr "Paymob"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_api_key
+#, fuzzy
 msgid "Paymob API Key"
-msgstr ""
+msgstr "Paymob-API-nøgle"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_account_country_id
+#, fuzzy
 msgid "Paymob Account Country"
-msgstr ""
+msgstr "Land for Paymob-kontoen"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_hmac_key
+#, fuzzy
 msgid "Paymob HMAC Key"
-msgstr ""
+msgstr "Paymob-HMAC-nøgle"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_public_key
+#, fuzzy
 msgid "Paymob Public Key"
-msgstr ""
+msgstr "Paymob offentlig nøgle"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_secret_key
+#, fuzzy
 msgid "Paymob Secret Key"
+msgstr "Paymob hemmelig nøgle"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_premium_card
+msgid "Premium Card"
 msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
 msgid "Public Key"
+msgstr "Offentlig nøgle"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_stcpay
+msgid "STCPay"
 msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
 msgid "Secret Key"
+msgstr "Hemmelig nøgle"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_souhoola
+msgid "Souhoola"
 msgstr ""
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
+#, fuzzy
 msgid "Successfully synchronized with Paymob"
+msgstr "Synkroniseret med Paymob"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_sympl
+msgid "Sympl"
 msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
+#, fuzzy
 msgid "Synchronize With Paymob"
+msgstr "Synkronisér med Paymob"
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_tabby
+msgid "Tabby"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_tamara
+msgid "Tamara"
 msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model.fields,help:payment_paymob.field_payment_provider__paymob_account_country_id
+#, fuzzy
 msgid ""
 "The country of the Paymob account. The currency will be updated to match the "
 "country of the Paymob account."
 msgstr ""
+"Landet for Paymob-kontoen. Valutaen opdateres, så den matcher landet for "
+"Paymob-kontoen."
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
+#, fuzzy
 msgid "The following fields must be filled: %(fields)s"
-msgstr ""
+msgstr "Følgende felter skal udfyldes: %(fields)s"
 
 #. module: payment_paymob
 #: model:ir.model.fields,help:payment_paymob.field_payment_provider__code
+#, fuzzy
 msgid "The technical code of this payment provider."
+msgstr "Denne betalingsudbyders tekniske kode."
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment_paymob
+#: model:payment.method,name:payment_paymob.payment_method_valu
+msgid "ValU"
 msgstr ""

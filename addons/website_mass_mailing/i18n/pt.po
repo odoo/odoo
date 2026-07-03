@@ -7,15 +7,15 @@
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # Manuela Silva <mmsrs@sky.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-11-16 22:46+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 12:55+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-master/"
 "website_mass_mailing/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_benefits_popup
@@ -144,6 +144,11 @@ msgid "Always <b>First</b>."
 msgstr "Sempre <b>primeiro</b>."
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid "Avatars"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_grid
 msgid "Be the first to find out all the latest new, products and trends."
 msgstr ""
@@ -156,6 +161,13 @@ msgid ""
 "Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
 "Seja o primeiro a saber as últimas notícias,<br/> produtos e tendências."
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid ""
+"Be the first to know when we launch.<br/>Leave your email and we'll notify "
+"you at launch."
+msgstr ""
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -196,8 +208,9 @@ msgstr "Inscrição por e-mail"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
+#, fuzzy
 msgid "First Name"
-msgstr ""
+msgstr "Primeiro Nome"
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -217,6 +230,12 @@ msgstr ""
 "produtos da nossa empresa, diretamente em sua caixa de entrada."
 
 #. module: website_mass_mailing
+#. odoo-python
+#: code:addons/website_mass_mailing/controllers/main.py:0
+msgid "Invalid subscription type"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "John Smith"
@@ -230,9 +249,15 @@ msgid ""
 msgstr ""
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
-msgid "Last Name"
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid "Join the waitlist."
 msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
+#, fuzzy
+msgid "Last Name"
+msgstr "Apelido"
 
 #. module: website_mass_mailing
 #. odoo-python
@@ -348,7 +373,7 @@ msgstr ""
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.js:0
+#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.edit.js:0
 msgid "Subscribe to"
 msgstr "Inscrever-se a"
 
@@ -390,6 +415,11 @@ msgid "This block is not linked to an active Newsletter."
 msgstr ""
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid "Waiting List"
+msgstr ""
+
+#. module: website_mass_mailing
 #. odoo-python
 #: code:addons/website_mass_mailing/controllers/website_form.py:0
 msgid "You cannot subscribe to the following list anymore : %s"
@@ -403,13 +433,13 @@ msgstr ""
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.js:0
+#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.edit.js:0
 msgid "Your Email"
 msgstr "O Seu Email"
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.js:0
+#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.edit.js:0
 msgid "Your Name"
 msgstr "O Seu Nome"
 
@@ -424,6 +454,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "johnsmith@example.com"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid "people on the waitlist."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid ""
+"updates, digest, bulletin, announcements, notifications, communication, "
+"email, prompt, subscription, subscribe, mailing-list, news, waitlist, "
+"waiting, signup, hero, jumbotron, headline, header, introduction, home"
 msgstr ""
 
 #. module: website_mass_mailing

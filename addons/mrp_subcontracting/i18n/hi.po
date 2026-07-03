@@ -2,33 +2,41 @@
 # This file contains the translation of the following modules:
 # * mrp_subcontracting
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-11-08 19:11+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-20 08:20+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-master/"
 "mrp_subcontracting/hi/>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#, fuzzy
 msgid "%(name)s Sequence Resupply Subcontractor"
-msgstr ""
+msgstr "%(name)s सीक्वेंस रिसप्लाई सबकॉन्ट्रैक्टर"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#, fuzzy
 msgid "%(name)s Sequence subcontracting"
+msgstr "%(name)s सीक्वेंस सबकॉन्ट्रैक्टिंग"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
+msgid "%(qty)s To %(route)s"
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -48,57 +56,66 @@ msgid "Assign serial numbers to production order"
 msgstr ""
 
 #. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
-msgid "BOM Overview Report"
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+msgid "Availabilities on subcontract location."
 msgstr ""
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
+#, fuzzy
+msgid "BOM Overview Report"
+msgstr "बीओएम की पूरी जानकारी वाली रिपोर्ट"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
+#, fuzzy
 msgid "Bill of Material"
-msgstr ""
+msgstr "बिल ऑफ़ मैटेरियल"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__type
+#, fuzzy
 msgid "BoM Type"
-msgstr ""
+msgstr "बीओएम टाइप"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__bom_ids
+#, fuzzy
 msgid "BoMs for which the Partner is one of the subcontractors"
-msgstr ""
+msgstr "बीओएम जिनके लिए पार्टनर सब-कॉन्ट्रैक्टर्स में से एक है"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
+#, fuzzy
 msgid "Bom Product"
-msgstr ""
+msgstr "बीओएम प्रॉडक्ट"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_change_production_qty
+#, fuzzy
 msgid "Change Production Qty"
-msgstr ""
-
-#. module: mrp_subcontracting
-#. odoo-javascript
-#: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
-msgid "Check Availability"
-msgstr ""
+msgstr "प्रॉडक्शन की मात्रा बदलें"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
+#, fuzzy
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
-msgstr ""
+msgstr "अगर आप प्रॉडक्ट को सब-कॉन्ट्रैक्ट करना चाहते हैं, तो सब-कॉन्ट्रैक्टर टाइप का वेंडर चुनें"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "संस्था"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
+#, fuzzy
 msgid "Consumed"
-msgstr ""
+msgstr "खपत की गई"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_partner
@@ -118,13 +135,15 @@ msgstr "ग्राहक बनाएं"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "Deadline Date"
-msgstr ""
+msgstr "डेडलाइन की तारीख"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Demand"
-msgstr ""
+msgstr "डिमांड"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -133,8 +152,9 @@ msgstr "विवरण"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
+#, fuzzy
 msgid "Detail Component"
-msgstr ""
+msgstr "विवरण देने वाला हिस्सा"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -171,12 +191,21 @@ msgstr "हो गया"
 
 #. module: mrp_subcontracting
 #: model:portal.entry,description:mrp_subcontracting.portal_manufacturing_orders
+#, fuzzy
 msgid "Follow manufacturing orders you have to fulfill"
+msgstr "उन मैन्युफैक्चरिंग ऑर्डर्स को फ़ॉलो करें जिन्हें आपको पूरा करना है"
+
+#. module: mrp_subcontracting
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+msgid "Free to Use / On Hand"
 msgstr ""
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
-msgid "Has been recorded?"
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom
+msgid ""
+"Free to Use / On Hand<br/>\n"
+"                subcontractor location"
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -203,15 +232,19 @@ msgstr "आईडी"
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
+#, fuzzy
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
 "Internal, linked to the appropriate company."
 msgstr ""
+"स्टॉक को सही ढंग से मैनेज करने के लिए, सब-कॉन्ट्रैक्टिंग लोकेशन्स इंटरनल टाइप की होनी चाहिए "
+"और संबंधित कंपनी से जुड़ी होनी चाहिए।"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
+#, fuzzy
 msgid "Incoming transfer"
-msgstr ""
+msgstr "इनकमिंग ट्रांसफ़र"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
@@ -220,29 +253,37 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
+#, fuzzy
 msgid "Is Subcontract"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्ट है"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
+#, fuzzy
 msgid ""
 "List of Products used in the BoM, used to filter the list of products in the "
 "subcontracting portal view"
 msgstr ""
+"बीओएम में इस्तेमाल होने वाले प्रॉडक्ट की लिस्ट, जिसका इस्तेमाल सब-कॉन्ट्रैक्टिंग पोर्टल व्यू में "
+"प्रॉडक्ट को फ़िल्टर करने के लिए किया जाता है"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
+#, fuzzy
 msgid "MRP Productions for which the Partner is the subcontractor"
-msgstr ""
+msgstr "ऐसी एमआरपी प्रोडक्शंस जिनके लिए पार्टनर सब-कॉन्ट्रैक्टर है"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move_line.py:0
+#, fuzzy
 msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
 msgstr ""
+"स्टॉक में किसी भी तरह की गड़बड़ी से बचने के लिए, अपने सब-कॉन्ट्रैक्टर के लिए संबंधित रिसप्लाई "
+"पिकिंग को वैलिडेट या एडाप्ट करना सुनिश्चित करें।"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production
@@ -257,8 +298,9 @@ msgstr "मैन्युफ़ैक्चरिंग ऑर्डर"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Manufacturing Reference"
-msgstr ""
+msgstr "मैन्युफ़ैक्चरिंग रेफ़रेंस"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -292,15 +334,19 @@ msgstr ""
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, fuzzy
 msgid ""
 "Portal users cannot create a stock move with a state 'Done' or change the "
 "current state to 'Done'."
 msgstr ""
+"पोर्टल यूज़र्स 'पूरा हुआ' स्टेट के साथ स्टॉक मूव नहीं बना सकते या मौजूदा स्टेट को 'पूरा हुआ' में "
+"नहीं बदल सकते।"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
+#, fuzzy
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "प्रॉडक्ट मूव्स (स्टॉक मूव लाइन)"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -310,13 +356,15 @@ msgstr "उत्पाद प्रकार"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_menu_production
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "Productions"
-msgstr ""
+msgstr "प्रॉडक्शन"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
+#, fuzzy
 msgid "Quant"
-msgstr ""
+msgstr "मात्रा"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -326,33 +374,44 @@ msgstr "तैयार"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "Register components for subcontracted product"
-msgstr ""
+msgstr "सब-कॉन्ट्रैक्टेड प्रॉडक्ट के कॉम्पोनेंट्स को रजिस्टर करें"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#, fuzzy
 msgid "Replenish on Order (MTO)"
+msgstr "ऑर्डर मिलने पर स्टॉक भरना (MTO)"
+
+#. module: mrp_subcontracting
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
+msgid "Reserve"
 msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
+#, fuzzy
 msgid "Resupply Subcontractor"
-msgstr ""
+msgstr "रिसप्लाई सबकॉन्ट्रैक्टर"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
+#, fuzzy
 msgid "Resupply Subcontractor on Order"
-msgstr ""
+msgstr "ऑर्डर पर रिसप्लाई सबकॉन्ट्रैक्टर"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
+#, fuzzy
 msgid "Resupply Subcontractors"
-msgstr ""
+msgstr "रिसप्लाई सबकॉन्ट्रैक्टर"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -362,8 +421,9 @@ msgstr "अनुसूचित तिथि"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__show_subcontracting_details_visible
+#, fuzzy
 msgid "Show Subcontracting Details Visible"
-msgstr ""
+msgstr "सब-कॉन्ट्रैक्टिंग की जानकारी दिखाएं"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -383,24 +443,28 @@ msgstr "चाल स्टॉक"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__picking_ids
+#, fuzzy
 msgid "Stock Pickings for which the Partner is the subcontractor"
-msgstr ""
+msgstr "ऐसी स्टॉक पिकिंग जिनके लिए पार्टनर सब-कॉन्ट्रैक्टर है"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
+#, fuzzy
 msgid "Stock Rule"
-msgstr ""
+msgstr "स्टॉक रूल"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
+#, fuzzy
 msgid "Subcontracted"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टेड"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, fuzzy
 msgid "Subcontracted manufacturing orders cannot be merged."
-msgstr ""
+msgstr "सब-कॉन्ट्रैक्टेड मैन्युफैक्चरिंग ऑर्डर्स को मर्ज नहीं किया जा सकता।"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -412,13 +476,15 @@ msgstr "सबकॉन्ट्रैक्टिंग"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
+#, fuzzy
 msgid "Subcontracting Location"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टिंग लोकेशन"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
+#, fuzzy
 msgid "Subcontracting Locations"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टिंग लोकेशन"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -429,18 +495,21 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
+#, fuzzy
 msgid "Subcontracting MTO Rule"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टिंग एमटीओ का नियम"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
+#, fuzzy
 msgid "Subcontracting MTS Rule"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टिंग एमटीएस का नियम"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
+#, fuzzy
 msgid "Subcontracting Operation Type"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टिंग ऑपरेशन टाइप"
 
 #. module: mrp_subcontracting
 #: model:ir.actions.act_window,name:mrp_subcontracting.subcontracting_portal_view_production_action
@@ -454,58 +523,69 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
+#, fuzzy
 msgid "Subcontracting Resupply Operation Type"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टिंग रिसप्लाई ऑपरेशन टाइप"
 
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#, fuzzy
 msgid "Subcontracting:"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टिंग:"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
+#, fuzzy
 msgid "Subcontracting: %s"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टिंग: %s"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontractor_id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__subcontractor_ids
+#, fuzzy
 msgid "Subcontractor"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टर"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
+#, fuzzy
 msgid "Subcontractor Location"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टर लोकेशन"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.view_partner_mrp_subcontracting_filter
+#, fuzzy
 msgid "Subcontractors"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टर"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
+#, fuzzy
 msgid "Supplier Pricelist"
-msgstr ""
+msgstr "सप्लायर प्राइसलिस्ट"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
+#, fuzzy
 msgid "The move is a subcontract receipt"
-msgstr ""
+msgstr "यह मूव एक सब-कॉन्ट्रैक्ट रसीद है"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_users__property_stock_subcontractor
+#, fuzzy
 msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
 msgstr ""
+"सब-कॉन्ट्रैक्टिंग प्रोसेस के दौरान इस कांटेक्ट को सामान         भेजते समय सोर्स और डेस्टिनेशन "
+"के रूप में इस्तेमाल होने वाली स्टॉक लोकेशन।"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -515,13 +595,15 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+#, fuzzy
 msgid "There are currently no productions for your account."
-msgstr ""
+msgstr "आपके अकाउंट के लिए फिलहाल कोई प्रोडक्शन उपलब्ध नहीं है।"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
+#, fuzzy
 msgid "Total Consumed"
-msgstr ""
+msgstr "कुल खपत"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
@@ -531,8 +613,10 @@ msgstr "स्थानांतरण"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
+#, fuzzy
 msgid "Used to restrict access to the portal user through Record Rules"
 msgstr ""
+"रिकॉर्ड रूल के माध्यम से पोर्टल यूजर के ऐक्सेस को प्रतिबंधित करने के लिए इस्तेमाल किया जाता है"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
@@ -541,42 +625,56 @@ msgstr "वेयरहाउस"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_workorder
+#, fuzzy
 msgid "Work Order"
-msgstr ""
+msgstr "वर्क ऑर्डर"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
+#, fuzzy
 msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
 msgstr ""
+"आप ऑपरेशन या बाय-प्रॉडक्ट लाइन वाले बिल ऑफ़ मैटेरियल को सब-कॉन्ट्रैक्टिंग के रूप में सेट नहीं "
+"कर सकते।"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_unbuild.py:0
+#, fuzzy
 msgid "You can't unbuild a subcontracted Manufacturing Order."
-msgstr ""
+msgstr "आप एक सब-कॉन्ट्रैक्टेड मैन्युफ़ैक्चरिंग ऑर्डर को 'अनबिल्ड' नहीं कर सकते।"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
+#, fuzzy
 msgid "You cannot alter the company's subcontracting location"
-msgstr ""
+msgstr "आप कंपनी की सब-कॉन्ट्रैक्टिंग लोकेशन को बदल नहीं सकते"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, fuzzy
 msgid "You cannot write on fields %s in mrp.production."
-msgstr ""
+msgstr "आप mrp.production में %s फ़ील्ड पर लिख नहीं सकते।"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, fuzzy
 msgid "e.g. PO0032"
-msgstr ""
+msgstr "जैसे, PO0032"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
 msgid "state"
 msgstr "स्टेट"
+
+#. module: mrp_subcontracting
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+msgid "subcontractor location"
+msgstr ""

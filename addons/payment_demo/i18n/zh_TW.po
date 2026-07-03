@@ -6,21 +6,22 @@
 # Wil Odoo, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-09-16 08:10+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 17:06+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-19/payment_demo/zh_Hant/>\n"
+"projects/odoo-master/payment_demo/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -68,6 +69,14 @@ msgid "<small>Street 2</small>"
 msgstr "<small>街道第二行</small>"
 
 #. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid ""
+"<span class=\"badge rounded-pill text-bg-warning ms-1\">\n"
+"                                Test Mode\n"
+"                            </span>"
+msgstr ""
+
+#. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
 msgstr "授權"
@@ -89,8 +98,9 @@ msgstr "已取消"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
@@ -139,8 +149,8 @@ msgstr "模擬快速結賬"
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
-msgid "Demo providers should never be enabled."
-msgstr "永遠不應啟用模擬服務商。"
+msgid "Demo providers must never be set in live mode."
+msgstr ""
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__display_name
@@ -154,6 +164,11 @@ msgstr "顯示名稱"
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Error"
 msgstr "錯誤"
+
+#. module: payment_demo
+#: model:payment.method,name:payment_demo.payment_method_unknown
+msgid "Express Checkout"
+msgstr ""
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__id
@@ -262,18 +277,14 @@ msgstr "模擬狀態"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "Successful"
-msgstr ""
+msgstr "成功"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Successful payment"
 msgstr ""
-
-#. module: payment_demo
-#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
-msgid "Test Mode"
-msgstr "測試模式"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
@@ -306,3 +317,9 @@ msgstr "XXXX XXXX XXXX XXXX"
 #: code:addons/payment_demo/models/payment_transaction.py:0
 msgid "You selected the following demo payment status: %s"
 msgstr "您選擇了以下演示付款狀態： %s"
+
+#~ msgid "Demo providers should never be enabled."
+#~ msgstr "永遠不應啟用模擬服務商。"
+
+#~ msgid "Test Mode"
+#~ msgstr "測試模式"

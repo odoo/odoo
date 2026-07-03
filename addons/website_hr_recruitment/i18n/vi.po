@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
-"PO-Revision-Date: 2025-11-10 13:23+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-19 05:56+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
 "website_hr_recruitment/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -74,7 +74,7 @@ msgid "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>All Jobs"
 msgstr "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>Tất cả công việc"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid ""
 "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
 "aria-label=\"Employment type\"/>"
@@ -376,8 +376,14 @@ msgstr "Khám phá sản phẩm của chúng tôi."
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_published_multi_mixin__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
+msgid "Drag blocks here to add them on all jobs"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -495,6 +501,7 @@ msgstr "Tôi cảm thấy may mắn"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_published_multi_mixin__id
 msgid "ID"
 msgstr "ID"
 
@@ -510,7 +517,7 @@ msgid "Industries Filter"
 msgstr "Bộ lọc ngành"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "Insert a Job Description..."
 msgstr "Thêm Mô tả công việc..."
 
@@ -581,7 +588,7 @@ msgstr "Dẫn dắt toàn bộ chu trình kinh doanh"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "LinkedIn Profile"
 msgstr "Hồ sơ LinkedIn"
 
@@ -623,6 +630,14 @@ msgid ""
 msgstr ""
 "Không tốn thời gian vào quy trình doanh nghiệp, tập trung vào trách nhiệm và "
 "tự chủ thực sự"
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/website_published_multi_mixin.py:0
+msgid ""
+"No website found for the company. Please create a website for this company "
+"to be able to open the job offer on the website."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
@@ -679,7 +694,7 @@ msgstr "Quyền lợi"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Phone Number"
 msgstr "Số Điện thoại"
 
@@ -687,18 +702,6 @@ msgstr "Số Điện thoại"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
 msgstr "Các hoạt động thể thao với đồng nghiệp <br/>được trả phí."
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "Potential Duplicate Detected: Ongoing Application"
-msgstr ""
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "Potential Duplicate Detected: Refused Application"
-msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
@@ -801,7 +804,7 @@ msgstr "Chia sẻ công việc"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Short Introduction"
 msgstr "Giới thiệu ngắn"
 
@@ -835,22 +838,6 @@ msgstr "Kỹ năng phân tích sắc sảo"
 #. module: website_hr_recruitment
 #: model:website.page,name:website_hr_recruitment.thankyou
 msgid "Thank you (Recruitment)"
-msgstr ""
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid ""
-"The following ongoing applications share an email address, phone number and/"
-"or linkedin profile with this application:"
-msgstr ""
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid ""
-"The following recently refused applications share an email address, phone "
-"number and/or linkedin profile with this application:"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -956,6 +943,11 @@ msgid "Website Absolute URL"
 msgstr "URL tuyệt đối của trang web"
 
 #. module: website_hr_recruitment
+#: model:ir.model,name:website_hr_recruitment.model_website_published_multi_mixin
+msgid "Website Published Mixin"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Biểu mẫu tuyển dụng trên Website"
@@ -1012,13 +1004,13 @@ msgstr "Thông tin <b>liên lạc</b> của bạn là:"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Your Email"
 msgstr "Email"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Your Name"
 msgstr "Tên"
 
@@ -1060,16 +1052,16 @@ msgid "job URL"
 msgstr "URL công việc"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open position"
 msgstr "vị trí đang tuyển"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open positions"
 msgstr "vị trí đang tuyển"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "scheduled"
 msgstr ""

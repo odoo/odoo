@@ -7,15 +7,15 @@
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:36+0000\n"
-"PO-Revision-Date: 2025-11-08 21:53+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-21 09:04+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
 "mrp_account/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -23,13 +23,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
+#, fuzzy
 msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
-msgstr ""
+msgstr "%(value)s لـ %(quantity)s %(unit)s من %(production)s"
 
 #. module: mrp_account
 #. odoo-python
@@ -98,11 +99,6 @@ msgid "Account Move Line"
 msgstr "بند حركة الحساب"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Acme Corp."
-msgstr "Acme Corp."
-
-#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "الحساب التحليلي"
@@ -151,8 +147,9 @@ msgstr "الفئة"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "الشركة "
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -171,6 +168,11 @@ msgid ""
 msgstr ""
 "يحتسب سعر المنتج باستخدام المنتجات والعمليات في قائمة المواد ذات الصلة، "
 "للمنتجات المصنعة فقط."
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_currency_id
+msgid "Consolidation Currency"
+msgstr ""
 
 #. module: mrp_account
 #. odoo-javascript
@@ -308,11 +310,6 @@ msgid "Label"
 msgstr "بطاقة عنوان"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Laptop"
-msgstr "لابتوب"
-
-#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_uid
 msgid "Last Updated by"
@@ -359,8 +356,9 @@ msgstr "عدد أوامر التصنيع"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+#, fuzzy
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr ""
+msgstr "التصنيع قيد التنفيذ - %(orders_list)s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
@@ -420,9 +418,9 @@ msgid "Production Account"
 msgstr "حساب الإنتاج"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "REF123"
-msgstr "REF123"
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_rate
+msgid "Rate"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
@@ -507,11 +505,6 @@ msgstr "إجمالي الائتمان"
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Debit"
 msgstr "إجمالي الدين"
-
-#. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Units"
-msgstr "الوحدات"
 
 #. module: mrp_account
 #. odoo-python
@@ -614,3 +607,15 @@ msgstr "سجل إنتاجية مركز العمل"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr "[WC] %s"
+
+#~ msgid "Acme Corp."
+#~ msgstr "Acme Corp."
+
+#~ msgid "Laptop"
+#~ msgstr "لابتوب"
+
+#~ msgid "REF123"
+#~ msgstr "REF123"
+
+#~ msgid "Units"
+#~ msgstr "الوحدات"

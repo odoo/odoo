@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_expense
+# * sale_expense
 #
 # Translators:
 # Jan Prokop, 2022
 # Martin Trigaux, 2022
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"PO-Revision-Date: 2026-06-20 06:35+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-master/"
+"sale_expense/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
-">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
@@ -40,8 +43,9 @@ msgstr "Môže byť znovu fakturované"
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovaný názov"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -51,13 +55,15 @@ msgstr "Výdavky"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
+#, fuzzy
 msgid "Expense Policy Tooltip"
-msgstr ""
+msgstr "Popis funkcie „Politika výdavkov“"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
+#, fuzzy
 msgid "Expense Split"
-msgstr ""
+msgstr "Rozdelenie výdavkov"
 
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
@@ -76,17 +82,23 @@ msgstr ""
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
+#, fuzzy
 msgid ""
 "Expenses will be added to the Sales Order at their actual cost when posted."
 msgstr ""
+"Výdavky budú pridané do predajnej objednávky v ich skutočnej výške v momente "
+"zaúčtovania."
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
+#, fuzzy
 msgid ""
 "Expenses will be added to the Sales Order at their sales price (product "
 "price, pricelist, etc.) when posted."
 msgstr ""
+"Výdavky sa pri zaúčtovaní pripíšu k predajnej objednávke v ich predajnej "
+"cene (cena produktu, cenník atď.)."
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__id
@@ -96,15 +108,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__id
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
+#, fuzzy
 msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
+"Ak má kategória nastavené pravidlá pre výdavky, bude refakturovaná na tejto "
+"objednávke"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -113,8 +129,9 @@ msgstr "Fakturácia"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move
+#, fuzzy
 msgid "Journal Entry"
-msgstr ""
+msgstr "Vstup účtovnej knihy"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move_line
@@ -134,8 +151,9 @@ msgstr ""
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id
+#, fuzzy
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Riadok objednávky predaja"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
@@ -145,5 +163,6 @@ msgstr "Objednávka "
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order_line
+#, fuzzy
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Položka objednávok"

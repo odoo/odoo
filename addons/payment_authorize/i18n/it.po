@@ -12,17 +12,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-04-04 12:53+0000\n"
-"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 11:07+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
 "payment_authorize/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -30,22 +30,27 @@ msgid "ABA Routing Number"
 msgstr "Numero di ABA routing"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
+#: model:payment.method,name:payment_authorize.payment_method_ach_direct_debit
+msgid "ACH Direct Debit"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "API Client Key"
 msgstr "Chiave API cliente"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "API Login ID"
 msgstr "API Login ID"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "API Signature Key"
 msgstr "Chiave di firma API"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "API Transaction Key"
 msgstr "Chiave transazione API"
 
@@ -53,6 +58,31 @@ msgstr "Chiave transazione API"
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Account Number"
 msgstr "Numero conto"
+
+#. module: payment_authorize
+#: model:payment.method,name:payment_authorize.payment_method_amex
+msgid "American Express"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
+msgid "Authorize API Client Key"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
+msgid "Authorize API Login ID"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
+msgid "Authorize API Signature Key"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
+msgid "Authorize API Transaction Key"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_webhook_id
@@ -83,6 +113,11 @@ msgstr "Nome banca"
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Business Checking"
 msgstr "Conto corrente aziendale"
+
+#. module: payment_authorize
+#: model:payment.method,name:payment_authorize.payment_method_card
+msgid "Card"
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -120,6 +155,16 @@ msgstr ""
 "(error_code)s; error_details: %(error_message)s)"
 
 #. module: payment_authorize
+#: model:payment.method,name:payment_authorize.payment_method_diners
+msgid "Diners Club International"
+msgstr ""
+
+#. module: payment_authorize
+#: model:payment.method,name:payment_authorize.payment_method_discover
+msgid "Discover"
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
@@ -152,11 +197,6 @@ msgid "Generate Your Webhook"
 msgstr ""
 
 #. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
-msgid "How to get paid with Authorize.Net"
-msgstr "Come essere pagati con Authorize.Net"
-
-#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
@@ -164,9 +204,19 @@ msgid "ID"
 msgstr "ID"
 
 #. module: payment_authorize
+#: model:payment.method,name:payment_authorize.payment_method_jcb
+msgid "JCB"
+msgstr ""
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
 msgstr "MM"
+
+#. module: payment_authorize
+#: model:payment.method,name:payment_authorize.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -281,15 +331,14 @@ msgstr ""
 
 #. module: payment_authorize
 #. odoo-python
-#: code:addons/payment_authorize/models/payment_provider.py:0
-msgid "This action cannot be performed while the provider is disabled."
-msgstr "L'azione non può essere eseguita quando il fornitore è disattivato."
-
-#. module: payment_authorize
-#. odoo-python
 #: code:addons/payment_authorize/controllers/main.py:0
 msgid "Transaction not found."
 msgstr "Transazione non trovata."
+
+#. module: payment_authorize
+#: model:payment.method,name:payment_authorize.payment_method_visa
+msgid "VISA"
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
@@ -306,3 +355,9 @@ msgstr "AA"
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "Your Authorize.Net webhook was successfully set up!"
 msgstr ""
+
+#~ msgid "How to get paid with Authorize.Net"
+#~ msgstr "Come essere pagati con Authorize.Net"
+
+#~ msgid "This action cannot be performed while the provider is disabled."
+#~ msgstr "L'azione non può essere eseguita quando il fornitore è disattivato."

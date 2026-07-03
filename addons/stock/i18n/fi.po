@@ -43,17 +43,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-04-04 13:05+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/stock/"
-"fi/>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 01:57+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"stock/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -620,11 +620,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
+"the \"Reserve\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                Kaikkia tuotteita ei voitu varata. Klikkaa "
-"\"Tarkista saatavuus\" -painiketta yrittääksesi varata tuotteita."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1131,6 +1128,12 @@ msgid "Add a Product"
 msgstr "Lisää tuote"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Add a description"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
@@ -1268,6 +1271,11 @@ msgstr "Kaikki ryhmät"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
+msgid "All Delivery Providers"
 msgstr ""
 
 #. module: stock
@@ -1795,6 +1803,11 @@ msgid "Bulk Weight"
 msgstr "Bulk paino"
 
 #. module: stock
+#: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
+msgid "Buy Odoo Enterprise now to get more providers."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
 msgstr "Erittäin"
@@ -1999,12 +2012,6 @@ msgstr ""
 "(eli viivakoodin, joka sisältää useita viivakoodin koodauksia)"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.vpicktree
-msgid "Check Availability"
-msgstr "Tarkista saatavuus"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
@@ -2062,12 +2069,6 @@ msgid "Clear"
 msgstr "Pyyhi"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-msgid "Click or press enter to add a description"
-msgstr "Lisää kuvaus klikkaamalla tai painamalla enteriä"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Close"
 msgstr "Sulje"
@@ -2117,100 +2118,6 @@ msgid "Compute shipping costs"
 msgstr "Laske toimituskustannukset"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Laske toimituskulut ja lähetä DHL:llä"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Laske toimituskulut ja lähetä DHL:llä<br/>\n"
-"                                      <strong>(siirry kohtaan "
-"Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "Laske kuljetuskustannukset ja lähetä Easypostilla"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "Laske toimituskulut ja lähetä Envia.comin kautta"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Laske toimituskulut ja lähetä FedEx:llä"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Laske toimituskulut ja lähetä FedExillä<br/>\n"
-"                                    <strong>(siirry kohtaan "
-"Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Laske toimituskulut ja lähetä Sendcloudilla"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Laske toimituskustannukset ja lähetä Shiprocketin avulla"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "Laske toimituskulut ja lähetä Starshipitillä"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Laske toimituskulut ja lähetä UPS:llä"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Laske toimituskulut ja lähetä UPS:llä<br/>\n"
-"                                 <strong>(siirry kohtaan "
-"Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Laske toimituskulut ja lähetä USPS:llä"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Laske toimituskulut ja lähetä USPS:llä<br/>\n"
-"                                 <strong>(siirry kohtaan "
-"Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with bpost"
-msgstr "Laske toimituskulut ja lähetä bpostilla"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
 msgstr "Laskee, milloin siirto pitäisi varata"
@@ -2226,6 +2133,11 @@ msgstr "Asetukset"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
 msgstr "Asetukset"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2727,16 +2639,6 @@ msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "DHL Connector"
-msgstr "DHL-liitin"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Express Connector"
-msgstr "DHL Express Liitin"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
@@ -2884,11 +2786,6 @@ msgstr "Oletusnimi"
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default OBTRETU Barcode"
 msgstr "Oletus OBTRETU viivakoodi"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Default Return Name"
-msgstr "Oletuspalautuksen nimi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__default_stock_location_id
@@ -3134,11 +3031,6 @@ msgstr "Tarve"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
 msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Demo Address and Name"
-msgstr "Demo Osoite ja nimi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -3486,7 +3378,6 @@ msgid "Do you confirm you want to scrap"
 msgstr "Vahvistatko, että haluat romuttaa"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Dokumentaatio"
@@ -3552,11 +3443,6 @@ msgstr "Dymo"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr "Easypost Connector"
 
 #. module: stock
 #. odoo-python
@@ -3641,11 +3527,6 @@ msgstr "Varmista varastoitavan tuotteen jäljitettävyys varastossasi."
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Enter a description"
 msgstr "Kirjoita kuvaus"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
-msgid "Envia.com Connector"
-msgstr "Envia.com Connector"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
@@ -3741,15 +3622,14 @@ msgid "February"
 msgstr "Helmikuu"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "FedEx Connector"
-msgstr "FedEx Connector"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
 msgstr "Suodatettu sijainti"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Find a Delivery Provider"
+msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3772,6 +3652,12 @@ msgstr "Ensimmäinen sarja- tai eränumero"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
 msgstr "Ensimmäinen sarjanumero"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Fold"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -4010,6 +3896,12 @@ msgstr "Luo eränumerot"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Generate Lots"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
 msgstr "Luo sarjanumerot"
@@ -4017,8 +3909,8 @@ msgstr "Luo sarjanumerot"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Generate Serials/Lots"
-msgstr "Sarjojen/erien luominen"
+msgid "Generate Serials"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -4489,20 +4381,16 @@ msgstr "Tuo"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Lots"
 msgstr "Tuo eriä"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Serials"
 msgstr "Tuo sarjanumerot"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Import Serials/Lots"
-msgstr "Tuo sarjat/erät"
 
 #. module: stock
 #. odoo-python
@@ -6038,6 +5926,12 @@ msgid "No allocation need found."
 msgstr "Jakotarvetta ei löytynyt."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "No backorder has been planned for undelivered demanded quantities: %s"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No delivery to do!"
 msgstr "Ei toimitusta tehtävänä!"
@@ -6155,12 +6049,6 @@ msgid "Notes"
 msgstr "Merkinnät"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-msgid "Nothing to check the availability for."
-msgstr "Mikään ei tarkista käytettävyyttä."
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
 msgid "November"
 msgstr "Marraskuu"
@@ -6275,6 +6163,14 @@ msgstr "Yksi per erä / sarjanumero"
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
 msgstr "Yksi per yksikkö"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
+"expected %(nbr_demanded)s %(uom)s"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -7037,13 +6933,9 @@ msgid "Please create a warehouse for company %s."
 msgstr "Luo varasto yritykselle %s."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Please put this document inside your return parcel.<br/>"
 msgstr ""
-"Laita tämä asiakirja palautuspaketin sisälle.<br/>\n"
-"                                Paketti on lähetettävä tähän osoitteeseen:"
 
 #. module: stock
 #. odoo-javascript
@@ -7760,7 +7652,7 @@ msgid "Quants cannot be created for consumables or services."
 msgstr "Kulutushyödykkeitä tai palveluita ei voida luoda."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "RETURN OF"
 msgstr "PALAUTUS"
 
@@ -8139,6 +8031,8 @@ msgstr "Varaustapa"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
 msgstr ""
 
@@ -8662,11 +8556,6 @@ msgid "Send email"
 msgstr "Lähetä sähköposti"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
-msgid "Sendcloud Connector"
-msgstr "Sendcloud-yhteys"
-
-#. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
@@ -8848,11 +8737,6 @@ msgid "Shipping"
 msgstr "Toimitus"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Shipping Connectors"
-msgstr "Logistiikkayhteydet"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__move_type
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8879,11 +8763,6 @@ msgstr ""
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
 msgstr "Kuljetus: Lähetä sähköpostitse"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
-msgid "Shiprocket Connector"
-msgstr "Shiprocket-liitin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -9157,11 +9036,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Starred"
 msgstr "Tähdelliset"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
-msgid "Starshipit Connector"
-msgstr "Starshipit-liitin"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -9576,11 +9450,9 @@ msgstr "Tekniset tiedot"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
 msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
+"Technical field used to compute whether the button \"Reserve\" should be "
+"displayed."
 msgstr ""
-"Tekninen kenttä, jota käytetään laskettaessa, pitäisikö painike \"Tarkista "
-"saatavuus\" näyttää."
 
 #. module: stock
 #. odoo-python
@@ -9919,6 +9791,12 @@ msgstr "varastosääntö, joka loi tämän varastomuutoksen"
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "There are no inventory adjustments to revert."
 msgstr "Varastojen oikaisuja ei ole palautettava."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "There is nothing to reserve."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10468,6 +10346,11 @@ msgid "Transfer"
 msgstr "Siirto"
 
 #. module: stock
+#: model:mail.message.subtype,name:stock.mt_picking_state
+msgid "Transfer Status"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
 msgstr "Siirto kohteeseen"
@@ -10578,18 +10461,6 @@ msgstr "Tyyppi"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Poikkeusaktiviteetin tyyppi tietueella."
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "UPS Connector"
-msgstr "UPS-liitin"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "USPS Connector"
-msgstr "USPS-liitin"
 
 #. module: stock
 #. odoo-javascript
@@ -11035,18 +10906,6 @@ msgstr "Varoitukset"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock
 msgid "Warnings for Stock"
 msgstr "Varoitukset varastolle"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__website_message_ids
-msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
-msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
@@ -11656,6 +11515,11 @@ msgstr ""
 "Nauti ateriastasi!"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Your parcel must be sent to this address:"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
@@ -11710,11 +11574,6 @@ msgstr "] <br/> min:"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
 msgstr "barcodelookup.com"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr "bpost Connector"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
@@ -11936,6 +11795,158 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Toimitustilaus (viite {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                All products could not be reserved. Click "
+#~ "on the \"Check Availability\" button to try to reserve products."
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                Kaikkia tuotteita ei voitu varata. "
+#~ "Klikkaa \"Tarkista saatavuus\" -painiketta yrittääksesi varata tuotteita."
+
+#~ msgid "Check Availability"
+#~ msgstr "Tarkista saatavuus"
+
+#~ msgid "Click or press enter to add a description"
+#~ msgstr "Lisää kuvaus klikkaamalla tai painamalla enteriä"
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Laske toimituskulut ja lähetä DHL:llä"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with DHL<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Laske toimituskulut ja lähetä DHL:llä<br/>\n"
+#~ "                                      <strong>(siirry kohtaan "
+#~ "Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
+
+#~ msgid "Compute shipping costs and ship with Easypost"
+#~ msgstr "Laske kuljetuskustannukset ja lähetä Easypostilla"
+
+#~ msgid "Compute shipping costs and ship with Envia.com"
+#~ msgstr "Laske toimituskulut ja lähetä Envia.comin kautta"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Laske toimituskulut ja lähetä FedEx:llä"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with FedEx<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Laske toimituskulut ja lähetä FedExillä<br/>\n"
+#~ "                                    <strong>(siirry kohtaan "
+#~ "Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
+
+#~ msgid "Compute shipping costs and ship with Sendcloud"
+#~ msgstr "Laske toimituskulut ja lähetä Sendcloudilla"
+
+#~ msgid "Compute shipping costs and ship with Shiprocket"
+#~ msgstr "Laske toimituskustannukset ja lähetä Shiprocketin avulla"
+
+#~ msgid "Compute shipping costs and ship with Starshipit"
+#~ msgstr "Laske toimituskulut ja lähetä Starshipitillä"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Laske toimituskulut ja lähetä UPS:llä"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with UPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Laske toimituskulut ja lähetä UPS:llä<br/>\n"
+#~ "                                 <strong>(siirry kohtaan "
+#~ "Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Laske toimituskulut ja lähetä USPS:llä"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with USPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Laske toimituskulut ja lähetä USPS:llä<br/>\n"
+#~ "                                 <strong>(siirry kohtaan "
+#~ "Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
+
+#~ msgid "Compute shipping costs and ship with bpost"
+#~ msgstr "Laske toimituskulut ja lähetä bpostilla"
+
+#~ msgid "DHL Connector"
+#~ msgstr "DHL-liitin"
+
+#~ msgid "DHL Express Connector"
+#~ msgstr "DHL Express Liitin"
+
+#~ msgid "Default Return Name"
+#~ msgstr "Oletuspalautuksen nimi"
+
+#~ msgid "Demo Address and Name"
+#~ msgstr "Demo Osoite ja nimi"
+
+#~ msgid "Easypost Connector"
+#~ msgstr "Easypost Connector"
+
+#~ msgid "Envia.com Connector"
+#~ msgstr "Envia.com Connector"
+
+#~ msgid "FedEx Connector"
+#~ msgstr "FedEx Connector"
+
+#~ msgid "Generate Serials/Lots"
+#~ msgstr "Sarjojen/erien luominen"
+
+#~ msgid "Import Serials/Lots"
+#~ msgstr "Tuo sarjat/erät"
+
+#~ msgid "Nothing to check the availability for."
+#~ msgstr "Mikään ei tarkista käytettävyyttä."
+
+#~ msgid ""
+#~ "Please put this document inside your return parcel.<br/>\n"
+#~ "                                Your parcel must be sent to this address:"
+#~ msgstr ""
+#~ "Laita tämä asiakirja palautuspaketin sisälle.<br/>\n"
+#~ "                                Paketti on lähetettävä tähän osoitteeseen:"
+
+#~ msgid "Sendcloud Connector"
+#~ msgstr "Sendcloud-yhteys"
+
+#~ msgid "Shipping Connectors"
+#~ msgstr "Logistiikkayhteydet"
+
+#~ msgid "Shiprocket Connector"
+#~ msgstr "Shiprocket-liitin"
+
+#~ msgid "Starshipit Connector"
+#~ msgstr "Starshipit-liitin"
+
+#~ msgid ""
+#~ "Technical field used to compute whether the button \"Check Availability\" "
+#~ "should be displayed."
+#~ msgstr ""
+#~ "Tekninen kenttä, jota käytetään laskettaessa, pitäisikö painike "
+#~ "\"Tarkista saatavuus\" näyttää."
+
+#~ msgid "UPS Connector"
+#~ msgstr "UPS-liitin"
+
+#~ msgid "USPS Connector"
+#~ msgstr "USPS-liitin"
+
+#~ msgid "Website Messages"
+#~ msgstr "Verkkosivun ilmoitukset"
+
+#~ msgid "Website communication history"
+#~ msgstr "Verkkosivun viestihistoria"
+
+#~ msgid "bpost Connector"
+#~ msgstr "bpost Connector"
 
 #~ msgid "Demo Lot/SN"
 #~ msgstr "Demo erä- tai sarjanumero"

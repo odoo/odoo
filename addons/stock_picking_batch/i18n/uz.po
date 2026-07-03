@@ -14,15 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-10-08 18:39+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 18:38+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
+"stock_picking_batch/uz/>\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -32,7 +34,7 @@ msgid "%s was removed from the batch, no quantity processed"
 msgstr "%s partiyadan olib tashlandi, hech qanday miqdor qayta ishlanmadi"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendar\"/>"
 msgstr ""
 
@@ -435,12 +437,6 @@ msgstr "To‘lqin o‘tkazmalarini yaratib bo‘lmaydi"
 #, fuzzy
 msgid "Categories to consider when grouping waves."
 msgstr "To‘lqinlarni guruhlashda hisobga olinadigan toifalar."
-
-#. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#, fuzzy
-msgid "Check Availability"
-msgstr "Mavjudlikni tekshirish"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1081,6 +1077,11 @@ msgstr ""
 "zonasida jamlang."
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Reserve"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__user_id
@@ -1164,16 +1165,15 @@ msgid "Show Allocation Button"
 msgstr "Taqsimlash tugmasini ko‘rsatish"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
-#, fuzzy
-msgid "Show Check Availability"
-msgstr "Mavjudlikni tekshirishni ko‘rsatish"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
 #, fuzzy
 msgid "Show Lots Text"
 msgstr "Partiyalar matnini ko‘rsatish"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Show Reserve Button"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -1371,7 +1371,7 @@ msgstr "Bugungi faoliyatlar"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 #, fuzzy
 msgid "Transfer"
 msgstr "O‘tkazma"
@@ -1402,8 +1402,8 @@ msgstr "O‘tkazuvchi"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 #, fuzzy
 msgid "Transfers"
 msgstr "O‘tkazmalar"
@@ -1483,18 +1483,6 @@ msgid "Wave transfers"
 msgstr "To‘lqin o‘tkazmalar"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
-#, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
-#, fuzzy
-msgid "Website communication history"
-msgstr "Veb-saytdagi muloqot tarixi"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 #, fuzzy
 msgid "When checked, create the batch in draft status"
@@ -1558,3 +1546,19 @@ msgstr "jo‘natish_hajmi"
 #, fuzzy
 msgid "shipping_weight"
 msgstr "jo‘natish_og‘irligi"
+
+#, fuzzy
+#~ msgid "Check Availability"
+#~ msgstr "Mavjudlikni tekshirish"
+
+#, fuzzy
+#~ msgid "Show Check Availability"
+#~ msgstr "Mavjudlikni tekshirishni ko‘rsatish"
+
+#, fuzzy
+#~ msgid "Website Messages"
+#~ msgstr "Veb-sayt xabarlari"
+
+#, fuzzy
+#~ msgid "Website communication history"
+#~ msgstr "Veb-saytdagi muloqot tarixi"

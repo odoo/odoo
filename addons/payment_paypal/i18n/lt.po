@@ -12,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-09-16 18:37+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-18 23:14+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-master/"
 "payment_paypal/lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
 "1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
@@ -54,7 +54,7 @@ msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Email"
 msgstr "El. paštas"
 
@@ -62,11 +62,6 @@ msgstr "El. paštas"
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Generate your webhook"
 msgstr ""
-
-#. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
-msgid "How to configure your paypal account?"
-msgstr "Kaip konfigūruoti jūsų Paypal paskyrą?"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
@@ -112,6 +107,11 @@ msgid "PayPal Client Secret"
 msgstr ""
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+msgid "PayPal Email"
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
 msgstr ""
@@ -135,6 +135,11 @@ msgstr "Mokėjimo operacija"
 #. odoo-javascript
 #: code:addons/payment_paypal/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_paypal
+msgid "Paypal"
 msgstr ""
 
 #. module: payment_paypal
@@ -186,3 +191,6 @@ msgstr ""
 #: code:addons/payment_paypal/models/payment_provider.py:0
 msgid "You must have an HTTPS connection to generate a webhook."
 msgstr ""
+
+#~ msgid "How to configure your paypal account?"
+#~ msgstr "Kaip konfigūruoti jūsų Paypal paskyrą?"

@@ -7,17 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-12-11 13:01+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:39+0000\n"
+"PO-Revision-Date: 2026-06-19 19:19+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
 "payment_redsys/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_amex
+msgid "American Express"
+msgstr ""
 
 #. module: payment_redsys
 #. odoo-python
@@ -28,9 +33,24 @@ msgid ""
 msgstr "支払処理中にエラーが発生しました(%s)。再度試して下さい。"
 
 #. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_bizum
+msgid "Bizum"
+msgstr ""
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__code
 msgid "Code"
 msgstr "コード"
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_diners
+msgid "Diners Club International"
+msgstr ""
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__display_name
@@ -43,6 +63,16 @@ msgstr "表示名"
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_transaction__id
 msgid "ID"
 msgstr "ID"
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_jcb
+msgid "JCB"
+msgstr ""
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
 
 #. module: payment_redsys
 #: model_terms:ir.ui.view,arch_db:payment_redsys.payment_provider_form
@@ -95,7 +125,17 @@ msgid "The technical code of this payment provider."
 msgstr "この決済プロバイダーのテクニカルコード。"
 
 #. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_unionpay
+msgid "UnionPay"
+msgstr ""
+
+#. module: payment_redsys
 #. odoo-python
 #: code:addons/payment_redsys/models/payment_transaction.py:0
 msgid "Unknown status code: %s"
 msgstr "不明なステータスコード: %s"
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_visa
+msgid "VISA"
+msgstr ""

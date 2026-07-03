@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-11-08 22:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 21:08+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-master/"
 "payment_flutterwave/lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
 "19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
 "1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_amex
+msgid "American Express"
+msgstr ""
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -30,9 +35,34 @@ msgid ""
 msgstr ""
 
 #. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_bank_account
+msgid "Bank Account"
+msgstr ""
+
+#. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_bank_transfer
+msgid "Bank Transfer"
+msgstr ""
+
+#. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
 msgid "Code"
 msgstr "Kodas"
+
+#. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_credit
+msgid "Credit Payment"
+msgstr ""
+
+#. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_discover
+msgid "Discover"
+msgstr ""
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__display_name
@@ -74,6 +104,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_mpesa
+msgid "M-Pesa"
+msgstr ""
+
+#. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
+
+#. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_mobile_money
+msgid "Mobile money"
+msgstr ""
+
+#. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_provider
 msgid "Payment Provider"
 msgstr "Mokėjimo paslaugos tiekėjas"
@@ -87,6 +132,11 @@ msgstr "Mokėjimo raktas"
 #: model:ir.model,name:payment_flutterwave.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Mokėjimo operacija"
+
+#. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_paypal
+msgid "Paypal"
+msgstr ""
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
@@ -114,9 +164,19 @@ msgid "The technical code of this payment provider."
 msgstr ""
 
 #. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_ussd
+msgid "USSD"
+msgstr ""
+
+#. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 msgid "Unknown payment status: %s"
+msgstr ""
+
+#. module: payment_flutterwave
+#: model:payment.method,name:payment_flutterwave.payment_method_visa
+msgid "VISA"
 msgstr ""
 
 #. module: payment_flutterwave

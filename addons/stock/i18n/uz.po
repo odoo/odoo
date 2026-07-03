@@ -14,15 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2025-10-08 18:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-19 16:32+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/stock/"
+"uz/>\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -638,15 +640,11 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
-#, fuzzy
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
+"the \"Reserve\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> Hamma mahsulotlarni band qilib "
-"bo‘lmadi. Mahsulotlarni band qilishga qayta urinish uchun \"Mavjudligini "
-"tekshirish\" tugmasini bosing."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1229,6 +1227,12 @@ msgid "Add a Product"
 msgstr "Mahsulot qo‘shish"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Add a description"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 #, fuzzy
@@ -1390,6 +1394,11 @@ msgstr "Barcha toifalar"
 #, fuzzy
 msgid "All Children Package"
 msgstr "Barcha bolalar to‘plami"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
+msgid "All Delivery Providers"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1999,6 +2008,11 @@ msgid "Bulk Weight"
 msgstr "Umumiy og‘irlik"
 
 #. module: stock
+#: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
+msgid "Buy Odoo Enterprise now to get more providers."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 #, fuzzy
 msgid "By Lots"
@@ -2237,13 +2251,6 @@ msgstr ""
 "belgi(lar)"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.vpicktree
-#, fuzzy
-msgid "Check Availability"
-msgstr "Mavjudligini tekshirish"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 #, fuzzy
 msgid ""
@@ -2313,13 +2320,6 @@ msgid "Clear"
 msgstr "Tozalash"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-#, fuzzy
-msgid "Click or press enter to add a description"
-msgstr "Tavsif qo‘shish uchun bosing yoki Enter tugmasini bosing"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 #, fuzzy
 msgid "Close"
@@ -2374,110 +2374,6 @@ msgid "Compute shipping costs"
 msgstr "Yetkazib berish xarajatlarini hisoblash"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Yetkazib berish xarajatlarini hisoblash va DHL orqali jo‘natish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Yetkazib berish xarajatlarini hisoblash va DHL orqali jo‘natish<br/> "
-"<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Easypost orqali jo‘natish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Envia.com orqali jo‘natish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Yetkazib berish xarajatlarini hisoblash va FedEx orqali jo‘natish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Yetkazib berish xarajatlarini hisoblash va FedEx orqali jo‘natish<br/> "
-"<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Sendcloud orqali jo‘natish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Shiprocket orqali jo‘natish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Starshipit orqali jo‘natish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Yetkazib berish xarajatlarini hisoblash va UPS orqali jo‘natish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Yetkazib berish xarajatlarini hisoblash va UPS orqali jo‘natish<br/> "
-"<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Yetkazib berish xarajatlarini hisoblash va USPS orqali jo‘natish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Yetkazib berish xarajatlarini hisoblash va USPS orqali jo‘natish<br/> "
-"<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Compute shipping costs and ship with bpost"
-msgstr "Yetkazib berish xarajatlarini hisoblash va bpost orqali jo‘natish"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 #, fuzzy
 msgid "Computes when a move should be reserved"
@@ -2496,6 +2392,11 @@ msgstr "Sozlamalarni sozlash"
 #, fuzzy
 msgid "Configuration"
 msgstr "Konfiguratsiya"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -3069,18 +2970,6 @@ msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "DHL Connector"
-msgstr "DHL ulagichi"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-#, fuzzy
-msgid "DHL Express Connector"
-msgstr "DHL tezkor ulagichi"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
@@ -3253,12 +3142,6 @@ msgstr "Standart nom"
 #, fuzzy
 msgid "Default OBTRETU Barcode"
 msgstr "Standart OBTRETU shtrix-kodi"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-#, fuzzy
-msgid "Default Return Name"
-msgstr "Standart qaytarish nomi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__default_stock_location_id
@@ -3529,12 +3412,6 @@ msgstr "Talab"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
 msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-#, fuzzy
-msgid "Demo Address and Name"
-msgstr "Namoyish manzili va nomi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -3931,7 +3808,6 @@ msgid "Do you confirm you want to scrap"
 msgstr "Chiqitga chiqarishni tasdiqlaysizmi"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #, fuzzy
 msgid "Documentation"
@@ -4011,12 +3887,6 @@ msgstr "Dymo"
 #, fuzzy
 msgid "Earliest Possible Arrival"
 msgstr "Eng erta mumkin bo‘lgan kelish vaqti"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-#, fuzzy
-msgid "Easypost Connector"
-msgstr "Easypost ulagichi"
 
 #. module: stock
 #. odoo-python
@@ -4115,12 +3985,6 @@ msgstr "Omboringizda saqlanadigan mahsulotning kuzatilishini ta'minlang"
 #, fuzzy
 msgid "Enter a description"
 msgstr "Tavsif kiriting"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
-#, fuzzy
-msgid "Envia.com Connector"
-msgstr "Envia.com ulagichi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
@@ -4228,17 +4092,15 @@ msgid "February"
 msgstr "Fevral"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "FedEx Connector"
-msgstr "FedEx ulagichi"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 #, fuzzy
 msgid "Filtered Location"
 msgstr "Filtrlangan joy"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Find a Delivery Provider"
+msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -4265,6 +4127,12 @@ msgstr "Birinchi SN/Partiya"
 #, fuzzy
 msgid "First Serial Number"
 msgstr "Birinchi seriya raqami"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Fold"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -4540,6 +4408,12 @@ msgstr "Partiya raqamlarini yaratish"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Generate Lots"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, fuzzy
 msgid "Generate Serial numbers"
@@ -4548,9 +4422,8 @@ msgstr "Seriya raqamlarini yaratish"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-#, fuzzy
-msgid "Generate Serials/Lots"
-msgstr "Seriyalar/partiyalar yaratish"
+msgid "Generate Serials"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -5092,6 +4965,7 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, fuzzy
 msgid "Import Lots"
 msgstr "Partiyalarni import qilish"
@@ -5099,16 +4973,10 @@ msgstr "Partiyalarni import qilish"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, fuzzy
 msgid "Import Serials"
 msgstr "Seriya raqamlarini import qilish"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-#, fuzzy
-msgid "Import Serials/Lots"
-msgstr "Seriya raqamlari/Partiyalarni import qilish"
 
 #. module: stock
 #. odoo-python
@@ -6885,6 +6753,12 @@ msgid "No allocation need found."
 msgstr "Taqsimlash zarurati topilmadi."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "No backorder has been planned for undelivered demanded quantities: %s"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 #, fuzzy
 msgid "No delivery to do!"
@@ -7022,13 +6896,6 @@ msgid "Notes"
 msgstr "Eslatmalar"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
-msgid "Nothing to check the availability for."
-msgstr "Mavjudligini tekshirish uchun hech narsa yo‘q."
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
 #, fuzzy
 msgid "November"
@@ -7160,6 +7027,14 @@ msgstr "Har bir partiya/seriya raqamiga bitta"
 #, fuzzy
 msgid "One per unit"
 msgstr "Har bir birlikka bitta"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
+"expected %(nbr_demanded)s %(uom)s"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -8043,14 +7918,9 @@ msgid "Please create a warehouse for company %s."
 msgstr "Iltimos, %s kompaniyasi uchun ombor yarating."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-#, fuzzy
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Please put this document inside your return parcel.<br/>"
 msgstr ""
-"Iltimos, bu hujjatni qaytarish paketingiz ichiga joylang.<br/> Paketingiz "
-"quyidagi manzilga yuborilishi shart:"
 
 #. module: stock
 #. odoo-javascript
@@ -8873,7 +8743,7 @@ msgid "Quants cannot be created for consumables or services."
 msgstr "Sarf materiallari yoki xizmatlar uchun kvantlar yaratilmaydi."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
 #, fuzzy
 msgid "RETURN OF"
 msgstr "QAYTARISH"
@@ -9309,6 +9179,8 @@ msgstr "Zaxiralash usuli"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
 msgstr ""
 
@@ -9911,12 +9783,6 @@ msgid "Send email"
 msgstr "Elektron xat yuborish"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
-#, fuzzy
-msgid "Sendcloud Connector"
-msgstr "Sendcloud ulagichi"
-
-#. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 #, fuzzy
 msgid ""
@@ -10122,12 +9988,6 @@ msgid "Shipping"
 msgstr "Yuk tashish"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "Shipping Connectors"
-msgstr "Yuk tashish ulagichlari"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__move_type
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10159,12 +10019,6 @@ msgstr ""
 #, fuzzy
 msgid "Shipping: Send by Email"
 msgstr "Yuk jo‘natish: Elektron pochta orqali yuborish"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
-#, fuzzy
-msgid "Shiprocket Connector"
-msgstr "Shiprocket ulagichi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -10480,12 +10334,6 @@ msgstr ""
 #, fuzzy
 msgid "Starred"
 msgstr "Yulduzchali"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
-#, fuzzy
-msgid "Starshipit Connector"
-msgstr "Starshipit ulagichi"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -10957,13 +10805,10 @@ msgstr "Texnik ma'lumot"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
-#, fuzzy
 msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
+"Technical field used to compute whether the button \"Reserve\" should be "
+"displayed."
 msgstr ""
-"\"Mavjudligini tekshirish\" tugmasi ko‘rsatilishi kerakligini hisoblash "
-"uchun ishlatiladigan texnik maydon."
 
 #. module: stock
 #. odoo-python
@@ -11346,6 +11191,12 @@ msgstr "Bu aksiya harakatini yaratgan ombor qoidasi"
 #, fuzzy
 msgid "There are no inventory adjustments to revert."
 msgstr "Bekor qilish uchun inventar tuzatishlari mavjud emas."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "There is nothing to reserve."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -11976,6 +11827,11 @@ msgid "Transfer"
 msgstr "O‘tkazma"
 
 #. module: stock
+#: model:mail.message.subtype,name:stock.mt_picking_state
+msgid "Transfer Status"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 #, fuzzy
 msgid "Transfer to"
@@ -12106,20 +11962,6 @@ msgstr "Tur"
 #, fuzzy
 msgid "Type of the exception activity on record."
 msgstr "Qaydda istisnoli faoliyat turi."
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "UPS Connector"
-msgstr "UPS ulagichi"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
-msgid "USPS Connector"
-msgstr "USPS ulagichi"
 
 #. module: stock
 #. odoo-javascript
@@ -12628,20 +12470,6 @@ msgstr "Ogohlantirishlar"
 #, fuzzy
 msgid "Warnings for Stock"
 msgstr "Zaxira uchun ogohlantirishlar"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__website_message_ids
-#, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
-#, fuzzy
-msgid "Website communication history"
-msgstr "Veb-sayt muloqot tarixi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
@@ -13332,6 +13160,11 @@ msgid ""
 msgstr "Tushligingiz yetkazib berildi. Yoqimli ishtaha!"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Your parcel must be sent to this address:"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 #, fuzzy
 msgid ""
@@ -13396,12 +13229,6 @@ msgstr "]<br/>min:"
 #, fuzzy
 msgid "barcodelookup.com"
 msgstr "barcodelookup.com"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-#, fuzzy
-msgid "bpost Connector"
-msgstr "bpost ulanishi"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
@@ -13660,6 +13487,201 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Yetkazib berish buyurtmasi (Havola "
 "{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                All products could not be reserved. Click "
+#~ "on the \"Check Availability\" button to try to reserve products."
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/> Hamma mahsulotlarni band qilib "
+#~ "bo‘lmadi. Mahsulotlarni band qilishga qayta urinish uchun \"Mavjudligini "
+#~ "tekshirish\" tugmasini bosing."
+
+#, fuzzy
+#~ msgid "Check Availability"
+#~ msgstr "Mavjudligini tekshirish"
+
+#, fuzzy
+#~ msgid "Click or press enter to add a description"
+#~ msgstr "Tavsif qo‘shish uchun bosing yoki Enter tugmasini bosing"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va DHL orqali jo‘natish"
+
+#, fuzzy
+#~ msgid ""
+#~ "Compute shipping costs and ship with DHL<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va DHL orqali jo‘natish<br/> "
+#~ "<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</"
+#~ "strong>"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with Easypost"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Easypost orqali jo‘natish"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with Envia.com"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Envia.com orqali jo‘natish"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va FedEx orqali jo‘natish"
+
+#, fuzzy
+#~ msgid ""
+#~ "Compute shipping costs and ship with FedEx<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va FedEx orqali jo‘natish<br/> "
+#~ "<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</"
+#~ "strong>"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with Sendcloud"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Sendcloud orqali jo‘natish"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with Shiprocket"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Shiprocket orqali jo‘natish"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with Starshipit"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Starshipit orqali jo‘natish"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va UPS orqali jo‘natish"
+
+#, fuzzy
+#~ msgid ""
+#~ "Compute shipping costs and ship with UPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va UPS orqali jo‘natish<br/> "
+#~ "<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</"
+#~ "strong>"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va USPS orqali jo‘natish"
+
+#, fuzzy
+#~ msgid ""
+#~ "Compute shipping costs and ship with USPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va USPS orqali jo‘natish<br/> "
+#~ "<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</"
+#~ "strong>"
+
+#, fuzzy
+#~ msgid "Compute shipping costs and ship with bpost"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va bpost orqali jo‘natish"
+
+#, fuzzy
+#~ msgid "DHL Connector"
+#~ msgstr "DHL ulagichi"
+
+#, fuzzy
+#~ msgid "DHL Express Connector"
+#~ msgstr "DHL tezkor ulagichi"
+
+#, fuzzy
+#~ msgid "Default Return Name"
+#~ msgstr "Standart qaytarish nomi"
+
+#, fuzzy
+#~ msgid "Demo Address and Name"
+#~ msgstr "Namoyish manzili va nomi"
+
+#, fuzzy
+#~ msgid "Easypost Connector"
+#~ msgstr "Easypost ulagichi"
+
+#, fuzzy
+#~ msgid "Envia.com Connector"
+#~ msgstr "Envia.com ulagichi"
+
+#, fuzzy
+#~ msgid "FedEx Connector"
+#~ msgstr "FedEx ulagichi"
+
+#, fuzzy
+#~ msgid "Generate Serials/Lots"
+#~ msgstr "Seriyalar/partiyalar yaratish"
+
+#, fuzzy
+#~ msgid "Import Serials/Lots"
+#~ msgstr "Seriya raqamlari/Partiyalarni import qilish"
+
+#, fuzzy
+#~ msgid "Nothing to check the availability for."
+#~ msgstr "Mavjudligini tekshirish uchun hech narsa yo‘q."
+
+#, fuzzy
+#~ msgid ""
+#~ "Please put this document inside your return parcel.<br/>\n"
+#~ "                                Your parcel must be sent to this address:"
+#~ msgstr ""
+#~ "Iltimos, bu hujjatni qaytarish paketingiz ichiga joylang.<br/> Paketingiz "
+#~ "quyidagi manzilga yuborilishi shart:"
+
+#, fuzzy
+#~ msgid "Sendcloud Connector"
+#~ msgstr "Sendcloud ulagichi"
+
+#, fuzzy
+#~ msgid "Shipping Connectors"
+#~ msgstr "Yuk tashish ulagichlari"
+
+#, fuzzy
+#~ msgid "Shiprocket Connector"
+#~ msgstr "Shiprocket ulagichi"
+
+#, fuzzy
+#~ msgid "Starshipit Connector"
+#~ msgstr "Starshipit ulagichi"
+
+#, fuzzy
+#~ msgid ""
+#~ "Technical field used to compute whether the button \"Check Availability\" "
+#~ "should be displayed."
+#~ msgstr ""
+#~ "\"Mavjudligini tekshirish\" tugmasi ko‘rsatilishi kerakligini hisoblash "
+#~ "uchun ishlatiladigan texnik maydon."
+
+#, fuzzy
+#~ msgid "UPS Connector"
+#~ msgstr "UPS ulagichi"
+
+#, fuzzy
+#~ msgid "USPS Connector"
+#~ msgstr "USPS ulagichi"
+
+#, fuzzy
+#~ msgid "Website Messages"
+#~ msgstr "Veb-sayt xabarlari"
+
+#, fuzzy
+#~ msgid "Website communication history"
+#~ msgstr "Veb-sayt muloqot tarixi"
+
+#, fuzzy
+#~ msgid "bpost Connector"
+#~ msgstr "bpost ulanishi"
 
 #, fuzzy
 #~ msgid "Demo Lot/SN"

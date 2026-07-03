@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-12-03 08:37+0000\n"
-"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 20:07+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
 "payment_dpo/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: payment_dpo
+#: model:payment.method,name:payment_dpo.payment_method_amex
+msgid "American Express"
+msgstr ""
 
 #. module: payment_dpo
 #. odoo-python
@@ -26,6 +31,11 @@ msgstr ""
 msgid ""
 "An error occurred during processing of your payment (code %(code)s: %"
 "(explanation)s). Please try again."
+msgstr ""
+
+#. module: payment_dpo
+#: model:payment.method,name:payment_dpo.payment_method_card
+msgid "Card"
 msgstr ""
 
 #. module: payment_dpo
@@ -66,6 +76,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: payment_dpo
+#: model:payment.method,name:payment_dpo.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
+
+#. module: payment_dpo
+#: model:payment.method,name:payment_dpo.payment_method_mobile
+msgid "Mobile"
+msgstr ""
+
+#. module: payment_dpo
 #: model:ir.model,name:payment_dpo.model_payment_provider
 msgid "Payment Provider"
 msgstr ""
@@ -89,4 +109,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_dpo/models/payment_transaction.py:0
 msgid "Unknown status code: %s"
+msgstr ""
+
+#. module: payment_dpo
+#: model:payment.method,name:payment_dpo.payment_method_visa
+msgid "VISA"
 msgstr ""

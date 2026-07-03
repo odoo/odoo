@@ -6,15 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-10-08 18:39+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 16:40+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-master/"
+"stock_delivery/lv/>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
+"19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -25,6 +28,18 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
 msgid "(computed:"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-javascript
+#: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
+msgid "1. Download and print the Return label and place it in your package."
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-javascript
+#: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
+msgid "2. Download and print the Shipping label and place it on your package."
 msgstr ""
 
 #. module: stock_delivery
@@ -183,6 +198,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__display_name
@@ -200,6 +216,12 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
 msgid "Display tracking links"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-javascript
+#: code:addons/stock_delivery/static/src/return_order_dialog/return_order_dialog.js:0
+msgid "Download Shipping Label"
 msgstr ""
 
 #. module: stock_delivery
@@ -226,7 +248,6 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__hs_code
-#: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "HS Code"
 msgstr ""
@@ -234,6 +255,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__id
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__id
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__id
@@ -308,7 +330,6 @@ msgid "Pickup Location Data"
 msgstr ""
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
 msgstr ""
@@ -321,6 +342,11 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_product_product
+msgid "Product Variant"
 msgstr ""
 
 #. module: stock_delivery

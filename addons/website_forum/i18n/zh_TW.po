@@ -12,17 +12,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-11-09 15:12+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 19:29+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-19/website_forum/zh_Hant/>\n"
+"projects/odoo-master/website_forum/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1290,30 +1290,6 @@ msgid "Chief Commentator"
 msgstr "首席評論員"
 
 #. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click here to accept this answer."
-msgstr "點選這裡以接受回答。"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your answer."
-msgstr "點選貼出您的答案。"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your question."
-msgstr "點選以貼出您的問題。"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to reply."
-msgstr "按下以回覆。"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
 msgid "Close"
@@ -1485,12 +1461,6 @@ msgstr "建立日期"
 #: model_terms:ir.actions.act_window,help:website_forum.forum_post_action
 msgid "Create a new forum post"
 msgstr "建立新的論壇貼文"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Create a new post in this forum by clicking on the button."
-msgstr "點選按鈕在此論壇中建立新貼文。"
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1707,6 +1677,11 @@ msgstr "負評"
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Downvote for posting offensive contents"
 msgstr "對冒犯內容給予負評"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Drag blocks here to add them on all forum"
+msgstr ""
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
@@ -2031,6 +2006,9 @@ msgstr "討論區標籤"
 
 #. module: website_forum
 #. odoo-javascript
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #: code:addons/website_forum/static/src/website_builder/forum_searchbar_option.xml:0
 #: model:ir.actions.act_window,name:website_forum.forum_forum_action
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
@@ -2052,12 +2030,6 @@ msgstr "此帖文有活動時，接收通知"
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "Get notified when this tag is used"
 msgstr "有人使用此標籤時，接收通知"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Give your post title."
-msgstr "給出你的貼文主題。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2277,12 +2249,6 @@ msgstr "圖像 512"
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "Inappropriate and unacceptable statements"
 msgstr "不恰當和不可接受的陳述"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Insert tags related to your question."
-msgstr "插入標籤到和您有關的問題。"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -2894,18 +2860,6 @@ msgstr ""
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
 msgstr "權威人士"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your answer here."
-msgstr "在這裡放置您的回答。"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your question here."
-msgstr "在這裡放置您的問題。"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
@@ -3837,21 +3791,11 @@ msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
-msgid "Website Messages"
-msgstr "網站資訊"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_url
 msgid "Website URL"
 msgstr "網站網址"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
-msgid "Website communication history"
-msgstr "網站溝通記錄"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
@@ -4322,3 +4266,36 @@ msgstr "您的基礎資料可以被視為提示工具"
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "your email..."
 msgstr "你的電郵地址⋯"
+
+#~ msgid "Click here to accept this answer."
+#~ msgstr "點選這裡以接受回答。"
+
+#~ msgid "Click to post your answer."
+#~ msgstr "點選貼出您的答案。"
+
+#~ msgid "Click to post your question."
+#~ msgstr "點選以貼出您的問題。"
+
+#~ msgid "Click to reply."
+#~ msgstr "按下以回覆。"
+
+#~ msgid "Create a new post in this forum by clicking on the button."
+#~ msgstr "點選按鈕在此論壇中建立新貼文。"
+
+#~ msgid "Give your post title."
+#~ msgstr "給出你的貼文主題。"
+
+#~ msgid "Insert tags related to your question."
+#~ msgstr "插入標籤到和您有關的問題。"
+
+#~ msgid "Put your answer here."
+#~ msgstr "在這裡放置您的回答。"
+
+#~ msgid "Put your question here."
+#~ msgstr "在這裡放置您的問題。"
+
+#~ msgid "Website Messages"
+#~ msgstr "網站資訊"
+
+#~ msgid "Website communication history"
+#~ msgstr "網站溝通記錄"

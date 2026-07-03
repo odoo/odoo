@@ -7,23 +7,23 @@
 # Wil Odoo, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-04-04 13:07+0000\n"
-"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 00:26+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/website_mass_mailing/zh_Hant/>\n"
+"projects/odoo-master/website_mass_mailing/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_benefits_popup
@@ -154,6 +154,11 @@ msgid "Always <b>First</b>."
 msgstr "永遠<b>置頂</b>。"
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid "Avatars"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_grid
 msgid "Be the first to find out all the latest new, products and trends."
 msgstr "成為第一個了解所有最新消息、產品資訊與趨勢的人。"
@@ -163,6 +168,13 @@ msgstr "成為第一個了解所有最新消息、產品資訊與趨勢的人。
 msgid ""
 "Be the first to find out all the latest news,<br/> products, and trends."
 msgstr "成為第一個了解所有最新消息、<br/>產品資訊與趨勢的人。"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid ""
+"Be the first to know when we launch.<br/>Leave your email and we'll notify "
+"you at launch."
+msgstr ""
 
 #. module: website_mass_mailing
 #. odoo-javascript
@@ -223,6 +235,12 @@ msgstr ""
 "收取有關公司動向、最新網誌文章、產品更新等最新消息，直接發送至你的收件箱。"
 
 #. module: website_mass_mailing
+#. odoo-python
+#: code:addons/website_mass_mailing/controllers/main.py:0
+msgid "Invalid subscription type"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_aside
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "John Smith"
@@ -233,6 +251,11 @@ msgstr "例：Alex Wong"
 msgid ""
 "Join our mailing list to receive carefully curated resources, tips, and "
 "updates straight to your inbox."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid "Join the waitlist."
 msgstr ""
 
 #. module: website_mass_mailing
@@ -256,13 +279,15 @@ msgstr "最新消息"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+#, fuzzy
 msgid "Newsletter Aside"
-msgstr ""
+msgstr "旁附電子通訊"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+#, fuzzy
 msgid "Newsletter Benefits"
-msgstr ""
+msgstr "電子通訊優勢"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
@@ -353,7 +378,7 @@ msgstr ""
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.js:0
+#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.edit.js:0
 msgid "Subscribe to"
 msgstr "訂閱"
 
@@ -395,6 +420,11 @@ msgid "This block is not linked to an active Newsletter."
 msgstr ""
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid "Waiting List"
+msgstr ""
+
+#. module: website_mass_mailing
 #. odoo-python
 #: code:addons/website_mass_mailing/controllers/website_form.py:0
 msgid "You cannot subscribe to the following list anymore : %s"
@@ -408,13 +438,13 @@ msgstr "由現在起，你會收到最新消息。"
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.js:0
+#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.edit.js:0
 msgid "Your Email"
 msgstr "你的電郵地址"
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.js:0
+#: code:addons/website_mass_mailing/static/src/js/mass_mailing_form_editor.edit.js:0
 msgid "Your Name"
 msgstr "您的姓名"
 
@@ -430,6 +460,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "johnsmith@example.com"
 msgstr "johnsmith@example.com"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_waiting_list
+msgid "people on the waitlist."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid ""
+"updates, digest, bulletin, announcements, notifications, communication, "
+"email, prompt, subscription, subscribe, mailing-list, news, waitlist, "
+"waiting, signup, hero, jumbotron, headline, header, introduction, home"
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets

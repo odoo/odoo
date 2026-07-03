@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-12-11 13:01+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 05:16+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
 "auth_totp_mail/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -227,16 +227,16 @@ msgid "Authentication Device"
 msgstr "Urządzenie uwierzytelniające"
 
 #. module: auth_totp_mail
-#. odoo-javascript
-#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
-msgid "Authentication code via email"
-msgstr ""
-
-#. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
 msgstr "Nie udało się wysłać e-maila: %s nie posiada adresu e-mail."
+
+#. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Check your mailbox"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -281,12 +281,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
 msgstr "Wymuszanie uwierzytelniania dwuskładnikowego"
-
-#. module: auth_totp_mail
-#. odoo-javascript
-#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
-msgid "Enter below the six-digit authentication code just sent to your email"
-msgstr ""
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_ir_http
@@ -383,6 +377,12 @@ msgid "Settings: 2Fa New Login"
 msgstr "Ustawienia: Nowe logowanie 2Fa"
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "Six-digit authentication code"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 msgid "Two-factor Authentication"
 msgstr "Uwierzytelnianie dwuskładnikowe"
@@ -428,6 +428,12 @@ msgid "Verify"
 msgstr ""
 
 #. module: auth_totp_mail
+#. odoo-javascript
+#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
+msgid "We sent a 6-digit code to your email address."
+msgstr ""
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid ""
 "We strongly recommend enabling the two-factor authentication using an "
@@ -437,12 +443,6 @@ msgstr ""
 "Zdecydowanie zalecamy włączenie uwierzytelniania dwuskładnikowego za pomocą "
 "aplikacji uwierzytelniającej, aby pomóc zabezpieczyć konto.\n"
 "<br/>"
-
-#. module: auth_totp_mail
-#. odoo-javascript
-#: code:addons/auth_totp_mail/static/src/services/check_identity/check_identity.xml:0
-msgid "XXXXXX"
-msgstr ""
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code

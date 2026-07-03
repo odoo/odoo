@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-11-16 15:28+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 06:55+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-master/"
 "auth_timeout/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_timeout
 #: model:ir.model,name:auth_timeout.model_res_groups
@@ -75,11 +75,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: auth_timeout
-#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
-msgid "Inactivity"
-msgstr ""
-
-#. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity
 msgid "Inactivity timeout"
 msgstr ""
@@ -115,7 +110,13 @@ msgid "Lock Timeout Inactivity Delay Unit"
 msgstr ""
 
 #. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "Lock screen"
+msgstr ""
+
+#. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_2fa_selection__without_2fa
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid "Logout"
 msgstr "Odjava"
 
@@ -155,13 +156,20 @@ msgid "Screen lock with two-factor authentication"
 msgstr ""
 
 #. module: auth_timeout
-#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
-msgid "Session"
-msgstr "Smjena"
-
-#. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout
 msgid "Session timeout"
+msgstr ""
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid ""
+"The screen of the users in this group will be locked after a defined delay"
+msgstr ""
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid ""
+"The users in this group will be automatically logout at regular intervals"
 msgstr ""
 
 #. module: auth_timeout
@@ -181,6 +189,11 @@ msgstr ""
 #. module: auth_timeout
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid "Timeouts"
+msgstr ""
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "Two-factor authentication"
 msgstr ""
 
 #. module: auth_timeout
@@ -225,3 +238,6 @@ msgstr ""
 #: model:ir.model,name:auth_timeout.model_ir_websocket
 msgid "websocket message handling"
 msgstr "upravljanje porukama websocketa"
+
+#~ msgid "Session"
+#~ msgstr "Smjena"

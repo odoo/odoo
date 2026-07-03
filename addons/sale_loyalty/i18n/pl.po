@@ -4,14 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-10-17 12:45+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 01:23+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
 "sale_loyalty/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -19,13 +20,25 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid " - On products with the following taxes: %(taxes)s"
 msgstr " - Na produkty z następującymi podatkami: %(taxes)s"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Issued"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Used"
+msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -42,14 +55,6 @@ msgstr "<strong>Karta lojalnościowa</strong>"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "A better global discount is already applied."
 msgstr "Lepsza globalna zniżka została już zastosowana."
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr ""
-"Aby otrzymać nagrodę, należy zakupić co najmniej %(amount)s%(currency)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -121,8 +126,9 @@ msgstr "Data utworzenia"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "Odrzuć"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -171,8 +177,9 @@ msgstr "Kod karty podarunkowej"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__gift_card_count
+#, fuzzy
 msgid "Gift Card Count"
-msgstr ""
+msgstr "Liczba kart podarunkowych"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -233,15 +240,10 @@ msgid "Issued"
 msgstr "Wydano"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Issued :"
-msgstr "Wydano:"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "Pozycja zapisu"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -258,20 +260,9 @@ msgid "Last Updated on"
 msgstr "Data ostatniej aktualizacji"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Loyalty Card :"
-msgstr "Karta lojalnościowa:"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
 msgstr "Kupon lojalnościowy"
-
-#. module: sale_loyalty
-#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
-msgid "Loyalty Data"
-msgstr "Dane lojalnościowe"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -317,8 +308,9 @@ msgstr "Nie wybrano nagrody."
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/tests/common.py:0
+#, fuzzy
 msgid "No reward to claim with this coupon"
-msgstr ""
+msgstr "Z tym kuponem nie można odebrać żadnej nagrody"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -392,8 +384,9 @@ msgstr "Produkty premiowane"
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
+#, fuzzy
 msgid "Rewards Available"
-msgstr ""
+msgstr "Dostępne nagrody"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
@@ -415,8 +408,9 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id_partner_id
+#, fuzzy
 msgid "Sale Order Customer"
-msgstr ""
+msgstr "Klient zamówienia zakupu"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -488,8 +482,9 @@ msgstr "Zamówienie sprzedaży, z którego generowany jest kupon"
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
+#, fuzzy
 msgid "There are available rewards not added to this order."
-msgstr ""
+msgstr "Dostępne są nagrody niedodane do tego zamówienia."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -567,6 +562,14 @@ msgid "This promo code is already applied."
 msgstr "Ten kod promocyjny został już zastosowany."
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"To take advantage of this offer, your order must include at least %(amount)s "
+"%(currency)s of the eligible products."
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
@@ -578,18 +581,15 @@ msgid "Used"
 msgstr "Używany"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Used :"
-msgstr "Użyto:"
-
-#. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "You don't have enough coupon points to proceed. Please check your applied "
 "rewards and coupon balance. "
 msgstr ""
+"Nie masz wystarczającej liczby punktów kuponu. Sprawdź swoje nagrody i saldo "
+"punktów na koncie. "
 
 #. module: sale_loyalty
 #. odoo-python
@@ -609,5 +609,23 @@ msgstr ""
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
+#, fuzzy
 msgid "order_id"
-msgstr ""
+msgstr "order_id"
+
+#~ msgid ""
+#~ "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+#~ msgstr ""
+#~ "Aby otrzymać nagrodę, należy zakupić co najmniej %(amount)s%(currency)s"
+
+#~ msgid "Issued :"
+#~ msgstr "Wydano:"
+
+#~ msgid "Loyalty Card :"
+#~ msgstr "Karta lojalnościowa:"
+
+#~ msgid "Loyalty Data"
+#~ msgstr "Dane lojalnościowe"
+
+#~ msgid "Used :"
+#~ msgstr "Użyto:"

@@ -36,10 +36,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-04-13 10:13+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-22 00:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
 "website_forum/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1352,30 +1352,6 @@ msgid "Chief Commentator"
 msgstr "Główny komentator"
 
 #. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click here to accept this answer."
-msgstr "Kliknij tutaj aby zaakceptować tą odpowiedź."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your answer."
-msgstr "Kliknij aby opublikować swoją odpowiedź"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to post your question."
-msgstr "Kliknij aby opublikować swoje pytanie."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to reply."
-msgstr "Kliknij aby odpowiedzieć."
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
 msgid "Close"
@@ -1547,12 +1523,6 @@ msgstr "Data utworzenia"
 #: model_terms:ir.actions.act_window,help:website_forum.forum_post_action
 msgid "Create a new forum post"
 msgstr "Utwórz nowy wątek"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Create a new post in this forum by clicking on the button."
-msgstr "Utwórz nowy post na tym forum, klikając przycisk."
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1771,6 +1741,11 @@ msgstr "Głos przeciw"
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Downvote for posting offensive contents"
 msgstr "Downvote za zamieszczanie obraźliwych treści"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Drag blocks here to add them on all forum"
+msgstr ""
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
@@ -2099,6 +2074,9 @@ msgstr "Tagi forum"
 
 #. module: website_forum
 #. odoo-javascript
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #: code:addons/website_forum/static/src/website_builder/forum_searchbar_option.xml:0
 #: model:ir.actions.act_window,name:website_forum.forum_forum_action
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
@@ -2120,12 +2098,6 @@ msgstr "Otrzymaj powiadomienie o aktywności w tym poście"
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "Get notified when this tag is used"
 msgstr "Otrzymaj powiadomienie, kiedy ten tag zostanie użyty"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Give your post title."
-msgstr "Nadaj tytuł swojemu postowi."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2353,12 +2325,6 @@ msgstr "Obraz 512"
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "Inappropriate and unacceptable statements"
 msgstr "Niewłaściwe i niedopuszczalne stwierdzenia"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Insert tags related to your question."
-msgstr "Wstaw znaczniki związane z Twoim pytaniem."
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -2973,18 +2939,6 @@ msgstr ""
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
 msgstr "Ekspert"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your answer here."
-msgstr "Tutaj umieść swoją odpowiedź."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Put your question here."
-msgstr "Umieść tutaj swoje pytanie."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
@@ -3931,21 +3885,11 @@ msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
-msgid "Website Messages"
-msgstr "Wiadomości"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_url
 msgid "Website URL"
 msgstr "Adres strony internetowej"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
-msgid "Website communication history"
-msgstr "Historia komunikacji"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
@@ -4427,3 +4371,36 @@ msgstr "Twoja biografia może być postrzegana jako podpowiedź"
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "your email..."
 msgstr "twój adres..."
+
+#~ msgid "Click here to accept this answer."
+#~ msgstr "Kliknij tutaj aby zaakceptować tą odpowiedź."
+
+#~ msgid "Click to post your answer."
+#~ msgstr "Kliknij aby opublikować swoją odpowiedź"
+
+#~ msgid "Click to post your question."
+#~ msgstr "Kliknij aby opublikować swoje pytanie."
+
+#~ msgid "Click to reply."
+#~ msgstr "Kliknij aby odpowiedzieć."
+
+#~ msgid "Create a new post in this forum by clicking on the button."
+#~ msgstr "Utwórz nowy post na tym forum, klikając przycisk."
+
+#~ msgid "Give your post title."
+#~ msgstr "Nadaj tytuł swojemu postowi."
+
+#~ msgid "Insert tags related to your question."
+#~ msgstr "Wstaw znaczniki związane z Twoim pytaniem."
+
+#~ msgid "Put your answer here."
+#~ msgstr "Tutaj umieść swoją odpowiedź."
+
+#~ msgid "Put your question here."
+#~ msgstr "Umieść tutaj swoje pytanie."
+
+#~ msgid "Website Messages"
+#~ msgstr "Wiadomości"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historia komunikacji"

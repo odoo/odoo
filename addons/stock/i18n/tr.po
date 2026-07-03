@@ -41,17 +41,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-01-13 16:10+0000\n"
-"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/stock/"
-"tr/>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 06:00+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-master/"
+"stock/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -633,11 +633,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
+"the \"Reserve\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                Tüm ürünler rezerve edilemedi. Ürünleri "
-"rezerve etmeyi denemek için \"Uygunluk Kontrolü\" düğmesine tıklayın."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1143,6 +1140,12 @@ msgid "Add a Product"
 msgstr "Ürün Ekle"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Add a description"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
@@ -1279,6 +1282,11 @@ msgstr "Tüm Kategoriler"
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
 msgstr "Tüm Çocuklar Paketi"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
+msgid "All Delivery Providers"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1804,6 +1812,11 @@ msgid "Bulk Weight"
 msgstr "Toplam Ağırlık"
 
 #. module: stock
+#: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
+msgid "Buy Odoo Enterprise now to get more providers."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
 msgstr "Lotlara Göre"
@@ -2009,12 +2022,6 @@ msgstr ""
 "içindeki verileri ayırmak için kullanılan karakter(ler)"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.vpicktree
-msgid "Check Availability"
-msgstr "Uygunluk Kontrolü"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
@@ -2073,12 +2080,6 @@ msgid "Clear"
 msgstr "Temizle"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-msgid "Click or press enter to add a description"
-msgstr "Açıklama eklemek için tıklayın veya 'enter' tuşuna basın"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Close"
 msgstr "Kapat"
@@ -2128,100 +2129,6 @@ msgid "Compute shipping costs"
 msgstr "Teslimat maliyetlerini hesapla"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Teslim maliyetlerini hesaplayın ve DHL ile gönderin"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"DHL ile kargo maliyetlerini hesapla ve gönder<br/>\n"
-"                                    <strong>(yüklemek için Ana "
-"Sayfa&gt;Uygulamalar'a gidin)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "Teslimat maliyetlerini hesaplayın ve Easypost ile gönderin"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "Gönderim maliyetlerini hesaplayın ve Envia.com ile gönderin"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Teslimat maliyetlerini hesaplayın ve FedEx ile gönderin"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"FedEx ile kargo maliyetlerini hesapla ve gönder<br/>\n"
-"                                    <strong>(yüklemek için Ana "
-"Sayfa&gt;Uygulamalar'a gidin)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Gönderim maliyetlerini hesaplayın ve Sendcloud ile gönderin"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Nakliye masraflarını hesaplayın ve Shiprocket ile gönderin"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "Starshipit ile kargo maliyetlerini hesapla ve gönder"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Teslimat maliyetlerini hesaplayın ve UPS ile gönderin"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"UPS ile kargo maliyetlerini hesapla ve gönder<br/>\n"
-"                                    <strong>(yüklemek için Ana "
-"Sayfa&gt;Uygulamalar'a gidin)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Teslimat maliyetlerini hesaplayın ve USPS ile gönderin"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"USPS ile gönderim maliyetlerini hesapla ve gönder<br/>\n"
-"                                    <strong>(yüklemek için Ana Sayfa > "
-"Uygulamalar’a gidin)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with bpost"
-msgstr "Teslimat maliyetlerini hesaplayın ve bpost ile gönderin"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
 msgstr "Bir hareketin ne zaman rezerve edilmesi gerektiğini hesaplar"
@@ -2237,6 +2144,11 @@ msgstr "Yapılandırma Ayarları"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
 msgstr "Ayarlar"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2749,16 +2661,6 @@ msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "DHL Connector"
-msgstr "DHL Bağlayıcısı"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Express Connector"
-msgstr "DHL Ekspres Bağlayıcı"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
@@ -2908,11 +2810,6 @@ msgstr "Varsayılan Ad"
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default OBTRETU Barcode"
 msgstr "Varsayılan OBTRETU Barkodu"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Default Return Name"
-msgstr "Varsayılan İade Adı"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__default_stock_location_id
@@ -3154,11 +3051,6 @@ msgstr "Talep"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
 msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Demo Address and Name"
-msgstr "Demo Adres ve Ad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -3507,7 +3399,6 @@ msgid "Do you confirm you want to scrap"
 msgstr "Hurdaya ayırmak istediğini onaylıyor musun"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Belgeleme"
@@ -3574,11 +3465,6 @@ msgstr "Dymo"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
 msgstr "Mümkün Olan En Erken Varış"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr "Easypost Bağlantısı"
 
 #. module: stock
 #. odoo-python
@@ -3665,11 +3551,6 @@ msgstr "Deponuzda stoklanabilir bir ürünün izlenebilirliğini sağlayın."
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Enter a description"
 msgstr "Açıklama girin"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
-msgid "Envia.com Connector"
-msgstr "Envia.com Bağlayıcı"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
@@ -3765,15 +3646,14 @@ msgid "February"
 msgstr "Şubat"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "FedEx Connector"
-msgstr "FedEx Bağlantısı"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
 msgstr "Filtrelenmiş Konum"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Find a Delivery Provider"
+msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3796,6 +3676,12 @@ msgstr "İlk Seri No/Lot"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
 msgstr "İlk Seri Numarası"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Fold"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -4035,6 +3921,12 @@ msgstr "Lot Numaraları oluştur"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Generate Lots"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
 msgstr "Seri Numarası oluştur"
@@ -4042,8 +3934,8 @@ msgstr "Seri Numarası oluştur"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Generate Serials/Lots"
-msgstr "Seri/Lot Oluştur"
+msgid "Generate Serials"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -4521,20 +4413,16 @@ msgstr "İçe Aktar"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Lots"
 msgstr "Lotları İçe Aktar"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Serials"
 msgstr "Seri numaraları içe aktar"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Import Serials/Lots"
-msgstr "Serileri/Lotları İçe Aktar"
 
 #. module: stock
 #. odoo-python
@@ -6064,6 +5952,12 @@ msgid "No allocation need found."
 msgstr "Tahsis ihtiyacı bulunamadı."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "No backorder has been planned for undelivered demanded quantities: %s"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No delivery to do!"
 msgstr "Teslimat yapılacak ürün yok!"
@@ -6181,12 +6075,6 @@ msgid "Notes"
 msgstr "Notlar"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-msgid "Nothing to check the availability for."
-msgstr "Uygunluğu kontrol edebilecek bir şey yok."
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
 msgid "November"
 msgstr "Kasım"
@@ -6301,6 +6189,14 @@ msgstr "Lot/SN başına bir"
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
 msgstr "Birim başına 1"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
+"expected %(nbr_demanded)s %(uom)s"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -7065,13 +6961,9 @@ msgid "Please create a warehouse for company %s."
 msgstr "Lütfen %s şirketi için bir depo oluşturun."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Please put this document inside your return parcel.<br/>"
 msgstr ""
-"Lütfen bu belgeyi iade paketinizin içine koyun.<br/>\n"
-"                                Paketiniz şu adrese gönderilmelidir:"
 
 #. module: stock
 #. odoo-javascript
@@ -7786,7 +7678,7 @@ msgid "Quants cannot be created for consumables or services."
 msgstr "Miktarlar hizmet ya da tüketilebilirlik için oluşturulamaz."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "RETURN OF"
 msgstr "İADESİ"
 
@@ -8163,6 +8055,8 @@ msgstr "Rezervasyon Metodu"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
 msgstr ""
 
@@ -8683,11 +8577,6 @@ msgid "Send email"
 msgstr "E-posta Gönder"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
-msgid "Sendcloud Connector"
-msgstr "Sendcloud Connector"
-
-#. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
@@ -8870,11 +8759,6 @@ msgid "Shipping"
 msgstr "Sevkiyat"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Shipping Connectors"
-msgstr "Sevkiyat Bağlayıcıları"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__move_type
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8902,11 +8786,6 @@ msgstr ""
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
 msgstr "Sevkiyat: E-posta ile Gönder"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
-msgid "Shiprocket Connector"
-msgstr "Shiprocket Bağlantısı"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -9178,11 +9057,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Starred"
 msgstr "Yıldızlı"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
-msgid "Starshipit Connector"
-msgstr "Starshipit Bağlantısı"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -9595,11 +9469,9 @@ msgstr "Teknik Bilgi"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
 msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
+"Technical field used to compute whether the button \"Reserve\" should be "
+"displayed."
 msgstr ""
-"\"Kullanılabilirlik Kontrolü\" düğmesinin gösterilip gösterilmeyeceğini "
-"hesaplamak için kullanılan teknik alan"
 
 #. module: stock
 #. odoo-python
@@ -9929,6 +9801,12 @@ msgstr "Bu stok hareketini oluşturan stok kuralı"
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "There are no inventory adjustments to revert."
 msgstr "Geri alınacak envanter düzenlemesi yok."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "There is nothing to reserve."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10475,6 +10353,11 @@ msgid "Transfer"
 msgstr "Aktarım"
 
 #. module: stock
+#: model:mail.message.subtype,name:stock.mt_picking_state
+msgid "Transfer Status"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
 msgstr "Transfer et"
@@ -10583,18 +10466,6 @@ msgstr "Tip"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Kayıtlardaki istisna etkinliğinin türü."
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "UPS Connector"
-msgstr "UPS Bağlantısı"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "USPS Connector"
-msgstr "USPS Bağlantısı"
 
 #. module: stock
 #. odoo-javascript
@@ -11041,18 +10912,6 @@ msgstr "Uyarılar"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock
 msgid "Warnings for Stock"
 msgstr "Stok için Uyarılar"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__website_message_ids
-msgid "Website Messages"
-msgstr "Websitesi Mesajları"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
-msgid "Website communication history"
-msgstr "Websitesi iletişim geçmişi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
@@ -11659,6 +11518,11 @@ msgstr ""
 "Afiyet olsun!"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Your parcel must be sent to this address:"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
@@ -11714,11 +11578,6 @@ msgstr "]<br/>min:"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
 msgstr "barcodelookup.com"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr "bpost Bağlantısı"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
@@ -11936,6 +11795,158 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Teslimat (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                All products could not be reserved. Click "
+#~ "on the \"Check Availability\" button to try to reserve products."
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                Tüm ürünler rezerve edilemedi. Ürünleri "
+#~ "rezerve etmeyi denemek için \"Uygunluk Kontrolü\" düğmesine tıklayın."
+
+#~ msgid "Check Availability"
+#~ msgstr "Uygunluk Kontrolü"
+
+#~ msgid "Click or press enter to add a description"
+#~ msgstr "Açıklama eklemek için tıklayın veya 'enter' tuşuna basın"
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Teslim maliyetlerini hesaplayın ve DHL ile gönderin"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with DHL<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "DHL ile kargo maliyetlerini hesapla ve gönder<br/>\n"
+#~ "                                    <strong>(yüklemek için Ana "
+#~ "Sayfa&gt;Uygulamalar'a gidin)</strong>"
+
+#~ msgid "Compute shipping costs and ship with Easypost"
+#~ msgstr "Teslimat maliyetlerini hesaplayın ve Easypost ile gönderin"
+
+#~ msgid "Compute shipping costs and ship with Envia.com"
+#~ msgstr "Gönderim maliyetlerini hesaplayın ve Envia.com ile gönderin"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Teslimat maliyetlerini hesaplayın ve FedEx ile gönderin"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with FedEx<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "FedEx ile kargo maliyetlerini hesapla ve gönder<br/>\n"
+#~ "                                    <strong>(yüklemek için Ana "
+#~ "Sayfa&gt;Uygulamalar'a gidin)</strong>"
+
+#~ msgid "Compute shipping costs and ship with Sendcloud"
+#~ msgstr "Gönderim maliyetlerini hesaplayın ve Sendcloud ile gönderin"
+
+#~ msgid "Compute shipping costs and ship with Shiprocket"
+#~ msgstr "Nakliye masraflarını hesaplayın ve Shiprocket ile gönderin"
+
+#~ msgid "Compute shipping costs and ship with Starshipit"
+#~ msgstr "Starshipit ile kargo maliyetlerini hesapla ve gönder"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Teslimat maliyetlerini hesaplayın ve UPS ile gönderin"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with UPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "UPS ile kargo maliyetlerini hesapla ve gönder<br/>\n"
+#~ "                                    <strong>(yüklemek için Ana "
+#~ "Sayfa&gt;Uygulamalar'a gidin)</strong>"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Teslimat maliyetlerini hesaplayın ve USPS ile gönderin"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with USPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "USPS ile gönderim maliyetlerini hesapla ve gönder<br/>\n"
+#~ "                                    <strong>(yüklemek için Ana Sayfa > "
+#~ "Uygulamalar’a gidin)</strong>"
+
+#~ msgid "Compute shipping costs and ship with bpost"
+#~ msgstr "Teslimat maliyetlerini hesaplayın ve bpost ile gönderin"
+
+#~ msgid "DHL Connector"
+#~ msgstr "DHL Bağlayıcısı"
+
+#~ msgid "DHL Express Connector"
+#~ msgstr "DHL Ekspres Bağlayıcı"
+
+#~ msgid "Default Return Name"
+#~ msgstr "Varsayılan İade Adı"
+
+#~ msgid "Demo Address and Name"
+#~ msgstr "Demo Adres ve Ad"
+
+#~ msgid "Easypost Connector"
+#~ msgstr "Easypost Bağlantısı"
+
+#~ msgid "Envia.com Connector"
+#~ msgstr "Envia.com Bağlayıcı"
+
+#~ msgid "FedEx Connector"
+#~ msgstr "FedEx Bağlantısı"
+
+#~ msgid "Generate Serials/Lots"
+#~ msgstr "Seri/Lot Oluştur"
+
+#~ msgid "Import Serials/Lots"
+#~ msgstr "Serileri/Lotları İçe Aktar"
+
+#~ msgid "Nothing to check the availability for."
+#~ msgstr "Uygunluğu kontrol edebilecek bir şey yok."
+
+#~ msgid ""
+#~ "Please put this document inside your return parcel.<br/>\n"
+#~ "                                Your parcel must be sent to this address:"
+#~ msgstr ""
+#~ "Lütfen bu belgeyi iade paketinizin içine koyun.<br/>\n"
+#~ "                                Paketiniz şu adrese gönderilmelidir:"
+
+#~ msgid "Sendcloud Connector"
+#~ msgstr "Sendcloud Connector"
+
+#~ msgid "Shipping Connectors"
+#~ msgstr "Sevkiyat Bağlayıcıları"
+
+#~ msgid "Shiprocket Connector"
+#~ msgstr "Shiprocket Bağlantısı"
+
+#~ msgid "Starshipit Connector"
+#~ msgstr "Starshipit Bağlantısı"
+
+#~ msgid ""
+#~ "Technical field used to compute whether the button \"Check Availability\" "
+#~ "should be displayed."
+#~ msgstr ""
+#~ "\"Kullanılabilirlik Kontrolü\" düğmesinin gösterilip gösterilmeyeceğini "
+#~ "hesaplamak için kullanılan teknik alan"
+
+#~ msgid "UPS Connector"
+#~ msgstr "UPS Bağlantısı"
+
+#~ msgid "USPS Connector"
+#~ msgstr "USPS Bağlantısı"
+
+#~ msgid "Website Messages"
+#~ msgstr "Websitesi Mesajları"
+
+#~ msgid "Website communication history"
+#~ msgstr "Websitesi iletişim geçmişi"
+
+#~ msgid "bpost Connector"
+#~ msgstr "bpost Bağlantısı"
 
 #~ msgid "Demo Lot/SN"
 #~ msgstr "Demo Lot/Seri No"
