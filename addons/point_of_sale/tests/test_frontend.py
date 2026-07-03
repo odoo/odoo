@@ -669,7 +669,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         email_count = self.env['mail.mail'].search_count([('email_to', '=', 'test@receiptscreen.com')])
         self.assertEqual(email_count, 1)
 
-    @skip('Temporary to fast merge new valuation')
     def test_02_pos_with_invoiced(self):
         self.pos_user.write({
             'group_ids': [
@@ -733,7 +732,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.show_product_images = False
         self.start_pos_tour('test_optional_product_image_not_display')
 
-    @skip('Temporary to fast merge new valuation')
+    @skip('Temporary to fast merge new valuation: out-of-scope point-of-sale ticket-screen tour that fails for a non-valuation reason; see commit message.')
     def test_05_ticket_screen(self):
         self.pos_user.write({
             'group_ids': [
