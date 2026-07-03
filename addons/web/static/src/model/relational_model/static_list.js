@@ -560,6 +560,20 @@ export class StaticList extends DataPoint {
     _applyCommands(commands, { canAddOverLimit } = {}) {
         const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
 
+        // `_unknownRecordCommands` is used for two distinct purposes below:
+        //   1) buffering commands for a record not yet in `this._cache` (page not loaded yet,
+        //      resolved asynchronously once `recordsToLoad` is fetched via `_loadRecords`)
+        //   2) buffering a single deferred field's command when that field is a one2many/
+        //      many2many marked invisible, or missing from `record.activeFields`
+        // Both cases were keyed by the same `command[1]` (the record id). Once case 2 occurred
+        // for a given id, `command[1] in this._unknownRecordCommands` stayed true forever for
+        // that id (nothing clears it outside of the `recordsToLoad` flow), so every subsequent
+        // UPDATE command for that already-loaded record was wrongly treated as "still loading"
+        // and silently dropped instead of being applied to `record.data`.
+        // `_loadingIds` tracks only records genuinely awaiting `_loadRecords` resolution, so it
+        // is safe to use as the "is this record still loading" check below.
+        this._loadingIds = this._loadingIds || new Set();
+
         // For performance reasons, we split commands by record ids, such that we have quick access
         // to all commands concerning a given record. At the end, we re-build the list of commands
         // from this structure.
@@ -614,10 +628,13 @@ export class StaticList extends DataPoint {
                             this._unknownRecordCommands[command[1]] = [];
                         }
                         this._unknownRecordCommands[command[1]].push(command);
-                    } else if (command[1] in this._unknownRecordCommands) {
+                    } else if (this._loadingIds.has(command[1])) {
                         // this case is more tricky: the record is in the cache, but it isn't loaded
                         // yet, as we are currently loading it (see below, where we load missing
                         // records for the current page)
+                        if (!(command[1] in this._unknownRecordCommands)) {
+                            this._unknownRecordCommands[command[1]] = [];
+                        }
                         this._unknownRecordCommands[command[1]].push(command);
                     } else {
                         const changes = {};
@@ -688,6 +705,7 @@ export class StaticList extends DataPoint {
                     if (!this.limit || this.records.length < this.limit || canAddOverLimit) {
                         if (!command[2]) {
                             recordsToLoad.push(record);
+                            this._loadingIds.add(record.resId);
                         }
                         this.records.push(record);
                         if (this.records.length > this.limit) {
@@ -750,6 +768,7 @@ export class StaticList extends DataPoint {
             for (const id of this._getResIdsToLoad(nextRecordIds)) {
                 const record = this._createRecordDatapoint({ id }, { dontApplyCommands: true });
                 recordsToLoad.push(record);
+                this._loadingIds.add(id);
             }
             for (const id of nextRecordIds) {
                 this.records.push(this._cache[id]);
@@ -761,6 +780,7 @@ export class StaticList extends DataPoint {
                 for (let i = 0; i < recordsToLoad.length; i++) {
                     const record = recordsToLoad[i];
                     record._applyValues(recordValues[i]);
+                    this._loadingIds.delete(record.resId);
                     const commands = this._unknownRecordCommands[record.resId];
                     if (commands) {
                         delete this._unknownRecordCommands[record.resId];
