@@ -815,6 +815,8 @@ class MailMail(models.Model):
             failure_reason = None
             failure_type = None
             mail = None
+            # separate variable for logging in case of postgres failure
+            message_id = None
             try:
                 mail = self.browse(mail_id)
                 if mail.state != 'outgoing':
@@ -822,6 +824,7 @@ class MailMail(models.Model):
                 no_recipients = (not (mail.email_to or '').strip() and not mail.recipient_ids
                                  and not (mail.email_cc or '').strip() and not mail.recipient_cc_ids)
 
+                message_id = mail.message_id
                 # Writing on the mail object may fail (e.g. lock on user) which
                 # would trigger a rollback *after* actually sending the email.
                 # To avoid sending twice the same email, provoke the failure earlier
@@ -919,6 +922,7 @@ class MailMail(models.Model):
                         else:
                             raise
                 if res:  # mail has been sent at least once, no major exception occurred
+                    message_id = res
                     mail.write({'state': 'sent', 'message_id': res, 'failure_type': False, 'failure_reason': False})
                     if not modules.module.current_test:
                         _logger.info(
@@ -949,7 +953,7 @@ class MailMail(models.Model):
                 # instead of marking the mail as failed
                 _logger.exception(
                     'MemoryError while processing mail with ID %r and Msg-Id %r. Consider raising the --limit-memory-hard startup option',
-                    mail.id, mail.message_id)
+                    mail.id, message_id)
                 # mail status will stay on ongoing since transaction will be rollback
                 raise
             except (psycopg2.Error, smtplib.SMTPServerDisconnected):
@@ -957,7 +961,7 @@ class MailMail(models.Model):
                 # or SMTP session are unusable, causing further errors when trying to save the state.
                 _logger.exception(
                     'Exception while processing mail with ID %r and Msg-Id %r.',
-                    mail.id, mail.message_id)
+                    mail.id, message_id)
                 raise
             except Exception as e:
                 if isinstance(e, AssertionError):
