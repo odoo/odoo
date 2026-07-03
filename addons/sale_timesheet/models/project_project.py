@@ -223,11 +223,12 @@ class ProjectProject(models.Model):
             ['id:recordset'],
         )
         for project, timesheets in timesheets_per_project:
-            timesheets_to_update = timesheets.filtered(lambda t: t._is_updatable_timesheet())
-            if not timesheets_to_update:
+            timesheets_per_employee = timesheets.filtered(lambda t: t._is_updatable_timesheet()).grouped('employee_id')
+            if not timesheets_per_employee:
                 continue
             for employee_mapping in project.sale_line_employee_ids:
-                timesheets_to_update.filtered(lambda t: t.employee_id == employee_mapping.employee_id).sudo().so_line = employee_mapping.sale_line_id
+                timesheets_to_update = timesheets_per_employee.get(employee_mapping.employee_id, self.env['account.analytic.line'])
+                timesheets_to_update.sudo().so_line = employee_mapping.sale_line_id
 
     def action_view_timesheet(self):
         self.ensure_one()
