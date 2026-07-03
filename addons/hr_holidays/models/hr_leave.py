@@ -379,6 +379,13 @@ class HrLeave(models.Model):
 
                 holiday.date_from = self._to_utc(compensated_request_date_from, hour_from, holiday.employee_id or holiday)
                 holiday.date_to = self._to_utc(compensated_request_date_to, hour_to, holiday.employee_id or holiday)
+        
+        # if an early flush occurs (i.e. using base_automation), _compute_duration will get evaluated too early and return zeros
+        # the add_to_compute will force recomputation thus preventing this
+
+        self.env.add_to_compute(self._fields['number_of_days'], self)
+        self.env.add_to_compute(self._fields['number_of_hours'], self)
+        self.env.add_to_compute(self._fields['duration_display'], self)
 
     @api.depends('holiday_status_id', 'request_unit_hours')
     def _compute_request_unit_half(self):
