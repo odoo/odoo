@@ -767,7 +767,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         picking = sale_order.picking_ids
         initial_product = sale_order.order_line.product_id
-        picking.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
         picking_form = Form(picking)
         with picking_form.move_ids.edit(0) as move:
             move.quantity = 5
@@ -859,7 +858,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         pick = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'internal')
-        pick.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
         picking_form = Form(pick)
         with picking_form.move_ids.edit(0) as move:
             move.quantity = 10
@@ -868,7 +866,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         pick.button_validate()
 
         delivery = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
-        delivery.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
         picking_form = Form(delivery)
         with picking_form.move_ids.edit(0) as move:
             move.quantity = 10
