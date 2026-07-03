@@ -3,7 +3,7 @@ from ast import literal_eval
 from datetime import timedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.translate import mark_as_copy
@@ -150,6 +150,49 @@ class StockPickingType(models.Model):
         default=lambda self: self.env.company.picking_policy, required=True,
         help="It specifies goods to be transferred partially or all at once")
 
+    # ==========================================================================
+    # Batch related fields
+    # ==========================================================================
+    count_picking_batch = fields.Integer(compute='_compute_picking_count')
+    count_picking_wave = fields.Integer(compute='_compute_picking_count')
+    auto_batch = fields.Boolean('Automatic Batches',
+        help="Automatically put pickings into batches as they are confirmed when possible.")
+    batch_group_by_partner = fields.Boolean('Contact', help="Automatically group batches by contacts.")
+    batch_group_by_destination = fields.Boolean('Destination Country', help="Automatically group batches by destination country.")
+    batch_group_by_src_loc = fields.Boolean('Group by Source Location',
+        help="Automatically group batches by their source location.")
+    batch_group_by_dest_loc = fields.Boolean('Group by Destination Location',
+        help="Automatically group batches by their destination location.")
+    wave_group_by_product = fields.Boolean('Product',
+        help="Split transfers by product then group transfers that have the same product.")
+    wave_group_by_category = fields.Boolean('Product Category',
+        help="Split transfers by product category, then group transfers that have the same product category.")
+    wave_category_ids = fields.Many2many('product.category',
+        string='Wave Product Categories', help="Categories to consider when grouping waves.")
+    wave_group_by_location = fields.Boolean('Location',
+        help="Split transfers by defined locations, then group transfers with the same location.")
+    wave_location_ids = fields.Many2many('stock.location',
+        string='Wave Locations',
+        help="Locations to consider when grouping waves.",
+        domain="[('usage', '=', 'internal')]")
+    batch_max_lines = fields.Integer("Maximum lines",
+        help="A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+             "Leave this value as '0' if no line limit.")
+    batch_max_pickings = fields.Integer("Maximum transfers",
+        help="A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+             "Leave this value as '0' if no transfer limit.")
+    batch_auto_confirm = fields.Boolean("Auto-confirm", default=True)
+    batch_properties_definition = fields.PropertiesDefinition('Batch Properties')
+
+    @api.constrains(lambda self: self._get_batch_group_by_keys() + ['auto_batch'])
+    def _check_auto_batch_options(self):
+        group_by_keys = self._get_batch_and_wave_group_by_keys()
+        for picking_type in self:
+            if not picking_type.auto_batch:
+                continue
+            if not any(picking_type[key] for key in group_by_keys):
+                raise ValidationError(_("If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."))
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -246,21 +289,44 @@ class StockPickingType(models.Model):
             rec.hide_reservation_method = rec.code == 'incoming'
 
     def _compute_picking_count(self):
+        base_domain = Domain([('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)])
+        # TODO (to check if it's not overkill): to avoid some `_read_group`:
+        #   - `count_picking` could be the sum of `count_picking_waiting` and `count_picking_ready`;
+        #   - We could compute some fields like we did for `count_picking_wave` and `count_picking_batch`
+        #     by checking a field value (would be easy for `state` and `backorder_id`.)
+        active_picking_states = ('assigned', 'waiting', 'confirmed')
         domains = {
-            'count_picking_draft': [('state', '=', 'draft')],
-            'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
-            'count_picking_ready': [('state', '=', 'assigned')],
-            'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed'))],
-            'count_picking_late': [('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', ('scheduled_date', '<', fields.Date.today()), ('has_deadline_issue', '=', True)],
-            'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting'))],
+            'count_picking_draft': Domain('state', '=', 'draft'),
+            'count_picking_waiting': Domain('state', 'in', ('confirmed', 'waiting')),
+            'count_picking_ready': Domain('state', '=', 'assigned'),
+            'count_picking': Domain('state', 'in', active_picking_states),
+            'count_picking_late': Domain([
+                ('state', 'in', active_picking_states),
+                '|',
+                ('scheduled_date', '<', fields.Date.today()),
+                ('has_deadline_issue', '=', True),
+            ]),
+            'count_picking_backorders': Domain([
+                ('backorder_id', '!=', False),
+                ('state', 'in', active_picking_states),
+            ]),
         }
         for field_name, domain in domains.items():
-            data = self.env['stock.picking']._read_group(domain +
-                [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
-                ['picking_type_id'], ['__count'])
+            data = self.env['stock.picking']._read_group(
+                Domain.AND([base_domain, domain]), ['picking_type_id'], ['__count'])
             count = {picking_type.id: count for picking_type, count in data}
             for record in self:
                 record[field_name] = count.get(record.id, 0)
+
+        if self.env.user.has_group('stock.group_stock_picking_batch'):
+            data = self.env['stock.picking.batch']._read_group(
+                base_domain, ['picking_type_id', 'is_wave'], ['__count'])
+            count = {(picking_type.id, is_wave): count for picking_type, is_wave, count in data}
+            for record in self:
+                record.count_picking_wave = count.get((record.id, True), 0)
+                record.count_picking_batch = count.get((record.id, False), 0)
+        else:
+            self.count_picking_batch, self.count_picking_wave = 0, 0
 
     @api.depends('warehouse_id')
     def _compute_display_name(self):
@@ -400,6 +466,18 @@ class StockPickingType(models.Model):
         action["context"] = dict(literal_eval(action["context"]), search_default_name="Barcode")
         return action
 
+    def action_batch(self):
+        action = self._get_action('stock.stock_picking_batch_action')
+        if self.env.context.get("view_mode"):
+            del action["mobile_view_mode"]
+            del action["views"]
+            action["view_mode"] = self.env.context["view_mode"]
+        return action
+
+    def action_wave(self):
+        action = self._get_action('stock.action_picking_tree_wave')
+        return action
+
     def _get_action(self, action_xmlid):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
         context = {}
@@ -519,3 +597,25 @@ class StockPickingType(models.Model):
             'internal': _('Internal Move'),
         }
         return code_names.get(self.code)
+
+    # ===== Batch business methods =====
+
+    def _is_auto_batch_grouped(self):
+        self.ensure_one()
+        return self.auto_batch and any(self[key] for key in self._get_batch_group_by_keys())
+
+    def _is_auto_wave_grouped(self):
+        self.ensure_one()
+        return self.auto_batch and any(self[key] for key in self._get_wave_group_by_keys())
+
+    @api.model
+    def _get_batch_group_by_keys(self):
+        return ['batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc', 'batch_group_by_partner']
+
+    @api.model
+    def _get_wave_group_by_keys(self):
+        return ['wave_group_by_category', 'wave_group_by_location', 'wave_group_by_product']
+
+    @api.model
+    def _get_batch_and_wave_group_by_keys(self):
+        return self._get_batch_group_by_keys() + self._get_wave_group_by_keys()

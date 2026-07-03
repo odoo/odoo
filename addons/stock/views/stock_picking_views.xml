@@ -93,6 +93,16 @@
                     <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
                     <field name="backorder_id" optional="hide"/>
                     <field name="picking_type_id" options="{'no_quick_create': True}" optional="hide"/>
+                    <field name="batch_id" optional="show"
+                           groups="stock.group_stock_picking_batch"
+                           width="190px"
+                           domain="[
+                                ('state', 'in', ['draft', 'in_progress']),
+                                '|',
+                                    ('picking_type_id', '=', picking_type_id),
+                                    ('picking_type_id', '=', False),
+                           ]"
+                           context="{'default_picking_type_id': picking_type_id}" readonly="state in ['cancel', 'done']"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="state" optional="show" widget="badge"
                            decoration-danger="state=='cancel'"
@@ -103,6 +113,29 @@
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="json_popover" widget="stock_rescheduling_popover" nolabel="1" invisible="not json_popover"/>
                 </list>
+            </field>
+        </record>
+
+        <record id="stock_picking_view_batch_tree_ref" model="ir.ui.view">
+            <field name="name">stock.picking.view.list.inherit.stock.picking.batch</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="default_order">batch_sequence</attribute>
+                </xpath>
+                <field name="company_id" position="before">
+                    <field name="batch_sequence" widget="handle"/>
+                </field>
+                <field name="company_id" position="replace"/>
+                <field name="batch_id" position="replace"/>
+                <field name="scheduled_date" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="priority" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
             </field>
         </record>
 
@@ -204,6 +237,13 @@
                                 <span class="o_stat_text">Next Transfer</span>
                             </div>
                         </button>
+                        <button type="object"
+                                name="action_view_batch"
+                                class="oe_stat_button"
+                                icon="local_shipping"
+                                string="Batch"
+                                invisible="not batch_id"
+                                groups="stock.group_stock_picking_batch"/>
                     </div>
                     <div class="oe_title">
                         <h1 class="o_outlined d-flex align-items-center gap-2">
@@ -332,6 +372,10 @@
                                     <field name="move_type" invisible="picking_type_code == 'incoming'" readonly="state in ['cancel', 'done']"/>
                                     <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" readonly="state in ['cancel', 'done']"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1"/>
+                                    <field name="batch_id"
+                                           groups="stock.group_stock_picking_batch"
+                                           readonly="1"
+                                           options="{'no_create': True}"/>
                                 </group>
                             </group>
                         </page>
@@ -345,6 +389,24 @@
             </field>
         </record>
 
+        <record id="stock_picking_view_form_from_batch" model="ir.ui.view">
+            <field name="name">stock.picking.view.form.from.batch</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="mode">primary</field>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="replace">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done"/>
+                    </header>
+                </xpath>
+                <xpath expr="//button[@name='action_show_details']" position="attributes">
+                    <attribute name="context">{'show_picking': True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_picking_internal_search" model="ir.ui.view">
             <field name="name">stock.picking.internal.search</field>
             <field name="model">stock.picking</field>
@@ -354,6 +416,7 @@
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="origin"/>
                     <field name="product_id"/>
+                    <field name="batch_id" groups="stock.group_stock_picking_batch"/>
                     <field name="picking_type_id"/>
                     <field name="move_line_ids"
                         string="Package"
@@ -406,6 +469,7 @@
                         <filter string="Source Document" name="origin" domain="[]" context="{'group_by': 'origin'}"/>
                         <filter string="Destination Country" name="partner_country" context="{'group_by': 'partner_country_id'}"/>
                         <filter string="Operation Type" name="picking_type" domain="[]" context="{'group_by': 'picking_type_id'}"/>
+                        <filter string="Batch Transfer" name="batch" domain="[]" context="{'group_by': 'batch_id'}" groups="stock.group_stock_picking_batch"/>
                         <filter string="Properties" name="group_by_picking_properties" context="{'group_by': 'picking_properties'}"/>
                     </group>
                 </search>

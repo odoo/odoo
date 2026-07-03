@@ -929,6 +929,12 @@ Please change the quantity done or the rounding precision in your settings.""",
             self._update_orderpoints()
         if 'picking_id' in vals:
             self._set_references()
+        if self.env.user.has_group('stock.group_stock_picking_batch') and\
+           'state' in vals and vals['state'] in ('partially_available', 'assigned'):
+            for picking in self.picking_id:
+                if picking.state != 'assigned':
+                    continue
+                picking._find_auto_batch()
         return res
 
     def _update_orderpoints(self):
@@ -1032,8 +1038,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         """
         self.ensure_one()
         view = self.env.ref('stock.view_stock_move_operations')
-
-        return {
+        action = {
             'name': _('Detailed Operations'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -1047,6 +1052,11 @@ Please change the quantity done or the rounding precision in your settings.""",
                 auto_pick_move_lines=self.picked,
             ),
         }
+        if self.env.context.get('show_picking') and self.picking_id.batch_id:
+            action['name'] = self.env._('Open: Stock Move')
+            action['context']['default_picking_id'] = self.picking_id.id
+            action['context']['display_name_partner'] = True
+        return action
 
     def action_product_forecast_report(self):
         self.ensure_one()
@@ -1586,16 +1596,22 @@ Please change the quantity done or the rounding precision in your settings.""",
         return keys
 
     def _search_picking_for_assignation_domain(self):
-        domain = [
+        domain = Domain([
             ('reference_ids', 'in', self.reference_ids.ids),
             ('location_id', '=', self.location_id.id),
             ('location_dest_id', '=', (self.location_dest_id.id or self.picking_type_id.default_location_dest_id.id)),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('printed', '=', False),
-            ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
+            ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned']),
+        ])
         if self.partner_id:
             picking_partner_id = self.env.context.get('move_picking_partner_id', self.partner_id).id
-            domain += [('partner_id', '=', picking_partner_id)]
+            domain = Domain.AND([domain, [('partner_id', '=', picking_partner_id)]])
+        if self.env.user.has_group('stock.group_stock_picking_batch'):
+            domain = Domain.AND([
+                domain,
+                ['|', ('batch_id', '=', False), ('batch_id.is_wave', '=', False)],
+            ])
         return domain
 
     def _search_picking_for_assignation(self):
@@ -1652,6 +1668,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         return vals
 
     def _assign_picking_post_process(self, new=False):
+        if self.env.user.has_group('stock.group_stock_picking_batch'):
+            for picking in self.picking_id:
+                picking._find_auto_batch()
         pass
 
     def _generate_serial_move_line_commands(self, field_data, location_dest_id=False, origin_move_line=None):
@@ -2240,6 +2259,9 @@ Please change the quantity done or the rounding precision in your settings.""",
             self.picking_id._check_entire_pack()
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
 
+        if self.env.user.has_group('stock.group_stock_picking_batch'):
+            self.move_line_ids._auto_wave()
+
     def _action_cancel(self):
         if any(move.state == 'done' and move.location_dest_usage != 'inventory' for move in self):
             raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'. Create a return in order to reverse the moves which took place.'))
@@ -2280,6 +2302,11 @@ Please change the quantity done or the rounding precision in your settings.""",
             'move_orig_ids': [(5, 0, 0)],
             'procure_method': 'make_to_stock',
         })
+
+        for picking in self.picking_id:
+            # Remove the picking from the batch if the whole batch isn't cancelled.
+            if picking.state == 'cancel' and picking.batch_id and any(p.state != 'cancel' for p in picking.batch_id.picking_ids):
+                picking.batch_id = None
         return True
 
     def _log_cancel_activity(self):
