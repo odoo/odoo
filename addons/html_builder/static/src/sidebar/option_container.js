@@ -28,7 +28,6 @@ export class OptionsContainer extends BaseOptionComponent {
     });
     rootRef = signal.ref();
     contentRef = signal.ref();
-    titleRef = signal.ref();
 
     setup() {
         useOptionsSubEnv(() => [this.props.editingElement]);
@@ -83,15 +82,6 @@ export class OptionsContainer extends BaseOptionComponent {
             : "";
 
         return (title || getSnippetName(this.env.getEditingElement())) + titleExtraInfo;
-    }
-
-    updateTitleTooltip(ev) {
-        if (!ev.currentTarget.dataset.tooltip) {
-            const titleEl = this.titleRef();
-            if (titleEl.offsetWidth < titleEl.scrollWidth) {
-                ev.currentTarget.dataset.tooltip = this.title;
-            }
-        }
     }
 
     /** @param {PointerEvent | FocusEvent} ev */

@@ -39,8 +39,6 @@ export class BuilderRow extends Component {
     contentRef = signal.ref();
     collapseRef = signal.ref();
     collapseContentRef = signal.ref();
-    labelWrapperRef = signal.ref();
-    labelRef = signal.ref();
 
     setup() {
         useBuilderComponent();
@@ -110,24 +108,6 @@ export class BuilderRow extends Component {
         );
 
         useLayoutEffect(() => refreshSublevelLines(this.rootRef()));
-    }
-
-    appendTooltip(ev) {
-        const labelEl = this.labelRef();
-        const labelWrapperEl = this.labelWrapperRef();
-        if (!labelEl || !labelWrapperEl || labelWrapperEl.dataset.tooltip) {
-            return;
-        }
-        const isLabelTooLong = labelEl.offsetWidth < labelEl.scrollWidth;
-        if (isLabelTooLong) {
-            labelWrapperEl.dataset.tooltip = this.props.tooltip
-                ? `${this.props.label}\u00A0: ${this.props.tooltip}`
-                : this.props.label;
-        } else if (this.props.tooltip) {
-            labelWrapperEl.dataset.tooltip = this.props.tooltip;
-        } else {
-            labelWrapperEl.dataset.tooltip = "";
-        }
     }
 
     getLevelClass() {
