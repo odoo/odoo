@@ -1,3 +1,5 @@
+[CLA] doc: add individual CLA for oesup
+
 Netherlands, 2026-07-03
 
 I hereby agree to the terms of the Odoo Individual Contributor License Agreement v1.0.
