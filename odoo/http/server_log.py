@@ -139,15 +139,15 @@ def http_log(
     if res:
         extra['http_response_status'] = res.status_code
         extra['http_headers'] = res.headers
-        res_content_length = next(
-            (v for k, v in res.headers if k == b'content-length'), None)
+        headers_get = dict(res.headers).get
+        res_content_length = headers_get(b'content-length')
         extra['http_response_body'] = (
             int(res_content_length) if res_content_length is not None
             else 0 if res.status_code in _NO_BODY_STATUS
             else 'stream'
         )
         # "Thu, 30 Apr 2026 16:18:06 GMT" => "30/Apr/2026 16:18:06"
-        res_http_date = next(v for k, v in res.headers if k == b'date').decode()
+        res_http_date = headers_get(b'date').decode()
         extra['date'] = res_http_date[5:-4].replace(' ', '/', 2)
 
     extra.update(kwargs.get('extra', {}))
