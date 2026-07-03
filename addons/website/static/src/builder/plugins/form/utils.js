@@ -1,3 +1,4 @@
+import { currencies } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
 import { generateHTMLId } from "@web/core/utils/strings";
@@ -236,6 +237,20 @@ export function getFieldType(fieldEl) {
 }
 
 /**
+ * Sets the currency displayed next to a monetary field. A readonly currency
+ * is imposed by the server; otherwise, keep the one selected in the form.
+ *
+ * @param {HTMLElement} fieldEl
+ * @param {Object} field
+ */
+export function setFieldCurrency(fieldEl, field) {
+    field.currencyId = field.currency_field_readonly
+        ? field.default_currency_id
+        : fieldEl.querySelector(".hidden-currency-input")?.value || Object.keys(currencies)[0];
+    field.currency = currencies[field.currencyId];
+}
+
+/**
  * Set the active field properties on the field Object
  *
  * @param {HTMLElement} fieldEl
@@ -283,6 +298,10 @@ export function setActiveProperties(fieldEl, field) {
     field.modelRequired = classList.contains("s_website_form_model_required");
     field.hidden = classList.contains("s_website_form_field_hidden");
     field.formatInfo = getFieldFormat(fieldEl);
+    field.showCurrency = !!fieldEl.querySelector(".o_currency_display");
+    if (field.showCurrency) {
+        setFieldCurrency(fieldEl, field);
+    }
     // this is needed to link states to the country
     if (field.name === "state_id") {
         field.linkStateToCountry =
