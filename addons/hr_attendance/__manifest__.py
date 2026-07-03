@@ -89,7 +89,7 @@ actions(Check in/Check out) performed by them.
             "barcodes/static/src/components/barcode_scanner.js",
             "barcodes/static/src/components/barcode_scanner.xml",
             "barcodes/static/src/components/barcode_scanner.scss",
-            "barcodes/static/src/barcode_service.js",
+            "barcodes/static/src/barcode_plugin.js",
 
         ],
     },
