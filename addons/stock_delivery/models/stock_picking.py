@@ -4,7 +4,7 @@ from datetime import date
 from markupsafe import Markup
 import json
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -267,19 +267,3 @@ class StockPicking(models.Model):
             clean_action(action, self.env)
             report_actions.append(action)
         return report_actions + super()._get_autoprint_report_actions()
-
-
-class StockPickingType(models.Model):
-    _inherit = "stock.picking.type"
-
-    auto_print_carrier_labels = fields.Boolean(
-        "Auto Print Carrier Labels",
-        help="Automatically print the carrier labels of the picking when they are created.",
-    )
-    auto_print_export_documents = fields.Boolean(
-        "Auto Print Export Documents",
-        help=(
-            "Automatically print the export documents of the picking when they are created. "
-            "Availability of export documents depends on the carrier and the destination."
-        ),
-    )
