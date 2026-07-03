@@ -61,6 +61,7 @@ class ResConfigSettings(models.TransientModel):
         string="Cookie Policy Page",
         related='website_id.cookie_policy_id',
         readonly=False)
+    has_cookie_policy = fields.Boolean(compute='_compute_has_cookie_policy')
     website_block_third_party_domains = fields.Boolean(
         'Block 3rd-party domains',
         related='website_id.block_third_party_domains',
@@ -131,6 +132,11 @@ class ResConfigSettings(models.TransientModel):
     def _compute_shared_user_account(self):
         for config in self:
             config.shared_user_account = not config.website_id.specific_user_account
+
+    @api.depends('website_id')
+    def _compute_has_cookie_policy(self):
+        for config in self:
+            config.has_cookie_policy = bool(config.website_id.cookie_policy_id)
 
     @api.onchange('plausible_shared_key')
     def _onchange_shared_key(self):
