@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -23,12 +22,12 @@ export class MpesaTransactionPopup extends Component {
         });
         this.ui = useService("ui");
         this.tx = null;
-        useLayoutEffect(
-            () => {
-                this.updateTransactions();
-            },
-            () => [this.pos.lipaLastNotificationTime]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.updateTransactions();
+        //     },
+        //     () => [this.pos.lipaLastNotificationTime]
+        // );
     }
 
     async updateTransactions() {
