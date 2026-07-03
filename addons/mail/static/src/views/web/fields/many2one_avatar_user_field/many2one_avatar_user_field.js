@@ -38,7 +38,6 @@ export class Many2OneAvatarUserField extends Component {
     }
 
     get relation() {
-        // This getter is used by `useAssignUserCommand`
         return this.props.record.fields[this.props.name].relation;
     }
 

@@ -1,4 +1,3 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { rightPos } from "@html_editor/utils/position";
 import {
@@ -6,11 +5,12 @@ import {
     generateRoleMentionElement,
     generateSpecialMentionElement,
 } from "@mail/utils/common/format";
-import { proxy, status, t } from "@odoo/owl";
+import { useSearch } from "@mail/utils/common/hooks";
+import { props, proxy, t, useScope } from "@odoo/owl";
 import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { useSearch } from "@mail/utils/common/hooks";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * Delimiters that trigger suggestion lists in the composer.
@@ -55,9 +55,18 @@ export const optionType = (store) =>
  */
 
 export class UseSuggestion {
-    constructor(comp) {
-        this.comp = comp;
-        this.suggestionService = useService("mail.suggestion");
+    props = props();
+    scope = useScope();
+    composerService = useService("mail.composer");
+    suggestionService = useService("mail.suggestion");
+
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@odoo/owl").ReactiveValue<import("@html_editor/editor").Editor>} editor
+     */
+    constructor(env, editor) {
+        this.env = env;
+        this.editor = editor;
         this.detection = proxy({
             /** @type {SuggestionDelimiter|undefined} */
             delimiter: undefined,
@@ -83,10 +92,8 @@ export class UseSuggestion {
             ]
         );
     }
-    /** @type {import("@mail/core/common/composer").Composer} */
-    comp;
     get composer() {
-        return this.comp.props.composer;
+        return this.props.composer;
     }
     clearRawMentions() {
         this.composer.mentionedPartners.length = 0;
@@ -107,8 +114,8 @@ export class UseSuggestion {
         let start = 0;
         let end = 0;
         let text = "";
-        if (this.comp.composerService.htmlEnabled) {
-            const selection = this.comp.editor.shared.selection.getEditableSelection();
+        if (this.composerService.htmlEnabled) {
+            const selection = this.editor().shared.selection.getEditableSelection();
             if (
                 !isTextNode(selection.startContainer) ||
                 !isContentEditable(selection.startContainer) ||
@@ -152,7 +159,7 @@ export class UseSuggestion {
         }
         const supportedDelimiters = this.suggestionService.getSupportedDelimiters(
             this.thread,
-            this.comp.env
+            this.env
         );
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {
@@ -202,15 +209,15 @@ export class UseSuggestion {
             [SUGGESTION_DELIMITERS.EMOJI, SUGGESTION_DELIMITERS.CANNED_RESPONSE].includes(
                 this.detection.delimiter
             ) ||
-            (this.comp.composerService.htmlEnabled &&
+            (this.composerService.htmlEnabled &&
                 this.detection.delimiter !== SUGGESTION_DELIMITERS.CHANNEL_COMMAND)
         ) {
             position = this.detection.position;
         }
-        if (this.comp.composerService.htmlEnabled) {
+        if (this.composerService.htmlEnabled) {
             const { startContainer, endContainer, endOffset } =
-                this.comp.editor.shared.selection.getEditableSelection();
-            this.comp.editor.shared.selection.setSelection({
+                this.editor().shared.selection.getEditableSelection();
+            this.editor().shared.selection.setSelection({
                 anchorNode: startContainer,
                 anchorOffset: position,
                 focusNode: endContainer,
@@ -224,13 +231,13 @@ export class UseSuggestion {
         } else if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
-        if (this.comp.composerService.htmlEnabled) {
+        if (this.composerService.htmlEnabled) {
             const inlineElement = makeMentionFromOption(option, { thread: this.thread });
-            this.comp.editor.shared.dom.insert(inlineElement);
+            this.editor().shared.dom.insert(inlineElement);
             const [anchorNode, anchorOffset] = rightPos(inlineElement);
-            this.comp.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
-            this.comp.editor.shared.dom.insert("\u00A0");
-            this.comp.editor.shared.history.commit();
+            this.editor().shared.selection.setSelection({ anchorNode, anchorOffset });
+            this.editor().shared.dom.insert("\u00A0");
+            this.editor().shared.history.commit();
         } else {
             // remove the user-typed search delimiter
             this.composer.composerText =
@@ -245,7 +252,7 @@ export class UseSuggestion {
             return undefined;
         }
         const { type, suggestions } = this.suggestionService.searchSuggestions(this.detection, {
-            composerType: this.comp.props.type,
+            composerType: this.props.type,
             thread: this.thread,
         });
         if (!suggestions.length) {
@@ -259,7 +266,7 @@ export class UseSuggestion {
     }
 
     async fetchSuggestions() {
-        if (!this.thread || status(this.comp) === "destroyed") {
+        if (!this.thread || this.scope.status === 3 /* destroyed */) {
             return;
         }
         if (!this.composer.store.self_user) {
@@ -271,7 +278,7 @@ export class UseSuggestion {
             await this.suggestionService.fetchSuggestions(this.detection, {
                 thread: this.thread,
                 abortSignal: this.abortController.signal,
-                composerType: this.comp.props.type,
+                composerType: this.props.type,
             });
         } catch (e) {
             if (e instanceof ConnectionAbortedError) {
@@ -279,7 +286,7 @@ export class UseSuggestion {
             }
             throw e;
         }
-        if (!this.thread || status(this.comp) === "destroyed") {
+        if (!this.thread || this.scope.status === 3 /* destroyed */) {
             return;
         }
         const { suggestions } = this.suggestionService.searchSuggestions(this.detection, {
@@ -289,8 +296,9 @@ export class UseSuggestion {
     }
 }
 
-export function useSuggestion() {
-    return new UseSuggestion(useComponent());
+/** @param {ConstructorParameters<typeof UseSuggestion>} args */
+export function useSuggestion(...args) {
+    return new UseSuggestion(...args);
 }
 
 /**

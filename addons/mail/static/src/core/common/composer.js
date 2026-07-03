@@ -111,6 +111,10 @@ export class Composer extends Component {
 
     app = useApp();
 
+    extraActionsRef = signal.ref(HTMLDivElement);
+    moreActionsRef = signal.ref(HTMLDivElement);
+    quickActionsRef = signal.ref(HTMLDivElement);
+
     setup() {
         super.setup();
         this.dialogService = useService("dialog");
@@ -184,7 +188,10 @@ export class Composer extends Component {
                 );
             },
         });
-        this.suggestion = useSuggestion();
+        this.suggestion = useSuggestion(
+            this.env,
+            computed(() => this.editor)
+        );
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
         this.saveContentDebounced = useDebounced(this.saveContent, 5000, {

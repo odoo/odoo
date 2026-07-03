@@ -1,7 +1,7 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { ancestors } from "@html_editor/utils/dom_traversal";
-import { throttleForAnimation } from "@web/core/utils/timing";
 import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrolling";
+import { throttleForAnimation } from "@web/core/utils/timing";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * This hook has the same job as the PositionPlugin, but for Components.
@@ -11,8 +11,7 @@ import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrollin
  * the positioning logic so that both the plugin and the hook can use it.
  */
 export function usePositionHook(containerRef, document, callback) {
-    const comp = useComponent();
-    const onLayoutGeometryChange = throttleForAnimation(callback.bind(comp));
+    const onLayoutGeometryChange = throttleForAnimation(callback);
     const resizeObserver = new ResizeObserver(onLayoutGeometryChange);
     const cleanups = [];
     const addDomListener = (target, eventName, capture) => {

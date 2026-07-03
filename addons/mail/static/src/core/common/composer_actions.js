@@ -1,15 +1,15 @@
-import { useComponent, useRef } from "@web/owl2/utils";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
+import { useRef } from "@web/owl2/utils";
 
 import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
 
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { markEventHandled } from "@web/core/utils/misc";
 import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
-import { useService } from "@web/core/utils/hooks";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
+import { _t } from "@web/core/l10n/translation";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { markEventHandled } from "@web/core/utils/misc";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -31,25 +31,14 @@ export function registerComposerAction(id, definition) {
 }
 
 export function pickerGetAnchor({ action, owner }) {
-    let anchorEl;
     if (owner.ui.isSmall) {
         return null;
     }
-    if (!anchorEl) {
-        if (action.sequenceQuick) {
-            anchorEl = owner.quickActionsRef.el;
-        } else {
-            anchorEl = owner.moreActionsRef.el ?? owner.extraActionsRef.el;
-        }
+    if (action.sequenceQuick) {
+        return owner.quickActionsRef();
+    } else {
+        return owner.moreActionsRef() ?? owner.extraActionsRef();
     }
-    return anchorEl;
-}
-
-export function pickerSetup() {
-    const component = useComponent();
-    component.quickActionsRef = useRef("quick-actions");
-    component.moreActionsRef = useRef("more-actions");
-    component.extraActionsRef = useRef("extra-actions");
 }
 
 registerComposerAction("send-message", {
@@ -63,10 +52,10 @@ registerComposerAction("send-message", {
         composer.message
             ? _t("Save editing")
             : composer.targetThread?.channel
-            ? _t("Send")
-            : owner.props.type === "note"
-            ? _t("Log")
-            : _t("Send"),
+              ? _t("Send")
+              : owner.props.type === "note"
+                ? _t("Log")
+                : _t("Send"),
     onSelected: ({ owner }) => owner.sendMessage(),
     sequenceQuick: 30,
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.PRIMARY : undefined),
@@ -90,7 +79,6 @@ registerComposerAction("add-emoji", {
         markEventHandled(ev, "Composer.onClickAddEmoji");
     },
     setup({ store }) {
-        pickerSetup();
         if (store.env.services.ui.isSmall) {
             return;
         }

@@ -1,13 +1,12 @@
-import { Component, onWillUnmount, props, proxy, status, types } from "@odoo/owl";
+import { Component, onWillUnmount, props, proxy, types, useScope } from "@odoo/owl";
 
-import { useComponent } from "@web/owl2/utils";
-import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
-import { Mp3Encoder } from "./mp3_encoder";
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
+import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { Mp3Encoder } from "./mp3_encoder";
 
 /** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
 
@@ -51,7 +50,7 @@ export const patchable = {
  */
 export function useVoiceRecorder(params = {}, options = {}) {
     const maxDuration = params.maxDuration ?? 60;
-    const component = useComponent();
+    const scope = useScope();
     const onRecordReady = params.onRecordReady;
     /** @type {MediaStream} */
     let microphone;
@@ -125,7 +124,7 @@ export function useVoiceRecorder(params = {}, options = {}) {
                 microphone = await sourceWindow.navigator.mediaDevices.getUserMedia({
                     audio: store.settings.audioConstraints,
                 });
-                if (status(component) === "destroyed") {
+                if (scope.status === 3 /* destroyed */) {
                     cleanUp();
                     return;
                 }

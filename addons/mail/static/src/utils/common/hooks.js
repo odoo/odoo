@@ -12,8 +12,8 @@ import {
     xml,
 } from "@odoo/owl";
 
-import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
@@ -29,23 +29,22 @@ import { useService } from "@web/core/utils/hooks";
  * @param {boolean|AddEventListenerOptions} [eventParams]
  */
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
-    const boundHandler = handler.bind(useComponent());
     let t;
     onMounted(() => {
         t = target();
         if (!t) {
             return;
         }
-        t.addEventListener(eventName, boundHandler, eventParams);
+        t.addEventListener(eventName, handler, eventParams);
     });
     onPatched(() => {
         const t2 = target();
         if (t !== t2) {
             if (t) {
-                t.removeEventListener(eventName, boundHandler, eventParams);
+                t.removeEventListener(eventName, handler, eventParams);
             }
             if (t2) {
-                t2.addEventListener(eventName, boundHandler, eventParams);
+                t2.addEventListener(eventName, handler, eventParams);
             }
             t = t2;
         }
@@ -54,7 +53,7 @@ export function useLazyExternalListener(target, eventName, handler, eventParams)
         if (!t) {
             return;
         }
-        t.removeEventListener(eventName, boundHandler, eventParams);
+        t.removeEventListener(eventName, handler, eventParams);
     });
 }
 
@@ -962,25 +961,23 @@ export class UseForwardRefsToParent {
      * @param {import("@odoo/owl").Signal<Element>} ref
      */
     constructor(propName, getRefIdFn, ref) {
-        const component = useComponent();
+        const compProps = props();
         this.ref = ref;
         // Note: The `useChildRefs()` Map is shared with all children, using useLayoutEffect/willUnmount to ensure proper on/off life cycle hook calls for given child.
         // If we use setup/willDestroy we can have 2 fiber nodes of same child component with one finalizing with willDestroy from cancelling duplicated fiber node.
         useLayoutEffect(
             (map, key) => {
-                this.registerRef(map, key);
-                return () => this.removeRef(map, key);
+                if (map) {
+                    this.registerRef(map, key);
+                    return () => map.delete(key);
+                }
             },
-            () => [component.props[propName], getRefIdFn(component.props)]
+            () => [compProps[propName], getRefIdFn(compProps)]
         );
     }
 
     registerRef(map, key) {
-        map?.set(key, this.ref);
-    }
-
-    removeRef(map, key) {
-        map?.delete(key);
+        map.set(key, this.ref);
     }
 }
 
