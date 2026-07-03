@@ -186,6 +186,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
                     this.dependencies.history.addStep();
                 },
                 setSelection: (selection) => this.dependencies.selection.setSelection(selection),
+                editable: this.editable,
             });
             props.host.removeAttribute("data-syntax-highlighting-autofocus");
         }

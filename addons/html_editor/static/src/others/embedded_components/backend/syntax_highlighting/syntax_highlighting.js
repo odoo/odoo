@@ -23,6 +23,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
         onTextareaFocus: { type: Function },
         convertToParagraph: { type: Function },
         setSelection: { type: Function },
+        editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         host: { type: Object },
     };
 
@@ -166,14 +167,24 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             if (!isCursorAtBoundary) {
                 return;
             }
+            // Walk up the ancestor chain, bounded by the editable root, until
+            // we find a level that has an adjacent element sibling to navigate
+            // into. This handles arbitrarily deep nesting (e.g. code block
+            // inside a <li> inside a nested <ul> inside another <li>).
+            let ancestor = this.props.host;
+            let sibling = null;
+            while (ancestor && !sibling && ancestor !== this.props.editable) {
+                sibling = isArrowUp ? ancestor.previousElementSibling : ancestor.nextElementSibling;
+                ancestor = ancestor.parentElement;
+            }
+            if (!sibling) {
+                return;
+            }
             ev.preventDefault();
             this.textarea.blur();
-            const node = isArrowUp
-                ? this.props.host.previousElementSibling
-                : this.props.host.nextElementSibling;
             this.props.setSelection({
-                anchorNode: node,
-                anchorOffset: isArrowUp ? nodeSize(node) : 0,
+                anchorNode: sibling,
+                anchorOffset: isArrowUp ? nodeSize(sibling) : 0,
             });
         }
     }

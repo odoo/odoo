@@ -1438,4 +1438,54 @@ describe("Arrow navigation (up/down) across syntax-highlighted code blocks", () 
                 "<p>[]after</p>",
         });
     });
+
+    test("ArrowUp from start of code block inside a list item (no previous sibling) moves caret to previous list item", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore: "<ul><li>item one</li><li><pre>code</pre></li></ul>",
+            contentBeforeEdit:
+                "<ul><li>item one</li><li>" +
+                highlightedPre({ value: "code" }) +
+                "</li></ul>",
+            stepFunction: async () => {
+                await click("textarea");
+                const textarea = queryOne("textarea");
+                // Cursor at start of code block: "[]code"
+                textarea.setSelectionRange(0, 0);
+                await pressAndWait("ArrowUp");
+            },
+            contentAfterEdit:
+                "<ul><li>item one[]</li><li>" +
+                highlightedPre({ value: "code" }) +
+                "</li></ul>",
+            contentAfter:
+                "<ul><li>item one[]</li><li>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">code</pre>` +
+                "</li></ul>",
+        });
+    });
+
+    test("ArrowDown from end of code block inside a list item (no next sibling) moves caret to next list item", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore: "<ul><li><pre>code</pre></li><li>item two</li></ul>",
+            contentBeforeEdit:
+                "<ul><li>" +
+                highlightedPre({ value: "code" }) +
+                "</li><li>item two</li></ul>",
+            stepFunction: async () => {
+                await click("textarea");
+                const textarea = queryOne("textarea");
+                // Cursor at end of code block: "code[]"
+                textarea.setSelectionRange(4, 4);
+                await pressAndWait("ArrowDown");
+            },
+            contentAfterEdit:
+                "<ul><li>" +
+                highlightedPre({ value: "code" }) +
+                "</li><li>[]item two</li></ul>",
+            contentAfter:
+                "<ul><li>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">code</pre>` +
+                "</li><li>[]item two</li></ul>",
+        });
+    });
 });
