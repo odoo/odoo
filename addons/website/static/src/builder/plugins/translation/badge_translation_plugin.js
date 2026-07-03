@@ -6,6 +6,7 @@ class BadgeTranslationPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         force_background_translation_state_selectors: "span.s_badge",
+        unsplittable_node_predicates: (node) => node.classList?.contains("s_badge"),
     };
 }
 
