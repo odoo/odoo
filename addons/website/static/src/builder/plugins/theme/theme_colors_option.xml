@@ -76,7 +76,7 @@
                                                     <t t-set-slot="fixedButton">
                                                         <Image class="'h-100'" src="'/website/static/src/img/snippets_options/palette.svg'"/>
                                                     </t>
-                                                    <t t-foreach="this.palettesByCategory" t-as="group" t-key="group.name">
+                                                    <t t-foreach="this.palettesByCategory" t-as="group" t-key="group.title">
                                                         <h6 class="o-hb-select-dropdown-category py-1 px-3 fst-italic small sticky-top">
                                                             <t t-esc="group.title"/>
                                                         </h6>
@@ -95,9 +95,9 @@
                                                                         class="o-hb-theme-color-slider-btn rounded overflow-hidden d-flex w-100"
                                                                         t-attf-style="--o-hb-theme-color-slider-btn-separator: {{palette.colors[4]}}"
                                                                     >
-                                                                        <t t-foreach="palette.colors" t-as="i" t-key="i">
+                                                                        <t t-foreach="palette.colors" t-as="color" t-key="color_index">
                                                                             <span class="flex-grow-1 o_preview_alpha_background"
-                                                                                  t-attf-style="background-color: #{i};">
+                                                                                  t-attf-style="background-color: #{color};">
                                                                             </span>
                                                                         </t>
                                                                     </div>
