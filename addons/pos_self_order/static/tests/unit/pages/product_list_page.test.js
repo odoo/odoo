@@ -1,7 +1,7 @@
 import { test, expect } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductListPage } from "@pos_self_order/app/pages/product_list_page/product_list_page";
-import { setupSelfPosEnv } from "../utils";
+import { setupSelfPosEnv, getFilledSelfOrder } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 
 definePosSelfModels();
@@ -57,4 +57,89 @@ test("getSubCategories and selectCategory", async () => {
     // for mobile mode
     store.config.self_ordering_mode = "mobile";
     expect(comp.getSubCategories()).toHaveLength(0);
+});
+
+test("showBackButton", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(ProductListPage, {});
+
+    expect(comp.showBackButton).toBe(false);
+
+    order.lines = [];
+    expect(comp.showBackButton).toBe(true);
+});
+
+test("backTargetPage", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(ProductListPage, {});
+
+    // No presets configured -> always default
+    store.config.use_presets = false;
+    expect(comp.backTargetPage).toBe("default");
+
+    // Presets configured, none selected yet -> let the customer pick one
+    store.config.use_presets = true;
+    const inPreset = store.models["pos.preset"].get(1);
+    order.preset_id = false;
+    expect(comp.backTargetPage).toBe("location");
+
+    // Pay after each, preset already selected, unsent items -> still let
+    // them re-pick (presetButton stays available too in this mode)
+    store.config.self_ordering_pay_after = "each";
+    order.preset_id = inPreset;
+    expect(comp.backTargetPage).toBe("location");
+
+    // Pay after meal, preset selected, no round sent yet -> still let them
+    // re-pick
+    store.config.self_ordering_pay_after = "meal";
+    expect(comp.backTargetPage).toBe("location");
+
+    // Pay after meal, a round has already been sent -> lock the preset,
+    // go to landing instead of back to location
+    await store.sendDraftOrderToServer();
+    expect(comp.backTargetPage).toBe("default");
+});
+
+test("checkoutDisabled", async () => {
+    const store = await setupSelfPosEnv();
+    const comp = await mountWithCleanup(ProductListPage, {});
+
+    expect(comp.checkoutDisabled).toBe(true);
+    await getFilledSelfOrder(store);
+    expect(comp.checkoutDisabled).toBe(false);
+});
+
+test("total", async () => {
+    const store = await setupSelfPosEnv();
+    await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(ProductListPage, {});
+
+    store.config.iface_tax_included = "total";
+    expect(comp.total).toMatchObject({ count: 5, price: 595 });
+
+    store.config.iface_tax_included = "subtotal";
+    expect(comp.total).toMatchObject({ count: 5, price: 500 });
+});
+
+test("OrderWidget renders the Discard button when there are pending changes", async () => {
+    const store = await setupSelfPosEnv();
+    await getFilledSelfOrder(store);
+    await mountWithCleanup(ProductListPage, {});
+
+    // With pending changes, the left slot shows Discard, not Back
+    expect(".btn-cancel").toHaveCount(1);
+    expect(".btn-back").toHaveCount(0);
+    expect(".cart").toHaveText("Checkout");
+});
+
+test("OrderWidget renders the Back button when there are no pending changes", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    order.lines = [];
+    await mountWithCleanup(ProductListPage, {});
+
+    expect(".btn-back").toHaveCount(1);
+    expect(".btn-cancel").toHaveCount(0);
 });

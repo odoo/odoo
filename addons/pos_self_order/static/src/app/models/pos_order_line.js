@@ -38,9 +38,12 @@ patch(PosOrderline.prototype, {
     isLotTracked() {
         return false;
     },
-    getDisplayPriceWithQty(qty) {
-        const prices = this.order_id._constructPriceData({ baseLineOpts: { quantity: qty } })
+    getPriceDetailsWithQty(qty) {
+        return this.order_id._constructPriceData({ baseLineOpts: { quantity: qty } })
             .baseLineByLineUuids[this.uuid].tax_details;
+    },
+    getDisplayPriceWithQty(qty) {
+        const prices = this.getPriceDetailsWithQty(qty);
 
         if (this.config.iface_tax_included === "total") {
             return prices.total_included;

@@ -22,6 +22,7 @@ export class CartPage extends Component {
         this.selfOrder = useSelfOrder();
         this.dialog = useService("dialog");
         this.router = useService("router");
+        this.ui = useService("ui");
         this.state = proxy({
             orderNoteValue: "",
             skipComboSuggestion: false,
@@ -52,6 +53,60 @@ export class CartPage extends Component {
         );
     }
 
+    get isCheckout() {
+        return !history.state?.fromLanding;
+    }
+
+    onClickBack() {
+        if (this.selfOrder.currentOrder.unsentLines.length) {
+            this.router.navigate("product_list");
+        } else {
+            this.router.back();
+        }
+    }
+
+    get presetButton() {
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+        const order = this.selfOrder.currentOrder;
+        if (
+            this.selfOrder.hasPresets() &&
+            order.preset_id &&
+            order.unsentLines.length &&
+            !(payAfter === "meal" && Object.keys(order.uiState.lineChanges).length) // No preset change after first order (pay-after-meal)
+        ) {
+            return {
+                label: order.preset_id.name,
+                onClick: () =>
+                    this.router.navigate("location", {}, { redirectPage: this.router.activeSlot }),
+            };
+        }
+        return null;
+    }
+
+    get payButton() {
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+        const order = this.selfOrder.currentOrder;
+
+        const hasChanges = Object.keys(order.changes).length > 0;
+        const hasPayment = this.selfOrder.hasPaymentMethod();
+
+        if (payAfter === "meal") {
+            if (this.isCheckout && hasChanges) {
+                return { label: _t("Order"), disabled: order.lines.length === 0 };
+            } else if (hasPayment) {
+                return { label: _t("Pay"), disabled: hasChanges };
+            }
+            return null;
+        }
+
+        if (hasPayment) {
+            return { label: _t("Pay") };
+        } else if (order.unsentLines.length) {
+            return { label: _t("Order") };
+        }
+        return null;
+    }
+
     get showCancelButton() {
         return (
             this.selfOrder.config.self_ordering_mode === "mobile" &&
@@ -65,26 +120,38 @@ export class CartPage extends Component {
     }
 
     get lines() {
-        const selfOrder = this.selfOrder;
-        const order = selfOrder.currentOrder;
-        const lines =
-            (selfOrder.config.self_ordering_pay_after === "meal" &&
-            Object.keys(order.changes).length > 0
-                ? order.unsentLines
-                : this.selfOrder.currentOrder.lines) || [];
+        const order = this.selfOrder.currentOrder;
+        let lines = [];
+        if (this.isCheckout) {
+            lines = order.unsentLines.filter((line) => !line.combo_parent_id);
+        } else {
+            lines = order.lines.filter(
+                (l) => order.uiState.lineChanges[l.uuid] && !l.combo_parent_id
+            );
+        }
 
         const regularLines = [];
         const serviceFeeLines = [];
-        for (const line of lines.filter((line) => !line.combo_parent_id)) {
+        for (const line of lines) {
             (line.isServiceFeeLine() ? serviceFeeLines : regularLines).push(line);
         }
 
         return [...regularLines, ...serviceFeeLines];
     }
 
+    getLineDisplayQty(line) {
+        if (this.isCheckout) {
+            return this.getLineChangeQty(line) || line.qty;
+        }
+        const change = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
+        return change ? change.qty : line.qty;
+    }
+
     get totalPriceAndTax() {
         const { amountTaxes, priceIncl } = this.selfOrder.currentOrder;
-        const { priceWithTax, tax, count } = this.selfOrder.orderLineNotSend;
+        const { priceWithTax, tax, count } = this.isCheckout
+            ? this.selfOrder.orderLineNotSend
+            : this.selfOrder.orderLineSent;
         return {
             priceWithTax: count > 0 ? priceWithTax : priceIncl,
             tax: count > 0 ? tax : amountTaxes,
@@ -404,14 +471,13 @@ export class CartPage extends Component {
 
     getPrice(line) {
         const childLines = line.combo_line_ids;
+        const qty = this.getLineDisplayQty(line);
         if (childLines.length === 0) {
-            const qty = this.getLineChangeQty(line) || line.qty;
             return line.getDisplayPriceWithQty(qty);
         } else {
             let price = 0;
             for (const child of childLines) {
-                const qty = this.getLineChangeQty(child) || child.qty;
-                price += child.getDisplayPriceWithQty(qty);
+                price += child.getDisplayPriceWithQty(this.getLineDisplayQty(child));
             }
             return price;
         }

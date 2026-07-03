@@ -2,10 +2,12 @@ import { useRef } from "@web/owl2/utils";
 import { Component, onMounted, onWillUnmount, computed, proxy } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { ProductNameWidget } from "@pos_self_order/app/components/product_name_widget/product_name_widget";
 import { CategoryListPopup } from "@pos_self_order/app/components/category_list_popup/category_list_popup";
+import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 import { useCategoryScrollSpy } from "../../utils/category_scrollspy_hook";
 import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";
@@ -21,6 +23,7 @@ export class ProductListPage extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
         this.dialog = useService("dialog");
+        this.ui = useService("ui");
         this.categoryListRef = useRef("category_list");
         this.subCategoryListRef = useRef("sub_category_list");
         this.productListRef = useRef("product_list");
@@ -87,6 +90,45 @@ export class ProductListPage extends Component {
             this.selfOrder.currentCategory = this.state.selectedCategory;
             savedScrollTop = this.productListRef.el?.scrollTop || 0;
         });
+    }
+
+    get showBackButton() {
+        const order = this.selfOrder.currentOrder;
+        return Object.keys(order.changes).length === 0 || order.lines.length === 0;
+    }
+
+    get backTargetPage() {
+        const order = this.selfOrder.currentOrder;
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+        const alreadyOrdered =
+            payAfter === "meal" && Object.keys(order.uiState.lineChanges).length > 0;
+        return this.selfOrder.hasPresets() && !alreadyOrdered ? "location" : "default";
+    }
+
+    discardOrder() {
+        this.dialog.add(CancelPopup, {
+            title: _t("Cancel order"),
+            confirm: () => {
+                this.selfOrder.cancelOrder();
+                this.router.navigate("default");
+            },
+        });
+    }
+
+    get checkoutDisabled() {
+        const order = this.selfOrder.currentOrder;
+        return order.lines.length === 0 || order.unsentLines.length === 0;
+    }
+
+    get total() {
+        const orderLineNotSend = this.selfOrder.orderLineNotSend;
+        return {
+            count: orderLineNotSend.count,
+            price:
+                this.selfOrder.config.iface_tax_included === "total"
+                    ? orderLineNotSend.priceWithTax
+                    : orderLineNotSend.priceWithoutTax,
+        };
     }
 
     selectCategory(category) {
@@ -291,9 +333,9 @@ export class ProductListPage extends Component {
             wrapper.style.transform = `scale(${ANIMATION_CONFIG.initialScale})`;
             requestAnimationFrame(() => {
                 wrapper.style.transform = `
-                    translateY(${offsetTop}px) 
-                    translateX(${offsetLeft}px) 
-                    scale(${ANIMATION_CONFIG.finalScale}) 
+                    translateY(${offsetTop}px)
+                    translateX(${offsetLeft}px)
+                    scale(${ANIMATION_CONFIG.finalScale})
                     rotate(${ANIMATION_CONFIG.rotation})
                 `;
                 wrapper.style.opacity = "0";

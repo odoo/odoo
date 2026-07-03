@@ -1,93 +1,57 @@
-import { test, expect } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
+import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
-import { setupSelfPosEnv, getFilledSelfOrder } from "../utils";
+import { setupSelfPosEnv } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 
 definePosSelfModels();
 
-test("buttonToShow", async () => {
-    const store = await setupSelfPosEnv();
-    const models = store.models;
-    const comp = await mountWithCleanup(OrderWidget, { props: { action: () => {} } });
+test("OrderWidget renders slot content in the left/right containers", async () => {
+    await setupSelfPosEnv();
 
-    store.router.activeSlot = "product_list";
-    expect(comp.buttonToShow).toMatchObject({ label: "Checkout", disabled: true });
+    class Parent extends Component {
+        static template = xml`<OrderWidget>
+                <t t-set-slot="left"><button class="my-left-btn">Back</button></t>
+                <t t-set-slot="right"><button class="my-right-btn">Pay</button></t>
+            </OrderWidget>`;
+        static components = { OrderWidget };
+        static props = ["*"];
+    }
 
-    await getFilledSelfOrder(store);
-    expect(comp.buttonToShow).toMatchObject({ label: "Checkout", disabled: false });
+    await mountWithCleanup(Parent);
 
-    store.router.activeSlot = "cart";
-    expect(comp.buttonToShow).toMatchObject({ label: "Order", disabled: false });
-    // With valid payment method
-    models["pos.payment.method"].create({ payment_provider: "stripe" });
-    expect(comp.buttonToShow).toMatchObject({ label: "Pay", disabled: false });
+    expect(".page-buttons .my-left-btn").toHaveCount(1);
+    expect(".page-buttons .my-right-btn").toHaveCount(1);
 });
 
-test("lineNotSend", async () => {
-    const store = await setupSelfPosEnv();
-    const comp = await mountWithCleanup(OrderWidget, { props: { action: () => {} } });
+test("OrderWidget renders without a slot that is not provided", async () => {
+    await setupSelfPosEnv();
 
-    expect(comp.lineNotSend).toMatchObject({
-        priceWithTax: 0,
-        priceWithoutTax: 0,
-        count: 0,
-        tax: 0,
-    });
-    await getFilledSelfOrder(store);
-    expect(comp.lineNotSend).toMatchObject({
-        priceWithTax: 595,
-        priceWithoutTax: 500,
-        count: 5,
-        tax: 95,
-    });
+    class Parent extends Component {
+        static template = xml`<OrderWidget>
+                <t t-set-slot="right"><button class="my-right-btn">Pay</button></t>
+            </OrderWidget>`;
+        static components = { OrderWidget };
+        static props = ["*"];
+    }
 
-    const product1 = store.models["product.template"].get(5);
-    await store.addToCart(product1, 1);
-    expect(comp.lineNotSend).toMatchObject({
-        priceWithTax: 710,
-        priceWithoutTax: 600,
-        count: 6,
-        tax: 110,
-    });
+    await mountWithCleanup(Parent);
+
+    expect(".my-right-btn").toHaveCount(1);
+    expect(".my-left-btn").toHaveCount(0);
 });
 
-test("shouldGoBack", async () => {
-    const store = await setupSelfPosEnv();
-    const comp = await mountWithCleanup(OrderWidget, { props: { action: () => {} } });
+test("removeTopClasses controls the border-top class", async () => {
+    await setupSelfPosEnv();
 
-    // No orderlines
-    expect(comp.shouldGoBack()).toBe(true);
-    await getFilledSelfOrder(store);
-    expect(comp.shouldGoBack()).toBe(false);
+    class Parent extends Component {
+        static template = xml`<OrderWidget removeTopClasses="this.props.removeTopClasses"/>`;
+        static components = { OrderWidget };
+        static props = ["*"];
+    }
 
-    await store.sendDraftOrderToServer();
-    expect(comp.shouldGoBack()).toBe(true);
-
-    const product5 = store.models["product.template"].get(5);
-    store.addToCart(product5, 2, "");
-    expect(comp.shouldGoBack()).toBe(false);
-
-    store.router.activeSlot = "cart";
-    expect(comp.shouldGoBack()).toBe(true);
-});
-
-test("presetBtnName", async () => {
-    const store = await setupSelfPosEnv();
-    const comp = await mountWithCleanup(OrderWidget, { props: { action: () => {} } });
-    const order = await getFilledSelfOrder(store);
-
-    store.config.use_presets = true;
-    order.preset_id = false;
-    expect(comp.presetBtnName).toBe(null);
-
-    const inPreset = store.models["pos.preset"].get(1);
-    order.preset_id = inPreset;
-    expect(comp.presetBtnName).toBe(null);
-    comp.router.activeSlot = "cart";
-    expect(comp.presetBtnName).toBe("In");
-
-    const takeoutPreset = store.models["pos.preset"].get(10);
-    order.preset_id = takeoutPreset;
-    expect(comp.presetBtnName).toBe("Self-Takeout");
+    await mountWithCleanup(Parent, { props: { removeTopClasses: false } });
+    expect(".page-buttons").toHaveClass("border-top");
 });

@@ -407,6 +407,27 @@ describe("cancelOrder", () => {
         expect(models["pos.order"].length).toBe(1);
         expect(models["pos.order.line"].length).toBe(2);
     });
+    test("reverts to the last-sent qty, not the pending delta, across multiple sync rounds", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        const product1 = store.models["product.template"].get(5);
+        const line1 = order.lines.find((l) => l.product_id.id === 5);
+
+        expect(line1.qty).toBe(3);
+        await store.sendDraftOrderToServer(); // round 1 sent: qty 3
+
+        await store.addToCart(product1, 1);
+        expect(line1.qty).toBe(4);
+        await store.sendDraftOrderToServer(); // round 2 sent: qty 4
+
+        await store.addToCart(product1, 1);
+        expect(line1.qty).toBe(5); // round 3: pending, not sent
+
+        store.cancelOrder();
+        // Must revert to the last SENT quantity (4), not the pending
+        // delta (5 - 4 = 1).
+        expect(line1.qty).toBe(4);
+    });
 });
 
 test("cancelBackendOrder", async () => {
@@ -624,4 +645,89 @@ test("product with single 'is_custom' attr is not configurable in 'kiosk' mode",
     expect(ptv.length).toBe(1);
     expect(ptv[0].is_custom).toBe(true);
     expect(!!store.isProductConfigurable(product)).toBe(false);
+});
+
+test("orderLineNotSend", async () => {
+    const store = await setupSelfPosEnv();
+
+    expect(store.orderLineNotSend).toMatchObject({
+        priceWithTax: 0,
+        priceWithoutTax: 0,
+        count: 0,
+        tax: 0,
+    });
+    await getFilledSelfOrder(store);
+    expect(store.orderLineNotSend).toMatchObject({
+        priceWithTax: 595,
+        priceWithoutTax: 500,
+        count: 5,
+        tax: 95,
+    });
+
+    const product1 = store.models["product.template"].get(5);
+    await store.addToCart(product1, 1);
+    expect(store.orderLineNotSend).toMatchObject({
+        priceWithTax: 710,
+        priceWithoutTax: 600,
+        count: 6,
+        tax: 110,
+    });
+});
+
+test("orderLineNotSend only prices the pending delta once a line has already been sent", async () => {
+    const store = await setupSelfPosEnv();
+    await getFilledSelfOrder(store);
+
+    await store.sendDraftOrderToServer();
+    expect(store.orderLineNotSend).toMatchObject({
+        priceWithTax: 0,
+        priceWithoutTax: 0,
+        count: 0,
+        tax: 0,
+    });
+
+    const product1 = store.models["product.template"].get(5);
+    await store.addToCart(product1, 1);
+    expect(store.orderLineNotSend).toMatchObject({
+        priceWithTax: 115,
+        priceWithoutTax: 100,
+        count: 1,
+        tax: 15,
+    });
+});
+
+test("orderLineSent", async () => {
+    const store = await setupSelfPosEnv();
+
+    expect(store.orderLineSent).toMatchObject({
+        priceWithTax: 0,
+        priceWithoutTax: 0,
+        count: 0,
+        tax: 0,
+    });
+
+    await getFilledSelfOrder(store);
+    expect(store.orderLineSent).toMatchObject({
+        priceWithTax: 0,
+        priceWithoutTax: 0,
+        count: 0,
+        tax: 0,
+    });
+
+    await store.sendDraftOrderToServer();
+    expect(store.orderLineSent).toMatchObject({
+        priceWithTax: 595,
+        priceWithoutTax: 500,
+        count: 5,
+        tax: 95,
+    });
+
+    const product1 = store.models["product.template"].get(5);
+    await store.addToCart(product1, 1);
+    expect(store.orderLineSent).toMatchObject({
+        priceWithTax: 595,
+        priceWithoutTax: 500,
+        count: 5,
+        tax: 95,
+    });
 });

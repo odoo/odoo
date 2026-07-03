@@ -776,11 +776,12 @@ export class SelfOrder extends Reactive {
         for (const line of this.currentOrder.lines) {
             const changes = line.changes;
             if (Object.values(changes).some((v) => v)) {
-                if (line.qty <= changes.qty) {
+                const lastChange = this.currentOrder.uiState.lineChanges[line.uuid];
+                if (!lastChange) {
                     lineToDelete.push(line);
                 } else {
                     line.update({
-                        qty: changes["qty"],
+                        qty: lastChange.qty,
                         customer_note: changes["customer_note"],
                         attribute_value_ids: changes["attribute_value_ids"]
                             ? JSON.parse(changes["attribute_value_ids"]).map((a) => [
@@ -1124,23 +1125,31 @@ export class SelfOrder extends Reactive {
             : null;
     }
 
-    get orderLineNotSend() {
-        return Object.entries(this.currentOrder.changes).reduce(
+    calculateOrderLineTotals(changes) {
+        return Object.entries(changes).reduce(
             (acc, [key, { qty }]) => {
-                if (qty && qty > 0) {
-                    const line = this.models["pos.order.line"].getBy("uuid", key);
+                const line = this.models["pos.order.line"].getBy("uuid", key);
+                if (line && qty && qty > 0) {
                     if (!line.combo_parent_id) {
                         acc.count += qty;
                     }
-                    const prices = line.prices;
+                    const prices = line.getPriceDetailsWithQty(qty);
                     acc.priceWithTax += prices.total_included;
                     acc.priceWithoutTax += prices.total_excluded;
-                    acc.tax += prices.taxes_data.reduce((acc, tax) => (acc += tax.tax_amount), 0);
+                    acc.tax += prices.taxes_data.reduce((acc, tax) => acc + tax.tax_amount, 0);
                 }
                 return acc;
             },
             { priceWithTax: 0, priceWithoutTax: 0, count: 0, tax: 0 }
         );
+    }
+
+    get orderLineNotSend() {
+        return this.calculateOrderLineTotals(this.currentOrder.changes);
+    }
+
+    get orderLineSent() {
+        return this.calculateOrderLineTotals(this.currentOrder.uiState.lineChanges);
     }
 
     get kioskBackgroundImageUrl() {

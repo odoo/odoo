@@ -65,7 +65,11 @@ export class LandingPage extends Component {
     }
 
     clickMyOrder() {
-        this.router.navigate(this.draftOrder.length > 0 ? "cart" : "orderHistory");
+        if (this.draftOrder.length > 0) {
+            this.router.navigate("cart", {}, { fromLanding: true });
+        } else {
+            this.router.navigate("orderHistory");
+        }
     }
 
     clickCustomLink(link) {
