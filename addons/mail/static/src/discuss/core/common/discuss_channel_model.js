@@ -102,6 +102,9 @@ export class DiscussChannel extends Record {
     get allowEditDescription() {
         return this.thread.is_editable;
     }
+    get showFavoriteActionsInHeader() {
+        return false;
+    }
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
     }

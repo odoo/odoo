@@ -47,7 +47,7 @@ registerThreadAction("add-to-favorites", {
         channel &&
         channel.self_member_id &&
         !channel.self_member_id.is_favorite &&
-        !owner.isDiscussContent,
+        (!owner.isDiscussContent || channel.showFavoriteActionsInHeader),
     icon: "fa fa-fw fa-star",
     name: _t("Add to Favorites"),
     /**
@@ -78,7 +78,8 @@ registerThreadAction("remove-from-favorites", {
      * @param {import("models").DiscussChannel} param0.channel
      */
     condition: ({ channel, owner }) =>
-        channel?.self_member_id?.is_favorite && !owner.isDiscussContent,
+        channel?.self_member_id?.is_favorite &&
+        (!owner.isDiscussContent || channel.showFavoriteActionsInHeader),
     icon: "fa fa-fw fa-star-o",
     name: _t("Remove from Favorites"),
     /**
