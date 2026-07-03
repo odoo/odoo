@@ -13,7 +13,7 @@ class SaleOrderTemplateLine(models.Model):
     def _prepare_order_line_values(self, fiscal_position, currency):
         vals = super()._prepare_order_line_values(fiscal_position, currency)
         if not self.product_id:
-            vals["currency_id"] = self.sale_order_template_id.currency_id._convert(
+            vals["purchase_price"] = self.sale_order_template_id.currency_id._convert(
                 from_amount=self.purchase_price, to_currency=currency
             )
 
