@@ -154,8 +154,6 @@ class StockPicking(models.Model):
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_ids.product_id', readonly=True)
     lot_id = fields.Many2one('stock.lot', 'Lot/Serial Number', related='move_line_ids.lot_id', readonly=True)
-    # TODO: delete this field `show_operations`
-    show_operations = fields.Boolean(related='picking_type_id.show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
     products_availability = fields.Char(

@@ -62,10 +62,6 @@ class StockPickingType(models.Model):
     print_label = fields.Boolean(
         'Generate Shipping Labels', compute="_compute_print_label", store=True, readonly=False,
         help="Check this box if you want to generate shipping label in this operation.")
-    # TODO: delete this field `show_operations`
-    show_operations = fields.Boolean(
-        'Show Detailed Operations', default=False,
-        help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
     reservation_method = fields.Selection(
         [('at_confirm', 'At Confirmation'), ('manual', 'Manually'), ('by_date', 'Before scheduled date')],
         'Reservation Method', required=True, default='at_confirm',
