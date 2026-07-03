@@ -80,7 +80,6 @@ export class Message extends Component {
         this.nbsp = nbsp;
         this.store = useService("mail.store");
         this.props = props({
-            asCard: t.boolean().optional(),
             className: t.string().optional(),
             hasActions: t.boolean().optional(true),
             isFirstMessage: t.boolean().optional(),
@@ -272,19 +271,14 @@ export class Message extends Component {
         return {
             "user-select-none o-isMobileOS": isMobileOS(),
             [this.props.className]: true,
-            "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-dark rounded-2": this.props.asCard,
-            "pt-1": !this.props.asCard && !this.props.squashed,
-            "o-pt-0_5": !this.props.asCard && this.props.squashed,
+            "pt-1": !this.props.squashed,
+            "o-pt-0_5": this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
             "o-selected":
                 this.props.message.composerAsReplyToMessage?.thread.eq(this.props.thread) ||
                 this.props.messageSelection?.isSelected(this.props.message),
             "o-squashed": this.props.squashed,
-            "mt-1":
-                !this.props.squashed &&
-                this.props.thread &&
-                !this.env.messageCard &&
-                !this.props.asCard,
+            "mt-1": !this.props.squashed && this.props.thread && !this.env.messageCard,
             "px-1": this.env.inChatWindow,
             "o-actionMenuMobileOpen": this.ui.isSmall && this.optionsDropdown.isOpen,
             "o-editing": this.isEditing,

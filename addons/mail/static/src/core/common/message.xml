@@ -18,7 +18,6 @@
         >
             <MessageContextMenu anchorRef="this.rightClickAnchor" dropdownState="this.rightClickDropdownState" message="this.message" thread="this.props.thread"/>
             <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
-            <div t-if="this.props.asCard and this.isMobileOS" class="position-absolute end-0 z-1 m-n2"><t t-call="mail.Message.actions"/></div>
             <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit">
                 <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="{ 'align-items-start': !this.isAlignedRight, 'o-inChatWindow': this.env.inChatWindow }">
                     <t t-if="!this.props.squashed">
@@ -36,12 +35,12 @@
                     </t>
                 </div>
                 <div class="w-100 min-w-0" t-att-class="{ 'flex-grow-1': this.isEditing }" t-custom-ref="messageContent">
-                    <div t-if="!this.props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !this.message.isNote, 'pe-2': this.props.asCard and this.isMobileOS }" name="header">
+                    <div t-if="!this.props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !this.message.isNote }" name="header">
                         <span t-if="this.message.authorName and this.shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="this.getAuthorAttClass()">
                             <strong class="me-1 o-fw-600" t-out="this.props.messageSearch?.highlight(this.message.authorName) ?? this.message.authorName"/>
                         </span>
                         <t t-if="!this.isAlignedRight" t-call="mail.Message.notification"/>
-                        <t t-if="this.isAlignedRight and !this.message.bubbleColor and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
+                        <t t-if="this.isAlignedRight and !this.message.bubbleColor" t-call="mail.Message.actions"/>
                         <small t-if="!this.message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="this.message.datetimeMedium">
                             <t t-if="this.message.isPending" t-call="mail.Message.pendingStatus"/>
                             <t t-else="" t-out="this.message.dateSimpleWithDay"/>
@@ -52,7 +51,7 @@
                             </span>
                         </div>
                         <t t-if="this.isAlignedRight" t-call="mail.Message.notification"/>
-                        <t t-if="!this.isAlignedRight and !this.message.bubbleColor and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
+                        <t t-if="!this.isAlignedRight and !this.message.bubbleColor" t-call="mail.Message.actions"/>
                     </div>
                     <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': this.isAlignedRight }">
                         <div class="o-mail-Message-content min-w-0" t-att-class="{ 'w-100': this.isEditing, 'opacity-50': this.message.isPending, 'pt-1': !this.showSubject and !this.message.bubbleColor, 'o-mail-Message-pollContent flex-grow-1': this.message.poll}">
@@ -121,7 +120,7 @@
                                         </div>
                                     </t>
                                 </t>
-                                <t t-if="this.message.bubbleColor and this.message.hasTextContent and !this.env.inChatWindow and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
+                                <t t-if="this.message.bubbleColor and this.message.hasTextContent and !this.env.inChatWindow" t-call="mail.Message.actions"/>
                                 <PollResult t-if="this.message.ended_poll_ids.length" poll="this.message.poll"/>
                                 <Poll t-elif="this.message.poll" poll="this.message.poll"/>
                             </div>
@@ -134,7 +133,7 @@
                             </div>
                             <MessageLinkPreviewList t-if="(this.message.message_link_preview_ids.length > 0 and this.store.hasLinkPreviewFeature and !this.message.linkPreviewSquash) or (!this.isEditing and this.message.linkPreviewSquash and this.message.parent_id)" messageLinkPreviews="this.message.message_link_preview_ids"/>
                         </div>
-                        <t t-if="this.message.bubbleColor and (!this.message.hasTextContent or this.env.inChatWindow) and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
+                        <t t-if="this.message.bubbleColor and (!this.message.hasTextContent or this.env.inChatWindow)" t-call="mail.Message.actions"/>
                     </div>
                     <MessageReactions message="this.message" openReactionMenu="this.openReactionMenu" t-if="this.message.reactions.length"/>
                     <t name="after-reactions"/>
@@ -151,8 +150,8 @@
     <div t-if="this.props.hasActions and this.message.hasActions and !this.isEditing" class="o-mail-Message-actions d-print-none d-flex align-items-start"
         t-att-class="{
             'start-0': this.isAlignedRight,
-            'o-mt-0_5': this.message.bubbleColor and !this.props.asCard and !this.isMobileOS,
-            'my-n2': !this.message.bubbleColor and !this.props.asCard and !this.isMobileOS,
+            'o-mt-0_5': this.message.bubbleColor and !this.isMobileOS,
+            'my-n2': !this.message.bubbleColor and !this.isMobileOS,
             'gap-1': this.isMobileOS,
             'mx-1': !this.isMobileOS,
             'invisible': !this.isActive() and !this.isMobileOS,
