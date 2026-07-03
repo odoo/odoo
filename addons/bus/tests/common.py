@@ -329,14 +329,25 @@ class WebsocketCase(HttpCase, BusCase):
         :param wait_for_dispatch: Whether to wait for the notification
             dispatching trigerred by the subscription.
         """
+        # A dispatch can be triggered by something unrelated to this subscription (e.g. a
+        # NOTIFY for a channel we were already subscribed to) so we must wait for the
+        # subscribe to occur first before waiting for the subsequent dispatch.
+        subscribed = Event()
         dispatch_bus_notification_done = Event()
+        original_subscribe = Websocket.subscribe
         original_dispatch_bus_notifications = Websocket._dispatch_bus_notifications
+
+        def _mocked_subscribe(self, *args):
+            original_subscribe(self, *args)
+            subscribed.set()
 
         def _mocked_dispatch_bus_notifications(self, *args):
             original_dispatch_bus_notifications(self, *args)
-            dispatch_bus_notification_done.set()
+            if subscribed.is_set():
+                dispatch_bus_notification_done.set()
 
-        with patch.object(Websocket, '_dispatch_bus_notifications', _mocked_dispatch_bus_notifications):
+        with patch.object(Websocket, 'subscribe', _mocked_subscribe), \
+             patch.object(Websocket, '_dispatch_bus_notifications', _mocked_dispatch_bus_notifications):
             sub = {'event_name': 'subscribe', 'data': {
                 'channels': channels or [],
                 'check_outdated': check_outdated,

@@ -63,7 +63,6 @@ class TestWebsocketDispatching(WebsocketCase):
         # The client has an higher id. This is common since the server min_id is held
         # back for the out-of-order commit case.
         self.subscribe(client, ["channel_A", "channel_B"], last=self.env["bus.bus"]._bus_last_id())
-        self.trigger_notification_dispatching()
         notifications = json.loads(client.recv())
         self.assertEqual(len(notifications), 1)
         self.assertEqual(notifications[0]["message"]["type"], "channel_a_notification_2")
