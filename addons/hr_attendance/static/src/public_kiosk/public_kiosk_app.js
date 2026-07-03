@@ -6,7 +6,7 @@ import { KioskBarcodeScanner } from "@hr_attendance/components/kiosk_barcode/kio
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { NewEmployeeDialog } from "@hr_attendance/components/new_employee_dialog/new_employee_dialog";
 import { KioskPinCode } from "@hr_attendance/components/pin_code/pin_code";
-import { Component, proxy, t, useProps, whenReady } from "@odoo/owl";
+import { Component, proxy, t, usePlugin, useProps, whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -17,6 +17,7 @@ import { url } from "@web/core/utils/urls";
 import { mountComponent } from "@web/env";
 import { session } from "@web/session";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
+import { BarcodePlugin } from "@barcodes/barcode_plugin";
 
 class kioskAttendanceApp extends Component {
     static template = "hr_attendance.public_kiosk_app";
@@ -45,7 +46,7 @@ class kioskAttendanceApp extends Component {
 
     setup() {
         this.dialogService = useService("dialog");
-        this.barcode = useService("barcode");
+        this.barcode = usePlugin(BarcodePlugin);
         this.notification = useService("notification");
         this.ui = useService("ui");
         this.companyImageUrl = url("/web/binary/company_logo", {

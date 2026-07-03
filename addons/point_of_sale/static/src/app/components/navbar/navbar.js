@@ -8,7 +8,7 @@ import { BurgerMenuDialog } from "@point_of_sale/app/components/navbar/burger_me
 import { Component, proxy, signal, useListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
-import { barcodeService } from "@barcodes/barcode_service";
+import { BarcodePlugin } from "@barcodes/barcode_plugin";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { _t } from "@web/core/l10n/translation";
 import { isPrivateIp } from "@point_of_sale/utils";
@@ -114,7 +114,7 @@ export class Navbar extends Component {
             } else {
                 this.timeout = setTimeout(() => {
                     this.checkInput(event);
-                }, barcodeService.maxTimeBetweenKeysInMs);
+                }, BarcodePlugin.maxTimeBetweenKeysInMs);
             }
         }
     }

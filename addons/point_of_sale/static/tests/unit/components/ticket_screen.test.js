@@ -3,7 +3,7 @@ import { mountWithCleanup, onRpc, patchWithCleanup } from "@web/../tests/web_tes
 import { click, animationFrame } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { session } from "@web/session";
-import { barcodeService } from "@barcodes/barcode_service";
+import { BarcodePlugin } from "@barcodes/barcode_plugin";
 import { setupPosEnv, makeOrder, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
@@ -542,7 +542,7 @@ test("scanning a barcode on the ticket screen does not feed the refund quantity"
         window.dispatchEvent(new KeyboardEvent("keyup", { key: char }));
         await advanceTime(10);
     }
-    await advanceTime(barcodeService.maxTimeBetweenKeysInMs);
+    await advanceTime(BarcodePlugin.maxTimeBetweenKeysInMs);
 
     expect(comp.getToRefundDetail(line).qty).toBe(0);
     expect(dialogTitles).toEqual([]);
