@@ -1,5 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { currencies } from "@web/core/currency";
 import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -30,6 +31,7 @@ import {
     renderField,
     replaceFieldElement,
     setActiveProperties,
+    setFieldCurrency,
     setVisibilityDependency,
     rerenderField,
     getFormCacheKey,
@@ -192,6 +194,8 @@ export class FormOptionPlugin extends Plugin {
             ToggleCharacterLimitAction,
             SetAllowedFileTypesAction,
             ToggleRestrictFileTypesAction,
+            DisplayCurrencyAction,
+            SetCurrencyAction,
         },
         content_not_editable_selectors: ".s_website_form form",
         content_editable_selectors: [
@@ -1971,6 +1975,44 @@ export class ToggleCheckboxLabel extends BuilderAction {
     isApplied({ editingElement: fieldEl }) {
         const formatInfo = getFieldFormat(fieldEl);
         return formatInfo.labelInvisible;
+    }
+}
+
+export class DisplayCurrencyAction extends BuilderAction {
+    static id = "displayCurrency";
+    static dependencies = ["websiteFormOption"];
+
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, loadResult: fields }) {
+        const field = getActiveField(fieldEl, { fields });
+        field.showCurrency = !field.showCurrency;
+        if (field.showCurrency) {
+            setFieldCurrency(fieldEl, field);
+        }
+        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    }
+    isApplied({ editingElement: fieldEl }) {
+        return Boolean(fieldEl.querySelector(".o_currency_display"));
+    }
+}
+
+export class SetCurrencyAction extends BuilderAction {
+    static id = "setCurrency";
+    static dependencies = ["websiteFormOption"];
+
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, loadResult: fields, value: currencyId }) {
+        const field = getActiveField(fieldEl, { fields });
+        field.currencyId = currencyId;
+        field.currency = currencies[currencyId];
+        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    }
+    isApplied({ editingElement: fieldEl, value: currencyId }) {
+        return fieldEl.querySelector(".hidden-currency-input")?.value === String(currencyId);
     }
 }
 
