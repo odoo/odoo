@@ -16,6 +16,7 @@ import {
 
 import {
     addGlobalFilter,
+    setGlobalFilterValueWithoutReload,
     setCellContent,
     updatePivot,
     updatePivotMeasureDisplay,
@@ -2686,6 +2687,31 @@ test("REFRESH_PIVOT properly invalidates a pivot table", async function () {
     expect(model.getters.getCellTableBorder(position)).not.toBe(undefined);
     model.dispatch("REFRESH_PIVOT", { id: model.getters.getPivotIds()[0] });
     expect(model.getters.getCellTableBorder(position)).toBe(undefined);
+    await waitForDataLoaded(model);
+    expect(model.getters.getCellTableBorder(position)).not.toBe(undefined);
+});
+
+test("Setting a date global filter does not crash while recomputing a loading pivot table", async function () {
+    mockDate("2016-12-16 00:00:00");
+    const { model, pivotId } = await createSpreadsheetWithPivot({ pivotType: "dynamic" });
+    const position = { sheetId: model.getters.getActiveSheetId(), col: 0, row: 0 };
+    const filter = {
+        id: "date_filter",
+        type: "date",
+        label: "Date",
+    };
+
+    await addGlobalFilter(model, filter, {
+        pivot: { [pivotId]: { chain: "date", type: "date", offset: -1 } },
+    });
+    expect(model.getters.getCellTableBorder(position)).not.toBe(undefined);
+
+    setGlobalFilterValueWithoutReload(model, {
+        id: filter.id,
+        value: { type: "relative", period: "last_7_days" },
+    });
+    expect(model.getters.getCellTableBorder(position)).toBe(undefined);
+
     await waitForDataLoaded(model);
     expect(model.getters.getCellTableBorder(position)).not.toBe(undefined);
 });
