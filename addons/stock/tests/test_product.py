@@ -452,8 +452,76 @@ class TestProductPostInstall(TestStockCommon):
         pickings.button_validate()
         product.is_storable = True
         self.assertEqual(product.qty_available, 0.0)
-        inventory_adjustments = self.env['stock.move'].search([('location_dest_usage', '=', 'inventory')], order='product_qty')
+        inventory_adjustments = self.env['stock.move'].search([
+            ('product_id', '=', self.product.id),
+            ('location_dest_usage', '=', 'inventory')
+        ], order='product_qty')
         self.assertRecordValues(inventory_adjustments, [
             {'location_id': transit_location.id, 'quantity': 3.0},
             {'location_id': self.stock_location.id, 'quantity': 4.0},
+        ])
+
+        # Ensure the quantity is counter balanced if quants already exist
+        receipt_2 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.uom_dozen.id,
+                    'location_id': self.supplier_location.id,
+                    'location_dest_id': self.stock_location.id,
+                }),
+            ],
+        })
+        receipt_2.action_confirm()
+        receipt_2.button_validate()
+        self.assertEqual(product.qty_available, 12.0)
+        product.is_storable = False
+        product.is_storable = True
+
+        # Already have previous quants and nothing changed, so keep same quantities
+        self.assertEqual(product.qty_available, 12.0)
+        inventory_adjustments = self.env['stock.move'].search([
+            ('product_id', '=', self.product.id),
+            ('location_dest_usage', '=', 'inventory')
+        ], order='product_qty')
+        self.assertRecordValues(inventory_adjustments, [
+            {'location_id': transit_location.id, 'quantity': 3.0},
+            {'location_id': self.stock_location.id, 'quantity': 4.0},
+        ])
+
+        # Ensure moves made while the product was not storable are adjusted, even though there are quants
+        product.is_storable = False
+        delivery_2 = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': 0.5,
+                    'product_uom': self.uom_dozen.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+            ],
+        })
+        delivery_2.action_confirm()
+        delivery_2.button_validate()
+        product.is_storable = True
+        self.assertEqual(product.qty_available, 12.0)
+        inventory_adjustments = self.env['stock.move'].search([
+            ('product_id', '=', self.product.id),
+            '|',
+                ('location_usage', '=', 'inventory'),
+                ('location_dest_usage', '=', 'inventory'),
+        ], order='product_qty')
+        inventory_location = self.product.property_stock_inventory
+        self.assertRecordValues(inventory_adjustments, [
+            {'location_id': transit_location.id, 'location_dest_id': inventory_location.id, 'quantity': 3.0},
+            {'location_id': self.stock_location.id, 'location_dest_id': inventory_location.id, 'quantity': 4.0},
+            {'location_id': inventory_location.id, 'location_dest_id': self.stock_location.id, 'quantity': 6.0},
         ])

@@ -1156,21 +1156,33 @@ class ProductTemplate(models.Model):
                 ('location_dest_usage', 'in', ('internal', 'transit')),
         ])
         move_lines_to_match = self.env['stock.move.line'].search_fetch(domain=move_line_domain, field_names=('product_id', 'location_id', 'quantity_product_uom'))
+        existing_quant_qties_group = self.env['stock.quant']._read_group([
+            ('product_id', 'in', self.product_variant_ids.ids),
+            ('location_id.usage', 'in', ('internal', 'transit')),
+        ], groupby=['product_id', 'location_id'], aggregates=['quantity:sum'])
+        existing_quant_qties = {(product, location): quantity for product, location, quantity in existing_quant_qties_group}
+
         inventory_ledger = defaultdict(float)
+        quant_vals_to_create = []
         for move_line in move_lines_to_match:
             if move_line.location_usage in ('internal', 'transit'):
                 inventory_ledger[move_line.product_id, move_line.location_id] -= move_line.quantity_product_uom
             if move_line.location_dest_usage in ('internal', 'transit'):
                 inventory_ledger[move_line.product_id, move_line.location_dest_id] += move_line.quantity_product_uom
-        quants_to_reset = self.env['stock.quant'].create([
-            {
-                'product_id': product.id,
-                'location_id': location.id,
-                'quantity': quantity,
-                'inventory_quantity': 0.0,
-            } for (product, location), quantity in inventory_ledger.items() if not product.uom_id.is_zero(quantity)
-        ])
-        quants_to_reset._apply_inventory()
+        for (product, location), quantity in inventory_ledger.items():
+            # Avoid counting already recorded stock twice
+            quantity -= existing_quant_qties.get((product, location), 0)
+
+            if not product.uom_id.is_zero(quantity):
+                quant_vals_to_create.append({
+                    'product_id': product.id,
+                    'location_id': location.id,
+                    'quantity': quantity,
+                    'inventory_quantity': 0
+                })
+
+        new_quants = self.env['stock.quant'].create(quant_vals_to_create)
+        new_quants._apply_inventory()
 
     def copy(self, default=None):
         new_products = super().copy(default=default)
