@@ -67,7 +67,7 @@ class AccountPaymentRegister(models.TransientModel):
             withholding_residual = sum(moves.mapped('withholding_residual_amount_currency'))
             withholding_net_residual = sum(moves.mapped('withholding_net_residual_amount_currency'))
 
-            if withholding_residual:
+            if withholding_residual > 0:
                 res['withhold'] = 'withhold_pay' if withholding_net_residual else 'withhold'
             else:
                 res['withhold'] = 'payment'
@@ -202,7 +202,7 @@ class AccountPaymentRegister(models.TransientModel):
                 if wizard.withhold == 'withhold':
                     wizard.amount = withholding_residual
                 elif wizard.withhold == 'payment':
-                    wizard.amount = max(0.0, base_amount - withholding_residual)
+                    wizard.amount = max(0.0, base_amount - withholding_residual) if withholding_residual > 0 else base_amount
                 elif wizard.withhold == 'withhold_pay':
                     wizard.amount = base_amount
 
