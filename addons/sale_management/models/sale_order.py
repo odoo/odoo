@@ -160,7 +160,6 @@ class SaleOrder(models.Model):
             "journal_id": self.journal_id.id,
             "note": self.note,
             "require_signature": self.require_signature,
-            "require_payment": self.require_payment,
             "prepayment_percent": self.prepayment_percent,
             "sale_order_template_line_ids": template_lines,
         }
