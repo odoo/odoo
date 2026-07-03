@@ -86,27 +86,6 @@ export class WebsiteBuilder extends Component {
             : history.pushState(state, "");
     }
 
-    updateTooltip(ev) {
-        const buttonEl = ev.currentTarget;
-        const textEl = buttonEl.querySelector("span");
-
-        if (buttonEl.dataset.baseTooltip !== undefined) {
-            return;
-        }
-        buttonEl.dataset.baseTooltip = buttonEl.dataset.tooltip || "";
-
-        if (textEl.offsetWidth < textEl.scrollWidth) {
-            const text = textEl.textContent.trim();
-            buttonEl.dataset.tooltip = buttonEl.dataset.baseTooltip
-                ? `${text}\n${buttonEl.dataset.baseTooltip}`
-                : text;
-        } else if (buttonEl.dataset.baseTooltip) {
-            buttonEl.dataset.tooltip = buttonEl.dataset.baseTooltip;
-        } else {
-            delete buttonEl.dataset.tooltip;
-        }
-    }
-
     async discard() {
         await revertPreview(this.editor);
         if (this.editor.shared.history.canUndo()) {

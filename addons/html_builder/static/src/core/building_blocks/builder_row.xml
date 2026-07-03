@@ -32,11 +32,11 @@
                     class="hb-row-label"
                     t-att-class="{'hb-row-label-actionable': this.props.slots.collapse, 'bg-transparent': !this.props.label.trim()}"
                     t-attf-class="#{this.props.extraLabelClass || ''}"
-                    t-on-pointerover="this.appendTooltip"
                     t-on-click="this.toggleCollapseContent"
                     >
-                    <div class="d-inline-flex align-items-center mw-100" t-ref="this.labelWrapperRef">
-                        <span class="text-nowrap text-truncate" t-out="this.props.label" t-ref="this.labelRef"/>
+                    <div class="d-inline-flex align-items-center mw-100" t-att-data-tooltip="this.props.tooltip">
+                        <span class="text-nowrap" t-out="this.props.label"
+                            data-text-truncate-tooltip=""/>
                         <i
                             t-if="this.props.tooltip"
                             class="oi icon-sup" data-icon="question_mark"

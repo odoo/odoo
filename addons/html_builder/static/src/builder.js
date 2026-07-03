@@ -7,6 +7,7 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUnmount,
+    providePlugins,
     signal,
     status,
     proxy,
@@ -23,6 +24,7 @@ import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { useSnippets } from "@html_builder/snippets/snippet_service";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
+import { TextTruncateTooltipPlugin } from "@web/core/tooltip/text_truncate_tooltip_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
@@ -72,6 +74,7 @@ export class Builder extends Component {
 
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();
+        providePlugins([TextTruncateTooltipPlugin], { rootRef: this.builderSidebarRef });
         this.state = proxy({
             canUndo: false,
             canRedo: false,

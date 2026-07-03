@@ -14,7 +14,7 @@
             <button t-if="!this.snippet.isInstallable and !this.snippet.isDisabled" class="o_snippet_thumbnail_area" t-on-click="this.props.onClickHandler" t-on-keydown="this.props.onSnippetKeydown" t-attf-aria-label="Insert {{this.snippet.title}} block"/>
             <Image t-if="this.snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
             <div class="o_snippet_thumbnail_img" t-att-style="this.snippet.thumbnailSrc and ('background-image: url(' + this.snippet.thumbnailSrc + ');')"/>
-            <span class="o_snippet_thumbnail_title" t-out="this.snippet.title"/>
+            <span class="o_snippet_thumbnail_title" data-text-truncate-tooltip="" t-out="this.snippet.title"/>
             <button
                 t-if="this.snippet.isInstallable"
                 class="o_install_btn btn btn-success position-absolute top-0 end-0 bottom-0 start-0 d-flex flex-wrap flex-column align-items-center justify-content-center visually-hidden-focusable z-1"

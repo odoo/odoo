@@ -367,16 +367,15 @@ describe("HTML builder tests", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        await animationFrame();
-        await hover("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
+        const textEl = queryOne(
+            "[data-label='Supercalifragilisticexpalidocious'] > .hb-row-label span"
+        );
+        await hover(textEl);
         await advanceTime(OPEN_DELAY);
-        await waitFor(".o-tooltip");
-        const label = queryOne("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
-        expect(label.scrollWidth).toBeGreaterThan(label.clientWidth); // the text is longer than the available width.
-        expect(".o-tooltip").toHaveText("Supercalifragilisticexpalidocious");
-
-        await contains(":iframe .test-options-target").hover();
-        expect(".o-tooltip").toHaveCount(0);
+        await waitFor(
+            "[data-text-truncate-tooltip][data-text-truncate-tooltip-checked='true'][data-tooltip='Supercalifragilisticexpalidocious']"
+        );
+        expect(textEl.scrollWidth).toBeGreaterThan(textEl.clientWidth); // the text is longer than the available width.
     });
     test("show row label before tooltip when label is truncated and hovering on wrapper", async () => {
         addBuilderOption({
@@ -385,15 +384,14 @@ describe("HTML builder tests", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        await animationFrame();
-        await hover("[data-label='Supercalifragilisticexpalidocious'] .hb-row-label div");
+        const textEl = queryOne(
+            "[data-label='Supercalifragilisticexpalidocious'] > .hb-row-label span"
+        );
+        await hover(textEl);
         await advanceTime(OPEN_DELAY);
-        await waitFor(".o-tooltip");
-        const label = queryOne("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
-        expect(label.scrollWidth).toBeGreaterThan(label.clientWidth); // the text is longer than the available width.
-        expect(".o-tooltip").toHaveText("Supercalifragilisticexpalidocious : my tooltip");
-
-        await contains(":iframe .test-options-target").hover();
-        expect(".o-tooltip").toHaveCount(0);
+        await waitFor(
+            "[data-tooltip='Supercalifragilisticexpalidocious\\00a0: my tooltip'] > [data-text-truncate-tooltip][data-text-truncate-tooltip-checked='true']"
+        );
+        expect(textEl.scrollWidth).toBeGreaterThan(textEl.clientWidth); // the text is longer than the available width.
     });
 });

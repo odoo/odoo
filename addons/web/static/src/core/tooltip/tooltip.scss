@@ -1,3 +1,9 @@
+[data-text-truncate-tooltip] {
+    @include text-truncate();
+    // Prevent Chrome from revealing truncated text on click.
+    user-select: none;
+}
+
 .o-tooltip {
     --#{$variable-prefix}tooltip-max-width: #{$tooltip-max-width};
     --#{$variable-prefix}tooltip-padding-x: #{$tooltip-padding-x};

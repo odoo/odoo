@@ -6,16 +6,16 @@
         <t t-set-slot="extraActions">
             <div class="o-website-discard-save-buttons d-flex">
                 <button type="button" t-on-click="this.discard"
-                    t-on-pointerover="this.updateTooltip"
                     class="o-hb-btn btn" data-action="cancel"
                     data-tooltip="Tip: Esc to preview" accesskey="j">
-                    <span class="d-inline-block text-truncate mw-100 align-bottom">Discard</span>
+                    <span class="d-inline-block mw-100 align-bottom"
+                        data-text-truncate-tooltip="">Discard</span>
                 </button>
                 <button type="button" t-on-click="this.save"
-                    t-on-pointerover="this.updateTooltip"
                     class="o-hb-btn btn btn-success px-3" data-action="save"
                     accesskey="s">
-                    <span class="d-inline-block text-truncate mw-100 align-bottom">Save</span>
+                    <span class="d-inline-block mw-100 align-bottom"
+                        data-text-truncate-tooltip="">Save</span>
                 </button>
             </div>
         </t>
