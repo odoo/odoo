@@ -180,23 +180,93 @@ export function protectMethod(scope, fn) {
  * error_service.js, so a destroyed-mid-fetch is silent, not an error toast.
  */
 export function useRpc() {
-    const scope = useScope();
-    return function (url, params, settings) {
-        if (isDead(scope)) {
-            return Promise.reject(makeAbortError());
-        }
-        const real = rpc(url, params, settings);
-        const guarded = protect(real, scope);
-        // keep the abort passthrough (e.g. `this.lastProm.abort(false)`)
-        guarded.abort = real.abort;
-        // OPTIONAL upgrade: also cancel the in-flight XHR when the component dies,
-        // so we don't just ignore the reply but stop the request. Uses the same
-        // AbortSignal that owl's resource() uses. Left commented until rpc() grows
-        // native `signal` support (then: rpc(url, params, {...settings, signal})).
-        // scope.onDestroy(() => real.abort(false));
-        return guarded;
-    };
+    return useAsync(rpc);
 }
+
+// -----------------------------------------------------------------------------
+// useAsync: one generic hook + a per-type `toAsync` protocol
+// -----------------------------------------------------------------------------
+//
+// `useAsync(target)` captures the component scope once and returns a scope-bound
+// version of `target`. HOW it binds is customizable per type via a `toAsync`
+// method, so each async source owns its own rule (which methods are async, what
+// to passthrough, whether to also cancel the request) instead of a global
+// SERVICES_METADATA registry:
+//
+//   this.rpc = useAsync(rpc);       // rpc.toAsync -> a guarded rpc function
+//   this.orm = useAsync(orm);       // ORM.toAsync -> a facade with guarded methods
+//   this.foo = useAsync(myAsyncFn); // no toAsync -> default: guard the returned promise
+//
+// Naming is negotiable (useScoped/useProtected, toScoped/protectedBy); the shape
+// -- a per-type binding hook + an overridable protocol + a sane default -- is
+// the point.
+
+/**
+ * Bind `target` to the current component/plugin scope. Call during setup.
+ * @template T
+ * @param {T} target a function, an object with methods, or anything exposing
+ *   a `toAsync(scope)` method.
+ * @returns {T} a scope-guarded facade with the same shape as `target`.
+ */
+export function useAsync(target) {
+    return toAsync(target, useScope());
+}
+
+/**
+ * The protocol. `target.toAsync(scope)` customizes binding; otherwise a default
+ * is applied (guard a function's result, or guard an object's async methods).
+ */
+export function toAsync(target, scope) {
+    if (target && typeof target.toAsync === "function") {
+        return target.toAsync(scope);
+    }
+    if (typeof target === "function") {
+        return bindFunction(scope, target);
+    }
+    if (target && typeof target === "object") {
+        return bindObject(scope, target, target.constructor?.asyncMethods);
+    }
+    throw new Error(`useAsync: don't know how to bind ${typeof target}`);
+}
+
+/** Default for a function: its returned promise is guarded, abort/cancel kept. */
+function bindFunction(scope, fn) {
+    return protectMethod(scope, fn);
+}
+
+/**
+ * Default for an object: return a facade whose async methods are guarded. Which
+ * methods to guard is taken from an explicit `Class.asyncMethods` list when
+ * present (preferred -- like today's `service.async`); otherwise every function
+ * on the prototype, which is a blunt default a type can refine via `toAsync`.
+ */
+function bindObject(scope, obj, methods) {
+    const names =
+        methods ??
+        Object.getOwnPropertyNames(Object.getPrototypeOf(obj)).filter(
+            (n) => n !== "constructor" && typeof obj[n] === "function"
+        );
+    const facade = Object.create(obj); // delegate non-guarded props to the original
+    for (const name of names) {
+        facade[name] = protectMethod(scope, obj[name].bind(obj));
+    }
+    return facade;
+}
+
+// The `rpc` function opts into the protocol with the extra abort passthrough it
+// needs. (In real code this would live next to rpc() itself.)
+rpc.toAsync = function (scope) {
+    const bound = bindFunction(scope, rpc);
+    // OPTIONAL upgrade: also cancel the in-flight XHR when the scope dies, rather
+    // than just ignoring the reply. Cleanest once rpc() grows native `signal`
+    // support and we pass scope.abortSignal (the owl resource() pattern).
+    return bound;
+};
+
+// A class like ORM would declare, next to itself:
+//   class ORM { static asyncMethods = ["read", "write", "create", "unlink",
+//                                       "searchRead", "webSearchRead", "call"]; }
+// and then `useAsync(orm)` guards exactly those, replacing SERVICES_METADATA.
 
 // -----------------------------------------------------------------------------
 // (B) EXPERIMENTAL: ambient scope + global then-patch  (DOES NOT catch `await`)
