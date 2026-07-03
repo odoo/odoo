@@ -485,6 +485,35 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         invoice.action_post()
         self.assertEqual(invoice.amount_total, 90)
 
+    def test_downpayment_invoice_line_name(self):
+        """When a down payment is invoiced straight from the POS, the invoice is
+        generated inside super().sync_from_ui, before the down-payment POS line
+        gets linked to a sale order line. At that point sale_order_line_id is
+        empty, so the invoice line name must not fall back to False (a False name
+        breaks the UBL/e-invoice export)."""
+        so = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                })],
+        })
+        so.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.start_pos_tour('PoSApplyDownpaymentInvoice')
+
+        pos_order = so.pos_order_line_ids.order_id
+        invoice_line = pos_order.account_move.invoice_line_ids.filtered(
+            lambda l: l.product_id == self.main_pos_config.down_payment_product_id)
+        self.assertTrue(invoice_line, "The down payment should have been invoiced")
+        self.assertTrue(invoice_line.name, "The down-payment invoice line must have a name")
+
     def test_order_sale_team(self):
         self.env['product.product'].create({
             'name': 'Test Product',
