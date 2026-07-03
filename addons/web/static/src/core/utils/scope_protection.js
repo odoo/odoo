@@ -30,7 +30,8 @@
 // A scope is "dead" (cancelled or destroyed) when status > MOUNTED.
 // =============================================================================
 
-import { blockDom } from "@odoo/owl";
+import { blockDom, useScope } from "@odoo/owl";
+import { rpc } from "@web/core/network/rpc";
 
 const MOUNTED = 1;
 
@@ -155,6 +156,44 @@ export function protectMethod(scope, fn) {
             guarded.abort = real.abort;
             guarded.cancel = real.cancel;
         }
+        return guarded;
+    };
+}
+
+/**
+ * Scope-bound rpc. Call it in setup (a class field works, since field
+ * initializers run inside the component's scope). The returned function has the
+ * exact same signature as `rpc(url, params, settings)`, but every call it
+ * produces is guarded by the calling component's scope:
+ *
+ *   rpc = useRpc();
+ *   async _fetchEmployeeData() {
+ *       const results = await this.rpc("/hr_attendance/employees_infos", {...});
+ *       // if the component was destroyed while the request was in flight, the
+ *       // await above throws AbortError and the lines below never run --
+ *       // instead of writing to a dead component's reactive state.
+ *       this.state.employeesData.records = results.records;
+ *       this.state.employeesData.count = results.length;
+ *   }
+ *
+ * The AbortError (err.name === "AbortError") is already swallowed by
+ * error_service.js, so a destroyed-mid-fetch is silent, not an error toast.
+ */
+export function useRpc() {
+    const scope = useScope();
+    return function (url, params, settings) {
+        if (isDead(scope)) {
+            return Promise.reject(makeAbortError());
+        }
+        const real = rpc(url, params, settings);
+        const guarded = protect(real, scope);
+        // keep the abort passthrough (e.g. `this.lastProm.abort(false)`)
+        guarded.abort = real.abort;
+        // OPTIONAL upgrade: also cancel the in-flight XHR when the component dies,
+        // so we don't just ignore the reply but stop the request. Uses the same
+        // AbortSignal that owl's resource() uses. Left commented until rpc() grows
+        // native `signal` support (then: rpc(url, params, {...settings, signal})).
+        // scope.onDestroy(() => real.abort(false));
         return guarded;
     };
 }
