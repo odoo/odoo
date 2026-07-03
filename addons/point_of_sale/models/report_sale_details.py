@@ -98,7 +98,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             for line in order.lines:
                 if order.config_id.module_pos_discount and line.product_id.id == order.config_id.discount_product_id.id:
                     continue
-                if not line.order_id.is_refund:
+                if not self._is_refund_order_line(line):
                     products_sold, taxes = self._get_products_and_taxes_dict(line, products_sold, taxes, currency)
                 else:
                     refund_done, refund_taxes = self._get_products_and_taxes_dict(line, refund_done, refund_taxes, currency)
@@ -384,15 +384,22 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
     def _get_product_total_amount(self, line):
         return line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
 
+    def _is_refund_order_line(self, line):
+        return line.order_id.is_refund
+
+    def _get_order_line_sign(self, line):
+        return 1
+
     def _get_products_and_taxes_dict(self, line, products, taxes, currency):
         key2 = (line.product_id, line.price_unit, line.discount)
         key1 = line.product_id.product_tmpl_id.pos_categ_ids[0].name if len(line.product_id.product_tmpl_id.pos_categ_ids) else _('Not Categorized')
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        sign = self._get_order_line_sign(line)
         products.setdefault(key1, {})
         products[key1].setdefault(key2, [0.0, 0.0, 0.0, ''])
         products[key1][key2][0] = round(products[key1][key2][0] + abs(line.qty), precision)
-        products[key1][key2][1] += self._get_product_total_amount(line)
-        products[key1][key2][2] += line.price_subtotal
+        products[key1][key2][1] += sign * self._get_product_total_amount(line)
+        products[key1][key2][2] += sign * line.price_subtotal
 
         # Name of each combo products along with the combo
         if line.combo_line_ids:
@@ -401,20 +408,20 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
         if line.tax_ids_after_fiscal_position:
             line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+            tax_sign = -1 if line.price_subtotal * line_taxes['total_excluded'] < 0 else 1
             base_amounts = {}
             for tax in line_taxes['taxes']:
                 taxes['taxes'].setdefault(tax['id'], {'name': tax['name'], 'tax_amount': 0.0, 'base_amount': 0.0})
-                taxes['taxes'][tax['id']]['tax_amount'] += tax['amount']
-                base_amounts[tax['id']] = tax['base']
+                taxes['taxes'][tax['id']]['tax_amount'] += sign * tax_sign * tax['amount']
+                base_amounts[tax['id']] = sign * tax_sign * tax['base']
 
             for tax_id, base_amount in base_amounts.items():
                 taxes['taxes'][tax_id]['base_amount'] += currency.round(base_amount)
         else:
             taxes['taxes'].setdefault(0, {'name': _('No Taxes'), 'tax_amount': 0.0, 'base_amount': 0.0})
-            taxes['taxes'][0]['base_amount'] += line.price_subtotal_incl
+            taxes['taxes'][0]['base_amount'] += sign * line.price_subtotal_incl
 
-        refund_sign = -1 if line.order_id.is_refund else 1
-        taxes['base_amount'] += line.price_subtotal * refund_sign
+        taxes['base_amount'] += sign * line.price_subtotal
         return products, taxes
 
     def _get_total_and_qty_per_category(self, categories):
