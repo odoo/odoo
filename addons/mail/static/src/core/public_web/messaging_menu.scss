@@ -78,6 +78,54 @@
     }
 }
 
+.o-mail-MessagingMenu-pillbar {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--mail-MessagingMenu-bg, $o-view-background-color);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.o-mail-MessagingMenu-pill {
+    background: transparent;
+    border: $border-width solid $border-color;
+    color: inherit;
+    white-space: nowrap;
+    line-height: 1.4;
+
+    .o-mail-MessagingMenu-pillIcon {
+        font-size: 0.85em;
+        opacity: 0.85;
+    }
+
+    .o-mail-MessagingMenu-pillCounter {
+        margin-left: 0.25rem;
+    }
+
+    &:hover {
+        background: $gray-200;
+    }
+
+    &:focus-visible {
+        outline: $border-width solid $o-enterprise-action-color !important;
+    }
+
+    &.active {
+        background: $o-component-active-bg;
+        color: $o-enterprise-action-color;
+        border-color: transparent;
+
+        .o-mail-MessagingMenu-pillIcon {
+            opacity: 1;
+        }
+    }
+}
+
 .o-mail-MessagingMenu-tab {
     &:hover .o-mail-MessagingMenu-tabIcon {
         background: $gray-200;
