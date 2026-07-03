@@ -19,6 +19,12 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             'request_unit': 'half_day',
         })
 
+    def tearDown(self):
+        # test_duration_with_activity_automation registers a create hook;
+        if 'base.automation' in self.env:
+            self.env['base.automation']._unregister_hook()  # noqa: OLS03001
+        super().tearDown()
+
     def test_no_attendances(self):
         calendar = self.env['resource.calendar'].create({
             'name': 'No Attendances',
@@ -227,6 +233,50 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.assertEqual(leave.number_of_hours, 0)
         self.assertEqual(leave.date_from, datetime(2019, 9, 3, 6, 0, 0))
         self.assertEqual(leave.date_to, datetime(2019, 9, 3, 10, 0, 0))
+
+    def test_duration_with_activity_automation(self):
+        """An automation that creates a "Time Off Approval" activity on leave
+        creation must not reset the leave duration to 0.
+
+        base_automation is not a dependency of hr_holidays, so skip when it is
+        not installed.
+        """
+        if 'base.automation' not in self.env:
+            self.skipTest("`base_automation` is not installed")
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Automation Duration Test',
+            'time_type': 'leave',
+            'requires_allocation': False,
+        })
+
+        model = self.env['ir.model']._get('hr.leave')
+        automation = self.env['base.automation'].create({  # noqa: OLS03001
+            'name': 'Create Time Off Approval activity',
+            'trigger': 'on_create_or_write',
+            'model_id': model.id,
+        })
+        self.env['ir.actions.server'].create({
+            'name': 'Create TOA activity',
+            'base_automation_id': automation.id,
+            'model_id': model.id,
+            'state': 'next_activity',
+            'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_approval').id,
+        })
+        # Need to register the base.automation module because _update_registry()
+        # is not marked true for testing
+        # register the hook explicitly then remove using tear down
+        self.env['base.automation']._register_hook()  # noqa: OLS03001
+
+        leave = self.env['hr.leave'].create({
+            'holiday_status_id': leave_type.id,
+            'employee_id': self.employee_emp_id,
+            'request_date_from': date(2019, 9, 2),
+            'request_date_to': date(2019, 9, 4),
+        })
+        self.assertTrue(leave.activity_ids)
+        self.assertEqual(leave.number_of_days, 3.0)
+        self.assertEqual(leave.number_of_hours, 24.0)
 
     def test_2weeks_calendar(self):
         self.env.user.tz = 'Europe/Brussels'
