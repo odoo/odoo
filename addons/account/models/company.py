@@ -402,6 +402,25 @@ class ResCompany(models.Model):
         for company in self:
             onboardings.with_company(company)._search_or_create_progress()
 
+    def _get_batch_payment_sequence_values(self):
+        self.ensure_one()
+        return {
+            'name': _("Batch Payment Number Sequence"),
+            'implementation': 'no_gap',
+            'padding': 5,
+            'use_date_range': True,
+            'company_id': self.id,
+            'prefix': 'BATCH/%(range_year)s/',
+        }
+
+    def _create_batch_payment_sequence(self):
+        for company in self:
+            if not company.batch_payment_sequence_id:
+                sequence = self.env['ir.sequence'].sudo().create(
+                    self._get_batch_payment_sequence_values()
+                )
+                company.batch_payment_sequence_id = sequence
+
     @api.model_create_multi
     def create(self, vals_list):
         companies = super().create(vals_list)
@@ -414,16 +433,7 @@ class ResCompany(models.Model):
                         install_demo=False,
                     )
                 self.env.cr.precommit.add(try_loading)
-            if not company.batch_payment_sequence_id:
-                sequence = self.env['ir.sequence'].sudo().create({
-                    'name': _("Batch Payment Number Sequence"),
-                    'implementation': 'no_gap',
-                    'padding': 5,
-                    'use_date_range': True,
-                    'company_id': company.id,
-                    'prefix': 'BATCH/%(range_year)s/',
-                })
-                company.batch_payment_sequence_id = sequence
+            company._create_batch_payment_sequence()
         return companies
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix):
