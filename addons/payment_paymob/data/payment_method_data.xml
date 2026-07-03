@@ -33,15 +33,6 @@
         <field name="supported_currency_ids" eval="[Command.set([ref('base.EGP')])]"/>
     </record>
 
-    <record id="payment_method_easypaisa" model="payment.method">
-        <field name="name">EasyPaisa</field>
-        <field name="code">easypaisa</field>
-        <field name="provider_id" ref="payment.payment_provider_paymob"/>
-        <field name="image" type="bytes" file="payment/static/img/easypaisa.png"/>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.pk')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.PKR')])]"/>
-    </record>
-
     <record id="payment_method_forsa" model="payment.method">
         <field name="name">Forsa</field>
         <field name="code">forsa</field>
@@ -67,15 +58,6 @@
         <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="supported_country_ids" eval="[Command.set([ref('base.eg')])]"/>
         <field name="supported_currency_ids" eval="[Command.set([ref('base.EGP')])]"/>
-    </record>
-
-    <record id="payment_method_jazzcash" model="payment.method">
-        <field name="name">JazzCash</field>
-        <field name="code">jazzcash</field>
-        <field name="provider_id" ref="payment.payment_provider_paymob"/>
-        <field name="image" type="bytes" file="payment/static/img/jazzcash.png"/>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.pk')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.PKR')])]"/>
     </record>
 
     <record id="payment_method_kiosk" model="payment.method">
