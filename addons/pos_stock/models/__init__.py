@@ -5,6 +5,7 @@ from . import stock_picking
 from . import stock_reference
 from . import stock_rule
 from . import stock_move
+from . import product_removal
 from . import pos_config
 from . import pos_order_line
 from . import pos_order
