@@ -408,6 +408,9 @@ class StockPicking(models.Model):
             vals['sale_id'] = self.sale_id.id
         return vals
 
+    def _get_related_account_moves(self):
+        return self.move_ids.sale_line_id.invoice_lines.move_id or super()._get_related_account_moves()
+
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'
