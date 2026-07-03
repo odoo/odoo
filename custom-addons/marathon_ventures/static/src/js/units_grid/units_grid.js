@@ -269,12 +269,20 @@ export class MvUnitsGrid extends Component {
         // Phase 12: run_start / run_end are no longer per-row from the
         // UI - the server auto-fills them from the deal-level
         // units_start_date when the row is created.
+        // Send every signature-defining field so the backend can
+        // build the schedule signature (days + rate + start_time +
+        // end_time + max_per_day) when the first cell is filled.
+        // Missing start_time/end_time here would materialize
+        // schedules with empty times.
         this.state.edits.row_creates.push({
             temp_id: tempKey,
             daypart: newRow.daypart,
             time_range: newRow.time_range,
             days_mask: newRow.days_mask.slice(),
             rate: newRow.rate,
+            start_time: newRow.start_time || false,
+            end_time: newRow.end_time || false,
+            max_per_day: newRow.max_per_day || 0,
         });
         this._markDirty();
     }

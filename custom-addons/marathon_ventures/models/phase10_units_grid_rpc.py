@@ -365,12 +365,16 @@ class MvDealUnitsGridRpc(models.Model):
                     **common_vals,
                 })
             else:
+                # Default cap = 'uncapped' so the Capping Report tab
+                # picks up the new schedule with the correct Selection
+                # value (matches cap_pct=100 = full delivery).
                 Sched.create({
                     'deal_parent': self.id,
                     'week': week_iso,
                     'units_available': units,
                     'status': 'sold',
                     'cap_pct': 100,
+                    'cap': 'uncapped',
                     **common_vals,
                 })
 
