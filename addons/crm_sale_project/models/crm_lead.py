@@ -45,6 +45,7 @@ class CrmLead(models.Model):
             default_reinvoiced_sale_order_id=(
                 self.order_ids[0].id if self.order_ids else False
             ),
+            lead_company_id=self.company_id.id,
         )
 
     def action_create_project(self):
