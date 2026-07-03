@@ -172,7 +172,7 @@ class PosOrder(models.Model):
     def _get_invoice_lines_values(self, line_values, pos_line, move_type):
         inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line, move_type)
 
-        if pos_line.sale_order_origin_id:
+        if pos_line.sale_order_origin_id and pos_line.sale_order_line_id:
             origin_line = pos_line.sale_order_line_id
             inv_line_vals["name"] = origin_line.name
             origin_line._set_analytic_distribution(inv_line_vals)
