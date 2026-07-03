@@ -72,11 +72,13 @@ class SaleOrderLine(models.Model):
 
     @api.onchange("margin")
     def _onchange_margin(self):
-        computed_margin = self._get_subtotal() - self.purchase_price * self._get_product_qty()
+        if not (product_qty := self._get_product_qty()):
+            # Nothing to do, write method raises UserError if quantity is below delivered quantity.
+            return
+        computed_margin = self._get_subtotal() - self.purchase_price * product_qty
         if not self.currency_id.compare_amounts(computed_margin, self.margin):
             # Nothing to do, onchange was triggered because of the compute
             return
-        product_qty = self._get_product_qty()
         discount = self._get_discount()
         margin_per_qty = self.margin / product_qty
         computed_price = (margin_per_qty + self.purchase_price) / discount
