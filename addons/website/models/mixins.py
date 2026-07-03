@@ -881,7 +881,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
         if len(search_terms) <= 2:
             for search_term in search_terms:
                 subdomains = [
-                    Domain(field, "ilike", search_term)
+                    self._search_get_field_domain(field, search_term)
                     for field in fields
                 ]
                 if extra:
@@ -893,7 +893,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
             case_parts = []
             for search_term in search_terms:
                 subdomains = [
-                    Domain(field, "ilike", search_term)
+                    self._search_get_field_domain(field, search_term)
                     for field in fields
                 ]
                 if extra:
@@ -911,6 +911,10 @@ class WebsiteSearchableMixin(models.AbstractModel):
             query.add_where(where_clause)
             domain &= Domain("id", "in", query)
         return domain
+
+    @api.model
+    def _search_get_field_domain(self, field, search_term):
+        return Domain(field, "ilike", search_term)
 
     @api.model
     def _search_get_detail(self, website, order, options):
