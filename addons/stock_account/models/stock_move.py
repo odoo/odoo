@@ -93,10 +93,10 @@ class StockMove(models.Model):
                 continue
             move.is_dropship = move._is_dropshipped() or move._is_dropshipped_returned()
 
-    @api.depends('state', 'move_line_ids')
+    @api.depends('is_in', 'is_out', 'is_dropship')
     def _compute_is_valued(self):
         for move in self:
-            move.is_valued = move.is_in or move.is_out
+            move.is_valued = move.is_in or move.is_out or move.is_dropship
 
     def _compute_value_manual(self):
         for move in self:
@@ -722,27 +722,6 @@ class StockMove(models.Model):
         if valued_type == 'out':
             return self.location_dest_id and self.location_dest_id.usage == 'supplier'
         return bool(self.picking_id.return_picking_id)
-
-    def _get_price_unit_delivery(self):
-        """ Computes the unit price for a set of moves, using a weighted average between
-        dropshipped and non dropshipped moves.
-        """
-        dropship_moves = self.filtered(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
-        dropship_quantity = sum(m._get_valued_qty() for m in dropship_moves)
-        dropship_price_unit = dropship_moves._get_price_unit_dropshipped()
-        regular_moves = self - dropship_moves
-        regular_quantity = sum(m._get_valued_qty() for m in regular_moves)
-        regular_price_unit = regular_moves._get_price_unit()
-        total_quantity = dropship_quantity + regular_quantity
-        if not total_quantity:
-            return self._get_price_unit()
-        return (dropship_quantity * dropship_price_unit + regular_quantity * regular_price_unit) / total_quantity
-
-    def _get_price_unit_dropshipped(self):
-        """ Returns the unit price to value the dropshipped moves."""
-        total_value = sum(m._get_value() for m in self)
-        total_qty = sum(m._get_valued_qty() for m in self)
-        return total_value / total_qty if total_qty else 0
 
     def _get_valued_consigned_qty(self):
         consigned_lines = self.move_line_ids.filtered(lambda l: l._is_consigned_valued_line())
