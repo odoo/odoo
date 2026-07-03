@@ -1,6 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { asyncComputed, computed, onWillStart, t, useProps } from "@odoo/owl";
+import { asyncComputed, computed, onWillStart, proxy, useProps, t } from "@odoo/owl";
+import { currencies } from "@web/core/currency";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { FormActionFieldsOption } from "./form_action_fields_option";
@@ -55,6 +56,15 @@ export class FormFieldOption extends BaseOptionComponent {
             { name: _t("Date & Time"), value: "datetime" },
             { name: _t("File Upload"), value: "binary" },
         ];
+        this.state = proxy({
+            availableFields: [],
+            conditionInputs: [],
+            conditionValueList: [],
+            currencies,
+            dependencyEl: null,
+            valueList: null,
+            fieldTypeItems: [],
+        });
         this.domState = useDomState((el) => {
             const modelName = getModelName(el.closest("form"));
             const fieldName = getFieldName(el);
@@ -316,6 +326,16 @@ export class FormFieldOption extends BaseOptionComponent {
     get isMultipleInputs() {
         const el = this.env.getEditingElement();
         return !!getMultipleInputs(el);
+    }
+    get isMonetaryField() {
+        const el = this.env.getEditingElement();
+        const fieldEl = el.closest(".s_website_form_field");
+        return fieldEl?.dataset.type === "monetary";
+    }
+    get hasReadonlyCurrencyField() {
+        const fieldEl = this.env.getEditingElement();
+        const field = this.fieldOptionData().fields?.[getFieldName(fieldEl)];
+        return field?.currency_field_readonly;
     }
     get isMaxFilesVisible() {
         // Do not display the option if only one file is supposed to be

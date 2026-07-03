@@ -207,6 +207,20 @@
             applyWithUnit="false"
         />
     </BuilderRow>
+    <BuilderRow label.translate="Display Currency" t-if="this.isMonetaryField">
+        <BuilderCheckbox
+            id="'display_currency'"
+            action="'displayCurrency'"
+         />
+    </BuilderRow>
+    <BuilderRow label.translate="Currency" level="1" t-if="this.isActiveItem('display_currency') and !this.hasReadonlyCurrencyField">
+        <BuilderSelect id="'set_currency'"
+            dataAttributeAction="'currencyId'"
+            action="'setCurrency'">
+            <BuilderSelectItem t-foreach="Object.keys(this.state.currencies)" t-as="id" t-key="id"
+                actionValue="id" dataAttributeActionValue="id" t-out="this.state.currencies[id].name"/>
+        </BuilderSelect>
+    </BuilderRow>
     <BuilderRow t-if="valueList and (!(this.domState.fieldName === 'state_id' and this.isActiveItem('link_state_to_country_opt')))">
         <div class="d-flex flex-column w-100">
             <p class="o_hb_row_label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
