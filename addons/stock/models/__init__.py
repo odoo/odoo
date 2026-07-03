@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import barcode
@@ -14,7 +13,6 @@ from . import stock_move
 from . import stock_move_line
 from . import stock_orderpoint
 from . import stock_lot
-from . import stock_picking
 from . import stock_quant
 from . import stock_reference
 from . import stock_replenish_mixin
@@ -24,5 +22,7 @@ from . import product
 from . import stock_package_history
 from . import stock_package_type
 from . import stock_package
+from . import stock_picking
+from . import stock_picking_type
 from . import stock_storage_category
 from . import stock_scrap_reason_tag
