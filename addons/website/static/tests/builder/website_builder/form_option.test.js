@@ -22,6 +22,7 @@ import {
 import { formSelectXml } from "@website/../tests/interactions/snippets/helpers";
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
 import {
+    confirmAddSnippet,
     getDragHelper,
     unfoldAllOptionsGroups,
     waitForEndOfOperation,
@@ -525,6 +526,21 @@ test("Saving outgoing mail form without company email uses editor email fallback
     expect(":iframe input[type='hidden'][name='email_to']").toHaveValue("user@mail.com");
 
     await contains(".o-snippets-top-actions button:contains(Save)").click();
+});
+
+test("dropping a snippet containing a form applies the default recipient email", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    onRpc("res.company", "read", () => [{ email: "company@mail.com" }]);
+    await setupWebsiteBuilder("");
+
+    await contains("[data-snippet-group='contact_and_forms'] .o_snippet_thumbnail_area").click();
+    await confirmAddSnippet("s_website_form_info");
+    await waitForEndOfOperation();
+
+    await contains(":iframe .s_website_form_info .s_website_form").click();
+
+    expect(":iframe .s_website_form_info input[name='email_to']").toHaveValue("company@mail.com");
+    expect(".hb-row[data-label='Recipient Emails'] input").toHaveValue("company@mail.com");
 });
 
 test("Last list entry cannot be removed", async () => {
