@@ -251,6 +251,23 @@ Blame the following rules:
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
         )
 
+    def test_local_without_groups(self):
+        """ Check what happens when the groups of a local rule are removed. """
+        rule = self._make_rule('rule 0', '[("val", "=", 42)]')
+        with self.debug_mode(), self.assertRaises(AccessError):
+            self.record.write({'val': 1})
+
+        # remove the relation between the ir.rule and its groups in plain SQL
+        self.env.cr.execute(
+            "DELETE FROM rule_group_rel WHERE rule_group_id = %s",
+            [rule.id],
+        )
+        self.env.registry.clear_cache('stable')
+        self.env.transaction.invalidate_access_cache()
+
+        # now the rule shouldn't apply at all
+        self.record.write({'val': 1})
+
     def test_globals_all(self):
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[("val", "=", 78)]', global_=True)

@@ -136,7 +136,7 @@ class IrRule(models.Model):
         """
         all_rules = self.sudo().search_fetch(
             [('active', '=', True)],
-            ['model_name', 'groups', 'domain_force', *(f'perm_{mode}' for mode in self._MODES)],
+            ['model_name', 'groups', 'global', 'domain_force', *(f'perm_{mode}' for mode in self._MODES)],
             order='id',
         )
         # pre-evaluate domains if possible (once per rule)
@@ -160,7 +160,7 @@ class IrRule(models.Model):
                 for mode in self._MODES
                 if rule[f'perm_{mode}']
                 # iterate over all groups, or just once with an empty group (for global rules)
-                for group in rule.groups or (rule.groups,)
+                for group in (rule.groups if not rule['global'] else (rule.groups.browse(),))
             )
             for model_name, model_rules in all_rules.grouped('model_name').items()
             if model_name in env
