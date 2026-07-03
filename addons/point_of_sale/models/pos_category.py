@@ -37,6 +37,7 @@ class PosCategory(models.Model):
     hour_until = fields.Float(string='Availability Until', default=24.0, help="The product will be available until this hour for online order and self order.")
     hour_after = fields.Float(string='Availability After', default=0.0, help="The product will be available after this hour for online order and self order.")
     pos_config_ids = fields.Many2many('pos.config', string='Linked PoS Configurations')
+    active = fields.Boolean(default=True)
 
     # During loading of data, the image is not loaded so we expose a lighter
     # field to determine whether a pos.category has an image or not.
@@ -65,10 +66,34 @@ class PosCategory(models.Model):
                 category.complete_name = category.name
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_session_open(self):
-        for record in self:
-            if record.pos_config_ids:
-                raise UserError(_('You cannot delete a category which is currently in use in a point of sale.'))
+    def _unlink_except_session_open_or_linked_to_pos(self):
+        """Prevent deletion if the category is used in an active POS session or linked to a restricted POS configuration."""
+        self._check_categ_in_linked_to_pos()
+        self._check_categ_in_active_session()
+
+    def _check_categ_in_linked_to_pos(self):
+        if self.pos_config_ids:
+            raise UserError(_('You cannot archive/delete a category which is currently in use in a point of sale.'))
+
+    def action_archive(self):
+        self._check_categ_in_linked_to_pos()
+        self._check_categ_in_active_session()
+        return super().action_archive()
+
+    def _check_categ_in_active_session(self):
+        if self._check_linked_active_pos_session():
+            raise UserError(_(
+                "You cannot archive/delete PoS Product Categories that are used in an active Point of Sale session.\n"
+                "Close all related PoS sessions first and try again.",
+            ))
+
+    def _check_linked_active_pos_session(self):
+        return self.env['pos.session'].sudo().search([
+            ('state', '!=', 'closed'),
+            '|',
+            ('config_id.iface_available_categ_ids', '=', False),
+            ('config_id.iface_available_categ_ids', 'in', self.ids),
+        ], limit=1)
 
     @api.depends('has_image')
     def _compute_has_image(self):
