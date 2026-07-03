@@ -20,16 +20,23 @@ class TestProjectPurchase(TestProjectPurchaseProfitability):
         })
 
         # Create additional analytic plans at setup to avoid adding fields in project.project between tests
-        cls.analytic_plan_1 = cls.env['account.analytic.plan'].create({'name': 'Purchase Project Plan 1'})
-        cls.analytic_plan_2 = cls.env['account.analytic.plan'].create({'name': 'Purchase Project Plan 2'})
-        cls.analytic_account_1 = cls.env['account.analytic.account'].create({
+        cls.analytic_plan_1, cls.analytic_plan_2, cls.analytic_plan_3 = cls.env['account.analytic.plan'].create([{
+            'name': 'Purchase Project Plan 1'
+        }, {
+            'name': 'Purchase Project Plan 2'
+        }, {
+            'name': 'Purchase Project Plan 3'
+        }])
+        cls.analytic_account_1, cls.analytic_account_2, cls.analytic_account_3 = cls.env['account.analytic.account'].create([{
             'name': 'Analytic Account - Plan 1',
             'plan_id': cls.analytic_plan_1.id,
-        })
-        cls.analytic_account_2 = cls.env['account.analytic.account'].create({
+        }, {
             'name': 'Analytic Account - Plan 2',
             'plan_id': cls.analytic_plan_2.id,
-        })
+        }, {
+            'name': 'Analytic Account - Plan 3',
+            'plan_id': cls.analytic_plan_3.id,
+        }])
 
     def test_project_creation_on_po_with_manual_analytic(self):
         """ Tests the interaction between manually added analytic account, distribution
@@ -53,11 +60,14 @@ class TestProjectPurchase(TestProjectPurchaseProfitability):
 
         # Add a manual analytic account and a project
         purchase_order.order_line.analytic_distribution = {**purchase_order.order_line.analytic_distribution, **analytic_distribution_manual}
+        # We can not use the account set on the 'account_id' field of the project to check if accounts are correctly added. Indeed, this account
+        # has the same plan as the self.analytic_account.id, and thus will be ignored during the compute method.
+        self.project1[f'{self.analytic_plan_3._column_name()}'] = self.analytic_account_3
         purchase_order.project_id = self.project1
         # All accounts should still be in the line after confirmation
         expected_analytic_distribution = {
-            f"{self.analytic_account.id},{purchase_order.project_id.account_id.id}": 100,
-            f"{self.analytic_account_1.id},{purchase_order.project_id.account_id.id}": 100,
+            f"{self.analytic_account.id},{self.analytic_account_3.id}": 100,
+            f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 100,
         }
         self.assertEqual(purchase_order.order_line.analytic_distribution, expected_analytic_distribution)
 
@@ -92,9 +102,10 @@ class TestProjectPurchase(TestProjectPurchaseProfitability):
 
         # When we add a project to the PO, it should keep the previous accounts + the project account
         purchase_order.project_id = self.project1
+        self.project1[f'{self.analytic_plan_3._column_name()}'] = self.analytic_account_3
         expected_distribution_project = {
-            f"{self.analytic_account_1.id},{self.analytic_account_2.id},{self.project1.account_id.id}": 100,
-            f"{self.analytic_account.id},{self.project1.account_id.id}": 100,
+            f"{self.analytic_account_1.id},{self.analytic_account_2.id},{self.analytic_account_3.id}": 100,
+            f"{self.analytic_account.id},{self.analytic_account_3.id}": 100,
         }
         self.assertEqual(purchase_order.order_line.analytic_distribution, expected_distribution_project)
 
