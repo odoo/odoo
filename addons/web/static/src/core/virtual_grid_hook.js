@@ -1,81 +1,38 @@
-import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
-import { pick, shallowEqual } from "@web/core/utils/objects";
+import { computed, signal, types as t, useListener } from "@odoo/owl";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 /**
- * @template T
- * @typedef VirtualGridParams
- * @property {ReturnType<typeof import("@odoo/owl").useRef>} scrollableRef
- *  a ref to the scrollable element
- * @property {ScrollPosition} [initialScroll={ left: 0, top: 0 }]
- *  the initial scroll position of the scrollable element
- * @property {(changed: Partial<VirtualGridIndexes>) => void} [onChange=() => render(this)]
- *  a callback called when the visible items change, i.e. when on scroll or resize.
- *  the default implementation is to re-render the component.
- * @property {number} [bufferCoef=1]
- *  the coefficient to calculate the buffer size around the visible area.
- *  The buffer size is equal to bufferCoef * windowSize.
- *  The default value is 1: it means that the buffer size takes one more window size on each side.
- *  So the whole area that will be rendered is 3 times the window size.
- *  If you use each direction, it could be up to 9 times the window size (3x3).
- *  Consider lowering this value if you have a costful rendering.
- *  A value of 0 means no buffer.
- */
-
-/**
- * @typedef VirtualGridIndexes
- * @property {[number, number] | undefined} columnsIndexes
- * @property {[number, number] | undefined} rowsIndexes
- */
-
-/**
- * @typedef VirtualGridSetters
- * @property {(widths: number[]) => void} setColumnsWidths
- *  Use it to set the width of each column.
- *  Indexes should match the indexes of the columns.
- * @property {(heights: number[]) => void} setRowsHeights
- *  Use it to set the height of each row.
- *  Indexes should match the indexes of the rows.
- */
-
-/**
- * @typedef ScrollPosition
- * @property {number} left
- * @property {number} top
- */
-
-const BUFFER_COEFFICIENT = 1;
-
-/**
- * @typedef GetIndexesParams
- * @property {number[]} sizes contains the sizes of the items. Each size is the sum of the sizes of the previous items and the size of the current item.
- * @property {number} start it is the start position of the visible area, here it is the scroll position.
- * @property {number} span it is the size of the visible area, here it is the window size.
- * @property {number} [prevStartIndex] the previous start index, it is used to optimize the calculation.
- * @property {number} [bufferCoef=BUFFER_COEFFICIENT] the coefficient to calculate the buffer size.
- */
-
-/**
- * This function calculates the indexes of the visible items in a virtual list.
+ * Computes the start and end indices of the visible items in a virtual list.
+ * This works both horizontally (start = scroll left, span = window width) and
+ * vertically (start = scroll top, span = window height).
  *
- * @param {GetIndexesParams} param0
- * @returns {[number, number] | undefined} the indexes of the visible items with a surrounding buffer of totalSize on each side.
+ * @param {number[]} sizes cumulative sizes of the items
+ * @param {number} start starting position (in pixels) of the visible area
+ * @param {number} span size (in pixels) of the visible area
+ * @param {number} prevStartIndex previous start index, used to optimize the calculation
+ * @param {number} bufferCoef coefficient used to compute buffer size
  */
-function getIndexes({ sizes, start, span, prevStartIndex, bufferCoef = BUFFER_COEFFICIENT }) {
-    if (!sizes || !sizes.length) {
-        return [];
+function computeIndices(sizes, start, span, prevStartIndex, bufferCoef) {
+    if (!sizes.length) {
+        return {
+            start: null,
+            end: null,
+        };
     }
     if (sizes.at(-1) < span) {
         // all items could be displayed
-        return [0, sizes.length - 1];
+        return {
+            start: 0,
+            end: sizes.length - 1,
+        };
     }
-    const bufferSize = Math.round(span * bufferCoef);
+    const bufferSize = Math.ceil(span * bufferCoef);
     const bufferStart = start - bufferSize;
     const bufferEnd = start + span + bufferSize;
 
-    let startIndex = prevStartIndex ?? 0;
-    // we search the first index such that sizes[index] > bufferStart
+    // search the first index such that sizes[index] > bufferStart
+    let startIndex = prevStartIndex || 0;
     while (startIndex > 0 && sizes[startIndex] > bufferStart) {
         startIndex--;
     }
@@ -83,97 +40,165 @@ function getIndexes({ sizes, start, span, prevStartIndex, bufferCoef = BUFFER_CO
         startIndex++;
     }
 
+    // search the last index such that (sizes[index - 1] || 0) < bufferEnd
     let endIndex = startIndex;
-    // we search the last index such that (sizes[index - 1] ?? 0) < bufferEnd
-    while (endIndex < sizes.length - 1 && (sizes[endIndex - 1] ?? 0) < bufferEnd) {
+    while (endIndex < sizes.length - 1 && (sizes[endIndex - 1] || 0) < bufferEnd) {
         endIndex++;
     }
-    while (endIndex > startIndex && (sizes[endIndex - 1] ?? 0) >= bufferEnd) {
+    while (endIndex > startIndex && (sizes[endIndex - 1] || 0) >= bufferEnd) {
         endIndex--;
     }
-    return [startIndex, endIndex];
+
+    return {
+        start: startIndex,
+        end: endIndex,
+    };
 }
 
 /**
- * Calculates the displayed items in a virtual grid.
+ * @param {number[]} values
+ */
+function getSummed(values) {
+    let acc = 0;
+    return values.map((w) => (acc += w));
+}
+
+const DEFAULT_BUFFER_COEFFICIENT = 1;
+
+/**
+ * Calculates which items should be displayed in a given grid. It works by receiving
+ * informations about row widths and/or column heights, and returning the **first**
+ * and **last** indices (for each direction) of the items that should be actually
+ * rendered.
  *
  * Requirements:
  *  - the scrollable area has a fixed height and width.
  *  - the items are rendered with a proper offset inside the scrollable area.
- *    This can be achieved e.g. with a css grid or an absolute positioning.
+ *      e.g. using CSS `grid` properties or absolute positioning
  *
- * @template T
- * @param {VirtualGridParams<T>} params
- * @returns {VirtualGridIndexes & VirtualGridSetters}
+ * The returned `scrollableRef` property should be given in a `t-ref` directive
+ * to the scrollable element.
+ *
+ * @param {Object} params
+ * @param {import("@odoo/owl").Signal<HTMLElement>} [params.scrollableRef] signal
+ * @param {number[]} [params.rowHeights] initial row heights
+ * @param {number[]} [params.columnWidths] initial column widths
+ *  pointing to the scrollable element. It is optional, as this hook can spawn a
+ *  new one if needed, that will be available in the return value.
+ * @param {{ left?: number; top?: number }} [params.initialScroll] initial scroll
+ *  position of the scrollable element
+ * @param {number} [params.bufferCoef=1] coefficient used to calculate the buffer
+ *  size around the visible area; with its default value of 1, it means that the
+ *  resulting buffer size is equal to the size of the window, and that the whole
+ *  rendered area will be 3 times the window size.
+ *  As this works in both dimensions, this could mean that a total area of 9 windows
+ *  (3x3) would be rendered.
+ *  Consider using a lower value if the rendering becomse too costly.
+ *  Setting it to 0 removes the buffer entirely.
  */
-export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferCoef }) {
-    const comp = useComponent();
-    onChange ||= () => render(comp);
+export function useVirtualGrid({
+    scrollableRef,
+    rowHeights,
+    columnWidths,
+    initialScroll,
+    bufferCoef,
+} = {}) {
+    function onResize() {
+        innerWidth.set(window.innerWidth);
+        innerHeight.set(window.innerHeight);
+    }
 
-    const current = { scroll: { left: 0, top: 0, ...initialScroll } };
-    const computeColumnsIndexes = () =>
-        getIndexes({
-            sizes: current.summedColumnsWidths,
-            start: Math.abs(current.scroll.left),
-            span: window.innerWidth,
-            prevStartIndex: current.columnsIndexes?.[0],
-            bufferCoef,
-        });
-    const computeRowsIndexes = () =>
-        getIndexes({
-            sizes: current.summedRowsHeights,
-            start: current.scroll.top,
-            span: window.innerHeight,
-            prevStartIndex: current.rowsIndexes?.[0],
-            bufferCoef,
-        });
-    const throttledCompute = useThrottleForAnimation(() => {
-        const changed = [];
-        const columnsVisibleIndexes = computeColumnsIndexes();
-        if (!shallowEqual(columnsVisibleIndexes, current.columnsIndexes)) {
-            current.columnsIndexes = columnsVisibleIndexes;
-            changed.push("columnsIndexes");
-        }
-        const rowsVisibleIndexes = computeRowsIndexes();
-        if (!shallowEqual(rowsVisibleIndexes, current.rowsIndexes)) {
-            current.rowsIndexes = rowsVisibleIndexes;
-            changed.push("rowsIndexes");
-        }
-        if (changed.length) {
-            onChange(pick(current, ...changed));
-        }
+    /**
+     * @param {Event & { currentTarget: HTMLElement }} ev
+     */
+    function onScroll(ev) {
+        scrollLeft.set(ev.currentTarget.scrollLeft);
+        scrollTop.set(ev.currentTarget.scrollTop);
+    }
+
+    bufferCoef ||= DEFAULT_BUFFER_COEFFICIENT;
+    scrollableRef ||= signal.ref();
+
+    // Columns reactive values
+    const columnIndices = computed(function computeColumnIndices() {
+        const indices = computeIndices(
+            summedColumnWidths(),
+            Math.abs(scrollLeft()),
+            innerWidth(),
+            lastColumnStartIndex,
+            bufferCoef
+        );
+        lastColumnStartIndex = indices.start;
+        return indices;
     });
-    const scrollListener = (/** @type {Event & { target: Element }} */ ev) => {
-        current.scroll.left = ev.target.scrollLeft;
-        current.scroll.top = ev.target.scrollTop;
-        throttledCompute();
-    };
-    useLayoutEffect(
-        (el) => {
-            el?.addEventListener("scroll", scrollListener);
-            return () => el?.removeEventListener("scroll", scrollListener);
-        },
-        () => [scrollableRef.el]
-    );
-    useListener(window, "resize", () => throttledCompute());
+    const firstColumn = computed(() => columnIndices().start);
+    const lastColumn = computed(() => columnIndices().end);
+    const summedColumnWidths = signal.Array(getSummed(columnWidths || []), t.number());
+    let lastColumnStartIndex = 0;
+
+    // Rows reactive values
+    const rowIndices = computed(function computeRowIndices() {
+        const indices = computeIndices(
+            summedRowHeights(),
+            Math.abs(scrollTop()),
+            innerHeight(),
+            lastRowStartIndex,
+            bufferCoef
+        );
+        lastRowStartIndex = indices.start;
+        return indices;
+    });
+    const firstRow = computed(() => rowIndices().start);
+    const lastRow = computed(() => rowIndices().end);
+    const summedRowHeights = signal.Array(getSummed(rowHeights || []), t.number());
+    let lastRowStartIndex = 0;
+
+    // "External" reactive values (i.e.: scroll position & window size)
+    const innerWidth = signal(window.innerWidth);
+    const innerHeight = signal(window.innerHeight);
+    const scrollLeft = signal(initialScroll?.left || 0);
+    const scrollTop = signal(initialScroll?.top || 0);
+
+    // TODO remove when Grid view uses a signal ref
+    if (typeof scrollableRef !== "function") {
+        const legacyCustomRef = scrollableRef;
+        const throttledOnScroll = useThrottleForAnimation(onScroll);
+        useLayoutEffect(
+            (el) => {
+                el?.addEventListener("scroll", throttledOnScroll);
+                return () => el?.removeEventListener("scroll", throttledOnScroll);
+            },
+            () => [legacyCustomRef.el]
+        );
+    } else {
+        useListener(scrollableRef, "scroll", useThrottleForAnimation(onScroll));
+    }
+
+    useListener(window, "resize", useThrottleForAnimation(onResize));
+
     return {
-        get columnsIndexes() {
-            return current.columnsIndexes;
+        firstRow,
+        lastRow,
+        firstColumn,
+        lastColumn,
+        ref: scrollableRef,
+        /**
+         * Sets the width of each column.
+         * Indexes should match the indexes of the columns.
+         *
+         * @param {number[]} widths
+         */
+        setColumnWidths(widths) {
+            summedColumnWidths.set(getSummed(widths));
         },
-        get rowsIndexes() {
-            return current.rowsIndexes;
-        },
-        setColumnsWidths(widths) {
-            let acc = 0;
-            current.summedColumnsWidths = widths.map((w) => (acc += w));
-            delete current.columnsIndexes;
-            current.columnsIndexes = computeColumnsIndexes();
-        },
-        setRowsHeights(heights) {
-            let acc = 0;
-            current.summedRowsHeights = heights.map((h) => (acc += h));
-            delete current.rowsIndexes;
-            current.rowsIndexes = computeRowsIndexes();
+        /**
+         * Sets the height of each row.
+         * Indexes should match the indexes of the rows.
+         *
+         * @param {number[]} heights
+         */
+        setRowHeights(heights) {
+            summedRowHeights.set(getSummed(heights));
         },
     };
 }
