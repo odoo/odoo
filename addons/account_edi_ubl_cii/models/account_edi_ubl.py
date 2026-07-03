@@ -376,7 +376,23 @@ class AccountEdiUBL(models.AbstractModel):
         base_line = vals['line_vals']['base_line']
         product = base_line['product_id']
 
+<<<<<<< 70334a50474396a25711ac614607b98c1f24fd5e
         if base_line.get('_removed_tax_data'):
+||||||| e60fc03e1c86d30c9ac019aef0dc5f14a7cf6163
+        line_name = name = base_line.get('name', '')  # Regular business line.
+        description = None
+        if product := base_line['product_id']:
+            name = product.display_name
+            description = line_name.replace(name, '').strip()  # Remove the redundant product's name from the description.
+        elif base_line.get('_removed_tax_data'):
+=======
+        line_name = name = base_line.get('name') or ''  # Regular business line.
+        description = None
+        if product := base_line['product_id']:
+            name = product.display_name
+            description = line_name.replace(name, '').strip()  # Remove the redundant product's name from the description.
+        elif base_line.get('_removed_tax_data'):
+>>>>>>> ed322dfba275cbb9ffdd25f77b34ed7dd37ae5b7
             # Emptying tax extra line.
             name = description = base_line['_removed_tax_data']['tax'].name
         else:
