@@ -2059,7 +2059,7 @@ class HrEmployee(models.Model):
             return (self.resource_calendar_id or self.env.company.resource_calendar_id)._get_unusual_days(
                 datetime.combine(fields.Date.from_string(date_from), time.min, tzinfo=UTC),
                 datetime.combine(fields.Date.from_string(date_to), time.max, tzinfo=UTC),
-                self.company_id,
+                self.company_id or self.env.company,
             )
         unusual_days = {}
         for version in employee_versions:

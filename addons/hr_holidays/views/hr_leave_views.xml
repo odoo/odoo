@@ -24,6 +24,9 @@
                 <field name="name"/>
                 <field name="activity_user_id" string="Activities of"/>
                 <field name="activity_type_id" string="Activity type"/>
+                <filter string="Current Company" name="current_company"
+                        domain="[('company_id', '=', allowed_company_ids[0])]"
+                        groups="base.group_multi_company"/>
                 <filter domain="[
                         ('state','in',['confirm']),
                         '|',
@@ -745,7 +748,7 @@
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,list,form,activity</field>
         <field name="domain">[('user_id', '=', uid), ('employee_id.company_id', 'in', allowed_company_ids)]</field>
-        <field name="context">{'short_name': 1, 'search_default_year': 1}</field>
+        <field name="context">{'short_name': 1, 'search_default_year': 1, 'search_default_current_company': 1}</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_my"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

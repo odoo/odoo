@@ -439,7 +439,7 @@ class HrEmployee(models.Model):
     def _get_public_holidays(self, date_start, date_end):
         domain = [
             ('resource_id', '=', False),
-            ('company_id', 'in', self.env.companies.ids),
+            ('company_id', '=', self.company_id.id or self.env.company.id),
             ('date_from', '<=', date_end),
             ('date_to', '>=', date_start),
             '|',
@@ -478,7 +478,7 @@ class HrEmployee(models.Model):
         domain = [
             ('start_date', '<=', end_date),
             ('end_date', '>=', start_date),
-            ('company_id', 'in', self.env.companies.ids),
+            ('company_id', '=', self.company_id.id or self.env.company.id),
             '|',
             ('resource_calendar_id', '=', False),
             ('resource_calendar_id', 'in', self.resource_calendar_id.ids),
