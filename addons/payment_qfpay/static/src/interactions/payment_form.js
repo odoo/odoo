@@ -7,14 +7,15 @@ import { Component, onMounted, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PaymentForm } from "@payment/interactions/payment_form";
 
-// QFPay requires its wallet element to be rendered outside any <form> element (per QFPay SDK docs).
-// To work around this constraint, the wallet UI is rendered inside an Odoo dialog component.
+const QFPAY_DIALOG_CLOSED = Symbol("qfpay.dialog.closed");
+
+// QFPay requires the wallet element outside any <form>. The wallet UI is rendered inside a dialog.
 class QFPayWalletDialog extends Component {
     static components = { Dialog };
     static template = xml`
         <Dialog title="this.props.title" size="'md'">
             <div id="o_qfpay_wallet_dialog_container"/>
-        </Dialog> 
+        </Dialog>
     `;
     static props = { close: Function, title: String, onMounted: Function };
 
@@ -26,16 +27,13 @@ class QFPayWalletDialog extends Component {
 patch(PaymentForm.prototype, {
     setup() {
         super.setup();
-        this.qfpayTrackedListeners = [];
         this.qfpayInlineValues = {};
         this.qfpayDialogClose = null;
+        this._qfpayAbortController = null;
     },
 
     /**
-     * Override of `payment` to reset the QFPay SDK state when the payment option changes.
-     *
-     * @override method from @payment/interactions/payment_form
-     * @return {void}
+     * @override
      */
     _collapseInlineForms() {
         this._qfpayCleanup();
@@ -45,57 +43,28 @@ patch(PaymentForm.prototype, {
     // === DOM MANIPULATION ===
 
     /**
-     * Prepare the inline form of QFPay for direct payment.
-     *
-     * @override method from @payment/interactions/payment_form
-     * @private
-     * @param {number} providerId - The id of the selected payment option's provider.
-     * @param {string} providerCode - The code of the selected payment option's provider.
-     * @param {number} paymentOptionId - The id of the selected payment option.
-     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
-     * @param {string} flow - The online payment flow of the selected payment option.
-     * @return {void}
+     * @override
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== "qfpay") {
-            await super._prepareInlineForm(...arguments);
-            return;
+            return super._prepareInlineForm(...arguments);
         }
-
         this._setPaymentFlow("direct");
-
-        try {
-            const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-            const inlineForm = this._getInlineForm(radio);
-            const inlineContext = inlineForm.querySelector(".o_qfpay_inline_context");
-            this.qfpayInlineValues = JSON.parse(inlineContext.dataset.qfpayInlineFormValues);
-            await this.waitFor(loadJS(this.qfpayInlineValues.sdk_url));
-        } catch {
-            this._displayErrorDialog(
-                _t("Payment Unavailable"),
-                _t("Could not load the QFPay payment SDK. Please refresh and try again.")
-            );
-            this._enableButton();
-        }
+        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        const inlineForm = this._getInlineForm(radio);
+        const inlineContext = inlineForm?.querySelector(".o_qfpay_inline_context");
+        this.qfpayInlineValues = JSON.parse(inlineContext.dataset.qfpayInlineFormValues);
+        await this.waitFor(loadJS(this.qfpayInlineValues.sdk_url));
     },
 
-    // #=== PAYMENT FLOW ===#
+    // === PAYMENT FLOW ===
 
     /**
-     * Process QFPay implementation of the direct payment flow.
-     *
-     * @override method from @payment/interactions/payment_form
-     * @private
-     * @param {string} providerCode - The code of the selected payment option's provider.
-     * @param {number} paymentOptionId - The id of the selected payment option.
-     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
-     * @param {object} processingValues - The processing values of the transaction.
-     * @return {void}
+     * @override
      */
     async _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
         if (providerCode !== "qfpay") {
-            await super._processDirectFlow(...arguments);
-            return;
+            return super._processDirectFlow(...arguments);
         }
 
         const { payment_intent, out_trade_no, txamt, txcurrcd, return_url } = processingValues;
@@ -126,10 +95,7 @@ patch(PaymentForm.prototype, {
                                         },
                                         payment_intent
                                     );
-                                    qfpay
-                                        .confirmWalletPayment({ return_url })
-                                        .then(resolve)
-                                        .catch(reject);
+                                    qfpay.confirmWalletPayment({ return_url }).then(resolve, reject);
                                 } catch (e) {
                                     reject(e);
                                 }
@@ -139,61 +105,65 @@ patch(PaymentForm.prototype, {
                     {
                         onClose: () => {
                             this.qfpayDialogClose = null;
+                            this._qfpayCleanup();
                             this._enableButton();
+                            reject(QFPAY_DIALOG_CLOSED);
                         },
                     }
                 );
             });
             this._qfpayCleanup();
         } catch (error) {
-            this._displayErrorDialog(
-                _t("Payment Error"),
-                error.message || _t("An unexpected error occurred during payment.")
-            );
+            if (error !== QFPAY_DIALOG_CLOSED) {
+                this._displayErrorDialog(
+                    _t("Payment Error"),
+                    error.message || _t("An unexpected error occurred during payment.")
+                );
+            }
             this._qfpayCleanup();
             this._enableButton();
         }
     },
 
-    // #=== HELPERS ===#
+    // === HELPERS ===
 
     /**
-     * Wrap a callback to intercept and track any `message` event listeners added by the QFPay SDK.
-     *
-     * The tracked listeners are stored so they can be removed during cleanup, since the SDK does
-     * not expose a teardown API.
+     * Intercept `message` listeners the QFPay SDK registers during `callback` and inject an
+     * `AbortSignal` for atomic cleanup via `AbortController.abort()`.
      *
      * @private
-     * @param {Function} callback - The callback during which listener registration is intercepted.
-     * @return {void}
+     * @param {Function} callback
      */
     _qfpayWrapListeners(callback) {
+        const abortController = new AbortController();
         const origAddEvent = window.addEventListener.bind(window);
         window.addEventListener = (type, listener, options) => {
             if (type === "message") {
-                this.qfpayTrackedListeners.push({ listener, options });
+                const signalOption = typeof options === "object" && options !== null
+                    ? { ...options, signal: abortController.signal }
+                    : { signal: abortController.signal, capture: !!options };
+                return origAddEvent(type, listener, signalOption);
             }
             return origAddEvent(type, listener, options);
         };
         try {
             callback();
+            this._qfpayAbortController = abortController;
         } finally {
             window.addEventListener = origAddEvent;
         }
     },
 
     /**
-     * Remove tracked SDK listeners and close the wallet dialog.
+     * Abort tracked listeners and close the wallet dialog.
      *
      * @private
-     * @return {void}
      */
     _qfpayCleanup() {
-        for (const { listener, options } of this.qfpayTrackedListeners) {
-            window.removeEventListener("message", listener, options);
+        if (this._qfpayAbortController) {
+            this._qfpayAbortController.abort();
+            this._qfpayAbortController = null;
         }
-        this.qfpayTrackedListeners = [];
-
         if (this.qfpayDialogClose) {
             this.qfpayDialogClose();
             this.qfpayDialogClose = null;

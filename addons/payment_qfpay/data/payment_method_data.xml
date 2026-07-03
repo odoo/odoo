@@ -17,6 +17,8 @@
         <field name="code">alipay_hk</field>
         <field name="provider_id" ref="payment.payment_provider_qfpay"/>
         <field name="image" type="bytes" file="payment/static/img/alipay_hk.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.hk')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.HKD')])]"/>
     </record>
 
     <record id="payment_method_card" model="payment.method">
@@ -25,6 +27,7 @@
         <field name="sequence">10</field>
         <field name="provider_id" ref="payment.payment_provider_qfpay"/>
         <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_tokenization" eval="False"/>
     </record>
 
     <record id="payment_method_fps" model="payment.method">
@@ -32,6 +35,8 @@
         <field name="code">fps</field>
         <field name="provider_id" ref="payment.payment_provider_qfpay"/>
         <field name="image" type="bytes" file="payment/static/img/fps.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.hk')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.HKD')])]"/>
     </record>
 
     <record id="payment_method_payme" model="payment.method">
@@ -39,6 +44,8 @@
         <field name="code">payme</field>
         <field name="provider_id" ref="payment.payment_provider_qfpay"/>
         <field name="image" type="bytes" file="payment/static/img/payme.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.hk')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.HKD')])]"/>
     </record>
 
     <record id="payment_method_unionpay" model="payment.method">
