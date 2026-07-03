@@ -32,15 +32,19 @@ class NuveiController(http.Controller):
         _logger.info("Handling redirection from Nuvei with data:\n%s", pprint.pformat(data))
         if tx_ref and error_access_token:
             _logger.warning("Nuvei errored on transaction with reference: %s", tx_ref)
-
-        tx_data = data or {'invoice_id': tx_ref}
+            payment_data = {}
+        else:
+            payment_data = data
+        tx_data = payment_data or {'invoice_id': tx_ref}
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'nuvei', tx_data
         )
-        self._verify_notification_signature(tx_sudo, data, error_access_token=error_access_token)
+        self._verify_notification_signature(
+            tx_sudo, payment_data, error_access_token=error_access_token
+        )
 
         # Handle the notification data if there is any.
-        tx_sudo._handle_notification_data('nuvei', data)
+        tx_sudo._handle_notification_data('nuvei', payment_data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)

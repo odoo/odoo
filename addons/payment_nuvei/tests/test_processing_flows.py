@@ -47,6 +47,21 @@ class TestProcessingFlows(NuveiCommon):
             self.assertEqual(handle_notification_data_mock.call_count, 1)
 
     @mute_logger('odoo.addons.payment_nuvei.controllers.main')
+    def test_process_empty_payment_data_on_cancellation(self):
+        tx = self._create_transaction('redirect')
+        url = self._build_url(NuveiController._return_url)
+        error_access_token = self._generate_test_access_token(tx.reference)
+        payment_data = dict(
+            tx_ref=tx.reference, error_access_token=error_access_token, data=self.notification_data
+        )
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._handle_notification_data'
+        ) as handle_notification_data_mock:
+            self._make_http_get_request(url, params=payment_data)
+            handle_notification_data_mock.assert_called_once_with('nuvei', {})
+
+    @mute_logger('odoo.addons.payment_nuvei.controllers.main')
     def test_redirect_notification_triggers_signature_check(self):
         """ Test that receiving a redirect notification triggers a signature check. """
         self._create_transaction('redirect')
