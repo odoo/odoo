@@ -176,8 +176,6 @@ class StockMove(models.Model):
     quantity_product_uom = fields.Float(
         'Quantity in Product UoM', digits='Product Unit',
         copy=False, compute='_compute_quantity_product_uom', store=True)
-    # TODO: delete this field `show_operations`
-    show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
     picking_code = fields.Selection(related='picking_type_id.code', readonly=True)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
     is_storable = fields.Boolean(related='product_id.is_storable')

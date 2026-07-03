@@ -6195,7 +6195,6 @@ class TestStockMove(TestStockCommon):
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
 
         child_location = self.stock_location.child_ids[0]
-        self.picking_type_in.show_operations = True
 
         # Create a delivery from the parent location to the customer location.
         delivery = self.env['stock.picking'].create({

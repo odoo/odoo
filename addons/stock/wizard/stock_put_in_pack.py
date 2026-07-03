@@ -11,7 +11,6 @@ class StockPutInPack(models.TransientModel):
     move_line_ids = fields.Many2many('stock.move.line', string='Move lines')
     package_ids = fields.Many2many('stock.package', string='Packages')
     package_type_id = fields.Many2one('stock.package.type', 'Package Type')
-    package_type_sequence_id = fields.Many2one(related="package_type_id.sequence_id")
     result_package_id = fields.Many2one('stock.package', 'Package')
     origin_package_ids = fields.Many2many('stock.package', compute='_compute_origin_package_ids')
 
