@@ -234,6 +234,7 @@ export class DescriptionScreen extends Component {
     setup() {
         this.industrySelection = useRef("industrySelection");
         this.purposeSelectionRef = useRef("purposeSelection");
+        this.positioningDropdownRef = useRef("positioningDropdown");
         this.state = useStore();
         this.orm = useService("orm");
         useAutofocus();
@@ -259,6 +260,9 @@ export class DescriptionScreen extends Component {
                     this.industrySelection.el?.querySelector("input").focus();
                 }
                 if (selectedIndustry) {
+                    if (this.positioningDropdownRef.el) {
+                        window.Dropdown.getOrCreateInstance(this.positioningDropdownRef.el).show();
+                    }
                     this.purposeSelectionRef.el?.focus();
                 }
             },
