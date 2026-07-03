@@ -416,19 +416,18 @@ class ProductProduct(models.Model):
         if not op:
             return NotImplemented
         product_ids = super(ProductProduct, self)._search_qty_available_new(operator, value, lot_id, owner_id, package_id)
+        # Callers that never value kits (e.g. stock valuation) can skip the kit BoM expansion.
+        if self.env.context.get('skip_kit_qty_available'):
+            return product_ids
         kit_boms = self.env['mrp.bom'].search([('type', "=", 'phantom')])
-        kit_products = self.env['product.product']
-        for kit in kit_boms:
-            if kit.product_id:
-                kit_products |= kit.product_id
-            else:
-                kit_products |= kit.product_tmpl_id.product_variant_ids
+        kit_products = kit_boms.mapped(lambda kit: kit.product_id or kit.product_tmpl_id.product_variant_ids)
+        product_ids = set(product_ids)
         for product in kit_products:
             if op(product.qty_available, value):
-                product_ids.append(product.id)
-            elif product.id in product_ids:
-                product_ids.pop(product_ids.index(product.id))
-        return list(set(product_ids))
+                product_ids.add(product.id)
+            else:
+                product_ids.discard(product.id)
+        return list(product_ids)
 
     def action_archive(self):
         filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')

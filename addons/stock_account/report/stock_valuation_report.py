@@ -36,13 +36,17 @@ class StockValuationReport(models.AbstractModel):
         # context used by total_value so qty_available scopes to valued internal locations.
         # Lot-valuated products are kept regardless because their value is summed from lots.
         # sudo: qty_available expands kit BoMs (mrp.bom) which accounting users cannot read.
-        valued_product_context = self.env['product.product'].sudo().with_company(company)._with_valuation_context()
+        # Kits are never valued on their own, so restrict to the valuation product domain
+        # and skip the kit BoM expansion that qty_available would otherwise trigger.
+        valued_product_context = self.env['product.product'].sudo().with_company(company).with_context(
+            skip_kit_qty_available=True,
+        )._with_valuation_context()
         if date:
             valued_product_context = valued_product_context.with_context(at_date=date, to_date=date)
-        valued_products = valued_product_context.search([
-            ('is_storable', '=', True),
-            '|', ('qty_available', '!=', 0), ('lot_valuated', '=', True),
-        ])
+        valued_products = valued_product_context.search(
+            company._get_valuation_product_domain()
+            + ['|', ('qty_available', '!=', 0), ('lot_valuated', '=', True)]
+        )
         accounts_by_product = company._get_accounts_by_product(products=valued_products)
         if not date:
             inventory_data = company.stock_value(accounts_by_product)
