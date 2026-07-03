@@ -157,7 +157,7 @@
             ('include', 'web.icons_fonts'),
             "web/static/src/views/fields/formatters.js",
             "point_of_sale/static/src/utils.js",
-            'bus/static/src/services/bus_service.js',
+            'bus/static/src/services/bus_plugin.js',
             'bus/static/src/services/worker_plugin.js',
             'bus/static/src/bus_parameters_plugin.js',
             'bus/static/src/multi_tab_plugin.js',

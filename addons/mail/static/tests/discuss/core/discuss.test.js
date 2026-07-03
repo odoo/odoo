@@ -1,5 +1,5 @@
 import { onWebsocketEvent } from "@bus/../tests/mock_websocket";
-import { busService } from "@bus/services/bus_service";
+import { BusPlugin } from "@bus/services/bus_plugin";
 import {
     click,
     contains,
@@ -28,12 +28,10 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
 
 test("subscribe to presence channels according to store data", async () => {
     let startBus;
-    patchWithCleanup(busService, {
-        start() {
-            const api = super.start(...arguments);
-            startBus = api.start;
-            api.startBus = () => {};
-            return api;
+    patchWithCleanup(BusPlugin.prototype, {
+        setup() {
+            super.setup();
+            startBus = () => this.start();
         },
     });
     await makeTestApp();
