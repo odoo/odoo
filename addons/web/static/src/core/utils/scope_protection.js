@@ -1,0 +1,384 @@
+/** @odoo-module **/
+
+// =============================================================================
+// PROTOTYPE: scope-based async "component protection" for Owl 3
+// =============================================================================
+//
+// Goal: reproduce (and improve) the protection that `_protectMethod` gives
+// today in `hooks.js` -- an async continuation belonging to a destroyed
+// component must not run -- but expressed against an Owl 3 `Scope` so it works
+// uniformly for components AND plugins, and without asking call sites to thread
+// a scope everywhere.
+//
+// This file contains TWO mechanisms, because a key experiment (see
+// scope_protection_probe.mjs) shows they are NOT equivalent:
+//
+//   (A) RECOMMENDED -- `protectMethod(scope, fn)` / `protect(promise, scope)`
+//       Returns a *thenable* bound to the consuming scope. `await` DOES invoke a
+//       thenable's `.then`, so this guards awaited calls at arbitrary depth.
+//       The scope is captured once at the injection boundary (useScope() in
+//       setup), so there is nothing to thread at call sites.
+//
+//   (B) EXPERIMENTAL -- `installThenPatch()` + `installEntrySeeding()`
+//       The "monkeypatch global Promise + seed the ambient scope at Owl entry
+//       points" idea. It works for explicit `.then()` chains but NATIVE `await`
+//       bypasses a patched `Promise.prototype.then` entirely (proven in the
+//       probe), so it silently misses most real code. Kept here only so the
+//       limitation can be observed directly. Do not ship (B).
+//
+// Owl STATUS enum (from owl.js): NEW=0, MOUNTED=1, CANCELLED=2, DESTROYED=3.
+// A scope is "dead" (cancelled or destroyed) when status > MOUNTED.
+// =============================================================================
+
+import { blockDom, useScope } from "@odoo/owl";
+import { rpc } from "@web/core/network/rpc";
+
+const MOUNTED = 1;
+
+export const scopeProtectionConfig = {
+    // "throw"   -> a dead scope rejects the continuation with an AbortError.
+    //              This is what Owl itself does (scope.until) and what
+    //              error_service.js already recognizes & ignores.
+    // "pending" -> a dead scope leaves the promise forever pending (legacy
+    //              _protectMethod behavior). Leaks the async frame; kept for
+    //              A/B comparison only.
+    strategy: "throw",
+};
+
+function isDead(scope) {
+    return !!scope && scope.status > MOUNTED;
+}
+
+export function makeAbortError() {
+    // name === "AbortError" so owl's isAbortError() and web's error_service both
+    // treat it as expected and swallow it.
+    const err = new Error("Aborted: the owning scope was destroyed");
+    err.name = "AbortError";
+    return err;
+}
+
+// -----------------------------------------------------------------------------
+// (A) RECOMMENDED: protected thenable bound to a scope
+// -----------------------------------------------------------------------------
+
+/**
+ * Wrap a real promise in a thenable that guards its continuation with `scope`.
+ * Because it is a thenable (not a native promise), `await protect(p, scope)`
+ * routes through this `.then`, unlike a patched Promise.prototype.then.
+ *
+ * If `scope` is dead when `real` settles:
+ *   - strategy "throw":   the awaiting code throws an AbortError.
+ *   - strategy "pending": the awaiting code never resumes.
+ *
+ * @template T
+ * @param {Promise<T>} real
+ * @param {import("@odoo/owl").Scope} scope
+ * @returns {PromiseLike<T>}
+ */
+export function protect(real, scope) {
+    const thenable = {
+        then(onFulfilled, onRejected) {
+            const settle = (isError, val) => {
+                if (isDead(scope)) {
+                    if (scopeProtectionConfig.strategy === "pending") {
+                        return new Promise(() => {}); // never resolves
+                    }
+                    const err = makeAbortError();
+                    // For `await`, onRejected is the internal reject capability;
+                    // calling it makes the await throw. For an explicit
+                    // `.then(onF)` with no onRejected, propagate as a rejection.
+                    return onRejected ? onRejected(err) : Promise.reject(err);
+                }
+                if (isError) {
+                    return onRejected ? onRejected(val) : Promise.reject(val);
+                }
+                return onFulfilled ? onFulfilled(val) : val;
+            };
+            return real.then(
+                (v) => settle(false, v),
+                (e) => settle(true, e)
+            );
+        },
+        catch(onRejected) {
+            return thenable.then(undefined, onRejected);
+        },
+        finally(cb) {
+            return thenable.then(
+                (v) => {
+                    cb();
+                    return v;
+                },
+                (e) => {
+                    cb();
+                    throw e;
+                }
+            );
+        },
+    };
+    return thenable;
+}
+
+/**
+ * Drop-in evolution of hooks.js `_protectMethod`, keyed on a Scope instead of a
+ * Component and returning a protected thenable (so `await` is guarded too).
+ *
+ * The scope is captured ONCE, at the injection boundary (e.g. inside a
+ * useService()-style hook that has called useScope() in setup). Every call
+ * through the returned function is then guarded, at any await depth, with zero
+ * work at the call site.
+ *
+ *   // in a hook, during setup:
+ *   const scope = useScope();
+ *   this.orm = protectMethod(scope, rawOrm.call.bind(rawOrm));
+ *   // later, anywhere, any depth:
+ *   const recs = await this.orm(...);  // throws AbortError if scope died
+ *
+ * A plugin's scope is app-lifetime, so status never exceeds MOUNTED and the
+ * guard is a harmless no-op -- which is the correct behavior.
+ *
+ * @param {import("@odoo/owl").Scope} scope
+ * @param {(...args: any[]) => any} fn
+ */
+export function protectMethod(scope, fn) {
+    return function (...args) {
+        // Cheap fast-path: already dead before we even start.
+        if (isDead(scope)) {
+            if (scopeProtectionConfig.strategy === "pending") {
+                return new Promise(() => {});
+            }
+            return Promise.reject(makeAbortError());
+        }
+        const real = fn.apply(this, args);
+        const guarded = protect(Promise.resolve(real), scope);
+        // Preserve the abort/cancel passthrough that call sites rely on
+        // (e.g. record_autocomplete.js `this.lastProm.abort(false)`).
+        if (real) {
+            guarded.abort = real.abort;
+            guarded.cancel = real.cancel;
+        }
+        return guarded;
+    };
+}
+
+/**
+ * Scope-bound rpc. Call it in setup (a class field works, since field
+ * initializers run inside the component's scope). The returned function has the
+ * exact same signature as `rpc(url, params, settings)`, but every call it
+ * produces is guarded by the calling component's scope:
+ *
+ *   rpc = useRpc();
+ *   async _fetchEmployeeData() {
+ *       const results = await this.rpc("/hr_attendance/employees_infos", {...});
+ *       // if the component was destroyed while the request was in flight, the
+ *       // await above throws AbortError and the lines below never run --
+ *       // instead of writing to a dead component's reactive state.
+ *       this.state.employeesData.records = results.records;
+ *       this.state.employeesData.count = results.length;
+ *   }
+ *
+ * The AbortError (err.name === "AbortError") is already swallowed by
+ * error_service.js, so a destroyed-mid-fetch is silent, not an error toast.
+ */
+export function useRpc() {
+    return useAsync(rpc);
+}
+
+// -----------------------------------------------------------------------------
+// useAsync: one generic hook + a per-type `toAsync` protocol
+// -----------------------------------------------------------------------------
+//
+// `useAsync(target)` captures the component scope once and returns a scope-bound
+// version of `target`. HOW it binds is customizable per type via a `toAsync`
+// method, so each async source owns its own rule (which methods are async, what
+// to passthrough, whether to also cancel the request) instead of a global
+// SERVICES_METADATA registry:
+//
+//   this.rpc = useAsync(rpc);       // rpc.toAsync -> a guarded rpc function
+//   this.orm = useAsync(orm);       // ORM.toAsync -> a facade with guarded methods
+//   this.foo = useAsync(myAsyncFn); // no toAsync -> default: guard the returned promise
+//
+// Naming is negotiable (useScoped/useProtected, toScoped/protectedBy); the shape
+// -- a per-type binding hook + an overridable protocol + a sane default -- is
+// the point.
+
+/**
+ * Bind `target` to the current component/plugin scope. Call during setup.
+ * @template T
+ * @param {T} target a function, an object with methods, or anything exposing
+ *   a `toAsync(scope)` method.
+ * @returns {T} a scope-guarded facade with the same shape as `target`.
+ */
+export function useAsync(target) {
+    return toAsync(target, useScope());
+}
+
+/**
+ * The protocol. `target.toAsync(scope)` customizes binding; otherwise a default
+ * is applied (guard a function's result, or guard an object's async methods).
+ */
+export function toAsync(target, scope) {
+    if (target && typeof target.toAsync === "function") {
+        return target.toAsync(scope);
+    }
+    if (typeof target === "function") {
+        return bindFunction(scope, target);
+    }
+    if (target && typeof target === "object") {
+        return bindObject(scope, target, target.constructor?.asyncMethods);
+    }
+    throw new Error(`useAsync: don't know how to bind ${typeof target}`);
+}
+
+/** Default for a function: its returned promise is guarded, abort/cancel kept. */
+function bindFunction(scope, fn) {
+    return protectMethod(scope, fn);
+}
+
+/**
+ * Default for an object: return a facade whose async methods are guarded. Which
+ * methods to guard is taken from an explicit `Class.asyncMethods` list when
+ * present (preferred -- like today's `service.async`); otherwise every function
+ * on the prototype, which is a blunt default a type can refine via `toAsync`.
+ */
+function bindObject(scope, obj, methods) {
+    const names =
+        methods ??
+        Object.getOwnPropertyNames(Object.getPrototypeOf(obj)).filter(
+            (n) => n !== "constructor" && typeof obj[n] === "function"
+        );
+    const facade = Object.create(obj); // delegate non-guarded props to the original
+    for (const name of names) {
+        facade[name] = protectMethod(scope, obj[name].bind(obj));
+    }
+    return facade;
+}
+
+// The `rpc` function opts into the protocol with the extra abort passthrough it
+// needs. (In real code this would live next to rpc() itself.)
+rpc.toAsync = function (scope) {
+    const bound = bindFunction(scope, rpc);
+    // OPTIONAL upgrade: also cancel the in-flight XHR when the scope dies, rather
+    // than just ignoring the reply. Cleanest once rpc() grows native `signal`
+    // support and we pass scope.abortSignal (the owl resource() pattern).
+    return bound;
+};
+
+// A class like ORM would declare, next to itself:
+//   class ORM { static asyncMethods = ["read", "write", "create", "unlink",
+//                                       "searchRead", "webSearchRead", "call"]; }
+// and then `useAsync(orm)` guards exactly those, replacing SERVICES_METADATA.
+
+// -----------------------------------------------------------------------------
+// (B) EXPERIMENTAL: ambient scope + global then-patch  (DOES NOT catch `await`)
+// -----------------------------------------------------------------------------
+
+// The ambient scope, seeded at Owl entry points and (attempted to be)
+// propagated across `.then`.
+let currentScope = null;
+
+export function getProtectionScope() {
+    return currentScope;
+}
+
+/**
+ * Seed `scope` as the ambient protection scope for the synchronous execution of
+ * `fn`. Used both by the entry-point seeding and by the then-patch's callback
+ * wrapper.
+ */
+export function runInScope(scope, fn) {
+    const prev = currentScope;
+    currentScope = scope;
+    try {
+        return fn();
+    } finally {
+        currentScope = prev;
+    }
+}
+
+function guard(scope, cb) {
+    return function (arg) {
+        if (isDead(scope)) {
+            if (scopeProtectionConfig.strategy === "pending") {
+                return new Promise(() => {});
+            }
+            throw makeAbortError();
+        }
+        return runInScope(scope, () => cb(arg));
+    };
+}
+
+let originalThen = null;
+let originalMainEventHandler = null;
+
+/**
+ * Monkeypatch Promise.prototype.then to capture the ambient scope at
+ * registration time and guard the callbacks.
+ *
+ * WARNING: native `await` on a native promise does NOT call this (verified in
+ * the probe). This only affects explicit `.then()/.catch()/.finally()` chains.
+ */
+export function installThenPatch() {
+    if (originalThen) {
+        return;
+    }
+    originalThen = Promise.prototype.then;
+    const orig = originalThen;
+    // eslint-disable-next-line no-extend-native
+    Promise.prototype.then = function (onFulfilled, onRejected) {
+        const scope = currentScope;
+        if (!scope) {
+            return orig.call(this, onFulfilled, onRejected); // zero-overhead path
+        }
+        return orig.call(
+            this,
+            typeof onFulfilled === "function" ? guard(scope, onFulfilled) : onFulfilled,
+            typeof onRejected === "function" ? guard(scope, onRejected) : onRejected
+        );
+    };
+}
+
+export function uninstallThenPatch() {
+    if (originalThen) {
+        // eslint-disable-next-line no-extend-native
+        Promise.prototype.then = originalThen;
+        originalThen = null;
+    }
+}
+
+/**
+ * Seed the ambient scope at the event-handler entry point. Owl does not push a
+ * scope around template event handlers (see mainEventHandler in owl.js), so
+ * without this there is no ambient scope when an RPC is fired from a click.
+ */
+export function installEntrySeeding() {
+    if (originalMainEventHandler) {
+        return;
+    }
+    const config = blockDom.config;
+    originalMainEventHandler = config.mainEventHandler;
+    const orig = originalMainEventHandler;
+    config.mainEventHandler = function (data, ev, currentTarget) {
+        let node = null;
+        if (Array.isArray(data)) {
+            // skip leading string modifiers, then ctx is at index 1
+            let i = 0;
+            while (typeof data[i] === "string") {
+                i++;
+            }
+            const ctx = data[i + 1];
+            node = ctx ? ctx.__owl__ : null;
+        }
+        if (node) {
+            return runInScope(node, () => orig(data, ev, currentTarget));
+        }
+        return orig(data, ev, currentTarget);
+    };
+}
+
+export function uninstallEntrySeeding() {
+    if (originalMainEventHandler) {
+        blockDom.config.mainEventHandler = originalMainEventHandler;
+        originalMainEventHandler = null;
+    }
+    currentScope = null;
+}

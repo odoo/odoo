@@ -1,6 +1,7 @@
 import { EventBus } from "@odoo/owl";
 import { browser } from "../browser/browser";
 import { omit } from "../utils/objects";
+import { isDead, makeAbortError, protect } from "../utils/use_async";
 
 /**
  * @typedef {{
@@ -13,7 +14,7 @@ import { omit } from "../utils/objects";
 
 export const rpcBus = new EventBus();
 
-const RPC_SETTINGS = new Set(["cache", "silent", "xhr", "headers"]);
+const RPC_SETTINGS = new Set(["cache", "silent", "xhr", "headers", "signal"]);
 function validateRPCSettings(settings) {
     if (!Object.keys(settings).every((key) => RPC_SETTINGS.has(key))) {
         throw new Error(`The settings for rpc should be ${[...RPC_SETTINGS].join(" ")}`);
@@ -183,5 +184,44 @@ rpc._rpc = function (url, params, settings) {
             rejectFn(error);
         }
     };
+    // Cancel the in-flight request when an AbortSignal fires (e.g. the caller's
+    // component scope is destroyed -- see rpc.toAsync). We stop listening once
+    // the request settles, so a later abort of the (shared) signal does not
+    // re-abort and re-trigger RPC:RESPONSE for an already-finished request.
+    if (settings.signal) {
+        const { signal } = settings;
+        const onAbort = () => promise.abort();
+        if (signal.aborted) {
+            onAbort();
+        } else {
+            signal.addEventListener("abort", onAbort);
+            const stopListening = () => signal.removeEventListener("abort", onAbort);
+            promise.then(stopListening, stopListening);
+        }
+    }
     return promise;
+};
+
+/**
+ * Scope-protocol (see `useAsync`): return a scope-bound rpc. Every call it
+ * produces passes the scope's AbortSignal, so a destroyed component's in-flight
+ * request is actually cancelled -- and the result is guarded, so the awaiting
+ * continuation is dropped (AbortError) if the component dies right as the
+ * response arrives.
+ *
+ *   rpc = useAsync(rpc);
+ *   const res = await this.rpc("/some/route", {...});  // aborted on destroy
+ *
+ * @param {import("@odoo/owl").Scope} scope
+ */
+rpc.toAsync = function (scope) {
+    return function (url, params, settings = {}) {
+        if (isDead(scope)) {
+            return Promise.reject(makeAbortError());
+        }
+        const real = rpc(url, params, { ...settings, signal: scope.abortSignal });
+        const guarded = protect(real, scope);
+        guarded.abort = real.abort;
+        return guarded;
+    };
 };

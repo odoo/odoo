@@ -2,6 +2,7 @@ import { assertType, plugin, Plugin, types as t } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
+import { toAsync } from "@web/core/utils/use_async";
 import { user } from "@web/core/user";
 import { Domain } from "@web/core/domain";
 
@@ -93,6 +94,26 @@ export class ORM extends Plugin {
      */
     cache(options = {}) {
         return Object.assign(Object.create(this), { _cache: options });
+    }
+
+    /**
+     * Scope-protocol (see `useAsync`): return an ORM bound to `scope`.
+     *
+     *   this.orm = useAsync(ORM);
+     *   const recs = await this.orm.searchRead(...);  // aborted on destroy
+     *
+     * Every ORM method funnels through `this.rpc`, so we only rebind that single
+     * choke point to a scope-bound rpc. That guards every method's result AND
+     * cancels its in-flight request when the scope is destroyed -- and it flows
+     * through `silent`, `cache()`, and any derived instance for free, since they
+     * inherit `this.rpc` via the prototype chain.
+     *
+     * @param {import("@odoo/owl").Scope} scope
+     * @returns {ORM}
+     */
+    static toAsync(scope) {
+        const orm = plugin(ORM);
+        return Object.assign(Object.create(orm), { rpc: toAsync(orm.rpc, scope) });
     }
 
     /**
