@@ -69,7 +69,7 @@ export class CopyClipboardURLField extends CopyClipboardField {
     static components = { Field: UrlField, CopyButton };
 
     get copyButtonIcon() {
-        return "fa-link";
+        return "fa-clipboard";
     }
 }
 
