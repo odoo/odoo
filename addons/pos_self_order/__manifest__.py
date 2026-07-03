@@ -77,7 +77,7 @@
             "web/static/src/core/model_field_selector/model_field_selector_popover.xml",
             "web/static/src/core/model_field_selector/model_field_selector_popover.scss",
             'web/static/src/core/currency.js',
-            'barcodes/static/src/barcode_service.js',
+            'barcodes/static/src/barcode_plugin.js',
             'point_of_sale/static/src/utils.js',
             'point_of_sale/static/src/app/utils/convert_python_template.js',
             'point_of_sale/static/src/lazy_getter.js',
