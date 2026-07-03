@@ -11,7 +11,6 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <group>
-                                <field name="partner_id" invisible="1"/> <!-- Needed for default partner to be set for newly created records -->
                                 <field name="account_number"/>
                                 <div class="d-flex" colspan="1" invisible="not show_clearing_number">
                                     <field name="clearing_label_id" class="p-0" options="{'no_create_edit': True, 'no_open': True}"/>
@@ -21,6 +20,7 @@
                                     <field name="clearing_number"/>
                                 </div>
                                 <field name="bank_bic"/>
+                                <field name="partner_id" invisible="context.get('default_partner_id')" groups="base.group_no_one"/>
                                 <field name="holder_name"/>
                             </group>
                             <group>
@@ -62,7 +62,7 @@
             <field name="name">res.partner.bank.list</field>
             <field name="model">res.partner.bank</field>
             <field name="arch" type="xml">
-                <list string="Bank Accounts" create="false" multi_edit="1" decoration-muted="(not active)">
+                <list string="Bank Accounts" multi_edit="1" decoration-muted="(not active)">
                     <field name="sequence" widget="handle"/>
                     <field name="account_number"/>
                     <field name="partner_id" optional="hide"/>
