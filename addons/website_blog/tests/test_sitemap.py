@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import re
+
 import odoo.tests
 from odoo.tests import HttpCase
 
@@ -21,6 +23,13 @@ class TestSitemap(HttpCase):
         # Fetch the first blog post for testing
         self.blog_post = self.env['blog.post'].search([], limit=1)
 
+    def _open_blog_sitemap(self):
+        """/sitemap.xml is a sitemap index; fetch the 'blog' group sub-sitemap."""
+        response = self.url_open("/sitemap.xml")
+        match = re.search(r'sitemap-\d+-[0-9a-f]{8}-blog-\d+\.xml', response.text)
+        self.assertIsNotNone(match, "sitemap index should reference the blog group sub-sitemap")
+        return self.url_open('/%s' % match.group(0))
+
     def test_01_sitemap_language(self):
         """Ensure sitemap is in English even when navigating to the French version of the website."""
 
@@ -28,8 +37,8 @@ class TestSitemap(HttpCase):
         response = self.url_open("/fr_FR")
         self.assertIn('/fr/contactus', response.text)
 
-        # Access the sitemap
-        response = self.url_open("/sitemap.xml")
+        # Access the blog sitemap
+        response = self._open_blog_sitemap()
 
         # Ensure the sitemap content is still in English as it's the default language
         if self.blog_post:
@@ -41,8 +50,8 @@ class TestSitemap(HttpCase):
         # Set the default language to French
         self.website.default_lang_id = self.env['res.lang'].sudo()._activate_lang('fr_FR')
 
-        # Access the sitemap
-        response = self.url_open("/sitemap.xml")
+        # Access the blog sitemap
+        response = self._open_blog_sitemap()
 
         # Ensure the sitemap content is in French
         if self.blog_post:

@@ -40,6 +40,7 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
+from odoo.addons.website.sitemap import registry as sitemap_registry
 from odoo.addons.website.tools import get_base_domain
 
 _lt = LazyTranslate(__name__)
@@ -383,36 +384,56 @@ class Website(Home):
             sitemaps = Attachment.search(dom)
             sitemaps.unlink()
 
-            pages = 0
-            locs = self.env.website.with_user(self.env.website.user_id)._enumerate_pages(ignore_custom_homepage=True)
-            while True:
-                values = {
-                    'locs': islice(locs, 0, LOC_PER_SITEMAP),
-                    'url_root': url_root[:-1],
-                }
-                urls = self.env.website._render_template('website.sitemap_locs', values)
-                if urls.strip():
-                    content = self.env.website._render_template('website.sitemap_xml', {'content': urls})
-                    pages += 1
-                    last_sitemap = create_sitemap('%s-%d.xml' % (sitemap_base_url, pages), content)
-                else:
-                    break
+            website_sudo = self.env.website.with_user(self.env.website.user_id)
+            index_suffixes = []
+            last_sitemap = None
 
-            if not pages:
+            def dump_chunks(locs, suffix_fmt):
+                # Chunk locs at LOC_PER_SITEMAP into one attachment per
+                # chunk; return the number of chunks created.
+                nonlocal content, last_sitemap
+                chunks = 0
+                while True:
+                    values = {
+                        'locs': islice(locs, 0, LOC_PER_SITEMAP),
+                        'url_root': url_root[:-1],
+                    }
+                    urls = self.env.website._render_template('website.sitemap_locs', values)
+                    if not urls.strip():
+                        return chunks
+                    content = self.env.website._render_template('website.sitemap_xml', {'content': urls})
+                    chunks += 1
+                    suffix = suffix_fmt % chunks
+                    last_sitemap = create_sitemap('%s-%s.xml' % (sitemap_base_url, suffix), content)
+                    # TODO: in master/saas-15, move current_website_id in template directly
+                    index_suffixes.append('%d-%s-%s' % (self.env.website.id, hashed_url_root, suffix))
+
+            # Each registered sitemap group gets its own sub-sitemap
+            # file(s), e.g. sitemap-1-abcd1234-blog-1.xml
+            group_chunks = 0
+            groups = sitemap_registry.get_groups(request.env.registry._init_modules)
+            for group in sorted(groups):
+                group_chunks += dump_chunks(
+                    website_sudo._enumerate_group_pages(group), group + '-%d')
+
+            # Remaining pages and controller routes, as before
+            legacy_chunks = dump_chunks(
+                website_sudo._enumerate_pages(
+                    ignore_custom_homepage=True, exclude_registry_groups=True),
+                '%d')
+
+            if not index_suffixes:
                 return request.not_found()
-            elif pages == 1:
+            elif not group_chunks and legacy_chunks == 1:
                 # rename the -id-page.xml => -id.xml
                 last_sitemap.write({
                     'url': "%s.xml" % sitemap_base_url,
                     'name': "%s.xml" % sitemap_base_url,
                 })
             else:
-                # TODO: in master/saas-15, move current_website_id in template directly
-                pages_with_website = ["%d-%s-%d" % (self.env.website.id, hashed_url_root, p) for p in range(1, pages + 1)]
-
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = self.env.website._render_template('website.sitemap_index_xml', {
-                    'pages': pages_with_website,
+                    'pages': index_suffixes,
                     # URLs inside the sitemap index have to be on the same
                     # domain as the sitemap index itself
                     'url_root': url_root,

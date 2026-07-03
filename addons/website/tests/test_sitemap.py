@@ -4,6 +4,8 @@ from odoo.tests import TransactionCase, tagged
 import functools
 from unittest.mock import patch
 
+from odoo.addons.website.sitemap import registry as sitemap_registry
+
 
 @tagged('-at_install', 'post_install')
 class TestWebsiteSitemap(TransactionCase):
@@ -147,3 +149,103 @@ class TestWebsiteSitemap(TransactionCase):
         locs_without_homepage_urls = [page['loc'] for page in locs_without_homepage]
         self.assertIn('/', locs_without_homepage_urls)
         self.assertNotIn(homepage_url, locs_without_homepage_urls)
+
+
+@tagged('-at_install', 'post_install')
+class TestSitemapRegistry(TransactionCase):
+
+    def _register(self, group, func, route_prefixes=()):
+        sitemap_registry.register(group, func, route_prefixes)
+        self.addCleanup(sitemap_registry._groups.pop, group, None)
+
+    def test_register_validates_group_name(self):
+        def group_func(env, query_string=None):
+            yield from ()
+
+        for name in ('Blog', 'blog-x', '42', '_blog', ''):
+            with self.assertRaises(ValueError):
+                sitemap_registry.register(name, group_func)
+
+    def test_register_idempotent(self):
+        def group_func(env, query_string=None):
+            yield from ()
+
+        self._register('test_idem', group_func)
+        sitemap_registry.register('test_idem', group_func)
+        self.assertEqual(len(sitemap_registry._groups['test_idem']), 1)
+
+    def test_get_groups_filters_unloaded_addons(self):
+        def group_func(env, query_string=None):
+            yield from ()
+
+        self._register('test_loaded', group_func)
+        # declared in odoo.addons.website.* -> visible when website is loaded
+        self.assertIn('test_loaded', sitemap_registry.get_groups({'website'}))
+        self.assertNotIn('test_loaded', sitemap_registry.get_groups({'base'}))
+
+    def test_enumerate_group_pages_normalization(self):
+        """Lock the URL normalization/dedup contract of _enumerate_group_pages."""
+        website = self.env['website'].search([], limit=1)
+
+        def group_func(env, query_string=None):
+            yield {'loc': '/norm/'}
+            yield {'loc': '/norm'}
+            yield {'loc': '/'}
+
+        self._register('test_norm', group_func)
+
+        locs = [loc['loc'] for loc in website._enumerate_group_pages('test_norm')]
+        # TODO(human): assert the expected normalized/deduplicated locs
+
+    def test_prefix_skips_unmarked_routes_only(self):
+        website = self.env['website'].search([], limit=1)
+
+        def group_func(env, query_string=None):
+            yield {'loc': '/covered/from-group'}
+
+        self._register('test_covered', group_func, route_prefixes=('/covered',))
+
+        def covered_page(self):
+            pass
+
+        def custom_sitemap(env, rule, qs):
+            yield {'loc': '/covered/custom'}
+
+        # Route under a registered prefix WITHOUT a `sitemap` kwarg:
+        # must be skipped (its URLs belong to the group generators)
+        class UnmarkedEndpoint:
+            routing = {'type': 'http', 'auth': 'public', 'website': True,
+                       'routes': ['/covered/page']}
+            original_endpoint = staticmethod(covered_page)
+
+        class UnmarkedRule:
+            rule = '/covered/page'
+            endpoint = UnmarkedEndpoint()
+            _converters = {}
+
+            def build(self, value, append_unknown=False):
+                return '', '/covered/page'
+
+        # Route under the same prefix WITH an explicit `sitemap` kwarg:
+        # must keep its legacy behavior
+        class MarkedEndpoint:
+            routing = {'sitemap': custom_sitemap}
+
+        class MarkedRule:
+            rule = '/covered/custom'
+            endpoint = MarkedEndpoint()
+
+        class FakeRouter:
+            def iter_rules(self):
+                return [UnmarkedRule(), MarkedRule()]
+
+        with patch('odoo.addons.website.models.ir_http.IrHttp.routing_map', autospec=True, return_value=FakeRouter()):
+            locs = [l['loc'] for l in website.with_user(website.user_id)._enumerate_pages()]
+            locs_excluded = [
+                l['loc'] for l in website.with_user(website.user_id)._enumerate_pages(
+                    exclude_registry_groups=True)]
+
+        self.assertNotIn('/covered/page', locs, "kwarg-less route under a registered prefix must be skipped")
+        self.assertIn('/covered/custom', locs, "explicit sitemap kwarg must bypass the prefix skip")
+        self.assertIn('/covered/from-group', locs, "group URLs must stay available to generic consumers")
+        self.assertNotIn('/covered/from-group', locs_excluded, "sitemap controller path must exclude group URLs")
