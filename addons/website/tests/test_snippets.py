@@ -188,6 +188,9 @@ class TestSnippets(HttpCase):
 
         # Explicitly remove custom policy if any
         website.cookie_policy_id = False
+        # The default policy page must be restored: the policy should never be
+        # left empty while the cookies bar is enabled.
+        self.assertEqual(website.cookie_policy_id.url, '/cookie-policy')
         res = self.url_open('/website/cookie-policy', allow_redirects=False)
 
         # Should redirect to default /cookie-policy page
