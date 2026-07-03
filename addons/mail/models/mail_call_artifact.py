@@ -10,7 +10,6 @@ class MailCallArtifact(models.Model):
 
     _name = "mail.call.artifact"
     _description = "Call Artifact"
-    _order = "start_ms, id"
 
     # required=False as artifact can also owned by other call models (ensured by constraints)
     discuss_call_history_id = fields.Many2one(
