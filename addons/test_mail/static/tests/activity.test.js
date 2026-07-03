@@ -674,6 +674,20 @@ test("activity view: group_by in the action has no effect", async () => {
     await assertSteps(["get_activity_data"]);
 });
 
+test("activity view: fetchActivityData uses the action limit when provided", async () => {
+    onRpc("get_activity_data", ({ kwargs }) => {
+        step("get_activity_data:limit:" + kwargs.limit);
+    });
+    await start();
+    registerArchs(archs);
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+        limit: 80,
+    });
+    await assertSteps(["get_activity_data:limit:80"]);
+});
+
 test("activity view: search more to schedule an activity for a record of a respecting model", async () => {
     const mailTestActivityId1 = pyEnv["mail.test.activity"].create({
         name: "MailTestActivity 3",
