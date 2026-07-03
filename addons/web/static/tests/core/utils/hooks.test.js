@@ -30,7 +30,6 @@ import {
     useChildRef,
     useForwardRefToParent,
     useService,
-    useServiceProtectMethodHandling,
     useSpellCheck,
 } from "@web/core/utils/hooks";
 
@@ -347,7 +346,6 @@ describe("useService", () => {
     });
 
     test("async service with protected methods", async () => {
-        useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.original;
         const state = proxy({ child: true });
         let nbCalls = 0;
         let def = Promise.withResolvers();
@@ -423,15 +421,20 @@ describe("useService", () => {
         def.resolve();
         expect.verifySteps([]);
 
-        // Calling the functions after the destruction rejects the promise
-        await expect(objectService.asyncMethod()).rejects.toThrow("Component is destroyed");
-        await expect(objectService.asyncMethod.call("boundThis")).rejects.toThrow(
-            "Component is destroyed"
+        // Calling the functions after the destruction drops the call: the
+        // returned promise never settles (neither resolves nor rejects), and the
+        // underlying method is not even invoked.
+        objectService.asyncMethod().then(
+            () => expect.step("settled"),
+            () => expect.step("settled")
         );
-        await expect(functionService()).rejects.toThrow("Component is destroyed");
-        await expect(functionService.call("boundThis")).rejects.toThrow("Component is destroyed");
+        functionService().then(
+            () => expect.step("settled"),
+            () => expect.step("settled")
+        );
+        await animationFrame();
+        expect.verifySteps([]);
         expect(nbCalls).toBe(8);
-        useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked;
     });
 });
 

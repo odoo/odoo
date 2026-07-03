@@ -1,8 +1,9 @@
 import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, onWillUnmount, t, toRaw, onMounted, onPatched, proxy } from "@odoo/owl";
+import { onWillUnmount, t, toRaw, onMounted, onPatched, proxy, useScope } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
+import { bindFunction } from "@web/core/utils/use_async";
 
 /**
  * This file contains various custom hooks.
@@ -110,39 +111,9 @@ export function useBus(bus, eventName, callback) {
     );
 }
 
-// In an object so that it can be patched in tests (prevent error on blocking RPCs after tests)
-export const useServiceProtectMethodHandling = {
-    fn() {
-        return this.original();
-    },
-    mocked() {
-        // Keep them unresolved so that no crash in test due to triggered RPCs by services
-        return new Promise(() => {});
-    },
-    original() {
-        return Promise.reject(new Error("Component is destroyed"));
-    },
-};
-
 // -----------------------------------------------------------------------------
 // useService
 // -----------------------------------------------------------------------------
-function _protectMethod(component, fn) {
-    return function (...args) {
-        if (status(component) === "destroyed") {
-            return useServiceProtectMethodHandling.fn();
-        }
-
-        const prom = Promise.resolve(fn.call(this, ...args));
-        const protectedProm = prom.then((result) =>
-            status(component) === "destroyed" ? new Promise(() => {}) : result
-        );
-        return Object.assign(protectedProm, {
-            abort: prom.abort,
-            cancel: prom.cancel,
-        });
-    };
-}
 
 export const SERVICES_METADATA = {};
 
@@ -160,17 +131,24 @@ export function useService(serviceName) {
         throw new Error(`Service ${serviceName} is not available`);
     }
     const service = services[serviceName];
+    const scope = useScope();
+    // A service can opt into scope-based protection by exposing `toAsync(scope)`
+    // (e.g. the ORM plugin, which also cancels its in-flight requests on destroy).
+    if (service && typeof service.toAsync === "function") {
+        return service.toAsync(scope);
+    }
+    // Otherwise, guard exactly the methods the service declared async. Keyed on
+    // the component's scope: a destroyed component's continuation is dropped.
     if (SERVICES_METADATA[serviceName]) {
         if (service instanceof Function) {
-            return _protectMethod(component, service);
-        } else {
-            const methods = SERVICES_METADATA[serviceName] ?? [];
-            const result = Object.create(service);
-            for (const method of methods) {
-                result[method] = _protectMethod(component, service[method]);
-            }
-            return result;
+            return bindFunction(scope, service);
         }
+        const methods = SERVICES_METADATA[serviceName] ?? [];
+        const result = Object.create(service);
+        for (const method of methods) {
+            result[method] = bindFunction(scope, service[method]);
+        }
+        return result;
     }
     if (toRaw(service) !== service) {
         return proxy(service);

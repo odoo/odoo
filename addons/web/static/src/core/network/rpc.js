@@ -1,7 +1,7 @@
 import { EventBus } from "@odoo/owl";
 import { browser } from "../browser/browser";
 import { omit } from "../utils/objects";
-import { isDead, makeAbortError, protect } from "../utils/use_async";
+import { isDead, protect } from "../utils/use_async";
 
 /**
  * @typedef {{
@@ -190,7 +190,10 @@ rpc._rpc = function (url, params, settings) {
     // re-abort and re-trigger RPC:RESPONSE for an already-finished request.
     if (settings.signal) {
         const { signal } = settings;
-        const onAbort = () => promise.abort();
+        // abort(false): cancel the request but DON'T reject -- the caller's
+        // continuation is dropped (left pending) by the scope guard, so a
+        // rejection here would only surface as a spurious unhandled error.
+        const onAbort = () => promise.abort(false);
         if (signal.aborted) {
             onAbort();
         } else {
@@ -217,7 +220,7 @@ rpc._rpc = function (url, params, settings) {
 rpc.toAsync = function (scope) {
     return function (url, params, settings = {}) {
         if (isDead(scope)) {
-            return Promise.reject(makeAbortError());
+            return new Promise(() => {}); // scope already gone: don't even send
         }
         const real = rpc(url, params, { ...settings, signal: scope.abortSignal });
         const guarded = protect(real, scope);

@@ -1,31 +1,18 @@
 // Verifies the PRODUCTION logic of use_async.js / rpc.toAsync / ORM.toAsync,
 // mirrored here with mocks (the real modules import @odoo/owl + XHR).
+// Semantics: a destroyed scope DROPS the continuation (promise never settles),
+// and the in-flight request is cancelled.
 //
 //   node addons/web/static/tests/core/utils/scope_protection_use_async_probe.mjs
 
 const MOUNTED = 1;
 const isDead = (s) => s.status > MOUNTED;
-const makeAbortError = () => {
-    const e = new Error("aborted");
-    e.name = "AbortError";
-    return e;
-};
+const dropped = () => new Promise(() => {}); // never settles
 
-// use_async.protect -- a plain derived promise (works natively with await)
-const protect = (p, scope) =>
-    Promise.resolve(p).then(
-        (v) => {
-            if (isDead(scope)) {
-                throw makeAbortError();
-            }
-            return v;
-        },
-        (e) => {
-            throw isDead(scope) ? makeAbortError() : e;
-        }
-    );
+// use_async.protect
+const protect = (p, scope) => Promise.resolve(p).then((r) => (isDead(scope) ? dropped() : r));
 
-// a mock rpc with the same signal + abort wiring added to rpc._rpc
+// mock rpc with the same signal + abort wiring added to rpc._rpc
 function makeRpc(log) {
     return function rpc(url, params, settings = {}) {
         let resolveFn;
@@ -41,16 +28,16 @@ function makeRpc(log) {
                 rej(e);
             };
         });
-        promise.abort = () => {
-            log.push("XHR aborted"); // the real one calls request.abort()
-            if (!settled) {
+        promise.abort = (rejectError = true) => {
+            log.push("XHR aborted");
+            if (rejectError && !settled) {
                 rejectFn(Object.assign(new Error("abort"), { name: "ConnectionAborted" }));
             }
         };
         promise._resolve = (v) => resolveFn(v); // test hook (stands in for the network)
         if (settings.signal) {
             const { signal } = settings;
-            const onAbort = () => promise.abort();
+            const onAbort = () => promise.abort(false); // cancel, don't reject
             if (signal.aborted) {
                 onAbort();
             } else {
@@ -67,7 +54,7 @@ function makeRpc(log) {
 function toAsyncRpc(rpc, scope) {
     return function (url, params, settings = {}) {
         if (isDead(scope)) {
-            return Promise.reject(makeAbortError());
+            return dropped();
         }
         const real = rpc(url, params, { ...settings, signal: scope.abortSignal });
         const guarded = protect(real, scope);
@@ -76,9 +63,7 @@ function toAsyncRpc(rpc, scope) {
     };
 }
 
-// a scope whose abortSignal fires on destroy (faithful to owl: abort THEN mark
-// destroyed, so the abort listener runs while status is still MOUNTED and the
-// microtask reactions later observe DESTROYED)
+// scope whose abortSignal fires on destroy (owl: abort THEN mark destroyed)
 function makeScope() {
     const ctrl = new AbortController();
     return {
@@ -93,6 +78,14 @@ function makeScope() {
     };
 }
 
+// does `p` settle within a few ticks?
+async function settles(p) {
+    const PENDING = Symbol("pending");
+    const timer = new Promise((res) => setTimeout(() => res(PENDING), 10));
+    const r = await Promise.race([p.then(() => "ok", () => "err"), timer]);
+    return r !== PENDING;
+}
+
 const results = [];
 const check = (name, pass, detail) => {
     results.push(pass);
@@ -100,41 +93,35 @@ const check = (name, pass, detail) => {
 };
 
 async function main() {
-    // V1: normal completion (resolve the underlying real handle)
+    // V1: normal completion resolves with the value
     {
         const log = [];
         const scope = makeScope();
         const base = makeRpc(log);
         let realHandle;
-        const spyRpc = (u, p, s) => (realHandle = base(u, p, s));
-        const rpc = toAsyncRpc(spyRpc, scope);
+        const rpc = toAsyncRpc((u, p, s) => (realHandle = base(u, p, s)), scope);
         const g = rpc("/x", {});
         realHandle._resolve(42);
         const v = await g;
         check("V1 normal completion", v === 42, `value=${v}`);
     }
 
-    // V2: destroyed mid-flight -> XHR aborted AND await throws AbortError
+    // V2: destroyed mid-flight -> XHR aborted AND continuation dropped (never settles)
     {
         const log = [];
         const scope = makeScope();
         const rpc = toAsyncRpc(makeRpc(log), scope);
         const g = rpc("/x", {});
-        scope.destroy(); // aborts the signal
-        let caught;
-        try {
-            await g;
-        } catch (e) {
-            caught = e.name;
-        }
+        scope.destroy();
+        const didSettle = await settles(g);
         check(
             "V2 destroy mid-flight",
-            caught === "AbortError" && log.includes("XHR aborted"),
-            `caught=${caught}, xhrAborted=${log.includes("XHR aborted")}`
+            !didSettle && log.includes("XHR aborted"),
+            `settled=${didSettle}, xhrAborted=${log.includes("XHR aborted")}`
         );
     }
 
-    // V3: resolved-then-destroyed race -> continuation dropped (AbortError)
+    // V3: resolved-then-destroyed race -> continuation dropped
     {
         const log = [];
         const scope = makeScope();
@@ -144,18 +131,11 @@ async function main() {
         const g = rpc("/x", {});
         realHandle._resolve("data"); // response arrived...
         scope.destroy(); // ...but component destroyed before the continuation runs
-        let caught;
-        let leaked = false;
-        try {
-            await g;
-            leaked = true;
-        } catch (e) {
-            caught = e.name;
-        }
-        check("V3 resolved-then-destroyed race", caught === "AbortError" && !leaked, `caught=${caught}`);
+        const didSettle = await settles(g);
+        check("V3 resolved-then-destroyed race", !didSettle, `settled=${didSettle}`);
     }
 
-    // V4: already dead before the call -> no request made, rejects immediately
+    // V4: already dead before the call -> no request made, continuation dropped
     {
         const log = [];
         const scope = makeScope();
@@ -165,13 +145,8 @@ async function main() {
             made = true;
             return makeRpc(log)("/x", {});
         }, scope);
-        let caught;
-        try {
-            await rpc("/x", {});
-        } catch (e) {
-            caught = e.name;
-        }
-        check("V4 dead before call", caught === "AbortError" && !made, `caught=${caught}, requestMade=${made}`);
+        const didSettle = await settles(rpc("/x", {}));
+        check("V4 dead before call", !didSettle && !made, `settled=${didSettle}, requestMade=${made}`);
     }
 
     // V5: ORM rebind flows through silent / derived instances
@@ -181,8 +156,6 @@ async function main() {
         const base = makeRpc(log);
         let lastHandle;
         const spyRpc = (u, p, s) => (lastHandle = base(u, p, s));
-
-        // a tiny ORM mirroring the real one's shape
         const orm = {
             rpc: spyRpc,
             _silent: false,
@@ -196,33 +169,21 @@ async function main() {
                 return this.call(model, "read");
             },
         };
-
         // ORM.toAsync: rebind the single this.rpc choke point
         const boundOrm = Object.assign(Object.create(orm), { rpc: toAsyncRpc(orm.rpc, scope) });
 
-        // silent goes through the bound rpc too (inherited via prototype)
         const g = boundOrm.silent.read("res.partner", [1]);
         lastHandle._resolve([{ id: 1 }]);
         const recs = await g;
-        check(
-            "V5 ORM rebind (silent/derived)",
-            Array.isArray(recs) && recs[0].id === 1,
-            `got ${JSON.stringify(recs)}`
-        );
+        check("V5 ORM rebind (silent/derived)", Array.isArray(recs) && recs[0].id === 1, `got ${JSON.stringify(recs)}`);
 
-        // and destroying the scope aborts an in-flight ORM request
         const g2 = boundOrm.read("res.partner", [2]);
         scope.destroy();
-        let caught;
-        try {
-            await g2;
-        } catch (e) {
-            caught = e.name;
-        }
+        const didSettle = await settles(g2);
         check(
             "V5b ORM in-flight cancelled on destroy",
-            caught === "AbortError" && log.includes("XHR aborted"),
-            `caught=${caught}`
+            !didSettle && log.includes("XHR aborted"),
+            `settled=${didSettle}, xhrAborted=${log.includes("XHR aborted")}`
         );
     }
 

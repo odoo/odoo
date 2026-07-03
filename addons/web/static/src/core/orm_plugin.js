@@ -97,10 +97,14 @@ export class ORM extends Plugin {
     }
 
     /**
-     * Scope-protocol (see `useAsync`): return an ORM bound to `scope`.
+     * Scope-protocol (see `useAsync` / `useService`): return an ORM bound to
+     * `scope`. `useService("orm")` calls this automatically, so existing
      *
-     *   this.orm = useAsync(ORM);
-     *   const recs = await this.orm.searchRead(...);  // aborted on destroy
+     *   this.orm = useService("orm");
+     *   const recs = await this.orm.searchRead(...);  // dropped + request
+     *                                                 // cancelled on destroy
+     *
+     * gets the protection with no call-site change.
      *
      * Every ORM method funnels through `this.rpc`, so we only rebind that single
      * choke point to a scope-bound rpc. That guards every method's result AND
@@ -111,9 +115,8 @@ export class ORM extends Plugin {
      * @param {import("@odoo/owl").Scope} scope
      * @returns {ORM}
      */
-    static toAsync(scope) {
-        const orm = plugin(ORM);
-        return Object.assign(Object.create(orm), { rpc: toAsync(orm.rpc, scope) });
+    toAsync(scope) {
+        return Object.assign(Object.create(this), { rpc: toAsync(this.rpc, scope) });
     }
 
     /**

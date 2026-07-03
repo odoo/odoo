@@ -41,7 +41,6 @@ import { browser } from "@web/core/browser/browser";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
-import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
@@ -101,7 +100,8 @@ export const registryNamesToCloneWithCleanup = [];
 registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 
 mailGlobal.isInTest = true;
-useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // so that RPCs after tests do not throw error
+// RPCs fired after a component is destroyed are dropped (their promise never
+// settles) by the scope guard in useService, so they can't throw after teardown.
 
 addBusMessageHandler("mail.record/insert", (_env, _id, payload) => {
     const recordsByModelName = Object.entries(payload);
