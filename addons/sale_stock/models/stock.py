@@ -283,21 +283,20 @@ class StockPicking(models.Model):
                     picking.move_type = "one"
 
     def _set_sale_id(self):
-        if self.reference_ids:
-            if self.sale_id:
-                self.reference_ids.sale_ids = [Command.link(self.sale_id.id)]
-            else:
-                sale_order = self.move_ids.sale_line_id.order_id
-                if len(sale_order) == 1:
-                    self.reference_ids.sale_ids = [Command.unlink(sale_order.id)]
-        else:
-            if self.sale_id:
-                reference = self.env['stock.reference'].sudo().create({
-                    'sale_ids': [Command.link(self.sale_id.id)],
-                    'name': self.sale_id.sudo().name,
-                })
-                self._add_reference(reference)
-        self.move_ids._reassign_sale_lines(self.sale_id)
+        for picking in self:
+            sale_order = picking.sale_id
+            references = sale_order.stock_reference_ids
+            # Destination moves still link this picking to its original supply chain.
+            chain_references = picking.move_ids.move_dest_ids.reference_ids
+            picking._remove_reference(picking.reference_ids.filtered('sale_ids') - references - chain_references)
+            if sale_order:
+                if not references:
+                    references = self.env['stock.reference'].sudo().create({
+                        'sale_ids': [Command.link(sale_order.id)],
+                        'name': sale_order.sudo().name,
+                    })
+                picking._add_reference(references)
+            picking.move_ids._reassign_sale_lines(sale_order)
 
     def _action_done(self):
         res = super()._action_done()
