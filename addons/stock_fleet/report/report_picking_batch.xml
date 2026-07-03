@@ -1,5 +1,5 @@
 <odoo>
-    <template id="report_picking_batch_inherit" inherit_id="stock_picking_batch.report_picking_batch">
+    <template id="report_picking_batch_inherit" inherit_id="stock.report_picking_batch">
         <xpath expr="//div[hasclass('page')]/div[2]" position="after">
             <div t-if="o.dock_id">
                 <strong>Dock:</strong>

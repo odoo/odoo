@@ -7,5 +7,13 @@
             <field name="default" eval="False"/>
             <field name="internal" eval="True"/>
         </record>
+
+        <!-- Batch picking related subtypes for messaging / Chatter -->
+        <record id="mt_batch_state" model="mail.message.subtype">
+            <field name="name">Stage Changed</field>
+            <field name="res_model">stock.picking.batch</field>
+            <field name="default" eval="False"/>
+            <field name="description">Stage Changed</field>
+        </record>
     </data>
 </odoo>

@@ -6,6 +6,7 @@ import json
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.addons.web.controllers.utils import clean_action
 
 
@@ -244,6 +245,22 @@ class StockPicking(models.Model):
             'carrier_price': 0.0,
         })
 
+    def _is_auto_batchable(self, picking=None):
+        """ Verifies if a picking can be put in a batch with another picking without violating auto_batch constrains.
+        """
+        res = super()._is_auto_batchable(picking)
+        if not picking:
+            picking = self.env['stock.picking']
+        if self.picking_type_id.batch_max_weight:
+            res = res and (self.weight + picking.weight <= self.picking_type_id.batch_max_weight)
+        return res
+
+    def _get_auto_batch_description(self):
+        description = super()._get_auto_batch_description()
+        if self.picking_type_id.batch_group_by_carrier and self.carrier_id:
+            description = f"{description}, {self.carrier_id.name}" if description else self.carrier_id.name
+        return description
+
     def _get_carrier_name(self):
         """Return the carrier name used by the shipping provider."""
         self.ensure_one()
@@ -267,3 +284,15 @@ class StockPicking(models.Model):
             clean_action(action, self.env)
             report_actions.append(action)
         return report_actions + super()._get_autoprint_report_actions()
+
+    def _get_possible_pickings_domain(self):
+        domain = super()._get_possible_pickings_domain()
+        if self.picking_type_id.batch_group_by_carrier:
+            domain &= Domain('carrier_id', '=', self.carrier_id.id if self.carrier_id else False)
+        return domain
+
+    def _get_possible_batches_domain(self):
+        domain = super()._get_possible_batches_domain()
+        if self.picking_type_id.batch_group_by_carrier:
+            domain &= Domain('picking_ids.carrier_id', '=', self.carrier_id.id if self.carrier_id else False)
+        return domain

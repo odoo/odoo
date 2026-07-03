@@ -151,6 +151,12 @@ class StockPicking(models.Model):
     shipping_volume = fields.Float(
         "Volume for Shipping", compute="_compute_shipping_volume")
 
+    batch_id = fields.Many2one(
+        'stock.picking.batch', string='Batch Transfer',
+        help='Batch associated to this transfer',
+        check_company=True, index=True, copy=False)
+    batch_sequence = fields.Integer(string='Sequence')
+
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_ids.product_id', readonly=True)
     lot_id = fields.Many2one('stock.lot', 'Lot/Serial Number', related='move_line_ids.lot_id', readonly=True)
@@ -191,7 +197,8 @@ class StockPicking(models.Model):
         'Reference must be unique per company!',
     )
 
-    @api.depends_context('formatted_display_name')
+    @api.depends('partner_id')
+    @api.depends_context('display_name_partner', 'formatted_display_name')
     def _compute_display_name(self):
         super()._compute_display_name()
         if self.env.context.get('formatted_display_name'):
@@ -203,6 +210,11 @@ class StockPicking(models.Model):
                     extra_display_info.append(picking.partner_id.display_name)
                 if extra_display_info:
                     picking.display_name += f'\t--{" ".join(extra_display_info)}--'
+        elif self.env.context.get('display_name_partner'):
+            for picking in self:
+                if not picking.partner_id:
+                    continue
+                picking.display_name = f"{picking.display_name} - {picking.partner_id.display_name}"
 
     def _compute_has_tracking(self):
         for picking in self:
@@ -639,11 +651,19 @@ class StockPicking(models.Model):
                 picking.with_context(mail_notrack=True).write({'scheduled_date': scheduled_date})
         pickings._autoconfirm_picking()
 
+        for picking, vals in zip(pickings, vals_list):
+            if vals.get('batch_id'):
+                if not picking.batch_id.picking_type_id:
+                    picking.batch_id.picking_type_id = picking.picking_type_id[0]
+                picking.batch_id._sanity_check()
+
         return pickings
 
     def write(self, vals):
         if vals.get('picking_type_id') and any(picking.state in ('done', 'cancel') for picking in self):
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
+
+        old_batches = self.batch_id
         if vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
             for picking in self:
@@ -652,6 +672,14 @@ class StockPicking(models.Model):
                     vals['location_id'] = picking_type.default_location_src_id.id
                     vals['location_dest_id'] = picking_type.default_location_dest_id.id
         res = super().write(vals)
+
+        if vals.get('batch_id'):
+            old_batches.filtered(lambda b: not b.picking_ids).state = 'cancel'
+            if not self.batch_id.picking_type_id:
+                self.batch_id.picking_type_id = self.picking_type_id[0]
+            self.batch_id._sanity_check()
+            # assign batch users to batch pickings
+            self.batch_id.picking_ids.assign_batch_user(self.batch_id.user_id.id)
         if vals.get('date_done'):
             self.filtered(lambda p: p.state == 'done').move_ids.date = vals['date_done']
         if vals.get('signature'):
@@ -694,6 +722,28 @@ class StockPicking(models.Model):
         self.ensure_one()
         return self.picking_type_code == 'outgoing'
 
+    def action_add_operations(self):
+        view = self.env.ref('stock.view_move_line_tree_detailed')
+        # TODO: would be better to have an actual record for the action.
+        return {
+            'name': _('Add Operations'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list',
+            'view': view,
+            'views': [(view.id, 'list')],
+            'res_model': 'stock.move.line',
+            'target': 'new',
+            'domain': [
+                ('picking_id', 'in', self.ids),
+                ('state', '!=', 'done')
+            ],
+            'context': dict(
+                self.env.context,
+                picking_to_wave=self.ids,
+                active_wave_id=self.env.context.get('active_wave_id').id,
+                search_default_by_location=True,
+            )}
+
     def action_confirm(self):
         self._check_company()
         if not self.env.context.get('skip_zero_demand_check') and not modules.module.current_test:
@@ -707,6 +757,10 @@ class StockPicking(models.Model):
 
         # run scheduler for moves forecasted to not have enough in stock
         self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))._trigger_scheduler()
+
+        if self.env.user.has_group('stock.group_stock_picking_batch'):
+            for picking in self:
+                picking._find_auto_batch()
         return True
 
     def action_assign(self):
@@ -728,6 +782,10 @@ class StockPicking(models.Model):
         self.move_ids._action_cancel()
         self.write({'is_locked': True})
         self.filtered(lambda x: not x.move_ids).state = 'cancel'
+        # Remove the cancelled operation from its batch if the batch has other active picking(s).
+        for picking in self:
+            if picking.batch_id and any(picking.state != 'cancel' for picking in picking.batch_id.picking_ids):
+                picking.batch_id = None
         return True
 
     def action_return(self):
@@ -817,6 +875,15 @@ class StockPicking(models.Model):
             "res_model": "stock.picking",
             "views": [[False, "list"], [False, "form"]],
             "domain": [('id', 'in', next_transfers.ids)],
+        }
+
+    def action_view_batch(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking.batch',
+            'res_id': self.batch_id.id,
+            'view_mode': 'form',
         }
 
     def _prepare_return_move_default_values(self, move_id):
@@ -989,6 +1056,8 @@ class StockPicking(models.Model):
 
     def _is_single_transfer(self):
         # Overriden for batches.
+        if self.env.user.has_group('stock.group_stock_picking_batch'):
+            return len(self) == 1 or len(self.batch_id) == 1
         return len(self) == 1
 
     def _check_entire_pack(self):
@@ -1115,6 +1184,33 @@ class StockPicking(models.Model):
             pickings_not_to_backorder.with_context(cancel_backorder=True)._action_done()
         if pickings_to_backorder:
             pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
+
+        # Remove done pickings from their batch.
+        if any(picking.state == 'done' for picking in self):
+            to_assign_ids = set()
+            if self and self.env.context.get('pickings_to_detach'):
+                pickings_to_detach = self.env['stock.picking'].browse(self.env.context['pickings_to_detach'])
+                pickings_to_detach.batch_id = False
+                pickings_to_detach.move_ids.filtered(lambda m: not m.quantity).picked = False
+                to_assign_ids.update(self.env.context['pickings_to_detach'])
+
+            for picking in self:
+                if picking.state != 'done':
+                    continue
+                # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
+                if picking.batch_id and any(p.state != 'done' for p in picking.batch_id.picking_ids):
+                    picking.batch_id = None
+                # If backorder were made and auto-batch is enabled, seek a batch for each of them with the selected criterias.
+                to_assign_ids.update(picking.backorder_ids.ids)
+
+            # If batch setting is enabled, auto-batch done pickings' backorders.
+            if self.env.user.has_group('stock.group_stock_picking_batch'):
+                # To avoid inconsistencies, all incorrect pickings must be removed before assigning backorder pickings
+                assignable_pickings = self.env['stock.picking'].browse(to_assign_ids)
+                for picking in assignable_pickings:
+                    picking._find_auto_batch()
+                assignable_pickings.move_line_ids.with_context(skip_auto_waveable=True)._auto_wave()
+
         report_actions = self._get_autoprint_report_actions()
         another_action = False
         pickings_show_report = self.filtered(lambda p: p.picking_type_id.auto_show_allocation_report)
@@ -1212,6 +1308,11 @@ class StockPicking(models.Model):
 
     def _should_show_transfers(self):
         """Whether the different transfers should be displayed on the pre action done wizards."""
+        if self.batch_id:
+            picking_ids_to_detach = self.env.context.get('pickings_to_detach') or []
+            batch_pickings_count = len(self.batch_id.picking_ids) - len(picking_ids_to_detach)
+            if len(self.batch_id) == 1 and len(self) == batch_pickings_count:
+                return False
         return len(self) > 1
 
     def _should_ignore_backorders(self):
@@ -1299,7 +1400,11 @@ class StockPicking(models.Model):
         """
         backorders = self.env['stock.picking']
         bo_to_assign = self.env['stock.picking']
+        pickings_to_detach = self.env['stock.picking'].browse(self.env.context.get('pickings_to_detach'))
         for picking in self:
+            # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
+            if picking.batch_id and picking.state != 'done' and any(p not in self for p in picking.batch_id.picking_ids - pickings_to_detach):
+                picking.batch_id = None
             if backorder_moves:
                 moves_to_backorder = backorder_moves.filtered(lambda m: m.picking_id == picking)
             else:
@@ -1872,3 +1977,126 @@ class StockPicking(models.Model):
                 'is_entire_pack': True,
             })
         return move_line_vals
+
+    # ===== Batch business methods =====
+
+    def _add_to_wave_post_picking_split_hook(self):
+        # Hook meant to be overriden
+        pass
+
+    def assign_batch_user(self, user_id):
+        pickings = self.filtered(lambda p: p.user_id.id != user_id)
+        pickings.write({'user_id': user_id})
+        for pick in pickings:
+            if user_id:
+                log_message = _('Assigned to %s Responsible', pick.batch_id._get_html_link())
+            else:
+                log_message = _('Unassigned responsible from %s', pick.batch_id._get_html_link())
+            pick.message_post(body=log_message)
+
+    def _get_possible_pickings_domain(self):
+        self.ensure_one()
+        domain = [
+            ('id', '!=', self.id),
+            ('company_id', '=', self.company_id.id if self.company_id else False),
+            ('state', '=', 'assigned'),
+            ('picking_type_id', '=', self.picking_type_id.id),
+            ('batch_id', '=', False),
+        ]
+        if self.picking_type_id.batch_group_by_partner:
+            domain.append(('partner_id', '=', self.partner_id.id))
+        if self.picking_type_id.batch_group_by_destination:
+            domain.append(('partner_id.country_id', '=', self.partner_id.country_id.id))
+        if self.picking_type_id.batch_group_by_src_loc:
+            domain.append(('location_id', '=', self.location_id.id))
+        if self.picking_type_id.batch_group_by_dest_loc:
+            domain.append(('location_dest_id', '=', self.location_dest_id.id))
+
+        return Domain(domain)
+
+    def _get_possible_batches_domain(self):
+        self.ensure_one()
+        domain = [
+            ('state', 'in', ('draft', 'in_progress') if self.picking_type_id.batch_auto_confirm else ('draft',)),
+            ('picking_type_id', '=', self.picking_type_id.id),
+            ('company_id', '=', self.company_id.id if self.company_id else False),
+            ('is_wave', '=', False)
+        ]
+        if self.picking_type_id.batch_group_by_partner:
+            domain.append(('picking_ids.partner_id', '=', self.partner_id.id))
+        if self.picking_type_id.batch_group_by_destination:
+            domain.append(('picking_ids.partner_id.country_id', '=', self.partner_id.country_id.id))
+        if self.picking_type_id.batch_group_by_src_loc:
+            domain.append(('picking_ids.location_id', '=', self.location_id.id))
+        if self.picking_type_id.batch_group_by_dest_loc:
+            domain.append(('picking_ids.location_dest_id', '=', self.location_dest_id.id))
+        if self.env.context.get('batches_to_validate'):
+            domain.append(('id', 'not in', self.env.context.get('batches_to_validate')))
+
+        return Domain(domain)
+
+    def _get_auto_batch_description(self):
+        """ Get the description of the automatically created batch based on the grouped pickings and grouping criteria """
+        self.ensure_one()
+        description_items = []
+        if self.picking_type_id.batch_group_by_partner and self.partner_id:
+            description_items.append(self.partner_id.name or '')
+        if self.picking_type_id.batch_group_by_destination and self.partner_id.country_id:
+            description_items.append(self.partner_id.country_id.name)
+        if self.picking_type_id.batch_group_by_src_loc and self.location_id:
+            description_items.append(self.location_id.display_name)
+        if self.picking_type_id.batch_group_by_dest_loc and self.location_dest_id:
+            description_items.append(self.location_dest_id.display_name)
+        return ', '.join(description_items)
+
+    def _find_auto_batch(self):
+        self.ensure_one()
+        # Check if auto_batch is enabled for this picking.
+        if not self.picking_type_id.auto_batch or\
+           not self.picking_type_id._is_auto_batch_grouped() or\
+           self.batch_id or not self.move_ids or\
+           not self._is_auto_batchable():
+            return False
+
+        # Try to find a compatible batch to insert the picking
+        possible_batches = self.env['stock.picking.batch'].sudo().search(self._get_possible_batches_domain())
+        for batch in possible_batches:
+            if batch._is_picking_auto_mergeable(self):
+                batch.picking_ids |= self
+                return batch
+
+        # If no batch were found, try to find a compatible picking and put them both in a new batch.
+        possible_pickings = self.env['stock.picking'].search(self._get_possible_pickings_domain())
+        new_batch_data = {
+            'picking_ids': [Command.link(self.id)],
+            'company_id': self.company_id.id if self.company_id else False,
+            'picking_type_id': self.picking_type_id.id,
+            'description': self._get_auto_batch_description()
+        }
+        for picking in possible_pickings:
+            if self._is_auto_batchable(picking):
+                # Add the picking to the new batch
+                new_batch_data['picking_ids'].append(Command.link(picking.id))
+                new_batch = self.env['stock.picking.batch'].sudo().create(new_batch_data)
+                if picking.picking_type_id.batch_auto_confirm:
+                    new_batch.action_confirm()
+                return new_batch
+
+        # If nothing was found after those two steps, then create a batch with the current picking alone
+        new_batch_data['user_id'] = self.user_id.id
+        new_batch = self.env['stock.picking.batch'].sudo().create(new_batch_data)
+        if self.picking_type_id.batch_auto_confirm:
+            new_batch.action_confirm()
+        return new_batch
+
+    def _is_auto_batchable(self, picking=None):
+        """ Verifies if a picking can be put in a batch with another picking without violating auto_batch constrains.
+        """
+        if self.state != 'assigned':
+            return False
+        if self.picking_type_id.batch_max_lines:
+            picking = picking or self.env['stock.picking']
+            moves_count = len(set(self.move_ids.ids + picking.move_ids.ids))
+            if moves_count > self.picking_type_id.batch_max_lines:
+                return False
+        return not self.picking_type_id.batch_max_pickings or self.picking_type_id.batch_max_pickings > 1

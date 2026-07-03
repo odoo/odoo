@@ -2,6 +2,8 @@
 
 import re
 
+from odoo import Command
+from odoo.tests.common import TransactionCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests.common import ProductVariantsCommon
 
@@ -220,3 +222,11 @@ class TestStockCommon(ProductVariantsCommon):
         model_name = self.env.ref(action_match[0]).sudo().res_model
         rec_id = re.findall(r'/(\d+)$', url)[0]
         return rec_id, model_name
+
+
+class TestStockBatchCommon(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Enable batch picking setting.
+        cls.env.user.write({'group_ids': [Command.link(cls.env.ref('stock.group_stock_picking_batch').id)]})

@@ -366,10 +366,14 @@ class Picking(models.Model):
             else:
                 picking.l10n_ro_edi_stock_document_uit = False
 
-    @api.depends('company_id.account_fiscal_country_id.code')
+    @api.depends('batch_id', 'company_id', 'company_id.account_fiscal_country_id.code', 'picking_type_code')
     def _compute_l10n_ro_edi_stock_enable(self):
         for picking in self:
-            picking.l10n_ro_edi_stock_enable = picking.picking_type_code != 'internal' and picking.company_id.account_fiscal_country_id.code == 'RO'
+            picking.l10n_ro_edi_stock_enable = (
+                (not picking.batch_id or picking.batch_id.state != 'done')
+                and picking.picking_type_code != 'internal'
+                and picking.company_id.country_id.code == 'RO'
+            )
 
     @api.depends('l10n_ro_edi_stock_enable', 'state', 'l10n_ro_edi_stock_state')
     def _compute_l10n_ro_edi_stock_enable_send(self):
@@ -430,8 +434,15 @@ class Picking(models.Model):
 
     @api.model
     def _l10n_ro_edi_stock_validate_carrier_filter(self, picking):
-        # To be overridden by stock.picking.batch
-        return picking.l10n_ro_edi_stock_enable
+        if self.env.user.has_group('stock.group_stock_picking_batch'):
+            # Override for when the batch picking calls this function to validate the carriers
+            validate_carrier = self.env.context.get('l10n_ro_edi_stock_validate_carrier', False)
+            return (
+                picking.company_id.account_fiscal_country_id.code == 'RO'
+                and (picking.l10n_ro_edi_stock_enable or validate_carrier)
+            )
+        else:
+            return picking.l10n_ro_edi_stock_enable
 
     @api.model
     def _l10n_ro_edi_stock_validate_data(self, data: dict):

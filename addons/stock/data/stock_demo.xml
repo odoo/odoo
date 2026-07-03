@@ -121,6 +121,22 @@
             <field name="inventory_quantity">16.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
+        <!-- Used by batched pickings -->
+        <record id="stock_inventory_batch_1" model="stock.quant">
+            <field name="product_id" ref="product.consu_delivery_01"/>
+            <field name="inventory_quantity">10.0</field>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+        </record>
+        <record id="stock_inventory_batch_2" model="stock.quant">
+            <field name="product_id" ref="product.consu_delivery_02"/>
+            <field name="inventory_quantity">18.0</field>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+        </record>
+        <record id="stock_inventory_batch_3" model="stock.quant">
+            <field name="product_id" ref="product.consu_delivery_03"/>
+            <field name="inventory_quantity">20.0</field>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+        </record>
 
         <function model="stock.quant" name="action_apply_inventory">
             <function eval="[[('id', 'in', (ref('stock_inventory_1'),
@@ -138,6 +154,9 @@
                                             ref('stock_inventory_13'),
                                             ref('stock_inventory_14'),
                                             ref('stock_inventory_15'),
+                                            ref('stock_inventory_batch_1'),
+                                            ref('stock_inventory_batch_2'),
+                                            ref('stock_inventory_batch_3'),
                                             ))]]" model="stock.quant" name="search"/>
         </function>
 
