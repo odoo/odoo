@@ -58,6 +58,7 @@ export class ActivityController extends Component {
                 resModel,
                 fields,
             },
+            limit: this.props.limit,
         };
     }
 
