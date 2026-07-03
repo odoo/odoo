@@ -922,7 +922,7 @@ class AccountEdiUBL(models.AbstractModel):
         item_node = vals['item_node']
         base_line = vals['line_vals']['base_line']
 
-        line_name = name = base_line.get('name', '')  # Regular business line.
+        line_name = name = base_line.get('name') or ''  # Regular business line.
         description = None
         if product := base_line['product_id']:
             name = product.display_name
