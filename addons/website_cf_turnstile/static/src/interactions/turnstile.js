@@ -39,8 +39,13 @@ export class TurnStile {
         };
         // unhide if interaction is needed
         globalThis.turnstileBecomeVisible = function () {
+            if (!this.wrapper) {
+                return;
+            }
             const turnstileContainer = this.wrapper.parentElement;
-            turnstileContainer.style.display = "";
+            if (turnstileContainer) {
+                turnstileContainer.style.display = "";
+            }
         };
         // avoid modifying shape of return, for stable compatibility
         const script1El = document.createElement("script");
