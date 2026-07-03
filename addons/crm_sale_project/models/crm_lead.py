@@ -42,6 +42,7 @@ class CrmLead(models.Model):
             default_lead_id=self.id,
             default_partner_id=self.partner_id.id,
             default_allow_billable=True,
+            lead_company_id=self.company_id.id,
         )
 
     def action_create_project(self):

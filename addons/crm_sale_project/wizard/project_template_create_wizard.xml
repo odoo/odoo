@@ -21,7 +21,10 @@
                 />
             </xpath>
             <xpath expr="//field[@name='template_id']" position="attributes">
-                <attribute name="domain">[('is_template', '=', True), ('allow_billable', '=', True)]</attribute>
+                <attribute name="domain">[
+                    ('is_template', '=', True), ('allow_billable', '=', True),
+                    '|', ('company_id', '=?', context.get('lead_company_id')), ('company_id', '=', False)]
+                </attribute>
                 <attribute name="context">{'default_is_template': True, 'default_allow_billable': True}</attribute>
             </xpath>
             <xpath expr="//form/footer/button[@name='action_create_project_from_so']" position="attributes">
