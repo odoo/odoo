@@ -13,8 +13,16 @@ export async function getDefaultEmailTo({ services }) {
     const companyId = services.website?.currentWebsite?.company_id;
     let defaultEmailTo;
     if (companyId) {
-        const companies = await services.orm.cache().read("res.company", [companyId], ["email"]);
-        defaultEmailTo = companies[0].email;
+        try {
+            const companies = await services.orm
+                .cache()
+                .read("res.company", [companyId], ["email"]);
+            defaultEmailTo = companies[0].email;
+        } catch {
+            // In cross-company editing, the editor user may not have access to
+            // the website's company and would hit an Access Error reading its
+            // email: fall back to the editor user's email below.
+        }
     }
     if (!defaultEmailTo && user.userId) {
         const users = await services.orm.cache().read("res.users", [user.userId], ["email"]);
