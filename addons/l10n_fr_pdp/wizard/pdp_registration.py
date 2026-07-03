@@ -2,6 +2,7 @@ import logging
 
 from odoo import api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
+from odoo.tools import single_email_re
 
 from odoo.addons.l10n_fr_pdp.models.res_company import PDP_identifier_re
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
@@ -230,6 +231,8 @@ class PdpRegistration(models.TransientModel):
                 action=self.company_id._get_records_action(),
                 button_text=self.env._("Go to company"),
             )
+        if not self.contact_email or not single_email_re.match(self.contact_email):
+            raise ValidationError(self.env._("Invalid email address '%s'", self.contact_email))
         base_url = self.company_id._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/id_authentication/1/authentication', params={
             'db_uuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
