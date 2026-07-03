@@ -30,7 +30,7 @@ class PosSession(models.Model):
     @api.model
     def _load_pos_data_models(self, config):
         pos_data_models = super()._load_pos_data_models(config)
-        pos_data_models.extend(['stock.picking.type', 'pos.pack.operation.lot'])
+        pos_data_models.extend(['stock.picking.type', 'pos.pack.operation.lot', 'product.removal'])
         return pos_data_models
 
     @api.model
