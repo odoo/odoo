@@ -2,6 +2,7 @@
 
 from ast import literal_eval
 from collections import defaultdict
+
 from lxml import html
 
 from odoo import SUPERUSER_ID, api, fields, models
@@ -55,7 +56,7 @@ class IrModel(models.Model):
         model = self.env[model_name]
         fields_get = model.fields_get(attributes=[
             'required', 'domain', 'readonly', 'type', 'relation', 'manual',
-            'definition_record', 'definition_record_field', 'string', 'selection',
+            'definition_record', 'definition_record_field', 'string', 'selection', 'currency_field',
         ])
 
         field_details_translated = {}
@@ -83,6 +84,13 @@ class IrModel(models.Model):
                     fields_get[field]['selection'] = field_translations.get('selection')
             if 'domain' in fields_get[field] and isinstance(fields_get[field]['domain'], str):
                 del fields_get[field]['domain']
+            if not fields_get[field].get('readonly') and fields_get[field].get('type') == 'monetary':
+                currency_field_name = fields_get[field].get('currency_field')
+                fields_get[field]["currency_field_readonly"] = (
+                    fields_get[currency_field_name].get("readonly")
+                    if currency_field_name and fields_get.get(currency_field_name)
+                    else True
+                )
             if fields_get[field].get('readonly') or field in models.MAGIC_COLUMNS or \
                     fields_get[field]['type'] in ('many2one_reference', 'json', 'reference'):
                 del fields_get[field]
@@ -136,6 +144,10 @@ class IrModel(models.Model):
                                 property_definition['domain'] = list(Domain(property_definition['domain']))
                             except ValueError:
                                 continue
+                        if not property_definition.get('readonly') and property_definition.get('type') == 'monetary':
+                            currency_field_name = property_definition.get('currency_field')
+                            property_definition['currency_field_readonly'] = fields_get[currency_field_name].get('readonly')
+
                         fields_get[property_definition.get('name')] = property_definition
 
         return fields_get

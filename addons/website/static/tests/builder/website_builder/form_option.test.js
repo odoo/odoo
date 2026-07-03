@@ -44,6 +44,7 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { currencies } from "@web/core/currency";
 
 class HrJob extends models.Model {
     _name = "hr.job";
@@ -1625,4 +1626,112 @@ test("field added by the form action is displayed as a dropdown when it has more
     // More than five options: the selection is turned into a dropdown.
     expect(":iframe .s_website_form_field[data-type='many2one']").toHaveCount(1);
     expect(":iframe select[name='long_selection'] option").toHaveCount(6);
+});
+
+test("monetary fields can display currency", async () => {
+    async function addField(name) {
+        await contains(":iframe section").click();
+        await contains("button:contains('+ Field')").click();
+        await contains("#type_opt").click();
+        await contains(`[role='menuitem']:contains('${name}')`).click();
+    }
+    async function toggleDisplayCurrency(name) {
+        await contains(`:iframe input[name='${name}']`).click();
+        await contains(".hb-row[data-label='Display Currency'] .o-checkbox").click();
+    }
+    const mockedCurrencies = {
+        1: { name: "USD", symbol: "$", position: "before" },
+        2: { name: "EUR", symbol: "€", position: "after" },
+        3: { name: "GBP", symbol: "£", position: "before" },
+    };
+    patchWithCleanup(currencies, mockedCurrencies);
+
+    onRpc("get_authorized_fields", () => ({
+        normal_currency_field: {
+            name: "normal_currency_field",
+            string: "Normal Currency Field",
+            type: "monetary",
+            currency_field: "currency_field",
+        },
+        computed_currency_field: {
+            name: "computed_currency_field",
+            string: "Computed Currency Field",
+            type: "monetary",
+            currency_field: "company_currency",
+            currency_field_readonly: true,
+        },
+        "38cc7a29ae55db57": {
+            name: "38cc7a29ae55db57",
+            type: "monetary",
+            string: "Monetary Property",
+            default: 0,
+            currency_field: "currency_id",
+            _property: {
+                field: "properties",
+            },
+            required: false,
+            currency_field_readonly: true,
+        },
+    }));
+
+    onRpc("base", "get_computed_value", () => 2);
+
+    await setupWebsiteBuilderWithSnippet("s_website_form");
+
+    // 1. Test monetary field with normal currency field
+
+    await addField("Normal Currency Field");
+    await toggleDisplayCurrency("normal_currency_field");
+
+    // Modify currency
+    await contains(".hb-row[data-label='Currency'] button").click();
+    for (const currencyId of Object.keys(mockedCurrencies)) {
+        const currency = mockedCurrencies[currencyId];
+        await contains(":iframe input[name='normal_currency_field']").click();
+        await contains(".hb-row[data-label='Currency'] button").click();
+        await contains(`[role='menuitem']:contains('${currency.name}')`).click();
+
+        expect(
+            ":iframe .s_website_form_field:has(input[name='normal_currency_field']) .o_currency_display"
+        ).toHaveText(currency.name);
+        expect(":iframe input[name='currency_field']").toHaveValue(currencyId);
+    }
+
+    await toggleDisplayCurrency("normal_currency_field");
+    expect(
+        ":iframe .s_website_form_field:has(input[name='normal_currency_field']) .o_currency_display"
+    ).toHaveCount(0);
+    expect(":iframe input[name='currency_field']").toHaveCount(0);
+
+    // 2. Test monetary field with computed currency field (readonly)
+    await addField("Computed Currency Field");
+    await toggleDisplayCurrency("computed_currency_field");
+
+    expect(
+        ":iframe .s_website_form_field:has(input[name='computed_currency_field']) .o_currency_display"
+    ).toHaveText("EUR");
+
+    // It is not posssible to modify currency because it is readonly
+    expect(".hb-row[data-label='Currency'] button").toHaveCount(0);
+
+    await toggleDisplayCurrency("computed_currency_field");
+    expect(
+        ":iframe .s_website_form_field:has(input[name='computed_currency_field']) .o_currency_display"
+    ).toHaveCount(0);
+
+    // 3. Test monetary properties (readonly currency_field)
+    await addField("Monetary Property");
+    await toggleDisplayCurrency("38cc7a29ae55db57");
+
+    expect(
+        ":iframe .s_website_form_field:has(input[name='38cc7a29ae55db57']) .o_currency_display"
+    ).toHaveText("EUR");
+
+    // It is not posssible to modify currency because it is readonly
+    expect(".hb-row[data-label='Currency'] button").toHaveCount(0);
+
+    await toggleDisplayCurrency("38cc7a29ae55db57");
+    expect(
+        ":iframe .s_website_form_field:has(input[name='38cc7a29ae55db57']) .o_currency_display"
+    ).toHaveCount(0);
 });

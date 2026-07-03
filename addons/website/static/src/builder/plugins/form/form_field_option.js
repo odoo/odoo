@@ -10,6 +10,7 @@ import {
     getCurrentFieldInputEl,
     getModelName,
 } from "./utils";
+import { currencies } from "@web/core/currency";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 
@@ -34,6 +35,7 @@ export class FormFieldOption extends BaseOptionComponent {
             availableFields: [],
             conditionInputs: [],
             conditionValueList: [],
+            currencies,
             dependencyEl: null,
             valueList: null,
         });
@@ -288,6 +290,16 @@ export class FormFieldOption extends BaseOptionComponent {
     get isMultipleInputs() {
         const el = this.env.getEditingElement();
         return !!getMultipleInputs(el);
+    }
+    get isMonetaryField() {
+        const el = this.env.getEditingElement();
+        const fieldEl = el.closest(".s_website_form_field");
+        return fieldEl?.dataset.type === "monetary";
+    }
+    get hasReadonlyCurrencyField() {
+        const fieldEl = this.env.getEditingElement();
+        const field = this.state.fields[getFieldName(fieldEl)];
+        return field?.currency_field_readonly;
     }
     get isMaxFilesVisible() {
         // Do not display the option if only one file is supposed to be
