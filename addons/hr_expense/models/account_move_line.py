@@ -40,3 +40,10 @@ class AccountMoveLine(models.Model):
 
     def _get_extra_query_base_tax_line_mapping(self) -> SQL:
         return SQL(' AND (base_line.expense_id IS NULL OR account_move_line.expense_id = base_line.expense_id)')
+
+    @api.model
+    def _is_python_base_tax_line_mapping_allowed(self, base_line, tax_line):
+        return (
+            super()._is_python_base_tax_line_mapping_allowed(base_line, tax_line)
+            and (not base_line.expense_id or tax_line.expense_id == base_line.expense_id)
+        )
