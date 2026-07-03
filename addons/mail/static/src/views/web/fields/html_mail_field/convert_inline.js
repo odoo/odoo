@@ -737,16 +737,24 @@ function enforceTablesResponsivity(element) {
         commonTr.appendChild(commonTd);
         commonTable.appendChild(commonTr);
         const tds = [...tr.children].filter((child) => child.nodeName === "TD");
+        const rowWidth = tds.reduce((total, td) => total + (parseFloat(td.style.maxWidth) || 0), 0);
         let index = 0;
         for (const td of tds) {
             const width = td.style.maxWidth;
+            // Gmail on mobile drops pixel widths larger than the screen and
+            // lets the tables collapse to the width of their contents: use
+            // percentages instead.
+            const percentWidth = rowWidth
+                ? `${Math.round((parseFloat(width) / rowWidth) * 10000) / 100}%`
+                : "100%";
             const div = document.createElement("div");
             div.style.display = "inline-block";
             div.style.verticalAlign = "top";
+            div.style.width = percentWidth;
             div.classList.add("o_stacking_wrapper");
             commonTd.appendChild(div);
             const newTable = _createTable();
-            newTable.style.width = width;
+            newTable.style.width = "100%";
             newTable.classList.add("o_stacking_wrapper");
             div.appendChild(newTable);
             const newTr = document.createElement("tr");
