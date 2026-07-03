@@ -31,14 +31,16 @@ class NuveiController(http.Controller):
         _logger.info("Handling redirection from Nuvei with data:\n%s", pprint.pformat(data))
         if tx_ref and error_access_token:
             _logger.warning("Nuvei errored on transaction: %s.", tx_ref)
-
-        tx_data = data or {'invoice_id': tx_ref}
+            payment_data = {}
+        else:
+            payment_data = data
+        tx_data = payment_data or {'invoice_id': tx_ref}
         tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('nuvei', tx_data)
         if tx_sudo:
             self._verify_signature(
-                tx_sudo, data, error_access_token=error_access_token
+                tx_sudo, payment_data, error_access_token=error_access_token
             )
-            tx_sudo._process('nuvei', data)
+            tx_sudo._process('nuvei', payment_data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
