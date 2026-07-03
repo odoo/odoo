@@ -1223,8 +1223,11 @@ class HrEmployee(models.Model):
         return action
 
     def action_send_invitation(self):
-        """Send (or resend) the self-service invitation e-mail to the user."""
-        raise NotImplementedError()
+        """Create a user and send a password-reset (invitation) e-mail to the linked user."""
+        self.ensure_one()
+        if not self.user_id:
+            self.user_id = self._get_or_create_light_user(required=True)
+        return self.user_id.action_reset_password()
 
     def action_reset_password(self):
         """Send a password-reset e-mail to the linked user."""
@@ -1556,7 +1559,7 @@ class HrEmployee(models.Model):
             vals['tz'] = user.tz
         return vals
 
-    def _get_or_create_light_user(self):
+    def _get_or_create_light_user(self, required=False):
         """Resolve or create the light user for an employee.
 
         Called while building an employee's create values so the employee is
@@ -1595,9 +1598,9 @@ class HrEmployee(models.Model):
                                            login=login, user_name=user.name))
             return user
         if not login:
-            # TODO DBE: if not possible to create a user, skip creation. The employee form will have a warning ??
-            # raise ValidationError(self.env._('Cannot create light user for employee because missing login.'))
-            return ResUsers
+            if not required:
+                return ResUsers
+            raise ValidationError(self.env._('Cannot create light user for an employee without login (email address or related contact).'))
         # Reimplement default_groups just to test.
         groups = ResUsers._default_groups(group='user')
         return ResUsers.create({

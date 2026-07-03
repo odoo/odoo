@@ -9,6 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 
 // Visual representation of res.users.state, mirrored on the employee.
 const STATUS = {
+    false: { label: _t("No User"), decoration: "danger", icon: "fa-user-times" },
     new: { label: _t("Invited"), decoration: "warning", icon: "fa-paper-plane" },
     active: { label: _t("Confirmed"), decoration: "success", icon: "fa-check-circle" },
     inactive: { label: _t("Archived"), decoration: "danger", icon: "fa-ban" },
@@ -46,8 +47,8 @@ export class EmployeeUserStatus extends Component {
         switch (this.state) {
             case "new":
                 return [
-                    { key: "send", label: _t("Resend Invitation"), icon: "fa-paper-plane", method: "action_send_invitation" },
-                    { key: "copy", label: _t("Copy Invitation Link"), icon: "fa-clipboard", method: "action_copy_invitation_link", copy: true },
+                    { key: "send", label: _t("Resend Invitation"), icon: "fa-paper-plane", method: "action_reset_password" },
+                    { key: "copy", label: _t("Copy Invitation Link"), icon: "fa-clipboard", method: "action_copy_invitation_link" },
                     { key: "deactivate", label: _t("Deactivate"), icon: "fa-ban", method: "action_toggle_user_active" },
                 ];
             case "active":
@@ -60,7 +61,9 @@ export class EmployeeUserStatus extends Component {
                     { key: "reactivate", label: _t("Reactivate"), icon: "fa-unlock", method: "action_toggle_user_active" },
                 ];
             default:
-                return [];
+                return [
+                    { key: "create_user", label: _t("Send Invitation"), icon: "fa-user-plus", method: "action_send_invitation" },
+                ];
         }
     }
 
@@ -69,8 +72,12 @@ export class EmployeeUserStatus extends Component {
         if (!resId) {
             return;
         }
+        if (item.key === 'create_user') {
+            // Save the form - as user will probably type in the email and use this action without saving first.
+            await this.props.record.save();
+        }
         const result = await this.orm.call("hr.employee", item.method, [resId]);
-        if (item.copy) {
+        if (item.key === 'copy') {
             if (result) {
                 await browser.navigator.clipboard.writeText(result);
                 this.notification.add(_t("Invitation link copied to clipboard."), { type: "success" });
