@@ -857,7 +857,7 @@ export class FormOptionPlugin extends Plugin {
      * @param {HTMLElement} params.snippetEl - The dropped snippet element.
      */
     async onSnippetDropped({ dragState, snippetEl }) {
-        if (!snippetEl.closest(".s_website_form")) {
+        if (!snippetEl.closest(".s_website_form") && !snippetEl.querySelector(".s_website_form")) {
             return;
         }
 
