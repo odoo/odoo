@@ -5,6 +5,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.tests import Form, tagged
+from odoo.exceptions import UserError
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
@@ -663,3 +664,17 @@ class TestSaleStockMargin(TestStockValuationCommon):
         so.picking_ids.button_validate()
         self.assertEqual(po.order_line.price_unit, 20)
         self.assertEqual(so.order_line.purchase_price, 20)
+
+    def test_reduce_ordered_quantity_after_delivery(self):
+        """Ensure the ordered quantity cannot be reduced after the product has been delivered."""
+        sale_order = self._create_sale_order()
+        product = self._create_product()
+
+        order_line = self._create_sale_order_line(sale_order, product, 1, 50)
+        sale_order.action_confirm()
+
+        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
+        sale_order.picking_ids.button_validate()
+
+        with self.assertRaises(UserError):
+            order_line.product_uom_qty = 0
