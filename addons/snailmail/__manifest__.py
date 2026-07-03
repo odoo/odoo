@@ -17,7 +17,6 @@ Allows users to send documents by post
         'views/snailmail_views.xml',
         'security/ir.access.csv',
     ],
-    'auto_install': True,
     'assets': {
         'web.assets_backend': [
             'snailmail/static/src/**/*',
