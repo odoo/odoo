@@ -1,4 +1,4 @@
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { onWillRender } from "@web/owl2/utils";
 import { Component, onWillStart, props, proxy, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
@@ -150,26 +150,26 @@ export class ModelFieldSelectorPopover extends Component {
             }
         });
 
-        useLayoutEffect(() => {
-            const focusedElement = this.rootRef()?.querySelector(
-                ".o_model_field_selector_popover_item.active"
-            );
-            if (focusedElement) {
-                // current page can be empty (e.g. after a search)
-                focusedElement.scrollIntoView({ block: "center" });
-            }
-        });
-        useLayoutEffect(
-            () => {
-                if (this.props.showSearchInput) {
-                    const searchInput = this.rootRef()?.querySelector(
-                        ".o_model_field_selector_popover_search .o_input"
-                    );
-                    searchInput.focus();
-                }
-            },
-            () => [this.state.page]
-        );
+        // useLayoutEffect(() => {
+        //     const focusedElement = this.rootRef()?.querySelector(
+        //         ".o_model_field_selector_popover_item.active"
+        //     );
+        //     if (focusedElement) {
+        //         // current page can be empty (e.g. after a search)
+        //         focusedElement.scrollIntoView({ block: "center" });
+        //     }
+        // });
+        // useLayoutEffect(
+        //     () => {
+        //         if (this.props.showSearchInput) {
+        //             const searchInput = this.rootRef()?.querySelector(
+        //                 ".o_model_field_selector_popover_search .o_input"
+        //             );
+        //             searchInput.focus();
+        //         }
+        //     },
+        //     () => [this.state.page]
+        // );
     }
 
     get fieldNames() {
