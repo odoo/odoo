@@ -1,4 +1,4 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillRender, useRef } from "@web/owl2/utils";
 import { Component, effect, props, proxy, t } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
@@ -147,29 +147,29 @@ export class DateTimeField extends Component {
         this.startDate = useRef("start-date");
         this.endDate = useRef("end-date");
 
-        useLayoutEffect(
-            () => {
-                [this.startDate, this.endDate].forEach((ref, index) => {
-                    if (ref.el?.getAttribute("data-field") === this.picker.activeInput) {
-                        ref.el.focus();
-                        // openPickerOnNextPatch is set in the template on pointerdown on the button
-                        if (this.openPickerOnNextPatch) {
-                            this.openPicker(index);
-                            this.openPickerOnNextPatch = false;
-                        }
-                    }
-                });
-            },
-            () => [this.startDate.el?.tagName, this.endDate.el?.tagName, this.picker.activeInput]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         [this.startDate, this.endDate].forEach((ref, index) => {
+        //             if (ref.el?.getAttribute("data-field") === this.picker.activeInput) {
+        //                 ref.el.focus();
+        //                 // openPickerOnNextPatch is set in the template on pointerdown on the button
+        //                 if (this.openPickerOnNextPatch) {
+        //                     this.openPicker(index);
+        //                     this.openPickerOnNextPatch = false;
+        //                 }
+        //             }
+        //         });
+        //     },
+        //     () => [this.startDate.el?.tagName, this.endDate.el?.tagName, this.picker.activeInput]
+        // );
 
-        useLayoutEffect(
-            () =>
-                effect(() => {
-                    this.state.value = this.getRecordValue();
-                }),
-            () => []
-        );
+        // useLayoutEffect(
+        //     () =>
+        //         effect(() => {
+        //             this.state.value = this.getRecordValue();
+        //         }),
+        //     () => []
+        // );
 
         onWillRender(() => this.triggerIsDirty());
 
