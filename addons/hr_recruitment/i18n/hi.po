@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2026-06-13 13:46+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -60,8 +60,7 @@ msgstr "<b>क्या आपने ईमेल भेजकर आवेद�
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, fuzzy
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
-msgstr ""
-"पहले इंटरव्यू के लिए उन्हें योग्य बनाने हेतु, इस <b>कार्ड को खींचें</b>।"
+msgstr "पहले इंटरव्यू के लिए उन्हें योग्य बनाने हेतु, इस <b>कार्ड को खींचें</b>।"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
@@ -174,9 +173,9 @@ msgstr ""
 "object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
 "        <a t-att-href=\"object.job_id.website_url\" t-attf-"
 "style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; text-decoration: none; color: {"
-"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
-"16px; border-radius: 5px;\">नौकरी का विवरण</a>\n"
+"'#875A7B'}}; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
+"8px 16px; border-radius: 5px;\">नौकरी का विवरण</a>\n"
 "    </div>\n"
 "\n"
 "    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
@@ -187,10 +186,10 @@ msgstr ""
 "        <p>\n"
 "            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
 "strong><br/>\n"
-"            <span>ईमेल: <t t-out=\"object.user_id.email or ''\">"
-"admin@yourcompany.example.com</t></span><br/>\n"
-"            <span>फ़ोन: <t t-out=\"object.user_id.phone or ''\">+1 650-123-"
-"4567</t></span>\n"
+"            <span>ईमेल: <t t-out=\"object.user_id.email or "
+"''\">admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>फ़ोन: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t></span>\n"
 "        </p>\n"
 "        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
 "border: medium none; clear: both; display: block; font-size: 0px; min-"
@@ -198,8 +197,8 @@ msgstr ""
 "    </t>\n"
 "\n"
 "    <h3 style=\"color:#9A6C8E;\"><strong>अगला चरण क्या है?</strong></h3>\n"
-"    हम आम तौर पर <strong>कुछ दिनों के भीतर आवेदन का जवाब देते हैं.</strong><br/><br/>"
-"\n"
+"    हम आम तौर पर <strong>कुछ दिनों के भीतर आवेदन का जवाब देते हैं.</strong><br/><br/"
+">\n"
 "    अगर <strong>आपको तुरंत जवाब चाहिए\n"
 "    </strong> या आपको हमसे जल्दी कोई खबर नहीं मिलती है,\n"
 "    तो बेझिझक हमसे संपर्क करें (बस इस ईमेल का जवाब दें).\n"
@@ -240,8 +239,8 @@ msgstr ""
 "    </t>\n"
 "    <br/>\n"
 "    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"        <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
-"Argentina</t><br/>\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or "
+"''\">Argentina</t><br/>\n"
 "        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.country_id.name)\"/>\n"
 "    </t>\n"
@@ -323,10 +322,10 @@ msgstr ""
 "            -- <br/>\n"
 "            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
 "strong><br/>\n"
-"            ईमेल: <t t-out=\"object.user_id.email or ''\">"
-"admin@yourcompany.example.com</t><br/>\n"
-"            फ़ोन: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>"
-"\n"
+"            ईमेल: <t t-out=\"object.user_id.email or "
+"''\">admin@yourcompany.example.com</t><br/>\n"
+"            फ़ोन: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</"
+"t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            -- <br/>\n"
@@ -381,15 +380,15 @@ msgstr ""
 "                -- <br/>\n"
 "                <strong t-out=\"object.user_id.name or ''\">Marc Demo</"
 "strong><br/>\n"
-"                ईमेल: <t t-out=\"object.user_id.email or ''\">"
-"mark.brown23@example.com</t><br/>\n"
-"                फ़ोन: <t t-out=\"object.user_id.phone or ''\">+1 650-123-"
-"4567</t>\n"
+"                ईमेल: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t><br/>\n"
+"                फ़ोन: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                -- <br/>\n"
-"                <t t-out=\"object.company_id.name or ''\">YourCompany</t>"
-"<br/>\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/"
+">\n"
 "                एचआर टीम<br/>\n"
 "            </t>\n"
 "        </div>\n"
@@ -520,27 +519,27 @@ msgstr ""
 "object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
 "            <a t-att-href=\"object.job_id.website_url\" t-attf-"
 "style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; text-decoration: none; color: {"
-"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
-"16px; border-radius: 5px;\">नौकरी का विवरण</a>\n"
+"'#875A7B'}}; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
+"8px 16px; border-radius: 5px;\">नौकरी का विवरण</a>\n"
 "        </div>\n"
 "\n"
 "        <t t-if=\"object.user_id\">\n"
 "            आपसे जल्द ही ये संपर्क करेंगे:<br/>\n"
 "            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
 "strong><br/>\n"
-"            <span>ईमेल: <t t-out=\"object.user_id.email or ''\">"
-"admin@yourcompany.example.com</t></span><br/>\n"
-"            <span>फ़ोन: <t t-out=\"object.user_id.phone or ''\">+1 650-123-"
-"4567</t></span>\n"
+"            <span>ईमेल: <t t-out=\"object.user_id.email or "
+"''\">admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>फ़ोन: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t></span>\n"
 "            <br/><br/>\n"
 "        </t>\n"
 "        जल्द मिलते हैं,\n"
 "        <div style=\"font-size: 11px; color: grey;\">\n"
 "            -- <br/>\n"
 "            एचआर टीम\n"
-"            <t t-if=\"'website_url' in object.job_id and hasattr"
-"(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"            <t t-if=\"'website_url' in object.job_id and "
+"hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
 "                <a href=\"/jobs\" style=\"text-"
 "decoration:none;color:#717188;\">हमारी सभी नौकरियों</a> को देखें.<br/>\n"
 "            </t>\n"
@@ -585,8 +584,8 @@ msgstr ""
 "object.job_id.address_id.city)\"/>\n"
 "        </t>\n"
 "        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
-"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>"
-",\n"
+"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</"
+"t>,\n"
 "            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.state_id.name)\"/>\n"
 "        </t>\n"
@@ -597,8 +596,8 @@ msgstr ""
 "        </t>\n"
 "        <br/>\n"
 "        <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"            <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
-"Argentina</t><br/>\n"
+"            <t t-out=\"object.job_id.address_id.country_id.name or "
+"''\">Argentina</t><br/>\n"
 "            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.country_id.name)\"/>\n"
 "        </t>\n"
@@ -1196,8 +1195,7 @@ msgstr "ब्लैकलिस्ट"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_blacklisted
 #, fuzzy
 msgid "Blacklisted Phone is Phone"
-msgstr ""
-"'ब्लैकलिस्टेड फ़ोन' फ़ील्ड में दर्ज किया गया मान वास्तव में एक फ़ोन नंबर है"
+msgstr "'ब्लैकलिस्टेड फ़ोन' फ़ील्ड में दर्ज किया गया मान वास्तव में एक फ़ोन नंबर है"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1369,8 +1367,7 @@ msgstr "कॉन्ट्रैक्ट साइन किया गया"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, fuzzy
 msgid "Copy this email address, to paste it in your email composer, to apply."
-msgstr ""
-"आवेदन करने के लिए, इस ईमेल पते को कॉपी करें और अपने ईमेल कंपोजर में पेस्ट करें।"
+msgstr "आवेदन करने के लिए, इस ईमेल पते को कॉपी करें और अपने ईमेल कंपोजर में पेस्ट करें।"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1426,8 +1423,7 @@ msgstr "रिक्रूटमेंट ऐक्टिविटी प्ल�
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 #, fuzzy
 msgid "Create a new rule to process emails from specific job boards."
-msgstr ""
-"खास जॉब बोर्ड से आने वाले ईमेल को प्रोसेस करने के लिए एक नया नियम बनाएं।"
+msgstr "खास जॉब बोर्ड से आने वाले ईमेल को प्रोसेस करने के लिए एक नया नियम बनाएं।"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1513,8 +1509,7 @@ msgstr "डिफ़ॉल्ट वैल्यू"
 msgid ""
 "Define a regex: Extract the applicant's name from the email's subject or "
 "body."
-msgstr ""
-"रेजेक्स (Regex) तय करें: ईमेल के विषय या मुख्य भाग से आवेदक का नाम निकालें।"
+msgstr "रेजेक्स (Regex) तय करें: ईमेल के विषय या मुख्य भाग से आवेदक का नाम निकालें।"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1597,8 +1592,7 @@ msgstr "डिपार्टमेंट"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
 #, fuzzy
 msgid "Describe the talent pool and common traits among talent pool applicants"
-msgstr ""
-"टैलेंट पूल और टैलेंट पूल में आए हुए आवेदकों के आम विशेषताओं की जानकारी दें"
+msgstr "टैलेंट पूल और टैलेंट पूल में आए हुए आवेदकों के आम विशेषताओं की जानकारी दें"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__name
@@ -2835,8 +2829,7 @@ msgstr "गलतियों की संख्या"
 #, fuzzy
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr ""
-"भर्ती चरण के दौरान इस जॉब पोज़िशन के लिए हायर किए गए कर्मचारियों की संख्या।"
+msgstr "भर्ती चरण के दौरान इस जॉब पोज़िशन के लिए हायर किए गए कर्मचारियों की संख्या।"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
@@ -3498,8 +3491,7 @@ msgstr "अनुक्रम"
 msgid ""
 "Set this template to a recruitment stage to send it when applications reach "
 "that stage"
-msgstr ""
-"इस टेम्पलेट को भर्ती चरण पर सेट करें, ताकि आवेदन उस चरण तक पहुंचने पर यह भेजा जाए"
+msgstr "इस टेम्पलेट को भर्ती चरण पर सेट करें, ताकि आवेदन उस चरण तक पहुंचने पर यह भेजा जाए"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -3569,8 +3561,8 @@ msgstr "स्पैम"
 #, fuzzy
 msgid "Specific jobs that use this stage. Other jobs will not use this stage."
 msgstr ""
-"वे ख़ास नौकरियां जो इस चरण का उपयोग करती हैं. अन्य नौकरियां इस चरण का उपयोग नहीं करेंगी"
-"।"
+"वे ख़ास नौकरियां जो इस चरण का उपयोग करती हैं. अन्य नौकरियां इस चरण का उपयोग नहीं "
+"करेंगी।"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -3934,8 +3926,7 @@ msgstr "ईमेल भेजने की कोशिश करें"
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 #, fuzzy
 msgid "Try the Website app to publish job offers online."
-msgstr ""
-"नौकरी के ऑफ़र ऑनलाइन प्रकाशित करने के लिए वेबसाइट ऐप का इस्तेमाल करके देखें।"
+msgstr "नौकरी के ऑफ़र ऑनलाइन प्रकाशित करने के लिए वेबसाइट ऐप का इस्तेमाल करके देखें।"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -3975,8 +3966,7 @@ msgstr "यूटीएम"
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, fuzzy
 msgid "Unable to post message, please configure the sender's email address."
-msgstr ""
-"मैसेज नहीं भेजा जा सका, कृपया सेंडर (भेजने वाले) का ईमेल एड्रेस सेट करें।"
+msgstr "मैसेज नहीं भेजा जा सका, कृपया सेंडर (भेजने वाले) का ईमेल एड्रेस सेट करें।"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -4140,6 +4130,12 @@ msgstr ""
 "आप इन यूटीएम सोर्स को मिटा नहीं सकते, क्योंकि वे भर्ती में निम्नलिखित भर्ती स्रोतों से जुड़े "
 "हैं: \n"
 "%(recruitment_sources)s"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "You cannot duplicate the talent(s)."
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python

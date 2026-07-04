@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-01-17 13:18+0000\n"
+"PO-Revision-Date: 2026-07-04 23:00+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/survey/"
 "pl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -288,6 +288,43 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dzień dobry <t t-out=\"object.partner_id.name or 'participant'\">"
+"uczestniku/uczestniczko</t><br/><br/>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            Zostałeś/aś zaproszony/a do nowej certyfikacji.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Przeprowadzamy ankietę i będziemy wdzięczni za Twoją odpowiedź.\n"
+"        </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    Rozpocznij certyfikację\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    Rozpocznij ankietę\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Odpowiedz na naszą ankietę do <t t-out=\"format_date"
+"(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            Życzymy powodzenia!\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Z góry dziękujemy za wzięcie udziału.\n"
+"        </t>\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -2045,7 +2082,7 @@ msgstr "Preferencje żywieniowe"
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "For this question, you can only select one answer."
-msgstr ""
+msgstr "W przypadku tego pytania można wybrać tylko jedną odpowiedź."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
@@ -2095,7 +2132,7 @@ msgstr "Zbieranie informacji zwrotnych od pracowników i klientów"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__survey_session_speed_rating_time_limit
 msgid "General Time limit (seconds)"
-msgstr ""
+msgstr "Ogólny limit czasowy (w sekundach)"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2
@@ -2885,6 +2922,8 @@ msgstr "Szablon wiadomości"
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Make your presentations more fun by sharing questions live"
 msgstr ""
+"Spraw, by Twoje prezentacje były bardziej interesujące, dzięki pytaniom na "
+"żywo"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_mandatory
@@ -3638,7 +3677,7 @@ msgstr "Wybierz szablon..."
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Pick a sample or"
-msgstr ""
+msgstr "Wybierz przykład lub"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p1_q1
@@ -4427,7 +4466,7 @@ msgstr "Data i godzina rozpoczęcia"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Start from scratch"
-msgstr ""
+msgstr "Zacznij od nowa"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__state

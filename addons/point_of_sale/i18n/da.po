@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:35+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2026-06-12 20:02+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -44,8 +44,8 @@ msgstr ""
 "            * YY årstal\n"
 "            * LL login-nummer (proxy for enheden)\n"
 "            * SSS sessions-ID\n"
-"            * F er 1 eller 0 (1, hvis sekvensnummeret er genereret af kunden)"
-"\n"
+"            * F er 1 eller 0 (1, hvis sekvensnummeret er genereret af "
+"kunden)\n"
 "            * OOOO sekvensnummer.\n"
 "    "
 
@@ -1778,7 +1778,8 @@ msgstr "Slank afslappet T-shirt i ren bomuld. Fås i forskellige størrelser"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_t_shirt_product_template
 msgid "Casual t-shirt 100% cotton. Various colors and sizes available."
-msgstr "Afslappet T-shirt i ren bomuld. Fås i forskellige farver og størrelser."
+msgstr ""
+"Afslappet T-shirt i ren bomuld. Fås i forskellige farver og størrelser."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -3302,8 +3303,10 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+#: code:addons/point_of_sale/static/src/app/services/printer_service.js:0
 msgid "Error"
 msgstr "Fejl"
 
@@ -5168,6 +5171,12 @@ msgstr "Ikke kategoriseret"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Invoiced"
 msgstr "Ikke faktureret"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Not implemented"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -7901,6 +7910,12 @@ msgid "Session Report"
 msgstr "Sessionsrapport"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Session already closed"
+msgstr ""
+
+#. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
 msgstr "Session åben i over 7 dage"
@@ -9466,7 +9481,8 @@ msgstr "For at registrere nye ordrer bedes du starte en ny session."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr "For at returnere produkt(er) skal du åbne en session i kassesystemet %s"
+msgstr ""
+"For at returnere produkt(er) skal du åbne en session i kassesystemet %s"
 
 #. module: point_of_sale
 #. odoo-javascript
