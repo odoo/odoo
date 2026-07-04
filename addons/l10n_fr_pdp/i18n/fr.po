@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 18:03+0000\n"
+"POT-Creation-Date: 2026-07-03 18:18+0000\n"
 "PO-Revision-Date: 2026-06-05 20:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -37,6 +37,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 msgid "%(amount)s %(currency_code)s (including %(tax_percent)s%% VAT)"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move_send.py:0
+msgid "%s has requested electronic invoices reception via French E-Invoicing."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+msgid "%s will be used as SIREN for the KYC"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -396,6 +408,13 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move_send.py:0
+msgid ""
+"Consider registering to use the Approved Platform for French E-Invoicing"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model,name:l10n_fr_pdp.model_res_partner
 msgid "Contact"
 msgstr ""
@@ -408,6 +427,12 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__reason_code__ref_ct_absent
 msgid "Contract reference required to process the missing invoice"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-javascript
+#: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
+msgid "Create, send and receive e-invoices for free."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -535,9 +560,14 @@ msgid "E-Invoicing ready invoices"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-javascript
+#: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
+msgid "E-Invoicing will be mandatory starting September 1 2026"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.actions.act_window,name:l10n_fr_pdp.l10n_fr_pdp_reports_action_flows
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_form
-#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_move_form
 msgid "E-Reporting"
 msgstr ""
 
@@ -564,6 +594,24 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "E-reporting Errors:"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "E-reporting Flow:"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "E-reporting Status:"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
 #: code:addons/l10n_fr_pdp/models/pdp_flow.py:0
 msgid "E-reports %s sent"
 msgstr ""
@@ -576,6 +624,14 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_registration__edi_user_id
 msgid "EDI user"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-javascript
+#: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
+msgid ""
+"Electronic Invoicing allows for complete automation of sending and receiving "
+"e-invoices."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -749,6 +805,12 @@ msgid "Franchised VAT Regime (Bimonthly)"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-javascript
+#: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
+msgid "Free on Odoo"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #. odoo-python
 #: code:addons/l10n_fr_pdp/wizard/account_move_send_wizard.py:0
 msgid "French E-Invoicing"
@@ -768,6 +830,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 msgid "French e-invoicing response error: %s"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-javascript
+#: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
+msgid "Fully automated"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1182,6 +1250,12 @@ msgid "No valid transactions/payments to send."
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "None"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_partner__pdp_verification_display_state__not_verified
 msgid "Not verified yet"
 msgstr ""
@@ -1290,6 +1364,13 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model:ir.actions.server,name:l10n_fr_pdp.ir_cron_pdp_send_lifecycles_ir_actions_server
 msgid "PDP: Send lifecycles"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-javascript
+#: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
+msgid ""
+"PEPPOL is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1710,7 +1791,7 @@ msgid "Send PDP Flow Wizard"
 msgstr ""
 
 #. module: l10n_fr_pdp
-#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_view_move_form
+#: model:ir.actions.server,name:l10n_fr_pdp.l10n_fr_pdp_action_open_response_wizard
 msgid "Send Response"
 msgstr ""
 
@@ -1841,6 +1922,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_form
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_list
 msgid "Start date"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-javascript
+#: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
+msgid ""
+"Starting in September 2026 all French companies need to be able to receive "
+"electronic invoices"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1980,6 +2069,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-javascript
+#: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
+msgid "The e-invoicing network"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #. odoo-python
 #: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
 msgid ""
@@ -2016,6 +2111,14 @@ msgstr ""
 #: code:addons/l10n_fr_pdp/models/res_company.py:0
 msgid ""
 "The identifier %s is not valid. The expected format is: SIREN, SIREN_SIRET, "
+"SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model:ir.model.fields,help:l10n_fr_pdp.field_pdp_registration__pdp_identifier
+msgid ""
+"The identifier starts with the SIREN, the part after the SIREN is optional. "
+"The expected format of the identifier is: SIREN, SIREN_SIRET, "
 "SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"
 msgstr ""
 
@@ -2169,6 +2272,24 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-javascript
+#: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
+msgid "What is electronic invoicing and why is it great?"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move_send.py:0
+msgid "Why should I use E-Invoicing?"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move_send.py:0
+msgid "Why should you use it ?"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__peppol_move_state__pd
 msgid "With Payments"
 msgstr ""
@@ -2202,6 +2323,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
 msgid "You can now send and receive electronic invoices."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move_send.py:0
+msgid "You can send this invoice electronically via Approved Platform."
 msgstr ""
 
 #. module: l10n_fr_pdp
