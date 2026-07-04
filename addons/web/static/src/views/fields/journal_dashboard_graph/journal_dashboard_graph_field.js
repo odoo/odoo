@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { getColor, hexToRGBA, getCustomColor } from "@web/core/colors/colors";
@@ -24,14 +24,14 @@ export class JournalDashboardGraphField extends Component {
 
         onWillStart(async () => await loadBundle("web.chartjs_lib"));
 
-        useLayoutEffect(() => {
-            this.renderChart();
-            return () => {
-                if (this.chart) {
-                    this.chart.destroy();
-                }
-            };
-        });
+        // useLayoutEffect(() => {
+        //     this.renderChart();
+        //     return () => {
+        //         if (this.chart) {
+        //             this.chart.destroy();
+        //         }
+        //     };
+        // });
     }
 
     /**
