@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { onMounted, onWillDestroy, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
@@ -24,12 +24,12 @@ export class GoogleMapsOption extends BaseOptionComponent {
         this.state = proxy({
             formattedAddress: this.env.getEditingElement().dataset.pinAddress || "",
         });
-        useLayoutEffect(
-            () => {
-                this.env.getEditingElement().dataset.pinAddress = this.state.formattedAddress;
-            },
-            () => [this.state.formattedAddress]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.env.getEditingElement().dataset.pinAddress = this.state.formattedAddress;
+        //     },
+        //     () => [this.state.formattedAddress]
+        // );
         onMounted(async () => {
             this.initializeAutocomplete(this.inputRef.el);
         });
