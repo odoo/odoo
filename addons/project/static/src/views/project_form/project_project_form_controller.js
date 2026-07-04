@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { onWillStart, props, t } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { formControllerProps } from "@web/views/form/form_controller";
@@ -26,19 +25,19 @@ export class ProjectProjectFormController extends FormControllerWithHTMLExpander
             );
         });
 
-        if (this.props.focusTitle) {
-            useLayoutEffect(
-                (el) => {
-                    if (el) {
-                        const title = this.rootRef.el.querySelector("#name_0");
-                        if (title) {
-                            title.focus();
-                        }
-                    }
-                },
-                () => [this.rootRef.el]
-            );
-        }
+        // if (this.props.focusTitle) {
+        //     useLayoutEffect(
+        //         (el) => {
+        //             if (el) {
+        //                 const title = this.rootRef.el.querySelector("#name_0");
+        //                 if (title) {
+        //                     title.focus();
+        //                 }
+        //             }
+        //         },
+        //         () => [this.rootRef.el]
+        //     );
+        // }
     }
 
     getStaticActionMenuItems() {
