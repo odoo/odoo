@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { HistoryDialog } from "@html_editor/components/history_dialog/history_dialog";
@@ -33,17 +32,17 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
         this.notifications = useService("notification");
 
         if (this.props.focusTitle) {
-            useLayoutEffect(
-                () => {
-                    if (this.rootRef) {
-                        const title = this.rootRef.el.querySelector("#name_0");
-                        if (title) {
-                            title.focus();
-                        }
-                    }
-                },
-                () => []
-            );
+            // useLayoutEffect(
+            //     () => {
+            //         if (this.rootRef) {
+            //             const title = this.rootRef.el.querySelector("#name_0");
+            //             if (title) {
+            //                 title.focus();
+            //             }
+            //         }
+            //     },
+            //     () => []
+            // );
         }
     }
 
