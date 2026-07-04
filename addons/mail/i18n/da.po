@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2026-06-23 15:44+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-2/mail/"
@@ -270,7 +270,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "%(model_name)s.%(field_path)s does not seem to be a valid field path"
-msgstr "%(model_name)s.%(field_path)s ser ikke ud til at være en gyldig feltsti"
+msgstr ""
+"%(model_name)s.%(field_path)s ser ikke ud til at være en gyldig feltsti"
 
 #. module: mail
 #. odoo-javascript
@@ -691,8 +692,8 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Skriv en besked</b> til medlemmer af denne her kanal.</p>\n"
-"<p>Du kan underrette nogen med <i>'@'</i> eller linke en anden kanal med <i>"
-"'#'</i>. Start din besked med <i>'/'</i> for at få en liste over mulige "
+"<p>Du kan underrette nogen med <i>'@'</i> eller linke en anden kanal med "
+"<i>'#'</i>. Start din besked med <i>'/'</i> for at få en liste over mulige "
 "kommandoer.</p>"
 
 #. module: mail
@@ -1374,19 +1375,19 @@ msgid "Add Followers"
 msgstr "Tilføj følgere"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Add a Reaction"
 msgstr "Tilføj en reaktion"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
-msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
-msgstr ""
-"Tilføj en Tenor GIF API-nøgle for at aktivere understøttelse af GIF'er. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -1829,7 +1830,8 @@ msgstr "Arkiveret"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "Arkiveret, fordi %(user_name)s (#%(user_id)s) har slettet portalkontoen"
+msgstr ""
+"Arkiveret, fordi %(user_name)s (#%(user_id)s) har slettet portalkontoen"
 
 #. module: mail
 #. odoo-javascript
@@ -2383,8 +2385,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by %"
 "(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Afvist/catchall '%(matching_alias_name)s' bruges allerede af %(document_name)"
-"s. Vælg et andet alias, eller ændr det i det andet dokument."
+"Afvist/catchall '%(matching_alias_name)s' bruges allerede af %"
+"(document_name)s. Vælg et andet alias, eller ændr det i det andet dokument."
 
 #. module: mail
 #. odoo-python
@@ -2657,15 +2659,16 @@ msgstr "Standardsvar"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change authorized group of sub-channel: %(channels)s."
-msgstr "Den autoriserede gruppe for underkanalen kan ikke ændres: %(channels)s."
+msgstr ""
+"Den autoriserede gruppe for underkanalen kan ikke ændres: %(channels)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
 msgstr ""
-"Hverken den første besked eller den overordnede kanal kan ændres: %(channels)"
-"s."
+"Hverken den første besked eller den overordnede kanal kan ændres: %"
+"(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -3934,8 +3937,8 @@ msgid ""
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
 "Standard, når der ikke er match med filtre for den udgående server. Kan være "
-"en lokal del, f.eks. ‘notifikationer’, eller en fuld e-mailadresse, f.eks. ‘"
-"notifications@eksempel.com' for at tilsidesætte alle udgående e-mails."
+"en lokal del, f.eks. ‘notifikationer’, eller en fuld e-mailadresse, f.eks. "
+"‘notifications@eksempel.com' for at tilsidesætte alle udgående e-mails."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__use_default_to
@@ -6215,7 +6218,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_tenor_api
-msgid "If you want to use Tenor API to share GIFs in conversations."
+msgid "If you want to use Klipy API to share GIFs in conversations."
 msgstr ""
 
 #. module: mail
@@ -6226,6 +6229,14 @@ msgstr "Hvis du ønsker at bruge Twilio som TURN/STUN-serverudbyder"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_call_server
 msgid "If you want to use your own SFU or ICE servers for video calls."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
 msgstr ""
 
 #. module: mail
@@ -6906,6 +6917,11 @@ msgstr "Nøgle"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Kind Regards"
 msgstr "Med venlig hilsen"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11482,7 +11498,10 @@ msgstr "SFU-server-URL"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Share GIFs in your conversations using the Tenor API"
+msgid ""
+"Share GIFs in your conversations using the Klipy API. If you were using a "
+"Tenor GIF API key (service shutdown on June 30, 2026), please replace it "
+"here with a Klipy GIF API key"
 msgstr ""
 
 #. module: mail
@@ -12137,11 +12156,6 @@ msgid "Templates"
 msgstr "Skabeloner"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor API-nøgle"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Test"
@@ -12340,8 +12354,8 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Meddelelsen nedenfor kunne ikke accepteres af adressen %(alias_display_name)"
-"s.\n"
+"Meddelelsen nedenfor kunne ikke accepteres af adressen %"
+"(alias_display_name)s.\n"
 "                 Kun %(contact_description)s har tilladelse til at kontakte "
 "denne adresse.<br /><br />\n"
 "                 Sørg for, at du bruger den korrekte adresse, eller kontakt "
@@ -12755,8 +12769,8 @@ msgstr "Denne uge"
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
 msgstr ""
-"Disse værdier understøttes ikke som muligheder ved gengivelse: %(param_names)"
-"s"
+"Disse værdier understøttes ikke som muligheder ved gengivelse: %"
+"(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -13218,7 +13232,8 @@ msgstr "Kan ikke oprette forbindelse til SMTP-serveren"
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "Unable to post message, please configure the sender's email address."
-msgstr "Kan ikke sende beskeder. Konfigurér venligst afsenderens e-mailadresse."
+msgstr ""
+"Kan ikke sende beskeder. Konfigurér venligst afsenderens e-mailadresse."
 
 #. module: mail
 #. odoo-javascript
@@ -13521,6 +13536,11 @@ msgid "Use Google Translate API"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
+msgid "Use Klipy API"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Microphone"
@@ -13529,11 +13549,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_sfu_server
 msgid "Use SFU server"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
-msgid "Use Tenor API"
 msgstr ""
 
 #. module: mail
@@ -14596,7 +14611,8 @@ msgstr "Din/dit"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
-msgstr "Din kontos e-mail er blevet ændret fra %(old_email)s til %(new_email)s."
+msgstr ""
+"Din kontos e-mail er blevet ændret fra %(old_email)s til %(new_email)s."
 
 #. module: mail
 #. odoo-python
@@ -14854,8 +14870,8 @@ msgstr "f.eks. \"Velkomstmail\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"f.eks. \"Velkommen til MinVirksomhed\" eller \"Hyggeligt at møde dig, {{ "
-"object.name }}\""
+"f.eks. \"Velkommen til MinVirksomhed\" eller \"Hyggeligt at møde dig, "
+"{{ object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -15346,6 +15362,16 @@ msgstr "\"%s\""
 #, fuzzy
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "Tilføj en Tenor GIF API-nøgle for at aktivere understøttelse af GIF'er. "
+#~ "https://developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API-nøgle"
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"
