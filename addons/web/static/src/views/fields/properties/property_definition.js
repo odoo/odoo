@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
@@ -149,22 +149,22 @@ export class PropertyDefinition extends Component {
         // update the state and fetch needed information
         onWillUpdateProps((newProps) => this._syncStateWithProps(newProps.value));
 
-        useLayoutEffect((event) => {
-            // focus the property label, when we open the property definition
-            if (this.labelFocused) {
-                // focus it only once
-                return;
-            }
-            this.labelFocused = true;
-            const labelInput = this.propertyDefinitionRef.el.querySelectorAll("input")[0];
-            if (labelInput) {
-                if (this.props.isNewlyCreated) {
-                    labelInput.select();
-                } else {
-                    labelInput.focus();
-                }
-            }
-        });
+        // useLayoutEffect((event) => {
+        //     // focus the property label, when we open the property definition
+        //     if (this.labelFocused) {
+        //         // focus it only once
+        //         return;
+        //     }
+        //     this.labelFocused = true;
+        //     const labelInput = this.propertyDefinitionRef.el.querySelectorAll("input")[0];
+        //     if (labelInput) {
+        //         if (this.props.isNewlyCreated) {
+        //             labelInput.select();
+        //         } else {
+        //             labelInput.focus();
+        //         }
+        //     }
+        // });
 
         useHotkey(
             "control+enter",
