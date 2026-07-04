@@ -1,5 +1,5 @@
-import { onWillRender, useRef } from "@web/owl2/utils";
-import { Component, effect, props, proxy, t } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -144,32 +144,26 @@ export class DateTimeField extends Component {
         this.openPicker = dateTimePicker.open;
         this.isPickerOpen = dateTimePicker.isOpen;
 
-        this.startDate = useRef("start-date");
-        this.endDate = useRef("end-date");
+        this.startDate = signal.ref(HTMLElement);
+        this.endDate = signal.ref(HTMLElement);
 
-        // useLayoutEffect(
-        //     () => {
-        //         [this.startDate, this.endDate].forEach((ref, index) => {
-        //             if (ref.el?.getAttribute("data-field") === this.picker.activeInput) {
-        //                 ref.el.focus();
-        //                 // openPickerOnNextPatch is set in the template on pointerdown on the button
-        //                 if (this.openPickerOnNextPatch) {
-        //                     this.openPicker(index);
-        //                     this.openPickerOnNextPatch = false;
-        //                 }
-        //             }
-        //         });
-        //     },
-        //     () => [this.startDate.el?.tagName, this.endDate.el?.tagName, this.picker.activeInput]
-        // );
+        useEffect(() => {
+            [this.startDate, this.endDate].forEach((ref, index) => {
+                const el = ref();
+                if (el?.getAttribute("data-field") === this.picker.activeInput) {
+                    el.focus();
+                    // openPickerOnNextPatch is set in the template on pointerdown on the button
+                    if (this.openPickerOnNextPatch) {
+                        this.openPicker(index);
+                        this.openPickerOnNextPatch = false;
+                    }
+                }
+            });
+        });
 
-        // useLayoutEffect(
-        //     () =>
-        //         effect(() => {
-        //             this.state.value = this.getRecordValue();
-        //         }),
-        //     () => []
-        // );
+        useEffect(() => {
+            this.state.value = this.getRecordValue();
+        });
 
         onWillRender(() => this.triggerIsDirty());
 
