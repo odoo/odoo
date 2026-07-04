@@ -1,4 +1,4 @@
-import { render, useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { render, useComponent, useEnv, useSubEnv } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -735,30 +735,30 @@ export class X2ManyFieldDialog extends Component {
         const { autofocusFieldIds, disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
             // to simplify
-            useLayoutEffect(
-                (isInEdition) => {
-                    let elementToFocus;
-                    if (isInEdition) {
-                        for (const id of autofocusFieldIds) {
-                            elementToFocus = this.modalRef.el.querySelector(`#${id}`);
-                            if (elementToFocus) {
-                                break;
-                            }
-                        }
-                        elementToFocus =
-                            elementToFocus ||
-                            this.modalRef.el.querySelector(".o_field_widget input");
-                    } else {
-                        elementToFocus = this.modalRef.el.querySelector("button.btn-primary");
-                    }
-                    if (elementToFocus) {
-                        elementToFocus.focus();
-                    } else {
-                        this.modalRef.el.focus();
-                    }
-                },
-                () => [this.record.isInEdition]
-            );
+            // useLayoutEffect(
+            //     (isInEdition) => {
+            //         let elementToFocus;
+            //         if (isInEdition) {
+            //             for (const id of autofocusFieldIds) {
+            //                 elementToFocus = this.modalRef.el.querySelector(`#${id}`);
+            //                 if (elementToFocus) {
+            //                     break;
+            //                 }
+            //             }
+            //             elementToFocus =
+            //                 elementToFocus ||
+            //                 this.modalRef.el.querySelector(".o_field_widget input");
+            //         } else {
+            //             elementToFocus = this.modalRef.el.querySelector("button.btn-primary");
+            //         }
+            //         if (elementToFocus) {
+            //             elementToFocus.focus();
+            //         } else {
+            //             this.modalRef.el.focus();
+            //         }
+            //     },
+            //     () => [this.record.isInEdition]
+            // );
         }
         useFormViewInDialog();
     }
