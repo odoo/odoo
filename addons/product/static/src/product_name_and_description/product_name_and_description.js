@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
@@ -64,12 +64,12 @@ export class ProductNameAndDescriptionField extends Component {
             parse: (v) => this.parseLabel(v),
         });
 
-        useLayoutEffect(
-            () => {
-                this.columnIsProductAndLabel.value = this.props.record.columnIsProductAndLabel;
-            },
-            () => [this.props.record.columnIsProductAndLabel]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.columnIsProductAndLabel.value = this.props.record.columnIsProductAndLabel;
+        //     },
+        //     () => [this.props.record.columnIsProductAndLabel]
+        // );
 
         onPatched(() => {
             if (this.labelNode.el && this.switchToLabel) {
