@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useComponent } from "@web/owl2/utils";
 
 /**
  * Hook used to enrich html and provide automatic links to action.
@@ -11,17 +11,17 @@ import { useComponent, useLayoutEffect } from "@web/owl2/utils";
  */
 export function useEnrichWithActionLinks(ref, selector = null) {
     const comp = useComponent();
-    useLayoutEffect(
-        (element) => {
-            // If we get an iframe, we need to wait until everything is loaded
-            if (element.matches("iframe")) {
-                element.onload = () => enrich(comp, element, selector, true);
-            } else {
-                enrich(comp, element, selector);
-            }
-        },
-        () => [ref.el]
-    );
+    // useLayoutEffect(
+    //     (element) => {
+    //         // If we get an iframe, we need to wait until everything is loaded
+    //         if (element.matches("iframe")) {
+    //             element.onload = () => enrich(comp, element, selector, true);
+    //         } else {
+    //             enrich(comp, element, selector);
+    //         }
+    //     },
+    //     () => [ref.el]
+    // );
 }
 
 function enrich(component, targetElement, selector, isIFrame = false) {
