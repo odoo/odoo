@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -32,17 +32,17 @@ export class PdfViewerField extends Component {
                 this.state.objectUrl = "";
             }
         });
-        useLayoutEffect(
-            (el) => {
-                if (el) {
-                    hidePDFJSButtons(this.iframeViewerPdfRef.el, {
-                        hideDownload: true,
-                        hidePrint: true,
-                    });
-                }
-            },
-            () => [this.iframeViewerPdfRef.el]
-        );
+        // useLayoutEffect(
+        //     (el) => {
+        //         if (el) {
+        //             hidePDFJSButtons(this.iframeViewerPdfRef.el, {
+        //                 hideDownload: true,
+        //                 hidePrint: true,
+        //             });
+        //         }
+        //     },
+        //     () => [this.iframeViewerPdfRef.el]
+        // );
     }
 
     get urlFile() {
