@@ -38,7 +38,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import { Component, onWillUpdateProps, props, status, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, status, proxy, t, useEffect } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { deepEqual } from "@web/core/utils/objects";
@@ -734,31 +734,28 @@ export class X2ManyFieldDialog extends Component {
 
         const { autofocusFieldIds, disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
-            // to simplify
-            // useLayoutEffect(
-            //     (isInEdition) => {
-            //         let elementToFocus;
-            //         if (isInEdition) {
-            //             for (const id of autofocusFieldIds) {
-            //                 elementToFocus = this.modalRef.el.querySelector(`#${id}`);
-            //                 if (elementToFocus) {
-            //                     break;
-            //                 }
-            //             }
-            //             elementToFocus =
-            //                 elementToFocus ||
-            //                 this.modalRef.el.querySelector(".o_field_widget input");
-            //         } else {
-            //             elementToFocus = this.modalRef.el.querySelector("button.btn-primary");
-            //         }
-            //         if (elementToFocus) {
-            //             elementToFocus.focus();
-            //         } else {
-            //             this.modalRef.el.focus();
-            //         }
-            //     },
-            //     () => [this.record.isInEdition]
-            // );
+            useEffect(() => {
+                const isInEdition = this.record.isInEdition;
+                let elementToFocus;
+                if (isInEdition) {
+                    for (const id of autofocusFieldIds) {
+                        elementToFocus = this.modalRef.el.querySelector(`#${id}`);
+                        if (elementToFocus) {
+                            break;
+                        }
+                    }
+                    elementToFocus =
+                        elementToFocus ||
+                        this.modalRef.el.querySelector(".o_field_widget input");
+                } else {
+                    elementToFocus = this.modalRef.el.querySelector("button.btn-primary");
+                }
+                if (elementToFocus) {
+                    elementToFocus.focus();
+                } else {
+                    this.modalRef.el.focus();
+                }
+            });
         }
         useFormViewInDialog();
     }
