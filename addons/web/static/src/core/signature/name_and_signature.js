@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 /* global SignaturePad */
 
 import { loadJS } from "@web/core/assets";
@@ -10,7 +10,7 @@ import { useAutofocus } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, signal, t, untrack, useEffect } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
@@ -41,16 +41,14 @@ export class NameAndSignature extends Component {
         });
 
         this.signNameInputRef = useRef("signNameInput");
-        this.signInputLoad = useRef("signInputLoad");
+        this.signInputLoad = signal.ref(HTMLInputElement);
         useAutofocus({ refName: "signNameInput" });
-        useLayoutEffect(
-            (el) => {
-                if (el) {
-                    el.click();
-                }
-            },
-            () => [this.signInputLoad.el]
-        );
+        useEffect(() => {
+            const el = this.signInputLoad();
+            if (el) {
+                el.click();
+            }
+        });
 
         onWillStart(async () => {
             this.fonts = await rpc(`/web/sign/get_fonts/${this.props.defaultFont}`);
@@ -60,34 +58,35 @@ export class NameAndSignature extends Component {
             await loadJS("/web/static/lib/signature_pad/signature_pad.umd.js");
         });
 
-        this.signatureRef = useRef("signature");
-        useLayoutEffect(
-            (el) => {
-                if (el) {
-                    this.signaturePad = new SignaturePad(el, {
-                        penColor: this.props.fontColor,
-                        backgroundColor: "rgba(255,255,255,0)",
-                        minWidth: 2,
-                        maxWidth: 2,
-                    });
-                    this.signaturePad.addEventListener("endStroke", () => {
-                        this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
-                        this.props.onSignatureChange(this.state.signMode);
-                    });
-                    this.resetSignature();
-                    this.props.signature.getSignatureImage = () => this.signaturePad.toDataURL();
-                    this.props.signature.resetSignature = () => this.resetSignature();
-                    if (this.state.signMode === "auto") {
-                        this.drawCurrentName();
-                    }
-                    if (this.props.signature.signatureImage) {
-                        this.clear();
-                        this.fromDataURL(this.props.signature.signatureImage);
-                    }
+        this.signatureRef = signal.ref(HTMLCanvasElement);
+        useEffect(() => {
+            const el = this.signatureRef();
+            if (!el) {
+                return;
+            }
+            untrack(() => {
+                this.signaturePad = new SignaturePad(el, {
+                    penColor: this.props.fontColor,
+                    backgroundColor: "rgba(255,255,255,0)",
+                    minWidth: 2,
+                    maxWidth: 2,
+                });
+                this.signaturePad.addEventListener("endStroke", () => {
+                    this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+                    this.props.onSignatureChange(this.state.signMode);
+                });
+                this.resetSignature();
+                this.props.signature.getSignatureImage = () => this.signaturePad.toDataURL();
+                this.props.signature.resetSignature = () => this.resetSignature();
+                if (this.state.signMode === "auto") {
+                    this.drawCurrentName();
                 }
-            },
-            () => [this.signatureRef.el]
-        );
+                if (this.props.signature.signatureImage) {
+                    this.clear();
+                    this.fromDataURL(this.props.signature.signatureImage);
+                }
+            });
+        });
     }
 
     /**
@@ -100,7 +99,7 @@ export class NameAndSignature extends Component {
             this.clear();
             return;
         }
-        const canvas = this.signatureRef.el;
+        const canvas = this.signatureRef();
         if (!canvas) {
             return;
         }
@@ -187,7 +186,7 @@ export class NameAndSignature extends Component {
     }
 
     uploadFile() {
-        this.signInputLoad.el?.click();
+        this.signInputLoad()?.click();
     }
 
     /**
@@ -295,10 +294,10 @@ export class NameAndSignature extends Component {
 
     resizeSignature() {
         // recompute size based on the current width
-        const width = this.signatureRef.el.clientWidth;
+        const width = this.signatureRef().clientWidth;
         const height = parseInt(width / this.props.displaySignatureRatio);
 
-        Object.assign(this.signatureRef.el, { width, height });
+        Object.assign(this.signatureRef(), { width, height });
     }
 
     /**

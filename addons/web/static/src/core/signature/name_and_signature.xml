@@ -90,14 +90,14 @@
                         <div t-if="this.state.signMode === 'load'" class="o_web_sign_load_file col-auto">
                             <button type="button" id="loadFileXml" t-on-click="this.uploadFile"
                                 class="btn btn-link fa fa-upload" />
-                            <input t-custom-ref="signInputLoad" type="file" accept="image/png, image/jpeg" role="button" name="files[]" class="d-none" t-on-change="this.onChangeSignLoadInput"/>
+                            <input t-ref="this.signInputLoad" type="file" accept="image/png, image/jpeg" role="button" name="files[]" class="d-none" t-on-change="this.onChangeSignLoadInput"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="o_web_sign_signature_container position-relative">
                     <div class="o_signature_stroke position-absolute"/>
-                    <canvas t-if="this.state.showSignatureArea" t-custom-ref="signature" class="o_web_sign_signature z-1"/>
+                    <canvas t-if="this.state.showSignatureArea" t-ref="this.signatureRef" class="o_web_sign_signature z-1"/>
                 </div>
 
                 <div t-if="this.loadIsInvalid" t-attf-class="o_web_sign_load_invalid card-footer d-none">
