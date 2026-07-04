@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
@@ -70,13 +70,13 @@ export class MenuDialog extends Component {
     };
 
     autofocusRef = signal(null);
-    urlInputRef = signal(null);
 
     setup() {
         this.website = useService("website");
         this.title = this.props.isMegaMenu ? _t("Mega menu item") : _t("Menu item");
         useAutofocus({ ref: this.autofocusRef });
 
+        this.urlInputRef = signal.ref(HTMLInputElement);
         this.urlInputEdited = !!this.props.url;
 
         this.state = proxy({
@@ -94,31 +94,25 @@ export class MenuDialog extends Component {
         useEffect(() => debouncedUpdatePageNotFound(this.state.url));
 
         const app = useApp();
-        useLayoutEffect(
-            (input) => {
-                if (!input) {
-                    return;
-                }
-                const options = {
-                    body: this.website.pageDocument.body,
-                    position: "bottom-fit",
-                    classes: {
-                        "ui-autocomplete": "o_edit_menu_autocomplete",
-                    },
-                    urlChosen: () => {
-                        this.state.url = input.value;
-                        this.state.pageNotFound = false;
-                    },
-                };
-                const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
-                    app,
-                    input,
-                    options
-                );
-                return () => unmountAutocompleteWithPages();
-            },
-            () => [this.urlInputRef()]
-        );
+        useEffect(() => {
+            const input = this.urlInputRef();
+            if (!input) {
+                return;
+            }
+            const options = {
+                body: this.website.pageDocument.body,
+                position: "bottom-fit",
+                classes: {
+                    "ui-autocomplete": "o_edit_menu_autocomplete",
+                },
+                urlChosen: () => {
+                    this.state.url = input.value;
+                    this.state.pageNotFound = false;
+                },
+            };
+            const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(app, input, options);
+            return () => unmountAutocompleteWithPages();
+        });
     }
 
     getUrl() {
