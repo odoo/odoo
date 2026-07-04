@@ -1,11 +1,11 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onWillStart, props, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, onWillUnmount, props, t } from "@odoo/owl";
 
 export class GaugeField extends Component {
     static template = "web.GaugeField";
@@ -23,13 +23,17 @@ export class GaugeField extends Component {
 
         onWillStart(async () => await loadBundle("web.chartjs_lib"));
 
-        useLayoutEffect(() => {
+        onMounted(() => this.renderChart());
+        onPatched(() => {
+            if (this.chart) {
+                this.chart.destroy();
+            }
             this.renderChart();
-            return () => {
-                if (this.chart) {
-                    this.chart.destroy();
-                }
-            };
+        });
+        onWillUnmount(() => {
+            if (this.chart) {
+                this.chart.destroy();
+            }
         });
     }
 
