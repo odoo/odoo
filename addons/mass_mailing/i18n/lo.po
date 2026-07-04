@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
@@ -67,36 +67,6 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_count
 msgid "# Favorite Filters"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
-msgid "$12.00"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
-msgid "$13.00"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
-msgid "$13.50"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
-msgid "$14.50"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
-msgid "$15.00"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
-msgid "$16.00"
 msgstr ""
 
 #. module: mass_mailing
@@ -255,7 +225,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_contact
-msgid "8.00am - 12.00am"
+msgid "8.00am - 12.00pm"
 msgstr ""
 
 #. module: mass_mailing
@@ -516,8 +486,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
@@ -1374,6 +1344,12 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Alright, let's send this mailing"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/masonry_block_template_option.xml:0
 msgid "Alternate Image Text"
 msgstr ""
@@ -1652,8 +1628,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
 
 #. module: mass_mailing
@@ -1666,8 +1642,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
 
 #. module: mass_mailing
@@ -1906,6 +1882,21 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/ir_mail_server.py:0
+msgid ""
+"Cannot set an owner on '%(server)s': it is configured as the dedicated Email "
+"Marketing server."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/ir_mail_server.py:0
+msgid ""
+"Cannot set an owner on '%(server)s': it is used by mailing '%(mailing)s'."
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Categories"
 msgstr ""
@@ -1968,14 +1959,14 @@ msgid "Chief Technical Officer"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
-msgid "Choose a date"
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Choose a <b>template</b>."
 msgstr ""
 
 #. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Choose this <b>theme</b>."
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
+msgid "Choose a date"
 msgstr ""
 
 #. module: mass_mailing
@@ -2001,13 +1992,13 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this button to add this mailing to your templates."
+msgid "Click on the star to add this mailing to your templates."
 msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this paragraph to edit it."
+msgid "Click on this block to edit it."
 msgstr ""
 
 #. module: mass_mailing
@@ -3512,12 +3503,6 @@ msgid "Language"
 msgstr ""
 
 #. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/builder/options/alert_option.xml:0
-msgid "Large"
-msgstr ""
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
 msgid "Lasagna al Forno"
 msgstr ""
@@ -4080,7 +4065,6 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/builder/options/alert_option.xml:0
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__medium_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__medium_id
@@ -5296,6 +5280,11 @@ msgid "Select a list..."
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
+msgid "Select a record"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
 msgid "Select and delete blocks to remove features."
 msgstr ""
@@ -5530,7 +5519,6 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/builder/options/alert_option.xml:0
 #: code:addons/mass_mailing/static/src/builder/options/image_tool_option.xml:0
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Size"
@@ -5538,7 +5526,6 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/builder/options/alert_option.xml:0
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Small"
 msgstr ""
@@ -6481,8 +6468,20 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "X"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
 msgid "X Account"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Y"
 msgstr ""
 
 #. module: mass_mailing

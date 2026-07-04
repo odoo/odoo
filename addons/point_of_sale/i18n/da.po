@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2026-06-23 16:07+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -61,6 +61,14 @@ msgid "% Disc"
 msgstr "% Rabat"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid ""
+"%(amount)s is more than 25% of the order's total amount. Are you sure of "
+"this tip amount?"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
@@ -86,6 +94,12 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(old_pm)s changed to %(new_pm)s for %(old_amount)s"
 msgstr "%(old_pm)s ændret til %(new_pm)s for %(old_amount)s"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "%(original)s + %(tip)s tip = %(overall)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -332,8 +346,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Hej %(client_name)s.<br/>Her er din kvittering %(is_invoiced)sfor"
-"             %(pos_name)s på %(amount)s fra %(company_name)s. </p>"
+"<p>Hej %(client_name)s.<br/>Her er din kvittering %"
+"(is_invoiced)sfor             %(pos_name)s på %(amount)s fra %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -387,8 +402,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Stregkoder</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-"
-"toggle=\"værktøjstip\"/>"
+"title=\"This setting is common to all PoS.\" pos-data-toggle=\"værktøjstip\"/"
+">"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -1259,6 +1274,12 @@ msgid "Are you sure that the customer wants to  pay"
 msgstr "Er du sikker på, at kunden ønsker at betale"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "Are you sure?"
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_sourdough_loaf_product_template
 msgid "Artisan sourdough bread with a crisp crust and soft interior."
 msgstr "Hjemmelavet surdejsbrød med sprød skorpe og blød indre."
@@ -2028,7 +2049,8 @@ msgstr "Slank afslappet T-shirt i ren bomuld. Fås i forskellige størrelser"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_t_shirt_product_template
 msgid "Casual t-shirt 100% cotton. Various colors and sizes available."
-msgstr "Afslappet T-shirt i ren bomuld. Fås i forskellige farver og størrelser."
+msgstr ""
+"Afslappet T-shirt i ren bomuld. Fås i forskellige farver og størrelser."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -2823,7 +2845,8 @@ msgstr "Opret nyt produkt"
 msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
-msgstr "Opret én faktura for alle ordrer med samme kunde og faktureringsadresse"
+msgstr ""
+"Opret én faktura for alle ordrer med samme kunde og faktureringsadresse"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -3462,6 +3485,7 @@ msgstr "Rabatter"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__display_name
@@ -4317,6 +4341,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__id
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__id
@@ -4658,7 +4683,8 @@ msgstr "Fakturastatus"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-msgstr "Fakturabetaling for %(order)s (%(account_move)s) med %(payment_method)s"
+msgstr ""
+"Fakturabetaling for %(order)s (%(account_move)s) med %(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -5893,6 +5919,12 @@ msgid "Not available"
 msgstr "Ikke tilgængelig"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Not implemented"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
 msgid "Not required"
 msgstr "Ikke påkrævet"
@@ -6016,6 +6048,7 @@ msgstr "Offline ordre"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oh snap !"
@@ -6958,8 +6991,8 @@ msgstr ""
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
 msgstr ""
-"Indtast venligst dine faktureringsoplysninger <small class=\"text-muted\">"
-"eller</small>"
+"Indtast venligst dine faktureringsoplysninger <small class=\"text-"
+"muted\">eller</small>"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8235,6 +8268,11 @@ msgid "Remaining"
 msgstr "Resterende"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_product_removal
+msgid "Removal Strategy"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/buttons/quantity_buttons/quantity_buttons.xml:0
 msgid "Remove one"
@@ -8836,6 +8874,12 @@ msgstr "Sessionsrapport"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__statistics_for_current_session
 msgid "Session Statistics"
 msgstr "Sessionsstatistikker"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Session already closed"
+msgstr ""
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -10572,7 +10616,8 @@ msgstr "For at registrere nye ordrer bedes du starte en ny session."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr "For at returnere produkt(er) skal du åbne en session i kassesystemet %s"
+msgstr ""
+"For at returnere produkt(er) skal du åbne en session i kassesystemet %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11836,10 +11881,15 @@ msgstr "notat"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "open orders for the next few days."
 msgstr "åbne ordrer for de næste par dage."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
+msgid "open orders planned for later."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form

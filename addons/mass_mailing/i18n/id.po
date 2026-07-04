@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:35+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2026-06-23 09:30+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -477,8 +477,8 @@ msgid ""
 "<font style=\"color:white;\"><span class=\"h3-fs\">Another color block</"
 "span></font>"
 msgstr ""
-"<font style=\"color:white;\"><span class=\"h3-fs\">Blok warna lainnya</span>"
-"</font>"
+"<font style=\"color:white;\"><span class=\"h3-fs\">Blok warna lainnya</"
+"span></font>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_color_blocks_2
@@ -645,7 +645,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
 msgid ""
 "<span class=\"fa fa-check text-success\" role=\"img\"/>  Account management"
-msgstr "<span class=\"fa fa-check text-success\" role=\"img\"/>  Manajemen akun"
+msgstr ""
+"<span class=\"fa fa-check text-success\" role=\"img\"/>  Manajemen akun"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -659,7 +660,8 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
 msgid "<span class=\"fa fa-check text-success\" role=\"img\"/>  Email support"
-msgstr "<span class=\"fa fa-check text-success\" role=\"img\"/>  Dukungan email"
+msgstr ""
+"<span class=\"fa fa-check text-success\" role=\"img\"/>  Dukungan email"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -698,8 +700,8 @@ msgid ""
 "<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/>  Huge "
 "holiday sale savings. Don't miss out."
 msgstr ""
-"<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/>  "
-"Diskon besar-besaran selama liburan. Jangan sampai ketinggalan."
+"<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/"
+">  Diskon besar-besaran selama liburan. Jangan sampai ketinggalan."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_special_offer_cta
@@ -707,8 +709,9 @@ msgid ""
 "<span class=\"fa fa-fw fa-tag\" contenteditable=\"false\"/>  <strong>Special "
 "Offers</strong>. Complimentary care packs included with every sofa."
 msgstr ""
-"<span class=\"fa fa-fw fa-tag\" contenteditable=\"false\"/>  <strong>"
-"Penawaran Khusus</strong>. Setiap sofa dilengkapi paket perawatan gratis."
+"<span class=\"fa fa-fw fa-tag\" contenteditable=\"false\"/"
+">  <strong>Penawaran Khusus</strong>. Setiap sofa dilengkapi paket perawatan "
+"gratis."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -918,8 +921,8 @@ msgid ""
 "<span style=\"font-size: 62px;\"><strong><font class=\"text-white\">Your "
 "journey starts here</font></strong></span>"
 msgstr ""
-"<span style=\"font-size: 62px;\"><strong><font class=\"text-white\">"
-"Perjalanan Anda dimulai dari sini</font></strong></span>"
+"<span style=\"font-size: 62px;\"><strong><font class=\"text-"
+"white\">Perjalanan Anda dimulai dari sini</font></strong></span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_coupon_code
@@ -1065,8 +1068,8 @@ msgid ""
 "<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
 "class=\"text-600\">CEO of MyCompany</font></span>"
 msgstr ""
-"<strong>John DOE</strong><br/><span class=\"h6-fs\"><font class=\"text-600\">"
-"CEO MyCompany</font></span>"
+"<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
+"class=\"text-600\">CEO MyCompany</font></span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_schedule
@@ -1088,8 +1091,8 @@ msgid ""
 "product, inspiring a deeper connection beyond simple features."
 msgstr ""
 "<strong>Ganti blok ini dengan kisah otentik dan unik tentang produk Anda.</"
-"strong> Fokus pada karakteristik yang menjadi ciri khas produk ini. <strong>"
-"Buat deskripsi yang singkat dan spesifik agar brand Anda tertap "
+"strong> Fokus pada karakteristik yang menjadi ciri khas produk ini. "
+"<strong>Buat deskripsi yang singkat dan spesifik agar brand Anda tertap "
 "tersampaikan</strong> melalui pilihan karya yang unik. Deskripsi ini akan "
 "menyampaikan <em>jiwa</em> produk yang akan memancing hubungan yang lebih "
 "dalam melampaui fitur-fitur sederhana."
@@ -2074,6 +2077,21 @@ msgstr "Dibatalkan"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Cancelled"
 msgstr "Dibatalkan"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/ir_mail_server.py:0
+msgid ""
+"Cannot set an owner on '%(server)s': it is configured as the dedicated Email "
+"Marketing server."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/ir_mail_server.py:0
+msgid ""
+"Cannot set an owner on '%(server)s': it is used by mailing '%(mailing)s'."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets

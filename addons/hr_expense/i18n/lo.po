@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
@@ -17,26 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "$100.00"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "$120.00"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "$500.00"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "$600.00"
-msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -97,11 +77,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "2023-08-11"
 msgstr ""
 
 #. module: hr_expense
@@ -357,6 +332,11 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
@@ -568,6 +548,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__display_name
@@ -812,6 +793,7 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
+#: code:addons/hr_expense/models/account_payment.py:0
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -979,6 +961,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__id
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__id
@@ -1923,6 +1906,14 @@ msgid "The account %(name)s (%(code)s) is archived. Activate it to continue"
 msgstr ""
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
+msgid ""
+"The attachment (%(attachment_name)s) has not been added to the report due to "
+"the following error: '%(error)s'"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid "The company's default journal used when an employee expense is created."
@@ -1977,6 +1968,15 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid ""
+"The vendor is required for expenses using SEPA Credit Transfer as the "
+"payment method.\n"
+"Please set a vendor on the following expenses: %s"
 msgstr ""
 
 #. module: hr_expense
@@ -2205,6 +2205,25 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You can't add an attachment to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid "You can't add attachments to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid ""
+"You can't delete attachments from an expense once it has been submitted."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
@@ -2284,6 +2303,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You don't have the access rights to modify this expense."
 msgstr ""
 
 #. module: hr_expense

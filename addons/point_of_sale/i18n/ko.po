@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2026-06-06 13:34+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -59,6 +59,14 @@ msgid "% Disc"
 msgstr "% 할인"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid ""
+"%(amount)s is more than 25% of the order's total amount. Are you sure of "
+"this tip amount?"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
@@ -85,6 +93,12 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(old_pm)s changed to %(new_pm)s for %(old_amount)s"
 msgstr "%(old_pm)s의 금액이 %(new_pm)s에서 %(old_amount)s으로 변경되었습니다."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "%(original)s + %(tip)s tip = %(overall)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -1270,6 +1284,12 @@ msgstr "보관됨"
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Are you sure that the customer wants to  pay"
 msgstr "고객이 지불하기를 원하십니까"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "Are you sure?"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_sourdough_loaf_product_template
@@ -3463,6 +3483,7 @@ msgstr "할인"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__display_name
@@ -4313,6 +4334,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__id
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__id
@@ -5873,6 +5895,12 @@ msgid "Not available"
 msgstr "사용할 수 없습니다"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Not implemented"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
 msgid "Not required"
 msgstr "필요 없음"
@@ -5995,6 +6023,7 @@ msgstr "오프라인 주문"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oh snap !"
@@ -8204,6 +8233,11 @@ msgid "Remaining"
 msgstr "잔여"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_product_removal
+msgid "Removal Strategy"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/buttons/quantity_buttons/quantity_buttons.xml:0
 msgid "Remove one"
@@ -8803,6 +8837,12 @@ msgstr "세션 보고서"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__statistics_for_current_session
 msgid "Session Statistics"
 msgstr "세션 통계"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Session already closed"
+msgstr ""
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -11719,10 +11759,15 @@ msgstr "노트"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "open orders for the next few days."
 msgstr "다음 며칠 동안의 미결 주문."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
+msgid "open orders planned for later."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form

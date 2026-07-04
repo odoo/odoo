@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2026-06-13 18:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -29,8 +29,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
-"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_slides
@@ -2695,6 +2695,7 @@ msgstr "Zobraziť"
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__display_name
 #: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__display_name
 #: model:ir.model.fields,field_description:website_slides.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:website_slides.field_mail_message__display_name
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:website_slides.field_res_groups__display_name
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__display_name
@@ -3419,6 +3420,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__id
 #: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__id
 #: model:ir.model.fields,field_description:website_slides.field_mail_activity__id
+#: model:ir.model.fields,field_description:website_slides.field_mail_message__id
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__id
 #: model:ir.model.fields,field_description:website_slides.field_res_groups__id
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__id
@@ -4122,6 +4124,11 @@ msgid "Merge Partner Wizard"
 msgstr "Pomocník zlučovania partnerov"
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
 msgid "Message Delivery error"
@@ -4542,8 +4549,8 @@ msgid ""
 msgstr ""
 "Voliteľný jazyk prekladu (kód ISO), ktorý sa vyberie pri odosielaní e-mailu. "
 "Ak nie je nastavený, použije sa jazyk hlavného partnera. Zvyčajne by to mal "
-"byť zástupný výraz, ktorý poskytuje príslušný jazyk, napr. {{ "
-"object.partner_id.lang }}."
+"byť zástupný výraz, ktorý poskytuje príslušný jazyk, napr. "
+"{{ object.partner_id.lang }}."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form

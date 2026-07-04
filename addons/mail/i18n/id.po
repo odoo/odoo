@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
 "PO-Revision-Date: 2026-06-23 09:29+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -1389,19 +1389,19 @@ msgid "Add Followers"
 msgstr "Tambah Pengikut"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Add a Reaction"
 msgstr "Tambahkan Reaksi"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
-msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
-msgstr ""
-"Tambahkan Tenor GIF API key untuk mengaktifkan bantuan GIF. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -6239,7 +6239,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_tenor_api
-msgid "If you want to use Tenor API to share GIFs in conversations."
+msgid "If you want to use Klipy API to share GIFs in conversations."
 msgstr ""
 
 #. module: mail
@@ -6250,6 +6250,14 @@ msgstr "Bila Anda ingin menggunakan twilio sebagai penyedia server TURN/STUN"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_call_server
 msgid "If you want to use your own SFU or ICE servers for video calls."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
 msgstr ""
 
 #. module: mail
@@ -6935,6 +6943,11 @@ msgstr "Kunci"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Kind Regards"
 msgstr "Salam Hangat"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11530,7 +11543,10 @@ msgstr "Sfu Server Url"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Share GIFs in your conversations using the Tenor API"
+msgid ""
+"Share GIFs in your conversations using the Klipy API. If you were using a "
+"Tenor GIF API key (service shutdown on June 30, 2026), please replace it "
+"here with a Klipy GIF API key"
 msgstr ""
 
 #. module: mail
@@ -12187,11 +12203,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
 msgstr "Contoh"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor API key"
 
 #. module: mail
 #. odoo-javascript
@@ -13580,6 +13591,11 @@ msgid "Use Google Translate API"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
+msgid "Use Klipy API"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Microphone"
@@ -13589,11 +13605,6 @@ msgstr "Gunakan Mikrofon"
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_sfu_server
 msgid "Use SFU server"
 msgstr "Gunakan Server SFU"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
-msgid "Use Tenor API"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -15425,6 +15436,16 @@ msgstr ""
 #, fuzzy
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "Tambahkan Tenor GIF API key untuk mengaktifkan bantuan GIF. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API key"
 
 #~ msgid ""
 #~ "Showing %(result_count)s results out of %(total_count)s. Narrow your "
