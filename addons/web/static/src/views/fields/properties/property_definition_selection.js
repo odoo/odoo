@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { uuid } from "@web/core/utils/strings";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class PropertyDefinitionSelection extends Component {
@@ -29,18 +29,8 @@ export class PropertyDefinitionSelection extends Component {
         this.propertyDefinitionSelectionRef = useRef("propertyDefinitionSelection");
         this.addButtonRef = useRef("addButton");
 
-        useLayoutEffect(() => {
-            // automatically give the focus to the new option if it is empty
-            if (!this.state.newOption) {
-                return;
-            }
-            const inputs = this.propertyDefinitionSelectionRef.el.querySelectorAll(
-                ".o_field_property_selection_option input"
-            );
-            if (inputs && inputs.length && !inputs[this.state.newOption.index].value) {
-                inputs[this.state.newOption.index].focus();
-            }
-        });
+        onMounted(() => this._focusNewOption());
+        onPatched(() => this._focusNewOption());
 
         useSortable({
             enable: () => this.props.canChangeDefinition && !this.props.readonly,
@@ -54,6 +44,21 @@ export class PropertyDefinitionSelection extends Component {
                 await this.onOptionMoveTo(movedOption, destinationOption);
             },
         });
+    }
+
+    /**
+     * Automatically give the focus to the new option if it is empty.
+     */
+    _focusNewOption() {
+        if (!this.state.newOption) {
+            return;
+        }
+        const inputs = this.propertyDefinitionSelectionRef.el.querySelectorAll(
+            ".o_field_property_selection_option input"
+        );
+        if (inputs && inputs.length && !inputs[this.state.newOption.index].value) {
+            inputs[this.state.newOption.index].focus();
+        }
     }
 
     /* --------------------------------------------------------
