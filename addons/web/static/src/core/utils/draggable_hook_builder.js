@@ -1058,56 +1058,57 @@ export function makeDraggableHook(hookParams) {
             // Effect depending on the params to update them.
             setupHooks.setup(
                 (...deps) => {
-                    const params = Object.fromEntries(deps);
-                    const actualParams = { ...defaultParams, ...omit(params, "edgeScrolling") };
-                    if (params.edgeScrolling) {
-                        actualParams.edgeScrolling = {
-                            ...actualParams.edgeScrolling,
-                            ...params.edgeScrolling,
-                        };
-                    }
+                    // commented out for useLayoutEffect migration
+                    // const params = Object.fromEntries(deps);
+                    // const actualParams = { ...defaultParams, ...omit(params, "edgeScrolling") };
+                    // if (params.edgeScrolling) {
+                    //     actualParams.edgeScrolling = {
+                    //         ...actualParams.edgeScrolling,
+                    //         ...params.edgeScrolling,
+                    //     };
+                    // }
 
-                    if (!ctx.ref.el) {
-                        return;
-                    }
+                    // if (!ctx.ref.el) {
+                    //     return;
+                    // }
 
-                    // Enable getter
-                    ctx.enable = actualParams.enable;
+                    // // Enable getter
+                    // ctx.enable = actualParams.enable;
 
-                    // Dragging constraint
-                    if (actualParams.preventDrag) {
-                        ctx.preventDrag = actualParams.preventDrag;
-                    }
+                    // // Dragging constraint
+                    // if (actualParams.preventDrag) {
+                    //     ctx.preventDrag = actualParams.preventDrag;
+                    // }
 
-                    // Selectors
-                    ctx.elementSelector = actualParams.elements;
-                    if (!ctx.elementSelector) {
-                        throw makeError(
-                            `no value found by "elements" selector: ${ctx.elementSelector}`
-                        );
-                    }
-                    const allSelectors = [ctx.elementSelector];
-                    ctx.cursor = actualParams.cursor || null;
-                    if (actualParams.handle) {
-                        allSelectors.push(actualParams.handle);
-                    }
-                    if (actualParams.ignore) {
-                        ctx.ignoreSelector = actualParams.ignore;
-                    }
-                    ctx.fullSelector = allSelectors.join(" ");
+                    // // Selectors
+                    // ctx.elementSelector = actualParams.elements;
+                    // if (!ctx.elementSelector) {
+                    //     throw makeError(
+                    //         `no value found by "elements" selector: ${ctx.elementSelector}`
+                    //     );
+                    // }
+                    // const allSelectors = [ctx.elementSelector];
+                    // ctx.cursor = actualParams.cursor || null;
+                    // if (actualParams.handle) {
+                    //     allSelectors.push(actualParams.handle);
+                    // }
+                    // if (actualParams.ignore) {
+                    //     ctx.ignoreSelector = actualParams.ignore;
+                    // }
+                    // ctx.fullSelector = allSelectors.join(" ");
 
-                    // Edge scrolling
-                    Object.assign(ctx.edgeScrolling, actualParams.edgeScrolling);
+                    // // Edge scrolling
+                    // Object.assign(ctx.edgeScrolling, actualParams.edgeScrolling);
 
-                    // Delay & tolerance
-                    ctx.delay = actualParams.delay;
-                    ctx.touchDelay = actualParams.delay || actualParams.touchDelay;
-                    ctx.tolerance = actualParams.tolerance;
+                    // // Delay & tolerance
+                    // ctx.delay = actualParams.delay;
+                    // ctx.touchDelay = actualParams.delay || actualParams.touchDelay;
+                    // ctx.tolerance = actualParams.tolerance;
 
-                    callBuildHandler("onComputeParams", { params: actualParams });
+                    // callBuildHandler("onComputeParams", { params: actualParams });
 
-                    // Calls effect cleanup functions when preparing to re-render.
-                    return effectCleanup.cleanup;
+                    // // Calls effect cleanup functions when preparing to re-render.
+                    // return effectCleanup.cleanup;
                 },
                 () => computeParams(params)
             );
@@ -1149,22 +1150,24 @@ export function makeDraggableHook(hookParams) {
             // Effect depending on the `ref.el` to add triggering pointer events listener.
             setupHooks.setup(
                 (el) => {
-                    if (el) {
-                        const { add, cleanup } = makeCleanupManager();
-                        const { addListener } = makeDOMHelpers({ add });
-                        initEl(el, addListener);
-                        return cleanup;
-                    }
+                    // commented out for useLayoutEffect migration
+                    // if (el) {
+                    //     const { add, cleanup } = makeCleanupManager();
+                    //     const { addListener } = makeDOMHelpers({ add });
+                    //     initEl(el, addListener);
+                    //     return cleanup;
+                    // }
                 },
                 () => [ctx.ref.el]
             );
 
             setupHooks.setup(
                 () => {
-                    const { add, cleanup } = makeCleanupManager();
-                    const { addListener } = makeDOMHelpers({ add });
-                    initWindow(window, addListener);
-                    return cleanup;
+                    // commented out for useLayoutEffect migration
+                    // const { add, cleanup } = makeCleanupManager();
+                    // const { addListener } = makeDOMHelpers({ add });
+                    // initWindow(window, addListener);
+                    // return cleanup;
                 },
                 () => []
             );
@@ -1172,22 +1175,21 @@ export function makeDraggableHook(hookParams) {
             if (params.iframeWindow || params.iframeSelector) {
                 setupHooks.setup(
                     (...iframes) => {
-                        const { add, cleanup } = makeCleanupManager();
-                        const { addListener } = makeDOMHelpers({ add });
-                        for (const iframe of iframes) {
-                            // Fun fact: the iframe has a contentWindow and a contentDocument from the moment the iframe is in the dom.
-                            // However, when the iframe is loaded, the contentDocument changes.
-                            const { contentWindow, contentDocument } = iframe;
-                            const body = contentDocument.body;
-                            initEl(body, addListener);
-                            initWindow(contentWindow, addListener);
-                            addListener(iframe, "load", () => {
-                                if (iframe.contentDocument.body !== body) {
-                                    initEl(iframe.contentDocument.body, addListener);
-                                }
-                            });
-                        }
-                        return cleanup;
+                        // commented out for useLayoutEffect migration
+                        // const { add, cleanup } = makeCleanupManager();
+                        // const { addListener } = makeDOMHelpers({ add });
+                        // for (const iframe of iframes) {
+                        //     const { contentWindow, contentDocument } = iframe;
+                        //     const body = contentDocument.body;
+                        //     initEl(body, addListener);
+                        //     initWindow(contentWindow, addListener);
+                        //     addListener(iframe, "load", () => {
+                        //         if (iframe.contentDocument.body !== body) {
+                        //             initEl(iframe.contentDocument.body, addListener);
+                        //         }
+                        //     });
+                        // }
+                        // return cleanup;
                     },
                     () => [...getIframes(params.ref.el)]
                 );
