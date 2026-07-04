@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2026-06-28 00:17+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -351,8 +351,8 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
-"<div><b>Probajte da da pošaljete email</b> kandidatu/kandidatkinji.</div>"
-"<div><i>Savet: Svi email-ovi poslati ili primljeni se čuvaju ovde kao "
+"<div><b>Probajte da da pošaljete email</b> kandidatu/kandidatkinji.</"
+"div><div><i>Savet: Svi email-ovi poslati ili primljeni se čuvaju ovde kao "
 "istorija</i>"
 
 #. module: hr_recruitment
@@ -2526,8 +2526,8 @@ msgid ""
 msgstr ""
 "Opcioni jezik prevoda (ISO kod) za odabir prilikom slanja e-pošte. Ako nije "
 "podešeno, koristiće se engleska verzija. Ovo bi obično trebalo da bude izraz "
-"placeholder-a koji obezbeđuje odgovarajući jezik, npr. {{ "
-"object.partner_id.lang }}."
+"placeholder-a koji obezbeđuje odgovarajući jezik, npr. "
+"{{ object.partner_id.lang }}."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2812,7 +2812,8 @@ msgstr "Odbijeno"
 msgid ""
 "Refused automatically because this application has been identified as a "
 "duplicate of %(link)s"
-msgstr "Odbijeno automatski jer je prijava identifikovana kao duplikat %(link)s"
+msgstr ""
+"Odbijeno automatski jer je prijava identifikovana kao duplikat %(link)s"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
@@ -3600,6 +3601,12 @@ msgstr ""
 "Ne možete da izbrišete ove UTM izvore jer su povezani sa sledećim "
 "regruterskim izvorima u aplikaciji Regrutacija:\n"
 "%(recruitment_sources)s"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "You cannot duplicate the talent(s)."
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python

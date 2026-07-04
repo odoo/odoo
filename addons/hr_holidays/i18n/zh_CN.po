@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2026-06-28 01:30+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -166,6 +166,14 @@ msgstr "%(name)s (剩余%(time)g / 总计%(maximum)g 天)"
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g hours)"
 msgstr "%(name)s (剩余%(time)g ，总计 %(maximum)g 小时)"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3608,8 +3616,8 @@ msgstr ""
 "\n"
 "                “立即”，在当前工资期的确切日期将员工切换至新的应计等级。\n"
 "\n"
-"               “在此应计期限之后”，保持员工的应计等级不变，直至当前工资期结束"
-"。\n"
+"               “在此应计期限之后”，保持员工的应计等级不变，直至当前工资期结"
+"束。\n"
 "                完成后，新等级将在下一工资期开始后生效。"
 
 #. module: hr_holidays
@@ -3904,12 +3912,6 @@ msgstr "休假时间上没有员工设置。请确保您登录在正确的公司
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "无有效分配以满足该要求。"
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "This allocation have already ran once, any modification won't be effective "
@@ -3942,7 +3944,8 @@ msgstr "这个区域由验证分配的用户自动填写"
 msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
-msgstr "该区域由用户自动填写，并通过第二级验证分配（如果休假类型需要第二级验证）。"
+msgstr ""
+"该区域由用户自动填写，并通过第二级验证分配（如果休假类型需要第二级验证）。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
@@ -5103,6 +5106,9 @@ msgstr "有效期至"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "完成送出"
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "无有效分配以满足该要求。"
 
 #~ msgid "00:00"
 #~ msgstr "00:00"

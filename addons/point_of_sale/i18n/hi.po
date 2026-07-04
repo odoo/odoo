@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
+"POT-Creation-Date: 2026-07-03 17:37+0000\n"
 "PO-Revision-Date: 2026-06-27 23:57+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -278,8 +278,8 @@ msgstr ""
 "                    <br/>\n"
 "                    <div> <t t-out=\"store_name\">Store name</t>से खरीदारी "
 "करने के लिए धन्यवाद!</div>\n"
-"                    <div> <span><t t-out=\"format_datetime"
-"(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"                    <div> <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
 "MMMM&quot;,                          lang_code=lg) or ''\">date</t> <t t-"
 "out=\"format_time(time=object.date_order, tz=tz, "
 "time_format='short',                          lang_code=lg)\">time</t> पर की "
@@ -861,8 +861,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_preset__is_return
 msgid ""
 "All quantity in the cart will be in negative. Ideal for return managment."
-msgstr ""
-"कार्ट में सभी मात्राएं निगेटिव होंगी. रिटर्न मैनेजमेंट के लिए सबसे अच्छा।"
+msgstr "कार्ट में सभी मात्राएं निगेटिव होंगी. रिटर्न मैनेजमेंट के लिए सबसे अच्छा।"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -1838,8 +1837,7 @@ msgstr "कैज़ुअल डेनिम शॉर्ट्स, रोज�
 msgid ""
 "Casual slim t-shirt 100% cotton with white embroidery. Various sizes "
 "available"
-msgstr ""
-"कैज़ुअल स्लिम टी-शर्ट 100% cकॉटन, सफेद कढ़ाई के साथ. अलग-अलग साइज़ उपलब्ध हैं"
+msgstr "कैज़ुअल स्लिम टी-शर्ट 100% cकॉटन, सफेद कढ़ाई के साथ. अलग-अलग साइज़ उपलब्ध हैं"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.t_shirt_slim_product_template
@@ -3436,8 +3434,10 @@ msgstr "सुनिश्चित करें कि आप दूसरा �
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+#: code:addons/point_of_sale/static/src/app/services/printer_service.js:0
 msgid "Error"
 msgstr "गड़बड़ी"
 
@@ -5376,6 +5376,12 @@ msgstr "कैटगरी में नहीं बांटा गया"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Invoiced"
 msgstr "इनवॉइस नहीं किया गया"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Not implemented"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -8153,6 +8159,12 @@ msgid "Session Report"
 msgstr "सेशन रिपोर्ट"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Session already closed"
+msgstr ""
+
+#. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
 msgstr "सेशन 7 दिनों से अधिक समय तक खुला रहता है"
@@ -9236,8 +9248,7 @@ msgstr ""
 msgid ""
 "The session has been opened for an unusually long period. Please consider "
 "closing."
-msgstr ""
-"सेशन असामान्य रूप से लंबी अवधि के लिए खुला हुआ है. कृपया बंद करने पर विचार करें।"
+msgstr "सेशन असामान्य रूप से लंबी अवधि के लिए खुला हुआ है. कृपया बंद करने पर विचार करें।"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9457,16 +9468,14 @@ msgstr ""
 msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
-msgstr ""
-"यह फ़ील्ड पॉइंट ऑफ़ सेल क्लाइंट को पीओएस मैनेजर समूह का आईडी पास करने के लिए है।"
+msgstr "यह फ़ील्ड पॉइंट ऑफ़ सेल क्लाइंट को पीओएस मैनेजर समूह का आईडी पास करने के लिए है।"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
 msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
-msgstr ""
-"यह फ़ील्ड पॉइंट ऑफ़ सेल क्लाइंट को पीओएस यूज़र ग्रुप का आईडी पास करने के लिए है।"
+msgstr "यह फ़ील्ड पॉइंट ऑफ़ सेल क्लाइंट को पीओएस यूज़र ग्रुप का आईडी पास करने के लिए है।"
 
 #. module: point_of_sale
 #. odoo-python

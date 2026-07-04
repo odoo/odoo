@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2026-06-28 01:26+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -167,6 +167,14 @@ msgstr "%(name)s（剩餘 %(time)g 天，共 %(maximum)g 天）"
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g hours)"
 msgstr "%(name)s（剩餘 %(time)g 小時，共 %(maximum)g 小時）"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3608,8 +3616,8 @@ msgid ""
 msgstr ""
 "指定如果在付款期間中間發生等級轉換會發生什麼情況。\n"
 "\n"
-"                「立即」將在持續支付期間的確切日期將員工切換到新的應計等級"
-"。\n"
+"                「立即」將在持續支付期間的確切日期將員工切換到新的應計等"
+"級。\n"
 "\n"
 "                「在此應計期之後」將使員工保持相同的應計水平，直到持續的工資"
 "期結束。\n"
@@ -3903,12 +3911,6 @@ msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
 msgstr "沒有員工安排休假。請確保您登入了正確的公司。"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "沒有足夠的有效分配休假去滿足該申請。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4823,9 +4825,9 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
-"你不可修改「包括公眾假期」設定，因為該休假類型的一個或多個休假"
-"                         與公眾假期重疊，意味此更改將影響該些員工的剩餘休假數"
-"目。"
+"你不可修改「包括公眾假期」設定，因為該休假類型的一個或多個休"
+"假                         與公眾假期重疊，意味此更改將影響該些員工的剩餘休假"
+"數目。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5106,6 +5108,9 @@ msgstr "有效期至"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "驗證"
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "沒有足夠的有效分配休假去滿足該申請。"
 
 #~ msgid "00:00"
 #~ msgstr "00:00"

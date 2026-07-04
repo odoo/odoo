@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2026-06-27 23:48+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -1102,24 +1102,27 @@ msgid "Add Reaction"
 msgstr "添加回应"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Add a Reaction"
-msgstr "添加表情符"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "添加 Tenor GIF API 密钥以启用 GIF 支持。"
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
 msgstr ""
-"添加 Tenor GIF API 密钥以启用 GIF 支持。https://developers.google.com/tenor/"
-"guides/quickstart#setup"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Add a Reaction"
+msgstr "添加表情符"
 
 #. module: mail
 #. odoo-javascript
@@ -3414,7 +3417,8 @@ msgstr "将为该子模型的消息添加注解。如为空，则添加名称。
 msgid ""
 "Determines how the channel will be displayed by default when opening it from "
 "its invitation link. No value means display text (no voice/video)."
-msgstr "确定从邀请链接打开频道时默认显示频道的方式。无值表示显示文本（无语音/视频）"
+msgstr ""
+"确定从邀请链接打开频道时默认显示频道的方式。无值表示显示文本（无语音/视频）"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
@@ -4653,8 +4657,8 @@ msgid ""
 "e.g.`42` or `My custom name` or the selected record."
 msgstr ""
 "对于 Python 表达式，该字段可以包含一个 Python 表达式，该表达式可以使用与服务"
-"器操作的代码字段相同的值，例如：`env.user.name` 可以将当前用户的名称设为值"
-"，`record.id` 可以将运行操作的记录的 ID 设为值。\n"
+"器操作的代码字段相同的值，例如：`env.user.name` 可以将当前用户的名称设为值，"
+"`record.id` 可以将运行操作的记录的 ID 设为值。\n"
 "\n"
 "对于静态值，将不经评估直接使用该值，例如`42`或`我的自定义名称`或所选记录。"
 
@@ -5329,6 +5333,14 @@ msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "如果您想使用twilio作为TURN/STUN服务器提供商"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all"
 msgstr "忽略所有"
@@ -5919,6 +5931,16 @@ msgstr "密钥KEY"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Kind Regards"
 msgstr "亲切问候"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8174,8 +8196,8 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例如"
-"：project(parent_model) 和任务 (模型)）"
+"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例"
+"如：project(parent_model) 和任务 (模型)）"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -8526,7 +8548,8 @@ msgstr "应在业务文档上发布消息。使用 message_notify 向用户发�
 msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
-msgstr "发布一则消息应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
+msgstr ""
+"发布一则消息应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
 
 #. module: mail
 #. odoo-python
@@ -10490,16 +10513,6 @@ msgid "Templates"
 msgstr "模板"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor API 密钥"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF API 密钥"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Test"
@@ -10565,7 +10578,8 @@ msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
-msgstr "税务识别号。此处的值将根据国家格式进行验证。可以使用“/”表示合作伙伴无需纳税。"
+msgstr ""
+"税务识别号。此处的值将根据国家格式进行验证。可以使用“/”表示合作伙伴无需纳税。"
 
 #. module: mail
 #. odoo-python
@@ -10724,7 +10738,8 @@ msgstr ""
 msgid ""
 "The message scheduled on %(model)s(%(id)s) with the following content could "
 "not be sent:%(original_message)s"
-msgstr "在%(model)s（%(id)s）安排的包含以下内容的信息无法发送：%(original_message)s"
+msgstr ""
+"在%(model)s（%(id)s）安排的包含以下内容的信息无法发送：%(original_message)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
@@ -13154,6 +13169,22 @@ msgstr "\"%(channel_name)s\"中的\"%(member_name)s\""
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr ""
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr "添加 Tenor GIF API 密钥以启用 GIF 支持。"
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "添加 Tenor GIF API 密钥以启用 GIF 支持。https://developers.google.com/"
+#~ "tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API 密钥"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF API 密钥"
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"

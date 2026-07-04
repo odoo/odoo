@@ -13,11 +13,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2026-06-28 00:07+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/mail/"
-"hi/>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/mail/hi/"
+">\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1137,24 +1137,27 @@ msgid "Add Reaction"
 msgstr "रिएक्शन जोड़ें"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Add a Reaction"
-msgstr "रिएक्शन जोड़ें"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "GIF सपोर्ट चालू करने के लिए Tenor GIF API की जोड़ें।"
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
 msgstr ""
-"GIF की सुविधा चालू करने के लिए आपको Tenor GIF API की डालनी होगी. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Add a Reaction"
+msgstr "रिएक्शन जोड़ें"
 
 #. module: mail
 #. odoo-javascript
@@ -1238,8 +1241,7 @@ msgstr "फ़ॉलोअर जोड़ें या हटाएं"
 msgid ""
 "Adding followers on channels is not possible. Consider adding members "
 "instead."
-msgstr ""
-"चैनलों पर फ़ॉलोअर जोड़ना संभव नहीं है. इसके बजाय सदस्य जोड़ने पर विचार करें।"
+msgstr "चैनलों पर फ़ॉलोअर जोड़ना संभव नहीं है. इसके बजाय सदस्य जोड़ने पर विचार करें।"
 
 #. module: mail
 #. odoo-python
@@ -1487,8 +1489,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/ir_attachment.py:0
 msgid "An access token must be provided for each attachment."
-msgstr ""
-"हर फाइल या अटैचमेंट को ऐक्सेस करने के लिए एक सिक्योरिटी टोकन देना ज़रूरी है।"
+msgstr "हर फाइल या अटैचमेंट को ऐक्सेस करने के लिए एक सिक्योरिटी टोकन देना ज़रूरी है।"
 
 #. module: mail
 #. odoo-python
@@ -5434,8 +5435,15 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "If you want to use twilio as TURN/STUN server provider"
+msgstr "अगर आप TURN या STUN सर्वर की सर्विस के लिए ट्विलियो का इस्तेमाल करना चाहते हैं"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
 msgstr ""
-"अगर आप TURN या STUN सर्वर की सर्विस के लिए ट्विलियो का इस्तेमाल करना चाहते हैं"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5665,8 +5673,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
-"अमान्य एक्सप्रेशन, यह एक लिटरल python डिक्शनरी परिभाषा होनी चाहिए जैसे कि \""
-"{'field': 'value'}\""
+"अमान्य एक्सप्रेशन, यह एक लिटरल python डिक्शनरी परिभाषा होनी चाहिए जैसे कि "
+"\"{'field': 'value'}\""
 
 #. module: mail
 #. odoo-python
@@ -5725,16 +5733,14 @@ msgstr "अमान्य टेम्पलेट या व्यू सो�
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Invalid template or view source record %(svalue)s, is %(model)s instead"
-msgstr ""
-"अमान्य टेम्पलेट या व्यू सोर्स रिकॉर्ड %(svalue)s, इसके बजाय यह %(model)s है"
+msgstr "अमान्य टेम्पलेट या व्यू सोर्स रिकॉर्ड %(svalue)s, इसके बजाय यह %(model)s है"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
-msgstr ""
-"अमान्य टेम्पलेट या व्यू सोर्स रेफ़रेंस %(svalue)s, इसके बजाय यह %(model)s है"
+msgstr "अमान्य टेम्पलेट या व्यू सोर्स रेफ़रेंस %(svalue)s, इसके बजाय यह %(model)s है"
 
 #. module: mail
 #. odoo-python
@@ -5941,8 +5947,8 @@ msgid ""
 "of Odoo"
 msgstr ""
 "यह नोटिफिकेशन द्वारा उपयोग की जाने वाली ब्राउज़र की को दिखाता है: \n"
-"- p256dh: यह ब्राउज़र द्वारा जनरेट की गई सब्सक्रिप्शन पब्लिक की है. ब्राउज़र प्राइवेट की "
-"\n"
+"- p256dh: यह ब्राउज़र द्वारा जनरेट की गई सब्सक्रिप्शन पब्लिक की है. ब्राउज़र प्राइवेट "
+"की \n"
 "          को गुप्त रखेगा और पेलोड को डिक्रिप्ट करने के लिए इसका इस्तेमाल करेगा\n"
 "- auth: वैल्यू को गुप्त माना जाना चाहिए और Odoo के बाहर साझा नहीं किया जाना चाहिए"
 
@@ -6036,6 +6042,16 @@ msgstr "कुंजी"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Kind Regards"
 msgstr "धन्यवाद"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7661,8 +7677,7 @@ msgstr ""
 msgid ""
 "Notification should receive partners given as a list of IDs (received %"
 "(pids)s)"
-msgstr ""
-"नोटिफिकेशन के पार्टनर्स 'आईडी की लिस्ट' के रूप में मिलने चाहिए (%(pids)s मिले)"
+msgstr "नोटिफिकेशन के पार्टनर्स 'आईडी की लिस्ट' के रूप में मिलने चाहिए (%(pids)s मिले)"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -8677,8 +8692,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"मैसेज पोस्ट करते समय अटैचमेंट की सूची, लिस्ट या टुपल्स के रूप में होनी चाहिए (मिला: %(aids)"
-"s)"
+"मैसेज पोस्ट करते समय अटैचमेंट की सूची, लिस्ट या टुपल्स के रूप में होनी चाहिए (मिला: %"
+"(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -8695,8 +8710,7 @@ msgstr ""
 msgid ""
 "Posting a message should receive partners as a list of IDs (received %"
 "(pids)s)"
-msgstr ""
-"मैसेज पोस्ट करने में पार्टनर्स आईडी की लिस्ट के रूप में मिलने चाहिए (%(pids)s मिले)"
+msgstr "मैसेज पोस्ट करने में पार्टनर्स आईडी की लिस्ट के रूप में मिलने चाहिए (%(pids)s मिले)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -10639,8 +10653,8 @@ msgid ""
 "Template rendering should only be called with a list of IDs. Received “%"
 "(res_ids)s” instead."
 msgstr ""
-"टेम्प्लेट रेंडरिंग को सिर्फ़ आईडी की सूची के साथ कॉल करें. इसके बजाय “%(res_ids)s” प्राप्त हुआ"
-"।"
+"टेम्प्लेट रेंडरिंग को सिर्फ़ आईडी की सूची के साथ कॉल करें. इसके बजाय “%(res_ids)s” प्राप्त "
+"हुआ।"
 
 #. module: mail
 #. odoo-python
@@ -10661,16 +10675,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
 msgstr "टेंप्लेट"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor एपीआई की"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF एपीआई की"
 
 #. module: mail
 #. odoo-javascript
@@ -11024,8 +11028,7 @@ msgstr "हर चैनल सदस्य के लिए केवल एक
 #. odoo-python
 #: code:addons/mail/controllers/mail.py:0
 msgid "There is no candidate company that has read access to the record."
-msgstr ""
-"ऐसा कोई कैंडिडेट कंपनी नहीं है जिसके पास इस रिकॉर्ड को पढ़ने का ऐक्सेस हो।"
+msgstr "ऐसा कोई कैंडिडेट कंपनी नहीं है जिसके पास इस रिकॉर्ड को पढ़ने का ऐक्सेस हो।"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -13386,6 +13389,22 @@ msgstr "“%(channel_name)s” में “%(member_name)s”"
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr ""
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr "GIF सपोर्ट चालू करने के लिए Tenor GIF API की जोड़ें।"
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "GIF की सुविधा चालू करने के लिए आपको Tenor GIF API की डालनी होगी. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor एपीआई की"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF एपीआई की"
 
 #, fuzzy
 #~ msgid "111.222.333.444"

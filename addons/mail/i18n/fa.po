@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2026-06-28 00:08+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-s18-3/mail/"
@@ -141,8 +141,8 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
-"آدرس ایمیل %(email)s به عنوان یک ایمیل معتبر شناخته نمی‌شود. ارائه این اطلاعات "
-"برای ایجاد یک مشتری جدید الزامی است."
+"آدرس ایمیل %(email)s به عنوان یک ایمیل معتبر شناخته نمی‌شود. ارائه این "
+"اطلاعات برای ایجاد یک مشتری جدید الزامی است."
 
 #. module: mail
 #. odoo-javascript
@@ -1082,24 +1082,27 @@ msgid "Add Reaction"
 msgstr "افزودن واکنش"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Add a Reaction"
-msgstr "ری‌اکشن اضافه کنید"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "یک کلید API Tenor GIF اضافه کنید تا از پشتیبانی GIFها پشتیبانی شود."
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
 msgstr ""
-"یک کلید API برای Tenor GIF اضافه کنید تا پشتیبانی از GIF فعال شود. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Add a Reaction"
+msgstr "ری‌اکشن اضافه کنید"
 
 #. module: mail
 #. odoo-javascript
@@ -1298,9 +1301,9 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"شناسه %(matching_name)s (%(current_id)s) در حال حاضر با  %(alias_model_name)"
-"s (%(matching_id)s) متصل شده و توسط %(parent_name)s %(parent_model_name)s "
-"استفاده می‌شود."
+"شناسه %(matching_name)s (%(current_id)s) در حال حاضر با  %"
+"(alias_model_name)s (%(matching_id)s) متصل شده و توسط %(parent_name)s %"
+"(parent_model_name)s استفاده می‌شود."
 
 #. module: mail
 #. odoo-python
@@ -5361,8 +5364,15 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "If you want to use twilio as TURN/STUN server provider"
+msgstr "اگر می‌خواهید از twilio به عنوان ارائه‌دهنده سرور TURN/STUN استفاده کنید"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
 msgstr ""
-"اگر می‌خواهید از twilio به عنوان ارائه‌دهنده سرور TURN/STUN استفاده کنید"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5594,8 +5604,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
-"عبارت نامعتبر است، باید یک تعریف لغت‌نامه‌ی واقعی پایتون باشد مانند \""
-"{'field': 'value'}\""
+"عبارت نامعتبر است، باید یک تعریف لغت‌نامه‌ی واقعی پایتون باشد مانند "
+"\"{'field': 'value'}\""
 
 #. module: mail
 #. odoo-python
@@ -5880,8 +5890,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
-"JSON که شناسه‌ها را از یک فیلد many2one به ثانیه‌های صرف‌شده نگاشت می‌کند"
+msgstr "JSON که شناسه‌ها را از یک فیلد many2one به ثانیه‌های صرف‌شده نگاشت می‌کند"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -5969,6 +5978,16 @@ msgstr "کلید"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Kind Regards"
 msgstr "با احترام"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7596,8 +7615,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received %"
 "(aids)s)"
 msgstr ""
-"اعلان باید سوابق پیوست‌ها را به‌صورت یک فهرست از شناسه‌ها دریافت کند (دریافت‌شده %"
-"(aids)s)"
+"اعلان باید سوابق پیوست‌ها را به‌صورت یک فهرست از شناسه‌ها دریافت کند (دریافت‌شده "
+"%(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -8021,8 +8040,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_mail_id
 msgid "Optional mail_mail ID. Used mainly to optimize searches."
-msgstr ""
-"شناسه‌ی اختیاری mail_mail. عمدتاً برای بهینه‌سازی جستجوها استفاده می‌شود."
+msgstr "شناسه‌ی اختیاری mail_mail. عمدتاً برای بهینه‌سازی جستجوها استفاده می‌شود."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__mail_server_id
@@ -10586,16 +10604,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
 msgstr "قالبها"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "کلید API تنور"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "کلید API تنور GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -13327,6 +13335,22 @@ msgstr "\"در %(channel_name)s\" %(member_name)s\"\""
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr ""
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr "یک کلید API Tenor GIF اضافه کنید تا از پشتیبانی GIFها پشتیبانی شود."
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "یک کلید API برای Tenor GIF اضافه کنید تا پشتیبانی از GIF فعال شود. "
+#~ "https://developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "کلید API تنور"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "کلید API تنور GIF"
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"

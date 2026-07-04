@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2026-06-28 01:04+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -1140,24 +1140,27 @@ msgid "Add Reaction"
 msgstr "Tambahkan Reaksi"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Add a Reaction"
-msgstr "Tambahkan Reaksi"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "Tambahkan Tenor GIF API key untuk mengaktifkan bantuan GIF."
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
 msgstr ""
-"Tambahkan Tenor GIF API key untuk mengaktifkan bantuan GIF. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Add a Reaction"
+msgstr "Tambahkan Reaksi"
 
 #. module: mail
 #. odoo-javascript
@@ -2274,7 +2277,8 @@ msgstr "Tidak dapat mengubah kelompok otoritas dari sub-channel: %(channels)s."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
-msgstr "Tidak dapat mengubah pesan awal atau channel induk untuk: %(channels)s."
+msgstr ""
+"Tidak dapat mengubah pesan awal atau channel induk untuk: %(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -3491,8 +3495,8 @@ msgid ""
 "its invitation link. No value means display text (no voice/video)."
 msgstr ""
 "Menentukan bagaimana channel akan ditampilkan secara default saat membukanya "
-"dari link undangan. Tidak ada value berarti teks tampilan (tanpa suara/video)"
-"."
+"dari link undangan. Tidak ada value berarti teks tampilan (tanpa suara/"
+"video)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
@@ -5450,6 +5454,14 @@ msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "Bila Anda ingin menggunakan twilio sebagai penyedia server TURN/STUN"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all"
 msgstr "Abaikan semuanya"
@@ -5687,7 +5699,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr "Field “%(field_name)s” tidak valid saat membuat channel dengan anggota."
+msgstr ""
+"Field “%(field_name)s” tidak valid saat membuat channel dengan anggota."
 
 #. module: mail
 #. odoo-javascript
@@ -6061,6 +6074,16 @@ msgstr "Kunci"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Kind Regards"
 msgstr "Salam Hangat"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7978,7 +8001,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
 msgid "Only administrators can modify 'model' and 'res_id' fields."
-msgstr "Hanya administrator yang dapat memodifikasi field 'model' dan 'res_id'."
+msgstr ""
+"Hanya administrator yang dapat memodifikasi field 'model' dan 'res_id'."
 
 #. module: mail
 #. odoo-python
@@ -8744,8 +8768,8 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"Memposting pesan harus menerima partner sebagai list of ID (diterima %(pids)"
-"s)"
+"Memposting pesan harus menerima partner sebagai list of ID (diterima %"
+"(pids)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -10726,16 +10750,6 @@ msgid "Templates"
 msgstr "Contoh"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor API key"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF API key"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Test"
@@ -10829,8 +10843,8 @@ msgid ""
 "(activity_type_model)s\"."
 msgstr ""
 "Tipe kegiatan \"%(activity_type_name)s\" tidak kompatibel dengan rencana \"%"
-"(plan_name)s\" karena terabatas hanya untuk model \"%(activity_type_model)"
-"s\"."
+"(plan_name)s\" karena terabatas hanya untuk model \"%"
+"(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-python
@@ -13475,6 +13489,22 @@ msgstr "“%(member_name)s” di “%(channel_name)s”"
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr ""
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr "Tambahkan Tenor GIF API key untuk mengaktifkan bantuan GIF."
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "Tambahkan Tenor GIF API key untuk mengaktifkan bantuan GIF. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API key"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF API key"
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"
