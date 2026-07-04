@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-16 13:08+0000\n"
-"PO-Revision-Date: 2026-06-23 16:37+0000\n"
-"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"PO-Revision-Date: 2026-07-04 09:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/base/da/>"
 "\n"
 "Language: da\n"
@@ -2055,6 +2055,8 @@ msgid ""
 "\n"
 "Add a dynamic report about contracts and employees.\n"
 msgstr ""
+"\n"
+"Tilføj en dynamisk rapport om kontrakter og medarbejdere.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_reports
@@ -2221,6 +2223,17 @@ msgid ""
 "\n"
 "You can assign several contracts per employee.\n"
 msgstr ""
+"\n"
+"Indtast alle oplysninger i medarbejderformularen for at administrere "
+"kontrakter.\n"
+"=============================================================\n"
+"\n"
+"    * Kontrakt\n"
+"    * Fødested,\n"
+"    * Dato for lægeundersøgelse\n"
+"    * Firmabil\n"
+"\n"
+"Du kan tildele flere kontrakter pr. medarbejder.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -2241,6 +2254,21 @@ msgid ""
 "(\"Generate the invoice automatically when the online payment is "
 "confirmed\")\n"
 msgstr ""
+"\n"
+"Tilføj en ekstra fane i betalingsforløbet på hjemmesiden/e-handlen med de "
+"mexicanske felter:\n"
+"\n"
+"- l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"- l10n_mx_edi_fiscal_regime (res.partner)\n"
+"- l10n_mx_edi_usage (sale.order/account.move)\n"
+"- l10n_mx_edi_no_tax_breakdown (res.partner)\n"
+"\n"
+"Den ekstra fane vises kun, hvis:\n"
+"\n"
+"- Den virksomhed, der er knyttet til hjemmesiden, er registreret i Mexico\n"
+"- Indstillingen 'automatic_invoice' er aktiveret i hjemmesidens "
+"indstillinger (\"Generér fakturaen automatisk, når onlinebetalingen er "
+"bekræftet\")\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -3851,6 +3879,8 @@ msgid ""
 "\n"
 "Bridge module for project_enterprise and hr_contract\n"
 msgstr ""
+"\n"
+"Bromodul for project_enterprise og hr_contract\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_payment_term
@@ -3920,6 +3950,9 @@ msgid ""
 "Bridge module to support the debit notes (nota di debito - NDD) by adding "
 "debit note fields.\n"
 msgstr ""
+"\n"
+"Bromodul til understøttelse af debetnoter (nota di debito – NDD) ved at "
+"tilføje felter til debetnoter.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation_hr_contract
@@ -12339,6 +12372,12 @@ msgid ""
 "installation will require a re-generation of your yearly Payroll-"
 "accounting.\n"
 msgstr ""
+"\n"
+"Dette modul implementerer ELM 5.0-lønstandarden fuldt ud og er Swissdec-"
+"certificeret under certifikatnummer 1203.25. Enhver uautoriseret ændring er "
+"strengt forbudt, da det kan medføre fejl i dataoverførsler og beregninger.\n"
+"Modulet er ikke bagudkompatibelt med tidligere versioner af Swiss Payroll, "
+"og installationen kræver, at det årlige lønregnskab genetableres.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sms
@@ -12786,6 +12825,11 @@ msgid ""
 "       1. Adds support for different invoice types and payment methods.\n"
 "       2. Introduces demo mode.\n"
 msgstr ""
+"\n"
+"Dette modul forbedrer den jordanske e-fakturering (JoFotara) ved at tilbyde "
+"følgende funktioner:\n"
+"       1. Understøttelse af forskellige fakturatyper og betalingsformer.\n"
+"       2. Introduktion af en demotilstand.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my_edi_extended
@@ -14838,6 +14882,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type in "
 "['one2many', 'many2many']\">to</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\">til</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -16435,7 +16481,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ro_efactura_synchronize
 msgid "Additional module to synchronize bills with the SPV"
-msgstr ""
+msgstr "Ekstra modul til synkronisering af fakturaer med SPV"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order
@@ -17317,7 +17363,7 @@ msgstr "Vurdering - Spørgeundersøgelse"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_contract
 msgid "Appraisal Contract"
-msgstr ""
+msgstr "Kontrakt om medarbejdersamtale"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_appraisals
@@ -18813,7 +18859,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_contract_gantt
 msgid "Bridge module linking Holidays Gantt and Contracts modules"
-msgstr ""
+msgstr "Bromodul, der forbinder modulerne \"Ferie-Gantt\" og \"Kontrakter\""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_twitter_wall
@@ -23220,7 +23266,7 @@ msgstr "Udvidede adresser"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_jo_edi_extended
 msgid "Extended features for JoFotara"
-msgstr ""
+msgstr "Udvidede funktioner til JoFotara"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_my_edi_extended
@@ -27214,7 +27260,7 @@ msgstr "Elektronisk fakturering for Jordan"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jo_edi_extended
 msgid "Jordan E-Invoicing Extended Features"
-msgstr ""
+msgstr "Udvidede funktioner til elektronisk fakturering i Jordan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
@@ -35894,7 +35940,7 @@ msgstr "Udlejning Produktion Bro"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_rental_product_configurators
 msgid "Rental Product Configurators Tests"
-msgstr ""
+msgstr "Test af konfiguratorer til udlejningsprodukter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_renting
@@ -36195,7 +36241,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_efactura_synchronize
 msgid "Romania - Synchronize E-Factura"
-msgstr ""
+msgstr "Rumænien – Synkronisering af e-fakturaer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_saft
@@ -38267,7 +38313,7 @@ msgstr "Regnearksdashboard til kundeservice"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_contract
 msgid "Spreadsheet dashboard for human resources"
-msgstr ""
+msgstr "Regnearksdashboard til personaleadministration"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_im_livechat
@@ -38702,7 +38748,7 @@ msgstr "Schweiz – POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm_transmission
 msgid "Swissdec Certified Payroll (ELM 5.0)"
-msgstr ""
+msgstr "Swissdec-certificeret lønadministration (ELM 5.0)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm_transmission_5_3
@@ -38737,7 +38783,7 @@ msgstr "Schweiz – Regnskabsrapporter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll
 msgid "Switzerland - Payroll"
-msgstr ""
+msgstr "Schweiz – Lønadministration"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm
@@ -39170,7 +39216,7 @@ msgstr "Testpakke til Dialog Enterprise"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_rental_product_configurators
 msgid "Test Suite for Rental Product Configurators"
-msgstr ""
+msgstr "Testsuite til konfiguratorer af produkter til leje"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_sale_product_configurators
@@ -40417,6 +40463,8 @@ msgstr "Denne metode kan kun tilgås via HTTP"
 #: model:ir.module.module,summary:base.module_hr_appraisal_contract
 msgid "This model is used to make a bridge between Appraisal and Contract"
 msgstr ""
+"Denne model bruges til at skabe en forbindelse mellem medarbejdervurderingen "
+"og ansættelseskontrakten"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_account
@@ -40916,7 +40964,7 @@ msgstr "Fravær på lønsedler Enterprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_contract_gantt
 msgid "Time off - Contract Gantt"
-msgstr ""
+msgstr "Fravær – Kontrakt-Gantt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -41674,7 +41722,7 @@ msgstr "De Forenede Arabiske Emirater – Bogføring"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_corporate_tax_report
 msgid "United Arab Emirates - Corporate Tax Report"
-msgstr ""
+msgstr "De Forenede Arabiske Emirater – Rapport om selskabsskat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll

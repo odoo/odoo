@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-01-17 08:18+0000\n"
+"PO-Revision-Date: 2026-07-04 09:47+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "payment_sips/pl/>\n"
@@ -20,9 +20,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_provider__code
@@ -59,12 +59,12 @@ msgstr "Transakcja płatnicza"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_prod_url
 msgid "Production URL"
-msgstr ""
+msgstr "URL produkcji"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_secret
 msgid "SIPS Secret Key"
-msgstr ""
+msgstr "Tajny klucz SIPS"
 
 #. module: payment_sips
 #: model_terms:ir.ui.view,arch_db:payment_sips.payment_provider_form
@@ -74,7 +74,7 @@ msgstr "Sekretny klucz"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_key_version
 msgid "Secret Key Version"
-msgstr ""
+msgstr "Wersja z tajnym kluczem"
 
 #. module: payment_sips
 #: model:ir.model.fields.selection,name:payment_sips.selection__payment_provider__code__sips
@@ -84,12 +84,14 @@ msgstr "Sips"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_test_url
 msgid "Test URL"
-msgstr ""
+msgstr "Testowy URL"
 
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_provider__sips_merchant_id
 msgid "The ID solely used to identify the merchant account with Sips"
 msgstr ""
+"Identyfikator służący wyłącznie do identyfikacji konta sprzedawcy w systemie "
+"Sips"
 
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_provider__code
@@ -101,4 +103,4 @@ msgstr "Kod techniczny tego dostawcy usług płatniczych."
 #: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
 msgid "Unrecognized response received from the payment provider."
-msgstr ""
+msgstr "Otrzymano nierozpoznaną odpowiedź od dostawcy usług płatniczych."

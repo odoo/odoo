@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-06-20 09:58+0000\n"
+"POT-Creation-Date: 2026-07-03 17:37+0000\n"
+"PO-Revision-Date: 2026-07-04 17:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-17/account_peppol/zh_Hans/>\n"
@@ -495,17 +495,17 @@ msgstr "Peppol：更新参与者状态"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
 msgid "Partner cannot receive format"
-msgstr ""
+msgstr "合作伙伴无法接收该格式"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
 msgid "Partner is not on Peppol"
-msgstr ""
+msgstr "合作伙伴未加入 Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "合作伙伴已接入Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -881,15 +881,6 @@ msgstr "此发票已"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
-msgid ""
-"This peppol identification is already used by %(parent_name)s. Please use "
-"something else."
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "This verification code has expired. Please request a new one."
 msgstr "此验证码已过期。请重新申请。"
 
@@ -1007,6 +998,15 @@ msgid ""
 "type different than 'Purchase'.\n"
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+#, python-format
+msgid ""
+"You will not be able to send Peppol documents in Odoo anymore. Are you sure "
+"you want to proceed?"
 msgstr ""
 
 #. module: account_peppol

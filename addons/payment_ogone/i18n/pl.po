@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-03-25 13:22+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-07-04 09:52+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "payment_ogone/pl/>\n"
 "Language: pl\n"
@@ -25,17 +25,17 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
 msgid "API User ID"
-msgstr "API użytkownika ID"
+msgstr "ID użytkownika API"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
 msgid "API User Password"
-msgstr "API Hasło użytkownika"
+msgstr "Hasło użytkownika API"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__code
@@ -52,7 +52,7 @@ msgstr "Nie można nawiązać połączenia z interfejsem API."
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
 msgid "Hash function"
-msgstr ""
+msgstr "Funkcja hash"
 
 #. module: payment_ogone
 #. odoo-python
@@ -92,7 +92,7 @@ msgstr "Transakcja płatnicza"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr "Otrzymano dane z nieprawidłowym statusem płatnosci: %s"
+msgstr "Otrzymano dane z nieprawidłowym statusem płatności: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
@@ -125,16 +125,20 @@ msgstr "SHA512"
 #, python-format
 msgid "Storing your payment details is necessary for future use."
 msgstr ""
+"Zapisanie danych płatniczych jest konieczne do wykorzystania ich w "
+"przyszłości."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
 msgstr ""
+"Identyfikator służący wyłącznie do identyfikacji użytkownika API w systemie "
+"Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "Identyfikator służący wyłącznie do identyfikacji konta w systemie Ogone"
 
 #. module: payment_ogone
 #. odoo-python
@@ -148,7 +152,7 @@ msgstr "Komunikacja z interfejsem API nie powiodła się."
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "Płatność została odrzucona: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
@@ -168,16 +172,18 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Please install"
 msgstr ""
+"Ten operator jest przestarzały.\n"
+"                    Zainstaluj"
 
 #. module: payment_ogone
 #: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been authorized."
-msgstr "Twoja płatność została autoryzowana."
+msgstr "Twoja płatność została zautoryzowana."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,cancel_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been cancelled."
-msgstr "Twoja płatność została anulowana"
+msgstr "Twoja płatność została anulowana."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,pending_msg:payment_ogone.payment_provider_ogone
@@ -198,8 +204,11 @@ msgid ""
 "automatically\n"
 "                    migrated from Ogone to Worldline."
 msgstr ""
+"jako bezpośredni zamiennik. Twoje dane i tokeny płatnicze zostaną "
+"automatycznie\n"
+"                    przeniesione z Ogone do Worldline."
 
 #. module: payment_ogone
 #: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
 msgid "the Worldline provider"
-msgstr ""
+msgstr "operator Worldline"

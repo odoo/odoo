@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
@@ -93,7 +93,7 @@ msgstr "Érvénytelen email"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/js/website_sale.js:0
 #, python-format
 msgid "Invalid email"
 msgstr "Érvénytelen email"
@@ -133,6 +133,13 @@ msgstr "Készlethiány"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
 msgstr "Készlethiány üzenet"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid "Please sign in to proceed."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -216,6 +223,13 @@ msgstr "A tétel nem került a kosárba, mivel nem elérhető."
 #, python-format
 msgid "The product '%(product_name)s' is now available"
 msgstr "'%(product_name)s' termék elérhetővé vált"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid "This product is not eligible for stock notifications."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript

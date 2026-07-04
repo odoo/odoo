@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-04-25 17:00+0000\n"
+"POT-Creation-Date: 2026-07-03 17:37+0000\n"
+"PO-Revision-Date: 2026-07-04 17:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/"
 "account_peppol/tr/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -292,7 +292,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Disable the reception."
-msgstr ""
+msgstr "Resepsiyonu devre dışı bırakın."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -484,17 +484,17 @@ msgstr "PEPPOL: update participant status"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
 msgid "Partner cannot receive format"
-msgstr ""
+msgstr "Ortak formatı alamıyor"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
 msgid "Partner is not on Peppol"
-msgstr ""
+msgstr "Ortak Peppol'da değil"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "Ortak Peppol'da yer almaktadır"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -616,6 +616,8 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"Lütfen cep telefonu numarasını doğru uluslararası formatta girin.\n"
+"Örneğin: +32123456789; burada +32 ülke kodudur."
 
 #. module: account_peppol
 #. odoo-python
@@ -716,7 +718,7 @@ msgstr "Bir soru cevapsız ve atlandı"
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "Bazı ekler XML ile gönderilemedi:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -792,6 +794,8 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"Fatura, Peppol Erişim Noktasına gönderilmiştir. XML dosyasıyla birlikte "
+"aşağıdaki ekler gönderilmiştir:"
 
 #. module: account_peppol
 #. odoo-python
@@ -868,15 +872,6 @@ msgstr "Bu fatura ayrıca"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
-msgid ""
-"This peppol identification is already used by %(parent_name)s. Please use "
-"something else."
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "This verification code has expired. Please request a new one."
 msgstr "Bu doğrulama kodunun süresi dolmuş. Lütfen yeni bir kod isteyin."
 
@@ -900,7 +895,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
 msgid "Unchecked"
-msgstr ""
+msgstr "İşaretlenmemiş"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -1001,6 +996,19 @@ msgid ""
 "type different than 'Purchase'.\n"
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
+msgstr ""
+"Peppol fatura alımı için kullanılan yevmiye defterinin türünü 'Satınalma'dan "
+"farklı bir türe değiştiremezsiniz.\n"
+"Lütfen bu yevmiye defterinin türünü değiştirmeden önce Peppol alımı için "
+"kullanılan yevmiye defterini değiştirin."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+#, python-format
+msgid ""
+"You will not be able to send Peppol documents in Odoo anymore. Are you sure "
+"you want to proceed?"
 msgstr ""
 
 #. module: account_peppol

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"POT-Creation-Date: 2026-07-03 17:37+0000\n"
 "PO-Revision-Date: 2026-06-20 11:13+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -916,15 +916,6 @@ msgstr "Esta factura también ha sido"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
-msgid ""
-"This peppol identification is already used by %(parent_name)s. Please use "
-"something else."
-msgstr "%(parent_name)s ya usa esta identificación de Peppol, usa otra."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
 msgid "This verification code has expired. Please request a new one."
 msgstr "Este código de verificación expiró, solicite uno nuevo."
 
@@ -1059,6 +1050,15 @@ msgstr ""
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 #, python-format
 msgid ""
+"You will not be able to send Peppol documents in Odoo anymore. Are you sure "
+"you want to proceed?"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+#, python-format
+msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
 msgstr ""
@@ -1112,6 +1112,12 @@ msgstr "para enviar facturas, pero esta"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "usa"
+
+#, python-format
+#~ msgid ""
+#~ "This peppol identification is already used by %(parent_name)s. Please use "
+#~ "something else."
+#~ msgstr "%(parent_name)s ya usa esta identificación de Peppol, usa otra."
 
 #, python-format
 #~ msgid ""
