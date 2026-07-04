@@ -1,4 +1,4 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillRender, useRef } from "@web/owl2/utils";
 import { Component, toRaw, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -71,19 +71,19 @@ export class MultiSelectionButtons extends Component {
         this.addButtonRef = useRef("addButton");
 
         const rootRef = useRef("root");
-        useLayoutEffect(
-            (el) => {
-                if (!el) {
-                    return;
-                }
-                // @ts-ignore
-                const { width: parentWidth } = el.parentElement.getBoundingClientRect();
-                const { width } = el.getBoundingClientRect();
-                const left = Math.floor((parentWidth - width) / 2);
-                el.style.setProperty("left", `${left}px`);
-            },
-            () => [rootRef.el]
-        );
+        // useLayoutEffect(
+        //     (el) => {
+        //         if (!el) {
+        //             return;
+        //         }
+        //         // @ts-ignore
+        //         const { width: parentWidth } = el.parentElement.getBoundingClientRect();
+        //         const { width } = el.getBoundingClientRect();
+        //         const left = Math.floor((parentWidth - width) / 2);
+        //         el.style.setProperty("left", `${left}px`);
+        //     },
+        //     () => [rootRef.el]
+        // );
 
         useHotkey("escape", () => {
             if (this.props.reactive.visible) {
