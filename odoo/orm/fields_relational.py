@@ -1032,6 +1032,7 @@ class One2many(_RelationalMulti):
             to_delete = []                      # line ids to delete
             to_link = defaultdict(OrderedSet)   # {record: line_ids}
             allow_full_delete = not create
+            comodel_domain = self.get_comodel_domain(model).optimize_dynamic(comodel)
 
             def unlink(lines):
                 if getattr(comodel._fields[inverse], 'ondelete', False) == 'cascade':
@@ -1048,13 +1049,17 @@ class One2many(_RelationalMulti):
                     to_delete.clear()
                 if to_create:
                     # create() will add the new lines to the cache of records
-                    comodel.create(to_create)
+                    lines = comodel.create(to_create)
+                    if len(lines.filtered_domain(comodel_domain)) < len(lines):
+                        raise ValueError(f"Cannot link inaccessible records in {self} ({comodel_domain})")
                     to_create.clear()
                 if to_link:
                     for record, line_ids in to_link.items():
                         lines = comodel.browse(line_ids) - before[record]
                         # linking missing lines should fail
                         lines.mapped(inverse)
+                        if len(lines.filtered_domain(comodel_domain)) < len(lines):
+                            raise ValueError(f"Cannot link inaccessible records in {self} ({comodel_domain})")
                         lines[inverse] = record
                     to_link.clear()
 
@@ -1553,11 +1558,14 @@ class Many2many(_RelationalMulti):
         # check comodel access of added records
         # we check the su flag of the environment of records, because su may be
         # disabled on the comodel
+        lines = comodel.browse(added_ids)
         if not model.env.su:
             try:
-                comodel.browse(added_ids).check_access('read')
+                lines.check_access('read')
             except AccessError as e:
                 raise AccessError(model.env._("Failed to write field %s", self) + "\n" + str(e))
+        if len(lines.filtered_domain(comodel_domain := self.get_comodel_domain(model))) < len(lines):
+            raise ValueError(f"Cannot link inaccessible records in {self} ({comodel_domain})")
 
         # update the cache of self
         for record in records:
