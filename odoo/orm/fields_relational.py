@@ -1498,8 +1498,7 @@ class Many2many(_RelationalMulti):
         cr = model.env.cr
 
         # determine old and new relation {x: ys}
-        set = OrderedSet
-        ids = set(rid for recs, cs in records_commands_list for rid in recs.ids)
+        ids = OrderedSet(rid for recs, cs in records_commands_list for rid in recs.ids)
         records = model.browse(ids)
 
         if self.store:
@@ -1512,17 +1511,17 @@ class Many2many(_RelationalMulti):
                 self.read(records.browse(missing_ids))
 
         # determine new relation {x: ys}
-        old_relation = {record.id: set(record[self.name]._ids) for record in records.sudo()}
+        old_relation = {record.id: OrderedSet(record[self.name]._ids) for record in records.sudo()}
         if records.env.context.get('active_test', True):
             old_inactive_relation = {
-                record.id: set(record[self.name]._ids) - old_relation[record.id]
+                record.id: OrderedSet(record[self.name]._ids) - old_relation[record.id]
                 for record in records.sudo().with_context(active_test=False)
             }
         else:
             old_inactive_relation = None
-        new_relation = {x: set(ys) for x, ys in old_relation.items()}
-        inaccessible_coids = set() if model.env.su else set(records.sudo()[self.name]._ids) - set(records[self.name]._ids)
-        added_ids = set()
+        new_relation = {x: OrderedSet(ys) for x, ys in old_relation.items()}
+        inaccessible_coids = OrderedSet() if model.env.su else OrderedSet(records.sudo()[self.name]._ids) - OrderedSet(records[self.name]._ids)
+        added_ids = OrderedSet()
 
         # operations on new relation
         def relation_add(xs, y):
@@ -1540,13 +1539,13 @@ class Many2many(_RelationalMulti):
             added_ids.update(ys)
             if inaccessible_coids:
                 for x in xs:
-                    new_relation[x] = set(ys) | (new_relation[x] & inaccessible_coids)
+                    new_relation[x] = OrderedSet(ys) | (new_relation[x] & inaccessible_coids)
             else:
                 for x in xs:
-                    new_relation[x] = set(ys)
+                    new_relation[x] = OrderedSet(ys)
 
         def relation_delete(ys):
-            ys = set(ys) - inaccessible_coids
+            ys = OrderedSet(ys) - inaccessible_coids
             # the pairs (x, y) have been cascade-deleted from relation
             for ys1 in old_relation.values():
                 ys1.difference_update(ys)
@@ -1572,7 +1571,7 @@ class Many2many(_RelationalMulti):
                     relation_add(recs._ids, command[1])
                 elif command[0] in (Command.CLEAR, Command.SET):
                     # new lines must no longer be linked to records
-                    to_create = [(set(ids) - set(recs._ids), vals) for (ids, vals) in to_create]
+                    to_create = [(OrderedSet(ids) - OrderedSet(recs._ids), vals) for (ids, vals) in to_create]
                     relation_set(recs._ids, command[2] if command[0] == Command.SET else ())
 
             if to_create:
@@ -1597,6 +1596,8 @@ class Many2many(_RelationalMulti):
                 raise AccessError(model.env._("Failed to write field %s", self) + "\n" + str(e))
         if len(lines.filtered_domain(comodel_domain := self.get_comodel_domain(model))) < len(lines):
             raise ValueError(f"Cannot link inaccessible records in {self} ({comodel_domain})")
+        if old_relation == new_relation:
+            return
 
         # update the cache of self
         for record in records:
@@ -1605,55 +1606,27 @@ class Many2many(_RelationalMulti):
                 new_ids += tuple(old_inactive_relation[record.id])
             self._update_cache(record, new_ids)
 
-        # determine the corecords for which the relation has changed
-        modified_corecord_ids = set()
-
         # process pairs to add (beware of duplicates)
-        pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
-        if pairs:
-            if self.store:
+        add_pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
+        remove_pairs = [(x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]]
+        if self.store:
+            if add_pairs:
                 cr.execute(SQL(
                     "INSERT INTO %s (%s, %s) VALUES %s ON CONFLICT DO NOTHING",
                     SQL.identifier(self.relation),
                     SQL.identifier(self.column1),
                     SQL.identifier(self.column2),
-                    SQL(", ").join(pairs),
+                    SQL(", ").join(add_pairs),
                 ))
-
-            # update the cache of inverse fields
-            y_to_xs = defaultdict(set)
-            for x, y in pairs:
-                y_to_xs[y].add(x)
-                modified_corecord_ids.add(y)
-            for invf in records.pool.field_inverses[self]:
-                domain = invf.get_comodel_domain(comodel)
-                valid_ids = set(records.filtered_domain(domain)._ids)
-                if not valid_ids:
-                    continue
-                inv_cache = invf._get_cache(comodel.env)
-                for y, xs in y_to_xs.items():
-                    corecord = comodel.browse(y)
-                    try:
-                        ids0 = inv_cache[corecord.id]
-                        ids1 = tuple(set(ids0) | (xs & valid_ids))
-                        invf._update_cache(corecord, ids1)
-                    except KeyError:
-                        pass
-
-        # process pairs to remove
-        pairs = [(x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]]
-        if pairs:
-            y_to_xs = defaultdict(set)
-            for x, y in pairs:
-                y_to_xs[y].add(x)
-                modified_corecord_ids.add(y)
-
-            if self.store:
+            if remove_pairs:
                 # express pairs as the union of cartesian products:
                 #    pairs = [(1, 11), (1, 12), (1, 13), (2, 11), (2, 12), (2, 14)]
                 # -> y_to_xs = {11: {1, 2}, 12: {1, 2}, 13: {1}, 14: {2}}
                 # -> xs_to_ys = {{1, 2}: {11, 12}, {2}: {14}, {1}: {13}}
-                xs_to_ys = defaultdict(set)
+                y_to_xs = defaultdict(OrderedSet)
+                for x, y in remove_pairs:
+                    y_to_xs[y].add(x)
+                xs_to_ys = defaultdict(OrderedSet)
                 for y, xs in y_to_xs.items():
                     xs_to_ys[frozenset(xs)].add(y)
                 # delete the rows where (id1 IN xs AND id2 IN ys) OR ...
@@ -1667,28 +1640,7 @@ class Many2many(_RelationalMulti):
                         for xs, ys in xs_to_ys.items()
                     ),
                 ))
-
-            # update the cache of inverse fields
-            for invf in records.pool.field_inverses[self]:
-                inv_cache = invf._get_cache(comodel.env)
-                for y, xs in y_to_xs.items():
-                    corecord = comodel.browse(y)
-                    try:
-                        ids0 = inv_cache[corecord.id]
-                        ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
-                        invf._update_cache(corecord, ids1)
-                    except KeyError:
-                        pass
-
-        if modified_corecord_ids:
-            # trigger the recomputation of fields that depend on the inverse
-            # fields of self on the modified corecords
-            corecords = comodel.browse(modified_corecord_ids)
-            corecords.modified([
-                invf.name
-                for invf in model.pool.field_inverses[self]
-                if invf.model_name == self.comodel_name
-            ])
+        self._update_relation_cache(records, comodel, add_pairs, remove_pairs)
 
     def write_new(self, records_commands_list):
         """ Update self on new records. """
@@ -1701,17 +1653,16 @@ class Many2many(_RelationalMulti):
         new = lambda id_: id_ and NewId(id_)
 
         # determine old and new relation {x: ys}
-        set = OrderedSet
-        old_relation = {record.id: set(record[self.name]._ids) for records, _ in records_commands_list for record in records}
+        old_relation = {record.id: OrderedSet(record[self.name]._ids) for records, _ in records_commands_list for record in records}
         if model.env.context.get('active_test', True):
             old_inactive_relation = {
-                record.id: set(record[self.name]._ids) - old_relation[record.id]
+                record.id: OrderedSet(record[self.name]._ids) - old_relation[record.id]
                 for records, _ in records_commands_list
                 for record in records.with_context(active_test=False)
             }
         else:
             old_inactive_relation = None
-        new_relation = {x: set(ys) for x, ys in old_relation.items()}
+        new_relation = {x: OrderedSet(ys) for x, ys in old_relation.items()}
 
         for recs, commands in records_commands_list:
             for command in commands:
@@ -1739,9 +1690,9 @@ class Many2many(_RelationalMulti):
                 elif command[0] in (Command.CLEAR, Command.SET):
                     # new lines must no longer be linked to records
                     line_ids = command[2] if command[0] == Command.SET else ()
-                    line_ids = set(new(line_id) for line_id in line_ids)
+                    line_ids = OrderedSet(new(line_id) for line_id in line_ids)
                     for id_ in recs._ids:
-                        new_relation[id_] = set(line_ids)
+                        new_relation[id_] = OrderedSet(line_ids)
 
         if new_relation == old_relation:
             return
@@ -1755,58 +1706,69 @@ class Many2many(_RelationalMulti):
                 new_ids += tuple(old_inactive_relation[record.id])
             self._update_cache(record, new_ids)
 
-        # determine the corecords for which the relation has changed
-        modified_corecord_ids = set()
-
         # process pairs to add (beware of duplicates)
-        pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
-        if pairs:
-            # update the cache of inverse fields
-            y_to_xs = defaultdict(set)
-            for x, y in pairs:
-                y_to_xs[y].add(x)
-                modified_corecord_ids.add(y)
-            for invf in records.pool.field_inverses[self]:
-                domain = invf.get_comodel_domain(comodel)
-                valid_ids = set(records.filtered_domain(domain)._ids)
-                if not valid_ids:
-                    continue
-                inv_cache = invf._get_cache(comodel.env)
-                for y, xs in y_to_xs.items():
-                    corecord = comodel.browse((y,))
-                    try:
-                        ids0 = inv_cache[corecord.id]
-                        ids1 = tuple(set(ids0) | (xs & valid_ids))
-                        invf._update_cache(corecord, ids1)
-                    except KeyError:
-                        pass
+        add_pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
+        remove_pairs = [(x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]]
+        self._update_relation_cache(records, comodel, add_pairs, remove_pairs)
 
-        # process pairs to remove
-        pairs = [(x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]]
-        if pairs:
-            # update the cache of inverse fields
-            y_to_xs = defaultdict(set)
-            for x, y in pairs:
-                y_to_xs[y].add(x)
-                modified_corecord_ids.add(y)
-            for invf in records.pool.field_inverses[self]:
-                inv_cache = invf._get_cache(comodel.env)
-                for y, xs in y_to_xs.items():
-                    corecord = comodel.browse((y,))
-                    try:
-                        ids0 = inv_cache[corecord.id]
-                        ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
-                        invf._update_cache(corecord, ids1)
-                    except KeyError:
-                        pass
+    def _update_relation_cache(
+        self,
+        records: BaseModel,
+        comodel: BaseModel,
+        add_pairs: list[tuple[int, int]],
+        remove_pairs: list[tuple[int, int]],
+    ) -> None:
+        """Update the cache of all other fields than self using the same relation."""
+        assert records._name == self.model_name and comodel._name == self.comodel_name
+        registry = records.pool
+        inverse_fields = registry.field_inverses[self]
 
-        if modified_corecord_ids:
-            # trigger the recomputation of fields that depend on the inverse
-            # fields of self on the modified corecords
-            corecords = comodel.browse(modified_corecord_ids)
+        if add_pairs:
+            if inverse_fields:
+                y_to_xs = defaultdict(OrderedSet)
+                for x, y in add_pairs:
+                    y_to_xs[y].add(x)
+                for invf in inverse_fields:
+                    domain = invf.get_comodel_domain(comodel)
+                    valid_ids = set(records.filtered_domain(domain)._ids)
+                    if not valid_ids:
+                        continue
+                    inv_cache = invf._get_cache(comodel.env)
+                    for y, xs in y_to_xs.items():
+                        corecord = comodel.browse((y,))
+                        try:
+                            ids0 = inv_cache[corecord.id]
+                            ids1 = tuple(OrderedSet(ids0) | (xs & valid_ids))
+                            invf._update_cache(corecord, ids1)
+                        except KeyError:
+                            pass
+
+        if remove_pairs:
+            if inverse_fields:
+                y_to_xs = defaultdict(OrderedSet)
+                for x, y in remove_pairs:
+                    y_to_xs[y].add(x)
+                for invf in inverse_fields:
+                    inv_cache = invf._get_cache(comodel.env)
+                    for y, xs in y_to_xs.items():
+                        corecord = comodel.browse((y,))
+                        try:
+                            ids0 = inv_cache[corecord.id]
+                            ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
+                            invf._update_cache(corecord, ids1)
+                        except KeyError:
+                            pass
+
+        # trigger the recomputation of fields that depend on the inverse
+        # fields of self on the modified corecords
+        if inverse_fields:
+            corecords = comodel.browse(unique(itertools.chain(
+                (y for _x, y in add_pairs),
+                (y for _x, y in remove_pairs),
+            )))
             corecords.modified([
                 invf.name
-                for invf in model.pool.field_inverses[self]
+                for invf in inverse_fields
                 if invf.model_name == self.comodel_name
             ])
 
