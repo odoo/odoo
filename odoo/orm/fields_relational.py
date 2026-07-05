@@ -1729,6 +1729,17 @@ class Many2many(_RelationalMulti):
         ]
 
         if add_pairs:
+            def add_cache(field: Field, model: BaseModel, id_to_coids, add_filter):
+                field_cache = field._get_cache(model.env)
+                for id_, coids in id_to_coids.items():
+                    record = model.browse((id_,))
+                    try:
+                        ids = OrderedSet(field_cache[id_])
+                        ids.update(add_filter(coids))
+                        field._update_cache(record, tuple(ids))
+                    except KeyError:
+                        pass
+
             if inverse_fields:
                 y_to_xs = defaultdict(OrderedSet)
                 for x, y in add_pairs:
@@ -1738,60 +1749,38 @@ class Many2many(_RelationalMulti):
                     valid_ids = set(records.filtered_domain(domain)._ids)
                     if not valid_ids:
                         continue
-                    inv_cache = invf._get_cache(comodel.env)
-                    for y, xs in y_to_xs.items():
-                        corecord = comodel.browse((y,))
-                        try:
-                            ids0 = inv_cache[corecord.id]
-                            ids1 = tuple(OrderedSet(ids0) | (xs & valid_ids))
-                            invf._update_cache(corecord, ids1)
-                        except KeyError:
-                            pass
+                    add_cache(invf, comodel, y_to_xs, lambda xs: xs & valid_ids)
             if sibling_fields:
                 x_to_ys = defaultdict(OrderedSet)
                 for x, y in add_pairs:
                     x_to_ys[x].add(y)
                 for field in sibling_fields:
                     domain = field.get_comodel_domain(records).optimize_dynamic(comodel)
-                    field_cache = field._get_cache(records.env)
-                    for x, ys in x_to_ys.items():
-                        record = records.browse((x,))
-                        try:
-                            ids0 = field_cache[record.id]
-                            ids1 = tuple(OrderedSet(ids0) | comodel.browse(ys).filtered_domain(domain)._ids)
-                            field._update_cache(record, ids1)
-                        except KeyError:
-                            pass
+                    add_cache(field, records, x_to_ys, lambda ys: comodel.browse(ys).filtered_domain(domain)._ids)
 
         if remove_pairs:
+            def remove_cache(field: Field, model: BaseModel, id_to_coids):
+                field_cache = field._get_cache(model.env)
+                for id_, coids in id_to_coids.items():
+                    record = model.browse((id_,))
+                    try:
+                        ids = tuple(id_ for id_ in field_cache[id_] if id_ not in coids)
+                        field._update_cache(record, ids)
+                    except KeyError:
+                        pass
+
             if inverse_fields:
                 y_to_xs = defaultdict(OrderedSet)
                 for x, y in remove_pairs:
                     y_to_xs[y].add(x)
                 for invf in inverse_fields:
-                    inv_cache = invf._get_cache(comodel.env)
-                    for y, xs in y_to_xs.items():
-                        corecord = comodel.browse((y,))
-                        try:
-                            ids0 = inv_cache[corecord.id]
-                            ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
-                            invf._update_cache(corecord, ids1)
-                        except KeyError:
-                            pass
+                    remove_cache(invf, comodel, y_to_xs)
             if sibling_fields:
                 x_to_ys = defaultdict(OrderedSet)
                 for x, y in remove_pairs:
                     x_to_ys[x].add(y)
                 for field in sibling_fields:
-                    field_cache = field._get_cache(records.env)
-                    for x, ys in x_to_ys.items():
-                        record = records.browse((x,))
-                        try:
-                            ids0 = field_cache[record.id]
-                            ids1 = tuple(id_ for id_ in ids0 if id_ not in ys)
-                            field._update_cache(record, ids1)
-                        except KeyError:
-                            pass
+                    remove_cache(field, records, x_to_ys)
 
         # trigger the recomputation of fields that depend on the inverse
         # fields of self on the modified corecords and on sibling fields
