@@ -827,10 +827,12 @@ class TestBoM(TestMrpCommon):
         """
         # Workcenter is working 24/7
         self.full_availability()
+        routes = self.env.ref('mrp.route_warehouse0_manufacture')
+        routes.product_selectable = True
         pickaxe = self.env['product.product'].create({
             'name': 'Iron Pickaxe',
             'is_storable': True,
-            'route_ids': [(6, 0, [self.ref('mrp.route_warehouse0_manufacture')])],
+            'route_ids': routes,
         })
         stick = self.env['product.product'].create({
             'name': 'Stick',

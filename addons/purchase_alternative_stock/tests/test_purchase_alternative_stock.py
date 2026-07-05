@@ -59,7 +59,8 @@ class TestPurchaseAlternativeStock(TestPurchaseAlternativeCommon):
         """ Checks if Purchase Order alternatives are correctly linked to the original PO's move_dest_ids. """
         # Prepare test data
         wh = self.env.ref('stock.warehouse0')
-        buy_route_id = self.ref('purchase_stock.route_warehouse0_buy')
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        buy_route.product_selectable = True
         vendor_1 = self.env['res.partner'].create({'name': 'Vendor 1'})
         vendor_2 = self.env['res.partner'].create({'name': 'Vendor 2'})
         product = self.env['product.product'].create({
@@ -70,7 +71,7 @@ class TestPurchaseAlternativeStock(TestPurchaseAlternativeCommon):
                 'price': 10.0,
                 'delay': 0,
             })],
-            'route_ids': [Command.set([buy_route_id])],
+            'route_ids': [Command.set([buy_route.id])],
         })
 
         # Sets the warehouse to do two-steps receptions

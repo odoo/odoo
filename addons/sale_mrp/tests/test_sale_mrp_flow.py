@@ -23,7 +23,9 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
 
         # Required for `uom_id` to be visible in the view
         cls._enable_uom()
-        cls.env.ref('stock.route_warehouse0_mto').active = True
+        mto_route = cls.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        mto_route.product_selectable = True
 
         # Useful models
         cls.StockMove = cls.env['stock.move']

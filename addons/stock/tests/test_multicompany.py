@@ -543,12 +543,14 @@ class TestMultiCompany(TransactionCase):
             ('supplied_wh_id', '=', self.warehouse_a.id)
         ])
         self.assertTrue(resupply_route, "Resupply route not found")
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        (resupply_route + mto_route).product_selectable = True
 
         product_lot = self.env['product.product'].create({
             'is_storable': True,
             'tracking': 'lot',
             'name': 'product lot',
-            'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)],
+            'route_ids': [(4, resupply_route.id), (4, mto_route.id)],
         })
 
         move_sup_to_whb = self.env['stock.move'].create({

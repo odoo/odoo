@@ -26,6 +26,7 @@ class TestMrpRepairFlow(TestMrpCommon):
         manufacturing_route = self.env['stock.rule'].search([('action', '=', 'manufacture')]).route_id
         rule = mto_route.rule_ids.filtered(lambda r: r.picking_type_id.code == 'repair_operation')
         rule.procure_method = 'make_to_order'
+        (mto_route + manufacturing_route).product_selectable = True
 
         product = self.product_2
         product.write({

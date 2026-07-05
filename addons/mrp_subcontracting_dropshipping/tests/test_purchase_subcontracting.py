@@ -25,7 +25,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         - Po created for the component.
         """
         # self.warehouse.manufacture_pull_id.route_id.write({'sequence': 20})
-        self.env.ref('stock.route_warehouse0_mto').active = True
+        self.env.ref('stock.route_warehouse0_mto').update({'active': True, 'product_selectable': True})
         mto_route = self.env['stock.route'].search([('name', '=', 'Replenish on Order (MTO)')])
         dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')])
         self.comp1.route_ids = [Command.link(mto_route.id)]
@@ -262,6 +262,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         Check that depending on the context, the right route is shown on the report.
         """
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
+        route_buy.product_selectable = True
         dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')], limit=1)
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         warehouse.manufacture_pull_id.route_id.write({'sequence': 20})
@@ -358,6 +359,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         ])
         route_mto = self.env.ref('stock.route_warehouse0_mto')
         route_mto.active = True
+        route_mto.product_selectable = True
         component = self.env['product.product'].create([{
             'name': 'Common Component',
             'is_storable': True,

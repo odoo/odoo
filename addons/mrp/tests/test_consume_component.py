@@ -27,6 +27,7 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.env.user.group_ids |= cls.env.ref('stock.group_production_lot')
 
         cls.manufacture_route = cls.env.ref('mrp.route_warehouse0_manufacture')
+        cls.manufacture_route.product_selectable = True
         cls.stock_id = cls.env.ref('stock.stock_location_stock').id
 
         cls.picking_type = cls.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]

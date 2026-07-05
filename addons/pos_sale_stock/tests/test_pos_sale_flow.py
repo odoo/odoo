@@ -335,6 +335,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         route_mto = self.env.ref('stock.route_warehouse0_mto')
         route_mto.rule_ids.procure_method = 'mts_else_mto'
+        (route_buy + route_mto).product_selectable = True
         self.partner_test = self.env['res.partner'].create({
             'name': 'Partner Test A',
             'street': '77 Santa Barbara Rd',

@@ -22,6 +22,7 @@ class TestSaleStockMultiWarehouse(TestSaleStockCommon, ValuationReconciliationTe
             'partner_id': cls.env.company.partner_id.id,
         })
         cls.env['stock.quant']._update_available_quantity(cls.product_a, cls.warehouse_B.lot_stock_id, 10)
+        (cls.warehouse_A + cls.warehouse_B).delivery_route_id.sale_selectable = True
 
         cls.env.user.group_ids |= cls.env.ref('stock.group_stock_user')
         cls.env.user.group_ids |= cls.env.ref('stock.group_stock_multi_locations')

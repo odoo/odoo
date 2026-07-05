@@ -1431,6 +1431,7 @@ class TestReorderingRule(TransactionCase):
         buy_product = self.product_01
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
+        mto_route.product_selectable = True
         buy_product.route_ids |= mto_route
         reference = self.env['stock.reference'].create({'name': 'test_backorder_mto_buy'})
         self.env["stock.rule"].run(

@@ -27,6 +27,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         warehouse.delivery_steps = 'pick_ship'
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
+        mto_route.product_selectable = True
         routes = [self.dropship_route.ids, mto_route.ids, []]
         compo01, compo02, kit = self.env['product.product'].create([{
             'name': name,

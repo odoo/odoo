@@ -396,6 +396,7 @@ class StockWarehouse(models.Model):
                 raise UserError(_('Can\'t find any generic route %s.', route_name))
             elif data_route and create:
                 route = data_route.copy({'name': route_name, 'company_id': company.id, 'rule_ids': False})
+        route.product_selectable = True
         return route
 
     def _get_global_route_rules_values(self):

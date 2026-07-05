@@ -615,6 +615,7 @@ class TestDropshipPostInstall(common.TransactionCase):
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.action_unarchive()
         buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        (mto_route + buy_route).product_selectable = True
         self.dropship_product.route_ids += buy_route
 
         so = self.env['sale.order'].create({

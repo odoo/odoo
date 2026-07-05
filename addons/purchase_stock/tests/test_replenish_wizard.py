@@ -637,7 +637,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             self.assertEqual(f.partner_id, self.vendor2)
 
     def test_product_replenish_wizard_multiple_buy_routes(self):
-        self.route_buy.copy()
+        self.warehouse.route_ids.filtered(lambda r: r.get_external_id()).product_selectable = False
         self.product.write({
             'seller_ids': [Command.create({
                 'partner_id': self.vendor.id,

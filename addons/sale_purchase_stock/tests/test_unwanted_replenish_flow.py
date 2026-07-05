@@ -11,6 +11,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
 
         cls.env.company.horizon_days = 0
         cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
+        cls.buy_route.product_selectable = True
 
         # Create a vendor (& suppliers) and a customer
         cls.vendor = cls.env['res.partner'].create(dict(name='Vendor'))

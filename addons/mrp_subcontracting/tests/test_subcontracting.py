@@ -141,6 +141,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """
         # Tick "resupply subconractor on order"
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
         # Create a different subcontract location for partner
         partner_subcontract_location = self.env['stock.location'].create({
@@ -213,12 +214,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """
         # Tick "resupply subconractor on order"
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
 
         # Tick "manufacture" and MTO on self.comp2
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
         manufacture_route = self.env['stock.route'].search([('name', '=', 'Manufacture')])
+        (mto_route + manufacture_route).product_selectable = True
         self.comp2.write({'route_ids': [(4, manufacture_route.id, None)]})
         self.comp2.write({'route_ids': [(4, mto_route.id, None)]})
 
@@ -280,6 +283,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
         manufacture_route = self.env['stock.route'].search([('name', '=', 'Manufacture')])
+        (mto_route + manufacture_route).product_selectable = True
         self.comp2.write({'route_ids': [(6, None, [manufacture_route.id, mto_route.id])]})
         picking_type_in = self.env.ref('stock.picking_type_in')
         self.env.ref('mrp_subcontracting.route_resupply_subcontractor_mto').active = False
@@ -442,6 +446,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
     def test_flow_8(self):
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
 
         # Create a receipt picking from the subcontractor
@@ -481,6 +486,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         resupply_sub_on_order_route = self.env['stock.route'].search([
             ('name', '=', 'Resupply Subcontractor on Order')
         ])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({
             'route_ids': [(4, resupply_sub_on_order_route.id)]
         })
@@ -605,6 +611,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
                 Form.from_action(self.env, action).save().process()
 
         resupply_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_route.product_selectable = True
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
             'is_storable': True,
@@ -924,6 +931,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_replenish_with_subcontracting_bom(self):
         """ Checks that a subcontracting bom cannot trigger a 'Manufacture' replenish.
         """
+        self.warehouse.route_ids.filtered(lambda r: r.get_external_id()).product_selectable = False
         self.assertEqual(self.finished.bom_ids.type, 'subcontract')
         self.finished.seller_ids.unlink()
         replenish_wizard = self.env['product.replenish'].create({
@@ -1435,6 +1443,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             'name': 'Subcontractor',
         })
         self.resupply_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        self.resupply_route.product_selectable = True
         self.raw_material = self.env['product.product'].create({
             'name': 'Component',
             'is_storable': True,

@@ -601,6 +601,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         mto_route.active = True
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         self.comp2.bom_ids.unlink()
+        (mto_route + resupply_sub_on_order_route).product_selectable = True
         (self.comp1 | self.comp2).write({
              'route_ids': [
                 Command.link(resupply_sub_on_order_route.id),
@@ -684,6 +685,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         """
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
+        mto_route.product_selectable = True
         self.comp2.bom_ids.unlink()
         self.finished.route_ids = mto_route.ids
         self.env['product.supplierinfo'].create({
@@ -734,6 +736,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         search_qty_more_than_total = 110
 
         resupply_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_route.product_selectable = True
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
             'is_storable': True,
@@ -1038,6 +1041,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         """
 
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2 + self.comp3 + self.comp4).write({'route_ids': [Command.link(resupply_sub_on_order_route.id)]})
 
         purchase_order = self.env['purchase.order'].create({
@@ -1075,6 +1079,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
     def test_replenish_with_subcontracting_bom(self):
         """ Checks that a subcontracting bom cannot trigger a 'Manufacture' replenish.
         """
+        self.warehouse.route_ids.filtered(lambda r: r.get_external_id()).product_selectable = False
         self.assertEqual(self.finished.bom_ids.type, 'subcontract')
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.finished.product_tmpl_id.id).create({
             'product_id': self.finished.id,

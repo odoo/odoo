@@ -13,15 +13,17 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # Product creation
         unit = self.ref("uom.product_uom_unit")
         warehouse1 = self.env.ref('stock.warehouse0')
-        route_buy = self.ref('purchase_stock.route_warehouse0_buy')
-        route_mto = warehouse1.mto_pull_id.route_id.id
+        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
+        route_mto = warehouse1.mto_pull_id.route_id
+        routes = route_buy + route_mto
+        routes.product_selectable = True
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         vendor2 = self.env['res.partner'].create({'name': 'BBB', 'email': 'from.test2@example.com'})
         product_test = self.env['product.product'].create({
             'name': 'Usb Keyboard',
             'is_storable': True,
             'uom_id': unit,
-            'route_ids': [(6, 0, [route_buy, route_mto])]
+            'route_ids': routes,
         })
         supplier_info1 = self.env['product.supplierinfo'].create({
             'product_id': product_test.id,
@@ -103,8 +105,8 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # Product creation
         unit = self.ref("uom.product_uom_unit")
         warehouse1 = self.env.ref('stock.warehouse0')
-        route_buy = self.ref('purchase_stock.route_warehouse0_buy')
-        route_mto = warehouse1.mto_pull_id.route_id.id
+        routes = self.env.ref('purchase_stock.route_warehouse0_buy') | warehouse1.mto_pull_id.route_id
+        routes.product_selectable = True
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         product_1 = self.env['product.product'].create({
             'name': 'product1',
@@ -114,7 +116,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
                 'partner_id': vendor1.id,
                 'price': 50,
             })],
-            'route_ids': [(6, 0, [route_buy, route_mto])]
+            'route_ids': routes,
         })
         product_2 = self.env['product.product'].create({
             'name': 'product2',
@@ -124,7 +126,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
                 'partner_id': vendor1.id,
                 'price': 50,
             })],
-            'route_ids': [(6, 0, [route_buy, route_mto])]
+            'route_ids': routes,
         })
 
         # Blanket orders creation
