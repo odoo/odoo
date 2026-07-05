@@ -62,7 +62,7 @@ class FleetVehicleLogContract(models.Model):
         ('monthly', 'Monthly'),
         ('yearly', 'Yearly')
         ], 'Recurring Cost Frequency', default='monthly', required=True, tracking=True)
-    service_ids = fields.Many2many('fleet.service.type', string="Included Services", domain=[('category', '=', 'service')])
+    service_ids = fields.Many2many('fleet.service.type', string="Included Services", domain=[('category', 'in', ['contract', 'service'])])
 
     @api.depends('vehicle_id.name', 'cost_subtype_id')
     def _compute_contract_name(self):
