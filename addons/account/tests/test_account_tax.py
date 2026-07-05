@@ -173,7 +173,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
                 "invoice_repartition_line_ids": [
                     Command.update(last_invoice_rep_line.id, {
                         'factor_percent': -100,
-                        'tag_ids': [Command.create({'name': 'TaxTag12345'})]
+                        'tag_ids': [Command.create({'name': 'TaxTag12345', 'applicability': 'taxes'})]
                     }),
                 ],
                 "refund_repartition_line_ids": [
