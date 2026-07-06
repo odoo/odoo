@@ -899,7 +899,7 @@ class ProjectTask(models.Model):
                             for role in task.role_ids:
                                 if (
                                     role.user_ids
-                                    and (candidat_ids := list(set(role.user_ids.ids) - user_ids))
+                                    and (candidat_ids := list(set(role.user_ids.filtered('active').ids) - user_ids))
                                 ):
                                     shuffle(candidat_ids)
                                     user_ids.add(candidat_ids[0])
