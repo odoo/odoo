@@ -200,12 +200,13 @@
     <BuilderContext
             t-if="this.isActiveItem('attributes_opt') or this.isActiveItem('attributes_opt_top')"
             action="'websiteConfig'"
+            level="1"
     >
-        <BuilderRow label.translate="Price" level="1">
+        <BuilderRow label.translate="Price">
             <BuilderCheckbox actionParam="{views: ['website_sale.filter_products_price']}"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Tags" level="1">
+        <BuilderRow label.translate="Tags">
             <BuilderCheckbox id="'o_wsale_tags_filter_opt'" actionParam="{views: ['website_sale.filter_products_tags']}"/>
         </BuilderRow>
     </BuilderContext>

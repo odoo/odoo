@@ -10,11 +10,11 @@
             </BuilderSelect>
             <BuilderButton icon="'fa-arrows-alt'" title.translate="Background Position" preview="false" action="'backgroundPositionOverlay'"/>
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('background_repeat_opt')" action="'setBackgroundSize'">
-            <BuilderRow label.translate="Width" level="3">
+        <BuilderContext t-if="this.isActiveItem('background_repeat_opt')" action="'setBackgroundSize'"  level="3">
+            <BuilderRow label.translate="Width">
                 <BuilderNumberInput actionParam="'width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
-            <BuilderRow label.translate="Height" level="3">
+            <BuilderRow label.translate="Height">
                 <BuilderNumberInput actionParam="'height'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
         </BuilderContext>
