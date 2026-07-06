@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 import operator
 from ast import literal_eval
@@ -15,7 +14,7 @@ from odoo import _, fields, http, tools
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.stream import content_disposition
-from odoo.tools import is_html_empty, plaintext2html
+from odoo.tools import BinaryBytes, is_html_empty, plaintext2html
 from odoo.tools.misc import babel_locale_parse
 
 
@@ -518,7 +517,7 @@ class EventTrackController(http.Controller):
             'description': plaintext2html(post['description']),
             'partner_biography': plaintext2html(post['partner_biography']),
             'user_id': False,
-            'image': base64.b64encode(post['image'].read()) if post.get('image') else False,
+            'image': BinaryBytes(post['image'].read()) if post.get('image') else False,
         })
 
         if request.env.user != request.website.user_id:
