@@ -16,7 +16,7 @@ from odoo.tools import SQL
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.-]+$')
 ACCOUNT_CODE_NUMBER_REGEX = re.compile(r'(.*?)(\d*)(\D*?)$')
-
+account_test = 1
 
 class AccountAccount(models.Model):
     _name = 'account.account'
