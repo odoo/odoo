@@ -1,11 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import UTC
+from datetime import UTC, datetime, time
+from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
 from odoo.tools.date_utils import localized
 from odoo.tools.intervals import Intervals
+
+from odoo.addons.resource.models.utils import localize_intervals
+import functools
+import operator
 
 
 class ResourceMixin(models.AbstractModel):
@@ -232,28 +237,61 @@ class ResourceMixin(models.AbstractModel):
         """
         return {record: (start, stop, record.resource_calendar_id) for record in self}
 
-    def _attendance_intervals(self, dt_from, dt_to, domain=None):
+    def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
         """
         Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
             - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
             - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
-        As calendars aren't bound to timezones, the return intervals are given back with naive datetimes.
+        The method uses the calendar method of the same name and shifts the intervals to be fitting the resource's timezone.
 
         :param dt_from: start date of the period (included).
         :param dt_to: end date of the period (included)
         :param domain: optional domain to filter attendances
         """
-        intervals_per_resource = {}
-        resources_per_tz = self.resource_id._get_resources_per_tz()
+        intervals_per_resource = defaultdict(lambda: Intervals([], keep_distinct=True))
         calendar_periods = self._get_calendar_periods(dt_from.date(), dt_to.date())
         shift_calendar_intervals = defaultdict(dict)
-        for tz, resources in resources_per_tz:
-            pass
-            # TODO BEDO
+        all_calendars = self.env['resource.calendar']
+        for _, _, cal in functools.reduce(operator.iadd, calendar_periods.values(), []):
+            all_calendars |= cal
+        cal_att_intervals = all_calendars._attendance_intervals(dt_from, dt_to, domain, availability)
+        for resource in self:
+            tz = resource.tz
+            for start, stop, calendar in calendar_periods.get(resource, []):
+                if not shift_calendar_intervals[calendar].get(tz):
+                    shift_calendar_intervals[calendar][tz] = localize_intervals(cal_att_intervals[calendar], tz)
+                shifted_perdiod_interval = Intervals([(
+                    datetime.combine(start, time.min, tzinfo=ZoneInfo(tz)),
+                    datetime.combine(stop, time.max, tzinfo=ZoneInfo(tz)),
+                    self.env['resource.calendar.attendance'],
+                )])
+                intervals_per_resource[resource] |= (shift_calendar_intervals[calendar][tz] & shifted_perdiod_interval)
         return intervals_per_resource
 
     def _leave_intervals(self, dt_from, dt_to, domain=None):
-        return {}  # TODO BEDO
+        intervals_per_resource = defaultdict(list)
+        domain = domain + [
+            ('resource_id', 'in', [False] + [r.id for r in self.resource_id.ids]),
+            ('date_from', '<=', dt_to.astimezone(UTC).replace(tzinfo=None)),
+            ('date_to', '>=', dt_from.astimezone(UTC).replace(tzinfo=None)),
+        ]
+        leaves_per_resource = dict(self.env['resource.calendar.leaves']._read_group(
+            domain, groupby=['resource_id'], aggregate=['id:recordset']))
+        for resource in self:
+            for leave in leaves_per_resource.get(resource.resource_id):
+                intervals_per_resource[resource].append([
+                    leave.date_from,
+                    leave.date_to,
+                    leave,
+                ])
+            for leave in leaves_per_resource.get(False):
+                if leave.company_id in [resource.company_id, False] and leave.calendar_id in [resource.resource_calendar_id, False]:
+                    intervals_per_resource[resource].append([
+                        leave.date_from,
+                        leave.date_to,
+                        leave,
+                    ])
+        return {r: Intervals(intervals_per_resource[r], keep_distinct=True) for r in self}
 
     def _work_intervals(self, dt_from, dt_to, domain=None):
         attendances = self._attendance_intervals(dt_from, dt_to, domain)
