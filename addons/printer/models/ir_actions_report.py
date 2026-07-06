@@ -4,7 +4,6 @@ from PIL import Image, ImageOps
 
 from odoo import api, fields, models, _
 
-
 epos_template = """
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
     <s:Body>
@@ -48,26 +47,31 @@ class IrActionsReport(models.Model):
         """Method to render reports for printers.
 
         This method is meant to be overridden by modules adding support
-        for specific printer types (e.g. ePOS, IoT).
+        for specific printer types (e.g. IoT).
 
-        By default, we render ZPL reports, PDF ones will be handled using
-        Odoo's default behavior.
+        By default, we render ZPL reports as-is. Any qweb-pdf report linked to an
+        ePOS printer is rendered to an image instead: HTML -> wkhtmltoimage -> thermal
+        format.
         """
         report = self._get_report(report_name)
-        if (
-            report.report_type == "qweb-text"
-            and "zpl" in report.name.lower()
-            and len(report.printer_ids.filtered(lambda p: p.type == "zpl").exists())
-        ):
-            return [
-                {
-                    "type": "zpl",
-                    "report": base64.b64encode(
-                        self._render(report_name, docids, data=data)[0]
-                    ),
-                }
-            ]
-        return []
+
+        def has_printer(printer_type):
+            return bool(report.printer_ids.filtered(lambda p: p.type == printer_type))
+
+        jobs = []
+        if report.report_type == "qweb-text" and "zpl" in report.name.lower() and has_printer("zpl"):
+            jobs.append({"type": "zpl", "report": base64.b64encode(self._render(report_name, docids, data=data)[0])})
+        elif report.report_type == "qweb-pdf" and has_printer("epos"):
+            html = self._render_qweb_html(report_name, docids, data=data)[0].decode()
+            # Reports reference relative URLs (e.g. the barcode widget's <img src="/report/barcode/...">),
+            # which wkhtmltoimage can't resolve without a <base href> since it renders a standalone local file.
+            base_url = self._get_report_url()
+            html = html.replace("<head>", f'<head><base href="{base_url}"/>', 1)
+            image = self._run_image_engine("wkhtmltopdf", [html], 576, 0)[0]
+            if image:
+                jobs.append({"type": "epos", "report": base64.b64encode(thermal_printer_format(image))})
+
+        return jobs
 
     def _read_format(self, *args, **kwargs):
         """Override to add printer IPs and jobs to the context,
