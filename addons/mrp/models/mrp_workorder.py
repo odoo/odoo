@@ -62,6 +62,7 @@ class MrpWorkorder(models.Model):
         'Quantity Done', default=0.0,
         digits='Product Unit',
         copy=False,
+        tracking=True,
         help="Quantity already processed in this work order. If continuous production is active on the bill of materials, recording quantities will unblock the next operation.")
     qty_ready = fields.Float('Quantity Ready', compute='_compute_qty_ready', digits='Product Unit')
     is_produced = fields.Boolean(string="Has Been Produced",
@@ -157,19 +158,21 @@ class MrpWorkorder(models.Model):
         help="The quantity to produce in this workorder in the backorders chain.")
     backorder_count = fields.Integer("Count of linked backorders", compute='_compute_backorder')
 
-    @api.depends('qty_ready', 'qty_remaining', 'production_bom_id.continuous')
+    @api.depends('qty_ready', 'qty_remaining', 'production_bom_id.continuous', 'qty_produced')
     def _compute_state(self):
         for workorder in self:
             if not workorder.uom_id or workorder.state not in ('blocked', 'ready'):
                 continue
             all_blocked_by_workorders_done = not workorder.blocked_by_workorder_ids or all(wo.state in ('cancel', 'done') for wo in workorder.blocked_by_workorder_ids)
-            has_all_qties_ready = workorder.uom_id.compare(workorder.qty_ready, workorder.qty_remaining) == 0
             has_qty_ready = workorder.uom_id.compare(workorder.qty_ready, 0) > 0
             continuous_production = not workorder.blocked_by_workorder_ids or workorder.production_bom_id.continuous
-            if all_blocked_by_workorders_done or has_all_qties_ready or (has_qty_ready and continuous_production):
-                workorder.write({'state': 'ready'})
+            has_all_qties_ready = workorder.uom_id.compare(workorder.qty_ready, workorder.qty_remaining) == 0 and continuous_production
+            if workorder.production_bom_id.continuous and workorder.qty_produced and workorder.state != 'blocked':
+                workorder.state = 'progress'
+            elif all_blocked_by_workorders_done or has_all_qties_ready or (has_qty_ready and continuous_production):
+                workorder.state = 'ready'
             else:
-                workorder.write({'state': 'blocked'})
+                workorder.state = 'blocked'
 
     def set_state(self, state):
         ids_to_update, ids_by_state = [], defaultdict(list)
@@ -189,7 +192,7 @@ class MrpWorkorder(models.Model):
             for wo in wo_to_update:
                 if float_is_zero(wo.qty_produced, precision_digits=0):
                     wo.qty_produced = wo.qty_producing or wo.qty_to_produce
-                if not float_is_zero(wo.production_id.qty_producing, precision_digits=0):
+                if not float_is_zero(wo.qty_produced, precision_digits=0):
                     wo_to_done.add(wo.id)
             wo_to_done = self.env['mrp.workorder'].browse(wo_to_done)
             return wo_to_done.with_context(check_create_backorder=True).action_mark_as_done()
@@ -540,9 +543,10 @@ class MrpWorkorder(models.Model):
             for workorder in self:
                 if workorder.state == 'done' and not workorder.time_ids:
                     workorder.duration = workorder.duration_expected / (workorder.qty_producing or workorder.qty_to_produce or workorder.qty_production) * workorder.qty_produced
-            productions_to_update = self.production_id.filtered(lambda p: p.state != 'done')
+
+            productions_to_update = self.production_id.filtered(lambda p: p.state != 'done' and not p.bom_id.continuous)
             productions_to_update.qty_producing = values['qty_produced']
-            if not self.env.context.get('bypass_change_producing'):
+            if not self.env.context.get('bypass_change_producing') and not workorder.production_bom_id.continuous:
                 productions_to_update._change_producing()
         for workorder in workorders_with_new_wc:
             workorder.duration_expected = workorder._get_duration_expected()

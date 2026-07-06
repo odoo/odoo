@@ -86,7 +86,7 @@ class MrpBom(models.Model):
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     note = fields.Html(string="Additional Notes", help="Additional notes for the manufacturing order. Notes added here will also be displayed in the Shop Floor.")
     continuous = fields.Boolean('Continuous Production', default=False,
-        help="Select to enable continuous production. When checked, operations will start as soon as some quantities are ready."
+        help="If active, registering production on a work order will automatically unblock the next work order if it is blocked."
     )
 
     _qty_positive = models.Constraint(
