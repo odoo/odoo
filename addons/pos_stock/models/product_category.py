@@ -3,9 +3,10 @@ from odoo import api, models
 
 
 class ProductCategory(models.Model):
-    _name = 'product.category'
-    _inherit = ['product.category', 'pos.load.mixin']
+    _inherit = 'product.category'
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'parent_id']
+        pos_data_fields = super()._load_pos_data_fields(config)
+        pos_data_fields.append('removal_strategy_id')
+        return pos_data_fields
