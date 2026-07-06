@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
         },
         {
             content: "Version should have no contract",
-            trigger: ".o_arrow_button_wrapper[data-tooltip='No contract']",
+            trigger: ".o_arrow_button_wrapper button[data-tooltip='No contract']",
         },
         {
             content: "Set a contract date start on the version",
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
         ...stepUtils.saveForm(),
         {
             content: "Tooltip should now reflect the new contract date start",
-            trigger: ".o_arrow_button_wrapper[data-tooltip^='Employee:']",
+            trigger: ".o_arrow_button_wrapper button[data-tooltip^='Employee:']",
         },
         {
             content: "Open contract end date",

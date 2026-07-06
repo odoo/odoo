@@ -262,7 +262,7 @@
             --formView-sheet-padding-y: var(--formView-sheet-padding-y-md, #{map-get($spacers, 3)});
             --formView-sheet-margin-x: var(--formView-sheet-margin-x-md, 0);
             --formView-sheet-border-width: var(--formView-sheet-border-width-md, #{$border-width});
-            --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, #{$border-radius});
+            --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, #{$border-radius-lg});
         }
 
         @include media-breakpoint-up(lg) {
@@ -271,8 +271,8 @@
         }
 
         @include media-breakpoint-up(xxl) {
-            --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl, #{map-get($spacers, 3)});
-            --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl, #{map-get($spacers, 3)});
+            --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl, #{map-get($spacers, 4)});
+            --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl, #{map-get($spacers, 4)});
         }
 
     }
