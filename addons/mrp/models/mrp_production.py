@@ -1468,6 +1468,7 @@ class MrpProduction(models.Model):
         def workorder_order(wo):
             return (wo.operation_id.bom_id, wo.operation_id.sequence, wo.id)
 
+        self.workorder_ids.write({'blocked_by_workorder_ids': False})
         if self.allow_workorder_dependencies:
             for workorder in self.workorder_ids.sorted(workorder_order):
                 workorder.blocked_by_workorder_ids = [Command.link(workorder_per_operation[operation_id].id)
