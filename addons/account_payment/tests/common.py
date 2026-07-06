@@ -19,7 +19,7 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
 
         cls.account = cls.outbound_payment_method_line.payment_account_id
         cls.invoice = cls.env['account.move'].create({
-            'move_type': 'entry',
+            'move_type': 'out_invoice',
             'date': '2019-01-01',
             'currency_id': cls.currency_euro.id,
             'partner_id': cls.partner.id,

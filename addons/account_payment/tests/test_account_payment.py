@@ -275,8 +275,8 @@ class TestAccountPayment(AccountPaymentCommon):
                 journal.inbound_payment_method_line_ids = [Command.update(copy_provider_pml.id, {'payment_provider_id': provider.id})]
 
     def test_generate_payment_link_with_no_invoice_line(self):
-        invoice = self.invoice
-        invoice.line_ids.unlink()
+        invoice = self.invoice.copy({'line_ids': self.invoice.line_ids.browse()})
+        assert not invoice.line_ids
         payment_values = invoice._get_default_payment_link_values()
 
         self.assertDictEqual(payment_values, {
