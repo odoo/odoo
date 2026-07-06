@@ -4,6 +4,7 @@ import babel
 import requests
 
 from odoo.addons.mail.tools.discuss import mail_route
+from odoo.fields import Domain
 from odoo.http import request, Controller
 
 # Google Translate rejects an unlisted region instead of falling back to the language.
@@ -24,7 +25,11 @@ class GoogleTranslateController(Controller):
         ir_config = request.env["ir.config_parameter"].sudo()
         if not ir_config.get_bool("mail.use_google_translate_api"):
             return
-        message = request.env["mail.message"].search([("id", "=", message_id)])
+        # sudo message search (for public users), then check actual access
+        message_su = request.env["mail.message"].sudo().search(
+            Domain("id", "=", message_id) & request.env["mail.message"]._get_search_domain_share()
+        )
+        message = message_su._get_with_access()
         if not message:
             raise request.not_found()
         if request.env.user._is_public():
