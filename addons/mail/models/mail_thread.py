@@ -272,7 +272,8 @@ class MailThread(models.AbstractModel):
 
     def _compute_message_needaction(self):
         res = dict.fromkeys(self.ids, 0)
-        if self.ids:
+        # public is never notified (and has no access on messages)
+        if self.ids and not self.env.user._is_public():
             # search for unread messages, directly in SQL to improve performances
             self.env.cr.execute(""" SELECT msg.res_id FROM mail_message msg
                                  RIGHT JOIN mail_notification rel

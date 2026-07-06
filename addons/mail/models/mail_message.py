@@ -179,7 +179,7 @@ class MailMessage(models.Model):
     preview = fields.Char(
         'Preview', compute='_compute_preview',
         help='The text-only beginning of the body used as email preview.')
-    linked_message_ids = fields.Many2many("mail.message", compute="_compute_linked_message_ids")
+    linked_message_ids = fields.Many2many("mail.message", compute="_compute_linked_message_ids", compute_sudo=True)
     message_link_preview_ids = fields.One2many(
         "mail.message.link.preview", "message_id", groups="base.group_erp_manager"
     )
@@ -338,7 +338,7 @@ class MailMessage(models.Model):
     def _compute_linked_message_ids(self):
         """ Compute the linked messages from the body of the message."""
         message_ids_by_message = defaultdict(list)
-        for message in self._filtered_access('read'):
+        for message in self:
             if tools.is_html_empty(message.body):
                 continue
             str_ids = html.fromstring(message.body).xpath(
@@ -351,10 +351,15 @@ class MailMessage(models.Model):
         if not mids:
             self.linked_message_ids = self.env["mail.message"]
             return
-        # Remove any potential sudo from the env as linked messages are user input, returning them
-        # as sudo could lead to users being able to read any arbitrary message through this feature.
-        # Only allowed messages for the current user are acceptable.
-        linked_messages = self.sudo(False).search(Domain("id", "in", mids))
+        # linked messages come from user input: never return messages the current user cannot access,
+        # otherwise users could read any arbitrary message through this feature
+        if self.env.user._is_public():
+            # sudo: mail.message - public has no access, restrict to shared messages then check access
+            linked_messages = self.sudo().search(
+                Domain("id", "in", mids) & self._get_search_domain_share()
+            )._get_with_access()
+        else:
+            linked_messages = self.sudo(False).search(Domain("id", "in", mids))
         for message in self:
             message.linked_message_ids = linked_messages.filtered(
                 lambda m, message=message: m.id in message_ids_by_message[message],
@@ -592,6 +597,8 @@ class MailMessage(models.Model):
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
+        if self.env.user._is_public():
+            return SHARE_DOMAIN & Domain('message_type', '!=', 'user_notification')
         return SHARE_DOMAIN
 
     def _filter_accessible_from_query(self, query: models.Query, operation: str) -> Self:
@@ -794,7 +801,9 @@ class MailMessage(models.Model):
         if self.env.user._is_admin():
             return self
         valid = self.sudo(False)._filtered_access(mode)
-        for res_model, model_messages in (self - valid).filtered('model').grouped('model').items():
+        # document-based access never grants private notifications, see '_search_res_access'
+        candidates = (self - valid).filtered(lambda m: m.model and m.message_type != 'user_notification')
+        for res_model, model_messages in candidates.grouped('model').items():
             if res_ids := set(model_messages.filtered('res_id').mapped('res_id')):
                 # note that this is still sequential (per document), currently ok
                 # as mostly called on 1 message - batch only for specific public

@@ -110,11 +110,16 @@ class DiscussChannelWebclientController(WebclientController):
     @store_handler("/discuss/channel/messages", audience="everyone", readonly=False)
     def store_get_discuss_channel_messages(self, store: Store, channel_id, fetch_params=None, is_prefetch=False):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        # sudo: mail.message - public has no access, restricted to shared messages of an accessible channel
+        is_public = request.env.user._is_public()
+        domain = request.env["mail.message"]._get_search_domain_share() if is_public else None
         if channel:
             messages = self._resolve_messages(
                 store,
+                domain=domain,
                 thread=channel,
                 fetch_params=fetch_params,
+                sudo=is_public,
             )
             # Prefetched messages are not seen yet. They are marked as done when read.
             if not is_prefetch:

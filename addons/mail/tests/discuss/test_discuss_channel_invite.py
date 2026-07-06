@@ -195,11 +195,16 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             group_chat.invite_by_email(["alfred@test.com"])
         last_message = group_chat._get_last_messages()
         self.assertEqual(last_message.message_type, "user_notification")
-        # user notification is not visible to other members, last message ignores it
-        for user, guest in [(other_user, self.env["mail.guest"]), (self.user_public, self.guest)]:
-            with self.subTest(user=user.name):
+        # user notification is not visible to other members, last message ignores it,
+        # even sudo-ed for share users
+        for user, guest, su in [
+            (other_user, self.env["mail.guest"], False),
+            (self.user_public, self.guest, False),
+            (self.user_public, self.guest, True),
+        ]:
+            with self.subTest(user=user.name, su=su):
                 self.assertEqual(
-                    group_chat.with_user(user).with_context(guest=guest)._get_last_messages(),
+                    group_chat.with_user(user).with_context(guest=guest).sudo(su)._get_last_messages(),
                     previous_message,
                 )
 

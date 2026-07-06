@@ -243,8 +243,9 @@ class SlideSlide(models.Model):
 
     @api.depends("message_ids")
     def _compute_comments_count(self):
+        # sudo: mail.message - published comments, domain restricted to shared messages
         count_by_slide = dict(
-            self.env["mail.message"]._read_group(
+            self.env["mail.message"].sudo()._read_group(
                 PortalWebClientController._get_portal_message_fetch_domain(self),
                 groupby=["res_id"],
                 aggregates=["__count"],
