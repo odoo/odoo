@@ -327,7 +327,7 @@ export class FontPlugin extends Plugin {
         set_block_overrides: this.handleSetBlock.bind(this),
 
         /** Predicates */
-        are_shorthands_available: (node) => {
+        are_shorthands_available_predicates: (node) => {
             if (closestElement(node, "pre")) {
                 return false;
             }
