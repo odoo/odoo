@@ -233,6 +233,9 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_window',
             "views": [[False, "form"]],
             'target': 'new',
+            'context': {
+                'website_id': self.website_id.id,
+            },
         }
 
     def action_open_blocked_third_party_domains(self):
