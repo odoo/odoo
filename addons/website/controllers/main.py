@@ -842,7 +842,7 @@ class Website(Home):
                         "updated": False,
                         "res_model": model['model'],
                         "res_id": model['id'],
-                        "id": f"{model['model']}-{model['id']}-{index}",
+                        "id": f"{model['model']}-{model['id']}-{model['field']}-{index}",
                         "field": model.get('field'),
                     })
         return json.dumps(result)
