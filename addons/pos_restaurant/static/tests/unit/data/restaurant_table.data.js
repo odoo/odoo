@@ -29,7 +29,7 @@ export class RestaurantTable extends models.ServerModel {
         },
         {
             id: 3,
-            table_number: 2,
+            table_number: 3,
             parent_id: false,
             parent_side: false,
             floor_id: 2,

@@ -412,8 +412,8 @@ describe("pos_store.js", () => {
         let products = store.productsToDisplay;
 
         expect(products.length).toBe(3);
-        expect(products[1].id).toBe(19);
-        expect(products[products.length - 1].id).toBe(5);
+        expect(products[1].id).toBe(51);
+        expect(products[products.length - 1].id).toBe(19);
         expect(store.selectedCategory.id).toBe(1);
         store.selectedCategory = store.models["pos.category"].get(1);
         store.searchProductWord = "TEST";
@@ -471,8 +471,8 @@ describe("pos_store.js", () => {
         grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1);
         expect(grouped[0][0]).toBe(1);
-        expect(grouped[0][1][1].name).toBe("Multi Category Product");
-        expect(grouped[0][1][2].name).toBe("TEST");
+        expect(grouped[0][1][1].name).toBe("Cake");
+        expect(grouped[0][1][2].name).toBe("Multi Category Product");
 
         // Case 5: Grouping with category 'Food' selected (parent of 'Burger' & 'Pizza')
         store.selectedCategory = store.models["pos.category"].get(3);

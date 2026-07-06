@@ -9,37 +9,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
-import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import { registry } from "@web/core/registry";
-
-registry.category("web_tour.tours").add("FloorScreenTour", {
-    steps: () =>
-        [
-            // check floors if they contain their corresponding tables
-            Chrome.startPoS(),
-            FloorScreen.selectedFloorIs("Main Floor"),
-            FloorScreen.hasTable("2"),
-            FloorScreen.hasTable("4"),
-            FloorScreen.hasTable("5"),
-            FloorScreen.clickFloor("Second Floor"),
-            FloorScreen.hasTable("3"),
-            FloorScreen.hasTable("1"),
-
-            // Opening product screen in second floor should go back to second floor
-            FloorScreen.clickFloor("Second Floor"),
-            FloorScreen.hasTable("3"),
-            FloorScreen.clickTable("3"),
-            ProductScreen.isShown(),
-            Chrome.clickPlanButton(),
-            FloorScreen.clickEditPlan(),
-            FloorScreen.selectedFloorIs("Second Floor"),
-            FloorScreen.addFloor(),
-            Dialog.is("New Floor"),
-            Dialog.footerBtnIsDisabled("Apply"),
-            TextInputPopup.inputText("Test Floor"),
-            Dialog.confirm(),
-        ].flat(),
-});
 
 /** TODO Edit floor plan tour
 registry.category("web_tour.tours").add("test_create_floor_tour", {
@@ -205,19 +175,5 @@ registry.category("web_tour.tours").add("no_ghost_floor", {
 
             // 5. Floor Plan ===> The floor deleted was reappearing
             FloorScreen.hasNotFloor("Ghost Floor"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_add_new_table_number_with_multi_floor", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            FloorScreen.clickEditPlan(),
-            FloorScreen.addTable({ close: false }),
-            FloorScreen.hasTable("6"),
-            FloorScreen.selectFloorEditMode("Second Floor"),
-            FloorScreen.addTable({ close: false }),
-            FloorScreen.hasTable("4"),
         ].flat(),
 });

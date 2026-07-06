@@ -1,5 +1,7 @@
 import { models, Command } from "@web/../tests/web_test_helpers";
 
+const { DateTime } = luxon;
+
 export class PosOrder extends models.ServerModel {
     _name = "pos.order";
 
@@ -39,6 +41,7 @@ export class PosOrder extends models.ServerModel {
     sync_from_ui(data) {
         const orderIds = [];
         for (const record of data) {
+            record.write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
             const record_uuid_mapping = record.relations_uuid_mapping || {};
             delete record.relations_uuid_mapping;
             if (record.id) {
@@ -81,7 +84,6 @@ export class PosOrder extends models.ServerModel {
                 }
             }
         }
-
         return this.read_pos_data(orderIds, data, this.config_id);
     }
 
@@ -179,6 +181,13 @@ export class PosOrder extends models.ServerModel {
             "product.attribute.custom.value": posCustomAttributeValue,
             "pos.prep.order": posPrepOrder,
             "pos.prep.line": posPrepLine,
+        };
+    }
+
+    search_order_ids(config_id, domain, limit, offset) {
+        return {
+            ordersInfo: [],
+            totalCount: 0,
         };
     }
 }
