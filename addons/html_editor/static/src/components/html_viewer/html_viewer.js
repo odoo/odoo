@@ -5,7 +5,7 @@ import {
     onMounted,
     onWillStart,
     onWillUnmount,
-    onWillUpdateProps,
+    useEffect,
     props,
     proxy,
     t,
@@ -40,10 +40,10 @@ export class HtmlViewer extends Component {
         });
         this.components = new Set();
 
-        onWillUpdateProps((newProps) => {
-            const newValue = this.formatValue(newProps.config.value);
+        useEffect(() => {
+            const newValue = this.formatValue(this.props.config.value);
             if (newValue.toString() !== this.state.value.toString()) {
-                this.state.value = this.formatValue(newProps.config.value);
+                this.state.value = newValue;
                 if (this.props.config.embeddedComponents) {
                     this.destroyComponents();
                 }
