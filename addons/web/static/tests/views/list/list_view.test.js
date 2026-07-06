@@ -6119,8 +6119,10 @@ test(`fields are translatable in list view`, async () => {
 
 test.tags("desktop");
 test(`long words in text cells should break into smaller lines`, async () => {
-    Foo._records[0].text = "a";
-    Foo._records[1].text = "pneumonoultramicroscopicsilicovolcanoconiosis"; // longest english word I could find
+    // The first row is skipped on purpose: its top border is not collapsed with a
+    // preceding row's, which makes it half a pixel shorter than the other ones.
+    Foo._records[1].text = "a";
+    Foo._records[2].text = "pneumonoultramicroscopicsilicovolcanoconiosis"; // longest english word I could find
 
     await mountView({
         resModel: "foo",
@@ -6131,9 +6133,9 @@ test(`long words in text cells should break into smaller lines`, async () => {
     // Intentionally set the table width to a small size
     queryOne("table").style.width = "100px";
     queryOne("th:eq(-1)").style.width = "100px";
-    const shortText = queryRect(".o_data_row:eq(0) td:eq(-1)").height;
-    const longText = queryRect(".o_data_row:eq(1) td:eq(-1)").height;
-    const emptyText = queryRect(".o_data_row:eq(2) td:eq(-1)").height;
+    const shortText = queryRect(".o_data_row:eq(1) td:eq(-1)").height;
+    const longText = queryRect(".o_data_row:eq(2) td:eq(-1)").height;
+    const emptyText = queryRect(".o_data_row:eq(3) td:eq(-1)").height;
 
     expect(shortText).toBe(emptyText, {
         message: "Short word should not change the height of the cell",

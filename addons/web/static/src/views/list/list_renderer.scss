@@ -2,7 +2,8 @@
 .o_list_renderer {
     --ListRenderer-table-padding-x: #{$table-cell-padding-x-sm};
     --ListRenderer-thead-padding-y: #{map-get($spacers, 4)};
-    --ListRenderer-thead-bg-color: #{$o-webclient-background-color};
+    --ListRenderer-thead-bg-color: linear-gradient(to bottom, #{$o-webclient-background-color}, #{rgba($o-webclient-background-color, .75)} );
+    --ListRendererGrouped__th-bg-color: #{rgba($o-view-background-color, .5)};
     --ListRenderer-thead-border-end-color: #{$border-color};
     --ListRenderer-tfoot-bg-color: #{$o-list-footer-bg-color};
     --sticky-header-zindex: 1;
@@ -82,15 +83,19 @@
 
             th {
                 padding-top: var(--ListRenderer-thead-padding-y);
-                background-color: var(--ListRenderer-thead-bg-color);
+                background: var(--ListRenderer-thead-bg-color);
                 color: $headings-color;
+
+                // Currently sticky thead > th elements have a border bottom that doens't follow when scrolling.
+                // Temporary workaround: We replace the border with a box-shadow to simulate the border bottom so it keeps visible when scrolling.
+                border-bottom: 0;
+                box-shadow: inset 0px -1px 0 0px var(--ListRenderer-thead-border-end-color);
+
+                // Define backdrop blur here to ensure it will applied on all th
+                backdrop-filter: var(--o-backdrop-blur-sm);
 
                 @include media-only(print) {
                     font-weight: $font-weight-bold;
-                }
-
-                &.table-active {
-                    box-shadow: none;
                 }
             }
 
@@ -264,8 +269,8 @@
 
         // Grouped list views
         tbody > tr.o_group_header {
-            --table-bg: var(--table-striped-bg);
-            --table-color: var(--table-striped-color);
+            --table-bg: var(--ListRendererGrouped__th-bg-color);
+            --table-color: var(--ListRenderer-thead-bg-color);
             height: 40px;
 
             &:hover .o_group_config {
@@ -383,7 +388,7 @@
         .o_list_actions_header {
             width: 32px;
             min-width: 32px;
-            background-color: var(--ListRenderer-thead-bg-color);
+            background: var(--ListRenderer-thead-bg-color);
         }
 
         .o_data_row.o_list_no_open {
