@@ -27,6 +27,8 @@ export class AnimateOption extends BaseOptionComponent {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
                 canHover: await this.dependencies.animateOption.canHaveHoverEffect(editingElement),
+                canHaveScrollEffect:
+                    this.dependencies.animateOption.canHaveScrollEffect(editingElement),
                 isLimitedEffect: this.limitedEffects.some((className) =>
                     editingElement.classList.contains(className)
                 ),
@@ -36,6 +38,7 @@ export class AnimateOption extends BaseOptionComponent {
                     (i) => !i.check || i.check(editingElement)
                 ),
                 isInDropdown: editingElement.closest(".dropdown"),
+                hasSharedTiming: editingElement.matches(".s_animated_number"),
             };
         });
     }

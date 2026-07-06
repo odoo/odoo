@@ -1373,7 +1373,9 @@ export class SelectionPlugin extends Plugin {
         // Get up-to-date selection
         const { editableSelection } = this.getSelectionData();
         // Avoid setting the selection if it's not inside an uneditable element
-        const isInUneditable = (node) => !closestElement(node).isContentEditable;
+        const isInUneditable = (node) =>
+            !closestElement(node).isContentEditable &&
+            this.checkPredicates("is_node_editable_predicates", node) !== true;
         let { startContainer: start, endContainer: end } = editableSelection;
         if (!(isInUneditable(start) || (end !== start && isInUneditable(end)))) {
             return editableSelection;

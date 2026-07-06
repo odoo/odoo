@@ -26,6 +26,7 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 
 /**
  * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_hover_effect_predicates
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_scroll_effect_predicates
  * @typedef {((el: HTMLElement) => Promise<boolean>)[]} hover_effect_allowed_predicates
  */
 
@@ -38,6 +39,7 @@ export class AnimateOptionPlugin extends Plugin {
         "getEffectsItems",
         "hasAnimationEffect",
         "canHaveHoverEffect",
+        "canHaveScrollEffect",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -97,6 +99,10 @@ export class AnimateOptionPlugin extends Plugin {
 
     setup() {
         this.scrollingElement = getScrollingElement(this.document);
+    }
+
+    canHaveScrollEffect(el) {
+        return this.checkPredicates("can_have_scroll_effect_predicates", el) ?? true;
     }
 
     async canHaveHoverEffect(el) {
@@ -473,6 +479,7 @@ export class SetAnimationModeAction extends BuilderAction {
 
         const isNextAnimationFadein = this.animationWithFadein.includes(nextAction.value);
         if (!isNextAnimationFadein) {
+            editingElement.classList.remove("o_animate", "o_animate_on_scroll");
             this._removeEffectAndDirectionClasses(editingElement.classList);
             editingElement.style.setProperty("--wanim-intensity", "");
             editingElement.style.animationDuration = "";
