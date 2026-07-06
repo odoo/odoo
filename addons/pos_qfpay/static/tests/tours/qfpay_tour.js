@@ -61,6 +61,7 @@ registry.category("web_tour.tours").add("qfpay_order_and_refund", {
             ProductScreen.addOrderline("Desk Pad"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Qfpay"),
+            PaymentScreen.clickSendButton(),
             {
                 content: "Waiting for Qfpay payment to be processed",
                 trigger: ".paymentline_status_title:contains('Waiting for card')",
