@@ -13,7 +13,7 @@ export class CarouselProduct extends Interaction {
             }),
         },
         _window: {
-            "t-on-resize.noUpdate": this.throttled(this.onSlideCarouselProduct),
+            "t-on-resize.passive.noUpdate": this.throttled(this.onSlideCarouselProduct),
         },
         ".carousel-indicators": {
             "t-att-style": () => ({

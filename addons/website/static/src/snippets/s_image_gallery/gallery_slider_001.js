@@ -8,7 +8,7 @@ export class GallerySlider001 extends Interaction {
             "t-on-slide.bs.carousel": this.onSlideCarousel,
         },
         ".carousel-indicators": {
-            "t-on-scroll": this.checkScrollableIndicators,
+            "t-on-scroll.passive": this.checkScrollableIndicators,
             "t-att-class": () => ({
                 o_faded_left: this.canScrollLeft,
                 o_faded_right: this.canScrollRight,

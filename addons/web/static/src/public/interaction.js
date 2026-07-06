@@ -97,6 +97,7 @@ export class Interaction {
      *  - `.stop`: calls event.stopPropagation()
      *  - `.capture`: sets { capture: true }
      *  - `.once`: sets { once: true }
+     *  - `.passive`: sets { passive: true }
      *  - `.noUpdate`: the dynamicContent will not be reevaluated after the
      *                 handler, generally because `updateContent` is called
      *                 explicitly.

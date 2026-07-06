@@ -17,7 +17,7 @@ export class HoverableDropdown extends Interaction {
             }),
         },
         _window: {
-            "t-on-resize": this.onResize,
+            "t-on-resize.passive": this.onResize,
         },
     };
 

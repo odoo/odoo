@@ -30,7 +30,7 @@ export class CarouselSlider extends Interaction {
             "t-on-load": this.computeMaxHeight,
         },
         _window: {
-            "t-on-resize": this.debounced(this.computeMaxHeight, 250),
+            "t-on-resize.passive": this.debounced(this.computeMaxHeight, 250),
         },
         ".carousel-item": {
             "t-att-style": () => ({

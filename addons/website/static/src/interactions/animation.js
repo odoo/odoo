@@ -12,7 +12,7 @@ export class Animation extends Interaction {
         _windowUnlessDropdown: () => this.windowUnlessDropdown,
     };
     dynamicContent = {
-        _window: { "t-on-resize": this.scrollWebsiteAnimate },
+        _window: { "t-on-resize.passive": this.scrollWebsiteAnimate },
         _windowUnlessDropdown: {
             "t-on-shown.bs.modal": this.scrollWebsiteAnimate,
             "t-on-slid.bs.carousel": this.scrollWebsiteAnimate,
@@ -23,7 +23,7 @@ export class Animation extends Interaction {
             // Setting capture to true allows to take advantage of event
             // bubbling for events that otherwise don’t support it. (e.g. useful
             // when scrolling a modal)
-            "t-on-scroll.capture": this.throttled(this.scrollWebsiteAnimate),
+            "t-on-scroll.capture.passive": this.throttled(this.scrollWebsiteAnimate),
         },
         _root: {
             "t-att-class": (el) => ({

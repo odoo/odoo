@@ -25,7 +25,7 @@ export class SlidesEmbed extends Interaction {
             },
         },
         _window: {
-            "t-on-resize": this.debounced(this.refreshCurrentPage, 500),
+            "t-on-resize.passive": this.debounced(this.refreshCurrentPage, 500),
         },
         _document: {
             "t-on-fullscreenchange": this.onFullScreenChange,

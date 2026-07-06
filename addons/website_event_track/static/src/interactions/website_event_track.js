@@ -6,18 +6,18 @@ export class WebsiteEventTrack extends Interaction {
 
     dynamicContent = {
         _window: {
-            "t-on-scroll": () => this.updateAgendaScroll(),
-            "t-on-resize": () => this.updateAgendaScroll(),
+            "t-on-scroll.passive": () => this.updateAgendaScroll(),
+            "t-on-resize.passive": () => this.updateAgendaScroll(),
         },
         "#event_track_search": { "t-on-input.prevent": (ev) => {
             this.searchText = ev.currentTarget.value.toLowerCase();
         }},
-        ".o_we_online_agenda": { "t-on-scroll": this.onAgendaScroll },
+        ".o_we_online_agenda": { "t-on-scroll.passive": this.onAgendaScroll },
         ".event_track": { "t-att-class": (el) => ({ "invisible": !el.textContent.toLowerCase().includes(this.searchText) }) },
         "#search_summary": { "t-att-class": () => ({ "invisible": !this.searchText }) },
         "#search_number": { "t-out": () => this.tracks.filter(element => !element.classList.contains('invisible')).length },
         ".o_we_agenda_horizontal_scroller_container": {
-            "t-on-scroll": this.alignAgendaScroll,
+            "t-on-scroll.passive": this.alignAgendaScroll,
             "t-att-class": () => ({
                 "d-none": !(this.visibleAgenda && this.visibleAgenda.classList.contains("o_we_online_agenda_has_scroll")),
             }),

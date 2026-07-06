@@ -18,7 +18,7 @@ export class BackgroundVideo extends Interaction {
             "t-on-optionalCookiesAccepted.once": () => (this.iframeEl.src = this.videoSrc),
         },
         _window: {
-            "t-on-resize": this.throttled(this.adjustIframe),
+            "t-on-resize.passive": this.throttled(this.adjustIframe),
         },
         _dropdown: {
             "t-on-shown.bs.dropdown": this.throttled(this.adjustIframe),
