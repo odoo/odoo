@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_view_form" model="ir.ui.view">
+        <field name="name">account.tax.view.form.inherit.l10n_do</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_group_id']" position="after">
+                <field name="l10n_do_isr_type"
+                       invisible="type_tax_use != 'purchase' or country_code != 'DO'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

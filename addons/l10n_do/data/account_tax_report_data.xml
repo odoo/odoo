@@ -34,7 +34,7 @@
                                     <record id="account_tax_report_2A2_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.good.export</field>
+                                        <field name="formula">-base.good.export</field>
                                     </record>
                                 </field>
                             </record>
@@ -46,7 +46,7 @@
                                     <record id="account_tax_report_2A3_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.service.export</field>
+                                        <field name="formula">-base.service.export</field>
                                     </record>
                                 </field>
                             </record>
@@ -70,7 +70,7 @@
                                     <record id="account_tax_report_2A5_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.untaxed.sales.destination</field>
+                                        <field name="formula">-base.untaxed.sales.destination</field>
                                     </record>
                                 </field>
                             </record>
@@ -82,7 +82,7 @@
                                     <record id="account_tax_report_2A6_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.untaxed.construction.service</field>
+                                        <field name="formula">-base.untaxed.construction.service</field>
                                     </record>
                                 </field>
                             </record>
@@ -94,7 +94,7 @@
                                     <record id="account_tax_report_2A7_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.untaxed.commissions</field>
+                                        <field name="formula">-base.untaxed.commissions</field>
                                     </record>
                                 </field>
                             </record>
@@ -106,7 +106,7 @@
                                     <record id="account_tax_report_2A8_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.untaxed.sales</field>
+                                        <field name="formula">-base.untaxed.sales</field>
                                     </record>
                                 </field>
                             </record>
@@ -116,7 +116,7 @@
                         <field name="name">II.B. TAXED</field>
                         <field name="name@es_419">II.B GRAVADAS</field>
                         <field name="code">IIB_TAXED</field>
-                        <field name="aggregation_formula">II_B_11.balance + II_B_12.balance + II_B_13.balance + II_B_14.balance + II_B_15.balance</field>
+                        <field name="aggregation_formula">II_B_11.balance + II_B_12.balance + II_B_15.balance</field>
                         <field name="children_ids">
                             <record id="account_tax_report_2B11_base" model="account.report.line">
                                 <field name="name">II.B.11 TRANSACTIONS TAXED AT 18%</field>
@@ -138,31 +138,7 @@
                                     <record id="account_tax_report_2B12_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.16%</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_2B13_base" model="account.report.line">
-                                <field name="name">II.B.13 TRANSACTIONS TAXED AT 9%</field>
-                                <field name="name@es_419">II.B.13 OPERACIONES GRAVADAS AL 9%</field>
-                                <field name="code">II_B_13</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_2B13_base_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">base.9%</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_2B14_base" model="account.report.line">
-                                <field name="name">II.B.13 TRANSACTIONS TAXED AT 8%</field>
-                                <field name="name@es_419">II.B.14 OPERACIONES GRAVADAS AL 8%</field>
-                                <field name="code">II_B_14</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_2B14_base_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">base.8%</field>
+                                        <field name="formula">-base.16%</field>
                                     </record>
                                 </field>
                             </record>
@@ -174,7 +150,7 @@
                                     <record id="account_tax_report_2B15_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.depreciable</field>
+                                        <field name="formula">-base.depreciable</field>
                                     </record>
                                 </field>
                             </record>
@@ -192,7 +168,7 @@
                         <field name="name">III.21 TOTAL ITBIS COLLECTED (Add Boxes 16+17+18+19+20)</field>
                         <field name="name@es_419">III.21 TOTAL ITBIS COBRADO (Sumar casillas 16+17+18+19+20)</field>
                         <field name="code">III_21</field>
-                        <field name="aggregation_formula">III_16.balance + III_17.balance + III_18.balance + III_19.balance + III_20.balance</field>
+                        <field name="aggregation_formula">III_16.balance + III_17.balance + III_20.balance</field>
                         <field name="children_ids">
                             <record id="account_tax_report_3_16_tax" model="account.report.line">
                                 <field name="name">III.16 ITBIS COLLECTED (18% of box 11)</field>
@@ -214,31 +190,7 @@
                                     <record id="account_tax_report_3_17_tax_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax.16%</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_3_18_tax" model="account.report.line">
-                                <field name="name">III.18 ITBIS COLLECTED (9% of box 13)</field>
-                                <field name="name@es_419">III.18 ITBIS COBRADO (9% de la casilla 13)</field>
-                                <field name="code">III_18</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_3_18_tax_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax.9%</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_3_19_tax" model="account.report.line">
-                                <field name="name">III.19 ITBIS COLLECTED (8% of box 14)</field>
-                                <field name="name@es_419">III.19 ITBIS COBRADO (8% de la casilla 14)</field>
-                                <field name="code">III_19</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_3_19_tax_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax.8%</field>
+                                        <field name="formula">-tax.16%</field>
                                     </record>
                                 </field>
                             </record>
@@ -250,7 +202,7 @@
                                     <record id="account_tax_report_3_20_tax_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax.decreciable</field>
+                                        <field name="formula">-tax.decreciable</field>
                                     </record>
                                 </field>
                             </record>

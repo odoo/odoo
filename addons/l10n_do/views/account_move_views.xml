@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_view_form" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit.l10n_do</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="l10n_do_purchase_type" invisible="move_type not in ('in_invoice', 'in_refund') or country_code != 'DO'"/>
+                <field name="l10n_do_payment_type" invisible="move_type not in ('in_invoice', 'in_refund') or country_code != 'DO'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
