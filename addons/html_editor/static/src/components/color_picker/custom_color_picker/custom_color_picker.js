@@ -12,7 +12,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
-import { Component, onMounted, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, useEffect, props, proxy, t } from "@odoo/owl";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 
 const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];
@@ -115,11 +115,14 @@ export class CustomColorPicker extends Component {
             this.previewActive = true;
             this._updateUI();
         });
-        onWillUpdateProps((newProps) => {
-            const newSelectedColor = newProps.selectedColor
-                ? newProps.selectedColor
-                : newProps.defaultColor;
-            if (normalizeCSSColor(newSelectedColor) !== this.colorComponents.cssColor) {
+        useEffect(() => {
+            const newSelectedColor = this.props.selectedColor
+                ? this.props.selectedColor
+                : this.props.defaultColor;
+            if (
+                normalizeCSSColor(newSelectedColor) !== this.colorComponents.cssColor &&
+                this.colorPickerAreaRef.el
+            ) {
                 this.setSelectedColor(newSelectedColor);
             }
         });
