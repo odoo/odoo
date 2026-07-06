@@ -216,10 +216,10 @@ export class StatusBarField extends Component {
     adjustVisibleItems() {
         // Get all visible buttons
         const itemEls = [
-            ...this.rootRef().querySelectorAll(".o_arrow_button:not(.dropdown-toggle)"),
+            ...this.rootRef().querySelectorAll(".o_arrow_button_wrap"),
         ];
         const selectedIndex = itemEls.findIndex((el) =>
-            el.classList.contains("o_arrow_button_current")
+            el.querySelector(".o_arrow_button_current")
         );
         const itemsBefore = itemEls.slice(selectedIndex + 2).reverse();
         const itemsAfter = itemEls.slice(0, Math.max(selectedIndex - 1, 0)).reverse();
@@ -229,10 +229,10 @@ export class StatusBarField extends Component {
         hide(this.dropdownRef(), this.beforeRef());
         if (this.items.folded.length) {
             show(this.afterRef());
-            itemEls.forEach((el) => el.classList.remove("o_first"));
+            itemEls.forEach((el) => el.querySelector(".o_arrow_button").classList.remove("o_first"));
         } else {
             hide(this.afterRef());
-            itemEls[0]?.classList.add("o_first");
+            itemEls[0]?.querySelector(".o_arrow_button").classList.add("o_first");
         }
 
         // Reset items variables
@@ -273,9 +273,13 @@ export class StatusBarField extends Component {
         if (!firstItem) {
             return false;
         }
+        const style = getComputedStyle(root);
+        const verticalOffset =
+            parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) +
+            parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
         const { height: currentHeight } = root.getBoundingClientRect();
         const { height: targetHeight } = firstItem.getBoundingClientRect();
-        return currentHeight > targetHeight;
+        return currentHeight > targetHeight + verticalOffset;
     }
 
     /**
