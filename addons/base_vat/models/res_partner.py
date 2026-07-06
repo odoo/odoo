@@ -156,6 +156,26 @@ class ResPartner(models.Model):
                 country_code.lower() in _region_specific_vat_codes
             ) and self._fix_vat_number(vat_prefix + number, partner.country_id.id) or ''
 
+    @api.model
+    def _get_country_specific_vat_variants(self, normalized_vat, country_prefix):
+        """
+        Return additional formatted VAT values to consider during EDI partner matching.
+        Should stay consistent with `_check_customer_vat_match` to ensure
+        correct partner matching when importing EDI documents.
+        """
+        vat_variants = super()._get_country_specific_vat_variants(normalized_vat, country_prefix)
+        if country_prefix.upper() == 'CH':
+            normalized_vat = normalized_vat.replace('-', '')
+            country = self.env.ref('base.ch')
+            if (
+                (vat_formatted := self._fix_vat_number(normalized_vat, country.id))
+                # Incorrect VAT must not match to raise an error
+                and self.simple_vat_check(country.code, vat_formatted[2:])
+            ):
+                vat_base = re.sub(r"\s*(TVA|IVA|MWST)?$", "", vat_formatted.upper())
+                vat_variants.extend([f'{vat_base} {suffix}' for suffix in ('TVA', 'IVA', 'MWST')])
+        return vat_variants
+
     @api.depends_context('company')
     @api.depends('vies_vat_to_check')
     def _compute_perform_vies_validation(self):
@@ -487,7 +507,7 @@ class ResPartner(models.Model):
         # Check the vat number
         return stdnum.util.get_cc_module('hu', 'vat').is_valid(vat)
 
-    __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
+    __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})( )?(MWST|TVA|IVA)$')
 
     def check_vat_ch(self, vat):
         '''
