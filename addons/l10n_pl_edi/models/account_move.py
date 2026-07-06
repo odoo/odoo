@@ -14,6 +14,7 @@ from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero, float_repr, mute_logger, OrderedSet
 from odoo.tools.business_data import split_vat
+from odoo.tools.image import image_data_uri
 
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
@@ -304,21 +305,19 @@ class AccountMove(models.Model):
                 f"{base_link}"
                 f"{compact(self.company_id.vat)}/"
                 f"{self.invoice_date.strftime('%d-%m-%Y')}/"
-                f"{base64.urlsafe_b64encode(sha256(base64.b64decode(self.l10n_pl_edi_attachment_file)).digest()).decode()}"
+                f"{base64.urlsafe_b64encode(sha256(self.l10n_pl_edi_attachment_file).digest()).decode()}"
             )
         return ""
 
     def _l10n_pl_edi_generate_qr(self):
         self.ensure_one()
-        return base64.b64encode(
-            self.env['ir.actions.report'].barcode(
-                barcode_type='QR',
-                value=self._l10n_pl_edi_generate_qr_link(),
-                width=180,
-                height=180,
-                quiet=0,
-            )
-        )
+        return image_data_uri(self.env['ir.actions.report'].barcode(
+            barcode_type='QR',
+            value=self._l10n_pl_edi_generate_qr_link(),
+            width=180,
+            height=180,
+            quiet=0,
+        ))
 
     def _l10n_pl_edi_get_status_mapping(self):
         """
