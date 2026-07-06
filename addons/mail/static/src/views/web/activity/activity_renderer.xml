@@ -5,10 +5,10 @@
         <tr>
             <th></th>
             <th t-foreach="this.activeColumns" t-as="type" t-key="type.id"
-                class="o_activity_type_cell p-3" t-attf-class="{{ this.activeFilter.activityTypeId === type.id ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}"
+                class="o_activity_type_cell ps-0 py-2 align-baseline" t-attf-class="{{ this.activeFilter.activityTypeId === type.id ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}"
                 t-attf-width="{{100/this.activeColumns.length}}%">
                 <div>
-                    <span t-out="type.name"/>
+                    <span class="fs-6" t-out="type.name"/>
                     <span t-if="type.template_ids.length > 0" class="dropdown float-end">
                         <i class="oi oi-fw" data-icon="more_vert" data-bs-toggle="dropdown"/>
                         <div class="dropdown-menu">
@@ -22,7 +22,7 @@
                         </div>
                     </span>
                 </div>
-                <div class="o_activity_counter d-flex align-items-center justify-content-between mb-3 h-0 mt24">
+                <div class="o_activity_counter d-flex align-items-center justify-content-between m-0">
                     <t t-set="group" t-value="this.getGroupInfo(type)"/>
                     <ColumnProgress t-if="group.data.count" group="group.data" aggregate="group.aggregate" aggregateOn="group.aggregateOn" progressBar="group.data.progressBar" onBarClicked.bind="group.data.filterProgressValue" />
                 </div>
@@ -79,7 +79,14 @@
     <t t-set="activityGroup" t-value="this.props.groupedActivities[resId] and this.props.groupedActivities[resId][type.id] or {count: 0, ids: [], state: false}"/>
     <t t-set="isCellHidden" t-value="!this.activeFilter.resIds.has(resId) and this.activeFilter.activityTypeId === type.id"/>
     <td t-if="activityGroup.state and !isCellHidden"
-        t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} {{ this.activeFilter.resIds.has(resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}">
+        t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} bg-gradient-lg {{ this.activeFilter.resIds.has(resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}"
+        t-att-class="{
+            'bg-danger-light text-danger': activityGroup.state == 'overdue',
+            'bg-warning-light text-warning': activityGroup.state == 'today',
+            'bg-success-light text-success': activityGroup.state == 'planned',
+            'bg-dark-light text-dark': activityGroup.state == 'done'
+        }"
+    >
         <ActivityCell activityIds="activityGroup.ids" activityTypeId="type.id"
                       attachmentsInfo="activityGroup.attachments_info"
                       reportingDate="activityGroup.reporting_date"
@@ -92,10 +99,15 @@
         />
     </td>
     <td t-else=""
-        class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"
+        class="o_activity_summary_cell o_activity_empty_cell p-0 cursor-pointer opacity-trigger-hover"
         t-attf-class="{{ this.activeFilter.resIds.has(resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}"
-        t-on-click.prevent.stop="() => this.props.onEmptyCell(resId, type.id)">
-        <i data-tooltip="Create" class="oi text-center mt-2 align-items-center justify-content-center h-100" data-icon="add"/>
+        t-on-click.prevent.stop="() => this.props.onEmptyCell(resId, type.id)"
+    >
+        <i
+            data-tooltip="Create"
+            class="oi d-flex align-items-center justify-content-center h-100 opacity-0 opacity-100-hover bg-100 text-black"
+            data-icon="add"
+        />
     </td>
 </t>
 

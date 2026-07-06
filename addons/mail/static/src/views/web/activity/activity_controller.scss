@@ -1,7 +1,37 @@
 .o_activity_view {
+    --ControlPanel-border-bottom: none;
+
     > table {
         thead > tr > th:first-of-type {
             min-width: 300px;
+        }
+
+        thead {
+            > tr {
+                position: sticky;
+                top: 0;
+                border-top: 0;
+                border-bottom: 0;
+                z-index: 1;
+            }
+
+            th {
+                --table-bg: linear-gradient(to bottom, #{$o-webclient-background-color}, #{rgba($o-webclient-background-color, .75)});
+
+                // Temporary workaround: We replace the border with a box-shadow to simulate the border bottom so it keeps visible when scrolling.
+                border: 0;
+                box-shadow: inset 0px calc(#{$table-border-width} * -1) 0 0 $table-border-color;
+
+                // Need to redefine it with background insead of background-color to ensure applying gradient.
+                background: var(--table-bg);
+
+                // Define backdrop blur here to ensure it will applied on all th
+                backdrop-filter: var(--o-backdrop-blur-sm);
+            }
+        }
+
+        tbody > tr:first-child {
+            border-top: 0;
         }
     }
     .o_activity_summary_cell {
@@ -44,19 +74,6 @@
                 color: map-get($theme-colors, 'dark');
                 &:hover {
                     text-decoration: underline;
-                }
-            }
-        }
-        &.o_activity_empty_cell {
-            > i {
-                display: none;
-            }
-            &:hover {
-                background-color: $component-active-bg;
-
-                > i {
-                    color: gray;
-                    display: flex;
                 }
             }
         }
