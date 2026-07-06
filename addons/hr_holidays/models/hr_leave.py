@@ -879,7 +879,15 @@ class HrLeave(models.Model):
             return
         for holiday in self:
             if holiday.state in ['validate1', 'validate']:
-                raise ValidationError(_("This modification is not allowed in the current state."))
+                message = _(
+                    "Approved time off cannot be modified (%(employee)s: %(date_from)s to %(date_to)s).",
+                    employee=holiday.employee_id.name,
+                    date_from=format_date(self.env, holiday.date_from),
+                    date_to=format_date(self.env, holiday.date_to),
+                )
+                if self.env.context.get('import_file'):
+                    message += _("To import it as a new time off request instead, leave the External ID column empty.")
+                raise ValidationError(message)
 
     @api.constrains('employee_id')
     def _check_executive_employee_type(self):
@@ -1048,7 +1056,7 @@ class HrLeave(models.Model):
                 work_entry_type_id = values.get('work_entry_type_id')
 
                 # Handle double validation
-                if mapped_validation_type[work_entry_type_id] == 'both':
+                if work_entry_type_id and mapped_validation_type.get(work_entry_type_id) == 'both':
                     self._check_double_validation_rules(employee_id, values.get('state', False))
 
         if any(not vals.get('employee_id') for vals in vals_list):

@@ -1345,6 +1345,13 @@ class HrEmployee(models.Model):
             employee_private.display_name = employee_public.display_name
 
     @api.model
+    def _search_display_name(self, operator, value):
+        domain = super()._search_display_name(operator, value)
+        if self.env.context.get('import_file'):
+            domain &= Domain('company_id', 'in', self.env.companies.ids)
+        return domain
+
+    @api.model
     def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
         if self.has_access('read'):
             return super().search_fetch(domain, field_names, offset, limit, order)
