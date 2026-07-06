@@ -332,6 +332,30 @@ test("list of table commands in last column", async () => {
     ]);
 });
 
+test("table column menu opens on an uneven table", async () => {
+    await setupEditor(`
+        <table>
+            <tbody>
+            <tr><td class="a">1[]</td><td class="b">2</td></tr>
+            <tr><td class="c">3</td></tr>
+            </tbody>
+        </table>`);
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover("td.b");
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    expect(availableCommands(queryOne(".dropdown-menu"))).toEqual([
+        "move_left",
+        "insert_left",
+        "insert_right",
+        "delete",
+        "clear_content",
+    ]);
+});
+
 test("list of commands updates when hovering different table columns", async () => {
     const { el } = await setupEditor(`
         <p><br></p>

@@ -111,7 +111,7 @@ export class TableMenu extends Component {
         const targetCells =
             this.props.type === "row"
                 ? [...cell.parentElement.children]
-                : [...table.rows].map((row) => row.cells[getColumnIndex(cell)]);
+                : [...table.rows].map((row) => row.cells[getColumnIndex(cell)]).filter(Boolean);
         return targetCells.some((td) => {
             const { children } = td;
             return !(
