@@ -21005,6 +21005,64 @@ test(`column tag: class attribute is applied to sub-field wrapper`, async () => 
     expect(groupFields[1]).not.toHaveClass("my_class");
 });
 
+test(`column tag: field decorations are applied to sub-field wrapper`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field" decoration-danger="int_field > 5"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+
+    expect(`tbody tr`).toHaveCount(4);
+    expect(`tbody .o_column_group_field.text-danger`).toHaveCount(3, {
+        message: "3 out of 4 values have the decoration since 4th row int is < 5",
+    });
+    expect(`tbody td.text-danger`).toHaveCount(0, {
+        message: "the decoration is restricted to the sub-field, not the whole cell",
+    });
+    const firstRowGroupFields = queryAll(
+        `tbody tr:eq(0) td:not(.o_list_record_selector):eq(1) .o_column_group_field`
+    );
+    expect(firstRowGroupFields[0]).toHaveClass("text-danger");
+    expect(firstRowGroupFields[1]).not.toHaveClass("text-danger");
+});
+
+test(`column tag: class attribute combines with field decorations on sub-field wrapper`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field" class="my_class" decoration-danger="int_field > 5"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+
+    expect(`tbody .o_column_group_field.my_class`).toHaveCount(4, {
+        message: "the class attribute is applied on every row",
+    });
+    expect(`tbody .o_column_group_field.my_class.text-danger`).toHaveCount(3, {
+        message: "the decoration combines with the class attribute where its condition holds",
+    });
+    const firstRowGroupFields = queryAll(
+        `tbody tr:eq(0) td:not(.o_list_record_selector):eq(1) .o_column_group_field`
+    );
+    expect(firstRowGroupFields[0]).toHaveClass("my_class text-danger");
+    expect(firstRowGroupFields[1]).not.toHaveClass("my_class");
+    expect(firstRowGroupFields[1]).not.toHaveClass("text-danger");
+});
+
 test(`x2many list: create control supports hotkey`, async () => {
     Foo._records[0].o2m = [1];
 

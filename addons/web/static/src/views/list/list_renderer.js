@@ -1098,17 +1098,7 @@ export class ListRenderer extends Component {
                 classNames.push("o_readonly_modifier");
             }
             if (this.canUseFormatter(column, record)) {
-                // generate field decorations classNames (only if field-specific decorations
-                // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
-                // only handle the text-decoration.
-                const { decorations } = column;
-                for (const decoName in decorations) {
-                    if (
-                        evaluateBooleanExpr(decorations[decoName], record.evalContextWithVirtualIds)
-                    ) {
-                        classNames.push(getClassNameFromDecoration(decoName));
-                    }
-                }
+                classNames.push(...this.getDecorationClassNames(column, record));
             }
             if (
                 record.isInEdition &&
@@ -1150,6 +1140,44 @@ export class ListRenderer extends Component {
 
     getFieldClass(column) {
         return column.attrs && column.attrs.class;
+    }
+
+    /**
+     * Generate field decorations classNames (only if field-specific decorations
+     * have been defined in an attribute, e.g. decoration-danger="other_field = 5").
+     * Only handle the text-decoration.
+     *
+     * @param {Column} column
+     * @param {RelationalRecord} record
+     */
+    getDecorationClassNames(column, record) {
+        const classNames = [];
+        const { decorations } = column;
+        for (const decoName in decorations) {
+            if (evaluateBooleanExpr(decorations[decoName], record.evalContextWithVirtualIds)) {
+                classNames.push(getClassNameFromDecoration(decoName));
+            }
+        }
+        return classNames;
+    }
+
+    /**
+     * Classes to apply on the element displaying a given field of a column group.
+     * When the field is displayed by the Field component, that component already
+     * applies the arch class and the decorations itself.
+     *
+     * @param {Column} fieldInfo
+     * @param {RelationalRecord} record
+     */
+    getColumnGroupFieldClasses(fieldInfo, record) {
+        if (!this.canUseFormatter(fieldInfo, record)) {
+            return "";
+        }
+        const classNames = this.getDecorationClassNames(fieldInfo, record);
+        if (this.getFieldClass(fieldInfo)) {
+            classNames.push(this.getFieldClass(fieldInfo));
+        }
+        return classNames.join(" ");
     }
 
     /**
