@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models import mail_message as mail_message_module
+from odoo.exceptions import AccessError
 from odoo.addons.mail.tests import common
 from odoo.exceptions import UserError
 from odoo.tests import HttpCase, new_test_user, tagged, users
@@ -10,8 +13,148 @@ from odoo.tools import mute_logger
 from unittest.mock import patch
 
 
-@tagged("mail_message")
-class TestMailMessage(common.MailCommon, HttpCase):
+class MailMessageCommon(common.MailCommon, HttpCase):
+    """ Mainly to use for access / security / low-level critical internals purpose """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.random_message = cls.partner_admin.message_post(body='Just for reference')
+
+        cls.test_internal_record = cls.env['res.partner'].create({'name': 'Test Internal'})
+        cls.test_public_record = cls.env['discuss.channel'].create({
+            'channel_type': 'channel',
+            'group_public_id': False,
+            'name': 'Test Public',
+        })
+        cls.public_message = cls.test_public_record.with_user(cls.user_employee).message_post(
+            body='For Reference',
+            message_type='comment',
+            subtype_id=cls.env.ref('mail.mt_comment').id,
+        )
+
+        html_ref = Markup(f"""
+<a href="/web#model=mail.message&id={cls.random_message.id}" class="o_message_redirect o_mail_notification"
+    data-oe-model="mail.message" data-oe-id="{cls.random_message.id}">View Message</a>
+<a href="/web#model=mail.message&id={cls.public_message.id}" class="o_message_redirect o_mail_notification"
+    data-oe-model="mail.message" data-oe-id="{cls.public_message.id}">View Message</a>""")
+        cls.test_internal_message = cls.test_internal_record.with_user(cls.user_employee).message_post(
+            body=Markup('<div>Test Body %s</div>') % html_ref,
+            message_type='comment',
+            subtype_id=cls.env.ref('mail.mt_comment').id,
+        )
+        cls.test_public_message = cls.test_public_record.with_user(cls.user_employee).message_post(
+            body=Markup('<div>Test Body %s</div>') % html_ref,
+            message_type='comment',
+            subtype_id=cls.env.ref('mail.mt_comment').id,
+        )
+
+
+@tagged("mail_message", "security")
+class TestMailMessage(MailMessageCommon):
+
+    def test_access_read_inexisting(self):
+        user = new_test_user(self.env, login="Bob", email="bob@test.com")
+        inexisting_message = self.env['mail.message'].with_user(user).browse(-434264)
+        self.assertFalse(inexisting_message.exists())
+        self.assertTrue(inexisting_message.browse().has_access('read'))
+        self.assertFalse(inexisting_message.has_access('read'))
+
+    def test_access_read_mc(self):
+        self.env['res.company'].invalidate_model(['name'])
+        message_c1 = self._add_messages(self.env.company, "Company Note 1", author=self.user_employee.partner_id)
+        message_c2 = self._add_messages(self.company_2, "Company Note 2", author=self.user_employee_c2.partner_id)
+        message_not_author_but_in_to = self._add_messages(
+            self.company_2, "Company Note 3",
+            author=self.user_employee_c2.partner_id, partner_ids=self.user_employee.partner_id)
+        message_not_author_but_in_cc = self._add_messages(
+            self.company_2, "Company Note 4",
+            author=self.user_employee_c2.partner_id, partner_cc_ids=self.user_employee.partner_id)
+        message_not_author_nor_in_recipients = self._add_messages(
+            self.company_2, "Company Note 5",
+            author=self.user_employee_c2.partner_id, partner_cc_ids=self.user_employee_c3.partner_id)
+        search_result = (
+            self.env["mail.message"]
+            .with_context(allowed_company_ids=[self.env.company.id])
+            .with_user(self.user_employee)
+            .search([("model", "=", "res.company")])
+        )
+        self.assertIn(message_c1, search_result)
+        self.assertNotIn(message_c2, search_result)
+        self.assertIn(message_not_author_but_in_to, search_result)
+        self.assertIn(message_not_author_but_in_cc, search_result)
+        self.assertNotIn(message_not_author_nor_in_recipients, search_result)
+
+    def test_access_read_search_with_limit(self):
+        ids = []
+        ids += self._add_messages(self.env.company, "Accessible notes", count=5).ids
+        ids += self._add_messages(self.company_2, "Inccessible notes", count=5).ids
+        ids += self._add_messages(self.env.company, "Accessible notes", count=5).ids
+        messages = (self.env["mail.message"]
+            .with_user(self.user_employee)
+            .with_context(allowed_company_ids=[self.env.company.id])
+        ).browse(ids)
+        accessible = messages._filtered_access('read')
+        self.assertEqual(len(accessible), 10)
+        domain = [('id', 'in', ids)]
+
+        self.assertEqual(messages.search(domain, limit=100), accessible)
+        self.assertEqual(messages.sudo().search(domain, limit=100), messages)
+
+        Message = self.registry[messages._name]
+        with (
+            patch.object(mail_message_module, 'IN_MAX', 3),
+            patch.object(Message, '_search', autospec=True, side_effect=Message._search) as search_func,
+        ):
+            self.assertEqual(messages.search(domain, limit=100), accessible)
+            self.assertGreaterEqual(search_func.call_count, 4)
+
+    def test_access_read_group_with_limit(self):
+        ids = []
+        ids += self._add_messages(self.company_2, "Inccessible notes", count=5, subject="Subject 1").ids
+        ids += self._add_messages(self.env.company, "Accessible notes", count=5, subject="Subject 2").ids
+        messages = (self.env["mail.message"]
+            .with_user(self.user_employee)
+            .with_context(allowed_company_ids=[self.env.company.id])
+        ).browse(ids)
+        accessible = messages._filtered_access('read')
+        self.assertEqual(len(accessible), 5)
+
+        with patch.object(mail_message_module, 'MAX_SEARCH_LIMIT', 5):
+            with self.assertRaisesRegex(UserError, "Please apply additional filters"):
+                messages.formatted_read_group(
+                    [("id", "in", ids)],
+                    ["subject"],
+                    ["id:count"],
+                    limit=100,
+                )
+
+    def test_access_read_public(self):
+        """ Check public access, notably with 2many fields / sudo-ed environment """
+        PublicMessage = self.env['mail.message'].with_user(self.user_public)
+
+        # internal message: cannot read except when sudo-ed
+        with self.assertRaises(AccessError):
+            PublicMessage.browse(self.test_internal_message.id).read(['id'])
+        message_internal_su = PublicMessage.sudo().browse(self.test_internal_message.id)
+        self.assertFalse(message_internal_su.is_current_user_or_guest_author)
+        for access_field in ('res_access_read', 'res_access_write', 'res_access_create', 'res_access_unlink'):
+            self.assertFalse(message_internal_su[access_field])
+        self.assertEqual(
+            message_internal_su.linked_message_ids, self.public_message,
+            "Only messages accessible to user are linked, even as sudo")
+        self.assertFalse(message_internal_su.message_link_preview_ids)
+
+        # public message: can read
+        message_public = PublicMessage.browse(self.test_public_message.id)
+        self.assertFalse(message_public.is_current_user_or_guest_author)
+        self.assertEqual(
+            message_public.linked_message_ids, self.public_message,
+            "Only messages accessible to user are linked")
+        with self.assertRaises(AccessError):  # field limited to admins
+            self.assertFalse(message_public.message_link_preview_ids)
+        with self.assertRaises(AccessError):  # field limited to admins
+            self.assertFalse(message_public.reaction_ids)
 
     @users("employee")
     def test_can_star_message_without_write_access(self):
@@ -31,6 +174,91 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.assertIn(self.env.user.partner_id, message.bookmarked_partner_ids)
         self.make_jsonrpc_request("/mail/store", {"fetch_params": ["remove_all_bookmarks"]})
         self.assertNotIn(self.env.user.partner_id, message.bookmarked_partner_ids)
+
+    @users("employee")
+    def test_unlink_failure_message_notify_author(self):
+        recipient = new_test_user(self.env(su=True), login="Bob", email="invalid_email_addr")
+        with self.mock_mail_gateway():
+            message = self.env.user.partner_id.message_post(
+                body="Hello world!", partner_ids=recipient.partner_id.ids
+            )
+        self.assertEqual(message.notification_ids.failure_type, "mail_email_invalid")
+        self.assertEqual(message.notification_ids.res_partner_id, recipient.partner_id)
+        self.assertEqual(message.notification_ids.author_id, self.env.user.partner_id)
+        with self.assertBus(
+            [
+                BusResult(recipient, "mail.message/delete", {"message_ids": [message.id]}),
+                BusResult(self.env.user, "mail.message/delete", {"message_ids": [message.id]}),
+            ],
+        ):
+            message.unlink()
+
+    @users("employee")
+    def test_web_push_attachment_body(self):
+        image = self.env["ir.attachment"].create(
+            {"mimetype": "image/png", "name": "picture.png", "raw": b"image"}
+        )
+        voice = self.env["ir.attachment"].create(
+            {"mimetype": "audio/mpeg", "name": "recording.mp3", "raw": b"voice"}
+        )
+        # sudo: discuss.voice.metadata is group_system; employees can't create it directly
+        voice.sudo()._set_voice_metadata()
+        pdf = self.env["ir.attachment"].create(
+            {"mimetype": "application/pdf", "name": "quote.pdf", "raw": b"pdf"}
+        )
+        cases = [
+            ([image], "📷\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}picture.png"),
+            ([voice], "🎤\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}Voice Message"),
+            ([pdf], "📄\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}quote.pdf"),
+            ([image, voice], "📷\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}picture.png and Voice Message"),
+            (
+                [image, voice, pdf],
+                "📷\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}picture.png and 2 other attachments",
+            ),
+        ]
+        partner = self.env["res.partner"].browse(self.partner_employee.id)
+        for attachments, expected_body in cases:
+            with self.subTest(count=len(attachments), first=attachments[0].name):
+                message = partner.message_post(
+                    body="",
+                    attachment_ids=[a.id for a in attachments],
+                )
+                payload = partner._notify_by_web_push_prepare_payload(message)
+                self.assertEqual(
+                    payload["options"]["body"], f"{self.env.user.name}: {expected_body}",
+                )
+
+
+@tagged("mail_message", "security")
+class TestMailMessageStore(MailMessageCommon):
+
+    @users("employee")
+    def test_messaging_menu_initialize_counters(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        partner = self.env.user.partner_id
+        values = {"model": "res.partner", "res_id": partner.id, "body": "Hey"}
+        bookmarked = self.env["mail.message"].create(
+            {**values, "bookmarked_partner_ids": [(4, partner.id)]},
+        )
+        notified = self.env["mail.message"].create({
+            **values,
+            "notification_ids": [(0, 0, {"res_partner_id": partner.id, "notification_type": "inbox"})],
+        })
+        self.env["mail.message"].create(values)
+        data = self.make_jsonrpc_request(
+            "/mail/store",
+            {"fetch_params": [[
+                "/mail/messaging_menu/initialize_counters",
+                {"filter_id_by_tab_id_by_record_type": {
+                    "mail.message": {"bookmark": None, "notification": "notification_unread"},
+                }},
+            ]]},
+        )
+        counter_ids_by_tab = {
+            tab["id"]: tab["init_counter_ids"] for tab in data["MessagingMenuTab"]
+        }
+        self.assertEqual(counter_ids_by_tab["bookmark"], bookmarked.ids)
+        self.assertEqual(counter_ids_by_tab["notification"], notified.ids)
 
     @users("employee")
     def test_store_mail_message_only_readable(self):
@@ -73,160 +301,3 @@ class TestMailMessage(common.MailCommon, HttpCase):
         with mute_logger("odoo.addons.mail.tools.store_handler"):
             data = self.make_jsonrpc_request("/mail/store", {"fetch_params": fetch_params[:1]})
         self.assertEqual(data, {})
-
-    def test_mail_message_read_inexisting(self):
-        user = new_test_user(self.env, login="Bob", email="bob@test.com")
-        inexisting_message = self.env['mail.message'].with_user(user).browse(-434264)
-        self.assertFalse(inexisting_message.exists())
-        self.assertTrue(inexisting_message.browse().has_access('read'))
-        self.assertFalse(inexisting_message.has_access('read'))
-
-    @users("employee")
-    def test_web_push_attachment_body(self):
-        image = self.env["ir.attachment"].create(
-            {"mimetype": "image/png", "name": "picture.png", "raw": b"image"}
-        )
-        voice = self.env["ir.attachment"].create(
-            {"mimetype": "audio/mpeg", "name": "recording.mp3", "raw": b"voice"}
-        )
-        # sudo: discuss.voice.metadata is group_system; employees can't create it directly
-        voice.sudo()._set_voice_metadata()
-        pdf = self.env["ir.attachment"].create(
-            {"mimetype": "application/pdf", "name": "quote.pdf", "raw": b"pdf"}
-        )
-        cases = [
-            ([image], "📷\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}picture.png"),
-            ([voice], "🎤\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}Voice Message"),
-            ([pdf], "📄\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}quote.pdf"),
-            ([image, voice], "📷\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}picture.png and Voice Message"),
-            (
-                [image, voice, pdf],
-                "📷\N{NO-BREAK SPACE}\N{NO-BREAK SPACE}picture.png and 2 other attachments",
-            ),
-        ]
-        partner = self.env["res.partner"].browse(self.partner_employee.id)
-        for attachments, expected_body in cases:
-            with self.subTest(count=len(attachments), first=attachments[0].name):
-                message = partner.message_post(
-                    body="",
-                    attachment_ids=[a.id for a in attachments],
-                )
-                payload = partner._notify_by_web_push_prepare_payload(message)
-                self.assertEqual(
-                    payload["options"]["body"], f"{self.env.user.name}: {expected_body}",
-                )
-
-    def test_mail_message_read_access(self):
-        self.env['res.company'].invalidate_model(['name'])
-        message_c1 = self._add_messages(self.env.company, "Company Note 1", author=self.user_employee.partner_id)
-        message_c2 = self._add_messages(self.company_2, "Company Note 2", author=self.user_employee_c2.partner_id)
-        message_not_author_but_in_to = self._add_messages(
-            self.company_2, "Company Note 3",
-            author=self.user_employee_c2.partner_id, partner_ids=self.user_employee.partner_id)
-        message_not_author_but_in_cc = self._add_messages(
-            self.company_2, "Company Note 4",
-            author=self.user_employee_c2.partner_id, partner_cc_ids=self.user_employee.partner_id)
-        message_not_author_nor_in_recipients = self._add_messages(
-            self.company_2, "Company Note 5",
-            author=self.user_employee_c2.partner_id, partner_cc_ids=self.user_employee_c3.partner_id)
-        search_result = (
-            self.env["mail.message"]
-            .with_context(allowed_company_ids=[self.env.company.id])
-            .with_user(self.user_employee)
-            .search([("model", "=", "res.company")])
-        )
-        self.assertIn(message_c1, search_result)
-        self.assertNotIn(message_c2, search_result)
-        self.assertIn(message_not_author_but_in_to, search_result)
-        self.assertIn(message_not_author_but_in_cc, search_result)
-        self.assertNotIn(message_not_author_nor_in_recipients, search_result)
-
-    def test_mail_message_read_access_search_with_limit(self):
-        ids = []
-        ids += self._add_messages(self.env.company, "Accessible notes", count=5).ids
-        ids += self._add_messages(self.company_2, "Inccessible notes", count=5).ids
-        ids += self._add_messages(self.env.company, "Accessible notes", count=5).ids
-        messages = (self.env["mail.message"]
-            .with_user(self.user_employee)
-            .with_context(allowed_company_ids=[self.env.company.id])
-        ).browse(ids)
-        accessible = messages._filtered_access('read')
-        self.assertEqual(len(accessible), 10)
-        domain = [('id', 'in', ids)]
-
-        self.assertEqual(messages.search(domain, limit=100), accessible)
-        self.assertEqual(messages.sudo().search(domain, limit=100), messages)
-
-        Message = self.registry[messages._name]
-        with (
-            patch.object(mail_message_module, 'IN_MAX', 3),
-            patch.object(Message, '_search', autospec=True, side_effect=Message._search) as search_func,
-        ):
-            self.assertEqual(messages.search(domain, limit=100), accessible)
-            self.assertGreaterEqual(search_func.call_count, 4)
-
-    def test_mail_message_read_access_read_group_with_limit(self):
-        ids = []
-        ids += self._add_messages(self.company_2, "Inccessible notes", count=5, subject="Subject 1").ids
-        ids += self._add_messages(self.env.company, "Accessible notes", count=5, subject="Subject 2").ids
-        messages = (self.env["mail.message"]
-            .with_user(self.user_employee)
-            .with_context(allowed_company_ids=[self.env.company.id])
-        ).browse(ids)
-        accessible = messages._filtered_access('read')
-        self.assertEqual(len(accessible), 5)
-
-        with patch.object(mail_message_module, 'MAX_SEARCH_LIMIT', 5):
-            with self.assertRaisesRegex(UserError, "Please apply additional filters"):
-                messages.formatted_read_group(
-                    [("id", "in", ids)],
-                    ["subject"],
-                    ["id:count"],
-                    limit=100,
-                )
-
-    @users("employee")
-    def test_unlink_failure_message_notify_author(self):
-        recipient = new_test_user(self.env(su=True), login="Bob", email="invalid_email_addr")
-        with self.mock_mail_gateway():
-            message = self.env.user.partner_id.message_post(
-                body="Hello world!", partner_ids=recipient.partner_id.ids
-            )
-        self.assertEqual(message.notification_ids.failure_type, "mail_email_invalid")
-        self.assertEqual(message.notification_ids.res_partner_id, recipient.partner_id)
-        self.assertEqual(message.notification_ids.author_id, self.env.user.partner_id)
-        with self.assertBus(
-            [
-                BusResult(recipient, "mail.message/delete", {"message_ids": [message.id]}),
-                BusResult(self.env.user, "mail.message/delete", {"message_ids": [message.id]}),
-            ],
-        ):
-            message.unlink()
-
-    @users("employee")
-    def test_messaging_menu_initialize_counters(self):
-        self.authenticate(self.env.user.login, self.env.user.login)
-        partner = self.env.user.partner_id
-        values = {"model": "res.partner", "res_id": partner.id, "body": "Hey"}
-        bookmarked = self.env["mail.message"].create(
-            {**values, "bookmarked_partner_ids": [(4, partner.id)]},
-        )
-        notified = self.env["mail.message"].create({
-            **values,
-            "notification_ids": [(0, 0, {"res_partner_id": partner.id, "notification_type": "inbox"})],
-        })
-        self.env["mail.message"].create(values)
-        data = self.make_jsonrpc_request(
-            "/mail/store",
-            {"fetch_params": [[
-                "/mail/messaging_menu/initialize_counters",
-                {"filter_id_by_tab_id_by_record_type": {
-                    "mail.message": {"bookmark": None, "notification": "notification_unread"},
-                }},
-            ]]},
-        )
-        counter_ids_by_tab = {
-            tab["id"]: tab["init_counter_ids"] for tab in data["MessagingMenuTab"]
-        }
-        self.assertEqual(counter_ids_by_tab["bookmark"], bookmarked.ids)
-        self.assertEqual(counter_ids_by_tab["notification"], notified.ids)
