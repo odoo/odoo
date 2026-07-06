@@ -78,7 +78,7 @@ class Employee(models.Model):
                         global_time_off._timesheet_prepare_line_values(
                             index,
                             employee,
-                            work_hours_data[global_time_off.id],
+                            work_hours_data[employee.resource_calendar_id.id][global_time_off.id],
                             day_date,
                             work_hours_count
                         )
