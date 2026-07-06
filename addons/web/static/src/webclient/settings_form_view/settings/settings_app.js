@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, signal } from "@odoo/owl";
 
 export class SettingsApp extends Component {
     static template = "web.SettingsApp";
@@ -15,18 +14,17 @@ export class SettingsApp extends Component {
         this.state = proxy({
             search: this.env.searchState,
         });
-        useLayoutEffect(
-            () => {
-                const el = this.settingsAppRef();
-                if (el) {
-                    const force =
-                        this.state.search.value &&
-                        !el.querySelector(".o_settings_container:not(.d-none)") &&
-                        !el.querySelector(".o_setting_box.o_searchable_setting");
-                    el.classList.toggle("d-none", force);
-                }
-            },
-            () => [this.state.search.value]
-        );
+        const updateVisibility = () => {
+            const el = this.settingsAppRef();
+            if (el) {
+                const force =
+                    this.state.search.value &&
+                    !el.querySelector(".o_settings_container:not(.d-none)") &&
+                    !el.querySelector(".o_setting_box.o_searchable_setting");
+                el.classList.toggle("d-none", force);
+            }
+        };
+        onMounted(updateVisibility);
+        onPatched(updateVisibility);
     }
 }
