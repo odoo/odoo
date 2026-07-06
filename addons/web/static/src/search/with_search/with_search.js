@@ -1,5 +1,6 @@
 import { render, useSubEnv } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, t, toRaw, useProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, plugin, t, toRaw, useProps } from "@odoo/owl";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
 import { SearchModel } from "@web/search/search_model";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -58,7 +59,7 @@ export class WithSearch extends Component {
             {
                 orm: useService("orm"),
                 view: useService("view"),
-                field: useService("field"),
+                field: plugin(FieldPlugin),
                 name: useService("name"),
                 dialog: useService("dialog"),
                 treeProcessor: useService("tree_processor"),
