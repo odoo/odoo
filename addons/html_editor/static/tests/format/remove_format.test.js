@@ -369,149 +369,149 @@ test("should remove striketrough format (10)", async () => {
 });
 test("should remove text color (1)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="color: rgb(255, 0, 0);">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="color: rgb(255, 0, 0);">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove text color (2)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="color: red">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="color: red">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove text color (3)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="color: #ff0000">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="color: #ff0000">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove text color (4)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font class="text-o-color-1">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span class="text-o-color-1">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove text color (5)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="color: rgb(255, 0, 0);">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="color: rgb(255, 0, 0);">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="color: rgb(255, 0, 0);">b</font>[cd]<font style="color: rgb(255, 0, 0);">e</font>f</div>',
+            '<div>a<span style="color: rgb(255, 0, 0);">b</span>[cd]<span style="color: rgb(255, 0, 0);">e</span>f</div>',
     });
 });
 test("should remove text color (6)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="color: red">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="color: red">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="color: red">b</font>[cd]<font style="color: red">e</font>f</div>',
+            '<div>a<span style="color: red">b</span>[cd]<span style="color: red">e</span>f</div>',
     });
 });
 test("should remove text color (7)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="color: #ff0000">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="color: #ff0000">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="color: #ff0000">b</font>[cd]<font style="color: #ff0000">e</font>f</div>',
+            '<div>a<span style="color: #ff0000">b</span>[cd]<span style="color: #ff0000">e</span>f</div>',
     });
 });
 test("should remove text color (8)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font class="text-o-color-1">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span class="text-o-color-1">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font class="text-o-color-1">b</font>[cd]<font class="text-o-color-1">e</font>f</div>',
+            '<div>a<span class="text-o-color-1">b</span>[cd]<span class="text-o-color-1">e</span>f</div>',
     });
 });
 test("should remove text color with shortcut", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="color: rgb(255, 0, 0);">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="color: rgb(255, 0, 0);">[cd]</span>ef</div>',
         stepFunction: () => press(["control", "Space"]),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove background color (1)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="background: rgb(0, 0, 255);">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="background: rgb(0, 0, 255);">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove background color (2)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="background: blue">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="background: blue">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove background color (3)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="background: #00f">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="background: #00f">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove background color (4)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="background-color: #00f">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="background-color: #00f">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove background color (5)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font class="bg-o-color-1">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span class="bg-o-color-1">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove background color (6)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="background: rgb(255, 0, 0);">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="background: rgb(255, 0, 0);">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="background: rgb(255, 0, 0);">b</font>[cd]<font style="background: rgb(255, 0, 0);">e</font>f</div>',
+            '<div>a<span style="background: rgb(255, 0, 0);">b</span>[cd]<span style="background: rgb(255, 0, 0);">e</span>f</div>',
     });
 });
 test("should remove background color (7)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="background: red">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="background: red">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="background: red">b</font>[cd]<font style="background: red">e</font>f</div>',
+            '<div>a<span style="background: red">b</span>[cd]<span style="background: red">e</span>f</div>',
     });
 });
 test("should remove background color (8)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="background: #ff0000">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="background: #ff0000">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="background: #ff0000">b</font>[cd]<font style="background: #ff0000">e</font>f</div>',
+            '<div>a<span style="background: #ff0000">b</span>[cd]<span style="background: #ff0000">e</span>f</div>',
     });
 });
 test("should remove background color (9)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="background-color: #ff0000">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="background-color: #ff0000">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="background-color: #ff0000">b</font>[cd]<font style="background-color: #ff0000">e</font>f</div>',
+            '<div>a<span style="background-color: #ff0000">b</span>[cd]<span style="background-color: #ff0000">e</span>f</div>',
     });
 });
 test("should remove background color (10)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font class="bg-o-color-1">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span class="bg-o-color-1">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font class="bg-o-color-1">b</font>[cd]<font class="bg-o-color-1">e</font>f</div>',
+            '<div>a<span class="bg-o-color-1">b</span>[cd]<span class="bg-o-color-1">e</span>f</div>',
     });
 });
 test("should remove background color with shortcut", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="background: rgb(0, 0, 255);">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="background: rgb(0, 0, 255);">[cd]</span>ef</div>',
         stepFunction: () => press(["control", "Space"]),
         contentAfter: "<div>ab[cd]ef</div>",
     });
@@ -519,7 +519,7 @@ test("should remove background color with shortcut", async () => {
 test("should remove the background image when clear the format", async () => {
     await testEditor({
         contentBefore:
-            '<div><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</font></p></div>',
+            '<div><p><span class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</span></p></div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div><p>[ab]</p></div>",
     });
@@ -527,56 +527,56 @@ test("should remove the background image when clear the format", async () => {
 test("should remove the background image when clear the format with shortcut", async () => {
     await testEditor({
         contentBefore:
-            '<div><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</font></p></div>',
+            '<div><p><span class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</span></p></div>',
         stepFunction: () => press(["control", "Space"]),
         contentAfter: "<div><p>[ab]</p></div>",
     });
 });
 test("should remove all the colors for the text separated by Shift+Enter when using removeFormat button (1)", async () => {
     await testEditor({
-        contentBefore: `<div><h1><font style="color: red">[ab</font><br><font style="color: red">cd</font><br><font style="color: red">ef]</font></h1></div>`,
+        contentBefore: `<div><h1><span style="color: red">[ab</span><br><span style="color: red">cd</span><br><span style="color: red">ef]</span></h1></div>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<div><h1>[ab<br>cd<br>ef]</h1></div>`,
     });
 });
 test("should remove all the colors for the text separated by Shift+Enter when using removeFormat button (2)", async () => {
     await testEditor({
-        contentBefore: `<div><h1><font style="color: red">[ab</font><br><font style="color: red">cd</font><br><font style="color: red">]ef</font></h1></div>`,
+        contentBefore: `<div><h1><span style="color: red">[ab</span><br><span style="color: red">cd</span><br><span style="color: red">]ef</span></h1></div>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
-        contentAfter: `<div><h1>[ab<br>cd<br><font style="color: red">]ef</font></h1></div>`,
+        contentAfter: `<div><h1>[ab<br>cd<br><span style="color: red">]ef</span></h1></div>`,
     });
 });
 test("should remove all the colors for the text separated by Shift+Enter when using removeFormat button with shortcut", async () => {
     await testEditor({
-        contentBefore: `<div><h1><font style="color: red">[ab</font><br><font style="color: red">cd</font><br><font style="color: red">ef]</font></h1></div>`,
+        contentBefore: `<div><h1><span style="color: red">[ab</span><br><span style="color: red">cd</span><br><span style="color: red">ef]</span></h1></div>`,
         stepFunction: () => press(["control", "Space"]),
         contentAfter: `<div><h1>[ab<br>cd<br>ef]</h1></div>`,
     });
 });
 test("should remove all the colors for the text separated by Enter when using removeFormat button (1)", async () => {
     await testEditor({
-        contentBefore: `<div><h1><font style="background-color: red">[ab</font></h1><h1><font style="background-color: red">cd</font></h1><h1><font style="background-color: red">ef]</font></h1></div>`,
+        contentBefore: `<div><h1><span style="background-color: red">[ab</span></h1><h1><span style="background-color: red">cd</span></h1><h1><span style="background-color: red">ef]</span></h1></div>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<div><h1>[ab</h1><h1>cd</h1><h1>ef]</h1></div>`,
     });
 });
 test("should remove all the colors for the text separated by Enter when using removeFormat button (2)", async () => {
     await testEditor({
-        contentBefore: `<div><h1><font style="color: red">[ab</font></h1><h1><font style="color: red">cd</font></h1><h1><font style="color: red">ef]</font></h1></div>`,
+        contentBefore: `<div><h1><span style="color: red">[ab</span></h1><h1><span style="color: red">cd</span></h1><h1><span style="color: red">ef]</span></h1></div>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<div><h1>[ab</h1><h1>cd</h1><h1>ef]</h1></div>`,
     });
 });
 test("should remove all the colors for the text separated by Enter with shortcut (1)", async () => {
     await testEditor({
-        contentBefore: `<div><h1><font style="background-color: red">[ab</font></h1><h1><font style="background-color: red">cd</font></h1><h1><font style="background-color: red">ef]</font></h1></div>`,
+        contentBefore: `<div><h1><span style="background-color: red">[ab</span></h1><h1><span style="background-color: red">cd</span></h1><h1><span style="background-color: red">ef]</span></h1></div>`,
         stepFunction: () => press(["control", "Space"]),
         contentAfter: `<div><h1>[ab</h1><h1>cd</h1><h1>ef]</h1></div>`,
     });
 });
 test("should remove all the colors for the text separated by Enter with shortcut (2)", async () => {
     await testEditor({
-        contentBefore: `<div><h1><font style="color: red">[ab</font></h1><h1><font style="color: red">cd</font></h1><h1><font style="color: red">ef]</font></h1></div>`,
+        contentBefore: `<div><h1><span style="color: red">[ab</span></h1><h1><span style="color: red">cd</span></h1><h1><span style="color: red">ef]</span></h1></div>`,
         stepFunction: () => press(["control", "Space"]),
         contentAfter: `<div><h1>[ab</h1><h1>cd</h1><h1>ef]</h1></div>`,
     });
@@ -619,7 +619,7 @@ test("should remove format and keep attribute in a span", async () => {
 test("should remove multiple color (1)", async () => {
     await testEditor({
         contentBefore:
-            '<div>ab<font style="background: rgb(0, 0, 255);color: rgb(0, 255, 255);">[cd]</font>ef</div>',
+            '<div>ab<span style="background: rgb(0, 0, 255);color: rgb(0, 255, 255);">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
@@ -627,7 +627,7 @@ test("should remove multiple color (1)", async () => {
 test("should remove multiple color (2)", async () => {
     await testEditor({
         contentBefore:
-            '<div>ab<font style="background: red" class="bg-o-color-1">[cd]</font>ef</div>',
+            '<div>ab<span style="background: red" class="bg-o-color-1">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
@@ -635,7 +635,7 @@ test("should remove multiple color (2)", async () => {
 test("should remove multiple color (3)", async () => {
     await testEditor({
         contentBefore:
-            '<div>ab<font style="background: rgb(0, 0, 255);"><font class="bg-o-color-1">[cd]</font></font>ef</div>',
+            '<div>ab<span style="background: rgb(0, 0, 255);"><span class="bg-o-color-1">[cd]</span></span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
@@ -643,7 +643,7 @@ test("should remove multiple color (3)", async () => {
 test("should remove multiple color (4)", async () => {
     await testEditor({
         contentBefore:
-            '<div>ab<font style="color: rgb(0, 0, 255);"><font class="bg-o-color-1">[cd]</font></font>ef</div>',
+            '<div>ab<span style="color: rgb(0, 0, 255);"><span class="bg-o-color-1">[cd]</span></span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
@@ -651,39 +651,38 @@ test("should remove multiple color (4)", async () => {
 test("should remove multiple color (5)", async () => {
     await testEditor({
         contentBefore:
-            '<div>ab<font style="background: blue">c[d<font class="bg-o-color-1">ef]</font></font>gh</div>',
+            '<div>ab<span style="background: blue">c[d<span class="bg-o-color-1">ef]</span></span>gh</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
-        contentAfter: '<div>ab<font style="background: blue">c</font>[def]gh</div>',
+        contentAfter: '<div>ab<span style="background: blue">c</span>[def]gh</div>',
     });
 });
-// TODO: we should avoid <font> element into <font> element when possible
 test.todo("should remove multiple color (6)", async () => {
     await testEditor({
         contentBefore:
-            '<div>ab<font style="background: blue">c[d<font class="bg-o-color-1">e]f</font></font>gh</div>',
+            '<div>ab<span style="background: blue">c[d<span class="bg-o-color-1">e]f</span></span>gh</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>ab<font style="background: blue">c</font>[de]<font class="bg-o-color-1">f</font>gh</div>',
+            '<div>ab<span style="background: blue">c</span>[de]<span class="bg-o-color-1">f</span>gh</div>',
     });
 });
 test("should remove multiple color with shortcut", async () => {
     await testEditor({
         contentBefore:
-            '<div>ab<font style="background: blue">c[d<font class="bg-o-color-1">ef]</font></font>gh</div>',
+            '<div>ab<span style="background: blue">c[d<span class="bg-o-color-1">ef]</span></span>gh</div>',
         stepFunction: () => press(["control", "Space"]),
-        contentAfter: '<div>ab<font style="background: blue">c</font>[def]gh</div>',
+        contentAfter: '<div>ab<span style="background: blue">c</span>[def]gh</div>',
     });
 });
 test("undo remove format should return the element to it's original state", async () => {
     await testEditor({
         contentBefore:
-            '<p><strong><em><font style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);"><u><s>[sdsdsdsds]</s></u></font></em></strong></p>',
+            '<p><strong><em><span style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);"><u><s>[sdsdsdsds]</s></u></span></em></strong></p>',
         stepFunction: (editor) => {
             execCommand(editor, "removeFormat");
             execCommand(editor, "historyUndo");
         },
         contentAfter:
-            '<p><strong><em><font style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);"><u><s>[sdsdsdsds]</s></u></font></em></strong></p>',
+            '<p><strong><em><span style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);"><u><s>[sdsdsdsds]</s></u></span></em></strong></p>',
     });
 });
 
@@ -747,7 +746,7 @@ test("should remove font-size style from multiple sized selected text", async ()
 
 test("should remove font size and color styles (1)", async () => {
     await testEditor({
-        contentBefore: `<p><span class="display-1-fs"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+        contentBefore: `<p><span class="display-1-fs"><span class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</span></span></p>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<p>[abcdefg]</p>`,
     });
@@ -755,7 +754,7 @@ test("should remove font size and color styles (1)", async () => {
 
 test("should remove font size and color styles (2)", async () => {
     await testEditor({
-        contentBefore: `<p><span style="font-size: 10px;"><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+        contentBefore: `<p><span style="font-size: 10px;"><span style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</span></span></p>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<p>[abcdefg]</p>`,
     });
@@ -816,7 +815,7 @@ test("should remove color only from selected text within a heading", async () =>
         contentBefore: '<div><h1 style="color: rgb(255, 0, 0);">a[bc]d</h1></div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div><h1><font style="color: rgb(255, 0, 0);">a</font>[bc]<font style="color: rgb(255, 0, 0);">d</font></h1></div>',
+            '<div><h1 style="color: rgb(255, 0, 0);">a<span class="o_default_color">[bc]</span>d</h1></div>',
     });
 });
 
@@ -832,7 +831,7 @@ test("should remove gradient color from span element", async () => {
 test("should remove all formats when having multiple formats", async () => {
     await testEditor({
         contentBefore:
-            '<p><span class="display-4-fs"><font style="color: rgb(255, 156, 0);"><strong>[test]</strong></font></span></p>',
+            '<p><span class="display-4-fs"><span style="color: rgb(255, 156, 0);"><strong>[test]</strong></span></span></p>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<p>[test]</p>",
     });
@@ -841,7 +840,7 @@ test("should remove all formats when having multiple formats", async () => {
 test("should remove all formats when having multiple formats (2)", async () => {
     await testEditor({
         contentBefore:
-            '<p><span style="font-size: 24px"><font style="color: rgb(255, 156, 0);"><strong>[test]</strong></font></span></p>',
+            '<p><span style="font-size: 24px"><span style="color: rgb(255, 156, 0);"><strong>[test]</strong></span></span></p>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<p>[test]</p>",
     });
@@ -850,7 +849,7 @@ test("should remove all formats when having multiple formats (2)", async () => {
 test("should remove all formats when having multiple formats (3)", async () => {
     await testEditor({
         contentBefore:
-            '<p><span class="display-4-fs"><font class="text-o-color-1"><strong>[test]</strong></font></span></p>',
+            '<p><span class="display-4-fs"><span class="text-o-color-1"><strong>[test]</strong></span></span></p>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<p>[test]</p>",
     });
@@ -878,9 +877,9 @@ test("Remove format not remove text color if applied on .btn element", async () 
 
 test("should remove format of a editable text within contenteditable false block", async () => {
     await testEditor({
-        contentBefore: `<div contenteditable="false"><div contenteditable="true"><p><font style="background-color: red;"><font style="background-color: blue;">ab[cd]ef</font></font></p></div></div>`,
+        contentBefore: `<div contenteditable="false"><div contenteditable="true"><p><span style="background-color: red;"><span style="background-color: blue;">ab[cd]ef</span></span></p></div></div>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
-        contentAfter: `<div contenteditable="false"><div contenteditable="true"><p><font style="background-color: red;"><font style="background-color: blue;">ab</font></font>[cd]<font style="background-color: red;"><font style="background-color: blue;">ef</font></font></p></div></div>`,
+        contentAfter: `<div contenteditable="false"><div contenteditable="true"><p><span style="background-color: red;"><span style="background-color: blue;">ab</span></span>[cd]<span style="background-color: red;"><span style="background-color: blue;">ef</span></span></p></div></div>`,
     });
 });
 
@@ -929,11 +928,11 @@ describe("Toolbar", () => {
 
     test("Should remove background class color from selection", async () => {
         const { el } = await setupEditor(
-            `<p>this <font class="text-o-color-1">is[ a ]UX</font> test.</p>`
+            `<p>this <span class="text-o-color-1">is[ a ]UX</span> test.</p>`
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p>this <font class="text-o-color-1">is</font>[ a ]<font class="text-o-color-1">UX</font> test.</p>`
+            `<p>this <span class="text-o-color-1">is</span>[ a ]<span class="text-o-color-1">UX</span> test.</p>`
         );
     });
 
@@ -985,7 +984,7 @@ describe("Toolbar", () => {
 
     test("Should remove background color of text within a fully selected table", async () => {
         const { el } = await setupEditor(
-            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p><font style="background-color: rgb(255, 0, 0);">[abc</font></p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p><span style="background-color: rgb(255, 0, 0);">[abc</span></p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
@@ -1132,23 +1131,23 @@ describe("list", () => {
 describe("removeFormat must not remove non-style classes", () => {
     test("does not remove non-color classes (1)", async () => {
         await testEditor({
-            contentBefore: '<p><font class="text-wrap">[test]</font></p>',
+            contentBefore: '<p><span class="text-wrap">[test]</span></p>',
             stepFunction: (editor) => execCommand(editor, "removeFormat"),
-            contentAfter: '<p><font class="text-wrap">[test]</font></p>',
+            contentAfter: '<p><span class="text-wrap">[test]</span></p>',
         });
     });
     test("does not remove non-color classes (2)", async () => {
         await testEditor({
-            contentBefore: '<p><font class="text-center">[test]</font></p>',
+            contentBefore: '<p><span class="text-center">[test]</span></p>',
             stepFunction: (editor) => execCommand(editor, "removeFormat"),
-            contentAfter: '<p><font class="text-center">[test]</font></p>',
+            contentAfter: '<p><span class="text-center">[test]</span></p>',
         });
     });
     test("does not remove non-color classes (3)", async () => {
         await testEditor({
-            contentBefore: '<p><font class="text-align">[test]</font></p>',
+            contentBefore: '<p><span class="text-align">[test]</span></p>',
             stepFunction: (editor) => execCommand(editor, "removeFormat"),
-            contentAfter: '<p><font class="text-align">[test]</font></p>',
+            contentAfter: '<p><span class="text-align">[test]</span></p>',
         });
     });
 
@@ -1169,7 +1168,7 @@ describe("removeFormat must not remove non-style classes", () => {
     for (const cls of classes) {
         test(`removes ${cls} color class`, async () => {
             await testEditor({
-                contentBefore: `<p><font class="${cls}">[test]</font></p>`,
+                contentBefore: `<p><span class="${cls}">[test]</span></p>`,
                 stepFunction: (editor) => execCommand(editor, "removeFormat"),
                 contentAfter: "<p>[test]</p>",
             });

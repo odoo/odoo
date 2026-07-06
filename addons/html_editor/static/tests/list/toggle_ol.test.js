@@ -247,37 +247,37 @@ describe("Range collapsed", () => {
         test("should apply both color and size styles on list item (1)", async () => {
             await testEditor({
                 contentBefore:
-                    '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></p>',
+                    '<p><span style="font-size: 18px;"><span style="color: rgb(255, 0, 0);">[abc]</span></span></p>',
                 stepFunction: toggleOrderedList,
                 contentAfter:
-                    '<ol><li style="color: rgb(255, 0, 0); font-size: 18px;">[abc]</li></ol>',
+                    '<ol><li style="font-size: 18px; color: rgb(255, 0, 0);">[abc]</li></ol>',
             });
         });
 
         test("should apply both color and size styles on list item (2)", async () => {
             await testEditor({
                 contentBefore:
-                    '<p><b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></i></b></p>',
+                    '<p><b><i><span style="font-size: 18px;"><span style="color: rgb(255, 0, 0);">[abc]</span></span></i></b></p>',
                 stepFunction: toggleOrderedList,
                 contentAfter:
-                    '<ol><li style="color: rgb(255, 0, 0); font-size: 18px;"><b><i>[abc]</i></b></li></ol>',
+                    '<ol><li style="font-weight: bolder; font-style: italic; font-size: 18px; color: rgb(255, 0, 0);">[abc]</li></ol>',
             });
         });
 
         test("should not apply color and size styles on list item", async () => {
             await testEditor({
                 contentBefore:
-                    '<p><span style="font-size: 18px;"><font style="color: rgb(0, 128, 0);">a</font></span>b</p>',
+                    '<p><span style="font-size: 18px;"><span style="color: rgb(0, 128, 0);">a</span></span>b</p>',
                 stepFunction: toggleOrderedList,
                 contentAfter:
-                    '<ol><li><span style="font-size: 18px;"><font style="color: rgb(0, 128, 0);">a</font></span>b</li></ol>',
+                    '<ol><li><span style="font-size: 18px;"><span style="color: rgb(0, 128, 0);">a</span></span>b</li></ol>',
             });
         });
 
         test("should only apply color style on list item", async () => {
             await testEditor({
                 contentBefore:
-                    '<p><font style="color: rgb(0, 128, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></font></p>',
+                    '<p><span style="color: rgb(0, 128, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></span></p>',
                 stepFunction: toggleOrderedList,
                 contentAfter:
                     '<ol><li style="color: rgb(0, 128, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></li></ol>',
@@ -287,10 +287,10 @@ describe("Range collapsed", () => {
         test("should only apply size style on list item", async () => {
             await testEditor({
                 contentBefore:
-                    '<p><span style="font-size: 18px;"><b><font style="color: rgb(0, 128, 0);">a</font></b><i><font style="color: rgb(0, 128, 0);">a</font></i></span></p>',
+                    '<p><span style="font-size: 18px;"><b><span style="color: rgb(0, 128, 0);">a</span></b><i><span style="color: rgb(0, 128, 0);">a</span></i></span></p>',
                 stepFunction: toggleOrderedList,
                 contentAfter:
-                    '<ol><li style="font-size: 18px;"><b><font style="color: rgb(0, 128, 0);">a</font></b><i><font style="color: rgb(0, 128, 0);">a</font></i></li></ol>',
+                    '<ol><li style="font-size: 18px;"><b><span style="color: rgb(0, 128, 0);">a</span></b><i><span style="color: rgb(0, 128, 0);">a</span></i></li></ol>',
             });
         });
     });

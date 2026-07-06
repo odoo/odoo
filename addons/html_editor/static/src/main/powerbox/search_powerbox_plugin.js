@@ -13,7 +13,7 @@ export class SearchPowerboxPlugin extends Plugin {
     static dependencies = ["powerbox", "selection", "history", "input"];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        on_beforeinput_handlers: this.onBeforeInput.bind(this),
+        on_beforeinput_handlers: withSequence(30, this.onBeforeInput.bind(this)),
         on_input_handlers: this.onInput.bind(this),
         on_deleted_handlers: this.update.bind(this),
         on_history_commit_undone_handlers: this.update.bind(this),
