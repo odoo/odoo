@@ -314,8 +314,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         in_stock=None,
         **post,
     ):
+        not_reload_request = request.httprequest.path != "/shop/reload"
         website = self.env.website
-        if not website.has_ecommerce_access():
+        if not_reload_request and not website.has_ecommerce_access():
             return request.redirect(f"/web/login?redirect={request.httprequest.path}")
 
         post = {k: v for k, v in post.items() if not k.startswith("_")}
@@ -327,7 +328,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # redirecting:
             # - The category was given as a query parameter instead of in the path,
             # - The category's parents (if any) weren't included in the path.
-            if path != request.httprequest.path:
+            if not_reload_request and path != request.httprequest.path:
                 url = urlparse(request.httprequest.url)
                 return request.redirect(url._replace(path=path).geturl(), code=301)
 
@@ -368,7 +369,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             .sorted()
             .grouped("attribute_id")
         )
-        if request.httprequest.args.getlist("attribute_values"):
+        if not_reload_request and request.httprequest.args.getlist("attribute_values"):
             redirect_url = self._get_url_with_attribute_values(grouped_attributes_values)
             return request.redirect(redirect_url, code=301)
         if attribute_value_params:

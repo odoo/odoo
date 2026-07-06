@@ -96,6 +96,10 @@ async function updateShopContent(interaction, {
 
     try {
         const paramsObject = Object.fromEntries(searchParams.entries());
+        const headerEl = document.querySelector("#o_wsale_products_header");
+        if (headerEl){
+            paramsObject.category = headerEl.dataset.categoryId;
+        }
         const data = await interaction.waitFor(rpc('/shop/reload', paramsObject));
         const updatedShopPage = document.createElement('div');
         setElementContent(updatedShopPage, markup(data.html))
