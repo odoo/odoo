@@ -144,18 +144,22 @@ def get_light_color(color, factor, is_open_shift):
 def localize_intervals(intervals, tz):
     """
     Converts an Intervals object so that all elements are localized to the selected timezone
+    If the dates are already localized, the datetimes will be localized to the wanted timezone.
+    Otherwise, the datetimes will simply have their timezone initialized to the timezone instead.
 
     :param intervals: The intervals on which the changes will be applied
     :param tz: The timezone to convert to
     :return: The converted intervals
     """
-    assert intervals and isinstance(intervals[0][0], datetime) and intervals[0][0].tzinfo is None
     localized_list = []
     tz_info = ZoneInfo(tz)
-    for interval in intervals:
-        for start, stop, meta in interval:
+    for start, stop, meta in intervals:
+        assert isinstance(start, datetime) and isinstance(stop, datetime)
+        if start.tzinfo is None:
             localized_list.append((start.replace(tzinfo=tz_info), stop.replace(tzinfo=tz_info), meta))
-    return Intervals(localized_list)
+        else:
+            localized_list.append((start.astimezone(tz_info), stop.astimezone(tz_info), meta))
+    return Intervals(localized_list, keep_distinct=intervals._keep_distinct)
 
 
 def extended_gcd(a, b):
