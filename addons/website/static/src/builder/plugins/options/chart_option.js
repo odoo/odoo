@@ -21,24 +21,23 @@ export class ChartOption extends BaseOptionComponent {
 
         this.state = proxy({ currentCell: {} });
 
-        this.domState = useDomState((editingElement) => ({
-            data: this.getData(editingElement),
-            isPieChart: this.isPieChart(editingElement),
-        }));
+        this.domState = useDomState((editingElement) => {
+            const isLineChart = this.dependencies.chartOptionPlugin.isLineChart(editingElement);
+            return {
+                data: this.getData(editingElement),
+                isPieChart: this.dependencies.chartOptionPlugin.isPieChart(editingElement),
+                isLineChart,
+                colorLabels: this.getColorpickersLabels(isLineChart),
+            };
+        });
         this.setDefaultState();
     }
 
     /**
-     * Resets the current cell to the topleft cell
-     * and sets the colorpicker labels based on chart type.
+     * Resets the current cell to the top-left cell.
      */
     setDefaultState() {
-        const { backgroundLabel, borderLabel } = this.getColorpickersLabels(
-            this.domState.isPieChart
-        );
         this.updateCurrentCell({
-            backgroundLabel,
-            borderLabel,
             datasetIndex: 0,
             dataIndex: 0,
         });
@@ -67,20 +66,11 @@ export class ChartOption extends BaseOptionComponent {
         });
         return data;
     }
-    isPieChart(editingElement) {
-        const isPieChart = this.dependencies.chartOptionPlugin.isPieChart(editingElement);
-        if (!this.domState || this.domState.isPieChart !== isPieChart) {
-            // Pie charts set color on a data cell basis, whereas the
-            // other ones set it on a dataset basis
-            const { backgroundLabel, borderLabel } = this.getColorpickersLabels(isPieChart);
-            this.updateCurrentCell({ backgroundLabel, borderLabel });
+    getColorpickersLabels(isLineChart) {
+        if (isLineChart) {
+            return { backgroundLabel: _t("Point Color"), borderLabel: _t("Line Color") };
         }
-        return isPieChart;
-    }
-    getColorpickersLabels(isPieChart) {
-        const backgroundLabel = isPieChart ? _t("Data Color") : _t("Dataset Color");
-        const borderLabel = isPieChart ? _t("Data Border") : _t("Dataset Border");
-        return { backgroundLabel, borderLabel };
+        return { backgroundLabel: _t("Fill Color"), borderLabel: _t("Border Color") };
     }
     getColor(color) {
         return getColor(color, this.window, this.document);
@@ -112,8 +102,6 @@ export class ChartOption extends BaseOptionComponent {
      * @param {Object} updatedCellInfo
      * @param {Number} [updatedCellInfo.dataIndex]
      * @param {Number} [updatedCellInfo.datasetIndex]
-     * @param {String} [updatedCellInfo.backgroundLabel]
-     * @param {String} [updatedCellInfo.borderLabel]
      */
     updateCurrentCell(updatedCellInfo) {
         for (const key in updatedCellInfo) {

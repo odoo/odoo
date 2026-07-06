@@ -12,12 +12,13 @@ import { registry } from "@web/core/registry";
 /**
  * @typedef { Object } ChartOptionShared
  * @property { ChartOptionPlugin['isPieChart'] } isPieChart
+ * @property { ChartOptionPlugin['isLineChart'] } isLineChart
  */
 
 export class ChartOptionPlugin extends Plugin {
     static id = "chartOptionPlugin";
     static dependencies = ["history"];
-    static shared = ["isPieChart"];
+    static shared = ["isPieChart", "isLineChart"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -34,12 +35,17 @@ export class ChartOptionPlugin extends Plugin {
             UpdateDatasetLabelAction,
             UpdateLabelNameAction,
             setMinMaxAction,
+            ToggleInterpolateAction,
             ColorChangeAction,
         },
     };
 
     isPieChart(editingElement) {
         return ["pie", "doughnut"].includes(editingElement.dataset.type);
+    }
+
+    isLineChart(editingElement) {
+        return editingElement.dataset.type === "line";
     }
 }
 
@@ -312,6 +318,24 @@ export class setMinMaxAction extends BaseChartAction {
         }
     }
 }
+export class ToggleInterpolateAction extends BaseChartAction {
+    static id = "toggleInterpolate";
+    isApplied({ editingElement, params: { datasetIndex } }) {
+        const data = this.getData(editingElement);
+        return data.datasets[datasetIndex]?.["interpolate"] == true;
+    }
+    apply({ editingElement, params: { datasetIndex } }) {
+        const data = this.getData(editingElement);
+        data.datasets[datasetIndex]["interpolate"] = true;
+        this.updateDOMData(editingElement, data);
+    }
+    clean({ editingElement, params: { datasetIndex } }) {
+        const data = this.getData(editingElement);
+        delete data.datasets[datasetIndex]["interpolate"];
+        this.updateDOMData(editingElement, data);
+    }
+}
+
 export class ColorChangeAction extends BaseChartAction {
     static id = "colorChange";
     getValue({ editingElement, params: { type, datasetIndex, dataIndex } }) {

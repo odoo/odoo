@@ -13,6 +13,11 @@ export class Chart extends Interaction {
         this.noAnimation = false;
         this.style = window.getComputedStyle(document.documentElement);
         this.chartBlockStyle = window.getComputedStyle(this.el);
+        this.fontSize = parseInt(this.el.dataset.fontSize) || 12;
+        this.borderWidth = parseInt(this.el.dataset.borderWidth);
+        this.isLineStyle = this.el.dataset.type === "line";
+        this.isPieStyle = ["pie", "doughnut"].includes(this.el.dataset.type);
+        this.isPointStyle = ["line", "radar"].includes(this.el.dataset.type);
     }
 
     async willStart() {
@@ -21,32 +26,53 @@ export class Chart extends Interaction {
 
     start() {
         const data = JSON.parse(this.el.dataset.data);
-        data.datasets.forEach((el) => {
+
+        const pointStyle = (el) => {
+            el.radius = this.borderWidth;
+            el.hitRadius = Math.max(this.borderWidth, 6);
+            el.hoverRadius = this.borderWidth * 1.25;
+            el.hoverBorderWidth = this.borderWidth * 1.25;
+            el.cubicInterpolationMode = el.interpolate && this.isLineStyle ? "monotone" : "default";
+        };
+
+        const defaultStyle = (el) => {
             el.backgroundColor = this.convertToCSS(el.backgroundColor);
             el.borderColor = this.convertToCSS(el.borderColor);
-            el.borderWidth = this.el.dataset.borderWidth;
+            el.borderWidth = this.borderWidth;
             el.color = this.convertToCSS(el.color);
-        });
+        };
+
+        if (this.isPointStyle) {
+            data.datasets.forEach((el) => ({ ...defaultStyle(el), ...pointStyle(el) }));
+        } else {
+            data.datasets.forEach((el) => defaultStyle(el));
+        }
 
         const colorRgba = convertCSSColorToRgba(this.chartBlockStyle.color);
         const textColor = `rgba(${colorRgba.red}, ${colorRgba.green}, ${colorRgba.blue}, ${colorRgba.opacity})`;
+        const luminance =
+            colorRgba.red * 0.2126 + colorRgba.green * 0.7152 + colorRgba.blue * 0.072;
+        const tooltipDarkmode = luminance > 255 / 2;
         const cartesianColor = `rgba(${colorRgba.red}, ${colorRgba.green}, ${colorRgba.blue}, 0.25)`;
 
         const radialAxis = {
             beginAtZero: true,
+            max: parseInt(this.el.dataset.ticksMax) || undefined,
+            pointLabels: { font: { size: this.fontSize } },
         };
 
         const linearAxis = {
             type: "linear",
             stacked: this.el.dataset.stacked === "true",
             beginAtZero: true,
-            min: parseInt(this.el.dataset.ticksMin),
-            max: parseInt(this.el.dataset.ticksMax),
+            min: parseInt(this.el.dataset.ticksMin) || undefined,
+            max: parseInt(this.el.dataset.ticksMax) || undefined,
             grid: {
                 color: cartesianColor,
             },
             ticks: {
                 color: textColor,
+                font: { size: this.fontSize },
             },
         };
 
@@ -58,6 +84,7 @@ export class Chart extends Interaction {
             },
             ticks: {
                 color: textColor,
+                font: { size: this.fontSize },
             },
         };
 
@@ -71,11 +98,24 @@ export class Chart extends Interaction {
                         position: this.el.dataset.legendPosition,
                         labels: {
                             color: textColor,
+                            font: { size: this.fontSize },
+                            boxWidth: this.fontSize * 2.5,
+                            boxHeight: this.fontSize,
+                            usePointStyle: this.isLineStyle || this.isRadarStyle,
                         },
                     },
                     tooltip: {
                         enabled: this.el.dataset.tooltipDisplay === "true",
                         position: "custom",
+                        titleColor: tooltipDarkmode ? "#000000cc" : "#ffffffcc",
+                        titleFont: { size: this.fontSize },
+                        bodyColor: tooltipDarkmode ? "#000000cc" : "#ffffffcc",
+                        bodyFont: { size: this.fontSize },
+                        boxWidth: this.fontSize,
+                        boxHeight: this.fontSize,
+                        boxPadding: 2,
+                        usePointStyle: this.isLineStyle || this.isRadarStyle,
+                        backgroundColor: tooltipDarkmode ? "white" : "black",
                     },
                     title: {
                         display: !!this.el.dataset.title,

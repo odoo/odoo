@@ -11,12 +11,22 @@
             <BuilderSelectItem actionValue="'line'" id="'line_chart_opt'">Line</BuilderSelectItem>
             <BuilderSelectItem actionValue="'pie'">Pie</BuilderSelectItem>
             <BuilderSelectItem actionValue="'doughnut'">Doughnut</BuilderSelectItem>
-            <BuilderSelectItem actionValue="'radar'">Radar</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'radar'" id="'radar_chart_opt'">Radar</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Stacked" level="1" t-if="this.domState.data.datasets.length > 1 and (this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt'))">
-        <BuilderCheckbox dataAttributeAction="'stacked'" dataAttributeActionValue="'true'"/>
-    </BuilderRow>
+
+    <t t-if="this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt') or this.isActiveItem('radar_chart_opt')">
+        <BuilderRow level="1" label.translate="Min Axis" t-if="!this.isActiveItem('radar_chart_opt')">
+            <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'min'" acceptEmpty="true"/>
+        </BuilderRow>
+        <BuilderRow level="1" label.translate="Max Axis">
+            <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'max'" acceptEmpty="true"/>
+        </BuilderRow>
+        <BuilderRow level="1" label.translate="Stacked" t-if="this.domState.data.datasets.length > 1 and !this.isActiveItem('radar_chart_opt')">
+            <BuilderCheckbox dataAttributeAction="'stacked'" dataAttributeActionValue="'true'"/>
+        </BuilderRow>
+    </t>
+
     <BuilderRow label.translate="Legend">
         <BuilderButtonGroup dataAttributeAction="'legendPosition'">
             <t t-set="leftLegendButton">
@@ -43,8 +53,20 @@
             <BuilderButton dataAttributeActionValue="'bottom'" title.translate="Bottom" iconImg="'/website/static/src/img/snippets_options/pos_bottom.svg'"/>
         </BuilderButtonGroup>
     </BuilderRow>
+
     <BuilderRow label.translate="Tooltip">
         <BuilderCheckbox dataAttributeAction="'tooltipDisplay'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Font Size">
+        <BuilderRange
+            withNumberInput="true"
+            dataAttributeAction="'fontSize'"
+            unit="'px'"
+            default="'12'"
+            min="12"
+            max="36"
+            step="1"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Chart Data">
@@ -153,7 +175,7 @@
 
                 <BuilderRow t-if="this.state.currentCell.datasetIndex or this.state.currentCell.datasetIndex === 0"
                             t-key="window.String(this.state.currentCell.datasetIndex) + window.String(this.state.currentCell.dataIndex)"
-                            label="this.state.currentCell.backgroundLabel">
+                            label="this.domState.colorLabels.backgroundLabel">
                     <BuilderColorPicker
                         getUsedCustomColors.bind="this.getColorPalette"
                         action="'colorChange'"
@@ -167,7 +189,7 @@
                 </BuilderRow>
                 <BuilderRow t-if="this.state.currentCell.datasetIndex or this.state.currentCell.datasetIndex === 0"
                             t-key="window.String(this.state.currentCell.datasetIndex) + window.String(this.state.currentCell.dataIndex)"
-                            label="this.state.currentCell.borderLabel">
+                            label="this.domState.colorLabels.borderLabel">
                     <BuilderColorPicker
                         getUsedCustomColors.bind="this.getColorPalette"
                         action="'colorChange'"
@@ -179,18 +201,15 @@
                         }"
                         enabledTabs="['solid', 'custom']"/>
                 </BuilderRow>
-                <BuilderRow t-if="this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt')"
-                            label.translate="Min Axis">
-                    <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'min'"/>
-                </BuilderRow>
-                <BuilderRow t-if="this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt')"
-                            label.translate="Max Axis">
-                    <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'max'"/>
-                </BuilderRow>
                 <BuilderRow label.translate="Border Width">
                     <BuilderNumberInput dataAttributeAction="'borderWidth'" default="2" unit="'px'" saveUnit="''" min="0"/>
                 </BuilderRow>
-
+                <BuilderRow t-if="this.isActiveItem('line_chart_opt') and (this.state.currentCell.datasetIndex or this.state.currentCell.datasetIndex === 0)"
+                            t-key="window.String(this.state.currentCell.datasetIndex)"
+                            label.translate="Interpolate"
+                            tooltip.translate="Smoothen the curve">
+                    <BuilderCheckbox action="'toggleInterpolate'" preview="false" actionParam="{ datasetIndex: this.state.currentCell.datasetIndex }"/>
+                </BuilderRow>
             </t>
         </BuilderSlidingPanel>
     </BuilderRow>
