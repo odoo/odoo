@@ -2,7 +2,7 @@ import base64
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import ec, ed25519, rsa
+from cryptography.hazmat.primitives.asymmetric import dsa, ec, ed25519, rsa, x25519
 from cryptography.hazmat.primitives.serialization import pkcs12
 from datetime import datetime, timedelta, timezone
 
@@ -392,3 +392,63 @@ class TestKeysCertificates(TransactionCase):
         self.assertTrue(leaf_record.private_key_id)
         self.assertFalse(unrelated_record)
         self.assertEqual(len(leaf_record._get_certificate_chain()), 1)
+
+    def test_is_issued_by(self):
+        """ The signature-based issuer check must accept valid issuers across RSA,
+        RSA-PSS, ECDSA, Ed25519 and DSA, and reject impostors and key/algorithm mismatches. """
+        Cert = self.env['certificate.certificate']
+
+        rsa_ca_key, rsa_leaf_key, rsa_other_key = self._generate_keys(3)
+        ec_ca_key, ec_leaf_key = ec.generate_private_key(ec.SECP256R1()), ec.generate_private_key(ec.SECP256R1())
+        ed_ca_key, ed_leaf_key = ed25519.Ed25519PrivateKey.generate(), ed25519.Ed25519PrivateKey.generate()
+        dsa_ca_key, dsa_leaf_key = dsa.generate_private_key(2048), dsa.generate_private_key(2048)
+
+        rsa_ca = self._build_test_cert("RSA CA", "RSA CA", rsa_ca_key)
+        ec_ca = self._build_test_cert("EC CA", "EC CA", ec_ca_key)
+        ed_ca = self._build_test_cert("Ed CA", "Ed CA", ed_ca_key)
+        dsa_ca = self._build_test_cert("DSA CA", "DSA CA", dsa_ca_key)
+
+        valid_chains = [
+            (self._build_test_cert("RSA Leaf", "RSA CA", rsa_leaf_key, rsa_ca_key, rsa_ca_key.public_key()), rsa_ca),  # RSA PKCS#1 v1.5
+            (self._build_test_cert("EC Leaf", "EC CA", ec_leaf_key, ec_ca_key, ec_ca_key.public_key()), ec_ca),       # ECDSA
+            (self._build_test_cert("Ed Leaf", "Ed CA", ed_leaf_key, ed_ca_key, ed_ca_key.public_key()), ed_ca),       # Ed25519
+            (self._build_test_cert("DSA Leaf", "DSA CA", dsa_leaf_key, dsa_ca_key, dsa_ca_key.public_key()), dsa_ca),  # DSA
+        ]
+
+        for child, issuer in valid_chains:
+            self.assertTrue(Cert._is_issued_by(child, issuer))
+
+        # Correct issuer name but signed by a different key.
+        impostor = self._build_test_cert("RSA Leaf", "RSA CA", rsa_leaf_key, rsa_other_key, rsa_other_key.public_key())
+        self.assertFalse(Cert._is_issued_by(impostor, rsa_ca))
+
+        # Issuer name does not match the certificate's issuer.
+        self.assertFalse(Cert._is_issued_by(valid_chains[0][0], ec_ca))
+
+        # Key-type / signature-algorithm mismatch must be rejected without raising.
+        # Ex: Ed25519-signed certificate cannot have been issued by an RSA key.
+        ed_named_rsa = self._build_test_cert("RSA CA", "RSA CA", ed_leaf_key, ed_ca_key, ed_ca_key.public_key())
+        self.assertFalse(Cert._is_issued_by(ed_named_rsa, rsa_ca))
+
+        # A signature we cannot mathematically verify (an issuer key type we do not support for
+        # signatures, here X25519) still resolves the issuer through the AKI/SKI match.
+        x25519_key = x25519.X25519PrivateKey.generate()
+        try:
+            unsupported_ca = self._build_test_cert("X25519 CA", "X25519 CA", x25519_key, rsa_ca_key, rsa_ca_key.public_key())
+        except TypeError:
+            self.skipTest("Installed cryptography does not support X25519 subject keys in CertificateBuilder")
+        unsupported_leaf = self._build_test_cert("X25519 Leaf", "X25519 CA", rsa_leaf_key, rsa_ca_key, x25519_key.public_key())
+
+        # Cannot be proven cryptographically
+        self.assertIsNone(Cert._is_issued_by(unsupported_leaf, unsupported_ca))
+
+        # The certificate still links to the CA through the matching SKI.
+        ca_record = Cert.create({
+            'name': 'X25519 CA',
+            'content': base64.b64encode(unsupported_ca.public_bytes(serialization.Encoding.DER)),
+        })
+        leaf_record = Cert.create({
+            'name': 'X25519 Leaf',
+            'content': base64.b64encode(unsupported_leaf.public_bytes(serialization.Encoding.DER)),
+        })
+        self.assertEqual(leaf_record.issuer_cert_id, ca_record)
