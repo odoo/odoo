@@ -80,7 +80,7 @@ class TestPayrollFieldsAccess(TransactionCase):
             'billable_time_target',
             'holidays',
             'car_id',
-            'new_car',
+            'has_new_car',
             'new_car_model_id',
             'ordered_car_id',
             'fuel_type',
