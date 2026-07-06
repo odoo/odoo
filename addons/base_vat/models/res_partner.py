@@ -172,11 +172,15 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_country_specific_vat_variants(self, normalized_vat, country_prefix):
+        """
+        Return additional formatted VAT values to consider during EDI partner matching.
+        Should stay consistent with `_check_customer_vat_match` to ensure
+        correct partner matching when importing EDI documents.
+        """
         vat_variants = super()._get_country_specific_vat_variants(normalized_vat, country_prefix)
         if country_prefix.upper() == 'CH':
             normalized_vat = normalized_vat.replace('-', '')
-            if len(normalized_vat) >= 12:
-                vat_formatted = self._run_vat_checks(self.env.ref('base.ch'), normalized_vat, validation=False)[0]
+            if (vat_formatted := self._run_vat_checks(self.env.ref('base.ch'), normalized_vat, validation='setnull')[0]):
                 vat_base = re.sub(r"\s*(TVA|IVA|MWST)?$", "", vat_formatted.upper())
                 vat_variants.extend([f'{vat_base} {suffix}' for suffix in ('TVA', 'IVA', 'MWST')])
         return vat_variants
