@@ -256,8 +256,6 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
                 backend_data[0],
             )
 
-        # Add function to model
-        order_model = self.env.registry.models['pos.order']
-        order_model.get_order_frontend_receipt_data = get_order_frontend_receipt_data
-        self.start_pos_tour("test_change_receipt_data")
-        self.compare_change_receipt_data(data['frontend_data'], data['backend_data'])
+        with patch.object(self.env.registry['pos.order'], 'get_order_frontend_receipt_data', get_order_frontend_receipt_data, create=True):
+            self.start_pos_tour("test_change_receipt_data")
+            self.compare_change_receipt_data(data['frontend_data'], data['backend_data'])
