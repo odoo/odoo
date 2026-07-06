@@ -505,14 +505,33 @@ class TestMailMessageAccess(MessageAccessCommon):
                 body=f'AnchorForTest / A message from {self.user_admin.name} on {record.name}',
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )
+        # authored message on locked: readable through ACLs (author), not through document access
+        msg_author = records[2].message_post(
+            author_id=self.partner_employee.id, body='Authored', subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+
         # lock -> see '_get_mail_message_access', cannot read locked message
         # without write access, with is not granted for employees
         with self.assertRaises(AccessError):  # write access not granted on locked -> cannot read message
             messages_all[2].with_user(self.user_employee).fetch(['subject'])
+        # write access not granted on locked but author -> can read message
+        msg_author.with_user(self.user_employee).fetch(['subject'])
         with self.assertRaises(AccessError):  # also working in case of batch ok / not ok
             messages_all.with_user(self.user_employee).fetch(['subject'])
         messages_all[0].with_user(self.user_employee).fetch(['subject'])
         messages_all[1].with_user(self.user_employee).fetch(['subject'])  # can read message of readonly
+
+        # '_get_with_access' (controllers, on sudo-ed messages) applies the same rules, also in batch
+        messages_su = (messages_all + msg_author).with_user(self.user_employee).sudo()
+        self.assertFalse(messages_su[2]._get_with_access(), 'Write access not granted on locked')
+        self.assertEqual(messages_su[3]._get_with_access(), msg_author, 'Write access not granted on locked, but author')
+        valid = self.env['mail.message'].sudo()
+        for msg_su in messages_su:
+            if msg_su._get_with_access():
+                valid += msg_su
+        # batch mixes messages granted by ACLs and by document access: an inaccessible message
+        # in the batch should not drop messages granted by ACLs only (here: authored one)
+        self.assertEqual(valid, messages_all[:2] + msg_author)
 
         with self.assertRaises(AccessError):  # fetch should be symmetric to read
             _message = messages_all[2].with_user(self.user_employee).copy_data()
@@ -648,6 +667,19 @@ class TestMailMessageAccess(MessageAccessCommon):
                 if msg_vals:
                     msg.write(original_vals)
                     self.env.invalidate_all()
+
+        # quick check on controller fetch shared messages of readable documents
+        self.authenticate(None, None)
+        res = self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [["/mail/thread/messages", {
+                    "thread_model": self.record_public._name,
+                    "thread_id": self.record_public.id,
+                }]],
+            }
+        )
+        self.assertEqual({m["id"] for m in res["mail.message"]}, set(self.record_public.message_ids[:2].ids))  # not creation note
 
     # ------------------------------------------------------------
     # UNLINK
