@@ -2,6 +2,7 @@ import { onWillRender, useComponent, useLayoutEffect, useRef } from "@web/owl2/u
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { signal } from "@odoo/owl";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -23,6 +24,7 @@ export function useInputField(params) {
     const inputRefOrSignal = params.ref || useRef(params.refName || "input");
     const getEl = () => resolveRefEl(inputRefOrSignal) ?? null;
     const component = useComponent();
+    const inputValue = signal("");
     const fieldName = params.fieldName || component.props.name;
     const shouldSave = params.shouldSave ?? (() => false);
 
@@ -55,6 +57,7 @@ export function useInputField(params) {
         if (params.preventLineBreaks && ev.inputType === "insertFromPaste") {
             ev.target.value = ev.target.value.replace(/[\r\n]+/g, " ");
         }
+        inputValue.set(ev.target.value);
         component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
         if (!component.props.record.isValid) {
             component.props.record.resetFieldValidity(fieldName);
@@ -91,6 +94,7 @@ export function useInputField(params) {
                     component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
                 } else {
                     getEl().value = params.getValue();
+                    inputValue.set(getEl().value);
                 }
             }
         }
@@ -149,6 +153,7 @@ export function useInputField(params) {
             el.value = value;
             lastSetValue = el.value;
         }
+        inputValue.set(el.value);
     });
 
     const { model } = component.props.record;
@@ -192,9 +197,11 @@ export function useInputField(params) {
                 component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             } else {
                 el.value = params.getValue();
+                inputValue.set(el.value);
             }
         }
     }
 
+    inputRefOrSignal.value = inputValue;
     return inputRefOrSignal;
 }
