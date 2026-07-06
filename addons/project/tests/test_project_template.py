@@ -373,3 +373,22 @@ class TestProjectTemplates(TestProjectCommon):
         task_2 = project_2.task_ids.filtered(lambda t: t.name == template_task_without_project.name)
         self.assertEqual(task_2.project_id, project_2, "The created task should be in the project that was created from the template.")
         self.assertTrue(task_2.depend_on_ids, "The created task should have some dependencies as the template as the project has task dependencies enabled.")
+
+    def test_create_from_template_with_archived_user_in_role(self):
+        """ Test that archived users in project roles are not assigned to tasks
+            when creating a project from a template.
+        """
+        developer_role = self.env['project.role'].create({
+            'name': 'Developer',
+            'user_ids': [Command.set(self.user_projectuser.ids)],
+        })
+        self.task_inside_template.role_ids = developer_role
+        self.user_projectuser.action_archive()
+        self.assertFalse(self.user_projectuser.active)
+
+        new_project = self.project_template.action_create_from_template({
+            'name': 'New Project',
+        })
+        self.assertFalse(new_project.is_template)
+        task = new_project.task_ids.filtered(lambda t: t.name == self.task_inside_template.name)
+        self.assertFalse(task.user_ids)
