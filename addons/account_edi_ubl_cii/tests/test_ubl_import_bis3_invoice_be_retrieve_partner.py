@@ -36,6 +36,56 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.partner_id, [{'id': partner.id}])
 
     @freeze_time('2020-01-01')
+    def test_import_partner_creation_ch(self):
+        """
+        Ensure that a CH partner can be created and re-matched on subsequent imports,
+        including when the partner's stored VAT uses a different language suffix
+        (TVA/IVA/MWST) than the one present in the EDI document.
+        Requires `base_vat` to be installed for CH VAT variant generation.
+        """
+        if self.env['ir.module.module']._get('base_vat').state != 'installed':
+            self.skipTest("base_vat module is not installed")
+        self.assertFalse(self.env['res.partner']._retrieve_partner(vat='CHE-107.787.577 TVA'))
+
+        # Test the partner has been created.
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_partner_creation_ch',
+            journal=self.company_data['default_journal_sale'],
+        )
+        partner = invoice.partner_id
+        self.assertRecordValues(partner, [{
+            'name': "CH Supplier",
+            'street': "Swiss 1",
+            'city': "Swiss",
+            'zip': "12345",
+            'vat': 'CHE-107.787.577 TVA',
+            'peppol_eas': '9927',
+            'peppol_endpoint': 'CHE-107.787.577TVA',
+        }])
+
+        # Test the partner has been retrieved.
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_partner_creation_ch',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertRecordValues(invoice.partner_id, [{'id': partner.id}])
+
+        # Test that other lang suffixes are correctly matched
+        partner.vat = 'CHE-107.787.577 IVA'
+        invoice_iva = self._import_invoice_as_attachment_on(
+            test_name='test_import_partner_creation_ch',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertRecordValues(invoice_iva.partner_id, [{'id': partner.id}])
+
+        partner.vat = 'CHE-107.787.577 MWST'
+        invoice_mwst = self._import_invoice_as_attachment_on(
+            test_name='test_import_partner_creation_ch',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertRecordValues(invoice_mwst.partner_id, [{'id': partner.id}])
+
+    @freeze_time('2020-01-01')
     def test_import_partner_creation_email(self):
         self.partner_be.unlink()
         self.assertFalse(self.env['res.partner'].search([('vat', '=', 'DE0477472701')]))
