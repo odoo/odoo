@@ -1003,7 +1003,7 @@ class HrLeave(models.Model):
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_back_to_approve(self):
         for holiday in self:
-            holiday.can_back_to_approve = holiday.state == 'validate' and holiday._check_approval_update('confirm', raise_if_not_possible=False)
+            holiday.can_back_to_approve = holiday._check_approval_update('confirm', raise_if_not_possible=False)
 
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_validate(self):
