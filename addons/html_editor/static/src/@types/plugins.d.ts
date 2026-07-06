@@ -27,7 +27,7 @@ declare module "plugins" {
     import { BannerShared } from "@html_editor/main/banner_plugin";
     import { EmojiShared } from "@html_editor/main/emoji_plugin";
     import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
-    import { apply_background_color_processors, apply_color_style_overrides, apply_color_overrides, color_combination_providers, ColorShared, background_color_processors, on_color_requested_handlers, before_color_element_processors } from "@html_editor/main/font/color_plugin";
+    import { apply_color_style_overrides, color_combination_providers, ColorShared, background_color_processors, before_color_element_processors } from "@html_editor/main/font/color_plugin";
     import { ColorUIShared, selected_background_color_providers } from "@html_editor/main/font/color_ui_plugin";
     import { before_insert_within_pre_processors, font_type_items } from "@html_editor/main/font/font_type_plugin";
     import { before_insert_within_pre_processors } from "@html_editor/main/font/font_size_plugin";
@@ -134,7 +134,6 @@ declare module "plugins" {
         on_apply_history_commit_handlers: on_apply_history_commit_handlers;
         on_beforeinput_handlers: on_beforeinput_handlers;
         on_collapsed_formats_removed_handlers: on_collapsed_formats_removed_handlers;
-        on_color_requested_handlers: on_color_requested_handlers;
         on_committed_to_history_handlers: on_committed_to_history_handlers;
         on_component_mounted_handlers: on_component_mounted_handlers;
         on_content_updated_handlers: on_content_updated_handlers;
@@ -188,7 +187,6 @@ declare module "plugins" {
 
         // Overrides
         apply_color_style_overrides: apply_color_style_overrides;
-        apply_color_overrides: apply_color_overrides;
         delete_backward_line_overrides: delete_backward_line_overrides;
         delete_backward_overrides: delete_backward_overrides;
         delete_backward_word_overrides: delete_backward_word_overrides;
@@ -236,7 +234,6 @@ declare module "plugins" {
         are_inlines_allowed_at_root_predicates: are_inlines_allowed_at_root_predicates;
 
         // Processors
-        apply_background_color_processors: apply_background_color_processors;
         attributes_mutation_value_processors: attributes_mutation_value_processors;
         background_color_processors: background_color_processors;
         before_color_element_processors: before_color_element_processors;

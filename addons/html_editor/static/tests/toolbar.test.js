@@ -1146,9 +1146,9 @@ test("should select table single formatted cell when entire content is selected 
                     <td style="width: 200px;">
                         <p><strong>abcdefghijklmno</strong></p>
                         <p>
-                            <font style="color: red;">
+                            <span style="color: red;">
                                 abcdefghijklmnopqrs
-                            </font>
+                            </span>
                         </p>
                         <p><em>abcdefg</em></p>
                     </td>

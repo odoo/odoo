@@ -3,12 +3,13 @@ import { click, queryAll, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
-import { splitBlock, undo } from "./_helpers/user_actions";
+import { setColor, splitBlock, undo } from "./_helpers/user_actions";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 async function setupIcon(icon = "local_bar", extraClass = "") {
     extraClass = (icon.startsWith("fa-") ? extraClass : `oi ${extraClass}`).trim();
@@ -142,8 +143,29 @@ test("Can set icon color", async () => {
     await expectElementCount(".o_font_color_selector", 0); // selector closed
     await waitFor(".o-we-toolbar .o-select-color-foreground [style*='rgb(107, 173, 222)']");
     expect(getContent(el)).toBe(
-        `<p>[<font style="color: rgb(107, 173, 222);">\ufeff<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>\ufeff</font>]</p>`
+        `<p>[<span style="color: rgb(107, 173, 222);">\ufeff<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>\ufeff</span>]</p>`
     );
+});
+
+test("Can set icon background color over its color", async () => {
+    const { el, editor } = await setupIcon("local_bar");
+    setColor("rgb(255, 0, 0)", "color")(editor);
+    // The icon is itself a <span>, so applying a second color must not mistake
+    // it for a wrapper it can style: it is not editable content.
+    setColor("rgb(0, 255, 0)", "backgroundColor")(editor);
+    const icon = el.querySelector("span.oi");
+    expect(icon.getAttribute("style")).toBe(null);
+    expect(icon.parentElement.style.color).toBe("rgb(255, 0, 0)");
+    expect(icon.parentElement.style.backgroundColor).toBe("rgb(0, 255, 0)");
+});
+
+test("Should not set icon color inside an uneditable element", async () => {
+    const { el, editor } = await setupEditor(
+        '<p>[a</p><div contenteditable="false"><span class="oi" data-icon="local_bar"></span></div><p>b]</p>'
+    );
+    setColor("rgb(255, 0, 0)", "color")(editor);
+    const icon = el.querySelector("span.oi");
+    expect(closestElement(icon, "[style*='color']")).toBe(null);
 });
 
 test("Can undo to 1x size after applying 2x size", async () => {

@@ -19,7 +19,7 @@ const HEX_OPACITY = "99";
 
 export class ColorUIPlugin extends Plugin {
     static id = "colorUi";
-    static dependencies = ["color", "history", "selection"];
+    static dependencies = ["color", "history", "selection", "format"];
     static shared = ["getPropsForColorSelector"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -45,9 +45,8 @@ export class ColorUIPlugin extends Plugin {
             },
         ],
         on_selectionchange_handlers: withSequence(100, this.updateSelectedColor.bind(this)),
-        on_color_requested_handlers: this.updateSelectedColor.bind(this),
+        on_format_requested_handlers: this.updateSelectedColor.bind(this),
         background_color_processors: this.getBackgroundColorProcessor.bind(this),
-        apply_background_color_processors: this.applyBackgroundColorProcessor.bind(this),
         /** Providers */
         selected_background_color_providers: withSequence(
             10,
@@ -58,8 +57,16 @@ export class ColorUIPlugin extends Plugin {
     setup() {
         this.selectedColors = proxy({ color: "", backgroundColor: "" });
         this.previewableApplyColor = this.dependencies.history.makePreviewableOperation(
-            (color, mode, previewMode) =>
-                this.dependencies.color.requestColor(color, mode, previewMode)
+            (color, mode) => {
+                if (mode === "backgroundColor" && color) {
+                    color = this.applyBackgroundColorProcessor(color);
+                }
+                this.dependencies.format.requestFormat(mode, {
+                    applyStyle: color !== "",
+                    formatProps: color ? { color } : undefined,
+                    commit: false,
+                });
+            }
         );
     }
 
@@ -91,7 +98,7 @@ export class ColorUIPlugin extends Plugin {
     }
 
     /**
-     * Apply a css or class color on the current selection (wrapped in <font>).
+     * Apply a css or class color on the current selection (wrapped in a span).
      *
      * @param {Object} param
      * @param {string} param.color hexadecimal or bg-name/text-name class
@@ -102,7 +109,7 @@ export class ColorUIPlugin extends Plugin {
         this.updateSelectedColor();
     }
     /**
-     * Apply a css or class color on the current selection (wrapped in <font>)
+     * Apply a css or class color on the current selection (wrapped in a span)
      * in preview mode so that it can be reset.
      *
      * @param {Object} param
@@ -111,7 +118,7 @@ export class ColorUIPlugin extends Plugin {
      */
     applyColorPreview({ color, mode }) {
         // Preview the color before applying it.
-        this.previewableApplyColor.preview(color, mode, true);
+        this.previewableApplyColor.preview(color, mode);
         this.updateSelectedColor();
     }
     /**
@@ -123,11 +130,11 @@ export class ColorUIPlugin extends Plugin {
     }
 
     getUsedCustomColors(mode) {
-        const allFont = this.editable.querySelectorAll("font");
+        const allSpans = this.editable.querySelectorAll("span");
         const usedCustomColors = new Set();
-        for (const font of allFont) {
-            if (isCSSColor(font.style[mode])) {
-                usedCustomColors.add(normalizeCSSColor(font.style[mode]));
+        for (const span of allSpans) {
+            if (isCSSColor(span.style[mode])) {
+                usedCustomColors.add(normalizeCSSColor(span.style[mode]));
             }
         }
         return usedCustomColors;
@@ -157,23 +164,26 @@ export class ColorUIPlugin extends Plugin {
             }
         }
 
-        const pending = this.dependencies.color.getActiveColorInfo();
-        this.selectedColors.backgroundColor =
-            pending.backgroundColor ?? (backgroundColor || "#00000000");
+        const { color: colorIntent, backgroundColor: bgIntent } =
+            this.dependencies.format.getPendingIntents();
+        const pendingColor = colorIntent && (colorIntent.formatProps?.color ?? "");
+        const pendingBgColor = bgIntent && (bgIntent.formatProps?.color ?? "");
+
+        this.selectedColors.backgroundColor = pendingBgColor ?? (backgroundColor || "#00000000");
 
         // Compute and update the text color.
         const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
         if (nodes.length === 0) {
-            this.selectedColors.color = pending.color ?? "";
+            this.selectedColors.color = pendingColor ?? "";
             return;
         }
         const el = closestElement(nodes[0]);
         if (!el) {
-            this.selectedColors.color = pending.color ?? "";
+            this.selectedColors.color = pendingColor ?? "";
             return;
         }
         const fromDom = this.dependencies.color.getElementColors(el);
-        this.selectedColors.color = pending.color ?? fromDom.color;
+        this.selectedColors.color = pendingColor ?? fromDom.color;
     }
 
     getBackgroundColorProcessor(backgroundColor) {

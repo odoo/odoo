@@ -768,8 +768,8 @@ p {
     margin-top: $paragraph-margin-top;
 }
 
-font[style*='background']:not(.text-gradient),
-font[class*='bg-'] {
+:is(font, span)[style*='background']:not(.text-gradient),
+:is(font, span)[class*='bg-'] {
     // Not adding any horizontal padding is important as it ensures that several
     // features work:
     // - Highlighting part of a word -> you don't want the word to be split

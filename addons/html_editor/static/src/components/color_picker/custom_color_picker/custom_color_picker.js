@@ -536,6 +536,10 @@ export class CustomColorPicker extends Component {
         this._updateHsl(this.colorComponents.hue, saturation, lightness);
         this._updateUI();
         this.shouldSetSelectedColor = true;
+        // Applying the color moves the editor selection, which pulls DOM focus
+        // into the editable. Restore focus to the pointer so the next arrow key
+        // keeps reaching this handler instead of the editable.
+        this.colorPickerPointerRef().focus();
     }
     /**
      * Updates color when user starts clicking on slider.
@@ -588,6 +592,8 @@ export class CustomColorPicker extends Component {
         this._updateHsl(hue, this.colorComponents.saturation, this.colorComponents.lightness);
         this._updateUI();
         this.shouldSetSelectedColor = true;
+        // Restore focus stolen by the editor.
+        this.colorSliderPointerRef().focus();
     }
     /**
      * Updates opacity when user starts clicking on opacity slider.
@@ -636,6 +642,8 @@ export class CustomColorPicker extends Component {
         this._updateOpacity(opacity);
         this._updateUI();
         this.shouldSetSelectedColor = true;
+        // Restore focus stolen by the editor.
+        this.opacitySliderPointerRef().focus();
     }
     /**
      * Called when the hex color input's input event is triggered.

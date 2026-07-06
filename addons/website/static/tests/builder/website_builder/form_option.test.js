@@ -1388,7 +1388,7 @@ test("default for label when user deletes its content, and use it on save", asyn
     expect(labelEl).not.toHaveAttribute("data-show-default-label");
     expect(labelEl).not.toHaveAttribute("data-default-label-content");
     setColor("rgb(255, 0, 0)", "color")(getEditor());
-    setSelectionOnNodeContent(labelEl.querySelector("font"));
+    setSelectionOnNodeContent(labelEl.querySelector("span"));
     deleteBackward(getEditor());
     expect(labelEl).toHaveAttribute("data-show-default-label", "true");
     expect(labelEl).toHaveAttribute("data-default-label-content", "Custom Field");

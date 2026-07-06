@@ -77,7 +77,7 @@ test("should not color list item when selection excludes trailing empty line", a
         contentBefore: "<ul><li>[abc</li><li>abcd]<br><br></li></ul>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
-            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li><font style="color: rgb(255, 0, 0);">abcd]</font><br><br></li></ul>',
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li><span style="color: rgb(255, 0, 0);">abcd]</span><br><br></li></ul>',
     });
 });
 
@@ -114,7 +114,7 @@ test("should apply color to completely selected and partially selected list item
         contentBefore: "<ol><li>[abc</li><li>def</li><li>gh]i</li></ol>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
-            '<ol><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);">def</li><li><font style="color: rgb(255, 0, 0);">gh]</font>i</li></ol>',
+            '<ol><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);">def</li><li><span style="color: rgb(255, 0, 0);">gh]</span>i</li></ol>',
     });
 });
 
@@ -123,7 +123,7 @@ test("should apply text color class to completely selected and partially selecte
         contentBefore: "<ol><li>[abc</li><li>def</li><li>gh]i</li></ol>",
         stepFunction: setColor("text-o-color-1", "color"),
         contentAfter:
-            '<ol><li class="text-o-color-1">[abc</li><li class="text-o-color-1">def</li><li><font class="text-o-color-1">gh]</font>i</li></ol>',
+            '<ol><li class="text-o-color-1">[abc</li><li class="text-o-color-1">def</li><li><span class="text-o-color-1">gh]</span>i</li></ol>',
     });
 });
 
@@ -132,7 +132,7 @@ test("should apply color to completely selected list items and paragraph tag", a
         contentBefore: "<ul><li>[abc</li><li>def</li></ul><p>ghi]</p>",
         stepFunction: setColor("rgb(255, 0, 0", "color"),
         contentAfter:
-            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);">def</li></ul><p><font style="color: rgb(255, 0, 0);">ghi]</font></p>',
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);">def</li></ul><p><span style="color: rgb(255, 0, 0);">ghi]</span></p>',
     });
 });
 
@@ -156,7 +156,7 @@ test("should carry list item color to new list item (2)", async () => {
 
 test("should carry color of paragraph to list item", async () => {
     await testEditor({
-        contentBefore: '<p><font style="color: rgb(255, 0, 0);">[]abc</font></p>',
+        contentBefore: '<p><span style="color: rgb(255, 0, 0);">[]abc</span></p>',
         stepFunction: toggleUnorderedList,
         contentAfter: '<ul><li style="color: rgb(255, 0, 0);">[]abc</li></ul>',
     });
@@ -165,7 +165,7 @@ test("should carry color of paragraph to list item", async () => {
 test("should carry color of paragraph to list item (2)", async () => {
     await testEditor({
         contentBefore:
-            '<ol><li style="color: rgb(255, 0, 0);">abc</li></ol><p><font style="color: rgb(0, 0, 255);">[]def</font></p><ol><li>ghi</li></ol>',
+            '<ol><li style="color: rgb(255, 0, 0);">abc</li></ol><p><span style="color: rgb(0, 0, 255);">[]def</span></p><ol><li>ghi</li></ol>',
         stepFunction: toggleOrderedList,
         contentAfter:
             '<ol><li style="color: rgb(255, 0, 0);">abc</li><li style="color: rgb(0, 0, 255);">[]def</li><li>ghi</li></ol>',
@@ -187,7 +187,7 @@ test("should carry color of list item to paragraph", async () => {
         contentBefore: '<ol><li style="color: rgb(255, 0, 0);">[]abc</li><li>def</li></ol>',
         stepFunction: toggleOrderedList,
         contentAfter:
-            '<p><font style="color: rgb(255, 0, 0);">[]abc</font></p><ol><li>def</li></ol>',
+            '<p><span style="color: rgb(255, 0, 0);">[]abc</span></p><ol><li>def</li></ol>',
     });
 });
 
@@ -197,7 +197,7 @@ test("should carry color of list item to paragraph (2)", async () => {
             '<ul><li style="color: rgb(255, 0, 0);">abc</li><li style="color: rgb(0, 0, 255);">[]def</li><li>ghi</li></ul>',
         stepFunction: toggleUnorderedList,
         contentAfter:
-            '<ul><li style="color: rgb(255, 0, 0);">abc</li></ul><p><font style="color: rgb(0, 0, 255);">[]def</font></p><ul><li>ghi</li></ul>',
+            '<ul><li style="color: rgb(255, 0, 0);">abc</li></ul><p><span style="color: rgb(0, 0, 255);">[]def</span></p><ul><li>ghi</li></ul>',
     });
 });
 
@@ -214,10 +214,10 @@ test("should carry color of list item to paragraph (3)", async () => {
 test("should carry color of list item to paragraph (4)", async () => {
     await testEditor({
         contentBefore:
-            '<ol><li style="color: rgb(255, 0, 0);">abc<font style="color: rgb(0, 255, 0)">def</font>ghi[]</li></ol>',
+            '<ol><li style="color: rgb(255, 0, 0);">abc<span style="color: rgb(0, 255, 0)">def</span>ghi[]</li></ol>',
         stepFunction: toggleOrderedList,
         contentAfter:
-            '<p><font style="color: rgb(255, 0, 0);">abc<font style="color: rgb(0, 255, 0)">def</font>ghi[]</font></p>',
+            '<p><span style="color: rgb(255, 0, 0);">abc<span style="color: rgb(0, 255, 0)">def</span>ghi[]</span></p>',
     });
 });
 
@@ -225,7 +225,7 @@ test("should carry class-defined color of list item to paragraph", async () => {
     await testEditor({
         contentBefore: '<ol><li class="text-o-color-1">[]abc</li><li>def</li></ol>',
         stepFunction: toggleOrderedList,
-        contentAfter: '<p><font class="text-o-color-1">[]abc</font></p><ol><li>def</li></ol>',
+        contentAfter: '<p><span class="text-o-color-1">[]abc</span></p><ol><li>def</li></ol>',
     });
 });
 
@@ -256,7 +256,7 @@ test("should remove color from partially selected list item", async () => {
         contentBefore: '<ol><li style="color: rgb(255, 0, 0);">ab[cd]ef</li></ol>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<ol><li style="color: rgb(255, 0, 0);">ab<font class="o_default_color">[cd]</font>ef</li></ol>',
+            '<ol><li style="color: rgb(255, 0, 0);">ab<span class="o_default_color">[cd]</span>ef</li></ol>',
     });
 });
 
@@ -307,7 +307,7 @@ test("should remove color from partially selected text inside list item", async 
                     <p>abc</p>
                     <ol class="o_default_color">
                         <li class="text-o-color-1">
-                            d<font class="o_default_color">[e]</font>f
+                            d<span class="o_default_color">[e]</span>f
                         </li>
                     </ol>
                 </li>
@@ -379,7 +379,7 @@ test("should change color of subpart of a list item", async () => {
             '<ol><li style="color: rgb(255, 0, 0);">a[b]c</li><li style="color: rgb(255, 0, 0);">ghi</li></ol>',
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
         contentAfter:
-            '<ol><li style="color: rgb(255, 0, 0);">a<font style="color: rgb(0, 0, 255);">[b]</font>c</li><li style="color: rgb(255, 0, 0);">ghi</li></ol>',
+            '<ol><li style="color: rgb(255, 0, 0);">a<span style="color: rgb(0, 0, 255);">[b]</span>c</li><li style="color: rgb(255, 0, 0);">ghi</li></ol>',
     });
 });
 
@@ -389,7 +389,7 @@ test("should change color of subpart of a list item (2)", async () => {
             '<ol><li style="color: rgb(255, 0, 0);">a[bc</li><li style="color: rgb(255, 0, 0);">gh]i</li></ol>',
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
         contentAfter:
-            '<ol><li style="color: rgb(255, 0, 0);">a<font style="color: rgb(0, 0, 255);">[bc</font></li><li style="color: rgb(255, 0, 0);"><font style="color: rgb(0, 0, 255);">gh]</font>i</li></ol>',
+            '<ol><li style="color: rgb(255, 0, 0);">a<span style="color: rgb(0, 0, 255);">[bc</span></li><li style="color: rgb(255, 0, 0);"><span style="color: rgb(0, 0, 255);">gh]</span>i</li></ol>',
     });
 });
 
@@ -402,7 +402,7 @@ test("should apply color to a list containing sublist if list contents are fully
     });
 });
 
-test("should apply gradient color style only on font inside list item", async () => {
+test("should apply gradient color style only on span inside list item", async () => {
     await testEditor({
         contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
         stepFunction: setColor(
@@ -410,6 +410,6 @@ test("should apply gradient color style only on font inside list item", async ()
             "color"
         ),
         contentAfter:
-            '<ol><li><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%);">[abc]</font></li><li>def</li></ol>',
+            '<ol><li><span class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%);">[abc]</span></li><li>def</li></ol>',
     });
 });
