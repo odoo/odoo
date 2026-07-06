@@ -67,7 +67,7 @@ class AccountAccount(models.Model):
             codes = [code for code in formula_params.get("codes", []) if code]
             if codes:
                 account_domain = Domain.OR(
-                    Domain.OR([Domain("code", "=like", f"{code}%"), Domain("name", "ilike", code), Domain("description", "ilike", code)])
+                    Domain.OR([Domain("code", "=like", f"{code}%"), Domain("name", "=", code)])
                     for code in codes
                 )
             elif default_accounts:

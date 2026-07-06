@@ -917,6 +917,12 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             'code': '',
             'company_ids': [Command.link(self.company_data['company'].id)],
         })
+        account_2 = self.env['account.account'].create({
+            'name': 'Unique Spreadsheet Name Revenue With Extra Bits',
+            'account_type': 'income',
+            'code': '',
+            'company_ids': [Command.link(self.company_data['company'].id)],
+        })
         self.env['account.move'].create({
             'company_id': self.company_data['company'].id,
             'move_type': 'entry',
@@ -924,6 +930,15 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             'line_ids': [
                 Command.create({'name': 'line_debit', 'account_id': account.id, 'debit': 200}),
                 Command.create({'name': 'line_credit', 'account_id': self.account_expense_c1.id, 'credit': 200}),
+            ],
+        })
+        self.env['account.move'].create({
+            'company_id': self.company_data['company'].id,
+            'move_type': 'entry',
+            'date': '2022-04-02',
+            'line_ids': [
+                Command.create({'name': 'line_debit', 'account_id': account_2.id, 'debit': 202}),
+                Command.create({'name': 'line_credit', 'account_id': self.account_expense_c1.id, 'credit': 202}),
             ],
         })
         self.assertEqual(
@@ -934,33 +949,6 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 'include_unposted': True,
             }]),
             [{'credit': 0.0, 'debit': 200.0}],
-        )
-
-    def test_match_by_account_description(self):
-        account = self.env['account.account'].create({
-            'name': 'Test Account for Description Match',
-            'description': 'Unique Spreadsheet Description Revenue',
-            'account_type': 'income',
-            'code': '',
-            'company_ids': [Command.link(self.company_data['company'].id)],
-        })
-        self.env['account.move'].create({
-            'company_id': self.company_data['company'].id,
-            'move_type': 'entry',
-            'date': '2022-04-02',
-            'line_ids': [
-                Command.create({'name': 'line_debit', 'account_id': account.id, 'debit': 300}),
-                Command.create({'name': 'line_credit', 'account_id': self.account_expense_c1.id, 'credit': 300}),
-            ],
-        })
-        self.assertEqual(
-            self.env['account.account'].spreadsheet_fetch_debit_credit([{
-                'date_range': {'range_type': 'year', 'year': 2022},
-                'codes': ['Unique Spreadsheet Description Revenue'],
-                'company_id': None,
-                'include_unposted': True,
-            }]),
-            [{'credit': 0.0, 'debit': 300.0}],
         )
 
     def test_code_no_account(self):
