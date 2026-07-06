@@ -1,9 +1,10 @@
-from odoo import models
+from odoo import api, models
 
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    @api.depends('move_id.country_code', 'move_id.move_type', 'display_type')
     def _compute_account_id(self):
         # EXTENDS 'account'
         super()._compute_account_id()
