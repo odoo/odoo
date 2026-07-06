@@ -766,3 +766,64 @@ class TestUi(HttpCaseWithWebsiteUser):
     @mute_logger("odoo.http")
     def test_website_replace_remove_image(self):
         self.start_tour("/", "website_replace_remove_image", login="admin")
+
+    def test_website_optimize_seo_with_multiple_fields(self):
+        model_id = self.env["ir.model"]._get_id("website")
+
+        self.env["ir.model.fields"].create(
+            [
+                {
+                    "name": "x_zone_left",
+                    "field_description": "Zone Left",
+                    "model_id": model_id,
+                    "ttype": "html",
+                },
+                {
+                    "name": "x_zone_right",
+                    "field_description": "Zone Right",
+                    "model_id": model_id,
+                    "ttype": "html",
+                },
+            ],
+        )
+
+        img = '<img src="/web/image/website.s_banner_default_image"/>'
+        website = self.env["website"].get_current_website()
+        website.write(
+            {
+                "x_zone_left": f"<div>{img}</div>",
+                "x_zone_right": f"<div>{img}</div>",
+            },
+        )
+
+        arch = """
+            <t t-name="website.seo_test_page">
+                <t t-call="website.layout">
+                    <div class="container"><div class="row">
+                        <div class="col-6"><div id="zone_left"  t-field="website.x_zone_left"/></div>
+                        <div class="col-6"><div id="zone_right" t-field="website.x_zone_right"/></div>
+                    </div></div>
+                </t>
+            </t>
+        """
+        view = self.env["ir.ui.view"].create(
+            {
+                "name": "SEO Test Page",
+                "type": "qweb",
+                "arch": arch,
+            },
+        )
+
+        self.env["website.page"].create(
+            {
+                "name": "SEO Test Page",
+                "url": "/optimize_seo_test_page",
+                "view_id": view.id,
+                "is_published": True,
+            },
+        )
+        self.start_tour(
+            "/optimize_seo_test_page",
+            "website.test_website_seo_with_duplicate_images_across_html_fields",
+            login="admin",
+        )
