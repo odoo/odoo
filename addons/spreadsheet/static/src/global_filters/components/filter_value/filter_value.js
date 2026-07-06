@@ -1,12 +1,12 @@
+import { FieldPlugin } from "@web/core/field_plugin";
 /** @ts-check */
 
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { DateFilterValue } from "../date_filter_value/date_filter_value";
 
-import { Component, onWillStart, t, useProps, providePlugins } from "@odoo/owl";
+import { Component, onWillStart, usePlugin, t, useProps, providePlugins } from "@odoo/owl";
 import { components, owlPlugins } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 import { TextFilterValue } from "../filter_text_value/filter_text_value";
@@ -45,7 +45,7 @@ export class FilterValue extends Component {
     setup() {
         providePlugins([ModelPlugin], { model: this.props.model });
         this.getters = this.props.model.getters;
-        this.fieldService = useService("field");
+        this.fieldService = usePlugin(FieldPlugin);
         this.isValid = false;
         onWillStart(async () => {
             if (this.filter.type !== "relation") {

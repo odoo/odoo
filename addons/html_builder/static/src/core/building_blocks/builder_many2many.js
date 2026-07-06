@@ -1,5 +1,6 @@
-import { Component, t, useProps } from "@odoo/owl";
-import { useAsyncComputed, useService } from "@web/core/utils/hooks";
+import { Component, t, useProps, usePlugin } from "@odoo/owl";
+import { FieldPlugin } from "@web/core/field_plugin";
+import { useAsyncComputed } from "@web/core/utils/hooks";
 import { useCachedModel } from "../cached_model_utils";
 import {
     basicContainerBuilderComponentProps,
@@ -25,7 +26,7 @@ export class BuilderMany2Many extends Component {
         message: t.string().optional(),
     });
 
-    fields = useService("field");
+    fields = usePlugin(FieldPlugin);
     searchModel = useAsyncComputed(() => this.getSearchModel(this.props));
 
     setup() {
