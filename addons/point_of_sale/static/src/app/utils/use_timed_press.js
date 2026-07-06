@@ -1,5 +1,7 @@
 import { onMounted, onWillUnmount } from "@odoo/owl";
 
+import { resolveRefEl } from "@web/core/utils/ref_utils";
+
 /**
  * `useTimedPress` — A hook to detect and respond to different press durations on a DOM element.
  *
@@ -91,10 +93,7 @@ export function useTimedPress(ref, ranges = []) {
         holdTimers = [];
     };
 
-    // Transitional ref resolution: Owl 3 native refs are signals (the element is
-    // obtained by CALLING the ref), while legacy refs expose `.el`. Resolving in a
-    // single place keeps existing `.el` callers working AND accepts signal refs.
-    const getEl = () => (typeof ref === "function" ? ref() : ref?.el);
+    const getEl = () => resolveRefEl(ref);
 
     onMounted(() => {
         const el = getEl();

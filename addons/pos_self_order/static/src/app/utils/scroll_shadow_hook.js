@@ -1,5 +1,6 @@
 import { onMounted, onWillUnmount, onPatched, proxy } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 export function useScrollShadow(scrollContainerRef, options = {}) {
     if (!scrollContainerRef) {
@@ -9,9 +10,7 @@ export function useScrollShadow(scrollContainerRef, options = {}) {
     const { threshold = 5 } = options;
     const shadows = proxy({ top: 0, bottom: 0 });
 
-    // Transitional: support both Owl 3 signal refs (function) and legacy `.el` refs.
-    const getEl = () =>
-        typeof scrollContainerRef === "function" ? scrollContainerRef() : scrollContainerRef?.el;
+    const getEl = () => resolveRefEl(scrollContainerRef);
 
     const updateShadows = () => {
         try {
@@ -37,11 +36,8 @@ export function useHorizontalScrollShadow(scrollContainerRef, classContainerRef,
     }
     const { threshold = 5 } = options;
 
-    // Transitional: support both Owl 3 signal refs (function) and legacy `.el` refs.
-    const getScrollEl = () =>
-        typeof scrollContainerRef === "function" ? scrollContainerRef() : scrollContainerRef?.el;
-    const getClassEl = () =>
-        typeof classContainerRef === "function" ? classContainerRef() : classContainerRef?.el;
+    const getScrollEl = () => resolveRefEl(scrollContainerRef);
+    const getClassEl = () => resolveRefEl(classContainerRef);
 
     const updateShadows = () => {
         try {
@@ -70,9 +66,7 @@ function initScrollShadow(scrollContainerRef, updateFn, options = {}) {
         return;
     }
     const { resizeDebounce = 100 } = options;
-    // Transitional: support both Owl 3 signal refs (function) and legacy `.el` refs.
-    const getEl = () =>
-        typeof scrollContainerRef === "function" ? scrollContainerRef() : scrollContainerRef?.el;
+    const getEl = () => resolveRefEl(scrollContainerRef);
     let scheduled = false;
 
     const handleScroll = () => {

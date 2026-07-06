@@ -1,4 +1,5 @@
 import { onMounted, onWillUnmount } from "@odoo/owl";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * Detects when a category section becomes visible within a scrollable container.
@@ -31,17 +32,10 @@ export function useCategoryScrollSpy(
 
     let selectedCategoryId = categoryId;
 
-    // Owl 3 native refs are signals (the element is obtained by CALLING the ref),
-    // while legacy refs expose the element through `.el`. Resolve both transparently
-    // here so the rest of the hook only ever deals with the resolved DOM element.
-    function refEl(ref) {
-        return typeof ref === "function" ? ref() : ref?.el;
-    }
-
     function selectCategory(categoryId) {
         selectedCategoryId = categoryId;
         onCategoryVisible(selectedCategoryId);
-        const categoryScrollEl = refEl(categoryScrollContainerRef);
+        const categoryScrollEl = resolveRefEl(categoryScrollContainerRef);
         const tabEl = categoryScrollEl.querySelector(`[data-category-pill="${categoryId}"]`);
         if (tabEl) {
             const scrollLeft = tabEl.offsetLeft + categoryScrollOffsetLeft;
@@ -54,7 +48,7 @@ export function useCategoryScrollSpy(
 
     function scrollToCategory(categoryId) {
         const section = categorySections.find((el) => el.dataset.category === "" + categoryId);
-        const scrollEl = refEl(productScrollContainerRef);
+        const scrollEl = resolveRefEl(productScrollContainerRef);
 
         if (section) {
             const containerTop = scrollEl.getBoundingClientRect().top;
@@ -72,7 +66,7 @@ export function useCategoryScrollSpy(
         let topCategory = null;
         let minTop = Infinity;
         const containerTop =
-            refEl(productScrollContainerRef).getBoundingClientRect().top + visibleThreshold;
+            resolveRefEl(productScrollContainerRef).getBoundingClientRect().top + visibleThreshold;
 
         // Loop through each category section to determine which is closest to the top
         for (const section of categorySections) {
@@ -107,14 +101,14 @@ export function useCategoryScrollSpy(
     }
 
     onMounted(() => {
-        const scrollEl = refEl(productScrollContainerRef);
+        const scrollEl = resolveRefEl(productScrollContainerRef);
         categorySections = [...scrollEl.querySelectorAll("[data-category]")];
         scrollEl.addEventListener("scroll", deferScroll);
         onProductScroll();
     });
 
     onWillUnmount(() => {
-        refEl(productScrollContainerRef).removeEventListener("scroll", deferScroll);
+        resolveRefEl(productScrollContainerRef).removeEventListener("scroll", deferScroll);
     });
 
     return {
