@@ -66,3 +66,23 @@ test("Test setting the inventory quantity to its default value of 0", async func
 
     expect("td[name=inventory_diff_quantity] div input").toHaveValue(-50);
 });
+
+test("Test clicking the inventory quantity without edit", async function () {
+    await mountView({
+        type: "list",
+        resModel: "quant",
+        arch: `<list editable="bottom">
+                        <field name="quantity"/>
+                        <field name="inventory_quantity" widget="counted_quantity_widget"/>
+                        <field name="inventory_quantity_set"/>
+                        <field name="inventory_diff_quantity"/>
+                   </list>
+                `,
+    });
+
+    await contains("td.o_counted_quantity_widget_cell").click();
+    await contains("thead").click();
+
+    expect("td[name=inventory_quantity] div span").not.toHaveText("0.00");
+    expect("td[name=inventory_quantity_set] div input").not.toBeChecked();
+});
