@@ -336,6 +336,8 @@ class HrJob(models.Model):
     def create(self, vals_list):
         jobs = super().create(vals_list)
         jobs.sudo().interviewer_ids._create_recruitment_interviewers()
+        for job in jobs:
+            job._job_position_message_auto_subscribe_notify()
         return jobs
 
     def write(self, vals):
@@ -355,20 +357,22 @@ class HrJob(models.Model):
 
         # Subscribe the recruiter if it has changed.
         if "recruiter_id" in vals:
+            new_recruiter = self.recruiter_id._get_related_partners()
             for job in self:
-                to_unsubscribe = [
-                    partner
-                    for partner in old_recruiters[job].user_partner_id.ids
-                    if partner not in job.manager_id._get_related_partners().ids
-                ]
-                job.message_unsubscribe(to_unsubscribe)
+                to_unsubscribe = old_recruiters[job].user_partner_id.filtered(
+                    lambda p: p not in job.manager_id._get_related_partners()
+                )
+                job.message_unsubscribe(to_unsubscribe.ids)
+                notify = new_recruiter - to_unsubscribe - self.env.user.partner_id
+                if notify:
+                    job._job_position_message_auto_subscribe_notify(new_recruiter=new_recruiter)
                 application_ids = job.application_ids.filtered(
                     lambda x:
                         x.recruiter_id == old_recruiters[job] and
                         x.application_status == 'ongoing'
                 )
                 if application_ids:
-                    application_ids.message_unsubscribe(to_unsubscribe)
+                    application_ids.message_unsubscribe(to_unsubscribe.ids)
                     application_ids.with_context(mail_auto_subscribe_no_notify=True).recruiter_id = job.recruiter_id
 
         # Since the alias is created upon record creation, the default values do not reflect the current values unless
@@ -380,6 +384,27 @@ class HrJob(models.Model):
                 alias_default_vals = job._alias_get_creation_values().get('alias_defaults', '{}')
                 job.alias_defaults = alias_default_vals
         return res
+
+    def _job_position_message_auto_subscribe_notify(self, new_recruiter=None):
+        user_partner = self.env.user.partner_id
+        recruiter_partners = new_recruiter if new_recruiter is not None else self.recruiter_id._get_related_partners()
+        self.message_subscribe((user_partner | recruiter_partners).ids)
+
+        notify_partners = recruiter_partners - user_partner
+        if notify_partners:
+            notification_subject = _("You have been assigned as a recruiter for %s", self.name)
+            notification_body = _("You have been assigned as a recruiter for the Job Position %s", self.name)
+            self.message_notify(
+                res_id=self.id,
+                model=self._name,
+                partner_ids=notify_partners.ids,
+                author_id=self.env.user.partner_id.id,
+                email_from=self.env.user.email_formatted,
+                subject=notification_subject,
+                body=notification_body,
+                email_layout_xmlid="mail.mail_notification_layout",
+                model_description="Job Position",
+            )
 
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')
