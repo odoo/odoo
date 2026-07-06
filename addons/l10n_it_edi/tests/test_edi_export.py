@@ -246,7 +246,7 @@ class TestItEdiExport(TestItEdi):
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_total_400_VAT_simplified.xml')
 
-    def test_invoice_more_400_simplified(self):
+    def test_invoice_more_400_is_not_simplified(self):
         invoice = self.env['account.move'].with_company(self.company).create({
             'move_type': 'out_invoice',
             'invoice_date': '2022-03-24',
@@ -260,9 +260,10 @@ class TestItEdiExport(TestItEdi):
                 }),
             ],
         })
+        self.assertFalse(invoice._l10n_it_edi_is_simplified())
         self.assertEqual(['l10n_it_edi_partner_address_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
 
-    def test_invoice_non_domestic_simplified(self):
+    def test_invoice_non_domestic_is_not_simplified(self):
         invoice = self.env['account.move'].with_company(self.company).create({
             'move_type': 'out_invoice',
             'invoice_date': '2022-03-24',
@@ -276,6 +277,7 @@ class TestItEdiExport(TestItEdi):
                 }),
             ],
         })
+        self.assertFalse(invoice._l10n_it_edi_is_simplified())
         self.assertEqual(['l10n_it_edi_partner_address_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
 
     def test_bill_refund_no_reconcile(self):

@@ -68,12 +68,18 @@ class AccountMove(models.Model):
             move.l10n_it_document_type = document_type.get(move._l10n_it_edi_get_document_type())
 
     def _l10n_it_edi_get_document_type(self):
+        """ If the user has selected a document type, generally use that.
+            If the user has selected (the default) TD01 and the partner has no complete address
+            then we can't issue a TD01 invoice - but if it's possible to issue a simplified invoice,
+            then switch automatically to the TD07.
+        """
         # EXTENDS 'l10n_it_edi'
         self.ensure_one()
-
-        if self.l10n_it_document_type:
-            return self.l10n_it_document_type.code
-        return super()._l10n_it_edi_get_document_type()
+        if not self.l10n_it_document_type.code:
+            return super()._l10n_it_edi_get_document_type()
+        if self.l10n_it_document_type.code == 'TD01' and super()._l10n_it_edi_get_document_type() == 'TD07':
+            self.l10n_it_document_type = self.env.ref('l10n_it_edi_ndd.l10n_it_document_type_07')
+        return self.l10n_it_document_type.code
 
     def _l10n_it_edi_get_values(self, pdf_values=None):
         # EXTENDS 'l10n_it_edi'
@@ -111,3 +117,17 @@ class AccountMove(models.Model):
             self.l10n_it_document_type = document_type
 
         return self
+
+    def _l10n_it_edi_base_export_check(self):
+        """ Warnings can be ignored by setting `l10n_it_document_type == 'TD07'` """
+        # EXTENDS 'l10n_it_edi'
+        errors = super()._l10n_it_edi_base_export_check()
+        simplified_moves = self.filtered(lambda move:
+            move._l10n_it_edi_is_simplified_document_type(move.l10n_it_document_type.code)
+        )
+        errors.update(
+            (k, v)
+            for k, v in simplified_moves._l10n_it_edi_is_simplified_checks().items()
+            if v.get('level') in ('error', 'warning')
+        )
+        return errors
