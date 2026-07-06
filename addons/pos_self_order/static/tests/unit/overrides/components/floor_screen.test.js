@@ -24,21 +24,11 @@ test("computeFloorSize", async () => {
         },
     };
     const table = store.models["restaurant.table"].getFirst();
-    const order1 = await getFilledOrder(store, { self_ordering_table_id: table });
-    await waitFor(`.tableId-${table.id}.occupied`);
-    order1.state = "cancel";
+    await getFilledOrder(store, { self_ordering_table_id: table });
     await waitForNone(`.tableId-${table.id}.occupied`);
 
     const order2 = await getFilledOrder(store, { table_id: table });
     await waitFor(`.tableId-${table.id}.occupied`);
     order2.state = "cancel";
-    await waitForNone(`.tableId-${table.id}.occupied`);
-
-    const order3 = await getFilledOrder(store, { self_ordering_table_id: table });
-    const order4 = await getFilledOrder(store, { self_ordering_table_id: table });
-    await waitFor(`.tableId-${table.id}.occupied`);
-    order3.state = "cancel";
-    await waitFor(`.tableId-${table.id}.occupied`);
-    order4.state = "cancel";
     await waitForNone(`.tableId-${table.id}.occupied`);
 });

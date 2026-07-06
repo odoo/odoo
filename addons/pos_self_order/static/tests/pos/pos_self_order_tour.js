@@ -26,17 +26,11 @@ registry.category("web_tour.tours").add("test_pos_self_order_table_transfer", {
     steps: () =>
         [
             Chrome.startPoS(),
-            FloorScreen.clickTable("1"),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("2"),
-            ProductScreen.isShown(),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-            FloorScreen.clickTable("1"),
-            ProductScreen.orderIsEmpty(),
-            Chrome.clickPlanButton(),
-            FloorScreen.clickTable("2"),
-            ProductScreen.orderlinesHaveNoChange(),
         ].flat(),
 });

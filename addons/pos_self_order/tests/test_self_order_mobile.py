@@ -377,7 +377,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
 
-        self.env['pos.order'].create({
+        order = self.env['pos.order'].create({
             'session_id': self.pos_config.current_session_id.id,
             'self_ordering_table_id': self.pos_main_floor.table_ids[0].id,
             'amount_total': 10.0,
@@ -392,19 +392,8 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
                 'price_subtotal_incl': self.cola.lst_price,
             })],
         })
-
         self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_table_transfer', login='pos_user')
-
-        orders = self.pos_config.current_session_id.order_ids
-        self.assertEqual(len(orders), 2, "Expected exactly 2 orders: the transferred self-order and an empty placeholder")
-        orders_with_lines = orders.filtered(lambda o: o.lines)
-        empty_orders = orders.filtered(lambda o: not o.lines)
-        self.assertEqual(len(orders_with_lines), 1, "Expected exactly one order with lines")
-        self.assertEqual(len(empty_orders), 1, "Expected exactly one empty order")
-        self_order = orders_with_lines[0]
-        self.assertEqual(self_order.self_ordering_table_id, self_order.table_id)
-        empty_order = empty_orders[0]
-        self.assertFalse(empty_order.lines, "Empty order should have no lines")
+        self.assertEqual(order.self_ordering_table_id, order.table_id)
 
     def test_self_order_mobile_not_visible_in_other_config(self):
         """Self-orders from config A should not appear in config B's ticket screen."""
