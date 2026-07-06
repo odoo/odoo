@@ -297,7 +297,7 @@
             <field name="question_type">simple_choice</field>
             <field name="sequence">4</field>
             <field name="description" type="html">
-                <p>At least C2 level.</p>
+                <p>At least C1 level.</p>
             </field>
         </record>
         <record id="q2_a" model="survey.question.answer">
@@ -367,6 +367,40 @@
         </record>
         <record id="e_q2_a_hr" model="job.match.answer.weight">
             <field name="answer_id" ref="q2_a"/><field name="profile_id" ref="profile_hr"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <!-- Q2 "English &amp; Dutch" / "English &amp; French" rule out the Nordic role -->
+        <record id="e_q2_b_bdn" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_b"/><field name="profile_id" ref="profile_bizdev_nordic"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_c_bdn" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_c"/><field name="profile_id" ref="profile_bizdev_nordic"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <!-- Q2 "English and Italian, German or Arabic" rules out the local-language and
+             non-language roles (only Software developer, Product Owner, Web Designer,
+             Customer Support Analyst, Partner Manager and the Dev Internship survive) -->
+        <record id="e_q2_e_ba" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_business_analyst"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_e_am" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_account_manager"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_e_bdr" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_bizdev_rep"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_e_bdn" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_bizdev_nordic"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_e_horeca" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_bizdev_horeca"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_e_hr" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_hr"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_e_mkt" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_marketing"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
+        </record>
+        <record id="e_q2_e_bint" model="job.match.answer.weight">
+            <field name="answer_id" ref="q2_e"/><field name="profile_id" ref="profile_bizdev_intern"/><field name="is_eliminating" eval="True"/><field name="points">0</field>
         </record>
         <!-- Q2 language bonuses -->
         <record id="w_q2_d_bdn" model="job.match.answer.weight">
@@ -459,11 +493,11 @@
         </record>
 
         <!-- ==================================================================
-             Q5: What do you enjoy doing the most?
+             Q5: What do you enjoy the most?
              ================================================================== -->
         <record id="q3" model="survey.question">
             <field name="survey_id" ref="survey_job_match_demo"/>
-            <field name="title">What do you enjoy doing the most?</field>
+            <field name="title">What do you enjoy the most?</field>
             <field name="question_type">simple_choice</field>
             <field name="sequence">5</field>
         </record>
@@ -641,9 +675,6 @@
         </record>
         <record id="w_q4_e_horeca" model="job.match.answer.weight">
             <field name="answer_id" ref="q4_e"/><field name="profile_id" ref="profile_bizdev_horeca"/><field name="points">3</field>
-        </record>
-        <record id="w_q4_e_bint" model="job.match.answer.weight">
-            <field name="answer_id" ref="q4_e"/><field name="profile_id" ref="profile_bizdev_intern"/><field name="points">3</field>
         </record>
         <record id="w_q4_f_am" model="job.match.answer.weight">
             <field name="answer_id" ref="q4_f"/><field name="profile_id" ref="profile_account_manager"/><field name="points">3</field>
