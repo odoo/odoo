@@ -1,5 +1,5 @@
 import { onWebsocketEvent } from "@bus/../tests/mock_websocket";
-import { WebsocketWorker } from "@bus/workers/websocket_worker";
+import { busService } from "@bus/services/bus_service";
 import {
     click,
     contains,
@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import { getService, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -27,11 +27,18 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
 });
 
 test("subscribe to presence channels according to store data", async () => {
-    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 10 });
-    await makeMockEnv();
-    const store = getService("mail.store");
+    let startBus;
+    patchWithCleanup(busService, {
+        start() {
+            const api = super.start(...arguments);
+            startBus = api.start;
+            api.startBus = () => {};
+            return api;
+        },
+    });
+    const env = await makeMockEnv();
+    const store = env.services["mail.store"];
     onWebsocketEvent("subscribe", (data) => expect.step(`subscribe - [${data.channels}]`));
-    expect(getService("bus_service").isActive).toBe(false);
     // Should not subscribe to presences as bus service is not started.
     store["res.partner"].insert({ id: 1, name: "Partner 1", user_ids: [1] });
     store["res.partner"].insert({ id: 2, name: "Partner 2", user_ids: [2] });
@@ -40,8 +47,10 @@ test("subscribe to presence channels according to store data", async () => {
     await tick();
     expect.waitForSteps([]);
     // Starting the bus should subscribe to known presence channels.
-    getService("bus_service").start();
+    startBus();
     await expect.waitForSteps([
+        "subscribe - []",
+        "subscribe - [odoo-presence-res.users_1]",
         "subscribe - [odoo-presence-res.users_1,odoo-presence-res.users_2]",
     ]);
     // Discovering new presence channels should refresh the subscription.
@@ -49,9 +58,11 @@ test("subscribe to presence channels according to store data", async () => {
     await expect.waitForSteps([
         "subscribe - [odoo-presence-mail.guest_1,odoo-presence-res.users_1,odoo-presence-res.users_2]",
     ]);
-    // Updating "im_status_access_token" should refresh the subscription.
+    // Updating "im_status_access_token" should refresh the subscription. (first
+    // subscription is made to remove the token-less channel).
     store["mail.guest"].insert({ id: 1, im_status_access_token: "token" });
     await expect.waitForSteps([
+        "subscribe - [odoo-presence-res.users_1,odoo-presence-res.users_2]",
         "subscribe - [odoo-presence-mail.guest_1-token,odoo-presence-res.users_1,odoo-presence-res.users_2]",
     ]);
 });
