@@ -1,8 +1,10 @@
 import { registry } from "@web/core/registry";
+import * as PrinterUtils from "@printer/../tests/tours/utils";
 
 registry.category("web_tour.tours").add("print_label_epos_tour", {
     steps: () =>
         [
+            PrinterUtils.mockPrinterRequest(),
             {
                 content: "Click cog icon",
                 trigger: ".o_cp_action_menus .dropdown-toggle",
@@ -21,11 +23,11 @@ registry.category("web_tour.tours").add("print_label_epos_tour", {
             {
                 content: "Click the printer field to later select the printer",
                 trigger: "div[name='printer_ids'] input",
-                run: "click",
+                run: "edit Test Epson Printer",
             },
             {
                 content: "Click the printer field to later select the printer",
-                trigger: "#printer_ids_0_0_0",
+                trigger: "a span span:contains('Test Epson Printer')",
                 run: "click",
             },
             {
