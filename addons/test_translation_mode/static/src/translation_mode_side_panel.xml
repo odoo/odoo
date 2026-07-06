@@ -21,7 +21,7 @@
                                 class="o_searchview_input flex-grow-1 border-0 p-0 bg-transparent"
                                 placeholder="Search…"
                                 t-att-disabled="!highlightsEnabled"
-                                t-custom-model="this.state.filter"
+                                t-model.proxy="this.state.filter"
                             />
                         </div>
                     </search>
