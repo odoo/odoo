@@ -57,7 +57,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)",
+            // Scoped to the composer: on the second run of the tour, the message posted
+            // by the first run displays identical attachment cards, which would match an
+            // unscoped selector before the current upload is done (runbot 941300).
+            trigger:
+                ".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)",
         },
         {
             content: "You must click on 'More Action' each time you want to upload a file",
@@ -82,7 +86,9 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: '.o-mail-AttachmentContainer:not(.o-isUploading)[title="image.png"]',
+            // Scoped to the composer: see the text.txt step above (runbot 941300).
+            trigger:
+                '.o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)[title="image.png"]',
             async run({ waitFor }) {
                 /** @type {import("models").Store} */
                 const store = odoo.__WOWL_DEBUG__.root.env.services["mail.store"];
@@ -110,7 +116,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                         disposeEffect();
                     }
                     await waitFor(
-                        `.o-mail-AttachmentContainer[title="image.png"] img[src="${getOrigin()}/web/image/${
+                        `.o-mail-Composer .o-mail-AttachmentContainer[title="image.png"] img[src="${getOrigin()}/web/image/${
                             attachment.id
                         }?access_token=${attachment.raw_access_token}&filename=image.png&unique=${
                             attachment.checksum
