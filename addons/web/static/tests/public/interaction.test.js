@@ -1130,6 +1130,44 @@ describe("using qualifiers", () => {
         expect("span").toHaveClass("a");
     });
 
+    test("add a listener with the .passive qualifier", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-on-click.passive": (ev) => {
+                        ev.preventDefault(); // Shouldn't have any effect.
+                        expect.step(`defaultPrevented: ${ev.defaultPrevented}`);
+                        expect.step("click");
+                    },
+                },
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect.verifySteps([]);
+        await click("span");
+        expect.verifySteps(["defaultPrevented: false", "click"]);
+    });
+
+    test("add a listener without the .passive qualifier", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-on-click": (ev) => {
+                        ev.preventDefault(); // Should have an effect.
+                        expect.step(`defaultPrevented: ${ev.defaultPrevented}`);
+                        expect.step("click");
+                    },
+                },
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect.verifySteps([]);
+        await click("span");
+        expect.verifySteps(["defaultPrevented: true", "click"]);
+    });
+
     test("add a listener with several qualifiers", async () => {
         let clicked = false;
         class Test extends Interaction {

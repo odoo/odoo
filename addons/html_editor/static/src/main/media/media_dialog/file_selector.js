@@ -279,7 +279,8 @@ export class FileSelector extends Component {
         useListener(
             () => this.props.modalRef()?.querySelector("main.modal-body"),
             "scroll",
-            this.debouncedOnScroll
+            this.debouncedOnScroll,
+            { passive: true }
         );
 
         useLayoutEffect(

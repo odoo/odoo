@@ -12,8 +12,11 @@ export class AnnouncementScroll extends Interaction {
             }),
         },
         _window: {
-            "t-on-resize": this.debounced(this.onResize, 100, { leading: true, trailing: true }),
-            "t-on-scroll": this.throttled(this.onScroll),
+            "t-on-resize.passive": this.debounced(this.onResize, 100, {
+                leading: true,
+                trailing: true,
+            }),
+            "t-on-scroll.passive": this.throttled(this.onScroll),
         },
         ".s_announcement_scroll_marquee_container": {
             "t-att-style": () => ({

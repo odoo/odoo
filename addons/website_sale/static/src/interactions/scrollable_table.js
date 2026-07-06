@@ -6,10 +6,10 @@ export class ScrollableTable extends Interaction {
     static selector = '.o_wsale_scrollable_table';
     dynamicContent = {
         _root: {
-            't-on-scroll': this.throttled(this.onScroll, 100),
+            't-on-scroll.passive': this.throttled(this.onScroll, 100),
         },
         _window: {
-            't-on-resize': this.debounced(this.updateMobileBadgeVisibility, 250),
+            't-on-resize.passive': this.debounced(this.updateMobileBadgeVisibility, 250),
         },
     };
 

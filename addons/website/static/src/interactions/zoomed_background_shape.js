@@ -26,7 +26,7 @@ export class ZoomedBackgroundShape extends Interaction {
     static selector = ".o_we_shape";
     dynamicContent = {
         _window: {
-            "t-on-resize": this.throttled(this.resizeBackgroundShape),
+            "t-on-resize.passive": this.throttled(this.resizeBackgroundShape),
         },
         _root: {
             "t-att-style": () => ({

@@ -7,8 +7,8 @@ export class BottomFixedElement extends Interaction {
     static selector = "#wrapwrap";
     dynamicContent = {
         _window: {
-            "t-on-resize": this.hideBottomFixedElements,
-            "t-on-scroll": this.hideBottomFixedElements,
+            "t-on-resize.passive": this.hideBottomFixedElements,
+            "t-on-scroll.passive": this.hideBottomFixedElements,
         },
     };
 

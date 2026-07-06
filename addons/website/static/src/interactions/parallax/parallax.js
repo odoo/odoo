@@ -12,8 +12,8 @@ export class Parallax extends Interaction {
             ),
     });
     dynamicContent = {
-        _document: { "t-on-scroll": this.onScroll },
-        _window: { "t-on-resize": this.updateBackgroundHeight },
+        _document: { "t-on-scroll.passive": this.onScroll },
+        _window: { "t-on-resize.passive": this.updateBackgroundHeight },
         _modal: { "t-on-shown.bs.modal": this.updateBackgroundHeight },
         _bg: {
             "t-att-style": () => ({

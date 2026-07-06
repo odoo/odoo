@@ -8,18 +8,18 @@ export class WebsiteEventTrack extends Interaction {
 
     dynamicContent = {
         _window: {
-            "t-on-scroll": () => this.throttledUpdateAgendaScroll(),
-            "t-on-resize": () => this.throttledUpdateAgendaScroll(),
+            "t-on-scroll.passive": () => this.throttledUpdateAgendaScroll(),
+            "t-on-resize.passive": () => this.throttledUpdateAgendaScroll(),
         },
         "#event_track_search": { "t-on-input.prevent": (ev) => {
             this.searchText = ev.currentTarget.value.toLowerCase();
         }},
-        ".o_we_online_agenda": { "t-on-scroll": this.throttled(this.onAgendaScroll) },
+        ".o_we_online_agenda": { "t-on-scroll.passive": this.throttled(this.onAgendaScroll) },
         ".event_track": { "t-att-class": (el) => ({ "invisible": !el.textContent.toLowerCase().includes(this.searchText) }) },
         "#search_summary": { "t-att-class": () => ({ "invisible": !this.searchText }) },
         "#search_number": { "t-out": () => this.tracks.filter(element => !element.classList.contains('invisible')).length },
         ".o_we_agenda_horizontal_scroller_container": {
-            "t-on-scroll": () => this.throttledAlignScroll(this.visibleAgenda),
+            "t-on-scroll.passive": () => this.throttledAlignScroll(this.visibleAgenda),
             "t-att-class": () => ({
                 "d-none": !(this.visibleAgenda && this.visibleAgenda.classList.contains("o_we_online_agenda_has_scroll")),
             }),
@@ -38,7 +38,6 @@ export class WebsiteEventTrack extends Interaction {
 
         this.searchText = "";
         this.agendaScroller = this.el.querySelector(".o_we_agenda_horizontal_scroller_container");
-        this.agendaScrollerElement = this.agendaScroller?.querySelector(".o_we_agenda_horizontal_scroller");
         this.agendas = Array.from(this.el.querySelectorAll(".o_we_online_agenda"));
         this.tracks = Array.from(this.el.querySelectorAll(".event_track"));
 
