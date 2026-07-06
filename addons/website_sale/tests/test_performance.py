@@ -324,5 +324,74 @@ class TestWebsiteSalePerformanceWithPricelistDepth(TestWebsiteSalePerformanceWit
         )
 
 
+# STOCK
+
+
+class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNoPricelist):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.heavy_product.is_storable = True
+        cls.heavy_product.allow_out_of_stock_order = False
+        for i, product in enumerate(cls.heavy_product.product_variant_ids):
+            product.qty_available = i - 1
+
+    def _get_shop_page_queries(self):
+        res = super()._get_shop_page_queries()
+        if "website_sale_renting" not in self.installed_modules:
+            res["product_product"] += 1
+        if "website_sale_stock" in self.installed_modules:
+            res["stock_warehouse"] += 2
+            res["stock_move"] += 2
+            res["stock_quant"] += 1
+        else:
+            res["product_product"] += 1
+            res["sale_order_line"] += 1
+
+        if "website_sale_mrp" in self.installed_modules:
+            res["mrp_bom"] += 1
+
+        if "product_expiry" in self.installed_modules:
+            res["stock_quant"] += 1
+        return res
+
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+    def _get_product_page_queries(self):
+        res = super()._get_product_page_queries()
+        res["res_partner"] += 1
+        res["uom_uom"] += 1
+        if "website_sale_stock" in self.installed_modules:
+            res["stock_warehouse"] += 2
+            res["stock_move"] += 2
+            res["stock_quant"] += 1
+        else:
+            res["product_product"] += 1
+            res["sale_order_line"] += 1
+
+        if "website_sale_mrp" in self.installed_modules:
+            res["mrp_bom"] += 1
+
+        if "website_sale_collect" in self.installed_modules:
+            res["delivery_carrier"] += 1
+
+        if "product_expiry" in self.installed_modules:
+            res["stock_quant"] += 1
+        return res
+
+    def test_product_page_generation(self):
+        select_queries = self._get_product_page_queries()
+        self._check_url_hot_query(
+            self.heavy_product.website_url,
+            sum(select_queries.values()),
+            select_tables_perf=select_queries,
+        )
+
+
 # TODO test when heavy product is set as rental/recurring
-# TODO test when heavy product stock is tracked
+# TODO test with enable uoms (& multiple uoms on products)
