@@ -3,8 +3,8 @@
 from markupsafe import Markup
 
 from odoo.addons.bus.tests.common import BusResult
-from odoo.exceptions import AccessError
 from odoo.addons.mail.tests import common
+from odoo.exceptions import AccessError
 from odoo.tests import HttpCase, new_test_user, tagged, users
 
 
@@ -92,16 +92,16 @@ class TestMailMessage(common.MailCommon, HttpCase):
             "Only messages accessible to user are linked, even as sudo")
         self.assertFalse(message_internal_su.message_link_preview_ids)
 
-        # public message: can read
-        message_public = PublicMessage.browse(self.test_public_message.id)
-        self.assertFalse(message_public.is_current_user_or_guest_author)
+        # public message: cannot read except when sudo-ed
+        with self.assertRaises(AccessError):
+            PublicMessage.browse(self.test_public_message.id).read(['id'])
+        message_public_su = PublicMessage.sudo().browse(self.test_public_message.id)
+        self.assertFalse(message_public_su.is_current_user_or_guest_author)
         self.assertEqual(
-            message_public.linked_message_ids, self.public_message,
+            message_public_su.linked_message_ids, self.public_message,
             "Only messages accessible to user are linked")
-        with self.assertRaises(AccessError):  # field limited to admins
-            self.assertFalse(message_public.message_link_preview_ids)
-        with self.assertRaises(AccessError):  # field limited to admins
-            self.assertFalse(message_public.reaction_ids)
+        self.assertFalse(message_public_su.message_link_preview_ids)
+        self.assertFalse(message_public_su.reaction_ids)
 
     @users("employee")
     def test_can_star_message_without_write_access(self):

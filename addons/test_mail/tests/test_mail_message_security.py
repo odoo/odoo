@@ -598,21 +598,21 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Read access check for public users """
         for msg, msg_vals, should_crash, reason in [
             # document based
-            (self.record_public.message_ids[0], {}, False, 'Access on record'),
+            (self.record_public.message_ids[0], {}, True, 'Public NoRead > Access on record'),
             (self.record_portal.message_ids[0], {}, True, 'No access on record'),
             (self.record_admin.message_ids[0], {}, True, 'No access on record'),
             # author
             (self.record_internal.message_ids[0], {
                 'author_id': self.user_public.partner_id.id,
-            }, False, 'Author > no access on record'),
+            }, True, 'Public NoRead > Author > no access on record'),
             # Recipient To
             (self.record_admin.message_ids[0], {
                 'partner_ids': [(4, self.user_public.partner_id.id)],
-            }, False, 'Recipients To > no access on record'),
+            }, True, 'Public NoRead > Recipients To > no access on record'),
             # Recipients Cc
             (self.record_admin.message_ids[0], {
                 'partner_cc_ids': [(4, self.user_public.partner_id.id)],
-            }, False, 'Recipients Cc > no access on record'),
+            }, True, 'Public NoRead > Recipients Cc > no access on record'),
             # forbidden
             (self.record_public.message_ids[0], {
                 'subtype_id': self.env.ref('mail.mt_note').id,
@@ -625,7 +625,7 @@ class TestMailMessageAccess(MessageAccessCommon):
                 'notification_ids': [(0, 0, {
                     'res_partner_id': self.user_public.partner_id.id,
                 })],
-            }, False, 'Notified > no access on record'),
+            }, True, 'Public NoRead > Notified > no access on record'),
         ]:
             original_vals = {
                 'author_id': msg.author_id.id,
@@ -875,7 +875,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.user_admin, []),
         ], [
             # public: record with access but no tracking
-            msg_record_public,
+            None,
             # portal: mentionned + record with access, if published
             msgs[0] + msgs[3] + msg_record_portal + msg_record_public,
             # employee
@@ -886,7 +886,11 @@ class TestMailMessageAccess(MessageAccessCommon):
             with self.subTest(test_user=test_user.name, add_domain=add_domain):
                 self.env.invalidate_all()
                 domain = [('subject', 'like', '_ZTest')] + add_domain
-                self.assertEqual(self.env['mail.message'].with_user(test_user).search(domain), exp_messages)
+                if exp_messages is None:
+                    with self.assertRaises(AccessError):
+                        self.env['mail.message'].with_user(test_user).search(domain)
+                else:
+                    self.assertEqual(self.env['mail.message'].with_user(test_user).search(domain), exp_messages)
 
     def test_search_customized(self):
         """ Test '_mail_get_operation_for_mail_message_operation' support in search """

@@ -1650,7 +1650,8 @@ class DiscussChannel(models.Model):
 
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""
-        messages = self.env["mail.message"]
+        # sudo: public may go through this code - last message should not be impacted by ACLs
+        messages = self.env["mail.message"].sudo()
         if not self.ids:
             return messages
         # Build the subquery, we know the model and must inject the same

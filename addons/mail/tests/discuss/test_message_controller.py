@@ -364,14 +364,17 @@ class TestMessageLinks(MailCommon, HttpCase):
             self.assertEqual(res.url, expected_url)
         with self.subTest(private_message_id=private_message_id):
             res = self.url_open(f'/mail/message/{private_message_id}')
-            self.assertEqual(res.status_code, 404)
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.url, self.base_url() + '/odoo/action-mail.action_discuss',
+                             'If not readable, should redirect to generic discuss action')
 
     @users('employee')
     def test_message_link_by_public(self):
         message = self.public_channel.message_post(
             body='Public Channel Message',
             message_type='comment',
-            subtype_xmlid='mail.mt_comment'
+            subtype_xmlid='mail.mt_comment',
         )
         res = self.url_open(f'/mail/message/{message.id}')
         self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.url, self.base_url() + f'/discuss/channel/{self.public_channel.id}?highlight_message_id={message.id}')

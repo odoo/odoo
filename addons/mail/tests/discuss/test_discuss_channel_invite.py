@@ -192,9 +192,9 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
     @users("employee")
     def test_06_invite_by_email_posts_user_notification(self):
         group_chat = self.env["discuss.channel"]._create_group(users_to=self.user_employee)
-        with self.mock_mail_gateway():
+        with self.mock_mail_gateway(), self.mock_mail_app():
             group_chat.invite_by_email(["alfred@test.com"])
-        last_message = group_chat._get_last_messages()
+        last_message = self._new_msgs
         self.assertEqual(last_message.message_type, "user_notification")
 
     def test_07_invite_link_rotation_revokes_old_access(self):
