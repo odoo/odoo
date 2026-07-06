@@ -67,6 +67,11 @@ export class FilePlugin extends Plugin {
                 return false;
             }
         },
+        are_shorthands_available_predicates: (node) => {
+            if (closestElement(node, ".o_file_box")) {
+                return false;
+            }
+        },
 
         /** Overrides */
         paste_overrides: (selection, clipboardData) => {
