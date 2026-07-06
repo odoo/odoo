@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
+import { hasColor } from "@html_editor/utils/color";
+import { mergeAdjacentTextNodes, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -199,6 +200,7 @@ export class LinkPlugin extends Plugin {
         "lineBreak",
         "overlay",
         "color",
+        "format",
         "baseContainer",
         "feff",
         "delete",
@@ -862,7 +864,7 @@ export class LinkPlugin extends Plugin {
                 });
                 if (!this.config.hideStylingInLinkPopover) {
                     link.removeAttribute("style");
-                    this.dependencies.color.removeAllColor();
+                    this.dependencies.format.removeSelectionFormats(["color", "backgroundColor"]);
                 }
                 // Remove the current link (linkInDocument) if it has no content
                 if (
@@ -901,16 +903,19 @@ export class LinkPlugin extends Plugin {
             const { color } = anchorEl.style;
             const childNodes = [...anchorEl.childNodes];
             if (color && childNodes.every(isPhrasingContent)) {
-                anchorEl.style.removeProperty("color");
-                const font =
-                    anchorEl.nodeName === "FONT" ? anchorEl : anchorEl.querySelector("font");
-                if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
+                removeStyle(anchorEl, "color");
+                const wrapper = anchorEl.firstElementChild;
+                if (
+                    wrapper &&
+                    hasColor(wrapper, "color") &&
+                    cleanZWChars(anchorEl.textContent) === wrapper.textContent
+                ) {
                     continue;
                 }
-                const newFont = this.document.createElement("font");
-                newFont.append(...childNodes);
-                anchorEl.appendChild(newFont);
-                this.dependencies.color.colorElement(newFont, color, "color");
+                const newSpan = this.document.createElement("span");
+                newSpan.append(...childNodes);
+                anchorEl.appendChild(newSpan);
+                this.dependencies.color.colorElement(newSpan, color, "color");
             }
         }
         return root;

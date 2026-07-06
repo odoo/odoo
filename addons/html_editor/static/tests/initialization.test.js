@@ -137,18 +137,11 @@ describe("allowInlineAtRoot options", () => {
     });
 });
 
-describe("sanitize spans/fonts", () => {
+describe("sanitize spans", () => {
     test("should NOT sanitize attributeless spans away", async () => {
         await testEditor({
             contentBefore: "<p><span>abc</span></p>",
             contentAfter: "<p><span>abc</span></p>",
-        });
-    });
-
-    test("should NOT sanitize attributeless fonts away", async () => {
-        await testEditor({
-            contentBefore: "<p><font>abc</font></p>",
-            contentAfter: "<p><font>abc</font></p>",
         });
     });
 });
@@ -175,28 +168,28 @@ describe("list normalization", () => {
 });
 
 describe("link normalization", () => {
-    test("should move inline color from anchor to font", async () => {
+    test("should move inline color from anchor to span", async () => {
         await testEditor({
             contentBefore: '<p><a href="#" style="color: #008f8c">test</a></p>',
             contentAfter:
-                '<p><a href="#"><font style="color: rgb(0, 143, 140);">test</font></a></p>',
+                '<p><a href="#"><span style="color: rgb(0, 143, 140);">test</span></a></p>',
         });
     });
 
-    test("should remove anchor color and retain font color", async () => {
+    test("should remove anchor color and retain text color", async () => {
         await testEditor({
             contentBefore:
-                '<p><a href="#" style="color: #008f8c"><font style="color: rgb(255, 0, 0);">test</font></a></p>',
-            contentAfter: '<p><a href="#"><font style="color: rgb(255, 0, 0);">test</font></a></p>',
+                '<p><a href="#" style="color: #008f8c"><span style="color: rgb(255, 0, 0);">test</span></a></p>',
+            contentAfter: '<p><a href="#"><span style="color: rgb(255, 0, 0);">test</span></a></p>',
         });
     });
 
     test("should handle inline color styles in multiple anchor elements", async () => {
         await testEditor({
             contentBefore:
-                '<p><a href="#" style="color: #008f8c"><font style="color: rgb(255, 0, 0);">test</font></a></p><p><a href="#" style="color: #008f8c">test</a></p>',
+                '<p><a href="#" style="color: #008f8c"><span style="color: rgb(255, 0, 0);">test</span></a></p><p><a href="#" style="color: #008f8c">test</a></p>',
             contentAfter:
-                '<p><a href="#"><font style="color: rgb(255, 0, 0);">test</font></a></p><p><a href="#"><font style="color: rgb(0, 143, 140);">test</font></a></p>',
+                '<p><a href="#"><span style="color: rgb(255, 0, 0);">test</span></a></p><p><a href="#"><span style="color: rgb(0, 143, 140);">test</span></a></p>',
         });
     });
 });
