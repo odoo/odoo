@@ -1,17 +1,10 @@
 import { registry } from "@web/core/registry";
+import * as PrinterUtils from "@printer/../tests/tours/utils";
 
 registry.category("web_tour.tours").add("print_label_zebra_tour", {
     steps: () =>
         [
-            {
-                content: "Click on 'Test Product' product",
-                trigger: ".o_kanban_record:contains('Test Product')",
-                run: "click",
-            },
-            {
-                content: "Wait for product form to load",
-                trigger: ".o_last_breadcrumb_item:contains('Test Product')",
-            },
+            PrinterUtils.mockPrinterRequest(),
             {
                 content: "Click cog icon",
                 trigger: ".o_cp_action_menus .dropdown-toggle",
@@ -35,11 +28,11 @@ registry.category("web_tour.tours").add("print_label_zebra_tour", {
             {
                 content: "Click the printer field to later select the printer",
                 trigger: "div[name='printer_ids'] input",
-                run: "click",
+                run: "edit Test Zebra Printer",
             },
             {
-                content: "Click the printer field to later select the printer",
-                trigger: "#printer_ids_0_0_0",
+                content: "Click 'Test Zebra Printer' in the dropdown",
+                trigger: "a span span:contains('Test Zebra Printer')",
                 run: "click",
             },
             {
