@@ -140,6 +140,7 @@ export class ExportDataDialog extends Component {
             // Params
             ref: this.draggableRef,
             elements: ".o_export_field",
+            ignore: ".o_remove_field",
             enable: !this.state.isSmall,
             cursor: "grabbing",
             // Hooks
@@ -224,18 +225,25 @@ export class ExportDataDialog extends Component {
     }
 
     /**
-     * Load fields to display and (re)set the list of available fields
+     * Load fields to display and (re)set the list of available fields.
+     *
+     * @param {boolean} [keepExportList=false] when true, the current export
+     *  list is left untouched. This is used when only the available fields
+     *  change (e.g. toggling the "Updatable fields only" switch), which must
+     *  not affect the fields the user already chose to export.
      */
-    async fetchFields() {
+    async fetchFields(keepExportList = false) {
         this.knownFields = {};
         this.expandedFields = {};
         await this.loadFields();
-        await this.setDefaultExportList();
+        if (!keepExportList) {
+            await this.setDefaultExportList();
+        }
         this.state.search = [];
         if (this.searchRef()) {
             this.searchRef().value = "";
         }
-        if (this.state.templateId) {
+        if (this.state.templateId && !keepExportList) {
             this.loadExportList(this.state.templateId);
         }
     }
@@ -407,7 +415,7 @@ export class ExportDataDialog extends Component {
 
     onToggleCompatibleExport(value) {
         this.isCompatible = value;
-        this.fetchFields();
+        this.fetchFields(true);
     }
 
     async setDefaultExportList() {
@@ -423,10 +431,8 @@ export class ExportDataDialog extends Component {
     }
 
     setFormat(ev) {
-        if (ev.target.checked) {
-            this.state.selectedFormat = this.availableFormats.findIndex(
-                ({ tag }) => tag === ev.target.value
-            );
-        }
+        this.state.selectedFormat = this.availableFormats.findIndex(
+            ({ tag }) => tag === ev.target.value
+        );
     }
 }
