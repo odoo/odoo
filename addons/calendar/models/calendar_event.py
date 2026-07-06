@@ -1747,7 +1747,9 @@ class CalendarEvent(models.Model):
             if meeting.location:
                 event.add('location').value = meeting.location
             if meeting.rrule:
-                event.add('rrule').value = meeting.rrule
+                # meeting.rrule may be a full dateutil string: "DTSTART:...\nRRULE:FREQ=..."
+                # Take the last line and strip the "RRULE:" prefix if present.
+                event.add('rrule').value = meeting.rrule.splitlines()[-1].replace('RRULE:', '', 1)
 
             if meeting.alarm_ids:
                 for alarm in meeting.alarm_ids:
