@@ -347,8 +347,6 @@
         'web.assets_backend': [
             ('include', 'website.assets_editor'),
             ('include', 'html_editor.assets_link_popover'),
-            'html_editor/static/src/main/media/media_dialog/*.js',
-            'html_editor/static/src/main/media/media_dialog/**/*',
             'website/static/src/scss/color_palettes.scss',
             'website/static/src/scss/view_hierarchy.scss',
             'website/static/src/scss/website.backend.scss',
