@@ -8,11 +8,15 @@ import {
     deleteConfirmationMessage,
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { unique } from "@web/core/utils/arrays";
 
 export class AttendeeCalendarModel extends CalendarModel {
     static services = [...CalendarModel.services, "dialog", "orm"];
 
     setup(params, services) {
+        // fields needed for the duplicate feature and the popover
+        const extraFields = ["partner_ids", "partner_id", "privacy", "user_can_edit", "recurrency"];
+        params.fieldNames = unique(params.fieldNames.concat(extraFields));
         super.setup(...arguments);
         this.dialog = services.dialog;
         this.rpc = rpc;
@@ -24,9 +28,8 @@ export class AttendeeCalendarModel extends CalendarModel {
     async load() {
         const res = await super.load(...arguments);
         if (!this._loaded) {
-            const { credential_status, sync_status, sync_email, default_duration } = await this.orm.call(
-                "res.users", "get_calendar_model_data",
-            );
+            const { credential_status, sync_status, sync_email, default_duration } =
+                await this.orm.call("res.users", "get_calendar_model_data");
             this.syncStatus = sync_status;
             this.credentialStatus = credential_status;
             this.syncEmail = sync_email;

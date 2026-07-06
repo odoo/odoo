@@ -1,7 +1,23 @@
 import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { unique } from "@web/core/utils/arrays";
 import { CalendarModel } from '@web/views/calendar/calendar_model';
 
 export class CalendarWithRecurrenceModel extends CalendarModel {
+    setup(params, services) {
+        const extraFields = [
+            // fields needed for the recurrence feature in the model
+            "duration",
+            "recurring_maintenance",
+            "repeat_interval",
+            "repeat_type",
+            "repeat_unit",
+            "repeat_until",
+            "schedule_date",
+            "state"
+        ];
+        params.fieldNames = unique(params.fieldNames.concat(extraFields));
+        super.setup(params, services);
+    }
     async loadRecords(data) {
         const rawRecords = await this.fetchRecords(data);
         const records = {};

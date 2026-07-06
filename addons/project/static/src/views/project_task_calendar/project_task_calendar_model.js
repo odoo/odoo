@@ -1,9 +1,17 @@
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { unique } from "@web/core/utils/arrays";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { ProjectTaskModelMixin } from "../project_task_model_mixin";
 
 export class ProjectTaskCalendarModel extends ProjectTaskModelMixin(CalendarModel) {
+    setup(params, services) {
+        // add the `state` field to the list of fields to read as we need it
+        // to compute the `o_past_event` classname
+        params.fieldNames = unique(params.fieldNames.concat(["state"]));
+        super.setup(params, services);
+    }
+
     /**
      * @override
      */

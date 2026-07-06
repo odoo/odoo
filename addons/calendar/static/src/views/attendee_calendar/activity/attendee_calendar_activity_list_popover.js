@@ -3,6 +3,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, onWillStart } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
 
 /**
  * @typedef {Object} Props
@@ -29,6 +30,16 @@ export class AttendeeCalendarActivityListPopover extends Component {
         this.limit = this.uiService.isSmall ? false : 5;
 
         this.activityIds = this.props.activityIds;
+
+        // This component spawns a dialog in a non conventional way: instead of using the dialog
+        // service and call ".add", it uses the Dialog component in the template. However, that
+        // component expects some plumbing that is normally done by the service:
+        useSubEnv({
+            dialogData: {
+                close: this.props.close,
+                scrollToOrigin: () => {},
+            },
+        });
 
         onWillStart(async () => {
             await this.store.fetchStoreData("mail.activity", { ids: this.activityIds });

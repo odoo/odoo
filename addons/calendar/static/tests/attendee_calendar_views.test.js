@@ -42,7 +42,7 @@ const arch = /*xml*/ `
         <field name="stop"/>
         <field name="allday"/>
         <field name="res_model_name" invisible="not res_model_name"
-            options="{'icon': 'fa fa-link', 'shouldOpenRecord': true}"/>
+            options="{'icon': 'fa fa-link'}" widget="calendar_open_event"/>
     </calendar>
 `;
 
@@ -161,7 +161,7 @@ test("Linked record rendering", async () => {
         sync_status: {},
         sync_email: false,
         default_duration: 1,
-    }))
+    }));
     const { id: modelId, display_name } = pyEnv["ir.model"].search_read(
         [["model", "=", "res.partner"]],
         ["display_name"]
@@ -181,7 +181,7 @@ test("Linked record rendering", async () => {
     await changeScale("week");
     await clickEvent(eventId);
     expect(".fa-link").toHaveCount(1, { message: "A link icon should be present" });
-    expect("li a[href='#']").toHaveText(display_name);
+    expect(".o_field_widget[name=res_model_name] a[href='#']").toHaveText(display_name);
 });
 
 test("Default duration rendering", async () => {
@@ -191,7 +191,7 @@ test("Default duration rendering", async () => {
         sync_status: {},
         sync_email: false,
         default_duration: 3.25,
-    }))
+    }));
     onRpc("res.partner", "get_attendee_detail", () => []);
     await mountView({ type: "calendar", resModel: "calendar.event", arch });
     expandCalendarView();
@@ -221,7 +221,7 @@ test("Activity events rendering and popover", async () => {
         sync_status: {},
         sync_email: false,
         default_duration: 1,
-    }))
+    }));
     onRpc("set_res_users_settings", (args) => {
         if ("calendar_show_activities" in args.kwargs.new_settings) {
             if (args.kwargs.new_settings.calendar_show_activities) {
