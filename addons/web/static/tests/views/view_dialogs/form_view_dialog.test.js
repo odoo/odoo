@@ -13,6 +13,7 @@ import {
     mountView,
     mountViewInDialog,
     mountWithCleanup,
+    patchWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
@@ -355,6 +356,32 @@ test("FormViewDialog with discard button", async () => {
     await animationFrame();
     expect.verifySteps(["discard"]);
     expect(".o_dialog .o_form_view").toHaveCount(0);
+});
+
+test("FormViewDialog with onRecordSave", async () => {
+    patchWithCleanup(FormViewDialog.prototype, {
+        onRecordSaved(record) {
+            expect.step(`onRecordSaved`);
+            expect(this.currentResId).not.toBeEmpty();
+        },
+    });
+
+    Partner._views.form = /* xml */ `<form><field name="foo"/></form>`;
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        onRecordSave: async (record) => {
+            expect.step("onRecordSave");
+            expect(record.resId).toBeEmpty();
+            const saved = await record.save({ reload: false });
+            return saved;
+        },
+    });
+    await animationFrame();
+
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    await clickSave();
+    expect.verifySteps(["onRecordSave", "onRecordSaved"]);
 });
 
 test("Save a FormViewDialog when a required field is empty don't close the dialog", async () => {
