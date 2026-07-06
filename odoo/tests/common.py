@@ -1735,6 +1735,9 @@ class ChromeBrowser:
             '--enable-unsafe-swiftshader': '',  # Allow software rendering fallback for WebGL when GPU is disabled
             '--mute-audio': '',  # Prevent audio playback from allocating system resources
             '--font-render-hinting': 'none',  # Disable sub-pixel font rendering calculations
+            '--disable-gpu-early-init': '',  # Disable proactive early init of GPU process
+            '--disable-gpu-sandbox': '',  # Disables the GPU process sandbox
+            '--disable-gpu-driver-bug-workarounds': '',  # Disable workarounds for various GPU driver bugs
         }
         switches = {
             # required for tours that use Youtube autoplay conditions (namely website_slides' "course_tour")
