@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useAutoresize } from "@web/core/utils/autoresize";
@@ -9,7 +8,7 @@ import { parseInteger } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component, props, signal, t, useListener } from "@odoo/owl";
+import { Component, onMounted, onPatched, props, signal, t, useListener } from "@odoo/owl";
 
 export const textFieldProps = {
     ...standardFieldProps,
@@ -32,11 +31,12 @@ export class TextField extends Component {
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder(this.textareaRef);
             useListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
-            useLayoutEffect(() =>
+            const updateModel = () =>
                 this.dynamicPlaceholder.updateModel(
                     this.props.dynamicPlaceholderModelReferenceField
-                )
-            );
+                );
+            onMounted(updateModel);
+            onPatched(updateModel);
         }
         useInputField({
             ref: this.textareaRef,

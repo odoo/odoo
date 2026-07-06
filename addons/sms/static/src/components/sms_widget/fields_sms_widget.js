@@ -3,6 +3,7 @@ import {
     EmojisTextField,
     emojisTextField,
 } from "@mail/views/web/fields/emojis_text_field/emojis_text_field";
+import { getRefEl } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
@@ -15,7 +16,10 @@ export class SmsWidget extends EmojisTextField {
     static template = "sms.SmsWidget";
     setup() {
         super.setup();
-        this._emojiAdded = () => this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
+        this._emojiAdded = () =>
+            this.props.record.update({
+                [this.props.name]: getRefEl(this.targetEditElement).value,
+            });
         this.notification = useService('notification');
     }
 
@@ -112,7 +116,9 @@ export class SmsWidget extends EmojisTextField {
      */
     async onInput(ev) {
         super.onInput(...arguments);
-        await this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
+        await this.props.record.update({
+            [this.props.name]: getRefEl(this.targetEditElement).value,
+        });
     }
 }
 
