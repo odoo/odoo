@@ -2731,6 +2731,20 @@ class AccountEdiUBL(models.AbstractModel):
             partner_create_values['vat'], _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
         return partner_create_values
 
+    def _check_customer_vat_match(self, customer, vat, collected_values):
+        """
+        Compare the VAT from an EDI document against a partner's stored VAT,
+        with country-specific normalization where needed.
+        Should stay consistent with `_get_country_specific_vat_variants`.
+        """
+        country = self._import_ubl_get_country(collected_values)
+        customer_vat = customer.vat.replace(' ', '').upper()
+        vat_to_compare = vat.replace(' ', '').replace('.', '').upper()
+        if country.code == 'CH':
+            customer_vat = re.sub(r"(TVA|IVA|MWST)?$", "", customer_vat.replace('.', '').replace('-', ''))
+            vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
+        return customer_vat == vat_to_compare
+
     def _import_ubl_create_missing_customer(self, collected_values):
         customer_values = collected_values['customer_values']
         logs = collected_values['logs']
@@ -2747,7 +2761,7 @@ class AccountEdiUBL(models.AbstractModel):
                 country = self._import_ubl_get_country(collected_values)
                 customer.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
                 return
-            if customer.vat.replace(' ', '') == vat.replace(' ', '').replace('.', ''):
+            if self._check_customer_vat_match(customer, vat, collected_values):
                 return
             vat_mismatch = True
 
