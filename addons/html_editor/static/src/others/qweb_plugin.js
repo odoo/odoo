@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
 import { QWEB_STYLE_ATTRS, isElement } from "@html_editor/utils/dom_info";
@@ -36,14 +36,11 @@ export const isUnremovableQWebElement = (node) =>
 
 export class QWebPlugin extends Plugin {
     static id = "qweb";
-    static dependencies = ["color", "overlay", "protectedNode", "selection"];
+    static dependencies = ["overlay", "protectedNode", "selection"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         on_selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
-
-        /** Overrides */
-        apply_color_overrides: this.applyColorToFieldNodes.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => {
@@ -109,19 +106,6 @@ export class QWebPlugin extends Plugin {
         });
         this.addDomListener(this.editable, "click", this.onClick);
         this.groupIndex = 0;
-    }
-
-    applyColorToFieldNodes(color, mode, coloredNodes) {
-        const fieldNodes = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((n) => closestElement(n, PROTECTED_QWEB_SELECTOR))
-                .filter(Boolean)
-        );
-        for (const fieldNode of fieldNodes) {
-            this.dependencies.color.colorElement(fieldNode, color, mode);
-            [fieldNode, ...descendants(fieldNode)].forEach((n) => coloredNodes.add(n));
-        }
     }
 
     isValidTargetForDomListener(ev) {

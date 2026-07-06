@@ -33,7 +33,7 @@ import {
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
+import { BG_CLASSES_REGEX, hasColor } from "@html_editor/utils/color";
 import { rgbaToHex } from "@web/core/utils/colors";
 import { _t } from "@web/core/l10n/translation";
 
@@ -165,6 +165,24 @@ export class TablePlugin extends Plugin {
             ),
         ],
         expandable_toolbar_namespaces_providers: "table",
+        formattable_node_providers: (node, { applyStyle, formatSpec }) => {
+            const formatName = formatSpec.id;
+            if (formatName !== "color" && formatName !== "backgroundColor") {
+                return;
+            }
+            const td = closestElement(node, ".o_selected_td");
+            if (!td) {
+                return;
+            }
+            // Apply: only a background color goes on the cell.
+            // Remove: background color and color on the cell.
+            const targetsCell = applyStyle
+                ? formatName === "backgroundColor"
+                : hasColor(td, formatName);
+            if (targetsCell) {
+                return td;
+            }
+        },
         color_target_providers: (node) => closestElement(node, ".o_selected_td"),
         overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
         selected_background_color_providers: withSequence(
@@ -196,6 +214,13 @@ export class TablePlugin extends Plugin {
         on_selectionchange_handlers: withSequence(5, this.updateSelectionTable.bind(this)),
         on_will_break_line_handlers: this.resetTableSelection.bind(this),
         on_will_split_block_handlers: this.resetTableSelection.bind(this),
+        on_format_applied_handlers: this.onFormatAppliedOnTableCell.bind(this),
+        on_history_commit_undone_handlers: () => {
+            delete this.tableGridMap;
+        },
+        on_history_commit_redone_handlers: () => {
+            delete this.tableGridMap;
+        },
 
         /** Processors */
         before_insert_processors: this.normalizeTableStructure.bind(this),
@@ -208,18 +233,11 @@ export class TablePlugin extends Plugin {
         resize_target_processors: this.processTableResizeTargets.bind(this),
         resize_width_reset_processors: this.processTableWidthReset.bind(this),
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
-        on_history_commit_undone_handlers: () => {
-            delete this.tableGridMap;
-        },
-        on_history_commit_redone_handlers: () => {
-            delete this.tableGridMap;
-        },
 
         /** Overrides */
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
         shift_tab_overrides: withSequence(20, this.handleShiftTab.bind(this)),
         delete_range_overrides: this.handleDeleteRange.bind(this),
-        apply_color_overrides: this.applyTableColor.bind(this),
         paste_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
         paste_odoo_editor_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
 
@@ -1899,22 +1917,17 @@ export class TablePlugin extends Plugin {
         return didDeselectTable;
     }
 
-    applyTableColor(color, mode, coloredNodes, previewMode) {
-        const selectedTds = [...this.editable.querySelectorAll(".o_selected_td")].filter(
-            (node) => node.isContentEditable
-        );
-        if (selectedTds.length && (mode === "backgroundColor" || (mode === "color" && !color))) {
+    onFormatAppliedOnTableCell(node, formatSpec, applyStyle) {
+        if (!isTableCell(node)) {
+            return;
+        }
+        node.style.color = applyStyle ? getComputedStyle(node).color : "";
+        if (formatSpec.id === "backgroundColor") {
             // Disable the `box-shadow` while previewing the background color.
-            selectedTds.forEach((td) =>
-                td.classList.toggle("o_selected_td_bg_color_preview", previewMode)
+            node.classList.toggle(
+                "o_selected_td_bg_color_preview",
+                this.dependencies.history.getIsPreviewing()
             );
-            for (const td of selectedTds) {
-                this.dependencies.color.colorElement(td, color, mode);
-                td.style["color"] = color ? getComputedStyle(td).color : "";
-                if (mode === "backgroundColor" && color) {
-                    [td, ...descendants(td)].forEach((n) => coloredNodes.add(n));
-                }
-            }
         }
     }
 
