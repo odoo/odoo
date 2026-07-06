@@ -155,7 +155,6 @@
                 </t>
                 <DatiBollo t-if="record.l10n_it_stamp_duty">
                     <BolloVirtuale t-translation="off">SI</BolloVirtuale>
-                    <ImportoBollo t-out="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
                 <t t-foreach="pension_fund_values" t-as="pension_fund">
                     <DatiCassaPrevidenziale>
