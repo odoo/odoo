@@ -74,7 +74,8 @@ const ParallaxPreview = (I) =>
                         this.updateParallaxPosition();
                         this.previewContainerEl.addEventListener(
                             "scroll",
-                            this.updateParallaxPosition
+                            this.updateParallaxPosition,
+                            { passive: true }
                         );
                     } else {
                         this.previewContainerEl.removeEventListener(

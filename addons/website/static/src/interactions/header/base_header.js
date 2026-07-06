@@ -8,10 +8,10 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 export class BaseHeader extends Interaction {
     dynamicContent = {
         _document: {
-            "t-on-scroll": this.onScroll,
+            "t-on-scroll.passive": this.onScroll,
         },
         _window: {
-            "t-on-resize": this.onResize,
+            "t-on-resize.passive": this.onResize,
         },
         _body: {
             "t-att-class": () => ({

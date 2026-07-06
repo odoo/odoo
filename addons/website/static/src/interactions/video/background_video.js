@@ -22,7 +22,7 @@ export class BackgroundVideo extends Interaction {
             },
         },
         _window: {
-            "t-on-resize": this.throttled(this.adjustPlayer),
+            "t-on-resize.passive": this.throttled(this.adjustPlayer),
         },
         _dropdown: {
             "t-on-shown.bs.dropdown": this.throttled(this.adjustPlayer),

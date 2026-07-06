@@ -13,10 +13,10 @@ export class BlogTableOfContents extends Interaction {
     };
     dynamicContent = {
         _window: {
-            "t-on-resize": this.debounced(this.onResize, 200),
+            "t-on-resize.passive": this.debounced(this.onResize, 200),
         },
         _scrollingTarget: {
-            "t-on-scroll": this.process,
+            "t-on-scroll.passive": this.throttled(this.process),
         },
         ".o_wblog_toc": {
             "t-att-class": () => ({

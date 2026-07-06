@@ -7,7 +7,7 @@ export class FullScreenHeight extends Interaction {
     static selector = ".o_full_screen_height";
     dynamicContent = {
         _window: {
-            "t-on-resize.noUpdate": this.debounced(this.updateContent, 250, {
+            "t-on-resize.passive.noUpdate": this.debounced(this.updateContent, 250, {
                 leading: true,
                 trailing: true,
             }),

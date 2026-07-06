@@ -79,7 +79,7 @@ export class Colibri {
                 "this.addListener can only be called after the interaction is started. Maybe move the call in the start method."
             );
         }
-        const re = /^(?<event>.*)\.(?<suffix>prevent|stop|capture|once|noUpdate)$/;
+        const re = /^(?<event>.*)\.(?<suffix>prevent|stop|capture|once|passive|noUpdate)$/;
         let groups = re.exec(event)?.groups;
         while (groups) {
             fn = {
@@ -103,6 +103,11 @@ export class Colibri {
                 once: (f) => {
                     options ||= {};
                     options.once = true;
+                    return f;
+                },
+                passive: (f) => {
+                    options ||= {};
+                    options.passive = true;
                     return f;
                 },
                 noUpdate:

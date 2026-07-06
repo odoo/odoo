@@ -112,7 +112,7 @@ export class OverlayButtonsPlugin extends Plugin {
                     this.showOverlayButtons();
                 }, 250);
             }),
-            { capture: true }
+            { capture: true, passive: true }
         );
 
         this._cleanups.push(() => {

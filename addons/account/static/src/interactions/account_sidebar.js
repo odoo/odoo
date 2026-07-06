@@ -6,7 +6,7 @@ import { scrollTo } from "@web/core/utils/scrolling";
 export class AccountSidebar extends Sidebar {
     static selector = ".o_portal_invoice_sidebar";
     dynamicContent = {
-        _window: { "t-on-resize": this.updateIframeSize },
+        _window: { "t-on-resize.passive": this.updateIframeSize },
         ".o_portal_invoice_print": { "t-on-click.prevent": this.onInvoicePrintClick },
     };
 
