@@ -478,9 +478,14 @@ class DiscussChannel(models.Model):
 
     @api.depends("message_ids")
     def _compute_message_count(self):
-        read_group_res = self.env["mail.message"]._read_group(
-            domain=self._get_message_domain()
-            & Domain("message_type", "not in", ("user_notification", "notification")),
+        domain = (
+            self._get_message_domain()
+            & Domain("message_type", "not in", ("user_notification", "notification"))
+            & self.env["mail.message"]._get_search_domain_share()
+        )
+        # sudo: mail.message - count does not depend on ACLs (public has none), restricted to shared messages
+        read_group_res = self.env["mail.message"].sudo()._read_group(
+            domain,
             groupby=["res_id"],
             aggregates=["__count"],
         )
@@ -2063,9 +2068,11 @@ class DiscussChannel(models.Model):
 
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""
-        messages = self.env["mail.message"]
+        # sudo: mail.message - public has no access, restrict to shared messages (not needed when already sudo)
+        restrict_share = self.env.user._is_public() and not self.env.su
+        Message = self.env['mail.message'].sudo() if restrict_share else self.env['mail.message']
         if not self.ids:
-            return messages
+            return Message
         # Build the subquery, we know the model and must inject the same
         # security rules as in the `_search` method. The search is optimized to
         # return a query without executing anything if the model is fixed.
@@ -2074,7 +2081,9 @@ class DiscussChannel(models.Model):
         domain = Domain("res_id", "in", self.ids) & self._get_correlated_message_domain(
             SQL("discuss_channel.id")
         )
-        messages_query = messages._search(domain, order='id desc', limit=1)
+        if restrict_share:
+            domain &= Message._get_search_domain_share()
+        messages_query = Message._search(domain, order='id desc', limit=1)
         sql = SQL(
             """
                    SELECT last_message_id
@@ -2087,7 +2096,7 @@ class DiscussChannel(models.Model):
             messages_query.subselect(),
             tuple(self.ids),
         )
-        return messages.browse(mid for mid, in self.env.execute_query(sql) if mid)
+        return Message.browse(mid for mid, in self.env.execute_query(sql) if mid)
 
     def _get_last_needaction_messages(self):
         """Return the last needaction message for each of the given channels."""
