@@ -171,6 +171,7 @@ registerCallAction("share-screen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.SUCCESS : undefined),
 });
 registerCallAction("fullscreen", {
+    btnAttrs: { "data-available-offline": true },
     btnClass: ({ channel }) =>
         attClassObjectToString({
             "o-discuss-CallActionList-pulse": Boolean(

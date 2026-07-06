@@ -3,6 +3,7 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -20,6 +21,7 @@ export class PinnedMessagesPanel extends Component {
 
     setup() {
         super.setup();
+        this.offlineService = useService("offline");
         onWillStart(() => {
             this.props.channel.fetchPinnedMessages();
         });
@@ -31,9 +33,15 @@ export class PinnedMessagesPanel extends Component {
     }
 
     /**
-     * Get the message to display when nothing is pinned on this channel.
+     * Get the message to display when nothing is pinned on this channel or client is offline.
      */
     get emptyText() {
+        if (
+            this.offlineService.status.offline &&
+            this.props.channel.pinnedMessagesState !== "loaded"
+        ) {
+            return _t("Go online to load pinned messages.");
+        }
         return _t("This channel doesn't have any pinned messages.");
     }
 }
