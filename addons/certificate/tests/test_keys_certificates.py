@@ -428,7 +428,10 @@ class TestKeysCertificates(TransactionCase):
         # A signature we cannot mathematically verify (an issuer key type we do not support for
         # signatures, here X25519) still resolves the issuer through the AKI/SKI match.
         x25519_key = x25519.X25519PrivateKey.generate()
-        unsupported_ca = self._build_test_cert("X25519 CA", "X25519 CA", x25519_key, rsa_ca_key, rsa_ca_key.public_key())
+        try:
+            unsupported_ca = self._build_test_cert("X25519 CA", "X25519 CA", x25519_key, rsa_ca_key, rsa_ca_key.public_key())
+        except TypeError:
+            self.skipTest("Installed cryptography does not support X25519 subject keys in CertificateBuilder")
         unsupported_leaf = self._build_test_cert("X25519 Leaf", "X25519 CA", rsa_leaf_key, rsa_ca_key, x25519_key.public_key())
 
         # Cannot be proven cryptographically
