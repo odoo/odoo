@@ -1615,6 +1615,8 @@ class StockPicking(models.Model):
         return True
 
     def action_split_transfer(self):
+        if self.state == 'done':
+            return
         if all(m.uom_id.is_zero(m.quantity) for m in self.move_ids):
             raise UserError(_("%s: Nothing to split. Fill the quantities you want in a new transfer in the done quantities", self.display_name))
         if all(m.uom_id.compare(m.quantity, m.product_uom_qty) == 0 for m in self.move_ids):
