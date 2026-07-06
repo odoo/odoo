@@ -920,7 +920,7 @@ class MailingMailing(models.Model):
         return {
             'ab_testing_schedule_datetime': values.get('ab_testing_schedule_datetime') or self.ab_testing_schedule_datetime,
             'ab_testing_winner_selection': values.get('ab_testing_winner_selection') or self.ab_testing_winner_selection,
-            'mailing_mail_ids': self.ids,
+            'mailing_mail_ids': self.ids if self.mailing_type == 'mail' else [],
             'name': _('A/B Test: %s', values.get('subject') or self.subject or fields.Datetime.now()),
             'user_id': values.get('user_id') or self.user_id.id or self.env.user.id,
         }

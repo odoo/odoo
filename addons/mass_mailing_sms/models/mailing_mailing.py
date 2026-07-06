@@ -398,4 +398,5 @@ class MailingMailing(models.Model):
             if sms_subject:
                 campaign_values['name'] = _("A/B Test: %s", sms_subject)
             campaign_values['ab_testing_sms_winner_selection'] = self.ab_testing_sms_winner_selection
+            campaign_values['mailing_sms_ids'] = self.ids
         return campaign_values
