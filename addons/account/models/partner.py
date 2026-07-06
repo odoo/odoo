@@ -7,7 +7,7 @@ from collections import defaultdict
 from psycopg2 import errors as pgerrors
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, unique
 from odoo.addons.account.models.account_move import BYPASS_LOCK_CHECK
@@ -296,6 +296,8 @@ class AccountFiscalPosition(models.Model):
         }
 
     def action_create_foreign_taxes(self):
+        if not (self.env.is_admin() or self.env.user.has_group('account.group_account_manager')):
+            raise AccessError(_("Only Accounting managers can create foreign taxes."))
         self.ensure_one()
         template_code = self.env['account.chart.template']._guess_chart_template(self.country_id)
         template = self.env['account.chart.template']._get_chart_template_mapping()[template_code]
