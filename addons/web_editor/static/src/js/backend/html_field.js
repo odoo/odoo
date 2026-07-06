@@ -385,6 +385,10 @@ export class HtmlField extends Component {
         if (this.isCurrentlySaving && !urgent) {
             await this.isCurrentlySaving;
         }
+        if (this.wysiwyg && this.wysiwyg.odooEditor && !this.props.readonly) {
+            // Commit a pending virtual keyboard composition before saving.
+            this.wysiwyg.odooEditor._compositionStep();
+        }
         if (this._isDirty() || urgent || (shouldInline && this.props.isInlineStyle)) {
             let savePendingImagesPromise, toInlinePromise;
             if (this.wysiwyg && this.wysiwyg.odooEditor) {
