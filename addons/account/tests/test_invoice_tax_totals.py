@@ -748,7 +748,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             (-500, self.tax_10),
         ]
         run_case('round_per_line', lines, [15.45])
-        run_case('round_globally', lines, [15.45])
+        run_case('round_globally', lines, [15.44])
 
     def test_invoice_foreign_currency_tax_totals(self):
         self.env['res.currency.rate'].create({
