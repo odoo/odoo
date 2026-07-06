@@ -17,6 +17,7 @@
             'l10n_pt_pos/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'auto_install': True,
 }

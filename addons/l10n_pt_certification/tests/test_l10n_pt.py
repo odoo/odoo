@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.models import Model
 from odoo.tests import tagged
 from odoo.tests.common import freeze_time
@@ -357,3 +358,36 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
              'amount_tax': 386.66,
              'amount_total': 2067.79,
          })
+
+
+@freeze_time('2024-06-15')
+@tagged('post_install', '-at_install')
+class TestL10nPtHashDomain(TestL10nPtCommon):
+    def test_l10n_pt_move_hash_domain_returns_domain(self):
+        """The PT override of `_get_move_hash_domain` must return a `Domain`
+        object (not a plain list) so that `_get_chain_info` can combine it with
+        `&`. Otherwise hashing crashes with a TypeError."""
+        AccountMove = self.env['account.move'].with_company(self.company_pt)
+        domain = AccountMove._get_move_hash_domain(force_hash=True)
+
+        self.assertIsInstance(domain, Domain)
+        # PT documents stay in the hash chain even when cancelled
+        self.assertIn(('state', 'in', ['posted', 'cancel']), list(domain))
+        # The exact operation that used to raise the TypeError must now work
+        domain & Domain('sequence_number', '>', 1)
+
+    def test_l10n_pt_get_chains_to_hash(self):
+        """Reproduce the reported crash path: when a chain already contains a
+        hashed move, `_get_chain_info` combines the hash domain with
+        `& Domain('sequence_number', '>', ...)`. If the PT override returns a
+        plain list this raises `TypeError: unsupported operand type(s) for &=:
+        'list' and 'DomainCondition'`."""
+        hashed_invoice = self.create_invoice(invoice_date='2024-01-01')
+        # Simulate an already hashed predecessor in the same chain, bypassing the
+        # write protection on hashed moves.
+        Model.write(hashed_invoice, {'inalterable_hash': '$1$' + 'A' * 40})
+        invoice = self.create_invoice(invoice_date='2024-01-02')
+        self.assertEqual(invoice.sequence_prefix, hashed_invoice.sequence_prefix)
+
+        chains = invoice._get_chains_to_hash(force_hash=True, raise_if_no_document=False)
+        self.assertEqual(chains[0]['moves'], invoice)

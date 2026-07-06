@@ -15,5 +15,6 @@
         'report/l10n_pt_sale_hash_integrity_templates.xml',
     ],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

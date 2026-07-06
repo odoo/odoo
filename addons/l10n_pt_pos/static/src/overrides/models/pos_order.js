@@ -21,7 +21,7 @@ patch(PosOrder.prototype, {
     get taxExemptionReasons() {
         // Select unique tax exemption reason codes in order
         const reasons = new Set(
-            this.get_orderlines()
+            this.getOrderlines()
                 .map((line) => line.tax_ids)
                 .flat()
                 .filter((tax) => tax.l10n_pt_tax_exemption_reason)

@@ -7,9 +7,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="l10n_pt_pos_payment_mechanism" invisible="country_code != 'PT'"/>
-                <field name="l10n_pt_pos_default_at_series_id"
-                       invisible="country_code != 'PT' or not journal_id"
-                       domain="[('company_id', '=', company_id), ('active', '=', False)]"/>
             </xpath>
         </field>
     </record>

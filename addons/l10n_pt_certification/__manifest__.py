@@ -20,6 +20,7 @@ The module adds the following features:
     'data': [
         'security/ir.model.access.csv',
         'security/l10n_pt_security.xml',
+        'data/res_partner_data.xml',
         'report/l10n_pt_hash_integrity_templates.xml',
         'wizard/account_move_reversal_views.xml',
         'wizard/account_payment_register_views.xml',
@@ -40,5 +41,6 @@ The module adds the following features:
         'demo/l10n_pt_at_series_demo.xml',
     ],
     'post_init_hook': '_post_init_hook',
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

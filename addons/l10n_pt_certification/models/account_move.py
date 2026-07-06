@@ -4,6 +4,7 @@ import urllib.parse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.tools import SQL, float_repr
 
 from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
@@ -160,6 +161,10 @@ class AccountMove(models.Model):
             if self.l10n_pt_at_series_id:
                 return f"{self.l10n_pt_at_series_id.document_identifier}/00000"
             standard = super()._get_starting_sequence()
+            if self.l10n_pt_document_type == 'out_receipt':
+                standard = 'S' + standard
+            elif self.l10n_pt_document_type == 'out_invoice_receipt':
+                standard = 'REC' + standard
             if re.match(r'^[A-Z0-9]+/\d.+/\d+$', standard):  # "INV/2026/00000" → "INV 2026/00000"
                 return standard.replace('/', ' ', 1)
             return standard
@@ -195,11 +200,12 @@ class AccountMove(models.Model):
         # EXTENDS account to include cancelled moves
         domain = super()._get_move_hash_domain(common_domain, force_hash)
         if self.env.company.account_fiscal_country_id.code == 'PT':
-            return [
-                ('state', 'in', ('posted', 'cancel')) if condition == ('state', '=', 'posted') else condition
-                for condition in domain
-            ]
-        return super()._get_move_hash_domain(common_domain, force_hash)
+            return domain.map_conditions(
+                lambda condition: Domain('state', 'in', ('posted', 'cancel'))
+                if (condition.field_expr, condition.operator, condition.value) == ('state', '=', 'posted')
+                else condition
+            )
+        return domain
 
     def preview_invoice(self):
         """
@@ -465,9 +471,7 @@ class AccountMove(models.Model):
             seq_source = self.name
         else:
             seq_source = self._get_starting_sequence()
-            if self.l10n_pt_document_type == 'out_receipt':
-                seq_source = 'S' + seq_source
-            elif self.l10n_pt_document_type == 'out_invoice_receipt':
+            if self.l10n_pt_document_type == 'out_invoice_receipt':
                 seq_source = 'REC' + seq_source
 
         format_string, format_values = self._get_sequence_format_param(seq_source)
@@ -578,7 +582,6 @@ class AccountMove(models.Model):
                 '&',
                 ('company_id', 'in', move.company_id.parent_ids.ids),
                 ('company_exclusive_series', '=', False),
-                ('active', '=', True),
                 ('journal_id', '=', move.journal_id.id),
                 ('document_type', '=', move.l10n_pt_document_type),
                 ('active', '=', True),
@@ -698,6 +701,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self._is_pt_move() and self.move_type in self.get_sale_types(include_receipts=True):
             return pt_hash_utils.verify_prerequisites_qr_code(self, self.inalterable_hash, self.l10n_pt_atcud)
+        return None
 
     @api.depends('l10n_pt_atcud')
     def _compute_l10n_pt_qr_code_str(self):

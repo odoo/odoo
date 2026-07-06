@@ -17,5 +17,6 @@
         'report/report_deliveryslip.xml',
     ],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

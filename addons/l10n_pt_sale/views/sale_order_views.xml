@@ -69,13 +69,13 @@
                 <xpath expr="//field[@name='order_line']//list//field[@name='discount']" position="attributes">
                     <attribute name="column_invisible">parent.country_code == 'PT'</attribute>
                 </xpath>
-                <xpath expr="//field[@name='order_line']//list//field[@name='tax_id']" position="after">
+                <xpath expr="//field[@name='order_line']//list//field[@name='tax_ids']" position="after">
                     <field name="l10n_pt_line_discount" string="Disc.%" optional="hide" column_invisible="parent.country_code != 'PT'"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']//form//field[@name='discount']" position="attributes">
                     <attribute name="invisible">parent.country_code == 'PT'</attribute>
                 </xpath>
-                <xpath expr="//field[@name='order_line']//form//field[@name='tax_id']" position="after">
+                <xpath expr="//field[@name='order_line']//form//field[@name='tax_ids']" position="after">
                     <field name="l10n_pt_line_discount" string="Disc.%" invisible="parent.country_code != 'PT'"/>
                 </xpath>
                 <!-- Add PT info group inside Other Info tab -->

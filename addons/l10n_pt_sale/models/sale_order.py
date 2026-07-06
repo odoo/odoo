@@ -44,12 +44,12 @@ class SaleOrderLine(models.Model):
             if line.l10n_pt_line_discount < 0.0 or line.l10n_pt_line_discount > 100.0:
                 raise ValidationError(_("Discount amounts should be between 0% and 100%."))
 
-    @api.constrains('tax_id')
+    @api.constrains('tax_ids')
     def _check_l10n_pt_tax_id(self):
         if self.filtered(
             lambda l: not l.display_type
             and l.company_id.account_fiscal_country_id.code == 'PT'
-            and not l.tax_id
+            and not l.tax_ids
         ):
             raise ValidationError(_("You cannot create a line without VAT tax."))
 
@@ -78,7 +78,7 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         exemption_reasons = sorted(set(
-            self.tax_id.filtered(lambda tax: tax.l10n_pt_tax_exemption_reason)
+            self.tax_ids.filtered(lambda tax: tax.l10n_pt_tax_exemption_reason)
             .mapped('l10n_pt_tax_exemption_reason')
         ))
         return ", ".join(f"[{reason}]" for reason in exemption_reasons) if as_string else exemption_reasons
@@ -352,22 +352,21 @@ class SaleOrder(models.Model):
         no other document may be issued with the current or previous date within the same series"
         """
         now = fields.Datetime.now()
-        series_ids = self.mapped('l10n_pt_at_series_id').ids
+        series = self.mapped('l10n_pt_at_series_id')
 
-        grouped = self.env['sale.order'].read_group(
+        grouped = self.env['sale.order']._read_group(
             domain=[
-                ('l10n_pt_at_series_id', 'in', series_ids),
-                ('l10n_pt_at_series_id', '!=', False),
+                ('l10n_pt_at_series_id', 'in', series.ids),
             ],
-            fields=['l10n_pt_at_series_id', 'date_order:max', 'l10n_pt_hashed_on:max'],
-            groupby=['l10n_pt_at_series_id']
+            groupby=['l10n_pt_at_series_id'],
+            aggregates=['date_order:max', 'l10n_pt_hashed_on:max'],
         )
         max_dates_per_series = {
-            group['l10n_pt_at_series_id'][0]: {
-                'max_order_date': group['date_order'],
-                'max_hashed_on_date': group['l10n_pt_hashed_on']
+            at_series.id: {
+                'max_order_date': max_order_date,
+                'max_hashed_on_date': max_hashed_on_date,
             }
-            for group in grouped
+            for at_series, max_order_date, max_hashed_on_date in grouped
         }
 
         for order in self:

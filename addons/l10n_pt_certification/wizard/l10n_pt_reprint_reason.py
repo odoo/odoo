@@ -42,6 +42,6 @@ class L10nPtReprintReason(models.TransientModel):
                            reason=self.reason))
             document.message_post(body=msg)
 
-        report_action = self._get_report_action(model, wizard or documents, self._context.get('action_to_return'))
+        report_action = self._get_report_action(model, wizard or documents, self.env.context.get('action_to_return'))
         report_action['close_on_report_download'] = True
         return report_action

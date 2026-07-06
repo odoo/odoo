@@ -19,7 +19,10 @@ class L10nPtAttachment(models.Model):
     original = fields.Boolean(string="Original Print")
     cancelled = fields.Boolean(string="Canceled")
 
-    _sql_constraints = [('report_res_id_uniq', "unique(res_model, res_id, report_name)", "This report already exists for this record and model.")]
+    _report_res_id_uniq = models.Constraint(
+        'unique(res_model, res_id, report_name)',
+        "This report already exists for this record and model.",
+    )
 
     def _get_l10n_pt_report_binary(self, doc, template, values):
         """

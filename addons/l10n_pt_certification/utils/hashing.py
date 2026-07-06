@@ -95,7 +95,7 @@ def verify_prerequisites_qr_code(record, hash_value, atcud):
     if not company_vat_ok or not hash_value or not atcud:
         error_msg = _lt("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
         error_msg += _lt('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
-        error_msg += _lt("- The `ATCUD` is not defined. Please verify the AT series") if not atcud else ""
+        error_msg += _lt("- The `ATCUD` is not defined. Please verify the AT series\n") if not atcud else ""
         error_msg += _lt("- The `hash` is not defined. You can contact the support.") if not hash_value else ""
         raise UserError(error_msg)
 

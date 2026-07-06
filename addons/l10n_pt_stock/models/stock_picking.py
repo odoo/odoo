@@ -20,13 +20,10 @@ class PickingType(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     l10n_pt_stock_at_series_id = fields.Many2one('l10n_pt.at.series', string="Official Series of the Tax Authority")
 
-    _sql_constraints = [
-        (
-            'at_series_code_unique',
-            'unique(l10n_pt_stock_at_series_id, code)',
-            'An AT series cannot be assigned to multiple Operation Types.'
-        )
-    ]
+    _at_series_code_unique = models.Constraint(
+        'unique(l10n_pt_stock_at_series_id, code)',
+        'An AT series cannot be assigned to multiple Operation Types.',
+    )
 
     @api.constrains('l10n_pt_stock_at_series_id')
     def _check_l10n_pt_stock_at_series_id(self):

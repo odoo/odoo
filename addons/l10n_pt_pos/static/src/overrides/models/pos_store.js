@@ -3,8 +3,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
-import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { PosStore } from "@point_of_sale/app/services/pos_store";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { ReprintReasonPopup } from "../../app/reprint_reason_popup/reprint_reason_popup";
 
 patch(PosStore.prototype, {
@@ -21,13 +21,7 @@ patch(PosStore.prototype, {
         return this.company.country_id?.code === "PT";
     },
 
-    getReceiptHeaderData(order) {
-        const result = super.getReceiptHeaderData(...arguments);
-        result.isCountryPortugal = this.isPortugueseCompany();
-        return result;
-    },
-
-    async l10nPtPrepareOrderForReceipt(order = this.get_order(), { notifyOnError = true } = {}) {
+    async l10nPtPrepareOrderForReceipt(order = this.getOrder(), { notifyOnError = true } = {}) {
         if (!this.isPortugueseCompany()) {
             return true;
         }
@@ -67,7 +61,7 @@ patch(PosStore.prototype, {
         return true;
     },
 
-    async printReceipt({ order = this.get_order() } = {}) {
+    async printReceipt({ order = this.getOrder() } = {}) {
         if (!this.isPortugueseCompany()) {
             return super.printReceipt(...arguments);
         }

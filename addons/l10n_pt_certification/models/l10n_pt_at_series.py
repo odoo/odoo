@@ -1,6 +1,7 @@
 import re
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError
 
 AT_SERIES_ACCOUNTING_DOCUMENT_TYPES = [
@@ -28,7 +29,7 @@ class L10nPtATSeries(models.Model):
         help="The name of the series will be part of the document number sequence.",
     )
     training_series = fields.Boolean("Training Series")
-    date_start = fields.Date("Start Date")
+    date_start = fields.Date("Start Date", required=True, default=fields.Date.today)
     date_end = fields.Date("End Date")
     active = fields.Boolean(compute='_compute_active', search='_search_active')
     company_exclusive_series = fields.Boolean(
@@ -66,11 +67,18 @@ class L10nPtATSeries(models.Model):
         store=True,
     )
 
-    _sql_constraints = [
-        ('type_per_series_uniq', 'unique(document_type, name, company_id)', "This document type already exists for this series name in this company."),
-        ('prefix_per_series_uniq', 'unique(prefix, name, company_id)', "This prefix has already been used in this series name in this company."),
-        ('at_code_uniq', 'unique(at_code)', "The AT code must be unique."),
-    ]
+    _type_per_series_uniq = models.Constraint(
+        'unique(document_type, name, company_id)',
+        "This document type already exists for this series name in this company.",
+    )
+    _prefix_per_series_uniq = models.Constraint(
+        'unique(prefix, name, company_id)',
+        "This prefix has already been used in this series name in this company.",
+    )
+    _at_code_uniq = models.Constraint(
+        'unique(at_code)',
+        "The AT code must be unique.",
+    )
 
     def _compute_active(self):
         today = fields.Date.today()
@@ -81,14 +89,40 @@ class L10nPtATSeries(models.Model):
             )
 
     def _search_active(self, operator, value):
-        if operator not in ['in', '=', '!=']:
-            raise ValueError(_('This operator is not supported'))
+        if value is None:
+            return Domain.FALSE
+        if isinstance(value, bool):
+            value = {value}
+        if operator not in ['not in', 'in', '=', '!=']:
+            raise ValueError(_('Operator (%s) is not supported', operator))
         today = fields.Date.today()
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            domain = [('date_start', '<=', today), '|', ('date_end', '=', False), ('date_end', '>=', today)]
-        else:
-            domain = [('date_start', '>', today), '|', ('date_end', '=', False), ('date_end', '<', today)]
-        return domain
+        active_domain = Domain.AND([
+            Domain('date_start', '<=', today),
+            Domain.OR([
+                Domain('date_end', '=', False),
+                Domain('date_end', '>=', today),
+            ]),
+        ])
+        not_active_domain = Domain.OR([
+            Domain('date_start', '>', today),
+            Domain.AND([
+                Domain('date_end', '=', False),
+                Domain('date_end', '<', today),
+            ]),
+        ])
+        if len(value) == 1:
+            if (
+                (operator in ['=', 'in'] and True in value)             # active = True or active in [True]
+                or (operator in ['!=', 'not in'] and False in value)    # active != False or active not in [False]
+            ):
+                return active_domain
+            if (
+                (operator in ['=', 'in'] and False in value)            # active = False or active in [False]
+                or (operator in ['!=', 'not in'] and True in value)     # active != True or active not in [True]
+            ):
+                return not_active_domain
+
+        return Domain.OR([active_domain, not_active_domain])
 
     @api.depends('document_type')
     def _compute_document_type_name(self):

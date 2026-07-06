@@ -32,7 +32,6 @@ class TestL10nPtPosCommon(TestL10nPtCommon, TestPoSCommon):
         })
         cls.config.payment_method_ids.write({
             'l10n_pt_pos_payment_mechanism': 'TB',
-            'l10n_pt_pos_default_at_series_id': cls.series_2024.filtered(lambda s: s.document_type == 'payment_receipt').id,
         })
         cls.product1 = cls.env['product.product'].create({
             'name': 'Product 1',
@@ -162,7 +161,6 @@ class TestL10nPtPosMiscRequirements(TestL10nPtPosCommon):
             'name': 'Payment method - No mechanism',
             'receivable_account_id': self.company_data['default_account_receivable'].id,
             'journal_id': self.company_data['default_journal_bank'].id,
-            'l10n_pt_pos_default_at_series_id': False,
         })
         self.config.write({'payment_method_ids': [Command.link(pos_payment_method.id)]})
         with self.assertRaisesRegex(RedirectWarning, "a payment mechanism. Payment methods with a bank journal"):
