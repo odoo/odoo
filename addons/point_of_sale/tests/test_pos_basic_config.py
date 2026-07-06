@@ -5,6 +5,7 @@ import odoo
 
 from odoo import fields
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.exceptions import ValidationError
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
@@ -1301,3 +1302,9 @@ class TestPoSBasicConfig(TestPoSCommon):
         })
 
         self.assertEqual(refund_order.refunded_order_id, orders[0])
+
+    def test_bank_pos_payment_method_outstanding_account(self):
+        """ Test that the outstanding account and receivable account cannot be the same.
+        """
+        with self.assertRaises(ValidationError):
+            self.bank_pm2.outstanding_account_id = self.pos_receivable_bank
