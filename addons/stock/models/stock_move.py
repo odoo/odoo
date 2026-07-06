@@ -897,7 +897,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move_to_recompute_state |= self - move_to_unreserve - receipt_moves_to_reassign
         if 'date_deadline' in vals:
             self._set_date_deadline(vals.get('date_deadline'))
-        if 'move_orig_ids' in vals:
+        if 'move_orig_ids' in vals or ('move_line_ids' in vals and 'quantity' in vals):
             move_to_recompute_state |= self.filtered(lambda m: m.state not in ['draft', 'cancel', 'done'])
         if 'location_id' in vals:
             move_to_check_location = self.filtered(lambda m: m.location_id.id != vals.get('location_id'))

@@ -2193,6 +2193,34 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(delivery_order.show_check_availability, False)
 
+    def test_delete_move_line_reserve_button(self):
+        """Test "Reserve" button (show_check_availability) should
+        reappear on the delivery.
+        """
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 10,
+                    'uom_id': self.productA.uom_id.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+            ],
+        })
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+        move = delivery_order.move_ids
+        with Form(move, view='stock.view_stock_move_operations') as move_form:
+            move_form.move_line_ids.remove(index=0)
+            move_form.save()
+        self.assertEqual(move.state, 'confirmed')
+        self.assertEqual(delivery_order.show_check_availability, True, 'The Reserve button should reappear.')
+
     def test_owner_1(self):
         # Required for `owner_id` to be visible in the view
         self.env.user.group_ids += self.env.ref("stock.group_tracking_owner")
