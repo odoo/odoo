@@ -1042,7 +1042,7 @@ test(`add a filter with the search more dialog on mobile`, async () => {
         "foo partner 13",
         "foo partner 14",
     ]);
-    await closeCwPopOver();
+    await contains(`.oi-arrow-left`).click();
     expect(`.modal`).toHaveCount(0);
     expect(`${section} .o_calendar_filter_item`).toHaveCount(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
@@ -1062,9 +1062,8 @@ test(`delete attribute on calendar doesn't show delete button in popover`, async
     });
 
     await clickEvent(4);
-    const container = isSmall() ? ".modal" : ".o_cw_popover";
-    expect(container).toHaveCount(1);
-    expect(`${container} .o_cw_popover_delete`).toHaveCount(0);
+    expect(".o_cw_popover").toHaveCount(1);
+    expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -1149,7 +1148,7 @@ test(`create and change events on desktop`, async () => {
     expectEventToBeOver(`.o_event[data-event-id="11"]`, [["2016-12-20", "2016-12-21"]]);
 
     await clickEvent(11);
-    expect(`.o_cw_popover .list-group-item:eq(0)`).toHaveText("December 20-21, 2016 2 days");
+    expect(`.o_cw_popover .o_card_record > div:eq(0)`).toHaveText("December 20-21, 2016\n2 days");
     await closeCwPopOver();
 
     // delete the a record
@@ -1195,14 +1194,12 @@ test(`create and change events on mobile`, async () => {
 
     // click on an existing event to open the formViewDialog
     await clickEvent(4);
-    const container = ".modal";
-    const closeButton = ".oi-arrow-left";
-    expect(container).toHaveCount(1);
-    expect(`${container} .o_cw_popover_edit`).toHaveCount(1);
-    expect(`${container} .o_cw_popover_delete`).toHaveCount(1);
-    expect(`${container} ${closeButton}`).toHaveCount(1);
+    expect(".o_cw_popover").toHaveCount(1);
+    expect(`.o_cw_popover .o_cw_popover_edit`).toHaveCount(1);
+    expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(1);
+    expect(`.o_cw_popover .o_cw_popover_close`).toHaveCount(1);
 
-    await contains(`${container} .o_cw_popover_edit`).click();
+    await contains(`.o_cw_popover .o_cw_popover_edit`).click();
     expect(`.modal-body`).toHaveCount(1);
 
     await contains(`.modal-body input:eq(0)`).edit("event 4 modified");
@@ -1263,7 +1260,7 @@ test(`create and change events on mobile`, async () => {
 
     await clickEvent(11);
 
-    expect(`${container} .list-group-item:eq(0)`).toHaveText("December 20-21, 2016 2 days");
+    expect(`.o_cw_popover .o_card_record > div:eq(0)`).toHaveText("December 20-21, 2016\n2 days");
 
     await closeCwPopOver();
 
@@ -1518,31 +1515,18 @@ test(`render popover`, async () => {
 
     await clickEvent(2);
     expect(`.o_cw_popover`).toHaveCount(1);
-    expect(`.o_cw_popover .popover-header`).toHaveText("event 2");
+    expect(`.o_cw_popover .o_popover_header`).toHaveText("event 2");
     expect(`.o_cw_popover .o_cw_popover_edit`).toHaveCount(1);
     expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(1);
     expect(`.o_cw_popover .o_cw_popover_close`).toHaveCount(1);
-    expect(`.o_cw_popover .list-group-item:eq(0)`).toHaveText("December 12, 2016");
-    expect(`.o_cw_popover .list-group-item:eq(1)`).toHaveText("11:55 - 15:55 (4 hours)");
-    expect(`.o_cw_popover .o_cw_popover_fields_secondary .list-group-item`).toHaveCount(2);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(0) .o_field_char`
-    ).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(0) .o_field_char`
-    ).toHaveText("event 2");
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(0) span.fw-bold`
-    ).toHaveText("Custom Name");
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(1) .o_form_uri`
-    ).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(1) .o_form_uri`
-    ).toHaveText("partner 1");
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(1) span.fw-bold`
-    ).toHaveText("Partner");
+    expect(`.o_cw_popover .o_card_record > div:eq(0)`).toHaveText("December 12, 2016");
+    expect(`.o_cw_popover .o_card_record > div:eq(1)`).toHaveText("11:55 - 15:55\n(4 hours)");
+    expect(`.o_cw_popover .o_card_record > div:eq(2) .o_field_char`).toHaveCount(1);
+    expect(`.o_cw_popover .o_card_record > div:eq(2) .o_field_char`).toHaveText("event 2");
+    expect(`.o_cw_popover .o_card_record > div:eq(2) span.fw-bold`).toHaveText("Custom Name");
+    expect(`.o_cw_popover .o_card_record > div:eq(3) .o_form_uri`).toHaveCount(1);
+    expect(`.o_cw_popover .o_card_record > div:eq(3) .o_form_uri`).toHaveText("partner 1");
+    expect(`.o_cw_popover .o_card_record > div:eq(3) span.fw-bold`).toHaveText("Partner");
 
     await animationFrame();
     // Fully visible
@@ -2114,7 +2098,10 @@ test(`rendering, with many2many on desktop`, async () => {
 
     await clickEvent(1);
     expect(`.o_cw_popover`).toHaveCount(1);
-    expect(`.o_cw_popover img`).toHaveCount(5);
+    // the card variant of the many2many_tags_avatar widget limits visible avatars to 1,
+    // grouping the rest behind a "+4" overflow badge
+    expect(`.o_cw_popover img`).toHaveCount(1);
+    expect(`.o_cw_popover .o_m2m_avatar_empty`).toHaveText("+4");
 });
 
 test.tags("mobile");
@@ -2140,12 +2127,15 @@ test(`rendering, with many2many on mobile`, async () => {
     await hideCalendarPanel();
     await toggleSectionFilter("attendee_ids");
     await clickEvent(4);
-    expect(".modal").toHaveCount(1);
-    expect(`.modal img`).toHaveCount(1);
+    expect(".o_cw_popover").toHaveCount(1);
+    expect(`.o_cw_popover img`).toHaveCount(1);
     await closeCwPopOver();
     await clickEvent(1);
-    expect(".modal").toHaveCount(1);
-    expect(`.modal img`).toHaveCount(5);
+    expect(".o_cw_popover").toHaveCount(1);
+    // the card variant of the many2many_tags_avatar widget limits visible avatars to 1,
+    // grouping the rest behind a "+4" overflow badge
+    expect(`.o_cw_popover img`).toHaveCount(1);
+    expect(`.o_cw_popover .o_m2m_avatar_empty`).toHaveText("+4");
 });
 
 test.tags("desktop");
@@ -3715,7 +3705,7 @@ test(`set event as all day when field is date`, async () => {
     expect(`.fc-daygrid-body .fc-event`).toHaveCount(1);
 
     await clickEvent(1);
-    expect(`.list-group-item:eq(0)`).toHaveText("December 14, 2016");
+    expect(`.o_card_record > div:eq(0)`).toHaveText("December 14, 2016");
 });
 
 test(`set event as all day when field is date (without all_day mapping)`, async () => {
@@ -3901,9 +3891,7 @@ test(`timezone does not affect calendar with date field on desktop`, async () =>
 
     await clickEvent(8);
     expect(`.o_cw_popover`).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
-    ).toHaveText("Dec 20");
+    expect(`.o_cw_popover .o_card_record .o_field_date`).toHaveText("Dec 20");
 
     await closeCwPopOver();
     await moveEventToDate(8, "2016-11-27");
@@ -3911,9 +3899,7 @@ test(`timezone does not affect calendar with date field on desktop`, async () =>
 
     await clickEvent(8);
     expect(`.o_cw_popover`).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
-    ).toHaveText("Nov 27");
+    expect(`.o_cw_popover .o_card_record .o_field_date`).toHaveText("Nov 27");
 });
 
 test.tags("mobile");
@@ -3943,20 +3929,16 @@ test(`timezone does not affect calendar with date field on mobile`, async () => 
     expect.verifySteps(["create 2016-12-20"]);
 
     await clickEvent(8);
-    expect(`.modal`).toHaveCount(1);
-    expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
-        "Dec 20"
-    );
+    expect(`.o_cw_popover`).toHaveCount(1);
+    expect(`.o_cw_popover .o_card_record .o_field_date`).toHaveText("Dec 20");
 
     await closeCwPopOver();
     await moveEventToDate(8, "2016-11-27");
     expect.verifySteps(["write 2016-11-27"]);
 
     await clickEvent(8);
-    expect(`.modal`).toHaveCount(1);
-    expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
-        "Nov 27"
-    );
+    expect(`.o_cw_popover`).toHaveCount(1);
+    expect(`.o_cw_popover .o_card_record .o_field_date`).toHaveText("Nov 27");
 });
 
 test(`drag and drop on month mode`, async () => {
@@ -3979,7 +3961,7 @@ test(`drag and drop on month mode`, async () => {
 
     await moveEventToDate(8, "2016-12-19");
     await clickEvent(8);
-    expect(`.list-group-item:eq(1)`).toHaveText("07:00 - 19:00 (12 hours)");
+    expect(`.o_card_record > div:eq(1)`).toHaveText("07:00 - 19:00\n(12 hours)");
 });
 
 test(`drag and drop on month mode with all_day mapping`, async () => {
@@ -4017,7 +3999,7 @@ test(`drag and drop on month mode with all_day mapping`, async () => {
     await contains(`.modal .o_form_button_save`).click();
     await moveEventToDate(8, "2016-12-19");
     await clickEvent(8);
-    expect(`.list-group-item:eq(1)`).toHaveText("07:00 - 19:00 (12 hours)");
+    expect(`.o_card_record > div:eq(1)`).toHaveText("07:00 - 19:00\n(12 hours)");
 });
 
 test(`form_view_id attribute works (for creating events)`, async () => {
@@ -4494,14 +4476,12 @@ test(`edit record and attempt to create a record with "create" attribute set to 
     // editing existing events should still be possible
     // click on an existing event to open the formViewDialog
     await clickEvent(4);
-    const popover = isSmall() ? ".modal" : ".o_cw_popover";
-    const closeButton = isSmall() ? ".oi-arrow-left" : ".o_cw_popover_close";
-    expect(popover).toHaveCount(1);
-    expect(`${popover} .o_cw_popover_edit`).toHaveCount(1);
-    expect(`${popover} .o_cw_popover_delete`).toHaveCount(1);
-    expect(`${popover} ${closeButton}`).toHaveCount(1);
+    expect(".o_cw_popover").toHaveCount(1);
+    expect(`.o_cw_popover .o_cw_popover_edit`).toHaveCount(1);
+    expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(1);
+    expect(`.o_cw_popover .o_cw_popover_close`).toHaveCount(1);
 
-    await contains(`${popover} .o_cw_popover_edit`).click();
+    await contains(`.o_cw_popover .o_cw_popover_edit`).click();
     expect(`.modal-body`).toHaveCount(1);
 
     await contains(`.modal-body input`).edit("event 4 modified");
@@ -4932,13 +4912,13 @@ test(`fields are added in the right order in popover`, async () => {
     });
 
     await clickEvent(4);
-    const popover = isSmall() ? ".modal" : ".o_cw_popover";
-    expect(popover).toHaveCount(0);
+    expect(".o_cw_popover").toHaveCount(0);
 
     deferred.resolve();
     await animationFrame();
-    expect(popover).toHaveCount(1);
-    expect(`${popover} .o_cw_popover_fields_secondary`).toHaveText("User\nName\nevent 4");
+    expect(".o_cw_popover").toHaveCount(1);
+    expect(`.o_cw_popover .o_card_record > div:eq(1)`).toHaveText("User");
+    expect(`.o_cw_popover .o_card_record > div:eq(2)`).toHaveText("Name\nevent 4");
 });
 
 test(`select events and discard create`, async () => {
@@ -5025,8 +5005,7 @@ test(`popover ignores readonly field modifier`, async () => {
 
     await clickEvent(4);
     // test would fail here if we don't ignore readonly modifier
-    const popover = isSmall() ? ".modal" : ".o_cw_popover";
-    expect(popover).toHaveCount(1);
+    expect(".o_cw_popover").toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -5269,17 +5248,11 @@ test(`calendar render properties in popover`, async () => {
     });
 
     await clickEvent(1);
-    const popover = isSmall() ? ".modal" : ".o_popover";
-    // Labels:
-    expect(queryAllTexts(`${popover} .o_calendar_property_field span.fw-bold`)).toEqual([
-        "My Char",
-        "My Selection",
-    ]);
+    // Only the 2 properties with view_in_cards=true are shown ("property_3" is hidden):
+    expect(`.o_popover .o_card_property_field`).toHaveCount(2);
     // Values:
-    expect(queryAllTexts(`${popover} .o_calendar_property_field div.text-truncate`)).toEqual([
-        "hello",
-        "B",
-    ]);
+    expect(`.o_popover .o_card_property_field:eq(0) span`).toHaveText("hello");
+    expect(`.o_popover .o_card_property_field:eq(1) span`).toHaveText("B");
 });
 
 test(`calendar create record with default properties`, async () => {
@@ -5595,9 +5568,9 @@ test(`check if active fields are fetched in addition to field names in record da
         fieldDependencies: [{ name: "delay", type: "float" }],
     });
 
-    onRpc("event", "search_read", ({ kwargs }) => {
-        expect.step("event.search_read");
-        expect(kwargs.fields).toInclude("delay");
+    onRpc("event", "web_read", ({ kwargs }) => {
+        expect.step("event.web_read");
+        expect(Object.keys(kwargs.specification)).toInclude("delay");
     });
 
     await mountView({
@@ -5610,7 +5583,10 @@ test(`check if active fields are fetched in addition to field names in record da
         `,
     });
 
-    expect.verifySteps(["event.search_read"]);
+    // the widget's field dependency is fetched when the record's popover
+    // (and its underlying Card/Record) is loaded, not with the grid's records
+    await clickEvent(1);
+    expect.verifySteps(["event.web_read"]);
 });
 
 test("update time while drag and drop on month mode", async () => {
@@ -5655,12 +5631,14 @@ test("html and boolean fields on calendar shouldn't have a tooltip", async () =>
     });
 
     await clickEvent(MockServer.env["event"][0].id);
-    const descriptionField = queryFirst('.o_cw_popover_field .o_field_widget[name="description"]');
-    let parentLi = descriptionField.closest("li");
-    expect(parentLi).toHaveAttribute("data-tooltip", "");
-    const isAllDayField = queryFirst('.o_cw_popover_field .o_field_widget[name="is_all_day"]');
-    parentLi = isAllDayField.closest("li");
-    expect(parentLi).toHaveAttribute("data-tooltip", "");
+    expect(`.o_card_record .o_field_widget[name="description"]`).toHaveCount(1);
+    expect(`.o_card_record > div:has(.o_field_widget[name="description"])`).not.toHaveAttribute(
+        "data-tooltip"
+    );
+    expect(`.o_card_record .o_field_widget[name="is_all_day"]`).toHaveCount(1);
+    expect(`.o_card_record > div:has(.o_field_widget[name="is_all_day"])`).not.toHaveAttribute(
+        "data-tooltip"
+    );
 });
 
 test.tags("mobile");
@@ -5706,8 +5684,7 @@ test("simple calendar rendering in mobile", async () => {
 });
 
 test.tags("mobile");
-test("calendar: popover is rendered as dialog in mobile", async () => {
-    // Legacy name of this test: "calendar: popover rendering in mobile"
+test("calendar: popover rendering in mobile", async () => {
     await mountView({
         type: "calendar",
         resModel: "event",
@@ -5715,13 +5692,13 @@ test("calendar: popover is rendered as dialog in mobile", async () => {
     });
 
     await clickEvent(1);
-    expect(".o_cw_popover").toHaveCount(0);
-    expect(".modal").toHaveCount(1);
-    expect(".modal").toHaveClass("o_modal_full");
+    expect(".o_cw_popover").toHaveCount(1);
 
-    expect(".modal-footer .btn").toHaveCount(2);
-    expect(".modal-footer .btn.btn-primary.o_cw_popover_edit").toHaveCount(1);
-    expect(".modal-footer .btn.btn-danger.o_cw_popover_delete").toHaveCount(1);
+    // note: these buttons render as part of the card's own footer (inside the modal
+    // body), not projected into the Dialog's actual bootstrap `.modal-footer` slot
+    expect(".o_cw_popover .o_popover_footer .btn").toHaveCount(2);
+    expect(".o_cw_popover .o_popover_footer .btn.btn-primary.o_cw_popover_edit").toHaveCount(1);
+    expect(".o_cw_popover .o_popover_footer .btn.btn-danger.o_cw_popover_delete").toHaveCount(1);
 });
 
 test.tags("mobile");

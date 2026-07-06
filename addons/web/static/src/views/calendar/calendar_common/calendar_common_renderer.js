@@ -266,20 +266,16 @@ export class CalendarCommonRenderer extends Component {
     }
     getPopoverProps(record) {
         return {
-            record,
             model: this.props.model,
-            createRecord: this.props.createRecord,
-            deleteRecord: this.props.deleteRecord,
-            editRecord: this.props.editRecord,
+            record,
+            context: this.props.model.meta.context,
+            openRecord: () => this.props.editRecord(record),
+            deleteRecord: () => this.props.deleteRecord(record),
+            reloadOnClose: () => this.props.model.load(),
         };
     }
     openPopover(target, record) {
-        const color = getColor(record.colorIndex);
-        this.popover.open(
-            target,
-            this.getPopoverProps(record),
-            `o_cw_popover card o_calendar_color_${typeof color === "number" ? color : 0}`
-        );
+        this.popover.open(target, this.getPopoverProps(record));
     }
 
     onClick(info) {

@@ -17,7 +17,6 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { formatFloat } from "@web/core/utils/numbers";
 import { useDebounced } from "@web/core/utils/timing";
 import { Model } from "@web/model/model";
-import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { computeAggregatedValue } from "@web/views/utils";
 
 const { DateTime } = luxon;
@@ -34,12 +33,8 @@ export class CalendarModel extends Model {
 
         const formViewFromConfig = (this.env.config.views || []).find((view) => view[1] === "form");
         const formViewIdFromConfig = formViewFromConfig ? formViewFromConfig[0] : false;
-        const fieldNodes = params.popoverFieldNodes;
-        const { activeFields, fields } = extractFieldsFromArchInfo({ fieldNodes }, params.fields);
         this.meta = {
             ...params,
-            activeFields,
-            fields,
             firstDayOfWeek: (localization.weekStart || 0) % 7,
             formViewId: params.formViewId || formViewIdFromConfig,
         };
@@ -164,12 +159,6 @@ export class CalendarModel extends Model {
     }
     get monthOverflow() {
         return this.meta.monthOverflow;
-    }
-    get popoverFieldNodes() {
-        return this.meta.popoverFieldNodes;
-    }
-    get activeFields() {
-        return this.meta.activeFields;
     }
     get rangeEnd() {
         return this.data.range.end;
@@ -710,12 +699,7 @@ export class CalendarModel extends Model {
      */
     fetchRecords(data) {
         const { context, fieldNames, resModel } = this.meta;
-        return this.orm.searchRead(
-            resModel,
-            this.computeDomain(data),
-            [...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)])],
-            { context }
-        );
+        return this.orm.searchRead(resModel, this.computeDomain(data), fieldNames, { context });
     }
     /**
      * @protected

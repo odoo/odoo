@@ -135,6 +135,7 @@ export const FAKE_FILTER_SECTIONS = [
 
 export const FAKE_FIELDS = {
     id: { string: "Id", type: "integer" },
+    display_name: { string: "Display Name", type: "char" },
     user_id: { string: "User", type: "many2one", relation: "user", default: -1 },
     partner_id: {
         string: "Partner",
@@ -189,34 +190,28 @@ export const FAKE_MODEL = {
     hasAllDaySlot: true,
     hasEditDialog: false,
     quickCreate: false,
-    popoverFieldNodes: {
-        name: Field.parseFieldNode(
-            createElement("field", { name: "name" }),
-            { event: { fields: FAKE_FIELDS } },
-            "event",
-            "calendar"
-        ),
-        description: Field.parseFieldNode(
-            createElement("field", { name: "description", class: "text-wrap" }),
-            { event: { fields: FAKE_FIELDS } },
-            "event",
-            "calendar"
-        ),
-    },
-    activeFields: {
-        name: {
-            context: "{}",
-            invisible: false,
-            readonly: false,
-            required: false,
-            onChange: false,
-        },
-        description: {
-            context: "{}",
-            invisible: false,
-            readonly: false,
-            required: false,
-            onChange: false,
+    meta: {
+        context: {},
+        fields: FAKE_FIELDS,
+        resModel: "event",
+        popover: {
+            cardId: false,
+            fields: [],
+            fieldNodes: {
+                name: Field.parseFieldNode(
+                    createElement("field", { name: "name" }),
+                    { event: { fields: FAKE_FIELDS } },
+                    "event",
+                    "calendar"
+                ),
+                description: Field.parseFieldNode(
+                    createElement("field", { name: "description", class: "text-wrap" }),
+                    { event: { fields: FAKE_FIELDS } },
+                    "event",
+                    "calendar"
+                ),
+            },
+            templates: {},
         },
     },
     rangeEnd: DEFAULT_DATE.endOf("month"),
@@ -471,11 +466,7 @@ export async function selectAllDayRange(startDate, endDate) {
     await animationFrame();
 }
 export async function closeCwPopOver() {
-    if (isSmall()) {
-        await contains(`.oi-arrow-left`).click();
-    } else {
-        await contains(`.o_cw_popover_close`).click();
-    }
+    await contains(`.o_cw_popover_close`).click();
 }
 /**
  * @param {number} eventId

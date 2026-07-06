@@ -445,9 +445,9 @@ test("multi_create: basic creation (datetime field)", async () => {
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
-    await expect(".o_popover .fa-clock-o").toHaveCount(1);
-    await expect(".o_popover .list-group-item:has(.fa-clock-o)").toHaveText(
-        "08:00 - 11:30 (3 hours, 30 minutes)"
+    await expect(".o_popover .o_popover_body div:eq(1) .fa-clock-o").toHaveCount(1);
+    await expect(".o_popover .o_popover_body div:eq(1)").toHaveText(
+        "08:00 - 11:30\n(3 hours, 30 minutes)"
     );
     await expect(".o_popover .o_field_widget[name='name']").toHaveText("Time off");
     await expect(".o_popover .o_field_widget[name='type']").toHaveText("Event Type 3");
@@ -457,9 +457,9 @@ test("multi_create: basic creation (datetime field)", async () => {
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
-    await expect(".o_popover .fa-clock-o").toHaveCount(1);
-    await expect(".o_popover .list-group-item:has(.fa-clock-o)").toHaveText(
-        "08:00 - 11:30 (3 hours, 30 minutes)"
+    await expect(".o_popover .o_popover_body div:eq(1) .fa-clock-o").toHaveCount(1);
+    await expect(".o_popover .o_popover_body div:eq(1)").toHaveText(
+        "08:00 - 11:30\n(3 hours, 30 minutes)"
     );
     await expect(".o_popover .o_field_widget[name='user_id']").toHaveText("user 3");
 

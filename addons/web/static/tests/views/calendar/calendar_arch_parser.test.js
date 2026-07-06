@@ -18,7 +18,7 @@ const DEFAULT_ARCH_RESULTS = {
         date_start: "start_date",
         date_stop: "start_date",
     },
-    fieldNames: ["start_date"],
+    fieldNames: ["display_name", "start_date"],
     filtersInfo: {},
     formViewId: false,
     hasEditDialog: false,
@@ -28,7 +28,12 @@ const DEFAULT_ARCH_RESULTS = {
     isTimeHidden: false,
     monthOverflow: true,
     multiCreateView: null,
-    popoverFieldNodes: {},
+    popover: {
+        cardId: false,
+        fields: [],
+        fieldNodes: {},
+        templates: {},
+    },
     scale: "week",
     scales: ["day", "week", "month", "year"],
     showUnusualDays: false,
@@ -217,4 +222,53 @@ test("showUnusualDays", () => {
     expect(parseWith({ show_unusual_days: "false" }).showUnusualDays).toBe(false);
     expect(parseWith({ show_unusual_days: "False" }).showUnusualDays).toBe(false);
     expect(parseWith({ show_unusual_days: "0" }).showUnusualDays).toBe(false);
+});
+
+test("popover: old-style top-level field (backward compatibility)", () => {
+    const result = parseArch(`
+        <calendar date_start="start_date">
+            <field name="name"/>
+        </calendar>
+    `);
+    expect(result.popover.fields).toEqual([]);
+    expect(Object.keys(result.popover.fieldNodes)).toEqual(["name"]);
+    expect(result.popover.cardId).toBe(false);
+    expect(result.popover.templates).toEqual({});
+});
+
+test("popover: card_id", () => {
+    const result = parseArch(`
+        <calendar date_start="start_date">
+            <popover card_id="12"/>
+        </calendar>
+    `);
+    expect(result.popover.cardId).toBe(12);
+});
+
+test("popover: templates", () => {
+    const result = parseArch(`
+        <calendar date_start="start_date">
+            <popover>
+                <templates>
+                    <t t-name="popover-footer">
+                        <button>Test</button>
+                    </t>
+                </templates>
+            </popover>
+        </calendar>
+    `);
+    expect(Object.keys(result.popover.templates)).toEqual(["popover-footer"]);
+});
+
+test("popover: field nested in <popover> is still collected", () => {
+    const result = parseArch(`
+        <calendar date_start="start_date">
+            <popover card_id="12">
+                <field name="name"/>
+            </popover>
+        </calendar>
+    `);
+    expect(result.popover.cardId).toBe(12);
+    expect(result.popover.fields).toEqual(["name"]);
+    expect(Object.keys(result.popover.fieldNodes)).toEqual([]);
 });
