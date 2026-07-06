@@ -21,10 +21,12 @@ class TestStockValuationCommon(BaseCommon):
     # HELPER
     def _create_account_move(self, move_type, product, quantity=1.0, price_unit=1.0, post=True, **kwargs):
         invoice_vals = {
-            "partner_id": self.vendor.id,
+            "partner_id": kwargs.get("partner_id", self.vendor.id),
             "move_type": move_type,
             "invoice_date": kwargs.get('invoice_date', fields.Date.today()),
             "invoice_line_ids": [],
+            'company_id': kwargs.get('company_id', self.env.company.id),
+            'currency_id': kwargs.get('currency_id', self.env.company.currency_id.id),
         }
         if kwargs.get('reversed_entry_id'):
             invoice_vals["reversed_entry_id"] = kwargs['reversed_entry_id']
@@ -32,13 +34,14 @@ class TestStockValuationCommon(BaseCommon):
         product_uom = kwargs.get('product_uom') or product.uom_id
         self.env["account.move.line"].create({
             "move_id": invoice.id,
-             "display_type": "product",
-             "name": "test line",
-             "price_unit": price_unit,
-             "quantity": quantity,
-             "product_id": product.id,
-             "product_uom_id": product_uom.id,
-             "tax_ids": [(5, 0, 0)],
+            "display_type": kwargs.get("display_type", "product"),
+            "name": kwargs.get("name"),
+            "price_unit": price_unit,
+            "quantity": quantity,
+            "product_id": product.id,
+            "product_uom_id": product_uom.id,
+            "tax_ids": kwargs.get("tax_ids", [Command.clear()]),
+            "analytic_distribution": kwargs.get("analytic_distribution", False),
         })
         if post:
             invoice.action_post()
@@ -54,19 +57,21 @@ class TestStockValuationCommon(BaseCommon):
         move_type = kwargs.pop("move_type", "out_refund")
         return self._create_account_move(move_type, product, quantity, price_unit, post, **kwargs)
 
-    def _refund(self, move_to_refund, quantity=None, post=True):
+    def _refund(self, move_to_refund, quantity=None, post=True, is_modify=False):
         reversal = self.env['account.move.reversal'].with_context(active_ids=move_to_refund.ids, active_model='account.move').create({
             'journal_id': move_to_refund.journal_id.id,
         })
-        credit_note = self.env['account.move'].browse(reversal.refund_moves()['res_id'])
+        action = reversal.modify_moves() if is_modify else reversal.refund_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
         if quantity:
             credit_note.line_ids.quantity = quantity
         if post:
             credit_note.action_post()
         return credit_note
 
-    def _close(self, auto_post=True, at_date=None):
-        action = self.company.action_close_stock_valuation(at_date=at_date, auto_post=auto_post)
+    def _close(self, auto_post=True, at_date=None, company=None):
+        company = company or self.company
+        action = company.action_close_stock_valuation(at_date=at_date, auto_post=auto_post)
         return action['res_id'] and self.env['account.move'].browse(action['res_id'])
 
     def _use_price_diff(self):
@@ -78,12 +83,6 @@ class TestStockValuationCommon(BaseCommon):
         self.category_standard.property_price_difference_account_id = self.account_price_diff.id
         self.category_standard_auto.property_price_difference_account_id = self.account_price_diff.id
         return self.account_price_diff
-
-    def _use_route_mto(self, product):
-        if not self.route_mto.active:
-            self.route_mto.active = True
-        product.route_ids = [(4, self.route_mto.id)]
-        return product
 
     def _use_multi_currencies(self, rates=None):
         date_1 = fields.Date.today()
@@ -197,10 +196,11 @@ class TestStockValuationCommon(BaseCommon):
             in_move.move_line_ids.owner_id = kwargs.get('owner_id')
 
         in_move.picked = True
-        if create_picking:
-            picking.button_validate()
-        else:
-            in_move._action_done()
+        if kwargs.get('auto_validate', True):
+            if create_picking:
+                picking.button_validate()
+            else:
+                in_move._action_done()
 
         return in_move
 
@@ -272,7 +272,8 @@ class TestStockValuationCommon(BaseCommon):
         elif force_assign:
             out_move.quantity = quantity
         out_move.picked = True
-        out_move._action_done()
+        if kwargs.get('auto_validate', True):
+            out_move._action_done()
 
         return out_move
 
@@ -287,15 +288,16 @@ class TestStockValuationCommon(BaseCommon):
         kwargs.setdefault('location_dest_id', self.customer_location.id)
         return self._make_in_move(product, quantity, unit_cost, create_picking, company, **kwargs)
 
-    def _make_return(self, move, quantity_to_return):
+    def _make_return(self, move, quantity_to_return, to_refund=True):
         stock_return_picking = Form(self.env['stock.return.picking']
             .with_context(active_ids=[move.picking_id.id], active_id=move.picking_id.id, active_model='stock.picking'))
         stock_return_picking = stock_return_picking.save()
         stock_return_picking.product_return_moves.quantity = quantity_to_return
+        stock_return_picking.product_return_moves.to_refund = to_refund
         stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids[0].quantity = quantity_to_return
-        return_pick.move_ids[0].picked = True
+        return_pick.move_ids.quantity = quantity_to_return
+        return_pick.move_ids.picked = True
         return_pick._action_done()
         return return_pick.move_ids
 
@@ -347,7 +349,8 @@ class TestStockValuationCommon(BaseCommon):
         super().setUpClass()
 
         # To move to stock common later
-        cls.route_mto = cls.env.ref('stock.route_warehouse0_mto')
+
+        # Company
         cls.company = cls.env['res.company'].create({'name': 'Inventory Test Company'})
         cls.env["account.chart.template"]._load(
             "generic_coa", cls.company, install_demo=False
@@ -355,38 +358,55 @@ class TestStockValuationCommon(BaseCommon):
         cls.company = cls.company.with_company(cls.company.id)
         cls.env = cls.company.env
         cls.env.invalidate_all()
+
+        cls.other_company = cls._create_company(name="Other Company")
+        cls.branch = cls._create_company(name="Branch Company", parent_id=cls.company.id)
+
         # We use the admin on tour.
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.user_admin.write({
             'company_id': cls.company.id,
             'company_ids': cls.company.ids,
         })
-        cls.inventory_user = cls._create_new_internal_user(name='Inventory User', login='inventory_user', groups='stock.group_stock_user')
+        cls.inventory_user = cls._create_new_internal_user(
+            name='Inventory User',
+            login='inventory_user',
+            groups='stock.group_stock_user',
+        )
+
+        # Partners
+        cls.vendor = cls.env['res.partner'].create({
+            'name': 'Test Vendor',
+            'company_id': cls.company.id,
+        })
         cls.owner = cls._create_partner(name='Consignment Owner')
+
+        # Warehouse & Locations
+        cls.route_mto = cls.env.ref('stock.route_warehouse0_mto')
         cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)], limit=1)
+
         cls.stock_location = cls.warehouse.lot_stock_id
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.inventory_location = cls.env['stock.location'].search([
-            ('usage', '=', 'inventory'),
-            ('company_id', '=', cls.company.id)
+            ('usage', '=', 'inventory'), ('company_id', '=', cls.company.id)
         ], limit=1)
+        cls.shelf1 = cls.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'usage': 'internal',
+            'location_id': cls.warehouse.lot_stock_id.id,
+        })
 
         cls.picking_type_in = cls.warehouse.in_type_id
         cls.picking_type_out = cls.warehouse.out_type_id
+
+        # Units of Measure
         cls.uom = cls.env.ref('uom.product_uom_unit')
         cls.uom_pack_of_6 = cls.env['uom.uom'].create({
             'name': 'Pack of 6',
             'relative_uom_id': cls.uom.id,
             'relative_factor': 6.0,
         })
-
-        cls.vendor = cls.env['res.partner'].create({
-            'name': 'Test Vendor',
-            'company_id': cls.company.id,
-        })
-        cls.other_company = cls._create_company(name="Other Company")
-        cls.branch = cls._create_company(name="Branch Company", parent_id=cls.company.id)
 
         # Stock account
         cls.account_expense = cls.company.expense_account_id
@@ -396,69 +416,46 @@ class TestStockValuationCommon(BaseCommon):
         cls.account_receivable = cls.company.partner_id.property_account_receivable_id
         cls.account_income = cls.company.income_account_id
 
-        cls.category_standard = cls.env['product.category'].create({
-            'name': 'Standard',
-            'property_valuation': 'periodic',
-            'property_cost_method': 'standard',
-        })
-        cls.category_standard_auto = cls.category_standard.copy({
-            'name': 'Standard Auto',
-            'property_valuation': 'real_time',
-        })
-        cls.category_fifo = cls.env['product.category'].create({
-            'name': 'Fifo',
-            'property_valuation': 'periodic',
-            'property_cost_method': 'fifo',
-        })
-        cls.category_fifo_auto = cls.category_fifo.copy({
-            'name': 'Fifo Auto',
-            'property_valuation': 'real_time',
-        })
-        cls.category_avco = cls.env['product.category'].create({
-            'name': 'Avco',
-            'property_valuation': 'periodic',
-            'property_cost_method': 'average',
-        })
-        cls.category_avco_auto = cls.category_avco.copy({
-            'name': 'Avco Auto',
-            'property_valuation': 'real_time',
-        })
+        # Category creations.
+        Category = cls.env['product.category']
 
+        def _create_category(name, cost_method):
+            category = Category.create({
+                'name': name,
+                'property_valuation': 'periodic',
+                'property_cost_method': cost_method,
+            })
+            return category, category.copy({
+                'name': f'{name} Auto',
+                'property_valuation': 'real_time',
+            })
+
+        cls.category_standard, cls.category_standard_auto = _create_category('Standard', 'standard')
+        cls.category_fifo, cls.category_fifo_auto = _create_category('Fifo', 'fifo')
+        cls.category_avco, cls.category_avco_auto = _create_category('Avco', 'average')
+
+        # Product creations.
         cls.product_common_vals = {
             "standard_price": 10.0,
             "list_price": 20.0,
             "uom_id": cls.uom.id,
             "is_storable": True,
         }
-        cls.product = cls.env['product.product'].create(
-            {**cls.product_common_vals, 'name': 'Storable Product'}).with_context(clean_context(cls.env.context))
-        cls.product_standard = cls.env['product.product'].create({
-            **cls.product_common_vals,
-            'name': 'Standard Product',
-            'categ_id': cls.category_standard.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_standard_auto = cls.env['product.product'].create({
-            **cls.product_common_vals,
-            'name': 'Standard Product Auto',
-            'categ_id': cls.category_standard_auto.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_fifo = cls.env['product.product'].create({
-            **cls.product_common_vals,
-            'name': 'Fifo Product',
-            'categ_id': cls.category_fifo.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_fifo_auto = cls.env['product.product'].create({
-            **cls.product_common_vals,
-            'name': 'Fifo Product Auto',
-            'categ_id': cls.category_fifo_auto.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_avco = cls.env['product.product'].create({
-            **cls.product_common_vals,
-            'name': 'Avco Product',
-            'categ_id': cls.category_avco.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_avco_auto = cls.env['product.product'].create({
-            **cls.product_common_vals,
-            'name': 'Avco Product Auto',
-            'categ_id': cls.category_avco_auto.id,
-        }).with_context(clean_context(cls.env.context))
+        Product = cls.env['product.product']
+
+        def _create_product(name, category=None):
+            vals = {
+                **cls.product_common_vals,
+                'name': name,
+            }
+            if category:
+                vals['categ_id'] = category.id
+            return Product.create(vals).with_context(clean_context(cls.env.context))
+
+        cls.product = _create_product("Storable Product")
+        cls.product_standard = _create_product("Standard Product", cls.category_standard)
+        cls.product_standard_auto = _create_product("Standard Product Auto", cls.category_standard_auto)
+        cls.product_fifo = _create_product("Fifo Product", cls.category_fifo)
+        cls.product_fifo_auto = _create_product("Fifo Product Auto", cls.category_fifo_auto)
+        cls.product_avco = _create_product("Avco Product", cls.category_avco)
+        cls.product_avco_auto = _create_product("Avco Product Auto", cls.category_avco_auto)
