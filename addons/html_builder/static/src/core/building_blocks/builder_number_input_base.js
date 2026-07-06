@@ -33,6 +33,7 @@ export class BuilderNumberInputBase extends BuilderInputBase {
         min: t.number().optional(),
         max: t.number().optional(),
         step: t.number().optional(),
+        acceptEmpty: t.boolean().optional(false),
     });
 
     onKeydown(e) {

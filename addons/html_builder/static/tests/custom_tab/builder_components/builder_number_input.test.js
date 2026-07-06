@@ -267,6 +267,45 @@ describe("default value", () => {
         expect("[data-action-id='customAction'] input").toHaveValue(0);
         expect(":iframe .test-options-target").toHaveInnerHTML("0");
     });
+    test("clear BuilderNumberInput with acceptEmpty keeps an empty string", async () => {
+        addBuilderAction({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
+                    expect.step(`customAction ${JSON.stringify(value)}`);
+                    editingElement.innerHTML = value;
+                }
+            },
+        });
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" acceptEmpty="true"/>`,
+        });
+        await setupHTMLBuilder(`
+                    <div class="test-options-target">10</div>
+                `);
+        await contains(":iframe .test-options-target").click();
+        await click("[data-action-id='customAction'] input");
+        expect("[data-action-id='customAction'] input").toHaveValue(10);
+
+        await contains("[data-action-id='customAction'] input").edit("0");
+        expect.verifySteps(['customAction "0"', 'customAction "0"']);
+        expect("[data-action-id='customAction'] input").toHaveValue(0);
+        expect(":iframe .test-options-target").toHaveInnerHTML("0");
+
+        await clear();
+        expect.verifySteps(['customAction ""']);
+        expect("[data-action-id='customAction'] input").toHaveValue(NaN);
+        expect(":iframe .test-options-target").toHaveInnerHTML("");
+
+        await click(".options-container");
+        expect.verifySteps(['customAction ""']);
+        expect("[data-action-id='customAction'] input").toHaveValue(NaN);
+        expect(":iframe .test-options-target").toHaveInnerHTML("");
+    });
     test("clear BuilderNumberInput with default value", async () => {
         addBuilderAction({
             customAction: class extends BuilderAction {

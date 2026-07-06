@@ -1,10 +1,4 @@
-import {
-    useComponent,
-    useEnv,
-    useLayoutEffect,
-    useRef,
-    useSubEnv,
-} from "@web/owl2/utils";
+import { useComponent, useEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     onMounted,
@@ -792,9 +786,13 @@ export function useOperationWithReload(callApply, reload) {
     };
 }
 
-function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
+function getValueWithDefault(userInputValue, defaultValue, formatRawValue, acceptEmpty = false) {
     if (defaultValue !== undefined) {
-        if (!userInputValue || (typeof userInputValue === "string" && !userInputValue.trim())) {
+        const isEmptyString = typeof userInputValue === "string" && !userInputValue.trim();
+        if (acceptEmpty && isEmptyString) {
+            return "";
+        }
+        if (!userInputValue || isEmptyString) {
             return formatRawValue(defaultValue);
         }
     }
@@ -925,6 +923,7 @@ export function useInputBuilderComponent({
     defaultValue,
     formatRawValue = (rawValue) => rawValue,
     parseDisplayValue = (displayValue) => displayValue,
+    acceptEmpty = false,
 } = {}) {
     const comp = useComponent();
     const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
@@ -986,7 +985,12 @@ export function useInputBuilderComponent({
     }
 
     function commit(userInputValue) {
-        userInputValue = getValueWithDefault(userInputValue, defaultValue, formatRawValue);
+        userInputValue = getValueWithDefault(
+            userInputValue,
+            defaultValue,
+            formatRawValue,
+            acceptEmpty
+        );
         const rawValue = parseDisplayValue(userInputValue);
         if (reload) {
             callOperation(operationWithReload, {
@@ -1017,7 +1021,12 @@ export function useInputBuilderComponent({
     const shouldPreview = useHasPreview(getAllActions);
     function preview(userInputValue) {
         if (shouldPreview) {
-            userInputValue = getValueWithDefault(userInputValue, defaultValue, formatRawValue);
+            userInputValue = getValueWithDefault(
+                userInputValue,
+                defaultValue,
+                formatRawValue,
+                acceptEmpty
+            );
             callOperation(applyOperation.preview, {
                 preview: true,
                 userInputValue: parseDisplayValue(userInputValue),

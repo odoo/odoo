@@ -48,6 +48,7 @@ export class BuilderNumberInput extends Component {
         max: t.number().optional(),
         composable: t.boolean().optional(false),
         applyWithUnit: t.boolean().optional(true),
+        acceptEmpty: t.boolean().optional(false),
     });
     static components = { BuilderComponent, BuilderNumberInputBase };
 
@@ -67,6 +68,7 @@ export class BuilderNumberInput extends Component {
             defaultValue: this.props.default === null ? null : this.props.default?.toString(),
             formatRawValue: this.formatRawValue.bind(this),
             parseDisplayValue: this.parseDisplayValue.bind(this),
+            acceptEmpty: this.props.acceptEmpty,
         });
         this.commit = commit;
         this.preview = preview;
