@@ -1,17 +1,9 @@
 /** @ts-check */
 
-import {
-    Component,
-    onWillStart,
-    onWillUpdateProps,
-    signal,
-    t,
-    onMounted,
-    useProps,
-} from "@odoo/owl";
+import { Component, computed, onMounted, signal, t, useProps } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { useService } from "@web/core/utils/hooks";
+import { useAsyncComputed, useService } from "@web/core/utils/hooks";
 
 export class SelectionFilterValue extends Component {
     static template = "spreadsheet.SelectionFilterValue";
@@ -26,50 +18,67 @@ export class SelectionFilterValue extends Component {
         onValueChanged: t.function(),
         placeholder: t.string().optional(),
     });
+    fields = useService("field");
 
-    setup() {
-        this.inputRef = signal.ref();
-        onMounted(() => {
-            // Prevent the user from typing free-text by setting the maxlength to 0
-            this.inputRef().setAttribute("maxlength", 0);
-        });
-        this.tags = [];
-        this.sources = [];
-        this.fields = useService("field");
-        onWillStart(() => this._computeTagsAndSources(this.props));
-        onWillUpdateProps((nextProps) => this._computeTagsAndSources(nextProps));
-    }
+    inputRef = signal.ref();
 
-    get placeholder() {
-        return this.tags.length ? "" : this.props.placeholder;
-    }
-
-    async _computeTagsAndSources(props) {
-        const fields = await this.fields.loadFields(props.resModel);
-        const field = fields[props.field];
-        if (!field) {
-            throw new Error(`Field "${props.field}" not found in model "${props.resModel}"`);
+    fieldData = useAsyncComputed(async () => {
+        const { resModel } = this.props;
+        return { fields: await this.fields.loadFields(resModel), resModel };
+    });
+    /**
+     * Options of the selection field, or `null` while the fields of the current
+     * model are loading (or failed to load).
+     *
+     * @type {import("@odoo/owl").ReadonlySignal<[string, string][] | null>}
+     */
+    selection = computed(() => {
+        const { field, resModel } = this.props;
+        const data = this.fieldData();
+        if (data?.resModel !== resModel) {
+            return null;
         }
-        const selection = field.selection;
-        this.tags = props.value.map((value) => ({
-            id: value,
-            text: selection.find((option) => option[0] === value)?.[1] ?? value,
-            onDelete: () => {
-                props.onValueChanged(props.value.filter((v) => v !== value));
-            },
-        }));
-        const alreadySelected = new Set(props.value);
-        this.sources = [
+        if (!data.fields[field]) {
+            throw new Error(`Field "${field}" not found in model "${resModel}"`);
+        }
+        return data.fields[field].selection;
+    });
+    sources = computed(() => {
+        const { value } = this.props;
+        const selected = new Set(value);
+        return [
             {
-                options: selection
-                    .filter((option) => !alreadySelected.has(option[0]))
-                    .map(([value, formattedValue]) => ({
-                        label: formattedValue,
+                options: (this.selection() || [])
+                    .filter(([val]) => !selected.has(val))
+                    .map(([val, label]) => ({
+                        label,
                         onSelect: () => {
-                            props.onValueChanged([...props.value, value]);
+                            this.props.onValueChanged([...value, val]);
                         },
                     })),
             },
         ];
+    });
+    tags = computed(() => {
+        const { value } = this.props;
+        const labels = Object.fromEntries(this.selection() || []);
+        return value.map((val) => ({
+            id: val,
+            text: labels[val] ?? val,
+            onDelete: () => {
+                this.props.onValueChanged(value.filter((v) => v !== val));
+            },
+        }));
+    });
+
+    setup() {
+        onMounted(() => {
+            // Prevent the user from typing free-text by setting the maxlength to 0
+            this.inputRef().setAttribute("maxlength", 0);
+        });
+    }
+
+    get placeholder() {
+        return this.tags().length ? "" : this.props.placeholder;
     }
 }

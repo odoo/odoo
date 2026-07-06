@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, t, useProps } from "@odoo/owl";
+import { Component, signal, t, useOnChange, useProps } from "@odoo/owl";
 import {
     dateFilterValueToString,
     getDateRange,
@@ -20,53 +20,56 @@ const { DateTime } = luxon;
 export class DateFilterDropdown extends Component {
     static template = "spreadsheet.DateFilterDropdown";
     static components = { DropdownItem, DateTimeInput };
+
     props = useProps({
         value: t.object().optional(),
         update: t.function(),
         model: t.object(),
     });
 
+    selectedValues = signal.Object(this._getDefaultSelectedValues());
+
     setup() {
-        this._computeDefaultSelectedValues();
-        this._applyCurrentValueToSelectedValues(this.props.value);
-        onWillUpdateProps((nextProps) => this._applyCurrentValueToSelectedValues(nextProps.value));
+        useOnChange(
+            () => [this.props.value],
+            (value) => this._applyCurrentValueToSelectedValues(value)
+        );
+    }
+
+    /**
+     * Updates the selected values based on the current value.
+     * This method is called whenever the `value` prop changes.
+     */
+    _applyCurrentValueToSelectedValues(value) {
+        this.selectedValues().range = this._getRange(value);
+        if (value?.type) {
+            const filterType = value.type === "relative" ? value.period : value.type;
+            if (this.isFixedPeriod(filterType)) {
+                this.selectedValues()[value.type] = { ...value };
+            }
+        }
     }
 
     /**
      * Computes the default selected values based on the current date.
      */
-    _computeDefaultSelectedValues() {
+    _getDefaultSelectedValues() {
         const now = DateTime.local();
         const fixedPeriodsTypes = getDateGlobalFilterTypes().filter(
             (type) => globalFilterDateRegistry.get(type).isFixedPeriod
         );
 
-        this.selectedValues = {};
+        const selectedValues = {};
         for (const type of fixedPeriodsTypes) {
-            this.selectedValues[type] = globalFilterDateRegistry
-                .get(type)
-                .getCurrentFixedPeriod(now);
+            selectedValues[type] = globalFilterDateRegistry.get(type).getCurrentFixedPeriod(now);
         }
+        return selectedValues;
     }
 
-    /**
-     * Updates the default selected values based on the current value.
-     * This method is called whenever the component's props are updated.
-     */
-    _applyCurrentValueToSelectedValues(value) {
-        this._setRangeToCurrentValue(value);
-        if (value?.type) {
-            const filterType = value.type === "relative" ? value.period : value.type;
-            if (this.isFixedPeriod(filterType)) {
-                this.selectedValues[value.type] = { ...value };
-            }
-        }
-    }
-
-    _setRangeToCurrentValue(value) {
+    _getRange(value) {
         const now = DateTime.local();
         const { from, to } = getDateRange(value, 0, now, this.props.model.getters);
-        this.selectedValues.range = {
+        return {
             type: "range",
             from: from ? from.toISODate() : now.startOf("month").toISODate(),
             to: to ? to.toISODate() : now.endOf("month").toISODate(),
@@ -110,59 +113,52 @@ export class DateFilterDropdown extends Component {
             this.props.update({ type: "relative", period: value.type });
             return;
         }
-        switch (value.type) {
-            case "range": {
-                const { from, to } = this.selectedValues.range;
-                if (from && to) {
-                    // Ensure 'to' is after 'from'
-                    if (DateTime.fromISO(from) > DateTime.fromISO(to)) {
-                        this.selectedValues.range.to = from;
-                        this.selectedValues.range.from = to;
-                    }
-                }
-                this.props.update(this.selectedValues.range);
-                break;
-            }
-            case undefined:
-                this.props.update(undefined);
-                break;
-            default:
-                this.props.update(this.selectedValues[value.type]);
-                break;
+        if (value.type === undefined) {
+            this.props.update(undefined);
+            return;
         }
+        const selectedValue = this.selectedValues()[value.type];
+        const { from, to } = selectedValue;
+        // Ensure 'to' is after 'from'
+        if (from && to && DateTime.fromISO(from) > DateTime.fromISO(to)) {
+            selectedValue.from = to;
+            selectedValue.to = from;
+        }
+        // Copy: the model must not hold (nor share) the reactive selected value
+        this.props.update({ ...selectedValue });
     }
 
     dateFrom() {
-        return this.selectedValues.range.from
-            ? DateTime.fromISO(this.selectedValues.range.from)
-            : undefined;
+        const { from } = this.selectedValues().range;
+        return from ? DateTime.fromISO(from) : undefined;
     }
 
     dateTo() {
-        return this.selectedValues.range.to
-            ? DateTime.fromISO(this.selectedValues.range.to)
-            : undefined;
+        const { to } = this.selectedValues().range;
+        return to ? DateTime.fromISO(to) : undefined;
     }
 
     setDateFrom(date) {
-        this.selectedValues.range.from = date ? date.toISODate() : "";
-        this.update(this.selectedValues.range);
+        const { range } = this.selectedValues();
+        range.from = date ? date.toISODate() : "";
+        this.update(range);
     }
     setDateTo(date) {
-        this.selectedValues.range.to = date ? date.toISODate() : "";
-        this.update(this.selectedValues.range);
+        const { range } = this.selectedValues();
+        range.to = date ? date.toISODate() : "";
+        this.update(range);
     }
 
     getDescription(type) {
-        return dateFilterValueToString(this.selectedValues[type], this.props.model.getters);
+        return dateFilterValueToString(this.selectedValues()[type], this.props.model.getters);
     }
 
     selectPrevious(type) {
-        this.selectedValues[type] = getPreviousDateFilterValue(this.selectedValues[type]);
+        this.selectedValues()[type] = getPreviousDateFilterValue(this.selectedValues()[type]);
     }
 
     selectNext(type) {
-        this.selectedValues[type] = getNextDateFilterValue(this.selectedValues[type]);
+        this.selectedValues()[type] = getNextDateFilterValue(this.selectedValues()[type]);
     }
 
     isFixedPeriod(type) {
