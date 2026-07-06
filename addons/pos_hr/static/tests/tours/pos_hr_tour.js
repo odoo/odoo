@@ -56,6 +56,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             NumberPopup.isShown("••••"),
             Dialog.confirm(),
             ProductScreen.isShown(),
+            Chrome.notExistMenuOption("Create Product"),
 
             // Create orders and check if the ticket list has the right employee for each order
             // order for employee 2
@@ -107,9 +108,11 @@ registry.category("web_tour.tours").add("CashierStayLogged", {
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
             PosHr.cashierNameIs("Mitchell Admin"),
+            Chrome.existMenuOption("Create Product"),
             PosHr.refreshPage(),
             ProductScreen.isShown(),
             PosHr.cashierNameIs("Mitchell Admin"),
+            Chrome.existMenuOption("Create Product"),
             Chrome.clickMenuButton(),
             PosHr.clickLockButton(),
             PosHr.refreshPage(),

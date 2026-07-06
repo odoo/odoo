@@ -164,6 +164,7 @@ export class PosStore extends Reactive {
         });
 
         initLNA(this.notification);
+        this.canUserCreateProduct = await user.checkAccessRight("product.product", "create");
     }
 
     get firstScreen() {
@@ -1979,8 +1980,13 @@ export class PosStore extends Reactive {
             }
         );
     }
+    get hasProductCreationAccess() {
+        return this.canUserCreateProduct;
+    }
+
+    // TODO: Remove in master. Use `hasProductCreationAccess` instead.
     async allowProductCreation() {
-        return await user.checkAccessRight("product.product", "create");
+        return this.hasProductCreationAccess;
     }
     orderDetailsProps(order) {
         const oldPaymentIds = order.payment_ids.map((p) => p.id);
