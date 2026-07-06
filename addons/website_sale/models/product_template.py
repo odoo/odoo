@@ -984,19 +984,20 @@ class ProductTemplate(models.Model):
                 cart_quantity = product_sudo.uom_id._compute_quantity(
                     request.cart._get_cart_qty(product_sudo.id), to_unit=uom
                 )
+
             digits = self.env["decimal.precision"].precision_get("Product Unit")
-            rounding = 10**-digits
             combination_info.update({
                 "free_qty": free_qty,
                 "cart_qty": cart_quantity,
-                "uom_name": uom.name,
-                "uom_rounding": rounding,
+                "uom_rounding": 10**-digits,
                 "show_availability": product_sudo.show_availability,
                 "out_of_stock_message": product_sudo.out_of_stock_message,
                 "has_stock_notification": has_stock_notification,
                 "stock_notification_email": stock_notification_email,
                 "is_in_wishlist": product_sudo._is_in_wishlist(),
             })
+            if self.env["res.groups"]._is_feature_enabled("uom.group_uom"):
+                combination_info["uom_name"] = uom.name
         else:
             combination_info.update({"free_qty": 0, "cart_qty": 0})
 

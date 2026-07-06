@@ -55,7 +55,7 @@
                 t-attf-class="availability_message_#{this.product_template} my-3 badge text-bg-warning"
             >
                 <i class="fa fa-circle text-warning me-2" role="presentation"/>
-                <t t-out="this.formatQuantity(this.free_qty)"/> <t t-out="this.uom_name" /> in stock
+                <t t-out="this.formatQuantity(this.free_qty)"/> <t t-if="this.uom_name" t-out="this.uom_name" /> in stock
                 <span
                     id="already_in_cart_message"
                     t-if="!this.allow_out_of_stock_order and this.show_availability and this.cart_qty"
