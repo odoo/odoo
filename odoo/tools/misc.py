@@ -1008,6 +1008,13 @@ class OrderedSet[T](MutableSet[T]):
     def __len__(self):
         return len(self._map)
 
+    def __and__(self, other):
+        # preserve order of this set
+        if not isinstance(other, Iterable):
+            return NotImplemented
+        other = set(other)
+        return self._from_iterable(value for value in self if value in other)
+
     def add(self, elem):
         self._map[elem] = None
 
