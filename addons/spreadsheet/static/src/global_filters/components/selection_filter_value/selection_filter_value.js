@@ -1,9 +1,10 @@
 /** @ts-check */
 
-import { Component, computed, onMounted, signal, t, useProps } from "@odoo/owl";
+import { Component, computed, onMounted, signal, t, useProps, usePlugin } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { useAsyncComputed, useService } from "@web/core/utils/hooks";
+import { useAsyncComputed } from "@web/core/utils/hooks";
+import { FieldPlugin } from "@web/core/field_plugin";
 
 export class SelectionFilterValue extends Component {
     static template = "spreadsheet.SelectionFilterValue";
@@ -18,7 +19,7 @@ export class SelectionFilterValue extends Component {
         onValueChanged: t.function(),
         placeholder: t.string().optional(),
     });
-    fields = useService("field");
+    fields = usePlugin(FieldPlugin);
 
     inputRef = signal.ref();
 
