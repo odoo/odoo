@@ -17,6 +17,7 @@ registerThreadAction("show-threads", {
         });
     },
     actionPanelOuterClass: "bg-100 border border-secondary",
+    btnAttrs: { "data-available-offline": true },
     condition: ({ channel, owner }) =>
         (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
         !owner.isDiscussSidebarChannelActions,
