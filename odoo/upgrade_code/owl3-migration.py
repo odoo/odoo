@@ -1102,6 +1102,7 @@ MISC_WHITELIST = {
 SERVICES_MAPPING = {
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
+    "mobile": ['MobilePlugin', '@web_mobile/js/mobile_plugin'],
 }
 
 
