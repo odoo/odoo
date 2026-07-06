@@ -302,8 +302,8 @@ class Export(Controller):
         except ModuleNotFoundError:
             xlsx_error = "XlsxWriter 0.9.3 required"
         return [
-            {'tag': 'xlsx', 'label': 'XLSX', 'error': xlsx_error},
-            {'tag': 'csv', 'label': 'CSV'},
+            {'tag': 'xlsx', 'label': request.env._("Excel Workbook (.xlsx)"), 'error': xlsx_error},
+            {'tag': 'csv', 'label': request.env._("Plain Text (.csv)")},
         ]
 
     def _get_property_fields(self, fields, model, domain=()):

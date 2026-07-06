@@ -1,13 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import {
-    check,
-    dblclick,
-    pointerDown,
-    queryAll,
-    queryAllTexts,
-    queryFirst,
-    select,
-} from "@odoo/hoot-dom";
+import { dblclick, pointerDown, queryAll, queryAllTexts, queryFirst, select } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
@@ -256,7 +248,7 @@ test("Export dialog: interacting with export templates", async () => {
     await openExportDialog();
 
     expect(`.o_dialog`).toHaveCount(1);
-    expect(".o_export_tree_item:nth-child(2) .o_add_field").toHaveClass("o_inactive", {
+    expect(".o_export_tree_item:nth-child(2) .o_add_field").toHaveCount(0, {
         message: "fields already selected cannot be added anymore",
     });
 
@@ -398,7 +390,7 @@ test("Export dialog: interacting with available fields", async () => {
     await animationFrame();
     expect(
         ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids'] .o_add_field"
-    ).toHaveClass("o_inactive", {
+    ).toHaveCount(0, {
         message: "field has been added by double clicking on it and cannot be added anymore",
     });
     await contains(firstField + ".o_add_field").click();
@@ -469,13 +461,13 @@ test("Export dialog: compatible and export type options", async () => {
     });
 
     await openExportDialog();
-    expect("input[name='o_export_format_name']").toHaveCount(3);
-    expect("[name=o_export_format_name][value=csv]").toBeChecked();
-    expect(".o_export_format div:nth-of-type(3)").toHaveText("WOW");
-    await check(".o_export_format div:nth-of-type(3) input");
+    expect(".o_export_format option").toHaveCount(3);
+    expect(".o_export_format").toHaveValue("csv");
+    expect(".o_export_format option:nth-of-type(3)").toHaveText("WOW");
+    await select("wow", { target: ".o_export_format" });
     await animationFrame();
     expect(".o_export_tree_item").toHaveCount(3);
-    await contains(".o_import_compat input").click();
+    await contains(".o_left_panel .form-check-input:first").click();
     expect(".o_export_tree_item").toHaveCount(3);
     def.resolve();
     await animationFrame();
@@ -511,11 +503,36 @@ test("toggling import compatibility after adding an expanded field", async () =>
 
     await contains("[data-field_id='activity_ids']").click();
     await contains("[data-field_id='activity_ids/partner_ids'] .o_add_field").click();
-    await contains(".o_import_compat input").click();
+    await contains(".o_left_panel .form-check-input:first").click();
     await contains("[data-field_id='activity_ids']").click();
     await contains(".o_select_button").click();
     // download file has been called with the correct url
     expect.verifySteps(["/web/export/csv"]);
+});
+
+test("toggling 'Updatable fields only' keeps the export list", async () => {
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", () => fetchedFields.root);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+
+    await openExportDialog();
+    expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(["Foo"]);
+
+    await contains(".o_left_field_panel .o_export_tree_item:first .o_add_field").click();
+    await contains(".o_right_field_panel .o_export_field:first .o_remove_field").click();
+    expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(["Activities"]);
+
+    await contains(".o_left_panel .form-check-input:first").click();
+    await animationFrame();
+    expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(["Activities"], {
+        message: "toggling 'Updatable fields only' has no impact on the export list",
+    });
 });
 
 test("Export dialog: many2many fields are extendable", async () => {

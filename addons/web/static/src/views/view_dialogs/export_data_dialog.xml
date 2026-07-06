@@ -12,19 +12,19 @@
     </t>
 
     <t t-name="web.ExportDataItem">
-        <div t-att-data-field_id="this.props.field.id" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ this.state.subfields.length ? 'o_expanded mb-2' : '' }} {{ this.props.field.parent ? '' : 'pe-3'}}" role="treeitem" t-on-click.stop="() => this.toggleItem(this.props.field.id, true)" t-on-dblclick="() => this.onDoubleClick(this.props.field.id)">
-            <div t-attf-class="o_tree_column d-flex align-items-center {{ this.props.field.required ? 'fw-bolder' : ''}}">
-                <span t-if="this.props.isFieldExpandable(this.props.field.id)" class="ms-n3 float-start o_expand_parent small oi" t-attf-data-icon="{{ this.state.subfields.length ? 'keyboard_arrow_down' : 'chevron_forward' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
+        <div t-att-data-field_id="this.props.field.id" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ this.state.subfields.length ? 'o_expanded mb-2' : '' }} {{ this.props.field.parent ? '' : 'pe-1'}}" role="treeitem" t-on-click.stop="() => this.toggleItem(this.props.field.id, true)" t-on-dblclick="() => this.onDoubleClick(this.props.field.id)">
+            <div t-attf-class="o_tree_column position-relative d-flex align-items-center {{ this.props.field.required ? 'fw-bolder' : ''}}">
+                <span t-if="this.props.isFieldExpandable(this.props.field.id)" class="position-absolute top-50 translate-middle-y o_expand_parent small oi" t-attf-data-icon="{{ this.state.subfields.length ? 'keyboard_arrow_down' : 'chevron_forward' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
                 <span t-if="this.props.isDebug and this.props.field.id" class="overflow-hidden w-100" t-out="`${this.props.field.string} (${this.props.field.id})`" />
                 <span t-else="" class="overflow-hidden w-100" t-out="this.props.field.string" />
-                <span title="Select field" t-attf-class="oi float-end m-1 o_add_field {{ this.isFieldSelected(this.props.field.id) ? 'o_inactive opacity-25' : '' }}" data-icon="add" t-on-click.stop="(ev) => !this.isFieldSelected(this.props.field.id) and this.props.onAdd(this.props.field.id)" />
+                <span t-if="!this.isFieldSelected(this.props.field.id)" title="Select field" t-attf-class="oi float-end m-1 o_add_field" data-icon="add" t-on-click.stop="() => this.props.onAdd(this.props.field.id)"/>
             </div>
-                <t t-foreach="this.state.subfields" t-as="field" t-key="field.id">
-                    <ExportDataItem
-                        t-props="this.props"
-                        field="field"
-                    />
-                </t>
+            <t t-foreach="this.state.subfields" t-as="field" t-key="field.id">
+                <ExportDataItem
+                    t-props="this.props"
+                    field="field"
+                />
+            </t>
         </div>
     </t>
 
@@ -32,14 +32,15 @@
         <Dialog contentClass="'o_export_data_dialog'" title.translate="Export Data" size="'lg'">
             <div class="row w-100">
                 <div class="o_left_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap">
-                    <div class="o_import_compat">
-                        <CheckBox className="'o_import_compat'" id="'o-update-data'" value="this.isCompatible" onChange.bind="this.onToggleCompatibleExport">
-                            I want to update data (import-compatible export)
-                        </CheckBox>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h4 class="mb-0">Available fields</h4>
+                        <CheckBox className="'form-switch'" value="this.isCompatible" onChange.bind="this.onToggleCompatibleExport">Updatable fields only</CheckBox>
                     </div>
-                    <h4 class="mt-3">Available fields</h4>
-                    <input t-ref="this.searchRef" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="this.onSearch" />
-                    <div class="o_left_field_panel h-100 overflow-auto border">
+                    <div class="position-relative mb-3">
+                        <input t-ref="this.searchRef" type="search" class="form-control o_export_search_input" placeholder="Search..." aria-label="Search fields" t-on-input="this.onSearch" />
+                        <i class="oi position-absolute top-50 end-0 translate-middle-y me-2 text-muted opacity-50 pe-1 pe-none" data-icon="search" role="img" aria-label="Search" />
+                    </div>
+                    <div class="o_left_field_panel flex-grow-1 overflow-auto border">
                         <div class="o_field_tree_structure">
                             <t t-if="this.fieldsAvailable">
                                 <t t-foreach="this.rootFields" t-as="field" t-key="field.id + '_' + this.state.search.length + '_' + this.isCompatible">
@@ -58,18 +59,17 @@
                             <h3 t-else="" class="text-center text-muted mt-5 o_no_match">No match found.</h3>
                         </div>
                     </div>
+                    <label class="d-flex align-items-center gap-2 mt-2 flex-shrink-0">
+                        <span class="form-label mb-0 fw-bold text-nowrap">Format</span>
+                        <select class="form-select form-select-sm o_export_format" t-on-change="this.setFormat">
+                            <t t-foreach="this.availableFormats" t-as="format" t-key="format.tag">
+                                <option t-att-value="format.tag" t-att-selected="format.tag === this.availableFormats[this.state.selectedFormat].tag" t-out="format.label" />
+                            </t>
+                        </select>
+                    </label>
                 </div>
                 <div t-attf-class="o_right_panel col-12 col-md-6 {{ this.state.isSmall ? 'h-50' : 'h-100' }} d-flex flex-column flex-nowrap mt-3 mt-md-0">
-                    <div class="o_export_format">
-                        <strong>Export Format:</strong>
-                        <t t-foreach="this.availableFormats" t-as="format" t-key="format.tag">
-                            <div class="radio form-check-inline ps-5">
-                                <input t-att-id="'o_radio' + format.tag" type="radio" t-att-checked="format.tag === this.availableFormats[this.state.selectedFormat].tag" name="o_export_format_name" t-att-value="format.tag" class="form-check-input" t-on-change="this.setFormat" />
-                                <label class="form-check-label ms-1" t-att-for="'o_radio' + format.tag" t-out="format.label" />
-                            </div>
-                        </t>
-                    </div>
-                    <div class="mt-3">
+                    <div class="mt-0">
                         <h4>Fields to export</h4>
                     </div>
                     <div class="o_exported_lists">
@@ -109,7 +109,7 @@
                                 <li t-attf-class="o_export_field d-inline-block w-100 {{ this.state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.id">
                                     <span t-if="!this.state.isSmall" class="oi o_sort_field mx-1" data-icon="swap_vert" t-attf-style="opacity:{{ this.state.exportList.length === 1 ? 0 : 1 }}" />
                                     <span t-out="this.debugMode.isActive() and field.id ? `${field.string} (${field.id})` : field.string" />
-                                    <span class="oi oi-filled m-1 pe-2 float-end o_remove_field cursor-pointer" data-icon="delete" t-att-title="this.removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
+                                    <span class="oi oi-filled p-1 float-end o_remove_field cursor-pointer" data-icon="delete" t-att-title="this.removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
                                 </li>
                             </t>
                         </ul>
