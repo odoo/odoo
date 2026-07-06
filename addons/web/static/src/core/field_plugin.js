@@ -1,6 +1,6 @@
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
-import { plugin, Plugin } from "@odoo/owl";
+import { plugin, Plugin, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { ORM } from "@web/core/orm_plugin";
 
@@ -232,6 +232,6 @@ registry.category("services").add("field", {
         "loadPathDescription",
     ],
     start() {
-        return plugin(FieldPlugin);
+        return usePlugin(FieldPlugin);
     },
 });

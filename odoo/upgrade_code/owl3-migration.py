@@ -1123,6 +1123,7 @@ SERVICES_MAPPING = {
     "dialog": ['DialogPlugin', '@web/core/dialog/dialog_plugin'],
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
     "effect": ['EffectPlugin', '@web/core/effects/effect_plugin'],
+    "field": ['FieldPlugin', '@web/core/field_plugin'],
     "frequent_emoji": ['FrequentEmojiPlugin', '@web/core/emoji_picker/frequent_emoji_plugin'],
     "hotkey": ['HotkeyPlugin', '@web/core/hotkeys/hotkey_plugin'],
     "lazy_session": ['LazySessionPlugin', '@web/webclient/lazy_session_plugin'],
