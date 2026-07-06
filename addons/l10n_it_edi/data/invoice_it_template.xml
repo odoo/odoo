@@ -141,7 +141,6 @@
                 <Numero t-out="format_alphanumeric(record.name, -20)"/>
                 <DatiBollo t-if="record.l10n_it_stamp_duty">
                     <BolloVirtuale t-translation="off">SI</BolloVirtuale>
-                    <ImportoBollo t-out="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
                 <ImportoTotaleDocumento t-out="format_monetary(importo_totale_documento, currency)"/>
             </DatiGeneraliDocumento>
