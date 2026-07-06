@@ -90,6 +90,7 @@
                             <Divisa t-out="currency.name"/>
                             <Data t-out="format_date(record.invoice_date)"/>
                             <Numero t-out="format_alphanumeric(record.name, -20)"/>
+                            <BolloVirtuale t-if="record.l10n_it_stamp_duty" t-translation="off">SI</BolloVirtuale>
                         </DatiGeneraliDocumento>
                         <DatiFatturaRettificata t-if="record.move_type == 'out_refund' and record.reversed_entry_id">
                             <NumeroFR t-out="format_alphanumeric(record.reversed_entry_id.name, -20)"/>
