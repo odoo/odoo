@@ -115,7 +115,7 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         self.assertEqual(invoice.partner_id.vat, self.partner_a.vat)
 
         # Change the VAT to trigger the VAT mismatch logic
-        self.partner_a.vat = 'BE4695478703'
+        self.partner_a.vat = 'BE0403170701'
         # A new partner should be created
         invoice = self._import_invoice_as_attachment_on(
             test_name='test_partial_import_partner_retrieval_bank_account_number',
@@ -126,6 +126,6 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
             'street': "Rue des Trucs 9",
             'city': "Bidule",
             'zip': "6713",
-            'vat': 'BE4018517582',
+            'vat': 'BE0727720427',
             'country_id': self.env.ref('base.be').id,
         }])
