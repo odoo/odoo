@@ -217,3 +217,10 @@ class ResPartner(models.Model):
             it_values = self._update_fields_values(('l10n_it_codice_fiscale', 'l10n_it_pa_index'))
             self.parent_id.update(it_values)
         return res
+
+    def _l10n_it_edi_is_italian(self):
+        return (
+            self.country_code == 'IT'
+            or self.l10n_it_codice_fiscale
+            or (self.vat and self.vat.upper().startswith('IT') and iva.is_valid(self.vat))
+        )
