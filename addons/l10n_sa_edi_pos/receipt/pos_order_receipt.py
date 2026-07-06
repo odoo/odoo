@@ -9,7 +9,11 @@ class PosOrderReceipt(models.AbstractModel):
     def order_receipt_generate_data(self, basic_receipt=False):
         data = super().order_receipt_generate_data(basic_receipt)
         data['conditions']['code_sa'] = self.company_id.country_id.code == 'SA'
-        data['conditions']['l10n_sa_not_legal'] = not self.l10n_sa_invoice_qr_code_str or self.l10n_sa_invoice_edi_state not in ("accepted", "warning")
+        data['conditions']['l10n_sa_not_legal'] = not (
+            self.config_id.invoice_journal_id._l10n_sa_ready_to_submit_einvoices()
+            and self.l10n_sa_invoice_qr_code_str
+            and self.l10n_sa_invoice_edi_state in ("accepted", "warning")
+        )
         if not data['conditions']['l10n_sa_not_legal']:
             data['image']['sa_qr_code'] = self._order_receipt_generate_qr_code(self.l10n_sa_invoice_qr_code_str)
         return data
