@@ -271,13 +271,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
             grade_domain += [('country_id', '=', country.id)]
         grades = self._get_grades(grade, grade_domain)
 
-        # Group by country
-        country_domain = list(base_partner_domain)
-        if grade:
-            country_domain += [('grade_id', '=', grade.id)]
-        country_groups = partner_obj.sudo()._read_group(
-            country_domain + [('country_id', '!=', False)],
-            ["country_id"], ["__count"], order="country_id")
         countries = [{
             'country_id_count': sum(count for __, count in country_groups),
             'country_id': (0, _("All Countries")),
