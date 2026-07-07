@@ -1675,3 +1675,30 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
 
         self.assertFalse(analytic_line.so_line)
         self.assertFalse(analytic_line.is_so_line_edited)
+
+    def test_create_timesheet_entry_from_so(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'Amazing SO',
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet2.id,
+            }) for _ in range(2)],
+        })
+        first_sol, second_sol = sale_order.order_line
+        sale_order.action_confirm()
+
+        action = sale_order.action_view_timesheet()
+        self.env[action['res_model']].with_context(action['context']).create([
+            {
+                'task_id': first_sol.task_id.id,
+                'unit_amount': 3,
+                'employee_id': self.employee_user.id,
+            },
+            {
+                'task_id': second_sol.task_id.id,
+                'unit_amount': 5,
+                'employee_id': self.employee_user.id,
+            },
+        ])._compute_so_line()
+        self.assertEqual(first_sol.qty_delivered, 3.0)
+        self.assertEqual(second_sol.qty_delivered, 5.0)
