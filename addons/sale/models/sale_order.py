@@ -1788,8 +1788,12 @@ class SaleOrder(models.Model):
 
         txs_to_be_linked = self.sudo().transaction_ids.filtered(
             lambda tx: (
-                tx.state in ("pending", "authorized")
-                or (tx.state == "done" and not tx.payment_id.is_reconciled)
+                tx.state in ('pending', 'authorized')
+                or (
+                    tx.state == 'done'
+                    and tx.payment_id.move_id.state == 'posted'
+                    and not tx.payment_id.is_reconciled
+                )
             )
         )
 
