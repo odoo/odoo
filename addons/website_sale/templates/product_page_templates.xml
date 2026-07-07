@@ -123,7 +123,7 @@
                                     >
                                         <t t-call="website_sale.product_price"/>
                                         <small
-                                            t-if="combination_info.get('base_unit_price')"
+                                            t-if="'base_unit_price' in combination_info"
                                             class="text-muted o_base_unit_price_wrapper d-block d-none"
                                         >
                                             (<t
@@ -628,7 +628,7 @@
                 <div>
                     <t t-call="website_sale.product_price"/>
                     <small
-                        t-if="combination_info.get('base_unit_price')"
+                        t-if="'base_unit_price' in combination_info"
                         class="ms-1 text-muted o_base_unit_price_wrapper d-none"
                     >
                         <t
