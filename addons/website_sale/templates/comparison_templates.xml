@@ -134,7 +134,7 @@
                                                 t-out="combination_info['list_price']"
                                                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                                             />
-                                            <small t-if="combination_info.get('base_unit_price')"
+                                            <small t-if="'base_unit_price' in combination_info"
                                                    class="d-block text-muted">
                                                 <t t-call="website_sale.base_unit_price"
                                                     base_unit_price="combination_info['base_unit_price']"/>
