@@ -62,20 +62,15 @@ export function mountComponent(
     { onBeforeComplete, onAfterComplete } = {}
 ) {
     const root = app.createRoot(Component, { props, env });
-    const mountPromise = root.mount(host);
-    // Patch mount fiber to hook into the exact call stack where root is
-    // mounted (but before). This will remove host children synchronously
-    // just before adding the root rendered html.
-    const fiber = root.node.fiber;
-    const fiberComplete = fiber.complete;
-    fiber.complete = function () {
+    const mountPromise = root.prepare().then(() => {
         if (onBeforeComplete?.() === false) {
             return;
         }
         host.replaceChildren();
-        fiberComplete.call(this);
+        const promise = root.mount(host);
         onAfterComplete?.();
-    };
+        return promise;
+    });
     return { root, mountPromise };
 }
 

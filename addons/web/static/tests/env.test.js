@@ -198,15 +198,20 @@ test(`mountComponent creates an env and sets the application as root when no env
     allowTranslations();
     registerService("my_service", [], () => "a");
 
+    let comp = null;
     class Root extends Component {
         static template = xml`Root`;
         static props = ["*"];
+
+        setup() {
+            comp = this;
+        }
     }
     const app = await mountComponent(Root, getFixture());
     const { env } = app;
     expect(env.services).toEqual({ my_service: "a" });
-    const [firstRoot] = app.roots;
-    expect(odoo.__WOWL_DEBUG__).toEqual({ root: firstRoot.node.component });
+    expect(comp).not.toBe(null);
+    expect(odoo.__WOWL_DEBUG__).toEqual({ root: comp });
     expect(getFixture()).toHaveText("Root");
 });
 
