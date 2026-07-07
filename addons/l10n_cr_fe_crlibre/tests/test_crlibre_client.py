@@ -126,6 +126,9 @@ class TestCrlibreClient(TransactionCase):
         self.assertEqual(called_params['r'], 'firmar')
         self.assertEqual(called_params['p12Url'], 'DC123')
         self.assertEqual(called_params['pinP12'], '1234')
+        self.assertEqual(
+            called_params['inXml'],
+            base64.b64encode('<FacturaElectronica>sin firmar</FacturaElectronica>'.encode()).decode())
 
     def test_sign_xml_missing_result_raises(self):
         payload = {'status': 'ok', 'resp': {}}
