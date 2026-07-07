@@ -22,10 +22,13 @@ class MergePartnerAutomatic(models.TransientModel):
 
         # Case 2: there is a visitor only for src_partners.
         # Need to fix the "de-sync" values between `access_token` and
-        # `partner_id`.
+        # `partner_id`. Only rows where access_token is in the legacy numeric
+        # format (partner_id stored as string) are updated; UUID-format tokens
+        # (32-char hex strings) are left untouched to avoid an invalid cast.
         self.env.cr.execute("""
             UPDATE website_visitor
-               SET access_token = partner_id
-             WHERE partner_id::int != access_token::int
+               SET access_token = partner_id::text
+             WHERE access_token ~ '^[0-9]+$'
+               AND access_token::bigint != partner_id
                AND partner_id = %s;
         """, (dst_partner.id,))
