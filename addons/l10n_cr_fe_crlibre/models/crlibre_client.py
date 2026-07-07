@@ -23,6 +23,8 @@ class CrlibreFeClient(models.AbstractModel):
         'prod': ('https://idp.comprobanteselectronicos.go.cr/auth/realms/rut/protocol/openid-connect/token', 'api-prod'),
     }
 
+    _CLIENT_ID_BY_ENVIRONMENT = {'stag': 'api-stag', 'prod': 'api-prod'}
+
     def _get_base_url(self):
         url = self.env['ir.config_parameter'].sudo().get_param('l10n_cr_fe.api_url')
         if not url:
@@ -135,3 +137,36 @@ class CrlibreFeClient(models.AbstractModel):
         if not isinstance(resp, dict) or not resp.get('xmlFirmado'):
             raise CrlibreApiError("Respuesta inesperada de 'firmarXML/firmar': %s" % resp)
         return base64.b64decode(resp['xmlFirmado']).decode('utf-8')
+
+    def send_fe(self, token, clave, fecha_iso, emisor_tipo, emisor_num,
+                receptor_tipo, receptor_num, xml_firmado, environment):
+        resp = self._call('send', 'json', {
+            'token': token,
+            'clave': clave,
+            'fecha': fecha_iso,
+            'emi_tipoIdentificacion': emisor_tipo,
+            'emi_numeroIdentificacion': emisor_num,
+            'recp_tipoIdentificacion': receptor_tipo,
+            'recp_numeroIdentificacion': receptor_num,
+            'comprobanteXml': base64.b64encode(xml_firmado.encode('utf-8')).decode('ascii'),
+            'client_id': self._CLIENT_ID_BY_ENVIRONMENT[environment],
+        })
+        if not isinstance(resp, dict) or 'Status' not in resp:
+            raise CrlibreApiError("Respuesta inesperada de 'send/json': %s" % resp)
+        http_status = resp['Status']
+        if http_status not in (200, 202):
+            raise CrlibreApiError("Hacienda rechazó el envío (HTTP %s): %s" % (http_status, resp.get('text')))
+        return {'http_status': http_status, 'raw': resp.get('text') or []}
+
+    def consultar_estado(self, token, clave, environment):
+        resp = self._call('consultar', 'consultarCom', {
+            'token': token,
+            'clave': clave,
+            'client_id': self._CLIENT_ID_BY_ENVIRONMENT[environment],
+        })
+        if not isinstance(resp, dict):
+            return {'ind_estado': 'desconocido', 'respuesta_xml': None}
+        return {
+            'ind_estado': resp.get('ind-estado', 'desconocido'),
+            'respuesta_xml': resp.get('respuesta-xml'),
+        }
