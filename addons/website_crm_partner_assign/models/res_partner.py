@@ -37,6 +37,8 @@ class ResPartner(models.Model):
     )
     implemented_partner_count = fields.Integer(compute='_compute_implemented_partner_count', store=True)
 
+    _country_id_grade_id_published_idx = models.Index('(country_id, grade_id) WHERE is_published IS TRUE AND grade_id IS NOT NULL AND country_id IS NOT NULL')
+
     @api.depends('implemented_partner_ids.is_published', 'implemented_partner_ids.active')
     def _compute_implemented_partner_count(self):
         rg_result = self.env['res.partner']._read_group(
