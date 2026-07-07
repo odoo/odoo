@@ -3,7 +3,7 @@
 _soap_clients = {}
 
 
-def new_get_soap_client(wsdlurl, timeout=30):
+def new_get_soap_client(wsdlurl, timeout=30, **kwargs):
     # stdnum library does not set the timeout for the zeep Transport class correctly
     # (timeout is to fetch the wsdl and operation_timeout is to perform the call),
     # requiring us to monkey patch the get_soap_client function.
