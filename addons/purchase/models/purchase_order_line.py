@@ -20,8 +20,8 @@ class PurchaseOrderLine(models.Model):
     _order = 'order_id, sequence, id'
 
     name = fields.Text(
-        string='Description', required=True, compute='_compute_price_unit_and_date_planned_and_name', store=True, readonly=False)
-    translated_product_name = fields.Text(compute='_compute_translated_product_name')
+        string='Description', compute='_compute_price_unit_and_date_planned_and_name', store=True, readonly=False)
+    label = fields.Text(string="Label", compute="_compute_label", inverse="_inverse_label")
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits='Product Unit', required=True)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
@@ -486,36 +486,15 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_qty', 'uom_id', 'company_id', 'order_id.partner_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
-            if not line.product_id or line.invoice_lines or not line.company_id or self.env.context.get('skip_uom_conversion') or (line.technical_price_unit != line.price_unit):
+            if not line.product_id or line.invoice_lines or not line.company_id or self.env.context.get('skip_uom_conversion') or line.technical_price_unit != line.price_unit:
                 continue
-            params = line._get_select_sellers_params()
 
             if line.selected_seller_id or not line.date_planned:
                 line.date_planned = line._get_date_planned(line.selected_seller_id).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-            # record product names to avoid resetting custom descriptions
-            default_names = []
-            display_names = []
-            vendors = line.product_id._prepare_sellers(params=params)
-            product_ctx = {'seller_id': None, 'partner_id': None, 'lang': get_lang(line.env, line.partner_id.lang).code}
-            line_without_seller = line.product_id.with_context(product_ctx)
-            default_names.append(line._get_product_purchase_description(line_without_seller))
-            for vendor in vendors:
-                product_ctx = {'seller_id': vendor.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
-                default_names.append(line._get_product_purchase_description(line.product_id.with_context(product_ctx)))
-                display_names.append(line.product_id.with_context(product_ctx).display_name)
-            if not line.name or line.name in default_names:
-                product_ctx = {'seller_id': line.selected_seller_id.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+            if not line.name:
+                product_ctx = {'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
-            else:
-                # Checks that the product vendor and vendor name are correct
-                for vendor, display_name in zip(vendors, display_names):
-                    if line.name.startswith(display_name):
-                        if not line.selected_seller_id:
-                            line.name = line_without_seller.display_name + line.name[len(display_name):]
-                        elif vendor.id != line.selected_seller_id.id:
-                            line.name = display_names[vendors.ids.index(line.selected_seller_id.id)] + line.name[len(display_name):]
-                        break
 
             # If not seller, use the standard price. It needs a proper currency conversion.
             if not line.selected_seller_id:
@@ -567,12 +546,41 @@ class PurchaseOrderLine(models.Model):
             'technical_price_unit': price_unit,
         })
 
-    @api.depends('product_id')
-    def _compute_translated_product_name(self):
+    @api.depends("product_id", "selected_seller_id", "partner_id.lang", "name")
+    def _compute_label(self):
         for line in self:
-            line.translated_product_name = line.product_id.with_context(
-                lang=line.partner_id.lang,
-            ).display_name
+            display_name = line._get_product_display_name()
+
+            if display_name and line.name:
+                line.label = f"{display_name}\n{line.name}"
+            elif display_name:
+                line.label = display_name
+            else:
+                line.label = line.name
+
+    def _inverse_label(self):
+        for line in self:
+            display_name = line._get_product_display_name()
+
+            if display_name and line.label:
+                line.name = (
+                    line.label
+                    .removeprefix(display_name)
+                    .removeprefix("\n")
+                )
+            else:
+                line.name = line.label
+
+    def _get_product_display_name(self):
+        self.ensure_one()
+        if not self.product_id:
+            return ""
+
+        product = self.product_id.with_context(
+            seller_id=self.selected_seller_id.id,
+            lang=get_lang(self.env, self.partner_id.lang).code,
+        )
+        return product.display_name
 
     @api.depends('uom_id', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
@@ -691,13 +699,16 @@ class PurchaseOrderLine(models.Model):
 
     def _get_product_purchase_description(self, product_lang):
         self.ensure_one()
-        name = product_lang.display_name
-        if product_lang.description_purchase:
-            name += '\n' + product_lang.description_purchase
-        product_lang_no_variant_attribute_value_ids = self.with_context(product_lang.env.context).product_no_variant_attribute_value_ids
+        name = product_lang.description_purchase or ""
+        product_lang_no_variant_attribute_value_ids = self.with_context(
+            product_lang.env.context
+        ).product_no_variant_attribute_value_ids
         for no_variant_attribute_value in product_lang_no_variant_attribute_value_ids:
-            name += "\n" + no_variant_attribute_value.attribute_id.name + ': ' + no_variant_attribute_value.name
-
+            if name:
+                name += "\n"
+            name += (
+                f"{no_variant_attribute_value.attribute_id.name}: {no_variant_attribute_value.name}"
+            )
         return name
 
     def _prepare_account_move_line(self, move=False):
@@ -707,7 +718,7 @@ class PurchaseOrderLine(models.Model):
 
         res = {
             'display_type': self.display_type or 'product',
-            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
+            'name': self.name,
             'product_id': self.product_id.id,
             'product_uom_id': self.uom_id.id,
             'quantity': -self.qty_to_invoice if move and move.move_type == 'in_refund' else self.qty_to_invoice,
@@ -770,15 +781,12 @@ class PurchaseOrderLine(models.Model):
             lang=partner_id.lang,
             partner_id=partner_id.id,
         )
-        name = product_lang.with_context(seller_id=seller.id).display_name
-        if product_lang.description_purchase:
-            name += '\n' + product_lang.description_purchase
 
         date_planned = self.order_id.date_planned or self._get_date_planned(seller, po=po)
         discount = seller.discount or 0.0
 
         return {
-            'name': name,
+            'name': product_lang.description_purchase or '',
             'product_qty': product_qty if product_uom else uom_po_qty,
             'product_id': product_id.id,
             'uom_id': product_uom.id or seller.uom_id.id,

@@ -445,11 +445,11 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         const sectionCols = columns.filter(
             (col) =>
                 col.widget === "handle"
-                || col.name === this.titleField
+                || [this.titleField, "product_and_description"].includes(col.name)
                 || (this.isSection(record) && this.sectionColumns.includes(col.name))
         );
         return sectionCols.map((col) => {
-            if (col.name === this.titleField) {
+            if (["product_and_description", this.titleField].includes(col.name)) {
                 return { ...col, colspan: columns.length - sectionCols.length + 1 };
             } else {
                 return { ...col };

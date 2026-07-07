@@ -720,8 +720,8 @@ class TestRepair(TestRepairCommon):
         self.assertEqual(len(res), 1, "The invoice should have one line")
         self.assertEqual(res[0]['product_name'], self.product_storable_serial.display_name, "The product name should be the same")
         self.assertEqual(res[0]['lot_name'], quant.lot_id.name, "The lot name should be the same")
-        self.assertEqual(sale_order.order_line[0].name, f'{self.product_storable_serial.display_name}\nPicking Description')
-        self.assertEqual(invoice.line_ids[0].name, f'{self.product_storable_serial.display_name}\nPicking Description')
+        self.assertEqual(sale_order.order_line[0].name, 'Picking Description')
+        self.assertEqual(invoice.line_ids[0].name, 'Picking Description')
 
     def test_create_repair_order_from_cross_company_sn(self):
         """

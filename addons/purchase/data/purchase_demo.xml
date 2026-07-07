@@ -29,21 +29,18 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_01'),
-                    'name': obj().env.ref('product.product_delivery_01').partner_ref,
                     'price_unit': 79.80,
                     'product_qty': 15.0,
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=3)}),
                 (0, 0, {
                     'product_id': ref('product.product_product_25'),
-                    'name': obj().env.ref('product.product_product_25').partner_ref,
                     'price_unit': 280.00,
                     'product_qty': 5.0,
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=3)}),
                 (0, 0, {
                     'product_id': ref('product.product_product_27'),
-                    'name': obj().env.ref('product.product_product_27').partner_ref,
                     'price_unit': 99.00,
                     'product_qty': 4.0,
                     'uom_id': ref('uom.product_uom_unit'),
@@ -58,14 +55,12 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_02'),
-                    'name': obj().env.ref('product.product_delivery_02').partner_ref,
                     'price_unit': 132.50,
                     'product_qty': 20.0,
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=1)}),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_01'),
-                    'name': obj().env.ref('product.product_delivery_01').partner_ref,
                     'price_unit': 89.0,
                     'product_qty': 5.0,
                     'uom_id': ref('uom.product_uom_unit'),
@@ -94,7 +89,6 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_product_2'),
-                    'name': obj().env.ref('product.product_product_2').partner_ref,
                     'price_unit': 25.50,
                     'product_qty': 10.0,
                     'uom_id': ref('uom.product_uom_hour'),
@@ -109,21 +103,18 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_02'),
-                    'name': obj().env.ref('product.product_delivery_02').partner_ref,
                     'price_unit': 85.50,
                     'product_qty': 6.0,
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=5)}),
                 (0, 0, {
                     'product_id': ref('product.product_product_20'),
-                    'name': obj().env.ref('product.product_product_20').partner_ref,
                     'price_unit': 1690.0,
                     'product_qty': 5.0,
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=5)}),
                 (0, 0, {
                     'product_id': ref('product.product_product_6'),
-                    'name': obj().env.ref('product.product_product_6').partner_ref,
                     'price_unit': 800.0,
                     'product_qty': 7.0,
                     'uom_id': ref('uom.product_uom_unit'),
@@ -154,14 +145,12 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_product_22'),
-                    'name': obj().env.ref('product.product_product_22').partner_ref,
                     'price_unit': 2010.0,
                     'product_qty': 3.0,
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),
                 (0, 0, {
                     'product_id': ref('product.product_product_24'),
-                    'name': obj().env.ref('product.product_product_24').partner_ref,
                     'price_unit': 876.0,
                     'product_qty': 3.0,
                     'uom_id': ref('uom.product_uom_unit'),
@@ -176,21 +165,18 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_02'),
-                    'name': obj().env.ref('product.product_delivery_02').partner_ref,
                     'price_unit': 58.0,
                     'product_qty': 9.0,
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_01'),
-                    'name': obj().env.ref('product.product_delivery_01').partner_ref,
                     'price_unit': 65.0,
                     'product_qty': 3.0,
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),
                 (0, 0, {
                     'product_id': ref('product.consu_delivery_01'),
-                    'name': obj().env.ref('product.consu_delivery_01').partner_ref,
                     'price_unit': 154.5,
                     'product_qty': 4.0,
                     'uom_id': ref('uom.product_uom_unit'),
@@ -205,14 +191,12 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_product_12'),
-                    'name': obj().env.ref('product.product_product_12').partner_ref,
                     'price_unit': 130.5,
                     'product_qty': 5.0,
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_02'),
-                    'name': obj().env.ref('product.product_delivery_02').partner_ref,
                     'price_unit': 38.0,
                     'product_qty': 15.0,
                     'uom_id': ref('uom.product_uom_unit'),
@@ -230,14 +214,12 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_product_16'),
-                    'name': 'Drawer Black',
                     'price_unit': 280.80,
                     'product_qty': 15.0,
                     'uom_id': ref('uom.product_uom_dozen'),
                     'date_planned': time.strftime('%Y-%m-%d')}),
                 (0, 0, {
                     'product_id': ref('product.product_product_20'),
-                    'name': 'Flipover',
                     'price_unit': 450.70,
                     'product_qty': 5.0,
                     'uom_id': ref('uom.product_uom_dozen'),
@@ -255,14 +237,12 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_product_8'),
-                    'name': 'Large Desk',
                     'price_unit': 500.00,
                     'product_qty': 20.0,
                     'uom_id': ref('uom.product_uom_dozen'),
                     'date_planned': time.strftime('%Y-%m-%d')}),
                 (0, 0, {
                     'product_id': ref('product.product_product_5'),
-                    'name': 'Corner Desk Right Sit',
                     'price_unit': 500.0,
                     'product_qty': 5.0,
                     'uom_id': ref('uom.product_uom_dozen'),
@@ -280,7 +260,6 @@
             <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_product_12'),
-                    'name': 'Office Chair Black',
                     'price_unit': 250.50,
                     'product_qty': 10.0,
                     'uom_id': ref('uom.product_uom_dozen'),

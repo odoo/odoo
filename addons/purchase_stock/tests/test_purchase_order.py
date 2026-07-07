@@ -499,12 +499,12 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.env['stock.rule'].run_scheduler()
 
         pol = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
-        self.assertEqual(pol.name, "[C01] Name01")
+        self.assertEqual(pol.label, "[C01] Name01")
 
         with Form(pol.order_id) as po_form:
             with po_form.order_line.edit(0) as pol_form:
                 pol_form.product_qty = 25
-        self.assertEqual(pol.name, "[C02] Name02")
+        self.assertEqual(pol.label, "[C02] Name02")
 
     def test_duplicated_and_modified_picking(self):
         """ Test that the purchase order's received quantity is not modified by a duplicated picking

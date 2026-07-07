@@ -502,7 +502,7 @@ class AccountMove(models.Model):
                     "OriginalInvoiceNumber": self.l10n_tw_edi_ecpay_invoice_id,
                     "OriginalInvoiceDate": convert_utc_time_to_tw_time(self.l10n_tw_edi_invoice_create_date),
                     "OriginalSequenceNumber": line.l10n_tw_edi_ecpay_item_sequence,
-                    "ItemName": line.name[:100],
+                    "ItemName": line._get_product_name_and_description(with_newline=True)[:100],
                     "ItemCount": quantity,
                     "ItemPrice": item_price,
                     "ItemAmount": item_amount,
@@ -510,7 +510,7 @@ class AccountMove(models.Model):
             else:
                 item_list.append({
                     "ItemSeq": line.l10n_tw_edi_ecpay_item_sequence,
-                    "ItemName": line.name[:100],
+                    "ItemName": line._get_product_name_and_description(with_newline=True)[:100],
                     "ItemCount": quantity,
                     "ItemWord": line.product_uom_id.name[:6] if line.product_uom_id else False,
                     "ItemPrice": item_price,

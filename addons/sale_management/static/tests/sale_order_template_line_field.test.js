@@ -104,7 +104,10 @@ class SaleOrderTemplate extends saleManagementModels.SaleOrderTemplate {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                            <field name="label"/>
+                        </column>
                         <field name="product_uom_qty"/>
                         <field name="display_type" column_invisible="1"/>
                         <field name="is_optional" column_invisible="1"/>
@@ -175,7 +178,7 @@ test("drag and drop regular template lines inside optional section resets some f
         resId: 1,
     });
 
-    expect(queryAllTexts('.o_data_row .o_list_text')).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts('.o_data_row .o_column_group_field')).toEqual(EXPECTED_LINE_RECORDS);
 
     await contains('.o_data_row:contains(Sec4-r1):first .o_row_handle').dragAndDrop('.o_data_row:contains(Sec3-sub2):first');
     await contains('.o_data_row:contains(Sec3-sub2-r1):first .o_row_handle').dragAndDrop('.o_data_row:contains(Sec4-sub1):first');
@@ -220,7 +223,7 @@ test("Moving Optional Sections to include some template lines should set quantit
         resId: 1,
     });
 
-    expect(queryAllTexts('.o_data_row .o_list_text')).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts('.o_data_row .o_column_group_field')).toEqual(EXPECTED_LINE_RECORDS);
 
     await contains('.o_data_row:contains(Sec4):first .o_row_handle').dragAndDrop('.o_data_row:contains(Sec3-r2):first');
     await clickSave();
@@ -270,7 +273,7 @@ test("Moving Optional Sections to exclude some template lines should set quantit
         resId: 1,
     });
 
-    expect(queryAllTexts('.o_data_row .o_list_text')).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts('.o_data_row .o_column_group_field')).toEqual(EXPECTED_LINE_RECORDS);
 
     await contains('.o_data_row:contains(Sec3):first .o_row_handle').dragAndDrop('.o_data_row:contains(Sec4):first');
     await clickSave();
@@ -284,7 +287,7 @@ test("Can't mark section hidden if optional and vice versa", async () => {
         resId: 1,
     });
 
-    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row .o_column_group_field")).toEqual(EXPECTED_LINE_RECORDS);
 
     await contains(".o_data_row:contains(Sec1) .o_list_section_options button").click();
     expect(".o-dropdown-item:contains(Set Optional)").toHaveClass("disabled", {
@@ -325,7 +328,7 @@ test("Setting section optional should reset some fields", async () => {
         resId: 1,
     });
 
-    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row .o_column_group_field")).toEqual(EXPECTED_LINE_RECORDS);
 
     await contains(".o_data_row:contains(Sec3-sub2) .o_list_section_options button").click();
     await contains(".o-dropdown-item:contains(Hide Composition)").click();
@@ -377,7 +380,7 @@ test("Unsetting optional section should reset quantity", async () => {
         resId: 1,
     });
 
-    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row .o_column_group_field")).toEqual(EXPECTED_LINE_RECORDS);
 
     expect(".o_data_row:contains(Sec3-r1)").toHaveClass("text-primary", {
         message: "Line under optional section should be text-primary",
@@ -416,7 +419,7 @@ test("Drag and drop optional subsection under hidden section resets its optional
         resId: 1,
     });
 
-    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row .o_column_group_field")).toEqual(EXPECTED_LINE_RECORDS);
 
     await contains(".o_data_row:contains(Sec3-sub1):first .o_row_handle").dragAndDrop(
         ".o_data_row:contains(Sec3):first"

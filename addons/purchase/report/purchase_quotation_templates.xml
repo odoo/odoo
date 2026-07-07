@@ -48,7 +48,7 @@
                         <tr t-att-class="'fw-bolder o_line_section' if order_line.display_type == 'line_section' else 'fw-bold o_line_subsection' if order_line.display_type == 'line_subsection' else 'fst-italic o_line_note' if order_line.display_type == 'line_note' else ''">
                             <t t-if="not order_line.display_type">
                                 <td id="product">
-                                    <span t-field="order_line.name"/>
+                                    <span t-field="order_line.label"/>
                                 </td>
                                 <td class="text-center">
                                     <span t-field="order_line.date_planned" t-options="{'date_only': 'true'}"/>

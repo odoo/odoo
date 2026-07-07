@@ -230,7 +230,7 @@ class AccountMove(models.Model):
             {
                 'NrWierszaFa': index + 1,
                 'UU_ID': f"odoo-line-{line.id}",
-                'P_7': line.name,
+                'P_7': line._get_product_name_and_description(with_newline=True),
                 'P_8A': line.product_uom_id.name or 'szt.',
                 'P_8B': line.quantity * sign,
                 'P_9A': float_repr(line.price_unit, 8),

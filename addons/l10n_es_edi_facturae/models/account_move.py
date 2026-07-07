@@ -343,7 +343,7 @@ class AccountMove(models.Model):
             'FileReference': invoice_ref,
             'ReceiverContractReference': invoice_ref,
             'FileDate': fields.Date.context_today(self),
-            'ItemDescription': line.name,
+            'ItemDescription': line.label,
             'Quantity': line.quantity,
             'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
             'DiscountsAndRebates': [],

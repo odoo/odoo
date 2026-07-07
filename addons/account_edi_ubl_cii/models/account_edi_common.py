@@ -1566,6 +1566,12 @@ class AccountEdiCommon(models.AbstractModel):
             to_write = line_collected_values['to_write']
             if product := line_collected_values['product_values'].get('product'):
                 to_write['product_id'] = product.id
+                # If the imported description matches the product's name, omit the `name`
+                # so the default product description is used instead of storing a redundant value.
+                if to_write.get('name') == product.name:
+                    to_write.pop('name')
+                elif to_write.get('name', '').startswith(f"{product.name}\n"):
+                    to_write['name'] = to_write.get('name').removeprefix(f"{product.name}\n")
             else:
                 to_write['product_id'] = False
 

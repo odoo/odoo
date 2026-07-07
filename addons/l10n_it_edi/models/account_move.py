@@ -497,7 +497,7 @@ class AccountMove(models.Model):
             # Down payment lines:
             # If there was a down paid amount that has been deducted from this move,
             # we need to put a reference to the down payment invoice in the DatiFattureCollegate tag
-            description = line.name
+            description = line._get_product_name_and_description()
             if not is_downpayment and price_subtotal < 0:
                 downpayment_moves = line._get_downpayment_lines().move_id
                 if downpayment_moves:
@@ -506,7 +506,7 @@ class AccountMove(models.Model):
                     description = f"{description}{sep}{downpayment_moves_description}"
             # Workaround: remove line breaks due to Tax Agency portal bug.
             # This deviates from Odoo's standard behavior and must be reviewed if the issue gets fixed.
-            description = description and description.replace('\n', ' ').strip() or "NO NAME"
+            description = (description and description.strip()) or "NO NAME"
 
             # Price unit.
             if quantity:

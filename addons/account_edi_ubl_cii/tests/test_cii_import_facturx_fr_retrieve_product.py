@@ -13,7 +13,7 @@ class TestCiiImportFacturXFRRetrieveProduct(CiiImportFacturXFR):
 
         # Not enough information to retrieve the product.
         self.assertRecordValues(invoice.invoice_line_ids, [{
-            'name': '[1234] XYZ',
+            'label': '[1234] XYZ',
             'product_id': None,
         }])
 
@@ -25,7 +25,7 @@ class TestCiiImportFacturXFRRetrieveProduct(CiiImportFacturXFR):
         product = self._create_product(name='XYZ')
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_name')
         self.assertRecordValues(invoice.invoice_line_ids, [{
-            'name': 'XYZ',
+            'label': 'XYZ',
             'product_id': product.id,
         }])
 
@@ -33,7 +33,7 @@ class TestCiiImportFacturXFRRetrieveProduct(CiiImportFacturXFR):
         product = self._create_product(name='XYZ', barcode='12345678912345')
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_barcode')
         self.assertRecordValues(invoice.invoice_line_ids, [{
-            'name': 'XYZ',
+            'label': 'XYZ',
             'product_id': product.id,
         }])
 
@@ -41,7 +41,7 @@ class TestCiiImportFacturXFRRetrieveProduct(CiiImportFacturXFR):
         product = self._create_product(name='XYZ', default_code='abcdefghij')
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_default_code')
         self.assertRecordValues(invoice.invoice_line_ids, [{
-            'name': '[abcdefghij] XYZ',
+            'label': '[abcdefghij] XYZ',
             'product_id': product.id,
         }])
 

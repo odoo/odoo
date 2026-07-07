@@ -266,10 +266,7 @@ class SaleOrderLine(models.Model):
         allocated_hours = 0.0
         if self.product_id.service_type != 'milestones':
             allocated_hours = self._convert_qty_company_hours(self.company_id)
-        sale_line_name_parts = self.name.split('\n')
-
-        if sale_line_name_parts and sale_line_name_parts[0] == self.product_id.display_name:
-            sale_line_name_parts.pop(0)
+        sale_line_name_parts = (self.name or '').split('\n')
 
         if len(sale_line_name_parts) == 1 and sale_line_name_parts[0]:
             title = sale_line_name_parts[0]
@@ -454,7 +451,7 @@ class SaleOrderLine(models.Model):
             milestones.write(write_vals)
         else:
             milestone = self.env['project.milestone'].create({
-                'name': self.name,
+                'name': self.label,
                 'project_id': project.id or self.order_id.project_id.id,
                 'sale_line_id': self.id,
                 'quantity_percentage': 1,

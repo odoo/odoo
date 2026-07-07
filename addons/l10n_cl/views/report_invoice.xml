@@ -202,7 +202,7 @@
             </div>
         </xpath>
 
-        <xpath expr="//span[@t-field='line.name']" position="replace">
+        <xpath expr="//span[@t-field='line.label']" position="replace">
             <t t-set="all_taxes" t-value="'all_taxes'"/>
             <t t-if="'second_currency' in line_amounts" t-set="line_second_currency_round" t-value="line_amounts['second_currency']['round_currency']"/>
             <span t-out="line_amounts['line_description']" t-options="{'widget': 'text'}"/>

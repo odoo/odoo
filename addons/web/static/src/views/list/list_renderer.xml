@@ -348,10 +348,11 @@
                         t-att-class="this.getCellClass(column, record)"
                         t-att-name="column.name"
                         t-att-data-column-id="column.id"
+                        t-att-colspan="column.colspan"
                         t-custom-click="(ev, isMiddleClick) => this.onCellClicked(record, column, ev, isMiddleClick)"
                         tabindex="-1">
                         <t t-foreach="column.fields" t-as="fieldInfo" t-key="fieldInfo.id">
-                            <t t-set="subIsInvisible" t-value="this.evalInvisible(fieldInfo.invisible, record) or !(fieldInfo.name in record.data) or (fieldInfo.optional and !this.optionalActiveFields[fieldInfo.name])"/>
+                            <t t-set="subIsInvisible" t-value="!this.isColumnGroupFieldVisible(fieldInfo, record)"/>
                             <div t-if="!subIsInvisible" class="o_column_group_field" t-att-class="this.getColumnGroupFieldClasses(fieldInfo, record)" t-att-data-field-name="fieldInfo.name">
                                 <t t-if="this.canUseFormatter(fieldInfo, record)" t-out="this.getFormattedValue(fieldInfo, record)"/>
                                 <Field t-else=""

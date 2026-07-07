@@ -625,12 +625,12 @@ class TestPurchase(AccountTestInvoicingCommon):
             line.product_id = self.product_a
             line.product_qty = 1
         po = po_form.save()
-        self.assertEqual(po.order_line.name, '[Code 1] Name 1')
+        self.assertEqual(po.order_line.label, '[Code 1] Name 1')
 
-        with po_form.order_line.edit(0) as line:
+        with po_form.order_line.new() as line:
             line.product_id = self.product_b
         po = po_form.save()
-        self.assertEqual(po.order_line.name, '[Code 3] Name 3')
+        self.assertEqual(po.order_line[1].label, '[Code 3] Name 3')
 
     def test_purchase_order_line_product_taxes_on_branch(self):
         """ Check taxes populated on PO lines from product on branch company.
@@ -765,12 +765,12 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_qty = 10
         po = po_form.save()
         self.assertEqual(po.order_line.price_unit, 5)
-        self.assertEqual(po.order_line.name, '[Vendor A] product_a')
+        self.assertEqual(po.order_line.label, '[Vendor A] product_a')
         self.assertEqual(po.order_line.product_qty, 10)
         self.assertEqual(po.order_line.date_planned, fields.Datetime.now() + timedelta(days=5))
         po.partner_id = self.partner_b
         self.assertEqual(po.order_line.price_unit, 10)
-        self.assertEqual(po.order_line.name, '[Vendor B] product_a')
+        self.assertEqual(po.order_line.label, '[Vendor B] product_a')
         self.assertEqual(po.order_line.product_qty, 10)
         self.assertEqual(po.order_line.date_planned, fields.Datetime.now() + timedelta(days=6))
 
@@ -1015,7 +1015,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = self.product_a
         po = po_form.save()
         self.assertEqual(po.order_line.product_qty, 10.0)
-        self.assertEqual(po.order_line.name, '[HHH] product_a')
+        self.assertEqual(po.order_line.label, '[HHH] product_a')
 
     def test_purchase_order_uom(self):
         fuzzy_drink = self.env['product.product'].create({
@@ -1265,7 +1265,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             'order_line': [Command.create({
                     'product_id': self.product_a.id,
                     'product_qty': 1,
-                    'name': "[Code 1] Name 1\nSome Variant: Some Value: Some Text"
+                    'name': "Some Variant: Some Value: Some Text"
                 }), Command.create({
                     'product_id': self.product_a.id,
                     'product_qty': 1,
@@ -1277,24 +1277,39 @@ class TestPurchase(AccountTestInvoicingCommon):
             ],
         })
 
-        self.assertEqual(po.order_line[0].name, "[Code 1] Name 1\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "[Code 1] Name 1")
+        self.assertEqual(
+            po.order_line[0].label,
+            "[Code 1] Name 1\nSome Variant: Some Value: Some Text",
+        )
+        self.assertEqual(po.order_line[1].label, "[Code 1] Name 1")
         self.assertEqual(po.order_line[2].name, custom_desc)
         po.partner_id = self.partner.id
-        self.assertEqual(po.order_line[0].name, "product_a\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "product_a")
+        self.assertEqual(
+            po.order_line[0].label,
+            "product_a\nSome Variant: Some Value: Some Text",
+        )
+        self.assertEqual(po.order_line[1].label, "product_a")
         self.assertEqual(po.order_line[2].name, custom_desc)
         po.partner_id = self.partner_b.id
-        self.assertEqual(po.order_line[0].name, "[Code 2] Name 2\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "[Code 2] Name 2")
+        self.assertEqual(
+            po.order_line[0].label,
+            "[Code 2] Name 2\nSome Variant: Some Value: Some Text",
+        )
+        self.assertEqual(po.order_line[1].label, "[Code 2] Name 2")
         self.assertEqual(po.order_line[2].name, custom_desc)
         po.partner_id = partner_c.id
-        self.assertEqual(po.order_line[0].name, "product_a\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "product_a")
+        self.assertEqual(
+            po.order_line[0].label,
+            "product_a\nSome Variant: Some Value: Some Text",
+        )
+        self.assertEqual(po.order_line[1].label, "product_a")
         self.assertEqual(po.order_line[2].name, custom_desc)
         po.partner_id = self.partner_a.id
-        self.assertEqual(po.order_line[0].name, "[Code 1] Name 1\nSome Variant: Some Value: Some Text")
-        self.assertEqual(po.order_line[1].name, "[Code 1] Name 1")
+        self.assertEqual(
+            po.order_line[0].label,
+            "[Code 1] Name 1\nSome Variant: Some Value: Some Text",
+        )
+        self.assertEqual(po.order_line[1].label, "[Code 1] Name 1")
         self.assertEqual(po.order_line[2].name, custom_desc)
 
     def test_supplier_info_uom_on_variant(self):
