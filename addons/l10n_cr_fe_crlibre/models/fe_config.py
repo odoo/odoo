@@ -1,5 +1,5 @@
-from odoo import fields, models, _, api
-from odoo.exceptions import UserError, ValidationError
+from odoo import fields, models, _
+from odoo.exceptions import UserError
 
 
 class L10nCrFeConfig(models.Model):
@@ -44,17 +44,10 @@ class L10nCrFeConfig(models.Model):
     crlibre_api_password = fields.Char(groups='l10n_cr_fe_crlibre.group_fe_admin')
     certificate_download_code = fields.Char(readonly=True)
 
-    @api.constrains('company_id')
-    def _check_company_id_unique(self):
-        for record in self:
-            if record.company_id:
-                existing = self.search([
-                    ('company_id', '=', record.company_id.id),
-                    ('id', '!=', record.id)
-                ])
-                if existing:
-                    raise ValidationError(
-                        _("Ya existe una configuración de Factura Electrónica para esta empresa."))
+    _company_id_uniq = models.Constraint(
+        'UNIQUE (company_id)',
+        "Ya existe una configuración de Factura Electrónica para esta empresa.",
+    )
 
     def _get_for_company(self, company):
         config = self.search([('company_id', '=', company.id)], limit=1)

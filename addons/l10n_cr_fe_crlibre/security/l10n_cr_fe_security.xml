@@ -1,7 +1,10 @@
 <odoo>
+    <record id="module_category_l10n_cr_fe" model="ir.module.category">
+        <field name="name">Facturación Electrónica CR</field>
+    </record>
     <record id="res_groups_privilege_l10n_cr_fe" model="res.groups.privilege">
         <field name="name">Facturación Electrónica CR</field>
-        <field name="category_id" ref="base.module_category_tools"/>
+        <field name="category_id" ref="module_category_l10n_cr_fe"/>
     </record>
     <record id="group_fe_admin" model="res.groups">
         <field name="name">Administrador</field>
