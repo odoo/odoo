@@ -52,3 +52,29 @@ class TestFeConfig(TransactionCase):
         self.env.ref('base.group_user').write({'user_ids': [(4, plain_user.id)]})
         with self.assertRaises(AccessError):
             self.config.with_user(plain_user).read(['hacienda_password'])
+
+    def test_next_consecutivo_has_no_gaps(self):
+        first = self.config._l10n_cr_fe_next_consecutivo()
+        second = self.config._l10n_cr_fe_next_consecutivo()
+        self.assertEqual(len(first), 10)
+        self.assertEqual(int(second), int(first) + 1)
+
+    def test_next_consecutivo_independent_per_company(self):
+        other_company = self.env['res.company'].create({'name': 'Otra Empresa FE'})
+        other_config = self.env['l10n_cr.fe.config'].create({
+            'company_id': other_company.id,
+            'environment': 'stag', 'identification_type': '01',
+            'identification_number': '999999999', 'legal_name': 'Otra SA',
+            'economic_activity_code': '011101',
+            'province': '1', 'canton': '01', 'district': '01', 'neighborhood': '01',
+            'address_detail': 'x', 'email': 'x@x.cr',
+        })
+        first_this = self.config._l10n_cr_fe_next_consecutivo()
+        first_other = other_config._l10n_cr_fe_next_consecutivo()
+        second_this = self.config._l10n_cr_fe_next_consecutivo()
+        second_other = other_config._l10n_cr_fe_next_consecutivo()
+        # Each company's sequence is independent, starting from 1
+        self.assertEqual(first_this, '0000000001')
+        self.assertEqual(first_other, '0000000001')
+        self.assertEqual(second_this, '0000000002')
+        self.assertEqual(second_other, '0000000002')

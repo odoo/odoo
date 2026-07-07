@@ -55,3 +55,18 @@ class L10nCrFeConfig(models.Model):
             raise UserError(
                 _("No hay configuración de Factura Electrónica para la empresa %s.") % company.name)
         return config
+
+    def _l10n_cr_fe_next_consecutivo(self):
+        self.ensure_one()
+        code = 'l10n_cr_fe.consecutivo.fe.%s' % self.company_id.id
+        sequence = self.env['ir.sequence'].sudo().search([('code', '=', code)], limit=1)
+        if not sequence:
+            sequence = self.env['ir.sequence'].sudo().create({
+                'name': 'Consecutivo FE - %s' % self.company_id.name,
+                'code': code,
+                'company_id': self.company_id.id,
+                'padding': 10,
+                'number_increment': 1,
+                'implementation': 'no_gap',
+            })
+        return sequence.next_by_id()

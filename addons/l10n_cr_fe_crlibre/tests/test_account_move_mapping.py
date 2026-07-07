@@ -43,6 +43,8 @@ class TestAccountMoveMapping(TransactionCase):
         self.assertEqual(params['cedula'], '702320717')
         self.assertEqual(len(params['codigoSeguridad']), 8)
         self.assertTrue(params['codigoSeguridad'].isdigit())
+        self.assertEqual(len(params['consecutivo']), 20)
+        self.assertTrue(params['consecutivo'].isdigit())
 
     def test_build_genxml_params_uses_company_config(self):
         import json
