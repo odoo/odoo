@@ -942,8 +942,7 @@ class ResPartner(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        if self.env.context.get('import_file'):
-            res.env.remove_to_compute(self._fields['vies_valid'], res)
+        res.env.remove_to_compute(self._fields['vies_valid'], res)
         return res
 
     def write(self, vals):
