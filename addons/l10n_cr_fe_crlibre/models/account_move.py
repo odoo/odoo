@@ -65,7 +65,7 @@ class AccountMove(models.Model):
             'tipoCedula': config.identification_type == '02' and 'juridico' or 'fisico',
             'cedula': config.identification_number,
             'situacion': 'normal',
-            'consecutivo': str(self.id),
+            'consecutivo': config.branch_number + config.terminal_number + '01' + config._l10n_cr_fe_next_consecutivo(),
             'codigoSeguridad': str(random.randint(0, 99999999)).zfill(8),
             'sucursal': config.branch_number,
             'terminal': config.terminal_number,
