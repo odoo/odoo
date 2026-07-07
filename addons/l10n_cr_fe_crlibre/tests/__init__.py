@@ -6,3 +6,4 @@ from . import test_action_post_fe
 from . import test_account_move_fields
 from . import test_consultar_estado_fe
 from . import test_acceptance_email
+from . import test_reintentar_fe
