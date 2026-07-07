@@ -1,11 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.bus.controllers.websocket import WebsocketController
+from odoo.addons.mail.tools.discuss import add_guest_to_context
 from odoo.http import request, route, SessionExpiredException
 
 
 class WebsocketControllerPresence(WebsocketController):
     """Override of websocket controller to add mail features (presence in particular)."""
+
+    @route()
+    @add_guest_to_context
+    def peek_notifications(self, channels, last, is_first_poll=False):
+        return super().peek_notifications(channels, last, is_first_poll)
 
     @route("/websocket/update_bus_presence", type="jsonrpc", auth="public", cors="*")
     def update_bus_presence(self, inactivity_period):
