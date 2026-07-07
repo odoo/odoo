@@ -2,7 +2,7 @@ import json
 import random
 from datetime import datetime
 
-from odoo import fields, models
+from odoo import fields, models, _
 from odoo.exceptions import UserError
 
 from .crlibre_client import CrlibreApiError
@@ -24,13 +24,15 @@ class AccountMove(models.Model):
 
     def _l10n_cr_fe_build_detalles(self):
         self.ensure_one()
-        cabys = self._l10n_cr_fe_param('default_cabys')
         detalles = []
         for line in self.invoice_line_ids.filtered(lambda l: l.display_type == 'product'):
+            if not line.product_id.l10n_cr_fe_cabys:
+                raise UserError(
+                    _("El producto '%s' no tiene código CABYS configurado.") % line.product_id.display_name)
             subtotal = line.price_subtotal
             impuesto_neto = line.price_total - line.price_subtotal
             detalle = {
-                'codigoCABYS': cabys,
+                'codigoCABYS': line.product_id.l10n_cr_fe_cabys,
                 'cantidad': line.quantity,
                 'unidadMedida': 'Unid',
                 'detalle': line.name or (line.product_id.display_name or 'Producto'),
