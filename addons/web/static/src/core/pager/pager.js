@@ -1,8 +1,7 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { useAutofocus } from "../utils/hooks";
 import { clamp } from "../utils/numbers";
 
-import { Component, EventBus, props, proxy, t, useListener } from "@odoo/owl";
+import { Component, EventBus, props, proxy, t, useEffect, useListener } from "@odoo/owl";
 
 export const PAGER_UPDATED_EVENT = "PAGER:UPDATED";
 export const pagerBus = new EventBus();
@@ -40,18 +39,14 @@ export class Pager extends Component {
         this.inputRef = useAutofocus();
         useListener(document, "mousedown", this.onClickAway.bind(this), { capture: true });
         let firstMount = true;
-        useLayoutEffect(
-            () => {
-                if (!firstMount && this.env.isSmall) {
-                    pagerBus.trigger(PAGER_UPDATED_EVENT, {
-                        value: this.value,
-                        total: this.props.total,
-                    });
-                }
-                firstMount = false;
-            },
-            () => [this.props.offset, this.props.limit, this.props.total]
-        );
+        useEffect(() => {
+            const { offset, limit, total } = this.props;
+            const value = this.value;
+            if (!firstMount && this.env.isSmall) {
+                pagerBus.trigger(PAGER_UPDATED_EVENT, { offset, limit, value, total });
+            }
+            firstMount = false;
+        });
     }
 
     /**
