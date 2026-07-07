@@ -429,18 +429,15 @@ var owl = (() => {
   function onReadTargetKey(target, key, atom) {
     onReadAtom(atom ?? getTargetKeyAtom(target, key));
   }
-  function onWriteTargetKey(target, key, atom) {
-    if (!atom) {
-      const keyToAtomItem = targetToKeysToAtomItem.get(target);
-      if (!keyToAtomItem) {
-        return;
-      }
-      if (!keyToAtomItem.has(key)) {
-        return;
-      }
-      atom = keyToAtomItem.get(key);
+  function onWriteTargetKey(target, key) {
+    const keyToAtomItem = targetToKeysToAtomItem.get(target);
+    if (!keyToAtomItem) {
+      return;
     }
-    onWriteAtom(atom);
+    if (!keyToAtomItem.has(key)) {
+      return;
+    }
+    onWriteAtom(keyToAtomItem.get(key));
   }
   var targets = /* @__PURE__ */ new WeakMap();
   var proxyCache = /* @__PURE__ */ new WeakMap();
@@ -497,18 +494,30 @@ var owl = (() => {
         const hadKey = objectHasOwnProperty.call(target, key);
         const originalValue = Reflect.get(target, key, receiver);
         const ret = Reflect.set(target, key, toRaw(value), receiver);
-        if (!hadKey && objectHasOwnProperty.call(target, key)) {
-          onWriteTargetKey(target, KEYCHANGES, atom);
-        }
-        if (originalValue !== Reflect.get(target, key, receiver) || key === "length" && Array.isArray(target)) {
-          onWriteTargetKey(target, key, atom);
+        const keyCreated = !hadKey && objectHasOwnProperty.call(target, key);
+        const valueChanged = originalValue !== Reflect.get(target, key, receiver);
+        if (atom) {
+          if (keyCreated || valueChanged) {
+            onWriteAtom(atom);
+          }
+        } else {
+          if (keyCreated) {
+            onWriteTargetKey(target, KEYCHANGES);
+          }
+          if (valueChanged || key === "length" && Array.isArray(target)) {
+            onWriteTargetKey(target, key);
+          }
         }
         return ret;
       },
       deleteProperty(target, key) {
         const ret = Reflect.deleteProperty(target, key);
-        onWriteTargetKey(target, KEYCHANGES, atom);
-        onWriteTargetKey(target, key, atom);
+        if (atom) {
+          onWriteAtom(atom);
+        } else {
+          onWriteTargetKey(target, KEYCHANGES);
+          onWriteTargetKey(target, key);
+        }
         return ret;
       },
       ownKeys(target) {
@@ -561,10 +570,10 @@ var owl = (() => {
       const ret = target[setterName](key, value);
       const hasKey = target.has(key);
       if (hadKey !== hasKey) {
-        onWriteTargetKey(target, KEYCHANGES, null);
+        onWriteTargetKey(target, KEYCHANGES);
       }
       if (originalValue !== target[getterName](key)) {
-        onWriteTargetKey(target, key, null);
+        onWriteTargetKey(target, key);
       }
       return ret;
     };
@@ -573,9 +582,9 @@ var owl = (() => {
     return () => {
       const allKeys = [...target.keys()];
       target.clear();
-      onWriteTargetKey(target, KEYCHANGES, null);
+      onWriteTargetKey(target, KEYCHANGES);
       for (const key of allKeys) {
-        onWriteTargetKey(target, key, null);
+        onWriteTargetKey(target, key);
       }
     };
   }
@@ -1092,6 +1101,16 @@ ${issueStrings}`);
       }
     });
     validate[intersectionSymbol] = types22;
+    validate.toShape = () => {
+      const shape = {};
+      for (const member of types22) {
+        const memberShape = typeof member.toShape === "function" ? member.toShape() : void 0;
+        if (memberShape && !Array.isArray(memberShape)) {
+          Object.assign(shape, memberShape);
+        }
+      }
+      return shape;
+    };
     return validate;
   }
   function literalType(literal) {
@@ -1167,6 +1186,7 @@ ${issueStrings}`);
     if (!Array.isArray(schema)) {
       validate[shapeSymbol] = schema;
     }
+    validate.toShape = () => schema;
     return validate;
   }
   function strictObjectType(schema) {
@@ -1176,6 +1196,7 @@ ${issueStrings}`);
     if (!Array.isArray(schema)) {
       validate[shapeSymbol] = schema;
     }
+    validate.toShape = () => schema;
     return validate;
   }
   function promiseType(type) {
@@ -1603,7 +1624,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.41";
+  var version = "3.0.0-alpha.42";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -4349,6 +4370,13 @@ ${issueStrings}`);
       let error = null;
       try {
         node = new ComponentNode(Root, props2, this, null, null);
+        const subConfig = config3;
+        if (subConfig.pluginManager) {
+          node.pluginManager = subConfig.pluginManager;
+        }
+        if (subConfig.onError) {
+          nodeErrorHandlers.set(node, [subConfig.onError]);
+        }
       } catch (e) {
         error = e;
         reject(e);
@@ -4409,7 +4437,9 @@ ${issueStrings}`);
         return promise;
       };
       const root = {
-        node,
+        get prepared() {
+          return fiber ? fiber.counter === 0 : false;
+        },
         promise,
         prepare,
         mount: mount3,
@@ -4439,6 +4469,9 @@ ${issueStrings}`);
   };
   async function mount2(C, target, config3 = {}) {
     const app = new App(config3);
+    if (app.pluginManager.status < STATUS.MOUNTED) {
+      await app.pluginManager.ready;
+    }
     const root = app.createRoot(C, config3);
     return root.mount(target, config3);
   }
@@ -4675,9 +4708,18 @@ ${issueStrings}`);
         if (!target) {
           return;
         }
-        root = app.createRoot(PortalContent, { props: { slots } });
-        root.node.pluginManager = portalNode.pluginManager;
-        nodeErrorHandlers.set(root.node, [forwardErrorToParent(portalNode)]);
+        root = app.createRoot(PortalContent, {
+          props: { slots },
+          // Forward the plugin chain from this Portal (createRoot defaults
+          // sub-roots to the app-level plugin manager) so `providePlugins`
+          // contributions from ancestors are visible inside the portaled content.
+          pluginManager: portalNode.pluginManager,
+          // Route errors from the portaled subtree back through Portal's parent
+          // chain so consumer `onError` handlers still catch them. Without this,
+          // sub-root errors would propagate to app._handleError and tear down
+          // the whole app.
+          onError: forwardErrorToParent(portalNode)
+        });
         root.mount(target);
         return tearDown;
       });
@@ -4712,13 +4754,18 @@ ${issueStrings}`);
     setup() {
       const suspenseNode = this.__owl__;
       const root = suspenseNode.app.createRoot(SuspenseHost, {
-        props: { slots: this.props.slots }
+        props: { slots: this.props.slots },
+        // Thread the plugin manager so `providePlugins` contributions from
+        // ancestors are visible inside the default slot. (createRoot defaults
+        // sub-roots to the app-level plugin manager; override here.) Destroy
+        // cascade is handled explicitly below via `onWillDestroy`.
+        pluginManager: suspenseNode.pluginManager,
+        // Route errors from the sub-root back into Suspense's parent chain so
+        // consumer `onError` handlers still catch descendant failures.
+        onError: forwardErrorToParent(suspenseNode)
       });
-      root.node.pluginManager = suspenseNode.pluginManager;
-      nodeErrorHandlers.set(root.node, [forwardErrorToParent(suspenseNode)]);
       root.prepare().then(() => this.prepared.set(true));
-      const fiber = root.node.fiber;
-      if (fiber && fiber.counter === 0) {
+      if (root.prepared) {
         this.prepared.set(true);
       }
       onMounted(() => this.mounted.set(true));
@@ -4761,8 +4808,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-07-02T07:21:41.069Z",
-    hash: "e9f79781",
+    date: "2026-07-07T08:37:30.925Z",
+    hash: "55111162",
     url: "https://github.com/odoo/owl"
   };
 

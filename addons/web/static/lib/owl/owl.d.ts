@@ -171,6 +171,20 @@ export type Type<T> = T & {
 	optional(value: T extends Function ? () => T : T | (() => T)): WithDefault<T>;
 	type: T;
 };
+/**
+ * A {@link Type} that also carries the object shape it was built from, exposed
+ * through `toShape()`: `t.object`/`t.strictObject` return their own shape, and
+ * `t.and` merges the shapes of the members that have one. The shape is the
+ * `{ key: type }` map (with `.optional()` brands intact), so it can be reused —
+ * most notably to drive component props: `props(schema.toShape())`.
+ */
+export type ShapeType<Shape, T> = Type<T> & {
+	toShape(): Shape;
+};
+export type MemberShape<M> = M extends {
+	toShape(): infer S;
+} ? S : never;
+export type MergedShape<T extends any[]> = UnionToIntersection<MemberShape<T[number]>>;
 export type IsAny<T> = 0 extends 1 & T ? true : false;
 export type HasDefault<T> = IsAny<T> extends true ? false : T extends {
 	[hasDefault]: any;
@@ -244,16 +258,16 @@ declare function functionType<const P extends unknown[]>(parameters: P): Type<(.
 declare function functionType<const P extends unknown[], R>(): Type<(...parameters: P) => R>;
 declare function functionType<const P extends unknown[], R>(parameters: P, result: R): Type<(...parameters: StripBrandsAll<P>) => StripBrands<R>>;
 declare function instanceType<T extends Constructor>(constructor: T): Type<InstanceType<T>>;
-declare function intersection<T extends any[]>(types: T): Type<UnionToIntersection<StripBrands<T[number]>>>;
+declare function intersection<T extends any[]>(types: T): ShapeType<MergedShape<T>, UnionToIntersection<StripBrands<T[number]>>>;
 export type LiteralTypes = number | string | boolean | null | undefined;
 declare function literalType<const T extends LiteralTypes>(literal: T): Type<T>;
 declare function literalSelection<const T extends LiteralTypes>(literals: T[]): Type<T>;
-declare function objectType(): Type<Record<string, any>>;
-declare function objectType<const Keys extends string[]>(keys: Keys): Type<ResolveOptionalEntries<KeyedObject<Keys>>>;
-declare function objectType<Shape extends {}>(): Type<ResolveOptionalEntries<Shape>>;
-declare function objectType<Shape extends {}>(shape: Shape): Type<ResolveOptionalEntries<Shape>>;
-declare function strictObjectType<const Keys extends string[]>(keys: Keys): Type<ResolveOptionalEntries<KeyedObject<Keys>>>;
-declare function strictObjectType<Shape extends {}>(shape: Shape): Type<ResolveOptionalEntries<Shape>>;
+declare function objectType(): ShapeType<Record<string, any>, Record<string, any>>;
+declare function objectType<const Keys extends string[]>(keys: Keys): ShapeType<Keys, ResolveOptionalEntries<KeyedObject<Keys>>>;
+declare function objectType<Shape extends {}>(): ShapeType<Shape, ResolveOptionalEntries<Shape>>;
+declare function objectType<Shape extends {}>(shape: Shape): ShapeType<Shape, ResolveOptionalEntries<Shape>>;
+declare function strictObjectType<const Keys extends string[]>(keys: Keys): ShapeType<Keys, ResolveOptionalEntries<KeyedObject<Keys>>>;
+declare function strictObjectType<Shape extends {}>(shape: Shape): ShapeType<Shape, ResolveOptionalEntries<Shape>>;
 declare function promiseType(): Type<Promise<void>>;
 declare function promiseType<T>(type: T): Type<Promise<StripBrands<T>>>;
 declare function recordType(): Type<Record<PropertyKey, any>>;
@@ -819,8 +833,8 @@ export interface AppConfig extends TemplateSetConfig {
 	test?: boolean;
 }
 export interface Root<T extends ComponentConstructor> {
-	node: ComponentNode;
 	promise: Promise<ComponentInstance<T>>;
+	readonly prepared: boolean;
 	prepare(): Promise<void>;
 	mount(target: MountTarget, options?: MountOptions): Promise<ComponentInstance<T>>;
 	destroy(): void;
