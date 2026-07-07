@@ -18,8 +18,11 @@
                     <group>
                         <field name="l10n_cr_fe_clave"/>
                         <field name="l10n_cr_fe_consecutivo"/>
+                        <field name="l10n_cr_fe_motivo_rechazo" invisible="l10n_cr_fe_state != 'rechazado'"/>
                     </group>
                     <field name="l10n_cr_fe_xml"/>
+                    <field name="l10n_cr_fe_xml_firmado"/>
+                    <field name="l10n_cr_fe_respuesta_xml"/>
                 </page>
             </xpath>
         </field>

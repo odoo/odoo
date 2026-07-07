@@ -14,8 +14,18 @@ class AccountMove(models.Model):
     l10n_cr_fe_clave = fields.Char(string="Clave FE", readonly=True, copy=False)
     l10n_cr_fe_consecutivo = fields.Char(string="Consecutivo FE", readonly=True, copy=False)
     l10n_cr_fe_xml = fields.Text(string="XML FE", readonly=True, copy=False)
+    l10n_cr_fe_xml_firmado = fields.Text(string="XML Firmado FE", readonly=True, copy=False)
+    l10n_cr_fe_respuesta_xml = fields.Text(string="Respuesta Hacienda", readonly=True, copy=False)
+    l10n_cr_fe_motivo_rechazo = fields.Char(string="Motivo de rechazo", readonly=True, copy=False)
     l10n_cr_fe_state = fields.Selection(
-        selection=[('draft', "Borrador"), ('generated', "Generado"), ('error', "Error")],
+        selection=[
+            ('draft', "Borrador"),
+            ('generado', "Generado"),
+            ('enviado', "Enviado"),
+            ('aceptado', "Aceptado"),
+            ('rechazado', "Rechazado"),
+            ('error', "Error"),
+        ],
         string="Estado FE", default='draft', readonly=True, copy=False)
 
     def _l10n_cr_fe_get_config(self):
@@ -131,7 +141,7 @@ class AccountMove(models.Model):
             'l10n_cr_fe_clave': clave_res['clave'],
             'l10n_cr_fe_consecutivo': clave_res['consecutivo'],
             'l10n_cr_fe_xml': xml,
-            'l10n_cr_fe_state': 'generated',
+            'l10n_cr_fe_state': 'generado',
         })
         self.message_post(body="Comprobante FE generado (PoC). Clave: %s" % clave_res['clave'])
         return self._l10n_cr_fe_notify(

@@ -37,7 +37,7 @@ class TestGenerateAction(TransactionCase):
              patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.gen_xml_fe',
                    return_value='<FacturaElectronica>ok</FacturaElectronica>'):
             self.invoice.action_l10n_cr_fe_generate()
-        self.assertEqual(self.invoice.l10n_cr_fe_state, 'generated')
+        self.assertEqual(self.invoice.l10n_cr_fe_state, 'generado')
         self.assertEqual(self.invoice.l10n_cr_fe_clave, clave)
         self.assertIn('FacturaElectronica', self.invoice.l10n_cr_fe_xml)
 
