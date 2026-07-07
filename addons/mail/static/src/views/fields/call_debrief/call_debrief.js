@@ -1,7 +1,5 @@
 import {
     Component,
-    onWillStart,
-    onWillUpdateProps,
     onWillUnmount,
     props,
     proxy,
@@ -18,6 +16,8 @@ import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+
+import { useOnChange } from "@mail/utils/common/hooks";
 
 export class CallDebrief extends Component {
     static template = "mail.CallDebrief";
@@ -56,20 +56,14 @@ export class CallDebrief extends Component {
         // Defer seeking when switching media segments
         this._pendingSeek = null;
 
-        // Tracks active record ID to bypass this.props update lag during async paging
-        this.activeResId = this.props.record.resId;
-
-        onWillStart(() => this._loadData(this.props));
-
-        onWillUpdateProps(async (nextProps) => {
-            const hasIdChanged = this.props.record.resId !== nextProps.record.resId;
-            const hasFieldChanged =
-                this.props.record.data[this.props.name] !== nextProps.record.data[nextProps.name];
-            if (hasIdChanged || hasFieldChanged) {
-                this.activeResId = nextProps.record.resId;
-                await this._loadData(nextProps);
+        useOnChange(
+            () => [this.props.record.resId, this.props.record.data[this.props.name]],
+            (resId) => {
+                // Tracks active record ID to bypass this.props update lag during async paging
+                this.activeResId = resId;
+                this._loadData(this.props);
             }
-        });
+        );
 
         useHotkey("k", () => this.togglePlay(), { global: true });
         useHotkey("space", () => this.togglePlay(), { global: true });
