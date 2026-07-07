@@ -11,10 +11,12 @@ const SUPPORTED_MIMETYPES = [
     "image/webp",
 ];
 
-const headResponseCache = new Cache(
-    async (src) => await fetch(src, { method: "HEAD" }),
-    JSON.stringify
-);
+const headResponseCache = new Cache(async (src) => {
+    if (!src) {
+        return new Response(null, { status: 404, statusText: "Source is undefined" });
+    }
+    return await fetch(src, { method: "HEAD" });
+}, JSON.stringify);
 
 /**
  * Extracts url and gradient parts from the background-image CSS property.
@@ -57,6 +59,9 @@ export async function getMimetype(image, data = image.dataset) {
         return mimetypeOnData;
     }
     const src = getImageSrc(image);
+    if (!src) {
+        return;
+    }
     try {
         const response = await headResponseCache.read(src);
         if (!response.ok) {
