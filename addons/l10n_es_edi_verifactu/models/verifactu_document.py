@@ -365,7 +365,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if vals['verifactu_move_type'] == 'correction_substitution' and not vals['substituted_document_reversal_document']:
             errors.append(_("There is no Veri*Factu document for the reversal of the substituted record."))
 
-        if vals['verifactu_move_type'] in ('correction_incremental', 'reversal_for_substitution') and not vals['refunded_document']:
+        if vals['verifactu_move_type'] == 'reversal_for_substitution' and not vals['refunded_document']:
             errors.append(_("There is no Veri*Factu document for the refunded record."))
 
         need_refund_reason = vals['verifactu_move_type'] in ('correction_incremental', 'correction_substitution')
@@ -642,8 +642,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
             # vals['verifactu_move_type'] == 'correction_incremental':
             tipo_rectificativa = 'I'
             tipo_factura = vals['refund_reason']
-            rectified = rectified_document._get_record_identifier()
-            fecha_operacion = rectified['FechaOperacion'] or rectified['FechaExpedicionFactura']
+            if rectified_document:
+                rectified = rectified_document._get_record_identifier()
+                fecha_operacion = rectified['FechaOperacion'] or rectified['FechaExpedicionFactura']
+            else:
+                fecha_operacion = None
 
         # Note: Error [1189]
         # Si TipoFactura es F1 o F3 o R1 o R2 o R3 o R4 el bloque Destinatarios tiene que estar cumplimentado.
@@ -669,7 +672,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             'DescripcionOperacion': vals['description'] or 'manual',
         })
 
-        if vals['verifactu_move_type'] in ('correction_incremental', 'correction_substitution'):
+        if rectified_document and vals['verifactu_move_type'] in ('correction_incremental', 'correction_substitution'):
             rectified_record_identifier = rectified_document._get_record_identifier()
             render_vals.update({
                 'FacturasRectificadas': [{
