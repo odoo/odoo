@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Component, onWillStart, markRaw, props, status, t, proxy } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { isMarkup } from "@web/core/utils/html";
-import { useDebounced } from "../utils/timing";
 import { Reactive } from "../utils/reactive";
 
 class CodeEditorState extends Reactive {
@@ -74,13 +73,6 @@ export class CodeEditor extends Component {
         theme: t.selection(CodeEditor.THEMES).optional(""),
         maxLines: t.number().optional(),
         sessionId: t.or([t.number(), t.string()]).optional(1),
-        cursorPosition: t
-            .object({
-                column: t.number().optional(),
-                row: t.number().optional(),
-            })
-            .optional(),
-        onCursorPositionChange: t.function().optional(),
         showLineNumbers: t.boolean().optional(true),
         lineWrapping: t.boolean().optional(),
         editorState: t.instanceOf(CodeEditorState).optional(),
@@ -95,10 +87,7 @@ export class CodeEditor extends Component {
         onWillStart(async () => await loadBundle("web.ace_lib"));
 
         const sessions = {};
-
-        const onCursorChange = useDebounced(() => {
-            this.props.onCursorPositionChange?.(this.aceEditor.getCursorPosition());
-        }, "animationFrame");
+        const cursorPositions = {};
 
         // The ace library triggers the "change" event even if the change is
         // programmatic. Even worse, it triggers 2 "change" events in that case,
@@ -117,7 +106,9 @@ export class CodeEditor extends Component {
                 this.props.onChange(this.aceEditor.getValue());
             }
 
-            onCursorChange();
+            queueMicrotask(() => {
+                cursorPositions[this.props.sessionId] = this.aceEditor.getCursorPosition();
+            });
         };
 
         useLayoutEffect(
@@ -158,7 +149,7 @@ export class CodeEditor extends Component {
                 // Wait for ace to be fully operational
                 window.requestAnimationFrame(() => {
                     if (status(this) != "destroyed") {
-                        this.setCursorPosition(this.props.cursorPosition);
+                        this.setCursorPosition(cursorPositions[this.props.sessionId]);
                     }
                 });
 
@@ -226,15 +217,9 @@ export class CodeEditor extends Component {
 
                 session.setMode(this.aceMode);
                 this.aceEditor.setSession(session);
+                this.setCursorPosition(cursorPositions[sessionId]);
             },
             () => [this.props.sessionId, this.props.mode, this.props.value]
-        );
-
-        useLayoutEffect(
-            (cursorPosition) => {
-                this.setCursorPosition(cursorPosition);
-            },
-            () => [this.props.cursorPosition]
         );
     }
 
