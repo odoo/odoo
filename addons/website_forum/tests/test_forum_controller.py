@@ -6,9 +6,12 @@ from odoo.addons.website_forum.controllers.website_forum import WebsiteForum
 from odoo.tests import tagged
 
 from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
+from odoo.exceptions import AccessError
+from odoo.tests.common import HttpCase
+from odoo.tools import mute_logger
 
 
-class TestForumController(TestForumCommon):
+class TestForumController(TestForumCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -72,3 +75,43 @@ class TestForumController(TestForumCommon):
                     employee_2_website_2_forum_2_post.with_user(self.env.user).user_favourite = True
                     self.assertIn(self.env.user, employee_2_website_2_forum_2_post.sudo().favourite_ids)
                     self.assertEqual(self._get_my_other_forums(self.forum_1_website_2), self.forum_2_website_2)
+
+    @mute_logger('odoo.http')
+    def test_post_comment_without_subscribed_partner_read_rights(self):
+        """ Test restricted portal user comments properly notify subscribers. """
+        self.user_employee.karma = KARMA['com_all']
+        self.user_portal.karma = 0
+        with self.assertRaises(AccessError):
+            self.user_employee.partner_id.with_user(self.user_portal).check_access('read')
+
+        forum_slug = self.env['ir.http']._slug(self.base_forum)
+        forum_post = self.forum_post(self.env, self.user_employee, self.base_forum)
+        forum_post.with_user(self.user_employee).is_follower = True
+        forum_answer = self.env['forum.post'].with_user(self.user_employee).create({
+            'name': 'This is an answer',
+            'forum_id': self.base_forum.id,
+            'parent_id': forum_post.id,
+        })
+        forum_answer.with_user(self.user_employee).is_follower = True
+        forum_answer_slug = self.env['ir.http']._slug(forum_answer)
+
+        self.authenticate(self.user_portal.login, self.user_portal.login)
+        data = {
+            'post_id': forum_answer.id,
+            'comment': 'Answer comment by the portal user',
+            'csrf_token': self.csrf_token(),
+        }
+        res = self.url_open(
+            f'/forum/{forum_slug}/post/{forum_answer_slug}/comment',
+            data=data,
+            allow_redirects=False,
+        )
+        self.assertEqual(res.status_code, 403)
+
+        self.user_portal.karma = KARMA['com_own']
+        res = self.url_open(
+            f'/forum/{forum_slug}/post/{forum_answer_slug}/comment',
+            data=data,
+            allow_redirects=False,
+        )
+        self.assertEqual(res.status_code, 303)
