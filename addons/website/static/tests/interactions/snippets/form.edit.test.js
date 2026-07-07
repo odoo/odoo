@@ -23,7 +23,7 @@ const formXml = `
                                     <div class="s_website_form_datetime input-group date">
                                         <input type="text" class="form-control datetimepicker-input s_website_form_input" name="When" placeholder="" id="onbni9ji3oa" value="1735722000"/>
                                         <div class="input-group-text o_input_group_date_icon">
-                                            <i class="fa fa-calendar"/>
+                                            <i class="oi oi-filled" data-icon="calendar_today"/>
                                         </div>
                                     </div>
                                 </div>
