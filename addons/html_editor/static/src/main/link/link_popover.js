@@ -363,6 +363,9 @@ export class LinkPopover extends Component {
     }
 
     onKeydown(ev) {
+        if (!this.editingWrapper?.el) {
+            return;
+        }
         if (ev.key === "Escape") {
             ev.preventDefault();
             ev.stopImmediatePropagation();
