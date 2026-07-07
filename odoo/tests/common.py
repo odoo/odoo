@@ -570,7 +570,7 @@ class BaseCase(case.TestCase):
         for actual_query, expect_query in zip(actual_queries, expected):
             self.assertEqual(
                 "".join(actual_query.lower().split()),
-                "".join(expect_query.lower().split()),
+                Like("".join(expect_query.lower().split())),
                 "\n---- actual query:\n%s\n---- not like:\n%s" % (actual_query, expect_query),
             )
 
