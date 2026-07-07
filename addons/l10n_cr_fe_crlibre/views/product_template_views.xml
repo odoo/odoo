@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_product_template_form_l10n_cr_fe" model="ir.ui.view">
+        <field name="name">product.template.form.l10n.cr.fe</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <field name="l10n_cr_fe_cabys" string="Código CABYS"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
