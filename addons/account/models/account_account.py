@@ -1078,6 +1078,13 @@ class AccountAccount(models.Model):
 
         return res
 
+    @api.model
+    def load(self, fields, data):
+        load_data = super(AccountAccount, self.with_context(defer_account_code_checks=True)).load(fields, data)
+        if {'company_ids', 'code', 'code_mapping_ids/code', 'code_mapping_ids/company_id'} & set(fields):
+            self.browse(load_data['ids'])._ensure_code_is_unique()
+        return load_data
+
     def _ensure_code_is_unique(self):
         """ Check that no child or parent companies have another account with the same code
             as the account.
