@@ -12,7 +12,7 @@ class PosPaymentMethod(models.Model):
         return super()._get_terminal_provider_selection() + [("mollie", "Mollie")]
 
     def _allowed_actions_in_self_order(self):
-        return super()._allowed_actions_in_self_order() + ["mollie_create_payment", "mollie_create_refund", "mollie_cancel_payment"]
+        return super()._allowed_actions_in_self_order() + ["mollie_create_payment", "mollie_create_refund", "mollie_cancel_payment", "mollie_get_payment"]
 
     mollie_terminal_id = fields.Char("Mollie Terminal ID", copy=False)
     mollie_payment_provider_id = fields.Many2one("payment.provider", domain=[("code", "=", "mollie")])
@@ -62,6 +62,6 @@ class PosPaymentMethod(models.Model):
         self.ensure_one()
         return self.sudo().mollie_payment_provider_id._send_api_request("DELETE", f"/payments/{payment_id}")
 
-    def _mollie_get_payment(self, payment_id: str):
+    def mollie_get_payment(self, payment_id: str):
         self.ensure_one()
         return self.sudo().mollie_payment_provider_id._send_api_request("GET", f"/payments/{payment_id}")
