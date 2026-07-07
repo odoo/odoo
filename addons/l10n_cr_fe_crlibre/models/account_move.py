@@ -1,5 +1,7 @@
+import base64
 import json
 import random
+import xml.etree.ElementTree as ET
 from datetime import datetime
 
 from odoo import fields, models, _
@@ -155,6 +157,46 @@ class AccountMove(models.Model):
             'l10n_cr_fe_state': 'enviado',
         })
         self.message_post(body=_("Comprobante FE enviado a Hacienda. Clave: %s") % clave_res['clave'])
+
+    def _l10n_cr_fe_parse_motivo(self, respuesta_xml):
+        if not respuesta_xml:
+            return False
+        try:
+            root = ET.fromstring(respuesta_xml)
+        except ET.ParseError:
+            return respuesta_xml[:200]
+        detalle = root.find('.//DetalleMensaje')
+        return detalle.text if detalle is not None else respuesta_xml[:200]
+
+    def action_l10n_cr_fe_consultar_estado(self):
+        self.ensure_one()
+        config = self._l10n_cr_fe_get_config()
+        client = self.env['l10n_cr.fe.client']
+        try:
+            token = client.get_hacienda_token(
+                config.hacienda_username, config.hacienda_password, config.environment)
+            result = client.consultar_estado(token, self.l10n_cr_fe_clave, config.environment)
+        except CrlibreApiError as exc:
+            self.message_post(body=_("Error al consultar el estado FE: %s") % exc)
+            return
+
+        respuesta_xml = False
+        if result.get('respuesta_xml'):
+            respuesta_xml = base64.b64decode(result['respuesta_xml']).decode('utf-8')
+
+        estado = result['ind_estado']
+        if estado == 'aceptado':
+            self.write({'l10n_cr_fe_state': 'aceptado', 'l10n_cr_fe_respuesta_xml': respuesta_xml})
+            self.message_post(body=_("Hacienda aceptó el comprobante FE."))
+        elif estado == 'rechazado':
+            self.write({
+                'l10n_cr_fe_state': 'rechazado',
+                'l10n_cr_fe_respuesta_xml': respuesta_xml,
+                'l10n_cr_fe_motivo_rechazo': self._l10n_cr_fe_parse_motivo(respuesta_xml) or _("Rechazado por Hacienda"),
+            })
+            self.message_post(body=_("Hacienda rechazó el comprobante FE."))
+        else:
+            self.message_post(body=_("Hacienda aún no tiene una respuesta definitiva (estado: %s).") % estado)
 
     def action_post(self):
         res = super().action_post()
