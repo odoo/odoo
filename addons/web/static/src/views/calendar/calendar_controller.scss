@@ -11,6 +11,10 @@ $o-cw-filter-avatar-size: 20px;
     }
 }
 
+.o_calendar_view {
+    --ControlPanel-border-bottom: 0;
+}
+
 .o_calendar_container {
     grid-template-rows: auto auto 1fr auto;
     grid-template-columns: 1fr auto auto;
@@ -49,24 +53,17 @@ $o-cw-filter-avatar-size: 20px;
     --Avatar-size: #{$o-cw-filter-avatar-size};
 
     flex: 0 0 auto;
-    border-right: $border-width solid $border-color;
 
     .o_calendar_unschedule_zone {
         width: $o-datetime-picker-reduced-width;
         height: stretch;
         min-height: 200px; // Fallback for firefox < 146
         border: 1px solid rgba($o-enterprise-action-color, 0.4);
-        border-radius: 10px;
         background-color: mix($o-enterprise-action-color, $o-view-background-color, 10%);
     }
 
     .o_calendar_sidepanel {
         width: $o-datetime-picker-reduced-width;
-
-        .o_datetime_picker {
-            padding-right: 0 !important;
-            padding-left: 0 !important;
-        }
 
         .o_time_picker input {
             field-sizing: content;
@@ -97,15 +94,8 @@ $o-cw-filter-avatar-size: 20px;
 }
 
 .o_calendar_sidebar {
-    width: 46px;
     writing-mode: vertical-rl;
     text-orientation: mixed;
-    border-right: $border-width solid $border-color;
-    
-    & .btn {
-        writing-mode: initial;
-        text-orientation: initial;
-    }
 }
 
 //  Print
