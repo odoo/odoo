@@ -104,18 +104,28 @@ class TestAvatarCardTour(MailCommon, HttpCase):
             subtype_xmlid="mail.mt_comment",
         )
         activity_type_todo = "mail.mail_activity_data_todo"
+        # Deadline in the past: the counter only counts today and overdue activities, and
+        # the default deadline (today in the scheduling env's timezone, Europe/Brussels
+        # for the superuser with demo data) is tomorrow for a user without timezone (UTC
+        # fallback) when the test runs between 22:00 and 00:00 UTC, making the activities
+        # planned and the counter empty (runbot 941407). A week-old deadline is overdue
+        # in every timezone.
+        date_deadline = date.today() - timedelta(days=7)
         self.test_record[0].activity_schedule(
             activity_type_todo,
+            date_deadline,
             summary="Test Activity for Company 2",
             user_id=user.id,
         )
         self.test_record[1].activity_schedule(
             activity_type_todo,
+            date_deadline,
             summary="Another Test Activity for Company 2",
             user_id=user.id,
         )
         self.test_record[2].activity_schedule(
             activity_type_todo,
+            date_deadline,
             summary="Test Activity for Company 3",
             user_id=user.id,
         )
