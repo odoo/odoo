@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { isValidEmail } from "@im_livechat/core/common/misc";
-import { Component, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, useOnChange, useProps } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * @typedef {Object} Props
@@ -11,6 +11,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class TranscriptSender extends Component {
     static template = "im_livechat.TranscriptSender";
+
     props = useProps({
         thread: t.object(),
         disableOnSend: t.boolean().optional(),
@@ -30,12 +31,14 @@ export class TranscriptSender extends Component {
             status: this.STATUS.IDLE,
         });
         this.store = useService("mail.store");
-        onWillUpdateProps((newProps) => {
-            if (this.props.thread?.notEq(newProps.thread)) {
-                this.state.email = newProps.thread.channel?.livechatVisitorMember?.persona.email;
+        useOnChange(
+            () => [this.props.thread],
+            (thread) => {
+                this.state.email = thread.channel?.livechatVisitorMember?.persona.email;
                 this.state.status = this.STATUS.IDLE;
-            }
-        });
+            },
+            { initialRun: false }
+        );
         useLayoutEffect(
             () => {
                 this.state.status = this.STATUS.IDLE;
