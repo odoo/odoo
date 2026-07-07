@@ -28,6 +28,7 @@ class kioskAttendanceApp extends Component{
         barcodeSource: { type: String },
         fromTrialMode: { type: Boolean },
         deviceTrackingEnabled: { type: Boolean },
+        lang: { type: String },
     };
     static components = {
         KioskBarcodeScanner,
@@ -64,6 +65,7 @@ class kioskAttendanceApp extends Component{
             this.manualKioskMode = true;
             this.state.active_display = "manual";
         }
+        luxon.Settings.defaultLocale = this.props.lang;
     }
 
     switchDisplay(screen) {
@@ -232,6 +234,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
                 barcodeSource: kiosk_backend_info.barcode_source,
                 fromTrialMode: kiosk_backend_info.from_trial_mode,
                 deviceTrackingEnabled: kiosk_backend_info.device_tracking_enabled,
+                lang: kiosk_backend_info.lang,
             },
         dev: env.debug,
         translateFn: appTranslateFn,
