@@ -103,7 +103,8 @@
                         icon="fa-clock-o"
                         type="object"
                         groups="hr_attendance.group_hr_attendance_officer"
-                        help="Regenerate overtimes for this ruleset"/>
+                        help="Regenerate overtimes for this ruleset"
+                        invisible="not context.get('edit')"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -184,6 +185,14 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_hr_attendance_overtime_rulesets" name="Overtime Rulesets" parent="hr_attendance.menu_hr_attendance_configuration" sequence="300" action="hr_attendance_overtime_ruleset_action" groups="hr_attendance.group_hr_attendance_manager"/>
+    <record id="action_open_overtime_rulesets" model="ir.actions.server">
+        <field name="name">Open Overtime Rulesets</field>
+        <field name="model_id" ref="model_hr_attendance_overtime_ruleset"/>
+        <field name="state">code</field>
+        <field name="code">
+action = env['hr.attendance.overtime.ruleset']._action_open_overtime_rulesets()
+        </field>
+    </record>
 
+    <menuitem id="menu_hr_attendance_overtime_rulesets" name="Overtime Rulesets" parent="hr_attendance.menu_hr_attendance_configuration" sequence="300" action="action_open_overtime_rulesets" groups="hr_attendance.group_hr_attendance_manager"/>
 </odoo>

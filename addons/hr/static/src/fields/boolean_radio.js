@@ -15,19 +15,26 @@ export class BooleanRadio extends RadioField {
     }
 
     moveElement() {
-        document.querySelectorAll("[data-value='true']")[0]
-            .labels[0].textContent = document.getElementById(this.props.yes_label_element_id).innerText;
-        document.querySelectorAll("[data-value='false']")[0]
-            .labels[0].textContent = document.getElementById(this.props.no_label_element_id).innerText;
+        document.querySelectorAll("[data-value='true']")[0].labels[0].textContent =
+            document.getElementById(this.props.yes_label_element_id).innerText;
+        document.querySelectorAll("[data-value='false']")[0].labels[0].textContent =
+            document.getElementById(this.props.no_label_element_id).innerText;
     }
 
     get items() {
-        if (this.type === "boolean") return [["true", ""], ["false", ""]];
+        if (this.type === "boolean") {
+            return [
+                ["true", ""],
+                ["false", ""],
+            ];
+        }
         return super.items;
     }
 
     get value() {
-        if (this.type === "boolean") return this.props.record.data[this.props.name].toString();
+        if (this.type === "boolean") {
+            return this.props.record.data[this.props.name].toString();
+        }
         return super.items;
     }
 
@@ -35,10 +42,11 @@ export class BooleanRadio extends RadioField {
      * @param {any} value
      */
     onChange(value) {
-        if (this.type === "boolean") this.props.record.update({ [this.props.name]: value[0] === "true" });
+        if (this.type === "boolean") {
+            this.props.record.update({ [this.props.name]: value[0] === "true" });
+        }
         super.onChange();
     }
-
 }
 
 export const booleanRadio = {
@@ -60,9 +68,8 @@ export const booleanRadio = {
         },
     ],
     supportedTypes: ["boolean"],
-    extractProps({ options }, dynamicInfo) {
+    extractProps({ options }) {
         return {
-            readonly: dynamicInfo.readonly,
             yes_label_element_id: options.yes_label_element_id,
             no_label_element_id: options.no_label_element_id,
         };
