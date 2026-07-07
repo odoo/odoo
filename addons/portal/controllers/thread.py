@@ -114,9 +114,7 @@ class PortalWebClientController(WebclientController):
         def can_react(thread):
             thread_mode = False
             # sudo: mail.thread - can read thread to build _mail_get_operation_for_mail_message_operation
-            for domain, operation in thread.sudo()._mail_get_operation_for_mail_message_operation(
-                getattr(thread, "_mail_message_reaction_access", "create"),
-            ):
+            for domain, operation in thread.sudo()._mail_get_operation_for_mail_message_operation("read"):
                 # sudo: mail.thread - can read thread to filter on access domain
                 if thread.sudo().filtered_domain(domain):
                     thread_mode = operation
