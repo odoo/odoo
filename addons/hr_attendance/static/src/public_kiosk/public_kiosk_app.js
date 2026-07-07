@@ -26,6 +26,7 @@ class kioskAttendanceApp extends Component{
         kioskMode: { type: String },
         barcodeSource: { type: String },
         fromTrialMode: { type: Boolean },
+        lang: { type: String },
     };
     static components = {
         KioskBarcodeScanner,
@@ -66,6 +67,7 @@ class kioskAttendanceApp extends Component{
         onWillStart( async () => {
             this.isFreshDb = await rpc("/hr_attendance/is_fresh_db", { token: this.props.token });
         });
+        luxon.Settings.defaultLocale = this.props.lang;
     }
 
     async setBadgeID() {
@@ -243,6 +245,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
                 kioskMode: kiosk_backend_info.kiosk_mode,
                 barcodeSource: kiosk_backend_info.barcode_source,
                 fromTrialMode: kiosk_backend_info.from_trial_mode,
+                lang: kiosk_backend_info.lang,
             },
         dev: env.debug,
         translateFn: _t,
