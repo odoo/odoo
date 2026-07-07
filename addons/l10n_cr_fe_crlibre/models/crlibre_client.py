@@ -124,3 +124,14 @@ class CrlibreFeClient(models.AbstractModel):
         if not isinstance(resp, dict) or not resp.get('access_token'):
             raise CrlibreApiError("Respuesta inesperada de 'token/gettoken': %s" % resp)
         return resp['access_token']
+
+    def sign_xml(self, download_code, pin, xml):
+        xml_b64 = base64.b64encode(xml.encode('utf-8')).decode('ascii')
+        resp = self._call('firmarXML', 'firmar', {
+            'p12Url': download_code,
+            'pinP12': pin,
+            'inXml': xml_b64,
+        })
+        if not isinstance(resp, dict) or not resp.get('xmlFirmado'):
+            raise CrlibreApiError("Respuesta inesperada de 'firmarXML/firmar': %s" % resp)
+        return base64.b64decode(resp['xmlFirmado']).decode('utf-8')

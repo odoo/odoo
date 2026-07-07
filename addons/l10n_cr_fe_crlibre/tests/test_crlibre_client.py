@@ -112,3 +112,24 @@ class TestCrlibreClient(TransactionCase):
                    return_value=self._mock_response(payload)):
             with self.assertRaises(CrlibreApiError):
                 self.client.get_hacienda_token('user', 'pass', 'stag')
+
+    def test_sign_xml_decodes_base64(self):
+        import base64
+        xml_firmado = '<FacturaElectronica>firmado</FacturaElectronica>'
+        payload = {'status': 'ok', 'resp': {'xmlFirmado': base64.b64encode(xml_firmado.encode()).decode()}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.sign_xml('DC123', '1234', '<FacturaElectronica>sin firmar</FacturaElectronica>')
+        self.assertEqual(result, xml_firmado)
+        called_params = m.call_args.kwargs['params']
+        self.assertEqual(called_params['w'], 'firmarXML')
+        self.assertEqual(called_params['r'], 'firmar')
+        self.assertEqual(called_params['p12Url'], 'DC123')
+        self.assertEqual(called_params['pinP12'], '1234')
+
+    def test_sign_xml_missing_result_raises(self):
+        payload = {'status': 'ok', 'resp': {}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)):
+            with self.assertRaises(CrlibreApiError):
+                self.client.sign_xml('DC123', '1234', '<xml/>')
