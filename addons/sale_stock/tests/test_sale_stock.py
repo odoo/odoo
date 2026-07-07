@@ -2835,3 +2835,30 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_sale_deliveries_with_interwarehouse_resupply(self):
+        """Test that cancelling and reconfirming a sales order does not create
+        resupply transfers when the main warehouse can already satisfy the demand."""
+        warehouse1 = self.company_data['default_warehouse']
+        warehouse2 = self.env['stock.warehouse'].create({
+            'name': 'Storage for Old products',
+            'code': 'OWH2',
+        })
+        self.env['stock.quant']._update_available_quantity(self.new_product, warehouse2.lot_stock_id, 10)
+        warehouse1.resupply_wh_ids = [Command.link(warehouse2.id)]
+        self.new_product.route_ids = [
+            Command.link(self.env['stock.route'].search([
+                ('supplier_wh_id', '=', warehouse2.id),
+                ('supplied_wh_id', '=', warehouse1.id),
+            ], limit=1).id),
+        ]
+        warehouse1.delivery_route_id.rule_ids.procure_method = 'mts_else_mto'
+        so = self._get_new_sale_order(amount=1, product=self.new_product)
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 3)
+        for transfer in so.picking_ids[:2]:
+            transfer.button_validate()
+        so.action_cancel()
+        so.action_draft()
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 4)
