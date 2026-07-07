@@ -654,6 +654,33 @@ describe("popover should show link preview", () => {
         queryOne("input").focus();
         await expectElementCount(".o-we-linkpopover", 0);
     });
+    test("should not crash when pressing tab", async () => {
+        onRpc("/html_editor/link_preview_internal", () => ({
+            description: markup("Test description"),
+            link_preview_name: "Task name | Project name",
+        }));
+        onRpc("/odoo/project/1/tasks/8", () => "");
+        const { editor } = await setupEditor(`<p>[]</p>`, {
+            config: {
+                allowStripDomain: false,
+            },
+        });
+        await insertText(editor, "/link");
+        await animationFrame();
+        await click(".o-we-command-name:first");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").fill(
+            window.location.origin + "/odoo/project/1/tasks/8"
+        );
+        await animationFrame();
+        expect(".o_we_replace_title_btn").toHaveCount(1);
+        expect(".o_we_url_link").toHaveText("Task name | Project name");
+        expect(".o_we_description_link_preview").toHaveText("Test description");
+
+        await contains(".o_we_url_link").focus();
+        await press("Tab");
+
+        expect(".o_we_edit_link").toBeFocused();
+    });
 });
 
 describe("popover in contenteditable=false or readonly mode", () => {
