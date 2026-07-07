@@ -11,8 +11,10 @@ class TestActionPostFe(TransactionCase):
 
     def setUp(self):
         super().setUp()
+        self.company = self.env['res.company'].create({'name': 'Frutas Demo Test SA'})
+        self.env['account.chart.template'].try_loading('generic_coa', company=self.company)
         self.env['l10n_cr.fe.config'].create({
-            'company_id': self.env.company.id,
+            'company_id': self.company.id,
             'environment': 'stag',
             'identification_type': '01',
             'identification_number': '702320717',
@@ -31,10 +33,11 @@ class TestActionPostFe(TransactionCase):
             'name': 'Producto demo', 'l10n_cr_fe_cabys': '0111101000000'})
         self.invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
+            'company_id': self.company.id,
             'partner_id': partner.id,
             'invoice_line_ids': [(0, 0, {
                 'product_id': product.id, 'quantity': 1, 'price_unit': 1000.0,
-                'name': 'Producto demo',
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
             })],
         })
 
@@ -74,7 +77,7 @@ class TestActionPostFe(TransactionCase):
         self.assertEqual(self.invoice.l10n_cr_fe_state, 'error')
 
     def test_action_post_does_not_block_when_certificate_missing(self):
-        config = self.env['l10n_cr.fe.config'].search([('company_id', '=', self.env.company.id)], limit=1)
+        config = self.env['l10n_cr.fe.config'].search([('company_id', '=', self.company.id)], limit=1)
         config.write({'certificate_download_code': False, 'certificate_file': False})
         self.invoice.action_post()
         self.assertEqual(self.invoice.state, 'posted')
@@ -86,6 +89,7 @@ class TestActionPostFe(TransactionCase):
             'name': 'Producto sin cabys', 'l10n_cr_fe_cabys': False})
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
+            'company_id': self.company.id,
             'partner_id': partner.id,
             'invoice_line_ids': [(0, 0, {
                 'product_id': product.id, 'quantity': 1, 'price_unit': 500.0,

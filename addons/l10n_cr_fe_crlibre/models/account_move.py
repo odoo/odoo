@@ -10,6 +10,16 @@ from odoo.exceptions import UserError
 from .crlibre_client import CrlibreApiError
 
 
+# Códigos de tarifa de IVA del catálogo de Hacienda (Anexos v4.4), por porcentaje.
+L10N_CR_FE_TARIFA_IVA_CODES = {
+    0: '01',
+    1: '02',
+    2: '03',
+    4: '04',
+    13: '08',
+}
+
+
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
@@ -57,10 +67,16 @@ class AccountMove(models.Model):
                 'montoTotalLinea': line.price_total,
             }
             if impuesto_neto:
+                tarifa = int(round(line.tax_ids[:1].amount))
+                codigo_tarifa = L10N_CR_FE_TARIFA_IVA_CODES.get(tarifa)
+                if not codigo_tarifa:
+                    raise UserError(
+                        _("La tarifa de impuesto %s%% del producto '%s' no está soportada por Hacienda.")
+                        % (tarifa, line.product_id.display_name))
                 detalle['impuesto'] = [{
                     'codigo': '01',
-                    'codigoTarifa': '08',
-                    'tarifa': 13,
+                    'codigoTarifa': codigo_tarifa,
+                    'tarifa': tarifa,
                     'monto': impuesto_neto,
                 }]
             detalles.append(detalle)

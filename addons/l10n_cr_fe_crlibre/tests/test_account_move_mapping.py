@@ -6,8 +6,10 @@ class TestAccountMoveMapping(TransactionCase):
 
     def setUp(self):
         super().setUp()
+        self.company = self.env['res.company'].create({'name': 'Frutas Demo Test SA'})
+        self.env['account.chart.template'].try_loading('generic_coa', company=self.company)
         self.env['l10n_cr.fe.config'].create({
-            'company_id': self.env.company.id,
+            'company_id': self.company.id,
             'environment': 'stag',
             'identification_type': '01',
             'identification_number': '702320717',
@@ -27,12 +29,14 @@ class TestAccountMoveMapping(TransactionCase):
         })
         self.invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
+            'company_id': self.company.id,
             'partner_id': self.partner.id,
             'invoice_line_ids': [(0, 0, {
                 'product_id': self.product.id,
                 'quantity': 1,
                 'price_unit': 1000.0,
                 'name': 'Producto demo',
+                'tax_ids': [(6, 0, [])],
             })],
         })
 
@@ -74,3 +78,46 @@ class TestAccountMoveMapping(TransactionCase):
         self.product.l10n_cr_fe_cabys = False
         with self.assertRaises(UserError):
             self.invoice._l10n_cr_fe_build_detalles()
+
+    def _create_invoice_with_tax(self, tax_amount):
+        tax = self.env['account.tax'].create({
+            'name': 'IVA %s%%' % tax_amount,
+            'amount_type': 'percent',
+            'amount': tax_amount,
+            'type_tax_use': 'sale',
+            'company_id': self.company.id,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Producto con IVA %s%%' % tax_amount,
+            'l10n_cr_fe_cabys': '0111101000000',
+        })
+        return self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': product.id,
+                'quantity': 1,
+                'price_unit': 1000.0,
+                'name': product.name,
+                'tax_ids': [(6, 0, [tax.id])],
+            })],
+        })
+
+    def test_build_detalles_maps_1_percent_tax_to_codigo_tarifa_02(self):
+        invoice = self._create_invoice_with_tax(1)
+        detalle = invoice._l10n_cr_fe_build_detalles()[0]
+        self.assertEqual(detalle['impuesto'][0]['codigoTarifa'], '02')
+        self.assertEqual(detalle['impuesto'][0]['tarifa'], 1)
+
+    def test_build_detalles_maps_13_percent_tax_to_codigo_tarifa_08(self):
+        invoice = self._create_invoice_with_tax(13)
+        detalle = invoice._l10n_cr_fe_build_detalles()[0]
+        self.assertEqual(detalle['impuesto'][0]['codigoTarifa'], '08')
+        self.assertEqual(detalle['impuesto'][0]['tarifa'], 13)
+
+    def test_build_detalles_unsupported_tax_rate_raises(self):
+        from odoo.exceptions import UserError
+        invoice = self._create_invoice_with_tax(7)
+        with self.assertRaises(UserError):
+            invoice._l10n_cr_fe_build_detalles()
