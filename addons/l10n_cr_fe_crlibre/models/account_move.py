@@ -115,46 +115,50 @@ class AccountMove(models.Model):
             'detalles': json.dumps(detalles),
         }
 
-    def action_l10n_cr_fe_generate(self):
+    def _l10n_cr_fe_generate_and_send(self):
         self.ensure_one()
         if self.move_type != 'out_invoice':
-            raise UserError("Solo aplica a facturas de cliente.")
+            return
         if not self.partner_id:
-            raise UserError("La factura no tiene cliente (receptor).")
+            raise UserError(_("La factura no tiene cliente (receptor)."))
+
+        config = self._l10n_cr_fe_get_config()
         client = self.env['l10n_cr.fe.client']
         try:
+            download_code = config._l10n_cr_fe_ensure_certificate_uploaded()
             clave_params = self._l10n_cr_fe_build_clave_params()
             clave_res = client.get_clave(clave_params)
             detalles = self._l10n_cr_fe_build_detalles()
             genxml_params = self._l10n_cr_fe_build_genxml_params(
                 clave_res['clave'], clave_res['consecutivo'], detalles)
             xml = client.gen_xml_fe(genxml_params)
+            token = client.get_hacienda_token(
+                config.hacienda_username, config.hacienda_password, config.environment)
+            xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
+            fecha_iso = fields.Datetime.context_timestamp(self, datetime.now()).strftime('%Y-%m-%dT%H:%M:%S-06:00')
+            client.send_fe(
+                token=token, clave=clave_res['clave'], fecha_iso=fecha_iso,
+                emisor_tipo=config.identification_type, emisor_num=config.identification_number,
+                receptor_tipo='01',
+                receptor_num=(self.partner_id.vat or '').replace('-', '') or '000000000',
+                xml_firmado=xml_firmado, environment=config.environment)
         except CrlibreApiError as exc:
-            # No se lanza excepción para no romper la transacción (ver spec §5):
-            # se persiste el estado de error, se informa en el chatter y se
-            # devuelve una notificación no bloqueante al usuario.
             self.l10n_cr_fe_state = 'error'
-            self.message_post(body="Error al generar el comprobante FE: %s" % exc)
-            return self._l10n_cr_fe_notify(
-                "Error al generar el comprobante", str(exc), 'danger')
+            self.message_post(body=_("Error en el flujo de Factura Electrónica: %s") % exc)
+            return
+
         self.write({
             'l10n_cr_fe_clave': clave_res['clave'],
             'l10n_cr_fe_consecutivo': clave_res['consecutivo'],
             'l10n_cr_fe_xml': xml,
-            'l10n_cr_fe_state': 'generado',
+            'l10n_cr_fe_xml_firmado': xml_firmado,
+            'l10n_cr_fe_state': 'enviado',
         })
-        self.message_post(body="Comprobante FE generado (PoC). Clave: %s" % clave_res['clave'])
-        return self._l10n_cr_fe_notify(
-            "Comprobante generado", "Clave: %s" % clave_res['clave'], 'success')
+        self.message_post(body=_("Comprobante FE enviado a Hacienda. Clave: %s") % clave_res['clave'])
 
-    def _l10n_cr_fe_notify(self, title, message, notif_type):
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': title,
-                'message': message,
-                'type': notif_type,  # 'success' | 'warning' | 'danger'
-                'sticky': False,
-            },
-        }
+    def action_post(self):
+        res = super().action_post()
+        for move in self:
+            if move.move_type == 'out_invoice':
+                move._l10n_cr_fe_generate_and_send()
+        return res
