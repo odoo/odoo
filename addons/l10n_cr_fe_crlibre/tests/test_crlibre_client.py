@@ -43,3 +43,31 @@ class TestCrlibreClient(TransactionCase):
                    return_value=self._mock_response({}, status=500)):
             with self.assertRaises(CrlibreApiError):
                 self.client.get_clave({'tipoDocumento': 'FE'})
+
+    def test_register_api_user_returns_session(self):
+        payload = {'status': 'ok', 'resp': {'sessionKey': 'sk123', 'userName': 'empresa1', 'idUser': 5}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.register_api_user('Empresa Uno', 'empresa1', 'pass123')
+        self.assertEqual(result['session_key'], 'sk123')
+        self.assertEqual(result['id_user'], 5)
+        called_params = m.call_args.kwargs['params']
+        self.assertEqual(called_params['w'], 'users')
+        self.assertEqual(called_params['r'], 'users_register')
+        self.assertEqual(called_params['userName'], 'empresa1')
+
+    def test_register_api_user_already_exists_raises(self):
+        payload = {'status': 'ok', 'resp': {'code': '-304', 'status': 'usuario ya existe'}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)):
+            with self.assertRaises(CrlibreApiError):
+                self.client.register_api_user('Empresa Uno', 'empresa1', 'pass123')
+
+    def test_login_api_user_returns_session(self):
+        payload = {'status': 'ok', 'resp': {'sessionKey': 'sk456', 'userName': 'empresa1', 'idUser': 5}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.login_api_user('empresa1', 'pass123')
+        self.assertEqual(result['session_key'], 'sk456')
+        called_params = m.call_args.kwargs['params']
+        self.assertEqual(called_params['r'], 'users_log_me_in')
