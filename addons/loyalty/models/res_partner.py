@@ -8,8 +8,7 @@ class ResPartner(models.Model):
     loyalty_card_count = fields.Integer(
         string="Active loyalty cards",
         compute='_compute_count_active_cards',
-        compute_sudo=True,
-        groups='base.group_user')
+        compute_sudo=True)
 
     def _compute_count_active_cards(self):
         loyalty_groups = self.env['loyalty.card']._read_group(
