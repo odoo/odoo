@@ -768,6 +768,9 @@ class ForumPost(models.Model):
                 raise AccessError(_('%d karma required to comment.', self.karma_comment))
             if not kwargs.get('force_record_name') and self.parent_id.name:
                 kwargs['force_record_name'] = self.parent_id.name
+            # Users should be able to comment and notify question_followers
+            # even if they don't have read access to them
+            return super(ForumPost, self.sudo()).message_post(message_type=message_type, **kwargs)
         return super().message_post(message_type=message_type, **kwargs)
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
