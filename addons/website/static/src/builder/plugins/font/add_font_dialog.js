@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -10,14 +10,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 class GoogleFontAutoComplete extends AutoComplete {
     setup() {
         super.setup();
-        this.inputRef = useRef("input");
         this.sourcesListRef = useRef("sourcesList");
-        useLayoutEffect(
-            (el) => {
-                el.setAttribute("id", "google_font");
-            },
-            () => [this.inputRef.el]
-        );
     }
 
     get dropdownOptions() {
