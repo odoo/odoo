@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onPatched, props, proxy, t, useEffect } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
@@ -72,45 +72,44 @@ export class BuilderRow extends Component {
             name: "hb-collapse-content",
         });
 
-        useLayoutEffect(
-            (stage) => {
-                const isFirstMount = !isMounted;
-                isMounted = true;
-                const contentEl = this.collapseContentRef.el;
-                if (!contentEl) {
-                    return;
-                }
+        useEffect(() => {
+            const stage = this.transition.stage;
+            const isFirstMount = !isMounted;
+            isMounted = true;
+            const contentEl = this.collapseContentRef.el;
+            if (!contentEl) {
+                return;
+            }
 
-                const setHeightAuto = () => {
-                    contentEl.style.height = "auto";
-                };
+            const setHeightAuto = () => {
+                contentEl.style.height = "auto";
+            };
 
-                // Skip transition on first mount if expand=true.
-                if (isFirstMount && this.props.expand) {
-                    setHeightAuto();
-                    return;
-                }
+            // Skip transition on first mount if expand=true.
+            if (isFirstMount && this.props.expand) {
+                setHeightAuto();
+                return;
+            }
 
-                switch (stage) {
-                    case "enter-active": {
-                        contentEl.style.height = contentEl.scrollHeight + "px";
-                        contentEl.addEventListener("transitionend", setHeightAuto, { once: true });
-                        break;
-                    }
-                    case "leave": {
-                        // Collapse from current height to 0
-                        contentEl.style.height = contentEl.scrollHeight + "px";
-                        void contentEl.offsetHeight; // force reflow
-                        contentEl.style.height = "0px";
-                        break;
-                    }
+            switch (stage) {
+                case "enter-active": {
+                    contentEl.style.height = contentEl.scrollHeight + "px";
+                    contentEl.addEventListener("transitionend", setHeightAuto, { once: true });
+                    break;
                 }
-            },
-            () => [this.transition.stage]
-        );
+                case "leave": {
+                    // Collapse from current height to 0
+                    contentEl.style.height = contentEl.scrollHeight + "px";
+                    void contentEl.offsetHeight; // force reflow
+                    contentEl.style.height = "0px";
+                    break;
+                }
+            }
+        });
         this.tooltip = useService("tooltip");
 
-        useLayoutEffect(() => refreshSublevelLines(this.rootRef.el));
+        onMounted(() => refreshSublevelLines(this.rootRef.el));
+        onPatched(() => refreshSublevelLines(this.rootRef.el));
     }
 
     getLevelClass() {
