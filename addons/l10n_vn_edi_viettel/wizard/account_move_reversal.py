@@ -2,6 +2,7 @@
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service import SInvoiceService
 
 
 class AccountMoveReversal(models.TransientModel):
@@ -54,7 +55,15 @@ class AccountMoveReversal(models.TransientModel):
         for move in self.move_ids.filtered(lambda m: m._l10n_vn_edi_is_sent()):
             # If an invoice has a tax code (symbol starts with C) and the code has not been approved by the tax authorities, you cannot adjust/reverse it.
             if move.l10n_vn_edi_invoice_symbol.name.startswith('C'):
-                invoice_lookup, _error_message = move._l10n_vn_edi_lookup_invoice()
+                access_token, error = move.company_id._l10n_vn_edi_get_access_token()
+                if error:
+                    raise UserError(error)
+
+                with SInvoiceService(access_token=access_token, vat=move.company_id.vat, env=self.env) as sinvoice:
+                    invoice_lookup, error_message = sinvoice.lookup_invoice(move.l10n_vn_edi_invoice_transaction_id)
+                if error_message:
+                    raise UserError(error_message)
+
                 if 'result' in invoice_lookup and invoice_lookup['result'][0].get('exchangeStatus') != 'INVOICE_HAS_CODE_APPROVED':
                     raise UserError(_('You cannot adjust/replace invoice %s, it has not been approved by the tax authorities.\n'
                                       'Please cancel/reverse it and create a new invoice instead.', move.name))
