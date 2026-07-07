@@ -112,7 +112,6 @@ class SaleOrder(models.Model):
         default_sale_line = next((sale_line for sale_line in self.order_line if sale_line.is_service and sale_line.product_id.service_policy in ['ordered_prepaid', 'delivered_timesheet']), self.env['sale.order.line'])
         context = {
             'search_default_billable_timesheet': True,
-            'default_is_so_line_edited': True,
             'default_so_line': default_sale_line.id,
         }  # erase default filters
 
