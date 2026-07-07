@@ -168,6 +168,25 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             [{**self.default_address_values, 'vat': 'BE0926372368'}],
         )
 
+    def test_addtional_identifiers_update(self):
+        self.authenticate(self.account_a.login, self.account_a.login)
+        csrf_token = self.csrf_token()
+        address_values = {
+            **self.default_address_values,
+            "ma_ice": "001561191000066",
+            "csrf_token": csrf_token,
+            "partner_id": self.account_a.partner_id.id,
+        }
+        res = self._submit_address_values(address_values)
+        self.assertEqual(res, {"redirectUrl": "/my/addresses"})
+        self.assertRecordValues(
+            self.account_a.partner_id,
+            [{**self.default_address_values, "additional_identifiers": {"MA_ICE": "001561191000066"}}],
+        )
+        # Should not be able to update commercial fields on child address if already set
+        res = self._submit_address_values({**address_values, "ma_ice": "001561191000055"})
+        self.assertIn("ma_ice", res["invalid_fields"])
+
     def test_cannot_update_vat_on_child_addresses(self):
         """Check that the VAT cannot be updated on a child address.
 

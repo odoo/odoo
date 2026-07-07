@@ -565,6 +565,7 @@ class CustomerPortal(Controller):
         ResPartner = request.env['res.partner']
         partner_fields = ResPartner._fields
         authorized_partner_fields = request.env['res.partner']._get_frontend_writable_fields()
+        all_additional_identifiers = request.env["res.partner"]._get_all_additional_identifiers_metadata()
         for key, value in form_data.items():
             if isinstance(value, str):
                 value = value.strip()
@@ -582,6 +583,11 @@ class CustomerPortal(Controller):
                 else:
                     # Always keep field values, even if falsy, as it might be for resetting a field.
                     address_values[key] = field.convert_to_cache(value, ResPartner)
+            elif (key_upper := key.upper()) in all_additional_identifiers:
+                # Set the additional identifier values in the `additional_identifiers` field of the
+                # address values.
+                address_values.setdefault("additional_identifiers", {})
+                address_values["additional_identifiers"][key_upper] = value
             elif value:  # The value cannot be saved on the `res.partner` model.
                 extra_form_data[key] = value
 
@@ -656,10 +662,25 @@ class CustomerPortal(Controller):
                     " the account settings or contact your administrator."
                 ))
 
+            def get_commercial_field_error_msg(field_description):
+                if partner_sudo.commercial_partner_id.is_company:
+                    return self.env._(
+                        "The %(field_name)s is managed on your company account.",
+                        field_name=field_description,
+                    )
+                return self.env._(
+                    "The %(field_name)s is managed on your main account address.",
+                    field_name=field_description,
+                )
+
             # Prevent changing commercial fields on sub-addresses, as they are expected to match
             # commercial partner values, and would be reset if modified on the commercial partner.
             if not (is_commercial_address := partner_sudo == partner_sudo.commercial_partner_id):
-                for commercial_field_name in partner_sudo._commercial_fields():
+                commercial_fields = partner_sudo._commercial_fields()
+                # The additional_identifiers field need to be handled separately, as it has multiple
+                # values handled differently on the partner.
+                commercial_fields.remove("additional_identifiers")
+                for commercial_field_name in commercial_fields:
                     if commercial_field_name not in address_values:
                         continue
                     partner_sudo_field = partner_sudo._fields[commercial_field_name]
@@ -676,18 +697,17 @@ class CustomerPortal(Controller):
                     ):
                         invalid_fields.add(commercial_field_name)
                         field_description = partner_sudo_field._description_string(request.env)
-                        if partner_sudo.commercial_partner_id.is_company:
-                            error_messages.append(_(
-                                "The %(field_name)s is managed on your company account.",
-                                field_name=field_description,
-                            ))
-                        else:
-                            error_messages.append(_(
-                                "The %(field_name)s is managed on your main account address.",
-                                field_name=field_description,
-                            ))
+                        error_messages.append(get_commercial_field_error_msg(field_description))
                     else:
                         address_values.pop(commercial_field_name, None)
+
+                for additional_identifier, value in address_values.get("additional_identifiers", {}).items():
+                    partner_sudo_value = partner_sudo._get_additional_identifier(additional_identifier)
+                    # Only set to invalid field if the additional identifier is already set on the
+                    # partner.
+                    if partner_sudo_value != value and bool(partner_sudo_value):
+                        invalid_fields.add(additional_identifier.lower())
+                        error_messages.append(get_commercial_field_error_msg(additional_identifier))
 
                 # Company name shouldn't be updated anywhere but the main and company address, even
                 # if it's not in the fields returned by _commercial_fields.
