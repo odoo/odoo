@@ -12,7 +12,7 @@ class IrAttachment(models.Model):
         expense_attachments = self.filtered(lambda a: a.res_model == 'hr.expense' and a.res_id)
         expenses = self.env['hr.expense'].browse(expense_attachments.mapped('res_id'))
         if not all(
-            (expense.state in {'draft', 'submitted'} and expense.has_access('write')) or self.env.su
+            (expense.exists() and expense.state in {'draft', 'submitted'} and expense.has_access('write')) or self.env.su
             for expense in expenses
         ):
             raise AccessError(self.env._("You can't delete attachments from an expense once it has been submitted."))
