@@ -168,6 +168,28 @@ class AccountMove(models.Model):
         detalle = root.find('.//DetalleMensaje')
         return detalle.text if detalle is not None else respuesta_xml[:200]
 
+    def _l10n_cr_fe_send_acceptance_email(self):
+        self.ensure_one()
+        if not self.partner_id.email:
+            return
+        attachment_ids = []
+        attachment_model = self.env['ir.attachment']
+        if self.l10n_cr_fe_xml_firmado:
+            attachment_ids.append(attachment_model.create({
+                'name': 'comprobante_%s.xml' % (self.l10n_cr_fe_clave or self.id),
+                'datas': base64.b64encode(self.l10n_cr_fe_xml_firmado.encode('utf-8')),
+                'res_model': 'account.move', 'res_id': self.id,
+            }).id)
+        if self.l10n_cr_fe_respuesta_xml:
+            attachment_ids.append(attachment_model.create({
+                'name': 'respuesta_hacienda_%s.xml' % (self.l10n_cr_fe_clave or self.id),
+                'datas': base64.b64encode(self.l10n_cr_fe_respuesta_xml.encode('utf-8')),
+                'res_model': 'account.move', 'res_id': self.id,
+            }).id)
+        template = self.env.ref('l10n_cr_fe_crlibre.mail_template_l10n_cr_fe_aceptado')
+        template.send_mail(self.id, force_send=True,
+                            email_values={'attachment_ids': [(6, 0, attachment_ids)]})
+
     def action_l10n_cr_fe_consultar_estado(self):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
@@ -188,6 +210,7 @@ class AccountMove(models.Model):
         if estado == 'aceptado':
             self.write({'l10n_cr_fe_state': 'aceptado', 'l10n_cr_fe_respuesta_xml': respuesta_xml})
             self.message_post(body=_("Hacienda aceptó el comprobante FE."))
+            self._l10n_cr_fe_send_acceptance_email()
         elif estado == 'rechazado':
             self.write({
                 'l10n_cr_fe_state': 'rechazado',
