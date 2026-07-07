@@ -124,9 +124,9 @@ class TestStructure(TransactionCase):
         with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap', TestStructure._check_vies_iap):
             partner = self.env["res.partner"].create({
                 'name': 'Dummy Partner',
-                'vat': 'BE0477472701',
                 'country_id': self.env.ref("base.be").id,
             })
+            partner.vat = 'BE0477472701'
             self.assertEqual(partner.vies_valid, True)
 
         with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap',
