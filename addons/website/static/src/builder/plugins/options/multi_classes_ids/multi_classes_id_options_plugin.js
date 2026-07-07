@@ -11,6 +11,7 @@ class SnippetOptionsPlugin extends Plugin {
         builder_options: [
             {
                 OptionComponent: SnippetOptions,
+                // Selectors
                 selector: "section, .container, div, [class^='col-'], img, button, h1, h2, h3, h4, h5, h6, p, span, a, hr, input, select, textarea",
             },
         ],
