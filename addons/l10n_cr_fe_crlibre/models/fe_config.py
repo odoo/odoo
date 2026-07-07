@@ -59,6 +59,10 @@ class L10nCrFeConfig(models.Model):
     def _l10n_cr_fe_next_consecutivo(self):
         self.ensure_one()
         code = 'l10n_cr_fe.consecutivo.fe.%s' % self.company_id.id
+        # Advisory lock keyed by company id: prevents two concurrent transactions
+        # from both missing the search and creating duplicate ir.sequence rows
+        # for this company's first-ever consecutivo.
+        self.env.cr.execute('SELECT pg_advisory_xact_lock(%s)', (self.company_id.id,))
         sequence = self.env['ir.sequence'].sudo().search([('code', '=', code)], limit=1)
         if not sequence:
             sequence = self.env['ir.sequence'].sudo().create({
