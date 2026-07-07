@@ -133,6 +133,34 @@ class TestUsersHttp(BaseCommon, HttpCase):
         self.assertEqual(portal_user.parent_id.name, 'Portal Company')
         self.assertEqual(portal_user.commercial_company_name, 'Portal Company')
 
+    def test_address_submit_parent_name_does_not_update_normal_customer_name(self):
+        # Setting parent_name on a normal customer (no parent) should create a parent company,
+        # not update the customer's own name.
+        portal_user = self.portal_user.partner_id
+        original_name = portal_user.name
+
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.url_open(
+            url="/my/address/submit",
+            data={
+                **self.address_test_data,
+                "name": portal_user.name,
+                "parent_name": "Test Company",
+                "vat": "BE0477472701",
+                "partner_id": str(portal_user.id),
+                "csrf_token": self.csrf_token(),
+            }
+        )
+        self.assertRecordValues(
+            portal_user,
+            [
+                {
+                    "name": original_name,
+                    "parent_name": "Test Company",
+                }
+            ],
+        )
+
     def test_deactivate_portal_user(self):
         # Create a portal user with data which should be removed on deactivation
         portal_user = self.portal_user
