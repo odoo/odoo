@@ -246,3 +246,35 @@ test("the selection should be restricted to the innermost uncrossable element wh
         )
     );
 });
+
+test("the selection is restricted when the uncrossable element has no previous element sibling", async () => {
+    const { getEditableContent } = await setupWebsiteBuilder(
+        `<div>Salut<div><p>text</p></div></div>`
+    );
+    const editableContent = getEditableContent();
+    const parentEl = editableContent.firstElementChild;
+    setSelection({
+        anchorNode: parentEl.firstChild,
+        anchorOffset: 0,
+        focusNode: parentEl.lastChild,
+        focusOffset: 1,
+        isMouseEventSimulated: true,
+    });
+    await animationFrame();
+    expect(getContent(editableContent)).toBe(`<div>[Salut]<div><p>text</p></div></div>`);
+});
+
+test("the selection is restricted when the uncrossable element has no previous sibling", async () => {
+    const { getEditableContent } = await setupWebsiteBuilder(`<div><div>salut</div>bug</div>`);
+    const editableContent = getEditableContent();
+    const parentEl = editableContent.firstElementChild;
+    setSelection({
+        anchorNode: parentEl,
+        anchorOffset: 0,
+        focusNode: parentEl.lastChild,
+        focusOffset: 3,
+        isMouseEventSimulated: true,
+    });
+    await animationFrame();
+    expect(getContent(editableContent)).toBe(`<div>[]<div>salut</div>bug</div>`);
+});
