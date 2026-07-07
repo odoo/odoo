@@ -1,5 +1,5 @@
-import { onWillRender, render, useLayoutEffect } from "@web/owl2/utils";
-import { Component, signal, t, useListener, useProps } from "@odoo/owl";
+import { onWillRender, render } from "@web/owl2/utils";
+import { Component, signal, t, onMounted, onPatched, useListener, useProps } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -78,11 +78,13 @@ export class StatusBarField extends Component {
             render(this);
         };
 
-        useLayoutEffect(() => {
+        const adjustIfNeeded = () => {
             if (status === "shouldAdjust") {
                 adjust();
             }
-        });
+        };
+        onMounted(adjustIfNeeded);
+        onPatched(adjustIfNeeded);
 
         let forceRecomputeItems = false;
         onWillRender(() => {
