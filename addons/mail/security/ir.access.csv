@@ -108,7 +108,7 @@ access_mail_alias_domain_user,mail.alias.domain.user,mail.alias.domain,base.grou
 access_mail_alias_domain_system,mail.alias.domain.system,mail.alias.domain,base.group_erp_manager,crud,
 access_mail_gateway_allowed_system,mail.gateway.allowed.system,mail.gateway.allowed,base.group_system,crud,
 access_mail_message_reaction_system,mail.message.reaction.system,mail.message.reaction,base.group_system,crud,
-mail_message_subtype_rule_public,mail.message.subtype: portal/public: read public subtypes,mail.message.subtype,base.group_everyone,r,"[('internal', '=', False)]"
+mail_message_subtype_rule_public,mail.message.subtype: portal: read public subtypes,mail.message.subtype,base.group_portal,r,"[('internal', '=', False)]"
 access_mail_message_subtype_user,mail.message.subtype.user,mail.message.subtype,base.group_user,r,
 access_mail_message_subtype_system,mail.message.subtype.system,mail.message.subtype,base.group_system,crud,
 access_mail_presence,mail.presence,mail.presence,base.group_system,crud,
