@@ -10,7 +10,7 @@
     'website': 'https://www.odoo.com/app/time-off',
     'description': """
 Manage time off requests and allocations
-=====================================
+========================================
 
 This application controls the time off schedule of your company. It allows employees to request time off. Then, managers can review requests for time off and approve or reject them. This way you can control the overall time off planning for the company or department.
 
