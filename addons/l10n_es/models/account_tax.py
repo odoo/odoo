@@ -39,14 +39,19 @@ class AccountTax(models.Model):
     # EDI HELPERS
     # -------------------------------------------------------------------------
 
+    @api.model
+    @api.ormcache()
+    def _l10n_es_get_oss_tag(self):
+        return self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
+
     def _l10n_es_get_regime_code(self):
         # Regime codes (ClaveRegimenEspecialOTrascendencia)
         # NOTE there's 11 more codes to implement, also there can be up to 3 in total
         # See https://www.gipuzkoa.eus/documents/2456431/13761128/Anexo+I.pdf/2ab0116c-25b4-f16a-440e-c299952d683d
-        oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
+        oss_tag_id = self._l10n_es_get_oss_tag().id
 
         # If there's an OSS tax, it is considered an OSS operation
-        if oss_tag and oss_tag in self.invoice_repartition_line_ids.tag_ids:
+        if oss_tag_id and oss_tag_id in self.invoice_repartition_line_ids.tag_ids.ids:
             return '17'
 
         if self.filtered(lambda t: t.l10n_es_exempt_reason == 'E2'):
