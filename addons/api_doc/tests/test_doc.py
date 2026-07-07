@@ -28,6 +28,13 @@ class TestDoc(HttpCaseWithUserDemo):
             'group_ids': [Command.link(cls.env.ref('api_doc.group_allow_doc').id)],
         })
 
+    def url_open(self, url, *args, **kwargs):
+        # The time it takes to compute the index scales with the size of
+        # the registry. Adapt the timeout accordingly.
+        if '/index.json' in url:
+            kwargs.setdefault('timeout', 12 + 0.01 * len(self.env))
+        return super().url_open(url, *args, **kwargs)
+
     def test_doc_access(self):
         e = "This page is only accessible to Technical Documentation users."
         new_test_user(self.env, login='test_doc_access')
