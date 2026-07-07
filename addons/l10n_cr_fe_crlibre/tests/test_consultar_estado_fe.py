@@ -9,8 +9,10 @@ class TestConsultarEstadoFe(TransactionCase):
 
     def setUp(self):
         super().setUp()
+        self.company = self.env['res.company'].create({'name': 'Frutas Demo Test SA'})
+        self.env['account.chart.template'].try_loading('generic_coa', company=self.company)
         self.env['l10n_cr.fe.config'].create({
-            'company_id': self.env.company.id,
+            'company_id': self.company.id,
             'environment': 'stag',
             'identification_type': '01',
             'identification_number': '702320717',
@@ -25,7 +27,7 @@ class TestConsultarEstadoFe(TransactionCase):
         })
         partner = self.env['res.partner'].create({'name': 'Cliente Demo', 'vat': '102340567'})
         self.invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice', 'partner_id': partner.id,
+            'move_type': 'out_invoice', 'company_id': self.company.id, 'partner_id': partner.id,
             'l10n_cr_fe_clave': '5' * 50, 'l10n_cr_fe_state': 'enviado',
         })
 

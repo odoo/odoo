@@ -9,8 +9,9 @@ class TestFeConfig(TransactionCase):
 
     def setUp(self):
         super().setUp()
+        self.company = self.env['res.company'].create({'name': 'Empresa Demo FE Test'})
         self.config = self.env['l10n_cr.fe.config'].create({
-            'company_id': self.env.company.id,
+            'company_id': self.company.id,
             'environment': 'stag',
             'identification_type': '01',
             'identification_number': '208400858',
@@ -25,7 +26,7 @@ class TestFeConfig(TransactionCase):
         })
 
     def test_get_for_company_returns_config(self):
-        found = self.env['l10n_cr.fe.config']._get_for_company(self.env.company)
+        found = self.env['l10n_cr.fe.config']._get_for_company(self.company)
         self.assertEqual(found, self.config)
 
     def test_get_for_company_raises_when_missing(self):
@@ -36,7 +37,7 @@ class TestFeConfig(TransactionCase):
     def test_company_id_is_unique(self):
         with self.assertRaises(Exception):
             self.env['l10n_cr.fe.config'].create({
-                'company_id': self.env.company.id,
+                'company_id': self.company.id,
                 'environment': 'stag',
                 'identification_type': '01',
                 'identification_number': '111111111',
