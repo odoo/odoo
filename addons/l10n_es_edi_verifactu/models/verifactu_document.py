@@ -928,18 +928,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
     # Sending #
     ###########
 
-    def _l10n_es_edi_verifactu_get_obligado_partner(self):
-        """Return the partner that acts as 'ObligadoEmision' for this document.
-
-        For a self-billing document (emitted by the recipient on behalf of the vendor) the
-        ObligadoEmision is the vendor (move partner). For every other document it is the
-        company itself.
-        """
-        self.ensure_one()
-        if self.move_id:
-            return self.move_id._l10n_es_edi_verifactu_get_obligado_partner()
-        return self.company_id.partner_id
-
     @api.model
     def trigger_next_batch(self):
         """

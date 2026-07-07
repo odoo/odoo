@@ -72,8 +72,10 @@ class AccountMove(models.Model):
             ('R4', "R4: Rest"),
             ('R5', "R5: Corrective invoices concerning simplified invoices"),
         ],
+        compute="_compute_verifactu_refund_reason",
         string="Veri*Factu Refund Reason",
         copy=False,
+        store=True, readonly=False,
     )
 
     def _auto_init(self):
@@ -380,3 +382,15 @@ class AccountMove(models.Model):
         if self.journal_id.is_self_billing:
             return self.commercial_partner_id
         return self.company_id.partner_id
+
+    def _compute_l10n_es_is_simplified(self):
+        moves_to_compute = self.filtered(lambda m: not m.reversed_entry_id.l10n_es_is_simplified)
+        super(AccountMove, moves_to_compute)._compute_l10n_es_is_simplified()
+
+    @api.depends('l10n_es_is_simplified', 'reversed_entry_id', 'l10n_es_edi_verifactu_substituted_entry_id')
+    def _compute_verifactu_refund_reason(self):
+        for move in self.filtered(lambda m: m.reversed_entry_id or m.l10n_es_edi_verifactu_substituted_entry_id):
+            if move.l10n_es_edi_verifactu_refund_reason:
+                # Keep the value if the user already set/changed it manually.
+                continue
+            move.l10n_es_edi_verifactu_refund_reason = 'R5' if move.l10n_es_is_simplified else 'R4'

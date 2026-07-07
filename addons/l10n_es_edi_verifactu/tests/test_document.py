@@ -89,7 +89,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         with self._mock_last_document(None):
             credit_note._l10n_es_edi_verifactu_create_documents()
 
-        errors = ["There is no Veri*Factu document for the refunded record.", "The refund reason is not specified."]
+        errors = ["There is no Veri*Factu document for the refunded record."]
         expected_record_values = {
             'l10n_es_edi_verifactu_state': False,
             'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),

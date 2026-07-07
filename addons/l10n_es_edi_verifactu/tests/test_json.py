@@ -120,10 +120,11 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
                 'move_ids': [Command.set((invoice.id,))],
                 'date': '2019-02-10',
                 'journal_id': invoice.journal_id.id,
-                'l10n_es_edi_verifactu_refund_reason': 'R1',
             }
         ).reverse_moves()
         credit_note = invoice.reversal_move_ids
+        # The refund reason defaults to 'R4', but the user can still change it manually.
+        credit_note.l10n_es_edi_verifactu_refund_reason = 'R1'
         credit_note.invoice_date = '2019-02-11'
         credit_note.action_post()
 
