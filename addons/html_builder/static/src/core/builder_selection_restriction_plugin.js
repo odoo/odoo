@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { getDeepestPosition, isElement, isIconElement } from "@html_editor/utils/dom_info";
-import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
+import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
@@ -283,19 +283,19 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
                         tempFocusNode = node;
                         continue;
                     }
-                    // The node is not the first selected node and it's
-                    // uncrossable, we need to move the focusNode before
-                    // this uncrossable node (or after if we are selecting to
-                    // the left).
+                    // The node is uncrossable, we need to move the focusNode
+                    // before this uncrossable node (or after if we are selecting
+                    // to the left).
                     if (direction === DIRECTIONS.RIGHT) {
-                        tempFocusNode = node.previousElementSibling || tempFocusNode;
-                        [newFocusNode, newFocusOffset] = getDeepestPosition(
-                            tempFocusNode,
-                            nodeSize(tempFocusNode)
-                        );
+                        tempFocusNode = node.previousSibling || tempFocusNode;
+                        [newFocusNode, newFocusOffset] = tempFocusNode
+                            ? getDeepestPosition(tempFocusNode, nodeSize(tempFocusNode))
+                            : leftPos(node);
                     } else {
-                        tempFocusNode = node.nextElementSibling || tempFocusNode;
-                        [newFocusNode, newFocusOffset] = getDeepestPosition(tempFocusNode, 0);
+                        tempFocusNode = node.nextSibling || tempFocusNode;
+                        [newFocusNode, newFocusOffset] = tempFocusNode
+                            ? getDeepestPosition(tempFocusNode, 0)
+                            : rightPos(node);
                     }
 
                     selection = this.dependencies.selection.setSelection({
