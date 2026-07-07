@@ -1,5 +1,4 @@
-import { usePopover } from "@web/core/popover/popover_hook";
-import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { useAvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
 import { Component, props, t } from "@odoo/owl";
 
@@ -18,7 +17,7 @@ export class Avatar extends Component {
     props = props(avatarProps);
 
     setup() {
-        this.avatarCard = usePopover(AvatarCard);
+        this.avatarCard = useAvatarCard();
     }
 
     get canOpenPopover() {
@@ -41,9 +40,8 @@ export class Avatar extends Component {
     }
 
     onClickAvatar(ev) {
-        const target = ev.currentTarget;
-        if (!this.avatarCard.isOpen && this.canOpenPopover) {
-            this.avatarCard.open(target, this.popoverProps);
+        if (this.canOpenPopover) {
+            this.avatarCard.open(ev, this.popoverProps);
         }
     }
 }

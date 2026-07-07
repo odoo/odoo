@@ -1,13 +1,12 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { RelativeTime } from "@mail/core/common/relative_time";
-import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { useAvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { toggleFn } from "@mail/utils/common/signal";
 
 import { Component, props, signal, types } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
 export const SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD = 50; // arbitrary, ~ 1 line on large screen
@@ -30,7 +29,7 @@ export class ScheduledMessage extends Component {
         });
         this.readMore = signal(false);
         this.toggleFn = toggleFn;
-        this.avatarCard = usePopover(AvatarCard);
+        this.avatarCard = useAvatarCard({ model: "res.partner" });
         this.dialogService = useService("dialog");
     }
 
@@ -70,12 +69,7 @@ export class ScheduledMessage extends Component {
     }
 
     onClickAuthor(ev) {
-        if (!this.avatarCard.isOpen) {
-            this.avatarCard.open(ev.currentTarget, {
-                id: this.props.scheduledMessage.author_id.id,
-                model: "res.partner",
-            });
-        }
+        this.avatarCard.open(ev, this.props.scheduledMessage.author_id);
     }
 
     onClickCancel() {

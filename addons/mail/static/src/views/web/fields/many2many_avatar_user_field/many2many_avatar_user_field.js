@@ -1,8 +1,7 @@
 import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
 
 import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { useAvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import {
     Many2ManyTagsAvatarField,
     many2ManyTagsAvatarField,
@@ -20,7 +19,7 @@ const WithUserChatter = (T) =>
             if (this.props.withCommand) {
                 useAssignUserCommand();
             }
-            this.avatarCard = usePopover(AvatarCard);
+            this.avatarCard = useAvatarCard({ preventOpenIfOpen: false });
         }
 
         displayAvatarCard(record) {

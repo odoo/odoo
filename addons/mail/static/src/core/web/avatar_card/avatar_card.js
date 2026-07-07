@@ -120,25 +120,54 @@ export class AvatarCard extends Component {
     }
 }
 
+function getAvatarCardProps(record, model) {
+    if (!record) {
+        return;
+    }
+    if (typeof record === "number") {
+        return model ? { id: record, model } : undefined;
+    }
+    const id = record.id ?? record.resId;
+    const recordModel = record.model ?? record.resModel ?? model;
+    return id && recordModel ? { id, model: recordModel } : undefined;
+}
+
 /**
  * @param {Object} param
+ * @param {string | undefined} param.model
+ * @param {Object | undefined} param.popoverOptions
+ * @param {boolean | undefined} param.preventOpenIfOpen
  * @param {boolean | undefined} param.stopPropagation
- * @returns {{ open: (event: Event, partner: import("models").ResPartner) => void }}
+ * @returns {{
+ *   isOpen: boolean,
+ *   close: () => void,
+ *   open: (target: Event | HTMLElement, record: Object | number, model?: string) => boolean
+ * }}
  */
-export function usePartnerAvatarCard({ stopPropagation = false } = {}) {
-    const avatarCard = usePopover(AvatarCard);
+export function useAvatarCard({
+    model,
+    popoverOptions,
+    preventOpenIfOpen = true,
+    stopPropagation = false,
+} = {}) {
+    const avatarCard = usePopover(AvatarCard, popoverOptions);
     return {
-        open(event, partner) {
-            if (!partner || avatarCard.isOpen) {
-                return;
+        get isOpen() {
+            return avatarCard.isOpen;
+        },
+        close() {
+            avatarCard.close();
+        },
+        open(target, record, recordModel = model) {
+            const avatarCardProps = getAvatarCardProps(record, recordModel);
+            if (!avatarCardProps || (preventOpenIfOpen && avatarCard.isOpen)) {
+                return false;
             }
             if (stopPropagation) {
-                event.stopPropagation();
+                target.stopPropagation?.();
             }
-            avatarCard.open(event.currentTarget, {
-                id: partner.id,
-                model: "res.partner",
-            });
+            avatarCard.open(target.currentTarget || target, avatarCardProps);
+            return true;
         },
     };
 }

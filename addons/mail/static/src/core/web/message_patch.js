@@ -16,15 +16,14 @@ import {
     formatText,
 } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
-import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { useAvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
 patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
         this.action = useService("action");
-        this.avatarCard = usePopover(AvatarCard);
+        this.avatarCard = useAvatarCard({ model: "res.partner" });
     },
     get attClass() {
         return {
@@ -60,13 +59,7 @@ patch(Message.prototype, {
     onClickAuthor(ev) {
         if (this.hasAuthorClickable()) {
             markEventHandled(ev, "Message.ClickAuthor");
-            const target = ev.currentTarget;
-            if (!this.avatarCard.isOpen) {
-                this.avatarCard.open(target, {
-                    id: this.message.author_id.id,
-                    model: "res.partner",
-                });
-            }
+            this.avatarCard.open(ev, this.message.author_id);
         }
     },
 
