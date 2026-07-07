@@ -2,7 +2,7 @@
 
 import json
 
-from markupsafe import Markup, escape
+from markupsafe import Markup
 from werkzeug.exceptions import BadRequest
 
 from odoo.exceptions import AccessError, MissingError
@@ -117,7 +117,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
 
         # Log the returned products on the order
         return_message = self._build_return_log_message(move_qty_by_picking, return_reason)
-        order_sudo.message_post(body=Markup("%s") % return_message)
+        order_sudo.message_post(body=return_message)
 
         label_name = f"Return-{order_sudo.name}.pdf"
         pdfhttpheaders = [
@@ -135,11 +135,13 @@ class CustomerPortal(sale_portal.CustomerPortal):
         :return: HTML message listing the returned products and the return reason.
         :rtype: str
         """
-        message = self.env._("A return label has been downloaded for the following products:<br/>")
+        message = Markup("%s<br/>") % self.env._(
+            "A return label has been downloaded for the following products:"
+        )
         for picking, qty_by_move in move_qty_by_picking.items():
-            message += "<br/>%s" % (self.env._("%s:") % picking.display_name)
+            message += Markup("<br/>%s") % (self.env._("%s:") % picking.display_name)
             for move, qty in qty_by_move.items():
-                message += "<br/>- %s" % escape(
+                message += Markup("<br/>- %s") % (
                     self.env._("%(quantity)s x %(product_name)s")
                     % {
                         "quantity": int(qty),
@@ -149,6 +151,6 @@ class CustomerPortal(sale_portal.CustomerPortal):
                         .display_name,
                     }
                 )
-            message += "<br/>"
-        message += "<br/>%s" % (self.env._("Return reason: %s") % return_reason.name)
+            message += Markup("<br/>")
+        message += Markup("<br/>%s") % (self.env._("Return reason: %s") % return_reason.name)
         return message
