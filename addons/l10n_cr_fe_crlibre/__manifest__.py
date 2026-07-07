@@ -11,6 +11,7 @@
         'security/l10n_cr_fe_security.xml',
         'security/ir.model.access.csv',
         'views/fe_config_views.xml',
+        'views/product_template_views.xml',
         'views/account_move_views.xml',
     ],
     'license': 'LGPL-3',
