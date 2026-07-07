@@ -241,12 +241,14 @@ export class ListPlugin extends Plugin {
 
     getBlocksToToggleList() {
         const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
-        return targetedBlocks.filter(
-            (block) =>
-                !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
-                block.isContentEditable &&
-                !["OL", "UL"].includes(block.tagName)
-        );
+        return targetedBlocks
+            .filter(
+                (block) =>
+                    !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
+                    !["OL", "UL"].includes(block.tagName)
+            )
+            .map((block) => closestElement(block, isListItem) ?? block)
+            .filter((block) => block.isContentEditable && block.parentElement.isContentEditable);
     }
 
     canToggleList(selection) {
@@ -290,7 +292,7 @@ export class ListPlugin extends Plugin {
         const nonListBlocks = new Set();
         const listsToSwitch = new Set();
         for (const block of this.getBlocksToToggleList()) {
-            const li = closestElement(block, isListItem);
+            const li = isListItem(block) && block;
             if (li) {
                 if (this.getListMode(li.parentElement) === mode) {
                     sameModeListItems.add(li);

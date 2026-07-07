@@ -411,15 +411,41 @@ describe("Mixed", () => {
     });
 });
 
-test("should have list tool only if the block is content editable", async () => {
-    for (const [contenteditable, count] of [
-        [false, 0],
-        [true, 1],
-    ]) {
+describe("availability", () => {
+    test("list tool should be available from span inside editable block", async () => {
         await setupEditor(
-            `<div contenteditable="${contenteditable}"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+            `<div contenteditable="true"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
         );
         await expandToolbar();
-        expect(".btn[name='list_selector']").toHaveCount(count);
-    }
+        expect(".btn[name='list_selector']").toHaveCount(1);
+    });
+    test("list tool should not be available from editable span inside non-editable block", async () => {
+        await setupEditor(
+            `<div contenteditable="false"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+        );
+        await expandToolbar();
+        expect(".btn[name='list_selector']").toHaveCount(0);
+    });
+    test("list tool should not be available from editable p inside non-editable block", async () => {
+        await setupEditor(
+            `<div contenteditable="false"><p contenteditable="true">ab[cde]fg</p></div>`
+        );
+        await expandToolbar();
+        expect(".btn[name='list_selector']").toHaveCount(0);
+    });
+
+    test("list tool should be available from editable p inside editable list", async () => {
+        await setupEditor(
+            `<ul contenteditable="true"><li><p contenteditable="true">ab[cde]fg</p></li></ul>`
+        );
+        await expandToolbar();
+        expect(".btn[name='list_selector']").toHaveCount(1);
+    });
+    test("list tool should not be available from editable p inside non-editable list", async () => {
+        await setupEditor(
+            `<ul contenteditable="false"><li><p contenteditable="true">ab[cde]fg</p></li></ul>`
+        );
+        await expandToolbar();
+        expect(".btn[name='list_selector']").toHaveCount(0);
+    });
 });
