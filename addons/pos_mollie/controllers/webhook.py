@@ -28,7 +28,7 @@ class PosMollie(http.Controller):
             _logger.warning("No POS session found matching Mollie webhook, ignoring")
             return "OK"
 
-        payment_info = payment_method_sudo._mollie_get_payment(id)
+        payment_info = payment_method_sudo.mollie_get_payment(id)
         payment_details = payment_info["details"]
 
         message = {
