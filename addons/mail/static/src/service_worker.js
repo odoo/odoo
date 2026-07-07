@@ -119,6 +119,23 @@ async function storeLogs(logs, { download = false } = {}) {
 }
 
 /**
+ * Encode an ArrayBuffer as a base64url string without padding.
+ * Mirrors _arrayBufferToBase64() in webclient.js, but uses the global btoa()
+ * instead of window.btoa() since window is not available in service workers.
+ *
+ * @param {ArrayBuffer} buffer
+ * @returns {string}
+ */
+function arrayBufferToBase64Url(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+}
+
+/**
  * @param {number} channelId id of the mail discuss channel
  * @param {Object} param1
  * @param {string} [param1.action] odoo client action
@@ -284,6 +301,10 @@ self.addEventListener("pushsubscriptionchange", async (event) => {
     const subscription = await self.registration.pushManager.subscribe(
         event.oldSubscription.options
     );
+    // Encode the VAPID public key as base64url to pass to the server for validation.
+    // Without this, register_devices always raises InvalidVapidError and the renewed
+    // subscription is never saved, breaking push notifications after a few days.
+    const vapid_public_key = arrayBufferToBase64Url(subscription.options.applicationServerKey);
     await fetch("/web/dataset/call_kw/mail.push.device/register_devices", {
         headers: {
             "Content-type": "application/json",
@@ -299,6 +320,7 @@ self.addEventListener("pushsubscriptionchange", async (event) => {
                 kwargs: {
                     ...subscription.toJSON(),
                     previousEndpoint: event.oldSubscription.endpoint,
+                    vapid_public_key,
                 },
                 context: {},
             },
