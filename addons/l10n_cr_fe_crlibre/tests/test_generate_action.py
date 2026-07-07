@@ -8,6 +8,17 @@ class TestGenerateAction(TransactionCase):
 
     def setUp(self):
         super().setUp()
+        self.env['l10n_cr.fe.config'].create({
+            'company_id': self.env.company.id,
+            'environment': 'stag',
+            'identification_type': '01',
+            'identification_number': '702320717',
+            'legal_name': 'Frutas Demo SA',
+            'economic_activity_code': '011101',
+            'province': '1', 'canton': '01', 'district': '08', 'neighborhood': '01',
+            'address_detail': 'Local de demostración',
+            'email': 'demo@frutasdemo.cr',
+        })
         partner = self.env['res.partner'].create({'name': 'Cliente Demo', 'vat': '102340567'})
         product = self.env['product.product'].create({'name': 'Producto demo'})
         self.invoice = self.env['account.move'].create({

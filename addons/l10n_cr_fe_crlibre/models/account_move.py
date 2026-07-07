@@ -18,8 +18,9 @@ class AccountMove(models.Model):
         selection=[('draft', "Borrador"), ('generated', "Generado"), ('error', "Error")],
         string="Estado FE", default='draft', readonly=True, copy=False)
 
-    def _l10n_cr_fe_param(self, key):
-        return self.env['ir.config_parameter'].sudo().get_param('l10n_cr_fe.' + key) or ''
+    def _l10n_cr_fe_get_config(self):
+        self.ensure_one()
+        return self.env['l10n_cr.fe.config']._get_for_company(self.company_id)
 
     def _l10n_cr_fe_build_detalles(self):
         self.ensure_one()
@@ -51,39 +52,44 @@ class AccountMove(models.Model):
             detalles.append(detalle)
         return detalles
 
+    def _l10n_cr_fe_param(self, key):
+        return self.env['ir.config_parameter'].sudo().get_param('l10n_cr_fe.' + key) or ''
+
     def _l10n_cr_fe_build_clave_params(self):
         self.ensure_one()
+        config = self._l10n_cr_fe_get_config()
         return {
             'tipoDocumento': 'FE',
-            'tipoCedula': self._l10n_cr_fe_param('emisor_tipo_identif') == '02' and 'juridico' or 'fisico',
-            'cedula': self._l10n_cr_fe_param('emisor_cedula'),
+            'tipoCedula': config.identification_type == '02' and 'juridico' or 'fisico',
+            'cedula': config.identification_number,
             'situacion': 'normal',
             'consecutivo': str(self.id),
             'codigoSeguridad': str(random.randint(0, 99999999)).zfill(8),
-            'sucursal': '001',
-            'terminal': '00001',
+            'sucursal': config.branch_number,
+            'terminal': config.terminal_number,
         }
 
     def _l10n_cr_fe_build_genxml_params(self, clave, consecutivo, detalles):
         self.ensure_one()
+        config = self._l10n_cr_fe_get_config()
         fecha = fields.Datetime.context_timestamp(self, datetime.now())
         total = self.amount_total
         base = self.amount_untaxed
         medios_pago = [{'tipoMedioPago': '01', 'totalMedioPago': total}]
         return {
             'clave': clave,
-            'proveedor_sistemas': self._l10n_cr_fe_param('proveedor_sistemas'),
-            'codigo_actividad_emisor': self._l10n_cr_fe_param('emisor_codigo_actividad'),
+            'proveedor_sistemas': config.identification_number,
+            'codigo_actividad_emisor': config.economic_activity_code,
             'consecutivo': consecutivo,
             'fecha_emision': fecha.strftime('%Y-%m-%dT%H:%M:%S-06:00'),
-            'emisor_nombre': self._l10n_cr_fe_param('emisor_nombre'),
-            'emisor_tipo_identif': self._l10n_cr_fe_param('emisor_tipo_identif'),
-            'emisor_num_identif': self._l10n_cr_fe_param('emisor_cedula'),
-            'emisor_provincia': self._l10n_cr_fe_param('emisor_provincia'),
-            'emisor_canton': self._l10n_cr_fe_param('emisor_canton'),
-            'emisor_distrito': self._l10n_cr_fe_param('emisor_distrito'),
-            'emisor_otras_senas': self._l10n_cr_fe_param('emisor_otras_senas'),
-            'emisor_email': self._l10n_cr_fe_param('emisor_email'),
+            'emisor_nombre': config.legal_name,
+            'emisor_tipo_identif': config.identification_type,
+            'emisor_num_identif': config.identification_number,
+            'emisor_provincia': config.province,
+            'emisor_canton': config.canton,
+            'emisor_distrito': config.district,
+            'emisor_otras_senas': config.address_detail,
+            'emisor_email': config.email,
             'receptor_nombre': self.partner_id.name or '',
             'receptor_tipo_identif': '01',
             'receptor_num_identif': (self.partner_id.vat or '').replace('-', '') or '000000000',
