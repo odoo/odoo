@@ -108,7 +108,7 @@ class L10n_Eg_EdiThumbDrive(models.Model):
         return ''.join(canonical_str)
 
     def _generate_signed_attrs__(self, eta_invoice, signing_time):
-        cert = x509.Certificate.load(self.certificate)
+        cert = x509.Certificate.load(self.certificate.content)
         data = hashlib.sha256(self._serialize_for_signing(eta_invoice).encode()).digest()
         return cms.CMSAttributes([
             cms.CMSAttribute({
@@ -136,7 +136,7 @@ class L10n_Eg_EdiThumbDrive(models.Model):
         ])
 
     def _generate_signer_info__(self, eta_invoice, signing_time, signature=False):
-        cert = x509.Certificate.load(self.certificate)
+        cert = x509.Certificate.load(self.certificate.content)
         signer_info = {
             'version': 'v1',
             'sid': cms.SignerIdentifier({
@@ -156,7 +156,7 @@ class L10n_Eg_EdiThumbDrive(models.Model):
         return signer_info
 
     def _generate_cades_bes_signature(self, eta_invoice, signing_time, signature):
-        cert = x509.Certificate.load(self.certificate)
+        cert = x509.Certificate.load(self.certificate.content)
         signed_data = {
             'version': 'v3',
             'digest_algorithms': cms.DigestAlgorithms((
