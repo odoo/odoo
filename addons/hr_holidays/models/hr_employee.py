@@ -31,15 +31,15 @@ class HrEmployee(models.Model):
             ('validate1', 'Waiting Second Approval'),
             ('validate', 'Approved'),
             ('cancel', 'Cancelled'),
-        ], groups="hr.group_hr_user")
-    leave_date_from = fields.Date('From Date', compute='_compute_leave_status', groups="hr.group_hr_user")
-    leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
+        ], groups="hr.group_hr_user", default=False)
+    leave_date_from = fields.Date('From Date', compute='_compute_leave_status', groups="hr.group_hr_user", default=False)
+    leave_date_to = fields.Date('To Date', compute='_compute_leave_status', default=False)
     allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count',
                                     groups="hr.group_hr_user")
     allocations_count = fields.Integer('Total number of allocations', compute="_compute_allocation_count",
                                        groups="hr.group_hr_user")
     show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
-    is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
+    is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee', default=False)
     allocation_display = fields.Char(compute='_compute_allocation_remaining_display')
     allocation_remaining_display = fields.Char(compute='_compute_allocation_remaining_display')
     hr_icon_display = fields.Selection(selection_add=[
@@ -213,14 +213,6 @@ class HrEmployee(models.Model):
             employee.leave_date_to = employee_back_on.get(employee.id, latest_emp_holiday.date_to).date()
             employee.current_leave_state = latest_emp_holiday.state
             employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
-
-        no_data = self - holidays.employee_id
-        no_data.update({
-            'leave_date_from': False,
-            'leave_date_to': False,
-            'current_leave_state': False,
-            'is_absent': False,
-        })
 
     @api.depends('parent_id')
     def _compute_leave_manager(self):
