@@ -3,6 +3,7 @@ import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
+import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from '@web/core/utils/timing';
 import { LocationList } from '@website_sale_stock/js/location_selector/location_list/location_list';
 import { MapContainer } from '@website_sale_stock/js/location_selector/map_container/map_container';
@@ -23,6 +24,7 @@ export class LocationSelectorDialog extends Component {
     props = props(locationSelectorDialogProps);
 
     setup() {
+        this.uiService = useService("ui");
         this.state = proxy({
             locations: [],
             error: false,
@@ -30,7 +32,7 @@ export class LocationSelectorDialog extends Component {
             zipCode: this.props.zipCode,
             // Some APIs like FedEx use strings to identify locations.
             selectedLocationId: String(this.props.selectedLocationId),
-            isSmall: this.env.isSmall,
+            isSmall: this.uiService.isSmall,
         });
 
         this.getLocationUrl = '/website_sale_stock/get_pickup_locations';
@@ -179,6 +181,6 @@ export class LocationSelectorDialog extends Component {
      * @return {void}
      */
     updateSize() {
-        this.state.isSmall = this.env.isSmall;
+        this.state.isSmall = this.uiService.isSmall;
     }
 }

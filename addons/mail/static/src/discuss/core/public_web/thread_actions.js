@@ -25,7 +25,7 @@ registerThreadAction("show-threads", {
     icon: "fa fa-fw fa-comments-o",
     name: _t("Threads"),
     setup({ owner, store }) {
-        if (owner.env.inDiscussApp && !store.env.isSmall) {
+        if (owner.env.inDiscussApp && !store.env.services.ui.isSmall) {
             this.popover = usePopover(SubChannelList, {
                 onClose: () => this.actionPanelClose(),
                 fixedPosition: true,

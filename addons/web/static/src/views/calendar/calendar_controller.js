@@ -69,6 +69,7 @@ export class CalendarController extends Component {
         this.action = useService("action");
         this.orm = useService("orm");
         this.displayDialog = useUniqueDialog();
+        this.uiService = useService("ui");
 
         this.model = useModelWithSampleData(this.props.Model, this.modelParams);
 
@@ -83,7 +84,7 @@ export class CalendarController extends Component {
                     ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
                     : true,
             sidePanelExpanded:
-                !this.env.isSmall &&
+                !this.uiService.isSmall &&
                 Boolean(localSidePanelExpanded != null ? JSON.parse(localSidePanelExpanded) : true),
         });
 
@@ -112,13 +113,17 @@ export class CalendarController extends Component {
     }
 
     get canScheduleEvents() {
-        return !this.env.isSmall && this.props.archInfo.canSchedule && this.props.archInfo.canEdit;
+        return (
+            !this.uiService.isSmall &&
+            this.props.archInfo.canSchedule &&
+            this.props.archInfo.canEdit
+        );
     }
 
     get currentDate() {
         const meta = this.model.meta;
         const scale = meta.scale;
-        if (this.env.isSmall && ["week", "month"].includes(scale)) {
+        if (this.uiService.isSmall && ["week", "month"].includes(scale)) {
             const date = meta.date || DateTime.now();
             let text = "";
             if (scale === "week") {
@@ -205,7 +210,7 @@ export class CalendarController extends Component {
     }
 
     get showCalendar() {
-        return !this.env.isSmall || !this.state.sidePanelExpanded;
+        return !this.uiService.isSmall || !this.state.sidePanelExpanded;
     }
 
     get hasSidePanel() {

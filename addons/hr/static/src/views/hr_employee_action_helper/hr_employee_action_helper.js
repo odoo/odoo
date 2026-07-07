@@ -26,6 +26,7 @@ export class HrEmployeeActionHelper extends ActionHelper {
         super.setup();
         this.orm = useService("orm");
         this.action = useService("action");
+        this.uiService = useService("ui");
         this.state = proxy({ isOnboarding: null });
         onWillStart(async () => {
             this.state.isOnboarding = await this.orm.call("hr.employee", "is_onboarding", [
@@ -41,7 +42,7 @@ export class HrEmployeeActionHelper extends ActionHelper {
     get showOnboardingHelper() {
         // If on mobile and that the user hasn't the employee rights, then keep the same behavior as
         // the ActionHelper (because no onboarding helper really suit this case)
-        return this.state.isOnboarding && !this.env.isSmall;
+        return this.state.isOnboarding && !this.uiService.isSmall;
     }
 
     async loadDemoData() {

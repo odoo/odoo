@@ -35,7 +35,7 @@
 
                 <t t-set-slot="control-panel-additional-actions">
                     <CogMenu t-if="!this.hasSelectedRecords"/>
-                    <CogMenu t-elif="this.env.isSmall and (this.props.info.actionMenus or this.archInfo.headerButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="this.hasSelectedRecords">
+                    <CogMenu t-elif="this.uiService.isSmall and (this.props.info.actionMenus or this.archInfo.headerButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="this.hasSelectedRecords">
                         <t t-foreach="this.archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!this.evalViewModifier(button.invisible)">
                             <DropdownItem class="'o-dropdown-item-unstyled-button'">
                                 <MultiRecordViewButton
@@ -57,7 +57,7 @@
                 <t t-set-slot="control-panel-selection-actions">
                     <div t-if="this.hasSelectedRecords" class="o_selection_container m-1 m-md-0 d-flex gap-1">
                         <SelectionBox root="this.model.root"/>
-                        <t t-if="!this.env.isSmall">
+                        <t t-if="!this.uiService.isSmall">
                             <t t-foreach="this.archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!this.evalViewModifier(button.invisible)">
                                 <MultiRecordViewButton
                                     t-if="button.display !== 'always'"

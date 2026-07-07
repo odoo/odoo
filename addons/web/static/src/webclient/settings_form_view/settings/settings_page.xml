@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.SettingsPage">
         <div class="o_setting_container">
-            <t t-if="this.env.isSmall">
+            <t t-if="this.uiService.isSmall">
                 <t t-call="web.SettingsPage.SidePanel.Small"/>
             </t>
             <t t-else="">

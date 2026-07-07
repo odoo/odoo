@@ -40,7 +40,7 @@
 </t>
 
 <t t-name="web.Form.InnerGroup.ItemComponent">
-    <t t-if="this.env.isSmall ? cell.props.fieldInfo.type !== 'boolean' and cell.props.fieldInfo.field.component.name !== 'ColorPickerField' : cell.props.fieldInfo.field.component.name !== 'BooleanField'">
+    <t t-if="this.uiService.isSmall ? cell.props.fieldInfo.type !== 'boolean' and cell.props.fieldInfo.field.component.name !== 'ColorPickerField' : cell.props.fieldInfo.field.component.name !== 'BooleanField'">
         <div class="o_cell o_wrap_label text-break text-900">
             <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
         </div>

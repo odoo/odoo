@@ -1,9 +1,9 @@
+import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { formatDate } from "@web/core/l10n/dates";
-import { getColor } from "../utils";
+import { useService } from "@web/core/utils/hooks";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
-
-import { Component } from "@odoo/owl";
+import { getColor } from "../utils";
 
 export class CalendarYearPopover extends Component {
     static components = { Dialog };
@@ -23,6 +23,10 @@ export class CalendarYearPopover extends Component {
         deleteRecord: Function,
         editRecord: Function,
     };
+
+    setup() {
+        this.uiService = useService("ui");
+    }
 
     get recordGroups() {
         return this.computeRecordGroups();

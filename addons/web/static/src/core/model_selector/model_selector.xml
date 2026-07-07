@@ -2,7 +2,7 @@
 <templates>
     <t t-name="web.ModelSelector">
         <div class="o_model_selector" t-custom-ref="autocomplete_container">
-            <input t-if="this.env.isSmall"
+            <input t-if="this.uiService.isSmall"
                 type="text"
                 class="o_input"
                 readonly=""

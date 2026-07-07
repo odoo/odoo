@@ -1,5 +1,6 @@
 import { Component, props, t } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
+import { useService } from "@web/core/utils/hooks";
 
 export const groupProps = {
     class: t.any().optional(),
@@ -57,6 +58,9 @@ export class OuterGroup extends Group {
 
 export class InnerGroup extends Group {
     static template = "web.Form.InnerGroup";
+    setup() {
+        this.uiService = useService("ui");
+    }
     getTemplate(subType) {
         return this.constructor.templates[subType] || this.constructor.templates.default;
     }

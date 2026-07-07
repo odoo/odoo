@@ -5,9 +5,9 @@
     <div class="o-form-buttonbox d-print-none position-relative d-flex w-md-auto" t-attf-class="{{ this.isFull ? 'o_full w-100' : 'o_not_full'}} {{this.props.class}}">
         <t t-call-slot="{{ button_value }}" t-foreach="this.visibleButtons" t-as="button" t-key="button_value"/>
         <div t-if="this.additionalButtons.length" class="oe_stat_button btn position-relative p-0 border-0">
-            <Dropdown position="!this.env.isSmall ? 'bottom-end' : ''" menuClass="'o-form-buttonbox p-0 border-0 ' + (!this.env.isSmall ? 'o_dropdown_more' : 'o-form-buttonbox-small')">
-                <button class="o_button_more btn d-flex justify-content-center align-items-center" t-att-class="!this.env.isSmall ? 'o-dropdown-caret btn-outline-secondary' : 'btn-secondary'" data-available-offline="">
-                    <span t-if="!this.env.isSmall">More</span>
+            <Dropdown position="!this.ui.isSmall ? 'bottom-end' : ''" menuClass="'o-form-buttonbox p-0 border-0 ' + (!this.ui.isSmall ? 'o_dropdown_more' : 'o-form-buttonbox-small')">
+                <button class="o_button_more btn d-flex justify-content-center align-items-center" t-att-class="!this.ui.isSmall ? 'o-dropdown-caret btn-outline-secondary' : 'btn-secondary'" data-available-offline="">
+                    <span t-if="!this.ui.isSmall">More</span>
                     <i t-else="" class="fa fa-fw fa-bolt lh-base" aria-hidden="true"/>
                 </button>
                 <t t-set-slot="content">

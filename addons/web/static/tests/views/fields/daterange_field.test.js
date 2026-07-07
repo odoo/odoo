@@ -16,20 +16,20 @@ import {
 } from "@odoo/hoot-dom";
 import { disableAnimations, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { editTime } from "@web/../tests/core/datetime/datetime_test_helpers";
+import { _makeUser, user } from "@web/core/user";
 import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 import {
     clickSave,
     contains,
     defineModels,
     fields,
-    getMockEnv,
+    isSmall,
     models,
     mountView,
     onRpc,
     pagerNext,
     patchWithCleanup,
 } from "../../web_test_helpers";
-import { _makeUser, user } from "@web/core/user";
 
 const { DateTime } = luxon;
 
@@ -42,7 +42,7 @@ function assertTimePickerInput() {
 
     for (let i = 0; i < expectedTimes.length; i++) {
         expect(queryAll(".o_time_picker_input")[i].value).toBe(
-            getMockEnv().isSmall
+            isSmall()
                 ? DateTime.fromFormat(expectedTimes[i], "H:mm").toFormat("HH:mm")
                 : expectedTimes[i]
         );
@@ -1204,7 +1204,7 @@ test(`list daterange in x2many: open/close picker`, async () => {
     await contains(getPickerCell("15")).click();
     await contains(getPickerCell("20")).click();
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         // Close the bottom sheet
         await click(".o_bottom_sheet_backdrop");
     } else {
@@ -1459,7 +1459,7 @@ test("updating time keeps selected dates", async () => {
 
     await click(getPickerCell("16").at(-1));
     await animationFrame();
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await runAllTimers();
         await editTime("05:05", 1);
     } else {
@@ -1475,7 +1475,7 @@ test("updating time keeps selected dates", async () => {
 
     await contains(".o_time_picker:eq(0) .o_time_picker_input").click();
     await animationFrame();
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await editTime("15:35");
     } else {
         await edit("15:35", { confirm: "enter" });

@@ -1,4 +1,3 @@
-import { onRendered } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import {
     advanceTime,
@@ -21,8 +20,8 @@ import {
     defineModels,
     defineParams,
     fields,
-    getMockEnv,
     getService,
+    isSmall,
     makeServerError,
     mockService,
     models,
@@ -34,6 +33,19 @@ import {
     serverState,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { serializeDateTime } from "@web/core/l10n/dates";
+import { registry } from "@web/core/registry";
+import { zip } from "@web/core/utils/arrays";
+import { range } from "@web/core/utils/numbers";
+import { onRendered } from "@web/owl2/utils";
+import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
+import { CalendarController } from "@web/views/calendar/calendar_controller";
+import { CalendarModel } from "@web/views/calendar/calendar_model";
+import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
+import { calendarView } from "@web/views/calendar/calendar_view";
+import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
+import { WebClient } from "@web/webclient/webclient";
 import {
     changeScale,
     clickAllDaySlot,
@@ -59,19 +71,6 @@ import {
     toggleFilter,
     toggleSectionFilter,
 } from "./calendar_test_helpers";
-
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { registry } from "@web/core/registry";
-import { zip } from "@web/core/utils/arrays";
-import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
-import { CalendarController } from "@web/views/calendar/calendar_controller";
-import { CalendarModel } from "@web/views/calendar/calendar_model";
-import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
-import { calendarView } from "@web/views/calendar/calendar_view";
-import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
-import { WebClient } from "@web/webclient/webclient";
-import { serializeDateTime } from "@web/core/l10n/dates";
-import { range } from "@web/core/utils/numbers";
 
 class Event extends models.Model {
     name = fields.Char();
@@ -1063,7 +1062,7 @@ test(`delete attribute on calendar doesn't show delete button in popover`, async
     });
 
     await clickEvent(4);
-    const container = getMockEnv().isSmall ? ".modal" : ".o_cw_popover";
+    const container = isSmall() ? ".modal" : ".o_cw_popover";
     expect(container).toHaveCount(1);
     expect(`${container} .o_cw_popover_delete`).toHaveCount(0);
 });
@@ -1737,7 +1736,7 @@ test(`create event with timezone in week mode with formViewDialog`, async () => 
     // use datepicker to enter a date: 12/13/2016 10:00:00
     await contains(`.o_field_widget[name='stop'] button`).click();
     await selectHourOnPicker("10");
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         // Close the timepicker
         await click(".o_bottom_sheet_backdrop");
     }
@@ -4004,14 +4003,14 @@ test(`drag and drop on month mode with all_day mapping`, async () => {
     // use datepicker to enter a date: 12/20/2016 07:00:00
     await contains(`.o_field_widget[name="start"] button`).click();
     await selectHourOnPicker("7:00");
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     }
 
     // use datepicker to enter a date: 12/20/2016 19:00:00
     await contains(`.o_field_widget[name="stop"] button`).click();
     await selectHourOnPicker("19:00");
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     }
 
@@ -4495,8 +4494,8 @@ test(`edit record and attempt to create a record with "create" attribute set to 
     // editing existing events should still be possible
     // click on an existing event to open the formViewDialog
     await clickEvent(4);
-    const popover = getMockEnv().isSmall ? ".modal" : ".o_cw_popover";
-    const closeButton = getMockEnv().isSmall ? ".oi-arrow-left" : ".o_cw_popover_close";
+    const popover = isSmall() ? ".modal" : ".o_cw_popover";
+    const closeButton = isSmall() ? ".oi-arrow-left" : ".o_cw_popover_close";
     expect(popover).toHaveCount(1);
     expect(`${popover} .o_cw_popover_edit`).toHaveCount(1);
     expect(`${popover} .o_cw_popover_delete`).toHaveCount(1);
@@ -4933,7 +4932,7 @@ test(`fields are added in the right order in popover`, async () => {
     });
 
     await clickEvent(4);
-    const popover = getMockEnv().isSmall ? ".modal" : ".o_cw_popover";
+    const popover = isSmall() ? ".modal" : ".o_cw_popover";
     expect(popover).toHaveCount(0);
 
     deferred.resolve();
@@ -5026,7 +5025,7 @@ test(`popover ignores readonly field modifier`, async () => {
 
     await clickEvent(4);
     // test would fail here if we don't ignore readonly modifier
-    const popover = getMockEnv().isSmall ? ".modal" : ".o_cw_popover";
+    const popover = isSmall() ? ".modal" : ".o_cw_popover";
     expect(popover).toHaveCount(1);
 });
 
@@ -5270,7 +5269,7 @@ test(`calendar render properties in popover`, async () => {
     });
 
     await clickEvent(1);
-    const popover = getMockEnv().isSmall ? ".modal" : ".o_popover";
+    const popover = isSmall() ? ".modal" : ".o_popover";
     // Labels:
     expect(queryAllTexts(`${popover} .o_calendar_property_field span.fw-bold`)).toEqual([
         "My Char",

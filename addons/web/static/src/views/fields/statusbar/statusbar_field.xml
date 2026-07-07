@@ -67,7 +67,7 @@
                     t-custom-ref="dropdown" 
                     type="button" 
                     class="btn btn-secondary dropdown-toggle"
-                    t-att-class="{'o_arrow_button': this.env.isSmall, 'o_last': selectedIndex === 0 , 'o_first': selectedIndex === allItems.length - 1}"
+                    t-att-class="{'o_arrow_button': this.uiService.isSmall, 'o_last': selectedIndex === 0 , 'o_first': selectedIndex === allItems.length - 1}"
                     t-att-disabled="this.props.isDisabled"
                 >
                     <t t-out="this.getCurrentLabel()" />

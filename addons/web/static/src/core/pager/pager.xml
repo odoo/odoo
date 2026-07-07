@@ -3,7 +3,7 @@
 
     <t t-name="web.Pager">
         <nav class="o_pager d-flex gap-2 h-100" aria-label="Pager">
-            <span t-if="!this.env.isSmall" class="o_pager_counter align-self-center" t-on-click.stop="">
+            <span t-if="!this.uiService.isSmall" class="o_pager_counter align-self-center" t-on-click.stop="">
                 <t t-if="this.state.isEditing">
                     <input type="text" class="o_pager_value o_input d-inline-block w-auto text-end mb-n1" size="7" t-custom-ref="autofocus" t-att-value="this.value" t-on-blur="this.onInputBlur" t-on-change="this.onInputChange" t-on-keydown.stop="this.onInputKeydown" />
                 </t>

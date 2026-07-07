@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="d-flex h-100 flex-column flex-md-row bg-300">
-                <t t-if="!this.env.isSmall">
+                <t t-if="!this.uiService.isSmall">
                     <div class="o_hr_kiosk_sidebar ps-2 py-2 overflow-auto">
                         <div class="list-group">
                             <a t-on-click="() => this.onDepartmentClick()" class="list-group-item py-3 list-group-item-action text-start">

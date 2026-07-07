@@ -1,12 +1,13 @@
 import { Component } from "@odoo/owl";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
-import { _t } from "@web/core/l10n/translation";
-import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 import {
     getEmptyFilterValue,
     getFilterTypeOperators,
     isEmptyFilterValue,
 } from "@spreadsheet/global_filters/helpers";
+import { _t } from "@web/core/l10n/translation";
+import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * This component is used to display a list of all the global filters of a dashboard.
@@ -21,6 +22,10 @@ export class DashboardFilterList extends Component {
         onFilterChange: Function,
         model: Object,
     };
+
+    setup() {
+        this.uiService = useService("ui");
+    }
 
     getTranslatedFilterLabel(filter) {
         return _t(filter.label); // Label is extracted from the spreadsheet json file

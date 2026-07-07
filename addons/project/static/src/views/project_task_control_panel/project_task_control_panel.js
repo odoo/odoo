@@ -36,8 +36,8 @@ export class ProjectTaskControlPanel extends ControlPanel {
     }
 
     getDropdownClass(action) {
-        return (!this.env.isSmall && this.embeddedPanelState.isEmbeddedActionVisible(action)) ||
-            (this.env.isSmall &&
+        return (!this.uiService.isSmall && this.embeddedPanelState.isEmbeddedActionVisible(action)) ||
+            (this.uiService.isSmall &&
                 this.embeddedPanelState.embeddedInfos.currentEmbeddedAction?.id === action.id)
             ? "selected"
             : "";

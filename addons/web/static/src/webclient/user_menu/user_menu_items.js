@@ -38,7 +38,7 @@ function shortCutsItem(env) {
     return {
         type: "item",
         id: "shortcuts",
-        hide: env.isSmall,
+        hide: env.services.ui.isSmall,
         description: markup`
             <div class="d-flex align-items-center justify-content-between p-0 w-100">
                 <span>${_t("Shortcuts")}</span>
@@ -140,7 +140,7 @@ function logOutItem(env) {
 export function shareUrlMenuItem(env) {
     return {
         type: "item",
-        hide: !router.shareUrl || env.isSmall || !isDisplayStandalone(),
+        hide: !router.shareUrl || env.services.ui.isSmall || !isDisplayStandalone(),
         id: "share_url",
         description: markup`
             <div class="d-flex align-items-center justify-content-between w-100">

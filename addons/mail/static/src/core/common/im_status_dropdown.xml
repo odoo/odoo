@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="mail.ImStatusDropdown">
         <Dropdown menuClass="'o-mail-ImStatusDropdown'">
-            <a href="#" t-att-class="{ 'd-block text-body py-2 d-flex flex-row align-items-baseline gap-2': this.env.isSmall }">
-                <ImStatus user="this.store.self_user"/> <span t-out="this.readableImStatus"/> <i t-if="this.env.isSmall" class="oi oi-chevron-right ms-auto mt-1"/>
+            <a href="#" t-att-class="{ 'd-block text-body py-2 d-flex flex-row align-items-baseline gap-2': this.uiService.isSmall }">
+                <ImStatus user="this.store.self_user"/> <span t-out="this.readableImStatus"/> <i t-if="this.uiService.isSmall" class="oi oi-chevron-right ms-auto mt-1"/>
             </a>
             <t t-set-slot="content">
                 <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'online' }" onSelected="() => this.setManualImStatus('online')"><i class="fa fa-circle text-success me-1" title="Online" role="img"/> Online</DropdownItem>

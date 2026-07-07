@@ -114,6 +114,7 @@ export class LunchDashboard extends Component {
     static template = "lunch.LunchDashboard";
     setup() {
         super.setup();
+        this.uiService = useService("ui");
         this.state = proxy({
             infos: {},
             date: DateTime.now(),

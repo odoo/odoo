@@ -1,11 +1,11 @@
-import { useRef } from "@web/owl2/utils";
 import { expect, onError, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
-import { contains, getMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, isSmall, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDraggable } from "@web/core/utils/draggable";
+import { useRef } from "@web/owl2/utils";
 
 test("contains: all actions", async () => {
     class Container extends Component {
@@ -86,7 +86,7 @@ test("contains: all actions", async () => {
         ],
     ];
 
-    if (!getMockEnv().isSmall) {
+    if (!isSmall()) {
         actions.unshift([
             "button",
             [...CLICK, ...CLICK, "dblclick"],

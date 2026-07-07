@@ -11,16 +11,14 @@ import {
     queryOne,
     runAllTimers,
 } from "@odoo/hoot-dom";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
-    getMockEnv,
     getService,
+    isSmall,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
-import { Component, xml } from "@odoo/owl";
-
 import { CommandPalette } from "@web/core/commands/command_palette";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 
@@ -568,7 +566,7 @@ test("command palette keeps the same top position when its content changes", asy
     await animationFrame();
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(4);
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         expect(".o_command_palette").toHaveRect({ top: 0 });
     } else {
         expect(".o_command_palette").toHaveRect({ top: 120 });
@@ -577,7 +575,7 @@ test("command palette keeps the same top position when its content changes", asy
     await edit("z");
     await runAllTimers();
     expect(".o_command").toHaveCount(0);
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         expect(".o_command_palette").toHaveRect({ top: 0 });
     } else {
         expect(".o_command_palette").toHaveRect({ top: 120 });

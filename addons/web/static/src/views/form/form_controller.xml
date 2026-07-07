@@ -20,14 +20,14 @@
                     </t>
 
                     <t t-set-slot="control-panel-actions">
-                        <t t-if="!this.env.isSmall and this.buttonBoxTemplate">
+                        <t t-if="!this.ui.isSmall and this.buttonBoxTemplate">
                             <t t-call="{{ this.buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
                         </t>
                     </t>
 
                     <t t-set-slot="control-panel-additional-actions">
                         <CogMenu t-props="this.cogMenuProps" />
-                        <t t-if="this.env.isSmall and this.buttonBoxTemplate">
+                        <t t-if="this.ui.isSmall and this.buttonBoxTemplate">
                             <t t-call="{{ this.buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
                         </t>
                     </t>

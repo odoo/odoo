@@ -1,7 +1,8 @@
 import { props, t } from "@odoo/owl";
-import { StateSelectionField, stateSelectionField } from "@web/views/fields/state_selection/state_selection_field";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { StateSelectionField, stateSelectionField } from "@web/views/fields/state_selection/state_selection_field";
 
 export class MaintenanceRequestStateSelection extends StateSelectionField {
     static template = "maintenance.MaintenanceRequestStateSelection";
@@ -15,6 +16,7 @@ export class MaintenanceRequestStateSelection extends StateSelectionField {
 
     setup() {
         super.setup();
+        this.uiService = useService("ui");
         this.icons = {
             normal: "o_status",
             changes_requested: "fa fa-lg fa-exclamation-circle",
@@ -52,7 +54,7 @@ export class MaintenanceRequestStateSelection extends StateSelectionField {
     }
 
     get isKanbanOrMobileView() {
-        return this.props.viewType === "kanban" || this.env.isSmall;
+        return this.props.viewType === "kanban" || this.uiService.isSmall;
     }
 
     getTogglerClass(currentValue) {

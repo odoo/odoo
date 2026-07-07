@@ -1,10 +1,11 @@
-import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
-import { useCrossDocumentListener } from "../utils/hooks";
-import { Component, onWillDestroy, props, t, xml, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, props, proxy, t, xml } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";
 import { useActiveElement } from "@web/core/ui/ui_service";
+import { useService } from "@web/core/utils/hooks";
+import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../utils/hooks";
 
 export class EditorOverlay extends Component {
     static template = xml`
@@ -32,6 +33,7 @@ export class EditorOverlay extends Component {
     });
 
     setup() {
+        this.uiService = useService("ui");
         this.lastSelection = this.props.initialSelection;
         /** @type {HTMLElement} */
         const editable = this.props.editable;
@@ -155,7 +157,7 @@ export class EditorOverlay extends Component {
     updateVisibility(overlayElement, solution, scrollContainer) {
         // @todo: mobile tests rely on a visible (yet overflowing) toolbar
         // Remove this once the mobile toolbar is fixed?
-        if (this.env.isSmall) {
+        if (this.uiService.isSmall) {
             return;
         }
         const shouldBeVisible = this.shouldOverlayBeVisible(

@@ -54,7 +54,7 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
     get hasMultiCreate() {
         return (
             !!this.meta.multiCreateView &&
-            !this.env.isSmall &&
+            !this.uiService.isSmall &&
             ["week", "month"].includes(this.meta.scale)
         );
     }

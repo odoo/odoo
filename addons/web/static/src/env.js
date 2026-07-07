@@ -25,9 +25,6 @@ export function makeEnv() {
         bus,
         services: {},
         debug: odoo.debug,
-        get isSmall() {
-            throw new Error("UI service not initialized!");
-        },
     };
 }
 

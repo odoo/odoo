@@ -52,7 +52,7 @@ patch(AttendeeCalendarModel.prototype, {
             resModel: "mail.activity",
             rawRecord: activities,
         };
-        if (this.env.isSmall) {
+        if (this.uiService.isSmall) {
             event.title = activities.length;
         } else if (activities.length > 1) {
             event.title = _t("%s pending activities", activities.length);

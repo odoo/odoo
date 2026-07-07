@@ -360,7 +360,7 @@ export class ListRenderer extends Component {
     }
 
     get hasSelectors() {
-        return this.props.allowSelectors && !this.env.isSmall;
+        return this.props.allowSelectors && !this.uiService.isSmall;
     }
 
     get hasOpenFormViewColumn() {
@@ -2128,7 +2128,7 @@ export class ListRenderer extends Component {
     }
 
     get showCountColumn() {
-        return this.props.list.isGrouped && !this.env.isSmall;
+        return this.props.list.isGrouped && !this.uiService.isSmall;
     }
 
     /**
@@ -2460,7 +2460,7 @@ export class ListRenderer extends Component {
      */
     ignoreEventInSelectionMode(ev) {
         const { list } = this.props;
-        if (this.env.isSmall && list.selection.length) {
+        if (this.uiService.isSmall && list.selection.length) {
             // in selection mode, only selection is allowed.
             ev.stopPropagation();
             ev.preventDefault();
@@ -2473,7 +2473,7 @@ export class ListRenderer extends Component {
      */
     onClickCapture(record, ev) {
         const { list } = this.props;
-        if (this.env.isSmall && list.selection.length) {
+        if (this.uiService.isSmall && list.selection.length) {
             ev.stopPropagation();
             ev.preventDefault();
             this.toggleRecordSelection(record);

@@ -16,14 +16,14 @@ import {
 } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickSave,
+    contains,
     defineModels,
     defineParams,
     fields,
-    getMockEnv,
+    isSmall,
     models,
     mountView,
     onRpc,
-    contains,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
@@ -97,7 +97,7 @@ test("DatetimeField in form view", async () => {
     await animationFrame();
     await editTime("8:25");
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         // Close the timepicker
         await click(".o_bottom_sheet_backdrop");
     }
@@ -152,7 +152,7 @@ test("DatetimeField only triggers fieldChange when a day is picked and when an h
 
     expect.verifySteps([]);
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         // Close the timepicker
         await click(".o_bottom_sheet_backdrop");
     }
@@ -189,7 +189,7 @@ test("DatetimeField edit hour/minute and click away", async () => {
     // Manually change the time without { confirm: "enter" }
     await click(`.o_time_picker_input:eq(0)`);
     await animationFrame();
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await edit("08:30"); // type="time" is always set with two digits format
         await animationFrame();
         expect(".o_field_datetime input").toHaveValue("02/08/2017 08:30:00", {
@@ -203,7 +203,7 @@ test("DatetimeField edit hour/minute and click away", async () => {
         });
     }
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         // Close the bottom sheet datepicker
         await click(".o_bottom_sheet_backdrop");
     } else {
@@ -304,7 +304,7 @@ test("DatetimeField in editable list view", async () => {
         message: "the date should be correct in edit mode",
     });
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     }
 

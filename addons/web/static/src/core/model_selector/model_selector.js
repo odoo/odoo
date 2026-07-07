@@ -1,7 +1,7 @@
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { _t } from "@web/core/l10n/translation";
 
 import { Component, onWillStart } from "@odoo/owl";
 
@@ -22,6 +22,7 @@ export class ModelSelector extends Component {
 
     setup() {
         this.orm = useService("orm");
+        this.uiService = useService("ui");
 
         onWillStart(async () => {
             if (!this.props.models) {

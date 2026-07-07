@@ -4,7 +4,7 @@ import {
     contains,
     defineModels,
     editSelectMenu,
-    getMockEnv,
+    isSmall,
     mountView,
     onRpc,
     serverState,
@@ -400,7 +400,7 @@ test(`Click on "?" should not trigger a focus`, async () => {
     await contains(`.o_form_label[for="field_222_0"] :contains("?")`).click();
     await runAllTimers();
     expect(".o-overlay-container .o-dropdown-item").toHaveCount(0);
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         expect(".o-overlay-container .o-tooltip").toHaveCount(1);
     } else {
         expect(".o-overlay-container .o-tooltip").toHaveCount(0);

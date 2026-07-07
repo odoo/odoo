@@ -1,7 +1,7 @@
 import { expect } from "@odoo/hoot";
 import { click, edit, queryAll, queryAllTexts, queryFirst, queryText } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { getMockEnv } from "@web/../tests/web_test_helpers";
+import { isSmall } from "@web/../tests/web_test_helpers";
 
 const { DateTime } = luxon;
 
@@ -46,7 +46,7 @@ export function assertDateTimePicker(expectedParams) {
         expect(".o_time_picker").toHaveCount(time.length);
         for (let i = 0; i < time.length; i++) {
             let expectedTime = time[i];
-            if (getMockEnv().isSmall) {
+            if (isSmall()) {
                 expectedTime = DateTime.fromFormat(time[i], "H:mm").toFormat("HH:mm");
             }
 
@@ -153,7 +153,7 @@ export async function zoomOut() {
 }
 
 export async function editTime(time, timepickerIndex = 0) {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         time = DateTime.fromFormat(time, "H:mm", {
             locale: "UTC",
             numberingSystem: "latn",

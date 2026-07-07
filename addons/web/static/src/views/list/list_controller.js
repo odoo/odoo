@@ -1,33 +1,32 @@
-import { render, onWillRender, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { Component, onWillPatch, onWillStart, plugin, props, proxy, t } from "@odoo/owl";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
+import { useModelWithSampleData } from "@web/model/model";
+import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
+import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { onWillRender, render, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
-import { useModelWithSampleData } from "@web/model/model";
-import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
-import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { standardViewProps } from "@web/views/standard_view_props";
-import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
-import { ViewButton } from "@web/views/view_button/view_button";
-import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
-import { ListConfirmationDialog } from "./list_confirmation_dialog";
 import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
-import { ListCogMenu } from "./list_cog_menu";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { OfflineActionHelper } from "@web/views/offline_action_helper";
+import { standardViewProps } from "@web/views/standard_view_props";
+import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
+import { ViewButton } from "@web/views/view_button/view_button";
+import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
-import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
-
-import { Component, onWillPatch, onWillStart, plugin, props, proxy, t } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { useDeleteRecords, useExportRecords } from "@web/views/view_hook";
+import { ListCogMenu } from "./list_cog_menu";
+import { ListConfirmationDialog } from "./list_confirmation_dialog";
 
 // -----------------------------------------------------------------------------
 
@@ -62,6 +61,7 @@ export class ListController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
+        this.uiService = useService("ui");
         this.orm = useService("orm");
         this.offlinePlugin = plugin(OfflinePlugin);
         this.rootRef = useRef("root");
@@ -136,7 +136,7 @@ export class ListController extends Component {
                 if (!isReady) {
                     return;
                 }
-                if (this.env.isSmall) {
+                if (this.uiService.isSmall) {
                     setScrollFromState();
                 } else {
                     const { rendererScrollPositions } = this.props.state || {};
@@ -430,7 +430,7 @@ export class ListController extends Component {
 
     onPageChange() {
         if (this.rootRef && this.rootRef.el) {
-            if (this.env.isSmall) {
+            if (this.uiService.isSmall) {
                 this.rootRef.el.scrollTop = 0;
             } else {
                 this.rootRef.el.querySelector(".o_content .o_list_renderer").scrollTop = 0;

@@ -1,10 +1,16 @@
-import { isBinarySize } from "@web/core/utils/binary";
 import { registry } from "@web/core/registry";
+import { isBinarySize } from "@web/core/utils/binary";
+import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
-import { ImageField, imageField, fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
+import { fileTypeMagicWordMap, ImageField, imageField } from "@web/views/fields/image/image_field";
 
 export class ContactImageField extends ImageField {
     static template = "web.ContactImageField";
+
+    setup() {
+        super.setup();
+        this.uiService = useService("ui");
+    }
 
     getUrl(imageFieldName) {
         if (
@@ -30,7 +36,7 @@ export class ContactImageField extends ImageField {
     }
 
     get containerClass() {
-        let classes = super.containerClass;
+        const classes = super.containerClass;
         if (!this.containsValidImage) {
             return ["top-0", "start-0", "h-100", "z-1"].concat(classes.split(" ")).join(" ");
         }

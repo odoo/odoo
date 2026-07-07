@@ -18,7 +18,7 @@
                 </t>
                 <div class="o_calendar_container d-grid h-100 bg-view">
                     <div class="o_calendar_header d-flex align-items-center gap-1 px-3 pe-md-1 py-2 px-print-0 pt-print-0 border-bottom">
-                        <div t-if="!this.env.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
+                        <div t-if="!this.uiService.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
                             <button
                                 class="o_calendar_button_prev btn btn-secondary d-none d-md-block"
                                 title="Previous"
@@ -54,7 +54,7 @@
                         </h5>
                         <MultiSelectionButtons reactive="this.multiSelectionButtonsReactive" />
                     </div>
-                    <MobileFilterPanel t-if="this.env.isSmall and this.hasSidePanel" t-props="this.mobileFilterPanelProps" />
+                    <MobileFilterPanel t-if="this.uiService.isSmall and this.hasSidePanel" t-props="this.mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
                         <t t-if="this.showCalendar" t-component="this.props.Renderer" t-props="this.rendererProps"/>
                         <CalendarSidePanel t-if="this.hasSidePanel" t-props="this.sidePanelProps"/>

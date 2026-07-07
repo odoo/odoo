@@ -395,6 +395,8 @@ export class EmbeddedActionsPanel extends Component {
     props = props({ state: t.object() });
 
     setup() {
+        this.uiService = useService("ui");
+
         this.root = useRef("root");
         useSortable({
             enable: true,
@@ -430,8 +432,8 @@ export class EmbeddedActionsPanel extends Component {
     }
 
     getDropdownClass(action) {
-        return (!this.env.isSmall && this.isEmbeddedActionVisible(action)) ||
-            (this.env.isSmall &&
+        return (!this.uiService.isSmall && this.isEmbeddedActionVisible(action)) ||
+            (this.uiService.isSmall &&
                 this.props.state.embeddedInfos.currentEmbeddedAction?.id === action.id)
             ? "selected"
             : "";

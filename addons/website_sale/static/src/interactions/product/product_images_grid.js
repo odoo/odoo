@@ -25,6 +25,8 @@ export class ProductGridLayout extends Interaction {
     };
 
     setup() {
+        this.uiService = this.services.ui;
+
         this.gridHeight = null;
         this.maxHeight = 0;
         this.isGridReady = false;
@@ -130,7 +132,7 @@ export class ProductGridLayout extends Interaction {
      * On page resize, recalculate the image height (mobile only)
      */
     onResize() {
-        if (!this.env.isSmall) {
+        if (!this.uiService.isSmall) {
             return;
         }
 

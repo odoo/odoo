@@ -6,12 +6,12 @@ import {
     runAllTimers,
     test,
 } from "@odoo/hoot";
-import { click, edit, press, queryAllTexts, queryOne, queryAll } from "@odoo/hoot-dom";
-import { Component, xml, proxy } from "@odoo/owl";
+import { click, edit, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { Component, proxy, xml } from "@odoo/owl";
 import {
     contains,
     editSelectMenu,
-    getMockEnv,
+    isSmall,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -76,7 +76,7 @@ class Parent extends Component {
 async function open() {
     await click(".o_select_menu_toggler");
     await animationFrame();
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         // In BottomSheet, the search input is not focused by default.
         // For the following tests, it's easier to expect a focused
         // input for any display of SelectMenu.
@@ -159,7 +159,7 @@ test("Close dropdown on click outside", async () => {
     await open();
     expect(".o_select_menu_menu").toHaveCount(1);
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     } else {
         await click(document.body);

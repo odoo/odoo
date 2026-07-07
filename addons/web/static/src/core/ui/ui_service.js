@@ -251,12 +251,6 @@ export const uiService = {
         };
         browser.addEventListener("resize", throttleForAnimation(updateSize));
 
-        Object.defineProperty(env, "isSmall", {
-            get() {
-                return ui.isSmall;
-            },
-        });
-
         return ui;
     },
 };

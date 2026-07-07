@@ -26,8 +26,8 @@ import {
     getKanbanProgressBars,
     getKanbanRecord,
     getKanbanRecordTexts,
-    getMockEnv,
     getService,
+    isSmall,
     mockOffline,
     models,
     mountView,
@@ -54,7 +54,7 @@ import { WebClient } from "@web/webclient/webclient";
 const { IrAttachment } = webModels;
 
 async function toggleMultiCurrencyPopover(el) {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(el).click();
     } else {
         await contains(el).hover();

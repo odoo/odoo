@@ -1,15 +1,15 @@
 import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
-import { findComponent, mountWithCleanup } from "./component_test_helpers";
-import { contains } from "./dom_test_helpers";
-import { assignTestEnv, getMockEnv } from "./app_test_helpers";
-
 import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
+import { assignTestEnv } from "./app_test_helpers";
+import { findComponent, mountWithCleanup } from "./component_test_helpers";
+import { contains } from "./dom_test_helpers";
+import { isSmall } from "./ui_test_helpers";
 
 const ensureSearchView = async () => {
     if (
-        getMockEnv().isSmall &&
+        isSmall() &&
         queryAll`.o_control_panel_navigation`.length &&
         !queryAll`.o_searchview`.length
     ) {
@@ -282,7 +282,7 @@ export async function validateSearch() {
  * @param {import("./mock_server/mock_server").ViewType} viewType
  */
 export async function switchView(viewType) {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".o_cp_switch_buttons .dropdown-toggle").click();
         await contains(`.dropdown-item:contains(${viewType.toUpperCase()})`).click();
     } else {

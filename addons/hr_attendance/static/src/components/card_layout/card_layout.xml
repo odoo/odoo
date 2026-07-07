@@ -3,7 +3,7 @@
 
 <t t-name="hr_attendance.CardLayout">
     <div class="o_attendance_background d-flex flex-column h-100">
-        <t t-if="this.env.isSmall">
+        <t t-if="this.uiService.isSmall">
             <div class="p-2 d-flex justify-content-between">
                 <button
                     t-on-click="this.props.kioskReturn"

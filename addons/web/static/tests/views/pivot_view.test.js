@@ -10,8 +10,8 @@ import {
     findComponent,
     getDropdownMenu,
     getFacetTexts,
-    getMockEnv,
     getService,
+    isSmall,
     MockServer,
     mockService,
     models,
@@ -39,7 +39,7 @@ async function removeFacet() {
 }
 
 async function toggleMultiCurrencyPopover(el) {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(el).click();
     } else {
         await contains(el).hover();

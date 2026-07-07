@@ -66,7 +66,7 @@
             </div>
         </xpath>
         <xpath expr="//t[@t-elif]//span[hasclass('o_current_week')]" position="attributes">
-            <attribute name="t-if" add="!this.env.isSmall" separator="and"/>
+            <attribute name="t-if" add="!this.uiService.isSmall" separator="and"/>
         </xpath>
     </t>
 </templates>

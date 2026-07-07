@@ -65,6 +65,7 @@ export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
+        this.uiService = useService("ui");
         this.offlinePlugin = plugin(OfflinePlugin);
         const { Model, archInfo } = this.props;
 
@@ -134,7 +135,7 @@ export class KanbanController extends Component {
                     activeBars: this.progressBarState?.activeBars,
                     modelState: this.model.exportState(),
                 };
-                if (this.env.isSmall && this.model.root.isGrouped) {
+                if (this.uiService.isSmall && this.model.root.isGrouped) {
                     const columnScrollTops = [];
                     const sel = ".o_kanban_group:not(.o_column_folded)";
                     const columnEls = this.rootRef.el.querySelectorAll(sel);
@@ -157,7 +158,7 @@ export class KanbanController extends Component {
         useLayoutEffect(
             (isReady) => {
                 if (isReady) {
-                    if (this.env.isSmall && this.model.root.isGrouped) {
+                    if (this.uiService.isSmall && this.model.root.isGrouped) {
                         const { scrollPositions } = this.props.state || {};
                         if (scrollPositions) {
                             const { scrollLeft, columnScrollTops } = scrollPositions;
@@ -331,7 +332,7 @@ export class KanbanController extends Component {
     }
 
     get className() {
-        if (this.env.isSmall && this.model.root.isGrouped) {
+        if (this.uiService.isSmall && this.model.root.isGrouped) {
             const classList = (this.props.className || "").split(" ");
             classList.push("o_action_delegate_scroll");
             return classList.join(" ");
@@ -512,7 +513,7 @@ export class KanbanController extends Component {
 
     onPageChange() {
         if (this.rootRef && this.rootRef.el) {
-            if (this.env.isSmall) {
+            if (this.uiService.isSmall) {
                 this.rootRef.el.scrollTop = 0;
             } else {
                 this.rootRef.el.querySelector(".o_content").scrollTop = 0;

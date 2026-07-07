@@ -74,6 +74,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
         this.notification = useService('notification');
         this.orm = useService("orm");
         this.http = useService("http");
+        this.uiService = useService("ui");
         this.createdExpenseIds = [];
     }
 
@@ -85,7 +86,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
             domain = Domain.or([domain, currentAction.domain]).toList();
             options['stackPosition'] = 'replaceCurrentAction';
         }
-        const views = this.env.isSmall
+        const views = this.uiService.isSmall
             ? [
                 [false, "kanban"],
                 [false, "list"],
@@ -140,7 +141,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
     }
 
     get viewType() {
-        return this.env.isSmall ? "kanban" : "list";
+        return this.uiService.isSmall ? "kanban" : "list";
     }
 
     get modelName() {

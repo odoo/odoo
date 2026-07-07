@@ -18,7 +18,7 @@
   <t t-name="web.FormViewDialog.ToMany.buttons" t-inherit="web.FormView.DialogButtons">
     <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
       <button class="btn btn-primary o_form_button_save" t-on-click="this.saveButtonClicked" data-hotkey="c">Save</button>
-      <button t-if="!this.env.isSmall" class="btn btn-primary o_form_button_save_new" t-on-click="() => this.saveButtonClicked({saveAndNew: true})" data-hotkey="n">Save &amp; New</button>
+      <button t-if="!this.ui.isSmall" class="btn btn-primary o_form_button_save_new" t-on-click="() => this.saveButtonClicked({saveAndNew: true})" data-hotkey="n">Save &amp; New</button>
     </xpath>
   </t>
 

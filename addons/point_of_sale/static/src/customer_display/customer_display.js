@@ -17,6 +17,7 @@ export class CustomerDisplay extends Component {
         this.session = session;
         this.dialog = useService("dialog");
         this.order = useService("customer_display_data");
+        this.uiService = useService("ui");
         this.time = useTime();
 
         this.scrollableRef = useRef("scrollable");

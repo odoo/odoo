@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { expect, getFixture, queryRect, test } from "@odoo/hoot";
 import {
     click,
@@ -13,14 +12,15 @@ import {
     resize,
 } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, xml, proxy } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     assignTestEnv,
     contains,
     defineParams,
-    getMockEnv,
+    isSmall,
     makeTestApp,
     mockService,
     mountWithCleanup,
@@ -29,11 +29,11 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dialog } from "@web/core/dialog/dialog";
+import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useActiveElement } from "@web/core/ui/ui_service";
-import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
 import { useService } from "@web/core/utils/hooks";
 
 const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
@@ -145,7 +145,7 @@ test("can be toggled", async () => {
     expect(DROPDOWN_MENU).toHaveAttribute("role", "menu");
     expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-expanded", "true");
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_handle_bar");
     } else {
         await click(DROPDOWN_TOGGLE);
@@ -175,7 +175,7 @@ test("close on outside click", async () => {
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     } else {
         await click("div.outside");
@@ -211,7 +211,7 @@ test("close on click outside an active element", async () => {
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     } else {
         await click(".outside");
@@ -255,7 +255,7 @@ test("close on click outside when the opening active element was removed", async
     expect(activeEl.isConnected).toBe(false);
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     } else {
         await click(".outside");
@@ -295,7 +295,7 @@ test("close on outside click in shadow dom", async () => {
     await animationFrame();
     expect(queryAll(DROPDOWN_MENU, { root: shadowBody })).toHaveCount(1);
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop", { root: shadowBody });
     } else {
         await click(".outside", { root: shadowBody });
@@ -869,7 +869,7 @@ test("don't close parent dropdown when clicking in a child active element", asyn
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(2);
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     } else {
         await click(".outside-dialog");
@@ -879,7 +879,7 @@ test("don't close parent dropdown when clicking in a child active element", asyn
     expect(".modal-dialog").toHaveCount(1);
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".modal-dialog .oi-arrow-left");
     } else {
         await click(".modal-dialog .btn-close");
@@ -993,7 +993,7 @@ test("Dropdown in dialog in dropdown, first dropdown should stay open when click
     expect(DROPDOWN_MENU).toHaveCount(2);
 
     // Click outside dropdown inside dialog => only first dropdown should be open
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     } else {
         await click(".inside-dialog");
@@ -1048,7 +1048,7 @@ test("multi-level dropdown: close on outside click", async () => {
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(3);
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
         await animationFrame();
         await click(".o_bottom_sheet_backdrop");

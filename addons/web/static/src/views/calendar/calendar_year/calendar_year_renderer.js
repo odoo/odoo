@@ -9,6 +9,7 @@ import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
 import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 
@@ -38,6 +39,7 @@ export class CalendarYearRenderer extends Component {
         }
         this.popover = useCalendarPopover(this.constructor.components.Popover);
         this.rootRef = useRef("root");
+        this.uiService = useService("ui");
 
         useLayoutEffect(() => {
             this.updateSize();
@@ -168,7 +170,7 @@ export class CalendarYearRenderer extends Component {
     }
 
     onDateClick(info) {
-        if (this.env.isSmall) {
+        if (this.uiService.isSmall) {
             this.props.model.load({
                 date: luxon.DateTime.fromISO(info.dateStr),
                 scale: "day",

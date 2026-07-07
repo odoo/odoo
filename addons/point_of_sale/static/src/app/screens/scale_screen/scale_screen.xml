@@ -3,13 +3,13 @@
     <t t-name="point_of_sale.ScaleScreen">
         <Dialog size="'md'" t-if="this.scale.product">
             <t t-set-slot="header">
-                <t t-if="this.env.isSmall">
+                <t t-if="this.uiService.isSmall">
                     <button class="btn oi oi-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="this.close"/>
                 </t>
-                <h4 class="modal-title text-break text-center w-100 ms-4" t-att-class="{ 'me-auto': this.env.isSmall }">
+                <h4 class="modal-title text-break text-center w-100 ms-4" t-att-class="{ 'me-auto': this.uiService.isSmall }">
                     <t t-out="this.scale.product.name"/>
                 </h4>
-                <t t-if="!this.env.isSmall">
+                <t t-if="!this.uiService.isSmall">
                     <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="this.close"/>
                 </t>
             </t>

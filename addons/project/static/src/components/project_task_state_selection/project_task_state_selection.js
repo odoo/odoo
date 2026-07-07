@@ -1,14 +1,14 @@
 import { props, proxy, t } from "@odoo/owl";
+import { useCommand } from "@web/core/commands/command_hook";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { formatSelection } from "@web/views/fields/formatters";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import {
     StateSelectionField,
     stateSelectionField,
 } from "@web/views/fields/state_selection/state_selection_field";
-import { useCommand } from "@web/core/commands/command_hook";
-import { formatSelection } from "@web/views/fields/formatters";
-
-import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class ProjectTaskStateSelection extends StateSelectionField {
     static template = "project.ProjectTaskStateSelection";
@@ -22,6 +22,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
     });
 
     setup() {
+        this.uiService = useService("ui");
         this.state = proxy({
             isStateButtonHighlighted: false,
         });
@@ -133,14 +134,14 @@ export class ProjectTaskStateSelection extends StateSelectionField {
     }
 
     getDropdownPosition() {
-        if (this.isView(['activity', 'card', 'list', 'calendar']) || this.env.isSmall) {
+        if (this.isView(['activity', 'card', 'list', 'calendar']) || this.uiService.isSmall) {
             return '';
         }
         return 'bottom-end';
     }
 
     getTogglerClass(currentValue) {
-        if (this.isView(['activity', 'card', 'list', 'calendar']) || this.env.isSmall) {
+        if (this.isView(['activity', 'card', 'list', 'calendar']) || this.uiService.isSmall) {
             return 'btn btn-link d-flex p-0';
         }
         return 'o_state_button btn rounded-pill ' + this.colorButton[currentValue];
@@ -158,7 +159,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
      * @param {MouseEvent} ev
      */
     onMouseEnterStateButton(ev) {
-        if (!this.env.isSmall) {
+        if (!this.uiService.isSmall) {
             this.state.isStateButtonHighlighted = true;
         }
     }

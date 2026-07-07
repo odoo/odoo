@@ -1,4 +1,5 @@
 import { Component, onWillUnmount, props, proxy, t } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 export class CardLayout extends Component {
@@ -13,6 +14,7 @@ export class CardLayout extends Component {
 
     setup() {
         this.state = proxy(this.getDateTime());
+        this.uiService = useService("ui");
         this.timeInterval = setInterval(() => {
             Object.assign(this.state, this.getDateTime());
         }, 1000);

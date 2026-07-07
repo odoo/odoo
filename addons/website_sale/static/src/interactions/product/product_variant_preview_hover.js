@@ -15,6 +15,7 @@ export class ProductVariantPreviewImageHover extends Interaction {
         this.productImg = this.el.querySelector('.oe_product_image_img_wrapper_primary img');
         this.originalImgSrc = this.productImg.getAttribute('src');
         this.originalImgSrcset = this.productImg.getAttribute('srcset');
+        this.uiService = this.services.ui;
     }
 
     /**
@@ -26,7 +27,7 @@ export class ProductVariantPreviewImageHover extends Interaction {
      * @returns {void}
      */
     _mouseEnter(ev) {
-        if (!this.env.isSmall) {
+        if (!this.uiService.isSmall) {
             const variantImageSrc = ev.target.dataset.variantImage;
             if (!variantImageSrc) {
                 return;
@@ -43,7 +44,7 @@ export class ProductVariantPreviewImageHover extends Interaction {
      * @returns {void}
      */
     _mouseLeave() {
-        if (!this.env.isSmall) {
+        if (!this.uiService.isSmall) {
             this._setImgSrc(this.originalImgSrc, this.originalImgSrcset);
         }
     }
@@ -76,7 +77,7 @@ export class ProductVariantPreviewImageHover extends Interaction {
      * @returns
      */
     _onClick(ev) {
-        if (this.env.isSmall) {
+        if (this.uiService.isSmall) {
             ev.preventDefault();
             const targetElement = ev.target.closest('.o_product_variant_preview');
             const productCard = ev.target.closest('.oe_product_cart');

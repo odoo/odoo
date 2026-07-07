@@ -11,6 +11,7 @@ export class SaverScreen extends Component {
     setup() {
         this.time = useTime();
         this.dialog = useService("dialog");
+        this.uiService = useService("ui");
         this.dialog.closeAll();
     }
 }

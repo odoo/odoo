@@ -4,7 +4,7 @@
     <t t-name="project_todo.TodoFormControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_cp_pager')]" position="before">
             <a
-                t-if="!this.env.isSmall"
+                t-if="!this.uiService.isSmall"
                 role="button"
                 title="Toggle chatter"
                 data-hotkey="d"

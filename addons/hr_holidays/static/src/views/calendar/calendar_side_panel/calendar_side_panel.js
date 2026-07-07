@@ -72,7 +72,7 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
     }
 
     async getHolidayData() {
-        if (!this.env.isSmall) {
+        if (!this.uiService.isSmall) {
             return [];
         }
         const promises = [];

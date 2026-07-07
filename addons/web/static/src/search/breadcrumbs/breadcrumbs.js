@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 export class Breadcrumbs extends Component {
     static template = "web.Breadcrumbs";
@@ -10,6 +11,10 @@ export class Breadcrumbs extends Component {
         breadcrumbs: Array,
         slots: { type: Object, optional: true },
     };
+
+    setup() {
+        this.uiService = useService("ui");
+    }
 
     getBreadcrumbTooltip({ isFormView, name }) {
         if (isFormView) {

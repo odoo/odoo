@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarYearPopover">
-        <t t-if="this.env.isSmall">
+        <t t-if="this.uiService.isSmall">
             <Dialog title="this.dialogTitle">
                 <t t-call="{{ this.constructor.subTemplates.body }}" />
                 <t t-set-slot="footer">

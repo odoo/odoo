@@ -82,6 +82,7 @@ export class KanbanRenderer extends Component {
                 !this.props.list.isGrouped || this.props.list.groups.length > 0,
         });
         this.dialog = useService("dialog");
+        this.uiService = useService("ui");
         this.exampleData = registry
             .category("kanban_examples")
             .get(this.props.archInfo.examples, null);
@@ -288,7 +289,7 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
 
     get canUseSortable() {
-        return !this.env.isSmall;
+        return !this.uiService.isSmall;
     }
 
     get canMoveRecords() {
@@ -397,7 +398,7 @@ export class KanbanRenderer extends Component {
         if (!group.count) {
             classes.push("o_kanban_no_records");
         }
-        if (!this.env.isSmall && group.isFolded) {
+        if (!this.uiService.isSmall && group.isFolded) {
             classes.push("o_column_folded", "flex-basis-0");
         }
         if (this.props.progressBarState && !group.isFolded) {
@@ -527,7 +528,7 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
 
     async onGroupClick(group, ev) {
-        if (!this.env.isSmall && group.isFolded) {
+        if (!this.uiService.isSmall && group.isFolded) {
             this.lastOpenedGroupId = group.id;
             await group.toggle();
             this.props.scrollTop();

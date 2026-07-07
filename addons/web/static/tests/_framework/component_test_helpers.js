@@ -4,9 +4,9 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
 import { patch } from "@web/core/utils/patch";
 import { getMockEnv, getTestApp, makeTestApp } from "./app_test_helpers";
-import { patchWithCleanup } from "./patch_test_helpers";
-
 import { makeMockServer, MockServer } from "./mock_server/mock_server";
+import { patchWithCleanup } from "./patch_test_helpers";
+import { isSmall } from "./ui_test_helpers";
 
 /**
  * @typedef {import("@odoo/hoot").Target} Target
@@ -73,7 +73,7 @@ export function findComponent(appOrComponent, predicate) {
  * @returns {HTMLElement | undefined}
  */
 export function getDropdownMenu(togglerSelector) {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         return queryFirst(".o-dropdown--menu", { eq: -1 });
     }
     let el = queryFirst(togglerSelector);

@@ -42,6 +42,7 @@ class BlankComponent extends Component {
     static components = { ControlPanel };
 
     setup() {
+        this.uiService = useService("ui");
         useChildSubEnv({ config: { breadcrumbs: [], noBreadcrumbs: true } });
         onMounted(() => this.props.onMounted());
     }
@@ -1264,7 +1265,7 @@ export function makeActionManager(env, router = _router) {
         }
 
         let view = (options.viewType && views.find((v) => v.type === options.viewType)) || views[0];
-        if (env.isSmall) {
+        if (env.services.ui.isSmall) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
         }
         if (
@@ -1275,9 +1276,7 @@ export function makeActionManager(env, router = _router) {
                 options.props?.resId || action.res_id || false
             )
         ) {
-            view =
-                views.find((v) => offlinePlugin.isAvailableOffline(action.id, v.type)) ||
-                view;
+            view = views.find((v) => offlinePlugin.isAvailableOffline(action.id, v.type)) || view;
         }
 
         const controller = _makeController({

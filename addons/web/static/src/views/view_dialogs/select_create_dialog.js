@@ -40,6 +40,7 @@ export class SelectCreateDialog extends Component {
     setup() {
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
+        this.uiService = useService("ui");
         this.state = proxy({ resIds: [] });
         const noContentHelp = this.props.noContentHelp || getDefaultNoContentHelp();
         this.busy = false; // flag used to ensure we only call once the onSelected/onUnselect props
@@ -55,7 +56,7 @@ export class SelectCreateDialog extends Component {
     }
 
     get viewProps() {
-        const type = this.env.isSmall ? "kanban" : "list";
+        const type = this.uiService.isSmall ? "kanban" : "list";
         const props = {
             loadIrFilters: true,
             ...this.baseViewProps,
@@ -102,7 +103,7 @@ export class SelectCreateDialog extends Component {
     }
 
     get canUnselect() {
-        return this.env.isSmall && !!this.props.onUnselect;
+        return this.uiService.isSmall && !!this.props.onUnselect;
     }
 
     async createEditRecord() {

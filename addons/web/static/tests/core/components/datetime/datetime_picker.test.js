@@ -1,22 +1,22 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
-import { DateTimePicker } from "@web/core/datetime/datetime_picker";
-import { ensureArray } from "@web/core/utils/arrays";
+import { Component, proxy, xml } from "@odoo/owl";
 import {
     defineParams,
-    getMockEnv,
-    mountWithCleanup,
+    isSmall,
     makeTestApp,
+    mountWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { DateTimePicker } from "@web/core/datetime/datetime_picker";
+import { ensureArray } from "@web/core/utils/arrays";
+import { range } from "@web/core/utils/numbers";
 import {
     assertDateTimePicker,
-    getPickerCell,
     editTime,
+    getPickerCell,
 } from "../../datetime/datetime_test_helpers";
-import { range } from "@web/core/utils/numbers";
 
 const { DateTime } = luxon;
 
@@ -70,7 +70,7 @@ test("default params", async () => {
         "--DateTimePicker__Day-template-columns": "8",
     });
 
-    if (!getMockEnv().isSmall) {
+    if (!isSmall()) {
         await click(".o_time_picker_input");
         await animationFrame();
         expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(
@@ -109,7 +109,7 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
         time: ["13:00"],
     });
 
-    if (!getMockEnv().isSmall) {
+    if (!isSmall()) {
         await click(".o_time_picker_input");
         await animationFrame();
         expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(
@@ -223,7 +223,7 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
         time: ["13:00"],
     });
 
-    if (!getMockEnv().isSmall) {
+    if (!isSmall()) {
         await click(".o_time_picker_input");
         await animationFrame();
         expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(
@@ -355,7 +355,7 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
         time: ["13:00"],
     });
 
-    if (!getMockEnv().isSmall) {
+    if (!isSmall()) {
         await click(".o_time_picker_input");
         await animationFrame();
         expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(

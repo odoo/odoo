@@ -36,6 +36,7 @@ export class FormViewDialog extends Component {
     setup() {
         super.setup();
 
+        this.uiService = useService("ui");
         this.actionService = useService("action");
         this.modalRef = useChildRef();
         this.env.dialogData.dismiss = () => this.discardRecord();

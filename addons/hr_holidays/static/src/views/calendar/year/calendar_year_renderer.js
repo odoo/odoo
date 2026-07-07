@@ -1,5 +1,4 @@
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
-
 import { useService } from "@web/core/utils/hooks";
 import { useMandatoryDays } from "../../hooks";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
@@ -34,7 +33,7 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
             elClass.startsWith("hr_mandatory_day_")
         );
         this.mandatoryDayPopover.close();
-        if (is_mandatory_day && !this.env.isSmall) {
+        if (is_mandatory_day && !this.uiService.isSmall) {
             this.popover.close();
             const date = luxon.DateTime.fromISO(info.dateStr);
             const target = info.dayEl;
@@ -61,7 +60,11 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
     }
 
     openPopover(target, date, records) {
-        this.popover.open(target, this.getPopoverProps(date, records), "o_cw_popover_holidays o_cw_popover");
+        this.popover.open(
+            target,
+            this.getPopoverProps(date, records),
+            "o_cw_popover_holidays o_cw_popover"
+        );
     }
 
     getDayCellClassNames(info) {
@@ -71,7 +74,9 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
     _halfDayStyleCache = new Set();
     ensureHalfDayClass(start, end) {
         const className = `o_event_half_${start}_${end}`;
-        if (this._halfDayStyleCache.has(className)) return className;
+        if (this._halfDayStyleCache.has(className)) {
+            return className;
+        }
 
         const css = `
             .fc-event-start.${className} {
@@ -84,10 +89,10 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
                 clip-path: polygon(${start}% 0%, ${end}% 0%, ${end}% 100%, ${start}% 100%);
             }
         `;
-        let styleSheet = document.getElementById('half-day-dynamic-styles');
+        let styleSheet = document.getElementById("half-day-dynamic-styles");
         if (!styleSheet) {
-            styleSheet = document.createElement('style');
-            styleSheet.id = 'half-day-dynamic-styles';
+            styleSheet = document.createElement("style");
+            styleSheet.id = "half-day-dynamic-styles";
             document.head.appendChild(styleSheet);
         }
 
@@ -101,49 +106,66 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
      * @override
      */
     eventClassNames({ event }) {
-    const classesToAdd = super.eventClassNames(...arguments);
-    const record = this.props.model.records[event.id];
-    if (record) {
-        const isHalfStart = record.requestDateFromPeriod === "pm" ||
-            (record?.rawRecord?.work_entry_type_request_unit === "hour" && record.start.c.hour >= 12);
-        const isHalfEnd = record.requestDateToPeriod === "am" ||
-            (record?.rawRecord?.work_entry_type_request_unit === "hour" && record.end.c.hour <= 12);
-        if (!isHalfStart && !isHalfEnd) return classesToAdd;
-
-        const isMultiWeek = record.start.localWeekNumber != record.end.localWeekNumber
-        let start = 0;
-        let end = 100;
-
-        if (!isMultiWeek) {
-            const lastRowStart = record.start > record.end.startOf('month') ? record.start : record.end.startOf('month');
-            const firstRowEnd = record.end < record.start.endOf('month') ? record.end : record.start.endOf('month');
-            const daysInFirstRow = firstRowEnd.startOf('day').diff(record.start.startOf('day'), 'days').days + 1;
-            const daysInLastRow = record.end.startOf('day').diff(lastRowStart.startOf('day'), 'days').days + 1;
-
-            start = isHalfStart ? Math.round(50 / daysInFirstRow) : 0;
-            end = isHalfEnd ? Math.round(100 - (50 / daysInLastRow)) : 100;
-        }
-        else {
-            // Multi-week: first slice — only care about start
-            if (isHalfStart) {
-                const rowEnd = record.start.endOf('week') < record.start.endOf('month')
-                    ? record.start.endOf('week').minus({ days: 1 })
-                    : record.start.endOf('month');
-                const daysInFirstRow = rowEnd.startOf('day').diff(record.start.startOf('day'), 'days').days + 1;
-                start = Math.round(50 / daysInFirstRow);
+        const classesToAdd = super.eventClassNames(...arguments);
+        const record = this.props.model.records[event.id];
+        if (record) {
+            const isHalfStart =
+                record.requestDateFromPeriod === "pm" ||
+                (record?.rawRecord?.work_entry_type_request_unit === "hour" &&
+                    record.start.c.hour >= 12);
+            const isHalfEnd =
+                record.requestDateToPeriod === "am" ||
+                (record?.rawRecord?.work_entry_type_request_unit === "hour" &&
+                    record.end.c.hour <= 12);
+            if (!isHalfStart && !isHalfEnd) {
+                return classesToAdd;
             }
-            // Multi-week: last slice — only care about end
-            if (isHalfEnd) {
-                const rowStart = record.end.startOf('week') > record.end.startOf('month')
-                    ? record.end.startOf('week').minus({ days: 1 })
-                    : record.end.startOf('month');
-                const daysInLastRow = record.end.startOf('day').diff(rowStart.startOf('day'), 'days').days + 1;
-                end = Math.round(100 - (50 / daysInLastRow));
-            }
-        }
 
-        classesToAdd.push(this.ensureHalfDayClass(start, end));
+            const isMultiWeek = record.start.localWeekNumber != record.end.localWeekNumber;
+            let start = 0;
+            let end = 100;
+
+            if (!isMultiWeek) {
+                const lastRowStart =
+                    record.start > record.end.startOf("month")
+                        ? record.start
+                        : record.end.startOf("month");
+                const firstRowEnd =
+                    record.end < record.start.endOf("month")
+                        ? record.end
+                        : record.start.endOf("month");
+                const daysInFirstRow =
+                    firstRowEnd.startOf("day").diff(record.start.startOf("day"), "days").days + 1;
+                const daysInLastRow =
+                    record.end.startOf("day").diff(lastRowStart.startOf("day"), "days").days + 1;
+
+                start = isHalfStart ? Math.round(50 / daysInFirstRow) : 0;
+                end = isHalfEnd ? Math.round(100 - 50 / daysInLastRow) : 100;
+            } else {
+                // Multi-week: first slice — only care about start
+                if (isHalfStart) {
+                    const rowEnd =
+                        record.start.endOf("week") < record.start.endOf("month")
+                            ? record.start.endOf("week").minus({ days: 1 })
+                            : record.start.endOf("month");
+                    const daysInFirstRow =
+                        rowEnd.startOf("day").diff(record.start.startOf("day"), "days").days + 1;
+                    start = Math.round(50 / daysInFirstRow);
+                }
+                // Multi-week: last slice — only care about end
+                if (isHalfEnd) {
+                    const rowStart =
+                        record.end.startOf("week") > record.end.startOf("month")
+                            ? record.end.startOf("week").minus({ days: 1 })
+                            : record.end.startOf("month");
+                    const daysInLastRow =
+                        record.end.startOf("day").diff(rowStart.startOf("day"), "days").days + 1;
+                    end = Math.round(100 - 50 / daysInLastRow);
+                }
+            }
+
+            classesToAdd.push(this.ensureHalfDayClass(start, end));
+        }
+        return classesToAdd;
     }
-    return classesToAdd;
-}
 }

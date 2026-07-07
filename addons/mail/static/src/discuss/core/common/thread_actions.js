@@ -61,7 +61,7 @@ registerThreadAction("add-to-favorites", {
             { channel_id: channel.id, is_favorite: true },
             { silent: false }
         );
-        if (owner.env.inDiscussApp && !owner.env.isSmall) {
+        if (owner.env.inDiscussApp && !owner.env.services.ui.isSmall) {
             return;
         }
         store.env.services.notification.add(
@@ -93,7 +93,7 @@ registerThreadAction("remove-from-favorites", {
             { channel_id: channel.id, is_favorite: false },
             { silent: false }
         );
-        if (owner.env.inDiscussApp && !owner.env.isSmall) {
+        if (owner.env.inDiscussApp && !owner.env.services.ui.isSmall) {
             return;
         }
         store.env.services.notification.add(

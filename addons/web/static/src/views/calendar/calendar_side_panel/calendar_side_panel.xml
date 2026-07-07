@@ -6,7 +6,7 @@
                 <b>Drop here to unschedule</b>
             </div>
             <div class="o_calendar_sidepanel" t-att-class="{ 'd-none': this.props.model.meta.canScheduleEvents and this.state.isDragging }">
-                <button t-if="!this.env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="() => this.props.toggleSidePanel()">
+                <button t-if="!this.uiService.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="() => this.props.toggleSidePanel()">
                     <i class="oi oi-panel-right"/>
                 </button>
                 <DatePicker t-if="this.showDatePicker" t-props="this.datePickerProps" />
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div t-elif="!this.env.isSmall" class="o_calendar_sidebar flex-grow-0 flex-shrink-0 bg-view h-100 cursor-pointer d-print-none" t-on-click="() => this.props.toggleSidePanel()">
+        <div t-elif="!this.uiService.isSmall" class="o_calendar_sidebar flex-grow-0 flex-shrink-0 bg-view h-100 cursor-pointer d-print-none" t-on-click="() => this.props.toggleSidePanel()">
             <div class="d-flex">
                 <button class="btn btn-light btn-sm m-2 p-1 py-2">
                     <i class="oi oi-panel-right"/>

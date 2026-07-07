@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarCommonPopover">
-        <t t-if="this.env.isSmall">
+        <t t-if="this.uiService.isSmall">
             <Dialog title="this.props.record.title" contentClass="'o_calendar_color_'+ this.props.record.colorIndex">
                 <t t-call="{{ this.constructor.subTemplates.body }}" />
                 <t t-set-slot="footer">

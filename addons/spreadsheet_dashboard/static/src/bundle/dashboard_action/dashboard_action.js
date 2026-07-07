@@ -1,21 +1,20 @@
-import { render, useLayoutEffect } from "@web/owl2/utils";
+import { Registry } from "@odoo/o-spreadsheet";
+import { Component, onWillStart, proxy, useListener } from "@odoo/owl";
+import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
+import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
+import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { Status } from "./dashboard_loader_service";
-import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
-import { useSetupAction } from "@web/search/action_hook";
-import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
-import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
 import { useService } from "@web/core/utils/hooks";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
-import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
-import { Registry } from "@odoo/o-spreadsheet";
-import { router } from "@web/core/browser/router";
+import { render, useLayoutEffect } from "@web/owl2/utils";
+import { useSetupAction } from "@web/search/action_hook";
+import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-
-import { Component, onWillStart, proxy, useListener } from "@odoo/owl";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { Status } from "./dashboard_loader_service";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
+import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
+import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
 
 export const dashboardActionRegistry = new Registry();
 
@@ -37,6 +36,7 @@ export class SpreadsheetDashboardAction extends Component {
         this.Status = Status;
         this.controlPanelDisplay = {};
         this.orm = useService("orm");
+        this.uiService = useService("ui");
         this.actionService = useService("action");
         this.loader = useService("spreadsheet_dashboard_loader");
         onWillStart(async () => {

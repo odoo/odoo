@@ -23,7 +23,8 @@ export class BoardController extends Component {
     setup() {
         this.board = proxy(this.props.board);
         this.dialogService = useService("dialog");
-        if (this.env.isSmall) {
+        this.uiService = useService("ui");
+        if (this.uiService.isSmall) {
             this.selectLayout("1", false);
         } else {
             const mainRef = useRef("main");

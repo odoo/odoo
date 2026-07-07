@@ -1,7 +1,6 @@
-import { useAutofocus } from "../utils/hooks";
-import { clamp } from "../utils/numbers";
-
 import { Component, EventBus, props, proxy, t, useEffect, useListener } from "@odoo/owl";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { clamp } from "@web/core/utils/numbers";
 
 export const PAGER_UPDATED_EVENT = "PAGER:UPDATED";
 export const pagerBus = new EventBus();
@@ -37,12 +36,13 @@ export class Pager extends Component {
             isDisabled: false,
         });
         this.inputRef = useAutofocus();
+        this.uiService = useService("ui");
         useListener(document, "mousedown", this.onClickAway.bind(this), { capture: true });
         let firstMount = true;
         useEffect(() => {
             const { offset, limit, total } = this.props;
             const value = this.value;
-            if (!firstMount && this.env.isSmall) {
+            if (!firstMount && this.uiService.isSmall) {
                 pagerBus.trigger(PAGER_UPDATED_EVENT, { offset, limit, value, total });
             }
             firstMount = false;

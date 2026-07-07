@@ -97,6 +97,7 @@ export class ExportDataDialog extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.uiService = useService("ui");
         this.draggableRef = useRef("draggable");
         this.exportListRef = useRef("exportList");
         this.searchRef = useRef("search");
@@ -113,7 +114,7 @@ export class ExportDataDialog extends Component {
             search: [],
             selectedFormat: 0,
             templateId: null,
-            isSmall: this.env.isSmall,
+            isSmall: this.uiService.isSmall,
             disabled: false,
         });
 
@@ -210,7 +211,7 @@ export class ExportDataDialog extends Component {
     }
 
     updateSize() {
-        this.state.isSmall = this.env.isSmall;
+        this.state.isSmall = this.uiService.isSmall;
     }
 
     /**

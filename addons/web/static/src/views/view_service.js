@@ -41,9 +41,9 @@ import { UPDATE_METHODS } from "@web/core/orm_plugin";
  */
 
 export const viewService = {
-    dependencies: ["orm"],
+    dependencies: ["orm", "ui"],
     async: ["loadViews"],
-    start(env, { orm }) {
+    start(env, { orm, ui }) {
         rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
             const { model, method } = ev.detail.data.params;
             if (["ir.ui.view", "ir.filters"].includes(model) && !ev.detail.error) {
@@ -83,7 +83,7 @@ export const viewService = {
                     loadViewsOptions[key] = options[key];
                 }
             }
-            if (env.isSmall) {
+            if (ui.isSmall) {
                 loadViewsOptions.mobile = true;
             }
             if (env.debug) {

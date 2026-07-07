@@ -11,6 +11,7 @@ import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {import("../standard_field_props").StandardFieldProps & {
@@ -66,6 +67,7 @@ export class StatusBarField extends Component {
         this.rootRef = useRef("root");
         this.afterRef = useRef("after");
         this.dropdownRef = useRef("dropdown");
+        this.uiService = useService("ui");
 
         // Resize listeners
         let status = "idle";
@@ -105,15 +107,17 @@ export class StatusBarField extends Component {
                 }
                 let domain = getFieldDomain(record, fieldName, props.domain);
                 domain = Domain.and([this.getDomain(props), domain]).toList();
-                const res = await orm.searchRead(relation, domain, fieldNames, { context }).catch((error) => {
-                    if (error instanceof ConnectionLostError) {
-                        if (this.props.record.data[this.props.name]) {
-                            return [this.props.record.data[this.props.name]];
+                const res = await orm
+                    .searchRead(relation, domain, fieldNames, { context })
+                    .catch((error) => {
+                        if (error instanceof ConnectionLostError) {
+                            if (this.props.record.data[this.props.name]) {
+                                return [this.props.record.data[this.props.name]];
+                            }
+                            return [];
                         }
-                        return [];
-                    }
-                    throw error;
-                });
+                        throw error;
+                    });
                 forceRecomputeItems = true;
                 return res;
             });
@@ -228,7 +232,7 @@ export class StatusBarField extends Component {
         this.items.after = [...this.items.folded];
         const itemsToAssign = this.getAllItems().filter((item) => !item.isFolded);
 
-        if (this.env.isSmall && this.items.inline.length) {
+        if (this.uiService.isSmall && this.items.inline.length) {
             // Small screen case: only a single dropdown
             show(this.dropdownRef.el);
             hide(this.beforeRef.el, this.afterRef.el, ...itemEls);

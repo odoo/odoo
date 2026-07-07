@@ -31,14 +31,14 @@
                         t-if="!propertyConfiguration.hidden"
                         class="o_property_field o_wrap_label text-900"
                         t-att-class="{
-                            'd-flex flex-row': !this.env.isSmall and !propertiesListGroup.isFolded, 'o_property_folded': propertiesListGroup.isFolded,
+                            'd-flex flex-row': !this.uiService.isSmall and !propertiesListGroup.isFolded, 'o_property_folded': propertiesListGroup.isFolded,
                             'mb-4': this.renderedColumnsCount === 1, 'mb-3': this.renderedColumnsCount !== 1
                         }"
                         t-att-property-name="propertyConfiguration.name">
                         <t t-set="domId" t-value="this.generateUniqueDomID()"/>
                         <label
                             class="o_field_property_label o_form_label text-break d-flex align-items-baseline mb-0 pe-2"
-                            t-att-class="{'w-auto': this.env.isSmall}"
+                            t-att-class="{'w-auto': this.uiService.isSmall}"
                             t-att-for="domId">
                             <span
                                 t-if="propertyConfiguration.string and propertyConfiguration.string.length"

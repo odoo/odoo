@@ -15,10 +15,11 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSubEnv } from "@web/owl2/utils";
 import { View } from "@web/views/view";
+import { getService } from "./app_test_helpers";
 import { mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
-import { getMockEnv, getService } from "./app_test_helpers";
 import { registerInlineViewArchs } from "./mock_server/mock_model";
+import { isSmall } from "./ui_test_helpers";
 
 /**
  * @typedef {import("@web/views/view").Config} Config
@@ -135,7 +136,7 @@ export async function clickCancel(options) {
  * @param {SelectorOptions} [options]
  */
 export async function clickFieldDropdown(fieldName, options) {
-    const selector = getMockEnv().isSmall
+    const selector = isSmall()
         ? `[name='${fieldName}'] input`
         : `[name='${fieldName}'] .dropdown input`;
     await contains(buildSelector(selector, options)).click();
@@ -147,7 +148,7 @@ export async function clickFieldDropdown(fieldName, options) {
  * @param {SelectorOptions} [options]
  */
 export async function clickFieldDropdownItem(fieldName, itemContent, options) {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(`.o_kanban_record:contains('${itemContent}')`).click();
         return;
     }

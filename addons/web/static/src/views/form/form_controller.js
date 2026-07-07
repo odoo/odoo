@@ -201,7 +201,7 @@ export class FormController extends Component {
                 this.props.context,
                 this.props.resModel,
                 this.viewService,
-                this.env.isSmall
+                this.ui.isSmall
             );
             const { activeFields, fields } = extractFieldsFromArchInfo(
                 this.archInfo,

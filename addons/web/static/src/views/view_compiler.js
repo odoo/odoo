@@ -184,7 +184,7 @@ export function isTextNode(node) {
 export function makeSeparator(title) {
     const separator = createElement("div", {
         class: "o_horizontal_separator mb-3 text-uppercase fw-bolder small",
-        "t-att-class": "{ 'mt-4' : !__comp__.env.isSmall }",
+        "t-att-class": "{ 'mt-4' : !__comp__.env.services.ui.isSmall }",
     });
     separator.textContent = title;
     return separator;

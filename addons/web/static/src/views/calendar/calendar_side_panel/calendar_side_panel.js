@@ -1,7 +1,7 @@
 import { Component, proxy } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { _t } from "@web/core/l10n/translation";
-import { useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
 import { CalendarScheduleSection } from "@web/views/calendar/calendar_schedule_section/calendar_schedule_section";
 
@@ -19,6 +19,7 @@ export class CalendarSidePanel extends Component {
         useBus(this.props.model.bus, "CALENDAR_EVENT_DRAG", ({ detail }) => {
             this.state.isDragging = detail.dragging;
         });
+        this.uiService = useService("ui");
     }
 
     get datePickerProps() {
@@ -61,7 +62,7 @@ export class CalendarSidePanel extends Component {
     }
 
     get showDatePicker() {
-        return this.props.model.showDatePicker && !this.env.isSmall;
+        return this.props.model.showDatePicker && !this.uiService.isSmall;
     }
 
     get toScheduleString() {

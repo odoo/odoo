@@ -3,7 +3,7 @@
     <t t-name="hr_calendar.AttendeeCalendarCommonPopover">
         <t t-if="this.isWorkLocationEvent()">
         <Record resModel="'hr.employee.location'" fieldNames="this.fieldNames" fields="this.fields" activeFields="this.fields" values="this.values" mode="'readonly'" t-slot-scope="slot">
-            <Dialog t-if="this.env.isSmall" title="this.props.record.title" contentClass="'o_calendar_color_'+ this.props.record.colorIndex">
+            <Dialog t-if="this.uiService.isSmall" title="this.props.record.title" contentClass="'o_calendar_color_'+ this.props.record.colorIndex">
                 <t t-call="{{ this.constructor.subTemplates.body }}"/>
                 <t t-set-slot="footer">
                     <t t-call="calendar.AttendeeCalendarCommonPopover.footer"/>

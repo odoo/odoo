@@ -1,4 +1,3 @@
-import { onRendered, useRef } from "@web/owl2/utils";
 import {
     animationFrame,
     clear,
@@ -30,6 +29,7 @@ import {
     waitFor,
 } from "@odoo/hoot";
 import { Component, markup, onWillStart, xml } from "@odoo/owl";
+import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
@@ -44,16 +44,16 @@ import {
     fields,
     getFacetTexts,
     getMenuItemTexts,
-    getMockEnv,
     getPagerLimit,
     getPagerValue,
     getService,
     installLanguages,
+    isSmall,
     makeKwArgs,
     makeServerError,
+    mockOffline,
     MockServer,
     mockService,
-    mockOffline,
     models,
     mountView,
     mountViewInDialog,
@@ -76,17 +76,16 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
-
-import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { currencies } from "@web/core/currency";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
+import { onRendered, useRef } from "@web/owl2/utils";
 import { session } from "@web/session";
 import { floatField } from "@web/views/fields/float/float_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -218,7 +217,7 @@ class Currency extends models.Model {
 defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 
 async function clickControlPanelAction(buttonName) {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
@@ -233,7 +232,7 @@ async function longPress(target) {
 }
 
 async function clickRecordSelector(count = 1) {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         const cells = queryAll(".o_data_row").slice(0, count);
         for (const cell of cells) {
             await longPress(cell);
@@ -246,7 +245,7 @@ async function clickRecordSelector(count = 1) {
 }
 
 async function selectAllRecords() {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         const cells = queryAll("tbody tr.o_data_row[data-id]:not(.o_data_row_selected)");
         for (const cell of cells) {
             await longPress(cell);
@@ -256,7 +255,7 @@ async function selectAllRecords() {
     }
 }
 async function unselectAllRecords() {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         const cells = queryAll("tbody tr.o_data_row.o_data_row_selected[data-id]");
         for (const cell of cells) {
             await longPress(cell);
@@ -268,7 +267,7 @@ async function unselectAllRecords() {
 
 async function selectMany2xItem(fieldName, value) {
     await contains(`.o_field_cell:has(>.o_field_widget[name="${fieldName}"])`).click();
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(`.o_selected_row .o_field_widget[name="${fieldName}"] input`).click();
         await contains(`.o_dialog .o_kanban_record:contains(${value})`).click();
     } else {
@@ -277,7 +276,7 @@ async function selectMany2xItem(fieldName, value) {
 }
 
 async function toggleMultiCurrencyPopover(el) {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(el).click();
     } else {
         await contains(el).hover();
@@ -1578,7 +1577,7 @@ test(`list view: give a context dependent on the current context to a header but
             a: "yop",
         },
     });
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".btn.dropdown-toggle").click();
     }
     await contains(`button[name=toDo]`).click();
@@ -2248,7 +2247,7 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`.o_data_row`).toHaveCount(4);
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
         expect(`.o_list_button_discard`).toHaveCount(0);
         expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
@@ -2834,7 +2833,7 @@ test(`grouped list rendering with groupby m2o field: edit group`, async () => {
     expect.verifySteps(["web_save"]);
     expect(queryAllTexts(`.o_group_name`, { inline: true })).toEqual(["Value edit", "Value 2"]);
     await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".o_bottom_sheet_backdrop").click();
     } else {
         await contains(getFixture()).click();
@@ -17537,7 +17536,7 @@ test(`list view with default_group_by`, async () => {
     expect(`.o_list_renderer table`).toHaveClass("o_list_table_grouped");
     expect(`.o_group_header`).toHaveCount(2);
     // open search bar in mobile
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".o_control_panel_navigation > button").click();
     }
     // The default_group_by should not create any facet
@@ -17590,7 +17589,7 @@ test(`list view with multi-fields default_group_by`, async () => {
     expect(`.o_list_renderer table`).toHaveClass("o_list_table_grouped");
     expect(`.o_group_header`).toHaveCount(3);
     // open search bar in mobile
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".o_control_panel_navigation > button").click();
     }
     // The default_group_by should not create any facet
@@ -17890,7 +17889,7 @@ test(`Properties: datetime`, async () => {
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
     await contains(`.o-dropdown--menu input[type='checkbox']`).click();
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     }
     expect(`.o_list_renderer th[data-name='properties.property_datetime']`).toHaveCount(1);
@@ -17905,7 +17904,7 @@ test(`Properties: datetime`, async () => {
     await contains(`.o_field_datetime .o_input`).click();
 
     await contains(getPickerCell("19")).click();
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     }
     await contains(`.o_list_button_save`).click();
@@ -20002,7 +20001,7 @@ test(`cache web_read_group: do not send opening_info if not necessary`, async ()
     expect(`.o_group_header`).toHaveCount(1);
 
     // Do not follow the same steps as earlier, directly remove the filter
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         // Toggle searchbar in mobile
         await contains(`.o_control_panel_navigation .fa-search`).click();
     }
@@ -20604,7 +20603,7 @@ test(`custom button that creates record in list with sample data`, async () => {
     });
     expect(`.o_list_view .o_content`).toHaveClass("o_view_sample_data");
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".o_control_panel_main_buttons .btn.dropdown-toggle").click();
     }
     await contains(".custom_create").click();
@@ -21045,10 +21044,10 @@ test(`Grouped list: count and pager behavior - mobile`, async () => {
     expect(`tr.o_group_header`).toHaveCount(2);
     await contains(`.o_group_header:eq(1)`).click();
 
-    // No pager in 'Count' column when env.isSmall.
+    // No pager in 'Count' column when uiService.isSmall.
     expect(`.o_group_header:eq(1) th:eq(-2) .o_pager_counter`).toHaveCount(0);
     expect(`.o_group_header:eq(1) th:eq(-2) .btn-group`).toHaveCount(0);
-    // Only the pager buttons are present in the last column when env.isSmall.
+    // Only the pager buttons are present in the last column when uiService.isSmall.
     expect(`.o_group_header:eq(1) th:eq(-1) .btn-group`).toBeVisible();
     expect(`.o_group_header:eq(1) th:eq(-1) .o_pager_counter`).toHaveCount(0);
 });

@@ -1,11 +1,12 @@
-import { PageDependencies } from "@website/components/dialog/page_properties";
+import { Component, onMounted, onPatched, onWillUnmount, props, t } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
+import { charField, CharField } from "@web/views/fields/char/char_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
-import { debounce } from "@web/core/utils/timing";
-import { Component, onMounted, onPatched, onWillUnmount, props, t } from "@odoo/owl";
-import { charField, CharField } from "@web/views/fields/char/char_field";
+import { PageDependencies } from "@website/components/dialog/page_properties";
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL
@@ -26,6 +27,7 @@ class PageUrlField extends UrlField {
     setup() {
         super.setup();
         this.serverUrl = `${window.location.origin}/`;
+        this.uiService = useService("ui");
 
         // Trigger onchange api on input event to display redirection
         // parameters as soon as the user types.

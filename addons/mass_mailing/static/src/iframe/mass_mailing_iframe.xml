@@ -35,7 +35,7 @@
                 </div>
                 <div t-if="!this.props.readonly and this.props.withBuilder and !this.props.showThemeSelector and !this.props.showCodeView">
                     <div class="position-sticky o_mass_mailing-builder_sidebar o_builder_sidebar_open"
-                        t-att-class="{ 'd-none': this.env.isSmall or !this.state.showFullscreen }" t-custom-ref="sidebarRef">
+                        t-att-class="{ 'd-none': this.ui.isSmall or !this.state.showFullscreen }" t-custom-ref="sidebarRef">
                         <LazyComponent t-if="this.state.ready" Component="'mass_mailing.MassMailingBuilder'"
                             props="() => ({
                                 builderProps: this.getBuilderProps(),

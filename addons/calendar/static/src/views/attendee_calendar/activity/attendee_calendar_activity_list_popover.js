@@ -25,7 +25,8 @@ export class AttendeeCalendarActivityListPopover extends Component {
         super.setup();
         this.action = useService("action");
         this.store = useService("mail.store");
-        this.limit = this.env.isSmall ? false : 5;
+        this.uiService = useService("ui");
+        this.limit = this.uiService.isSmall ? false : 5;
 
         this.activityIds = this.props.activityIds;
 

@@ -37,6 +37,7 @@ export class ControlPanel extends Component {
         this.embeddedPanelState = useEmbeddedActions();
         this.actionService = useService("action");
         this.offlinePlugin = plugin(OfflinePlugin);
+        this.uiService = useService("ui");
         this.pagerProps = this.env.config.pagerProps
             ? proxy(this.env.config.pagerProps)
             : undefined;
@@ -68,7 +69,7 @@ export class ControlPanel extends Component {
 
         useLayoutEffect(() => {
             if (
-                !this.env.isSmall ||
+                !this.uiService.isSmall ||
                 ("adaptToScroll" in this.display && !this.display.adaptToScroll)
             ) {
                 return;
@@ -86,7 +87,7 @@ export class ControlPanel extends Component {
 
         onMounted(() => {
             if (
-                !this.env.isSmall ||
+                !this.uiService.isSmall ||
                 ("adaptToScroll" in this.display && !this.display.adaptToScroll)
             ) {
                 return;

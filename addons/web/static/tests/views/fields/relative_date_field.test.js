@@ -3,13 +3,13 @@ import { click, edit, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
+    contains,
     defineModels,
     fields,
-    getMockEnv,
+    isSmall,
     models,
     mountView,
     onRpc,
-    contains,
 } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -309,7 +309,7 @@ test("RelativeDateField on a datetime field in form view", async () => {
 
     await click(getPickerCell("9"));
 
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     }
     await animationFrame();

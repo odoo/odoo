@@ -1,9 +1,9 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-
 import { Component, computed, proxy, signal } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useService } from "@web/core/utils/hooks";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export class SettingsPage extends Component {
     static template = "web.SettingsPage";
@@ -16,6 +16,7 @@ export class SettingsPage extends Component {
     };
     settingsRef = signal(null);
     setup() {
+        this.uiService = useService("ui");
         this.state = proxy({
             selectedTab: "",
             search: this.env.searchState,

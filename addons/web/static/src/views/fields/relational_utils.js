@@ -224,6 +224,7 @@ export class Many2XAutocomplete extends Component {
     setup() {
         this.orm = useService("orm");
         this.offlinePlugin = plugin(OfflinePlugin);
+        this.uiService = useService("ui");
 
         this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
@@ -869,7 +870,7 @@ async function getFormViewInfo({ list, context, activeField, viewService, env })
         {}, // context
         comodel,
         viewService,
-        env.isSmall
+        env.services.ui.isSmall
     );
 
     return { archInfo: formArchInfo, fields };

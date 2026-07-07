@@ -248,7 +248,7 @@
 
     <t t-name="lunch.LunchDashboard">
         <t t-set="currency" t-value="this.state.infos.currency"/>
-        <t t-if="!this.env.isSmall">
+        <t t-if="!this.uiService.isSmall">
             <t t-call="lunch.LunchDashboardOrder"/>
         </t>
         <t t-else="">

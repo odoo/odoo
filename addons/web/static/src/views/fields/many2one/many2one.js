@@ -116,6 +116,7 @@ export class Many2One extends Component {
         this.action = useService("action");
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.uiService = useService("ui");
 
         this.state = proxy({ isFloating: false });
 
@@ -289,7 +290,7 @@ export class Many2One extends Component {
             const input = this.input;
             input.value = barcode;
             input.dispatchEvent(new Event("input"));
-            if (this.env.isSmall) {
+            if (this.uiService.isSmall) {
                 input.dispatchEvent(new Event("barcode-search"));
             }
         }

@@ -9,7 +9,7 @@ export class TodoFormControlPanel extends ControlPanel {
     setup() {
         super.setup();
         useEffect(() => {
-            if (this.env.isSmall && !this.embeddedPanelState.displayChatter) {
+            if (this.uiService.isSmall && !this.embeddedPanelState.displayChatter) {
                 this.toggleChatter();
             }
         });
@@ -19,7 +19,7 @@ export class TodoFormControlPanel extends ControlPanel {
                 router.current.actionStack?.[router.current.actionStack?.length - 1]?.view_type ===
                 "activity";
             if (
-                !this.env.isSmall &&
+                !this.uiService.isSmall &&
                 !this.embeddedPanelState.displayChatter &&
                 (isFromActivityView || JSON.parse(browser.localStorage.getItem("isChatterOpened")))
             ) {

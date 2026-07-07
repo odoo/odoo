@@ -1,7 +1,7 @@
 import { useChildSubEnv } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
-import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
+import { useBackButton, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { Component, onWillDestroy, props, proxy, t, useListener } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
@@ -64,6 +64,7 @@ export class Dialog extends Component {
     props = props(this.constructor.props);
 
     setup() {
+        this.uiService = useService("ui");
         this.modalRef = useForwardRefToParent("modalRef");
         useActiveElement("modalRef");
         this.data = proxy(this.env.dialogData);
@@ -92,7 +93,7 @@ export class Dialog extends Component {
         if (this.isMovable) {
             this.position = proxy({ left: 0, top: 0 });
             useDialogDraggable({
-                enable: () => !this.env.isSmall,
+                enable: () => !this.uiService.isSmall,
                 ref: this.modalRef,
                 elements: ".modal-content",
                 handle: ".modal-header",
@@ -107,7 +108,7 @@ export class Dialog extends Component {
             useListener(window, "resize", throttledResize);
         }
         onWillDestroy(() => {
-            if (this.env.isSmall) {
+            if (this.uiService.isSmall) {
                 this.data.scrollToOrigin();
             }
         });
@@ -120,7 +121,7 @@ export class Dialog extends Component {
     }
 
     get isFullscreen() {
-        return this.props.fullscreen || (this.env.isSmall && this.design !== "minimal");
+        return this.props.fullscreen || (this.uiService.isSmall && this.design !== "minimal");
     }
 
     get design() {

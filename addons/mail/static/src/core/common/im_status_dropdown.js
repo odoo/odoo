@@ -13,6 +13,7 @@ export class ImStatusDropdown extends Component {
 
     setup() {
         this.store = useService("mail.store");
+        this.uiService = useService("ui");
         this.readableImStatusByCode = {
             online: _t("Online"),
             away: _t("Away"),

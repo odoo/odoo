@@ -14,7 +14,7 @@ import {
     defineModels,
     fields,
     getService,
-    getMockEnv,
+    isSmall,
     mockService,
     models,
     mountWebClient,
@@ -765,7 +765,7 @@ describe("Import view", () => {
         );
 
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Display name");
-        if (getMockEnv().isSmall) {
+        if (isSmall()) {
             await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -807,7 +807,7 @@ describe("Import view", () => {
         await animationFrame();
         // For this test, we force the display of an error message if this field is set
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Selection");
-        if (getMockEnv().isSmall) {
+        if (isSmall()) {
             await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -870,7 +870,7 @@ describe("Import view", () => {
         await animationFrame();
         // For this test, we force the display of an error message if this field is set
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Bar");
-        if (getMockEnv().isSmall) {
+        if (isSmall()) {
             await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -940,7 +940,7 @@ describe("Import view", () => {
             message: "import is now successful",
         });
         await contains(".o_import_field_many2many select").select("import_skip_records");
-        if (getMockEnv().isSmall) {
+        if (isSmall()) {
             await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -1096,7 +1096,7 @@ describe("Import view", () => {
         await setInputFiles([file]);
         await animationFrame();
         await contains("input#o_import_batch_limit").edit(1);
-        if (getMockEnv().isSmall) {
+        if (isSmall()) {
             await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -1226,7 +1226,7 @@ describe("Import view", () => {
         // Set batch limit to 1. Total rows is 3. This will trigger 3 batches.
         await contains("input#o_import_batch_limit").edit(1);
 
-        if (getMockEnv().isSmall) {
+        if (isSmall()) {
             await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
             await contains(".o-dropdown--menu button:contains('Import')").click();
         } else {
@@ -1444,7 +1444,7 @@ describe("Import view", () => {
         await animationFrame();
         // For this test, we force the display of an error message if this field is set
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Many2Many");
-        if (getMockEnv().isSmall) {
+        if (isSmall()) {
             await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -1496,7 +1496,7 @@ describe("Import view", () => {
         await animationFrame();
         await contains(".o_import_date_format#date_format-5").edit("YYYYMMDD");
 
-        if (getMockEnv().isSmall) {
+        if (isSmall()) {
             await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -1762,7 +1762,7 @@ test("locale separators only apply to CSV, not to other formats", async () => {
     expect.verifySteps(["import_1"]);
 
     const xlsxFile = new File(["fake_file"], "data.xlsx", { type: "text/plain" });
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
         await contains(".o-dropdown--menu .o_file_input_trigger").click();
     } else {
@@ -1774,7 +1774,7 @@ test("locale separators only apply to CSV, not to other formats", async () => {
     expect.verifySteps(["import_2"]);
 
     const csvFile2 = new File(["fake_file"], "data.csv", { type: "text/plain" });
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await contains(".o-dropdown--menu .o_file_input_trigger").click();
     } else {
         await contains(".o_control_panel_main_buttons .o_file_input button").click();

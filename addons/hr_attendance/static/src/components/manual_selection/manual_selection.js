@@ -26,6 +26,7 @@ export class KioskManualSelection extends Component {
 
     setup() {
         this.orm = useService("orm");
+        this.uiService = useService("ui");
         const limit = this.calculateLimit();
         this.state = proxy({
             employeesData: {
@@ -99,7 +100,7 @@ export class KioskManualSelection extends Component {
     }
 
     async onDepartmentClick(departmentId = false) {
-        if (this.env.isSmall) {
+        if (this.uiService.isSmall) {
             if (departmentId) {
                 const selectedDepartment = this.props.departments.find(
                     (department) => department.id === departmentId

@@ -22,7 +22,7 @@ export class QuestionPageListRenderer extends ListRenderer {
 
     add(params) {
         let editable = false;
-        if (params.context && !this.env.isSmall) {
+        if (params.context && !this.uiService.isSmall) {
             const evaluatedContext = makeContext([params.context]);
             if (evaluatedContext[`default_${this.discriminant}`]) {
                 editable = this.props.editable;

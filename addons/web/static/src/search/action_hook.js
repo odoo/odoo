@@ -1,5 +1,6 @@
 import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { onMounted, useListener } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export const scrollSymbol = Symbol("scroll");
 
@@ -53,6 +54,7 @@ export function useCallbackRecorder(callbackRecorder, callback) {
  */
 export function useSetupAction(params = {}) {
     const component = useComponent();
+    const ui = useService("ui");
     const {
         __beforeLeave__,
         __getGlobalState__,
@@ -100,7 +102,7 @@ export function useSetupAction(params = {}) {
         const scrolling = state && state[scrollSymbol];
         if (scrolling) {
             const rootEl = getRootEl();
-            if (component.env.isSmall) {
+            if (ui.isSmall) {
                 rootEl.scrollTop = (scrolling.root && scrolling.root.top) || 0;
                 rootEl.scrollLeft = (scrolling.root && scrolling.root.left) || 0;
             } else if (scrolling.content) {
@@ -122,7 +124,7 @@ export function useSetupAction(params = {}) {
             }
             if (rootRef) {
                 const rootEl = getRootEl();
-                if (component.env.isSmall) {
+                if (ui.isSmall) {
                     state[scrollSymbol] = {
                         root: { left: rootEl.scrollLeft, top: rootEl.scrollTop },
                     };

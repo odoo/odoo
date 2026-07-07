@@ -3,7 +3,7 @@ import { browser } from "@web/core/browser/browser";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { is24HourFormat } from "@web/core/l10n/time";
-import { useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
@@ -69,6 +69,7 @@ export class CalendarCommonRenderer extends Component {
     };
 
     setup() {
+        this.uiService = useService("ui");
         this.fc = useFullCalendar(
             "fullCalendar",
             this.props.isDisabled ? this.disabledOptions : this.interactiveOptions
@@ -142,7 +143,7 @@ export class CalendarCommonRenderer extends Component {
         return {
             allDaySlot: true,
             allDayContent: "",
-            dayHeaderFormat: this.env.isSmall
+            dayHeaderFormat: this.uiService.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
             dayHeaderDidMount: this.onDayHeaderDidMount,
@@ -169,7 +170,10 @@ export class CalendarCommonRenderer extends Component {
             snapDuration: { minutes: 15 },
             timeZone: luxon.Settings.defaultZone.name,
             weekNumberFormat: {
-                week: this.props.model.scale === "month" || this.env.isSmall ? "numeric" : "long",
+                week:
+                    this.props.model.scale === "month" || this.uiService.isSmall
+                        ? "numeric"
+                        : "long",
             },
             weekends: this.props.isWeekendVisible,
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
@@ -185,7 +189,7 @@ export class CalendarCommonRenderer extends Component {
 
     get customOptions() {
         return {
-            weekNumbersWithinDays: !this.env.isSmall,
+            weekNumbersWithinDays: !this.uiService.isSmall,
         };
     }
 
@@ -393,7 +397,7 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventDragStop(info) {
         this.ref.el.classList.remove("o_interacting", "o_grabbing");
-        if (!this.env.isSmall) {
+        if (!this.uiService.isSmall) {
             const point = info.jsEvent.changedTouches?.[0] ?? info.jsEvent;
             const x = point.clientX;
             const y = point.clientY;
@@ -416,21 +420,17 @@ export class CalendarCommonRenderer extends Component {
         if (info.oldEvent.allDay !== info.event.allDay) {
             forceAllDay = true;
         }
-        this.props.model
-            .updateRecord(this.fcEventToRecord(info.event, forceAllDay))
-            .catch((e) => {
-                info.revert();
-                throw e;
-            });
+        this.props.model.updateRecord(this.fcEventToRecord(info.event, forceAllDay)).catch((e) => {
+            info.revert();
+            throw e;
+        });
     }
     onEventResize(info) {
         this.fc.api.unselect();
-        this.props.model
-            .updateRecord(this.fcEventToRecord(info.event))
-            .catch((e) => {
-                info.revert();
-                throw e;
-            });
+        this.props.model.updateRecord(this.fcEventToRecord(info.event)).catch((e) => {
+            info.revert();
+            throw e;
+        });
     }
     async onEventScheduled(info) {
         const original = info.event;
@@ -440,7 +440,7 @@ export class CalendarCommonRenderer extends Component {
         original.remove();
     }
     /**
-     * 
+     *
      * @param {object} event fullcalendar event
      * @param {boolean} forceAllDay if true, set the all_day to the value of allDay, otherwise keep the original record value
      * @returns {object} odoo record values
@@ -475,7 +475,10 @@ export class CalendarCommonRenderer extends Component {
                     // [X, 2000-01-01 16:00] -> [X, 2000-01-02[ -> [X, 2000-01-01 16:00]
                     // [X, 2000-01-02 00:00] -> [X, 2000-01-02[ -> [X, 2000-01-02 00:00]
                     // [X, 2000-01-02 00:01] -> [X, 2000-01-03[ -> [X, 2000-01-02 00:01]
-                    if (existingRecord.end.toMillis() !== existingRecord.end.startOf("day").toMillis()) {
+                    if (
+                        existingRecord.end.toMillis() !==
+                        existingRecord.end.startOf("day").toMillis()
+                    ) {
                         res.end = res.end.minus({ days: 1 });
                     }
                     res.end = res.end.set({
@@ -496,7 +499,7 @@ export class CalendarCommonRenderer extends Component {
         this.fc.api.unselect();
         this.highlightEvent(info.event, "o_cw_custom_highlight");
         this.ref.el.classList.add("o_interacting", "o_grabbing");
-        if (!this.env.isSmall) {
+        if (!this.uiService.isSmall) {
             this.props.model.bus.trigger("CALENDAR_EVENT_DRAG", { dragging: true });
         }
     }

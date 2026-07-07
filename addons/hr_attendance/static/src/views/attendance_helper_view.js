@@ -9,6 +9,7 @@ export class AttendanceActionHelper extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
+        this.uiService = useService("ui");
         this.state = proxy({
             hasDemoData: false,
         });

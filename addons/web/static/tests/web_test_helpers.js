@@ -144,6 +144,7 @@ export {
     installLanguages,
     patchTranslations,
 } from "./_framework/translation_test_helpers";
+export { isSmall } from "./_framework/ui_test_helpers";
 export {
     clickButton,
     clickCancel,

@@ -51,6 +51,7 @@ export class PivotRenderer extends Component {
 
     setup() {
         this.actionService = useService("action");
+        this.uiService = useService("ui");
         this.model = this.props.model;
         this.table = this.model.getTable();
         this.l10n = localization;

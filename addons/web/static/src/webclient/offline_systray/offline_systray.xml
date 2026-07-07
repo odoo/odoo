@@ -7,7 +7,7 @@
             navigationOptions="{ 'shouldFocusChildInput': false }"
             disabled="!this.offlinePlugin.hasScheduledCalls">
             <div
-                t-if="this.env.isSmall"
+                t-if="this.uiService.isSmall"
                 t-on-click="() => this.offlinePlugin.checkConnection()"
                 class="o_nav_entry o_offline_systray">
                     <i t-attf-class="{{ this.labelIcon }} {{ this.labelColor }}"

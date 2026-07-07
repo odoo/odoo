@@ -28,6 +28,7 @@ class OfflineSystray extends Component {
         this.offlinePlugin = plugin(OfflinePlugin);
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
+        this.uiService = useService("ui");
         useLayoutEffect(this.env.redrawNavbar, () => [
             this.offlinePlugin.isOffline(),
             this.offlinePlugin.hasScheduledCalls,
@@ -100,19 +101,19 @@ class OfflineSystray extends Component {
 
     get labelColor() {
         if (this.inError()) {
-            if (this.env.isSmall) {
+            if (this.uiService.isSmall) {
                 return "text-danger";
             }
             return "text-bg-danger";
         }
         if (this.offlinePlugin.isOffline()) {
-            if (this.env.isSmall) {
+            if (this.uiService.isSmall) {
                 return "text-warning";
             }
             return "text-bg-warning";
         }
         if (this.offlinePlugin.syncingORM()) {
-            if (this.env.isSmall) {
+            if (this.uiService.isSmall) {
                 return "";
             }
             return "text-bg-secondary";

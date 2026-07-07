@@ -21,7 +21,8 @@ export class Many2ManyTagsAvatarEmployeeField extends EmployeeFieldRelationMixin
 ) {
     displayAvatarCard(record) {
         return (
-            (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
+            (!this.uiService.isSmall &&
+                ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
             super.displayAvatarCard(record)
         );
     }
@@ -49,7 +50,8 @@ export class CardMany2ManyTagsAvatarEmployeeField extends EmployeeFieldRelationM
 ) {
     displayAvatarCard(record) {
         return (
-            (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
+            (!this.uiService.isSmall &&
+                ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
             super.displayAvatarCard(record)
         );
     }
@@ -83,7 +85,8 @@ export class ListMany2ManyTagsAvatarEmployeeField extends EmployeeFieldRelationM
 ) {
     displayAvatarCard(record) {
         return (
-            (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
+            (!this.uiService.isSmall &&
+                ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
             super.displayAvatarCard(record)
         );
     }

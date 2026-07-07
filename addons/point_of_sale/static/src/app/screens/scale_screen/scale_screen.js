@@ -16,6 +16,7 @@ export class ScaleScreen extends Component {
 
     setup() {
         this.dialog = useService("dialog");
+        this.uiService = useService("ui");
         this.pos = usePos();
         this.scale = this.pos.scale;
         this.scale.setErrorCallback(this.onError.bind(this));

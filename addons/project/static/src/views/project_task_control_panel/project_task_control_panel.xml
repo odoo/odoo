@@ -3,7 +3,7 @@
 
     <t t-name="project.ProjectTaskControlPanel" t-inherit="web.ControlPanel">
         <xpath expr="//button[@name='embedded_actions']" position="replace">
-            <t t-if="this.showTaskOptions and (!this.env.isSmall or !this.embeddedPanelState.embeddedInfos.embeddedActions?.length)">
+            <t t-if="this.showTaskOptions and (!this.uiService.isSmall or !this.embeddedPanelState.embeddedInfos.embeddedActions?.length)">
                 <Dropdown>
                     <button class="btn btn-secondary" t-att-title="this.taskOptionsTitle">
                         <i class="fa fa-sliders"/>
@@ -12,7 +12,7 @@
                         <DropdownItem onSelected="() => this.onClickShowSubtasks()" class="this.embeddedPanelState.showSubtasks ? 'selected' : ''">
                             Show Sub-Tasks
                         </DropdownItem>
-                        <DropdownItem t-if="this.embeddedPanelState.embeddedInfos.embeddedActions?.length and !this.env.isSmall"
+                        <DropdownItem t-if="this.embeddedPanelState.embeddedInfos.embeddedActions?.length and !this.uiService.isSmall"
                             class="this.embeddedPanelState.embeddedInfos.showEmbedded ? 'selected' : ''"
                             onSelected="() => this.embeddedPanelState.onClickShowEmbedded()"
                         >
@@ -28,7 +28,7 @@
     </t>
 
    <t t-name="project.MobileCombinedActionsDropdown">
-        <t t-if="this.env.isSmall and this.embeddedPanelState.embeddedInfos.embeddedActions?.length">
+        <t t-if="this.uiService.isSmall and this.embeddedPanelState.embeddedInfos.embeddedActions?.length">
             <Dropdown menuClass="'o_combined_mobile_dropdown'">
                 <button class="btn btn-secondary">
                     <i class="fa fa-sliders" t-att-data-tooltip="this.taskOptionsTitle" />

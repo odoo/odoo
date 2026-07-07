@@ -21,7 +21,7 @@
 
 <t t-name="web.Many2XAutocomplete" >
     <div class="o_input_dropdown" t-custom-ref="autocomplete_container">
-        <input t-if="this.env.isSmall and this.props.dropdown"
+        <input t-if="this.uiService.isSmall and this.props.dropdown"
             type="text"
             t-att-id="this.props.id"
             class="o_input"
@@ -47,7 +47,7 @@
     <t t-if="this.record.isInEdition">
         <t t-if="this.canCreate">
             <button class="btn btn-primary o_form_button_save" t-on-click="this.save" data-hotkey="c">Save &amp; Close</button>
-            <button t-if="!this.env.isSmall" class="btn btn-primary o_form_button_save_new" t-on-click="this.saveAndNew" data-hotkey="n">Save &amp; New</button>
+            <button t-if="!this.ui.isSmall" class="btn btn-primary o_form_button_save_new" t-on-click="this.saveAndNew" data-hotkey="n">Save &amp; New</button>
         </t>
         <t t-else="">
             <button class="btn btn-primary o_form_button_save" t-on-click="this.save" data-hotkey="c">Save</button>

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="project_todo.TodoDoneCheckmark">
-        <t t-if="!this.env.isSmall">
+        <t t-if="!this.uiService.isSmall">
             <a t-att-title="this.stateDone.isDone ? 'Mark as to-do' : 'Mark as done'"
                t-on-click.stop="this.onDoneToggled"
                t-on-mouseleave="this.actualizeDoneState"

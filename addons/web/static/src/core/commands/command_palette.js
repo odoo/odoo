@@ -1,25 +1,24 @@
-import { useRef } from "@web/owl2/utils";
+import {
+    Component,
+    EventBus,
+    markRaw,
+    onWillDestroy,
+    onWillStart,
+    proxy,
+    useListener,
+    useScope,
+} from "@odoo/owl";
+import { hasTouch, isMacOS } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { highlightText } from "@web/core/utils/html";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
-import { isMacOS, hasTouch } from "@web/core/browser/feature_detection";
-import { highlightText } from "@web/core/utils/html";
-
-import {
-    Component,
-    onWillStart,
-    onWillDestroy,
-    EventBus,
-    markRaw,
-    proxy,
-    useListener,
-    useScope,
-} from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 
 const DEFAULT_PLACEHOLDER = _t("Search...");
 const DEFAULT_EMPTY_MESSAGE = _t("No result found");
@@ -100,7 +99,7 @@ export class CommandPalette extends Component {
         config: Object,
         closeMe: { type: Function, optional: true },
     };
-    
+
     scope = useScope();
 
     setup() {
@@ -115,7 +114,8 @@ export class CommandPalette extends Component {
         this.keepLast = new KeepLast();
         this._sessionId = CommandPalette.lastSessionId++;
         this.DefaultCommandItem = DefaultCommandItem;
-        this.activeElement = useService("ui").activeElement;
+        this.uiService = useService("ui");
+        this.activeElement = this.uiService.activeElement;
         this.inputRef = useAutofocus();
 
         useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
@@ -201,9 +201,7 @@ export class CommandPalette extends Component {
         this.categoryNames = {};
         const proms = this.providersByNamespace[namespace].map((provider) => {
             const { provide } = provider;
-            const result = this.scope.run(() => {
-                return provide(this.env, options);
-            });
+            const result = this.scope.run(() => provide(this.env, options));
             return result;
         });
         let commands = (await this.keepLast.add(Promise.all(proms))).flat();

@@ -24,12 +24,13 @@ const { DateTime } = luxon;
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
-    static services = ["notification"];
+    static services = ["notification", "ui"];
 
-    setup(params, { notification }) {
+    setup(params, { notification, ui }) {
         /** @protected */
         this.keepLast = new KeepLast();
         this.notification = notification;
+        this.uiService = ui;
 
         const formViewFromConfig = (this.env.config.views || []).find((view) => view[1] === "form");
         const formViewIdFromConfig = formViewFromConfig ? formViewFromConfig[0] : false;
@@ -145,7 +146,9 @@ export class CalendarModel extends Model {
         return this.meta.hasEditDialog;
     }
     get hasMultiCreate() {
-        return !!this.meta.multiCreateView && !this.env.isSmall && this.meta.scale === "month";
+        return (
+            !!this.meta.multiCreateView && !this.uiService.isSmall && this.meta.scale === "month"
+        );
     }
     get hasQuickCreate() {
         return this.meta.quickCreate;
@@ -864,7 +867,7 @@ export class CalendarModel extends Model {
             isTimeHidden: isTimeHidden || !showTime,
             isDay: this.meta.scale === "day",
             isMonth: this.meta.scale === "month",
-            isSmall: this.env.isSmall,
+            isSmall: this.uiService.isSmall,
             rawRecord,
         };
     }

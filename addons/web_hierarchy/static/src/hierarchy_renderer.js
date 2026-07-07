@@ -22,6 +22,7 @@ export class HierarchyRenderer extends Component {
     setup() {
         this.rendererRef = useRef("renderer");
         this.notification = useService("notification");
+        this.uiService = useService("ui");
         if (this.canDragAndDropRecord) {
             useHierarchyNodeDraggable({
                 ref: this.rendererRef,
@@ -91,7 +92,7 @@ export class HierarchyRenderer extends Component {
     }
 
     get canDragAndDropRecord() {
-        return this.draggable && !this.env.isSmall;
+        return this.draggable && !this.uiService.isSmall;
     }
 
     get draggable() {

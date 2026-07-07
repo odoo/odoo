@@ -8,6 +8,7 @@ import { Record } from "@web/model/record";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
 
 import { Component, useListener } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class CalendarCommonPopover extends Component {
     static template = "web.CalendarCommonPopover";
@@ -35,6 +36,7 @@ export class CalendarCommonPopover extends Component {
         this.timeDuration = null;
         this.date = null;
         this.dateDuration = null;
+        this.uiService = useService("ui");
 
         useListener(
             window,

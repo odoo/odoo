@@ -28,6 +28,7 @@ export class DashboardSearchBar extends Component {
 
     setup() {
         this.nameService = useService("name");
+        this.uiService = useService("ui");
         this.orm = useService("orm");
         this.keepLast = new KeepLast();
         this.fields = useService("field");
@@ -122,7 +123,7 @@ export class DashboardSearchBar extends Component {
     }
 
     onSearchInputPointerDown(ev) {
-        if (this.env.isSmall) {
+        if (this.uiService.isSmall) {
             // Prevent the input from being focused on mobile, as it opens the keyboard
             ev.preventDefault();
         }
@@ -331,7 +332,7 @@ export class DashboardSearchBar extends Component {
     resetState(options = { focus: true }) {
         this.state.subItemsLimits = {};
         this.computeState({ expanded: [], query: "", subItems: [] });
-        if (options.focus && !this.env.isSmall) {
+        if (options.focus && !this.uiService.isSmall) {
             this.inputRef.el.focus();
         }
     }

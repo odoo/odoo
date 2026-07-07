@@ -52,6 +52,7 @@ export class PropertiesField extends Component {
             closeOnEscape: false,
         });
         this.propertiesRef = useRef("properties");
+        this.uiService = useService("ui");
 
         let currentResId;
         useRecordObserver((record) => {
@@ -280,7 +281,7 @@ export class PropertiesField extends Component {
      * @returns {object}
      */
     get renderedColumnsCount() {
-        return this.env.isSmall ? 1 : this.props.columns;
+        return this.uiService.isSmall ? 1 : this.props.columns;
     }
 
     /**

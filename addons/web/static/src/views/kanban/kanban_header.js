@@ -7,11 +7,11 @@ import { registry } from "@web/core/registry";
 import { utils } from "@web/core/ui/ui_service";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
+import { odoomark } from "@web/core/utils/html";
 import { useDebounced } from "@web/core/utils/timing";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 import { QuickCreateState } from "./kanban_record_quick_create";
-import { odoomark } from "@web/core/utils/html";
 
 class KanbanHeaderTooltip extends Component {
     static template = "web.KanbanGroupTooltip";
@@ -42,6 +42,7 @@ export class KanbanHeader extends Component {
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
+        this.uiService = useService("ui");
         this.popover = usePopover(KanbanHeaderTooltip);
         this.onTitleMouseEnter = useDebounced(this.onTitleMouseEnter, 400);
         this.odoomark = odoomark;

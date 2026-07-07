@@ -6,7 +6,7 @@
             t-att-class="this.cssClass"
         >
             <Dropdown
-                t-if="!this.env.isSmall"
+                t-if="!this.uiService.isSmall"
                 state="this.dropdownState"
                 menuRef="this.menuRef"
                 manual="true"
@@ -42,7 +42,7 @@
                 </t>
             </Dropdown>
             <input
-                t-if="this.env.isSmall"
+                t-if="this.uiService.isSmall"
                 type="time"
                 t-custom-ref="inputRef"
                 class="o_time_picker_input form-control px-0"

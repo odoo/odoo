@@ -133,7 +133,7 @@ export class FormRenderer extends Component {
 
     onScroll(ev) {
         this.state.isStatusbarStickyPinned =
-            !this.env.inDialog && !this.env.isSmall && ev.target.scrollTop !== 0;
+            !this.env.inDialog && !this.uiService.isSmall && ev.target.scrollTop !== 0;
     }
 
     async onWillChangeNotebookPage() {

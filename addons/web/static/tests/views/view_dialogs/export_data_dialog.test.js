@@ -13,7 +13,7 @@ import {
     contains,
     defineModels,
     fields,
-    getMockEnv,
+    isSmall,
     models,
     mountView,
     onRpc,
@@ -21,7 +21,6 @@ import {
     serverState,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-
 import { download } from "@web/core/network/download";
 
 async function exportAllAction() {
@@ -29,7 +28,7 @@ async function exportAllAction() {
     await contains(".o-dropdown--menu .dropdown-item").click();
 }
 const openExportDialog = async () => {
-    if (getMockEnv().isSmall) {
+    if (isSmall()) {
         await pointerDown(".o_data_row:nth-child(1), .o_kanban_record:nth-child(1)");
         await runAllTimers();
     } else if (queryFirst(".o_kanban_view")) {

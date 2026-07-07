@@ -127,6 +127,7 @@ export class GraphRenderer extends Component {
         this.canvasRef = useRef("canvas");
         this.containerRef = useRef("container");
         this.actionService = useService("action");
+        this.uiService = useService("ui");
 
         this.chart = null;
         this.tooltip = null;
@@ -804,7 +805,7 @@ export class GraphRenderer extends Component {
     resizeChart(context) {
         const { mode } = this.model.metaData;
         if (mode === "pie") {
-            if (this.env.isSmall) {
+            if (this.uiService.isSmall) {
                 context.plugins.legend.position = "bottom";
                 context.plugins.legend.align = "center";
             } else {
