@@ -10,6 +10,7 @@ import {
     setupChatHub,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, edit, expect, mockDate, press, test } from "@odoo/hoot";
@@ -79,7 +80,10 @@ test("bus subscription updated when joining locally pinned thread", async () => 
 
 test("bus subscription is refreshed when channel is joined", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
+    pyEnv["discuss.channel"].create([
+        { name: "General" },
+        { name: "Sales", channel_member_ids: [] },
+    ]);
     onWebsocketEvent("subscribe", () => expect.step("subscribe"));
     const later = luxon.DateTime.now().plus({ seconds: 2 });
     mockDate(
@@ -89,8 +93,13 @@ test("bus subscription is refreshed when channel is joined", async () => {
     await expect.waitForSteps(["subscribe"]);
     await openDiscuss();
     await expect.waitForSteps([]);
-    await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "new channel");
+    await triggerHotkey("control+k");
+    await click("input[placeholder='Search a conversation']");
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search a conversation']",
+        "Sales"
+    );
+    await click(".o-mail-DiscussCommand:text(Sales)");
     await expect.waitForSteps(["subscribe"]);
 });
 
