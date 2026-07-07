@@ -1198,3 +1198,17 @@ class TestExpenses(TestExpenseCommon):
                 {'name': 'file_4.png', 'res_model': 'account.move', 'res_id': expense_2.account_move_id.id},
             ]
         )
+
+    def test_delete_expense_with_attachment(self):
+        """ Deleting an expense should also delete its attachments """
+        expense = self.create_expenses()
+        attachment = self.env['ir.attachment'].create({
+            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': 'file.png',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        })
+
+        expense.unlink()
+        self.assertFalse(expense.exists())
+        self.assertFalse(attachment.exists())
