@@ -73,6 +73,33 @@ class TestActionPostFe(TransactionCase):
         self.assertEqual(self.invoice.state, 'posted')
         self.assertEqual(self.invoice.l10n_cr_fe_state, 'error')
 
+    def test_action_post_does_not_block_when_certificate_missing(self):
+        config = self.env['l10n_cr.fe.config'].search([('company_id', '=', self.env.company.id)], limit=1)
+        config.write({'certificate_download_code': False, 'certificate_file': False})
+        self.invoice.action_post()
+        self.assertEqual(self.invoice.state, 'posted')
+        self.assertEqual(self.invoice.l10n_cr_fe_state, 'error')
+
+    def test_action_post_does_not_block_when_product_missing_cabys(self):
+        partner = self.env['res.partner'].create({'name': 'Cliente Sin Cabys', 'vat': '102340567'})
+        product = self.env['product.product'].create({
+            'name': 'Producto sin cabys', 'l10n_cr_fe_cabys': False})
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': product.id, 'quantity': 1, 'price_unit': 500.0,
+                'name': 'Producto sin cabys',
+            })],
+        })
+        # get_clave se llama antes que _l10n_cr_fe_build_detalles en el flujo; se mockea
+        # para que la ejecución realmente llegue a la validación de CABYS que se quiere probar.
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.get_clave',
+                   return_value={'clave': '5' * 50, 'consecutivo': '0' * 20}):
+            invoice.action_post()
+        self.assertEqual(invoice.state, 'posted')
+        self.assertEqual(invoice.l10n_cr_fe_state, 'error')
+
     def test_action_post_ignores_vendor_bills(self):
         partner = self.env['res.partner'].create({'name': 'Proveedor Demo'})
         bill = self.env['account.move'].create({
