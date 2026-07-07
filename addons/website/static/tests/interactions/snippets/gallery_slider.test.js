@@ -163,7 +163,7 @@ const defaultOldLightbox = `
             </div>
             <ul class="carousel-indicators">
                 <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
-                    <i class="oi oi-chevron-left"></i>
+                    <i class="oi" data-icon="chevron_backward"></i>
                 </li>
                 <li data-bs-target="#slideshow_3" data-bs-slide-to="0" class="" style="background-image: url(/web/image/website.set_2_square_md_1)"></li>
                 <li data-bs-target="#slideshow_3" data-bs-slide-to="1" style="background-image: url(/web/image/website.set_2_square_md_3)" class=""></li>
@@ -171,7 +171,7 @@ const defaultOldLightbox = `
                 <li data-bs-target="#slideshow_3" data-bs-slide-to="3" style="background-image: url(/web/image/website.set_2_square_md_4)" class="active" aria-current="true"></li><li data-bs-target="#slideshow_3" data-bs-slide-to="4" style="background-image: url(/web/image/website.set_2_square_md_6)"></li>
                 <li data-bs-target="#slideshow_3" data-bs-slide-to="5" style="background-image: url(/web/image/website.set_2_square_md_2)" class=""></li>
                 <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
-                    <i class="oi oi-chevron-right"></i>
+                    <i class="oi" data-icon="chevron_forward"></i>
                 </li>
             </ul>
         </div>
