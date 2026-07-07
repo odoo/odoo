@@ -429,18 +429,15 @@ var owl = (() => {
   function onReadTargetKey(target, key, atom) {
     onReadAtom(atom ?? getTargetKeyAtom(target, key));
   }
-  function onWriteTargetKey(target, key, atom) {
-    if (!atom) {
-      const keyToAtomItem = targetToKeysToAtomItem.get(target);
-      if (!keyToAtomItem) {
-        return;
-      }
-      if (!keyToAtomItem.has(key)) {
-        return;
-      }
-      atom = keyToAtomItem.get(key);
+  function onWriteTargetKey(target, key) {
+    const keyToAtomItem = targetToKeysToAtomItem.get(target);
+    if (!keyToAtomItem) {
+      return;
     }
-    onWriteAtom(atom);
+    if (!keyToAtomItem.has(key)) {
+      return;
+    }
+    onWriteAtom(keyToAtomItem.get(key));
   }
   var targets = /* @__PURE__ */ new WeakMap();
   var proxyCache = /* @__PURE__ */ new WeakMap();
@@ -497,18 +494,30 @@ var owl = (() => {
         const hadKey = objectHasOwnProperty.call(target, key);
         const originalValue = Reflect.get(target, key, receiver);
         const ret = Reflect.set(target, key, toRaw(value), receiver);
-        if (!hadKey && objectHasOwnProperty.call(target, key)) {
-          onWriteTargetKey(target, KEYCHANGES, atom);
-        }
-        if (originalValue !== Reflect.get(target, key, receiver) || key === "length" && Array.isArray(target)) {
-          onWriteTargetKey(target, key, atom);
+        const keyCreated = !hadKey && objectHasOwnProperty.call(target, key);
+        const valueChanged = originalValue !== Reflect.get(target, key, receiver);
+        if (atom) {
+          if (keyCreated || valueChanged) {
+            onWriteAtom(atom);
+          }
+        } else {
+          if (keyCreated) {
+            onWriteTargetKey(target, KEYCHANGES);
+          }
+          if (valueChanged || key === "length" && Array.isArray(target)) {
+            onWriteTargetKey(target, key);
+          }
         }
         return ret;
       },
       deleteProperty(target, key) {
         const ret = Reflect.deleteProperty(target, key);
-        onWriteTargetKey(target, KEYCHANGES, atom);
-        onWriteTargetKey(target, key, atom);
+        if (atom) {
+          onWriteAtom(atom);
+        } else {
+          onWriteTargetKey(target, KEYCHANGES);
+          onWriteTargetKey(target, key);
+        }
         return ret;
       },
       ownKeys(target) {
@@ -524,26 +533,26 @@ var owl = (() => {
   function makeKeyObserver(methodName, target, atom) {
     return (key) => {
       key = toRaw(key);
-      onReadTargetKey(target, key, atom);
+      onReadTargetKey(target, key, null);
       return possiblyReactive(target[methodName](key), atom);
     };
   }
   function makeIteratorObserver(methodName, target, atom) {
     return function* () {
-      onReadTargetKey(target, KEYCHANGES, atom);
+      onReadTargetKey(target, KEYCHANGES, null);
       const keys = target.keys();
       for (const item of target[methodName]()) {
         const key = keys.next().value;
-        onReadTargetKey(target, key, atom);
+        onReadTargetKey(target, key, null);
         yield possiblyReactive(item, atom);
       }
     };
   }
   function makeForEachObserver(target, atom) {
     return function forEach(forEachCb, thisArg) {
-      onReadTargetKey(target, KEYCHANGES, atom);
+      onReadTargetKey(target, KEYCHANGES, null);
       target.forEach(function(val, key, targetObj) {
-        onReadTargetKey(target, key, atom);
+        onReadTargetKey(target, key, null);
         forEachCb.call(
           thisArg,
           possiblyReactive(val, atom),
@@ -553,7 +562,7 @@ var owl = (() => {
       }, thisArg);
     };
   }
-  function delegateAndNotify(setterName, getterName, target, atom) {
+  function delegateAndNotify(setterName, getterName, target) {
     return (key, value) => {
       key = toRaw(key);
       const hadKey = target.has(key);
@@ -561,61 +570,61 @@ var owl = (() => {
       const ret = target[setterName](key, value);
       const hasKey = target.has(key);
       if (hadKey !== hasKey) {
-        onWriteTargetKey(target, KEYCHANGES, atom);
+        onWriteTargetKey(target, KEYCHANGES);
       }
       if (originalValue !== target[getterName](key)) {
-        onWriteTargetKey(target, key, atom);
+        onWriteTargetKey(target, key);
       }
       return ret;
     };
   }
-  function makeClearNotifier(target, atom) {
+  function makeClearNotifier(target) {
     return () => {
       const allKeys = [...target.keys()];
       target.clear();
-      onWriteTargetKey(target, KEYCHANGES, atom);
+      onWriteTargetKey(target, KEYCHANGES);
       for (const key of allKeys) {
-        onWriteTargetKey(target, key, atom);
+        onWriteTargetKey(target, key);
       }
     };
   }
   var rawTypeToFuncHandlers = {
     Set: (target, atom) => ({
       has: makeKeyObserver("has", target, atom),
-      add: delegateAndNotify("add", "has", target, atom),
-      delete: delegateAndNotify("delete", "has", target, atom),
+      add: delegateAndNotify("add", "has", target),
+      delete: delegateAndNotify("delete", "has", target),
       keys: makeIteratorObserver("keys", target, atom),
       values: makeIteratorObserver("values", target, atom),
       entries: makeIteratorObserver("entries", target, atom),
       [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, atom),
       forEach: makeForEachObserver(target, atom),
-      clear: makeClearNotifier(target, atom),
+      clear: makeClearNotifier(target),
       get size() {
-        onReadTargetKey(target, KEYCHANGES, atom);
+        onReadTargetKey(target, KEYCHANGES, null);
         return target.size;
       }
     }),
     Map: (target, atom) => ({
       has: makeKeyObserver("has", target, atom),
       get: makeKeyObserver("get", target, atom),
-      set: delegateAndNotify("set", "get", target, atom),
-      delete: delegateAndNotify("delete", "has", target, atom),
+      set: delegateAndNotify("set", "get", target),
+      delete: delegateAndNotify("delete", "has", target),
       keys: makeIteratorObserver("keys", target, atom),
       values: makeIteratorObserver("values", target, atom),
       entries: makeIteratorObserver("entries", target, atom),
       [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, atom),
       forEach: makeForEachObserver(target, atom),
-      clear: makeClearNotifier(target, atom),
+      clear: makeClearNotifier(target),
       get size() {
-        onReadTargetKey(target, KEYCHANGES, atom);
+        onReadTargetKey(target, KEYCHANGES, null);
         return target.size;
       }
     }),
     WeakMap: (target, atom) => ({
       has: makeKeyObserver("has", target, atom),
       get: makeKeyObserver("get", target, atom),
-      set: delegateAndNotify("set", "get", target, atom),
-      delete: delegateAndNotify("delete", "has", target, atom)
+      set: delegateAndNotify("set", "get", target),
+      delete: delegateAndNotify("delete", "has", target)
     })
   };
   function collectionsProxyHandler(target, targetRawType, atom) {
@@ -662,16 +671,16 @@ var owl = (() => {
   function signalRef() {
     return buildSignal(null, (atom) => atom.value);
   }
-  function signalArray(initialValue) {
+  function signalArray(initialValue = []) {
     return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
   }
-  function signalObject(initialValue) {
+  function signalObject(initialValue = {}) {
     return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
   }
-  function signalMap(initialValue) {
+  function signalMap(initialValue = /* @__PURE__ */ new Map()) {
     return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
   }
-  function signalSet(initialValue) {
+  function signalSet(initialValue = /* @__PURE__ */ new Set()) {
     return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
   }
   function signal(value) {
@@ -1092,6 +1101,16 @@ ${issueStrings}`);
       }
     });
     validate[intersectionSymbol] = types22;
+    validate.toShape = () => {
+      const shape = {};
+      for (const member of types22) {
+        const memberShape = typeof member.toShape === "function" ? member.toShape() : void 0;
+        if (memberShape && !Array.isArray(memberShape)) {
+          Object.assign(shape, memberShape);
+        }
+      }
+      return shape;
+    };
     return validate;
   }
   function literalType(literal) {
@@ -1167,6 +1186,7 @@ ${issueStrings}`);
     if (!Array.isArray(schema)) {
       validate[shapeSymbol] = schema;
     }
+    validate.toShape = () => schema;
     return validate;
   }
   function strictObjectType(schema) {
@@ -1176,6 +1196,7 @@ ${issueStrings}`);
     if (!Array.isArray(schema)) {
       validate[shapeSymbol] = schema;
     }
+    validate.toShape = () => schema;
     return validate;
   }
   function promiseType(type) {
@@ -1603,7 +1624,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.40";
+  var version = "3.0.0-alpha.42";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -1996,9 +2017,11 @@ ${issueStrings}`);
         style.removeProperty(prop);
       }
     }
+    let changed = false;
     for (let prop in val) {
-      if (val[prop] !== oldVal[prop]) {
+      if (changed || val[prop] !== oldVal[prop]) {
         setStyleProp(style, prop, val[prop]);
+        changed = true;
       }
     }
     if (!style.cssText) {
@@ -3225,6 +3248,7 @@ ${issueStrings}`);
         return "destroyed";
     }
   }
+  var MAX_RENDER_ITERATIONS = 1e3;
   function makeChildFiber(node, parent) {
     let current = node.fiber;
     if (current) {
@@ -3237,6 +3261,7 @@ ${issueStrings}`);
     let current = node.fiber;
     if (current) {
       let root = current.root;
+      root.renderCount++;
       root.locked = true;
       root.setCounter(root.counter + 1 - cancelFibers(current.children));
       root.locked = false;
@@ -3331,6 +3356,15 @@ ${issueStrings}`);
       const node = this.node;
       const root = this.root;
       if (root) {
+        if (root.renderCount > MAX_RENDER_ITERATIONS) {
+          handleError({
+            node,
+            error: new OwlError(
+              `Maximum render iterations (${MAX_RENDER_ITERATIONS}) exceeded. Component "${node.componentName}" is stuck in a render loop: rendering it keeps triggering another render before the DOM is updated. A common cause is updating reactive state during render or setup() \u2014 e.g. calling a parent's state setter from a child's setup().`
+            )
+          });
+          return;
+        }
         const c = getCurrentComputation();
         removeSources(node.signalComputation);
         setComputation(node.signalComputation);
@@ -3353,6 +3387,9 @@ ${issueStrings}`);
   };
   var RootFiber = class extends Fiber {
     counter = 1;
+    // Number of times this (uncommitted) fiber has been recycled by makeRootFiber.
+    // Climbs without bound only in a render loop; see issue #1968.
+    renderCount = 0;
     // only add stuff in this if they have registered some hooks
     willPatch = [];
     patched = [];
@@ -4333,6 +4370,13 @@ ${issueStrings}`);
       let error = null;
       try {
         node = new ComponentNode(Root, props2, this, null, null);
+        const subConfig = config3;
+        if (subConfig.pluginManager) {
+          node.pluginManager = subConfig.pluginManager;
+        }
+        if (subConfig.onError) {
+          nodeErrorHandlers.set(node, [subConfig.onError]);
+        }
       } catch (e) {
         error = e;
         reject(e);
@@ -4393,7 +4437,9 @@ ${issueStrings}`);
         return promise;
       };
       const root = {
-        node,
+        get prepared() {
+          return fiber ? fiber.counter === 0 : false;
+        },
         promise,
         prepare,
         mount: mount3,
@@ -4423,6 +4469,9 @@ ${issueStrings}`);
   };
   async function mount2(C, target, config3 = {}) {
     const app = new App(config3);
+    if (app.pluginManager.status < STATUS.MOUNTED) {
+      await app.pluginManager.ready;
+    }
     const root = app.createRoot(C, config3);
     return root.mount(target, config3);
   }
@@ -4659,9 +4708,18 @@ ${issueStrings}`);
         if (!target) {
           return;
         }
-        root = app.createRoot(PortalContent, { props: { slots } });
-        root.node.pluginManager = portalNode.pluginManager;
-        nodeErrorHandlers.set(root.node, [forwardErrorToParent(portalNode)]);
+        root = app.createRoot(PortalContent, {
+          props: { slots },
+          // Forward the plugin chain from this Portal (createRoot defaults
+          // sub-roots to the app-level plugin manager) so `providePlugins`
+          // contributions from ancestors are visible inside the portaled content.
+          pluginManager: portalNode.pluginManager,
+          // Route errors from the portaled subtree back through Portal's parent
+          // chain so consumer `onError` handlers still catch them. Without this,
+          // sub-root errors would propagate to app._handleError and tear down
+          // the whole app.
+          onError: forwardErrorToParent(portalNode)
+        });
         root.mount(target);
         return tearDown;
       });
@@ -4696,13 +4754,18 @@ ${issueStrings}`);
     setup() {
       const suspenseNode = this.__owl__;
       const root = suspenseNode.app.createRoot(SuspenseHost, {
-        props: { slots: this.props.slots }
+        props: { slots: this.props.slots },
+        // Thread the plugin manager so `providePlugins` contributions from
+        // ancestors are visible inside the default slot. (createRoot defaults
+        // sub-roots to the app-level plugin manager; override here.) Destroy
+        // cascade is handled explicitly below via `onWillDestroy`.
+        pluginManager: suspenseNode.pluginManager,
+        // Route errors from the sub-root back into Suspense's parent chain so
+        // consumer `onError` handlers still catch descendant failures.
+        onError: forwardErrorToParent(suspenseNode)
       });
-      root.node.pluginManager = suspenseNode.pluginManager;
-      nodeErrorHandlers.set(root.node, [forwardErrorToParent(suspenseNode)]);
       root.prepare().then(() => this.prepared.set(true));
-      const fiber = root.node.fiber;
-      if (fiber && fiber.counter === 0) {
+      if (root.prepared) {
         this.prepared.set(true);
       }
       onMounted(() => this.mounted.set(true));
@@ -4745,8 +4808,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-06-26T12:30:41.410Z",
-    hash: "e74870c2",
+    date: "2026-07-07T08:37:30.925Z",
+    hash: "55111162",
     url: "https://github.com/odoo/owl"
   };
 
