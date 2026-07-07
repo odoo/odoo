@@ -1169,3 +1169,17 @@ class TestExpenses(TestExpenseCommon):
         payable_move_line = payment_entry.line_ids.filtered(lambda l: l.account_id == other_payable_account)
         self.assertTrue(bill.payment_state in ('in_payment', 'paid'), "The bill should be marked as paid/in_payment")
         self.assertTrue(payable_move_line.reconciled, "The payment entry should be reconciled with the bill")
+
+    def test_delete_expense_with_attachment(self):
+        """ Deleting an expense should also delete its attachments """
+        expense = self.create_expenses()
+        attachment = self.env['ir.attachment'].create({
+            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': 'file.png',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        })
+
+        expense.unlink()
+        self.assertFalse(expense.exists())
+        self.assertFalse(attachment.exists())
