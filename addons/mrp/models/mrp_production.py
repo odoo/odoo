@@ -1951,6 +1951,9 @@ class MrpProduction(models.Model):
             for move in finish_moves:
                 if move.product_id.tracking in ['lot', 'serial'] and not move.lot_ids:
                     move.lot_ids = order.lot_producing_ids.ids
+                    if move.product_id.tracking == 'lot' and order.lot_producing_ids:
+                        lines_without_lot = move.move_line_ids.filtered(lambda ml: not ml.lot_id)
+                        lines_without_lot.lot_id = order.lot_producing_ids[:1]
                 move.quantity = order.uom_id.round(order.qty_producing - order.qty_produced, rounding_method='HALF-UP')
                 extra_vals = order._prepare_finished_extra_vals()
                 if extra_vals:
