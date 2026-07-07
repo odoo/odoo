@@ -284,9 +284,14 @@ class TestSaleOrder(SaleCommon):
             }),
             Command.create({"product_id": product_with_desc.id}),
             Command.create({"name": "Productless SOL\nsub description", "price_unit": 12.0}),
+            Command.create({
+                "product_id": product_with_desc.id,
+                "name": f"{product_with_desc.display_name}\nAdditional\ninfo.",
+                "price_unit": 12.0,
+            }),
         ]
-        sol1, sol2, sol3, sol4, sol5, sol6, sol7 = self.sale_order.order_line
-        sol1.name += "\nOK THANK YOU\nGOOD BYE"
+        sol1, sol2, sol3, sol4, sol5, sol6, sol7, sol8 = self.sale_order.order_line
+        sol1.name += "OK THANK YOU\nGOOD BYE"
 
         self.assertEqual(
             sol1.display_name,
@@ -323,6 +328,14 @@ class TestSaleOrder(SaleCommon):
             sol7.display_name,
             f"{self.sale_order.name} - Productless SOL ({self.partner.name})",
             "Product lines without product should display the SOL name",
+        )
+        # This can happen with SOs created before v20. Keep this behavior to avoid breaking data
+        # after migration.
+        self.assertEqual(
+            sol8.display_name,
+            f"{self.sale_order.name} - {product_with_desc.display_name} ({self.partner.name})",
+            "Product lines with the product's display_name on the first line and a default "
+            "description on the second line should display the product name",
         )
 
     def test_state_changes(self):

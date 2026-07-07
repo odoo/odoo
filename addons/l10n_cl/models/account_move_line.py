@@ -122,10 +122,21 @@ class AccountMoveLine(models.Model):
                 'round_currency': second_currency.decimal_places,
             }
 
-        values['line_description'] = '%s (%s: %s @ %s)' % (
-            self.name,
-            values['second_currency']['currency_name'],
-            float_repr(values['second_currency']['price'], values['second_currency']['round_currency']),
-            self.move_id._float_repr_float_round(values['second_currency']['conversion_rate'], values['second_currency']['round_currency']),
-        ) if values.get('second_currency') and not self.l10n_latam_document_type_id._is_doc_type_export() else self.name
+        values['line_description'] = (
+            '%s (%s: %s @ %s)'
+            % (
+                self.label,
+                values['second_currency']['currency_name'],
+                float_repr(
+                    values['second_currency']['price'], values['second_currency']['round_currency']
+                ),
+                self.move_id._float_repr_float_round(
+                    values['second_currency']['conversion_rate'],
+                    values['second_currency']['round_currency'],
+                ),
+            )
+            if values.get('second_currency')
+            and not self.l10n_latam_document_type_id._is_doc_type_export()
+            else self.label
+        )
         return values

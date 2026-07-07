@@ -132,10 +132,5 @@ class SaleOrderLine(models.Model):
                 "discount": self.discount,
                 "price_unit": self.price_unit,
             })
-        else:
-            # Try to remove the default product display_name from the line name
-            vals["name"] = self.name.removeprefix(f"{self.product_id.display_name}").removeprefix(
-                "\n"
-            )
 
         return vals

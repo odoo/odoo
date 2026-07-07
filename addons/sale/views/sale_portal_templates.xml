@@ -729,8 +729,8 @@
                                 <div t-else="" class="py-3 px-3 border-bottom">
                                     <!-- Name + subtotal -->
                                     <div class="d-flex justify-content-between align-items-start gap-2">
-                                        <t t-set="name_parts_m" t-value="(line.name or '').split('\n', 1)"/>
-                                        <t t-set="name_title_m" t-value="name_parts_m[0][name_parts_m[0].find(']') + 2:] if name_parts_m[0].startswith('[') else name_parts_m[0]"/>
+                                        <t t-set="label_parts_m" t-value="(line.label or '').split('\n', 1)"/>
+                                        <t t-set="name_title_m" t-value="label_parts_m[0][label_parts_m[0].find(']') + 2:] if label_parts_m[0].startswith('[') else label_parts_m[0]"/>
                                         <span t-out="name_title_m"/>
                                         <t t-if="not line.is_downpayment and not collapse_prices_m">
                                             <span t-if="price_field_m == 'price_subtotal'"
@@ -742,9 +742,9 @@
                                         </t>
                                     </div>
                                     <!-- Optional description -->
-                                    <span t-if="len(name_parts_m) > 1"
+                                    <span t-if="len(label_parts_m) > 1"
                                           class="o_sale_portal_line_description d-block text-muted small mt-1"
-                                          t-out="name_parts_m[1]"/>
+                                          t-out="label_parts_m[1]"/>
                                     <t t-if="not collapse_prices_m">
                                         <!-- Qty × price (with strikethrough + discounted price if rebate) -->
                                         <div class="d-flex flex-wrap align-items-baseline gap-1 mt-1 small text-muted">
@@ -917,7 +917,7 @@
                                             class="d-sm-none"
                                             t-att-style="padding_style"
                                         >
-                                            <span t-field="line.name"/>
+                                            <span t-field="line.label"/>
                                             <span
                                                 t-if="show_section_qty_uom"
                                                 class="text-muted fw-normal ms-1"
@@ -932,7 +932,7 @@
                                             class="d-none d-sm-table-cell d-md-none"
                                             t-att-style="padding_style"
                                         >
-                                            <span t-field="line.name"/>
+                                            <span t-field="line.label"/>
                                             <span
                                                 t-if="show_section_qty_uom"
                                                 class="text-muted fw-normal ms-1"
@@ -947,7 +947,7 @@
                                             class="d-none d-md-table-cell"
                                             t-att-style="padding_style"
                                         >
-                                            <span t-field="line.name"/>
+                                            <span t-field="line.label"/>
                                             <span
                                                 t-if="show_section_qty_uom"
                                                 class="text-muted fw-normal ms-1"
@@ -983,7 +983,7 @@
                                             colspan="99"
                                             t-att-style="padding_style"
                                         >
-                                            <span t-field="line.name"/>
+                                            <span t-field="line.label"/>
                                         </td>
                                     </tr>
                                     <tr t-elif="is_combo" name="tr_combo" class="fw-bold">
@@ -999,7 +999,7 @@
                                             name="td_combo_name"
                                             t-att-style="padding_style"
                                         >
-                                            <span t-field="line.name">Combo Product</span>
+                                            <span t-field="line.label">Combo Product</span>
                                         </td>
                                         <td
                                             name="td_combo_quantity"
@@ -1046,11 +1046,16 @@
                                                     t-att-alt="line.product_id.display_name" class="o_sale_portal_product_image d-none d-lg-inline me-2 rounded object-fit-cover"
                                                 />
                                                 <div>
-                                                    <t t-set="name_parts" t-value="(line.name or '').split('\n', 1)"/>
-                                                    <span name="span_product_name" t-out="name_parts[0]"/>
-                                                    <span t-if="len(name_parts) > 1"
+                                                    <t
+                                                        t-set="label_parts"
+                                                        t-value="(line.label or '').split('\n', 1)"
+                                                    />
+                                                    <span name="span_product_name" t-out="label_parts[0]"/>
+                                                    <span
+                                                        t-if="len(label_parts) > 1"
                                                         class="o_sale_portal_line_description d-block text-muted small"
-                                                        t-out="name_parts[1]"/>
+                                                        t-out="label_parts[1]"
+                                                    />
                                                 </div>
                                             </div>
                                         </td>
@@ -1127,7 +1132,7 @@
                                             <t t-set="line_counter" t-value="line_counter + 1"/>
                                         </td>
                                         <td name="td_section_group_name" t-att-style="padding_style">
-                                            <span t-field="line.name">
+                                            <span t-field="line.label">
                                                 Section Summary
                                             </span>
                                         </td>

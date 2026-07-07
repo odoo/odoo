@@ -146,14 +146,9 @@ class SaleOrderLine(models.Model):
     is_product_archived = fields.Boolean(compute="_compute_is_product_archived")
 
     name = fields.Text(
-        string="Description",
-        compute="_compute_name",
-        store=True,
-        readonly=False,
-        required=True,
-        precompute=True,
+        string="Description", compute="_compute_name", store=True, readonly=False, precompute=True
     )
-    translated_product_name = fields.Text(compute="_compute_translated_product_name")
+    label = fields.Text(string="Label", compute="_compute_label", inverse="_inverse_label")
 
     product_uom_qty = fields.Float(
         string="Quantity",
@@ -437,15 +432,21 @@ class SaleOrderLine(models.Model):
         for so_line in self.sudo():
             if so_line.order_partner_id.lang:
                 so_line = so_line.with_context(lang=so_line.order_id._get_lang())
-            if (product := so_line.product_id).display_name:
-                default_name = so_line._get_sale_order_line_multiline_description_sale()
-                if so_line.name == default_name:
-                    description = product.display_name
-                else:
-                    parts = (so_line.name or "").split("\n", 2)
-                    description = parts[1] if len(parts) > 1 and parts[1] else product.display_name
-            else:
-                description = (so_line.name or "").split("\n", 1)[0]
+
+            description = (so_line.name or "").split("\n", 1)[0]
+            default_name = so_line._get_sale_order_line_multiline_description_sale()
+            if so_line.product_id and (
+                so_line.name
+                in {
+                    default_name,
+                    f"{so_line.product_id.display_name}\n{default_name}",
+                    so_line.product_id.display_name,
+                }
+            ):
+                # if name (or old product display_name + name) matches the multiline description,
+                # use product's display name
+                description = so_line.product_id.display_name
+
             name = f"{so_line.order_id.name} - {description}"
             additional_name = name_per_id.get(so_line.id)
             if additional_name:
@@ -516,22 +517,34 @@ class SaleOrderLine(models.Model):
     def _get_sale_order_line_multiline_description_sale(self):
         """Compute a default multiline description for this sales order line.
 
-        In most cases the product description is enough but sometimes we need to append information
-        that only exists on the sale order line itself (custom and no_variant attributes, ...).
+        In most cases the product description is enough, but sometimes we need to append
+        information that only exists on the sale order line itself (custom and
+        no_variant attributes, ...).
         """
         self.ensure_one()
-        description = (
-            self.product_id.get_product_multiline_description_sale()
-            + self._get_sale_order_line_multiline_description_variants()
-        )
-        if self.linked_line_id and not self.combo_item_id:
-            description += "\n" + self.env._(
-                "Option for: %s",
-                self.linked_line_id.product_id.with_context(
-                    display_default_code=False
-                ).display_name,
+
+        description_parts = []
+
+        if self.product_id.description_sale:
+            description_parts.append(
+                self.product_id.get_product_multiline_description_sale(with_display_name=False)
             )
-        return description
+
+        variants = self._get_sale_order_line_multiline_description_variants()
+        if variants:
+            description_parts.append(variants)
+
+        if self.linked_line_id and not self.combo_item_id:
+            description_parts.append(
+                self.env._(
+                    "Option for: %s",
+                    self.linked_line_id.product_id.with_context(
+                        display_default_code=False
+                    ).display_name,
+                )
+            )
+
+        return "\n".join(description_parts)
 
     def _get_sale_order_line_multiline_description_variants(self):
         """When using no_variant attributes or is_custom values, the product
@@ -548,7 +561,7 @@ class SaleOrderLine(models.Model):
         if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
 
-        name = ""
+        lines = []
 
         custom_ptavs = (
             self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
@@ -557,15 +570,16 @@ class SaleOrderLine(models.Model):
 
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate description)
-        for ptav in no_variant_ptavs - multi_ptavs - custom_ptavs:
-            name += "\n" + ptav.display_name
+        lines.extend((no_variant_ptavs - multi_ptavs - custom_ptavs).mapped("display_name"))
 
         # display the selected values per attribute on a single for a multi checkbox
         for pta, ptavs in groupby(multi_ptavs, lambda ptav: ptav.attribute_id):
-            name += "\n" + self.env._(
-                "%(attribute)s: %(values)s",
-                attribute=pta.name,
-                values=", ".join(ptav.name for ptav in ptavs),
+            lines.append(
+                self.env._(
+                    "%(attribute)s: %(values)s",
+                    attribute=pta.name,
+                    values=", ".join(ptav.name for ptav in ptavs),
+                )
             )
 
         # Sort the values according to _order settings, because it doesn't work for virtual records
@@ -575,9 +589,9 @@ class SaleOrderLine(models.Model):
             pacv = self.product_custom_attribute_value_ids.filtered(
                 lambda pcav: pcav.custom_product_template_attribute_value_id == patv
             )
-            name += "\n" + pacv.display_name
+            lines.append(pacv.display_name)
 
-        return name
+        return "\n".join(lines)
 
     def _get_downpayment_description(self):
         self.ensure_one()
@@ -612,12 +626,31 @@ class SaleOrderLine(models.Model):
 
         return name
 
-    @api.depends("product_id")
-    def _compute_translated_product_name(self):
+    @api.depends("product_id", "name", "order_id.partner_id")
+    def _compute_label(self):
         for line in self:
-            line.translated_product_name = line.product_id.with_context(
-                lang=line.order_id._get_lang()
-            ).display_name
+            if not line.product_id:
+                line.label = line.name
+                continue
+
+            product_with_lang = line.product_id.with_context(lang=line.order_id._get_lang())
+            if not line.name:
+                line.label = product_with_lang.display_name
+            elif line.name.splitlines()[0] == product_with_lang.display_name:
+                # If description already holds the product name, use it as label
+                line.label = line.name
+            else:
+                line.label = product_with_lang.display_name + "\n" + line.name
+
+    def _inverse_label(self):
+        for line in self:
+            if line.product_id and line.label:
+                display_name = line.product_id.with_context(
+                    lang=line.order_id._get_lang()
+                ).display_name
+                line.name = line.label.removeprefix(display_name).removeprefix("\n")
+            else:
+                line.name = line.label
 
     @api.depends("display_type", "product_id")
     def _compute_product_uom_qty(self):
@@ -773,10 +806,7 @@ class SaleOrderLine(models.Model):
             document_tax_mode=line.document_tax_mode,
         )
         price_unit = line.product_id._adapt_price_unit_to_document_tax_mode(
-            price_unit,
-            product_taxes,
-            line.product_uom_id,
-            line.document_tax_mode,
+            price_unit, product_taxes, line.product_uom_id, line.document_tax_mode
         )
         line.update({"price_unit": price_unit, "technical_price_unit": price_unit})
 
@@ -1939,9 +1969,7 @@ class SaleOrderLine(models.Model):
         res = {
             "display_type": self.display_type or "product",
             "sequence": self.sequence,
-            "name": self.env["account.move.line"]._get_journal_items_full_name(
-                self.name, self.product_id.display_name
-            ),
+            "name": self.name,
             "product_id": self.product_id.id,
             "product_uom_id": self.product_uom_id.id,
             "quantity": self.qty_to_invoice,

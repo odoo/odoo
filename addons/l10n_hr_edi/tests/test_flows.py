@@ -368,7 +368,7 @@ class TestHrEdiFlowsMocked(TestL10nHrEdiCommon, TestAccountMoveSendCommon, Patch
         }])
 
         self.assertRecordValues(fetched_invoice.invoice_line_ids, [{
-            'name': '[E-COM10] Pedal Bin',
+            'name': 'Pedal Bin',
             'quantity': 1.0,
             'price_unit': 47.0,
         }])

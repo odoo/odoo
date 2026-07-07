@@ -48,10 +48,10 @@ class StockMove(models.Model):
                 seller = move.purchase_line_id.sudo().selected_seller_id
                 vendor_reference = f'[{seller.product_code}]' if seller.product_code else ''
                 vendor_reference += f' {seller.product_name}' if seller.product_name else ''
-                if vendor_reference.strip() in current_description:
+                if current_description and vendor_reference.strip() in current_description:
                     vendor_reference = ''
                 no_variant_attributes = '\n'.join(f'{attribute.attribute_id.name}: {attribute.name}' for attribute in move.purchase_line_id.sudo().product_no_variant_attribute_value_ids)
-                move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + current_description).strip()
+                move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + (current_description or '')).strip()
 
     def write(self, vals):
         res = super().write(vals)
