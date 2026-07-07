@@ -418,7 +418,15 @@ class Base(models.AbstractModel):
         aggregates = list(aggregates)
         if '__count' not in aggregates:  # Used for computing length of sublevel groups
             aggregates.append('__count')
-        domain = Domain(domain).optimize(self)
+
+        # If the domain contains a condition on the active field, we need to disable
+        # the active test to ensure that we can read all records, including inactive ones.
+        # Because optimizing the domain may remove the condition on the active field, and
+        # only active records will get returned in the default case
+        domain = Domain(domain)
+        if any(cond.field_expr == self._active_name for cond in domain.iter_conditions()):
+            self = self.with_context(active_test=False)
+        domain = domain.optimize(self)
 
         # dict to help creating order compatible with _read_group and for search
         dict_order: dict[str, str] = {}  # {fname_and_property: "<direction> <nulls>"}
