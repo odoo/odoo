@@ -4,10 +4,16 @@ from odoo.http import request, route
 from odoo.http.session import SessionExpiredException
 
 from odoo.addons.bus.controllers.websocket import WebsocketController
+from odoo.addons.mail.tools.discuss import add_guest_to_context
 
 
 class WebsocketControllerPresence(WebsocketController):
     """Override of websocket controller to add mail features (presence in particular)."""
+
+    @route()
+    @add_guest_to_context
+    def peek_notifications(self, channels, last, is_first_poll=False):
+        return super().peek_notifications(channels, last, is_first_poll)
 
     @route("/websocket/update_bus_presence", type="jsonrpc", auth="public", cors="*")
     def update_bus_presence(self, inactivity_period):
