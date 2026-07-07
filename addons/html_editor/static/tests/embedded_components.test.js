@@ -749,23 +749,20 @@ describe("Mount processing", () => {
         });
         patchWithCleanup(App.prototype, {
             createRoot(Root, config) {
-                if (Root.name !== "LabeledCounter") {
-                    return super.createRoot(...arguments);
-                }
                 const root = super.createRoot(...arguments);
+                if (Root.name !== "LabeledCounter") {
+                    return root;
+                }
                 const mount = root.mount;
                 root.mount = (target, options) => {
-                    const result = mount(target, options);
                     if (target.dataset.embedded === "labeledCounter") {
-                        const fiber = root.node.fiber;
-                        const fiberComplete = fiber.complete;
-                        fiber.complete = function () {
-                            expect.step("html prop suppression");
-                            asyncControl.resolve();
-                            fiberComplete.call(this);
-                        };
+                        // `mount` is called synchronously after the host child
+                        // nodes suppression, and it inserts the owl rendered
+                        // nodes and runs `mounted` callbacks synchronously.
+                        expect.step("html prop suppression");
+                        asyncControl.resolve();
                     }
-                    return result;
+                    return mount(target, options);
                 };
                 return root;
             },
