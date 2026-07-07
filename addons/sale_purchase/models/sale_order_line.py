@@ -155,19 +155,12 @@ class SaleOrderLine(models.Model):
             price_unit = 0.0
         return price_unit, taxes
 
-    def _purchase_service_get_product_name(self, supplierinfo, purchase_order, quantity):
-        product_ctx = {
-            'lang': get_lang(self.env, purchase_order.partner_id.lang).code,
-            'company_id': purchase_order.company_id.id,
-        }
-        if supplierinfo:
-            product_ctx.update({'seller_id': supplierinfo.id})
-        else:
-            product_ctx.update({'partner_id': purchase_order.partner_id.id})
-        product = self.product_id.with_context(**product_ctx)
-        name = product.display_name
-        if product.description_purchase:
-            name += '\n' + product.description_purchase
+    def _purchase_service_get_product_description(self, purchase_order):
+        name = ""
+        if self.product_id.description_purchase:
+            name = self.product_id.with_context({
+                "lang": get_lang(self.env, purchase_order.partner_id.lang).code
+            }).description_purchase
         return name
 
     def _purchase_service_prepare_line_values(self, purchase_order, quantity=False):
@@ -196,7 +189,7 @@ class SaleOrderLine(models.Model):
             purchase_qty_uom = self.product_id.uom_id._compute_quantity(purchase_qty_uom, supplierinfo.uom_id)
 
         price_unit, taxes = self._purchase_service_get_price_unit_and_taxes(supplierinfo, purchase_order)
-        name = self._purchase_service_get_product_name(supplierinfo, purchase_order, quantity)
+        name = self._purchase_service_get_product_description(purchase_order)
 
         line_description = self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants()
         if line_description:

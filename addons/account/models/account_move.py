@@ -7894,6 +7894,11 @@ class AccountMove(models.Model):
         # else, attachments with 'res_field' get excluded
         return res | self.env['account.move.send']._get_invoice_extra_attachments(self)
 
+    def _get_lang(self):
+        self.ensure_one()
+
+        return self.partner_id.lang or self.commercial_partner_id.lang
+
     # -------------------------------------------------------------------------
     # TOOLING
     # -------------------------------------------------------------------------

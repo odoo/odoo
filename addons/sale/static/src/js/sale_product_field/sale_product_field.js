@@ -67,21 +67,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return this.props.record.data.is_downpayment;
     }
 
-    get label() {
-        let label = this.props.record.data.name;
-        if (this.translatedProductName && label.startsWith(this.translatedProductName)) {
-            // Remove the translated name as it is already shown to the salesman on the SOL.
-            label = label.slice(this.translatedProductName.length + 1); // + "\n"
-        } else {
-            label = super.label;
-        }
-        return label;
-    }
-
-    get translatedProductName() {
-        return this.props.record.data.translated_product_name;
-    }
-
     get m2oProps() {
         const props = super.m2oProps;
         return {
@@ -108,15 +93,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
      */
     shouldShowWarning() {
         return super.shouldShowWarning() && !this.isDownpayment;
-    }
-
-    parseLabel(value) {
-        if (!this.translatedProductName) {
-            return super.parseLabel(value);
-        }
-        return (
-            (value && this.translatedProductName.concat("\n", value)) || this.translatedProductName
-        );
     }
 
     // Hooks for saleProductMixin
@@ -154,7 +130,6 @@ export const saleOrderLineProductField = {
         { name: "product_type", type: "selection" },
         { name: "service_tracking", type: "selection" },
         { name: "product_template_attribute_value_ids", type: "many2many" },
-        { name: "translated_product_name", type: "char" },
     ],
 };
 

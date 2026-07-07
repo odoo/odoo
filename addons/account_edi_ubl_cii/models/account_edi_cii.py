@@ -271,16 +271,17 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_line_specified_trade_product_node(self, vals, base_line):
         product = base_line['product_id']
+        description = base_line['name']
         return {
             'ram:GlobalID': {
                 '_text': product.barcode,
                 'schemeID': "0160",
             } if product.barcode else None,
             'ram:SellerAssignedID': {'_text': product.default_code} if product.default_code else None,
-            'ram:Name': {'_text': base_line['name']},
+            'ram:Name': {'_text': product.name or description},
             'ram:Description': {
-                '_text': html2plaintext(product.description),
-            } if product.description else None,
+                '_text': description,
+            } if product else None,
         }
 
     def _cii_get_gross_price_product_trade_price_node(self, vals, base_line):
@@ -1161,8 +1162,8 @@ class AccountEdiCii(models.AbstractModel):
     def _import_cii_invoice_line_add_name(self, collected_values):
         line_tree = collected_values['line_tree']
         name = collected_values['name'] = (
-            line_tree.findtext('.//{*}SpecifiedTradeProduct/{*}Name')
-            or line_tree.findtext('.//{*}SpecifiedTradeProduct/{*}Description')
+            line_tree.findtext('.//{*}SpecifiedTradeProduct/{*}Description')
+            or line_tree.findtext('.//{*}SpecifiedTradeProduct/{*}Name')
         )
         if name:
             collected_values['to_write']['name'] = name

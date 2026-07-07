@@ -429,10 +429,17 @@ class PurchaseOrderLine(models.Model):
                 lang=partner.lang,
                 partner_id=partner.id,
             )
-            name = product_lang.display_name
-            if product_lang.description_purchase:
-                name += '\n' + product_lang.description_purchase
-            lines = lines.filtered(lambda l: (l.name == name + '\n' + description_picking) or (values.get('product_description_variants') in (product_lang.name, product_id.with_user(SUPERUSER_ID).name) and l.name == name))
+            name = product_lang.description_purchase or ""
+            lines = lines.filtered(
+                lambda l: (
+                    (l.name == name + ('\n' if name else '') + description_picking)
+                    or (
+                        values.get('product_description_variants')
+                        in {product_lang.name, product_id.with_user(SUPERUSER_ID).name}
+                        and l.name == name
+                    )
+                )
+            )
         return lines and lines.sorted(lambda l: l.orderpoint_id)[0] or self.env['purchase.order.line']
 
     def _get_outgoing_incoming_moves(self):

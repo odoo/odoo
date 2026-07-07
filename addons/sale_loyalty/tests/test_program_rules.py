@@ -308,7 +308,7 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, p1)
         self._claim_reward(order, p2)
-        discounts = set(order.order_line.mapped("name")) - {"Product A"}
+        discounts = set(order.order_line.mapped("label")) - {"Product A"}
         self.assertEqual(
             len(discounts), 1, "The order should contains the Product A line and a discount"
         )
@@ -323,7 +323,7 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, p1)
         self._claim_reward(order, p2)
-        discounts = set(order.order_line.mapped("name")) - {"Product A"}
+        discounts = set(order.order_line.mapped("label")) - {"Product A"}
         self.assertEqual(
             len(discounts), 1, "The order should contains the Product A line and a discount"
         )

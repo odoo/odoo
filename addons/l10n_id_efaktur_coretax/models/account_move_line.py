@@ -51,7 +51,7 @@ class AccountMoveLine(models.Model):
         line_val = {
             "Opt": "B" if product.type == "service" else "A",  # A: goods, B: service
             "Code": product.l10n_id_product_code.code or self.env.ref('l10n_id_efaktur_coretax.product_code_000000_goods').code,
-            "Name": (self.name or '').replace('\n', ' '),
+            "Name": (self.label or '').replace('\n', ' '),
             "Unit": self.product_uom_id.l10n_id_uom_code.code or self.env.ref('l10n_id_efaktur_coretax.uom_code_0018').code,
             "Price": tax_details['raw_gross_price_unit'],  # excluding tax, before discount
             "Qty": self.quantity,

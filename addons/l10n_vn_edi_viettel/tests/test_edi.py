@@ -122,7 +122,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                 'payments': [{'paymentMethodName': 'TM/CK'}],
                 'itemInfo': [{
                     'itemCode': 'BN/1035',
-                    'itemName': '[BN/1035] product_a',
+                    'itemName': 'product_a',
                     'unitName': 'Units',
                     'unitPrice': 1000.0,
                     'quantity': 1.0,
