@@ -169,3 +169,55 @@ test("CallDebrief: timeline-media synchronization", async () => {
         message: "Timestamp should be close to 66s (01:06), but was " + finalTimestampText,
     });
 });
+
+test("CallDebrief: generates silence gaps in timeline", async () => {
+    _setupCallDebriefPatch();
+    const pyEnv = await startServer();
+
+    // Create a call of 240 seconds total:
+    // 0s to 60s: Media 1 (60s duration)
+    // 60s to 120s: Silence Gap 1 (60s)
+    // 120s to 180s: Media 2 (60s duration)
+    // 180s to 240s: Silence Gap 2 (60s)
+    const art1 = _createRecording(pyEnv, { start: 0 });
+    const art2 = _createRecording(pyEnv, { start: 120 });
+
+    const discussCallHistoryId = pyEnv["discuss.call.history"].create({
+        start_date: "2023-01-01 10:00:00",
+        end_date: "2023-01-01 10:04:00", // 240s total duration
+        artifact_ids: [art1, art2],
+    });
+
+    await start();
+    await _openDebriefView(pyEnv, discussCallHistoryId);
+
+    // Timeline track is rendered
+    expect(".o-CallDebriefTimeline-track").toHaveCount(1);
+
+    // There should be 4 segments total:
+    // 1. Media segment (0s to 60s) -> 25% width, left 0%
+    // 2. Silence segment (60s to 120s) -> 25% width, left 25%
+    // 3. Media segment (120s to 180s) -> 25% width, left 50%
+    // 4. Silence segment (180s to 240s) -> 25% width, left 75%
+    expect(".o-CallDebriefTimeline-segment").toHaveCount(4);
+    expect(".o-CallDebriefTimeline-media-segment").toHaveCount(2);
+    expect(".o-CallDebriefTimeline-silence-segment").toHaveCount(2);
+
+    // Verify coordinates
+    const segments = document.querySelectorAll(".o-CallDebriefTimeline-segment");
+    expect(segments[0].style.left).toBe("0%");
+    expect(segments[0].style.width).toBe("25%");
+    expect(segments[0].classList.contains("o-CallDebriefTimeline-media-segment")).toBe(true);
+
+    expect(segments[1].style.left).toBe("25%");
+    expect(segments[1].style.width).toBe("25%");
+    expect(segments[1].classList.contains("o-CallDebriefTimeline-silence-segment")).toBe(true);
+
+    expect(segments[2].style.left).toBe("50%");
+    expect(segments[2].style.width).toBe("25%");
+    expect(segments[2].classList.contains("o-CallDebriefTimeline-media-segment")).toBe(true);
+
+    expect(segments[3].style.left).toBe("75%");
+    expect(segments[3].style.width).toBe("25%");
+    expect(segments[3].classList.contains("o-CallDebriefTimeline-silence-segment")).toBe(true);
+});
