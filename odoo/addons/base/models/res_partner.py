@@ -205,9 +205,12 @@ class ResPartner(models.Model):
     name = fields.Char(index=True, default_export_compatible=True)
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     parent_id: ResPartner = fields.Many2one('res.partner', string='Related Company', index=True)
-    # It's Stored intentionally and will act in place of `company_name`
     parent_name = fields.Char(related='parent_id.name', readonly=True, store=False, string='Parent name')
     child_ids: ResPartner = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
+    child_all_ids = fields.One2many(
+        'res.partner', 'parent_id', string='Contacts (incl. archived)',
+        context={'active_test': False},
+    )
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
                             compute='_compute_lang', readonly=False, store=True,
@@ -649,21 +652,27 @@ class ResPartner(models.Model):
         if addr_vals:
             super().write(addr_vals)
 
-    @api.model
     def _commercial_fields(self):
         """ Returns the list of fields that are managed by the commercial entity
         to which a partner belongs. These fields are meant to be hidden on
         partners that aren't `commercial entities` themselves, or synchronized
         at update (if present in _synced_commercial_fields), and will be
         delegated to the parent `commercial entity`. The list is meant to be
-        extended by inheriting classes. """
+        extended by inheriting classes.
+
+        This method can be called as an api.model (global behavior) or on a
+        record set, allowing partner-specific behavior (e.g. l10n specific).
+        """
         return self._synced_commercial_fields() + ['company_registry', 'industry_id']
 
-    @api.model
     def _synced_commercial_fields(self):
         """ Returns the list of fields that are managed by the commercial entity
         to which a partner belongs. When modified on a children, update is
-        propagated until the commercial entity. """
+        propagated until the commercial entity.
+
+        This method can be called as an api.model (global behavior) or on a
+        record set, allowing partner-specific behavior (e.g. l10n specific).
+        """
         return ['vat']
 
     def _get_commercial_values(self):
@@ -721,7 +730,7 @@ class ResPartner(models.Model):
         if fields_to_sync is None:
             fields_to_sync = self._commercial_fields()
         sync_vals = commercial_partner._convert_fields_to_values(fields_to_sync)
-        sync_children = self.child_ids.filtered(lambda c: not c.is_company)
+        sync_children = self.child_all_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_descendants(fields_to_sync)
         sync_children.write(sync_vals)
@@ -731,6 +740,9 @@ class ResPartner(models.Model):
         Also synchronize address to parent. This somehow mimics related fields
         to the parent, with more control. This method should be called after
         updating values in cache e.g. self should contain new values.
+
+        Note that this method should be called on a singletong recordset (not
+        enforced in stable when writing this comment).
 
         :param dict values: updated values, triggering sync
         """
@@ -749,7 +761,7 @@ class ResPartner(models.Model):
                 if address_values := self.parent_id._get_address_values():
                     self._update_address(address_values)
 
-        # 2. To UPSTREAM: sync parent address, as well as editable synchronized commercial fields
+        # 2.1 To UPSTREAM: sync parent address
         address_to_upstream = (
             # parent is set, potential address update as contact address = parent address
             bool(self.parent_id) and bool(self.type == 'contact') and
@@ -761,33 +773,42 @@ class ResPartner(models.Model):
         if address_to_upstream:
             new_address = self._get_address_values()
             self.parent_id.write(new_address)  # is going to trigger _fields_sync again
+
+        # 2.2 To UPSTREAM: sync editable synchronized commercial fields
+        synced_commercial_fields = self._synced_commercial_fields()
         commercial_to_upstream = (
             # has a parent and is not a commercial entity itself
             bool(self.parent_id) and (self.commercial_partner_id != self) and
             # actually updated, or parent updated
-            (any(field in values for field in self._synced_commercial_fields()) or 'parent_id' in values) and
+            (any(field in values for field in synced_commercial_fields) or 'parent_id' in values) and
             # something is actually updated
-            any(self[fname] != self.parent_id[fname] for fname in self._synced_commercial_fields())
+            any(self[fname] != self.parent_id[fname] for fname in synced_commercial_fields)
         )
         if commercial_to_upstream:
             new_synced_commercials = self._get_synced_commercial_values()
-            self.parent_id.write(new_synced_commercials)
+            self._fields_sync_upstream_sync_commercial_values(self.parent_id, new_synced_commercials)
 
         # 3. To DOWNSTREAM: sync children
         self._children_sync(values)
 
+    def _fields_sync_upstream_sync_commercial_values(self, targets, synced_commercials):
+        """ Update targets (parents) to new synchronized commercial values
+        in upstream propagation. Helper method to allow overrides for custom
+        behavior e.g. l10n specific management of values. """
+        targets.write(synced_commercials)
+
     def _children_sync(self, values):
-        if not self.child_ids:
+        if not self.child_all_ids:
             return
         # 2a. Commercial Fields: sync if commercial entity
         if self.commercial_partner_id == self:
             fields_to_sync = values.keys() & self._commercial_fields()
             self.sudo()._commercial_sync_to_descendants(fields_to_sync)
-        # 2b. Address fields: sync if address changed
+        # 2b. Address fields: sync if address changed, only active contacts
         address_fields = self._address_fields()
         if any(field in values for field in address_fields):
-            contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
-            contacts._update_address(values)
+            active_contacts = self.child_all_ids.filtered(lambda c: c.active and c.type == 'contact')
+            active_contacts._update_address(values)
 
     def _handle_first_contact_creation(self):
         """ On creation of first contact for a company (or root) that has no address, assume contact address

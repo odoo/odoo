@@ -829,6 +829,26 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertEqual(individual.ref, 'COMPANYREF', 'downstream update')
         self.assertEqual(individual.vat, 'BEINDIVIDUAL')
 
+        # create parent using child_ids
+        with patch.object(
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
+        ):
+            company_2 = self.env['res.partner'].create({
+                'child_ids': [(4, individual.id)],
+                'name': 'Company 2',
+                'ref': 'COMPANYREF 2',
+            })
+        self.assertFalse(company_2.industry_id, 'Industry is not considered for upstream')
+        self.assertEqual(company_2.ref, 'COMPANYREF 2', 'not updated from contact child')
+        self.assertEqual(company_2.vat, 'BEINDIVIDUAL')
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(company_2[fname], fvalue, 'Void parent should have been updated when adding a contact with address')
+            self.assertEqual(individual[fname], fvalue, 'Setting parent with void address should not reset child')
+        self.assertEqual(individual.industry_id, self.test_industries[0], 'No upstream sync, but no reset either')
+        self.assertEqual(individual.ref, 'COMPANYREF 2', 'downstream update')
+        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+
     def test_commercial_partner_nullcompany(self):
         """ The commercial partner is the first ancestor-or-self which doesn't have a parent """
         P = self.env['res.partner']
@@ -903,11 +923,67 @@ class TestPartnerAddressCompany(TransactionCase):
             for fname, fvalue in (('company_registry', 'new'), ('industry_id', self.test_industries[1]), ('vat', 'BEnew')):
                 self.assertEqual(partner[fname], fvalue, "Commercial field should be updated from the company 2")
 
-        # UPSTREAM: now supported
+        # UPSTREAM (sync commercial fields): now supported for sync fields
         contactvat = 'BE445566'
-        contact.write({'vat': contactvat})
+        contactregistry = 'Another Registry'
+        contact.write({
+            'company_registry': contactregistry,  # other commercial field ('_commercial_fields') -> no upstream
+            'industry_id': self.test_industries[2].id,  # other commercial field ('_commercial_fields') -> no upstream
+            'vat': contactvat,  # sync commercial field ('_synced_commercial_fields')
+        })
         for partner in company_2 + contact + contact_dlr + contact_ct + contact2:
             self.assertEqual(partner.vat, contactvat, 'Commercial sync works upstream, therefore also for siblings')
+            if partner == contact:  # contact only is updated
+                self.assertEqual(partner.company_registry, contactregistry)
+                self.assertEqual(partner.industry_id, self.test_industries[2])
+            else:  # no upstream sync
+                self.assertEqual(partner.company_registry, 'new')
+                self.assertEqual(partner.industry_id, self.test_industries[1])
+
+    @users('employee')
+    def test_commercial_field_sync_archived(self):
+        """ Specific case of synchronisation when archived records are involved. """
+        sync_commercial_fields = self.env['res.partner']._synced_commercial_fields()
+
+        individual = self.env['res.partner'].create({
+            'active': False,
+            'company_registry': 'contact_registry',
+            'industry_id': self.test_industries[0].id,
+            'name': 'Individual',
+            'ref': 'REFINDIVIDUAL',
+            'vat': 'BEINDIVIDUAL',
+            **self.test_address_values,
+        })
+        # create a company through "quick create", which would have partial default
+        # values for some company values
+        with patch.object(
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
+        ):
+            company = self.env['res.partner'].create({
+                'active': False,
+                'name': 'Company',
+                'ref': 'COMPANYREF',
+            })
+            individual.write({'parent_id': company})
+        self.assertEqual(company.ref, 'COMPANYREF')
+        self.assertEqual(company.vat, 'BEINDIVIDUAL')
+        self.assertEqual(individual.ref, 'COMPANYREF')
+        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+
+        # propagate to archived children
+        with patch.object(
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
+        ):
+            company.write({
+                'company_registry': 'new_company_registry',
+                'vat': 'BENEWER',
+            })
+        self.assertEqual(company.company_registry, 'new_company_registry')
+        self.assertEqual(company.vat, 'BENEWER')
+        self.assertEqual(individual.company_registry, 'new_company_registry')
+        self.assertEqual(individual.vat, 'BENEWER')
 
     def test_commercial_field_sync_reset(self):
         """ Test voiding fields propagation. We would like to allow forcing void

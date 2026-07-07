@@ -36,7 +36,6 @@ class ResPartner(models.Model):
 
         super(ResPartner, self - l10n_hu_partners)._compute_is_company()
 
-    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + [
             'l10n_hu_group_vat',

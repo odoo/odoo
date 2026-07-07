@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
-from odoo import api, fields, models, _
+from odoo import fields, models, _
 
 
 class ResPartner(models.Model):
@@ -22,7 +22,6 @@ class ResPartner(models.Model):
              '4 - Foreigner')
     l10n_cl_activity_description = fields.Char(string='Activity Description', help="Chile: Economic activity.")
 
-    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_cl_sii_taxpayer_type']
 

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class ResPartner(models.Model):
@@ -10,7 +10,6 @@ class ResPartner(models.Model):
 
     l10n_eg_building_no = fields.Char('Building No.')
 
-    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_eg_building_no']
 
