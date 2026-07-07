@@ -552,6 +552,31 @@ class TestFrenchLeaves(TransactionCase):
         })
         self.assertEqual(leave.number_of_days, 4.0, 'Public holidays for French part-time employees should be considered')
 
+    def test_leave_on_non_working_day(self):
+        """Check that a one day time off taken on a non-working day of the
+        employee (a Saturday for a Monday-to-Friday schedule) keeps its own
+        date range instead of being shifted onto the surrounding working days."""
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'attendance_ids': [
+                (0, 0, {'name': f'Day {i}', 'dayofweek': str(i), 'hour_from': 8, 'hour_to': 16, 'day_period': 'full_day'})
+                for i in range(5)
+            ],
+        })
+        self.company.resource_calendar_id = self.base_calendar
+        self.employee.resource_calendar_id = employee_calendar
+
+        # 2021-09-11 is a Saturday
+        leave = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2021-09-11',
+            'request_date_to': '2021-09-11',
+        })
+        self.assertEqual(leave.date_from.date(), date(2021, 9, 11))
+        self.assertEqual(leave.date_to.date(), date(2021, 9, 11))
+
     def test_employee_2_week_calendar(self):
         """
         Test Case:
