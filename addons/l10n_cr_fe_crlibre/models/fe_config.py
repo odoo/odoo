@@ -1,3 +1,6 @@
+import base64
+import uuid
+
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 
@@ -74,3 +77,25 @@ class L10nCrFeConfig(models.Model):
                 'implementation': 'no_gap',
             })
         return sequence.next_by_id()
+
+    def _l10n_cr_fe_ensure_certificate_uploaded(self):
+        self.ensure_one()
+        if self.certificate_download_code:
+            return self.certificate_download_code
+        if not self.certificate_file:
+            raise UserError(_("Debe cargar el certificado .p12 antes de generar comprobantes."))
+
+        client = self.env['l10n_cr.fe.client']
+        if not self.crlibre_api_username:
+            username = 'odoo-%s-%s' % (self.company_id.id, uuid.uuid4().hex[:8])
+            password = uuid.uuid4().hex
+            client.register_api_user(self.company_id.name or username, username, password)
+            self.crlibre_api_username = username
+            self.crlibre_api_password = password
+
+        login = client.login_api_user(self.crlibre_api_username, self.crlibre_api_password)
+        upload = client.upload_certificate(
+            login['session_key'], self.crlibre_api_username,
+            base64.b64decode(self.certificate_file))
+        self.certificate_download_code = upload['download_code']
+        return self.certificate_download_code

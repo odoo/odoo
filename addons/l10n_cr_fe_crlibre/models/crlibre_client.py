@@ -77,3 +77,31 @@ class CrlibreFeClient(models.AbstractModel):
         if not isinstance(resp, dict) or not resp.get('sessionKey'):
             raise CrlibreApiError("Respuesta inesperada de 'users_log_me_in': %s" % resp)
         return {'session_key': resp['sessionKey'], 'id_user': resp.get('idUser')}
+
+    def _call_multipart(self, w, r, params, files):
+        query = dict(params or {})
+        query['w'] = w
+        query['r'] = r
+        url = self._get_base_url() + '/api.php'
+        try:
+            resp = requests.post(url, params=query, files=files, timeout=TIMEOUT)
+        except requests.RequestException as exc:
+            raise CrlibreApiError("No se pudo conectar con la API: %s" % exc)
+        if resp.status_code != 200:
+            raise CrlibreApiError("La API respondió HTTP %s" % resp.status_code)
+        try:
+            data = resp.json()
+        except ValueError:
+            raise CrlibreApiError("La API devolvió una respuesta no-JSON.")
+        if not isinstance(data, dict) or data.get('status') != 'ok':
+            raise CrlibreApiError("La API respondió estado no-ok: %s" % data)
+        return data.get('resp')
+
+    def upload_certificate(self, session_key, username, p12_bytes):
+        resp = self._call_multipart('fileUploader', 'subir_certif', {
+            'iam': username,
+            'sessionKey': session_key,
+        }, files={'fileToUpload': ('certificado.p12', p12_bytes, 'application/x-pkcs12')})
+        if not isinstance(resp, dict) or not resp.get('downloadCode'):
+            raise CrlibreApiError("Respuesta inesperada de 'subir_certif': %s" % resp)
+        return {'download_code': resp['downloadCode']}
