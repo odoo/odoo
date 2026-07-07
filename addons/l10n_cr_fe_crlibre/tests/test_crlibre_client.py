@@ -71,3 +71,17 @@ class TestCrlibreClient(TransactionCase):
         self.assertEqual(result['session_key'], 'sk456')
         called_params = m.call_args.kwargs['params']
         self.assertEqual(called_params['r'], 'users_log_me_in')
+
+    def test_upload_certificate_returns_download_code(self):
+        payload = {'status': 'ok', 'resp': {'idFile': 1, 'name': 'cert.p12', 'downloadCode': 'DC123'}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.post',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.upload_certificate('sk123', 'empresa1', b'contenido-p12')
+        self.assertEqual(result['download_code'], 'DC123')
+        called_params = m.call_args.kwargs['params']
+        self.assertEqual(called_params['w'], 'fileUploader')
+        self.assertEqual(called_params['r'], 'subir_certif')
+        self.assertEqual(called_params['iam'], 'empresa1')
+        self.assertEqual(called_params['sessionKey'], 'sk123')
+        called_files = m.call_args.kwargs['files']
+        self.assertIn('fileToUpload', called_files)
