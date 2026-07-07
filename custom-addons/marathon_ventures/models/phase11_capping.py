@@ -237,7 +237,23 @@ class MvDealCappingRpc(models.Model):
             if isinstance(sig, str) and sig.startswith('tmp:'):
                 continue
             pct = max(0, min(100, int(pct)))
+            # Optional date range: only apply the cap to schedules
+            # whose week (Monday) falls in [start_date, end_date].
+            # Blank/None on either side means "unbounded on that
+            # side" so a planner can restrict just one edge.
+            start_iso = (ru.get('start_date') or '').strip() or None
+            end_iso   = (ru.get('end_date')   or '').strip() or None
+            start_date = fields.Date.from_string(start_iso) if start_iso else None
+            end_date   = fields.Date.from_string(end_iso)   if end_iso   else None
             scheds = self._capping_schedules_for_sig(sig, active_only=True)
+            if start_date is not None:
+                scheds = scheds.filtered(
+                    lambda s: s.week and s.week >= start_date
+                )
+            if end_date is not None:
+                scheds = scheds.filtered(
+                    lambda s: s.week and s.week <= end_date
+                )
             if scheds:
                 vals = {'cap_pct': pct}
                 # Prefer the caller-supplied cap value; only reverse-

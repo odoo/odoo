@@ -55,12 +55,15 @@ export class MvUnitsGrid extends Component {
             pendingLtcDate: "",
             // Multi-row selection state. `selected` is keyed by row.id
             // (only real rows, not LTC previews). bulkAction tracks
-            // which bulk modal is open: "" (none), "ltc", or "maxday".
-            // bulkLtcDate / bulkMaxDay back the inputs in those modals.
+            // which bulk modal is open: "" (none), "ltc", "maxday",
+            // or "hiatus". bulkLtcDate / bulkMaxDay / bulkHiatusStart
+            // / bulkHiatusEnd back the inputs in those modals.
             selected: {},
             bulkAction: "",
             bulkLtcDate: "",
             bulkMaxDay: "",
+            bulkHiatusStart: "",
+            bulkHiatusEnd: "",
         });
         onWillStart(this.loadGrid.bind(this));
         onWillUpdateProps((nextProps) => {
@@ -86,6 +89,7 @@ export class MvUnitsGrid extends Component {
             cell_updates: [],
             deal_update: {},   // Phase 12: holds units_start_date changes
             ltc_ops: [],       // Staged Last-To-Cancel operations
+            hiatus_ops: [],    // Staged Hiatus operations (bulk action)
         };
         this.state.dirty = false;
         // Drop any selection + bulk-bar state too - the rows from the
@@ -94,6 +98,8 @@ export class MvUnitsGrid extends Component {
         this.state.bulkAction = "";
         this.state.bulkLtcDate = "";
         this.state.bulkMaxDay = "";
+        this.state.bulkHiatusStart = "";
+        this.state.bulkHiatusEnd = "";
     }
 
     // Phase 12: deal-level start date changed -> snap to Monday,
@@ -762,6 +768,214 @@ export class MvUnitsGrid extends Component {
         } else if (value === "maxday") {
             this.state.bulkAction = "maxday";
             this.state.bulkMaxDay = "";
+        } else if (value === "hiatus") {
+            this.state.bulkAction = "hiatus";
+            // Pre-populate the range with the deal's current
+            // broadcast-quarter bounds so the planner has a sensible
+            // starting range they can shrink to the actual hiatus.
+            const dealStart = this._isoDate(new Date())
+            
+            const now = new Date();
+            const end = new Date(now.getTime() + 7 * 86400000);
+            this.state.bulkHiatusStart = this._isoDate(now);
+            this.state.bulkHiatusEnd   = this._isoDate(end);
+        }
+    }
+
+    _isoDate(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const dd = String(d.getDate()).padStart(2, "0");
+        return `${y}-${m}-${dd}`;
+    }
+
+    onBulkHiatusStartInput(ev) { this.state.bulkHiatusStart = ev.target.value || ""; }
+    onBulkHiatusEndInput(ev)   { this.state.bulkHiatusEnd   = ev.target.value || ""; }
+
+    _addDaysIso(iso, days) {
+        const d = new Date(iso + "T00:00:00");
+        d.setDate(d.getDate() + days);
+        return this._isoDate(d);
+    }
+
+    // Stage one hiatus op per selected row. The backend does the
+    // heavy lifting on Save: it walks every schedule matching the
+    // row's signature whose week overlaps [start, end] and strips
+    // the hiatus-covered days from its days_allowed. No sibling
+    // schedule is created - the schedule just stops running on
+    // those days (falling into a new signature group).
+    confirmBulkHiatus() {
+        const start = (this.state.bulkHiatusStart || "").trim();
+        const end   = (this.state.bulkHiatusEnd   || "").trim();
+        if (!start || !end) {
+            alert("Please pick both a Start Date and an End Date.");
+            return;
+        }
+        if (end < start) {
+            alert("End Date must be on or after Start Date.");
+            return;
+        }
+        const ids = this.selectedRowIds;
+        if (!ids.length) {
+            alert("No rows selected.");
+            return;
+        }
+
+        let affectedCount = 0;
+        for (const rid of ids) {
+            if (typeof rid === "string" && rid.startsWith("tmp:")) {
+                continue;  // temp rows have no persisted schedules
+            }
+            const row = (this.state.payload.rows || []).find((r) => r.id === rid);
+            if (!row) continue;
+
+            console.log(row);
+            
+            const schedules = [];
+            for (const cell of row.cells) {
+                if (!cell.sched_id) continue;   // only real, persisted schedules
+
+                // Which of this schedule's allowed weekdays land inside the
+                // hiatus window. days_mask[i] -> i days after the week's
+                // Monday (i = 0=Mon .. 6=Sun); cell.week is always a Monday.
+                const hiatusDays = [];
+                for (let i = 0; i < 7; i++) {
+                    if (!row.days_mask[i]) continue;
+                    const dayIso = this._addDaysIso(cell.week, i);
+                    if (dayIso >= start && dayIso <= end) {
+                        hiatusDays.push(i);
+                    }
+                }
+                if (hiatusDays.length) {
+                    schedules.push({
+                        sched_id: cell.sched_id,
+                        week: cell.week,
+                        hiatus_days: hiatusDays,
+                    });
+                    affectedCount += 1;
+                }
+            }
+
+            // Nothing in this row runs on a hiatus day - skip it entirely.
+            if (!schedules.length) continue;
+
+            const op = {
+                row_id: rid,
+                hiatus_start: start,
+                hiatus_end: end,
+                schedules: schedules,
+            };
+            this.state.edits.hiatus_ops.push(op);
+
+            // Insert preview row(s) so the planner can see how the
+            // grid will look AFTER Save.
+            this._stageHiatusPreview(row, op);
+        }
+
+        this._markDirty();
+        this.state.bulkAction = "";
+        this.state.bulkHiatusStart = "";
+        this.state.bulkHiatusEnd = "";
+        this.clearSelection();
+    }
+
+    // Stage the visual preview for a single hiatus_op. For each
+    // affected schedule we compute its post-hiatus days_bits (row's
+    // current days_mask MINUS the hiatus days for THAT schedule),
+    // group affected weeks by the resulting bits, and insert one
+    // "PREVIEW" row per group directly below the original. The
+    // original row's affected cells are dimmed to 'dashed' so the
+    // planner can see the units moving into the preview row.
+    // On Save, the backend actually mutates the schedules'
+    // days_allowed; on Discard, loadGrid() replaces the whole payload
+    // and the preview rows evaporate.
+    _stageHiatusPreview(row, op) {
+        if (!row || !op || !op.schedules || !op.schedules.length) return;
+
+        // Group affected schedules by their post-hiatus 7-bit mask.
+        const byBits = {};  // '1100000' -> { days_mask, entries: [...] }
+        for (const s of op.schedules) {
+            const removed = new Set(s.hiatus_days || []);
+            const newMask = row.days_mask.map((v, i) => v && !removed.has(i));
+            const bits = newMask.map((v) => (v ? "1" : "0")).join("");
+            if (!byBits[bits]) {
+                byBits[bits] = { days_mask: newMask, entries: [] };
+            }
+            byBits[bits].entries.push(s);
+        }
+
+        // Insertion index right after the original row.
+        const rows = this.state.payload.rows;
+        let insertAt = rows.indexOf(row);
+        if (insertAt < 0) return;
+        insertAt += 1;
+
+        const weekList = this.state.payload.weeks || [];
+
+        // For each new-bits group, build a preview row.
+        for (const bits of Object.keys(byBits)) {
+            const { days_mask, entries } = byBits[bits];
+            const affectedWeekSet = new Set(entries.map((e) => e.week));
+            // Map week -> the source cell so we can carry the units
+            // across into the preview (visual continuity - user sees
+            // where those units end up).
+            const srcCellByWeek = {};
+            for (const c of row.cells) srcCellByWeek[c.week] = c;
+
+            const previewCells = weekList.map((wk) => {
+                if (affectedWeekSet.has(wk)) {
+                    const src = srcCellByWeek[wk] || {};
+                    // All 7 days removed -> the preview row shows this
+                    // week as cancelled (gray). Otherwise, keep the
+                    // units and mark green.
+                    const allRemoved = bits === "0000000";
+                    return {
+                        week: wk,
+                        units: allRemoved ? 0 : (src.units || 0),
+                        state: allRemoved ? "gray" : "green",
+                        sched_id: false,   // no persistent id yet
+                        cancelled_units: 0,
+                        cancelled_sched_ids: [],
+                        dirty: true,
+                    };
+                }
+                return {
+                    week: wk, units: 0, state: "dashed",
+                    sched_id: false, cancelled_units: 0,
+                    cancelled_sched_ids: [],
+                };
+            });
+
+            this._tempCounter += 1;
+            const previewKey = "hiatus-preview:" + this._tempCounter;
+            const previewRow = {
+                ...row,
+                id: previewKey,
+                _is_hiatus_preview: true,
+                _is_ltc_preview: true,   // reuse existing preview styling
+                _temp: this._tempCounter,
+                days_mask: days_mask,
+                cells: previewCells,
+                total_spots: 0,
+                total_revenue: 0,
+                total_cancelled: 0,
+            };
+            rows.splice(insertAt, 0, previewRow);
+            insertAt += 1;
+        }
+
+        // Dim the ORIGINAL row's cells for the affected weeks so the
+        // planner sees the units 'leaving' the source row and
+        // 'arriving' at the preview. Zero the units too - the preview
+        // row is already displaying them, so leaving them here would
+        // double-count visually.
+        const affectedWeeks = new Set(op.schedules.map((s) => s.week));
+        for (const cell of row.cells) {
+            if (!affectedWeeks.has(cell.week)) continue;
+            cell.units = 0;
+            cell.cancelled_units = 0;
+            cell.state = "dashed";
+            cell.dirty = true;
         }
     }
 

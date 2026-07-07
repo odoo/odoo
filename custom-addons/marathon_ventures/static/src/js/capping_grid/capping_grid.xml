@@ -28,6 +28,34 @@
                 </option>
               </select>
             </div>
+            <!-- Date range restriction: cap applies only to weeks whose
+                 Monday falls between Start Date and End Date (inclusive).
+                 Defaults to the full grid range so a blank submit still
+                 covers what the planner sees on-screen. -->
+            <div style="margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap;">
+              <label style="display: flex; flex-direction: column; font-size: 12px; color: #555;">
+                <span>Start Date</span>
+                <input type="date"
+                       class="mv-cap-cell__select"
+                       style="width: 160px;"
+                       t-att-value="state.pendingBulkCapStart"
+                       t-on-input="(ev) => this.onBulkCapStartInput(ev)"/>
+              </label>
+              <label style="display: flex; flex-direction: column; font-size: 12px; color: #555;">
+                <span>End Date</span>
+                <input type="date"
+                       class="mv-cap-cell__select"
+                       style="width: 160px;"
+                       t-att-value="state.pendingBulkCapEnd"
+                       t-on-input="(ev) => this.onBulkCapEndInput(ev)"/>
+              </label>
+            </div>
+            <div style="margin-top: 6px;">
+              <small class="text-muted">
+                Cap % is applied to schedules whose week falls in this range.
+                Defaults to the visible grid range.
+              </small>
+            </div>
           </div>
           <div class="mv-confirm-dialog__footer">
             <button class="btn btn-light"

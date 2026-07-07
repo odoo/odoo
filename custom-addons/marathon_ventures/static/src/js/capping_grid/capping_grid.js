@@ -31,8 +31,14 @@ export class MvCappingGrid extends Component {
             // Bulk cap picklist dialog state. When `pendingBulkCap`
             // is true the dialog is open; `pendingBulkCapValue` holds
             // the cap Selection value the planner has chosen.
+            // pendingBulkCapStart/End restrict the write to weeks
+            // whose Monday falls in [start, end]. Defaults come from
+            // the first / last week columns rendered in the grid so
+            // the planner sees the natural range up front.
             pendingBulkCap: false,
             pendingBulkCapValue: "uncapped",
+            pendingBulkCapStart: "",
+            pendingBulkCapEnd: "",
         });
         onWillStart(this.loadGrid.bind(this));
         onWillUpdateProps((nextProps) => {
@@ -165,11 +171,32 @@ export class MvCappingGrid extends Component {
         if (!this.state.pendingBulkCapValue) {
             this.state.pendingBulkCapValue = "uncapped";
         }
+        // Default date range = first / last week currently rendered
+        // in the grid. Weeks are ISO Mondays; the end date on-screen
+        // is Sunday of the last week (last Monday + 6d).
+        const weeks = (this.state.payload && this.state.payload.weeks) || [];
+        if (weeks.length) {
+            this.state.pendingBulkCapStart = weeks[0];
+            // Push end to the Sunday of the last week so the input
+            // matches the grid's visible span.
+            try {
+                const lastMon = new Date(weeks[weeks.length - 1] + "T00:00:00");
+                lastMon.setDate(lastMon.getDate() + 6);
+                const y = lastMon.getFullYear();
+                const m = String(lastMon.getMonth() + 1).padStart(2, "0");
+                const dd = String(lastMon.getDate()).padStart(2, "0");
+                this.state.pendingBulkCapEnd = `${y}-${m}-${dd}`;
+            } catch (e) {
+                this.state.pendingBulkCapEnd = weeks[weeks.length - 1];
+            }
+        }
     }
 
     onBulkCapSelect(ev) {
         this.state.pendingBulkCapValue = ev.target.value;
     }
+    onBulkCapStartInput(ev) { this.state.pendingBulkCapStart = ev.target.value || ""; }
+    onBulkCapEndInput(ev)   { this.state.pendingBulkCapEnd   = ev.target.value || ""; }
 
     cancelBulkCap() {
         this.state.pendingBulkCap = false;
@@ -187,18 +214,47 @@ export class MvCappingGrid extends Component {
         let pct = opt.pct;
         if (!Number.isFinite(pct)) pct = 100;
         pct = Math.max(0, Math.min(100, pct));
+        // Optional date range from the modal. If either bound is
+        // blank we treat that side as unbounded.
+        const start = (this.state.pendingBulkCapStart || "").trim();
+        const end   = (this.state.pendingBulkCapEnd   || "").trim();
+        if (start && end && end < start) {
+            alert("End Date must be on or after Start Date.");
+            return;
+        }
+        // A week (Monday) intersects [start, end] if its Sunday
+        // (Monday + 6d) is >= start AND its Monday is <= end.
+        const inRange = (weekIso) => {
+            if (!weekIso) return false;
+            if (start) {
+                // week's Sunday must be >= start
+                let sun;
+                try {
+                    const d = new Date(weekIso + "T00:00:00");
+                    d.setDate(d.getDate() + 6);
+                    sun = d.toISOString().slice(0, 10);
+                } catch (e) { sun = weekIso; }
+                if (sun < start) return false;
+            }
+            if (end && weekIso > end) return false;
+            return true;
+        };
         for (const rid of ids) {
             // Send BOTH pct and the picklist selection. Without the
             // explicit `cap`, ghost (pct=0) and v_0 (pct=0) collide
             // and the backend would reverse-map both to 'v_0' via
-            // _cap_pct_to_value.
+            // _cap_pct_to_value. Include the date range so the
+            // backend only touches schedules within it.
             this.state.edits.row_cap_pct.push({
                 row_id: rid, cap_pct: pct, cap: capValue,
+                start_date: start || null,
+                end_date: end || null,
             });
             const row = this.state.payload.rows.find((r) => r.id === rid);
             if (row) {
                 for (const c of row.cells) {
                     if (c.state === 'hatched' || c.state === 'dashed') continue;
+                    if (!inRange(c.week)) continue;   // out-of-range cell
                     c.cap_pct = pct;
                     c.cap = capValue;
                     c.units_effective = Math.round((c.units_booked || 0) * pct / 100 * 100) / 100;

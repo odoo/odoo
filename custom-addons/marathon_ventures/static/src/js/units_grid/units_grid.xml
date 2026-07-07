@@ -115,6 +115,7 @@
             <option value="">Select action -</option>
             <option value="ltc">LTC</option>
             <option value="maxday">Max/Day</option>
+            <option value="hiatus">Hiatus</option>
           </select>
         </span>
         <button class="btn btn-light btn-sm"
@@ -188,6 +189,49 @@
             </button>
             <button class="btn btn-primary"
                     t-on-click.stop.prevent="() => this.confirmBulkMaxDay()">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Hiatus modal -->
+      <div t-if="state.bulkAction === 'hiatus'"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkAction()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">
+            Apply Hiatus to <t t-esc="selectedRowIds.length"/> row(s)
+          </div>
+          <div class="mv-confirm-dialog__body">
+            Pick the hiatus date range:
+            <div style="margin-top: 8px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">Start Date</label>
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkHiatusStart || ''"
+                     t-on-input="(ev) => this.onBulkHiatusStartInput(ev)"/>
+            </div>
+            <div style="margin-top: 6px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">End Date</label>
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkHiatusEnd || ''"
+                     t-on-input="(ev) => this.onBulkHiatusEndInput(ev)"/>
+            </div>
+            <br/>
+            <small class="text-muted">
+              For each selected row, schedules whose week falls in the
+              range get their days_allowed trimmed so they no longer
+              run on hiatus dates. No new rows are created.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkAction()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.confirmBulkHiatus()">
               Apply
             </button>
           </div>

@@ -390,6 +390,31 @@ class MvDealUnitsGridRpc(models.Model):
                 sig = sig_migration[sig]
             self._do_apply_ltc_by_sig(sig, ltc_date)
 
+        # Hiatus ops: for each (sig, start, end) queued by the Hiatus
+        # bulk action, walk schedules matching sig whose week overlaps
+        # [start, end] and strip out any weekdays whose actual
+        # calendar date falls in the hiatus range. No sibling row is
+        # created - the schedule simply stops running on those days.
+        for op in edits.get('hiatus_ops') or []:
+            sig = op.get('row_id') or op.get('sig')
+            hstart = op.get('hiatus_start')
+            hend = op.get('hiatus_end')
+            if isinstance(sig, str) and sig.startswith('tmp:'):
+                continue
+            if not sig or not hstart or not hend:
+                continue
+            if sig in sig_migration:
+                sig = sig_migration[sig]
+            # Prefer the per-schedule payload the frontend now sends
+            # (list of {sched_id, week, hiatus_days: [0..6]}) - it's
+            # already precise. Fall back to the sig-scan path if the
+            # frontend didn't pre-compute.
+            payload_scheds = op.get('schedules') or []
+            if payload_scheds:
+                self._do_apply_hiatus_from_payload(payload_scheds)
+            else:
+                self._do_apply_hiatus_by_sig(sig, hstart, hend)
+
         return self.load_units_grid()
 
     # ==================================================================
@@ -506,3 +531,87 @@ class MvDealUnitsGridRpc(models.Model):
                 ltc_sched.write({
                     'days_allowed': [(6, 0, tag_ids)],
                 })
+
+    # Hiatus: bulk hiatus for one row (sig). Strip hiatus-covered
+    # days from each matching schedule's days_allowed. No sibling
+    # schedule is created - the schedule simply stops running on
+    # hiatus days (its new days_bits shifts it into a fresh row
+    # signature on the next load).
+    # ==================================================================
+    def _do_apply_hiatus_by_sig(self, sig, hstart, hend):
+        self.ensure_one()
+        if not sig or not hstart or not hend:
+            return
+        if isinstance(hstart, str):
+            hstart = date.fromisoformat(hstart)
+        if isinstance(hend, str):
+            hend = date.fromisoformat(hend)
+        if hend < hstart:
+            return
+
+        matching = self._schedules_for_sig(sig, active_only=True)
+        if not matching:
+            return
+
+        for sched in matching:
+            if not sched.week:
+                continue
+            week_mon = sched.week
+            week_end = week_mon + timedelta(days=6)
+            # Skip schedules whose entire week is OUTSIDE the hiatus.
+            if week_end < hstart or week_mon > hend:
+                continue
+            cur_bits = _days_bits_from_allowed(sched.days_allowed)
+            new_bits_list = list(cur_bits)
+            any_removed = False
+            for i in range(7):
+                if cur_bits[i] != '1':
+                    continue
+                d = week_mon + timedelta(days=i)
+                if hstart <= d <= hend:
+                    new_bits_list[i] = '0'
+                    any_removed = True
+            if not any_removed:
+                continue
+            new_bits = ''.join(new_bits_list)
+            if new_bits == '0' * 7:
+                sched.write({'status': 'canceled'})
+                continue
+            new_tag_ids = _tag_ids_from_bits(self.env, new_bits)
+            sched.write({'days_allowed': [(6, 0, new_tag_ids)]})
+
+    def _do_apply_hiatus_from_payload(self, payload_scheds):
+        """Apply hiatus using the exact per-schedule day list the
+        frontend pre-computed. `payload_scheds` is a list of dicts:
+            {'sched_id': <int>, 'week': '2026-03-02', 'hiatus_days': [0,3,6]}
+        where hiatus_days is a list of weekday indices (0=Mon..6=Sun)
+        to strip from that schedule's days_allowed.
+
+        Falls back cleanly if the schedule was deleted between the
+        frontend snapshot and Save."""
+        self.ensure_one()
+        Sched = self.env['mv.schedules']
+        for entry in payload_scheds:
+            sched_id = entry.get('sched_id')
+            hiatus_days = entry.get('hiatus_days') or []
+            if not sched_id or not hiatus_days:
+                continue
+            sched = Sched.browse(sched_id).exists()
+            if not sched:
+                continue
+            cur_bits = _days_bits_from_allowed(sched.days_allowed)
+            new_bits_list = list(cur_bits)
+            any_removed = False
+            for i in hiatus_days:
+                if 0 <= i < 7 and new_bits_list[i] == '1':
+                    new_bits_list[i] = '0'
+                    any_removed = True
+            if not any_removed:
+                continue
+            new_bits = ''.join(new_bits_list)
+            if new_bits == '0' * 7:
+                # No air days left -> cancel entirely.
+                sched.write({'status': 'canceled'})
+                continue
+            new_tag_ids = _tag_ids_from_bits(self.env, new_bits)
+            sched.write({'days_allowed': [(6, 0, new_tag_ids)]})
