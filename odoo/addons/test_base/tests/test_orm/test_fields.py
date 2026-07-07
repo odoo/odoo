@@ -4029,7 +4029,7 @@ class SudoCommands(TransactionCaseWithUserDemo):
             # Case: a normal updating his user to add himself a group
             with self.assertRaisesRegex(AccessError, "not allowed to modify 'test_orm.group'"):
                 my_user.write({
-                    'group_ids': [Command.update(my_user.group_ids[0].id, {})],
+                    'group_ids': [Command.update(my_user.group_ids[0].id, {'name': 'Whatever'})],
                 })
             # 2.2 Command.DELETE
             # Case: a public user deleting the public user to mess with the database

@@ -403,13 +403,13 @@ class SurveySurvey(models.Model):
     @api.onchange('survey_type')
     def _onchange_survey_type(self):
         if self.survey_type == 'survey':
-            self.write({
+            self.update({
                 'certification': False,
                 'is_time_limited': False,
                 'scoring_type': 'no_scoring',
             })
         elif self.survey_type == 'live_session':
-            self.write({
+            self.update({
                 'access_mode': 'public',
                 'is_attempts_limited': False,
                 'is_time_limited': False,
@@ -420,7 +420,7 @@ class SurveySurvey(models.Model):
                 'users_can_go_back': False,
             })
         elif self.survey_type == 'assessment':
-            self.write({
+            self.update({
                 'access_mode': 'token',
                 'scoring_type': 'scoring_with_answers',
             })

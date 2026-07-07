@@ -2581,15 +2581,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @freeze_time('2023-09-01')
     def test_accrual_creation_on_anterior_date(self):
         accrual_plan = self.accrual_plan_weekly_carryover_lost
-        accrual_allocation = self.env['hr.leave.allocation'].new({
-            'name': 'Employee allocation',
-            'work_entry_type_id': self.work_entry_type.id,
-            'date_from': '2023-01-01',
-            'employee_id': self.employee_emp.id,
-            'accrual_plan_id': accrual_plan.id,
-        })
-        # As the duration is set to a onchange, we need to force that onchange to run
-        accrual_allocation._onchange_process_accrual_plans()
+
+        # the duration is set by a onchange, let's use the form view to create the allocation
+        with Form(self.env['hr.leave.allocation']) as form:
+            form.name = 'Employee allocation'
+            form.date_from = '2023-01-01'
+            form.work_entry_type_id = self.work_entry_type
+            form.accrual_plan_id = accrual_plan
+            form.employee_id = self.employee_emp
+
+        accrual_allocation = form.record
         accrual_allocation.action_approve()
         # The amount of days should be computed as if it was accrued since
         # the start date of the allocation.

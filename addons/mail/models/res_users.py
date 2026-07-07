@@ -111,7 +111,7 @@ class ResUsers(models.Model):
         # Special case: internal users with inbox notifications converted to portal must be converted to email users
         new_portal_users = self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')])
         new_portal_users.notification_type = 'email'
-        new_portal_users.with_context(no_group_change_log=NO_GROUP_CHANGE_LOG).write({"group_ids": [Command.unlink(inbox_group_id)]})
+        new_portal_users.with_context(no_group_change_log=NO_GROUP_CHANGE_LOG).group_ids = [Command.unlink(inbox_group_id)]  # noqa: OLS03019
 
     @api.depends('out_of_office_from', 'out_of_office_to')
     def _compute_is_out_of_office(self):

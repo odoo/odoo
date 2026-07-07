@@ -4011,6 +4011,10 @@ class BaseModel(metaclass=MetaModel):
         if not self:
             return True
 
+        if not all(self._ids):
+            # unexpected write() on new records
+            raise ValueError(f"write() forbidden on {self}, use update() instead")
+
         self.check_access('write')
         for field_name in vals:
             try:
@@ -4094,8 +4098,6 @@ class BaseModel(metaclass=MetaModel):
             # line's order after the modification.
             self.modified(fnames_modifying_relations, before=True)
 
-            real_recs = self.filtered('id')
-
             for field, value in field_values:
                 field.write(self, value)
 
@@ -4119,17 +4121,17 @@ class BaseModel(metaclass=MetaModel):
 
             # validate non-inversed fields first
             inverse_fields = [f.name for fs in determine_inverses.values() for f in fs]
-            real_recs._validate_fields(vals, inverse_fields)
+            self._validate_fields(vals, inverse_fields)
 
             for fields in determine_inverses.values():
                 # write again on non-stored fields that have been invalidated from cache
                 for field in fields:
-                    if not field.store and (not field.inherited or field.type not in ('one2many', 'many2many')) and any(field._cache_missing_ids(real_recs)):
-                        field.write(real_recs, vals[field.name])
+                    if not field.store and (not field.inherited or field.type not in ('one2many', 'many2many')) and any(field._cache_missing_ids(self)):
+                        field.write(self, vals[field.name])
 
                 # inverse records that are not being computed
                 try:
-                    fields[0].determine_inverse(real_recs)
+                    fields[0].determine_inverse(self)
                 except AccessError as e:
                     if fields[0].inherited:
                         description = self.env['ir.model']._get(self._name).name
@@ -4142,14 +4144,14 @@ class BaseModel(metaclass=MetaModel):
                     raise
 
             # invalidate the cache
-            if real_recs and (cache_name := self._clear_cache_name) and (
+            if (cache_name := self._clear_cache_name) and (
                 self._clear_cache_on_fields is None
                 or not vals.keys().isdisjoint(self._clear_cache_on_fields)
             ):
                 self.env.transaction.invalidate_ormcache(cache_name)
 
             # validate inversed fields
-            real_recs._validate_fields(inverse_fields)
+            self._validate_fields(inverse_fields)
 
         if self._check_company_auto:
             self._check_company(list(vals))

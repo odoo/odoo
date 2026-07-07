@@ -42,7 +42,8 @@ class ResUsers(models.Model):
         for user in self:
             user.karma = user_karma_map.get(user.id, 0)
 
-        self.sudo()._recompute_rank()
+        if any(self._ids):
+            self.sudo()._recompute_rank()
 
     @api.depends('badge_ids')
     def _get_user_badge_level(self):

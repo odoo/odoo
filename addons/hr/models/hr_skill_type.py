@@ -55,7 +55,7 @@ class HrSkillType(models.Model):
     def _onchange_skill_level_ids(self):
         for level in self.skill_level_ids:
             if level.technical_is_new_default:
-                (self.skill_level_ids - level).write({'default_level': False})
+                (self.skill_level_ids - level).default_level = False
                 # This value need to be set to False, to reset it for the frontend.
                 level.technical_is_new_default = False
                 break

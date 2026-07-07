@@ -1126,7 +1126,7 @@ class One2many(_RelationalMulti):
                         allow_full_delete = False
                     elif command[0] == Command.UPDATE:
                         prefetch_ids = recs[self.name]._prefetch_ids
-                        browse((command[1],)).with_prefetch(prefetch_ids).write(command[2])
+                        browse((command[1],)).with_prefetch(prefetch_ids).update(command[2])
                     elif command[0] == Command.DELETE:
                         to_delete.append(command[1])
                     elif command[0] == Command.UNLINK:
@@ -1207,11 +1207,7 @@ class One2many(_RelationalMulti):
                         for record in recs:
                             link(record, comodel.new(command[2], ref=command[1]))
                     elif command[0] == Command.UPDATE:
-                        lines = browse(command[1])
-                        if is_real:
-                            lines.write(command[2])
-                        else:
-                            lines.update(command[2])
+                        browse(command[1]).update(command[2])
                     elif command[0] in (Command.DELETE, Command.UNLINK):
                         unlink(browse((command[1],)))
                     else:
@@ -1574,13 +1570,10 @@ class Many2many(_RelationalMulti):
                         relation_add(recs._ids, line_id)
                 elif command[0] == Command.UPDATE:
                     line_id = command[1]
-                    if is_real and line_id:
-                        prefetch_ids = recs[self.name]._prefetch_ids
-                        comodel.browse((line_id,)).with_prefetch(prefetch_ids).write(command[2])
-                    else:
-                        if line_id:
-                            line_id = NewId(line_id)
-                        comodel.browse((line_id,)).update(command[2])
+                    if not is_real:
+                        line_id = line_id and NewId(line_id)
+                    prefetch_ids = recs[self.name]._prefetch_ids
+                    comodel.browse((line_id,)).with_prefetch(prefetch_ids).update(command[2])
                 elif command[0] == Command.DELETE:
                     line_id = command[1]
                     if is_real and line_id:

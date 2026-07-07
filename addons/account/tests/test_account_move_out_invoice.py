@@ -2727,9 +2727,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             "allow_out_payment": True,
         })
 
-        move = self.env["account.move"].with_context(default_move_type="out_invoice").new({
-            "partner_id": self.partner_a.id,
-        })
+        move = self.init_invoice('out_invoice', self.partner_a)
         move.action_switch_move_type()
 
         self.assertEqual(move.bank_partner_id, self.partner_a)
