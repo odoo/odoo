@@ -3,6 +3,8 @@
 import json
 from urllib.parse import urlencode
 
+from markupsafe import Markup
+
 from odoo.tests import Form, HttpCase, tagged
 
 from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
@@ -148,8 +150,17 @@ class TestReturnOrderController(TestSaleStockCommon, HttpCase):
 
     def test_download_label_logs_chatter_message(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.product_a.name = "Chair <b>Deluxe</b> & Co"
+        self.return_reason.name = "Wrong <i>item</i> & size"
         self._download_return_label()
         message = self.sale_order.message_ids.filtered(
             lambda m: "return label has been downloaded" in (m.body or "").lower()
         )[:1]
-        self.assertTrue(message.body)
+        # The layout tags are kept as HTML while the product and reason names are escaped.
+        self.assertEqual(message.body, Markup(
+            "<p>A return label has been downloaded for the following products:"
+            "<br><br>%s:"
+            "<br>- 1 x Chair &lt;b&gt;Deluxe&lt;/b&gt; &amp; Co"
+            "<br>"
+            "<br>Return reason: Wrong &lt;i&gt;item&lt;/i&gt; &amp; size</p>"
+        ) % self.sale_order.picking_ids.display_name)
