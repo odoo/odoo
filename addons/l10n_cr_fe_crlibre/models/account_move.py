@@ -210,7 +210,10 @@ class AccountMove(models.Model):
         if estado == 'aceptado':
             self.write({'l10n_cr_fe_state': 'aceptado', 'l10n_cr_fe_respuesta_xml': respuesta_xml})
             self.message_post(body=_("Hacienda aceptó el comprobante FE."))
-            self._l10n_cr_fe_send_acceptance_email()
+            try:
+                self._l10n_cr_fe_send_acceptance_email()
+            except Exception as exc:
+                self.message_post(body=_("No se pudo enviar el correo de notificación al cliente: %s") % exc)
         elif estado == 'rechazado':
             self.write({
                 'l10n_cr_fe_state': 'rechazado',

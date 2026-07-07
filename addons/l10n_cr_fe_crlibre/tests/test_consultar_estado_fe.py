@@ -56,3 +56,15 @@ class TestConsultarEstadoFe(TransactionCase):
                    return_value={'ind_estado': 'procesando', 'respuesta_xml': None}):
             self.invoice.action_l10n_cr_fe_consultar_estado()
         self.assertEqual(self.invoice.l10n_cr_fe_state, 'enviado')
+
+    def test_consultar_estado_aceptado_persists_state_when_email_fails(self):
+        xml = '<MensajeHacienda><DetalleMensaje>Comprobante aceptado</DetalleMensaje></MensajeHacienda>'
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.get_hacienda_token',
+                   return_value='tok'), \
+             patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.consultar_estado',
+                   return_value={'ind_estado': 'aceptado', 'respuesta_xml': base64.b64encode(xml.encode()).decode()}), \
+             patch('odoo.addons.l10n_cr_fe_crlibre.models.account_move.AccountMove._l10n_cr_fe_send_acceptance_email',
+                   side_effect=Exception("SMTP timeout")):
+            self.invoice.action_l10n_cr_fe_consultar_estado()
+        self.assertEqual(self.invoice.l10n_cr_fe_state, 'aceptado')
+        self.assertIn('aceptado', self.invoice.l10n_cr_fe_respuesta_xml)
