@@ -4,7 +4,7 @@ from freezegun import freeze_time
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form, tagged
+from odoo.tests import tagged
 from odoo import fields, Command
 
 
@@ -15,74 +15,62 @@ class TestAccountMove(TestStockValuationCommon):
         self._use_multi_currencies([('2017-01-01', 2.0)])
         rate = self.other_currency.rate_ids.rate
 
-        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
-        move_form.partner_id = self.partner
-        move_form.currency_id = self.other_currency
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = product
-            line_form.tax_ids.clear()
-        invoice = move_form.save()
+        invoice = self._create_invoice(
+            product=product, price_unit=40, post=False, currency_id=self.other_currency.id
+        )
 
         self.assertAlmostEqual(product.lst_price * rate, invoice.amount_total)
-        self.assertEqual(len(invoice.mapped("line_ids")), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
+        self.assertEqual(len(invoice.line_ids), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 1)
 
         invoice._post()
 
         self.assertAlmostEqual(product.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(product.lst_price * rate, invoice.amount_residual)
-        self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+        self.assertEqual(len(invoice.line_ids), 4)
+        self.assertEqual(len(invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 2)
 
     def test_fifo_perpetual_01_mc_01(self):
         product = self.product_fifo_auto
         self._use_multi_currencies([('2017-01-01', 2.0)])
         rate = self.other_currency.rate_ids.rate
 
-        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
-        move_form.partner_id = self.partner
-        move_form.currency_id = self.other_currency
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = product
-            line_form.tax_ids.clear()
-        invoice = move_form.save()
+        invoice = self._create_invoice(
+            product=product, price_unit=40, post=False, currency_id=self.other_currency.id
+        )
 
         self.assertAlmostEqual(product.lst_price * rate, invoice.amount_total)
-        self.assertEqual(len(invoice.mapped("line_ids")), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
+        self.assertEqual(len(invoice.line_ids), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 1)
 
         invoice._post()
         self.assertAlmostEqual(product.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(product.lst_price * rate, invoice.amount_residual)
-        self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+        self.assertEqual(len(invoice.line_ids), 4)
+        self.assertEqual(len(invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 2)
 
     def test_average_perpetual_01_mc_01(self):
         product = self.product_avco_auto
         self._use_multi_currencies([('2017-01-01', 2.0)])
         rate = self.other_currency.rate_ids.rate
 
-        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
-        move_form.partner_id = self.partner
-        move_form.currency_id = self.other_currency
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = product
-            line_form.tax_ids.clear()
-        invoice = move_form.save()
+        invoice = self._create_invoice(
+            product=product, price_unit=40, post=False, currency_id=self.other_currency.id
+        )
 
         self.assertAlmostEqual(product.lst_price * rate, invoice.amount_total)
-        self.assertEqual(len(invoice.mapped("line_ids")), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
+        self.assertEqual(len(invoice.line_ids), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 1)
 
         invoice._post()
 
         self.assertAlmostEqual(product.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(product.lst_price * rate, invoice.amount_residual)
-        self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+        self.assertEqual(len(invoice.line_ids), 4)
+        self.assertEqual(len(invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 2)
 
     def test_storno_accounting(self):
         """Storno accounting uses negative numbers on debit/credit to cancel other moves.
@@ -94,37 +82,25 @@ class TestAccountMove(TestStockValuationCommon):
         self.env.company.account_storno = True
         self.env.company.anglo_saxon_accounting = True
 
-        move = self.env['account.move'].create({
-            'move_type': 'out_refund',
-            'invoice_date': fields.Date.from_string('2019-01-01'),
-            'partner_id': self.partner.id,
-            'currency_id': self.other_currency.id,
-            'invoice_line_ids': [
-                (0, None, {'product_id': product.id}),
-            ]
-        })
-        move.action_post()
+        self._create_credit_note(
+            product=product, currency_id=self.other_currency.id, invoice_date=fields.Date.from_string('2019-01-01')
+        )
 
-        stock_output_line = move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
+        stock_output_line = self._get_stock_valuation_move_lines()
         self.assertEqual(stock_output_line.debit, 0)
         self.assertEqual(stock_output_line.credit, -10)
 
-        expense_line = move.line_ids.filtered(lambda l: l.account_id == product._get_product_accounts()['expense'])
+        expense_line = self._get_expense_move_lines()
         self.assertEqual(expense_line.debit, -10)
         self.assertEqual(expense_line.credit, 0)
 
     def test_standard_manual_tax_edit(self):
         ''' Test manually editing tax amount, cogs creation should not reset tax amount '''
         product = self.product_standard_auto
-        product.lst_price = 100
-        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
-        move_form.partner_id = self.partner
-        self.company.income_account_id.write({
-            'tax_ids': [(6, 0, [self.env.company.account_sale_tax_id.id])]
-        })
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = product
-        invoice = move_form.save()
+
+        invoice = self._create_invoice(
+            product=product, price_unit=100, post=False, tax_ids=[Command.set(self.env.company.account_sale_tax_id.ids)]
+        )
 
         self.assertEqual(invoice.amount_total, 115)
         self.assertEqual(invoice.amount_untaxed, 100)
@@ -135,14 +111,14 @@ class TestAccountMove(TestStockValuationCommon):
         tax_totals['subtotals'][0]['tax_groups'][0]['tax_amount_currency'] = 14.0
         invoice.tax_totals = tax_totals
 
-        self.assertEqual(len(invoice.mapped("line_ids")), 3)
+        self.assertEqual(len(invoice.line_ids), 3)
         self.assertEqual(invoice.amount_total, 114)
         self.assertEqual(invoice.amount_untaxed, 100)
         self.assertEqual(invoice.amount_tax, 14)
 
         invoice._post()
 
-        self.assertEqual(len(invoice.mapped("line_ids")), 5)
+        self.assertEqual(len(invoice.line_ids), 5)
         self.assertEqual(invoice.amount_total, 114)
         self.assertEqual(invoice.amount_untaxed, 100)
         self.assertEqual(invoice.amount_tax, 14)
@@ -159,20 +135,14 @@ class TestAccountMove(TestStockValuationCommon):
         self.env.user.company_ids |= self.other_company
 
         for company in (self.company | self.other_company):
-            bill_form = Form(self.env['account.move'].with_company(company.id).with_context(default_move_type='in_invoice'))
-            bill_form.partner_id = self.partner
-            bill_form.invoice_date = fields.Date.today()
-            with bill_form.invoice_line_ids.new() as line:
-                line.product_id = self.product_standard
-                line.price_unit = 100
-            bill = bill_form.save()
-            bill.action_post()
+            bill = self._create_bill(
+                product=self.product_standard, price_unit=100, partner_id=self.partner.id, company_id=company.id
+            )
 
             product_accounts = self.product_standard.product_tmpl_id.with_company(company.id).get_product_accounts()
             self.assertEqual(bill.invoice_line_ids.account_id, product_accounts['expense'])
 
     def test_cogs_analytic_accounting(self):
-
         """Check analytic distribution is correctly propagated to COGS lines.
         Both the debit interim account line and the credit expense account line
         should carry the analytic distribution; otherwise analytic accounting
@@ -187,20 +157,9 @@ class TestAccountMove(TestStockValuationCommon):
             'company_id': False,
         })
 
-        move = self.env['account.move'].create({
-            'move_type': 'out_refund',
-            'invoice_date': fields.Date.from_string('2019-01-01'),
-            'partner_id': self.partner.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': product.id,
-                    'analytic_distribution': {
-                        analytic_account.id: 100,
-                    },
-                }),
-            ]
-        })
-        move.action_post()
+        move = self._create_credit_note(
+            product=product, invoice_date=fields.Date.from_string('2019-01-01'), analytic_distribution={analytic_account.id: 100}
+        )
 
         cogs_lines = move.line_ids.filtered(lambda l: l.display_type == 'cogs')
         self.assertRecordValues(cogs_lines.sorted('balance'), [
@@ -215,12 +174,7 @@ class TestAccountMove(TestStockValuationCommon):
         """
         self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         product = self.product_standard_auto
-        cost_of_production = self.env['account.account'].create({
-            'name': 'STCK Test Account',
-            'code': '100119',
-            'reconcile': True,
-            'account_type': 'asset_current',
-        })
+        cost_of_production = self._use_inventory_location_accounting()
         default_plan = self.env['account.analytic.plan'].create({
             'name': 'Default',
         })
@@ -237,21 +191,9 @@ class TestAccountMove(TestStockValuationCommon):
         })
         self.stock_location.valuation_account_id = cost_of_production.id
 
-        receipt = self.env['stock.picking'].create([
-            {
-                'location_id': self.supplier_location.id,
-                'location_dest_id': self.stock_location.id,
-                'picking_type_id': self.picking_type_in.id,
-                'partner_id': self.partner.id,
-                'move_ids': [Command.create({
-                    'product_id': product.id,
-                    'location_id': self.supplier_location.id,
-                    'location_dest_id': self.stock_location.id,
-                    'product_uom_qty': 1.0,
-                })],
-            },
-        ])
-        receipt.button_validate()
+        self._make_in_move(
+            product=product, quantity=1, create_picking=True, company=self.company, partner_id=self.partner.id
+        )
 
         aml = self.env['account.move.line'].search([('product_id', '=', product.id)], order='debit')
         self.assertRecordValues(aml, [
@@ -272,17 +214,7 @@ class TestAccountMove(TestStockValuationCommon):
         self.category_standard_auto.with_company(branch.id).property_valuation = "real_time"
         self.category_standard_auto.with_company(branch.id).property_stock_valuation_account_id = test_account
 
-        bill = self.env['account.move'].with_company(branch.id).with_context(default_move_type='in_invoice').create({
-            'partner_id': self.partner.id,
-            'invoice_date': fields.Date.today(),
-            'company_id': branch.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': product.id,
-                    'price_unit': 100,
-                }),
-            ],
-        })
+        bill = self._create_bill(product=product, post=False, company_id=branch.id)
         self.assertEqual(bill.invoice_line_ids.account_id, test_account)
 
     def test_apply_inventory_adjustment_on_multiple_quants_simultaneously(self):
@@ -323,22 +255,13 @@ class TestAccountMove(TestStockValuationCommon):
         prior_to_lock_date = fields.Datetime.add(lock_date, days=-1)
         post_to_lock_date = fields.Datetime.add(lock_date, days=+1)
         self.env['stock.quant']._update_available_quantity(self.product_standard, self.stock_location, 10)
-        receipts = receipt, receipt_done = self.env['stock.picking'].create([
-            {
-                'location_id': self.supplier_location.id,
-                'location_dest_id': self.stock_location.id,
-                'picking_type_id': self.picking_type_in.id,
-                'owner_id': self.env.company.partner_id.id,
-                'move_ids': [Command.create({
-                    'product_id': self.product_standard.id,
-                    'location_id': self.supplier_location.id,
-                    'location_dest_id': self.stock_location.id,
-                    'product_uom_qty': 1.0,
-                })]
-            } for _ in range(2)
-        ])
-        receipts.action_confirm()
-        receipt_done.button_validate()
+
+        receipt_not_done = self._make_in_move(
+            product=self.product_standard, quantity=1, create_picking=True, auto_validate=False
+        ).picking_id
+        receipt_done = self._make_in_move(
+            product=self.product_standard, quantity=1, create_picking=True
+        ).picking_id
         # Check that the purchase, sale and tax lock dates do not impose any restrictions
         self.env.company.write({
             'sale_lock_date': lock_date,
@@ -346,7 +269,7 @@ class TestAccountMove(TestStockValuationCommon):
             'tax_lock_date': lock_date,
         })
         # Receipts can be backdated
-        receipt.scheduled_date = prior_to_lock_date
+        receipt_not_done.scheduled_date = prior_to_lock_date
         receipt_done.date_done = prior_to_lock_date
 
         # Check that the fiscal year lock date imposes restrictions
@@ -357,10 +280,10 @@ class TestAccountMove(TestStockValuationCommon):
             'fiscalyear_lock_date': lock_date,
         })
         # Receipts can not be backdated prior to lock date
-        receipt.scheduled_date = post_to_lock_date
+        receipt_not_done.scheduled_date = post_to_lock_date
         receipt_done.date_done = post_to_lock_date
         # Lock dates should not affect un-validated scheduled_date
-        receipt.scheduled_date = prior_to_lock_date
+        receipt_not_done.scheduled_date = prior_to_lock_date
         with self.assertRaises(UserError):
             receipt_done.date_done = prior_to_lock_date
 
@@ -370,10 +293,10 @@ class TestAccountMove(TestStockValuationCommon):
             'hard_lock_date': lock_date,
         })
         # Receipts can not be backdated prior to lock date
-        receipt.scheduled_date = post_to_lock_date
+        receipt_not_done.scheduled_date = post_to_lock_date
         receipt_done.date_done = post_to_lock_date
         # Lock dates should not affect un-validated scheduled_date
-        receipt.scheduled_date = prior_to_lock_date
+        receipt_not_done.scheduled_date = prior_to_lock_date
         with self.assertRaises(UserError):
             receipt_done.date_done = prior_to_lock_date
 
@@ -382,17 +305,7 @@ class TestAccountMove(TestStockValuationCommon):
         The 'name' field is optional on account.move.line and should be
         handled safely when generating accounting entries.
         """
-        move = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_standard.id,
-                    'name': False,
-                }),
-            ],
-        })
-        move.action_post()
+        move = self._create_invoice(product=self.product_standard)
         # name should remain falsy on the invoice line
         self.assertFalse(move.invoice_line_ids.name)
         # ensure the invoice is posted successfully
