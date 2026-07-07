@@ -117,3 +117,40 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTestsCommon):
         visitor_3 = self._get_last_visitor()
         self.assertEqual(channel_1.livechat_visitor_id, visitor_3)
         self.assertNotEqual(visitor_3, visitor_2)
+
+    def test_tracking_does_not_logout_authenticated_user_with_guest_cookie(self):
+        self.set_registry_readonly_mode(False)  # Allow creation of visitors
+
+        operator = self.user_admin
+        livechat_channel = self.env["im_livechat.channel"].create({
+            "name": "Awesome Channel",
+            "user_ids": [Command.set([operator.id])],
+        })
+        self.env["mail.presence"]._update_presence(operator)
+
+        self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "channel_id": livechat_channel.id,
+            },
+        )
+        self.assertIn(self.env["mail.guest"]._cookie_name, self.opener.cookies)
+
+        self._authenticate_via_web(self.user_admin.login, "admin")
+        self.assertEqual(
+            self.make_jsonrpc_request("/web/session/get_session_info")["uid"],
+            self.user_admin.id,
+        )
+
+        self.make_jsonrpc_request(
+            route="/website/odoo_track",
+            params={
+                "res_model": self.tracked_page._name,
+                "res_id": self.tracked_page.id,
+            },
+        )
+
+        self.assertEqual(
+            self.make_jsonrpc_request("/web/session/get_session_info")["uid"],
+            self.user_admin.id,
+        )
