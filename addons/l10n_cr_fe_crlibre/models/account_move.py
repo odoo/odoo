@@ -122,9 +122,9 @@ class AccountMove(models.Model):
         if not self.partner_id:
             raise UserError(_("La factura no tiene cliente (receptor)."))
 
-        config = self._l10n_cr_fe_get_config()
         client = self.env['l10n_cr.fe.client']
         try:
+            config = self._l10n_cr_fe_get_config()
             download_code = config._l10n_cr_fe_ensure_certificate_uploaded()
             clave_params = self._l10n_cr_fe_build_clave_params()
             clave_res = client.get_clave(clave_params)
@@ -142,7 +142,7 @@ class AccountMove(models.Model):
                 receptor_tipo='01',
                 receptor_num=(self.partner_id.vat or '').replace('-', '') or '000000000',
                 xml_firmado=xml_firmado, environment=config.environment)
-        except CrlibreApiError as exc:
+        except (CrlibreApiError, UserError) as exc:
             self.l10n_cr_fe_state = 'error'
             self.message_post(body=_("Error en el flujo de Factura Electrónica: %s") % exc)
             return
