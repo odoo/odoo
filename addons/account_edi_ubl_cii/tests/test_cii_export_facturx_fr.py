@@ -145,11 +145,11 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             lst_price=100.0,
             default_code='P123',
             barcode='1234567890123',
-            description='A simple product description',
             taxes_id=self.tax_20,
         )
         invoice = self._create_invoice_one_line(
             product_id=product,
+            name='A simple product description',
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
             post=True,

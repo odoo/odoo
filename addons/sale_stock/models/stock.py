@@ -75,7 +75,9 @@ class StockMove(models.Model):
 
             so_line_vals = {
                 'move_ids': [(4, move.id, 0)],
-                'name': product.with_context(lang=sale_order.partner_id.lang).get_product_multiline_description_sale(),
+                'name': product.with_context(
+                    lang=sale_order.partner_id.lang
+                ).get_product_multiline_description_sale(with_display_name=False),
                 'order_id': sale_order.id,
                 'product_id': product.id,
                 'product_uom_qty': 0,

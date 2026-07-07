@@ -143,6 +143,7 @@ class SaleOrder extends saleManagementModels.SaleOrder {
                         </control>
                         <field name="sequence" widget="handle"/>
                         <field name="name"/>
+                        <field name="label"/>
                         <column name="sol_qty">
                             <field name="product_uom_qty" invisible="display_type"/>
                             <field
@@ -492,7 +493,7 @@ test("Editing a subsection's quantity applies the ratio to its line and recomput
 
     expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
 
-    await contains(".o_data_row:contains(Sec3-sub2):first [name=name]").click();
+    await contains(".o_data_row:contains(Sec3-sub2):first [name=label]").click();
     await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4");
     await clickSave();
 

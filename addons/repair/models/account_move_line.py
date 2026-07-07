@@ -12,9 +12,9 @@ class AccountMoveLine(models.Model):
         super()._compute_name()
         for line in self:
             if line.repair_service_line_id and line.repair_service_line_id.description:
-                line.name = line.translated_product_name + '\n' + line.repair_service_line_id.description
+                line.name = line.repair_service_line_id.description
             elif line.stock_move_id.repair_id and line.stock_move_id.description_picking_manual:
-                line.name = line.translated_product_name + '\n' + line.stock_move_id.description_picking
+                line.name = line.stock_move_id.description_picking
 
     def _eligible_for_stock_account(self):
         moves = self.cogs_move_ids

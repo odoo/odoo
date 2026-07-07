@@ -118,7 +118,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         new_sale_order = self.env["sale.order"].search([]) - old_sale_order
         new_order_line = new_sale_order.order_line
         self.assertEqual(
-            new_order_line.name,
+            new_order_line.label,
             "Short (TEST) (M always, M dynamic)"
             "\nNever attribute size: M never"
             "\nNever attribute size custom: Yes never custom: TEST",

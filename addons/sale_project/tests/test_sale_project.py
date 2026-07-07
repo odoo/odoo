@@ -131,7 +131,7 @@ class TestSaleProject(TestSaleProjectCommon):
         })
 
         so_line_order_task_in_global = SaleOrderLine.create({
-            'name': f"{self.product_order_service2.display_name}\nDescription for global task.",
+            'name': "Description for global task.",
             'product_id': self.product_order_service2.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
@@ -139,7 +139,7 @@ class TestSaleProject(TestSaleProjectCommon):
 
         self.product_order_service3.description_sale = "Task in New Project"
         so_line_order_new_task_new_project = SaleOrderLine.create({
-            'name': f"{self.product_order_service3.display_name}\nDescription for new project task.",
+            'name': "Description for new project task.",
             'product_id': self.product_order_service3.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,

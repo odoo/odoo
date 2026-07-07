@@ -11,7 +11,6 @@
         </record>
         <record id="rfq3_line" model="purchase.order.line" forcecreate="0">
             <field name="order_id" ref="rfq3"/>
-            <field name="name" model="purchase.order.line" eval="obj().env.ref('product.product_product_13').partner_ref"/>
             <field name="date_planned" eval="time.strftime('%Y-%m-10')"/>
             <field name="product_id" ref="product.product_product_13"/>
             <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -25,7 +24,6 @@
         </record>
         <record id="rfq4_line" model="purchase.order.line" forcecreate="0">
             <field name="order_id" ref="rfq4"/>
-            <field name="name" model="purchase.order.line" eval="obj().env.ref('product.product_product_13').partner_ref"/>
             <field name="date_planned" eval="time.strftime('%Y-%m-15')"/>
             <field name="product_id" ref="product.product_product_13"/>
             <field name="uom_id" ref="uom.product_uom_unit"/>

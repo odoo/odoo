@@ -71,7 +71,7 @@
                         <tr t-att-class="'fw-bolder o_line_section' if line.display_type == 'line_section' else 'fw-bold o_line_subsection' if line.display_type == 'line_subsection' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
                                 <td id="product" class="text-start">
-                                    <span t-field="line.name"/>
+                                    <span t-field="line.label"/>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.product_qty"/>

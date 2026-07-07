@@ -203,7 +203,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         backend_url = f"/odoo/action-{order_sudo._get_portal_return_action().id}/{order_sudo.id}"
         values = {
-            "sale_order": order_sudo,
+            "sale_order": order_sudo.with_context(lang=order_sudo._get_lang()),
             "product_documents": order_sudo._get_product_documents(),
             "message": message,
             "report_type": "html",

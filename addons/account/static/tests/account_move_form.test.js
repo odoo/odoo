@@ -92,7 +92,7 @@ test("Update description on product line", async() => {
     const productId = pyEnv["product"].browse([1]);
     const accountMove = pyEnv["account.move"].browse([1]);
     pyEnv["account.move"].write([accountMove[0].id], {
-        invoice_line_ids: [[0, 0, { name: productId[0].name, product_id: productId[0].id }]],
+        invoice_line_ids: [[0, 0, { product_id: productId[0].id }]],
     });
     await start();
     onRpc("account.move", "web_save", () => { expect.step("save")});
@@ -119,5 +119,5 @@ test("Update description on product line", async() => {
     await expect.waitForSteps(["save"]);
 
     const line = pyEnv["account.move.line"].browse([1])[0];
-    expect(line.name).toBe("testProduct\ntestDescription");
+    expect(line.name).toBe("testDescription");
 });

@@ -512,7 +512,7 @@ class TestCIIFR(TestUBLCommon):
                 'amount_tax': 22,
                 'currency_id': self.other_currency.id,
                 'invoice_lines': [{
-                    'name': "product_a",
+                    'label': "product_a",
                     'quantity': 1,
                     'price_unit': 99,
                     'discount': 0,
@@ -525,7 +525,7 @@ class TestCIIFR(TestUBLCommon):
         kwargs['invoice_vals'].update({
             'amount_tax': 23,
             'invoice_lines': [{
-                'name': "product_a",
+                'label': "product_a",
                 'quantity': 1,
                 'price_unit': 98,
                 'discount': 0,

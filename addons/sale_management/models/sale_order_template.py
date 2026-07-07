@@ -195,28 +195,6 @@ class SaleOrderTemplate(models.Model):
                     self.env._("Prepayment percentage must be a valid percentage.")
                 )
 
-    # === CRUD METHODS ===#
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        records = super().create(vals_list)
-        records._update_product_translations()
-        return records
-
-    def write(self, vals):
-        result = super().write(vals)
-        self._update_product_translations()
-        return result
-
-    def _update_product_translations(self):
-        languages = self.env["res.lang"].search([("active", "=", True)])
-        for lang in languages:
-            for line in self.sale_order_template_line_ids.filtered("product_id"):
-                if line.name == line._get_default_description():
-                    line.with_context(lang=lang.code).name = line.with_context(
-                        lang=lang.code
-                    )._get_default_description()
-
     @api.model
     def _demo_configure_template(self):
         demo_template = self.env.ref(
