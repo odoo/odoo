@@ -136,3 +136,48 @@ class TestCrlibreClient(TransactionCase):
                    return_value=self._mock_response(payload)):
             with self.assertRaises(CrlibreApiError):
                 self.client.sign_xml('DC123', '1234', '<xml/>')
+
+    def test_send_fe_parses_202_recibido(self):
+        raw_lines = ['HTTP/1.1 202 Accepted', 'Content-Type: application/json', '', '']
+        payload = {'status': 'ok', 'resp': {'Status': 202, 'text': raw_lines}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.send_fe(
+                token='tok', clave='5' * 50, fecha_iso='2026-07-06T09:00:00-06:00',
+                emisor_tipo='01', emisor_num='702320717',
+                receptor_tipo='01', receptor_num='102340567',
+                xml_firmado='<FacturaElectronica/>', environment='stag')
+        self.assertEqual(result['http_status'], 202)
+        called_params = m.call_args.kwargs['params']
+        self.assertEqual(called_params['w'], 'send')
+        self.assertEqual(called_params['r'], 'json')
+        self.assertEqual(called_params['client_id'], 'api-stag')
+        self.assertEqual(called_params['token'], 'tok')
+
+    def test_send_fe_error_status_raises(self):
+        payload = {'status': 'ok', 'resp': {'Status': 400, 'text': ['HTTP/1.1 400 Bad Request', '']}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)):
+            with self.assertRaises(CrlibreApiError):
+                self.client.send_fe(
+                    token='tok', clave='5' * 50, fecha_iso='2026-07-06T09:00:00-06:00',
+                    emisor_tipo='01', emisor_num='702320717',
+                    receptor_tipo='01', receptor_num='102340567',
+                    xml_firmado='<FacturaElectronica/>', environment='stag')
+
+    def test_consultar_estado_aceptado(self):
+        payload = {'status': 'ok', 'resp': {'ind-estado': 'aceptado', 'respuesta-xml': 'PGZvbz8+'}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.consultar_estado('tok', '5' * 50, 'stag')
+        self.assertEqual(result['ind_estado'], 'aceptado')
+        self.assertEqual(result['respuesta_xml'], 'PGZvbz8+')
+        self.assertEqual(m.call_args.kwargs['params']['client_id'], 'api-stag')
+
+    def test_consultar_estado_pendiente(self):
+        payload = {'status': 'ok', 'resp': None}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)):
+            result = self.client.consultar_estado('tok', '5' * 50, 'stag')
+        self.assertEqual(result['ind_estado'], 'desconocido')
+        self.assertIsNone(result['respuesta_xml'])
