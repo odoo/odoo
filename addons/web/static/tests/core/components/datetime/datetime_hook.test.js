@@ -228,3 +228,20 @@ test("close popover when owner component is unmounted", async () => {
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(0);
 });
+
+test("hide reset button in datetime picker popover", async () => {
+    const pickerProps = {
+        type: "datetime",
+        value: DateTime.fromSQL("2026-09-05"),
+    };
+
+    await mountInput((startDateRef) => {
+        useDateTimePicker({ inputRefs: [startDateRef], pickerProps, showResetButton: false });
+    });
+
+    await click("input.datetime_hook_input");
+    await animationFrame();
+
+    expect(".o_datetime_picker").toHaveCount(1);
+    expect(".o_datetime_buttons button[title='Clear']").toHaveCount(0);
+});
