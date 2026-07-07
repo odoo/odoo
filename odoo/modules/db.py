@@ -10,6 +10,7 @@ import logging
 import os
 import pathlib
 import re
+import secrets
 import shutil
 import subprocess
 import tempfile
@@ -634,6 +635,7 @@ def restore(
             [
                 find_pg_tool('psql'),
                 '--dbname', db_name,
+                '--command', f'\\restrict {secrets.token_hex()}',
                 '--file', os.path.join(dump_dir, 'dump.sql'),
                 '--quiet',
             ],
