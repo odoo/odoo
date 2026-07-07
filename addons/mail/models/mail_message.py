@@ -363,14 +363,29 @@ class MailMessage(models.Model):
                 message.record_name = False
 
     @api.depends('author_id', 'author_guest_id')
-    @api.depends_context('guest', 'uid')
+    @api.depends_context('guest', 'portal_data', 'uid')
     def _compute_is_current_user_or_guest_author(self):
         user = self.env.user
         guest = self.env['mail.guest']._get_guest_from_context()
+        # support context-based author check, using recordsets (non forgeable by rpc)
+        portal_data = self.env.context.get("portal_data", {})
+        portal_partner = portal_data.get("portal_partner")
+        if portal_partner:
+            portal_partner = portal_partner if isinstance(portal_partner, self.pool["res.partner"]) else None
+        portal_thread = portal_data.get("portal_thread")
+        if portal_thread:
+            portal_thread = portal_thread if isinstance(portal_thread, self.pool["mail.thread"]) else None
+
         for message in self:
             if not user._is_public() and (message.author_id and message.author_id == user.partner_id):
                 message.is_current_user_or_guest_author = True
             elif message.author_guest_id and message.author_guest_id == guest:
+                message.is_current_user_or_guest_author = True
+            elif (
+                portal_partner and portal_thread and message.model and message.res_id and
+                message.author_id == portal_partner and
+                message.model == portal_thread._name and message.res_id == portal_thread.id
+            ):
                 message.is_current_user_or_guest_author = True
             else:
                 message.is_current_user_or_guest_author = False
