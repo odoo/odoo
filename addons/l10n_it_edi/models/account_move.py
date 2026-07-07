@@ -1904,7 +1904,7 @@ class AccountMove(models.Model):
                 tax_scope = 'service' if move_line.product_id.type == 'service' else 'consu'
                 extra_domain += [('tax_scope', 'in', [tax_scope, False])]
             if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason):
-                move_line.tax_ids |= tax
+                move_line.tax_ids |= self.fiscal_position_id.map_tax(tax)
             else:
                 message = Markup("<br/>").join((
                     _("Tax not found for line with description '%s'", move_line.name),
