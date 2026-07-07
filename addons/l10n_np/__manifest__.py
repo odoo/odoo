@@ -5,6 +5,7 @@
     'icon': '/account/static/description/l10n.png',
     'countries': ['np'],
     'description': """
+ Nepal - Accounting Chart and Tax Templates
     """,
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
@@ -17,7 +18,6 @@
     'demo': [
         'demo/demo_company.xml',
     ],
-    'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

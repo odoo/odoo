@@ -593,6 +593,29 @@ class NumberToWords_BG(Num2Word_Base):
         ret.reverse()
         return ret_minus + ''.join(ret)
 
+# The following section of the code is used to add support for the Nepali Numbering System in the num2words package.
+# Part of the code is taken from the following PR: https://github.com/savoirfairelinux/num2words/pull/548
+
+
+try:
+    from num2words.lang_EN import Num2Word_EN
+except ImportError:
+    Num2Word_EN = None
+
+if Num2Word_EN is not None:
+    class NumberToWords_NP(Num2Word_EN):
+        locale = 'ne_NP'
+        lang = 'Nepali'
+
+        def set_high_numwords(self, high):
+            self.cards[10 ** 17] = "shankha"
+            self.cards[10 ** 15] = "padam"
+            self.cards[10 ** 13] = "neel"
+            self.cards[10 ** 11] = "kharba"
+            self.cards[10 ** 9] = "arba"
+            self.cards[10 ** 7] = "crore"
+            self.cards[10 ** 5] = "lakh"
+
 
 def patch_module():
     try:
@@ -600,6 +623,8 @@ def patch_module():
     except ImportError:
         return
     num2words.CONVERTER_CLASSES['bg'] = NumberToWords_BG()
+    if Num2Word_EN is not None:
+        num2words.CONVERTER_CLASSES['ne_NP'] = NumberToWords_NP()
 
     if MIN_PY_VERSION >= (3, 13):
         msg = "The num2words monkey patch for Czech is obsolete. Bump the version of the library to the latest available in the official package repository, if it hasn't already been done, and remove the patch."
