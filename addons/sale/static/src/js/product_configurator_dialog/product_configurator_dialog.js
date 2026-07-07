@@ -63,7 +63,7 @@ export class ProductConfiguratorDialog extends Component {
 
         useSubEnv({
             mainProductTmplId: this.props.productTemplateId,
-            currencyId: this.props.currency_id,
+            currencyId: this.props.currencyId,
             canChangeVariant: this.props.options?.canChangeVariant ?? true,
             showQuantity: this.props.options?.showQuantity ?? true,
             showPrice: this.props.options?.showPrice ?? true,
@@ -112,7 +112,7 @@ export class ProductConfiguratorDialog extends Component {
             (sum, product) => sum + product.price * product.quantity,
             0
         );
-        return formatCurrency(total, this.props.currency_id);
+        return formatCurrency(total, this.props.currencyId);
     }
 
     //--------------------------------------------------------------------------
