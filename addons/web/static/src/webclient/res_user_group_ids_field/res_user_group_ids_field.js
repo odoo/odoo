@@ -1,4 +1,4 @@
-import { onWillRender, useChildSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
@@ -9,7 +9,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-import { Component, toRaw } from "@odoo/owl";
+import { Component, signal, toRaw, useEffect } from "@odoo/owl";
 import { localeCompare } from "@web/core/l10n/utils";
 
 /**
@@ -114,9 +114,11 @@ class ResUserGroupIdsField extends Component {
             privileges,
         };
         useChildSubEnv({
-            resUserGroupsInfo: this.info, // computed in onWillRender
+            resUserGroupsInfo: this.info,
         });
-        onWillRender(() => {
+        this.values = signal({});
+        this.shadowedGroupIds = [];
+        useEffect(() => {
             // Generate groups information based on current ids, i.e.
             //  - `id`, `name`, `privilege_id`, `comment` are kept as in the static definition
             //  - `selected` is true iff the group is explicitely selected (!= implied)
@@ -173,8 +175,8 @@ class ResUserGroupIdsField extends Component {
             }
 
             // Generate values for the dynamically generated selection and boolean fields
-            this.values = {};
-            this.shadowedGroupIds = [];
+            const values = {};
+            const shadowedGroupIds = [];
             for (const category of categories) {
                 for (const privilege of category.privileges) {
                     let groupId =
@@ -184,17 +186,19 @@ class ResUserGroupIdsField extends Component {
                     if (groupId && !options.some((option) => option[0] === groupId)) {
                         // The option has been removed because a higher level group is implied
                         // => force the value to false to show the implied group instead
-                        this.shadowedGroupIds.push(groupId);
+                        shadowedGroupIds.push(groupId);
                         groupId = false;
                     }
-                    this.values[fieldName] = groupId;
+                    values[fieldName] = groupId;
                 }
             }
             if (this.extraCategory) {
                 for (const privilege of this.extraCategory.privileges) {
-                    this.values[this.getFieldName(privilege)] = selectedIds.has(privilege.groupId);
+                    values[this.getFieldName(privilege)] = selectedIds.has(privilege.groupId);
                 }
             }
+            this.shadowedGroupIds = shadowedGroupIds;
+            this.values.set(values);
         });
 
         this.hooks = {
