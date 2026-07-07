@@ -7,6 +7,7 @@
     'author': "PoC Odoo x API_Hacienda (CRLibre)",
     'depends': ['account', 'l10n_cr'],
     'data': [
+        'data/system_params.xml',
         'security/l10n_cr_fe_security.xml',
         'security/ir.model.access.csv',
         'views/fe_config_views.xml',
