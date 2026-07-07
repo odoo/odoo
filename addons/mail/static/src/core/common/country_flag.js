@@ -1,4 +1,6 @@
-import { Component, t, useProps } from "@odoo/owl";
+import { propComputed } from "@mail/utils/common/hooks";
+
+import { Component, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -8,9 +10,7 @@ export class CountryFlag extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = useProps({
-            class: t.string().optional(),
-            country: t.instanceOf(this.store["res.country"]),
-        });
+        this.class = propComputed("class", t.string().optional());
+        this.country = propComputed("country", t.instanceOf(this.store["res.country"]));
     }
 }

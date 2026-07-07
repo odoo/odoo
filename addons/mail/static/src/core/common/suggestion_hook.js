@@ -46,6 +46,10 @@ export const optionType = (store) =>
 
 /** @typedef {import("@odoo/owl").StripType<ReturnType<typeof optionType>>} Option */
 
+/** @param {import("models").Store} store */
+export const onSelectType = (store) =>
+    t.function([t.instanceOf(Event), t.object({ option: optionType(store) })]);
+
 /**
  * @typedef {import("models").ResPartner
  *   | import("models").ResRole

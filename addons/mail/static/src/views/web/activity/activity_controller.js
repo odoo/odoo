@@ -25,6 +25,8 @@ export class ActivityController extends Component {
     setup() {
         this.archInfo = this.props.archInfo;
         this.model = proxy(useModel(this.props.Model, this.modelParams));
+        // bound once so reloadFunc stays a stable (props.static) ref down to ActivityCell
+        this.onReloadData = () => this.model.load(this.getSearchProps());
 
         this.dialog = useService("dialog");
         this.action = useService("action");
@@ -143,7 +145,7 @@ export class ActivityController extends Component {
             archInfo: this.props.archInfo,
             groupedActivities: this.model.activityData.grouped_activities,
             scheduleActivity: this.scheduleActivity.bind(this),
-            onReloadData: () => this.model.load(this.getSearchProps()),
+            onReloadData: this.onReloadData,
             onEmptyCell: this.openActivityFormView.bind(this),
             onSendMailTemplate: this.sendMailTemplate.bind(this),
             openRecord: this.openRecord.bind(this),

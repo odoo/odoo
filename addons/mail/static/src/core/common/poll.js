@@ -1,7 +1,8 @@
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
+import { propComputed } from "@mail/utils/common/hooks";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 
-import { Component, proxy, signal, types, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -14,9 +15,7 @@ export class Poll extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = useProps({
-            poll: types.instanceOf(this.store["mail.poll"]),
-        });
+        this.poll = propComputed("poll", t.instanceOf(this.store["mail.poll"]));
         /** @type {import("@odoo/owl").Signal<Element>} */
         this.rootRef = signal();
         this.state = proxy({
@@ -25,7 +24,7 @@ export class Poll extends Component {
             voting: false,
         });
         useDynamicInterval(() => {
-            const endDt = this.props.poll.poll_end_dt;
+            const endDt = this.poll().poll_end_dt;
             if (!endDt) {
                 return;
             }
@@ -52,11 +51,11 @@ export class Poll extends Component {
     }
 
     get remainingTimeTextTitle() {
-        if (!this.props.poll.poll_end_dt) {
+        if (!this.poll().poll_end_dt) {
             return "";
         }
         return _t("Poll ends on %(date)s", {
-            date: this.props.poll.poll_end_dt.toLocaleString(DateTime.DATETIME_MED),
+            date: this.poll().poll_end_dt.toLocaleString(DateTime.DATETIME_MED),
         });
     }
 
@@ -70,41 +69,53 @@ export class Poll extends Component {
 
     get isShowingResults() {
         return (
-            this.props.poll.selfAlreadyVoted ||
-            this.props.poll.end_message_id ||
+            this.poll().selfAlreadyVoted ||
+            this.poll().end_message_id ||
             this.state.isShowingResults
         );
     }
 
-    async onClickVote() {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ pollAtRender: import("models").MailPollModel }} param1
+     */
+    async onClickVote(ev, { pollAtRender }) {
         if (this.state.voting) {
             return;
         }
         try {
             this.state.voting = true;
-            await this.props.poll.vote([...this.state.selectedOptionIds]);
+            await pollAtRender.vote([...this.state.selectedOptionIds]);
         } finally {
             this.state.voting = false;
             this.state.selectedOptionIds.clear();
         }
     }
 
-    onClickNumberOfVotes() {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ pollAtRender: import("models").MailPollModel }} param1
+     */
+    onClickNumberOfVotes(ev, { pollAtRender }) {
         this.env.services.dialog.add(
             PollVotesPanel,
-            { poll: this.props.poll },
+            { poll: pollAtRender },
             { rootRef: this.rootRef }
         );
     }
 
-    onOptionCheckboxToggle(optionId, checked) {
-        if (!this.props.poll.allow_multiple_options) {
+    /**
+     * @param {Event} ev
+     * @param {{ option: import("models").MailPollOptionModel, pollAtRender: import("models").MailPollModel }} param1
+     */
+    onOptionCheckboxToggle(ev, { option, pollAtRender }) {
+        if (!pollAtRender.allow_multiple_options) {
             this.state.selectedOptionIds.clear();
         }
-        if (checked) {
-            this.state.selectedOptionIds.add(optionId);
+        if (ev.target.checked) {
+            this.state.selectedOptionIds.add(option.id);
         } else {
-            this.state.selectedOptionIds.delete(optionId);
+            this.state.selectedOptionIds.delete(option.id);
         }
     }
 

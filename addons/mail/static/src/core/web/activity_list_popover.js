@@ -1,7 +1,9 @@
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
+import { onActivityChangedType } from "@mail/core/web/activity_types";
+import { propComputed } from "@mail/utils/common/hooks";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { Component, signal, types, useOnChange, useProps } from "@odoo/owl";
+import { Component, computed, signal, types, useOnChange, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -13,19 +15,29 @@ export class ActivityListPopover extends Component {
 
     setup() {
         super.setup();
-        this.props = useProps({
-            activityIds: types.array(types.number()),
-            close: types.function([]),
-            defaultActivityTypeId: types.number().optional(),
-            onActivityChanged: types.function([]),
-            resId: types.number(),
-            /** Ids of record selection used to schedule activities in batch; it must include resId. */
-            resIds: types.array(types.number()).optional(),
-            resModel: types.string(),
-        });
         this.store = useService("mail.store");
+        this.activityIds = propComputed("activityIds", types.array(types.number()));
+        this.close = useProps.static("close", types.function([]));
+        this.defaultActivityTypeId = propComputed(
+            "defaultActivityTypeId",
+            types.number().optional()
+        );
+        this.onActivityChanged = useProps.static(
+            "onActivityChanged",
+            onActivityChangedType(this.store)
+        );
+        this.resId = propComputed("resId", types.number());
+        /** Ids of record selection used to schedule activities in batch; it must include resId. */
+        this.resIds = propComputed("resIds", types.array(types.number()).optional());
+        this.resModel = propComputed("resModel", types.string());
+        this.thread = computed(() =>
+            this.store["mail.thread"].insert({
+                model: this.resModel(),
+                id: this.resId(),
+            })
+        );
         useOnChange(
-            () => [this.props.activityIds],
+            () => [this.activityIds()],
             (activityIds) => this.store.fetchStoreData("mail.activity", { ids: activityIds })
         );
     }
@@ -34,19 +46,23 @@ export class ActivityListPopover extends Component {
         /** @type {import("models").Activity[]} */
         const allActivities = Object.values(this.store["mail.activity"].records);
         return allActivities
-            .filter((activity) => this.props.activityIds.includes(activity.id))
+            .filter((activity) => this.activityIds().includes(activity.id))
             .sort((a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id);
     }
 
-    onClickAddActivityButton() {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ threadAtRender: import("models").Thread }} param1
+     */
+    onClickAddActivityButton(ev, { threadAtRender }) {
         this.store
             .scheduleActivity(
-                this.props.resModel,
-                this.props.resIds ? this.props.resIds : [this.props.resId],
-                this.props.defaultActivityTypeId
+                threadAtRender.model,
+                this.resIds() ? this.resIds() : [threadAtRender.id],
+                this.defaultActivityTypeId()
             )
-            .then(() => this.props.onActivityChanged());
-        this.props.close();
+            .then(() => this.onActivityChanged({ thread: threadAtRender }));
+        this.close();
     }
 
     get doneActivities() {

@@ -89,7 +89,8 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             {
                 activityIds: activityEvent.rawRecord.map((a) => a.id),
                 model: this.props.model,
-                onActivityChanged: () => {
+                /** @type {ReturnType<typeof import("@mail/core/web/activity_types").onActivityChangedType>["type"]} */
+                onActivityChanged: ({ thread }) => {
                     this.props.model.load();
                 },
                 /** @type {ReturnType<typeof import("./attendee_calendar_activity_list_popover_item").onViewMeetingType>["type"]} */

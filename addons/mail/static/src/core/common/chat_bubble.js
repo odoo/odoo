@@ -2,10 +2,10 @@ import { useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
+import { Component, computed, signal, t, useEffect } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { useHover } from "@mail/utils/common/hooks";
+import { propComputed, propSignal, useHover } from "@mail/utils/common/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -18,14 +18,12 @@ class ChatBubblePreview extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = useProps({
-            chatWindow: types.instanceOf(this.store.ChatWindow),
-        });
+        this.chatWindow = propSignal("chatWindow", t.instanceOf(this.store.ChatWindow));
     }
 
     /** @returns {import("models").DiscussChannel} */
     get channel() {
-        return this.props.chatWindow.channel;
+        return this.chatWindow().channel;
     }
 
     get previewText() {
@@ -43,9 +41,7 @@ export class ChatBubble extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = useProps({
-            chatWindow: types.instanceOf(this.store.ChatWindow),
-        });
+        this.chatWindow = propComputed("chatWindow", t.instanceOf(this.store.ChatWindow));
         const popoverRef = signal.ref();
         this.isMobileOS = isMobileOS();
         this.isPopoverOpen = signal(false);
@@ -66,7 +62,7 @@ export class ChatBubble extends Component {
         this.hover = useHover([this.rootRef, popoverRef], {
             onHover: () => {
                 this.env.bus.trigger("ChatBubble:preview-will-open", this);
-                this.popover.open(this.rootRef(), { chatWindow: this.props.chatWindow });
+                this.popover.open(this.rootRef(), { chatWindow: this.chatWindow });
                 this.isPopoverOpen.set(true);
             },
             onAway: () => this.popover.close(),
@@ -77,8 +73,23 @@ export class ChatBubble extends Component {
         useSubEnv({ inChatBubble: true });
     }
 
-    /** @returns {import("models").Channel} */
     get channel() {
-        return this.props.chatWindow.channel;
+        return this.chatWindow().channel;
+    }
+
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ chatWindowAtRender: import("models").ChatWindow }} param1
+     */
+    onClick(ev, { chatWindowAtRender }) {
+        chatWindowAtRender.open({ focus: true });
+    }
+
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ chatWindowAtRender: import("models").ChatWindow }} param1
+     */
+    onClickClose(ev, { chatWindowAtRender }) {
+        chatWindowAtRender.requestClose();
     }
 }

@@ -16,11 +16,9 @@ patch(MessagingMenuCallParticipants.prototype, {
             "o-active cursor-pointer rounded-4": Boolean(session.persona?.main_user_id),
         };
     },
-    /**
-     * @param {MouseEvent} ev
-     * @param {import("models").RtcSession} session
-     */
-    onClickParticipant(ev, session) {
+    /** @override */
+    onClickParticipant(ev, { session }) {
+        super.onClickParticipant(...arguments);
         if (!session.persona?.main_user_id) {
             return;
         }

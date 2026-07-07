@@ -1,5 +1,6 @@
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
+import { onActivityChangedType } from "@mail/core/web/activity_types";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { computeDelay } from "@mail/utils/common/dates";
@@ -21,7 +22,11 @@ export class ActivityListPopoverItem extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"]));
-        this.onActivityChanged = useProps.static("onActivityChanged", t.function([]).optional());
+        this.thread = computed(() => this.activity().thread);
+        this.onActivityChanged = useProps.static(
+            "onActivityChanged",
+            onActivityChangedType(this.store).optional()
+        );
         this.onClickDoneAndScheduleNext = useProps.static(
             "onClickDoneAndScheduleNext",
             t.function([]).optional()
@@ -36,14 +41,7 @@ export class ActivityListPopoverItem extends Component {
         // bound once so `close` can be passed as a stable (useProps.static) handler
         this.closeMarkDoneView = () => this.hasMarkDoneView.set(false);
         if (this.activity().activity_category === "upload_file") {
-            this.attachmentUploader = useAttachmentUploader(
-                computed(() =>
-                    this.store["mail.thread"].insert({
-                        model: this.activity().res_model,
-                        id: this.activity().res_id,
-                    })
-                )
-            );
+            this.attachmentUploader = useAttachmentUploader(this.thread);
         }
     }
 
@@ -81,11 +79,14 @@ export class ActivityListPopoverItem extends Component {
         return this.activity().state !== "done" && !this.hasFileUploader;
     }
 
-    onClickEditActivityButton() {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ activityAtRender: import("models").Activity }} param1
+     */
+    onClickEditActivityButton(ev, { activityAtRender }) {
+        const thread = activityAtRender.thread;
         this.onClickEditActivityButtonProp?.();
-        this.activity()
-            .edit()
-            .then(() => this.onActivityChanged?.());
+        activityAtRender.edit().then(() => this.onActivityChanged?.({ thread }));
     }
 
     onClickAssignButton(ev) {
@@ -96,16 +97,21 @@ export class ActivityListPopoverItem extends Component {
         this.assignPopover.open(ev.currentTarget, {
             activity: this.activity,
             hasHeader: true,
-            onActivityChanged: (thread) => this.onActivityChanged?.(thread),
+            /** @type {ReturnType<typeof import("@mail/core/web/activity_types").onActivityChangedType>["type"]} */
+            onActivityChanged: ({ thread }) => this.onActivityChanged?.({ thread }),
         });
     }
 
-    async onFileUploaded(data) {
-        const activity = this.activity();
+    /**
+     * @param {Object} data
+     * @param {{ activityAtRender: import("models").Activity }} param1
+     */
+    async onFileUploaded(data, { activityAtRender }) {
+        const thread = activityAtRender.thread;
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
-            activity,
+            activity: activityAtRender,
         });
-        await activity.markAsDone([attachmentId]);
-        this.onActivityChanged?.();
+        await activityAtRender.markAsDone([attachmentId]);
+        this.onActivityChanged?.({ thread });
     }
 }

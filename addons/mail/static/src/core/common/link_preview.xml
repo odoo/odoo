@@ -58,7 +58,7 @@
         <div class="o-mail-LinkPreviewImage mb-2 rounded" t-att-class="{ 'me-2': this.env.inChatter }" t-attf-class="{{ this.className }}">
             <div class="position-relative d-inline-block">
                 <a t-if="this.linkPreview.imageUrl" t-att-href="this.linkPreview.imageUrl" target="_blank">
-                    <Gif t-if="this.linkPreview.isGif" paused="this.props.messageLinkPreview.gifPaused" class="'h-auto w-auto rounded'" src="this.linkPreview.imageUrl" onLoad.bind="this.onImageLoaded"/>
+                    <Gif t-if="this.linkPreview.isGif" paused="this.messageLinkPreview().gifPaused" class="'h-auto w-auto rounded'" src="this.linkPreview.imageUrl" onLoad.bind="this.onImageLoaded"/>
                     <img t-else="" class="h-auto w-auto rounded" t-att-src="this.linkPreview.imageUrl" t-on-load="this.onImageLoaded"/>
                 </a>
                 <t t-call="mail.LinkPreview.aside"
@@ -93,8 +93,9 @@
     </t>
 
     <t t-name="mail.LinkPreview.aside">
-        <div t-if="this.props.messageLinkPreview.message_id?.allowsEdition and !this.env.inLinkPreviewConfirmDelete" class="position-absolute top-0 end-0 small">
-            <button t-attf-class="{{ className }}" class="o-mail-LinkPreview-aside btn" aria-label="Remove" t-on-click="this.onClick">
+        <div t-if="this.messageLinkPreview().message_id?.allowsEdition and !this.env.inLinkPreviewConfirmDelete" class="position-absolute top-0 end-0 small">
+            <t t-set="messageLinkPreviewAtRender" t-value="this.messageLinkPreview()"/>
+            <button t-attf-class="{{ className }}" class="o-mail-LinkPreview-aside btn" aria-label="Remove" t-on-click="(ev) => this.onClick(ev, { messageLinkPreviewAtRender })">
                 <i class="oi" data-icon="close"/>
             </button>
         </div>

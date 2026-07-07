@@ -19,7 +19,8 @@ export class MailFullComposerSuggestionPlugin extends Plugin {
         });
     }
 
-    onSelect(ev, option) {
+    /** @type {ReturnType<typeof import("@mail/core/common/suggestion_hook").onSelectType>["type"]} */
+    onSelect(ev, { option }) {
         this.dependencies.selection.focusEditable();
         const mentionBlock = makeMentionFromOption(option, { thread: this.config.thread });
         if (!mentionBlock) {

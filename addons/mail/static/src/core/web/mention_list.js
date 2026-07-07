@@ -6,10 +6,10 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { SearchInput } from "@mail/core/common/search_input";
 import {
     mapSuggestionsToOptions,
-    optionType,
+    onSelectType,
     SUGGESTION_DELIMITERS,
 } from "@mail/core/common/suggestion_hook";
-import { useSearch } from "@mail/utils/common/hooks";
+import { propComputed, useSearch } from "@mail/utils/common/hooks";
 
 export class MentionList extends Component {
     static template = "mail.MentionList";
@@ -17,29 +17,31 @@ export class MentionList extends Component {
 
     setup() {
         super.setup();
+        this.onSelectSuggestion = this.onSelectSuggestion.bind(this);
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        this.props = useProps({
-            close: t.function([]).optional(() => {}),
-            composerType: t.string(),
-            onSelect: t.function([t.instanceOf(Event), optionType(this.store), t.record()]),
-            thread: t.instanceOf(this.store["mail.thread"]).optional(),
-            type: t.string(),
-        });
+        this.onSelect = useProps.static("onSelect", onSelectType(this.store));
+        this.close = useProps.static(
+            "close",
+            t.function([]).optional(() => {})
+        );
+        this.composerType = propComputed("composerType", t.string());
+        this.thread = propComputed("thread", t.instanceOf(this.store["mail.thread"]).optional());
+        this.type = propComputed("type", t.string());
         this.suggestionService = useService("mail.suggestion");
         this.anchorRef = signal.ref();
         this.search = useSearch({
             fetch: (term) =>
                 this.suggestionService.fetchSuggestions(
                     { delimiter: this.delimiter, term },
-                    { composerType: this.props.composerType, thread: this.props.thread }
+                    { composerType: this.composerType(), thread: this.thread() }
                 ),
             filter: (term) =>
                 this.suggestionService.searchSuggestions(
                     { delimiter: this.delimiter, term },
-                    { composerType: this.props.composerType, thread: this.props.thread }
+                    { composerType: this.composerType(), thread: this.thread() }
                 ).suggestions,
-            deps: () => [this.delimiter, this.props.thread],
+            deps: () => [this.delimiter, this.thread()],
         });
     }
 
@@ -48,7 +50,7 @@ export class MentionList extends Component {
     }
 
     get placeholder() {
-        switch (this.props.type) {
+        switch (this.type()) {
             case "Partner":
                 return _t("Search for a user...");
             default:
@@ -56,17 +58,20 @@ export class MentionList extends Component {
         }
     }
 
+    /** @type {ReturnType<typeof import("@mail/core/common/suggestion_hook").onSelectType>["type"]} */
+    onSelectSuggestion(...args) {
+        this.onSelect(...args);
+        this.close?.();
+    }
+
     get navigableListProps() {
         return {
             anchorRef: this.anchorRef,
             position: "bottom-fit",
             isLoading: !!this.search.searchTerm && this.search.loading,
-            onSelect: (...args) => {
-                this.props.onSelect(...args);
-                this.props.close();
-            },
-            ...mapSuggestionsToOptions(this.props.type, this.search.results, {
-                thread: this.props.thread,
+            onSelect: this.onSelectSuggestion,
+            ...mapSuggestionsToOptions(this.type(), this.search.results, {
+                thread: this.thread(),
             }),
         };
     }
@@ -74,7 +79,7 @@ export class MentionList extends Component {
     onKeydown(ev) {
         switch (ev.key) {
             case "Escape": {
-                this.props.close();
+                this.close?.();
                 break;
             }
         }

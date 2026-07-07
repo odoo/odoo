@@ -1,6 +1,6 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
-import { optionType } from "@mail/core/common/suggestion_hook";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { onSelectType, optionType } from "@mail/core/common/suggestion_hook";
+import { onExternalClick, propComputed, propSignal } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
 import { Component, proxy, signal, t, useListener, useOnChange, useProps } from "@odoo/owl";
@@ -37,18 +37,16 @@ export class NavigableList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.onSelect = useProps.static("onSelect", onSelectType(this.store));
         const option = optionType(this.store);
-        this.props = useProps({
-            anchorRef: t.signal(t.instanceOf(HTMLElement)).optional(),
-            class: t.string().optional(),
-            closeOnSelect: t.boolean().optional(true),
-            isLoading: t.boolean().optional(false),
-            onSelect: t.function([t.instanceOf(Event), option, t.record()]),
-            options: t.array(option),
-            optionTemplate: t.string().optional(),
-            position: t.string().optional("bottom"),
-            rememberPosition: t.boolean().optional(),
-        });
+        this.anchorRef = propSignal("anchorRef", t.ref(), { optional: true });
+        this.class = propComputed("class", t.string().optional());
+        this.closeOnSelect = propComputed("closeOnSelect", t.boolean().optional(true));
+        this.isLoading = propComputed("isLoading", t.boolean().optional(false));
+        this.options = propComputed("options", t.array(option));
+        this.optionTemplate = propComputed("optionTemplate", t.string().optional());
+        this.position = propComputed("position", t.string().optional("bottom"));
+        this.rememberPosition = propComputed("rememberPosition", t.boolean().optional());
         this.state = proxy({
             activeIndex: null,
             open: false,
@@ -66,19 +64,19 @@ export class NavigableList extends Component {
             this.close();
         });
         // position and size
-        usePosition(this.rootRef, () => this.props.anchorRef?.(), {
-            position: this.props.position,
-            rememberPosition: this.props.rememberPosition,
+        usePosition(this.rootRef, () => this.anchorRef?.(), {
+            position: this.position(),
+            rememberPosition: this.rememberPosition(),
         });
         useOnChange(
             // Open on mount and when a new set of options arrives. In particular,
             // do not re-open on unrelated re-renders after the user closed the
             // list (Escape, click away): the options are then the same.
-            () => [optionsToString(this.props.options)],
+            () => [optionsToString(this.options())],
             () => this.open()
         );
         useOnChange(
-            () => [this.props.isLoading],
+            () => [this.isLoading()],
             (isLoading) => {
                 if (isLoading) {
                     const loadingTimeoutId = setTimeout(
@@ -95,11 +93,11 @@ export class NavigableList extends Component {
     }
 
     get show() {
-        return Boolean(this.state.open && (this.props.isLoading || this.props.options.length));
+        return Boolean(this.state.open && (this.isLoading() || this.options().length));
     }
 
     get sortedOptions() {
-        return this.props.options.sort((o1, o2) => (o1.group ?? 0) - (o2.group ?? 0));
+        return this.options().sort((o1, o2) => (o1.group ?? 0) - (o2.group ?? 0));
     }
 
     open() {
@@ -109,14 +107,18 @@ export class NavigableList extends Component {
     }
 
     close() {
-        if (this.props.closeOnSelect) {
+        if (this.closeOnSelect()) {
             this.state.open = false;
             this.state.activeIndex = null;
         }
     }
 
-    selectOption(ev, index, params = {}) {
-        const option = this.props.options[index];
+    /**
+     * @param {Event} ev
+     * @param {import("@mail/core/common/suggestion_hook").Option} option
+     * @param {Object} [params]
+     */
+    selectOption(ev, option, params = {}) {
         if (!option) {
             return;
         }
@@ -124,14 +126,12 @@ export class NavigableList extends Component {
             this.close();
             return;
         }
-        this.props.onSelect(ev, option, {
-            ...params,
-        });
+        this.onSelect(ev, { option, ...params });
         this.close();
     }
 
     navigate(direction) {
-        if (this.props.options.length === 0) {
+        if (this.options().length === 0) {
             return;
         }
         const activeOptionId = this.state.activeIndex !== null ? this.state.activeIndex : 0;
@@ -141,7 +141,7 @@ export class NavigableList extends Component {
                 targetId = 0;
                 break;
             case "last":
-                targetId = this.props.options.length - 1;
+                targetId = this.options().length - 1;
                 break;
             case "previous":
                 targetId = activeOptionId - 1;
@@ -152,7 +152,7 @@ export class NavigableList extends Component {
                 break;
             case "next":
                 targetId = activeOptionId + 1;
-                if (targetId > this.props.options.length - 1) {
+                if (targetId > this.options().length - 1) {
                     this.navigate("first");
                     return;
                 }
@@ -178,7 +178,7 @@ export class NavigableList extends Component {
                     return;
                 }
                 markEventHandled(ev, "NavigableList.select");
-                this.selectOption(ev, this.state.activeIndex);
+                this.selectOption(ev, this.sortedOptions[this.state.activeIndex]);
                 break;
             case "escape":
                 markEventHandled(ev, "NavigableList.close");
@@ -196,7 +196,7 @@ export class NavigableList extends Component {
             default:
                 return;
         }
-        if (this.props.options.length !== 0) {
+        if (this.options().length !== 0) {
             ev.stopPropagation();
         }
         ev.preventDefault();

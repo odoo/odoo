@@ -950,8 +950,8 @@ export function propComputed(name, shape) {
  * @template S
  * @param {string} name
  * @param {S} shape shape of the final value (e.g. `t.number()`)
- * @param {object} [options]
- * @param {boolean} [options.optional]
+ * @param {{ optional?: boolean }} [options] pass `{ optional: true }` if the parent may omit the
+ *   prop; the resulting signal is then `undefined` when omitted (read it with `?.()`).
  * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>}
  */
 export function propSignal(name, shape, { optional = false } = {}) {

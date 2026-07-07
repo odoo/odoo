@@ -1,4 +1,5 @@
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
+import { propComputed } from "@mail/utils/common/hooks";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
@@ -18,34 +19,35 @@ export class ActivityCell extends Component {
     contentRef = signal.ref();
 
     setup() {
-        this.props = useProps({
-            activityIds: t.array(t.number()),
-            activityTypeId: t.number(),
-            attachmentsInfo: t
+        this.activityIds = propComputed("activityIds", t.array(t.number()));
+        this.activityTypeId = propComputed("activityTypeId", t.number());
+        this.attachmentsInfo = propComputed(
+            "attachmentsInfo",
+            t
                 .object({
                     count: t.number(),
                     most_recent_id: t.number(),
                     most_recent_name: t.string(),
                 })
-                .optional(),
-            countByState: t.record(t.number()),
-            reloadFunc: t.function([]),
-            reportingDate: t.string(),
-            resId: t.number(),
-            resModel: t.string(),
-            summaries: t.array(),
-            userAssignedIds: t.array(t.number()),
-            roleToAssignIds: t.array(t.number()).optional(),
-        });
+                .optional()
+        );
+        this.countByState = propComputed("countByState", t.record(t.number()));
+        this.reloadFunc = useProps.static("reloadFunc", t.function([]));
+        this.reportingDate = propComputed("reportingDate", t.string());
+        this.resId = propComputed("resId", t.number());
+        this.resModel = propComputed("resModel", t.string());
+        this.roleToAssignIds = propComputed("roleToAssignIds", t.array(t.number()).optional());
+        this.summaries = propComputed("summaries", t.array());
+        this.userAssignedIds = propComputed("userAssignedIds", t.array(t.number()));
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
     }
 
     get reportingDateFormatted() {
-        return formatDate(luxon.DateTime.fromISO(this.props.reportingDate));
+        return formatDate(luxon.DateTime.fromISO(this.reportingDate()));
     }
     get displayedSummaries() {
-        const summariesWithContent = this.props.summaries.filter((textContent) => !!textContent);
-        const extras = this.props.summaries.length - summariesWithContent.length;
+        const summariesWithContent = this.summaries().filter((textContent) => !!textContent);
+        const extras = this.summaries().length - summariesWithContent.length;
         if (summariesWithContent.length > 0 && extras > 0) {
             summariesWithContent.push(_t("%(extraCount)s more", { extraCount: extras }));
         }
@@ -54,29 +56,34 @@ export class ActivityCell extends Component {
 
     get ongoingActivityCount() {
         return (
-            (this.props.countByState?.planned ?? 0) +
-            (this.props.countByState?.today ?? 0) +
-            (this.props.countByState?.overdue ?? 0)
+            (this.countByState()?.planned ?? 0) +
+            (this.countByState()?.today ?? 0) +
+            (this.countByState()?.overdue ?? 0)
         );
     }
 
     get totalActivityCount() {
-        return this.ongoingActivityCount + (this.props.countByState?.done ?? 0);
+        return this.ongoingActivityCount + (this.countByState()?.done ?? 0);
     }
 
-    onClick() {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ resIdAtRender: number, resModelAtRender: string }} param1
+     */
+    onClick(ev, { resIdAtRender, resModelAtRender }) {
         if (this.popover.isOpen) {
             this.popover.close();
         } else {
             this.popover.open(this.contentRef(), {
-                activityIds: this.props.activityIds,
-                defaultActivityTypeId: this.props.activityTypeId,
-                onActivityChanged: () => {
-                    this.props.reloadFunc();
+                activityIds: this.activityIds(),
+                defaultActivityTypeId: this.activityTypeId(),
+                /** @type {ReturnType<typeof import("@mail/core/web/activity_types").onActivityChangedType>["type"]} */
+                onActivityChanged: ({ thread }) => {
+                    this.reloadFunc();
                     this.popover.close();
                 },
-                resId: this.props.resId,
-                resModel: this.props.resModel,
+                resId: resIdAtRender,
+                resModel: resModelAtRender,
             });
         }
     }

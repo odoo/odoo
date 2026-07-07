@@ -52,7 +52,7 @@
                             <sup t-else="" class="o-mail-Followers-counter" t-out="this.state.thread.followersCount ?? 0"/>
                         </button>
                         <t t-set-slot="content">
-                            <FollowerList onAddFollowers.bind="this.onAddFollowers" onFollowerChanged.bind="this.onFollowerChanged" thread="this.state.thread" dropdown="this.followerListDropdown"/>
+                            <FollowerList onAddFollowers="this.onAddFollowers" onFollowerChanged="this.onFollowerChanged" thread="this.state.thread" dropdown="this.followerListDropdown"/>
                         </t>
                     </Dropdown>
                 </div>
@@ -79,7 +79,7 @@
                     <div class="d-flex flex-column">
                         <AttachmentList
                             attachments="this.attachments"
-                            unlinkAttachment.bind="this.unlinkAttachment"
+                            unlinkAttachment="this.unlinkAttachment"
                         />
                         <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
                             <t t-set-slot="toggler">
@@ -146,7 +146,7 @@
         </div>
         <div t-if="this.state.showScheduledMessages">
             <t t-foreach="this.scheduledMessages" t-as="scheduledMessage" t-key="scheduledMessage.id">
-                <ScheduledMessage scheduledMessage="scheduledMessage" onScheduledMessageChanged.bind="this.onScheduledMessageChanged"/>
+                <ScheduledMessage scheduledMessage="scheduledMessage" onScheduledMessageChanged="this.onScheduledMessageChanged"/>
             </t>
         </div>
     </div>

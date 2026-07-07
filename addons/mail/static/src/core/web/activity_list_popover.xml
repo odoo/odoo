@@ -10,7 +10,7 @@
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-danger mx-3 align-self-center" t-out="this.overdueActivities.length"/>
                     </div>
-                    <ActivityListPopoverItem t-foreach="this.overdueActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.props.onActivityChanged" onClickEditActivityButton="this.props.close" onClickDoneAndScheduleNext="this.props.close"/>
+                    <ActivityListPopoverItem t-foreach="this.overdueActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.onActivityChanged" onClickEditActivityButton="this.close" onClickDoneAndScheduleNext="this.close"/>
                 </t>
                 <t t-if="this.todayActivities.length > 0">
                     <div class="d-flex bg-100 py-2 border-bottom">
@@ -18,7 +18,7 @@
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-warning mx-3 align-self-center" t-out="this.todayActivities.length"/>
                     </div>
-                    <ActivityListPopoverItem t-foreach="this.todayActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.props.onActivityChanged" onClickEditActivityButton="this.props.close" onClickDoneAndScheduleNext="this.props.close"/>
+                    <ActivityListPopoverItem t-foreach="this.todayActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.onActivityChanged" onClickEditActivityButton="this.close" onClickDoneAndScheduleNext="this.close"/>
                 </t>
                 <t t-if="this.plannedActivities.length > 0">
                     <div class="d-flex bg-100 py-2 border-bottom">
@@ -26,7 +26,7 @@
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-success mx-3 align-self-center" t-out="this.plannedActivities.length"/>
                     </div>
-                    <ActivityListPopoverItem t-foreach="this.plannedActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.props.onActivityChanged" onClickEditActivityButton="this.props.close" onClickDoneAndScheduleNext="this.props.close"/>
+                    <ActivityListPopoverItem t-foreach="this.plannedActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.onActivityChanged" onClickEditActivityButton="this.close" onClickDoneAndScheduleNext="this.close"/>
                 </t>
                 <t t-if="this.doneActivities.length > 0">
                     <div class="o-mail-ActivityListPopover-done d-flex bg-100 py-2 border-bottom">
@@ -34,11 +34,12 @@
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-secondary mx-3 align-self-center" t-out="this.doneActivities.length"/>
                     </div>
-                    <ActivityListPopoverItem t-foreach="this.doneActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.props.onActivityChanged"/>
+                    <ActivityListPopoverItem t-foreach="this.doneActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.onActivityChanged"/>
                 </t>
             </div>
-            <button class="btn btn-secondary p-3 text-center" t-on-click="this.onClickAddActivityButton">
-                <t t-if="this.props.resIds"><i class="oi oi-fw" data-icon="add"/><strong>Schedule an activity on selected records</strong></t>
+            <t t-set="threadAtRender" t-value="this.thread()"/>
+            <button class="btn btn-secondary p-3 text-center" t-on-click="(ev) => this.onClickAddActivityButton(ev, { threadAtRender })">
+                <t t-if="this.resIds()"><i class="oi oi-fw" data-icon="add"/><strong>Schedule an activity on selected records</strong></t>
                 <t t-else=""><i class="oi oi-fw" data-icon="add"/><strong>Schedule an activity</strong></t>
             </button>
         </div>

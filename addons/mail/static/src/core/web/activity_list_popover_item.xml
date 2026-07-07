@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.ActivityListPopoverItem">
         <div class="o-mail-ActivityListPopoverItem d-flex flex-column border-bottom py-2">
+            <t t-set="activityAtRender" t-value="this.activity()"/>
             <div class="overflow-auto d-flex align-items-baseline ms-3 me-1">
                 <span class="o-mail-ActivityListPopoverItem-name flex-grow-1 flex-basis-0 text-truncate">
                     <t t-if="this.activity().summary">
@@ -15,7 +16,7 @@
                     <i class="oi oi-filled" data-icon="person" role="img" aria-label="Assign"/>
                 </button>
                 <t t-if="this.activity().can_write">
-                    <FileUploader t-if="this.hasFileUploader" onUploaded.bind="this.onFileUploaded">
+                    <FileUploader t-if="this.hasFileUploader" onUploaded="(data) => this.onFileUploaded(data, { activityAtRender })">
                         <t t-set-slot="toggler">
                             <button class="btn btn-sm btn-success btn-link" title="Upload file" aria-label="Upload File">
                                 <i class="oi" data-icon="upload"/>
@@ -26,7 +27,7 @@
                         <i class="oi" data-icon="check"/>
                     </button>
                 </t>
-                <button t-if="this.hasEditButton" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" title="Edit" aria-label="Edit" t-on-click="this.onClickEditActivityButton">
+                <button t-if="this.hasEditButton" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" title="Edit" aria-label="Edit" t-on-click="(ev) => this.onClickEditActivityButton(ev, { activityAtRender })">
                     <i class="oi oi-filled" data-icon="edit"/>
                 </button>
             </div>

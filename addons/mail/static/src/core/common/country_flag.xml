@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.CountryFlag">
-        <img class="o-mail-CountryFlag" t-att-class="this.props.class" t-att-title="this.props.country.name" t-att-src="this.props.country.flagUrl"/>
+        <img class="o-mail-CountryFlag" t-att-class="this.class()" t-att-title="this.country().name" t-att-src="this.country().flagUrl"/>
     </t>
 
 </templates>

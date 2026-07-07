@@ -1,9 +1,11 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, types, useProps } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { propComputed } from "@mail/utils/common/hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { onFollowerChangedType } from "@mail/core/web/follower_types";
 
 export class Follower extends Component {
     static template = "mail.Follower";
@@ -11,35 +13,49 @@ export class Follower extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.props = useProps({
-            close: types.function([]).optional(),
-            follower: types.instanceOf(this.store["mail.followers"]),
-            onFollowerChanged: types.function([]).optional(),
-        });
+        this.close = useProps.static("close", t.function([]).optional());
+        this.follower = propComputed("follower", t.instanceOf(this.store["mail.followers"]));
+        this.onFollowerChanged = useProps.static(
+            "onFollowerChanged",
+            onFollowerChangedType(this.store).optional()
+        );
         this.avatarCard = usePopover(AvatarCard, { position: "right" });
     }
 
-    onClickDetails(ev) {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ followerAtRender: import("models").Follower }} param1
+     */
+    onClickDetails(ev, { followerAtRender }) {
         if (this.avatarCard.isOpen) {
             return;
         }
         this.avatarCard.open(ev.currentTarget, {
-            id: this.props.follower.partner_id.id,
+            id: followerAtRender.partner_id.id,
             model: "res.partner",
         });
     }
 
-    async onClickEdit() {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ followerAtRender: import("models").Follower }} param1
+     */
+    async onClickEdit(ev, { followerAtRender }) {
         this.env.services.dialog.add(FollowerSubtypeDialog, {
-            follower: this.props.follower,
-            onFollowerChanged: (thread) => this.props.onFollowerChanged?.(thread),
+            follower: followerAtRender,
+            /** @type {ReturnType<typeof onFollowerChangedType>["type"]} */
+            onFollowerChanged: ({ thread }) => this.onFollowerChanged?.({ thread }),
         });
-        this.props.close?.();
+        this.close?.();
     }
 
-    async onClickRemove() {
-        const thread = this.props.follower.thread;
-        await this.props.follower.remove();
-        this.props.onFollowerChanged?.(thread);
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ followerAtRender: import("models").Follower }} param1
+     */
+    async onClickRemove(ev, { followerAtRender }) {
+        const thread = followerAtRender.thread;
+        await followerAtRender.remove();
+        this.onFollowerChanged?.({ thread });
     }
 }

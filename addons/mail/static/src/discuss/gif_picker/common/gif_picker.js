@@ -42,6 +42,8 @@ const tenorGifType = t.object({
 });
 /** @typedef {import("@odoo/owl").StripType<typeof tenorGifType>} TenorGif */
 
+export const onSelectGifType = () => t.function([t.object({ gif: tenorGifType })]);
+
 export class GifPicker extends Component {
     static template = "discuss.GifPicker";
     static components = { Gif };
@@ -51,12 +53,10 @@ export class GifPicker extends Component {
 
     setup() {
         super.setup();
-        this.props = useProps({
-            close: t.function([]).optional(),
-            onSelect: t.function([tenorGifType, t.boolean()]),
-        });
+        this.onSelect = useProps.static("onSelect", onSelectGifType());
         this.orm = useService("orm");
         this.store = useService("mail.store");
+        this.close = useProps.static("close", t.function([]).optional());
         this.sequential = useSequential();
         useAutofocus({ ref: this.autofocusRef });
         useOnBottomScrolled(
@@ -227,8 +227,8 @@ export class GifPicker extends Component {
      * @param {TenorGif} gif
      */
     onClickGif(gif) {
-        this.props.onSelect(gif, true);
-        this.props.close?.();
+        this.onSelect({ gif });
+        this.close?.();
     }
 
     clear() {

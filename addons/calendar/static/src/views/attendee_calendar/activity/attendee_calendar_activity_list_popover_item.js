@@ -92,33 +92,35 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
     /**
      * Remove the activity from the list when uploading a document
      * (i.e. when an activity of type Document is marked as done).
+     * @param {Object} data
+     * @param {{ activityAtRender: import("models").Activity }} param1
      */
-    async onFileUploaded(data) {
-        const activity = this.activity();
-        await super.onFileUploaded(data);
-        activity.remove();
-        this.calendarProps.onRemoveActivityItem(activity.id);
+    async onFileUploaded(data, { activityAtRender }) {
+        await super.onFileUploaded(...arguments);
+        activityAtRender.remove();
+        this.calendarProps.onRemoveActivityItem(activityAtRender.id);
     }
 
     /**
      * Reschedule the activity to a specific date.
      * @param {Object} targetDay
+     * @param {{ activityAtRender: import("models").Activity }} param1
      */
-    onRescheduleActivity(targetDay) {
+    onRescheduleActivity(targetDay, { activityAtRender }) {
         // Do nothing if rescheduled on same date.
-        if (targetDay.day.hasSame(this.activity().date_deadline, "day")) {
+        if (targetDay.day.hasSame(activityAtRender.date_deadline, "day")) {
             return;
         }
-        const activity = this.activity();
+        const thread = activityAtRender.thread;
         this.action.doActionButton({
             type: "object",
             name: targetDay.actionName,
             resModel: "mail.activity",
-            resId: activity.id,
+            resId: activityAtRender.id,
             onClose: () => {
-                activity.remove();
-                this.calendarProps.onRemoveActivityItem(activity.id);
-                this.onActivityChanged?.();
+                activityAtRender.remove();
+                this.calendarProps.onRemoveActivityItem(activityAtRender.id);
+                this.onActivityChanged?.({ thread });
             },
         });
     }

@@ -15,6 +15,7 @@ import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
 import { attClassObjectToString } from "@mail/utils/common/format";
+import { propComputed } from "@mail/utils/common/hooks";
 
 class Actions extends Component {
     static components = { Dropdown, DropdownItem };
@@ -35,6 +36,10 @@ class Actions extends Component {
     }
 }
 
+/** @param {import("models").Store} store */
+export const unlinkAttachmentType = (store) =>
+    t.function([t.object({ attachment: t.instanceOf(store["ir.attachment"]) })]);
+
 export class AttachmentList extends Component {
     static components = { Actions, Gif };
     static template = "mail.AttachmentList";
@@ -46,11 +51,18 @@ export class AttachmentList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = useProps({
-            attachments: t.array(t.instanceOf(this.store["ir.attachment"])),
-            messageSearch: t.instanceOf(MessageSearchState).optional(),
-            unlinkAttachment: t.function([t.instanceOf(this.store["ir.attachment"])]),
-        });
+        this.unlinkAttachment = useProps.static(
+            "unlinkAttachment",
+            unlinkAttachmentType(this.store)
+        );
+        this.attachments = propComputed(
+            "attachments",
+            t.array(t.instanceOf(this.store["ir.attachment"]))
+        );
+        this.messageSearch = propComputed(
+            "messageSearch",
+            t.instanceOf(MessageSearchState).optional()
+        );
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.fileViewer = useFileViewer(this.rootRef);
@@ -78,9 +90,10 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @param {import("models").Attachment} attachment
+     * @param {MouseEvent} ev
+     * @param {{ attachment: import("models").Attachment }} param1
      */
-    onClickDownload(attachment) {
+    onClickDownload(ev, { attachment }) {
         download({
             data: {},
             url: attachment.downloadUrl,
@@ -92,11 +105,12 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @param {import("models").Attachment} attachment
+     * @param {MouseEvent} ev
+     * @param {{ attachment: import("models").Attachment }} param1
      */
-    onClickUnlink(attachment) {
+    onClickUnlink(ev, { attachment }) {
         if (this.env.inComposer) {
-            this.props.unlinkAttachment(attachment);
+            this.unlinkAttachment({ attachment });
             return true;
         }
         if (this.hasUnlinkConfirmation(attachment)) {
@@ -110,29 +124,33 @@ export class AttachmentList extends Component {
                     confirmLabel: _t("Delete Attachment"),
                     cancel: () => resolve(false),
                     confirm: () => {
-                        this.onConfirmUnlink(attachment);
+                        this.onConfirmUnlink({ attachment });
                         resolve(true);
                     },
                 });
             });
         } else {
-            this.onConfirmUnlink(attachment);
+            this.onConfirmUnlink({ attachment });
             return true;
         }
     }
 
-    onClickAttachment(attachment) {
-        this.fileViewer.open(attachment, this.props.attachments, {
-            onUnlink: this.onClickUnlink.bind(this),
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ attachment: import("models").Attachment }} param1
+     */
+    onClickAttachment(ev, { attachment }) {
+        this.fileViewer.open(attachment, this.attachments(), {
+            onUnlink: (file) => this.onClickUnlink(undefined, { attachment: file }),
             canUnlink: (file) => this.showDelete(file),
         });
     }
 
     /**
-     * @param {import("models").Attachment} attachment
+     * @param {{ attachment: import("models").Attachment }} param0
      */
-    async onConfirmUnlink(attachment) {
-        await this.props.unlinkAttachment(attachment);
+    async onConfirmUnlink({ attachment }) {
+        await this.unlinkAttachment({ attachment });
     }
 
     onImageLoaded() {
@@ -154,14 +172,14 @@ export class AttachmentList extends Component {
                 label: _t("Remove"),
                 icon: "delete",
                 icon_class: "oi-filled",
-                onSelect: () => this.onClickUnlink(attachment),
+                onSelect: (ev) => this.onClickUnlink(ev, { attachment }),
             });
         }
         if (this.canDownload(attachment)) {
             res.push({
                 label: _t("Download"),
                 icon: "download",
-                onSelect: () => this.onClickDownload(attachment),
+                onSelect: (ev) => this.onClickDownload(ev, { attachment }),
             });
         }
         return res;
@@ -179,7 +197,7 @@ export class AttachmentList extends Component {
         return (
             !this.env.message ||
             this.env.message.hasTextContent ||
-            (this.env.message && this.props.attachments.length > 1)
+            (this.env.message && this.attachments().length > 1)
         );
     }
 

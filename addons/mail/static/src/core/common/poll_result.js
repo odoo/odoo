@@ -1,4 +1,6 @@
-import { Component, types, useProps } from "@odoo/owl";
+import { propComputed } from "@mail/utils/common/hooks";
+
+import { Component, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -8,15 +10,17 @@ export class PollResult extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = useProps({
-            poll: types.instanceOf(this.store["mail.poll"]),
-        });
+        this.poll = propComputed("poll", t.instanceOf(this.store["mail.poll"]));
     }
 
-    onClickViewPoll() {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ pollAtRender: import("models").MailPollModel }} param1
+     */
+    onClickViewPoll(ev, { pollAtRender }) {
         this.env.messageHighlight.highlightMessage(
-            this.props.poll.start_message_id,
-            this.props.poll.start_message_id.thread
+            pollAtRender.start_message_id,
+            pollAtRender.start_message_id.thread
         );
     }
 }

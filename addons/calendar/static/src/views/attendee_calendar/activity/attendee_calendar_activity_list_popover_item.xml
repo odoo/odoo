@@ -19,7 +19,7 @@
                     <i class="oi oi-filled o_button_icon" data-icon="calendar_today"/>
                 </button>
                 <t t-set-slot="content">
-                    <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.today)">
+                    <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.today, { activityAtRender })">
                         <div class="d-flex justify-content-between">
                             <span>
                                 <i class="oi me-1" data-icon="early_on"/> Today
@@ -27,7 +27,7 @@
                             <span t-out="this.targetDays.today.day.weekdayShort" class="ms-2 text-muted"/>
                         </div>
                     </DropdownItem>
-                    <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.tomorrow)">
+                    <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.tomorrow, { activityAtRender })">
                         <div class="d-flex justify-content-between">
                             <span>
                                 <i class="oi me-1" data-icon="event_upcoming"/> Tomorrow
@@ -35,7 +35,7 @@
                             <span t-out="this.targetDays.tomorrow.day.weekdayShort" class="ms-2 text-muted"/>
                         </div>
                     </DropdownItem>
-                    <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.nextWeek)">
+                    <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.nextWeek, { activityAtRender })">
                         <div class="d-flex justify-content-between">
                             <span>
                                 <i class="oi me-1" data-icon="calendar_clock"/> Next Week

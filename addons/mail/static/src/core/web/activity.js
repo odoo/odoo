@@ -1,6 +1,7 @@
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
+import { onActivityChangedType } from "@mail/core/web/activity_types";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
@@ -23,7 +24,10 @@ export class Activity extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"]));
-        this.onActivityChanged = useProps.static("onActivityChanged", t.function([]));
+        this.onActivityChanged = useProps.static(
+            "onActivityChanged",
+            onActivityChangedType(this.store)
+        );
         this.reloadParentView = useProps.static("reloadParentView", t.function([]));
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "bottom" });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
@@ -32,12 +36,7 @@ export class Activity extends Component {
             this.updateDelayAtNight();
         });
         onWillUnmount(() => browser.clearTimeout(this.updateDelayMidnightTimeout));
-        this.thread = computed(() =>
-            this.store["mail.thread"].insert({
-                model: this.activity().res_model,
-                id: this.activity().res_id,
-            })
-        );
+        this.thread = computed(() => this.activity().thread);
         this.attachmentUploader = useAttachmentUploader(this.thread);
     }
 
@@ -94,40 +93,52 @@ export class Activity extends Component {
         });
     }
 
-    async onFileUploaded(data) {
-        const activity = this.activity();
-        const thread = this.thread();
+    /**
+     * @param {Object} data
+     * @param {{ activityAtRender: import("models").Activity }} param1
+     */
+    async onFileUploaded(data, { activityAtRender }) {
+        const thread = activityAtRender.thread;
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
-            activity,
+            activity: activityAtRender,
         });
-        await activity.markAsDone([attachmentId]);
-        this.onActivityChanged(thread);
-        await thread.fetchNewMessages();
+        await activityAtRender.markAsDone([attachmentId]);
+        this.onActivityChanged({ thread });
+        await thread?.fetchNewMessages();
     }
 
-    onClickAvatar(ev) {
-        if (!this.activity().user_id) {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ activityAtRender: import("models").Activity }} param1
+     */
+    onClickAvatar(ev, { activityAtRender }) {
+        if (!activityAtRender.user_id) {
             return;
         }
         const target = ev.currentTarget;
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(target, {
-                id: this.activity().user_id.id,
+                id: activityAtRender.user_id.id,
                 model: "res.users",
             });
         }
     }
 
-    async edit() {
-        const thread = this.thread();
-        await this.activity().edit();
-        this.onActivityChanged(thread);
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ activityAtRender: import("models").Activity }} param1
+     */
+    async edit(ev, { activityAtRender }) {
+        const thread = activityAtRender.thread;
+        await activityAtRender.edit();
+        this.onActivityChanged({ thread });
     }
 
     /**
      * @param {MouseEvent} ev
+     * @param {{ activityAtRender: import("models").Activity }} param1
      */
-    onClick(ev) {
-        this.store.handleClickOnLink(ev, this.thread());
+    onClick(ev, { activityAtRender }) {
+        this.store.handleClickOnLink(ev, activityAtRender.thread);
     }
 }

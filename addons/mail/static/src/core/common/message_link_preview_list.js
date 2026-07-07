@@ -1,6 +1,7 @@
 import { LinkPreview } from "@mail/core/common/link_preview";
+import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, types, useProps } from "@odoo/owl";
+import { Component, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -11,10 +12,9 @@ export class MessageLinkPreviewList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = useProps({
-            messageLinkPreviews: types.array(
-                types.instanceOf(this.store["mail.message.link.preview"])
-            ),
-        });
+        this.messageLinkPreviews = propComputed(
+            "messageLinkPreviews",
+            t.array(t.instanceOf(this.store["mail.message.link.preview"]))
+        );
     }
 }

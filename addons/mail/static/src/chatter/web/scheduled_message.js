@@ -1,9 +1,10 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { propComputed } from "@mail/utils/common/hooks";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, signal, types, useProps } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -11,6 +12,10 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
 export const SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD = 50; // arbitrary, ~ 1 line on large screen
+
+/** @param {import("models").Store} store */
+export const onScheduledMessageChangedType = (store) =>
+    t.function([t.object({ thread: t.instanceOf(store["mail.thread"]) })]);
 
 export class ScheduledMessage extends Component {
     static template = "mail.ScheduledMessage";
@@ -22,12 +27,15 @@ export class ScheduledMessage extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = useProps({
-            onScheduledMessageChanged: types.function([
-                types.instanceOf(this.store["mail.thread"]),
-            ]),
-            scheduledMessage: types.instanceOf(this.store["mail.scheduled.message"]),
-        });
+        this.scheduledMessage = propComputed(
+            "scheduledMessage",
+            t.instanceOf(this.store["mail.scheduled.message"])
+        );
+        this.onScheduledMessageChanged = useProps.static(
+            "onScheduledMessageChanged",
+            onScheduledMessageChangedType(this.store)
+        );
+        this.onClickAttachmentUnlink = this.onClickAttachmentUnlink.bind(this);
         this.readMore = signal(false);
         this.toggleFn = toggleFn;
         this.avatarCard = usePopover(AvatarCard);
@@ -35,66 +43,84 @@ export class ScheduledMessage extends Component {
     }
 
     get isShort() {
-        return (
-            this.props.scheduledMessage.textContent.length < SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD
-        );
+        return this.scheduledMessage().textContent.length < SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD;
     }
 
     get scheduledDate() {
-        return this.props.scheduledMessage.scheduled_date.toLocaleString(
-            luxon.DateTime.DATETIME_SHORT
-        );
+        return this.scheduledMessage().scheduled_date.toLocaleString(luxon.DateTime.DATETIME_SHORT);
     }
 
     get truncatedMessage() {
         return (
-            this.props.scheduledMessage.textContent.substring(
-                0,
-                SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD
-            ) + "..."
+            this.scheduledMessage().textContent.substring(0, SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD) +
+            "..."
         );
     }
 
-    async cancel() {
-        const thread = this.props.scheduledMessage.thread;
-        await this.props.scheduledMessage.cancel();
-        this.props.onScheduledMessageChanged(thread);
+    /** @param {{ scheduledMessageAtRender: import("models").ScheduledMessage }} param0 */
+    async cancel({ scheduledMessageAtRender }) {
+        const thread = scheduledMessageAtRender.thread;
+        await scheduledMessageAtRender.cancel();
+        this.onScheduledMessageChanged({ thread });
     }
 
-    onClick(ev) {
-        this.props.scheduledMessage.store.handleClickOnLink(ev, this.props.scheduledMessage.thread);
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ scheduledMessageAtRender: import("models").ScheduledMessage }} param1
+     */
+    onClick(ev, { scheduledMessageAtRender }) {
+        this.store.handleClickOnLink(ev, scheduledMessageAtRender.thread);
     }
 
-    async onClickAttachmentUnlink(attachment) {
+    /** @type {ReturnType<typeof import("@mail/core/common/attachment_list").unlinkAttachmentType>["type"]} */
+    async onClickAttachmentUnlink({ attachment }) {
         attachment.remove();
     }
 
-    onClickAuthor(ev) {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ scheduledMessageAtRender: import("models").ScheduledMessage }} param1
+     */
+    onClickAuthor(ev, { scheduledMessageAtRender }) {
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
-                id: this.props.scheduledMessage.author_id.id,
+                id: scheduledMessageAtRender.author_id.id,
                 model: "res.partner",
             });
         }
     }
 
-    onClickCancel() {
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ scheduledMessageAtRender: import("models").ScheduledMessage }} param1
+     */
+    onClickCancel(ev, { scheduledMessageAtRender }) {
         this.dialogService.add(ConfirmationDialog, {
             body: _t("Are you sure you want to cancel the scheduled message?"),
             cancel: () => {},
             cancelLabel: _t("Close"),
-            confirm: this.cancel.bind(this),
+            confirm: () => this.cancel({ scheduledMessageAtRender }),
             confirmLabel: _t("Cancel Message"),
         });
     }
 
-    async onClickEdit() {
-        await this.props.scheduledMessage.edit();
-        this.props.onScheduledMessageChanged(this.props.scheduledMessage.thread);
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ scheduledMessageAtRender: import("models").ScheduledMessage }} param1
+     */
+    async onClickEdit(ev, { scheduledMessageAtRender }) {
+        const thread = scheduledMessageAtRender.thread;
+        await scheduledMessageAtRender.edit();
+        this.onScheduledMessageChanged({ thread });
     }
 
-    async onClickSendNow() {
-        await this.props.scheduledMessage.send();
-        this.props.onScheduledMessageChanged(this.props.scheduledMessage.thread);
+    /**
+     * @param {MouseEvent} ev
+     * @param {{ scheduledMessageAtRender: import("models").ScheduledMessage }} param1
+     */
+    async onClickSendNow(ev, { scheduledMessageAtRender }) {
+        const thread = scheduledMessageAtRender.thread;
+        await scheduledMessageAtRender.send();
+        this.onScheduledMessageChanged({ thread });
     }
 }

@@ -59,9 +59,9 @@ export class MessagingMenuCallParticipants extends Component {
 
     /**
      * @param {MouseEvent} ev
-     * @param {import("models").RtcSession} session
+     * @param {{ session: import("models").RtcSession }} param1
      */
-    onClickParticipant(ev, session) {}
+    onClickParticipant(ev, { session }) {}
 
     /** @param {import("models").RtcSession} session */
     participantClass(session) {

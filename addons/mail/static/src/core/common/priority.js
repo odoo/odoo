@@ -1,4 +1,6 @@
-import { Component, types, useProps } from "@odoo/owl";
+import { propComputed } from "@mail/utils/common/hooks";
+
+import { Component, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -8,17 +10,15 @@ export class Priority extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = useProps({
-            thread: types.instanceOf(this.store["mail.thread"]),
-        });
+        this.thread = propComputed("thread", t.instanceOf(this.store["mail.thread"]));
     }
 
     get priorityDefinition() {
-        return Object.fromEntries(this.props.thread.priority_definition);
+        return Object.fromEntries(this.thread().priority_definition);
     }
 
     get priority() {
-        return Number(this.props.thread.priority);
+        return Number(this.thread().priority);
     }
 
     get label() {

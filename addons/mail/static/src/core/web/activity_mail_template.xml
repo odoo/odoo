@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityMailTemplate">
+        <t t-set="activityAtRender" t-value="this.activity()"/>
         <t t-foreach="this.activity().mail_template_ids" t-as="mailTemplate" t-key="mailTemplate.id">
             <div class="d-flex align-items-baseline flex-wrap">
                 <div class="text-truncate">
@@ -12,7 +13,7 @@
                     <button
                         class="o-mail-ActivityMailTemplate-preview btn btn-link py-0"
                         t-att-data-mail-template-id="mailTemplate.id"
-                        t-on-click="(ev) => this.onClickPreview(ev, mailTemplate)"
+                        t-on-click="(ev) => this.onClickPreview(ev, { activityAtRender, mailTemplate })"
                     >
                         Preview
                     </button>
@@ -20,7 +21,7 @@
                     <button
                         class="o-mail-ActivityMailTemplate-send btn btn-link py-0"
                         t-att-data-mail-template-id="mailTemplate.id"
-                        t-on-click="(ev) => this.onClickSend(ev, mailTemplate)"
+                        t-on-click="(ev) => this.onClickSend(ev, { activityAtRender, mailTemplate })"
                     >
                         Send Now
                     </button>

@@ -16,7 +16,7 @@
             />
             <div t-else="" class="d-flex flex-column gap-1 flex-grow-1 overflow-hidden" style="padding-left: 0.5px;">
                 <t t-foreach="this.sessions" t-as="session" t-key="session.localId">
-                    <div class="o-mail-MessagingMenuCallParticipants-participant d-flex text-reset overflow-hidden align-items-center" t-att-class="this.participantClass(session)" t-on-click.stop="(ev) => this.onClickParticipant(ev, session)">
+                    <div class="o-mail-MessagingMenuCallParticipants-participant d-flex text-reset overflow-hidden align-items-center" t-att-class="this.participantClass(session)" t-on-click.stop="(ev) => this.onClickParticipant(ev, { session })">
                         <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:30px;height:30px;margin: 1.5px;">
                             <img class="w-100 h-100 rounded-circle object-fit-cover" t-att-src="session.channel_member_id?.avatarUrl" alt="Participant avatar" t-att-title="session.channel_member_id?.name"/>
                         </div>
