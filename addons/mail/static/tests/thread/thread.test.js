@@ -20,10 +20,12 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { Thread } from "@mail/core/common/thread";
+import { DiscussContent } from "@mail/core/public_web/discuss_content";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceFrame, animationFrame, press, queryFirst, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
+import { onWillUpdateProps } from "@odoo/owl";
 import {
     Command,
     getService,
@@ -106,6 +108,72 @@ test("messages still render when a reset strands mountedAndLoaded", async () => 
     await advanceFrame(1);
     await animationFrame();
     await contains(".o-mail-Message", { count: 1 });
+});
+
+test("messages render when load completes during a cancelled parent render", async () => {
+    // Regression for runbot 940032. When a reactive change notifies a
+    // component whose parent already holds a pending, not-yet-rendered child
+    // fiber for it, the component's reactive subscriptions are cleared and
+    // its re-render is coalesced into that pending fiber. If another parent
+    // render then cancels that fiber before it could render, and the
+    // component's props are back to their committed values, the parent used
+    // to skip re-rendering the component: the coalesced render was silently
+    // dropped, so the loaded messages never rendered and the component
+    // stayed deaf to any further store change ("Found 0 instead" with no
+    // error). The gate on `onWillUpdateProps` widens the natural microtask
+    // window in which the load can complete.
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    pyEnv["mail.message"].create([
+        { body: "m1", model: "discuss.channel", res_id: channelId },
+        { body: "m2", model: "discuss.channel", res_id: channelId },
+    ]);
+    let gate = null;
+    patchWithCleanup(Thread.prototype, {
+        setup() {
+            super.setup();
+            onWillUpdateProps(() => gate);
+        },
+    });
+    let discussContent;
+    patchWithCleanup(DiscussContent.prototype, {
+        setup() {
+            super.setup();
+            discussContent = this;
+        },
+    });
+    const fetchDef = new Deferred();
+    onRpcBefore("/discuss/channel/messages", () => fetchDef);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Thread");
+    await contains(".o-mail-Message", { count: 0 });
+    const thread = getService("mail.store")["discuss.channel"].get(channelId);
+    // parent render pass 1: Thread's jumpPresent prop differs, so the parent
+    // opens a child fiber for Thread, held pending by the gate
+    gate = new Deferred();
+    discussContent.state.jumpThreadPresent++;
+    await tick();
+    // the initial load completes while Thread cannot render: its notification
+    // is coalesced into the pending (gated) fiber
+    fetchDef.resolve();
+    for (let i = 0; i < 50 && !thread.isLoaded; i++) {
+        await tick();
+    }
+    expect(thread.isLoaded).toBe(true);
+    expect(thread.messages.length).toBe(2);
+    // parent render pass 2: the prop reverts; the pending child fiber is
+    // cancelled and Thread's props compare equal to its committed props
+    discussContent.state.jumpThreadPresent--;
+    gate.resolve();
+    gate = null;
+    await animationFrame();
+    await animationFrame();
+    // the loaded messages must render
+    await contains(".o-mail-Message", { count: 2 });
 });
 
 test("dragover files on thread with composer", async () => {

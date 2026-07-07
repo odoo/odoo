@@ -1728,6 +1728,14 @@
             }
             else {
                 result++;
+                if (node.bdom) {
+                    // a mounted node whose pending fiber is cancelled before it could
+                    // render may have coalesced reactive renders into that fiber (its
+                    // reactive subscriptions were cleared when they were notified), so
+                    // dropping the fiber would silently lose them: force the cancelling
+                    // render to re-render the node even if its props are unchanged.
+                    node.forceNextRender = true;
+                }
             }
             result += cancelFibers(fiber.children);
         }
