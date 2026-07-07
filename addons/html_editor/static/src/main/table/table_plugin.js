@@ -24,7 +24,7 @@ import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/posi
 import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
 import { getColumnIndex, getRowIndex, getTableCells } from "@html_editor/utils/table";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { isBrowserFirefox, isMacOS } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
@@ -812,7 +812,6 @@ export class TablePlugin extends Plugin {
         this.tableGridMap?.delete(closestElement(row, "table"));
     }
 
-
     /**
      * @param {HTMLTableCellElement} cell
      */
@@ -1472,12 +1471,21 @@ export class TablePlugin extends Plugin {
     onMousedown(ev) {
         this._currentMouseState = ev.type;
         this._lastMousedownPosition = [ev.x, ev.y];
+        delete this._isKeyDown;
         const isPointerInsideCell = this.isPointerInsideCell(ev);
         const td = closestElement(ev.target, isTableCell);
         if (isPointerInsideCell) {
-            if (
-                !isProtected(td) &&
-                !isProtecting(td) &&
+            const isUnprotectedCell = !isProtected(td) && !isProtecting(td);
+            const isMultiSelectClick = isMacOS() ? ev.metaKey : ev.ctrlKey;
+            if (isUnprotectedCell && isMultiSelectClick) {
+                td.classList.toggle("o_selected_td");
+                const table = closestElement(td, "table");
+                table.classList.toggle(
+                    "o_selected_table",
+                    table.querySelectorAll(".o_selected_td").length > 0
+                );
+            } else if (
+                isUnprotectedCell &&
                 ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
             ) {
                 this.handleFirefoxSelection();
