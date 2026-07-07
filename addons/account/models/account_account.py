@@ -237,6 +237,7 @@ class AccountAccount(models.Model):
 
     @api.constrains('company_ids', 'account_type')
     def _check_company_consistency(self):
+        self.invalidate_recordset(['company_ids'])
         if accounts_without_company := self.filtered(lambda a: not a.sudo().company_ids):
             raise ValidationError(
                 self.env._(
@@ -244,12 +245,11 @@ class AccountAccount(models.Model):
                     accounts="\n".join(f"- {account.display_name}" for account in accounts_without_company),
                 ),
             )
-        if self.filtered(lambda a: a.account_type == 'asset_cash' and len(a.company_ids) > 1):
+
+        if self.filtered(lambda a: a.account_type == 'asset_cash' and len(a.sudo().company_ids) > 1):
             raise ValidationError(_("Bank & Cash accounts cannot be shared between companies."))
 
-        # Need to invalidate the sudo cache as we might have just written on `company_ids`
-        self.invalidate_recordset(fnames=['company_ids'])
-        for companies, accounts in self.grouped(lambda a: a.company_ids).items():
+        for companies, accounts in self.grouped(lambda a: a.sudo().company_ids).items():
             if self.env['account.move.line'].sudo().search_count([
                 ('account_id', 'in', accounts.ids),
                 '!', ('company_id', 'child_of', companies.ids)
