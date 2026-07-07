@@ -85,3 +85,30 @@ class TestCrlibreClient(TransactionCase):
         self.assertEqual(called_params['sessionKey'], 'sk123')
         called_files = m.call_args.kwargs['files']
         self.assertIn('fileToUpload', called_files)
+
+    def test_get_hacienda_token_returns_access_token(self):
+        payload = {'status': 'ok', 'resp': {
+            'access_token': 'tok123', 'expires_in': 300, 'refresh_token': 'ref123'}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)) as m:
+            token = self.client.get_hacienda_token('user@stag.comprobanteselectronicos.go.cr', 'pass', 'stag')
+        self.assertEqual(token, 'tok123')
+        called_params = m.call_args.kwargs['params']
+        self.assertEqual(called_params['w'], 'token')
+        self.assertEqual(called_params['r'], 'gettoken')
+        self.assertEqual(called_params['client_id'], 'api-stag')
+        self.assertIn('idp.comprobanteselectronicos.go.cr', called_params['url'])
+
+    def test_get_hacienda_token_prod_uses_prod_client_id(self):
+        payload = {'status': 'ok', 'resp': {'access_token': 'tokprod'}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)) as m:
+            self.client.get_hacienda_token('user@prod...', 'pass', 'prod')
+        self.assertEqual(m.call_args.kwargs['params']['client_id'], 'api-prod')
+
+    def test_get_hacienda_token_missing_access_token_raises(self):
+        payload = {'status': 'ok', 'resp': None}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.get',
+                   return_value=self._mock_response(payload)):
+            with self.assertRaises(CrlibreApiError):
+                self.client.get_hacienda_token('user', 'pass', 'stag')

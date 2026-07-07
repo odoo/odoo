@@ -18,6 +18,11 @@ class CrlibreFeClient(models.AbstractModel):
     _name = 'l10n_cr.fe.client'
     _description = 'Cliente HTTP para la API_Hacienda (CRLibre)'
 
+    _ENVIRONMENT_URLS = {
+        'stag': ('https://idp.comprobanteselectronicos.go.cr/auth/realms/rut-stag/protocol/openid-connect/token', 'api-stag'),
+        'prod': ('https://idp.comprobanteselectronicos.go.cr/auth/realms/rut/protocol/openid-connect/token', 'api-prod'),
+    }
+
     def _get_base_url(self):
         url = self.env['ir.config_parameter'].sudo().get_param('l10n_cr_fe.api_url')
         if not url:
@@ -105,3 +110,17 @@ class CrlibreFeClient(models.AbstractModel):
         if not isinstance(resp, dict) or not resp.get('downloadCode'):
             raise CrlibreApiError("Respuesta inesperada de 'subir_certif': %s" % resp)
         return {'download_code': resp['downloadCode']}
+
+    def get_hacienda_token(self, username, password, environment):
+        idp_url, client_id = self._ENVIRONMENT_URLS[environment]
+        resp = self._call('token', 'gettoken', {
+            'url': idp_url,
+            'grant_type': 'password',
+            'client_id': client_id,
+            'client_secret': '',
+            'username': username,
+            'password': password,
+        })
+        if not isinstance(resp, dict) or not resp.get('access_token'):
+            raise CrlibreApiError("Respuesta inesperada de 'token/gettoken': %s" % resp)
+        return resp['access_token']
