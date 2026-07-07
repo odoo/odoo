@@ -520,7 +520,9 @@ class LoyaltyProgram(models.Model):
             grouped_programs[program.program_type] |= program
         for program_type, programs in grouped_programs.items():
             if program_type in program_type_defaults:
-                programs.write(program_type_defaults[program_type])
+                # this enables to clear reward_ids
+                programs = programs.with_context(loyalty_skip_reward_check=True)
+                programs.update(program_type_defaults[program_type])
 
     @api.depends("currency_id", "program_type")
     def _compute_portal_point_name(self):

@@ -211,7 +211,7 @@ class CalendarRecurrence(models.Model):
         for recurrence in self:
             current_rule = recurrence._rrule_serialize()
             if recurrence.rrule != current_rule:
-                recurrence.write({'rrule': current_rule})
+                recurrence.rrule = current_rule
 
     def _inverse_rrule(self):
         for recurrence in self:

@@ -1315,7 +1315,7 @@ class HrLeave(models.Model):
                 if changes:
                     # create() protects these fields while its inverses run, so an
                     # assignment would reach the cache only and leave date_to stale
-                    leave.write(changes)
+                    leave.update(changes)
 
                 self.env.remove_to_compute(self._fields['work_entry_type_id'], leave)   # to stop onchange methods from resetting the wet chosen earlier
 

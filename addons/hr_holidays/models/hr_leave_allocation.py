@@ -958,7 +958,7 @@ class HrLeaveAllocation(models.Model):
                     allocation._convert_from_type_request_unit(values['previous_carryover_allocated_duration'], 'day', values),
             })
             to_update_values['number_of_days'] = allocation._convert_from_type_request_unit(values['allocated_duration'], 'day', values)
-            allocation.write(to_update_values)
+            allocation.update(to_update_values)
 
     @api.model
     def _get_to_update_accrual_allocations(self):

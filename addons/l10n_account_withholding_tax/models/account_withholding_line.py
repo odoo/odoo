@@ -275,13 +275,13 @@ class AccountWithholdingLine(models.AbstractModel):
         for sequence, lines in lines_per_sequence.items():
             if sequence:
                 for i, line in enumerate(lines):
-                    line.write({
+                    line.update({
                         'placeholder_value': sequence.get_next_char(sequence.number_next_actual + i),
                         'previous_placeholder_type': line.placeholder_type,
                     })
             else:
                 for line in lines:
-                    line.write({
+                    line.update({
                         'placeholder_value': None,
                         'previous_placeholder_type': line.placeholder_type,
                     })
