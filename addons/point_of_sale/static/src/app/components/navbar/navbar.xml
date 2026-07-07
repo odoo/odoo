@@ -62,6 +62,9 @@
                                 <DropdownItem onSelected="() => this.openCustomerDisplay()">
                                     <i class="fa fa-fw fa-desktop" aria-hidden="true" /> Customer Display
                                 </DropdownItem>
+                                <DropdownItem t-if="!this.ui.isSmall" onSelected="() => this.pos.toggleLayout()">
+                                    <i class="oi oi-fw oi-panel-right" t-att-class="{'fa-flip-horizontal': !this.pos.isLayoutReversed}" aria-hidden="true" /> Toggle Layout
+                                </DropdownItem>
                                 <DropdownItem t-if="!this.isDisplayStandalone and this.pos.cashier._role != 'minimal'" onSelected="() => window.open(this.appUrl)">
                                     <i class="fa fa-fw fa-download" aria-hidden="true" /> Install App
                                 </DropdownItem>

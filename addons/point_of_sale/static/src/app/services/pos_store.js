@@ -165,6 +165,7 @@ export class PosStore extends WithLazyGetterTrap {
         await this.initServerData();
 
         this.closeOtherTabs();
+        this.initLayout();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
 
@@ -1911,6 +1912,16 @@ export class PosStore extends WithLazyGetterTrap {
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
     }
+
+    initLayout() {
+        this.isLayoutReversed = localStorage.getItem("isLayoutReversed") === "true";
+    }
+
+    toggleLayout() {
+        this.isLayoutReversed = !this.isLayoutReversed;
+        localStorage.setItem("isLayoutReversed", this.isLayoutReversed);
+    }
+
     switchPaneTicketScreen() {
         this.ticket_screen_mobile_pane =
             this.ticket_screen_mobile_pane === "left" ? "right" : "left";
