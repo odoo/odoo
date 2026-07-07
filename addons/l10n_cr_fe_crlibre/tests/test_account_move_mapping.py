@@ -23,6 +23,7 @@ class TestAccountMoveMapping(TransactionCase):
         })
         self.product = self.env['product.product'].create({
             'name': 'Producto demo',
+            'l10n_cr_fe_cabys': '0111101000000',
         })
         self.invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -56,3 +57,18 @@ class TestAccountMoveMapping(TransactionCase):
         self.assertEqual(params['receptor_num_identif'], '102340567')
         self.assertIsInstance(params['detalles'], str)
         self.assertEqual(json.loads(params['detalles'])[0]['codigoCABYS'], '0111101000000')
+
+    def test_build_detalles_uses_product_cabys(self):
+        detalles = self.invoice._l10n_cr_fe_build_detalles()
+        self.assertEqual(len(detalles), 1)
+        self.assertEqual(detalles[0]['codigoCABYS'], '0111101000000')
+        for field in ('subTotal', 'impuestoAsumidoEmisorFabrica', 'impuestoNeto',
+                      'cantidad', 'unidadMedida', 'detalle', 'precioUnitario',
+                      'montoTotal', 'montoTotalLinea'):
+            self.assertIn(field, detalles[0])
+
+    def test_build_detalles_without_cabys_raises(self):
+        from odoo.exceptions import UserError
+        self.product.l10n_cr_fe_cabys = False
+        with self.assertRaises(UserError):
+            self.invoice._l10n_cr_fe_build_detalles()

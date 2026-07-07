@@ -20,7 +20,7 @@ class TestGenerateAction(TransactionCase):
             'email': 'demo@frutasdemo.cr',
         })
         partner = self.env['res.partner'].create({'name': 'Cliente Demo', 'vat': '102340567'})
-        product = self.env['product.product'].create({'name': 'Producto demo'})
+        product = self.env['product.product'].create({'name': 'Producto demo', 'l10n_cr_fe_cabys': '0111101000000'})
         self.invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': partner.id,
