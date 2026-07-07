@@ -11,10 +11,10 @@ const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
 const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
 const DROPDOWN_ITEM = ".o-dropdown-item.dropdown-item:not(.o-dropdown)";
 
-function getHexcode(selector, pseudoSelector) {
+function getContent(selector, pseudoSelector) {
     const content = getComputedStyle(queryOne(selector), pseudoSelector).content;
     if (content !== "none") {
-        return "\\" + content.replace(/['"]/g, "").charCodeAt(0).toString(16);
+        return content.replace(/['"]/g, "");
     } else {
         return content;
     }
@@ -134,9 +134,9 @@ test("'active' and 'selected' classes shows a checked icon", async () => {
     await click(DROPDOWN_TOGGLE);
     await animationFrame();
 
-    expect(getHexcode(".o-dropdown-item.no-check", ":before")).toEqual("none");
-    expect(getHexcode(".o-dropdown-item.selected", ":before")).toEqual("\\f00c");
-    expect(getHexcode(".o-dropdown-item.active", ":before")).toEqual("\\f00c");
+    expect(getContent(".o-dropdown-item.no-check", ":before")).toEqual("none");
+    expect(getContent(".o-dropdown-item.selected", ":before")).toEqual("check");
+    expect(getContent(".o-dropdown-item.active", ":before")).toEqual("check");
 });
 
 test.tags("mobile");
@@ -160,7 +160,7 @@ test("'active' and 'selected' classes shows a checked icon (mobile)", async () =
     await click(DROPDOWN_TOGGLE);
     await animationFrame();
 
-    expect(getHexcode(".o-dropdown-item.no-check", "::after")).toEqual("none");
-    expect(getHexcode(".o-dropdown-item.selected", "::after")).toEqual("\\f00c");
-    expect(getHexcode(".o-dropdown-item.active", "::after")).toEqual("\\f00c");
+    expect(getContent(".o-dropdown-item.no-check", "::after")).toEqual("none");
+    expect(getContent(".o-dropdown-item.selected", "::after")).toEqual("check");
+    expect(getContent(".o-dropdown-item.active", "::after")).toEqual("check");
 });

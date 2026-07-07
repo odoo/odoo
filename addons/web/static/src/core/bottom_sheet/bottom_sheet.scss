@@ -215,11 +215,9 @@
             @include o-position-absolute(50%, $list-group-item-padding-x);
             transform: translateY(-50%);
             color: $o-action;
-            // .fa
             text-rendering: auto;
-            font: normal normal normal 14px/1 FontAwesome;
-            // .fa-check
-            content: "";
+            font: normal normal normal 14px/1 'Material Symbols Outlined';
+            content: "check";
         }
     }
 
@@ -270,15 +268,12 @@
 
             @include o-position-absolute(var(--dropdown-item-padding-y), $list-group-item-padding-x);
             padding-block: map-get($spacers, 2);
-            // .fa
             text-rendering: auto;
-            font: normal normal normal 14px/1 FontAwesome;
-            // .fa-caret-down
-            content: "\f0d7";
+            font: normal normal normal 14px/1 'Material Symbols Outlined';
+            content: "arrow_drop_down";
         }
         &.open::after {
-            // .fa-caret-up
-            content: "\f0d8";
+            content: "arrow_drop_up";
         }
     }
 
