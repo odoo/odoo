@@ -55,3 +55,25 @@ class CrlibreFeClient(models.AbstractModel):
         if not isinstance(resp, dict) or not resp.get('xml'):
             raise CrlibreApiError("Respuesta inesperada de 'gen_xml_fe': %s" % resp)
         return base64.b64decode(resp['xml']).decode('utf-8')
+
+    def register_api_user(self, full_name, username, password):
+        resp = self._call('users', 'users_register', {
+            'fullName': full_name,
+            'userName': username,
+            'email': '%s@l10n-cr-fe.local' % username,
+            'about': 'Cuenta de servicio Odoo l10n_cr_fe_crlibre',
+            'country': 'crc',
+            'pwd': password,
+        })
+        if not isinstance(resp, dict) or not resp.get('sessionKey'):
+            raise CrlibreApiError("Respuesta inesperada de 'users_register': %s" % resp)
+        return {'session_key': resp['sessionKey'], 'id_user': resp.get('idUser')}
+
+    def login_api_user(self, username, password):
+        resp = self._call('users', 'users_log_me_in', {
+            'userName': username,
+            'pwd': password,
+        })
+        if not isinstance(resp, dict) or not resp.get('sessionKey'):
+            raise CrlibreApiError("Respuesta inesperada de 'users_log_me_in': %s" % resp)
+        return {'session_key': resp['sessionKey'], 'id_user': resp.get('idUser')}
