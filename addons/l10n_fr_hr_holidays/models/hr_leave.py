@@ -96,6 +96,9 @@ class HrLeave(models.Model):
         while not self.resource_calendar_id._works_on_date(date_target + relativedelta(days=1)):
             date_target += relativedelta(days=1)
 
+        if date_start > date_target:
+            return (date_from, date_to)
+
         # Undo the last day increment
         return (date_start, date_target)
 
