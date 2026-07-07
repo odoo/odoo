@@ -10,6 +10,6 @@ class WebsiteLivechat(Website):
     def track(self, res_model, res_id, **kwargs):
         # Since _upsert_visitor needs the guest in the context
         guest_token = request.httprequest.cookies.get(request.env['mail.guest']._cookie_name)
-        if guest_token:
-            force_guest_env(guest_token)
+        if guest_token and request.env.user._is_public():
+            force_guest_env(guest_token, raise_if_not_found=False)
         return super().track(res_model=res_model, res_id=res_id, **kwargs)
