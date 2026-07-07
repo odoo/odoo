@@ -1082,10 +1082,26 @@ class AccountAccount(models.Model):
 
     @api.model
     def load(self, fields, data):
+        for id_fname in ['id', '.id']:
+            if id_fname in fields:
+                id_index = fields.index(id_fname)
+                ids = [d[id_index] for d in data]
+                if id_fname == 'id':
+                    ids = [self.env['ir.model.data']._xmlid_to_res_id(id_, raise_if_not_found=False) for id_ in ids]
+                self.browse(ids).check_access('write')
         load_data = super(AccountAccount, self.with_context(defer_account_code_checks=True)).load(fields, data)
         if {'company_ids', 'code', 'code_mapping_ids/code', 'code_mapping_ids/company_id'} & set(fields):
             self.browse(load_data['ids'])._ensure_code_is_unique()
         return load_data
+
+    def _check_access(self, operation: str):
+        cache = self.env.cr.cache.setdefault('access_checked', {}).setdefault((self._name, operation, self.env.uid), set())
+        if all(id_ in cache for id_ in self._ids):
+            return None
+        check = super()._check_access(operation)
+        if not self.env.su and check is None:
+            cache.update(self._ids)
+        return check
 
     def _ensure_code_is_unique(self):
         """ Check account codes per companies. These are the checks:
