@@ -1,4 +1,4 @@
-import { toRaw } from "@odoo/owl";
+import { markRaw, toRaw } from "@odoo/owl";
 import { ATTR_SYM, MANY_SYM, ONE_SYM } from "./misc";
 
 export class ModelInternal {
@@ -50,6 +50,10 @@ export class ModelInternal {
      * @type {Map<string, string>}
      * */
     parentFields = new Map();
+
+    constructor() {
+        markRaw(this);
+    }
 
     prepareField(fieldName, data) {
         this.fields.set(fieldName, true);

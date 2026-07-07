@@ -75,6 +75,10 @@ export class RecordListInternal {
      */
     gettingField = false;
 
+    constructor() {
+        markRaw(this);
+    }
+
     /**
      * Version of add() that does not update the inverse.
      * This is internally called when inserting (with intent to add)
@@ -262,7 +266,7 @@ export class RecordList extends Array {
     _proxyInternal;
     /** @type {this} */
     _proxy;
-    _ = markRaw(new RecordListInternal());
+    _ = new RecordListInternal();
 
     constructor() {
         super();

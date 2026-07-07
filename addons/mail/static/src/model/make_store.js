@@ -3,7 +3,6 @@ import {
     STORE_SYM,
     fields,
     isFieldDefinition,
-    isMany,
     isRelation,
     modelRegistry,
     technicalKeysOnRecords,
@@ -13,7 +12,7 @@ import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 import { RecordInternal } from "./record_internal";
 
-import { markRaw, proxy, toRaw } from "@odoo/owl";
+import { proxy, toRaw } from "@odoo/owl";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -22,7 +21,7 @@ export function makeStore(env, { localRegistry } = {}) {
     let store = new Store();
     store.env = env;
     store.Model = Store;
-    store._ = markRaw(new StoreInternal());
+    store._ = new StoreInternal();
     store._raw = store;
     store._proxyInternal = store;
     store._proxy = store;
@@ -53,123 +52,28 @@ export function makeStore(env, { localRegistry } = {}) {
                     const record = this;
                     record._raw = record;
                     record.Model = Model;
-                    record._ = markRaw(
-                        record[STORE_SYM] ? new StoreInternal() : new RecordInternal()
-                    );
-                    const recordProxyInternal = new Proxy(record, {
-                        /**
-                         * @param {Record} record
-                         * @param {string} name
-                         * @param {Record} recordFullProxy
-                         */
-                        get(record, name, recordFullProxy) {
-                            if (Model._.parentFields.has(name)) {
-                                const parentFieldName = Model._.parentFields.get(name);
-                                const parentRecordFullProxy = recordFullProxy[parentFieldName];
-                                if (!parentRecordFullProxy) {
-                                    const ParentModel =
-                                        Models[Model._.fieldsTargetModel.get(parentFieldName)];
-                                    if (isMany(ParentModel, name)) {
-                                        return [];
-                                    }
-                                    return;
-                                }
-                                return Reflect.get(parentRecordFullProxy, name);
-                            }
-                            if (record._.gettingField || !Model._.fields.get(name)) {
-                                let res = Reflect.get(...arguments);
-                                if (typeof res === "function") {
-                                    res = res.bind(recordFullProxy);
-                                }
-                                return res;
-                            }
-                            if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
-                                record._.fieldsComputeInNeed.set(name, true);
-                                if (record._.fieldsComputeOnNeed.get(name)) {
-                                    record._.compute(record, name, { fromInNeed: true });
-                                }
-                            }
-                            if (Model._.fieldsSort.get(name) && !Model._.fieldsEager.get(name)) {
-                                record._.fieldsSortInNeed.set(name, true);
-                                if (record._.fieldsSortOnNeed.get(name)) {
-                                    record._.sort(record, name, { fromInNeed: true });
-                                }
-                            }
-                            record._.gettingField = true;
-                            const val = recordFullProxy[name];
-                            record._.gettingField = false;
-                            if (isRelation(Model, name)) {
-                                const recordListFullProxy = val._proxy;
-                                if (isMany(Model, name)) {
-                                    return recordListFullProxy;
-                                }
-                                return recordListFullProxy[0];
-                            }
-                            return Reflect.get(record, name, recordFullProxy);
-                        },
-                        /**
-                         * @param {Record} record
-                         * @param {string} name
-                         */
-                        deleteProperty(record, name) {
-                            if (Model._.parentFields.has(name)) {
-                                const parentFieldName = Model._.parentFields.get(name);
-                                const parentRecordProxyInternal =
-                                    record._proxyInternal[parentFieldName];
-                                return Reflect.deleteProperty(parentRecordProxyInternal, name);
-                            }
-                            return store.MAKE_UPDATE(function recordDeleteProperty() {
-                                if (isRelation(Model, name)) {
-                                    const recordList = record[name];
-                                    recordList.clear();
-                                    return true;
-                                }
-                                return Reflect.deleteProperty(record, name);
-                            });
-                        },
+                    record._ = record[STORE_SYM] ? new StoreInternal() : new RecordInternal();
+                    record._proxyInternal = new Proxy(record, {
+                        get: (...args) => record._.proxyGet(...args),
+                        deleteProperty: (...args) => record._.proxyDeleteProperty(...args),
                         /**
                          * Using record.update(data) is preferable for performance to batch process
                          * when updating multiple fields at the same time.
                          */
-                        set(record, name, val, receiver) {
-                            if (Model._.parentFields.has(name)) {
-                                const parentFieldName = Model._.parentFields.get(name);
-                                const parentRecordProxyInternal =
-                                    record._proxyInternal[parentFieldName];
-                                return Reflect.set(parentRecordProxyInternal, name, val);
-                            }
-                            // ensure each field write goes through the updatingAttrs method exactly once
-                            if (record._.updatingAttrs.has(name)) {
-                                record[name] = val;
-                                return true;
-                            }
-                            return store.MAKE_UPDATE(function recordSet() {
-                                const reactiveSet = receiver !== record._proxyInternal;
-                                if (reactiveSet) {
-                                    record._.proxyUsed.set(name, true);
-                                }
-                                store._.updateFields(record, { [name]: val });
-                                if (reactiveSet) {
-                                    record._.proxyUsed.delete(name);
-                                }
-                                return true;
-                            });
-                        },
+                        set: (...args) => record._.proxySet(...args),
                     });
-                    record._proxyInternal = recordProxyInternal;
-                    const recordProxy = proxy(recordProxyInternal);
-                    record._proxy = recordProxy;
+                    record._proxy = proxy(record._proxyInternal);
                     if (record?.[STORE_SYM]) {
                         record.recordByLocalId = store.recordByLocalId;
-                        record._ = markRaw(toRaw(store._));
+                        record._ = store._;
                         store = record;
                         Record.store = store;
                     }
-                    return recordProxy;
+                    return record._proxy;
                 }
             },
         }[OgClass.getName()];
-        Model._ = markRaw(new ModelInternal());
+        Model._ = new ModelInternal();
         Object.assign(Model, {
             Class,
             records: proxy({}),
