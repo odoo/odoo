@@ -37,7 +37,7 @@ import {
     isTableWrapper,
     wrapTableInScrollContainer,
 } from "@html_editor/utils/table";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { isBrowserFirefox, isMacOS } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
@@ -1797,12 +1797,33 @@ export class TablePlugin extends Plugin {
     onMousedown(ev) {
         this._currentMouseState = ev.type;
         this._lastMousedownPosition = [ev.x, ev.y];
+        delete this._isKeyDown;
         const isPointerInsideCell = this.isPointerInsideCell(ev);
         const td = closestElement(ev.target, isTableCell);
         if (isPointerInsideCell) {
-            if (
-                !isProtected(td) &&
-                !isProtecting(td) &&
+            const isUnprotectedCell = !isProtected(td) && !isProtecting(td);
+            const isMultiSelectClick = isMacOS() ? ev.metaKey : ev.ctrlKey;
+            if (isUnprotectedCell && isMultiSelectClick) {
+                td.classList.toggle("o_selected_td");
+                const table = closestElement(td, "table");
+                const selectedTds = table.querySelectorAll(".o_selected_td");
+                table.classList.toggle("o_selected_table", selectedTds.length > 0);
+                const cell = td.classList.contains("o_selected_td") ? td : [...selectedTds].at(-1);
+                if (cell) {
+                    // Force a non-collapsed selection on a selected cell to
+                    // avoid having a collapsed selection that is actually
+                    // selecting something.
+                    ev.preventDefault();
+                    this.dependencies.selection.setSelection({
+                        anchorNode: cell,
+                        anchorOffset: 0,
+                        focusNode: cell,
+                        focusOffset: nodeSize(cell),
+                    });
+                    this.dependencies.selection.focusEditable();
+                }
+            } else if (
+                isUnprotectedCell &&
                 ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
             ) {
                 this.handleFirefoxSelection();

@@ -22,6 +22,7 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import { nodeSize } from "@html_editor/utils/position";
+import { isMacOS } from "@web/core/browser/feature_detection";
 
 function expectContentToBe(el, html) {
     expect(getContent(el)).toBe(unformat(html));
@@ -412,6 +413,104 @@ describe("custom selection", () => {
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
         );
+    });
+});
+
+describe("ctrl/cmd+click multi-cell selection", () => {
+    /** Simulate a multi-select click at the center of a table cell. */
+    function multiSelectClickCell(td) {
+        const rect = td.getBoundingClientRect();
+        return manuallyDispatchProgrammaticEvent(td, "mousedown", {
+            detail: 1,
+            [isMacOS() ? "metaKey" : "ctrlKey"]: true,
+            clientX: rect.x + rect.width / 2,
+            clientY: rect.y + rect.height / 2,
+        });
+    }
+
+    test.tags("desktop");
+    test("should select and toggle non-adjacent cells with ctrl/cmd+click to format them", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>ab[]</td><td>cd</td><td>ef</td></tr>
+                    </tbody>
+                </table>`)
+        );
+        const [td0, td1, td2] = queryAll("td");
+
+        // Ctrl/cmd+click builds a non-contiguous selection.
+        await multiSelectClickCell(td0);
+        await multiSelectClickCell(td2);
+        await animationFrame();
+
+        expect(td0).toHaveClass("o_selected_td");
+        expect(td1).not.toHaveClass("o_selected_td");
+        expect(td2).toHaveClass("o_selected_td");
+        expect(el.querySelector("table")).toHaveClass("o_selected_table");
+
+        const selection = editor.shared.selection.getEditableSelection();
+        expect(selection.isCollapsed).toBe(false);
+
+        // The format applies to all the selected cells.
+        bold(editor);
+        await animationFrame();
+
+        expect(td0.innerHTML).toBe("<strong>ab</strong>");
+        expect(td1.innerHTML).toBe("cd");
+        expect(td2.innerHTML).toBe("<strong>ef</strong>");
+        expect(td0).toHaveClass("o_selected_td");
+        expect(td2).toHaveClass("o_selected_td");
+
+        bold(editor);
+        await animationFrame();
+
+        expect(td0.innerHTML).toBe("ab");
+        expect(td2.innerHTML).toBe("ef");
+
+        // Ctrl/cmd+clicking a selected cell again toggles it back out.
+        await multiSelectClickCell(td0);
+        await animationFrame();
+
+        expect(td0).not.toHaveClass("o_selected_td");
+        expect(td2).toHaveClass("o_selected_td");
+    });
+
+    test.tags("desktop");
+    test("should keep the selection on a selected cell when toggling a cell out", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]ab</td><td>cd</td><td>ef</td></tr>
+                    </tbody>
+                </table>`)
+        );
+        const [td0, td1, td2] = queryAll("td");
+
+        await multiSelectClickCell(td0);
+        await multiSelectClickCell(td2);
+        await animationFrame();
+
+        // Toggling out the cell holding the selection moves it to a selected one.
+        await multiSelectClickCell(td2);
+        await animationFrame();
+
+        const selection = editor.shared.selection.getEditableSelection();
+        expect(selection.isCollapsed).toBe(false);
+        bold(editor);
+        await animationFrame();
+        expect(td0.innerHTML).toBe("<strong>ab</strong>");
+        expect(td1.innerHTML).toBe("cd");
+        expect(td2.innerHTML).toBe("ef");
+
+        // Toggling out the last selected cell lets the browser place the caret.
+        await multiSelectClickCell(td0);
+        await animationFrame();
+
+        expect(td0).not.toHaveClass("o_selected_td");
+        expect(el.querySelector("table")).not.toHaveClass("o_selected_table");
     });
 });
 
