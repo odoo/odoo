@@ -52,7 +52,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             ('provider_id', 'in', available_providers_sudo.ids),
         ])
 
-        supported_pms = request.env['payment.method'].search(
+        supported_pms = request.env['payment.method'].sudo().search(
             Domain.OR([brands_domain, primary_without_brands_domain]),
             limit=limit,
         )._deduplicate_by_code().mapped(lambda pm: {
