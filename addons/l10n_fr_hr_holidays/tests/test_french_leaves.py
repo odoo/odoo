@@ -348,6 +348,32 @@ class TestFrenchLeaves(TransactionCase):
 
         self.assertEqual(work_hours_data[leave_1.employee_id.id][0][1], 7.50)
 
+    def test_leave_on_non_working_day(self):
+        """Check that a one day time off taken on a non-working day of the
+        employee (a Saturday for a Monday-to-Friday schedule) keeps its own
+        date range instead of being shifted onto the surrounding working days."""
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': weekday, 'hour_from': hour, 'hour_to': hour + 4})
+                for weekday in ['0', '1', '2', '3', '4']
+                for hour in [8, 13]
+            ],
+        })
+        self.company.resource_calendar_id = self.base_calendar
+        self.employee.resource_calendar_id = employee_calendar
+
+        # 2021-09-11 is a Saturday
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
+            'name': 'Test',
+            'work_entry_type_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2021-09-11',
+            'request_date_to': '2021-09-11',
+        })
+        self.assertEqual(leave.date_from.date(), date(2021, 9, 11))
+        self.assertEqual(leave.date_to.date(), date(2021, 9, 11))
+
     def test_leave_flexible_employee(self):
         self.company.resource_calendar_id = self.base_calendar
         self.employee.write({
