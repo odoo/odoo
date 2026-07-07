@@ -1,8 +1,7 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, useEffect } from "@odoo/owl";
 
 export class IframeWrapperField extends Component {
     static template = "web.IframeWrapperField";
@@ -13,25 +12,27 @@ export class IframeWrapperField extends Component {
     iframeRef = signal(null);
 
     setup() {
-        useLayoutEffect(
-            (value) => {
-                /**
-                 * The document.write is not recommended. It is better to manipulate the DOM through $.appendChild and
-                 * others. In our case though, we deal with an iframe without src attribute and with metadata to put in
-                 * head tag. If we use the usual dom methods, the iframe is automatically created with its document
-                 * component containing html > head & body. Therefore, if we want to make it work that way, we would
-                 * need to receive each piece at a time to  append it to this document (with this.record.data and extra
-                 * model fields or with an rpc). It also cause other difficulties getting attribute on the most parent
-                 * nodes, parsing to HTML complex elements, etc.
-                 * Therefore, document.write makes it much more trivial in our situation.
-                 */
-                const iframeDoc = this.iframeRef().contentDocument;
-                iframeDoc.open();
-                iframeDoc.write(value);
-                iframeDoc.close();
-            },
-            () => [this.props.record.data[this.props.name]]
-        );
+        useEffect(() => {
+            /**
+             * The document.write is not recommended. It is better to manipulate the DOM through $.appendChild and
+             * others. In our case though, we deal with an iframe without src attribute and with metadata to put in
+             * head tag. If we use the usual dom methods, the iframe is automatically created with its document
+             * component containing html > head & body. Therefore, if we want to make it work that way, we would
+             * need to receive each piece at a time to  append it to this document (with this.record.data and extra
+             * model fields or with an rpc). It also cause other difficulties getting attribute on the most parent
+             * nodes, parsing to HTML complex elements, etc.
+             * Therefore, document.write makes it much more trivial in our situation.
+             */
+            const value = this.props.record.data[this.props.name];
+            const iframe = this.iframeRef();
+            if (!iframe) {
+                return;
+            }
+            const iframeDoc = iframe.contentDocument;
+            iframeDoc.open();
+            iframeDoc.write(value);
+            iframeDoc.close();
+        });
     }
 }
 
