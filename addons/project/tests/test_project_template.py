@@ -347,3 +347,29 @@ class TestProjectTemplates(TestProjectCommon):
             template_stage,
             "The new project should correctly inherit the 'Template Stage' from its template.",
         )
+
+    def test_create_project_from_template_with_task_template_without_project(self):
+        """
+        Create a project from a template that has a sub-task template without a project.
+        It should only copy the task dependencies if the project has them enabled.
+        """
+        template_task_without_project = self.env["project.task"].create({
+            "name": "Task Template without Project",
+            "project_id": False,
+            "is_template": True,
+            "parent_id": self.task_inside_template.id,
+            "depend_on_ids": [Command.set(self.task_template_inside_template.ids)],
+        })
+
+        self.project_template.allow_task_dependencies = False
+        project_1 = self.project_template.action_create_from_template({"name": "Project 1"})
+        task_1 = project_1.task_ids.filtered(lambda t: t.name == template_task_without_project.name)
+        self.assertEqual(task_1.project_id, project_1, "The created task should be in the project that was created from the template.")
+        self.assertTrue(task_1.is_template, "The copied task should retain its template status.")
+        self.assertFalse(task_1.depend_on_ids, "The created task should not have dependencies as the project has task dependencies disabled.")
+
+        self.project_template.allow_task_dependencies = True
+        project_2 = self.project_template.action_create_from_template({"name": "Project 2"})
+        task_2 = project_2.task_ids.filtered(lambda t: t.name == template_task_without_project.name)
+        self.assertEqual(task_2.project_id, project_2, "The created task should be in the project that was created from the template.")
+        self.assertTrue(task_2.depend_on_ids, "The created task should have some dependencies as the template as the project has task dependencies enabled.")
