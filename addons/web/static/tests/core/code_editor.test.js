@@ -310,66 +310,68 @@ test("initial value cannot be undone", async () => {
 });
 
 test.tags("focus required");
-test("code editor can set cursor position", async () => {
+test("cursor position stored by sessionId", async () => {
+    function dedent(str) {
+        return str.replace(/^\s*/gm, "");
+    }
+
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`
             <CodeEditor
-                maxLines="2"
-                value="this.value"
-                cursorPosition="this.state.cursorPosition"
-                onCursorPositionChange="this.onCursorPositionChange"
+                maxLines="5"
+                value="this.state.value"
+                sessionId="this.state.sessionId"
             />`;
         static props = ["*"];
 
         setup() {
-            this.value = `
-            1
-            2
-            3
-            4aa
-            5
-            `.replace(/^\s*/gm, ""); // simple dedent
-
             this.state = proxy({
-                cursorPosition: { row: 3, column: 2 },
+                value: dedent(`
+                    1
+                    2
+                    3
+                    4aa
+                    5
+                `),
+                sessionId: 0,
             });
-        }
-
-        onCursorPositionChange(cursor) {
-            expect.step(cursor);
         }
     }
     const comp = await mountWithCleanup(Parent);
     await animationFrame();
 
     const editor = window.ace.edit(queryOne(".ace_editor"));
-    expect(document.activeElement).toBe(editor.textInput.getElement());
-    expect(editor.getCursorPosition()).toEqual({ row: 3, column: 2 });
+    expect(editor.getCursorPosition()).toEqual({ row: 0, column: 0 });
 
-    expect(queryAllTexts(".ace_gutter-cell")).toEqual(["3", "4", "5"]);
-    expect.verifySteps([]);
+    editor.focus();
+    editor.selection.moveToPosition({ row: 3, column: 3 });
+    await animationFrame();
     await contains(".ace_editor textarea", { displayed: true, visible: false }).edit("new\nvalue", {
         instantly: true,
     });
     await animationFrame();
-    expect.verifySteps([
-        {
-            column: 5,
-            row: 1,
-        },
-    ]);
+    expect(editor.getCursorPosition()).toEqual({ row: 1, column: 5 });
 
-    comp.state.cursorPosition = { row: 0, column: 2 };
+    const value = editor.getValue();
+    comp.state.sessionId = 1;
+    comp.state.value = dedent(`
+        my other
+        text
+    `);
     await animationFrame();
-    expect.verifySteps([]);
-    expect(editor.getCursorPosition()).toEqual({ row: 0, column: 2 });
+    expect(editor.getCursorPosition()).toEqual({ row: 0, column: 0 });
+
+    comp.state.sessionId = 0;
+    comp.state.value = value;
+    await animationFrame();
+    expect(editor.getCursorPosition()).toEqual({ row: 1, column: 5 });
 });
 
 test("qweb mode readonly attributes", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" mode="this.props.state.mode" value="this.props.state.value" modeOptions="this.props.state.modeOptions" cursorPosition="this.props.state.cursorPosition"/>`;
+        static template = xml`<CodeEditor maxLines="10" mode="this.props.state.mode" value="this.props.state.value" modeOptions="this.props.state.modeOptions"/>`;
         static props = ["*"];
     }
 
@@ -387,7 +389,6 @@ test("qweb mode readonly attributes", async () => {
                 readonlyAttributes: ["lock-id"],
             },
         },
-        cursorPosition: { column: 17, row: 0 },
     });
 
     await mountWithCleanup(Parent, {
@@ -395,6 +396,8 @@ test("qweb mode readonly attributes", async () => {
     });
     await animationFrame();
     const editor = window.ace.edit(queryOne(".ace_editor"));
+    editor.focus();
+    editor.selection.moveToPosition({ row: 0, column: 17 });
     expect(document.activeElement).toBe(editor.textInput.getElement());
 
     expect(".ace_editor .ace_odoo_attr_readonly").toHaveCount(5);
