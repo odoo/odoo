@@ -23,7 +23,6 @@ PAYMENT_METHODS_MAPPING = {
     "clearpay": "afterpay_clearpay",
     "cash_app_pay": "cashapp",
     "mobile_pay": "mobilepay",
-    "unknown": "card",  # For express checkout.
 }
 
 INDIAN_MANDATES_SUPPORTED_CURRENCIES = [
