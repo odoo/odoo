@@ -313,10 +313,10 @@ class PaymentTransaction(models.Model):
             return super()._apply_updates(payment_data)
 
         # Update the payment method.
-        payment_method = payment_data.get("payment_method")
-        if isinstance(payment_method, dict):  # capture/void/refund requests receive a string.
-            payment_method_type = payment_method.get("type")
-            if self.payment_method_id.code == payment_method_type == "card":
+        payment_method_data = payment_data.get("payment_method")
+        if isinstance(payment_method_data, dict):  # capture/void/refund requests receive a string.
+            payment_method_type = payment_method_data.get("type")
+            if payment_method_type == "card":
                 payment_method_type = payment_data["payment_method"]["card"]["brand"]
             payment_method = self.provider_id._get_pm_from_code(
                 payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
