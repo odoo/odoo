@@ -224,6 +224,14 @@ class AccountMove(models.Model):
         else:
             self.message_post(body=_("Hacienda aún no tiene una respuesta definitiva (estado: %s).") % estado)
 
+    def action_l10n_cr_fe_reintentar(self):
+        self.ensure_one()
+        self.write({
+            'l10n_cr_fe_state': 'draft',
+            'l10n_cr_fe_motivo_rechazo': False,
+        })
+        self._l10n_cr_fe_generate_and_send()
+
     def action_post(self):
         res = super().action_post()
         for move in self:
