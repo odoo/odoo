@@ -8,7 +8,7 @@ import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_ma
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { user } from "@web/core/user";
-import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { onWillStart, proxy, useEffect } from "@odoo/owl";
 
 patch(PropertyValue.prototype, {
     setup() {
@@ -19,9 +19,9 @@ patch(PropertyValue.prototype, {
         });
         this.htmlState = proxy({ isPortalUser: false, key: 0 });
 
-        onWillUpdateProps((newProps) => {
-            const newValueStr = newProps.value?.toString();
-            if (newProps.type === "html" && newValueStr !== this.lastHtmlValue) {
+        useEffect(() => {
+            const newValueStr = this.props.value?.toString();
+            if (this.props.type === "html" && newValueStr !== this.lastHtmlValue) {
                 this.htmlState.key += 1;
                 this.lastHtmlValue = newValueStr;
             }
