@@ -216,15 +216,16 @@ export class EmbeddedComponentPlugin extends Plugin {
             });
         }
         this.trigger("on_will_mount_component_handlers", { name, env, props });
-        const { root } = mountComponent(this.app, Component, host, props, env, {
-            onAfterComplete: () => this.trigger("on_component_mounted_handlers"),
-        });
+        // If a pending operation should be executed after the first mount of
+        // an inserted blueprint, run it synchronously right after the mounted
+        // callbacks, in the same call stack as the DOM insertion.
         const onComponentInserted = this.extractOnComponentInserted(host);
-        if (onComponentInserted) {
-            // If a pending operation should be executed after the first mount
-            // of an inserted blueprint, add it as the last `onMounted` callback
-            root.node.mounted.push(onComponentInserted);
-        }
+        const { root } = mountComponent(this.app, Component, host, props, env, {
+            onAfterComplete: () => {
+                onComponentInserted?.();
+                this.trigger("on_component_mounted_handlers");
+            },
+        });
         const info = {
             root,
             host,
