@@ -17,11 +17,15 @@ export class Many2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
         );
     }
 
-    get many2OneProps() {
-        return {
-            ...super.many2OneProps,
-            relation: this.relation,
-        };
+    onClickAvatar(ev) {
+        if (
+            (this.props.name === "parent_id" || this.props.name === "coach_id") &&
+            this.props.record.data.has_cross_company_relation
+        ) {
+            ev.stopPropagation();
+            return;
+        }
+        super.onClickAvatar(ev);
     }
 }
 
@@ -36,6 +40,7 @@ export const many2OneAvatarEmployeeField = {
         ...many2OneAvatarUserField.extractProps(fieldInfo, dynamicInfo),
         canQuickCreate: false,
         relation: fieldInfo.options?.relation,
+        canOpen: !fieldInfo.options.no_open
     }),
 };
 
@@ -49,12 +54,6 @@ export class KanbanMany2OneAvatarEmployeeField extends EmployeeFieldRelationMixi
             (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
             super.displayAvatarCard
         );
-    }
-    get many2OneProps() {
-        return {
-            ...super.many2OneProps,
-            relation: this.relation,
-        };
     }
 }
 
