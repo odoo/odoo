@@ -9,7 +9,6 @@ import {
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { App } from "@odoo/owl";
 import { startRouter } from "@web/core/browser/router";
-import { createDebugContext } from "@web/core/debug/debug_context";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
@@ -200,13 +199,10 @@ export async function makeTestApp(options) {
         startRouter();
     }
 
-    const env = makeEnv();
-    Object.assign(env, testEnv, createDebugContext(env)); // This is needed if the views are in debug mode
-
     const app = new TestApp({
         customDirectives,
         dev: false,
-        env,
+        env: Object.assign(makeEnv(), testEnv),
         getTemplate,
         globalValues,
         name: getCurrent().test?.fullName || "TEST",

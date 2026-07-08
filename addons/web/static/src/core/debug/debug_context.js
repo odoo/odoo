@@ -1,7 +1,8 @@
-import { useEffect } from "@odoo/owl";
-import { useEnv, useSubEnv } from "@web/owl2/utils";
+import { config, onWillDestroy, plugin, Plugin, providePlugins } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { user } from "@web/core/user";
-import { registry } from "../registry";
+import { useEnv } from "@web/owl2/utils";
 
 const debugRegistry = registry.category("debug");
 
@@ -18,10 +19,8 @@ const getAccessRights = async () => {
     return accessRights;
 };
 
-class DebugContext {
-    constructor(defaultCategories) {
-        this.categories = new Map(defaultCategories.map((cat) => [cat, [{}]]));
-    }
+class DebugContextPlugin extends Plugin {
+    categories = config("categories") ?? new Map();
 
     activateCategory(category, context) {
         const contexts = this.categories.get(category) || new Set();
@@ -53,28 +52,22 @@ class DebugContext {
             });
     }
 }
-
-const debugContextSymbol = Symbol("debugContext");
-export function createDebugContext({ categories = [] } = {}) {
-    return { [debugContextSymbol]: new DebugContext(categories) };
-}
+services.add(DebugContextPlugin);
 
 export function useOwnDebugContext({ categories = [] } = {}) {
-    useSubEnv(createDebugContext({ categories }));
+    providePlugins([DebugContextPlugin], {
+        categories: new Map(categories.map((cat) => [cat, [{}]])),
+    });
 }
 
 export function useEnvDebugContext() {
-    const debugContext = useEnv()[debugContextSymbol];
-    if (!debugContext) {
-        throw new Error("There is no debug context available in the current environment.");
-    }
-    return debugContext;
+    return plugin(DebugContextPlugin);
 }
 
 export function useDebugCategory(category, context = {}) {
     const env = useEnv();
     if (env.debug) {
         const debugContext = useEnvDebugContext();
-        useEffect(() => debugContext.activateCategory(category, context));
+        onWillDestroy(debugContext.activateCategory(category, context));
     }
 }
