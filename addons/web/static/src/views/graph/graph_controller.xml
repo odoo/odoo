@@ -10,45 +10,65 @@
                 multiSelect="false"
             />
         </div>
-        <div class="btn-group" role="toolbar" aria-label="Change graph">
-            <button class="btn btn-secondary oi o_graph_button" data-icon="bar_chart" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
-                t-on-click="() => this.onModeSelected('bar')"
-                t-att-class="{ active: this.model.metaData.mode === 'bar' }"
-            />
-            <button class="btn btn-secondary oi o_graph_button" data-icon="show_chart" data-tooltip="Line Chart" aria-label="Line Chart" data-mode="line"
-                t-on-click="() => this.onModeSelected('line')"
-                t-att-class="{ active: this.model.metaData.mode === 'line' }"
-            />
-            <button class="btn btn-secondary oi o_graph_button" data-icon="pie_chart" data-tooltip="Pie Chart" aria-label="Pie Chart" data-mode="pie"
-                t-on-click="() => this.onModeSelected('pie')"
-                t-att-class="{ active: this.model.metaData.mode === 'pie' }"
-            />
-        </div>
-        <div t-if="this.model.metaData.mode === 'bar'" class="btn-group" role="toolbar" aria-label="Change graph">
-            <button class="oi btn btn-secondary o_graph_button" data-icon="database" data-tooltip="Stacked" aria-label="Stacked"
-                t-on-click="this.toggleStacked"
-                t-att-class="{ active: this.model.metaData.stacked }"
-            />
-        </div>
-        <div t-if="this.model.metaData.mode === 'line'" class="btn-group" role="toolbar" aria-label="Change graph">
-            <button class="oi btn btn-secondary o_graph_button" data-icon="database" data-tooltip="Stacked" aria-label="Stacked"
-                t-on-click="this.toggleStacked"
-                t-att-class="{ active: this.model.metaData.stacked }"
-            />
-            <button class="oi btn btn-secondary o_graph_button" data-icon="signal_cellular_4_bar" data-tooltip="Cumulative" aria-label="Cumulative"
-                t-on-click="this.toggleCumulated"
-                t-att-class="{ active: this.model.metaData.cumulated }"
-            />
-        </div>
-        <div t-if="this.model.metaData.mode !== 'pie'" class="btn-group" role="toolbar" aria-label="Sort graph" name="toggleOrderToolbar">
-            <button class="oi btn btn-secondary o_graph_button o_sort_desc" data-icon="sort" data-tooltip="Descending" aria-label="Descending"
-                t-on-click="() => this.toggleOrder('DESC')"
-                t-att-class="{ active: this.model.metaData.order === 'DESC' }"
-            />
-            <button class="oi btn btn-secondary oi-flip-vertical o_graph_button o_sort_asc" data-icon="sort" data-tooltip="Ascending" aria-label="Ascending"
-                t-on-click="() => this.toggleOrder('ASC')"
-                t-att-class="{ active: this.model.metaData.order === 'ASC' }"
-            />
+
+        <div class="ms-auto d-flex gap-2" role="toolbar" aria-label="Graph actions">
+            <t t-if="this.model.metaData.mode === 'bar' || this.model.metaData.mode === 'line'">
+                <div t-if="this.model.metaData.mode === 'line'"
+                     class="form-check form-switch align-self-center me-2 mb-0"
+                     data-tooltip="Cumulative"
+                >
+                    <label class="form-check-label small" for="switchCumulated">Cumulative</label>
+                    <input class="form-check-input"
+                           type="checkbox"
+                           role="switch"
+                           id="switchCumulated"
+                           t-on-change="this.toggleCumulated"
+                           t-att-checked="this.model.metaData.cumulated"
+                    />
+                </div>
+                <div class="form-check form-switch align-self-center mb-0"
+                     data-tooltip="Stacked"
+                >
+                    <label class="form-check-label small" for="switchStacked">Stacked</label>
+                    <input class="form-check-input"
+                           type="checkbox"
+                           role="switch"
+                           id="switchStacked"
+                           t-on-change="this.toggleStacked"
+                           t-att-checked="this.model.metaData.stacked"
+                    />
+                </div>
+                <span class="vr my-2 mx-2 text-600"/>
+            </t>
+            <t t-if="this.model.metaData.mode !== 'pie'">
+                <small class="align-self-center">Order</small>
+                <div class="btn-group o_switcher" role="toolbar" aria-label="Sort graph" name="toggleOrderToolbar">
+                    <button class="oi btn btn-secondary o_graph_button o_sort_desc" data-icon="south" data-tooltip="Descending" aria-label="Descending"
+                            t-on-click="() => this.toggleOrder('DESC')"
+                            t-att-class="{ active: this.model.metaData.order === 'DESC' }"
+                    />
+                    <button class="oi btn btn-secondary o_graph_button o_sort_asc" data-icon="north" data-tooltip="Ascending" aria-label="Ascending"
+                            t-on-click="() => this.toggleOrder('ASC')"
+                            t-att-class="{ active: this.model.metaData.order === 'ASC' }"
+                    />
+                </div>
+                <span class="vr my-2 mx-2 text-600"/>
+            </t>
+            <small class="align-self-center">Type</small>
+            <div class="btn-group o_switcher" role="toolbar" aria-label="Change graph">
+                <button class="btn btn-secondary oi o_graph_button" data-icon="bar_chart" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
+                        t-on-click="() => this.onModeSelected('bar')"
+                        t-att-class="{ active: this.model.metaData.mode === 'bar' }"
+                />
+                <button class="btn btn-secondary oi o_graph_button" data-icon="show_chart" data-tooltip="Line Chart" aria-label="Line Chart" data-mode="line"
+                        t-on-click="() => this.onModeSelected('line')"
+                        t-att-class="{ active: this.model.metaData.mode === 'line' }"
+                />
+                <button class="btn btn-secondary oi o_graph_button" data-icon="pie_chart" data-tooltip="Pie Chart" aria-label="Pie Chart" data-mode="pie"
+                        t-on-click="() => this.onModeSelected('pie')"
+                        t-att-class="{ active: this.model.metaData.mode === 'pie' }"
+                />
+            </div>
         </div>
     </t>
 
