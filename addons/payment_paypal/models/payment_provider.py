@@ -65,6 +65,11 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
+    def _compute_feature_support_fields(self):
+        """Override of `payment` to enable additional features."""
+        super()._compute_feature_support_fields()
+        self.filtered(lambda p: p.code == "paypal").update({"support_tokenization": True})
+
     # === CONSTRAINT METHODS === #
 
     @api.constrains("is_published")
@@ -166,6 +171,7 @@ class PaymentProvider(models.Model):
         webhook_events = (
             const.CHECKOUT_WEBHOOK_EVENTS
             + const.CAPTURE_WEBHOOK_EVENTS
+            + const.VAULT_WEBHOOK_EVENTS
             + const.MERCHANT_WEBHOOK_EVENTS
         )
         data = {
@@ -203,6 +209,11 @@ class PaymentProvider(models.Model):
             "paypal_email_account": response_content.get("primary_email"),
             "paypal_payments_receivable": response_content.get("payments_receivable"),
             "paypal_email_confirmed": response_content.get("primary_email_confirmed"),
+            "allow_tokenization": any(
+                capability.get("name") == const.VAULTING_CAPABILITY
+                and capability.get("status") == "ACTIVE"
+                for capability in response_content.get("capabilities", [])
+            ),
         })
 
         return response_content
@@ -240,6 +251,8 @@ class PaymentProvider(models.Model):
         for provider in self.filtered(lambda p: p.code == "paypal"):
             if not provider.paypal_client_id or not provider.paypal_client_secret:
                 continue
+            if not currency_id:
+                continue  # PayPal assesses eligibility per purchase; skip it for validations.
             eligible_method_keys = provider._paypal_get_eligible_payment_method_keys(
                 partner_id,
                 amount,
@@ -308,17 +321,22 @@ class PaymentProvider(models.Model):
             return None
         return set(response_content.get("eligible_methods", {}))
 
-    def _paypal_get_inline_form_values(self, currency=None, partner_id=None):
+    def _paypal_get_inline_form_values(self, currency=None, partner_id=None, payment_method=None):
         """Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
 
         :param res.currency currency: The transaction currency.
-        :param int partner_id: The partner of the transaction, as a `res.partner` id.
+        :param int partner_id: The partner making the payment, as a `res.partner` id.
+        :param payment.method payment_method: The payment method the form is rendered for.
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
         partner = self.env["res.partner"].browse(partner_id).exists()
+        # Validation operations have no currency, but the SDK requires a supported one.
+        currency = currency or self.with_context(
+            validation_pm=payment_method
+        )._get_validation_currency()
         inline_form_values = {
             "provider_id": self.id,
             "client_id": self.paypal_client_id,

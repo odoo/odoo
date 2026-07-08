@@ -169,11 +169,18 @@ patch(PaymentForm.prototype, {
             await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
 
             if (isCard && paypal.CardFields !== undefined) {
+                const isValidation = this.paymentContext['mode'] === 'validation';
                 const cardFields = paypal.CardFields({
                     style: CARD_FIELDS_STYLE,
-                    createOrder: () => {
-                        return this.paypalData[paymentOptionId].paypalOrderId;
-                    },
+                    ...(isValidation ? {
+                        createVaultSetupToken: () => {
+                            return this.paypalData[paymentOptionId].paypalSetupTokenId;
+                        },
+                    } : {
+                        createOrder: () => {
+                            return this.paypalData[paymentOptionId].paypalOrderId;
+                        },
+                    }),
                     onApprove: this._paypalOnApprove.bind(this),
                 });
 
@@ -301,6 +308,7 @@ patch(PaymentForm.prototype, {
             return;
         }
         this.paypalData[paymentOptionId].paypalOrderId = processingValues['order_id'];
+        this.paypalData[paymentOptionId].paypalSetupTokenId = processingValues['setup_token_id'];
         this.paypalData[paymentOptionId].paypalTxRef = processingValues['reference'];
 
         if (paymentMethodCode === 'card') {
@@ -322,7 +330,7 @@ patch(PaymentForm.prototype, {
      * @return {void}
      */
     async _paypalOnApprove(data) {
-        const orderID = data.orderID;
+        const orderID = data.orderID || data.vaultSetupToken;
         try {
             await this.waitFor(rpc('/payment/paypal/complete_order', {
                 'order_id': orderID,

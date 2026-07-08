@@ -8,6 +8,7 @@
         <field name="code">paypal</field>
         <field name="provider_id" ref="payment.payment_provider_paypal"/>
         <field name="image" type="bytes" file="payment/static/img/paypal.png"/>
+        <field name="support_tokenization">True</field>
     </record>
 
     <record id="payment_method_bancontact" model="payment.method">
