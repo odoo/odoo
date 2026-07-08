@@ -217,6 +217,16 @@ class AccountEdiProxyClientUser(models.Model):
             move_type = 'out_invoice' if invoice_type_code else 'out_refund'
         return journal, move_type
 
+    def _peppol_get_duplicate_message_uuids(self, message_uuids):
+        self.ensure_one()
+        return set(
+            self.env['account.move'].search([
+                ('peppol_message_uuid', 'in', message_uuids),
+                ('company_id', '=', self.company_id.id),
+            ])
+            .mapped('peppol_message_uuid')
+        )
+
     def _peppol_get_new_documents(self):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
         job_count = self._context.get('peppol_crons_job_count') or BATCH_SIZE
@@ -245,6 +255,19 @@ class AccountEdiProxyClientUser(models.Model):
                 message['uuid']
                 for message in messages.get('messages', [])
             ]
+            # remove the duplicates
+            if duplicate_message_uuids := list(edi_user._peppol_get_duplicate_message_uuids(message_uuids)):
+                message_uuids = list(set(message_uuids) - set(duplicate_message_uuids))
+                # acknowledge the duplicates on IAP side.
+                edi_user._call_peppol_proxy(
+                    endpoint=edi_user._get_peppol_proxy_endpoint('1/ack'),
+                    params={'message_uuids': duplicate_message_uuids},
+                )
+                _logger.info(
+                    "Messages with UUID %s could not be imported because they are identified as duplicates",
+                    ', '.join(duplicate_message_uuids)
+                )
+
             if not message_uuids:
                 continue
 
