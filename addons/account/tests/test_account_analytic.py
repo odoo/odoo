@@ -1131,6 +1131,49 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         invoice.action_post()
         self.assertEqual(self.get_analytic_lines(invoice).amount, 3.33)
 
+    def test_analytic_distribution_with_discount_on_second_line_update(self):
+        """Ensure discount allocation lines recompute weighted analytic distribution on second line update."""
+
+        self.company_data['company'].account_discount_expense_allocation_id = self.company_data['default_account_expense']
+
+        distrib_1 = {
+            self.analytic_account_1.id: 60,
+            self.analytic_account_2.id: 40,
+        }
+        distrib_2 = {
+            self.analytic_account_3.id: 80,
+            self.analytic_account_4.id: 20,
+        }
+        invoice = self._create_invoice(invoice_line_ids=[
+            self._prepare_invoice_line(
+                product_id=self.product_a,
+                price_unit=1000,
+                discount=20,
+                analytic_distribution=distrib_1,
+            ),
+            self._prepare_invoice_line(
+                product_id=self.product_b,
+                price_unit=1000,
+                discount=10,
+                analytic_distribution=distrib_2,
+            ),
+        ])
+
+        # Update only the second line discount to reproduce the issue.
+        invoice.invoice_line_ids[1].discount = 20
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_type == 'expense'), [
+            {
+                'balance': 400.0,
+                'analytic_distribution': {
+                    str(self.analytic_account_1.id): 30,
+                    str(self.analytic_account_2.id): 20,
+                    str(self.analytic_account_3.id): 40,
+                    str(self.analytic_account_4.id): 10,
+                },
+            },
+        ])
+
     def test_post_move_with_archived_analytic_account(self):
         """Ensure that posting an invoice with an archived analytic account
         in its distribution raises a UserError.
