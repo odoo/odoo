@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { props, t, useEffect } from "@odoo/owl";
+import { props, t, useListener } from "@odoo/owl";
 import { integerField, IntegerField, integerFieldProps } from "@web/views/fields/integer/integer_field";
 
 
@@ -33,15 +33,7 @@ export class IntegerUpdateFlagField extends IntegerField {
                 [this.props.flagFieldName]: parseInt(this.formattedValue) !== this.props.referenceValue}
             );
         }
-        useEffect(() => {
-            const inputEl = this.numpadDecimalRef();
-            if (inputEl) {
-                inputEl.addEventListener("change", onChange);
-                return () => {
-                    inputEl.removeEventListener("change", onChange);
-                };
-            }
-        });
+        useListener(this.numpadDecimalRef, "change", onChange);
     }
 }
 
