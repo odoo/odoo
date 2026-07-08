@@ -115,8 +115,12 @@ export class FontSizePlugin extends Plugin {
         on_all_formats_removed_handlers: this.updateFontSizeSelectorParams.bind(this),
         normalize_processors: this.normalize.bind(this),
 
-        is_format_class_predicates: (className) => {
-            if ([...FONT_SIZE_CLASSES, "o_default_font_size", "o_rfs"].includes(className)) {
+        is_format_class_predicates: (className, targetClassName) => {
+            if (
+                [...FONT_SIZE_CLASSES, "o_default_font_size", "o_rfs"].includes(className) ||
+                (DEFAULT_FONT_SIZE_CLASSES.includes(className) &&
+                    DEFAULT_FONT_SIZE_CLASSES.includes(targetClassName))
+            ) {
                 return true;
             }
         },
@@ -130,14 +134,27 @@ export class FontSizePlugin extends Plugin {
                     const blockParent = closestBlock(node).parentElement;
                     const stopAtBlockParent = (el) => el === blockParent;
 
-                    const hasClass = (cls) =>
-                        !!findNode(path, (el) => el.classList?.contains(cls), stopAtBlockParent) ||
-                        li?.classList?.contains(cls);
+                    // Find the closest ancestor (or <li>) that has any font styling class applied
+                    const styledElement =
+                        findNode(
+                            path,
+                            (el) =>
+                                [
+                                    ...FONT_SIZE_CLASSES,
+                                    ...DEFAULT_FONT_SIZE_CLASSES,
+                                    ...TEXT_STYLE_CLASSES,
+                                ].some((cls) => el.classList?.contains(cls)),
+                            stopAtBlockParent
+                        ) ?? li;
 
+                    // Get the specific font size class active on that element (if any)
+                    const activeFontSizeClass =
+                        styledElement &&
+                        FONT_SIZE_CLASSES.find((cls) => styledElement.classList.contains(cls));
+
+                    // Check for an exact class match if props.className was provided.
                     if (props?.className) {
-                        return (
-                            FONT_SIZE_CLASSES.includes(props.className) && hasClass(props.className)
-                        );
+                        return props.className === activeFontSizeClass;
                     }
 
                     const inlineSize = (
@@ -146,7 +163,7 @@ export class FontSizePlugin extends Plugin {
                     if (props?.size) {
                         return inlineSize === props.size;
                     }
-                    return inlineSize || FONT_SIZE_CLASSES.some(hasClass);
+                    return inlineSize || !!activeFontSizeClass;
                 },
                 hasStyle: (node) =>
                     node.style?.["font-size"] ||
