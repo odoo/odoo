@@ -158,7 +158,11 @@ class AccountMove(models.Model):
             taxes = base_line['tax_ids']
             account = base_line['account_id']
             to_create.append(Command.create({
-                'name': " - ".join([partner.name or self.env._("Unknown partner"), account.code, " / ".join(taxes.mapped('name')) or self.env._("Untaxed")]),
+                'name': " - ".join(filter(None, [
+                    partner.name or self.env._("Unknown partner"),
+                    account.code,
+                    " / ".join(taxes.mapped('name')) or self.env._("Untaxed"),
+                ])),
                 'quantity': base_line['quantity'],
                 'price_unit': base_line['price_unit'],
                 'extra_tax_data': AccountTax._export_base_line_extra_tax_data(base_line),
