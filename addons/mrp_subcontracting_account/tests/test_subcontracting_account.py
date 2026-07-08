@@ -61,7 +61,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
 
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
         all_amls_ids += amls.ids
-        # stock valo only 30 because the extra can only be added with a bill
         self.assertRecordValues(amls.sorted('product_id'), [
             # Delivery com1 to subcontractor
             {'account_id': self.account_stock_valuation.id,   'product_id': self.comp1.id,       'debit': 0.0,   'credit': 10.0},
@@ -70,8 +69,8 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
             {'account_id': self.account_stock_valuation.id,   'product_id': self.comp2.id,       'debit': 0.0,   'credit': 20.0},
             {'account_id': self.account_production.id,    'product_id': self.comp2.id,       'debit': 20.0,  'credit': 0.0},
             # Receipt from subcontractor
-            {'account_id': self.account_production.id,    'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
-            {'account_id': self.account_stock_valuation.id,   'product_id': self.finished.id,    'debit': 30.0, 'credit': 0.0},
+            {'account_id': self.account_production.id,    'product_id': self.finished.id,    'debit': 0.0,   'credit': 60.0},
+            {'account_id': self.account_stock_valuation.id,   'product_id': self.finished.id,    'debit': 60.0, 'credit': 0.0},
         ])
 
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
