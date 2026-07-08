@@ -9,12 +9,17 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { x2ManyCommands } from "@web/core/orm_plugin";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { TagsList } from "@web/core/tags_list/tags_list";
+import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -93,7 +98,7 @@ class ExportDataItem extends Component {
 
 export class ExportDataDialog extends Component {
     static template = "web.ExportDataDialog";
-    static components = { CheckBox, Dialog, ExportDataItem };
+    static components = { AutoComplete, BadgeTag, CheckBox, Dialog, ExportDataItem, TagsList };
     props = useProps({
         close: t.function(),
         context: t.object().optional(),
@@ -119,10 +124,12 @@ export class ExportDataDialog extends Component {
         this.expandedFields = {};
         this.availableFormats = [];
         this.templates = [];
+        this.languagesInstalled = [];
         this.isCompatible = false;
 
         this.state = proxy({
             exportList: [],
+            exportLanguages: [],
             isEditingTemplate: false,
             search: [],
             selectedFormat: 0,
@@ -163,15 +170,21 @@ export class ExportDataDialog extends Component {
         });
 
         onWillStart(async () => {
-            this.availableFormats = await rpc("/web/export/formats");
-            this.templates = await this.orm.searchRead(
-                "ir.exports",
-                [["resource", "=", this.props.root.resModel]],
-                [],
-                {
-                    context: this.props.context,
-                }
-            );
+            // formats and installed languages only change when a module or a
+            // language is installed, unlike the templates this dialog itself
+            // creates, edits and deletes
+            [this.availableFormats, this.templates, this.languagesInstalled] = await Promise.all([
+                rpc("/web/export/formats", {}, { cache: true }),
+                this.orm.searchRead(
+                    "ir.exports",
+                    [["resource", "=", this.props.root.resModel]],
+                    [],
+                    {
+                        context: this.props.context,
+                    }
+                ),
+                this.orm.cache().searchRead("res.lang", [], ["code", "name"], { order: "name" }),
+            ]);
             await this.fetchFields();
         });
 
@@ -188,6 +201,58 @@ export class ExportDataDialog extends Component {
             return this.state.search.length && Object.values(this.state.search);
         }
         return Object.values(this.knownFields);
+    }
+
+    /**
+     * Languages are only worth selecting when at least one field of the export
+     * list is translatable: without any, every language would produce the very
+     * same columns, so the selector is hidden instead of being a no-op.
+     */
+    get canExportTranslations() {
+        return (
+            this.languagesInstalled.length > 1 &&
+            this.state.exportList.some(({ translate }) => translate)
+        );
+    }
+
+    get languageChoices() {
+        return this.languagesInstalled
+            .filter(({ code }) => !this.state.exportLanguages.some((lang) => lang.code === code))
+            .map((language) => ({ value: language, label: language.name }));
+    }
+
+    get userLanguageName() {
+        const userLanguage = user.lang.replace("-", "_");
+        return (
+            this.languagesInstalled.find(({ code }) => code === userLanguage)?.name || userLanguage
+        );
+    }
+
+    get languageSources() {
+        return [{ options: this.loadLanguageOptions.bind(this) }];
+    }
+
+    loadLanguageOptions(request) {
+        const choices = request
+            ? fuzzyLookup(request, this.languageChoices, (choice) => choice.label)
+            : this.languageChoices;
+        return choices.map(({ value, label }) => ({
+            label,
+            onSelect: () => this.onAddLanguage(value),
+        }));
+    }
+
+    get languageTags() {
+        return this.state.exportLanguages.map(({ code, name }) => ({
+            id: code,
+            text: name,
+            onDelete: () => {
+                this.state.exportLanguages = this.state.exportLanguages.filter(
+                    (lang) => lang.code !== code
+                );
+                this.enterTemplateEdition();
+            },
+        }));
     }
 
     get rootFields() {
@@ -264,12 +329,15 @@ export class ExportDataDialog extends Component {
         if (!value || value === "new_template") {
             return;
         }
-        const fields = await rpc("/web/export/namelist", {
+        const { fields, export_languages } = await rpc("/web/export/namelist", {
             model: this.props.root.resModel,
             export_id: Number(value),
         });
         // Don't safe the result in this.knownFields because, the result is only partial
         this.state.exportList = fields;
+        this.state.exportLanguages = this.languagesInstalled.filter(({ code }) =>
+            export_languages.includes(code)
+        );
     }
 
     async loadFields(id, preventLoad = false) {
@@ -330,18 +398,18 @@ export class ExportDataDialog extends Component {
                 type: "danger",
             });
         }
+        const exportLanguageIds = this.canExportTranslations
+            ? this.state.exportLanguages.map(({ id }) => id)
+            : [];
         const [id] = await this.orm.create(
             "ir.exports",
             [
                 {
                     name,
-                    export_fields: this.state.exportList.map((field) => [
-                        0,
-                        0,
-                        {
-                            name: field.id,
-                        },
-                    ]),
+                    export_fields: this.state.exportList.map((field) =>
+                        x2ManyCommands.create(false, { name: field.id })
+                    ),
+                    export_language_ids: [x2ManyCommands.set(exportLanguageIds)],
                     resource: this.props.root.resModel,
                 },
             ],
@@ -369,7 +437,7 @@ export class ExportDataDialog extends Component {
         }
         this.state.disabled = true;
         await this.props.download(
-            this.state.exportList,
+            this.getFieldsToExport(),
             this.isCompatible,
             this.availableFormats[this.state.selectedFormat].tag
         );
@@ -390,6 +458,35 @@ export class ExportDataDialog extends Component {
                 this.setDefaultExportList();
             },
         });
+    }
+
+    /**
+     * Return the fields to export: each translatable field of the export list
+     * is replaced by one column per selected export language, using the same
+     * `@lang` suffix convention as the import (e.g. `name@fr_FR`) on both the
+     * technical name and the label, so the columns stay import-compatible.
+     * The unsuffixed column (in the active language) is dropped to avoid
+     * exporting the same column twice under different headers.
+     */
+    getFieldsToExport() {
+        if (!this.state.exportLanguages.length) {
+            return this.state.exportList;
+        }
+        return this.state.exportList.flatMap((field) => {
+            if (!field.translate) {
+                return [field];
+            }
+            return this.state.exportLanguages.map(({ code }) => ({
+                ...field,
+                id: `${field.id}@${code}`,
+                string: `${field.string}@${code}`,
+            }));
+        });
+    }
+
+    onAddLanguage(language) {
+        this.state.exportLanguages.push(language);
+        this.enterTemplateEdition();
     }
 
     onSearch(ev) {

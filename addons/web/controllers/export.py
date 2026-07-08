@@ -306,62 +306,6 @@ class Export(Controller):
             {'tag': 'csv', 'label': request.env._("Plain Text (.csv)")},
         ]
 
-    def _get_property_fields(self, fields, model, domain=()):
-        """ Return property fields existing for the `domain` """
-        property_fields = {}
-        Model = request.env[model]
-        for fname, field in fields.items():
-            if field.get('type') != 'properties':
-                continue
-
-            definition_record = field['definition_record']
-            definition_record_field = field['definition_record_field']
-
-            # sudo(): user may lack access to property definition model
-            target_model = Model.env[Model._fields[definition_record].comodel_name].sudo()
-            domain_definition = [(definition_record_field, '!=', False)]
-            # Depends of the records selected to avoid showing useless Properties
-            if domain:
-                self_subquery = Model.with_context(active_test=False)._search(domain)
-                field_to_get = self_subquery.table[definition_record]
-                domain_definition.append(('id', 'in', self_subquery.subselect(field_to_get)))
-
-            definition_records = target_model.search_fetch(
-                domain_definition, [definition_record_field, 'display_name'],
-                order='id',  # Avoid complex order
-            )
-
-            for record in definition_records:
-                for definition in record[definition_record_field]:
-                    # definition = {
-                    #     'name': 'aa34746a6851ee4e',
-                    #     'string': 'Partner',
-                    #     'type': 'many2one',
-                    #     'comodel': 'test_orm.partner',
-                    #     'default': [1337, 'Bob'],
-                    # }
-                    if (
-                        definition['type'] == 'separator' or
-                        (
-                            definition['type'] in ('many2one', 'many2many')
-                            and definition.get('comodel') not in Model.env
-                        )
-                    ):
-                        continue
-                    id_field = f"{fname}.{definition['name']}"
-                    property_fields[id_field] = {
-                        'type': definition['type'],
-                        'string': Model.env._(
-                            "%(property_string)s (%(parent_name)s)",
-                            property_string=definition['string'], parent_name=record.display_name,
-                        ),
-                        'default_export_compatible': field['default_export_compatible'],
-                    }
-                    if definition['type'] in ('many2one', 'many2many'):
-                        property_fields[id_field]['relation'] = definition['comodel']
-
-        return property_fields
-
     @route('/web/export/get_fields', type='jsonrpc', auth='user', readonly=True)
     def get_fields(self, model, domain, prefix='', parent_name='',
                    import_compat=True, parent_field_type=None,
@@ -372,6 +316,7 @@ class Export(Controller):
             attributes=[
                 'type', 'string', 'required', 'relation_field', 'default_export_compatible',
                 'relation', 'definition_record', 'definition_record_field', 'exportable', 'readonly',
+                'translate',
             ],
         )
 
@@ -402,7 +347,7 @@ class Export(Controller):
                 continue
             exportable_fields[field_name] = field
 
-        exportable_fields.update(self._get_property_fields(fields, model, domain=domain))
+        exportable_fields.update(request.env['ir.exports']._get_property_fields(fields, model, domain=domain))
 
         fields_sequence = sorted(exportable_fields.items(), key=lambda field: field[1]['string'].lower())
 
@@ -423,6 +368,7 @@ class Export(Controller):
                 'required': field.get('required'),
                 'relation_field': field.get('relation_field'),
                 'default_export': import_compat and field.get('default_export_compatible'),
+                'translate': bool(field.get('translate')),
             }
             if len(ident.split('/')) < 3 and 'relation' in field:
                 field_dict['value'] += '/id'
@@ -441,80 +387,10 @@ class Export(Controller):
     @route('/web/export/namelist', type='jsonrpc', auth='user', readonly=True)
     def namelist(self, model, export_id):
         export = request.env['ir.exports'].browse([export_id])
-        return self.fields_info(model, export.export_fields.mapped('name'))
-
-    def fields_info(self, model, export_fields):
-        field_info = []
-        fields = request.env[model].fields_get(
-            attributes=[
-                'type', 'string', 'required', 'relation_field', 'default_export_compatible',
-                'relation', 'definition_record', 'definition_record_field',
-            ],
-        )
-        fields.update(self._get_property_fields(fields, model))
-        if ".id" in export_fields:
-            fields['.id'] = fields.get('id', {'string': 'ID'})
-
-        # To make fields retrieval more efficient, fetch all sub-fields of a
-        # given field at the same time. Because the order in the export list is
-        # arbitrary, this requires ordering all sub-fields of a given field
-        # together so they can be fetched at the same time
-        #
-        # Works the following way:
-        # * sort the list of fields to export, the default sorting order will
-        #   put the field itself (if present, for xmlid) and all of its
-        #   sub-fields right after it
-        # * then, group on: the first field of the path (which is the same for
-        #   a field and for its subfields and the length of splitting on the
-        #   first '/', which basically means grouping the field on one side and
-        #   all of the subfields on the other. This way, we have the field (for
-        #   the xmlid) with length 1, and all of the subfields with the same
-        #   base but a length "flag" of 2
-        # * if we have a normal field (length 1), just add it to the info
-        #   mapping (with its string) as-is
-        # * otherwise, recursively call fields_info via graft_subfields.
-        #   all graft_subfields does is take the result of fields_info (on the
-        #   field's model) and prepend the current base (current field), which
-        #   rebuilds the whole sub-tree for the field
-        #
-        # result: because we're not fetching the fields_get for half the
-        # database models, fetching a namelist with a dozen fields (including
-        # relational data) falls from ~6s to ~300ms (on the leads model).
-        # export lists with no sub-fields (e.g. import_compatible lists with
-        # no o2m) are even more efficient (from the same 6s to ~170ms, as
-        # there's a single fields_get to execute)
-        for (base, length), subfields in itertools.groupby(
-                sorted(export_fields),
-                lambda field: (field.split('/', 1)[0], len(field.split('/', 1)))):
-            subfields = list(subfields)
-            if length == 2:
-                # subfields is a seq of $base/*rest, and not loaded yet
-                field_info.extend(
-                    self.graft_subfields(
-                        fields[base]['relation'], base, fields[base]['string'], subfields
-                    ),
-                )
-            elif base in fields:
-                field_dict = fields[base]
-                field_info.append({
-                    'id': base,
-                    'string': field_dict['string'],
-                    'field_type': field_dict['type'],
-                })
-
-        indexes_dict = {fname: i for i, fname in enumerate(export_fields)}
-        return sorted(field_info, key=lambda field_dict: indexes_dict[field_dict['id']])
-
-    def graft_subfields(self, model, prefix, prefix_string, fields):
-        export_fields = [field.split('/', 1)[1] for field in fields]
-        return (
-            dict(
-                field_info,
-                id=f"{prefix}/{field_info['id']}",
-                string=f"{prefix_string}/{field_info['string']}",
-            )
-            for field_info in self.fields_info(model, export_fields)
-        )
+        return {
+            'fields': request.env['ir.exports']._get_fields_info(model, export.export_fields.mapped('name')),
+            'export_languages': export.export_language_ids.filtered('active').mapped('code'),
+        }
 
 
 class ExportFormat:

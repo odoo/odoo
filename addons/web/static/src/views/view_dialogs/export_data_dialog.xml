@@ -30,89 +30,101 @@
 
     <t t-name="web.ExportDataDialog">
         <Dialog contentClass="'o_export_data_dialog'" title.translate="Export Data" size="'lg'">
-            <div class="row w-100">
-                <div class="o_left_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h4 class="mb-0">Available fields</h4>
-                        <CheckBox className="'form-switch'" value="this.isCompatible" onChange.bind="this.onToggleCompatibleExport">Updatable fields only</CheckBox>
-                    </div>
-                    <div class="position-relative mb-3">
-                        <input t-ref="this.searchRef" type="search" class="form-control o_export_search_input" placeholder="Search..." aria-label="Search fields" t-on-input="this.onSearch" />
-                        <i class="oi position-absolute top-50 end-0 translate-middle-y me-2 text-muted opacity-50 pe-1 pe-none" data-icon="search" role="img" aria-label="Search" />
-                    </div>
-                    <div class="o_left_field_panel flex-grow-1 overflow-auto border">
-                        <div class="o_field_tree_structure">
-                            <t t-if="this.fieldsAvailable">
-                                <t t-foreach="this.rootFields" t-as="field" t-key="field.id + '_' + this.state.search.length + '_' + this.isCompatible">
-                                    <ExportDataItem
-                                        exportList="this.state.exportList"
-                                        field="field"
-                                        filterSubfields.bind="this.filterSubfields"
-                                        isFieldExpandable.bind="this.isFieldExpandable"
-                                        isDebug="this.debugMode.isActive()"
-                                        isExpanded="this.state.search.length > 0"
-                                        loadFields.bind="this.loadFields"
-                                        onAdd.bind="this.onAddItemExportList"
-                                    />
-                                </t>
-                            </t>
-                            <h3 t-else="" class="text-center text-muted mt-5 o_no_match">No match found.</h3>
-                        </div>
-                    </div>
-                    <label class="d-flex align-items-center gap-2 mt-2 flex-shrink-0">
-                        <span class="form-label mb-0 fw-bold text-nowrap">Format</span>
-                        <select class="form-select form-select-sm o_export_format" t-on-change="this.setFormat">
-                            <t t-foreach="this.availableFormats" t-as="format" t-key="format.tag">
-                                <option t-att-value="format.tag" t-att-selected="format.tag === this.availableFormats[this.state.selectedFormat].tag" t-out="format.label" />
-                            </t>
-                        </select>
-                    </label>
+            <div class="o_export_grid w-100">
+                <!-- left column -->
+                <div class="d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0">Available fields</h4>
+                    <CheckBox className="'form-switch o_export_compatible'" value="this.isCompatible" onChange.bind="this.onToggleCompatibleExport">Updatable fields only</CheckBox>
                 </div>
-                <div t-attf-class="o_right_panel col-12 col-md-6 {{ this.state.isSmall ? 'h-50' : 'h-100' }} d-flex flex-column flex-nowrap mt-3 mt-md-0">
-                    <div class="mt-0">
-                        <h4>Fields to export</h4>
+                <div class="position-relative">
+                    <input t-ref="this.searchRef" type="search" class="form-control o_export_search_input" placeholder="Search..." aria-label="Search fields" t-on-input="this.onSearch" />
+                    <i class="oi position-absolute top-50 end-0 translate-middle-y me-2 text-muted opacity-50 pe-1 pe-none" data-icon="search" role="img" aria-label="Search" />
+                </div>
+                <div class="o_left_field_panel overflow-auto border">
+                    <div class="o_field_tree_structure">
+                        <t t-if="this.fieldsAvailable">
+                            <t t-foreach="this.rootFields" t-as="field" t-key="field.id + '_' + this.state.search.length + '_' + this.isCompatible">
+                                <ExportDataItem
+                                    exportList="this.state.exportList"
+                                    field="field"
+                                    filterSubfields.bind="this.filterSubfields"
+                                    isFieldExpandable.bind="this.isFieldExpandable"
+                                    isDebug="this.debugMode.isActive()"
+                                    isExpanded="this.state.search.length > 0"
+                                    loadFields.bind="this.loadFields"
+                                    onAdd.bind="this.onAddItemExportList"
+                                />
+                            </t>
+                        </t>
+                        <h3 t-else="" class="text-center text-muted mt-5 o_no_match">No match found.</h3>
                     </div>
-                    <div class="o_exported_lists">
-                        <div class="input-group mb-3">
-                            <t t-if="this.state.templateId === 'new_template'">
-                                <label class="pt-2 mb-0 fw-bold">Save as: </label>
-                                <input t-ref="this.exportListRef" class="form-control ms-4 o_save_list_name" t-att-placeholder="this.newTemplateText" />
-                            </t>
-                            <t t-else="">
-                                <label class="pt-2 mb-0 fw-bold">Template: </label>
-                                <select class="form-select ms-4 o_exported_lists_select" t-on-change="this.onChangeExportList">
-                                    <option />
-                                    <t t-foreach="this.templates" t-as="template" t-key="template.id">
-                                        <option t-att-value="template.id" t-out="template.name or 'undefined'" t-att-selected="this.state.templateId === template.id" />
-                                    </t>
-                                    <option class="fst-italic" value="new_template">New template </option>
-                                </select>
-                            </t>
-                            <t t-if="this.state.isEditingTemplate">
-                                <button t-if="this.state.templateId === 'new_template'" type="button" class="btn btn-secondary ms-1 o_save_list_btn" t-on-click.stop="this.onSaveExportTemplate">
-                                    <i class="oi" data-icon="save"/>
-                                </button>
-                                <button type="button" class="btn btn-secondary ms-1 o_cancel_list_btn" t-on-click.stop="this.onCancelExportTemplate">
-                                    <i class="oi" t-attf-data-icon="{{ this.state.templateId === 'new_template' ? 'close' : 'undo' }}" />
-                                </button>
-                            </t>
-                            <t t-else="">
-                                <button t-if="this.state.templateId" type="button" class="btn btn-secondary ms-1 o_delete_exported_list" t-on-click.stop="this.onDeleteExportTemplate">
-                                    <i class="oi oi-filled" data-icon="delete" />
-                                </button>
-                            </t>
-                        </div>
+                </div>
+                <label class="d-flex align-items-stretch gap-2">
+                    <span class="form-label mb-0 fw-bold text-nowrap align-self-center">Format</span>
+                    <select class="form-select form-select-sm o_export_format" t-on-change="this.setFormat">
+                        <t t-foreach="this.availableFormats" t-as="format" t-key="format.tag">
+                            <option t-att-value="format.tag" t-att-selected="format.tag === this.availableFormats[this.state.selectedFormat].tag" t-out="format.label" />
+                        </t>
+                    </select>
+                </label>
+                <!-- right column -->
+                <div class="d-flex align-items-center">
+                    <h4 class="mb-0">Fields to export</h4>
+                </div>
+                <div class="o_exported_lists">
+                    <div class="input-group">
+                        <t t-if="this.state.templateId === 'new_template'">
+                            <label class="pt-2 mb-0 fw-bold">Save as: </label>
+                            <input t-ref="this.exportListRef" class="form-control ms-4 o_save_list_name" t-att-placeholder="this.newTemplateText" />
+                        </t>
+                        <t t-else="">
+                            <label class="pt-2 mb-0 fw-bold">Template: </label>
+                            <select class="form-select ms-4 o_exported_lists_select" t-on-change="this.onChangeExportList">
+                                <option />
+                                <t t-foreach="this.templates" t-as="template" t-key="template.id">
+                                    <option t-att-value="template.id" t-out="template.name or 'undefined'" t-att-selected="this.state.templateId === template.id" />
+                                </t>
+                                <option class="fst-italic" value="new_template">New template </option>
+                            </select>
+                        </t>
+                        <t t-if="this.state.isEditingTemplate">
+                            <button t-if="this.state.templateId === 'new_template'" type="button" class="btn btn-secondary ms-1 o_save_list_btn" t-on-click.stop="this.onSaveExportTemplate">
+                                <i class="oi" data-icon="save"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary ms-1 o_cancel_list_btn" t-on-click.stop="this.onCancelExportTemplate">
+                                <i class="oi" t-attf-data-icon="{{ this.state.templateId === 'new_template' ? 'close' : 'undo' }}" />
+                            </button>
+                        </t>
+                        <t t-else="">
+                            <button t-if="this.state.templateId" type="button" class="btn btn-secondary ms-1 o_delete_exported_list" t-on-click.stop="this.onDeleteExportTemplate">
+                                <i class="oi oi-filled" data-icon="delete" />
+                            </button>
+                        </t>
                     </div>
-                    <div class="o_right_field_panel h-100 px-2 overflow-auto border">
-                        <ul class="o_fields_list list-unstyled" t-ref="this.draggableRef">
-                            <t t-foreach="this.state.exportList" t-as="field" t-key="field.id">
-                                <li t-attf-class="o_export_field d-inline-block w-100 {{ this.state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.id">
-                                    <span t-if="!this.state.isSmall" class="oi o_sort_field mx-1" data-icon="swap_vert" t-attf-style="opacity:{{ this.state.exportList.length === 1 ? 0 : 1 }}" />
-                                    <span t-out="this.debugMode.isActive() and field.id ? `${field.string} (${field.id})` : field.string" />
-                                    <span class="oi oi-filled p-1 float-end o_remove_field cursor-pointer" data-icon="delete" t-att-title="this.removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
-                                </li>
-                            </t>
-                        </ul>
+                </div>
+                <div class="o_right_field_panel p-1 overflow-auto border">
+                    <ul class="o_fields_list list-unstyled" t-ref="this.draggableRef">
+                        <t t-foreach="this.state.exportList" t-as="field" t-key="field.id">
+                            <li t-attf-class="o_export_field d-flex align-items-center w-100 {{ this.state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.id">
+                                <span t-if="!this.state.isSmall" class="oi o_sort_field mx-1" data-icon="swap_vert" t-attf-style="opacity:{{ this.state.exportList.length === 1 ? 0 : 1 }}" />
+                                <span class="flex-grow-1 text-truncate" t-out="this.debugMode.isActive() and field.id ? `${field.string} (${field.id})` : field.string" />
+                                <span class="oi oi-filled p-1 o_remove_field cursor-pointer" data-icon="delete" t-att-title="this.removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+                <div t-if="this.canExportTranslations" class="d-flex align-items-stretch gap-2">
+                    <span class="form-label mb-0 fw-bold text-nowrap align-self-center">Languages</span>
+                    <div class="o_export_languages o_input d-inline-flex flex-wrap align-items-center gap-1 w-100">
+                        <TagsList tags="this.languageTags" tagLimit="3" t-slot-scope="tag">
+                            <BadgeTag text="tag.text" onDelete="tag.onDelete"/>
+                        </TagsList>
+                        <AutoComplete
+                            t-if="this.languageChoices.length"
+                            sources="this.languageSources"
+                            resetOnSelect="true"
+                            placeholder="this.state.exportLanguages.length ? '' : this.userLanguageName"
+                        />
                     </div>
                 </div>
             </div>
