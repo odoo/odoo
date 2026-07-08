@@ -1,9 +1,10 @@
-import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useRef, useSubEnv } from "@web/owl2/utils";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import {
     Component,
     useEffect,
     onMounted,
+    onPatched,
     onWillDestroy,
     onWillStart,
     onWillUnmount,
@@ -179,30 +180,38 @@ export class WebsiteBuilderClientAction extends Component {
                 this.addSystrayItems();
             }
         });
-        useLayoutEffect(
-            (isEditing) => {
-                document.querySelector("body").classList.toggle("o_builder_open", isEditing);
-                if (isEditing) {
-                    // When entering edit mode, the navbar animates upwards.
-                    // To avoid an abrupt disappearance, we delay adding the
-                    // 'd-none' class
-                    this.navBarTimeout = setTimeout(() => {
-                        if (!this.state.isEditing) {
-                            return;
-                        }
-                        websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
-                        websiteSystrayRegistry.trigger("EDIT-WEBSITE");
-                        document
-                            .querySelector(".o_builder_open .o_main_navbar")
-                            .classList.add("d-none");
-                    }, 200);
-                } else {
-                    document.querySelector(".o_main_navbar")?.classList.remove("d-none");
-                }
-                return () => clearTimeout(this.navBarTimeout);
-            },
-            () => [this.state.isEditing]
-        );
+        const updateBuilderOpen = (isEditing) => {
+            document.querySelector("body").classList.toggle("o_builder_open", isEditing);
+            if (isEditing) {
+                // When entering edit mode, the navbar animates upwards.
+                // To avoid an abrupt disappearance, we delay adding the
+                // 'd-none' class
+                this.navBarTimeout = setTimeout(() => {
+                    if (!this.state.isEditing) {
+                        return;
+                    }
+                    websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
+                    websiteSystrayRegistry.trigger("EDIT-WEBSITE");
+                    document
+                        .querySelector(".o_builder_open .o_main_navbar")
+                        .classList.add("d-none");
+                }, 200);
+            } else {
+                document.querySelector(".o_main_navbar")?.classList.remove("d-none");
+            }
+        };
+        onMounted(() => {
+            this.lastIsEditing = this.state.isEditing;
+            updateBuilderOpen(this.lastIsEditing);
+        });
+        onPatched(() => {
+            if (this.state.isEditing !== this.lastIsEditing) {
+                this.lastIsEditing = this.state.isEditing;
+                clearTimeout(this.navBarTimeout);
+                updateBuilderOpen(this.lastIsEditing);
+            }
+        });
+        onWillUnmount(() => clearTimeout(this.navBarTimeout));
         onMounted(() => {
             document.body.classList.add("o_website_o_website_preview");
         });
@@ -528,7 +537,12 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     get websiteId() {
-        return this.props.websiteId || router.current.website_id || this.websiteService.currentWebsiteId || false;
+        return (
+            this.props.websiteId ||
+            router.current.website_id ||
+            this.websiteService.currentWebsiteId ||
+            false
+        );
     }
 
     waitForIframeReady() {
