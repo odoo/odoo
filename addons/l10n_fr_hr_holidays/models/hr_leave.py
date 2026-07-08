@@ -23,6 +23,14 @@ class HrLeave(models.Model):
                self.resource_calendar_id != self.company_id.resource_calendar_id and \
                self.holiday_status_id == self.company_id._get_fr_reference_leave_type()
 
+    def _l10n_fr_get_employee_tz(self):
+        # date_from/date_to are stored in UTC. Reasoning about calendar days
+        # directly on those UTC values can shift the day by one for
+        # timezones far from UTC (e.g. UTC-10), since the local hour used to
+        # build them (_to_utc) may cross the UTC day boundary. Callers must
+        # localize back to this timezone first.
+        return pytz.timezone(self.employee_id.tz or self.env.user.tz or 'UTC')
+
     def _get_fr_date_from_to(self, date_from, date_to):
         self.ensure_one()
         # What we need to compute is how much we will need to push date_to in order to account for the lost days
@@ -32,6 +40,16 @@ class HrLeave(models.Model):
         # which the employee works zero hours.
         if not (self.resource_calendar_id.attendance_ids):
             raise UserError(_("An employee can't take paid time off in a period without any work hours."))
+
+        # date_from/date_to are UTC: localize to the employee's timezone
+        # before any weekday-based lookup below (including adjust_date_range),
+        # otherwise the local calendar day can be misread for timezones far
+        # from UTC (e.g. UTC-10), see _l10n_fr_get_employee_tz. Everything
+        # from here on is computed in local time; UTC conversion only
+        # happens at the two return points.
+        employee_tz = self._l10n_fr_get_employee_tz()
+        date_from = pytz.utc.localize(date_from).astimezone(employee_tz)
+        date_to = pytz.utc.localize(date_to).astimezone(employee_tz)
 
         if not self.request_unit_hours:
             # Use company's working schedule hours for the leave to avoid duration calculation issues.
@@ -46,10 +64,10 @@ class HrLeave(models.Model):
                                                                     and not a.display_type)
                 if period_ids_from:
                     min_hour = min(attendance.hour_from for attendance in period_ids_from)
-                    date_from = self._to_utc(date_from, min_hour, employee_id)
+                    date_from = pytz.utc.localize(self._to_utc(date_from.date(), min_hour, employee_id)).astimezone(employee_tz)
                 if period_ids_to:
                     max_hour = max(attendance.hour_to for attendance in period_ids_to)
-                    date_to = self._to_utc(date_to, max_hour, employee_id)
+                    date_to = pytz.utc.localize(self._to_utc(date_to.date(), max_hour, employee_id)).astimezone(employee_tz)
                 return date_from, date_to
 
             if self.request_unit_half:
@@ -73,7 +91,7 @@ class HrLeave(models.Model):
                 and (not self.resource_calendar_id.two_weeks_calendar or a.week_type == date_from_weektype))
             if len(attendance_ids) == 2:
                 # The employee took the morning off on a day where he works the afternoon aswell
-                return (date_from, date_to)
+                return (date_from.astimezone(pytz.utc).replace(tzinfo=None), date_to.astimezone(pytz.utc).replace(tzinfo=None))
 
         # Check calendars for working days until we find the right target, start at date_to + 1 day
         # Postpone date_target until the next working day
@@ -89,7 +107,7 @@ class HrLeave(models.Model):
             date_target += relativedelta(days=1)
 
         # Undo the last day increment
-        return (date_start, date_target)
+        return (date_start.astimezone(pytz.utc).replace(tzinfo=None), date_target.astimezone(pytz.utc).replace(tzinfo=None))
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
                  'request_unit_half', 'request_unit_hours', 'employee_id')
@@ -145,8 +163,13 @@ class HrLeave(models.Model):
                         duration_by_leave_id.update(leave._get_durations(resource_calendar=company_cal))
                         continue
                     # Extend the end date to next working day
-                    date_start = leave.date_from
-                    date_end = leave.date_to
+                    # date_from/date_to are UTC: localize to the employee's
+                    # timezone first, otherwise the calendar day extracted via
+                    # .date() can be off by one for timezones far from UTC
+                    # (e.g. UTC-10), corrupting the day count below.
+                    employee_tz = leave._l10n_fr_get_employee_tz()
+                    date_start = pytz.utc.localize(leave.date_from).astimezone(employee_tz)
+                    date_end = pytz.utc.localize(leave.date_to).astimezone(employee_tz)
                     while not leave.resource_calendar_id._works_on_date(date_start):
                         date_start += relativedelta(days=1)
                     extended_date_end = date_end
