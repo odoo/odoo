@@ -153,20 +153,20 @@
                                                 Agents who are inactive in Odoo for more than 30 minutes will be considered disconnected.
                                             </p>
                                         </group>
-                                        <group class="oe_subtotal_footer d-flex justify-content-end">
-                                            <div class="container">
+                                        <group class="oe_subtotal_footer">
+                                            <div class="container p-0 mw-100">
                                                 <field name="available_operator_ids" invisible="1"/>
                                                 <div class="row mb-2">
                                                     <div class="col"><label class="fw-bold" for="available_operator_ids_count"/></div>
-                                                    <div class="col me-1"><field name="available_operator_ids_count" nolabel="1"/></div>
+                                                    <div class="col me-1 text-end"><field name="available_operator_ids_count" nolabel="1"/></div>
                                                 </div>
                                                 <div class="row mb-2">
                                                     <div class="col"><label class="fw-bold" for="ongoing_session_count"/></div>
-                                                    <div class="col me-1"><field name="ongoing_session_count" nolabel="1"/></div>
+                                                    <div class="col me-1 text-end"><field name="ongoing_session_count" nolabel="1"/></div>
                                                 </div>
                                                 <div class="row mb-2" invisible="max_sessions_mode!='limited'">
                                                     <div class="col"><label class="fw-bold" for="remaining_session_capacity"/></div>
-                                                    <div class="col me-1"><field name="remaining_session_capacity" nolabel="1"/></div>
+                                                    <div class="col me-1 text-end"><field name="remaining_session_capacity" nolabel="1"/></div>
                                                 </div>
                                             </div>
                                         </group>
