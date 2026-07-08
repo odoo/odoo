@@ -82,7 +82,7 @@ class StockMove(models.Model):
             sale_order_lines_vals.append(so_line_vals)
 
         if sale_order_lines_vals:
-            self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_order_lines_vals)
+            self.env['sale.order.line'].with_context(skip_procurement=True).sudo().create(sale_order_lines_vals)
         return super()._action_synch_order()
 
     @api.model
