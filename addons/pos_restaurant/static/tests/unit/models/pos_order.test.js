@@ -285,7 +285,7 @@ describe("pos.order restaurant patches", () => {
 
         const orderSummary = await mountWithCleanup(OrderSummary);
 
-        expect(orderSummary.state.potentialCombos.length).toBe(1);
+        expect(orderSummary.potentialCombos().length).toBe(1);
         await orderSummary.applyBestCombo();
         const comboParent = order.lines.find((l) => l.combo_line_ids.length > 0);
         const sodaComboLine = comboParent.combo_line_ids.find((l) => l.product_id.id === 22);
