@@ -1412,6 +1412,10 @@ const MS_ICONS = {
         has_fill: true,
         tags: "analysis beaker beaker icon chemical chemistry chemistry icon container discovery education experiment experiment icon flask fluid glass glassware innovation knowledge lab lab icon laboratory learning liquid reaction research research icon science scientific solution study test tube tube",
     },
+    screen_rotation_alt: {
+        has_fill: false,
+        tags: "Android OS adjust alter alternate alternative arrow change circle circular control counter clockwise counterclockwise device direction display flip hardware iOS landscape mobile orientation phone portrait refresh reload rotate rotation screen screen rotation setting switch tablet turn",
+    },
     search: {
         has_fill: false,
         tags: "browse circle discover discover icon explore explore icon filter find find icon glass handle inspect investigate locate locate icon look magnifier magnify magnifying mode options query query icon scope search search bar search button see stick tool view zoom",
