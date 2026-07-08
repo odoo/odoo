@@ -14,6 +14,16 @@ _logger = logging.getLogger(__name__)
 class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
+    def _peppol_get_duplicate_message_uuids(self, message_uuids):
+        self.ensure_one()
+        duplicate_message_uuids = set(
+            self.env['account.peppol.response'].search([
+                ('peppol_message_uuid', 'in', message_uuids),
+                ('company_id', '=', self.company_id.id),
+            ]).mapped('peppol_message_uuid')
+        )
+        return duplicate_message_uuids | super()._peppol_get_duplicate_message_uuids(message_uuids)
+
     def _peppol_send_response(self, reference_moves, status, clarifications=None):
         self.ensure_one()
         clarifications = clarifications or []
