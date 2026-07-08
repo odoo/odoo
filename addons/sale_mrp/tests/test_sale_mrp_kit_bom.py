@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
 from odoo.tests import Form, tagged
 
 from odoo import Command
@@ -866,3 +867,43 @@ class TestSaleMrpKitBom(BaseCommon):
         component_move = so.picking_ids.move_ids
         self.assertEqual(component_move.uom_id, uom_kg)
         self.assertEqual(component_move.packaging_uom_id, uom_kg)
+
+    @freeze_time('2020-01-15')
+    def test_qty_delivered_at_date_with_bom(self):
+        """Check the quantity delivered at date is correct for a sale order with a kit"""
+
+        self.kit = self._create_product('Kit', True, 0.00)
+        self.comp = self._create_product('Component', True, 0.00)
+
+        # Create BoM for Kit
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_tmpl_id = self.kit.product_tmpl_id
+        bom_product_form.product_qty = 1.0
+        bom_product_form.type = 'phantom'
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.comp
+            bom_line.product_qty = 1
+        self.bom = bom_product_form.save()
+
+        self.customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({
+                    'name': self.kit.name,
+                    'product_id': self.kit.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 1,
+                    'tax_ids': False,
+                })],
+        })
+        so.action_confirm()
+        picking = so.picking_ids
+        picking.move_ids.write({'quantity': 1, 'picked': True})
+        picking.button_validate()
+
+        self.assertEqual(so.with_context({'accrual_entry_date': '2020-01-15'}).order_line.qty_delivered_at_date, 1)
+        self.assertEqual(so.with_context({'accrual_entry_date': '2020-01-10'}).order_line.qty_delivered_at_date, 0)
