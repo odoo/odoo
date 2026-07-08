@@ -1,9 +1,9 @@
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, plugin } from "@odoo/owl";
 
 export class ModelSelector extends Component {
     static template = "web.ModelSelector";
@@ -20,9 +20,9 @@ export class ModelSelector extends Component {
         autofocus: { type: Boolean, optional: true },
     };
 
-    setup() {
-        this.orm = useService("orm");
+    orm = plugin(ORM);
 
+    setup() {
         onWillStart(async () => {
             if (!this.props.models) {
                 this.models = await this._fetchAvailableModels();
