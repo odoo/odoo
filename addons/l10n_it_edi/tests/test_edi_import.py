@@ -18,10 +18,13 @@ class TestItEdiImport(TestItEdi):
     """ Main test class for the l10n_it_edi vendor bills XML import"""
 
     fake_test_content = """<?xml version="1.0" encoding="UTF-8"?>
-        <p:FatturaElettronica versione="FPR12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-        xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+        <p:FatturaElettronica
+            xmlns:ds="___ignore___"
+            xmlns:p="___ignore___"
+            xmlns:xsi="___ignore___"
+            xsi:schemaLocation="___ignore___"
+            versione="FPR12"
+        >
         <FatturaElettronicaHeader>
           <DatiTrasmissione>
             <IdTrasmittente>
