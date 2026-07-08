@@ -3,6 +3,7 @@
 from collections import defaultdict
 
 from odoo import _, api, fields, models
+from odoo.tools import OrderedSet
 from odoo.exceptions import UserError
 
 
@@ -204,9 +205,8 @@ class ProductPricelist(models.Model):
         rules = self._get_applicable_rules(products, date, **kwargs)
 
         results = {}
+        qtys_in_product_uom = {}
         for product in products:
-            suitable_rule = self.env['product.pricelist.item']
-
             product_uom = product.uom_id
             target_uom = uom or product_uom  # If no uom is specified, fall back on the product uom
 
@@ -219,11 +219,16 @@ class ProductPricelist(models.Model):
             else:
                 qty_in_product_uom = quantity
 
-            for rule in rules:
-                if rule._is_applicable_for(product, qty_in_product_uom):
-                    suitable_rule = rule
-                    break
+            qtys_in_product_uom[product.id] = qty_in_product_uom
 
+        suitable_rule_by_product_id = self._get_applicability_map(rules, products, qtys_in_product_uom)
+        for product in products:
+            suitable_rule = suitable_rule_by_product_id.get(
+                product.id, self.env['product.pricelist.item']
+            )
+            product_uom = product.uom_id
+            target_uom = uom or product_uom
+            qty_in_product_uom = qtys_in_product_uom[product.id]
             if compute_price:
                 price = suitable_rule._compute_price(
                     product, quantity, target_uom, date=date, currency=currency, **kwargs)
@@ -235,14 +240,95 @@ class ProductPricelist(models.Model):
 
         return results
 
+    def _get_applicability_map(self, items, products, qtys_in_product_uom):
+        """Match each given product with the first rule of ``items`` applicable to it.
+
+        Instead of scanning all the rules for each product, products are indexed by
+        what the rules can be applied on (category subtree, template, variant), so
+        that each rule only has to look at the products it may apply to.
+
+        :param items: recordset of pricelist rules (product.pricelist.item)
+        :param products: recordset of products (product.product/product.template)
+        :param dict qtys_in_product_uom: {product id: quantity}
+        :returns: {product id: matched rule}, products without any matching rule are left out
+        :rtype: dict
+        """
+        matched_rule_by_product_id = {}
+        products = products.sorted(key=lambda p: qtys_in_product_uom[p.id], reverse=True)
+        remaining_product_ids = OrderedSet(products.ids)
+        product_ids_by_template, product_ids_by_variant = defaultdict(OrderedSet), defaultdict(OrderedSet)
+        product_ids_by_parent_path = defaultdict(OrderedSet)
+        is_template = products._name == 'product.template'
+        for product in products:
+            if is_template:
+                product_ids_by_template[product.id].add(product.id)
+                # A rule applied on a variant is acceptable on its template as long as
+                # that template has a single variant, cf. `_is_applicable_for`.
+                if product.product_variant_count == 1:
+                    product_ids_by_variant[product.product_variant_id.id].add(product.id)
+            else:
+                product_ids_by_template[product.product_tmpl_id.id].add(product.id)
+                product_ids_by_variant[product.id].add(product.id)
+
+            if not product.categ_id:
+                continue
+            # Index each product under all of its ancestor categories, so that a rule
+            # directly gets every product of its category subtree.
+            prefix_path = ""
+            for categ_id in product.categ_id.parent_path.split('/')[:-1]:
+                prefix_path += f'{categ_id}/'
+                product_ids_by_parent_path[prefix_path].add(product.id)
+
+        for rule in items:
+            if not remaining_product_ids:
+                break
+
+            if rule.applied_on == '2_product_category':
+                candidates = product_ids_by_parent_path[rule.categ_id.parent_path]
+            elif rule.applied_on == '1_product':
+                candidates = product_ids_by_template[rule.product_tmpl_id.id]
+            elif rule.applied_on == '0_product_variant':
+                candidates = product_ids_by_variant[rule.product_id.id]
+            else:
+                # Handling the condition where the rule is applied on all products. (i.e `3_global`)
+                candidates = remaining_product_ids
+
+            matched_product_ids = set()
+            product_ids_to_check = []
+            for product_id in candidates:
+                # [PERF]: In cases where rules are applined with a `min_quantity`, we can break early
+                # if the product quantity is lower than the rule's `min_quantity`, because the candidates
+                # should be sorted by the `qtys_product_uom` quantity in descending order.
+                if rule.min_quantity and qtys_in_product_uom[product_id] < rule.min_quantity:
+                    break
+                if product_id not in remaining_product_ids:
+                    # Already matched with a higher priority rule.
+                    matched_product_ids.add(product_id)
+                else:
+                    product_ids_to_check.append(product_id)
+
+            for product in products.browse(product_ids_to_check).with_prefetch(products._prefetch_ids):
+                if rule._is_applicable_for(product, qtys_in_product_uom[product.id]):
+                    matched_rule_by_product_id[product.id] = rule
+                    matched_product_ids.add(product.id)
+
+            # [PERF]: Matched products will never be matched again, discard them.
+            # This way in the average case, a product will only be referenced limited
+            # number of times proportiniate to the number of indexes used above which is constant.
+            remaining_product_ids.difference_update(matched_product_ids)
+            candidates.difference_update(matched_product_ids)
+
+        return matched_rule_by_product_id
+
     # Split methods to ease (community) overrides
     def _get_applicable_rules(self, products, date, **kwargs):
         self and self.ensure_one()  # self is at most one record
         if not self:
             return self.env['product.pricelist.item']
 
-        return self.env['product.pricelist.item'].search(
-            self._get_applicable_rules_domain(products=products, date=date, **kwargs)
+        return self.env['product.pricelist.item'].search_fetch(
+            self._get_applicable_rules_domain(products=products, date=date, **kwargs),
+            ['applied_on', 'categ_id', 'product_tmpl_id', 'product_id', 'min_quantity'],
         )
 
     def _get_applicable_rules_domain(self, products, date, **kwargs):
