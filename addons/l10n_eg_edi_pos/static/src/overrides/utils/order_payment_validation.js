@@ -16,7 +16,7 @@ patch(OrderPaymentValidation.prototype, {
             return result;
         }
 
-        if (this.order.amount_total >= (company.l10n_eg_invoicing_threshold || 0)) {
+        if (this.order.amount_total >= (this.pos.config._l10n_eg_edi_invoicing_threshold || 0)) {
             const partner = this.order.partner_id;
             if (!partner || !partner.name || !partner.vat) {
                 this.pos.dialog.add(AlertDialog, {
@@ -26,7 +26,7 @@ patch(OrderPaymentValidation.prototype, {
                             "depending on the nature of the buyer, please either select " +
                             'an Individual Egypt Customer and fill in the "Tax ID" with ' +
                             "their National ID, or an Individual non-Egypt Customer.",
-                        (company.l10n_eg_invoicing_threshold || 0).toLocaleString()
+                        (this.pos.config._l10n_eg_edi_invoicing_threshold || 0).toLocaleString()
                     ),
                 });
                 return false;

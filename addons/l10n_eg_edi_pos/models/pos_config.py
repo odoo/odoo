@@ -1,6 +1,9 @@
+import json
+
 from datetime import datetime, timedelta
 
 from odoo import _, fields, models
+from odoo.addons.l10n_eg_edi_eta.lib.eta_client import ETAClient
 
 
 class PosConfig(models.Model):
@@ -14,6 +17,12 @@ class PosConfig(models.Model):
     l10n_eg_edi_pos_access_token = fields.Char(groups='base.group_system', readonly=True)
     l10n_eg_edi_pos_token_expiry = fields.Datetime(groups='base.group_system', readonly=True)
     l10n_eg_edi_pos_last_uuid = fields.Char(groups='base.group_system', readonly=True)
+
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        if read_records and self.env.company.country_id.code == 'EG':
+            read_records[0]['_l10n_eg_edi_invoicing_threshold'] = self.env.company._get_invoicing_threshold()
+        return read_records
 
     def _l10n_eg_edi_pos_get_token(self):
         """
@@ -59,16 +68,17 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         request_data = self._l10n_eg_edi_pos_build_auth_request()
-        response = self.env['account.edi.format']._l10n_eg_eta_connect_to_server(
-            request_data,
-            '/connect/token',
-            'POST',
-            is_access_token_req=True,
-            production_enviroment=not self.l10n_eg_edi_pos_preprod,
+        client = ETAClient(
+            is_production=not self.l10n_eg_edi_pos_preprod
         )
 
-        data = response.get('data') or {}
-        if (error := response.get('error')) or 'access_token' not in data:
+        content = client.get_access_token(
+            body=request_data['body'],
+            headers=request_data['header']
+        )
+
+        data = json.loads(content)
+        if (error := data.get('error')) or 'access_token' not in data:
             return "", error or _("ETA authentication response is missing the access token.")
 
         try:

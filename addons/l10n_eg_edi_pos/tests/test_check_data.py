@@ -44,7 +44,7 @@ class TestL10nEgEdiPosCheckData(TestL10nEgEdiPosCommon):
     def test_threshold_domestic_person_no_vat_returns_error(self):
         """Above-threshold sales to a domestic individual without a National ID
         trip the threshold guard and are rejected."""
-        self.env.company.l10n_eg_invoicing_threshold = 1.0
+        self.env['ir.config_parameter'].sudo().set_float('l10n_eg_edi_eta.invoicing_threshold', 1.0)
         self.eg_individual_customer._set_additional_identifier('EG_NIN', False)
         order = self._create_unpaid_order()
         errors = order._l10n_eg_edi_pos_check_data()
@@ -53,7 +53,7 @@ class TestL10nEgEdiPosCheckData(TestL10nEgEdiPosCommon):
     def test_threshold_domestic_person_with_vat_passes(self):
         """Same above-threshold case but the individual has a National ID —
         check_data returns no threshold error."""
-        self.env.company.l10n_eg_invoicing_threshold = 1.0
+        self.env['ir.config_parameter'].sudo().set_float('l10n_eg_edi_eta.invoicing_threshold', 1.0)
         order = self._create_unpaid_order()
         errors = order._l10n_eg_edi_pos_check_data()
         self.assertFalse(any('National ID' in e for e in errors))

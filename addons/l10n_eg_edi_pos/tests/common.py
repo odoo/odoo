@@ -2,6 +2,7 @@ import json
 from contextlib import contextmanager
 from unittest.mock import patch
 
+from odoo.addons.l10n_eg_edi_eta.lib.eta_client import ETAClient
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
@@ -26,9 +27,7 @@ class TestL10nEgEdiPosCommon(CommonPosTest):
 
     @classmethod
     def _l10n_eg_set_invoicing_threshold(cls):
-        cls.env.company.write({
-            'l10n_eg_invoicing_threshold': 150000.0,
-        })
+        cls.env['ir.config_parameter'].sudo().set_float('l10n_eg_edi_eta.invoicing_threshold', 150000.0)
 
     @classmethod
     def _l10n_eg_create_branch_partner(cls):
@@ -203,31 +202,39 @@ class TestL10nEgEdiPosCommon(CommonPosTest):
 
     @contextmanager
     def _mock_eta(self, *, send_response=None, token='cached-token', expires_in=3600, auth_response=None):
-        """Patch the single ETA HTTP entry point, dispatching on the request type
-        the production code already flags. Auth requests return ``auth_response`` when
-        given (use it for malformed payloads), else a well-formed
-        ``{access_token, expires_in}``; submission requests return ``send_response``
-        (a dict, or a callable ``(request_data) -> dict`` that inspects/echoes the
-        request). The real network is never reached."""
-        edi_format = self.env.registry['account.edi.format']
+        """Mock ETA authentication and receipt submission."""
 
-        def fake(model_self, request_data, request_url, method, is_access_token_req=False, production_enviroment=False):
-            if is_access_token_req:
-                return auth_response or {'data': {'access_token': token, 'expires_in': expires_in}}
+        def fake_get_access_token(client, body, headers, timeout=20):
+            return json.dumps(auth_response or {
+                'access_token': token,
+                'expires_in': expires_in,
+            }).encode()
+
+        def fake_submit_receipt(client, body, headers, timeout=20):
             if callable(send_response):
-                return send_response(request_data)
-            return send_response
+                return send_response(body)
+            return json.dumps(send_response).encode()
 
-        with patch.object(edi_format, '_l10n_eg_eta_connect_to_server', new=fake):
+        with patch.object(
+            ETAClient, 'get_access_token', new=fake_get_access_token
+        ), patch.object(
+            ETAClient, 'submit_receipt', new=fake_submit_receipt
+        ):
             yield
 
     @contextmanager
     def _assert_no_eta_call(self):
         """Spy the ETA HTTP entry point and assert it is never invoked."""
-        edi_format = self.env.registry['account.edi.format']
-        with patch.object(edi_format, '_l10n_eg_eta_connect_to_server') as http_mock:
+        with patch.object(
+            ETAClient, 'get_access_token'
+            ) as get_access_token_mock, patch.object(
+            ETAClient, 'submit_receipt'
+            ) as submit_receipt_mock:
             yield
-        self.assertFalse(http_mock.called, "Expected no ETA HTTP call")
+        self.assertFalse(
+            get_access_token_mock.called or submit_receipt_mock.called,
+            "Expected no ETA HTTP call"
+        )
 
     # ------------------------------------------------------------------ #
     #  ETA response factories                                            #
@@ -238,24 +245,18 @@ class TestL10nEgEdiPosCommon(CommonPosTest):
         The uuid is a SHA-256 of the payload, so tests don't know it ahead of time;
         the mock parses the request and echoes the uuid into ``acceptedDocuments``."""
         def factory(request_data):
-            payload = json.loads(request_data['body'].decode())['receipts'][0]
+            payload = json.loads(request_data.decode())['receipts'][0]
             return {
-                'ok': True,
-                'data': {
-                    'acceptedDocuments': [{'uuid': payload['header']['uuid']}],
-                    'submissionId': submission_id,
-                },
+                'acceptedDocuments': [{'uuid': payload['header']['uuid']}],
+                'submissionId': submission_id,
             }
         return factory
 
     def _eta_rejects_any_uuid(self, *, message='Validation failed'):
         """Dynamic send-response: rejects whichever uuid the order computed."""
         def factory(request_data):
-            payload = json.loads(request_data['body'].decode())['receipts'][0]
-            return {
-                'ok': True,
-                'data': {'rejectedDocuments': [{'uuid': payload['header']['uuid'], 'error': message}]},
-            }
+            payload = json.loads(request_data.decode())['receipts'][0]
+            return {'rejectedDocuments': [{'uuid': payload['header']['uuid'], 'error': message}]}
         return factory
 
     @staticmethod
@@ -272,7 +273,7 @@ class TestL10nEgEdiPosCommon(CommonPosTest):
     def _eta_response_unknown():
         """Empty data with no accept/reject for the uuid — postprocess falls through
         to the "Unexpected response from ETA." error branch."""
-        return {'ok': True, 'data': {}}
+        return {}
 
     # ------------------------------------------------------------------ #
     #  Read-back helpers                                                 #
