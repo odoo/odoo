@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import Domain
 from odoo.http import request, route
 
 from odoo.addons.account_payment.controllers import portal as account_payment_portal
@@ -39,23 +38,14 @@ class PaymentPortal(payment_portal.PaymentPortal):
                     self.env.website.company_id.id, None, 0, website_id=self.env.website.id
                 )
         )
-        # Select the brands, i.e. non-primary payment methods. E.g., Amex for Card.
-        brands_domain = Domain([
-            ('is_primary', '=', False),
-            ('primary_payment_method_id.provider_id', 'in', available_providers_sudo.ids),
-            ('primary_payment_method_id.active', '=', True),
-        ])
-        # Or, select the primary payment methods without any brands. E.g., PayPal.
-        primary_without_brands_domain = Domain([
-            ('is_primary', '=', True),
-            ('brand_ids', '=', False),
-            ('provider_id', 'in', available_providers_sudo.ids),
-        ])
+        # For each available provider's primary payment method, show its active brands if any
+        # (e.g. Amex/Visa for Card), otherwise show the primary payment method itself (e.g. PayPal)
+        primary_pms_sudo = available_providers_sudo.primary_payment_method_ids.filtered("active")
+        all_pms_sudo = primary_pms_sudo.mapped(
+            lambda pm: pm.brand_ids.filtered("active") if pm.brand_ids else pm
+        )
 
-        supported_pms = request.env['payment.method'].sudo().search(
-            Domain.OR([brands_domain, primary_without_brands_domain]),
-            limit=limit,
-        )._deduplicate_by_code().mapped(lambda pm: {
+        supported_pms = all_pms_sudo._deduplicate_by_code()[:limit].mapped(lambda pm: {
             'name': pm.name,
             # Loading the image via this url caches the image on the client browser
             'image_url': request.env['website'].image_url(pm, 'image'),
