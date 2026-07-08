@@ -86,8 +86,7 @@ export class FileViewer extends Component {
     }
 
     onIframeLoaded(ev) {
-        const iFrameEl = ev.target;
-        iFrameEl.contentWindow.requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
             this.state.isIframeLoaded = true;
         });
     }
