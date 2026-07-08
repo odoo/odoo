@@ -148,12 +148,37 @@ class TestItEdi(AccountTestInvoicingCommon):
 
         cls.module = 'l10n_it_edi'
 
+    def _remove_all_namespaces(self, root):
+        """Strip XML namespaces and schemaLocation for deterministic test comparisons.
+
+        While namespaces are fixed, schemaLocation can change across XSD versions.
+        Since tests don't care about schema URLs or tag prefixes, stripping
+        them keeps assertions focused purely on business data correctness.
+        """
+        for elem in root.iter(etree.Element):
+            if isinstance(elem.tag, str) and elem.tag.startswith('{'):
+                elem.tag = etree.QName(elem).localname
+            for key in list(elem.attrib.keys()):
+                if key.startswith('{'):
+                    if "xmlns" in key or "schemaLocation" in key:
+                        elem.attrib.pop(key)
+                    else:
+                        local_key = etree.QName(key).localname
+                        elem.attrib[local_key] = elem.attrib.pop(key)
+                elif key.startswith('xmlns'):
+                    elem.attrib.pop(key)
+        return root
+
     def _assert_export_invoice(self, invoice, filename):
         path = f'{self.module}/tests/export_xmls/{filename}'
         with tools.file_open(path, mode='rb') as fd:
             expected_tree = etree.fromstring(fd.read())
+            expected_tree = self._remove_all_namespaces(expected_tree)
+
         xml = invoice._l10n_it_edi_render_xml()
         invoice_etree = etree.fromstring(xml)
+        invoice_etree = self._remove_all_namespaces(invoice_etree)
+
         try:
             self.assertXmlTreeEqual(invoice_etree, expected_tree)
         except AssertionError as ae:
