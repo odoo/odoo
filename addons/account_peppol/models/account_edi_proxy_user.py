@@ -149,6 +149,23 @@ class AccountEdiProxyClientUser(models.Model):
                 message['uuid']
                 for message in messages.get('messages', [])
             ]
+            # remove the duplicates
+            if duplicate_message_uuids := set(
+                self.env['account.move'].search([
+                    ('peppol_message_uuid', 'in', message_uuids),
+                    ('company_id', '=', edi_user.company_id.id),
+                ])
+                .mapped('peppol_message_uuid')
+            ):
+                message_uuids = [uuid for uuid in message_uuids if uuid not in duplicate_message_uuids]
+                # acknowledge the duplicates on IAP side.
+                edi_user._make_request(
+                    f"{edi_user._get_server_url()}/api/peppol/1/ack",
+                    {'message_uuids': list(duplicate_message_uuids)},
+                )
+                for uuid in duplicate_message_uuids:
+                    _logger.info("Message with UUID %s could not be imported because it is identified as a duplicate", uuid)
+
             if not message_uuids:
                 continue
 
