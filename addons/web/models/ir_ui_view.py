@@ -23,7 +23,7 @@ class IrUiView(models.Model):
         return {
             'list': {'icon': 'reorder'},
             'form': {'icon': 'contact_mail', 'multi_record': False},
-            'graph': {'icon': 'area_chart'},
+            'graph': {'icon': 'bar_chart'},
             'pivot': {'icon': 'oi_view-pivot'},
             'kanban': {'icon': 'oi_view-kanban'},
             'calendar': {'icon': 'calendar_today'},
