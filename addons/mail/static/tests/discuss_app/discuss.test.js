@@ -2107,6 +2107,41 @@ test("Retry loading more messages on failed load more messages should load more 
     await contains(".o-mail-Message", { count: 90 });
 });
 
+test("Retry on failed initial load should load messages", async () => {
+    let messageFetchShouldFail = true;
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    const messageIds = pyEnv["mail.message"].create(
+        [...Array(60).keys()].map(() => ({
+            body: "coucou",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: messageIds[29],
+    });
+    onRpcBefore("/discuss/channel/messages", () => {
+        if (messageFetchShouldFail) {
+            return Promise.reject();
+        }
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("button", { text: "Click here to retry" });
+    messageFetchShouldFail = false;
+    await click("button", { text: "Click here to retry" });
+    await contains(".o-mail-Message", { count: 60 });
+    await contains(".o-mail-Thread-newMessage");
+});
+
 test("composer state: attachments save and restore", async () => {
     const pyEnv = await startServer();
     const [channelId] = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Special" }]);
