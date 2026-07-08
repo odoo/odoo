@@ -264,6 +264,16 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return {'uuid': uuid, 'move': move}
 
+    def _peppol_get_duplicate_message_uuids(self, message_uuids):
+        self.ensure_one()
+        return set(
+            self.env['account.move'].search([
+                ('peppol_message_uuid', 'in', message_uuids),
+                ('company_id', '=', self.company_id.id),
+            ])
+            .mapped('peppol_message_uuid')
+        )
+
     def _peppol_get_new_documents(self, skip_no_journal=False):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
         job_count = self.env.context.get('peppol_crons_job_count') or BATCH_SIZE
@@ -295,9 +305,30 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     'Error while receiving the document from Peppol Proxy: %s', e.message)
                 continue
 
+            received_messages = messages.get('messages', [])
+            # Edge case: self-addressed messages (sender == receiver), i.e. a company genuinely
+            # invoicing itself. The outgoing invoice already carries the message UUID, so the
+            # duplicate check would wrongly discard the incoming document.
+            # Exclude those messages from the check so the vendor bill can still be created.
+            uuids_to_check = [
+                message['uuid'] for message in received_messages
+                if message.get('sender') and message['sender'] != message['receiver']
+            ]
+            # Acknowledge the duplicates on IAP side.
+            if duplicate_message_uuids := edi_user._peppol_get_duplicate_message_uuids(uuids_to_check):
+                edi_user._call_peppol_proxy(
+                    endpoint=edi_user._get_peppol_proxy_endpoint('1/ack'),
+                    params={'message_uuids': list(duplicate_message_uuids)},
+                )
+                _logger.info(
+                    "Messages with UUID %s could not be imported because they are identified as duplicates",
+                    ', '.join(duplicate_message_uuids)
+                )
+
+            # Remove the duplicates
             message_uuids = [
-                message['uuid']
-                for message in messages.get('messages', [])
+                message['uuid'] for message in received_messages
+                if message['uuid'] not in duplicate_message_uuids
             ]
             if not message_uuids:
                 continue
