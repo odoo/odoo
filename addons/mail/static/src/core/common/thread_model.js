@@ -547,7 +547,15 @@ export class Thread extends Record {
     async fetchNewMessages({ routeParams = {} } = {}) {
         if (
             this.status === "loading" ||
+<<<<<<< d88a1b0eee4f2b6010ed9d9a34a2854f2a92e9ff
             (this.isLoaded && !this.hasLoadingFailed && this.channel)
+||||||| d1fd3b428ebf63ff77e80db8c673ae313299e875
+            (this.isLoaded && ["discuss.channel", "mail.box"].includes(this.model))
+=======
+            (!this.hasLoadingFailed &&
+                this.isLoaded &&
+                ["discuss.channel", "mail.box"].includes(this.model))
+>>>>>>> 8fef505264ac81f64c688b2a66a285ebcd579f1a
         ) {
             return;
         }
