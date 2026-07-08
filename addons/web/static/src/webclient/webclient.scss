@@ -10,6 +10,12 @@ html, body {
     height: 100%;
 }
 
+* {
+  scrollbar-color: var(--CustomScrollBar__thumb-color, #{rgba($body-color, .5)}) var(--CustomScrollBar__track-color, transparent);
+  scrollbar-width: var(--CustomScrollBar-width, auto);
+  scrollbar-gutter: var(--CustomScrollBar-gutter, auto);
+}
+
 // Disable default border-style added by _reboot.scss
 tfoot {
   tr, td, th {
@@ -197,6 +203,11 @@ select {
       color: $o-main-text-color;
     }
   }
+}
+
+textarea {
+  // This will reserve space for the scrollbar, preventing the content from shifting when a scrollbar appears.
+  --CustomScrollBar-gutter: stable;
 }
 
 @mixin o-placeholder {

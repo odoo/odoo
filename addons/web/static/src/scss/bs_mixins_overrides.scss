@@ -78,6 +78,7 @@ $o-color-extras-nesting-selector: '&' !default;
 // the way .text-muted elements are rendered in those environments.
 @mixin bg-variant($parent, $color, $text-color: null) {
     #{$parent} {
+        --CustomScrollBar__thumb-color: #{rgba(color-contrast($color), .5)};
         @include o-bg-color($color, $text-color);
     }
     a#{$parent},

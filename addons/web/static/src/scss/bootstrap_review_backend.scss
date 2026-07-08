@@ -139,7 +139,9 @@ $-o-theme-text-colors: null;
 //    classes later in conjunction with legacy 'bg-white-x' and 'bg-black-x'
 //    ones.
 @each $-name, $-color in $theme-colors {
-    .bg-#{$-name} {
+    .bg-#{$-name}, .text-bg-#{$-name} {
+        --CustomScrollBar__thumb-color: #{rgba(color-contrast($-color), .5)};
+
         @include o-print-color($-color, background-color, bg-opacity);
     }
 }
@@ -160,6 +162,8 @@ $-o-theme-text-colors: null;
 }
 
 %-bg-white {
+    --CustomScrollBar__thumb-color: #{rgba(color-contrast($o-white), .5)};
+
     @include o-print-color($o-white, background-color, bg-opacity);
 }
 
@@ -180,11 +184,13 @@ $-o-theme-text-colors: null;
 }
 
 .bg-black {
+    --CustomScrollBar__thumb-color: #{rgba(color-contrast($o-black), .5)};
     @extend %-bg-black;
 }
 
-.bg-transparent{
+.bg-transparent {
     --bg-opacity: 0;
+    --CustomScrollBar__thumb-color: inherit;
     @extend %-bg-black;
 }
 
@@ -201,6 +207,7 @@ $-o-grayscale-opacities: map-remove($o-opacities, 0, 100);
 
     .bg-black-#{$-name} {
         --bg-opacity: #{$-value};
+        --CustomScrollBar__thumb-color: #{rgba(color-contrast($o-black), .5)};
         @extend %-bg-black;
     }
 }
@@ -239,6 +246,7 @@ $-o-bg-colors-custom: map-merge($o-bg-colors-custom, $o-grays);
 @each $-name, $-color in map-merge($-o-bg-colors-custom, $o-grays) {
     .bg-#{$-name}, .text-bg-#{$-name}  {
         @include o-print-color($-color, background-color, bg-opacity);
+        --CustomScrollBar__thumb-color: #{rgba(color-contrast($-color), .5)};
     }
 
     .text-bg-#{$-name} {
