@@ -12,10 +12,10 @@ const DAYPART_OPTIONS = [
       start: "v_09_00a", end: "v_06_00p" },
     { value: "prime",         label: "Prime",         range: "6p - 12a",
       start: "v_06_00p", end: "v_12_00a" },
-    { value: "late_fringe",   label: "Late Fringe",   range: "12a - 2a",
-      start: "v_12_00a", end: "v_02_00a" },
-    { value: "overnight",     label: "Overnight",     range: "2a - 6a",
-      start: "v_02_00a", end: "v_06_00a" },
+    { value: "late_fringe",   label: "Late Fringe",   range: "12a - 3a",
+      start: "v_12_00a", end: "v_03_00a" },
+    { value: "overnight",     label: "Overnight",     range: "3a - 6a",
+      start: "v_03_00a", end: "v_06_00a" },
     // Selected automatically when the planner enters a (start, end) pair
     // that doesn't match any of the standard dayparts above.
     { value: "custom",        label: "Custom",        range: "",

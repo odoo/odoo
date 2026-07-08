@@ -123,10 +123,10 @@
 }
 
 /* Style the actual <input> / <select> elements to look like the mockup. */
-.mv-deal-redesign .mv-essentials-grid input,
+.mv-deal-redesign .mv-essentials-grid input:not(.form-check-input):not([type="checkbox"]),
 .mv-deal-redesign .mv-essentials-grid select,
 .mv-deal-redesign .mv-essentials-grid .o_input,
-.mv-deal-redesign .mv-essentials-grid .o_field_widget input,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget input:not(.form-check-input):not([type="checkbox"]),
 .mv-deal-redesign .mv-essentials-grid .o_field_widget select {
     width: 100% !important;
     border: 1px solid #d1d5db !important;

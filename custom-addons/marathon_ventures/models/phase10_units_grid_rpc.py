@@ -23,12 +23,12 @@ from odoo.addons.marathon_ventures.models.phase12_deal_start_date import (
 DAYPART_DEFAULT_TIMES = {
     'early_morning': ('v_06_00a', 'v_09_00a'),
     'morning':       ('v_09_00a', 'v_12_00p'),
-    'day':           ('v_12_00p', 'v_03_00p'),
+    'day':           ('v_09_00a', 'v_06_00p'),
     'afternoon':     ('v_03_00p', 'v_06_00p'),
     'early_fringe':  ('v_06_00p', 'v_08_00p'),
-    'prime':         ('v_08_00p', 'v_11_00p'),
-    'late_fringe':   ('v_11_00p', 'v_01_00a'),
-    'overnight':     ('v_01_00a', 'v_06_00a'),
+    'prime':         ('v_06_00p', 'v_12_00a'),
+    'late_fringe':   ('v_12_00a', 'v_03_00a'),
+    'overnight':     ('v_03_00a', 'v_06_00a'),
 }
 
 DAYPART_LABELS = {
