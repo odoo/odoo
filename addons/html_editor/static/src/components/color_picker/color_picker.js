@@ -1,5 +1,5 @@
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
-import { Component, useProps, proxy, signal, t, useListener } from "@odoo/owl";
+import { Component, useProps, proxy, signal, t, useListener, computed } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -10,7 +10,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { POSITION_BUS } from "@web/core/position/position_hook";
 import { registry } from "@web/core/registry";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export const DEFAULT_COLORS = [
@@ -69,6 +69,7 @@ export class ColorPicker extends Component {
     });
     rootRef = signal.ref();
     tabListRef = signal.ref();
+    defaultColorSet = computed(() => this.getDefaultColorSet());
 
     setup() {
         this.tabs = registry
@@ -84,9 +85,6 @@ export class ColorPicker extends Component {
         useTabsKeyboardNavigation({
             ref: this.tabListRef,
             isTabActive: (el) => el.classList.contains(`${this.state.activeTab}-tab`),
-        });
-        onWillRender(() => {
-            this.defaultColorSet = this.getDefaultColorSet();
         });
         this.defaultColor = this.props.state.selectedColor;
         this.focusedBtn = null;
@@ -260,9 +258,10 @@ export class ColorPicker extends Component {
     }
 
     getDefaultColorSet() {
-        const colorToMatch = this.state.currentColorPreview || this.state.isHoverPreviewActive
-            ? this.state.currentCustomColor
-            : this.props.state.selectedColor;
+        const colorToMatch =
+            this.state.currentColorPreview || this.state.isHoverPreviewActive
+                ? this.state.currentCustomColor
+                : this.props.state.selectedColor;
         if (!colorToMatch) {
             return;
         }
