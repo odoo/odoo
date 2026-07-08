@@ -2841,13 +2841,6 @@ class AccountMove(models.Model):
                     'message': _("You must specify the Profit Account (company dependent)")
                 }}
 
-    @api.onchange('document_tax_mode')
-    def _onchange_document_tax_mode(self):
-        for move in self:
-            # Managed here due to limitations of the account.move.line model in handling related fields
-            for line in move.invoice_line_ids:
-                line.document_tax_mode = move.document_tax_mode
-
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
