@@ -206,6 +206,29 @@ describe("pos.order - loyalty", () => {
         expect(order._canGenerateRewards(program, 30, 30)).toBe(false);
     });
 
+    test("product-restricted rules require a valid product in the order", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Restrict loyalty rule #1 (program #1) to product #5 only
+        const rule = models["loyalty.rule"].get(1);
+        rule.any_product = false;
+        const program = models["loyalty.program"].get(1);
+
+        // Order only contains product #1, which is not valid for the rule
+        await addProductLineToOrder(store, order, { qty: 1 });
+
+        expect(order.pointsForPrograms([program])[program.id]).toEqual([]);
+        expect(order._canGenerateRewards(program, 1000, 1000)).toBe(false);
+
+        // Adding the valid product #5 makes the rule apply
+        await addProductLineToOrder(store, order, { templateId: 5, productId: 5 });
+
+        expect(order.pointsForPrograms([program])[program.id]).toEqual([{ points: 1 }]);
+        expect(order._canGenerateRewards(program, 1000, 1000)).toBe(true);
+    });
+
     test("isProgramsResettable", async () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();
