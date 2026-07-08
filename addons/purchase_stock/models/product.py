@@ -170,18 +170,20 @@ class ProductProduct(models.Model):
         qty_by_product_location, qty_by_product_wh = super()._get_quantity_in_progress(location_ids, warehouse_ids)
         domain = self._get_lines_domain(location_ids, warehouse_ids)
         groups = self.env['purchase.order.line'].sudo()._read_group(domain,
-            ['order_id', 'product_id', 'uom_id', 'orderpoint_id', 'forecasted_location_id'],
-            ['product_qty:sum'])
-        for order, product, uom, orderpoint, location_final, product_qty_sum in groups:
+            ['order_id', 'product_id', 'orderpoint_id', 'forecasted_location_id'],
+            ['product_uom_qty:sum'])
+
+        for order, product, orderpoint, location_final, product_uom_qty_sum in (
+            self.env['purchase.order.line']._get_countable_rfq_groups(groups)
+        ):
             if orderpoint:
                 location = orderpoint.location_id
             elif location_final:
                 location = location_final
             else:
                 location = order.picking_type_id.default_location_dest_id
-            product_qty = uom._compute_quantity(product_qty_sum, product.uom_id, round=False)
-            qty_by_product_location[(product.id, location.id)] += product_qty
-            qty_by_product_wh[(product.id, location.warehouse_id.id)] += product_qty
+            qty_by_product_location[(product.id, location.id)] += product_uom_qty_sum
+            qty_by_product_wh[(product.id, location.warehouse_id.id)] += product_uom_qty_sum
         return qty_by_product_location, qty_by_product_wh
 
     def _get_lines_domain(self, location_ids=False, warehouse_ids=False):
