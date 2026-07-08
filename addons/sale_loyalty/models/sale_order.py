@@ -1533,3 +1533,20 @@ class SaleOrder(models.Model):
             self._force_lines_to_invoice_policy_order()
             invoice = self._create_invoices(final=True)
             invoice.action_post()
+
+            if invoice._is_ready_to_be_sent():
+                invoice.is_move_sent = True  # Mark invoice as sent
+                send_context = {'allow_raising': False, 'allow_fallback_pdf': True}
+
+                default_template_param = (
+                    self.env['ir.config_parameter']
+                    .sudo()
+                    .get_param('sale.default_invoice_email_template', False)
+                )
+
+                if default_template_param:
+                    mail_template = self.env['mail.template'].sudo().browse(int(default_template_param))
+                    if mail_template.exists():
+                        send_context['mail_template'] = mail_template
+
+                self.env['account.move.send']._generate_and_send_invoices(invoice, **send_context)
