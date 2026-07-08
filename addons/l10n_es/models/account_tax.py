@@ -51,6 +51,9 @@ class AccountTax(models.Model):
 
         if self.filtered(lambda t: t.l10n_es_exempt_reason == 'E2'):
             return '02'
+        
+        if com_partner.country_id.code == 'ES' and com_partner.state_id.code in ('TF', 'GC', 'CE', 'ME') and self.filtered(lambda t: t.l10n_es_type == 'no_sujeto_loc'):
+            invoice_node['ClaveRegimenEspecialOTrascendencia'] = '08'
 
         return '01'
 

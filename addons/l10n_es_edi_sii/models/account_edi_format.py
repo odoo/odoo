@@ -273,6 +273,8 @@ class AccountEdiFormat(models.Model):
                     invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09'
                 elif reagyp:
                     invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02'
+                elif com_partner.country_id.code == 'ES' and com_partner.state_id.code in ('TF', 'GC', 'CE', 'ME'):
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '08'
                 else:
                     invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
 
