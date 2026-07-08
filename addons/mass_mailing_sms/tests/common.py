@@ -68,6 +68,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             'bounce': 'error',
             'process': 'process',
             'pending': 'pending',
+            'open': 'outgoing',  # actually fallback on default sms status until something else required
         }
         traces = self.env['mailing.trace'].search([
             ('mass_mailing_id', 'in', mailing.ids),
@@ -111,6 +112,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
                 # trace info
                 'failure_type',
                 'trace_status',
+                'trace_values',  # misc mailing.trace additional field values
                 # check control
                 'check_sms',
             }
@@ -131,6 +133,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             # checks
             recipient_check_sms = recipient_info.get('check_sms', check_sms)
 
+            # mailing.trace check
             trace = traces.filtered(
                 lambda t: t.sms_number == number and t.trace_status == status and (t.res_id == record.id if record else True)
             )
@@ -141,6 +144,12 @@ class MassSMSCase(SMSCase, MockLinkTracker):
                     status, debug_info
                 )
             )
+            if failure_type is not None:
+                self.assertEqual(trace.failure_type, failure_type)
+            if recipient_info.get('trace_values'):
+                for fname, fvalue in recipient_info['trace_values'].items():
+                    self.assertEqual(trace[fname], fvalue)
+
             sms_not_created = is_cancel_not_sent and trace.trace_status == 'cancel'
             self.assertTrue(sms_not_created or bool(trace.sms_id_int))
             if sms_not_created:

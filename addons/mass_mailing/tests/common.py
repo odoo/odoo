@@ -298,24 +298,27 @@ class MassMailCase(MailCase, MockLinkTracker):
             raise AssertionError('url %s not found in mailing %s for record %s' % (click_label, mailing, record))
         return trace
 
-    def gateway_mail_trace_open(self, mailing, record):
+    def gateway_mail_trace_open(self, mailing, records):
         """ Simulate opening an email through blank.gif icon access. As we
         don't want to use the whole Http layer just for that we will just
         call 'set_opened()' on trace, until having a better option.
 
         :param mailing: a ``mailing.mailing`` record on which we find a trace
           to open;
-        :param record: record which should open;
+        :param records: record which should open;
         """
-        trace = mailing.mailing_trace_ids.filtered(
-            lambda t: t.model == record._name and t.res_id == record.id
-        )
-        self.assertTrue(trace)
+        traces = self.env['mailing.trace']
+        for record in records:
+            trace = mailing.mailing_trace_ids.filtered(
+                lambda t: t.model == record._name and t.res_id == record.id
+            )
+            self.assertTrue(trace)
+            trace.set_opened()
+            traces += trace
+        self.assertEqual(len(traces), len(records))
+        return traces
 
-        trace.set_opened()
-        return trace
-
-    def gateway_mail_trace_reply(self, mailing, record):
+    def gateway_mail_trace_reply(self, mailing, records):
         """ Simulate replying to an email. As we don't want to use the whole
         mail and gateway layer just for that we will just call 'set_replied()'
         on trace.
@@ -324,12 +327,15 @@ class MassMailCase(MailCase, MockLinkTracker):
           to open;
         :param record: record which should open;
         """
-        trace = mailing.mailing_trace_ids.filtered(
-            lambda t: t.model == record._name and t.res_id == record.id
-        )
-        self.assertTrue(trace)
-
-        trace.set_replied()
+        traces = self.env['mailing.trace']
+        for record in records:
+            trace = mailing.mailing_trace_ids.filtered(
+                lambda t: t.model == record._name and t.res_id == record.id
+            )
+            self.assertTrue(trace)
+            trace.set_replied()
+            traces += trace
+        self.assertEqual(len(traces), len(records))
         return trace
 
     @classmethod
