@@ -77,6 +77,16 @@
                                     <div>
                                         <a role="menuitem" type="object" name="open_payments_action">Payments</a>
                                     </div>
+                                    <div t-if="journal_type == 'bank' || journal_type == 'cash' || journal_type == 'credit'">
+                                        <a
+                                            role="menuitem"
+                                            type="action"
+                                            name="%(account.action_account_cashflow_analysis)d"
+                                            context="{'search_default_journal_id': id}"
+                                        >
+                                            Analysis
+                                        </a>
+                                    </div>
                                 </div>
 
                                 <div class="col-4" groups="account.group_account_basic" name="kanban_manage_new">
