@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { AttachmentList } from "@mail/core/common/attachment_list";
@@ -96,7 +95,6 @@ const chatterPatch = {
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
-        this.subjectInputRef = useRef("subjectInput");
         /** @type {Map<string, Function>} */
         this.uploadHandlers = new Map();
         useCustomDropzone(
