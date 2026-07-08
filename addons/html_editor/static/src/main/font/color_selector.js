@@ -1,13 +1,12 @@
-import { useChildEnv } from "@web/owl2/utils";
-import { isColorGradient } from "@web/core/utils/colors";
-import { Component, props, t, useEffect, proxy, signal } from "@odoo/owl";
 import {
-    useColorPicker,
     DEFAULT_COLORS,
     DEFAULT_THEME_COLOR_VARS,
+    useColorPicker,
 } from "@html_editor/components/color_picker/color_picker";
-import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { isColorGradient } from "@web/core/utils/colors";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
@@ -71,7 +70,6 @@ export class ColorSelector extends Component {
                 onEscape: () => this.colorSelectorBtn()?.focus(),
             },
             {
-                env: useChildEnv(),
                 onClose: (...args) => {
                     this.props.applyColorResetPreview();
                     this.props.onClose(...args);

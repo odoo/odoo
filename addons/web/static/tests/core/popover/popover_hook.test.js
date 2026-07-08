@@ -1,5 +1,16 @@
 import { animationFrame, expect, getFixture, test } from "@odoo/hoot";
-import { Component, onMounted, props, signal, types as t, xml } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    Plugin,
+    props,
+    providePlugins,
+    signal,
+    types as t,
+    useConfig,
+    usePlugin,
+    xml,
+} from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -103,4 +114,35 @@ test("popover opened from another", async () => {
 
     await contains(document.body).click();
     expect(".o_popover").toHaveCount(0);
+});
+
+test("propagate scope to popover", async () => {
+    class MyPlugin extends Plugin {
+        text = useConfig("text");
+    }
+
+    class Popover extends Component {
+        static template = xml`<t t-out="this.p.text"/>`;
+        setup() {
+            this.p = usePlugin(MyPlugin);
+        }
+    }
+
+    class Parent extends Component {
+        static template = xml`<div t-ref="this.ref"/>`;
+
+        ref = signal.ref();
+
+        setup() {
+            providePlugins([MyPlugin], { text: "abc" });
+            const popover = usePopover(Popover, { withScope: true });
+            onMounted(() => {
+                popover.open(this.ref(), {});
+            });
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    await animationFrame();
+    expect(".o_popover").toHaveText("abc");
 });

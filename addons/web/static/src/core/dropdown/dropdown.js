@@ -1,4 +1,4 @@
-import { onRendered, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
+import { onRendered, useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     immediateEffect,
@@ -141,7 +141,6 @@ export class Dropdown extends Component {
             arrow: false,
             closeOnClickAway: (target) => this.popoverCloseOnClickAway(target),
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
-            env: useChildEnv(),
             holdOnHover: this.props.holdOnHover,
             onClose: () => this.state.close(),
             onPositioned: (el, { direction }) => this.setTargetDirectionClass(direction),
@@ -157,6 +156,7 @@ export class Dropdown extends Component {
             ref: this.menuRef,
             shrink: true,
             setActiveElement: false,
+            withScope: true,
         };
         if (this.isBottomSheet) {
             Object.assign(options, {

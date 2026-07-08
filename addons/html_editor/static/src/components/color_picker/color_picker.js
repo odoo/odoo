@@ -377,6 +377,7 @@ export function useColorPicker(ref, props, options = {}) {
         };
     }
 
+    options.withScope = true;
     const colorPicker = usePopover(ColorPicker, options);
 
     function onClick() {

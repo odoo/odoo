@@ -1,20 +1,19 @@
-import { useChildEnv } from "@web/owl2/utils";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { Plugin } from "@html_editor/plugin";
+import { removeClass, removeStyle } from "@html_editor/utils/dom";
+import { isTextNode } from "@html_editor/utils/dom_info";
+import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
+import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-import { Component, xml, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
+import { isCSSColor, rgbaToHex } from "@web/core/utils/colors";
+import { getCurrentTextHighlight } from "@website/js/highlight_utils";
 import { HighlightConfigurator } from "./highlight_configurator";
 import { StackingComponent, useStackingComponentState } from "./stacking_component";
-import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
-import { removeClass, removeStyle } from "@html_editor/utils/dom";
-import { isTextNode } from "@html_editor/utils/dom_info";
-import { getCurrentTextHighlight } from "@website/js/highlight_utils";
-import { isCSSColor, rgbaToHex } from "@web/core/utils/colors";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { nodeSize } from "@html_editor/utils/position";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
@@ -311,12 +310,12 @@ class HighlightToolbarButton extends Component {
             ...this.props.highlightConfiguratorProps,
         });
         this.configuratorPopover = usePopover(StackingComponent, {
-            env: useChildEnv(),
             onClose: () => {
                 while (this.componentStack.stack.length > 1) {
                     this.componentStack.pop();
                 }
             },
+            withScope: true,
         });
     }
     openHighlightConfigurator() {

@@ -10,6 +10,19 @@ import {
     test,
 } from "@odoo/hoot";
 import {
+    Component,
+    onMounted,
+    Plugin,
+    props,
+    providePlugins,
+    proxy,
+    signal,
+    t,
+    useConfig,
+    usePlugin,
+    xml,
+} from "@odoo/owl";
+import {
     contains,
     destroyApp,
     getMockEnv,
@@ -17,8 +30,6 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
-import { Component, onMounted, props, proxy, signal, types as t, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { CommandPalette } from "@web/core/commands/command_palette";
 import { registry } from "@web/core/registry";
@@ -28,6 +39,7 @@ import {
     useBus,
     useChildRef,
     useForwardRefToParent,
+    useOwnedDialogs,
     useService,
     useSpellCheck,
 } from "@web/core/utils/hooks";
@@ -783,5 +795,36 @@ describe("useBackButton", () => {
 
         expect.verifySteps(["dummy3 callback", "dummy2 callback", "dummy1 callback"]);
         expect(history.state.sentinel).toBe(2);
+    });
+});
+
+describe("useOwnedDialogs", () => {
+    test("propagate scope to dialog", async () => {
+        class MyPlugin extends Plugin {
+            text = useConfig("text");
+        }
+
+        class Dialog extends Component {
+            static template = xml`<div class="dialog" t-out="this.p.text"/>`;
+            setup() {
+                this.p = usePlugin(MyPlugin);
+            }
+        }
+
+        class Parent extends Component {
+            static template = xml``;
+
+            setup() {
+                providePlugins([MyPlugin], { text: "abc" });
+                const addDialog = useOwnedDialogs({ withScope: true });
+                onMounted(() => {
+                    addDialog(Dialog, {});
+                });
+            }
+        }
+
+        await mountWithCleanup(Parent);
+        await animationFrame();
+        expect(".dialog").toHaveText("abc");
     });
 });

@@ -7,7 +7,7 @@ const services = registry.category("services");
 
 /**
  * @typedef {{
- *  env?: object;
+ *  scope?: import("@odoo/owl").Scope;
  *  onRemove?: () => void;
  *  sequence?: number;
  *  rootId?: string;
@@ -44,7 +44,7 @@ export const overlayService = {
             overlays[id] = {
                 id,
                 component,
-                env: options.env && markRaw(options.env),
+                scope: options.scope && markRaw(options.scope),
                 props,
                 remove: removeCurrentOverlay,
                 sequence: options.sequence ?? 50,

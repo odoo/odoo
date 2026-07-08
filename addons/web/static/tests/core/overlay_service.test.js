@@ -1,7 +1,6 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, Plugin, providePlugins, useConfig, usePlugin, useScope, xml } from "@odoo/owl";
 import {
     assignTestEnv,
     getService,
@@ -10,6 +9,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { useService } from "@web/core/utils/hooks";
 
 test("simple case", async () => {
     await mountWithCleanup(MainComponentsContainer);
@@ -138,25 +138,32 @@ test("sequence", async () => {
     expect(".overlayed").toHaveCount(0);
 });
 
-test("allow env as option", async () => {
-    await mountWithCleanup(MainComponentsContainer);
+test("allow scope as option", async () => {
+    class MyPlugin extends Plugin {
+        A = useConfig("a");
+        B = useConfig("b");
+    }
 
-    class MyComp extends Component {
-        static props = ["*"];
+    class Overlay extends Component {
         static template = xml`
             <ul class="outer">
-                <li>A=<t t-out="this.env.A"/></li>
-                <li>B=<t t-out="this.env.B"/></li>
+                <li>A=<t t-out="this.p.A"/></li>
+                <li>B=<t t-out="this.p.B"/></li>
             </ul>
         `;
+        p = usePlugin(MyPlugin);
+    }
+
+    class Parent extends Component {
+        static template = xml``;
         setup() {
-            useSubEnv({ A: "blip" });
+            providePlugins([MyPlugin], { a: "foo", b: "bar" });
+            const scope = useScope();
+            useService("overlay").add(Overlay, {}, { scope });
         }
     }
 
-    getService("overlay").add(MyComp, {}, { env: { A: "foo", B: "bar" } });
-    await animationFrame();
-
-    expect(".o-overlay-container li:nth-child(1)").toHaveText("A=blip");
+    await mountWithCleanup(Parent);
+    expect(".o-overlay-container li:nth-child(1)").toHaveText("A=foo");
     expect(".o-overlay-container li:nth-child(2)").toHaveText("B=bar");
 });

@@ -298,14 +298,19 @@ export function useForwardRefToParent(refOrName, propName) {
  *
  * @returns {import("@web/core/dialog/dialog_service").DialogServiceInterface}
  */
-export function useOwnedDialogs() {
+export function useOwnedDialogs(options = {}) {
+    const scope = useScope();
     const dialogService = useService("dialog");
     const cbs = [];
     onWillUnmount(() => {
         cbs.forEach((cb) => cb());
     });
-    const addDialog = (...args) => {
-        const close = dialogService.add(...args);
+    const addDialog = (component, props, dialogOptions = {}) => {
+        const newOptions = Object.create(dialogOptions);
+        if (options.withScope) {
+            newOptions.scope = scope;
+        }
+        const close = dialogService.add(component, props, newOptions);
         cbs.push(close);
         return close;
     };

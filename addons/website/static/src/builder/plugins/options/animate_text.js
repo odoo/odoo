@@ -1,11 +1,11 @@
-import { useChildEnv, useChildSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
-import { AnimateOption } from "./animate_option";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { DependencyManager } from "@html_builder/core/dependency_manager";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { DependencyManager } from "@html_builder/core/dependency_manager";
+import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { POSITION_BUS } from "@web/core/position/position_hook";
+import { useChildSubEnv } from "@web/owl2/utils";
+import { AnimateOption } from "./animate_option";
 
 export class AnimateTextPopover extends BaseOptionComponent {
     static template = "website_builder.AnimateTextPopover";
@@ -60,12 +60,12 @@ export class AnimateText extends Component {
             services: this.props.config.editor.services,
         });
         this.popover = usePopover(AnimateTextPopover, {
-            env: useChildEnv(),
             onClose: () => {
                 if (!this.props.config.editor.isDestroyed) {
                     this.updateState();
                 }
             },
+            withScope: true,
         });
     }
 

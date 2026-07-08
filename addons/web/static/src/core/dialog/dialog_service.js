@@ -14,6 +14,7 @@ class DialogWrapper extends Component {
  *  @typedef {{
  *      onClose?(): void;
  *      rootRef?: import("@odoo/owl").Signal<Node>;
+ *      scope?: import("@odoo/owl").Scope;
  *  }} DialogServiceInterfaceAddOptions
  */
 /**
@@ -86,6 +87,7 @@ export const dialogService = {
                         }
                     },
                     rootId: options.rootRef?.()?.getRootNode()?.host?.id,
+                    scope: options.scope,
                 }
             );
 

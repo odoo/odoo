@@ -1,19 +1,17 @@
-import { provideEnv, useChildSubEnv } from "@web/owl2/utils";
-import { Component, onWillDestroy, signal } from "@odoo/owl";
+import { Component, computed, onWillDestroy, signal, t, useProps, useScope } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler } from "@web/core/utils/components";
+import { useChildSubEnv } from "@web/owl2/utils";
 
 const OVERLAY_ITEMS = [];
 export const OVERLAY_SYMBOL = Symbol("Overlay");
 
 class OverlayItem extends Component {
     static template = "web.OverlayContainer.Item";
-    static components = {};
-    static props = {
-        component: { type: Function },
-        props: { type: Object },
-        env: { type: Object, optional: true },
-    };
+
+    componentClass = useProps.static("component", t.component());
+    componentProps = useProps.static("props", t.object());
+    parentScope = useProps.static("scope", t.object().optional());
 
     rootRef = signal(null);
 
@@ -24,8 +22,9 @@ class OverlayItem extends Component {
             OVERLAY_ITEMS.splice(index, 1);
         });
 
-        if (this.props.env) {
-            provideEnv(this.props.env);
+        if (this.parentScope) {
+            const currentScope = useScope();
+            currentScope.pluginManager = this.parentScope.pluginManager;
         }
 
         useChildSubEnv({
@@ -50,13 +49,14 @@ class OverlayItem extends Component {
 export class OverlayContainer extends Component {
     static template = "web.OverlayContainer";
     static components = { ErrorHandler, OverlayItem };
-    static props = { overlays: Object };
+
+    overlays = useProps.static("overlays", t.object());
 
     root = signal(null);
 
-    get sortedOverlays() {
-        return sortBy(Object.values(this.props.overlays), (overlay) => overlay.sequence);
-    }
+    sortedOverlays = computed(() =>
+        sortBy(Object.values(this.overlays), (overlay) => overlay.sequence)
+    );
 
     isVisible(overlay) {
         return overlay.rootId === this.env?.rootId;

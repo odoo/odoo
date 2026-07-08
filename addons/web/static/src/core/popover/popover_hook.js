@@ -61,6 +61,9 @@ export function usePopover(component, options = {}) {
     }
     const newOptions = Object.create(options);
     const scope = useScope();
+    if (options.withScope) {
+        newOptions.scope = scope;
+    }
     if (options.onClose) {
         newOptions.onClose = () => {
             if (scope.status === 1) {

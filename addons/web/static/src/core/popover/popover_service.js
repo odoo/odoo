@@ -60,7 +60,7 @@ export const popoverService = {
                     setActiveElement: options.setActiveElement ?? true,
                 },
                 {
-                    env: options.env,
+                    scope: options.scope,
                     onRemove: options.onClose,
                     rootId: target.getRootNode()?.host?.id,
                     sequence: options.sequence,
