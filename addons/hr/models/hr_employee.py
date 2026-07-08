@@ -93,6 +93,14 @@ class HrEmployee(models.Model):
 
     hr_responsible_id = fields.Many2one(related='version_id.hr_responsible_id', readonly=False, inherited=True, domain=_get_hr_responsible_domain, groups="hr.group_hr_user")
 
+    @api.onchange('name')
+    def _onchange_employee_name(self):
+        if self.name and not self.work_contact_id:
+            partner = self.env['res.partner'].create({
+                'name': self.name,
+            })
+            self.work_contact_id = partner.id
+
     @api.model
     def _lang_get(self):
         return self.env['res.lang'].get_installed()

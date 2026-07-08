@@ -257,11 +257,10 @@
                                         </div>
 
                                         <div class="o-row d-flex justify-content-between gap-2 align-items-start" invisible="has_multiple_bank_accounts">
-                                            <field name="bank_account_ids"
+                                            <field name="bank_account_ids" invisible="not name"
                                                 widget="many2many_tags_salary_bank"
                                                 context="{'default_partner_id': work_contact_id}"
-                                                options="{'color_field': 'color', 'no_quick_create': True, 'on_tag_click': 'open_form'}"
-                                                readonly="not id"/>
+                                                options="{'color_field': 'color', 'no_quick_create': True, 'on_tag_click': 'open_form'}"/>
                                             <div class="d-flex align-items-start" invisible="not bank_account_ids">
                                                 <span class="d-flex w-50">
                                                     <span invisible="is_trusted_bank_account" class="text-muted">Untrusted</span>
