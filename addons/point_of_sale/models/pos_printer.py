@@ -55,7 +55,7 @@ class PosPrinter(models.Model):
     use_lna = fields.Boolean(string="Use Local Network Access")
 
     def copy_data(self, default=None):
-        default = dict(default or {}, pos_config_ids=[(5, 0, 0)], printer_ip="0.0.0.0")
+        default = dict(default or {})
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for printer, vals in zip(self, vals_list):
