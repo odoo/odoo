@@ -899,7 +899,7 @@ test("Direct export list take optional fields into account on desktop", async ()
         loadActionMenus: true,
     });
 
-    await contains("table .o_optional_columns_dropdown .dropdown-toggle").click();
+    await contains("table .o_optional_columns .dropdown-toggle").click();
     await contains("span.dropdown-item:first-child").click();
     expect("th").toHaveCount(3, {
         message: "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns",
@@ -930,7 +930,7 @@ test("Direct export list take optional fields into account on mobile", async () 
         loadActionMenus: true,
     });
 
-    await contains("table .o_optional_columns_dropdown .dropdown-toggle").click();
+    await contains("table .o_optional_columns .dropdown-toggle").click();
     await contains("span.dropdown-item:first-child").click();
     expect("th").toHaveCount(2, {
         message: "should have 2 th, 1 for columns, 1 for optional columns",
@@ -1263,7 +1263,7 @@ test("Export dialog in list view: excludes raw properties field, includes enable
         loadActionMenus: true,
     });
 
-    await contains(".o_optional_columns_dropdown .dropdown-toggle").click();
+    await contains(".o_optional_columns .dropdown-toggle").click();
     await contains(".o-dropdown-item:nth-child(1) span:contains('My Char')").click();
 
     await openExportDialog();

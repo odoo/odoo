@@ -381,6 +381,24 @@ export class ListRenderer extends Component {
         );
     }
 
+    get hasInvalidOptionalFields() {
+        if (!this.props.list.editedRecord || this.props.list.editedRecord.isValid) {
+            return false;
+        }
+        return this.optionalFieldGroups.some((group) =>
+            group.optionalFields
+                .filter((field) => !this.optionalActiveFields[field.name])
+                .some((field) => this.props.list.editedRecord?.isFieldInvalid(field.name))
+        );
+    }
+
+    getOptionalDropdownItemClass(field) {
+        return !this.optionalActiveFields[field.name] &&
+            this.props.list.editedRecord?.isFieldInvalid(field.name)
+            ? "o_invalid_dropdown_item"
+            : "";
+    }
+
     add(params) {
         if (this.canCreate) {
             this.props.onAdd(params);
@@ -2340,7 +2358,7 @@ export class ListRenderer extends Component {
             return;
         }
         // Optional columns
-        if (target.closest(".o_optional_columns_dropdown")) {
+        if (target.closest(".o_optional_columns")) {
             return;
         }
         // Overlay

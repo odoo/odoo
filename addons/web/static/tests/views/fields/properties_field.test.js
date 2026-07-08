@@ -1699,7 +1699,7 @@ test("properties: switch view on desktop", async () => {
     await animationFrame();
     await click(".o_switch_view.o_list");
     await animationFrame();
-    expect(".o_optional_columns_dropdown").toHaveCount(1, {
+    expect(".o_optional_columns").toHaveCount(1, {
         message: "Properties should be added as optional columns.",
     });
 });
@@ -1734,7 +1734,7 @@ test("properties: switch view on mobile", async () => {
     await animationFrame();
     await click(".dropdown-item:contains(List)");
     await animationFrame();
-    expect(".o_optional_columns_dropdown").toHaveCount(1, {
+    expect(".o_optional_columns").toHaveCount(1, {
         message: "Properties should be added as optional columns.",
     });
 });

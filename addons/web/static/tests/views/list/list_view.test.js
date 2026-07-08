@@ -940,7 +940,7 @@ test(`non-editable list with open_form_view`, async () => {
         type: "list",
         arch: `<list open_form_view="1"><field name="foo"/></list>`,
     });
-    expect(".o_optional_columns_dropdown").toHaveCount(0);
+    expect(".o_optional_columns").toHaveCount(0);
     expect(`td.o_list_record_open_form_view`).toHaveCount(0, {
         message: "button to open form view should not be present on non-editable list",
     });
@@ -968,7 +968,7 @@ test(`editable list with open_form_view`, async () => {
             expect.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
         },
     });
-    expect(".o_optional_columns_dropdown").toHaveCount(0);
+    expect(".o_optional_columns").toHaveCount(0);
     expect(`td.o_list_record_open_form_view`).toHaveCount(4, {
         message: "button to open form view should be present on each rows",
     });
@@ -985,7 +985,7 @@ test(`editable list with open_form_view in debug`, async () => {
         type: "list",
         arch: `<list editable="top" open_form_view="1"><field name="foo"/></list>`,
     });
-    expect(".o_optional_columns_dropdown").toHaveCount(0);
+    expect(".o_optional_columns").toHaveCount(0);
     expect(`td.o_list_record_open_form_view`).toHaveCount(4, {
         message: "button to open form view should be present on each rows",
     });
@@ -1021,8 +1021,8 @@ test(`editable list without open_form_view in debug`, async () => {
     const localStorageKey = "debug_open_view,foo,list,1,foo";
     expect.verifySteps([["getItem", localStorageKey, null]]);
     expect(`td.o_list_record_open_form_view`).toHaveCount(0);
-    expect(".o_optional_columns_dropdown").toHaveCount(1);
-    await contains(".o_optional_columns_dropdown button").click();
+    expect(".o_optional_columns").toHaveCount(1);
+    await contains(".o_optional_columns button").click();
     expect(".o-dropdown-item:contains('View Button')").toHaveCount(1);
     await contains(".o-dropdown-item:contains('View Button')").click();
     expect.verifySteps([
@@ -1037,7 +1037,7 @@ test(`editable list without open_form_view in debug`, async () => {
     await contains(`td.o_list_record_open_form_view`).click();
     expect.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
 
-    await contains(".o_optional_columns_dropdown button").click();
+    await contains(".o_optional_columns button").click();
     await contains(".o-dropdown-item:contains('View Button')").click();
     expect.verifySteps([
         ["setItem", localStorageKey, false],
@@ -1055,7 +1055,7 @@ test(`non-editable list in debug`, async () => {
         type: "list",
         arch: `<list><field name="foo"/></list>`,
     });
-    expect(".o_optional_columns_dropdown").toHaveCount(0);
+    expect(".o_optional_columns").toHaveCount(0);
 });
 
 test(`editable readonly list with open_form_view`, async () => {
@@ -1846,7 +1846,7 @@ test(`column names (noLabel, label, string and default)`, async () => {
         "",
     ]);
 
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     expect(queryAllTexts(`.o-dropdown--menu .dropdown-item`)).toEqual([
         "Display name",
         "Some static label",
@@ -7951,9 +7951,9 @@ test(`empty list with sample data: toggle optional field`, async () => {
         message:
             "should have 1 th for selector (desktop only), 1 th for foo and 1 th for optional columns",
     });
-    expect(`table .o_optional_columns_dropdown`).toHaveCount(1);
+    expect(`table .o_optional_columns`).toHaveCount(1);
 
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     await contains(`.o-dropdown--menu span.dropdown-item:eq(0) label`).click();
     expect(`.o_list_view .o_content`).toHaveClass("o_view_sample_data");
     expect(`.o_data_row`).toHaveCount();
@@ -15680,15 +15680,15 @@ test(`list view with optional fields rendering`, async () => {
     expect(`tbody tr:first > td:not(.o_list_record_selector)`).toHaveCount(3, {
         message: "should have 4 td, 1 for selector, 2 for columns and 1 for optional columns",
     });
-    expect(`table .o_optional_columns_dropdown`).toHaveCount(1, {
+    expect(`table .o_optional_columns`).toHaveCount(1, {
         message: "should have the optional columns dropdown toggle inside the table",
     });
-    expect(`table > thead > tr > th:eq(-1) .o_optional_columns_dropdown`).toHaveCount(1, {
+    expect(`table > thead > tr > th:eq(-1) .o_optional_columns`).toHaveCount(1, {
         message: "The optional fields toggler is in the last header column",
     });
 
     // optional fields
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     expect(`.o-dropdown--menu span.dropdown-item`).toHaveCount(2, {
         message: "dropdown have 2 optional field foo with checked and bar with unchecked",
     });
@@ -15739,10 +15739,10 @@ test(`list view with optional fields rendering in RTL mode`, async () => {
             </list>
         `,
     });
-    expect(`table .o_optional_columns_dropdown`).toHaveCount(1, {
+    expect(`table .o_optional_columns`).toHaveCount(1, {
         message: "should have the optional columns dropdown toggle inside the table",
     });
-    expect(`table > thead > tr > th:eq(-1) .o_optional_columns_dropdown`).toHaveCount(1, {
+    expect(`table > thead > tr > th:eq(-1) .o_optional_columns`).toHaveCount(1, {
         message: "The optional fields toggler is in the last header column",
     });
 });
@@ -15766,7 +15766,7 @@ test(`optional fields do not disappear even after listview reload`, async () => 
     });
 
     // enable optional field
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     expect(`.o-dropdown--menu span.dropdown-item:eq(0) input`).not.toBeChecked();
 
     await contains(`.o-dropdown--menu span.dropdown-item:eq(0)`).click();
@@ -15787,7 +15787,7 @@ test(`optional fields do not disappear even after listview reload`, async () => 
     });
     expect(`th[data-name=m2o]`).toHaveCount(1);
 
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     expect(`.o-dropdown--menu span.dropdown-item:eq(0) input`).toBeChecked();
 });
 
@@ -15817,7 +15817,7 @@ test(`optional fields is shown only if enabled`, async () => {
     });
 
     // disable optional field
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     await contains(`.o-dropdown--menu span.dropdown-item:eq(0)`).click();
     expect(`th:not(.o_list_record_selector)`).toHaveCount(2, {
         message: "should have 1 for selector (desktop only), 1 for columns, 1 for optional columns",
@@ -15849,7 +15849,7 @@ test(`selection is kept when optional fields are toggled`, async () => {
     expect(`.o_list_record_selector input:checked`).toHaveCount(1);
 
     // add an optional field
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     await contains(`.o-dropdown--menu span.dropdown-item:eq(0) label`).click();
     expect(`th`).toHaveCount(4);
     expect(`.o_list_record_selector input:checked`).toHaveCount(1);
@@ -15859,7 +15859,7 @@ test(`selection is kept when optional fields are toggled`, async () => {
     expect(`.o_list_record_selector input:checked`).toHaveCount(5);
 
     // remove an optional field
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     await contains(`.o-dropdown--menu span.dropdown-item:eq(0) label`).click();
     expect(`th`).toHaveCount(3);
     expect(`.o_list_record_selector input:checked`).toHaveCount(5);
@@ -15890,24 +15890,24 @@ test(`list view with optional fields and async rendering`, async () => {
         `,
     });
     expect(`th:not(.o_list_record_selector)`).toHaveCount(2);
-    expect(`.o_optional_columns_dropdown .show`).toHaveCount(0);
+    expect(`.o_optional_columns .show`).toHaveCount(0);
 
     // add an optional field (we click on the label on purpose, as it will trigger
     // a second event on the input)
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
-    expect(`.o_optional_columns_dropdown .show`).toHaveCount(1);
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
+    expect(`.o_optional_columns .show`).toHaveCount(1);
     expect(`.o-dropdown--menu input:checked`).toHaveCount(0);
 
     await contains(`.o-dropdown--menu span.dropdown-item:eq(0) label`).click();
     expect(`th:not(.o_list_record_selector)`).toHaveCount(2);
-    expect(`.o_optional_columns_dropdown .show`).toHaveCount(1);
+    expect(`.o_optional_columns .show`).toHaveCount(1);
     expect(`.o-dropdown--menu input:checked`).toHaveCount(1);
     expect.verifySteps(["onWillStart", "onWillStart", "onWillStart", "onWillStart"]); // 4 rows
 
     deferred.resolve();
     await animationFrame();
     expect(`th:not(.o_list_record_selector)`).toHaveCount(3);
-    expect(`.o_optional_columns_dropdown .show`).toHaveCount(1);
+    expect(`.o_optional_columns .show`).toHaveCount(1);
     expect(`.o-dropdown--menu input:checked`).toHaveCount(1);
 });
 
@@ -16061,7 +16061,7 @@ test(`list view with optional fields rendering and local storage mock`, async ()
     expect(`th[data-name=reference]`).toHaveCount(0);
 
     // optional fields
-    await contains(`table .o_optional_columns_dropdown button`).click();
+    await contains(`table .o_optional_columns button`).click();
     expect(`.o-dropdown--menu span.dropdown-item`).toHaveCount(2, {
         message: "dropdown have 2 optional fields",
     });
@@ -16141,7 +16141,7 @@ test(`list view with optional fields from local storage being the empty array`, 
     expect.verifySteps([["getItem", localStorageKey]]);
     verifyHeaders(["foo", "reference"]);
     // open optional columns headers dropdown
-    await contains(`table .o_optional_columns_dropdown button`).click();
+    await contains(`table .o_optional_columns button`).click();
     expect(`.o-dropdown--menu span.dropdown-item`).toHaveCount(2, {
         message: "dropdown has 2 optional column headers",
     });
@@ -17333,7 +17333,7 @@ test(`optional field selection do not unselect current row`, async () => {
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`div[name=foo] input`).toBeFocused();
 
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     // input loses focus when we open dropdown but gets it back when an item is toggled.
     expect(`div[name=foo] input`).not.toBeFocused();
@@ -20899,7 +20899,7 @@ test(`column tag: optional attribute on sub-fields shows/hides individual sub-fi
     ).toHaveCount(1);
 
     // Toggle date on via the optional columns dropdown
-    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
     await contains(`.o-dropdown-item`).click();
     expect(
         `tbody tr:eq(0) td:not(.o_list_record_selector):eq(1) .o_column_group_field`
@@ -21182,7 +21182,7 @@ test("save filter with list_optional_show, untoggle, and reapply", async () => {
     });
     expect("th[data-name='bar']").toHaveCount(0);
 
-    await contains("table .o_optional_columns_dropdown .dropdown-toggle").click();
+    await contains("table .o_optional_columns .dropdown-toggle").click();
     await contains(".o-dropdown--menu span.dropdown-item:eq(0)").click();
 
     expect("th[data-name='bar']").toHaveCount(1);
@@ -21194,7 +21194,7 @@ test("save filter with list_optional_show, untoggle, and reapply", async () => {
 
     await removeFacet("My favorite");
 
-    await contains("table .o_optional_columns_dropdown .dropdown-toggle").click();
+    await contains("table .o_optional_columns .dropdown-toggle").click();
     await contains(".o-dropdown--menu span.dropdown-item:eq(0)").click();
 
     expect("th[data-name='bar']").toHaveCount(0);
@@ -21296,4 +21296,30 @@ test("editable list: text fields place cursor at the end, numeric fields auto-se
 
     expect(input.selectionStart).toBe(0);
     expect(input.selectionEnd).toBe(input.value.length);
+});
+
+test(`optional columns toggle button is highlighted when a hidden field is invalid`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="top">
+                <field name="int_field"/>
+                <field name="foo" required="1" optional="show"/>
+            </list>
+        `,
+    });
+
+    expect(`.o_invalid_optional_columns_button`).toHaveCount(0);
+
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`[name=foo] input`).edit("", { confirm: false });
+    await contains(".o_list_button_save").click();
+    expect(`.o_field_invalid`).toHaveCount(1);
+    expect(`.o_invalid_optional_columns_button`).toHaveCount(0);
+    await contains(`.o_optional_columns button`).click();
+    await contains(`.o-dropdown--menu span.dropdown-item [name=foo]`).click();
+    await animationFrame();
+    expect(`.o_invalid_optional_columns_button`).toHaveCount(1);
+    expect(`.o-dropdown--menu .o_invalid_dropdown_item`).toHaveCount(1);
 });

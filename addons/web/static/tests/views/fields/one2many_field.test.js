@@ -7093,7 +7093,7 @@ test("one2many list editable - should not allow tab navigation focus on the opti
             </form>`,
         resId: 1,
     });
-    expect(".o_optional_columns_dropdown .dropdown-toggle").toHaveProperty("tabIndex", -1);
+    expect(".o_optional_columns .dropdown-toggle").toHaveProperty("tabIndex", -1);
 });
 
 test('one2many list edition, no "Remove" button in modal', async () => {
@@ -11271,7 +11271,7 @@ test("one2many field in edit mode with optional fields and trash icon", async ()
         resId: 1,
     });
 
-    expect(".o_field_one2many table .o_optional_columns_dropdown .dropdown-toggle").toHaveCount(1);
+    expect(".o_field_one2many table .o_optional_columns .dropdown-toggle").toHaveCount(1);
 
     // should have 2 columns 1 for foo and 1 for trash icon, dropdown is displayed
     // on trash icon cell, no separate cell created for trash icon and advanced field dropdown
@@ -11282,7 +11282,7 @@ test("one2many field in edit mode with optional fields and trash icon", async ()
         message: "should be 2 cells in the one2many in edit mode",
     });
 
-    await contains(".o_optional_columns_dropdown .dropdown-toggle").click();
+    await contains(".o_optional_columns .dropdown-toggle").click();
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(2, {
         message: "dropdown have 2 advanced field foo with checked and bar with unchecked",
     });
@@ -11303,7 +11303,7 @@ test("one2many field in edit mode with optional fields and trash icon", async ()
     expect(".o-dropdown--menu").toHaveCount(0, { message: "dropdown is closed" });
     expect(".o_field_one2many tr.o_selected_row").toHaveCount(1);
 
-    await contains(".o_optional_columns_dropdown .dropdown-toggle").click();
+    await contains(".o_optional_columns .dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item").click();
     expect(".o_field_one2many tr.o_selected_row").toHaveCount(1);
     expect(".o_field_one2many th").toHaveCount(3, {
@@ -11974,8 +11974,8 @@ test("open a one2many record with optional open record displayed", async () => {
     expect.verifySteps([["getItem", localStorageKey, null]]);
 
     expect(`td.o_list_record_open_form_view`).toHaveCount(0);
-    expect(".o_optional_columns_dropdown").toHaveCount(1);
-    await contains(".o_optional_columns_dropdown button").click();
+    expect(".o_optional_columns").toHaveCount(1);
+    await contains(".o_optional_columns button").click();
     expect(".o-dropdown-item:contains('View Button')").toHaveCount(1);
     await contains(".o-dropdown-item:contains('View Button')").click();
     expect.verifySteps([

@@ -43,8 +43,7 @@ export const purchaseForm = {
     displayOptionalField(fieldName) {
         return [
             {
-                trigger:
-                    ".o_form_renderer .o_list_view.o_field_x2many .o_optional_columns_dropdown button",
+                trigger: ".o_form_renderer .o_list_view.o_field_x2many .o_optional_columns button",
                 run: "click",
             },
             { trigger: `input[name="${fieldName}"]:not(:checked)`, run: "click" },

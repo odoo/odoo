@@ -570,7 +570,18 @@
         display: flex;
     }
 
-    .o_optional_columns_dropdown .dropdown-item .o-checkbox .text-truncate {
+    .o_optional_columns .o_invalid_optional_columns_button {
+        color: o-text-color('danger');
+        background-color: #{$o-input-invalid-bg};
+    }
+}
+
+.o_optional_columns_dropdown .dropdown-item {
+    &.o_invalid_dropdown_item {
+        color: o-text-color('danger');
+    }
+
+    .o-checkbox .text-truncate {
         max-width: 30em;
     }
 }
