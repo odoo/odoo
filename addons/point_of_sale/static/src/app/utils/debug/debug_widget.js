@@ -164,10 +164,6 @@ export class DebugWidget extends Component {
             }
         }
     }
-
-    refreshDisplay() {
-        this.hardwareProxy.message("display_refresh", {});
-    }
     async downloadLogs() {
         await downloadPosLogs();
     }
