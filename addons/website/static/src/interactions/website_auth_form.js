@@ -14,12 +14,20 @@ export class WebsiteAuthFormWarning extends Interaction {
     start() {
         if (!session.is_public) {
             const btnWrapperEl = this.el.querySelector(".oe_login_buttons");
+
+            const link = document.createElement("a");
+            link.setAttribute("href", window.location.origin);
+            link.textContent = _t("Go back to the homepage");
+
             const warningEl = document.createElement("p");
             warningEl.className = "alert alert-warning";
             warningEl.setAttribute("role", "alert");
             warningEl.textContent = this.el.classList.contains("oe_signup_form")
                 ? _t("You are already signed in.")
                 : _t("You are already logged in.");
+
+            warningEl.appendChild(document.createElement("br"));
+            warningEl.appendChild(link);
             this.insert(warningEl, btnWrapperEl, "afterbegin");
         }
     }
