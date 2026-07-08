@@ -1,5 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import {
+    advanceTime,
     click,
     hover,
     manuallyDispatchProgrammaticEvent,
@@ -14,7 +15,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
-import { undo } from "../_helpers/user_actions";
+import { getElementTouchPosition, undo } from "../_helpers/user_actions";
 import { expectElementCount } from "../_helpers/ui_expectations";
 
 function availableCommands(menu) {
@@ -33,6 +34,7 @@ test("should only display the table ui menu if the table isContentEditable=true"
     await expectElementCount(".o-we-table-menu", 2);
 });
 
+test.tags("desktop");
 test("should display the table ui menu only if hover on first row/col", async () => {
     const { el } = await setupEditor(`
         <table>
@@ -60,6 +62,7 @@ test("should display the table ui menu only if hover on first row/col", async ()
     await waitForNone(".o-we-table-menu");
 });
 
+test.tags("desktop");
 test("should not display the table UI menu when hovering over non-first row/col cells", async () => {
     const { el } = await setupEditor(`
         <table>
@@ -78,6 +81,27 @@ test("should not display the table UI menu when hovering over non-first row/col 
     await hover(el.querySelector("td.b"));
     await animationFrame();
     await expectElementCount(".o-we-table-menu", 0);
+});
+
+test.tags("mobile");
+test("should display row and column menus when focusing any table cell on mobile", async () => {
+    await setupEditor(`
+        <table>
+            <tbody>
+                <tr><td>1</td><td class="a">2</td><td>3</td></tr>
+                <tr><td>4</td><td class="b">5[]</td><td>6</td></tr>
+                <tr><td class="c">7</td><td>8</td><td>9</td></tr>
+            </tbody>
+        </table>`);
+
+    for (const selector of ["td.a", "td.b", "td.c"]) {
+        await manuallyDispatchProgrammaticEvent(queryOne(selector), "touchend", {
+            touches: [getElementTouchPosition(selector)],
+        });
+        await animationFrame();
+        await expectElementCount("[data-type='column'].o-we-table-menu", 1);
+        await expectElementCount("[data-type='row'].o-we-table-menu", 1);
+    }
 });
 
 test("should not display the table ui menu if the table element isContentEditable=false", async () => {
@@ -739,10 +763,10 @@ test("basic delete column operation", async () => {
 
     // hover on td to show col ui
     await hover(el.querySelector("td.b"));
-    await waitFor(".o-we-table-menu");
+    await waitFor("[data-type='column'].o-we-table-menu");
 
     // click on it to open dropdown
-    await click(".o-we-table-menu");
+    await click("[data-type='column'].o-we-table-menu");
     await waitFor("div[name='delete']");
 
     // delete column
@@ -788,10 +812,10 @@ test("basic clear column content operation", async () => {
 
     // hover on td to show col ui
     await hover(el.querySelector("td.b"));
-    await waitFor(".o-we-table-menu");
+    await waitFor("[data-type='column'].o-we-table-menu");
 
     // click on it to open dropdown
-    await click(".o-we-table-menu");
+    await click("[data-type='column'].o-we-table-menu");
     await waitFor("div[name='clear_content']");
 
     // clear content of the column
@@ -837,10 +861,10 @@ test("basic delete row operation", async () => {
 
     // hover on td to show col ui
     await hover(el.querySelector("td.c"));
-    await waitFor(".o-we-table-menu");
+    await waitFor("[data-type='row'].o-we-table-menu");
 
     // click on it to open dropdown
-    await click(".o-we-table-menu");
+    await click("[data-type='row'].o-we-table-menu");
     await waitFor("div[name='delete']");
 
     // delete row
@@ -885,10 +909,10 @@ test("basic clear row content operation", async () => {
 
     // hover on td to show col ui
     await hover(el.querySelector("td.c"));
-    await waitFor(".o-we-table-menu");
+    await waitFor("[data-type='row'].o-we-table-menu");
 
     // click on it to open dropdown
-    await click(".o-we-table-menu");
+    await click("[data-type='row'].o-we-table-menu");
     await waitFor("div[name='clear_content']");
 
     // clear content of the row
@@ -934,10 +958,10 @@ test("insert column left operation", async () => {
 
     // hover on td to show col ui
     await hover(el.querySelector("td.b"));
-    await waitFor(".o-we-table-menu");
+    await waitFor("[data-type='column'].o-we-table-menu");
 
     // click on it to open dropdown
-    await click(".o-we-table-menu");
+    await click("[data-type='column'].o-we-table-menu");
     await waitFor("div[name='insert_left']");
 
     // insert column left
@@ -990,10 +1014,10 @@ test("editable should be focused after delete operation", async () => {
 
     // hover on td to show col ui
     await hover(el.querySelector("td.a"));
-    await waitFor(".o-we-table-menu");
+    await waitFor("[data-type='column'].o-we-table-menu");
 
     // click on it to open dropdown
-    await click(".o-we-table-menu");
+    await click("[data-type='column'].o-we-table-menu");
     await waitFor("div[name='delete']");
 
     // delete column
@@ -2018,7 +2042,6 @@ test("preserve table rows width on move row below operation", async () => {
     );
 });
 
-
 test("applies alternating row colors when 'Insert Alternate Colors' option is clicked", async () => {
     const { el } = await setupEditor(
         unformat(`
@@ -2410,6 +2433,53 @@ describe("Merge column cells", () => {
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
+
+    test.tags("mobile");
+    test("merges selected cells in a single row into one with colspan (mobile)", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a"><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td class="b"><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+
+        await manuallyDispatchProgrammaticEvent(queryOne("td.b"), "touchstart", {
+            touches: [getElementTouchPosition("td.b")],
+        });
+        await advanceTime(200);
+        await manuallyDispatchProgrammaticEvent(queryOne("td.a"), "touchmove", {
+            touches: [getElementTouchPosition("td.a")],
+        });
+        await manuallyDispatchProgrammaticEvent(queryOne("td.a"), "touchend", {
+            touches: [getElementTouchPosition("td.a")],
+        });
+
+        await expectElementCount(".o-we-table-menu", 2);
+        await waitFor("[data-type='row'].o-we-table-menu");
+
+        await click("[data-type='row'].o-we-table-menu");
+        await waitFor("div[name='merge_cell']");
+        await click("div[name='merge_cell']");
+
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="a o_selected_td" colspan="3"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
 });
 
 describe("Merge row cells", () => {
@@ -2601,6 +2671,67 @@ describe("Merge row cells", () => {
         expect("div[name='merge_cell']").toHaveCount(0);
         await click("[data-type='column'].o-we-table-menu");
         await animationFrame();
+    });
+
+    test.tags("mobile");
+    test("merges selected cells in a single column into one with rowspan (mobile)", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td class="a"><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td class="b"><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+
+        await manuallyDispatchProgrammaticEvent(queryOne("td.b"), "touchstart", {
+            touches: [getElementTouchPosition("td.b")],
+        });
+        await advanceTime(200);
+        await manuallyDispatchProgrammaticEvent(queryOne("td.a"), "touchmove", {
+            touches: [getElementTouchPosition("td.a")],
+        });
+        await manuallyDispatchProgrammaticEvent(queryOne("td.a"), "touchend", {
+            touches: [getElementTouchPosition("td.a")],
+        });
+
+        await expectElementCount(".o-we-table-menu", 2);
+        await waitFor("[data-type='column'].o-we-table-menu");
+
+        await click("[data-type='column'].o-we-table-menu");
+        await waitFor("div[name='merge_cell']");
+        await click("div[name='merge_cell']");
+
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td class="a o_selected_td" rowspan="3"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
     });
 });
 
