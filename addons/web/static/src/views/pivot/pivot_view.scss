@@ -15,7 +15,7 @@
         @include o-hover-text-color($body-color, $headings-color);
 
         &:hover {
-            background-color: map-get($grays, "200") !important;
+            background-color: var(--PivotView__cell-bg--hover, #{map-get($grays, "200")}) !important;
         }
     }
 
