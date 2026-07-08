@@ -22,6 +22,7 @@ import h11
 from odoo.http.router import root
 from odoo.http.server import SERVER_AGENT, SERVER_SOFTWARE
 from odoo.http.server_log import http_log, run_in_isolated_context, reset_thread_info
+from odoo.tools import parse_version
 from odoo.tools.misc import find_in_path
 
 __all__ = ['PaperMuncherInfo', 'PaperMuncherServer', 'paper_muncher']
@@ -35,7 +36,8 @@ WRITE_TIMEOUT = 15  # seconds
 SERVE_TIMEOUT = 15 * 60  # 15 minutes
 CHUNK_SIZE = 8192  # 8kiB, buffer size of paper-muncher
 MAX_INCOMPLETE_EVENT_SIZE = 8192  # 8kiB
-GET_DOCUMENT_RE = re.compile(br"^/paper-muncher/(\.|[0-9]+)\.(?:html|xhtml|xml)$")
+MIN_REQUIRED_VERSION = '0.6'  # keep in sync with README.md
+GET_DOCUMENT_RE = re.compile(br"^/paper-muncher/(header|footer|\.|[0-9]+)\.(?:html|xhtml|xml)$")
 
 
 class PaperMuncherServer:
@@ -354,13 +356,20 @@ def _normalize_header(header: str) -> bytes:
 class PaperMuncherInfo(NamedTuple):
     state: Literal['ok', 'install']
     bin: str
-    version: str
+    version: tuple[str, ...]
+
+
+def extract_version(output: bytes) -> str:
+    match = re.match(br'paper-muncher v([0-9]+(?:\.[0-9]+)*)', output)
+    if not match:
+        raise ValueError(f"Could not find version in output: {output!r}")
+    return match[1].decode()
 
 
 @cache
 def paper_muncher() -> PaperMuncherInfo:
     bin_path = ''
-    version = ''
+    version = ()
     try:  # noqa: PLW0717
         try:
             bin_path = find_in_path('paper-muncher')
@@ -371,11 +380,17 @@ def paper_muncher() -> PaperMuncherInfo:
             bin_path = FALLBACK_BIN_PATH
 
         result = sp.run([bin_path, '--version'], stdout=sp.PIPE, stderr=sp.DEVNULL, check=True)
-        version = result.stdout.decode('utf-8', errors='replace').strip()
+        version_str = extract_version(result.stdout)
+        version = parse_version(version_str)
     except (RuntimeError, OSError, sp.SubprocessError):
         _logger.info("You need paper-muncher to print a pdf version of the reports.",
                      exc_info=_logger.isEnabledFor(logging.DEBUG))
         return PaperMuncherInfo(state='install', bin=bin_path, version=version)
 
-    _logger.info("Will use the paper-muncher binary at %s", bin_path)
+    if version < parse_version(MIN_REQUIRED_VERSION):
+        _logger.info("Your paper-muncher version %s is too old, please upgrade to at least %s",
+                     version_str, MIN_REQUIRED_VERSION)
+        return PaperMuncherInfo(state='install', bin=bin_path, version=version)
+
+    _logger.info("Will use the paper-muncher binary at %s (version %s)", bin_path, version_str)
     return PaperMuncherInfo(state='ok', bin=bin_path, version=version)
