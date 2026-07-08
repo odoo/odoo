@@ -170,21 +170,6 @@ export class CheckIdentity {
         registry
             .category("error_handlers")
             .add("verifyUserErrorHandler", this.verifyUserErrorHandler.bind(this), { force: true });
-
-        // Check the fingerprint each time webclient is loaded
-        // Only for internal user
-        env.bus.addEventListener("WEB_CLIENT_READY", () => {
-            if (session.device_salt) {
-                this.updateFingerprint()
-                    .then((result) => !result && this.run())
-                    .catch(() => {});
-                // Swallows the error because the goal is to update backend
-                // information. If we have already continued the flow (page
-                // change or other), the request will be closed on the
-                // client side and the error will be `TypeError: Failed to
-                // fetch`. This is a false positive.
-            }
-        });
     }
 
     async getFingerprint() {
@@ -246,14 +231,19 @@ export class CheckIdentity {
             return false;
         }
 
-        const response = await fetch("/web/session/fingerprint/check", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({ fingerprint: fingerprint }),
-        });
-        return response.ok;
+        try {
+            const response = await fetch("/web/session/fingerprint/check", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({ fingerprint: fingerprint }),
+                signal: AbortSignal.timeout(10000),
+            });
+            return response.ok;
+        } catch {
+            return false;
+        }
     }
 
     async check(credential) {

@@ -316,7 +316,7 @@ def get_device(session: Session, request: Request) -> Device:
         'last_activity': None,
         'country': geoip.country.name,
         'city': geoip.city.name,
-        'trusted': not session['_devices'],  # First device in a session is always trusted
+        'trusted': False,
     }
     session.is_dirty = True
     return new_device
