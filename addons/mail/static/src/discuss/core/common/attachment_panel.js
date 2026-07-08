@@ -20,6 +20,7 @@ export class AttachmentPanel extends Component {
         super.setup();
         this.sequential = useSequential();
         this.store = useService("mail.store");
+        this.offlineService = useService("offline");
         this.ormService = useService("orm");
         this.attachmentUploadService = useService("mail.attachment_upload");
         onWillStart(() => {
