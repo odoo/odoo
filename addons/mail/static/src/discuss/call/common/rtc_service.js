@@ -789,9 +789,6 @@ export class Rtc extends Record {
             this.network?.disconnect();
             this.clear();
             this.soundEffectsService.play("call-leave");
-            if (channel.default_display_mode === "video_full_screen" && !channel.hasChatMessages) {
-                channel.unpinChannel({ notify: false });
-            }
         }
     }
 

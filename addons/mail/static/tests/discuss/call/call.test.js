@@ -142,47 +142,6 @@ test("should not display call UI when no more members (self disconnect)", async 
     await contains(".o-discuss-Call", { count: 0 });
 });
 
-test("leaving the call unpins an empty meeting channel", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "General",
-        default_display_mode: "video_full_screen",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await click("[title='Start Call']");
-    await contains(".o-discuss-Call");
-    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await contains(".o-discuss-Call", { count: 0 });
-    await contains(".o-mail-DiscussSidebarChannel-itemName", { count: 1 });
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-});
-
-test("leaving the call keeps a meeting channel that has chat messages", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "Meeting",
-        default_display_mode: "video_full_screen",
-    });
-    pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "let's keep this around",
-        message_type: "comment",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message"); // wait for the chat message to load before joining
-    await click("[title='Start Call']");
-    await contains(".o-discuss-Call");
-    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await contains(".o-discuss-Call", { count: 0 });
-    // The meeting holds actual conversation, so it stays pinned after the call ends.
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Meeting')");
-});
-
 test("show call UI in chat window when in call", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
