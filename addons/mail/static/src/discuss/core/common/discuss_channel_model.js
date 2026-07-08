@@ -149,15 +149,6 @@ export class DiscussChannel extends Record {
             !this.is_readonly
         );
     }
-    /**
-     * Whether the channel holds actual chat messages, i.e. excluding call/join/rename and
-     * other system notifications. Used to decide whether an ended meeting is worth keeping.
-     *
-     * @returns {boolean}
-     */
-    get hasChatMessages() {
-        return this.persistentMessages.some((message) => !message.isNotification);
-    }
     canHide = fields.Attr(false, {
         compute() {
             return this._computeCanHide();
