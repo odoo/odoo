@@ -56,10 +56,6 @@
                 .
             </t>
         </t>
-        <t t-if="hasattr(object, 'display_timesheet_portal_link') and object.display_timesheet_portal_link">
-            <br /><br />
-            PS: you can review your timesheets <a t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % object.name">from the portal.</a>
-        </t>
         <br /><br />
         Do not hesitate to contact us if you have any questions.
         <t t-if="not is_html_empty(object.invoice_user_id.signature)">
@@ -187,10 +183,6 @@
         from <t t-out="object.company_id.name or ''">YourCompany</t>.
         <t t-if="object.payment_state in ('paid', 'in_payment')">
             This self-billing invoice has already been paid.
-        </t>
-        <t t-if="hasattr(object, 'display_timesheet_portal_link') and object.display_timesheet_portal_link">
-            <br /><br />
-            PS: you can review your timesheets <a t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % object.name">from the portal.</a>
         </t>
         <br /><br />
         Do not hesitate to contact us if you have any questions.
