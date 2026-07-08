@@ -1,5 +1,6 @@
 import { useComponent } from "@web/owl2/utils";
 import { loadBundle } from "@web/core/assets";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 import { onMounted, onPatched, onWillStart, onWillUnmount, untrack } from "@odoo/owl";
 
@@ -44,7 +45,7 @@ export function useFullCalendar(ref, params) {
             return instance;
         },
         get el() {
-            return untrack(ref);
+            return resolveRefEl(ref);
         },
     };
 }
