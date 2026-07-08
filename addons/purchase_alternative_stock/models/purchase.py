@@ -21,3 +21,13 @@ class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     on_time_rate_perc = fields.Float(string="OTD", related="order_id.on_time_rate_perc")
+
+    def _get_countable_rfq_groups(self, groups):
+        groups = super()._get_countable_rfq_groups(groups)
+        countable_groups = {}
+        for group in groups:
+            order, product, *_, qty = group
+            key = (order.purchase_group_id or order, product)
+            if key not in countable_groups or qty > countable_groups[key][-1]:
+                countable_groups[key] = group
+        return countable_groups.values()
