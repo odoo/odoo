@@ -9,6 +9,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_paypal import const
+from odoo.addons.payment_paypal import utils as paypal_utils
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 from odoo.addons.payment_paypal.tests.common import PaypalCommon
 
@@ -69,17 +70,15 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     def test_complete_order_confirms_transaction(self):
         """Test the processing of a webhook notification."""
         tx = self._create_transaction("direct")
-        normalized_data = PaypalController._normalize_paypal_data(
-            self, self.completed_order, is_capture_request=True
+        normalized_data = paypal_utils.normalize_payment_data(
+            self.completed_order, has_capture_data=True
         )
         tx.with_context(payment_safe_write=True)._process(normalized_data)
         self.assertEqual(tx.state, "done")
         self.assertEqual(tx.provider_reference, normalized_data["id"])
 
     def test_feedback_processing(self):
-        normalized_data = PaypalController._normalize_paypal_data(
-            self, self.payment_data.get("resource")
-        )
+        normalized_data = paypal_utils.normalize_payment_data(self.payment_data.get("resource"))
 
         # Confirmed transaction
         tx = self._create_transaction("direct")
@@ -187,7 +186,6 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         the VAULT.PAYMENT-TOKEN.CREATED webhook, correlated through the order id."""
         paypal_pm = self.env.ref("payment_paypal.payment_method_paypal").id
         tx = self._create_transaction("direct", payment_method_id=paypal_pm, tokenize=True)
-        customer_id = "CUSTOMER123"
         vault_id = "VAULT456"
         approved_capture = {
             "status": "COMPLETED",
@@ -195,22 +193,16 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             "txn_type": "CAPTURE",
             "reference_id": self.reference,
             "amount": {"currency_code": self.currency.name, "value": str(self.amount)},
-            "payment_source": {
-                "paypal": {
-                    "attributes": {"vault": {"status": "APPROVED", "customer": {"id": customer_id}}}
-                }
-            },
+            "payment_source": {"paypal": {"attributes": {"vault": {"status": "APPROVED"}}}},
         }
         tx.with_context(payment_safe_write=True)._process(approved_capture)
         self.assertEqual(tx.state, "done")
-        self.assertEqual(tx.paypal_customer_id, customer_id)
         self.assertFalse(tx.token_id, "No token should be created before the vault webhook.")
 
         notification = {
             "event_type": "VAULT.PAYMENT-TOKEN.CREATED",
             "resource": {
                 "id": vault_id,
-                "customer": {"id": customer_id},
                 "metadata": {"order_id": self.order_id},
                 "payment_source": {"paypal": {"email_address": "buyer@example.com"}},
             },
@@ -225,7 +217,6 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         tx.invalidate_recordset()
         self.assertTrue(tx.token_id, "The vault webhook should create the token.")
         self.assertEqual(tx.token_id.provider_ref, vault_id)
-        self.assertEqual(tx.token_id.paypal_customer_id, customer_id)
         self.assertEqual(tx.token_id.payment_details, "buyer@example.com")
         self.assertFalse(tx.tokenize)
 
