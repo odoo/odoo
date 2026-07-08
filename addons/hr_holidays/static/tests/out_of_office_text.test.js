@@ -8,12 +8,11 @@ import {
     contains,
     openDiscuss,
     insertText,
-    hover,
 } from "@mail/../tests/mail_test_helpers";
 
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { drag, press } from "@odoo/hoot-dom";
+import { press } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
@@ -105,18 +104,7 @@ test("Discuss Sidebar shows out of office indication", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussSidebarChannel-itemName .text-warning", {
-        text: "Back on Apr 11",
-    });
-    // also in compact mode
-    await (
-        await drag(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle")
-    ).drop(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle", {
-        position: { x: 0 },
-    });
-    await contains(".o-mail-DiscussSidebar.o-compact");
-    await hover(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-DiscussSidebar-floatingMenu:has(:text('Back on Apr 11'))");
+    await contains(".o-mail-NotificationItem .text-warning", { text: "Back on Apr 11" });
 });
 
 test("CTRL+K command shows out of office indication", async () => {

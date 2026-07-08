@@ -7,9 +7,11 @@ import {
     onRpcBefore,
     openDiscuss,
     openFormView,
+    openMessagingMenu,
     start,
     startServer,
     triggerHotkey,
+    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { Composer } from "@mail/core/common/composer";
@@ -142,7 +144,7 @@ test("Show self-avatar in composer of Discuss App", async () => {
     // but not in chat window
     await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-Chatter");
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow .o-mail-Composer");
     await contains(".o-mail-ChatWindow .o-mail-Composer-avatar", { count: 0 });

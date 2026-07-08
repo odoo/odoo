@@ -7,10 +7,12 @@ import {
     insertText,
     openDiscuss,
     openFormView,
+    openMessagingMenu,
     patchUiSize,
     scroll,
     start,
     startServer,
+    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { getService, onRpc, patchWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
@@ -112,7 +114,7 @@ test("Composer GIF button should open the GIF picker (chat window)", async () =>
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:contains('General')");
     await click(".o-mail-ChatWindow .o-mail-Composer [title='More Actions']");
     await click(".o-dropdown-item:contains('Send GIF')");

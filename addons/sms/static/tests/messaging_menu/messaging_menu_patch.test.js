@@ -1,9 +1,11 @@
 import {
     click,
     contains,
+    openMessagingMenu,
     start,
     startServer,
     triggerEvents,
+    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { defineSMSModels } from "@sms/../tests/sms_test_helpers";
@@ -25,7 +27,7 @@ test("mark as read", async () => {
         notification_type: "sms",
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await contains(".o-mail-NotificationItem");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "" });
     await contains(".o-mail-NotificationItem [title='Mark As Read']");
@@ -74,7 +76,7 @@ test("notifications grouped by notification_type", async () => {
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(":nth-child(1 of .o-mail-NotificationItem)", {
         contains: [
@@ -136,7 +138,7 @@ test("grouped notifications by document model", async () => {
         },
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await click(".o-mail-NotificationItem", {
         text: "SMS Failure: Contact",
         contains: [".badge", { text: "2" }],

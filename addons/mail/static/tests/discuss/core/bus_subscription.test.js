@@ -11,6 +11,8 @@ import {
     setupChatHub,
     start,
     startServer,
+    triggerHotkey,
+    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, edit, expect, mockDate, press, runAllTimers, test } from "@odoo/hoot";
@@ -59,7 +61,7 @@ test("bus subscription updated when opening/closing chat window as a non member"
     await waitForChannels([`discuss.channel_${channelId}`]);
 });
 
-test("bus subscription updated when joining locally pinned thread", async () => {
+test("bus subscription updated when joining non-member thread open in discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [],
@@ -87,7 +89,7 @@ test("bus subscription is refreshed when channel is joined", async () => {
     await openDiscuss();
     await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
     onWebsocketEvent("subscribe", () => expect.step("subscribe"));
-    await click("input[placeholder='Search']");
+    await triggerHotkey("control+k");
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
         "new channel"
@@ -104,7 +106,7 @@ test("bus subscription is refreshed when channel is left", async () => {
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
     await start();
-    await openDiscuss();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
     onWebsocketEvent("subscribe", () => expect.step("subscribe"));
     await click("[title='Channel Actions']");

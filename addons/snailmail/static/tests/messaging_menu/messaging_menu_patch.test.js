@@ -1,9 +1,11 @@
 import {
     click,
     contains,
+    openMessagingMenu,
     start,
     startServer,
     triggerEvents,
+    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { defineSnailmailModels } from "@snailmail/../tests/snailmail_test_helpers";
@@ -25,7 +27,7 @@ test("mark as read", async () => {
         notification_type: "snail",
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await contains(".o-mail-NotificationItem");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await contains(".o-mail-NotificationItem-text", {
@@ -73,7 +75,7 @@ test("notifications grouped by notification_type", async () => {
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(":nth-child(1 of .o-mail-NotificationItem)", {
         contains: [
@@ -142,7 +144,7 @@ test("grouped notifications by document model", async (assert) => {
         },
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await contains(".o-mail-NotificationItem", { text: "Snailmail Failure: Contact" });
     await contains(".o-mail-NotificationItem-counter", { text: "2" });
     await click(".o-mail-NotificationItem");

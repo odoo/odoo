@@ -132,8 +132,12 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
 registry.category("web_tour.tours").add("create_thread_for_attachment_without_body", {
     steps: () => [
         {
+            trigger: ".o-mail-MessagingMenu-tab:has(:text('Channels'))",
+            run: "click",
+        },
+        {
             content: "Open general channel",
-            trigger: '.o-mail-DiscussSidebarChannel-itemName:contains("general")',
+            trigger: '.o-mail-NotificationItem:has(:text("general"))',
             run: "click",
         },
         {

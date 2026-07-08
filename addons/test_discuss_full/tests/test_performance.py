@@ -29,9 +29,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_count mail_canned_response
     #   [enterprise] search_fetch mail_activity_type (voip_config)
     #   [enterprise] search_count voip_call (_get_number_of_missed_calls)
-    #   2: show_livechat_category
-    #       - search discuss_channel_member (is_self for ACL check)
-    #       - search_count discuss_channel_member
     #   11: store add odoobot:
     #       - fetch res_partner (_read_format)
     #         [enterprise] search ai_agent (_compute_im_status ai override)
@@ -45,32 +42,29 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search hr_employee_location (_store_im_status_fields hr_homeworking override)
     #       - fetch hr_employee (_compute_work_location_type)
     #       - search hr_leave (_compute_leave_status)
-    _query_count_init_store = 23
+    _query_count_init_store = 21
     # Queries for _query_count_init_messaging (in order):
     #   2: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
     #       - fetch res_users
     #       - fetch discuss_channel_member
     #   1. search discuss_channel (chathub given channel ids)
     #   1: search bus_bus (_bus_last_id)
-    #   2: search_fetch discuss_channel_member (_store_init_messaging_global_fields)
-    #   1: _compute_message_unread (_init_messaging_global_fields discuss)
-    #   2: _init_messaging (mail)
-    #       - _get_needaction_count (inbox counter)
-    #       - search mail_message (bookmark counter)
-    #   25: _process_request_for_all (discuss):
+    #   28: _process_request_for_all (discuss):
     #       - search_fetch discuss_channel (channels_domain)
     #       2: check permissions
     #       - fetch discuss_channel (chathub given channel ids, missing search_fetch)
-    #       21: store add channel:
+    #       24: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
+    #           - fetch discuss_channel_member (invited member, _compute_invited_member_ids)
     #           - search discuss_channel_rtc_session
     #           - fetch discuss_channel_rtc_session
     #           - search member (channel_member_ids)
     #           - fetch discuss_channel_member (manual prefetch)
-    #           9: member:
-    #               9: partner:
+    #           10: member:
+    #               10: partner:
     #                   - search_fetch res_partner (partner)
+    #                   - search res_users (partner.user_ids, _store_im_status_fields)
     #                     [enterprise] search ai_agent (_compute_im_status ai override)
     #                   - fetch res_users (_compute_im_status)
     #                   - search mail_presence (_compute_im_status)
@@ -87,7 +81,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
     #           - select the current db snapshot
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 32
     # Queries for _query_count_discuss_channels (in order):
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
@@ -487,7 +481,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mt_note": self.env.ref("mail.mt_note").id,
                 "odoobot": self.user_root.partner_id.id,
                 "self_user": self.users[0].id,
-                "show_livechat_category": True,
                 "settings": {
                     "calendar_show_activities": True,
                     "channel_notifications": False,
@@ -506,8 +499,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         """Returns the result of a call to init_messaging.
         The point of having a separate getter is to allow it to be overriden.
         """
-        # sudo: bus.bus: reading non-sensitive last id
-        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         return {
             "discuss.channel": self._filter_channels_fields(
                 self._expected_result_for_channel(self.channel_chat_1),
@@ -538,26 +529,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_employee(self.users[14].employee_ids[0]),
                 self._res_for_employee(self.users[2].employee_ids[0]),
             ],
-            "Store": {
-                "inbox": {
-                    "counter": 1,
-                    "counter_bus_id": bus_last_id,
-                    "id": "inbox",
-                    "model": "mail.box",
-                },
-                "bookmarkBox": {
-                    "counter": 1,
-                    "counter_bus_id": bus_last_id,
-                    "id": "bookmark",
-                    "model": "mail.box",
-                },
-                "init_unread_channel_ids": (
-                    self.channel_general
-                    | self.channel_channel_public_1
-                    | self.channel_livechat_1
-                    | self.channel_livechat_2
-                ).ids,
-            },
         }
 
     def _get_discuss_channels_result(self):
@@ -1444,6 +1415,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": False,
+                "needaction_done": False,
                 "notification_ids": [],
                 "parent_id": False,
                 "partner_ids": [],
@@ -1477,6 +1449,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": True,
+                "needaction_done": False,
                 "notification_ids": [last_message.notification_ids.id],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parent_id": False,
@@ -1513,6 +1486,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
+                "needaction_done": False,
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parent_id": False,
@@ -1550,6 +1524,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
+                "needaction_done": False,
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parent_id": False,
@@ -1586,6 +1561,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
+                "needaction_done": False,
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parent_id": False,
@@ -1620,6 +1596,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": False,
+                "needaction_done": False,
                 "notification_ids": [],
                 "parent_id": False,
                 "partner_ids": [],
@@ -1652,6 +1629,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": False,
+                "needaction_done": False,
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parent_id": False,
@@ -1685,6 +1663,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": False,
+                "needaction_done": False,
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parent_id": False,

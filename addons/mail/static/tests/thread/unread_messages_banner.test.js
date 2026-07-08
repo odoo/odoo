@@ -115,7 +115,7 @@ test("remove banner when scrolling to bottom", async () => {
 test("remove banner when opening thread at the bottom", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const [channelId] = pyEnv["discuss.channel"].create([{ name: "general" }, { name: "sales" }]);
     const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     const messageId = pyEnv["mail.message"].create({
         author_id: bobPartnerId,
@@ -133,9 +133,9 @@ test("remove banner when opening thread at the bottom", async () => {
     await click("[title='Expand']", { parent: [".o-mail-Message:has(:text('Hello World'))"] });
     await click(".o-dropdown-item:contains('Mark as Unread')");
     await contains(".o-mail-Thread-banner:has(:text('1 new message'))");
-    await click(".o-mail-DiscussSidebar-item:has(:text('Inbox'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
-    await click(".o-mail-DiscussSidebarChannel:text('general')");
+    await click(".o-mail-NotificationItem:has(:text('sales'))");
+    await contains(".o-mail-DiscussContent-threadName[title='sales']");
+    await click(".o-mail-NotificationItem:has(:text('general'))");
     await contains(".o-mail-DiscussContent-threadName[title='general']");
     await contains(".o-mail-Thread-banner:has(:text('1 new message'))", { count: 0 });
 });
@@ -181,12 +181,12 @@ test("sidebar and banner counters display same value", async () => {
     }
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebar-badge:text('30')", {
-        parent: [".o-mail-DiscussSidebarChannel:has(:text('Bob'))"],
+    await contains(".o-discuss-badge:text('30')", {
+        parent: [".o-mail-MessagingMenuItem:has(:text('Bob'))"],
     });
-    await click(".o-mail-DiscussSidebarChannel-itemName:text('Bob')");
+    await click(".o-mail-NotificationItem:has(:text('Bob'))");
     await contains(".o-mail-Thread-banner:has(:text('30 new messages'))");
-    await contains(".o-mail-DiscussSidebar-badge:text('30')");
+    await contains(".o-discuss-badge:text('30')");
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -199,8 +199,8 @@ test("sidebar and banner counters display same value", async () => {
         })
     );
     await contains(".o-mail-Thread-banner:has(:text('31 new messages'))");
-    await contains(".o-mail-DiscussSidebar-badge:text('31')", {
-        parent: [".o-mail-DiscussSidebarChannel:has(:text('Bob'))"],
+    await contains(".o-discuss-badge:text('31')", {
+        parent: [".o-mail-MessagingMenuItem:has(:text('Bob'))"],
     });
 });
 
@@ -224,7 +224,7 @@ test("mobile: mark as read when opening chat", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
-    await contains("button.active:text('Notifications')");
+    await contains(".o-mail-MessagingMenu-tab.active:has(:text('Chats')) .badge:text(1)");
     await click("button:has(.badge:contains('1')):has(:text('Chats'))");
     await contains(".o-mail-NotificationItem:has(.badge:contains(1)):has(:text('bob'))");
     await click(".o-mail-NotificationItem:has(:text('bob'))");

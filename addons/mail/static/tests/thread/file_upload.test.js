@@ -5,8 +5,10 @@ import {
     inputFiles,
     openDiscuss,
     openFormView,
+    openMessagingMenu,
     start,
     startServer,
+    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { onRpc } from "@web/../tests/web_test_helpers";
@@ -31,7 +33,7 @@ test("no conflicts between file uploads", async () => {
     await click("button:text('Send message')");
     await inputFiles(".o-mail-Chatter .o-mail-Composer input[type=file]", [text]);
     // Uploading file in the second thread: discuss.channel in chatWindow.
-    await click("i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     await inputFiles(".o-mail-ChatWindow .o-mail-Composer input[type=file]", [text2]);
     await contains(".o-mail-Chatter .o-mail-AttachmentContainer");

@@ -6,17 +6,17 @@ registry.category("web_tour.tours").add("sidebar_in_public_page_tour", {
             trigger: ".o-mail-DiscussContent-header [title='Channel 1']",
         },
         {
-            trigger: ".o-mail-DiscussSidebarChannel:contains(Channel 1).o-active",
+            trigger: ".o-mail-NotificationItem.o-active:has(:text('Channel 1'))",
         },
         {
-            trigger: ".o-mail-DiscussSidebarChannel:contains(Channel 2)",
+            trigger: ".o-mail-NotificationItem:has(:text('Channel 2'))",
             run: "click",
         },
         {
             trigger: ".o-mail-DiscussContent-header [title='Channel 2']",
         },
         {
-            trigger: ".o-mail-DiscussSidebarChannel:contains(Channel 2).o-active",
+            trigger: ".o-mail-NotificationItem.o-active:has(:text('Channel 2'))",
             run() {
                 history.back();
             },
@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("sidebar_in_public_page_tour", {
             trigger: ".o-mail-DiscussContent-header [title='Channel 1']",
         },
         {
-            trigger: ".o-mail-DiscussSidebarChannel:contains(Channel 1).o-active",
+            trigger: ".o-mail-NotificationItem.o-active:has(:text('Channel 1'))",
             run() {
                 history.forward();
             },
@@ -34,11 +34,12 @@ registry.category("web_tour.tours").add("sidebar_in_public_page_tour", {
             trigger: ".o-mail-DiscussContent-header [title='Channel 2']",
         },
         {
-            trigger: ".o-mail-DiscussSidebarChannel:contains(Channel 2).o-active",
+            trigger: ".o-mail-NotificationItem.o-active:has(:text('Channel 2'))",
         },
         {
             content: "Open channel actions",
-            trigger: ".o-mail-DiscussSidebarChannel:contains(Channel 2).o-active",
+            trigger:
+                ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem.o-active:has(:text('Channel 2')))",
             run: "hover && click [title='Channel Actions']",
         },
         {

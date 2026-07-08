@@ -34,7 +34,8 @@ test("display banner when ptt extension is not enabled", async () => {
     await click(".o-dropdown-item:text('Voice & Video Settings')");
     await click("label[aria-label='Enable Push-to-talk']");
     await click("[title*='Close Chat Window']");
-    await click("button[title='New Meeting']");
+    await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
+    await click("button:text('Meeting')");
     await contains(".o-mail-Meeting");
     await contains(".o-discuss-PttAdBanner");
     await click("[title='Voice Settings']");

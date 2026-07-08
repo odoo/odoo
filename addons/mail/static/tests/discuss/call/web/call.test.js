@@ -9,6 +9,7 @@ import {
     openDiscuss,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { Settings } from "@mail/core/common/settings_model";
 import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_extension_service";
@@ -28,7 +29,7 @@ test("no auto-call on joining chat", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await click("input[placeholder='Search']");
+    await triggerHotkey("control+k");
     await contains(".o_command_name", { count: 2 });
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
@@ -36,7 +37,7 @@ test("no auto-call on joining chat", async () => {
     );
     await contains(".o_command_name", { count: 2 });
     await click(".o_command_name:text('Mario')");
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario')");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Mario'))");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-discuss-Call", { count: 0 });
 });
@@ -51,13 +52,13 @@ test("no auto-call on joining group chat", async () => {
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     await start();
     await openDiscuss();
-    await click("input[placeholder='Search']");
+    await triggerHotkey("control+k");
     await click(".o_command_name:text(Mario)");
     await contains(".o-mail-DiscussContent-threadName[title='Mario']");
     await click("[title='Invite People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text(Luigi))");
     await click("button:text('Create Group Chat')");
-    await contains(".o-mail-DiscussSidebar-item:contains('Mario, and Luigi')");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Mitchell Admin, Mario, and Luigi'))");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-discuss-Call", { count: 0 });
 });

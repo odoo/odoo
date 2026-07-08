@@ -9,7 +9,6 @@ import {
     contains,
     defineMailModels,
     insertText,
-    listenStoreFetch,
     openDiscuss,
     openFormView,
     openListView,
@@ -17,10 +16,9 @@ import {
     setupChatHub,
     start,
     startServer,
-    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, test } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
 import { mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
@@ -29,43 +27,6 @@ import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
 defineMailModels();
-
-test("auto-select 'Inbox' when discuss had channel as active thread", async () => {
-    const pyEnv = await startServer();
-    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    patchUiSize({ size: SIZES.SM });
-    await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-ChatWindow [title*='Close Chat Window']");
-    await contains(".o-mail-MessagingMenu-tab.active:text('Channels')");
-    await click("button:text('Inbox')");
-    await contains(".o-mail-MessagingMenu-tab.active:text('Inbox')");
-    await contains(".btn-secondary.active:text('Inbox')"); // in header
-});
-
-test("show loading on initial opening", async () => {
-    // This could load a lot of data (all pinned conversations)
-    const { promise, resolve } = Promise.withResolvers();
-    listenStoreFetch("channels_as_member", {
-        async onRpc() {
-            expect.step("before channels_as_member");
-            await promise;
-        },
-    });
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
-    patchUiSize({ size: SIZES.SM });
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin");
-    await contains(".o-mail-NotificationItem-name:text('General')", { count: 0 });
-    await expect.waitForSteps(["before channels_as_member"]);
-    resolve();
-    await waitStoreFetch("channels_as_member");
-    await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin", { count: 0 });
-    await contains(".o-mail-NotificationItem-name:text('General')");
-});
 
 test("can leave channel in mobile", async () => {
     const pyEnv = await startServer();

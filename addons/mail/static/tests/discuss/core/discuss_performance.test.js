@@ -15,7 +15,6 @@ import { Composer } from "@mail/core/common/composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, rightClick, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
@@ -109,7 +108,7 @@ test("replying to message should only render relevant part", async () => {
     replying = false;
     const result = stopObserve();
     expect(result.get(Composer)).toBeLessThan(2);
-    expect(result.get(ActionSwiper)).toBeLessThan(3); // Note: ActionSwiper from Message's template
+    expect(result.get(Message)).toBeLessThan(3);
 });
 
 test("right-click message selection should only render relevant part", async () => {
@@ -148,5 +147,5 @@ test("right-click message selection should only render relevant part", async () 
     await contains(".dropdown-menu .o-mail-ActionList");
     rightClicking = false;
     const result = stopObserve();
-    expect(result.get(ActionSwiper)).toBeLessThan(2); // Note: ActionSwiper from Message's template
+    expect(result.get(Message)).toBe(1);
 });

@@ -575,6 +575,7 @@ export async function mail_message_post(request) {
         "attachment_ids",
         "body",
         "message_type",
+        "needaction",
         "partner_ids",
         "subtype_xmlid",
     ];
@@ -820,7 +821,7 @@ async function search(request) {
     /** @type {import("mock_models").DiscussChannelMember} */
     const DiscussChannelMember = this.env["discuss.channel.member"];
     const base_domain = [
-        ["name", "ilike", term],
+        ...(!term ? [] : [["name", "ilike", term]]),
         ["channel_type", "!=", "chat"],
     ];
     const currentPartnerId = this.env.user?.partner_id;
@@ -914,6 +915,7 @@ function processRequest(fetchParams) {
     store.add_chatter_fields = false;
     store.request_channel_ids = new Set();
     store.add_channels_last_message = false;
+    store.add_channels_last_needaction = false;
     storeHandlerRegistry.execute_for_user(this, store, fetchParams);
     // messages (WebclientController layer)
     if (store.request_message_ids.size) {
@@ -957,6 +959,20 @@ function processRequest(fetchParams) {
                 .filter(Boolean)
                 .map((message) => message.id);
             store.add(MailMessage.browse(lastMessageIds), "_store_message_fields");
+        }
+        if (store.add_channels_last_needaction) {
+            const lastNeedactionMessageIds = channelIds
+                .map((channelId) =>
+                    MailMessage._filter([
+                        ["model", "=", "discuss.channel"],
+                        ["res_id", "=", channelId],
+                    ])
+                        .sort((a, b) => b.id - a.id)
+                        .find((message) => MailMessage._needaction(message))
+                )
+                .filter(Boolean)
+                .map((message) => message.id);
+            store.add(MailMessage.browse(lastNeedactionMessageIds), "_store_message_fields");
         }
     }
     return store;

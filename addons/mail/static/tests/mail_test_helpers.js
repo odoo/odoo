@@ -33,6 +33,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
+import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
 import { click, contains } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
@@ -51,9 +52,6 @@ import { SoundEffects } from "@mail/core/common/sound_effects_service";
 import { Store as StoreService } from "@mail/core/common/store_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
-import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
-import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 import { DISCUSS_ACTION_ID, authenticateGuest } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
 import { DiscussCallHistory } from "./mock_server/mock_models/discuss_call_history";
@@ -229,14 +227,31 @@ export function onlineTest(...args) {
     }
 }
 
-export async function openDiscuss(activeId, { target } = {}) {
+/** @typedef {`discuss.tab_${import("menu_tabs").MenuTabs[keyof import("menu_tabs").MenuTabs]}`} MenuTabId */
+
+/** @type {{ [K in keyof import("menu_tabs").MenuTabs]: `discuss.tab_${import("menu_tabs").MenuTabs[K]}` }} */
+export const MENU_ACTIVE_IDS = Object.fromEntries(
+    Object.entries(MENU_TABS).map(([key, value]) => [key, `discuss.tab_${value}`])
+);
+
+/** @param {number|MenuTabId} [activeIdOrTabId] */
+export async function openDiscuss(activeIdOrTabId, { target } = {}) {
+    let tabId;
+    if (typeof activeIdOrTabId === "string" && activeIdOrTabId?.startsWith("discuss.tab_")) {
+        tabId = activeIdOrTabId.slice("discuss.tab_".length);
+        activeIdOrTabId = undefined;
+    }
     const actionService = target?.services.action ?? getService("action");
     await actionService.doAction({
-        context: { active_id: activeId },
+        context: { active_id: activeIdOrTabId },
         id: DISCUSS_ACTION_ID,
         tag: "mail.action_discuss",
         type: "ir.actions.client",
     });
+    if (tabId) {
+        await click(`.o-mail-Discuss .o-mail-MessagingMenu-tab[data-id=${tabId}]`);
+        await contains(`.o-mail-Discuss .o-mail-MessagingMenu-tab[data-id=${tabId}].active`);
+    }
 }
 
 export async function openFormView(resModel, resId, params) {
@@ -871,6 +886,20 @@ export async function isInViewportOf(childSelector, parentSelector) {
     return inViewportPromise;
 }
 
+/** @param {MenuTabId} [tabId] */
+export async function openMessagingMenu(tabId) {
+    if (!queryFirst(".o-mail-MessagingMenuInDropdown")) {
+        await click(".o_menu_systray i[aria-label='Messages']");
+    }
+    if (tabId) {
+        const id = tabId.slice("discuss.tab_".length);
+        await click(`.o-mail-MessagingMenuInDropdown .o-mail-MessagingMenu-tab[data-id='${id}']`);
+        await click(
+            `.o-mail-MessagingMenuInDropdown .o-mail-MessagingMenu-tab[data-id='${id}'].active`
+        );
+    }
+}
+
 export async function hover(selector) {
     await contains(selector);
     await hootHover(selector);
@@ -889,22 +918,6 @@ function convertChatHubParam(param) {
 
 export function setupChatHub({ opened = [], folded = [] } = {}) {
     browser.localStorage.setItem(CHAT_HUB_KEY, toChatHubData(opened, folded));
-}
-
-export function setDiscussSidebarCategoryFoldState(categoryId, val) {
-    const localId = DiscussAppCategory.localId(categoryId);
-    const lse = new LocalStorageEntry(makeRecordFieldLocalId(localId, "is_open"));
-    if (val) {
-        lse.set(!val);
-    } else {
-        lse.remove();
-    }
-}
-
-export function isDiscussSidebarCategoryFolded(categoryId) {
-    const localId = DiscussAppCategory.localId(categoryId);
-    const lse = new LocalStorageEntry(makeRecordFieldLocalId(localId, "is_open"));
-    return !(lse.get() ?? true);
 }
 
 export function assertChatHub({ opened = [], folded = [] }) {

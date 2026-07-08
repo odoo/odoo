@@ -2,9 +2,11 @@ import {
     click,
     contains,
     defineMailModels,
+    openMessagingMenu,
     start,
     startServer,
     triggerEvents,
+    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
@@ -36,7 +38,7 @@ test("basic layout", async () => {
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await contains(".o-mail-NotificationItem", {
         contains: [
             [".o-mail-NotificationItem-name:text('Email Failure: Discussion Channel')"],
@@ -61,7 +63,7 @@ test("mark as read", async () => {
         notification_type: "email",
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await triggerEvents(".o-mail-NotificationItem-name:text('Email Failure: Discussion Channel')", [
         "mouseenter",
     ]);
@@ -121,7 +123,7 @@ test("open non-channel failure", async () => {
         },
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await click(".o-mail-NotificationItem");
     await expect.waitForSteps(["do_action"]);
 });
@@ -167,7 +169,7 @@ test("different discuss.channel are not grouped", async () => {
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await contains(
         ".o-mail-NotificationItem-text:text('An error occurred when sending an email')",
         { count: 2 }
@@ -213,7 +215,7 @@ test("multiple grouped notifications by model", async () => {
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(".o-mail-NotificationItem-counter:text('2')", { count: 2 });
 });
@@ -232,7 +234,7 @@ test("non-failure notifications are ignored", async () => {
         notification_type: "email",
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu();
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
@@ -257,7 +259,7 @@ test("marked as read thread notifications are ordered by last message date", asy
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(".o-mail-NotificationItem-name:eq(0):text('Channel 2020')");
     await contains(".o-mail-NotificationItem-name:eq(1):text('Channel 2019')");
@@ -293,7 +295,7 @@ test("thread notifications are re-ordered on receiving a new message", async () 
         },
     ]);
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await contains(".o-mail-NotificationItem", { count: 2 });
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
@@ -338,10 +340,10 @@ test("messaging menu counter should ignore unread messages in channels that are 
     ]);
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-MessagingMenu-counter", { count: 0 });
-    await click(".o_menu_systray i[aria-label='Messages']"); // fetch channels
+    await contains(".o-mail-MessagingMenuInDropdown-counter", { count: 0 });
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL); // fetch channels
     await contains(".o-mail-NotificationItem-name:text('General')"); // ensure channels fetched
-    await contains(".o-mail-MessagingMenu-counter", { count: 0 });
+    await contains(".o-mail-MessagingMenuInDropdown-counter", { count: 0 });
 });
 
 test("subtype description should be displayed when body is empty", async () => {
@@ -357,6 +359,6 @@ test("subtype description should be displayed when body is empty", async () => {
         subtype_id: subtypeId,
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await contains(".o-mail-NotificationItem-text:text('Partner1: hello')");
 });

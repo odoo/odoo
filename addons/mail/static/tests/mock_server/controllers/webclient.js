@@ -1,6 +1,8 @@
 import { _resolve_messages } from "@mail/../tests/mock_server/mail_mock_server";
 import { registerStoreHandler } from "@mail/../tests/mock_server/store_handler";
 
+import { serverState } from "@web/../tests/web_test_helpers";
+
 // Mirrors the store handlers of `mail/controllers/webclient.py` (WebclientController).
 
 registerStoreHandler(
@@ -21,22 +23,32 @@ registerStoreHandler(
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").MailGuest} */
-        const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
-        if (ResUsers._is_internal(this.env.uid)) {
-            ResUsers._init_messaging([this.env.uid], store);
-        }
-        const guest = ResUsers._is_public(this.env.uid) && MailGuest._get_guest_from_context();
-        const members = DiscussChannelMember._filter([
-            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", this.env.user.partner_id],
+        // is_self is a per-current-user compute only refreshed at create/write in the mock
+        DiscussChannelMember.browse(DiscussChannelMember.search([]))._compute_is_self();
+        const rtcInvitedChannelIds = DiscussChannelMember._filter([
+            ["is_self", "=", true],
             ["rtc_inviting_session_id", "!=", false],
-        ]);
-        for (const channelId of DiscussChannel.search([
-            ["id", "in", members.map((member) => member.channel_id)],
-        ])) {
+        ]).map((member) => member.channel_id);
+        for (const channelId of rtcInvitedChannelIds) {
             store.request_channel_ids.add(channelId);
+        }
+        if (!ResUsers._is_public(this.env.uid)) {
+            const odoobotChatMemberChannelIds = DiscussChannelMember._filter([
+                ["partner_id", "=", serverState.odoobotId],
+            ]).map((member) => member.channel_id);
+            const myMemberChannelIds = DiscussChannelMember._filter([
+                ["partner_id", "=", this.env.user.partner_id],
+            ]).map((member) => member.channel_id);
+            const odoobotChatIds = DiscussChannel.search([
+                ["channel_type", "=", "chat"],
+                ["id", "in", odoobotChatMemberChannelIds],
+                ["id", "in", myMemberChannelIds],
+            ]);
+            for (const channelId of odoobotChatIds) {
+                store.request_channel_ids.add(channelId);
+            }
         }
     },
     { audience: "everyone" }

@@ -519,11 +519,7 @@ export class DiscussChannel extends models.ServerModel {
             for (const channel of this) {
                 const member = this._find_or_create_member_for_self(channel.id);
                 if (member) {
-                    // simulate compute of message_unread_counter
-                    DiscussChannelMember.write([member.id], {
-                        message_unread_counter:
-                            DiscussChannelMember._compute_message_unread_counter([member.id]),
-                    });
+                    DiscussChannelMember._compute_message_unread_counter();
                 }
             }
             res.one(

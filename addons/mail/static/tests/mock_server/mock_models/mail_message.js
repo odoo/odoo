@@ -206,6 +206,7 @@ export class MailMessage extends models.ServerModel {
         res.attr("scheduledDatetime", () => false);
         if (res.is_for_current_user()) {
             res.attr("needaction", (m) => this._needaction(m));
+            res.attr("needaction_done", (m) => this._needaction_done(m));
         }
         // Add extras at the end to guarantee order in result.
         this._store_extra_fields(res, { format_reply });
@@ -221,9 +222,23 @@ export class MailMessage extends models.ServerModel {
         const MailNotification = this.env["mail.notification"];
         return Boolean(
             this.env.user &&
+                (message.needaction ||
+                    MailNotification.search([
+                        ["mail_message_id", "=", message.id],
+                        ["is_read", "=", false],
+                        ["res_partner_id", "=", this.env.user.partner_id],
+                    ]).length)
+        );
+    }
+
+    _needaction_done(message) {
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+        return Boolean(
+            this.env.user &&
                 MailNotification.search([
                     ["mail_message_id", "=", message.id],
-                    ["is_read", "=", false],
+                    ["is_read", "=", true],
                     ["res_partner_id", "=", this.env.user.partner_id],
                 ]).length
         );
@@ -549,7 +564,7 @@ export class MailMessage extends models.ServerModel {
             "limit"
         ));
         const res = {};
-        if (thread.length) {
+        if (thread) {
             domain = domain.concat([
                 ["res_id", "=", parseInt(thread[0].id)],
                 ["model", "=", thread._name],
@@ -576,7 +591,7 @@ export class MailMessage extends models.ServerModel {
                 [["subject", "ilike", search_term]],
                 [["subtype_ids", "in", subtypeIds]],
             ]);
-            if (thread.length && is_notification !== false) {
+            if (thread && is_notification !== false) {
                 const messageIds = this.search([
                     ["res_id", "=", parseInt(thread[0].id)],
                     ["model", "=", thread._name],

@@ -7,6 +7,7 @@ import {
     openDiscuss,
     start,
     startServer,
+    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
@@ -28,19 +29,16 @@ test("unknown channel can be displayed and interacted with", async () => {
     getService("bus_service").subscribe("discuss.channel/new_message", () =>
         expect.step("discuss.channel/new_message")
     );
-    await openDiscuss("mail.box_inbox");
-    await contains("button.o-active:text('Inbox')");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-MessagingMenuItem", { count: 0 });
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
-    await contains(".o-mail-DiscussSidebarChannel.o-active:text('Not So Secret')");
+    await contains(".o-mail-NotificationItem.o-active:has(:text('Not So Secret'))");
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await press("Enter");
     await contains(".o-mail-Message:has(:text('Hello'))");
     await expect.waitForSteps(["discuss.channel/new_message"]);
-    await click("button:text('Inbox')");
-    await contains(".o-mail-DiscussSidebarChannel:not(.o-active):text('Not So Secret')");
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:text(Hide)");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
+    await contains(".o-mail-MessagingMenuItem", { count: 0 });
 });

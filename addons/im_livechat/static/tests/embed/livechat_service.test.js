@@ -87,7 +87,13 @@ test("Only necessary requests are made when creating a new chat", async () => {
     listenStoreFetch(undefined, { logParams: ["init_livechat"] });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await contains(".o-livechat-LivechatButton");
-    await waitStoreFetch(["init_messaging", ["init_livechat", livechatChannelId]]);
+    await waitStoreFetch([
+        "init_messaging",
+        // Called because mail/core/public_web is loaded in test bundle, and it cannot be
+        // restricted to logged in users.
+        "/mail/messaging_menu/initialize_counters",
+        ["init_livechat", livechatChannelId],
+    ]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
     await expect.waitForSteps([
