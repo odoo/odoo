@@ -217,6 +217,32 @@ test("should update the font class if the parent already has one", async () => {
     });
 });
 
+test("should preserve a heading typography span in its matching heading", async () => {
+    await testEditor({
+        contentBefore: '<h4><span class="h4">a[b]c</span></h4>',
+        stepFunction: setFontSizeClassName("display-1-fs"),
+        contentAfter: '<h4><span class="h4">a<span class="display-1-fs">[b]</span>c</span></h4>',
+    });
+});
+
+test("should replace a default heading typography class with another default class", async () => {
+    await testEditor({
+        contentBefore: '<p><span class="h4">a[b]c</span></p>',
+        stepFunction: setFontSizeClassName("h1"),
+        contentAfter:
+            '<p><span class="h4">a</span><span class="h1">[b]</span><span class="h4">c</span></p>',
+    });
+});
+
+test("should split an inline default font size class", async () => {
+    await testEditor({
+        contentBefore: '<p><span class="o_default_font_size">a[b]c</span></p>',
+        stepFunction: setFontSizeClassName("display-1-fs"),
+        contentAfter:
+            '<p><span class="o_default_font_size">a</span><span class="display-1-fs">[b]</span><span class="o_default_font_size">c</span></p>',
+    });
+});
+
 test("should apply font size on space", async () => {
     await testEditor({
         contentBefore: `<div><p>a[ ]b</p></div>`,

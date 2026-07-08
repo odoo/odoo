@@ -73,7 +73,7 @@ const NOT_A_NUMBER = /[^\d]/g;
  *
  * @typedef {((node: Node, formatName: string, options: { applyStyle: boolean, formatProps: object }) => Node | undefined)[]} formattable_node_providers
  * @typedef {((selection: EditorSelection) => boolean | undefined)[]} can_format_content_predicates
- * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
+ * @typedef {((className: string, targetClassName?: string) => boolean | undefined)[]} is_format_class_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_formattable_node_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} can_remove_format_predicates
  * @typedef {((node: Node, blockNode: Node) => boolean | undefined)[]} is_node_in_same_block_segment_predicates
@@ -541,6 +541,7 @@ export class FormatPlugin extends Plugin {
             if (isTextNode(node) || node.nodeName === "BR") {
                 const { inlineAncestor, parentNode } = this.splitInlineAncestors(node, {
                     formatName,
+                    formatProps,
                     cursor,
                 });
                 const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
@@ -621,7 +622,7 @@ export class FormatPlugin extends Plugin {
         }
     }
 
-    splitInlineAncestors(node, { formatName, cursor }) {
+    splitInlineAncestors(node, { formatName, formatProps, cursor }) {
         let inlineAncestor;
         /** @type { Node } */
         let currentNode = node;
@@ -633,7 +634,11 @@ export class FormatPlugin extends Plugin {
         const isClassListSplittable = (classList) =>
             [...classList].every(
                 (className) =>
-                    this.checkPredicates("is_format_class_predicates", className) ?? false
+                    this.checkPredicates(
+                        "is_format_class_predicates",
+                        className,
+                        formatProps?.className
+                    ) ?? false
             );
 
         while (parentNode && !isBlock(parentNode)) {

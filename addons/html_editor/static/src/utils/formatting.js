@@ -140,6 +140,7 @@ export function getFontSizeDisplayValue(sel, document) {
                 [style*='font-size'],
                 ${FONT_SIZE_CLASSES.map((className) => `.${className}`)},
                 ${TEXT_STYLE_CLASSES.map((className) => `.${className}`)},
+                ${DEFAULT_FONT_SIZE_CLASSES.map((className) => `.${className}`)},
                 ${tagNameRelatedToFontSize}
             `)
     );
@@ -156,22 +157,25 @@ export function getFontSizeDisplayValue(sel, document) {
             // options.
             return parseFloat(getComputedStyle(closestStartContainerEl).fontSize);
         }
-        // It's a class font size or a hN tag. We don't return the computed
-        // font size because it can be different from the one displayed in
-        // the toolbar because it's responsive.
-        const fontSizeClass = FONT_SIZE_CLASSES.find((className) =>
-            closestFontSizedEl.classList.contains(className)
-        );
+        // It's a font size class (custom or default/neutral) or a heading tag.
+        // Retrieve the theme CSS variable to get the desktop size instead of
+        // the computed font size, which can be different due to responsiveness.
+        const activeClass = [
+            ...FONT_SIZE_CLASSES,
+            ...DEFAULT_FONT_SIZE_CLASSES,
+            ...TEXT_STYLE_CLASSES,
+        ].find((cls) => closestFontSizedEl.classList.contains(cls));
+
         let fsName;
-        if (fontSizeClass) {
-            fsName = fontSizeClass.substring(0, fontSizeClass.length - 3); // Without -fs
+        if (activeClass === "o_default_font_size" || activeClass === "base-fs") {
+            fsName = "font-size-base";
+        } else if (activeClass) {
+            // e.g. o_small-fs -> small-font-size
+            fsName = `${activeClass.replace(/^o_/, "").replace(/-fs$/, "")}-font-size`;
         } else {
-            fsName =
-                TEXT_STYLE_CLASSES.find((className) =>
-                    closestFontSizedEl.classList.contains(className)
-                ) || closestFontSizedEl.tagName.toLowerCase();
+            fsName = `${closestFontSizedEl.tagName.toLowerCase()}-font-size`;
         }
-        remValue = parseFloat(getCSSVariableValue(`${fsName}-font-size`, htmlStyle));
+        remValue = parseFloat(getCSSVariableValue(fsName, htmlStyle));
     }
     const pxValue = remValue && convertNumericToUnit(remValue, "rem", "px", htmlStyle);
     return pxValue || parseFloat(getComputedStyle(closestStartContainerEl).fontSize);
