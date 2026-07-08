@@ -258,6 +258,7 @@ export class ImagePlugin extends Plugin {
             downloadUrl: targetedImg.src,
         };
         this.document.getSelection().collapseToEnd();
+        this.document.activeElement.blur();
         this.fileViewer.open(fileModel);
     }
 
