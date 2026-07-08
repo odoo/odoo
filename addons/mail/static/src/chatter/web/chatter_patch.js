@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { AttachmentList } from "@mail/core/common/attachment_list";
@@ -132,13 +132,14 @@ const chatterPatch = {
                 (!this.store.meetingViewOpened || this.env.inMeetingView) &&
                 (this.state.thread?.isTransient || this.state.thread?.canPostMessage)
         );
-        useLayoutEffect(
-            () => {
-                if (!this.state.thread) {
+        useOnChange(
+            () => [this.thread(), this.thread()?.isLoadingAttachments],
+            (thread) => {
+                if (!thread) {
                     return;
                 }
                 browser.clearTimeout(this.loadingAttachmentTimeout);
-                if (this.state.thread?.isLoadingAttachments) {
+                if (thread.isLoadingAttachments) {
                     this.loadingAttachmentTimeout = browser.setTimeout(
                         () => (this.state.showAttachmentLoading = true),
                         DELAY_FOR_SPINNER
@@ -151,16 +152,15 @@ const chatterPatch = {
                             this.attachments.length > 0);
                 }
                 return () => browser.clearTimeout(this.loadingAttachmentTimeout);
-            },
-            () => [this.state.thread, this.state.thread?.isLoadingAttachments]
+            }
         );
-        useLayoutEffect(
+        useOnChange(
+            () => [this.thread()?.status, this.attachments.length],
             (status, attachmentsLength) => {
                 if (!["new", "loading"].includes(status) && attachmentsLength === 0) {
                     this.state.isAttachmentBoxOpened = false;
                 }
-            },
-            () => [this.state.thread?.status, this.attachments.length]
+            }
         );
     },
 
