@@ -2057,7 +2057,7 @@ class TranslationImporter:
                     for xmlid, translations in sub_field_dictionary:
                         params.append([*xmlid.split('.', maxsplit=1), Json(translations)])
                     if not force_overwrite:
-                        value_query = SQL("""CASE WHEN %(overwrite)s IS TRUE AND imd.noupdate IS FALSE
+                        value_query = SQL("""CASE WHEN %(overwrite)s IS TRUE AND imd.noupdate IS NOT TRUE
                         THEN m.%(field_name)s || t.value
                         ELSE t.value || m.%(field_name)s
                         END""", overwrite=overwrite, field_name=SQL.identifier(field_name))
