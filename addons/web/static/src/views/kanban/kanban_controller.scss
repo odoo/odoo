@@ -366,6 +366,10 @@
         /*rtl:ignore*/
         direction: ltr;
     }
+
+    .o_search_panel_resize + &, .o_search_panel_sidebar + & {
+        --Kanban-padding: 0 #{map-get($spacers, 3)} #{map-get($spacers, 3)} 0;
+    }
 }
 
 .o_kanban_mobile .o_kanban_renderer .o_kanban_record {
