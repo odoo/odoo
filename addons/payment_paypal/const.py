@@ -8,15 +8,12 @@ PAYMENT_COMPLETE_ORDER_ROUTE = "/payment/paypal/complete_order"
 PAYMENT_RETURN_ROUTE = "/payment/paypal/return"
 PAYMENT_CANCEL_ROUTE = "/payment/paypal/cancel"
 WEBHOOK_ROUTE = "/payment/paypal/webhook/"
-
-
 OAUTH_INIT_ROUTE = "/payment/paypal/oauth/init"
 OAUTH_FINALIZE_ROUTE = "/payment/paypal/oauth/finalize"
 
 # ISO 4217 codes of currencies supported by PayPal
 # See https://developer.paypal.com/docs/reports/reference/paypal-supported-currencies/.
 # Last seen on: 04 November 2025.
-
 # CNY removed as it requires in-country PayPal accounts but China mostly uses WeChat and Alipay.
 SUPPORTED_CURRENCIES = (
     "AUD",
@@ -72,10 +69,14 @@ CHECKOUT_WEBHOOK_EVENTS = [
     "CHECKOUT.PAYMENT-APPROVAL.REVERSED",
 ]
 CAPTURE_WEBHOOK_EVENTS = ["PAYMENT.CAPTURE.COMPLETED", "PAYMENT.CAPTURE.DENIED"]
+VAULT_WEBHOOK_EVENTS = ["VAULT.PAYMENT-TOKEN.CREATED"]
 MERCHANT_WEBHOOK_EVENTS = ["CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED"]
+
+# The merchant capability required to vault PayPal wallets
+VAULTING_CAPABILITY = "PAYPAL_WALLET_VAULTING_ADVANCED"
 
 # Odoo's public identifiers as a PayPal Partner for OAuth
 OAUTH_ODOO_PARTNER_ID = "QHZVTLZNWGSEW"
 OAUTH_ODOO_CLIENT_ID = (
-    "AUssUsouGEwQ-elJwte7-ullwiRUY3eQyYlWU-1T6iI7-zVw7bveLzjm8ue53fhVFBojRE6RNQZiecp"  # noqa: E501
+    "AUssUsouGEwQ-elJwte7-ullwiRUY3eQyYlWU-1T6iI7-zVw7bveLzjm8ue53fhVFBojRE6RNQZiecp"
 )

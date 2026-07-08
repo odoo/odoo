@@ -171,13 +171,17 @@ patch(PaymentForm.prototype, {
 
             if (isCard && paypal.CardFields !== undefined) {
                 // Render the card inputs
-                const cardFields = paypal.CardFields({
+                const paypalData = this.paypalData[paymentOptionId];
+                const cardFieldsOptions = {
                     style: CARD_INPUT_STYLE,
-                    createOrder: () => {
-                        return this.paypalData[paymentOptionId].paypalOrderId;
-                    },
                     onApprove: this._paypalOnApprove.bind(this),
-                });
+                };
+                if (this.paymentContext['mode'] === 'validation') {
+                    cardFieldsOptions.createVaultSetupToken = () => paypalData.paypalSetupTokenId;
+                } else {
+                    cardFieldsOptions.createOrder = () => paypalData.paypalOrderId;
+                }
+                const cardFields = paypal.CardFields(cardFieldsOptions);
                 this.paypalData[paymentOptionId].cardFields = cardFields;
                 cardFields
                   .NameField({ placeholder: "" })
@@ -220,6 +224,7 @@ patch(PaymentForm.prototype, {
                         .forEach(domButton => {
                             const enabledButton = paypal.Buttons({
                                 fundingSource: activeConfig.fundingSource,
+                                enableVenmoSandbox: !this._getProviderIsLive(radio),
                                 // https://developer.paypal.com/sdk/js/reference/#link-style
                                 style: {
                                     layout: 'vertical',
@@ -305,6 +310,7 @@ patch(PaymentForm.prototype, {
             return;
         }
         this.paypalData[paymentOptionId].paypalOrderId = processingValues['order_id'];
+        this.paypalData[paymentOptionId].paypalSetupTokenId = processingValues['setup_token_id'];
         this.paypalData[paymentOptionId].paypalTxRef = processingValues['reference'];
 
         // Submit the card fields to report invalid inputs
