@@ -308,9 +308,11 @@ export class PosStore extends WithLazyGetterTrap {
     get idleTimeout() {
         return [
             {
-                timeout: 300000, // 5 minutes
+                timeout: 180000, // 3 minutes
                 action: () =>
-                    this.router.state.current !== "PaymentScreen" && this.navigate("SaverScreen"),
+                    this.router.state.current !== "PaymentScreen" &&
+                    this.saveIfOrder() &&
+                    this.navigate("SaverScreen"),
             },
             {
                 timeout: 120000, // 2 minutes
@@ -318,6 +320,10 @@ export class PosStore extends WithLazyGetterTrap {
                     this.router.state.current === "LoginScreen" && this.navigate("SaverScreen"),
             },
         ];
+    }
+
+    saveIfOrder() {
+        return true;
     }
 
     async reloadData(fullReload = false) {
