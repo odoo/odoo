@@ -1605,6 +1605,7 @@ class SaleOrderLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        combo_item_ids = []
         for vals in vals_list:
             if vals.get("display_type") or self.default_get(["display_type"]).get("display_type"):
                 vals["product_uom_qty"] = 0.0
@@ -1615,7 +1616,16 @@ class SaleOrderLine(models.Model):
                 # because technical_price_unit is set.
                 vals.pop("technical_price_unit")
 
+            if self.env.context.get("import_file"):
+                combo_item_ids.append(vals.pop("combo_item_id", False))
+
         lines = super().create(vals_list)
+
+        if self.env.context.get("import_file"):
+            for line, combo_item_id in zip(lines, combo_item_ids):
+                if combo_item_id:
+                    line.combo_item_id = combo_item_id
+
         for line in lines:
             linked_line = line._get_linked_line()
             if linked_line:
