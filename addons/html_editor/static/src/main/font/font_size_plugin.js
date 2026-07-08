@@ -9,6 +9,7 @@ import {
     getHtmlStyle,
     getFontSizeDisplayValue,
     FONT_SIZE_CLASSES,
+    DEFAULT_FONT_SIZE_CLASSES,
 } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 import { READ, withSequence } from "@html_editor/utils/resource";
@@ -93,8 +94,12 @@ export class FontSizePlugin extends Plugin {
         on_all_formats_removed_handlers: this.updateFontSizeSelectorParams.bind(this),
         normalize_processors: this.normalize.bind(this),
 
-        is_format_class_predicates: (className) => {
-            if ([...FONT_SIZE_CLASSES, "o_default_font_size", "o_rfs"].includes(className)) {
+        is_format_class_predicates: (className, targetClassName) => {
+            if (
+                [...FONT_SIZE_CLASSES, "o_default_font_size", "o_rfs"].includes(className) ||
+                (DEFAULT_FONT_SIZE_CLASSES.includes(className) &&
+                    DEFAULT_FONT_SIZE_CLASSES.includes(targetClassName))
+            ) {
                 return true;
             }
         },

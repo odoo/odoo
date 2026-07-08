@@ -57,7 +57,7 @@ function isFormatted(formatPlugin, format) {
  * }) => void | boolean)[]} format_selection_overrides
  * @typedef {(() => void)[]} on_all_formats_removed_handlers
  *
- * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
+ * @typedef {((className: string, targetClassName?: string) => boolean | undefined)[]} is_format_class_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} has_format_predicates
  */
 
@@ -403,7 +403,11 @@ export class FormatPlugin extends Plugin {
             const isClassListSplittable = (classList) =>
                 [...classList].every(
                     (className) =>
-                        this.checkPredicates("is_format_class_predicates", className) ?? false
+                        this.checkPredicates(
+                            "is_format_class_predicates",
+                            className,
+                            formatProps?.className
+                        ) ?? false
                 );
 
             // Special case: if the parent node is unsplittable and fully selected,
