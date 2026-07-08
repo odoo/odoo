@@ -77,7 +77,7 @@ WITH
             m.state NOT IN ('draft', 'cancel') AND
             (m.state != 'done' or m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
     ),
-    all_sm (id, product_id, tmpl_id, product_qty, quantity, qty_done_product_uom, date, state, company_id, whs_id, whd_id) AS (
+    all_sm (id, product_id, tmpl_id, product_qty, quantity, qty_done_product_uom, date, state, company_id, whs_id, whd_id) AS NOT MATERIALIZED (
         SELECT sm.id, sm.product_id, sm.tmpl_id,
             CASE
                 WHEN is_duplicated = 0 OR sm.whs_id != sm.whd_id THEN sm.product_qty
