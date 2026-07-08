@@ -624,6 +624,7 @@ patch(PosOrder.prototype, {
                     continue;
                 }
                 let totalProductQty = 0;
+                let hasValidProduct = false;
                 // Only count points for paid lines.
                 const qtyPerProduct = {};
                 let orderedProductPaid = 0;
@@ -662,10 +663,15 @@ patch(PosOrder.prototype, {
                                 : line.prices.total_included;
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
+                            hasValidProduct = true;
                         }
                     }
                 }
 
+                // Skip product-restricted rules when the order contains none of their products.
+                if (!rule.any_product && !hasValidProduct) {
+                    continue;
+                }
                 if (
                     (this.isRefund && refundedLinesSummary.qty < rule.minimum_qty) ||
                     (!this.isRefund && totalProductQty < rule.minimum_qty)
@@ -778,6 +784,14 @@ patch(PosOrder.prototype, {
             }
             const nItems = this._computeNItems(rule);
             if (rule.minimum_qty > nItems) {
+                return false;
+            }
+            if (
+                !rule.any_product &&
+                !this._get_regular_order_lines().some((line) =>
+                    rule.validProductIds.has(line.product_id.id)
+                )
+            ) {
                 return false;
             }
         }
