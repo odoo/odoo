@@ -1747,7 +1747,11 @@ class CalendarEvent(models.Model):
             if meeting.location:
                 event.add('location').value = meeting.location
             if meeting.rrule:
-                event.add('rrule').value = meeting.rrule
+                rrule_value = next(
+                    (line[6:] for line in meeting.rrule.splitlines() if line.upper().startswith("RRULE:")),
+                    meeting.rrule,  # fallback: use as-is if already a bare value
+                )
+                event.add('rrule').value = rrule_value
 
             if meeting.alarm_ids:
                 for alarm in meeting.alarm_ids:
