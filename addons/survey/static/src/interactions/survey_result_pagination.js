@@ -1,5 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { redirect } from "@web/core/utils/urls";
 import { renderToMarkup } from "@web/core/utils/render";
 
 export class SurveyResultPagination extends Interaction {
@@ -23,6 +24,9 @@ export class SurveyResultPagination extends Interaction {
             "t-att-class": () => ({
                 "h-auto": this.paginationState.showAll,
             }),
+        },
+        ".filter-add-answer": {
+            "t-on-click": this.onFilterAddAnswerClick,
         },
         tbody: {
             "t-out": () => this.tableContent,
@@ -94,6 +98,15 @@ export class SurveyResultPagination extends Interaction {
         this.paginationState.showAll = true;
         this.paginationState.minIdx = 0;
         this.paginationState.maxIdx = this.elCount;
+    }
+
+    onFilterAddAnswerClick(ev) {
+        const { modelShortKey, rowId, recordId } = ev.currentTarget.dataset;
+        const filter = `${modelShortKey},${rowId || 0},${recordId}`;
+        const params = new URLSearchParams(window.location.search);
+        const filters = params.get("filters");
+        params.set("filters", filters && !filters.split("|").includes(filter) ? `${filters}|${filter}` : filters || filter);
+        redirect(window.location.pathname + "?" + params.toString());
     }
 }
 
