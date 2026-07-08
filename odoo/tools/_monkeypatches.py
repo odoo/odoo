@@ -157,7 +157,7 @@ def new_get_soap_client(wsdlurl, timeout=30):
     return _soap_clients[(wsdlurl, timeout)]
 
 
-if util:
+if util and parse_version(version("python-stdnum")) < parse_version("2.0"):
     util.get_soap_client = new_get_soap_client
 
 
