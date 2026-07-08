@@ -61,7 +61,18 @@ class IrExportsLine extends models.Model {
     name = fields.Char();
     export_id = fields.Many2one({ relation: "ir.exports" });
 }
-defineModels([Partner, User, IrExports, IrExportsLine]);
+class ResLang extends models.Model {
+    _name = "res.lang";
+    name = fields.Char();
+    code = fields.Char();
+    active = fields.Boolean();
+
+    _records = [
+        { id: 1, name: "English (US)", code: "en_US", active: true },
+        { id: 2, name: "French / Français", code: "fr_FR", active: false },
+    ];
+}
+defineModels([Partner, User, IrExports, IrExportsLine, ResLang]);
 
 const fetchedFields = {
     root: [
@@ -218,11 +229,17 @@ test("Export dialog: interacting with export templates", async () => {
     onRpc("/web/export/namelist", async (request) => {
         const { params } = await request.json();
         if (params.export_id === 1) {
-            return [{ id: "activity_ids", string: "Activities" }];
+            return {
+                fields: [{ id: "activity_ids", string: "Activities" }],
+                export_languages: [],
+            };
         }
-        return [];
+        return { fields: [], export_languages: [] };
     });
     onRpc(({ args, method, model, kwargs }) => {
+        if (model !== "ir.exports") {
+            return;
+        }
         switch (method) {
             case "search_read":
                 expect(kwargs.domain).toEqual([["resource", "=", "partner"]], {
@@ -323,12 +340,15 @@ test("Export dialog: interacting with export templates in debug", async () => {
     onRpc("/web/export/namelist", async (request) => {
         const { params } = await request.json();
         if (params.export_id === 1) {
-            return [{ id: "activity_ids", string: "Activities" }];
+            return {
+                fields: [{ id: "activity_ids", string: "Activities" }],
+                export_languages: [],
+            };
         }
-        return [];
+        return { fields: [], export_languages: [] };
     });
-    onRpc(({ method }) => {
-        if (method === "search_read") {
+    onRpc(({ method, model }) => {
+        if (method === "search_read" && model === "ir.exports") {
             return [{ id: 1, name: "Activities template" }];
         }
     });
@@ -467,7 +487,7 @@ test("Export dialog: compatible and export type options", async () => {
     await select("wow", { target: ".o_export_format" });
     await animationFrame();
     expect(".o_export_tree_item").toHaveCount(3);
-    await contains(".o_left_panel .form-check-input:first").click();
+    await contains(".o_export_compatible .form-check-input:first").click();
     expect(".o_export_tree_item").toHaveCount(3);
     def.resolve();
     await animationFrame();
@@ -503,7 +523,7 @@ test("toggling import compatibility after adding an expanded field", async () =>
 
     await contains("[data-field_id='activity_ids']").click();
     await contains("[data-field_id='activity_ids/partner_ids'] .o_add_field").click();
-    await contains(".o_left_panel .form-check-input:first").click();
+    await contains(".o_export_compatible .form-check-input:first").click();
     await contains("[data-field_id='activity_ids']").click();
     await contains(".o_select_button").click();
     // download file has been called with the correct url
@@ -528,7 +548,7 @@ test("toggling 'Updatable fields only' keeps the export list", async () => {
     await contains(".o_right_field_panel .o_export_field:first .o_remove_field").click();
     expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(["Activities"]);
 
-    await contains(".o_left_panel .form-check-input:first").click();
+    await contains(".o_export_compatible .form-check-input:first").click();
     await animationFrame();
     expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(["Activities"], {
         message: "toggling 'Updatable fields only' has no impact on the export list",
@@ -1356,4 +1376,151 @@ test("Export dialog in kanban view: no raw properties fields in default export l
         "My Char",
     ]);
     expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(["Foo", "My Char"]);
+});
+
+test("Export dialog: translations select is hidden when a single language is installed", async () => {
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", () => fetchedFields.root);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+
+    await openExportDialog();
+    expect(".o_export_languages").toHaveCount(0);
+});
+
+test("Export dialog: translations select is hidden when no exported field is translatable", async () => {
+    ResLang._records[1].active = true;
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", () =>
+        fetchedFields.root.map((field) =>
+            field.id === "bar" ? { ...field, translate: true } : field
+        )
+    );
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+
+    await openExportDialog();
+    expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(["Foo"]);
+    expect(".o_export_languages").toHaveCount(0, {
+        message: "no exported field is translatable",
+    });
+
+    // adding a translatable field makes the languages relevant again
+    await contains(".o_left_field_panel [data-field_id='bar'] .o_add_field").click();
+    expect(".o_export_languages").toHaveCount(1);
+
+    await contains(".o_right_field_panel [data-field_id='bar'] .o_remove_field").click();
+    expect(".o_export_languages").toHaveCount(0);
+});
+
+test("Export dialog: translatable fields are exported in the selected languages", async () => {
+    ResLang._records[1].active = true;
+    patchWithCleanup(download, {
+        _download: (options) => {
+            expect.step(options.url);
+            const data = JSON.parse(options.data.data);
+            expect(data.fields.map((field) => field.name)).toEqual(["foo@fr_FR", "bar"]);
+            expect(data.fields[0].label).toBe("Foo@fr_FR");
+        },
+    });
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", () =>
+        fetchedFields.root.map((field) =>
+            field.id === "foo" ? { ...field, translate: true } : field
+        )
+    );
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
+        loadActionMenus: true,
+    });
+
+    const addLanguage = async (label) => {
+        await contains(".o_export_languages .o-autocomplete input").click();
+        await runAllTimers();
+        await contains(`.o-autocomplete--dropdown-item:contains(${label})`).click();
+    };
+
+    await openExportDialog();
+    expect(".o_export_languages").toHaveCount(1);
+    await addLanguage("French / Français");
+    expect(".o_export_languages .o_tag").toHaveText("French / Français");
+    await contains(".o_export_languages .o_tag .o_delete").click();
+    expect(".o_export_languages .o_tag").toHaveCount(0);
+    await addLanguage("French / Français");
+    await contains(".o_select_button").click();
+    expect.verifySteps(["/web/export/csv"]);
+});
+
+test("Export dialog: export templates remember the selected languages", async () => {
+    ResLang._records[1].active = true;
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", () =>
+        fetchedFields.root.map((field) =>
+            field.id === "foo" ? { ...field, translate: true } : field
+        )
+    );
+    onRpc("/web/export/namelist", async (request) => {
+        const { params } = await request.json();
+        if (params.export_id === 1) {
+            return {
+                fields: [{ id: "foo", string: "Foo", translate: true }],
+                export_languages: ["fr_FR"],
+            };
+        }
+        return { fields: [], export_languages: [] };
+    });
+    onRpc(({ args, method, model }) => {
+        if (method === "search_read" && model === "ir.exports") {
+            return [{ id: 1, name: "Translated template" }];
+        }
+        if (method === "create") {
+            expect.step("create template");
+            expect(model).toBe("ir.exports");
+            expect(args[0][0].export_language_ids).toEqual([[6, false, [2]]], {
+                message: "the selected languages are saved on the new template",
+            });
+            return [2];
+        }
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+
+    await openExportDialog();
+    expect(".o_export_languages .o_tag").toHaveCount(0);
+
+    await select("1", { target: ".o_exported_lists_select" });
+    await animationFrame();
+    expect(".o_export_languages .o_tag").toHaveText("French / Français");
+
+    // removing a language edits the template and canceling restores it
+    await contains(".o_export_languages .o_tag .o_delete").click();
+    expect(".o_export_languages .o_tag").toHaveCount(0);
+    expect(`.o_cancel_list_btn [data-icon="undo"]`).toHaveCount(1);
+    await contains(".o_cancel_list_btn").click();
+    expect(".o_export_languages .o_tag").toHaveText("French / Français");
+
+    // saving a new template persists the selected languages
+    await select("new_template", { target: ".o_exported_lists_select" });
+    await animationFrame();
+    await contains(".o_save_list_name").edit("Translated template copy");
+    await contains(".o_save_list_btn").click();
+    expect.verifySteps(["create template"]);
 });
