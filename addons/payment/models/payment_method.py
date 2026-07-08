@@ -200,6 +200,16 @@ class PaymentMethod(models.Model):
         if any(pm.code == "unknown" for pm in self):
             raise UserError(self.env._("You cannot delete the default payment method."))
 
+    def _can_return_content(self, field_name=None, access_token=None):
+        """Override of `BaseModel` to allow showing payment method images to public users.
+
+        The `image_payment_form` is fetched on the payment form, and the `image` field can be used
+        in other modules (e.g. `website_payment`).
+        """
+        if field_name in ("image", "image_payment_form"):
+            return True
+        return super()._can_return_content(field_name=field_name, access_token=access_token)
+
     # === BUSINESS METHODS === #
 
     def _deduplicate_by_code(self, report=None):
