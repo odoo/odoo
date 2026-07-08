@@ -5,20 +5,13 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.addons.l10n_eg_edi_eta.tools.eta_serialize import serialize_eta_document
+from odoo.fields import Datetime
 from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo.tools import BinaryBytes
 
 from .common import TestEGEdiCommon
 
-ETA_TEST_RESPONSE = {
-    'l10n_eg_uuid': 'UUIDXIL9182712KMHJQ',
-    'l10n_eg_long_id': 'LIDMN12132LASKXXA',
-    'l10n_eg_internal_id': 'INTLA1212MMKA12',
-    'l10n_eg_hash_key': 'BaK12lX1kASdma12',
-    'l10n_eg_submission_number': '12125523452353',
-}
-ETA_TEST_SIGNATURES = [{'1': '1'}]
+ETA_TEST_SIGNATURES = [{'i': 'i'}]
 COMMON_REQUEST_DICT = {
     'issuer': {
         'address': {
@@ -27,7 +20,7 @@ COMMON_REQUEST_DICT = {
             'regionCity': 'Iswan',
             'street': '12th dec. street',
             'buildingNumber': '10',
-            'postalCode': '',
+            'postalCode': '12345',
             'branchID': '0',
         },
         'name': 'branch partner',
@@ -46,10 +39,9 @@ COMMON_REQUEST_DICT = {
 }
 
 
-def mocked_action_post_sign_invoices(self):
+def mocked_action_sign_invoices(self):
     for invoice in self:
-        eta_invoice = self.env['account.edi.format']._l10n_eg_eta_prepare_eta_invoice(self)
-        eta_invoice['signatures'] = ETA_TEST_SIGNATURES
+        eta_invoice = invoice._generate_l10n_eg_edi_json(is_demo=True)
         self.env['ir.attachment'].create(
             {
                 'name': ('ETA_INVOICE_DOC_%s', invoice.name),
@@ -62,21 +54,35 @@ def mocked_action_post_sign_invoices(self):
                 'description': ('Egyptian Tax authority JSON invoice generated for %s.', invoice.name),
             },
         )
+        invoice.l10n_eg_signing_time = Datetime.now()
+        invoice.l10n_eg_is_signed = True
         invoice.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
     return True
 
 
-def mocked_l10n_eg_edi_post_invoice_web_service(self, invoice):
-    eta_invoice_json = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
-    eta_invoice_json['response'] = ETA_TEST_RESPONSE
-    invoice.l10n_eg_eta_json_doc_file = BinaryBytes(json.dumps(eta_invoice_json).encode())
-    invoice.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
-    json_doc_attachment_id = self.env['ir.attachment'].search([
-        ('res_model', '=', invoice._name),
-        ('res_id', '=', invoice.id),
-        ('res_field', '=', 'l10n_eg_eta_json_doc_file'),
-    ])
-    return {'success': True, 'attachment': json_doc_attachment_id}
+def _get_eta_response_json(is_inv=True):
+    return {
+        'submissionUUID': 'TZRKK8MFZCPSTW9XCYWBMKME10',
+        'acceptedDocuments': [
+            {
+                'uuid': 'TZRKK8MFZCPSTW9XCYWBMKME11',
+                'longId': 'TZRKK8MFZ CPSTW9XC YWBMKME10A BC123160 2681697',
+                'internalId': is_inv and 'INV/2022/00001' or 'RINV/2022/00001',
+            },
+        ],
+    }
+
+
+def mocked_submit_invoices(self, body, headers, timeout=20):
+    is_inv = json.loads(body)['documents'][0]['documentType'] == 'i'
+    return json.dumps(_get_eta_response_json(is_inv=is_inv)).encode()
+
+
+def mocked_get_access_token(self, body, headers, timeout=20):
+    return json.dumps({
+        'access_token': 'test_access_token',
+        'expires_in': 3600,
+    }).encode()
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -84,37 +90,40 @@ class TestEdiJson(TestEGEdiCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
-    def test_1_simple_test_local_parter_no_tax(self):
+    def test_1_simple_test_local_parter_with_tax(self):
+        invoice = self._create_invoice_eg(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                },
+            ],
+        )
+        invoice.action_post()
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
-            new=mocked_action_post_sign_invoices,
+            new=mocked_action_sign_invoices,
         ), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
-            new=mocked_l10n_eg_edi_post_invoice_web_service,
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.get_access_token',
+            new=mocked_get_access_token,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.submit_invoices',
+            new=mocked_submit_invoices,
         ):
-            invoice = self._create_invoice_eg(
-                partner_id=self.partner_a.id,
-                invoice_line_ids=[
-                    {
-                        'product_id': self.product_a.id,
-                        'price_unit': 100.0,
-                        'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'tax_ids': [],
-                    },
-                    {
-                        'product_id': self.product_a.id,
-                        'price_unit': 200.0,
-                        'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'tax_ids': [],
-                    },
-                ],
-            )
-            invoice.action_post()
             invoice.action_post_sign_invoices()
-
-            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
-            self.assertTrue(generated_files)
-            json_file = json.loads(generated_files[0])
+            wizard = self.create_send_and_print(invoice, default=True)
+            self.assertTrue(wizard.extra_edi_checkboxes and wizard.extra_edi_checkboxes.get('eg_eta_edi', {}).get('checked'))
+            wizard.action_send_and_print()
+            json_file = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
             self.assertEqual(
                 json_file,
                 {
@@ -126,7 +135,7 @@ class TestEdiJson(TestEGEdiCommon):
                                 'regionCity': 'Iswan',
                                 'street': '12th dec. street',
                                 'buildingNumber': '12',
-                                'postalCode': '',
+                                'postalCode': '33445',
                             },
                             'name': 'partner_a',
                             'type': 'B',
@@ -145,10 +154,15 @@ class TestEdiJson(TestEGEdiCommon):
                                 'itemsDiscount': 0.0,
                                 'unitValue': {'currencySold': 'EGP', 'amountEGP': 100.0},
                                 'discount': {'rate': 0.0, 'amount': 0.0},
-                                'taxableItems': [],
+                                'taxableItems': [{
+                                    'amount': 14.0,
+                                    'rate': 14.0,
+                                    'subType': 'V009',
+                                    'taxType': 'T1',
+                                }],
                                 'salesTotal': 100.0,
                                 'netTotal': 100.0,
-                                'total': 100.0,
+                                'total': 114.0,
                             },
                             {
                                 'description': 'product_a',
@@ -162,123 +176,36 @@ class TestEdiJson(TestEGEdiCommon):
                                 'itemsDiscount': 0.0,
                                 'unitValue': {'currencySold': 'EGP', 'amountEGP': 200.0},
                                 'discount': {'rate': 0.0, 'amount': 0.0},
-                                'taxableItems': [],
+                                'taxableItems': [{
+                                    'amount': 28.0,
+                                    'rate': 14.0,
+                                    'subType': 'V009',
+                                    'taxType': 'T1',
+                                }],
                                 'salesTotal': 200.0,
                                 'netTotal': 200.0,
-                                'total': 200.0,
+                                'total': 228.0,
                             },
                         ],
-                        'taxTotals': [],
+                        'taxTotals': [{'amount': 42.0, 'taxType': 'T1'}],
                         'totalSalesAmount': 300.0,
                         'netAmount': 300.0,
-                        'totalAmount': 300.0,
+                        'totalAmount': 342.0,
                     },
-                    'response': ETA_TEST_RESPONSE,
+                    'response': _get_eta_response_json()['acceptedDocuments'][0],
                 },
             )
 
-    def test_2_simple_test_local_parter_vat_14(self):
+    def test_2_simple_test_local_parter_vat_14_discount_credit_note(self):
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
-            new=mocked_action_post_sign_invoices,
+            new=mocked_action_sign_invoices,
         ), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
-            new=mocked_l10n_eg_edi_post_invoice_web_service,
-        ):
-            invoice = self._create_invoice_eg(
-                partner_id=self.partner_a.id,
-                invoice_line_ids=[
-                    {
-                        'product_id': self.product_a.id,
-                        'price_unit': 120.99,
-                        'quantity': 1.0,
-                        'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
-                    },
-                    {
-                        'product_id': self.product_a.id,
-                        'price_unit': 999.99,
-                        'quantity': 1.0,
-                        'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
-                    },
-                ],
-            )
-            invoice.action_post()
-            invoice.action_post_sign_invoices()
-
-            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
-            self.assertTrue(generated_files)
-            json_file = json.loads(generated_files[0])
-            self.assertEqual(
-                json_file,
-                {
-                    'request': {**COMMON_REQUEST_DICT,
-                        'receiver': {
-                            'address': {
-                                'country': 'EG',
-                                'governate': 'Cairo',
-                                'regionCity': 'Iswan',
-                                'street': '12th dec. street',
-                                'buildingNumber': '12',
-                                'postalCode': '',
-                            },
-                            'name': 'partner_a',
-                            'type': 'B',
-                            'id': '123456789',
-                        },
-                        'invoiceLines': [
-                            {
-                                'description': 'product_a',
-                                'itemType': 'GS1',
-                                'itemCode': '1KGS1TEST',
-                                'unitType': 'C62',
-                                'quantity': 1.0,
-                                'internalCode': '',
-                                'valueDifference': 0.0,
-                                'totalTaxableFees': 0.0,
-                                'itemsDiscount': 0.0,
-                                'unitValue': {'currencySold': 'EGP', 'amountEGP': 120.99},
-                                'discount': {'rate': 0.0, 'amount': -0.0},
-                                'taxableItems': [{'taxType': 'T1', 'amount': 16.94, 'subType': 'V009', 'rate': 14.0}],
-                                'salesTotal': 120.99,
-                                'netTotal': 120.99,
-                                'total': 137.93,
-                            },
-                            {
-                                'description': 'product_a',
-                                'itemType': 'GS1',
-                                'itemCode': '1KGS1TEST',
-                                'unitType': 'C62',
-                                'quantity': 1.0,
-                                'internalCode': '',
-                                'valueDifference': 0.0,
-                                'totalTaxableFees': 0.0,
-                                'itemsDiscount': 0.0,
-                                'unitValue': {'currencySold': 'EGP', 'amountEGP': 999.99},
-                                'discount': {'rate': 0.0, 'amount': 0.0},
-                                'taxableItems': [{'taxType': 'T1', 'amount': 140.0, 'subType': 'V009', 'rate': 14.0}],
-                                'salesTotal': 999.99,
-                                'netTotal': 999.99,
-                                'total': 1139.99,
-                            },
-                        ],
-                        'taxTotals': [{'taxType': 'T1', 'amount': 156.94}],
-                        'totalSalesAmount': 1120.98,
-                        'netAmount': 1120.98,
-                        'totalAmount': 1277.92,
-                    },
-                    'response': ETA_TEST_RESPONSE,
-                },
-            )
-
-    def test_3_simple_test_local_parter_vat_14_discount_credit_note(self):
-        with freeze_time(self.frozen_today), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
-            new=mocked_action_post_sign_invoices,
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.get_access_token',
+            new=mocked_get_access_token,
         ), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
-            new=mocked_l10n_eg_edi_post_invoice_web_service,
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.submit_invoices',
+            new=mocked_submit_invoices,
         ):
             invoice = self._create_invoice_eg(
                 move_type='out_refund',
@@ -304,10 +231,9 @@ class TestEdiJson(TestEGEdiCommon):
             )
             invoice.action_post()
             invoice.action_post_sign_invoices()
-
-            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
-            self.assertTrue(generated_files)
-            json_file = json.loads(generated_files[0])
+            wizard = self.create_send_and_print(invoice, default=True)
+            wizard.action_send_and_print()
+            json_file = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
             self.assertEqual(
                 json_file,
                 {
@@ -319,7 +245,7 @@ class TestEdiJson(TestEGEdiCommon):
                                 'regionCity': 'Iswan',
                                 'street': '12th dec. street',
                                 'buildingNumber': '12',
-                                'postalCode': '',
+                                'postalCode': '33445',
                             },
                             'name': 'partner_a',
                             'type': 'B',
@@ -369,17 +295,20 @@ class TestEdiJson(TestEGEdiCommon):
                         'netAmount': 100.76,
                         'totalAmount': 114.86,
                     },
-                    'response': ETA_TEST_RESPONSE,
+                    'response': _get_eta_response_json(is_inv=False)['acceptedDocuments'][0],
                 },
             )
 
-    def test_4_simple_test_local_parter_vat_14_discount_multiple_tax(self):
+    def test_3_simple_test_local_parter_vat_14_discount_multiple_tax(self):
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
-            new=mocked_action_post_sign_invoices,
+            new=mocked_action_sign_invoices,
         ), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
-            new=mocked_l10n_eg_edi_post_invoice_web_service,
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.get_access_token',
+            new=mocked_get_access_token,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.submit_invoices',
+            new=mocked_submit_invoices,
         ):
             ref_eg_standard_sale_14 = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids
             invoice = self._create_invoice_eg(
@@ -421,10 +350,10 @@ class TestEdiJson(TestEGEdiCommon):
             )
             invoice.action_post()
             invoice.action_post_sign_invoices()
-
-            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
-            self.assertTrue(generated_files)
-            json_file = json.loads(generated_files[0])
+            wizard = self.create_send_and_print(invoice, default=True)
+            self.assertTrue(wizard.extra_edi_checkboxes and wizard.extra_edi_checkboxes.get('eg_eta_edi', {}).get('checked'))
+            wizard.action_send_and_print()
+            json_file = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
             self.assertEqual(
                 json_file,
                 {
@@ -436,7 +365,7 @@ class TestEdiJson(TestEGEdiCommon):
                                 'regionCity': 'Iswan',
                                 'street': '12th dec. street',
                                 'buildingNumber': '12',
-                                'postalCode': '',
+                                'postalCode': '33445',
                             },
                             'name': 'partner_a',
                             'type': 'B',
@@ -500,19 +429,22 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalDiscountAmount': 122.05445,
                         'totalSalesAmount': 1220.54445,
                         'netAmount': 1098.49,
-                        'totalAmount': 1262.27
+                        'totalAmount': 1262.27,
                     },
-                    'response': ETA_TEST_RESPONSE,
+                    'response': _get_eta_response_json()['acceptedDocuments'][0],
                 },
             )
 
-    def test_5_simple_test_foreign_partner_exempt_discount(self):
+    def test_4_simple_test_foreign_partner_exempt_discount(self):
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
-            new=mocked_action_post_sign_invoices,
+            new=mocked_action_sign_invoices,
         ), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
-            new=mocked_l10n_eg_edi_post_invoice_web_service,
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.get_access_token',
+            new=mocked_get_access_token,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.submit_invoices',
+            new=mocked_submit_invoices,
         ):
             invoice = self._create_invoice_eg(
                 partner_id=self.partner_b.id,
@@ -538,9 +470,10 @@ class TestEdiJson(TestEGEdiCommon):
             invoice.action_post()
             invoice.action_post_sign_invoices()
 
-            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
-            self.assertTrue(generated_files)
-            json_file = json.loads(generated_files[0])
+            wizard = self.create_send_and_print(invoice, default=True)
+            self.assertTrue(wizard.extra_edi_checkboxes and wizard.extra_edi_checkboxes.get('eg_eta_edi', {}).get('checked'))
+            wizard.action_send_and_print()
+            json_file = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
             self.assertEqual(
                 json_file,
                 {
@@ -552,7 +485,7 @@ class TestEdiJson(TestEGEdiCommon):
                                 'regionCity': 'New York City',
                                 'street': '5th avenue street',
                                 'buildingNumber': '12',
-                                'postalCode': '',
+                                'postalCode': '54321',
                             },
                             'name': 'partner_b',
                             'type': 'F',
@@ -601,17 +534,20 @@ class TestEdiJson(TestEGEdiCommon):
                         'netAmount': 4456.93,
                         'totalAmount': 4456.93,
                     },
-                    'response': ETA_TEST_RESPONSE,
+                    'response': _get_eta_response_json()['acceptedDocuments'][0],
                 },
             )
 
-    def test_6_simple_test_foreign_parter_exempt_discount_foreign_currency(self):
+    def test_5_simple_test_foreign_parter_exempt_discount_foreign_currency(self):
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
-            new=mocked_action_post_sign_invoices,
+            new=mocked_action_sign_invoices,
         ), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
-            new=mocked_l10n_eg_edi_post_invoice_web_service,
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.get_access_token',
+            new=mocked_get_access_token,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.submit_invoices',
+            new=mocked_submit_invoices,
         ):
             invoice = self._create_invoice_eg(
                 currency_id=self.currency_aed_id.id,
@@ -644,9 +580,10 @@ class TestEdiJson(TestEGEdiCommon):
             invoice.action_post()
             invoice.action_post_sign_invoices()
 
-            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
-            self.assertTrue(generated_files)
-            json_file = json.loads(generated_files[0])
+            wizard = self.create_send_and_print(invoice, default=True)
+            self.assertTrue(wizard.extra_edi_checkboxes and wizard.extra_edi_checkboxes.get('eg_eta_edi', {}).get('checked'))
+            wizard.action_send_and_print()
+            json_file = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
             self.assertEqual(
                 json_file,
                 {
@@ -658,7 +595,7 @@ class TestEdiJson(TestEGEdiCommon):
                                 'regionCity': 'New York City',
                                 'street': '5th avenue street',
                                 'buildingNumber': '12',
-                                'postalCode': '',
+                                'postalCode': '54321',
                             },
                             'name': 'partner_b',
                             'type': 'F',
@@ -716,17 +653,20 @@ class TestEdiJson(TestEGEdiCommon):
                         'netAmount': 22496.44,
                         'totalAmount': 22496.44,
                     },
-                    'response': ETA_TEST_RESPONSE,
+                    'response': _get_eta_response_json()['acceptedDocuments'][0],
                 },
             )
 
-    def test_7_simple_test_foreign_parter_exempt_discount_foreign_currency_credit_note(self):
+    def test_6_simple_test_foreign_parter_exempt_discount_foreign_currency_credit_note(self):
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
-            new=mocked_action_post_sign_invoices,
+            new=mocked_action_sign_invoices,
         ), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
-            new=mocked_l10n_eg_edi_post_invoice_web_service,
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.get_access_token',
+            new=mocked_get_access_token,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.submit_invoices',
+            new=mocked_submit_invoices,
         ):
             invoice = self._create_invoice_eg(
                 move_type='out_invoice',
@@ -754,9 +694,10 @@ class TestEdiJson(TestEGEdiCommon):
             invoice.action_post()
             invoice.action_post_sign_invoices()
 
-            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
-            self.assertTrue(generated_files)
-            json_file = json.loads(generated_files[0])
+            wizard = self.create_send_and_print(invoice, default=True)
+            self.assertTrue(wizard.extra_edi_checkboxes and wizard.extra_edi_checkboxes.get('eg_eta_edi', {}).get('checked'))
+            wizard.action_send_and_print()
+            json_file = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
             self.assertEqual(
                 json_file,
                 {
@@ -768,7 +709,7 @@ class TestEdiJson(TestEGEdiCommon):
                                 'regionCity': 'New York City',
                                 'street': '5th avenue street',
                                 'buildingNumber': '12',
-                                'postalCode': '',
+                                'postalCode': '54321',
                             },
                             'name': 'partner_b',
                             'type': 'F',
@@ -826,17 +767,14 @@ class TestEdiJson(TestEGEdiCommon):
                         'netAmount': 2657.62,
                         'totalAmount': 2657.62,
                     },
-                    'response': ETA_TEST_RESPONSE,
+                    'response': _get_eta_response_json()['acceptedDocuments'][0],
                 },
             )
 
-    def test_8_test_serialization_function(self):
+    def test_7_test_serialization_function(self):
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
-            new=mocked_action_post_sign_invoices,
-        ), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
-            new=mocked_l10n_eg_edi_post_invoice_web_service,
+            new=mocked_action_sign_invoices,
         ):
             invoice = self._create_invoice_eg(
                 move_type='out_invoice',
@@ -864,20 +802,15 @@ class TestEdiJson(TestEGEdiCommon):
             invoice.action_post()
             invoice.action_post_sign_invoices()
 
-            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
-            self.assertTrue(generated_files)
-            json_file = json.loads(generated_files[0])
+            json_file = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
             serialized_string = serialize_eta_document(json_file['request'])
-            self.assertEqual(serialized_string, '"ISSUER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""10""POSTALCODE""""BRANCHID""0""NAME""branch partner""TYPE""B""ID""456789123""RECEIVER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""12""POSTALCODE""""NAME""عميل 1""TYPE""B""ID""123456789""DOCUMENTTYPE""i""DOCUMENTTYPEVERSION""1.0""DATETIMEISSUED""2022-03-15T00:00:00Z""TAXPAYERACTIVITYCODE""8121""INTERNALID""INV/2022/00001""INVOICELINES""INVOICELINES""DESCRIPTION""product_a""ITEMTYPE""GS1""ITEMCODE""1KGS1TEST""UNITTYPE""C62""QUANTITY""1.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""504.75556""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.0""DISCOUNT""RATE""10.0""AMOUNT""50.47556""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""504.75556""NETTOTAL""454.28""TOTAL""454.28""INVOICELINES""DESCRIPTION""product_b""ITEMTYPE""EGS""ITEMCODE""EG-EGS-TEST""UNITTYPE""CMT""QUANTITY""5.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""506.51494""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.35""DISCOUNT""RATE""13.0""AMOUNT""329.23471""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""2532.57471""NETTOTAL""2203.34""TOTAL""2203.34""TAXTOTALS""TAXTOTALS""TAXTYPE""T1""AMOUNT""0.0""TOTALDISCOUNTAMOUNT""379.71027""TOTALSALESAMOUNT""3037.33027""NETAMOUNT""2657.62""TOTALAMOUNT""2657.62""EXTRADISCOUNTAMOUNT""0.0""TOTALITEMSDISCOUNTAMOUNT""0.0""SIGNATURES""SIGNATURES""1""1"')
+            self.assertEqual(serialized_string, '"ISSUER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""10""POSTALCODE""12345""BRANCHID""0""NAME""branch partner""TYPE""B""ID""456789123""RECEIVER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""12""POSTALCODE""98765""NAME""عميل 1""TYPE""B""ID""123456789""DOCUMENTTYPE""i""DOCUMENTTYPEVERSION""1.0""DATETIMEISSUED""2022-03-15T00:00:00Z""TAXPAYERACTIVITYCODE""8121""INTERNALID""INV/2022/00001""INVOICELINES""INVOICELINES""DESCRIPTION""product_a""ITEMTYPE""GS1""ITEMCODE""1KGS1TEST""UNITTYPE""C62""QUANTITY""1.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""504.75556""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.0""DISCOUNT""RATE""10.0""AMOUNT""50.47556""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""504.75556""NETTOTAL""454.28""TOTAL""454.28""INVOICELINES""DESCRIPTION""product_b""ITEMTYPE""EGS""ITEMCODE""EG-EGS-TEST""UNITTYPE""CMT""QUANTITY""5.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""506.51494""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.35""DISCOUNT""RATE""13.0""AMOUNT""329.23471""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""2532.57471""NETTOTAL""2203.34""TOTAL""2203.34""TAXTOTALS""TAXTOTALS""TAXTYPE""T1""AMOUNT""0.0""TOTALDISCOUNTAMOUNT""379.71027""TOTALSALESAMOUNT""3037.33027""NETAMOUNT""2657.62""TOTALAMOUNT""2657.62""EXTRADISCOUNTAMOUNT""0.0""TOTALITEMSDISCOUNTAMOUNT""0.0""SIGNATURES""SIGNATURES""I""i"')
 
-    def test_10_street2_is_concatenated_with_space(self):
+    def test_8_street2_is_concatenated_with_space(self):
         """Ensure that street and street2 are concatenated with a single space."""
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
-            new=mocked_action_post_sign_invoices,
-        ), patch(
-            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
-            new=mocked_l10n_eg_edi_post_invoice_web_service,
+            new=mocked_action_sign_invoices,
         ):
             partner = self.env['res.partner'].create({
                 'name': 'Partner Street2',
@@ -900,15 +833,13 @@ class TestEdiJson(TestEGEdiCommon):
             invoice.action_post()
             invoice.action_post_sign_invoices()
 
-            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
-            self.assertTrue(generated_files)
-            json_file = json.loads(generated_files[0])
+            json_file = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
             self.assertEqual(
                 json_file['request']['receiver']['address']['street'],
                 '12th dec. street apt 5',
             )
 
-    def test_11_description_over_eta_character_limit(self):
+    def test_9_description_over_eta_character_limit(self):
         invoice = self._create_invoice_eg(
             partner_id=self.partner_a.id,
             invoice_line_ids=[
@@ -923,8 +854,10 @@ class TestEdiJson(TestEGEdiCommon):
         )
         with self.assertRaisesRegex(UserError, "exceeds the ETA limit of 500 characters"):
             invoice.action_post()
+            wizard = self.create_send_and_print(invoice, default=True)
+            wizard.action_send_and_print()
 
-    def test_12_description_at_eta_character_limit(self):
+    def test_10_description_at_eta_character_limit(self):
         invoice = self._create_invoice_eg(
             partner_id=self.partner_a.id,
             invoice_line_ids=[

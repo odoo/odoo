@@ -67,8 +67,12 @@ async function actionGetDrive(env, actionDescr, type) {
         });
         result = await result.json();
     } catch {
+        if (type === "sign") {
+            await sendLogOnSignFailure(orm, actionDescr.params);
+        }
         dialog.add(AlertDialog, {
             body: _t("Error trying to connect to the middleware. Is the middleware running?"),
+            confirm: () => { action.doAction("soft_reload") },
         });
         return;
     }
@@ -106,6 +110,15 @@ async function actionGetDrive(env, actionDescr, type) {
             body: _t("An unexpected error has occurred"),
         });
     }
+}
+
+async function sendLogOnSignFailure(orm, params) {
+    const invoices = JSON.parse(params.invoices);
+    if (!invoices) {
+        return;
+    }
+    const invoice_ids = Object.keys(invoices).map(Number);
+    await orm.call("account.move", "l10n_eg_log_on_sign_failure", [invoice_ids])
 }
 
 registry
