@@ -484,7 +484,7 @@ class IrModel(models.Model):
             '_description': model_data['name'],
             '_module': False,
             '_custom': True,
-            '_abstract': bool(model_data['abstract']),
+            '_abstract': bool(model_data.get('abstract', False)),
             '_transient': bool(model_data['transient']),
             '_order': model_data['order'],
             '_fold_name': model_data['fold_name'],
