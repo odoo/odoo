@@ -730,6 +730,43 @@ class TestEdiZatca(TestSaEdiCommon):
         self.assertEqual(monetary_vals['payable_amount'], 0.0,
         f"Payable amount should be 0.0 (fully prepaid), got {monetary_vals['payable_amount']}")
 
+    @freeze_time('2022-09-05 08:20:02')
+    def test_invoice_global_rounding_line_extension_amount(self):
+        """
+        Under global rounding, LineExtensionAmount (BT-106) must equal TaxExclusiveAmount (BT-109).
+        note: price included is just there to make it easy to have the rounding issue
+        """
+
+        self.company.tax_calculation_rounding_method = 'round_globally'
+        self.tax_15.price_include_override = 'tax_included'
+
+        move_data = {
+            'name': 'INV/2022/00015',
+            'invoice_date': '2022-09-05',
+            'invoice_date_due': '2022-09-05',
+            'partner_id': self.partner_sa,
+            'invoice_line_ids': [{
+                'product_id': self.product_a.id,
+                'price_unit': 10.00,
+                'tax_ids': self.tax_15.ids,
+            } for _dummy in range(3)],
+        }
+
+        invoice = self._create_invoice(**move_data)
+        invoice.action_post()
+
+        xml_content = self.env['account.edi.format']._l10n_sa_generate_zatca_template(invoice)
+        xml_root = etree.fromstring(xml_content)
+        namespaces = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
+        line_extension_amount = xml_root.xpath(
+            "//cac:LegalMonetaryTotal/cbc:LineExtensionAmount", namespaces=namespaces)[0].text.strip()
+        tax_exclusive_amount = xml_root.xpath(
+            "//cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount", namespaces=namespaces)[0].text.strip()
+
+        self.assertEqual(line_extension_amount, tax_exclusive_amount,
+            "LineExtensionAmount (BT-106) must equal TaxExclusiveAmount (BT-109) under global rounding")
+        self.assertEqual(line_extension_amount, '26.09')
+
     def test_csr_validation_with_multibyte_characters(self):
         vals = self._get_company_vals({"name": "مجموعة النخبة العالمية للاستشارات الفنية"})
         new_company = self._create_company(**vals)

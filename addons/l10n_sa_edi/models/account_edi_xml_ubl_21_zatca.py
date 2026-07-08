@@ -429,7 +429,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
 
         line_vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
         total_amount_sa = abs(taxes_vals['tax_amount_currency'] + taxes_vals['base_amount_currency'])
-        extension_amount = abs(line_vals['line_extension_amount'])
+        extension_amount = abs(taxes_vals['base_amount_currency'])
         if not line.move_id._is_downpayment() and line._get_downpayment_lines():
             total_amount_sa = extension_amount = 0
             line_vals['price_vals']['price_amount'] = 0
