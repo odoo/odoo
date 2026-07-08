@@ -1,4 +1,5 @@
 from odoo import api, Command, fields, models
+from odoo.tools import OrderedSet
 
 
 class ProjectTemplateCreateWizard(models.TransientModel):
@@ -7,6 +8,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     partner_id = fields.Many2one("res.partner")
     allow_billable = fields.Boolean(related="template_id.allow_billable")
     role_to_users_ids = fields.One2many(compute="_compute_role_to_users_ids", readonly=False, store=True)
+    sale_warning_text = fields.Text('Project Template Warning', compute='_compute_sale_warning_text', help='Warning for the partner as set by the user.')
 
     @api.depends("template_id")
     def _compute_role_to_users_ids(self):
@@ -22,6 +24,22 @@ class ProjectTemplateCreateWizard(models.TransientModel):
                 ]
                 if wizard.template_id else [Command.clear()]
             )
+
+    @api.depends('partner_id.name', 'partner_id.sale_warn_msg')
+    def _compute_sale_warning_text(self):
+        if not self.env.user.has_group("sale.group_warning_sale"):
+            self.sale_warning_text = ""
+            return
+        for project in self:
+            warnings = OrderedSet()
+            if partner_msg := project.partner_id.sale_warn_msg:
+                warnings.add(
+                    (project.partner_id.name or project.partner_id.display_name) + " - " + partner_msg
+                )
+            if partner_parent_msg := project.partner_id.parent_id.sale_warn_msg:
+                parent = project.partner_id.parent_id
+                warnings.add((parent.name or parent.display_name) + " - " + partner_parent_msg)
+            project.sale_warning_text = "\n".join(warnings)
 
     def _get_template_whitelist_fields(self):
         res = super()._get_template_whitelist_fields()

@@ -5,7 +5,7 @@ import ast
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.models import Query
-from odoo.tools import SQL
+from odoo.tools import SQL, OrderedSet
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
 
@@ -49,6 +49,7 @@ class ProjectProject(models.Model):
     )
     real_cost = fields.Monetary(compute='_compute_real_cost', export_string_translation=False)
     real_cost_ratio = fields.Float(compute='_compute_real_cost', export_string_translation=False)
+    sale_warning_text = fields.Text('Project Warning', compute='_compute_sale_warning_text', help='Warning for the partner as set by the user.')
 
     @api.model
     def default_get(self, fields):
@@ -91,6 +92,22 @@ class ProjectProject(models.Model):
                     not p.partner_id or p.sale_line_id.order_partner_id.commercial_partner_id != p.partner_id.commercial_partner_id
                 )
         ).update({'sale_line_id': False})
+
+    @api.depends('partner_id.name', 'partner_id.sale_warn_msg')
+    def _compute_sale_warning_text(self):
+        if not self.env.user.has_group("sale.group_warning_sale"):
+            self.sale_warning_text = ""
+            return
+        for project in self:
+            warnings = OrderedSet()
+            if partner_msg := project.partner_id.sale_warn_msg:
+                warnings.add(
+                    (project.partner_id.name or project.partner_id.display_name) + " - " + partner_msg
+                )
+            if partner_parent_msg := project.partner_id.parent_id.sale_warn_msg:
+                parent = project.partner_id.parent_id
+                warnings.add((parent.name or parent.display_name) + " - " + partner_parent_msg)
+            project.sale_warning_text = "\n".join(warnings)
 
     def _get_projects_for_invoice_status(self, invoice_status):
         """ Returns a recordset of project.project that has any Sale Order which invoice_status is the same as the
