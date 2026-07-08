@@ -26,6 +26,9 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
 
     def test_website_form_contact_us_edition_with_email(self):
         self.start_tour('/web', 'website_form_contactus_edition_with_email', login="admin")
+        # Rendered value is used first and `email_to` is computed during
+        # rendering according to `res_company.email`
+        self.env.company.email = 'test@test.test'  # Value to sign for `email_to` in the `website.contactus` form
         self.start_tour('/contactus', 'website_form_contactus_submit', login="portal")
         mail = self.env['mail.mail'].search([], order='id desc', limit=1)
         self.assertEqual(
