@@ -11,6 +11,7 @@ class CalendarEvent(models.Model):
 
     def _do_sms_reminder(self, alarms):
         """ Send an SMS text reminder to attendees that haven't declined the event """
+        print("pass inside the sms reminder")
         log_message_bodies = {}
         for event in self:
             declined_partners = event.attendee_ids.filtered_domain([('state', '=', 'declined')]).partner_id

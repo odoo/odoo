@@ -181,6 +181,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
 
     @api.model
     def _send_reminder(self):
+        print("pass inside the send reminder")
         # Executed via cron
         events_by_alarm = self._get_events_by_alarm_to_notify('email')
         if not events_by_alarm:
