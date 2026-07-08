@@ -6,6 +6,7 @@ import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInput
 import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
+import { negateStep } from "@point_of_sale/../tests/tours/helpers/utils";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import { registry } from "@web/core/registry";
 
@@ -78,6 +79,8 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             TextInputPopup.checkConfirmDisabled(),
             TextInputPopup.inputText("New Floor"),
             TextInputPopup.clickConfirm(),
+            FloorScreen.selectedFloorIs("New Floor"), // Ensure the new floor is loaded
+            negateStep(FloorScreen.hasTable), // Ensure the new floor is loaded
 
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.hasTable("2"),
