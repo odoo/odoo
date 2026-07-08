@@ -845,7 +845,8 @@ class PosConfig(models.Model):
              ORDER BY product_product__product_tmpl_id.is_favorite DESC,
                       CASE WHEN product_product__product_tmpl_id.type = 'service' THEN 1 ELSE 0 END DESC,
                       pm.date DESC NULLS LAST,
-                      product_product.write_date DESC
+                      product_product.write_date DESC,
+                      product_product.id
                 LIMIT %s
             """,
             query.from_clause,
