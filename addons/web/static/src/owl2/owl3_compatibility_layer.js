@@ -91,13 +91,16 @@ owl.onRendered = function onRendered(cb) {
 /**
  * @param {string} name
  */
-owl.useRef = function useRef(name) {
+owl.useRef = function useRef(name, { asSignal = false } = {}) {
     const node = owl.useScope();
     if (!node.__refs__) {
         node.__refs__ = {};
     }
     if (!node.__refs__[name]) {
         node.__refs__[name] = owl.signal(null);
+    }
+    if (asSignal) {
+        return node.__refs__[name];
     }
     return {
         get el() {

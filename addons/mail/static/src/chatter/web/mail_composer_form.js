@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv, useRef } from "@web/owl2/utils";
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
 import { EventBus, props, t } from "@odoo/owl";
@@ -7,6 +7,7 @@ import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
+import { useOnChange } from "@mail/utils/common/hooks";
 
 export class MailComposerFormController extends formView.Controller {
     props = props({
@@ -27,8 +28,13 @@ export class MailComposerFormRenderer extends formView.Renderer {
         super.setup();
         this.orm = useService("orm");
         // Autofocus the visible editor in edition mode.
-        this.root = useRef("compiled_view_root");
-        useLayoutEffect(
+        this.compiled_view_root = useRef("compiled_view_root", { asSignal: true });
+        useOnChange(
+            () => [
+                this.props.record.isInEdition,
+                this.compiled_view_root(),
+                this.props.record.resId,
+            ],
             (isInEdition, el) => {
                 if (
                     el &&
@@ -41,8 +47,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
                         document.dispatchEvent(new Event("selectionchange", {}));
                     }
                 }
-            },
-            () => [this.props.record.isInEdition, this.root.el, this.props.record.resId]
+            }
         );
 
         const getActiveMailThreads = () =>
@@ -58,7 +63,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
         this.attachmentUploadService = useService("mail.attachment_upload");
         this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
 
-        useCustomDropzone(this.root, MailAttachmentDropzone, {
+        useCustomDropzone(this.compiled_view_root, MailAttachmentDropzone, {
             /** @param {Event} event */
             onDrop: async (event) => {
                 for (const thread of getActiveMailThreads()) {
