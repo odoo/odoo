@@ -1,7 +1,7 @@
-import { onMounted, props, t } from "@odoo/owl";
+import { onMounted, onPatched, props, t } from "@odoo/owl";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { escapeRegExp } from "@web/core/utils/strings";
-import { useLayoutEffect } from "@web/owl2/utils";
+
 
 const T_INVALID_LOCATORS = t.object({
     attrib: t.record(t.string()),
@@ -22,17 +22,21 @@ export class IrUiViewCodeEditor extends CodeEditor {
         onMounted(() => {
             // Markers have fixed pixel positions, so they get wonky on change.
             this.aceEditor.getSession().on("change", this.clearMarkers.bind(this));
+            this.applyInvalidLocators();
         });
 
-        useLayoutEffect(
-            (arch, invalidLocators) => {
-                if (arch && invalidLocators) {
-                    this.highlightInvalidLocators(arch, invalidLocators);
-                    return this.clearMarkers.bind(this);
-                }
-            },
-            () => [this.props.value, this.irUiViewProps.invalidLocators]
-        );
+        onPatched(() => {
+            this.applyInvalidLocators();
+        });
+    }
+
+    applyInvalidLocators() {
+        this.clearMarkers();
+        const arch = this.props.value;
+        const invalidLocators = this.irUiViewProps.invalidLocators;
+        if (arch && invalidLocators) {
+            this.highlightInvalidLocators(arch, invalidLocators);
+        }
     }
 
     /**
