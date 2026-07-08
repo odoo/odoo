@@ -82,8 +82,7 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
         }
     }
 
-    document.querySelector('.oe_website_sale')
-        .querySelectorAll('.availability_message_' + combination.product_template)
+    this.el.querySelectorAll('.availability_message_' + combination.product_template)
         .forEach(el => el.remove());
     if (combination.out_of_stock_message) {
         combination.out_of_stock_message = markup(combination.out_of_stock_message);
