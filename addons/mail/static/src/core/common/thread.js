@@ -506,6 +506,14 @@ export class Thread extends Component {
         this.props.thread.fetchMoreMessages();
     }
 
+    onClickRetry() {
+        if (!this.props.thread.oldestPersistentMessage) {
+            this.fetchInitialMessages();
+            return;
+        }
+        this.onClickLoadOlder();
+    }
+
     async onClickPreferences() {
         const actionDescription = await this.orm.call("res.users", "action_get");
         actionDescription.res_id = this.store.self_user?.id;
