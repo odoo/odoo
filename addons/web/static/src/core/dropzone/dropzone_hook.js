@@ -1,7 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Dropzone } from "@web/core/dropzone/dropzone";
 import { useService } from "@web/core/utils/hooks";
-import { useListener } from "@odoo/owl";
+import { onMounted, onPatched, useListener } from "@odoo/owl";
 
 /**
  * @param {Ref} targetRef - Element on which to place the dropzone.
@@ -83,13 +82,12 @@ export function useCustomDropzone(
         }
     }
 
-    useLayoutEffect(
-        (el) => {
-            hasTarget = !!el;
-            updateDropzone();
-        },
-        () => [getTargetEl()]
-    );
+    function updateHasTarget() {
+        hasTarget = !!getTargetEl();
+        updateDropzone();
+    }
+    onMounted(updateHasTarget);
+    onPatched(updateHasTarget);
 }
 
 /**
