@@ -163,7 +163,17 @@ class AccountMove(models.Model):
             if taxes.mapped('name') and len(base_lines) > 1:
                 description += f" - {taxes.mapped('name')[0]}"
             to_create.append(Command.create({
+<<<<<<< 111230ec879c86a7ffafa7b1375b316d0a3fe588
                 'name': description,
+||||||| 87fd5ca935da74e4f45e5bd33d50a79636eaf52e
+                'name': " - ".join([partner.name or self.env._("Unknown partner"), account.code, " / ".join(taxes.mapped('name')) or self.env._("Untaxed")]),
+=======
+                'name': " - ".join(filter(None, [
+                    partner.name or self.env._("Unknown partner"),
+                    account.code,
+                    " / ".join(taxes.mapped('name')) or self.env._("Untaxed"),
+                ])),
+>>>>>>> 9be37f6b53e96d0b44d99decd4eb1beeff71f823
                 'quantity': base_line['quantity'],
                 'price_unit': base_line['price_unit'],
                 'extra_tax_data': AccountTax._export_base_line_extra_tax_data(base_line),

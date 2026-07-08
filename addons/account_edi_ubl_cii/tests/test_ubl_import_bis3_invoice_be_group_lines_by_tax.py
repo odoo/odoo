@@ -88,3 +88,23 @@ class TestUblImportBis3InvoiceBEGroupLinesByTax(TestUblImportBis3InvoiceBE):
         self.assertEqual(invoice.amount_tax, 9.06)
         invoice.action_group_ungroup_lines_by_tax()
         self.assertEqual(invoice.amount_tax, 9.06)
+
+    def test_group_invoice_lines_without_account_code(self):
+        """Ensure invoice lines are grouped correctly when the invoice line account has no code."""
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_invoice_group_lines_correct_tax_amount',
+            journal=self.company_data['default_journal_purchase'],
+        )
+
+        self.assertTrue(invoice.invoice_line_ids)
+
+        invoice.invoice_line_ids[0].account_id.code = False
+        invoice.action_group_ungroup_lines_by_tax()
+
+        expected_grouped_line_value = [{
+            'name': f"{invoice.partner_id.name} - {self.env._('Untaxed')}",
+            'account_code': False,
+            'price_subtotal': 43.17,
+            'tax_ids': [],
+        }]
+        self.assertRecordValues(invoice.invoice_line_ids, expected_grouped_line_value)
