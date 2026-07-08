@@ -4,7 +4,7 @@ import re
 import logging
 
 from collections import OrderedDict
-from lxml import html
+from lxml import etree, html
 
 from odoo import models
 from odoo.http import request
@@ -48,10 +48,10 @@ class IrQWeb(models.AbstractModel):
         if el.tag == 'form' and el.get('action') == '/website/form/':
             self._pre_compile_form_signature(el, compile_context)
         if el.tag == 'span' and el.get('data-for'):
-            self._pre_compile_data_form(el, compile_context)
+            self._pre_compile_data_for(el, compile_context)
         return super()._compile_directives(el, compile_context, level)
 
-    def _pre_compile_data_form(self, el, compile_context) -> None:
+    def _pre_compile_data_for(self, el, compile_context) -> None:
         if form_id := el.get('data-for'):
             compile_context.setdefault('dynamic_form_ctx', {})[form_id] = el.get('t-att-data-values') or '{}'
 
@@ -62,51 +62,58 @@ class IrQWeb(models.AbstractModel):
         existing_sign_el = el.find('.//input[@type="hidden"][@name="__sign__"]')
         if existing_sign_el is not None:
             existing_sign_el.getparent().remove(existing_sign_el)
+        sign_el = html.Element('input',
+            attrib={
+                'type': 'hidden',
+                'name': '__sign__',
+                'class': 'form-control s_website_form_input s_website_form_custom',
+            },
+        )
+        el.append(sign_el)
 
-        # Determine the dynamic context of the form
-        dynamic_ctx: str = '{}'
-
-        dynamic_form_ctx = compile_context.get("dynamic_form_ctx")
-        form_id = el.get("id")
-        if dynamic_form_ctx and form_id:
-            dynamic_ctx = dynamic_form_ctx.pop(form_id, '{}')
-
-        # Determine values to sign
-        to_sign: dict[str, str] = {}
-
+        # Determine values `etree._Element` to sign
+        entries: dict[str, etree._element] = {}
         for entry_el in el.xpath(
             ".//*[contains(concat(' ', normalize-space(@class), ' '), ' s_website_form_input ')]"
         ):
             entry_name = entry_el.get('name')
             if not entry_name or entry_name not in model_fields:
                 continue
-            if entry_el.get('type') != 'hidden':
-                to_sign[entry_name] = 'None'  # Evaluated `None` means no predefined value
+            entries[entry_name] = entry_el
+
+        # Determine the dynamic context of the form
+        dynamic_ctx: str | None = None
+        dynamic_form_ctx = compile_context.get('dynamic_form_ctx')
+        form_id = el.get('id')
+        if dynamic_form_ctx and form_id:
+            dynamic_ctx = dynamic_form_ctx.pop(form_id, None)
+
+        # Compute form's signature
+        data_to_sign = {}
+
+        if dynamic_ctx is None:  # Compute signature statically
+            for name, el in entries.items():
+                data_to_sign[name] = el.get('value', None) if el.get('type') == 'hidden' else None
+            sign_el.set('value', self._runtime_form_signature(data_to_sign, model_name))
+            return
+
+        # Defer computation of signature during rendering
+        for name, el in entries.items():
+            if el.get('type') != 'hidden':
+                data_to_sign[name] = 'None'
                 continue
-            static_value = entry_el.get('value', '')
+            static_value = el.get('value', '')
             dynamic_value = entry_el.get('t-att-value', "''")
             dynamic_format_value = entry_el.get('t-attf-value', "''")
-            # If no predefined values, it can be edited by the client
             predefined_value = (
-                f'{dynamic_ctx!s}.get({entry_name!r})'
+                f'{dynamic_ctx!s}.get({name!r})'
                 f' or {dynamic_value!s} or {dynamic_format_value!s}'
                 f' or {static_value!r}'
                 ' or None'
             )
-            to_sign[entry_name] = predefined_value
-
-        # Make values to sign computed during the rendering
-        to_sign = '{' + ','.join(f'{k!r}: {v!s}' for k, v in to_sign.items()) + '}'
-
-        sign_el = html.Element('input',
-            attrib={
-                'type': 'hidden',
-                'name': '__sign__',
-                'class': 'form-control s_website_form_input s_website_form_custom',
-                't-att-value': f"env['ir.qweb']._runtime_form_signature({to_sign!s}, {model_name!r})",
-            },
-        )
-        el.append(sign_el)
+            data_to_sign[name] = predefined_value
+        data_to_sign = '{' + ','.join(f'{k!r}: {v!s}' for k, v in data_to_sign.items()) + '}'
+        sign_el.set('t-att-value', f"env['ir.qweb']._runtime_form_signature({data_to_sign!s}, {model_name!r})")
 
     def _runtime_form_signature(self, data: dict, model_name: str) -> str:
         expected_client_data = {}

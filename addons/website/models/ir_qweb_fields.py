@@ -34,6 +34,11 @@ class HTML(models.AbstractModel):
             # is replicating what is done in the `super()` implementation.
             body = etree.fromstring("<body>%s</body>" % res, etree.HTMLParser())[0]
             add_form_signature(body, self.sudo().env)
+            # HTML field is not rendered with the qweb engine
+            # Pass it through the precompilation step, which will calculate the
+            # form's signature statically
+            for form_el in body.xpath("//form[@action='/website/form/']"):
+                self.env['ir.qweb']._pre_compile_form_signature(form_el, {})
             res = Markup(etree.tostring(body, encoding='unicode', method='html')[6:-7])
 
         return res
