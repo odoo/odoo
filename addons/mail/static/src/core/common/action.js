@@ -599,6 +599,7 @@ export class UseActions extends Reactive {
                 id: `more-action:${id}`,
                 definition: {
                     ...data,
+                    btnAttrs: { "data-available-offline": true },
                     dropdown: true,
                     dropdownState: new DropdownState(),
                     icon: data?.icon ?? "oi oi-ellipsis-v",
