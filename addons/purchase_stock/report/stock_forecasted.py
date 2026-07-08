@@ -18,8 +18,16 @@ class StockForecasted_Product_Product(models.AbstractModel):
         else:
             company = self.env.company
         domain += [('company_id', '=', company.id)]
-        po_lines = self.env['purchase.order.line'].sudo().search(domain).grouped('product_id')
-        in_qty = {k.id: sum(v.mapped('product_uom_qty')) for k, v in po_lines.items()}
+        groups = self.env['purchase.order.line'].sudo()._read_group(domain,
+            ['order_id', 'product_id'],
+            ['id:recordset', 'product_uom_qty:sum'])
+        countable_groups = {(order, product) for order, product, *_ in self.env['purchase.order.line']._get_countable_rfq_groups(groups)}
+        in_qty = {}
+        po_lines = {}
+        for order, product, lines, product_uom_qty_sum in groups:
+            po_lines[product] = po_lines.get(product, lines[:0]) | lines
+            if (order, product) in countable_groups:
+                in_qty[product.id] = in_qty.get(product.id, 0.0) + product_uom_qty_sum
         self._add_product_quantities(res, product_template_ids, product_ids, 'draft_purchase_qty', in_qty)
         for product in self._get_products(product_template_ids, product_ids):
             if product not in po_lines:
