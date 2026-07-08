@@ -87,5 +87,6 @@
         <field name="report_name">sale_timesheet.report_timesheet_account_move</field>
         <field name="binding_model_id" ref="model_account_move"/>
         <field name="domain" eval="[('timesheet_ids', '!=', False)]"/>
+        <field name="print_report_name">('%s Timesheets' % (object.name))</field>
     </record>
 </odoo>
