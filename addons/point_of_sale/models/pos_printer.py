@@ -77,7 +77,7 @@ class PosPrinter(models.Model):
     timeout = fields.Integer(string="Connection Timeout (ms)", default=15000, help="Time in milliseconds before considering that the printer is not responding.")
 
     def copy_data(self, default=None):
-        default = dict(default or {}, pos_config_ids=[(5, 0, 0)], printer_ip="0.0.0.0")
+        default = dict(default or {})
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for printer, vals in zip(self, vals_list):

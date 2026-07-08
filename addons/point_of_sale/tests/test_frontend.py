@@ -3073,9 +3073,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         pos_printer = self.env['pos.printer'].create({
             'name': 'Printer',
             'printer_type': 'epson_epos',
-            'printer_ip': '0.0.0.0',
+            'printer_ip': '1.0.1.0',
             'use_type': 'receipt',
         })
+        # Ensure duplicating a printer preserves its configured IP address,
+        copied_printer_data = pos_printer.copy_data()
+        self.assertEqual(
+            copied_printer_data[0]['printer_ip'],
+            '1.0.1.0',
+            "The copied printer should preserve the original printer IP address.",
+        )
         self.main_pos_config.write({
             'use_fast_payment': True,
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
