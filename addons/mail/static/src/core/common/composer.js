@@ -247,7 +247,7 @@ export class Composer extends Component {
                     this.selection.restore();
                     el.focus();
                 }
-                if (focus && this.editor) {
+                if (focus && this.editor?.editable) {
                     this.editor.shared.selection.focusEditable();
                     this.editor.shared.selection.selectAroundNonEditable();
                 }
