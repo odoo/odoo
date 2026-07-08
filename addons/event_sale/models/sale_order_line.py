@@ -125,3 +125,7 @@ class SaleOrderLine(models.Model):
                 price = event_ticket.price
             return self._convert_to_sol_currency(price, company.currency_id)
         return super()._get_display_price()
+
+    @api.model
+    def _get_deliverable_lines_domain(self):
+        return [('product_id.service_tracking', '!=', 'event')] + super()._get_deliverable_lines_domain()

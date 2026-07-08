@@ -60,3 +60,7 @@ class SaleOrderLine(models.Model):
         delivery_lines = self.filtered('is_delivery')
         super(SaleOrderLine, self - delivery_lines)._compute_pricelist_item_id()
         delivery_lines.pricelist_item_id = False
+
+    @api.model
+    def _get_deliverable_lines_domain(self):
+        return [("is_delivery", "=", False)] + super()._get_deliverable_lines_domain()

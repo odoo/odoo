@@ -1729,6 +1729,10 @@ class SaleOrderLine(models.Model):
                 # price will be computed in batch with pricelist utils so not given here
             }
 
+    @api.model
+    def _get_deliverable_lines_domain(self):
+        return []
+
     #=== TOOLING ===#
 
     def _convert_to_sol_currency(self, amount, currency):
