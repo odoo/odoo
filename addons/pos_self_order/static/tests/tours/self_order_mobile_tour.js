@@ -480,13 +480,8 @@ registry.category("web_tour.tours").add("test_delete_mobile_order_from_backend",
             {
                 trigger: "body",
                 run: async () =>
-                    new Promise((resolve) => {
-                        setTimeout(async () => {
-                            await rpc(`/pos-self-order/test-delete-order-from-backend/`, {
-                                order_ids: [posmodel.currentOrder.id],
-                            });
-                            resolve();
-                        }, 150);
+                    await rpc(`/pos-self-order/test-delete-order-from-backend/`, {
+                        order_ids: [posmodel.currentOrder.id],
                     }),
             },
             Utils.clickBtn("Order Now"),
