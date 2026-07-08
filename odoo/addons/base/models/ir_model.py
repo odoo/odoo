@@ -137,7 +137,15 @@ def upsert_en(model, fnames, rows, conflict):
     conf = ", ".join(conflict)
     excluded = ", ".join(
         (
-            f"COALESCE({table}.{quote(fname)}, '{{}}'::jsonb) || EXCLUDED.{quote(fname)}"
+            f"""CASE
+                WHEN {table}.{quote(fname)}->>'en_US' IS DISTINCT FROM EXCLUDED.{quote(fname)}->>'en_US'
+                    -- the source text changed: existing translations were
+                    -- made for a source that no longer exists, drop them so
+                    -- they get reloaded fresh instead of being kept as if
+                    -- they still applied to the current source
+                    THEN EXCLUDED.{quote(fname)}
+                ELSE COALESCE({table}.{quote(fname)}, '{{}}'::jsonb) || EXCLUDED.{quote(fname)}
+               END"""
             if model._fields[fname].translate is True
             else f"EXCLUDED.{quote(fname)}"
         )
@@ -149,8 +157,6 @@ def upsert_en(model, fnames, rows, conflict):
         RETURNING id
     """
 
-    # for translated fields, we can actually erase the json value, as
-    # translations will be reloaded after this
     def identity(val):
         return val
 
