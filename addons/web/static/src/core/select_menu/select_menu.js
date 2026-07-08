@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, computed, onMounted, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -103,6 +102,20 @@ export class SelectMenu extends Component {
         menu: signal(null),
     };
 
+    selectedChoice = computed(() => {
+        const allChoices = [
+            ...this.props.choices,
+            ...this.props.groups.flatMap((g) => g.choices || []),
+        ];
+        if (!this.props.multiSelect) {
+            return allChoices.find((c) => c.value === this.props.value);
+        }
+        const byValue = new Map(allChoices.map((c) => [c.value, c]));
+        return (this.props.value || [])
+            .map((v) => byValue.get(v) || this._seenChoices.get(v))
+            .filter(Boolean);
+    });
+
     setup() {
         this.selectMenuId = selectMenuId++;
         this.state = proxy({
@@ -119,30 +132,29 @@ export class SelectMenu extends Component {
         }, DEBOUNCED_DELAY);
         this.dropdownState = useDropdownState();
 
-        this.selectedChoice = this.getSelectedChoice(this.props);
-        onWillUpdateProps((nextProps) => {
-            const choicesChanged = this.state.choices !== nextProps.choices;
-            if (choicesChanged) {
-                this.state.choices = nextProps.choices;
+        this._seenChoices = new Map();
+        this._prevChoices = this.props.choices;
+        this._prevGroups = this.props.groups;
+        const refilter = () => {
+            const choices = this.props.choices;
+            const groups = this.props.groups;
+            this._updateSeenChoices({ choices, groups });
+            if (this.dropdownState.isOpen) {
+                this.filterOptions(this.pendingValue, [{ choices, section: "" }, ...groups]);
             }
-            if (choicesChanged || this.props.value !== nextProps.value) {
-                this.selectedChoice = this.getSelectedChoice(nextProps);
+        };
+        onMounted(refilter);
+        onPatched(() => {
+            if (this.props.choices !== this._prevChoices || this.props.groups !== this._prevGroups) {
+                this._prevChoices = this.props.choices;
+                this._prevGroups = this.props.groups;
+                refilter();
             }
         });
-        useLayoutEffect(
-            () => {
-                if (this.dropdownState.isOpen) {
-                    const groups = [{ choices: this.props.choices }, ...this.props.groups];
-                    this.filterOptions(this.pendingValue, groups);
-                }
-            },
-            () => [this.props.choices, this.props.groups]
-        );
 
-        useLayoutEffect(
-            () => this.updateInputValue(),
-            () => [this.selectedChoice]
-        );
+        // updateInputValue is idempotent (pendingValue short-circuits), so sync every patch.
+        onMounted(() => this.updateInputValue());
+        onPatched(() => this.updateInputValue());
 
         const navigationCallback = (navigator) => {
             if (navigator.activeItem) {
@@ -195,7 +207,7 @@ export class SelectMenu extends Component {
         for (const ref of Object.values(this.inputRefs)) {
             const el = ref();
             if (el) {
-                el.value = value || this.pendingValue || this.selectedChoice?.label || "";
+                el.value = value || this.pendingValue || this.selectedChoice()?.label || "";
             }
         }
     }
@@ -213,11 +225,11 @@ export class SelectMenu extends Component {
     }
 
     get canDeselect() {
-        return !this.props.required && this.selectedChoice !== undefined;
+        return !this.props.required && this.selectedChoice() !== undefined;
     }
 
     get multiSelectChoices() {
-        return this.selectedChoice.map((c) => ({
+        return this.selectedChoice().map((c) => ({
             id: c.value,
             text: c.label,
             onDelete: () => {
@@ -346,20 +358,10 @@ export class SelectMenu extends Component {
         }
     }
 
-    getSelectedChoice(props) {
-        const choices = [...props.choices, ...props.groups.flatMap((g) => g.choices || [])];
-        if (!this.props.multiSelect) {
-            return choices.find((c) => c.value === props.value);
+    _updateSeenChoices(props) {
+        for (const c of [...props.choices, ...props.groups.flatMap((g) => g.choices || [])]) {
+            this._seenChoices.set(c.value, c);
         }
-
-        const valueSet = new Set(props.value);
-        // Combine previously selected choices + newly selected choice from
-        // the searched choices and then filter the choices based on
-        // props.value i.e. valueSet.
-        return [...(this.selectedChoice || []), ...choices].filter(
-            (c, index, self) =>
-                valueSet.has(c.value) && self.findIndex((t) => t.value === c.value) === index
-        );
     }
 
     onItemSelected(value) {
@@ -373,7 +375,7 @@ export class SelectMenu extends Component {
             } else {
                 this.props.onSelect([...this.props.value, value]);
             }
-        } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
+        } else if (!this.selectedChoice() || this.selectedChoice().value !== value) {
             this.props.onSelect(value);
             if (this.state.choices && this.state.choices.length) {
                 this.updateInputValue(this.state.choices.find((c) => c.value === value).label);
