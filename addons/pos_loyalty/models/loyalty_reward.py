@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
-from odoo.fields import Domain
-
-import ast
 import json
+
+from odoo import api, models
+from odoo.fields import Domain
 
 
 class LoyaltyReward(models.Model):
@@ -27,7 +25,7 @@ class LoyaltyReward(models.Model):
             ('reward_product_tag_id.product_product_ids.active', '=', True),
         ]
         return Domain.AND([
-            [('program_id', 'in', config._get_program_ids().ids)],
+            [('program_id', 'in', config.loyalty_program_ids.ids)],
             Domain.OR([
                 [('reward_type', '!=', 'product')],
                 [('reward_product_id.active', '=', True)],
@@ -38,7 +36,7 @@ class LoyaltyReward(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['description', 'program_id', 'reward_type', 'required_points', 'clear_wallet', 'currency_id',
-                'discount', 'discount_mode', 'discount_applicability', 'all_discount_product_ids', 'is_global_discount',
+                'discount', 'discount_mode', 'discount_applicability', 'discount_product_ids', 'is_global_discount',
                 'discount_max_amount', 'discount_line_product_id', 'reward_product_id',
                 'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id', 'reward_product_domain']
 
@@ -51,7 +49,7 @@ class LoyaltyReward(models.Model):
 
     def _get_reward_product_domain_fields(self, config):
         fields = set()
-        search_domain = [('program_id', 'in', config._get_program_ids().ids)]
+        search_domain = [('program_id', 'in', config.loyalty_program_ids.ids)]
         domains = self.search_read(search_domain, fields=['reward_product_domain'], load=False)
         for domain in filter(lambda d: d['reward_product_domain'] != "null", domains):
             domain = json.loads(domain['reward_product_domain'])

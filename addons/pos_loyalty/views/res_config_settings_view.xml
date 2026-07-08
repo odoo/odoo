@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='pos-loyalty']" position="inside">
                 <div class="content-group" invisible="not module_loyalty">
+                    <field name="pos_loyalty_program_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="Add a loyalty program"/>
                     <div class="mt8">
                         <button name="%(loyalty.loyalty_program_discount_loyalty_action)d" icon="oi-arrow-right" type="action" string="Discount &amp; Loyalty" class="btn-link"/>
                     </div>

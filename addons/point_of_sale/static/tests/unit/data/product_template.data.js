@@ -77,7 +77,7 @@ export class ProductTemplate extends models.ServerModel {
             id: 5,
             display_name: "TEST",
             standard_price: 0,
-            categ_id: false,
+            categ_id: 1,
             pos_categ_ids: [1],
             taxes_id: [1],
             barcode: false,

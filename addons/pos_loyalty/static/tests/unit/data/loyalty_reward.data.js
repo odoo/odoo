@@ -19,6 +19,8 @@ export class LoyaltyReward extends models.ServerModel {
             "all_discount_product_ids",
             "is_global_discount",
             "discount_max_amount",
+            "discount_product_domain",
+            "discount_product_ids",
             "discount_line_product_id",
             "reward_product_id",
             "multi_product",
@@ -51,6 +53,7 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_qty: 1,
             reward_product_uom_id: false,
             reward_product_domain: "[]",
+            discount_product_domain: "[]",
         },
         {
             id: 2,
@@ -73,6 +76,7 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_qty: 1,
             reward_product_uom_id: false,
             reward_product_domain: "[]",
+            discount_product_domain: "[]",
         },
         {
             id: 3,
@@ -95,6 +99,7 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_qty: 1,
             reward_product_uom_id: false,
             reward_product_domain: "[]",
+            discount_product_domain: "[]",
         },
         {
             id: 4,
@@ -117,6 +122,7 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_qty: 1,
             reward_product_uom_id: false,
             reward_product_domain: "[]",
+            discount_product_domain: "[]",
         },
         {
             id: 5,
@@ -139,6 +145,7 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_qty: 1,
             reward_product_uom_id: false,
             reward_product_domain: "[]",
+            discount_product_domain: "[]",
         },
     ];
 }

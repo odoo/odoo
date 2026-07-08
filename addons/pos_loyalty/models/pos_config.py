@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
@@ -8,24 +7,17 @@ from odoo.exceptions import UserError
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    # NOTE: this funtions acts as a m2m field with loyalty.program model. We do this to handle an excpetional use case:
-    # When no PoS is specified at a loyalty program form, this program is applied to every PoS (instead of none)
-    def _get_program_ids(self):
-        today = fields.Date.context_today(self)
-        return self.env['loyalty.program'].search([
-            ('pos_ok', '=', True),
-            '|', ('pos_config_ids', '=', self.id), ('pos_config_ids', '=', False),
-            '|', ('date_from', '=', False), ('date_from', '<=', today),
-            '|', ('date_to', '=', False), ('date_to', '>=', today),
-            '|', ('pricelist_ids', '=', False), ('pricelist_ids', 'in', self._get_available_pricelists().ids),
-            ('currency_id', '=', self.currency_id.id)
-        ]).filtered(lambda p: not p.limit_usage or p.sudo().total_order_count < p.max_usage)
+    loyalty_program_ids = fields.Many2many(
+        'loyalty.program',
+        string='Loyalty Programs',
+        help="The loyalty programs that are available in this PoS.",
+    )
 
     def _check_before_creating_new_session(self):
         self.ensure_one()
         # Check validity of programs before opening a new session
         invalid_reward_products_msg = ''
-        for reward in self._get_program_ids().reward_ids:
+        for reward in self.loyalty_program_ids.reward_ids:
             if reward.reward_type == 'product':
                 for product in reward.reward_product_ids:
                     if product.available_in_pos:
@@ -36,16 +28,7 @@ class PosConfig(models.Model):
                         name=reward.program_id.name,
                         reward_product=product.name,
                     )
-        gift_card_programs = self._get_program_ids().filtered(lambda p: p.program_type == 'gift_card')
-        for product in gift_card_programs.mapped('rule_ids.valid_product_ids'):
-            if product.available_in_pos:
-                continue
-            invalid_reward_products_msg += "\n\t"
-            invalid_reward_products_msg += _(
-                "Program: %(name)s, Rule Product: `%(rule_product)s`",
-                name=reward.program_id.name,
-                rule_product=product.name,
-            )
+        gift_card_programs = self.loyalty_program_ids.filtered(lambda p: p.program_type == 'gift_card')
 
         if invalid_reward_products_msg:
             prefix_error_msg = _("To continue, make the following reward products available in Point of Sale.")
@@ -55,7 +38,7 @@ class PosConfig(models.Model):
                 # Do not allow a gift card program with more than one rule or reward, and check that they make sense
                 if len(gc_program.reward_ids) > 1:
                     raise UserError(_('Invalid gift card program. More than one reward.'))
-                elif len(gc_program.rule_ids) > 1:
+                if len(gc_program.rule_ids) > 1:
                     raise UserError(_('Invalid gift card program. More than one rule.'))
                 rule = gc_program.rule_ids
                 if rule.reward_point_amount != 1 or rule.reward_point_mode != 'money':
@@ -74,7 +57,7 @@ class PosConfig(models.Model):
         self.ensure_one()
         # Points desc so that in coupon mode one could use a coupon multiple times
         coupon = self.env['loyalty.card'].search(
-            [('program_id', 'in', self._get_program_ids().ids),
+            [('program_id', 'in', self.loyalty_program_ids.ids),
              '|', ('partner_id', 'in', (False, partner_id)), ('program_type', '=', 'gift_card'),
              ('code', '=', code)],
             order='partner_id, points desc', limit=1)

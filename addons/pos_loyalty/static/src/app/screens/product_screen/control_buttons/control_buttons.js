@@ -1,4 +1,4 @@
-import { proxy } from "@odoo/owl";
+import { signal } from "@odoo/owl";
 import { onWillRender } from "@web/owl2/utils";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -11,12 +11,16 @@ import { patch } from "@web/core/utils/patch";
 patch(ControlButtons.prototype, {
     setup() {
         super.setup(...arguments);
-        this.state = proxy({
-            nbrRewards: 0,
-        });
+        this.nbRewards = signal(0);
 
         onWillRender(() => {
-            this.state.nbrRewards = this.getPotentialRewards().length;
+            const order = this.pos.getOrder();
+            if (!order) {
+                this.nbRewards.set(0);
+                return;
+            }
+
+            this.nbRewards.set(order.manualAvailableRewards.length);
         });
     },
     _getEWalletRewards(order) {
@@ -116,35 +120,6 @@ patch(ControlButtons.prototype, {
             },
         });
     },
-
-    getPotentialRewards() {
-        const order = this.pos.getOrder();
-        // Claimable rewards excluding those from eWallet programs.
-        // eWallet rewards are handled in the eWalletButton.
-        let rewards = [];
-        if (order) {
-            const claimableRewards = order.getClaimableRewards();
-            rewards = claimableRewards.filter(
-                ({ reward }) => reward.program_id.program_type !== "ewallet"
-            );
-        }
-        const result = {};
-        const discountRewards = rewards.filter(({ reward }) => reward.reward_type == "discount");
-        const freeProductRewards = rewards.filter(({ reward }) => reward.reward_type == "product");
-        const potentialFreeProductRewards = this.pos.getPotentialFreeProductRewards();
-        const avaiRewards = [
-            ...potentialFreeProductRewards,
-            ...discountRewards,
-            ...freeProductRewards, // Free product rewards at the end of array to prioritize them
-        ];
-
-        for (const reward of avaiRewards) {
-            result[reward.reward.id] = reward;
-        }
-
-        return Object.values(result);
-    },
-
     /**
      * Applies the reward on the current order, if multiple products can be claimed opens a popup asking for which one.
      *
@@ -196,14 +171,20 @@ patch(ControlButtons.prototype, {
         }
     },
     async clickRewards() {
-        const rewards = this.getPotentialRewards();
+        const order = this.pos.getOrder();
+        if (!order) {
+            return;
+        }
+
+        const rewards = order.manualAvailableRewards;
         if (rewards.length >= 1) {
             const rewardsList = rewards.map((reward) => ({
-                id: reward.reward.id,
-                label: reward.reward.program_id.name,
-                description: `Add "${reward.reward.description}"`,
+                id: reward.id,
+                label: reward.program_id.name,
+                description: `Add "${reward.description}"`,
                 item: reward,
             }));
+
             this.dialog.add(SelectionPopup, {
                 title: _t("Available rewards"),
                 list: rewardsList,

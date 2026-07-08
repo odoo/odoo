@@ -1,18 +1,31 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from uuid import uuid4
+
+from odoo import api, fields, models
 
 
 class LoyaltyCard(models.Model):
     _name = 'loyalty.card'
     _inherit = ['loyalty.card', 'pos.load.mixin']
 
-    source_pos_order_id = fields.Many2one('pos.order', "PoS Order Reference", index=True,
-        help="PoS order where this coupon was generated.")
+    uuid = fields.Char(
+        string='Uuid',
+        readonly=True,
+        default=lambda self: str(uuid4()),
+        copy=False,
+    )
+    source_pos_order_id = fields.Many2one(
+        'pos.order',
+        "PoS Order Reference",
+        index=True,
+        help="PoS order where this coupon was generated.",
+    )
     source_pos_order_partner_id = fields.Many2one(
-        'res.partner', "PoS Order Customer",
-        related="source_pos_order_id.partner_id")
+        'res.partner',
+        "PoS Order Customer",
+        related="source_pos_order_id.partner_id",
+    )
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -56,7 +69,7 @@ class LoyaltyCard(models.Model):
             'status': bool(is_valid) or not card.exists(),
             'data': {
                 'loyalty.card': card.read(card_fields, load=False),
-            }
+            },
         }
 
     @api.model

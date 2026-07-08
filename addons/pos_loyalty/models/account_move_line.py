@@ -14,7 +14,7 @@ class AccountMoveLine(models.Model):
             if not pos_orders:
                 continue
             reward_discount_products = pos_orders.lines.filtered(
-                lambda pol: pol.is_reward_line and pol.reward_id.reward_type == 'discount'
+                lambda pol: pol.is_reward_line and pol.reward_id.reward_type == 'discount',
             ).product_id
             if line.product_id in reward_discount_products:
                 discount_line_ids.append(line.id)

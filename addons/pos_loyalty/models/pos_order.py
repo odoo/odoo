@@ -1,15 +1,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+
 from markupsafe import Markup
 
-from odoo import _, models
+from odoo import _, fields, models
 from odoo.tools import BinaryBytes, float_compare
 from odoo.tools.image import image_data_uri
 
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'
+
+    loyalty_card_ids = fields.Many2many(
+        'loyalty.card',
+        string='Loyalty Cards',
+        readonly=True,
+        copy=False,
+        ondelete='set null',
+    )
 
     def validate_coupon_programs(self, point_changes, new_codes):
         """
@@ -102,7 +111,6 @@ class PosOrder(models.Model):
             'points': 0,
             'expiration_date': p.get('date_to', False),
             'source_pos_order_id': self.id,
-            'expiration_date': p.get('expiration_date')
         } for p in coupons_to_create.values()]
 
         # Pos users don't have the create permission
@@ -284,7 +292,7 @@ class PosOrder(models.Model):
 
     def _add_mail_attachment(self, name, ticket, basic_receipt):
         attachment = super()._add_mail_attachment(name, ticket, basic_receipt)
-        gift_card_programs = self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'gift_card' and
+        gift_card_programs = self.config_id.loyalty_program_ids.filtered(lambda p: p.program_type == 'gift_card' and
                                                                                   p.pos_report_print_id)
         if gift_card_programs:
             gift_cards = self.env['loyalty.card'].search([('source_pos_order_id', '=', self.id),
