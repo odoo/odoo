@@ -421,6 +421,10 @@ export class Record {
         const Model = record.Model;
         const data = { ...recordProxy };
         for (const name of Model._.fields.keys()) {
+            if (Model._.fieldsCompute.has(name)) {
+                delete data[name];
+                continue;
+            }
             if (isMany(Model, name)) {
                 data[name] = record._proxyInternal[name].map((recordProxy) => {
                     const record = toRaw(recordProxy)._raw;
@@ -446,6 +450,7 @@ export class Record {
         delete data._proxy;
         delete data._proxyInternal;
         delete data._raw;
+        delete data.env;
         delete data.Model;
         return data;
     }
