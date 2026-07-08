@@ -222,6 +222,7 @@ class ImDispatch(threading.Thread):
     def __init__(self):
         super().__init__(daemon=True, name=f'{__name__}.Bus')
         self._channels_to_ws = {}
+        self._start_lock = threading.Lock()
 
     def subscribe(self, channels, last, websocket):
         """
@@ -236,7 +237,9 @@ class ImDispatch(threading.Thread):
         websocket.subscribe(channels, last)
         with contextlib.suppress(RuntimeError):
             if not self.is_alive():
-                self.start()
+                with self._start_lock:
+                    if not self.is_alive():
+                        self.start()
 
     def unsubscribe(self, websocket):
         self._clear_outdated_channels(websocket, websocket._min_id_by_channel.keys())
