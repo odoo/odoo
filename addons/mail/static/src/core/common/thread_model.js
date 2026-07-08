@@ -517,7 +517,9 @@ export class Thread extends Record {
     async fetchNewMessages() {
         if (
             this.status === "loading" ||
-            (this.isLoaded && ["discuss.channel", "mail.box"].includes(this.model))
+            (!this.hasLoadingFailed &&
+                this.isLoaded &&
+                ["discuss.channel", "mail.box"].includes(this.model))
         ) {
             return;
         }
