@@ -49,20 +49,16 @@ patch(PosStore.prototype, {
         }
         return super.defaultPage;
     },
-    get idleTimeout() {
-        return [
-            ...super.idleTimeout,
-            {
-                timeout: 180000, // 3 minutes
-                action: () =>
-                    this.dialog.closeAll() &&
-                    this.config.module_pos_restaurant &&
-                    !["PaymentScreen", "TicketScreen", "ActionScreen", "LoginScreen"].includes(
-                        this.router.state.current
-                    ) &&
-                    this.navigate("FloorScreen"),
-            },
-        ];
+    saveIfOrder() {
+        if (!this.config.module_pos_restaurant) {
+            return super.saveIfOrder(...arguments);
+        }
+        const currentOrder = this.getOrder();
+        if (currentOrder) {
+            this.addPendingOrder([currentOrder.id]);
+        }
+        this.syncAllOrders();
+        return true;
     },
     createNewOrder() {
         const order = super.createNewOrder(...arguments);
