@@ -21,6 +21,7 @@ export class SubChannelList extends Component {
 
     setup() {
         this.store = useService("mail.store");
+        this.offlineService = useService("offline");
         this.state = useState({
             loading: false,
             searchTerm: "",
