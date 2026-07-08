@@ -672,6 +672,46 @@ test("toolbar font size selector reflects heading size after remove format", asy
     expect(inputEl).toHaveValue(getFontSizeFromVar("h2-font-size"));
 });
 
+test("toolbar font size selector reflects default size with o_default_font_size class", async () => {
+    await setupEditor(
+        '<p class="display-3-fs">abc <span class="o_default_font_size">[def]</span> ghi</p>'
+    );
+    await expandToolbar();
+    const style = getHtmlStyle(document);
+    const getFontSizeFromVar = (cssVar) => {
+        const strValue = getCSSVariableValue(cssVar, style);
+        const remValue = parseFloat(strValue);
+        const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+        return Math.round(pxValue);
+    };
+    await waitFor(".o-we-toolbar");
+    const inputEl = await getIframeInput(
+        ".o-we-toolbar [name='font_size'] iframe.o_font_size_selector_iframe",
+        "input[name='font_size_input']"
+    );
+    expect(inputEl).toHaveValue(getFontSizeFromVar("font-size-base"));
+});
+
+test("toolbar works: apply custom font size on a selection inside block default class", async () => {
+    const { el } = await setupEditor(
+        '<h2 class="display-3-fs">abc <span class="h2">d[e]f</span> ghi</h2>'
+    );
+    await expandToolbar();
+    await contains(".o-we-toolbar [name='font_size'].dropdown-toggle").click();
+    const style = getHtmlStyle(document);
+    const getFontSizeFromVar = (cssVar) => {
+        const strValue = getCSSVariableValue(cssVar, style);
+        const remValue = parseFloat(strValue);
+        const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+        return Math.round(pxValue);
+    };
+    const h1Size = getFontSizeFromVar("h1-font-size").toString();
+    await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
+    expect(getContent(el)).toBe(
+        '<h2 class="display-3-fs">abc <span class="h2">d<span class="h1-fs">[e]</span>f</span> ghi</h2>'
+    );
+});
+
 test("toolbar works: show the correct text alignment", async () => {
     const { el } = await setupEditor("<p>[test</p><p><br>]</p>");
     await expandToolbar();
