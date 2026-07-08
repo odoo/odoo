@@ -65,6 +65,23 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_negative_price_unit')
 
+    def test_invoice_negative_discount(self):
+        """ Ensure the ChargeIndicator is set to true during the generation of the
+        xml because 'AllowanceChargeAmount' cannot be negative.
+        """
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(taxes_id=tax_21)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=product, price_unit=147.0, discount=-20),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_negative_discount')
+
     def test_invoice_price_unit_more_decimals(self):
         tax_21 = self.percent_tax(21.0)
         decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')], limit=1)

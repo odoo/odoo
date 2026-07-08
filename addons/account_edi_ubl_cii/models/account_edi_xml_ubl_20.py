@@ -446,6 +446,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if not line.discount:
             return fixed_tax_charge_vals_list
 
+        is_charge = line.discount < 0
+        factor = -1 if is_charge else 1
+
         # Price subtotal with discount subtracted:
         net_price_subtotal = line.price_subtotal
         # Price subtotal without discount subtracted:
@@ -459,17 +462,16 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
             'multiplier_factor': abs(line.discount),
 
-            # Must be 'false' since this method is for allowances.
-            'charge_indicator': 'false',
+            'charge_indicator': 'true' if is_charge else 'false',
 
             # A reason should be provided. In Odoo, we only manage discounts.
             # Full code list is available here:
             # https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
-            'allowance_charge_reason_code': 95,
+            'allowance_charge_reason_code': 'ADK' if is_charge else 95,
             'allowance_charge_reason': 'Discount',
 
             # The discount should be provided as an amount.
-            'amount': gross_price_subtotal - net_price_subtotal,
+            'amount': (gross_price_subtotal - net_price_subtotal) * factor,
             'base_amount': gross_price_subtotal,
         }
 
