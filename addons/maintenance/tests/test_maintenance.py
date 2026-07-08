@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pytz
 import time
+
+from datetime import datetime
+from freezegun import freeze_time
 
 from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
@@ -124,6 +128,25 @@ class TestEquipment(TestEquipmentCommon):
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
         ])
+
+    @freeze_time('2024-01-10 05:00:00')
+    def test_activity_deadline_timezone(self):
+        """Ensure the activity deadline matches the schedule date in the user's timezone"""
+        self.user.tz = 'Pacific/Auckland'
+        tz = pytz.timezone('Pacific/Auckland')
+        tomorrow_local = tz.localize(datetime(2024, 1, 11, 8, 0, 0))
+        schedule_date_utc = tomorrow_local.astimezone(pytz.UTC).replace(tzinfo=None)
+        request = self.maintenance_request.with_user(self.user).create({
+            'name': 'Test timezone activity deadline',
+            'user_id': self.user.id,
+            'schedule_date': schedule_date_utc,
+            'maintenance_team_id': self.ref('maintenance.equipment_team_maintenance'),
+        })
+        activity = request.activity_ids.filtered(
+            lambda a: a.activity_type_id == self.env.ref('maintenance.mail_act_maintenance_request'))
+        self.assertEqual(
+            activity.date_deadline, tomorrow_local.date(),
+            "The activity deadline should match the scheduled date in the user's timezone")
 
 
 @tagged("post_install", "-at_install")
