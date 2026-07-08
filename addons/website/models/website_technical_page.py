@@ -34,15 +34,29 @@ class WebsiteTechnicalPage(models.Model):
         routes = set()
         for rule in self.env["ir.http"].routing_map().iter_rules():
             endpoint = rule.endpoint.routing
-            route_title = endpoint.get("list_as_website_content")
-            if callable(route_title):
-                route_title = route_title(self.env)
-            if route_title:
+            route_data = endpoint.get("list_as_website_content")
+            if not route_data:
+                continue
+            # CASE 1: callable returns structured data
+            if callable(route_data):
+                items = route_data(self.env) or []
+                for item in items:
+                    route_title = item.get("route_title")
+                    route_url = item.get("route_url")
+                    if route_title and route_url and not dynamic_route_re.search(route_url):
+                        routes.add((str(route_title), route_url))
+            # CASE 2: static title
+            else:
                 last_static_route = next(
-                    r for r in reversed(endpoint.get("routes", []))
-                    if not dynamic_route_re.search(r)
+                    (
+                        r for r in reversed(endpoint.get("routes", []))
+                        if not dynamic_route_re.search(r)
+                    ),
+                    None,
                 )
-                routes.add((str(route_title), last_static_route))
+                if last_static_route:
+                    routes.add((str(route_data), last_static_route))
+
         return routes
 
     @property
