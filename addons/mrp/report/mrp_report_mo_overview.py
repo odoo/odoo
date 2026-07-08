@@ -675,7 +675,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         unknown_products = products.filtered(lambda product: product.id not in replenish_data.get('products', {}))
         if unknown_products:
             location_ids = self._get_location_ids(production, replenish_data)
-            forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, unknown_products.ids, location_ids, production.location_src_id, read=False)
+            warehouse_by_location = defaultdict(lambda: production.warehouse_id.id)
+            forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, unknown_products.ids, location_ids, production.warehouse_id.lot_stock_id, warehouse_by_location, read=False)
             forecast_lines = self._add_origins_to_forecast(forecast_lines)
             for product in unknown_products:
                 extra_docs = self._get_extra_replenishments(product)

@@ -151,7 +151,7 @@ class TestSaleStockReports(TestReportsCommon):
                 line.product_uom_qty = 3
             sale_order = so_form.save()
         sale_order.action_confirm()
-
+        so_warehouse_id = sale_order.warehouse_id.id
         # Create a draft SO with the same user for the same product
         with Form(self.env['sale.order']) as so_form:
             so_form.partner_id = self.partner
@@ -171,11 +171,16 @@ class TestSaleStockReports(TestReportsCommon):
 
         # Need to reset the cache otherwise it wouldn't trigger an Access Error anyway as the Sale Order is already there.
         sale_order.env.invalidate_all()
-        report_values = self.env['stock.forecasted_product_product'].with_user(other).get_report_values(docids=self.product.ids)
+        report_values = (
+            self.env["stock.forecasted_product_product"]
+            .with_user(other)
+            .with_context(warehouse_id=so_warehouse_id)
+            .get_report_values(docids=self.product.ids)
+        )
         self.assertEqual(len(report_values['docs']['lines']), 1)
         self.assertEqual(report_values['docs']['lines'][0]['document_out']['name'], sale_order.name)
-        self.assertEqual(len(report_values['docs']['product'][self.product.id]['draft_sale_orders']), 1)
-        self.assertEqual(report_values['docs']['product'][self.product.id]['draft_sale_orders'][0]['name'], draft.name)
+        self.assertEqual(len(report_values['docs']['product'][f'{self.product.id}_{so_warehouse_id}']['draft_sale_orders']), 1)
+        self.assertEqual(report_values['docs']['product'][f'{self.product.id}_{so_warehouse_id}']['draft_sale_orders'][0]['name'], draft.name)
 
         # While 'other' can see these SO on the report, they shouldn't be able to access them.
         with self.assertRaises(AccessError):

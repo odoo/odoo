@@ -2,10 +2,14 @@
 <templates id="template" xml:space="preserve">
      <t t-name="purchase_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
          <xpath expr="//tr[@name='draft_picking_in']" position="after">
-            <tr t-if="currentProduct.draft_purchase_qty.in" name="draft_po_in"
-            t-attf-class="#{currentProduct.draft_purchase_orders_matched and 'table-info'} #{this.multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+            <tr t-if="currentProduct.draft_purchase_qty and currentProduct.draft_purchase_qty.in" name="draft_po_in"
+                t-att-class="{
+                    'table-info': currentProduct.draft_purchase_orders_matched,
+                    'd-none': this.state.products[line.product.id] || this.state.warehouses[this._getGroupKey(line)],
+                }">
                 <td/>
                 <td>Requests for quotation :
+
                     <t t-foreach="currentProduct.draft_purchase_orders" t-as="purchase_order" t-key="purchase_order_index">
                         <t t-if="purchase_order_index > 0"> | </t>
                         <a t-attf-href="#" t-out="purchase_order.name"

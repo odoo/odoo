@@ -70,43 +70,43 @@ class StockForecasted_Product_Product(models.AbstractModel):
         if 'product' not in res:
             res['product'] = dict()
         products = self._get_products(product_template_ids, product_ids)
-        for product in products:
-            if product.id not in res['product']:
-                res['product'][product.id] = {
-                    'uom': product.uom_id.display_name,
-                    'quantity_on_hand': product.qty_available,
-                    'virtual_available': product.virtual_available,
-                    'free_qty': product.free_qty,
-                    'incoming_qty': product.incoming_qty,
-                    'outgoing_qty': product.outgoing_qty,
+        for warehouse in self._get_warehouses():
+            wh_quantities = products.with_context(warehouse_id=warehouse.id)._compute_quantities_dict(None, None, None)
+            for product_id, quantities in wh_quantities.items():
+                res['product'][f'{product_id}_{warehouse.id}'] = quantities
+                res['product'][f'{product_id}_{warehouse.id}'].update({
+                    'uom': products.browse(product_id).uom_id.display_name,
                     'qty': {
-                        'in':  0.0,
-                        'out':  0.0,
+                        'in': 0.0,
+                        'out': 0.0,
                     },
-                }
+                })
 
     def _add_product_quantities(self, res, product_template_ids, product_ids, var_name, qty_in={}, qty_out={}):
-        products = self._get_products(product_template_ids, product_ids)
-        for product in products:
-            res['product'][product.id][var_name] = {
-                'in': qty_in.get(product.id, 0.0),
-                'out': qty_out.get(product.id, 0.0),
+        for key, product_data in res['product'].items():
+            in_qty = qty_in.get(key, 0.0)
+            out_qty = qty_out.get(key, 0.0)
+            product_data[var_name] = {
+                'in': in_qty,
+                'out': out_qty,
             }
-            res['product'][product.id]['qty']['in'] += qty_in.get(product.id, 0.0)
-            res['product'][product.id]['qty']['out'] += qty_out.get(product.id, 0.0)
+            product_data['qty']['in'] += in_qty
+            product_data['qty']['out'] += out_qty
 
     def _get_product_leadtime(self, res, product_template_ids, product_ids):
         """Return a dictionary with product lead times."""
         products = self._get_products(product_template_ids, product_ids)
-        location = self._get_warehouses()[:1].lot_stock_id
-        for product in products:
-            rule = product._get_rules_from_location(location)
-            leadtime = rule._get_lead_days(product)
-            if not leadtime:
-                leadtime = [{'total_delay': 0}, {}]
-            res['product'][product.id]['leadtime'] = {
+        warehouses = self._get_warehouses()
+        for warehouse in warehouses:
+            location = warehouse.lot_stock_id
+            for product in products:
+                rule = product._get_rules_from_location(location)
+                leadtime = rule._get_lead_days(product)
+                if not leadtime:
+                    leadtime = [{'total_delay': 0}, {}]
+            res['product'][f'{product.id}_{warehouse.id}']['leadtime'] = {
                 'total_delay': leadtime[0].get('total_delay', 0),
-                'details': leadtime[1]
+                'details': leadtime[1],
             }
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
@@ -134,8 +134,23 @@ class StockForecasted_Product_Product(models.AbstractModel):
             })
 
         in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
-        in_sum = {k.id: v for k, v in self.env['stock.move']._read_group(in_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
-        out_sum = {k.id: v for k, v in self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
+        in_sum = {
+            (f'{product.id}_{warehouse.id}'): qty
+            for product, warehouse, qty in self.env['stock.move']._read_group(
+                in_domain,
+                aggregates=['product_qty:sum'],
+                groupby=['product_id', 'location_dest_id.warehouse_id'],
+            )
+        }
+
+        out_sum = {
+            (f'{product.id}_{warehouse.id}'): qty
+            for product, warehouse, qty in self.env['stock.move']._read_group(
+                out_domain,
+                aggregates=['product_qty:sum'],
+                groupby=['product_id', 'location_id.warehouse_id'],
+            )
+        }
 
         self._get_product_quantities(res, product_template_ids, product_ids)
         self._add_product_quantities(res, product_template_ids, product_ids, 'draft_picking_qty', in_sum, out_sum)
@@ -161,17 +176,23 @@ class StockForecasted_Product_Product(models.AbstractModel):
         res = {}
 
         warehouses = self._get_warehouses()
-        wh_location_ids = self.env['stock.location'].search([('id', 'child_of', warehouses.view_location_id.ids)]).ids
+        res['multiple_warehouses'] = len(warehouses) > 1
+
+        wh_location_ids = self.env['stock.location'].search_fetch([('id', 'child_of', warehouses.view_location_id.ids)], ['warehouse_id'])
+        warehouse_by_location = {
+            location.id: location.warehouse_id.id
+            for location in wh_location_ids
+        }
+
         # any quantities in this location will be considered free stock, others are free stock in transit
         wh_stock_locations = warehouses.lot_stock_id
+        res.update(self._get_report_header(product_template_ids, product_ids, wh_location_ids.ids))
 
-        res.update(self._get_report_header(product_template_ids, product_ids, wh_location_ids))
-
-        res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_location_ids, wh_stock_locations)
+        res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_location_ids.ids, wh_stock_locations, warehouse_by_location)
         res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_user')
         return res
 
-    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
+    def _prepare_report_line(self, quantity, move_out=None, move_in=None, warehouse_id=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
         delivery_late = move_out.state != 'done' and move_out.date < datetime.now() if move_out else False
@@ -199,7 +220,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
             'reservation': self._get_reservation_data(reserved_move) if reserved_move else False,
             'in_transit': in_transit,
             'is_matched': any(move_id in [move_in_id, move_out_id] for move_id in move_to_match_ids),
-            'uom_id' : product.uom_id.read()[0] if read else product.uom_id,
+            'uom_id': product.uom_id.read()[0] if read else product.uom_id,
+            'warehouse_id': warehouse_id,
         }
         if move_in:
             document_in = move_in.sudo()._get_source_document()
@@ -236,7 +258,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _get_quant_domain(self, location_ids, products):
         return [('location_id', 'in', location_ids), ('quantity', '>', 0), ('product_id', 'in', products.ids)]
 
-    def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_locations, read=True):
+    def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_locations, warehouse_by_location, read=True):
         def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents, sub_location_to_stock):
             reserved_out = 0
             # the move to show when qty is reserved
@@ -288,10 +310,10 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     move_out_qty = sum(sibling_moves.filtered(lambda m: m.state == 'done').mapped('quantity'))
                     move_available_qty = move_in_qty - move_out_qty - reserved
                 else:
-                    move_available_qty = currents[out.product_id.id, move.location_id.id]
+                    move_available_qty = currents[(out.product_id.id, move.location_id.id)]
                 # count taken from stock, but avoid taking more than whats in stock in case of move origs,
                 # this can happen if stock adjustment is done after orig moves are done
-                taken_from_stock = min(demand, move_available_qty, currents[out.product_id.id, move.location_id.id])
+                taken_from_stock = min(demand, move_available_qty, currents[(out.product_id.id, move.location_id.id)])
                 if taken_from_stock > 0:
                     # any sublocation qties needs to be removed to the main stock location qty as well
                     parent_stock_id = sub_location_to_stock.get(move.location_id.id)
@@ -306,7 +328,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
 
         def _reconcile_out_with_ins(lines, out, ins, demand, product_uom, read=True):
             ins_to_remove = []
-            out_warehouse_id = out.location_id.warehouse_id.id
+            out_warehouse_id = warehouse_by_location[out.location_id.id]
             for in_id in ins:
                 in_data = in_id_to_in_data[in_id]
                 if product_uom.is_zero(in_data['qty']):
@@ -316,7 +338,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     continue
                 taken_from_in = min(demand, in_data['qty'])
                 demand -= taken_from_in
-                lines.append(self._prepare_report_line(taken_from_in, move_in=in_data['move'], move_out=out, read=read))
+                lines.append(self._prepare_report_line(taken_from_in, move_in=in_data['move'], move_out=out, warehouse_id=out_warehouse_id, read=read))
+                wh_with_lines.add(out_warehouse_id)
                 in_data['qty'] -= taken_from_in
                 if in_data['qty'] <= 0:
                     ins_to_remove.append(in_id)
@@ -382,7 +405,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 'qty': in_.product_qty,
                 'move': in_,
                 'move_dests': in_._rollup_move_dests(),
-                'warehouse_id': in_.location_dest_id.warehouse_id.id,
+                'warehouse_id': warehouse_by_location[in_.location_dest_id.id],
             }
             product_id = in_.product_id.id
             ins_per_product[product_id].add(in_.id)
@@ -432,25 +455,35 @@ class StockForecasted_Product_Product(models.AbstractModel):
         product_sum = defaultdict(float)
         for product_loc, quantity in currents.items():
             if product_loc[1] not in wh_stock_sub_location_ids:
-                product_sum[product_loc[0]] += quantity
+                product_sum[product_loc[0], warehouse_by_location[product_loc[1]]] += quantity
         lines = []
         for product in (ins | outs).product_id | self._get_products(product_template_ids, product_ids):
-            lines_init_count = len(lines)
+            wh_with_lines = set()
             unreconciled_outs = []
             # remaining stock
-            free_stock = sum(currents[product.id, stock_id] for stock_id in wh_stock_locations.ids)
-            transit_stock = product_sum[product.id] - free_stock
+            free_stock = {}
+            transit_stock = {}
+            for stock_id in wh_stock_locations.ids:
+                warehouse_id = warehouse_by_location[stock_id]
+                free_qty = currents[product.id, stock_id]
+
+                free_stock[warehouse_id] = free_qty
+                transit_stock[warehouse_id] = (
+                    product_sum[product.id, warehouse_id] - free_qty
+                )
             # add report lines and see if remaining demand can be reconciled by unreservable stock or ins
             for out in outs_per_product[product.id]:
                 reserved_out = moves_data[out].get('reserved')
                 taken_from_stock_out = moves_data[out].get('taken_from_stock')
                 reserved_move = moves_data[out].get('reserved_move')
                 demand_out = out.product_qty
+                warehouse_id = warehouse_by_location[out.location_id.id]
                 # Reconcile with the reserved stock.
                 if reserved_out > 0:
                     demand_out = max(demand_out - reserved_out, 0)
                     in_transit = bool(reserved_move.move_orig_ids)
-                    lines.append(self._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
+                    lines.append(self._prepare_report_line(reserved_out, move_out=out, warehouse_id=warehouse_id, reserved_move=reserved_move, in_transit=in_transit, read=read))
+                    wh_with_lines.add(warehouse_id)
 
                 if product.uom_id.is_zero(demand_out):
                     continue
@@ -458,17 +491,19 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 # Reconcile with the current stock.
                 if taken_from_stock_out > 0:
                     demand_out = max(demand_out - taken_from_stock_out, 0)
-                    lines.append(self._prepare_report_line(taken_from_stock_out, move_out=out, read=read))
+                    lines.append(self._prepare_report_line(taken_from_stock_out, move_out=out, warehouse_id=warehouse_id, read=read))
+                    wh_with_lines.add(warehouse_id)
 
                 if product.uom_id.is_zero(demand_out):
                     continue
 
                 # Reconcile with unreservable stock, quantities that are in stock but not in correct location to reserve from (in transit)
-                unreservable_qty = min(demand_out, transit_stock)
+                unreservable_qty = min(demand_out, transit_stock[warehouse_id])
                 if unreservable_qty > 0:
                     demand_out -= unreservable_qty
-                    transit_stock -= unreservable_qty
-                    lines.append(self._prepare_report_line(unreservable_qty, move_out=out, in_transit=True, read=read))
+                    transit_stock[warehouse_id] -= unreservable_qty
+                    lines.append(self._prepare_report_line(unreservable_qty, move_out=out, warehouse_id=warehouse_id, in_transit=True, read=read))
+                    wh_with_lines.add(warehouse_id)
 
                 if product.uom_id.is_zero(demand_out):
                     continue
@@ -484,25 +519,33 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product.uom_id, read=read)
                 if not product.uom_id.is_zero(demand):
                     # Not reconciled
-                    lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False, read=read))
+                    warehouse_id = warehouse_by_location[out.location_id.id]
+                    lines.append(self._prepare_report_line(demand, move_out=out, warehouse_id=warehouse_id, replenishment_filled=False, read=read))
+                    wh_with_lines.add(warehouse_id)
             # Stock in transit
-            if not product.uom_id.is_zero(transit_stock):
-                lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
-
+            for warehouse_id, quantity in transit_stock.items():
+                if not product.uom_id.is_zero(quantity):
+                    lines.append(self._prepare_report_line(quantity, product=product, warehouse_id=warehouse_id, in_transit=True, read=read))
+                    wh_with_lines.add(warehouse_id)
             # Unused remaining stock.
-            if not product.uom_id.is_zero(free_stock) or lines_init_count == len(lines):
-                lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
+            lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, wh_with_lines, read)
 
             # In moves not used.
             for in_id in ins_per_product[product.id]:
                 in_data = in_id_to_in_data[in_id]
                 if product.uom_id.is_zero(in_data['qty']):
                     continue
-                lines.append(self._prepare_report_line(in_data['qty'], move_in=in_data['move'], read=read))
+                lines.append(self._prepare_report_line(in_data['qty'], move_in=in_data['move'], warehouse_id=in_data['warehouse_id'], read=read))
         return lines
 
-    def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
-            return [self._prepare_report_line(free_stock, product=product, read=read)]
+    def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, wh_with_lines, read):
+        return [
+            self._prepare_report_line(
+                free_stock_qty, product=product, warehouse_id=warehouse_id, read=read
+            )
+            for warehouse_id, free_stock_qty in free_stock.items()
+            if not product.uom_id.is_zero(free_stock_qty) or warehouse_id not in wh_with_lines
+        ]
 
     @api.model
     def action_reserve_linked_picks(self, move_id):

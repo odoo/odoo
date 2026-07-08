@@ -23,7 +23,9 @@
                 context="{fill_temporal: false}"
                 info="this.graphInfo"
                 useSampleModel="true"/>
-            <ForecastedDetails docs="this.docs" openView.bind="this.openView" reloadReport.bind="this.reloadReport"/>
+            <ForecastedDetails docs="this.docs" openView.bind="this.openView"
+                reloadReport.bind="this.reloadReport"
+                warehouses="this.warehouses"/>
         </div>
     </div>
 </templates>

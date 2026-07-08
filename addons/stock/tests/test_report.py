@@ -49,11 +49,13 @@ class TestReportsCommon(TransactionCase):
         if product_template_ids:
             report = self.env['stock.forecasted_product_template']
             product_ids = product_template_ids
-        elif product_variant_ids:
+        else:
             report = self.env['stock.forecasted_product_product']
-            product_ids = product_template_ids
-        if context:
-            report = report.with_context(context)
+            product_ids = product_variant_ids
+        report = report.with_context({
+            "warehouse_id": self.env.ref("stock.warehouse0").id,
+            **(context or {}),
+        })
         report_values = report.get_report_values(docids=product_ids)
         docs = report_values['docs']
         lines = docs['lines']

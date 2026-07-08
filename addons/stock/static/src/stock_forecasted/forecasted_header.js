@@ -46,7 +46,7 @@ export class ForecastedHeader extends Component {
     }
 
     get products() {
-        return this.props.docs.product;
+        return this.props.docs.product; 
     }
 
     get leadTime() {
@@ -78,7 +78,7 @@ export class ForecastedHeader extends Component {
     }
 
     get quantityOnHand() {
-        return Object.values(this.products).reduce((sum, product) => sum + product.quantity_on_hand, 0);
+        return Object.values(this.products).reduce((sum, product) => sum + product.qty_available, 0);
     }
 
     get incomingQty() {
