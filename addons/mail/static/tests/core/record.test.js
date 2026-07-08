@@ -996,6 +996,11 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
         messages = fields.Many("Message");
         team = fields.One("Team");
         signature = fields.Html("");
+        isDiscuss = fields.Attr(false, {
+            compute() {
+                return this.team === "Discuss";
+            },
+        });
     }).register(localRegistry);
     (class Message extends Record {
         static id = "body";
@@ -1022,13 +1027,30 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     expect(toRaw(store.Person.records[p.localId])).toBe(toRaw(p));
     expect(serializeDateTime(p.due_datetime)).toBe("2024-08-28 10:19:44");
     // export data, delete, then insert back
-    const data = JSON.parse(JSON.stringify(p.toData()));
+    const data = p.toData();
+    // ensure no computed field
+    expect(data).toEqual({
+        Person: [
+            {
+                id: 1,
+                due_datetime: "2024-08-28 10:19:44",
+                names: ["John", "Marc"],
+                messages: [{ body: "1" }, { body: "2" }],
+                team: { name: "Discuss" },
+                signature: [
+                    "markup",
+                    "<p>-- John</p>",
+                ],
+            },
+        ],
+    });
+    const serializedData = JSON.parse(JSON.stringify(data));
     p.delete();
     store.Message.get("1").delete();
     store.Message.get("2").delete();
     store.Team.get("Discuss").delete();
     expect(toRaw(store.Person.records[p.localId])).toBe(undefined);
-    store.insert(data);
+    store.insert(serializedData);
     const p2 = store.Person.get(1);
     // Same assertions as before
     expect(p2.names).toEqual(["John", "Marc"]);
