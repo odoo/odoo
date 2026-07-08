@@ -5,7 +5,7 @@ import re
 from markupsafe import Markup
 from stdnum.be import vat as be_vat
 
-from odoo import _, fields, models, Command
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, str2bool, unique
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
@@ -2873,17 +2873,14 @@ class AccountEdiUBL(models.AbstractModel):
             collected_values['to_write']['invoice_origin'] = invoice_origin
 
     def _import_ubl_invoice_add_narration(self, collected_values):
-        tree = collected_values['tree']
-        notes = []
-        note = tree.findtext('./{*}Note')
-        if note:
-            notes.append(html_escape(note))
-        for node in tree.findall('./{*}PaymentTerms/{*}Note'):
-            if note := node.text:
-                notes.append(html_escape(note))
-
-        if narration := ''.join(f'<p>{note}</p>' for note in notes):
+        if narration := ''.join(f'<p>{note}</p>' for note in self._get_notes(collected_values)):
             collected_values['to_write']['narration'] = narration
+
+    @api.model
+    def _get_notes(self, collected_values):
+        tree = collected_values["tree"]
+        nodes = tree.findall("./{*}Note") + tree.findall("./{*}PaymentTerms/{*}Note")
+        return [html_escape(node.text) for node in nodes if node.text]
 
     def _import_ubl_invoice_add_payment_reference(self, collected_values):
         tree = collected_values['tree']
