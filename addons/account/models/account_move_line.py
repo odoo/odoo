@@ -1019,14 +1019,15 @@ class AccountMoveLine(models.Model):
         distribution_totals = defaultdict(lambda: defaultdict(float))
         for line, discounted_amounts in line2discounted_amount.items():
             for account, _amount_currency, amount in discounted_amounts:
-                for analytic_account_id in line.analytic_distribution or {}:
+                for analytic_account_id, percentage in (line.analytic_distribution or {}).items():
+                    weighted_amount = amount * percentage / 100
                     distribution_totals[frozendict({
                         'move_id': line.move_id.id,
                         'account_id': account.id,
                         'currency_rate': line.currency_rate,
-                    })][analytic_account_id] += amount
+                    })][analytic_account_id] += weighted_amount
 
-        for line in self:
+        for line in self.move_id.line_ids:
             line.discount_allocation_dirty = True
             if line not in line2discounted_amount:
                 line.discount_allocation_needed = False
