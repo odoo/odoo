@@ -15,7 +15,9 @@ class AccountMoveLine(models.Model):
         project_id = self.env.context.get('project_id', False)
         if project_id:
             project = self.env['project.project'].browse(project_id)
-            lines = self.filtered(lambda line: line.account_type not in ['asset_receivable', 'liability_payable'])
+            # Payement lines could receive this context if the payment was created after opening the bill from a project
+            lines = self.filtered(lambda line: line.account_type not in ['asset_receivable', 'liability_payable']
+                                  and not line.move_id.payment_ids)
             lines.analytic_distribution = project._get_analytic_distribution()
 
     def _get_so_mapping_domain(self):
