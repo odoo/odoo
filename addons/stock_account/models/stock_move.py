@@ -275,7 +275,7 @@ class StockMove(models.Model):
         else:
             debit_acc = self.location_dest_id.valuation_account_id
             credit_acc = self.product_id._get_product_accounts()['stock_valuation']
-        value = self._get_price_unit(exclude_external_cost=True) * self._get_valued_qty()
+        value = self.value if self.is_in else -self.value
         return [{
             'account_id': credit_acc.id,
             'name': self.reference + ' - ' + self.product_id.name,
