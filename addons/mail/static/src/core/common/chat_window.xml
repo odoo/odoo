@@ -21,6 +21,7 @@
                             t-att-disabled="state.editingName or props.chatWindow.actionsDisabled"
                             t-att-title="actionsMenuTitleText"
                             t-ref="actionsMenuButton"
+                            data-available-offline=""
                         >
                             <t t-call="mail.ChatWindow.headerContent"/>
                             <i t-if="!state.editingName" class="fa fa-fw fa-caret-down"/>
