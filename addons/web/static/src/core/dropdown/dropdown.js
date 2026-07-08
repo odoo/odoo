@@ -196,6 +196,7 @@ export class Dropdown extends Component {
         };
         onMounted(applyTarget);
         onPatched(applyTarget);
+        onWillDestroy(immediateEffect(applyTarget));
         onWillDestroy(() => targetCleanup?.());
 
         onWillUpdateProps(({ disabled }) => {
