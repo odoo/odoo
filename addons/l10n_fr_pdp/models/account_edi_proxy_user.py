@@ -217,7 +217,9 @@ class AccountEdiProxyClientUser(models.Model):
             return
 
         if annuaire_start_date := proxy_user.get('annuaire_line_start_date'):
-            self.sudo().company_id.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(annuaire_start_date)
+            company = self.sudo().company_id
+            company.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(annuaire_start_date)
+            company._force_update_l10n_fr_f10_moves()
         if 'pilot_phase' in proxy_user:
             self.sudo().company_id.l10n_fr_pdp_pilot_phase = proxy_user['pilot_phase']
 

@@ -2037,6 +2037,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.company._force_update_l10n_fr_f10_moves()
         self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
         # test _force_update_l10n_fr_f10_moves skips compagnies with l10n_fr_pdp_flow_10_start_date = None
-        self.company.l10n_fr_pdp_flow_10_start_date = False
+        self.company.l10n_fr_pdp_annuaire_start_date = False
+        self.assertFalse(self.company.l10n_fr_pdp_flow_10_start_date)
         self.company._force_update_l10n_fr_f10_moves()
         self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
