@@ -770,11 +770,15 @@ class BaseModel(metaclass=MetaModel):
 
                 fnames_by_path = dict(groupby(
                     [path for path in field_paths if path and path[0] not in ('id', '.id')],
-                    lambda path: path[0],
+                    # strip the language part of translated paths ('name@fr_FR')
+                    lambda path: path[0].split('@')[0],
                 ))
 
                 # Fetch needed fields (remove '.property_name' part)
                 fnames = list(unique(fname.split('.')[0] for fname in fnames_by_path))
+                if translated_fnames := [fname for fname in fnames if records._fields[fname].translate]:
+                    # fetch all the languages at once instead of one query each
+                    records.with_context(prefetch_langs=True).fetch(translated_fnames)
                 records.fetch(fnames)
                 # Fill the cache of the properties field
                 for fname in fnames:
@@ -828,15 +832,22 @@ class BaseModel(metaclass=MetaModel):
                     current[i] = (record._name, record.id)
                 else:
                     prop_name = None
-                    if '.' in name:  # Properties field
-                        fname, prop_name = name.split('.')
+                    fname, __, lang = name.partition('@')
+                    if '.' in fname:  # Properties field
+                        fname, prop_name = fname.split('.')
                         field = record._fields[fname]
                         field_type, cache_value = cache_properties[field].get(prop_name, ('char', None))
                         value = cache_value.get(record.id, '') if cache_value else ''
                     else:  # Normal field
-                        field = record._fields[name]
+                        field = record._fields[fname]
                         field_type = field.type
-                        value = record[name]
+                        if field.translate:
+                            # 'check_translations' skips the delayed translations,
+                            # which are not reimportable next to their source
+                            translated = record.with_context(check_translations=True)
+                            value = (translated.with_context(lang=lang) if lang else translated)[fname]
+                        else:
+                            value = record[fname]
 
                     # this part could be simpler, but it has to be done this way
                     # in order to reproduce the former behavior
@@ -914,6 +925,10 @@ class BaseModel(metaclass=MetaModel):
         """ Export fields for selected objects
 
         This method is used when exporting data via client menu
+
+        A field path may be suffixed with ``@`` and a language code (e.g.
+        ``name@fr_FR``) to export the translation of a translated field in
+        that language, using the same convention as the import.
 
         :param list fields_to_export: list of fields
         :returns: dictionary with a *datas* matrix
