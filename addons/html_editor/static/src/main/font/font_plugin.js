@@ -23,6 +23,7 @@ import {
     getHtmlStyle,
     getFontSizeDisplayValue,
     FONT_SIZE_CLASSES,
+    DEFAULT_FONT_SIZE_CLASSES,
 } from "@html_editor/utils/formatting";
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
@@ -355,7 +356,8 @@ export class FontPlugin extends Plugin {
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_processors: this.handleInsertWithinPre.bind(this),
 
-        format_class_predicates: (className) => FONT_SIZE_CLASSES.includes(className),
+        format_class_predicates: (className) =>
+            [...FONT_SIZE_CLASSES, ...DEFAULT_FONT_SIZE_CLASSES].includes(className),
     };
 
     setup() {
