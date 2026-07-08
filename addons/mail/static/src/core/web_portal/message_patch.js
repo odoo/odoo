@@ -136,7 +136,10 @@ patch(Message.prototype, {
             group[0].parentNode.insertBefore(ellipsisbtnEl, group[0]);
             // Toggle All next nodes
             if (!this.state.isReadMoreByIndex.has(index)) {
-                this.state.isReadMoreByIndex.set(index, true);
+                this.state.isReadMoreByIndex.set(
+                    index,
+                    Boolean(this.message?.message_type?.includes("email"))
+                );
             }
             const updateFromState = () => {
                 const isReadMore = this.state.isReadMoreByIndex.get(index);

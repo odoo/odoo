@@ -122,6 +122,7 @@ test("ellipsis button is not duplicated when switching from read to edit mode", 
                     System
                 </div>
             </div>`,
+        message_type: "email",
         model: "res.partner",
         res_id: partnerId,
     });
@@ -165,6 +166,7 @@ test("[TECHNICAL] unfolded ellipsis button should not fold on message click besi
                     System
                 </span>
             </div>`,
+        message_type: "email",
         model: "res.partner",
         res_id: partnerId,
     });
@@ -185,7 +187,7 @@ test("[TECHNICAL] unfolded ellipsis button should not fold on message click besi
     expect(".o-mail-Message-body span").toHaveCount(1);
 });
 
-test("ellipsis button on message of type notification", async () => {
+test("ellipsis content is visible by default on message of type notification", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({
@@ -217,6 +219,41 @@ test("ellipsis button on message of type notification", async () => {
             </form>`,
     });
     await contains(".o-mail-ellipsis");
+    await contains(".o-mail-Message-body span", { text: "System" });
+});
+
+test("ellipsis content is visible by default on comment and can be toggled", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: `
+            <div>
+                Visible comment content<br>
+                <span data-o-mail-quote="1">
+                    Quoted comment content
+                </span>
+            </div>`,
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <chatter/>
+            </form>`,
+    });
+    await contains(".o-mail-ellipsis");
+    await contains(".o-mail-Message-body span", { text: "Quoted comment content" });
+    await click(".o-mail-ellipsis");
+    expect(".o-mail-Message-body span").toHaveCount(0);
+    await click(".o-mail-ellipsis");
+    await contains(".o-mail-Message-body span", { text: "Quoted comment content" });
 });
 
 test("read more/less should appear only once for the signature", async () => {
@@ -229,6 +266,7 @@ test("read more/less should appear only once for the signature", async () => {
                 // Simulate message post of full composer
                 pyEnv["mail.message"].create({
                     body: action.context.default_body,
+                    message_type: "email",
                     model: action.context.default_model,
                     res_id: action.context.default_res_ids[0],
                 });
@@ -261,5 +299,5 @@ test("read more/less should appear only once for the signature", async () => {
     await insertText(".o-mail-Composer-input", "Example Body");
     await click("button[title='Open Full Composer']");
     await contains(".o-mail-Message-body", { text: "Example Body", count: 1 });
-    expect(".o-mail-Message a:contains(Read More)").toHaveCount(1);
+    expect(".o-mail-Message .o-signature-container button.o-mail-ellipsis").toHaveCount(1);
 });
