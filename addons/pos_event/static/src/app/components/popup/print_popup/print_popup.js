@@ -38,6 +38,7 @@ patch(PrintPopup.prototype, {
         ]);
     },
     async printEventBadge() {
+        super.printEventBadge();
         const registrations = this.order.eventRegistrations.map((reg) => reg.id);
         await this.report.doAction("event.action_report_event_registration_badge", [registrations]);
 
