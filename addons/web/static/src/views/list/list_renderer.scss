@@ -33,6 +33,18 @@
         background-clip: padding-box;
     }
 
+    .o_list_view:has(.o_search_panel_resize + &, .o_search_panel_sidebar + &) {
+        --ControlPanel-border-bottom: 0;
+    }
+
+    .o_search_panel_resize + &,
+    .o_search_panel_sidebar + & {
+        border: $border-width solid $border-color;
+        border-bottom: 0;
+        margin-right: map-get($spacers, 3);
+        border-radius: $border-radius-xl $border-radius-xl 0 0;
+    }
+
     .o_list_view & {
         --ListRenderer-thead-padding-y: #{$table-cell-padding-y-sm};
         --ListRenderer-table-padding-x: #{$o-horizontal-padding};
