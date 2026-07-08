@@ -271,6 +271,10 @@ except ImportError:
             category: type[Warning] | None = DeprecationWarning,
             stacklevel: int = 1,
         ) -> None:
+            if not isinstance(message, str):
+                raise TypeError(
+                    f"Expected an object of type str for 'message', not {message.__class__.__name__!r}",
+                )
             self.message = message
             self.category = category
             self.stacklevel = stacklevel
