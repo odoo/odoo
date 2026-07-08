@@ -1,8 +1,12 @@
 import json
+from requests import Response
 from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
+
+RESPONSE = Response()
+RESPONSE.status_code = 200
 
 
 class TestL10nEgEdiPosCommon(CommonPosTest):
@@ -26,9 +30,7 @@ class TestL10nEgEdiPosCommon(CommonPosTest):
 
     @classmethod
     def _l10n_eg_set_invoicing_threshold(cls):
-        cls.env.company.write({
-            'l10n_eg_invoicing_threshold': 150000.0,
-        })
+        cls.env['ir.config_parameter'].sudo().set_float('l10n_eg_edi_eta.invoicing_threshold', 150000.0)
 
     @classmethod
     def _l10n_eg_create_branch_partner(cls):
@@ -209,23 +211,23 @@ class TestL10nEgEdiPosCommon(CommonPosTest):
         ``{access_token, expires_in}``; submission requests return ``send_response``
         (a dict, or a callable ``(request_data) -> dict`` that inspects/echoes the
         request). The real network is never reached."""
-        edi_format = self.env.registry['account.edi.format']
+        account_move = self.env.registry['account.move']
 
-        def fake(model_self, request_data, request_url, method, is_access_token_req=False, production_enviroment=False):
+        def fake(model_self, url, method, body, headers, is_prod=False, is_access_token_req=False):
             if is_access_token_req:
-                return auth_response or {'data': {'access_token': token, 'expires_in': expires_in}}
+                return RESPONSE, auth_response or {'access_token': token, 'expires_in': expires_in}
             if callable(send_response):
-                return send_response(request_data)
+                return send_response(body)
             return send_response
 
-        with patch.object(edi_format, '_l10n_eg_eta_connect_to_server', new=fake):
+        with patch.object(account_move, '_l10n_eg_edi_eta_request', new=fake):
             yield
 
     @contextmanager
     def _assert_no_eta_call(self):
         """Spy the ETA HTTP entry point and assert it is never invoked."""
-        edi_format = self.env.registry['account.edi.format']
-        with patch.object(edi_format, '_l10n_eg_eta_connect_to_server') as http_mock:
+        account_move = self.env.registry['account.move']
+        with patch.object(account_move, '_l10n_eg_edi_eta_request') as http_mock:
             yield
         self.assertFalse(http_mock.called, "Expected no ETA HTTP call")
 
@@ -238,41 +240,35 @@ class TestL10nEgEdiPosCommon(CommonPosTest):
         The uuid is a SHA-256 of the payload, so tests don't know it ahead of time;
         the mock parses the request and echoes the uuid into ``acceptedDocuments``."""
         def factory(request_data):
-            payload = json.loads(request_data['body'].decode())['receipts'][0]
-            return {
-                'ok': True,
-                'data': {
-                    'acceptedDocuments': [{'uuid': payload['header']['uuid']}],
-                    'submissionId': submission_id,
-                },
+            payload = json.loads(request_data.decode())['receipts'][0]
+            return RESPONSE, {
+                'acceptedDocuments': [{'uuid': payload['header']['uuid']}],
+                'submissionId': submission_id,
             }
         return factory
 
     def _eta_rejects_any_uuid(self, *, message='Validation failed'):
         """Dynamic send-response: rejects whichever uuid the order computed."""
         def factory(request_data):
-            payload = json.loads(request_data['body'].decode())['receipts'][0]
-            return {
-                'ok': True,
-                'data': {'rejectedDocuments': [{'uuid': payload['header']['uuid'], 'error': message}]},
-            }
+            payload = json.loads(request_data.decode())['receipts'][0]
+            return RESPONSE, {'rejectedDocuments': [{'uuid': payload['header']['uuid'], 'error': message}]}
         return factory
 
     @staticmethod
     def _eta_response_warning(message='Transient transport error'):
         """Transport-warning shape — postprocess routes to ``to_send`` (retryable)."""
-        return {'error': message, 'blocking_level': 'warning'}
+        return RESPONSE, {'error': message, 'blocking_level': 'warning'}
 
     @staticmethod
     def _eta_response_error(message='Payload rejected before parsing'):
         """Transport-error shape — postprocess routes to ``error[_test]`` (non-retryable)."""
-        return {'error': message, 'blocking_level': 'error'}
+        return RESPONSE, {'error': message, 'blocking_level': 'error'}
 
     @staticmethod
     def _eta_response_unknown():
         """Empty data with no accept/reject for the uuid — postprocess falls through
         to the "Unexpected response from ETA." error branch."""
-        return {'ok': True, 'data': {}}
+        return RESPONSE, {}
 
     # ------------------------------------------------------------------ #
     #  Read-back helpers                                                 #

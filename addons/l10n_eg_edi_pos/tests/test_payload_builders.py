@@ -80,7 +80,7 @@ class TestL10nEgEdiPosPayloadBuilders(TestL10nEgEdiPosCommon):
     def test_domestic_person_above_threshold_includes_vat_and_name(self):
         """Domestic 'P' partner with total ≥ threshold → buyer includes
         ``id`` (National ID) and ``name``."""
-        self.env.company.l10n_eg_invoicing_threshold = 1.0
+        self.env['ir.config_parameter'].sudo().set_float('l10n_eg_edi_eta.invoicing_threshold', 1.0)
         order = self._create_unpaid_order()
         payload = order._l10n_eg_edi_pos_build_receipt()
         self.assertEqual(payload['buyer']['type'], 'P')
