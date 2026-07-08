@@ -58,11 +58,15 @@ export class TableMenu extends Component {
             () => {
                 const { type, target } = this.props;
                 this.tableGrid = this.props.buildTableGrid(closestElement(target, "table"));
+                const rowIndex = getRowIndex(target.parentElement);
+                const colIndex = this.tableGrid[rowIndex].indexOf(target);
+                this.anchorCell =
+                    type === "column" ? this.tableGrid[0][colIndex] : this.tableGrid[rowIndex][0];
                 if (type === "column") {
-                    this.isFirst = target.cellIndex === 0;
-                    this.isLast = !target.nextElementSibling;
+                    this.isFirst = this.anchorCell.cellIndex === 0;
+                    this.isLast = !this.anchorCell.nextElementSibling;
                 } else {
-                    const tr = target.parentElement;
+                    const tr = this.anchorCell.parentElement;
                     this.isFirst = !tr.previousElementSibling;
                     this.isLast = !tr.nextElementSibling;
                     this.isTableHeader = [...tr.children][0].nodeName === "TH";
@@ -85,7 +89,7 @@ export class TableMenu extends Component {
     }
 
     get hasCustomTableSize() {
-        const table = closestElement(this.props.target, "table");
+        const table = closestElement(this.anchorCell, "table");
         if (!table) {
             return false;
         }
@@ -97,23 +101,23 @@ export class TableMenu extends Component {
     }
 
     get hasCustomRowHeight() {
-        return !!closestElement(this.props.target, "tr")?.style.height;
+        return !!closestElement(this.anchorCell, "tr")?.style.height;
     }
 
     get hasCustomColumnWidth() {
-        const table = closestElement(this.props.target, "table");
-        const index = this.tableGrid[0].indexOf(this.props.target);
+        const table = closestElement(this.anchorCell, "table");
+        const index = this.tableGrid[0].indexOf(this.anchorCell);
         const colgroup = table.querySelector("colgroup");
         if (!colgroup) {
             return false;
         }
-        const targetCols = [...colgroup.children].slice(index, index + this.props.target.colSpan);
+        const targetCols = [...colgroup.children].slice(index, index + this.anchorCell.colSpan);
         return targetCols.some((col) => col.style.width);
     }
 
     get hasContent() {
         const baseContainerSelector = getBaseContainerSelector();
-        const cell = this.props.target;
+        const cell = this.anchorCell;
         const colIndex = this.tableGrid[0].indexOf(cell);
         const targetCells =
             this.props.type === "row"
@@ -130,11 +134,11 @@ export class TableMenu extends Component {
     }
 
     updatePosition() {
-        const { target, type, direction } = this.props;
-        if (!this.overlayEl || !target) {
+        const { type, direction } = this.props;
+        if (!this.overlayEl || !this.anchorCell) {
             return;
         }
-        const targetRect = getIframeAdjustedBoundingRect(target);
+        const targetRect = getIframeAdjustedBoundingRect(this.anchorCell);
         const container = this.overlayEl.parentElement;
         const containerRect = container.getBoundingClientRect();
         const top = targetRect.top - containerRect.top;
@@ -159,13 +163,13 @@ export class TableMenu extends Component {
         }
     }
     onSelected(item) {
-        item.action(this.props.target);
+        item.action(this.anchorCell);
         this.props.commit();
         this.props.close();
     }
 
     onPointerDown(ev) {
-        const target = this.props.target;
+        const target = this.anchorCell;
         let hasMergedSpan = false;
         if (this.props.type === "column") {
             const colIndex = this.tableGrid[0].indexOf(target);
@@ -206,7 +210,7 @@ export class TableMenu extends Component {
     }
 
     isCurrentOrAdjacentCellRowSpanned(position) {
-        const td = this.props.target;
+        const td = this.anchorCell;
         const tr = closestElement(td, "tr");
         const rowIndex = getRowIndex(tr);
         const adjacentRowIndex = position === "move_down" ? rowIndex + 1 : rowIndex - 1;
@@ -217,7 +221,7 @@ export class TableMenu extends Component {
     }
 
     isCurrentOrAdjacentCellColSpanned(position) {
-        const targetCell = this.props.target;
+        const targetCell = this.anchorCell;
         const columnIndex = this.tableGrid[0].indexOf(targetCell);
         const adjacentIndex = position === "move_right" ? columnIndex + 1 : columnIndex - 1;
         return this.tableGrid.some(
@@ -230,7 +234,7 @@ export class TableMenu extends Component {
         const { canMerge, canUnmerge, cells, spanType } = getSelectedCellsMergeInfo(
             this.editableDocument,
             this.tableGrid,
-            this.props.target
+            this.anchorCell
         );
         return [
             !this.isFirst && {
@@ -272,44 +276,42 @@ export class TableMenu extends Component {
                 action: this.props.removeColumn.bind(this),
             },
             this.props.resetColumnWidth &&
-               
                 this.hasCustomColumnWidth && {
-                        name: "reset_column_size",
-                        icon: "table_chart",
-                        text: _t("Reset column size"),
-                        action: (target) => {
-                            const cell = closestElement(target, isTableCell);
-                            const table = closestElement(cell, "table");
-                            const colgroup = table.querySelector("colgroup");
-                            if (!colgroup) {
-                                return;
-                            }
-                            const colIndex = this.tableGrid[0].indexOf(cell);
-                            const targetCols = [...colgroup.children].slice(
-                                colIndex,
-                                colIndex + cell.colSpan
-                            );
-                            const layoutContainer = closestElement(cell, "table");
-                            targetCols.forEach((col) => {
-                                this.props.resetColumnWidth(col, {
-                                    layoutContainer,
-                                    hasProxyElements: true,
-                                });
+                    name: "reset_column_size",
+                    icon: "table_chart",
+                    text: _t("Reset column size"),
+                    action: (target) => {
+                        const cell = closestElement(target, isTableCell);
+                        const table = closestElement(cell, "table");
+                        const colgroup = table.querySelector("colgroup");
+                        if (!colgroup) {
+                            return;
+                        }
+                        const colIndex = this.tableGrid[0].indexOf(cell);
+                        const targetCols = [...colgroup.children].slice(
+                            colIndex,
+                            colIndex + cell.colSpan
+                        );
+                        const layoutContainer = closestElement(cell, "table");
+                        targetCols.forEach((col) => {
+                            this.props.resetColumnWidth(col, {
+                                layoutContainer,
+                                hasProxyElements: true,
                             });
-                        },
+                        });
                     },
+                },
             this.props.resetSize &&
-               
                 this.hasCustomTableSize && {
-                        name: "reset_table_size",
-                        icon: "table_chart",
-                        text: _t("Reset table size"),
-                        action: (target) =>
-                            this.props.resetSize(closestElement(target, "table"), {
-                                proxyElementSelector: "colgroup",
-                                heightElementsSelector: "tr",
-                            }),
-                    },
+                    name: "reset_table_size",
+                    icon: "table_chart",
+                    text: _t("Reset table size"),
+                    action: (target) =>
+                        this.props.resetSize(closestElement(target, "table"), {
+                            proxyElementSelector: "colgroup",
+                            heightElementsSelector: "tr",
+                        }),
+                },
             this.hasContent && {
                 name: "clear_content",
                 icon: "cancel",
@@ -335,12 +337,12 @@ export class TableMenu extends Component {
     }
 
     rowItems() {
-        const table = closestElement(this.props.target, "table");
+        const table = closestElement(this.anchorCell, "table");
         const hasAlternatingRowClass = table.classList.contains("o_alternating_rows");
         const { canMerge, canUnmerge, cells, spanType } = getSelectedCellsMergeInfo(
             this.editableDocument,
             this.tableGrid,
-            this.props.target
+            this.anchorCell
         );
         return [
             this.isFirst &&
@@ -403,29 +405,27 @@ export class TableMenu extends Component {
                 action: (target) => this.props.removeRow(target.parentElement),
             },
             this.props.resetRowHeight &&
-               
                 this.hasCustomRowHeight && {
-                        name: "reset_row_size",
-                        icon: "table_chart",
-                        text: _t("Reset row size"),
-                        action: (target) =>
-                            this.props.resetRowHeight(closestElement(target, "tr"), {
-                                layoutContainer: closestElement(target, "table"),
-                                elementsSelector: "tr",
-                            }),
-                    },
+                    name: "reset_row_size",
+                    icon: "table_chart",
+                    text: _t("Reset row size"),
+                    action: (target) =>
+                        this.props.resetRowHeight(closestElement(target, "tr"), {
+                            layoutContainer: closestElement(target, "table"),
+                            elementsSelector: "tr",
+                        }),
+                },
             this.props.resetSize &&
-               
                 this.hasCustomTableSize && {
-                        name: "reset_table_size",
-                        icon: "table_chart",
-                        text: _t("Reset table size"),
-                        action: (target) =>
-                            this.props.resetSize(closestElement(target, "table"), {
-                                proxyElementSelector: "colgroup",
-                                heightElementsSelector: "tr",
-                            }),
-                    },
+                    name: "reset_table_size",
+                    icon: "table_chart",
+                    text: _t("Reset table size"),
+                    action: (target) =>
+                        this.props.resetSize(closestElement(target, "table"), {
+                            proxyElementSelector: "colgroup",
+                            heightElementsSelector: "tr",
+                        }),
+                },
             this.hasContent && {
                 name: "clear_content",
                 icon: "cancel",

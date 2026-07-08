@@ -9,7 +9,8 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { TableDragDrop } from "./table_drag_drop";
 import { registry } from "@web/core/registry";
 import { getRowIndex } from "@html_editor/utils/table";
-import { allowsParagraphRelatedElements } from "@html_editor/utils/dom_info";
+import { allowsParagraphRelatedElements, isTableCell } from "@html_editor/utils/dom_info";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 /**
  * This plugin only contains the table ui feature (table picker, menus, ...).
@@ -101,6 +102,7 @@ export class TableUIPlugin extends Plugin {
         };
         this.addDomListener(this.document, "scroll", closeMenus, true);
         this.tableMenuMethods = Object.assign({}, ...this.getResource("table_menu_commands"));
+        this.addDomListener(this.document, "touchend", this.onTouchEnd);
     }
 
     openPicker() {
@@ -132,6 +134,20 @@ export class TableUIPlugin extends Plugin {
             this.openMobilePicker();
         } else {
             this.openPicker();
+        }
+    }
+
+    onTouchEnd(ev) {
+        const touch = ev.changedTouches[0];
+        const element = this.document.elementFromPoint(touch.clientX, touch.clientY);
+        if (!element) {
+            return;
+        }
+        const targetCell = closestElement(element, isTableCell);
+        const isTableMenuClick = !targetCell && element.closest(".o-we-table-menu");
+
+        if (!isTableMenuClick && this.activeTd !== targetCell) {
+            this.setActiveTd(targetCell);
         }
     }
 
@@ -198,7 +214,7 @@ export class TableUIPlugin extends Plugin {
         }
         const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
         const rowIndex = getRowIndex(td.parentElement);
-        if (grid[rowIndex][0] === td) {
+        if (grid[rowIndex][0] === td || hasTouch()) {
             registry.category(this.config.localOverlayContainers.key).add(this.rowMenuOverlayKey, {
                 Component: TableMenu,
                 props: {
@@ -215,7 +231,7 @@ export class TableUIPlugin extends Plugin {
                 },
             });
         }
-        if (td.parentElement.rowIndex === 0) {
+        if (td.parentElement.rowIndex === 0 || hasTouch()) {
             registry
                 .category(this.config.localOverlayContainers.key)
                 .add(this.columnMenuOverlayKey, {
