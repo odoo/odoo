@@ -52,6 +52,10 @@ function _getValidSrc(src) {
         return cache[src];
     }
     const prom = new Promise((resolve) => {
+        if (!src) {
+            resolve(placeholderHref);
+            return;
+        }
         fetch(src)
             .then((response) => {
                 resolve(response.ok ? src : placeholderHref);
