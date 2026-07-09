@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.pk.edi.pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_localization_section']" position="after">
+                <block title="Pakistan electronic receipts (FBR)" id="pos_l10n_pk_edi_section" invisible="country_code != 'PK'">
+                    <setting id="l10n_pk_edi_pos_setting"
+                             string="Enable Electronic receipts"
+                             help="Submit your orders to generate FBR compliant receipts">
+                        <field name="pos_l10n_pk_edi_pos_enabled"/>
+                        <div class="content-group mt16" invisible="not pos_l10n_pk_edi_pos_enabled">
+                            <div class="row mt16">
+                                <label for="pos_l10n_pk_edi_pos_identifier" string="Shop ID" class="col-lg-3 o_light_label"/>
+                                <field name="pos_l10n_pk_edi_pos_identifier"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="pos_l10n_pk_edi_pos_token" string="Shop Token" class="col-lg-3 o_light_label"/>
+                                <field name="pos_l10n_pk_edi_pos_token"/>
+                            </div>
+                            <div class="mt16">
+                                <field name="pos_l10n_pk_edi_pos_charge_service_fee" class="oe_inline"/>
+                                <label class="fw-normal" for="pos_l10n_pk_edi_pos_charge_service_fee" string="Charge Service Fee"/>
+                            </div>
+                            <div class="row mt16" invisible="not pos_l10n_pk_edi_pos_charge_service_fee">
+                                <label for="pos_l10n_pk_edi_pos_service_fee_product_id" string="Service Fee Product" class="col-lg-3 o_light_label"/>
+                                <field name="pos_l10n_pk_edi_pos_service_fee_product_id" required="pos_l10n_pk_edi_pos_charge_service_fee"/>
+                            </div>
+                            <div class="mt16">
+                                <field name="pos_l10n_pk_edi_pos_sandbox" class="oe_inline"/>
+                                <label class="fw-normal" for="pos_l10n_pk_edi_pos_sandbox" string="Use Sandbox Environment"/>
+                            </div>
+                            <div class="row mt16" invisible="not pos_l10n_pk_edi_pos_sandbox">
+                                <label for="pos_l10n_pk_edi_pos_test_identifier" string="Test Shop ID" class="col-lg-3 o_light_label"/>
+                                <field name="pos_l10n_pk_edi_pos_test_identifier"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
