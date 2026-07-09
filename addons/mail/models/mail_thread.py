@@ -641,6 +641,7 @@ class MailThread(models.AbstractModel):
             bodies = self.env.cr.precommit.data.get(f'mail.tracking.message.{self._name}', {})
             authors = self.env.cr.precommit.data.get(f'mail.tracking.author.{self._name}', {})
 
+        log_vars_by_author = defaultdict(dict)
         for record in self:
             changes, tracking_values = trackings.get(record.id, (None, None))
             if not changes:
@@ -664,11 +665,19 @@ class MailThread(models.AbstractModel):
                     tracking_values=tracking_values,
                 )
             elif tracking_values:
-                record._message_log(
-                    body=body,
+                log_vars_by_author[author_id][record.id] = {
+                    "body": body,
+                    "tracking_values": tracking_values,
+                }
+
+        batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.batch_size') or 50  # be sure to not have 0, as otherwise no iteration is done
+        for author_id, log_vars_by_record in log_vars_by_author.items():
+            for record_ids_chunk in split_every(batch_size, log_vars_by_record.keys()):
+                self.browse(record_ids_chunk)._message_log_batch(
+                    bodies={record_id: log_vars_by_record[record_id]["body"] for record_id in record_ids_chunk},
                     author_id=author_id,
                     message_type="tracking",
-                    tracking_values=tracking_values,
+                    tracking_values={record_id: log_vars_by_record[record_id]["tracking_values"] for record_id in record_ids_chunk},
                 )
 
     def _track_log_get_default_body(self, track_init_values: ValuesType) -> str | Markup:
