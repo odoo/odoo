@@ -1,0 +1,133 @@
+# .github/workflows/review_correct_apply.yml (dans chaque repo cible)
+# Phase 2/2 — Déclenché par le label review-correct:apply sur une PR.
+# L'agent lit le plan de corrections et l'exécute.
+name: Review correct apply
+
+on:
+  pull_request:
+    types: [labeled]
+
+concurrency:
+  group: review-correct-apply-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.event.label.name == 'review-correct:apply'
+    runs-on: self-hosted
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: read
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout la PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Configurer git
+        run: |
+          git config user.name "alpha barry"
+          git config user.email "alpha@users.noreply.github.com"
+          git config url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
+
+      - name: Récupérer le plan et le contexte
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          PR_TITLE="$(gh pr view "$PR_NUMBER" --json title --jq '.title')"
+          PR_BODY="$(gh pr view "$PR_NUMBER" --json body --jq '.body // ""')"
+          PR_BRANCH="${{ github.event.pull_request.head.ref }}"
+
+          # Récupérer les commentaires de la PR pour trouver le plan
+          gh pr view "$PR_NUMBER" --json comments --jq '.comments[] | .body' > /tmp/pr_comments.txt
+
+          # Récupérer l'issue liée
+          PR_DIFF="$(gh pr diff "$PR_NUMBER")"
+          ISSUE_NUMBER="$(echo "$PR_BODY" | grep -oP 'Closes\s+#\K\d+' | head -1 || echo '')"
+
+          if [ -n "$ISSUE_NUMBER" ]; then
+            ISSUE_TITLE="$(gh issue view "$ISSUE_NUMBER" --json title --jq '.title // "inaccessible"')"
+            ISSUE_BODY="$(gh issue view "$ISSUE_NUMBER" --json body --jq '.body // ""')"
+          else
+            ISSUE_TITLE="pas d'issue liée"
+            ISSUE_BODY=""
+          fi
+
+          printf '%s' "$PR_TITLE" > /tmp/pr_title.txt
+          printf '%s' "$PR_BODY" > /tmp/pr_body.txt
+          printf '%s' "$PR_DIFF" > /tmp/pr_diff.txt
+          printf '%s' "$PR_BRANCH" > /tmp/pr_branch.txt
+          printf '%s' "$ISSUE_NUMBER" > /tmp/issue_number.txt
+          printf '%s' "$ISSUE_TITLE" > /tmp/issue_title.txt
+          printf '%s' "$ISSUE_BODY" > /tmp/issue_body.txt
+
+          echo "PR: $PR_TITLE"
+          echo "Branche: $PR_BRANCH"
+          echo "Issue liée: #${ISSUE_NUMBER:-aucune}"
+
+      - name: Appliquer les corrections
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          PR_BRANCH="$(cat /tmp/pr_branch.txt)"
+
+          fcc-claude --yes "$(cat <<PROMPT
+          Tu es un développeur senior chargé d'**appliquer des corrections validées**.
+          Tu travailles sur une PR existante, sur sa branche.
+
+          ═══════════════════════════════════════════════
+          PR #${PR_NUMBER} — branche ${PR_BRANCH}
+          ═══════════════════════════════════════════════
+
+          Contexte dans /tmp/ : titre, description, diff de la PR, commentaires (dont le
+          plan de corrections à exécuter), et issue liée si présente.
+
+          ═══════════════════════════════════════════════
+          CONSIGNES OBLIGATOIRES (NON NÉGOCIABLES)
+          ═══════════════════════════════════════════════
+
+          1. Lis les conventions dans .claude/Skills/ (git.md en priorité).
+
+          2. Lis TOUS les fichiers de contexte dans /tmp/ :
+             - pr_title.txt, pr_body.txt, pr_diff.txt
+             - pr_comments.txt → c'est ici que se trouve le plan de corrections à exécuter
+             - issue_number.txt, issue_title.txt, issue_body.txt si l'issue existe
+
+          3. Trouve le plan de corrections dans /tmp/pr_comments.txt. Il commence par
+             "🤖 Plan de corrections" et contient les corrections à appliquer.
+             Si tu ne trouves pas de plan, arrête tout et commente la PR pour le signaler.
+
+          4. Applique les corrections dans l'ordre :
+             - D'ABORD les corrections bloquantes (🔴)
+             - ENSUITE les améliorations recommandées (🟡)
+             - Pour chaque correction : fichier précis + changement exact décrit dans le plan
+
+          5. Commite avec des messages conventionnels :
+             - un commit par correction logique, pas un méga-commit "fix everything"
+             - format : \`fix(<scope>): <description>\` ou \`refactor(<scope>): <description>\`
+             - référence \`ref #${PR_NUMBER}\` dans le body (pas "Closes", la PR le fait déjà)
+
+          6. Après avoir tout committé, push sur la branche \`${PR_BRANCH}\` :
+             \`git push origin ${PR_BRANCH}\`
+
+          7. Poste un commentaire récapitulatif sur la PR #${PR_NUMBER} :
+             - liste de ce qui a été corrigé, commit par commit
+             - si des corrections du plan n'ont PAS pu être faites, explique pourquoi
+             - précise ce qui reste à vérifier manuellement
+
+          8. Gestion des labels :
+             - retire "review-correct:pending" : gh pr edit ${PR_NUMBER} --remove-label "review-correct:pending"
+             - retire "review-correct:apply" : gh pr edit ${PR_NUMBER} --remove-label "review-correct:apply"
+             - ajoute "review:approved-ai" : gh pr edit ${PR_NUMBER} --add-label "review:approved-ai"
+
+          9. NE MERGE PAS la PR. La décision de merger reste humaine.
+
+          PR number: ${PR_NUMBER}
+          PROMPT
+          )"
