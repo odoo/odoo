@@ -8,7 +8,6 @@ Manage your mailing lists from Odoo.
     """,
     'version': '1.1',
     'depends': [
-        'mail',
         'portal',
     ],
     'data': [

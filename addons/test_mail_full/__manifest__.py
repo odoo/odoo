@@ -9,18 +9,11 @@ and mail-related sub modules. Those tests are present in a separate module as it
 contains models used only to perform tests independently to functional aspects of
 real applications. """,
     'depends': [
-        'mail',
         'mail_bot',
-        'portal',
-        'rating',
         # 'snailmail',
-        'mass_mailing',
         'mass_mailing_sms',  # adds portal
-        'phone_validation',
-        'sms',
-        'test_mail',
-        'test_mail_sms',
         'test_mass_mailing',
+        'portal_rating',
     ],
     'data': [
         'data/mail_message_subtype_data.xml',

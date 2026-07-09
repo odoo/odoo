@@ -4,7 +4,7 @@
     "name": "Cloud Storage",
     "summary": """Store chatter attachments in the cloud""",
     "category": "Technical Settings",
-    "depends": ["base_setup", "mail"],
+    "depends": ["mail"],
     "data": [
         "views/settings.xml",
     ],

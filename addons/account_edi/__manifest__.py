@@ -10,7 +10,7 @@ the transmission of said documents to various parties involved in the exchange (
 governements, etc.)
     """,
     'category': 'Accounting/Accounting',
-    'depends' : ['account'],
+    'depends': ['account'],
     'data': [
         'views/account_edi_document_views.xml',
         'views/account_move_views.xml',

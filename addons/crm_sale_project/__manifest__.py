@@ -4,7 +4,7 @@
     'category': 'Sales/CRM',
     'depends': [
         'sale_project',
-        'crm',
+        'sale_crm',
     ],
     'data': [
         'data/ir_actions_server_data.xml',

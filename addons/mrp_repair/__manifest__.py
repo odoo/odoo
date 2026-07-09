@@ -4,7 +4,7 @@
 {
     'name': 'Mrp Repairs',
     'category': 'Supply Chain/Inventory',
-    'depends': ['repair', 'mrp'],
+    'depends': ['repair', 'sale_mrp'],
     'data': [
         'views/production_views.xml',
         'views/repair_views.xml',

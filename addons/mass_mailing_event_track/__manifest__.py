@@ -10,7 +10,7 @@ Mass mail event track speakers
 
 Bridge module adding UX requirements to ease mass mailing of event track speakers.
         """,
-    'depends': ['website_event_track', 'mass_mailing'],
+    'depends': ['website_event_track', 'website_mass_mailing_event'],
     'data': [
         'views/event_views.xml'
     ],

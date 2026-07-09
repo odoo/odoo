@@ -8,14 +8,14 @@ This module brings a new building block with a mailing list widget to drop on an
 On a simple click, your visitors can subscribe to mailing lists managed in the Email Marketing app.
     """,
     'category': 'Website/Website',
-    'depends': ['website', 'mass_mailing', 'google_recaptcha'],
+    'depends': ['mass_mailing', 'website_links'],
     'data': [
         'data/ir_model_data.xml',
         'views/snippets_templates.xml',
         'views/snippets/s_newsletter_benefits_popup.xml',
         'security/ir.access.csv',
     ],
-    'auto_install': ['website', 'mass_mailing'],
+    'auto_install': ['website_links', 'mass_mailing'],
     'assets': {
         'web.assets_frontend': [
             'website_mass_mailing/static/src/scss/website_mass_mailing.scss',

@@ -4,11 +4,11 @@
     'category': 'Productivity/Dashboard',
     'summary': 'Spreadsheet',
     'description': 'Spreadsheet',
-    'depends': ['spreadsheet_dashboard', 'pos_hr', 'pos_restaurant'],
+    'depends': ['pos_hr_restaurant', 'spreadsheet_dashboard_pos_hr'],
     'data': [
         "data/dashboards.xml",
     ],
-    'auto_install': ['pos_hr', 'pos_restaurant'],
+    'auto_install': ['pos_hr_restaurant'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

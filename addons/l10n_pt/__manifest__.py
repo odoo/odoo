@@ -8,7 +8,6 @@
     'category': 'Accounting/Localizations/Account Charts',
     'description': 'Portugal - Accounting',
     'depends': [
-        'base',
         'account',
         'base_vat',
         'account_edi_ubl_cii',

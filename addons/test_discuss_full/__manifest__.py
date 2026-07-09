@@ -7,20 +7,15 @@
     "summary": "Test of Discuss with all possible overrides installed.",
     "description": """Test of Discuss with all possible overrides installed, including feature and performance tests.""",
     "depends": [
-        "calendar",
-        "crm",
         "crm_livechat",
-        "hr_attendance",
         "hr_fleet",
-        "hr_holidays",
-        "im_livechat",
-        "mail",
         "mail_bot",
         "microsoft_calendar",
         "project_todo",
         "website_livechat",
         "website_sale",
         "website_slides",
+        'hr_holidays_attendance',
     ],
     "assets": {
         "web.assets_tests": [

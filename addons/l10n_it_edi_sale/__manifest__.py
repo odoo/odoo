@@ -2,7 +2,7 @@
     'name': 'Italy - Sale E-invoicing',
     'depends': [
         'l10n_it_edi',
-        'sale',
+        'sale_edi_ubl',
     ],
     'description': 'Sale modifications for Italy E-invoicing',
     'category': 'Accounting/Localizations/EDI',

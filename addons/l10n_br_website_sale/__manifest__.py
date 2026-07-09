@@ -4,8 +4,8 @@
     'description': 'Bridge Website Sale for Brazil',
     'category': 'Sales/Sales',
     'depends': [
-        'l10n_br',
         'website_sale',
+        'l10n_br_sales',
     ],
     'data': [
         'views/templates.xml',

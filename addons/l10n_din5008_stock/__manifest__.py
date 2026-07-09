@@ -5,7 +5,7 @@
     'category': 'Accounting/Localizations',
     'depends': [
         'l10n_din5008',
-        'stock',
+        'stock_account',
     ],
     'data': [
         'report/din5008_stock_templates.xml',

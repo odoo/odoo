@@ -4,8 +4,7 @@
     'countries': ['it'],
     'version': '0.1',
     'depends': [
-        'l10n_it_edi',
-        'sale',
+        'l10n_it_edi_sale',
     ],
     'description': """
     Add support for the Declaration of Intent (Dichiarazione di Intento) to the Italian localization.

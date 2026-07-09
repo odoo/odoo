@@ -6,7 +6,7 @@
     'category': 'Sales/Sales',
     'depends': [
         'l10n_fi',
-        'sale',
+        'sale_edi_ubl',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

@@ -6,7 +6,7 @@
     The snippet is linked to specified events and will load a snapshot of their data to be sent by email.
     """,
     'category': 'Marketing/Email Marketing/Website',
-    'depends': ['mass_mailing', 'website_event'],
+    'depends': ['website_event', 'mass_mailing_event', 'website_mass_mailing'],
     'assets': {
         'mass_mailing.assets_builder': [
             'website_mass_mailing_event/static/src/builder/**/*',

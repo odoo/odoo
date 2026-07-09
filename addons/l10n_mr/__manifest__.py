@@ -9,7 +9,6 @@ Mauritania basic package that contains the chart of accounts, the taxes, tax rep
     """,
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
-        'account',
         'base_vat',
     ],
     'data': [

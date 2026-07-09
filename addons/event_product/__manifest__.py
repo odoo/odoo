@@ -1,7 +1,7 @@
 {
     'name': 'Events Product',
     'category': 'Marketing/Events',
-    'depends': ['event', 'product', 'account'],
+    'depends': ['event', 'account'],
     'data': [
         'views/event_ticket_views.xml',
         'views/event_registration_views.xml',

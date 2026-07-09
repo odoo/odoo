@@ -13,8 +13,9 @@ Forwarding leads can be done for one or several leads at a time. The action is a
 The automatic assignment is figured from the weight of partner levels and the geolocalization. Partners get leads that are located around them.
 
     """,
-    'depends': ['base_geolocalize', 'crm', 'account', 'website_partnership',
-                'website_partner', 'website_google_map', 'portal'],
+    'depends': ['website_partnership',
+                'website_google_map',
+    ],
     'data': [
         'data/crm_lead_merge_template.xml',
         'data/crm_tag_data.xml',

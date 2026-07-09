@@ -3,7 +3,7 @@
     'version': '1.1',
     'category': 'Marketing/Marketing Card',
     'summary': 'Generate dynamic shareable cards',
-    'depends': ['link_tracker', 'mass_mailing', 'website', 'base_report_wkhtmltox'],
+    'depends': ['base_report_wkhtmltox', 'website_mass_mailing'],
     'data': [
         'security/marketing_card_groups.xml',
         'views/card_card_templates.xml',

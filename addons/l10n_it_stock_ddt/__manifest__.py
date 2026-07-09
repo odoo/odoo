@@ -20,7 +20,7 @@ When invoices are related to their sale order and the sale order with the
 delivery, the system will automatically calculate the linked DDTs for every
 invoice line to export in the FatturaPA XML.
     """,
-    'depends': ['l10n_it_edi', 'stock_delivery', 'stock_account'],
+    'depends': ['stock_delivery', 'l10n_it_edi_sale'],
     'data': [
         'report/l10n_it_ddt_report.xml',
         'views/stock_picking_views.xml',

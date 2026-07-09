@@ -3,7 +3,7 @@
     'version': '1.1',
     'category': 'Marketing/Marketing Card',
     'summary': 'Generate dynamic shareable cards for entities linked to events.',
-    'depends': ['marketing_card', 'event'],
+    'depends': ['marketing_card', 'mass_mailing_event'],
     'data': [
         'views/event_event_views.xml',
         'views/mailing_mailing_views.xml',

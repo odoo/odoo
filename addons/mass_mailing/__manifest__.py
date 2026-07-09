@@ -8,14 +8,10 @@
     'website': 'https://www.odoo.com/app/email-marketing',
     'category': 'Marketing/Email Marketing',
     'depends': [
-        'contacts',
-        'mail',
         'html_builder',
-        'utm',
         'link_tracker',
         'social_media',
-        'web_tour',
-        'digest',
+        'mail_plugin',
     ],
     'data': [
         'data/res_groups_privilege_data.xml',

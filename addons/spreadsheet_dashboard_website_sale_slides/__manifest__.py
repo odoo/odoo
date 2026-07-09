@@ -4,7 +4,7 @@
     'category': 'Productivity/Dashboard',
     'summary': 'Spreadsheet',
     'description': 'Spreadsheet',
-    'depends': ['spreadsheet_dashboard', 'website_sale_slides'],
+    'depends': ['website_sale_slides', 'spreadsheet_dashboard_website_sale'],
     'data': [
         "data/dashboards.xml",
     ],

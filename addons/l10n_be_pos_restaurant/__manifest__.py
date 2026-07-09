@@ -2,7 +2,7 @@
 {
     'name': 'Belgian POS Restaurant Localization',
     'category': 'Sales/Point of Sale',
-    'depends': ['pos_restaurant', 'l10n_be'],
+    'depends': ['pos_restaurant', 'l10n_be_pos'],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

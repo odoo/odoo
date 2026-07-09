@@ -6,7 +6,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Link module between pos_sale and l10n_be',
-    'depends': ['pos_sale', 'l10n_be'],
+    'depends': ['pos_sale', 'l10n_be_pos'],
     'auto_install': True,
     'assets': {
         'point_of_sale._assets_pos': [

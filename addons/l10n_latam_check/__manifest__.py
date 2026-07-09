@@ -42,7 +42,6 @@ There are 2 main Payment Methods additions:
     'author': 'ADHOC SA',
     'license': 'LGPL-3',
     'depends': [
-        'account',
         'base_vat',
     ],
     'data': [

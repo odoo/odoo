@@ -21,7 +21,7 @@ from purchase order.
     'demo': [
         'data/purchase_mrp_demo.xml',
     ],
-    'depends': ['mrp', 'purchase_stock'],
+    'depends': ['purchase_stock', 'mrp_account'],
     'auto_install': True,
     'assets': {
         'web.assets_backend': [

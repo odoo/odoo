@@ -4,8 +4,9 @@
     'name': 'DIN 5008 - Repair',
     'category': 'Accounting/Localizations',
     'depends': [
-        'l10n_din5008',
         'repair',
+        'l10n_din5008_sale',
+        'l10n_din5008_stock',
     ],
     'data': [
         'report/din5008_repair_templates.xml',

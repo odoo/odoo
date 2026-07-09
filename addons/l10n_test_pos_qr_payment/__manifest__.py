@@ -9,12 +9,11 @@
         It tests all the supported qr codes: SEPA, Swiss QR and EMV QR (using the hk and br implementation)
     """,
     'depends': [
-        'point_of_sale',
         'account_qr_code_sepa',
-        'l10n_be',
-        'l10n_ch',
         'l10n_hk',
         'l10n_br',
+        'l10n_be_pos',
+        'l10n_ch_pos',
     ],
     'assets': {
         'web.assets_tests': [

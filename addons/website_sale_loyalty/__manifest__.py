@@ -10,7 +10,7 @@ discounts, etc.). Shoppers can use them in the eCommerce checkout.
 Coupon & promotion programs can be edited in the Catalog menu of the Website app.
     """,
     "category": "Website/Website",
-    "depends": ["website_sale", "website_links", "sale_loyalty"],
+    "depends": ["website_sale", "website_links", "sale_loyalty_delivery"],
     "data": [
         "views/loyalty_card_views.xml",
         "views/loyalty_program_views.xml",
@@ -21,7 +21,7 @@ Coupon & promotion programs can be edited in the Catalog menu of the Website app
         "security/ir.access.csv",
     ],
     "demo": ["data/product_demo.xml"],
-    "auto_install": ["website_sale", "sale_loyalty"],
+    "auto_install": ["website_sale", "sale_loyalty_delivery"],
     "assets": {
         "web.assets_frontend": [
             "website_sale_loyalty/static/src/js/**/*",

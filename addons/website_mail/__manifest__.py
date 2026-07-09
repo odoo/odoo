@@ -8,7 +8,7 @@
     'description': """
 Module holding mail improvements for website. It holds the follow widget.
 """,
-    'depends': ['website', 'mail'],
+    'depends': ['website'],
     'data': [
         'views/website_mail_templates.xml',
     ],

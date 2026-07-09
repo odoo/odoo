@@ -2,7 +2,7 @@
     "name": "Auth Timeout",
     "summary": "Ask for authentication after user inactivity",
     "category": "Hidden/Tools",
-    "depends": ["auth_totp", "auth_totp_mail", "auth_passkey", "bus"],
+    "depends": ["auth_totp_mail", "auth_passkey"],
     "data": [
         "views/res_groups_views.xml",
     ],

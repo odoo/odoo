@@ -20,10 +20,8 @@ Featuring
 """,
     'depends': [
         'portal_rating',
-        'website',
         'website_mail',
         'website_profile',
-        'digest'
     ],
     'data': [
         'security/website_slides_security.xml',

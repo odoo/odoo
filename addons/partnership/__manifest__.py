@@ -8,7 +8,7 @@ This module allows you to manage all operations for managing memberships and par
 
 You can easily assign grade to members/partners, with a specific pricelist.
     """,
-    'depends': ['crm', 'sale'],
+    'depends': ['sale_crm'],
     'data': [
         'data/res_partner_grade_data.xml',
         'views/res_config_settings_views.xml',

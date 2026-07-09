@@ -9,7 +9,7 @@
     'description': """
 This is a link module between Point of Sale and Mrp.
 """,
-    'depends': ['pos_stock', 'mrp'],
+    'depends': ['pos_stock', 'mrp_account'],
     'data': [
         'security/ir.access.csv',
     ],

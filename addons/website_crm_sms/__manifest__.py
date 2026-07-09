@@ -5,7 +5,7 @@
     'sequence': 54,
     'summary': 'Allows to send sms to website visitor that have lead',
     'description': """Allows to send sms to website visitor if the visitor is linked to a lead.""",
-    'depends': ['website_sms', 'crm'],
+    'depends': ['website_sms', 'website_crm'],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -9,7 +9,7 @@ This module helps to configure the system at the installation of a new database.
 Shows you a list of applications features to install from.
 
     """,
-    'depends': ['base', 'web'],
+    'depends': ['web'],
     'data': [
         'data/base_setup_data.xml',
         'views/res_config_settings_views.xml',

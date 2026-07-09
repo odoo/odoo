@@ -9,19 +9,11 @@ It installs sale capabilities, front-end flow, eCommerce, questions and
 automatic lead generation, full Online support, ...
 """,
     'depends': [
-        'event',
-        'event_booth',
-        'event_crm',
         'event_crm_sale',
-        'event_sale',
         'event_sms',
         'payment_demo',
         'website_event_booth_sale_exhibitor',
-        'website_event_exhibitor',
-        'website_event_sale',
-        'website_event_track',
-        'website_event_track_live',
-        'website_event_track_quiz',
+        'website_event_track_live_quiz',
     ],
     'data': [
         # 'data/event_type_data.xml',  # uncomment to reproduce test tour

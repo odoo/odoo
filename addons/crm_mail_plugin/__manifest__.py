@@ -9,7 +9,6 @@
     'website': 'https://www.odoo.com/app/crm',
     'depends': [
         'crm',
-        'mail_plugin',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

@@ -8,7 +8,7 @@
     "description": """
     This modules allows the user to send consolidated invoices to the MyInvois system when using the POS app.
     """,
-    "depends": ["l10n_my_edi", "point_of_sale"],
+    "depends": ["l10n_my_edi", "pos_account_tax_python"],
     "data": [
         "views/myinvois_document_pos_views.xml",
         "views/pos_order_views.xml",

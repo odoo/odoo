@@ -25,7 +25,6 @@ If your localization needs this logic will then need to add this module as depen
 
 """,
     "depends": [
-        "account",
         "account_debit_note",
     ],
     "data": [

@@ -20,7 +20,7 @@ Activates:
     'author': 'Odoo S.A., Drysharks Consulting and Trading Ltd.',
     'depends': [
         'account',
-        'contacts',
+        'mail_plugin',
     ],
     'auto_install': ['account'],
     'data': [

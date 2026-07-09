@@ -6,7 +6,7 @@
     'category': 'Accounting/Localizations/Point of Sale',
     'depends': [
         'l10n_in',
-        'point_of_sale'
+        'pos_account_tax_python',
     ],
     'data': [
         'views/pos_order_line_views.xml',

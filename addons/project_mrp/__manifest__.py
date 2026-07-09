@@ -4,7 +4,7 @@
     'name': "MRP Project",
     'summary': "Monitor MRP using project",
     'category': 'Services/Project',
-    'depends': ['mrp', 'project'],
+    'depends': ['mrp', 'project_stock'],
     'data': [
         'views/mrp_bom_views.xml',
         'views/mrp_production_views.xml',

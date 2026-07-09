@@ -4,7 +4,8 @@
     'summary': 'Chatbot for the HR Recruitment',
     'depends': [
         'website_hr_recruitment',
-        'im_livechat'
+        'hr_livechat',
+        'website_livechat',
     ],
     'description': """
 A chatbot to help the user be guided through recruitment process on the website and land on the right jobs position.

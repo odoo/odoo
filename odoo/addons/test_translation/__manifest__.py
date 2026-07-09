@@ -3,7 +3,7 @@
     'version': '0.1',
     'category': 'Hidden/Tests',
     'description': """A module to test translation.""",
-    'depends': ['base', 'web_tour'],
+    'depends': ['web_tour'],
     'data': [
         'view.xml',
         'data/test_translation_data.xml',

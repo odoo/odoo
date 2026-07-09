@@ -9,7 +9,7 @@ Manage the inventory of your Kit products and display their availability status 
     """,
     'depends': [
         'website_sale_stock',
-        'sale_mrp',
+        'mrp_delivery',
     ],
     'auto_install': True,
     'assets': {

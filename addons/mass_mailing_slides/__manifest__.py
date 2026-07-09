@@ -10,7 +10,7 @@ Mass mail course members
 
 Bridge module adding UX requirements to ease mass mailing of course members.
         """,
-    'depends': ['website_slides', 'mass_mailing'],
+    'depends': ['website_slides', 'website_mass_mailing'],
     'data': [
         'views/slide_channel_views.xml'
     ],

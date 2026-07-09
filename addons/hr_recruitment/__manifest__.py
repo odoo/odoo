@@ -8,12 +8,9 @@
     'summary': 'Track your recruitment pipeline',
     'website': 'https://www.odoo.com/app/recruitment',
     'depends': [
-        'hr',
-        'calendar',
         'utm',
         'attachment_indexation',
-        'web_tour',
-        'digest',
+        'hr_calendar',
     ],
     'data': [
         'security/hr_recruitment_security.xml',

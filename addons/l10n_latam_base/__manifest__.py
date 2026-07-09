@@ -45,8 +45,8 @@ All the defined identification types can be reviewed and activate/deactivate in 
 This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.
 """,
     'depends': [
-        'contacts',
         'base_vat',
+        'mail_plugin',
     ],
     'data': [
         'data/res_country_group.xml',

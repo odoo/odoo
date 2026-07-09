@@ -8,7 +8,7 @@
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/vietnam.html',
     "depends": [
         "l10n_vn_edi_viettel",
-        "stock",
+        'stock_account',
     ],
     "summary": "Delivery E-invoicing using SInvoice by Viettel",
     "description": """

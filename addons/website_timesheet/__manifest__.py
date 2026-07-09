@@ -5,7 +5,7 @@
     'description': """
 When hiding the timesheets in the portal, this module allows also hiding timesheet information on other records.
     """,
-    'depends': ['website', 'hr_timesheet'],
+    'depends': ['hr_timesheet', 'website_project'],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

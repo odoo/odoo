@@ -5,7 +5,7 @@
     'category': 'Shipping Connectors',
     'summary': 'Carrier with kits',
     'description': "Manage datas of carriers with kit products",
-    'depends': ['mrp', 'stock_delivery'],
+    'depends': ['stock_delivery', 'sale_mrp'],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
