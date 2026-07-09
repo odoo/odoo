@@ -409,7 +409,7 @@
                         <t
                             t-elif="not ptav.is_custom"
                             t-set="background_style"
-                            t-value="'background: ' + str(ptav.html_color or ptav.name)"
+                            t-value="'background: ' + str(ptav.html_color or ptav.with_context(lang='en_US').name)"
                         />
                         <label
                             t-att-style="background_style"
@@ -1011,7 +1011,7 @@
                t-value="'background:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % v.id if v.image else ''"
             />
             <t t-set="color_style"
-               t-value="'background: ' + str(v.html_color or v.name if not v.is_custom else '')"
+               t-value="'background: ' + str(v.html_color or v.with_context(lang='en_US').name if not v.is_custom else '')"
             />
             <label t-attf-style="#{img_style or color_style}"
                    t-attf-class="css_attribute_color cursor-pointer #{'active' if v.id in attrib_set else ''}"

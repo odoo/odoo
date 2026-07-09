@@ -133,7 +133,7 @@
                                    t-value="'background: url(/web/image/product.template.attribute.value/%s/image); background-size: cover; ' % ptav.id if ptav.image else ''"
                                 />
                                 <t t-set="color_style"
-                                   t-value="'background:' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"
+                                   t-value="'background:' + str(ptav.html_color or ptav.with_context(lang='en_US').name if not ptav.is_custom else '')"
                                 />
                                 <label t-attf-style="#{img_style or color_style}"
                                        t-attf-class="css_attribute_color cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
