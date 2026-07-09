@@ -989,8 +989,8 @@ class MyInvoisDocument(models.Model):
                                     'myinvois_retry_at': document_result['retry_at'],
                                 })
                             error_messages[record.id] = _format_error_messages([self._myinvois_map_error(error) for error in document_result['errors']])
-                            if self.invoice_ids:
-                                invoice_to_cancel |= self.invoice_ids
+                            if record.invoice_ids:
+                                invoice_to_cancel |= record.invoice_ids
 
                         record.write(updated_values)
 
