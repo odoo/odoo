@@ -192,11 +192,11 @@ class MailingTrace(models.Model):
             })
         return traces
 
-    def set_bounced(self, domain=None, bounce_message=False):
+    def set_bounced(self, domain=None, failure_reason=False, failure_type=False):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.write({
-            'failure_reason': bounce_message,
-            'failure_type': 'mail_bounce',
+            'failure_reason': failure_reason,
+            'failure_type': failure_type,
             'trace_status': 'bounce',
         })
         return traces

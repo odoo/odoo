@@ -63,7 +63,9 @@ class MailThread(models.AbstractModel):
         if bounced_msg_ids:
             bounced_traces = self.env['mailing.trace'].set_bounced(
                 domain=[('message_id', 'in', bounced_msg_ids)],
-                bounce_message=tools.html2plaintext(message_dict.get('body') or ''))
+                failure_reason=tools.html2plaintext(message_dict.get('body') or ''),
+                failure_type='mail_bounce',
+            )
             # some bounce traces may have been unhandled due to being sent from an email not matching the destination email
             for model, traces in bounced_traces.grouped('model').items():
                 if missed_bounce_traces := traces.filtered(lambda trace: trace.email != bounced_email):

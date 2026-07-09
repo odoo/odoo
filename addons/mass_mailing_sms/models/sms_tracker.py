@@ -44,12 +44,15 @@ class SmsTracker(models.Model):
         traces = self.mailing_trace_id.filtered(lambda t: t.trace_status not in statuses_to_ignore)
         if traces:
             # TDE note: check to use set_sent / ... tools updating marketing automation bits
-            traces_values = {
-                'trace_status': trace_status,
-                'failure_type': failure_type,
-                'failure_reason': failure_reason,
-            }
-            traces.write(traces_values)
+            if trace_status == 'bounce':
+                traces.set_bounced(failure_reason=failure_reason, failure_type=failure_type)
+            else:
+                traces_values = {
+                    'trace_status': trace_status,
+                    'failure_type': failure_type,
+                    'failure_reason': failure_reason,
+                }
+                traces.write(traces_values)
             traces.filtered(
                 lambda t: t.trace_status not in ['outgoing', 'process', 'error', 'cancel'] and not t.sent_datetime
             ).sent_datetime = self.env.cr.now()

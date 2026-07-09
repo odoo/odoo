@@ -48,7 +48,7 @@ class TestMailingStatistics(TestMassSMSCommon):
         for record_idx in (7, 8):
             record = target_records[record_idx]
             trace = mailing.mailing_trace_ids.filtered(lambda t: t.model == record._name and t.res_id == record.id)
-            trace.set_bounced()
+            trace.set_bounced(failure_type='sms_number_missing')
 
         self.assertEqual(mailing.clicked, 3)
         self.assertEqual(mailing.delivered, 4)
