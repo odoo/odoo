@@ -1,0 +1,117 @@
+# .github/workflows/agent_plan.yml (dans chaque repo cible)
+# Déclenche l'agent en mode "plan" quand on pose le label 🤖 agent:plan sur une issue.
+# L'agent analyse l'issue et propose un plan sans écrire de code.
+name: Agent plan
+
+on:
+  issues:
+    types: [labeled]
+
+concurrency:
+  group: agent-plan-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    if: github.event.label.name == '🤖 agent:plan'
+    runs-on: self-hosted
+    timeout-minutes: 15
+    permissions:
+      issues: write
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Récupérer l'issue
+        id: issue
+        run: |
+          NUMBER="${{ github.event.issue.number }}"
+          TITLE="$(gh issue view "$NUMBER" --json title --jq '.title')"
+          BODY="$(gh issue view "$NUMBER" --json body --jq '.body // ""')"
+          LABELS="$(gh issue view "$NUMBER" --json labels --jq '.labels[].name' | paste -sd ',' -)"
+          {
+            printf 'TITLE<<EOF\n'
+            printf '%s\n' "$TITLE"
+            printf 'EOF\n'
+            printf 'BODY<<EOF\n'
+            printf '%s\n' "$BODY"
+            printf 'EOF\n'
+            printf 'LABELS<<EOF\n'
+            printf '%s\n' "$LABELS"
+            printf 'EOF\n'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Générer le plan
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ steps.issue.outputs.TITLE }}
+          ISSUE_BODY: ${{ steps.issue.outputs.BODY }}
+          ISSUE_LABELS: ${{ steps.issue.outputs.LABELS }}
+        run: |
+          fcc-claude --yes "$(cat <<PROMPT
+          Tu es un architecte logiciel. Une issue GitHub vient de t'être assignée pour
+          **planification uniquement**. Tu ne dois PAS écrire de code.
+
+          ═══════════════════════════════════════════════
+          ISSUE #${ISSUE_NUMBER} : ${ISSUE_TITLE}
+          ═══════════════════════════════════════════════
+
+          ${ISSUE_BODY}
+
+          ═══════════════════════════════════════════════
+          LABELS DE CONTEXTE : ${ISSUE_LABELS}
+          ═══════════════════════════════════════════════
+
+          ═══════════════════════════════════════════════
+          CONSIGNES OBLIGATOIRES (NON NÉGOCIABLES)
+          ═══════════════════════════════════════════════
+
+          1. Lis tous les fichiers dans .claude/Skills/ pour comprendre les conventions
+             du projet (en priorité .claude/Skills/git.md).
+
+          2. Les labels de contexte te donnent le type de tâche (type:*) et le domaine
+             concerné (area:*). Utilise-les pour orienter ton analyse :
+             - Pour chaque label area:*, cherche un skill correspondant dans .claude/Skills/
+               (ex: area:frontend → .claude/Skills/frontend.md, area:backend → .claude/Skills/backend.md)
+             - Si le skill existe, lis-le pour comprendre les conventions spécifiques au domaine
+             - Concentre ton exploration du codebase sur les dossiers et patterns du domaine concerné
+             - Le label type:* indique la nature du changement : bug (corriger sans casser),
+               feature (nouveau code isolé), refactor (ne pas changer le comportement),
+               perf (mesurer avant/après), test (couverture uniquement), docs (docs uniquement)
+
+          3. Explore le codebase pour comprendre l'architecture existante :
+             - structure des dossiers
+             - dépendances clés
+             - patterns utilisés
+             - points d'entrée / API / interfaces concernées par l'issue
+
+          4. Produis un plan d'implémentation structuré en français qui couvre :
+             - **Résumé** : 2-3 phrases sur l'approche
+             - **Fichiers modifiés / créés** : liste avec le rôle de chaque fichier
+             - **Étapes** : ordre d'implémentation, chaque étape avec ce qu'elle fait et pourquoi
+             - **Risques / points d'attention** : edge cases, impacts sur l'existant, dette technique
+             - **Complexité estimée** : simple / moyenne / complexe, avec justification
+
+          5. Tu NE DOIS PAS :
+             - créer de branche git
+             - écrire ou modifier du code
+             - faire de commit ou de push
+             - ouvrir de PR
+
+          6. Poste ton plan EN UN SEUL COMMENTAIRE sur l'issue #${ISSUE_NUMBER}
+             avec \`gh issue comment\`. Utilise du markdown propre (titres, listes, blocs
+             de code pour les chemins de fichiers).
+
+          7. Si l'issue est trop vague pour produire un plan utile, pose des questions
+             de clarification dans le commentaire au lieu de deviner.
+
+          8. À la fin, retire le label "🤖 agent:plan" de l'issue avec :
+             gh issue edit ${ISSUE_NUMBER} --remove-label "🤖 agent:plan"
+
+          Numéro de l'issue : #${ISSUE_NUMBER}
+          PROMPT
+          )"
