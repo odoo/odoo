@@ -11632,8 +11632,12 @@ test(`status indicator: field dirty state (datetime)`, async () => {
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(1);
 
     await contains(".o_field_widget button").click();
+    const initialValue = queryFirst(`.o_field_widget input`).value;
     await contains(`.o_field_widget input`).edit("12/12/2012 11:55:05", { confirm: false });
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(0);
+
+    await contains(`.o_field_widget input`).edit(initialValue, { confirm: "blur" });
+    expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(1);
 });
 
 test(`status indicator: save dirty state`, async () => {

@@ -1,5 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
+import { Component, computed, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";
@@ -310,6 +309,46 @@ export class DateTimePicker extends Component {
     static template = "web.DateTimePicker";
     static components = { TimePicker };
 
+    values = computed(() =>
+        ensureArray(this.props.value).map((value) => (value && !value.isValid ? null : value))
+    );
+    maxDate = computed(() => {
+        let maxDate = parseLimitDate(this.props.maxDate, MAX_VALID_DATE);
+        if (this.props.type === "date") {
+            maxDate = maxDate.endOf("day");
+        }
+        return maxDate;
+    });
+    minDate = computed(() => {
+        let minDate = parseLimitDate(this.props.minDate, MIN_VALID_DATE);
+        if (this.props.type === "date") {
+            minDate = minDate.startOf("day");
+        }
+        return minDate;
+    });
+    title = computed(() => this.activePrecisionLevel.getTitle(this.state.focusDate));
+    items = computed(() =>
+        this.activePrecisionLevel.getItems(this.state.focusDate, {
+            maxDate: this.maxDate(),
+            minDate: this.minDate(),
+            showWeekNumbers: this.props.showWeekNumbers ?? !this.props.range,
+            isDateValid: this.props.isDateValid,
+            dayCellClass: this.props.dayCellClass,
+        })
+    );
+    selectedRange = computed(() => {
+        const values = this.values();
+        const selectedRange = [...values];
+        if (
+            this.props.range &&
+            this.props.focusedDateIndex > 0 &&
+            (!values[1] || this.state.hoveredDate > values[0])
+        ) {
+            selectedRange[1] = this.state.hoveredDate;
+        }
+        return selectedRange;
+    });
+
     //-------------------------------------------------------------------------
     // Getters
     //-------------------------------------------------------------------------
@@ -326,7 +365,7 @@ export class DateTimePicker extends Component {
     }
 
     get titles() {
-        return ensureArray(this.title);
+        return ensureArray(this.title());
     }
 
     //-------------------------------------------------------------------------
@@ -336,9 +375,6 @@ export class DateTimePicker extends Component {
     setup() {
         /** @type {PrecisionLevel[]} */
         this.allowedPrecisionLevels = [];
-        /** @type {Item[]} */
-        this.items = [];
-        this.title = "";
         this.shouldAdjustFocusDate = false;
 
         this.state = proxy({
@@ -354,8 +390,6 @@ export class DateTimePicker extends Component {
 
         this.onPropsUpdated(this.props);
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
-
-        onWillRender(() => this.onWillRender());
     }
 
     /**
@@ -363,7 +397,7 @@ export class DateTimePicker extends Component {
      */
     onPropsUpdated(props) {
         /** @type {[NullableDateTime] | NullableDateRange} */
-        this.values = ensureArray(props.value).map((value) =>
+        const values = ensureArray(props.value).map((value) =>
             value && !value.isValid ? null : value
         );
         this.allowedPrecisionLevels = this.filterPrecisionLevels(
@@ -371,41 +405,20 @@ export class DateTimePicker extends Component {
             props.maxPrecision
         );
 
-        this.maxDate = parseLimitDate(props.maxDate, MAX_VALID_DATE);
-        this.minDate = parseLimitDate(props.minDate, MIN_VALID_DATE);
-        if (this.props.type === "date") {
-            this.maxDate = this.maxDate.endOf("day");
-            this.minDate = this.minDate.startOf("day");
+        let maxDate = parseLimitDate(props.maxDate, MAX_VALID_DATE);
+        let minDate = parseLimitDate(props.minDate, MIN_VALID_DATE);
+        if (props.type === "date") {
+            maxDate = maxDate.endOf("day");
+            minDate = minDate.startOf("day");
         }
 
-        if (this.maxDate < this.minDate) {
+        if (maxDate < minDate) {
             throw new Error(`DateTimePicker error: given "maxDate" comes before "minDate".`);
         }
 
-        this.state.timeValues = this.getTimeValues(props);
+        this.state.timeValues = this.getTimeValues(props, values);
         this.shouldAdjustFocusDate = !props.range;
-        this.adjustFocus(this.values, props.focusedDateIndex);
-    }
-
-    onWillRender() {
-        const { dayCellClass, focusedDateIndex, isDateValid, range, showWeekNumbers } = this.props;
-        const { focusDate, hoveredDate } = this.state;
-        const precision = this.activePrecisionLevel;
-        const getterParams = {
-            maxDate: this.maxDate,
-            minDate: this.minDate,
-            showWeekNumbers: showWeekNumbers ?? !range,
-            isDateValid,
-            dayCellClass,
-        };
-
-        this.title = precision.getTitle(focusDate);
-        this.items = precision.getItems(focusDate, getterParams);
-
-        this.selectedRange = [...this.values];
-        if (range && focusedDateIndex > 0 && (!this.values[1] || hoveredDate > this.values[0])) {
-            this.selectedRange[1] = hoveredDate;
-        }
+        this.adjustFocus(values, props.focusedDateIndex, minDate, maxDate);
     }
 
     //-------------------------------------------------------------------------
@@ -415,8 +428,10 @@ export class DateTimePicker extends Component {
     /**
      * @param {NullableDateTime[]} values
      * @param {number} focusedDateIndex
+     * @param {DateTime} [minDate]
+     * @param {DateTime} [maxDate]
      */
-    adjustFocus(values, focusedDateIndex) {
+    adjustFocus(values, focusedDateIndex, minDate = this.minDate(), maxDate = this.maxDate()) {
         if (!this.shouldAdjustFocusDate && this.state.focusDate) {
             return;
         }
@@ -425,14 +440,16 @@ export class DateTimePicker extends Component {
             values[focusedDateIndex] || values[focusedDateIndex === 1 ? 0 : 1] || today();
 
         this.shouldAdjustFocusDate = false;
-        this.state.focusDate = this.clamp(dateToFocus.startOf("month"));
+        this.state.focusDate = this.clamp(dateToFocus.startOf("month"), minDate, maxDate);
     }
 
     /**
      * @param {DateTime} value
+     * @param {DateTime} [minDate]
+     * @param {DateTime} [maxDate]
      */
-    clamp(value) {
-        return clampDate(value, this.minDate, this.maxDate);
+    clamp(value, minDate = this.minDate(), maxDate = this.maxDate()) {
+        return clampDate(value, minDate, maxDate);
     }
 
     /**
@@ -459,8 +476,9 @@ export class DateTimePicker extends Component {
      * @param {DateItem} item
      */
     getActiveRangeInfo({ range }) {
+        const selectedRange = this.selectedRange();
         const result = {
-            isSelected: isInRange(this.selectedRange, range),
+            isSelected: isInRange(selectedRange, range),
             isSelectStart: false,
             isSelectEnd: false,
             isHighlighted: isInRange(this.state.hoveredDate, range),
@@ -468,7 +486,7 @@ export class DateTimePicker extends Component {
 
         if (this.props.range) {
             if (result.isSelected) {
-                const [selectStart, selectEnd] = this.selectedRange.sort();
+                const [selectStart, selectEnd] = [...selectedRange].sort();
                 result.isSelectStart = !selectStart || isInRange(selectStart, range);
                 result.isSelectEnd = !selectEnd || isInRange(selectEnd, range);
             }
@@ -481,13 +499,14 @@ export class DateTimePicker extends Component {
 
     /**
      * @param {DateTimePickerProps} props
+     * @param {[NullableDateTime] | NullableDateRange} values
      */
-    getTimeValues(props) {
-        const timeValues = this.values.map(
+    getTimeValues(props, values) {
+        const timeValues = values.map(
             (val, index) =>
                 new Time({
                     hour:
-                        index === 1 && !this.values[1]
+                        index === 1 && !values[1]
                             ? (val || DateTime.local()).hour + 1
                             : (val || DateTime.local()).hour,
                     minute: val?.minute || 0,
@@ -508,7 +527,7 @@ export class DateTimePicker extends Component {
      * @param {DateItem} item
      */
     isSelectedDate({ range }) {
-        return this.values.some((value) => isInRange(value, range));
+        return this.values().some((value) => isInRange(value, range));
     }
 
     /**
@@ -539,7 +558,7 @@ export class DateTimePicker extends Component {
      */
     onTimeChange(valueIndex, newTime) {
         this.state.timeValues[valueIndex] = newTime;
-        const value = this.values[valueIndex] || today();
+        const value = this.values()[valueIndex] || today();
         this.validateAndSelect(value, valueIndex, "time");
     }
 
@@ -554,7 +573,7 @@ export class DateTimePicker extends Component {
             return false;
         }
 
-        const result = [...this.values];
+        const result = [...this.values()];
         result[valueIndex] = value;
 
         if (this.props.type === "datetime") {
@@ -562,7 +581,7 @@ export class DateTimePicker extends Component {
             const { hour, minute, second } = this.state.timeValues[valueIndex];
             result[valueIndex] = result[valueIndex].set({ hour, minute, second });
         }
-        if (!isInRange(result[valueIndex], [this.minDate, this.maxDate])) {
+        if (!isInRange(result[valueIndex], [this.minDate(), this.maxDate()])) {
             // Date is outside range defined by min and max dates
             return false;
         }

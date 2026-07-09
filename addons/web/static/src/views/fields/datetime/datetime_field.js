@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
-import { Component, effect, proxy, signal, t, untrack, useProps } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, effect, proxy, signal, t, untrack, useProps, useEffect } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -178,7 +178,7 @@ export class DateTimeField extends Component {
             () => []
         );
 
-        onWillRender(() => this.triggerIsDirty());
+        useEffect(() => this.triggerIsDirty());
 
         this.futureWarningMsg = _t("This date is in the future");
     }
@@ -395,6 +395,7 @@ export class DateTimeField extends Component {
     }
 
     onInputBlured() {
+        this.triggerIsDirty();
         if (!this.isPickerOpen()) {
             this.picker.activeInput = "";
         }
