@@ -7,10 +7,12 @@ import copy
 import functools
 import importlib
 import importlib.metadata
+import io
 import logging
 import os
 import re
 import sys
+import tokenize
 import traceback
 import typing
 from collections.abc import Collection, Iterable, Mapping
@@ -42,6 +44,7 @@ except ImportError:
 __all__ = [
     "Manifest",
     "adapt_version",
+    "check_dependency_declarations",
     "get_manifest",
     "get_module_path",
     "get_modules",
@@ -526,6 +529,202 @@ def get_modules() -> list[str]:
     """Get the list of module names that can be loaded.
     """
     return [m.name for m in Manifest.all_addon_manifests()]
+
+
+def check_dependency_declarations() -> None:
+    """Check the ``depends`` declared by every available module and log a
+    warning for each improvable declaration:
+
+    - missing explicit dependency: an auto-installable module whose whole
+      dependency closure is already contained in the checked module's one
+      (it is therefore always installed alongside it, and depending on it
+      installs nothing more) and which subsumes one of the declared
+      dependencies; the checked module can depend on it instead, and safely
+      extend it.
+    - redundant implicit dependency: a declared dependency that is already
+      implied by another declared dependency. A comment (``# ...``) on the
+      dependency's line in the manifest (or on the ``'depends'`` opening
+      line) marks it as deliberately explicit and silences the warning.
+    - improvable auto_install trigger: a trigger element that is already
+      implied by another one (vacuous), or that can be replaced by a declared
+      dependency which is always auto-installed alongside the rest of the
+      trigger, letting the replaced element become an implicit dependency.
+      The same comment convention on the ``'auto_install'`` list applies.
+    """
+    manifests = {m.name: m for m in Manifest.all_addon_manifests()}
+    depends = {name: [d for d in manifest['depends'] if d in manifests]
+               for name, manifest in manifests.items()}
+
+    closures: dict[str, set] = {}
+
+    def closure(module: str) -> set:
+        stack, opened = [module], set()
+        while stack:
+            name = stack[-1]
+            if name in closures:
+                stack.pop()
+                continue
+            if name in opened:
+                result = set()
+                for dep in depends[name]:
+                    result.add(dep)
+                    # a dependency cycle leaves some closures unresolved;
+                    # under-approximating keeps the warnings sound
+                    result |= closures.get(dep, set())
+                closures[name] = result
+                stack.pop()
+                continue
+            opened.add(name)
+            stack.extend(dep for dep in depends[name]
+                         if dep not in closures and dep not in opened)
+        return closures[module]
+
+    def trigger(name: str) -> set | None:
+        auto_install = manifests[name]['auto_install']  # normalized: set or False
+        if auto_install is False:
+            return None
+        return {dep for dep in auto_install if dep in manifests} or None
+
+    # relevance filter, not a correctness one (whether a suggested glue is
+    # co-installed is guaranteed by the closure check below): glue triggered
+    # by the base/web/mail application layer alone bridges no specific
+    # feature, so suggesting it would be noise for almost every module
+    generic = {'base', 'web', 'mail'} & manifests.keys()
+    changed = True
+    while changed:
+        changed = False
+        for name in manifests:
+            if name not in generic and manifests[name]['installable'] \
+                    and not manifests[name]['countries'] \
+                    and (auto_trigger := trigger(name)) and auto_trigger <= generic:
+                generic |= {name} | closure(name)
+                changed = True
+
+    # glue candidates: guaranteed auto-installation (installable, no country
+    # gating), a trigger that carries a signal (not generic, not a
+    # localization pack installed with accounting on any database)
+    candidates = {
+        name: auto_trigger
+        for name in manifests
+        if (auto_trigger := trigger(name))
+        and manifests[name]['installable']
+        and not manifests[name]['countries']
+        and not (auto_trigger & generic)
+        and not (name.startswith('l10n_') and auto_trigger == {'account'})
+    }
+
+    def commented_deps(module: str, manifest_key: str = 'depends') -> set:
+        """elements of a manifest list whose line (or the list's opening
+        line) has a '# ...' comment: deliberately explicit, exempt from
+        warnings"""
+        try:
+            with tools.file_open(opj(manifests[module].path, MANIFEST_NAMES[0])) as f:
+                source = f.read()
+            tree = ast.parse(source)
+        except (OSError, SyntaxError, ValueError):
+            return set()
+        node = None
+        for statement in tree.body:
+            if isinstance(statement, (ast.Expr, ast.Assign)) \
+                    and isinstance(statement.value, ast.Dict):
+                for key, val in zip(statement.value.keys, statement.value.values):
+                    if isinstance(key, ast.Constant) and key.value == manifest_key \
+                            and isinstance(val, ast.List):
+                        node = val
+        if node is None:
+            return set()
+        comment_lines = set()
+        try:
+            for token in tokenize.generate_tokens(io.StringIO(source).readline):
+                if token.type == tokenize.COMMENT \
+                        and node.lineno <= token.start[0] <= node.end_lineno:
+                    comment_lines.add(token.start[0])
+        except tokenize.TokenizeError:
+            return set()
+        dep_lines = {element.value: element.lineno
+                     for element in node.elts if isinstance(element, ast.Constant)}
+        if node.lineno in comment_lines:
+            return set(dep_lines)
+        return {dep for dep, line in dep_lines.items() if line in comment_lines}
+
+    for name in sorted(manifests):
+        deps = depends[name]
+        if not deps or not manifests[name]['installable']:
+            continue
+        auto_install = manifests[name]['auto_install'] or set()
+        exempt = None  # lazy: most modules need no manifest re-read
+        # redundant implicit dependencies
+        for dep in deps:
+            if dep in auto_install:
+                continue  # removing it would change the auto_install trigger
+            implier = next((other for other in deps
+                            if other != dep and dep in closure(other)), None)
+            if implier is None:
+                continue
+            if exempt is None:
+                exempt = commented_deps(name)
+            if dep not in exempt:
+                _logger.warning(
+                    "Module %s: dependency %r is redundant, already implied by"
+                    " %r; remove it, or comment (# ...) its line in the"
+                    " manifest to keep it explicit.", name, dep, implier)
+        # improvable auto_install trigger (explicit list only); all trigger
+        # elements must be known modules to reason about them
+        if auto_install and auto_install != set(manifests[name]['depends']) \
+                and auto_install <= set(deps):
+            trigger_closure = set()
+            for t in auto_install:
+                trigger_closure |= {t} | closure(t)
+            exempt_triggers = commented_deps(name, 'auto_install')
+            for t in sorted(auto_install - exempt_triggers):
+                implied = next((other for other in auto_install
+                                if other != t and t in closure(other)), None)
+                if implied is not None:
+                    _logger.warning(
+                        "Module %s: auto_install trigger %r is redundant,"
+                        " already implied by trigger %r.", name, t, implied)
+                    continue
+                glue = next(
+                    (g for g in deps
+                     if g not in auto_install and g != t
+                     and manifests[g]['installable']
+                     and not manifests[g]['countries']
+                     and (glue_trigger := trigger(g)) is not None
+                     and t in closure(g)
+                     and glue_trigger <= trigger_closure
+                     and not glue_trigger <= {t} | closure(t)),
+                    None)
+                if glue is not None:
+                    _logger.warning(
+                        "Module %s: auto_install trigger %r can be replaced by"
+                        " the declared dependency %r, which is always"
+                        " auto-installed alongside the rest of the trigger;"
+                        " %r then becomes an implicit dependency.",
+                        name, t, glue, t)
+        # missing explicit dependencies on always-installed glue modules
+        available = {name}
+        for dep in deps:
+            available |= {dep} | closure(dep)
+        # glue may only be suggested from the addons directories the module
+        # already spans: its own and those of its explicit and implicit
+        # dependencies (e.g. community modules never get enterprise glue)
+        allowed_paths = {manifests[mod].addons_path for mod in available}
+        for glue, auto_trigger in candidates.items():
+            if glue == name or glue in available or manifests[glue].addons_path not in allowed_paths:
+                continue
+            if name in closure(glue) or not closure(glue) <= available:
+                continue
+            subsumed = next(
+                (dep for dep in deps
+                 if dep in closure(glue)
+                 and not auto_trigger <= {dep} | closure(dep)
+                 and not any(dep in closure(other) for other in deps if other != dep)),
+                None)
+            if subsumed is not None:
+                _logger.warning(
+                    "Module %s: missing explicit dependency %r: it is always"
+                    " auto-installed alongside %s, and it subsumes the"
+                    " dependency on %r.", name, glue, name, subsumed)
 
 
 def adapt_version(version: str) -> str:

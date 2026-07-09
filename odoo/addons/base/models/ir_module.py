@@ -830,6 +830,8 @@ class IrModuleModule(models.Model):
 
             mod._update_from_terp(terp)
 
+        modules.check_dependency_declarations()
+
         return res
 
     def _update_from_terp(self, terp):

@@ -12,6 +12,7 @@ from . import module
 from .module import (
     Manifest,
     adapt_version,
+    check_dependency_declarations,
     get_module_path,
     get_modules,
     get_resource_from_path,
