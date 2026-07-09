@@ -88,7 +88,7 @@ class ProductCatalogMixin(models.AbstractModel):
         """
         res = {}
 
-        price_type = self._get_product_price_type()
+        price_type = self and self._get_product_price_type()
         prices = (
             products._price_compute(price_type, currency=self._get_catalog_currency())
             if price_type
