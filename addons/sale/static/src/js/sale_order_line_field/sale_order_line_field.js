@@ -1,19 +1,21 @@
-import { useSubEnv } from "@web/owl2/utils";
 import {
     ProductLabelSectionAndNoteListRender,
     productLabelSectionAndNoteOne2Many,
     ProductLabelSectionAndNoteOne2Many,
 } from "@account/components/product_label_section_and_note_o2m/product_label_section_and_note_field_o2m";
 import { sectionAndNoteFieldOne2Many } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
+import { usePlugin } from "@odoo/owl";
 import { openComboConfigurator } from "@sale/js/combo_configurator_utils";
 import { clearSelectedComboItems, getSelectedComboItems } from "@sale/js/sale_utils";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useSubEnv } from "@web/owl2/utils";
 
 function getComboRecords(listRecords, record) {
     const comboRecords = [];
 
-    if (record.data.product_type === 'combo') {
+    if (record.data.product_type === "combo") {
         // if currernt record is combo then we move forward util we find non combo line
         comboRecords.push(record);
         let index = listRecords.indexOf(record) + 1;
@@ -21,18 +23,15 @@ function getComboRecords(listRecords, record) {
         while (index < listRecords.length) {
             const r = listRecords[index];
             if (
-                !r.data.combo_item_id?.id
-                || (
-                    r.data.linked_line_id?.id !== record.resId
-                    && r.data.linked_virtual_id !== record.data.virtual_id
-                )
+                !r.data.combo_item_id?.id ||
+                (r.data.linked_line_id?.id !== record.resId &&
+                    r.data.linked_virtual_id !== record.data.virtual_id)
             ) {
                 break;
             }
             comboRecords.push(r);
             index++;
         }
-
     } else if (record.data.combo_item_id?.id) {
         // if current record is combo item then we move backward util we find associated combo line
         // Here we assume that the record we get is the last item of the combo
@@ -42,11 +41,9 @@ function getComboRecords(listRecords, record) {
             comboRecords.unshift(r);
 
             if (
-                r.data.product_type === 'combo'
-                && (
-                    r.resId === record.data.linked_line_id?.id
-                    || r.data.virtual_id === record.data.linked_virtual_id
-                )
+                r.data.product_type === "combo" &&
+                (r.resId === record.data.linked_line_id?.id ||
+                    r.data.virtual_id === record.data.linked_virtual_id)
             ) {
                 break;
             }
@@ -59,11 +56,11 @@ function getComboRecords(listRecords, record) {
 
 export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRender {
     static template = "sale.SaleOrderLineListRenderer";
-    static recordRowTemplate = 'sale.ListRenderer.RecordRow';
+    static recordRowTemplate = "sale.ListRenderer.RecordRow";
 
     setup() {
         super.setup();
-        this.priceColumns.push('discount');
+        this.priceColumns.push("discount");
         this.adjustingSectionQuantities = false;
 
         useSubEnv({
@@ -111,9 +108,9 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     getRowClass(record) {
         let classNames = super.getRowClass(record);
         if (this.isCombo(record) || this.isComboItem(record)) {
-            classNames = classNames.replace('o_row_draggable', '');
+            classNames = classNames.replace("o_row_draggable", "");
         }
-        return `${classNames} ${this.isCombo(record) ? 'fw-bold' : ''}`;
+        return `${classNames} ${this.isCombo(record) ? "fw-bold" : ""}`;
     }
 
     /**
@@ -140,7 +137,8 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
 
     getSectionColumns(columns) {
         const isSectionCol = (col) =>
-            [this.productAndDescriptionColumn, ...this.sectionColumns].includes(col.name) || col.widget === "handle";
+            [this.productAndDescriptionColumn, ...this.sectionColumns].includes(col.name) ||
+            col.widget === "handle";
 
         let titleColspan = 1;
         let absorbingColumns = true;
@@ -181,9 +179,10 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     }
 
     isFieldReadonly(column, record) {
-        return super.isFieldReadonly(column, record) || (
-            this.isComboItem(record)
-                && !['name', 'tax_ids', 'qty_delivered'].includes(column.name)
+        return (
+            super.isFieldReadonly(column, record) ||
+            (this.isComboItem(record) &&
+                !["name", "tax_ids", "qty_delivered"].includes(column.name))
         );
     }
 
@@ -205,13 +204,13 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     getComboSwapPairs(record, direction) {
         const comboRecords = getComboRecords(this.props.list.records, record);
 
-        if (direction === 'up') {
+        if (direction === "up") {
             return {
                 movingRecords: this.getPreviousRecords(record),
                 targetRecords: comboRecords,
             };
         }
-        if (direction === 'down') {
+        if (direction === "down") {
             return {
                 movingRecords: comboRecords,
                 targetRecords: this.getNextRecords(record),
@@ -224,7 +223,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         const { records } = this.props.list;
         const previousRecord = records[records.indexOf(record) - 1];
 
-        if (previousRecord?.data.combo_item_id?.id){
+        if (previousRecord?.data.combo_item_id?.id) {
             return getComboRecords(records, previousRecord);
         }
         return previousRecord ? [previousRecord] : false;
@@ -235,17 +234,14 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         const comboRecords = getComboRecords(records, record);
 
         const nextRecord = records[records.indexOf(record) + comboRecords.length];
-        if (nextRecord?.data.product_type === 'combo'){
+        if (nextRecord?.data.product_type === "combo") {
             return getComboRecords(records, nextRecord);
         }
         return nextRecord ? [nextRecord] : false;
     }
 
     canUseFormatter(column, record) {
-        if (
-            this.isCombo(record) &&
-            this.props.aggregatedFields.includes(column.name)
-        ) {
+        if (this.isCombo(record) && this.props.aggregatedFields.includes(column.name)) {
             return true;
         }
         return super.canUseFormatter(column, record);
@@ -254,10 +250,12 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     // For totals on combo lines
     getFormattedValue(column, record) {
         if (this.isCombo(record) && this.props.aggregatedFields.includes(column.name)) {
-            const total = getComboRecords(this.props.list.records, record)
-                .reduce((total, record) => total + record.data[column.name], 0);
+            const total = getComboRecords(this.props.list.records, record).reduce(
+                (total, record) => total + record.data[column.name],
+                0
+            );
 
-            const formatter = registry.category('formatters').get(column.fieldType, (val) => val);
+            const formatter = registry.category("formatters").get(column.fieldType, (val) => val);
 
             return formatter(total, {
                 ...formatter.extractOptions?.(column),
@@ -269,7 +267,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     }
 
     isCombo(record) {
-        return record.data.product_type === 'combo';
+        return record.data.product_type === "combo";
     }
 
     isComboItem(record) {
@@ -280,7 +278,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         return !this.isCombo(record) && !this.isComboItem(record);
     }
 
-    displayDeleteIcon(record){
+    displayDeleteIcon(record) {
         return super.displayDeleteIcon(record) && !this.isComboItem(record);
     }
 }
@@ -291,11 +289,8 @@ export class SaleOrderLineOne2Many extends ProductLabelSectionAndNoteOne2Many {
         ListRenderer: SaleOrderLineListRenderer,
     };
 
-    setup() {
-        super.setup();
-        this.dialog = useService("dialog");
-        this.orm = useService("orm");
-    }
+    dialog = usePlugin(DialogPlugin);
+    orm = usePlugin(ORM);
 
     async openRecord(record) {
         if (record.data.product_type === "combo") {
@@ -318,4 +313,4 @@ export const saleOrderLineOne2Many = {
     additionalClasses: sectionAndNoteFieldOne2Many.additionalClasses,
 };
 
-registry.category('fields').add('sol_o2m', saleOrderLineOne2Many);
+registry.category("fields").add("sol_o2m", saleOrderLineOne2Many);
