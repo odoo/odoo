@@ -167,6 +167,24 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             [{**self.default_address_values, 'vat': 'BE0926372368'}],
         )
 
+    def test_company_name_update(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        csrf_token = Request.csrf_token(self)
+        portal_partner = self.portal_user.partner_id
+        address_values = {
+            **self.default_address_values,
+            "parent_name": "parent company",
+            "csrf_token": csrf_token,
+            "partner_id": portal_partner.id,
+        }
+        res = self._submit_address_values(address_values)
+        self.assertEqual(res, {"redirectUrl": "/my/addresses"})
+        self.assertEqual(portal_partner.parent_id.name, "parent company")
+        self.assertTrue(portal_partner.parent_id.is_company)
+
+        res = self._submit_address_values({**address_values, "parent_name": "New parent"})
+        self.assertEqual(portal_partner.parent_id.name, "New parent")
+
     def test_cannot_update_vat_on_child_addresses(self):
         """Check that the VAT cannot be updated on a child address.
 
