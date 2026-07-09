@@ -1,10 +1,9 @@
-import { propSignal } from "@mail/utils/common/hooks";
+import { propSignal, useOnChange } from "@mail/utils/common/hooks";
 
-import { Component, onWillUnmount, t } from "@odoo/owl";
+import { Component, onWillUnmount, signal, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
 class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
@@ -15,14 +14,14 @@ class AbstractAttachmentView extends Component {
         this.store = useService("mail.store");
         this.thread = propSignal("thread", t.instanceOf(this.store["mail.thread"].Class));
         this.uiService = useService("ui");
-        this.iframeViewerPdfRef = useRef("iframeViewerPdf");
-        useLayoutEffect(
+        this.iframeViewerPdfRef = signal.ref();
+        useOnChange(
+            () => [this.iframeViewerPdfRef()],
             (el) => {
                 if (el) {
-                    hidePDFJSButtons(this.iframeViewerPdfRef.el);
+                    hidePDFJSButtons(el);
                 }
-            },
-            () => [this.iframeViewerPdfRef.el]
+            }
         );
     }
 

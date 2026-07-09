@@ -14,7 +14,7 @@
                 <div t-if="this.thread().message_main_attachment_id.isImage" class="o-mail-Attachment-imgContainer">
                     <img id="attachment_img" class="img img-fluid d-block" t-att-src="this.thread().message_main_attachment_id.defaultSource"/>
                 </div>
-                <iframe t-if="this.thread().message_main_attachment_id.isPdf" class="d-print-none mb48" t-att-src="this.thread().message_main_attachment_id.defaultSource" t-custom-ref="iframeViewerPdf"/>
+                <iframe t-if="this.thread().message_main_attachment_id.isPdf" class="d-print-none mb48" t-att-src="this.thread().message_main_attachment_id.defaultSource" t-ref="this.iframeViewerPdfRef"/>
                 <t t-if="this.thread().attachmentsInWebClientView.length > 1 or (this.thread().attachmentsInWebClientView.length > 0 and !(this.thread().message_main_attachment_id.isPdf or this.thread().message_main_attachment_id.isImage))">
                     <a class="arrow o_move_previous text-center" href="#" t-on-click.prevent="this.onClickPrevious">
                         <span class="oi oi-chevron-left"/>
