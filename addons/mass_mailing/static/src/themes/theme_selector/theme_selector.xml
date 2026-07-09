@@ -1,5 +1,8 @@
 <templates id="template">
     <div t-name="mass_mailing.ThemeSelector" class="o_mail_theme_selector">
+        <div t-if="this.state.showBanner" class="o_banner ps-4 pt-1 pb-1 d-inline-block fw-normal text-white fs-6">
+            Use the Save as Template under the <i class="oi" role="img" data-icon="more_vert"/> button to save your mailings to your Template Library.
+        </div>
         <div t-ref="this.themeSelectorWrapperRef" class="o_mailing_template_preview_wrapper d-inline-block w-100">
             <div class="o_mail_templates_grid w-100">
                 <div t-foreach="this.simpleThemes.values()" t-as="theme" t-key="theme_index" role="menuitem" class="cursor-pointer dropdown-item px-4"
@@ -8,27 +11,15 @@
                     <div class="o_thumb large mb-2" t-attf-style="background-image: url(#{theme.imgPath}_large.webp)"/>
                     <h5 class="text-capitalize text-truncate" t-out="theme.title"/>
                 </div>
-                <div t-foreach="this.state.favoriteTemplates" t-as="template" t-key="template_index"
-                    class="cursor-pointer dropdown-item px-4 o_mail_template_preview d-flex flex-column justify-content-between" role="menuitem"
-                    t-on-click="() => this.onSelectFavorite(template.bodyArch)">
-                    <!-- Template HTML preview -->
-                        <div t-if="template.imagePreviewSrc" class="s_dialog_preview s_dialog_preview_image">
-                            <img t-att-src="template.imagePreviewSrc"/>
+                <div t-foreach="this.state.templates" t-as="template" t-key="template_index" role="menuitem" t-if="template.active"
+                    class="cursor-pointer dropdown-item px-4 o_mail_template_preview d-flex flex-column justify-content-between"
+                    t-on-click="() => this.onSelectTemplate(template.bodyArch)">
+                        <div class="d-flex flex-grow-1">
+                            <TemplatePreview template="template" styleSheetsPromise="this.props.styleSheetsPromise"/>
                         </div>
-                        <t t-else="">
-                            <div class="d-flex flex-grow-1">
-                                <FavoritePreview template="template" styleSheetsPromise="this.props.styleSheetsPromise"/>
-                            </div>
-                        </t>
-                    <div class="d-flex flex-row align-items-center mb-2 w-100">
-                        <i class="oi oi-filled me-2" data-icon="star"/>
-                        <h5 class="text-truncate mb-0" t-out="template.subject"/>
-                        <div class="lh-1 ms-auto o_mail_template_remove_favorite" 
-                            aria-label="Remove from Templates" aria-role="button"
-                            t-on-click="(ev) => this.onRemoveFavorite(ev, template_index)" title="Remove from Templates">
-                            <i class="oi oi-filled ps-2 me-1" data-icon="delete" t-att-data-id="template.id"/>
-                        </div> 
-                    </div>
+                        <div class="mb-2">
+                            <h5 class="text-truncate mb-0" t-out="template.subject"/>
+                        </div>
                 </div>
                 <div t-foreach="this.commonThemes.values()" t-as="theme" t-key="theme_index" role="menuitem" class="cursor-pointer dropdown-item px-4"
                     t-on-click="() => this.onSelectTheme(theme)" t-att-data-name="theme.name">

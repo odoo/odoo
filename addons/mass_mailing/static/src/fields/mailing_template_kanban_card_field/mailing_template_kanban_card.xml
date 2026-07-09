@@ -1,0 +1,16 @@
+<templates>
+    <t t-name="mass_mailing.MailingTemplateKanbanCard">
+        <div t-ref="this.rootWrapperRef" class="o_mailing_template_card_preview_wrapper mb-2">
+            <div t-ref="this.shadowRootRef" class="o_mailing_shadow_root" inert="inert"/>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.TemplateKanbanCardPreviewBody">
+        <div class="o_mailing_template_preview">
+            <div class="o_mass_mailing_value o_readonly"
+                t-att-class="{'o_rtl': isRTL}">
+                <t t-out="bodyArch"/>
+            </div>
+        </div>
+    </t>
+</templates>

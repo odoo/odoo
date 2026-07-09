@@ -9,10 +9,9 @@ import {
     signal,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { FavoritePreview } from "./template_preview";
+import { TemplatePreview } from "./template_preview";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { _t } from "@web/core/l10n/translation";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class ThemeSelector extends Component {
@@ -21,12 +20,12 @@ export class ThemeSelector extends Component {
         config: { type: Object },
         styleSheetsPromise: Promise,
         themesPromise: Promise,
-        // Reactive wrapper for favoriteThemes promise: { promise }
-        favoriteThemes: Object,
+        // Reactive wrapper for templateThemes promise: { promise }
+        templateThemes: Object,
         iframeRef: { type: Function },
     };
     static components = {
-        FavoritePreview,
+        TemplatePreview,
     };
 
     themeSelectorWrapperRef = signal.ref();
@@ -40,24 +39,25 @@ export class ThemeSelector extends Component {
         this.simpleThemes = this.themeService.getSimpleThemes();
         this.state = proxy({
             loading: false,
-            favoriteTemplates: [],
+            templates: [],
+            showBanner: !this.props.config.isTemplate,
         });
         onWillStart(async () => {
-            const { themesPromise, favoriteThemes } = this.props;
-            const [favoriteTemplates] = await Promise.all([favoriteThemes.promise, themesPromise]);
-            Object.assign(this.state, { favoriteTemplates });
+            const { themesPromise, templateThemes } = this.props;
+            const [templates] = await Promise.all([templateThemes.promise, themesPromise]);
+            Object.assign(this.state, { templates });
         });
-        let favoriteThemesPromise = this.props.favoriteThemes.promise;
-        const keepLastFavoriteThemes = new KeepLast();
+        let templateThemesPromise = this.props.templateThemes.promise;
+        const keepLastTemplateThemes = new KeepLast();
         useEffect(async () => {
             if (status(this) === "destroyed") {
                 return;
             }
-            if (favoriteThemesPromise !== this.props.favoriteThemes.promise) {
-                favoriteThemesPromise = this.props.favoriteThemes.promise;
+            if (templateThemesPromise !== this.props.templateThemes.promise) {
+                templateThemesPromise = this.props.templateThemes.promise;
                 this.state.loading = true;
-                const favoriteTemplates = await keepLastFavoriteThemes.add(favoriteThemesPromise);
-                Object.assign(this.state, { favoriteTemplates });
+                const templates = await keepLastTemplateThemes.add(templateThemesPromise);
+                Object.assign(this.state, { templates });
                 this.state.loading = false;
             }
         });
@@ -99,27 +99,7 @@ export class ThemeSelector extends Component {
         });
     }
 
-    async onRemoveFavorite(ev, index) {
-        ev.stopPropagation();
-        const favorite = this.state.favoriteTemplates[index];
-        if (this.state.loading || !favorite) {
-            return;
-        }
-        await this.orm.write("mailing.mailing", [favorite.id], { favorite: false });
-        this.state.favoriteTemplates.splice(index, 1);
-        this.action.doAction({
-            type: "ir.actions.client",
-            tag: "display_notification",
-            params: {
-                message: _t("Design removed from the templates!"),
-                next: { type: "ir.actions.act_window_close" },
-                sticky: false,
-                type: "info",
-            },
-        });
-    }
-
-    onSelectFavorite(html) {
+    onSelectTemplate(html) {
         if (this.state.loading) {
             return;
         }

@@ -54,7 +54,7 @@ class Mailing extends models.Model {
         }
     }
 
-    action_fetch_favorites() {
+    action_fetch_templates() {
         return [];
     }
 
@@ -219,7 +219,7 @@ async function waitForThemeSelector() {
     await waitUntil(
         () =>
             themeSelector &&
-            themeSelector.props.favoriteThemes.promise &&
+            themeSelector.props.templateThemes.promise &&
             !themeSelector.state.loading,
         { timeout: 3000 }
     );
