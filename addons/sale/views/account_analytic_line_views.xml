@@ -88,6 +88,14 @@
             'default_unit_amount': 1,
         }</field>
         <field name="domain">[('product_id.reinvoice_policy', '!=', 'no'), ('order_id', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_services_and_material mb-1">
+                Bill for the work you deliver
+            </p>
+            <p>
+                Log your services deliveries, additional materials and expenses to invoice accurately.
+            </p>
+        </field>
     </record>
 
 </odoo>
