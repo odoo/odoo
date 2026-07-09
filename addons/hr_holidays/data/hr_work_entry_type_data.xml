@@ -596,6 +596,57 @@
         <field name="requires_allocation" eval="False"/>
     </record>
 
+    <!-- LEAVE6665  -->
+    <record id="hr_work_entry.l10n_be_work_entry_type_economic_unemployment" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">hr</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <!-- LEAVE2049 -->
+    <record id="hr_work_entry.l10n_be_work_entry_type_economic_unemployment_refused_by_administration" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="time_off_selectable">False</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <!-- LEAVE231  -->
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_incident" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">hr</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <!-- LEAVE238  -->
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_bad_weather" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">hr</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+        <!-- LEAVE086  -->
+    <record id="hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment_no_onss" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">hr</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="include_public_holidays_in_duration" eval="True"/>
+    </record>
+
+        <!-- LEAVE207  -->
+    <record id="hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">hr</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="include_public_holidays_in_duration" eval="True"/>
+    </record>
+
 <!-- CH: Switzerland -->
 
     <record id="hr_work_entry.l10n_ch_swissdec_unpaid_wt" model="hr.work.entry.type">
