@@ -433,7 +433,7 @@ class Website(Home):
                 domain,
                 ['|', ('filter_id.model_id', '=', model_name), ('action_server_id.model_id.model', '=', model_name)]
             ])
-        dynamic_filter = request.env['website.snippet.filter'].sudo().search_read(
+        dynamic_filter = request.env['website.snippet.filter'].with_context(lang=request.env.user.lang).sudo().search_read(
             domain, ['id', 'name', 'limit', 'model_name'], order='id asc'
         )
         return dynamic_filter
