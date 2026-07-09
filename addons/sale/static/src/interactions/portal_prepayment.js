@@ -41,7 +41,9 @@ export class PortalPrepayment extends Interaction {
         } else {
             this.isDownPayment = true;
         }
-        this.showPaymentModal = params.has('payment_amount') || params.has('amount_selection');
+        this.showPaymentModal = params.has('payment_amount')
+            || params.has('amount_selection')
+            || this.el.dataset.awaitingSplitPayment === 'True';
     }
 
     start() {

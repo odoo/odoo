@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
@@ -413,7 +414,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         """
         self.amount = self.sale_order.amount_total
         tx = self._create_transaction(
-            flow="redirect", sale_order_ids=[self.sale_order.id], state="done",
+            flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
             self._run_post_processing(tx)
@@ -627,3 +628,192 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             invoice,
             "Invoice id was incorrectly removed from payment.transaction",
         )
+
+    def test_get_payment_amount_defaults_to_remaining_amount_due(self):
+        """Test that the remaining amount due is charged when no amount is requested."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 4,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+            reference="Done Transaction",
+        )
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 4,
+            sale_order_ids=[self.sale_order.id],
+            state="pending",
+            reference="Pending Transaction",
+        )
+        remaining_amount = self.sale_order.currency_id.round(
+            self.sale_order.amount_total
+            - self.sale_order.amount_paid
+            - self.sale_order.amount_pending
+        )
+        self.assertEqual(self.sale_order._get_payment_amount(None), remaining_amount)
+
+    def test_get_payment_amount_returns_requested_amount_when_valid(self):
+        """Test that a valid requested amount is returned unchanged."""
+        requested_amount = self.sale_order.amount_total / 4
+        self.assertEqual(self.sale_order._get_payment_amount(requested_amount), requested_amount)
+
+    def test_get_payment_amount_raises_when_amount_exceeds_remaining(self):
+        """Test that requesting more than the remaining amount due raises an error."""
+        with self.assertRaises(ValidationError):
+            self.sale_order._get_payment_amount(self.sale_order.amount_total + 1)
+
+    def test_is_paid_or_pending_true_when_done_and_pending_cover_total(self):
+        """Test that done and pending transactions together satisfy the order's total."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+            reference="Done Transaction",
+        )
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="pending",
+            reference="Pending Transaction",
+        )
+        self.assertTrue(self.sale_order._is_paid_or_pending())
+
+    def test_is_paid_or_pending_false_when_underpaid(self):
+        """Test that a partial payment alone does not satisfy the order's total."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 4,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        self.assertFalse(self.sale_order._is_paid_or_pending())
+
+    def test_is_awaiting_split_payment_true_after_partial_payment_done(self):
+        """Test that the order awaits a split payment once a partial payment is done."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        self.assertTrue(self.sale_order._is_awaiting_split_payment())
+
+    def test_is_awaiting_split_payment_false_when_fully_covered(self):
+        """Test that the order doesn't await a split payment once fully paid."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        self.assertFalse(self.sale_order._is_awaiting_split_payment())
+
+    def test_is_awaiting_split_payment_false_when_order_cancelled(self):
+        """Test that a canceled order never awaits a split payment, even mid-payment."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        self.sale_order.state = "cancel"
+        self.assertFalse(self.sale_order._is_awaiting_split_payment())
+
+    def test_is_awaiting_split_payment_false_when_no_valid_transactions(self):
+        """Test that an order without any valid transaction doesn't await a split payment."""
+        self._create_transaction(flow="direct", sale_order_ids=[self.sale_order.id], state="draft")
+        self.assertFalse(self.sale_order._is_awaiting_split_payment())
+
+    def test_check_not_awaiting_split_payment_raises_user_error(self):
+        """Test that checking an order awaiting a split payment raises an error."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        with self.assertRaises(UserError):
+            self.sale_order._check_not_awaiting_split_payment()
+
+    def test_get_portal_display_transaction_prefers_authorized_over_done(self):
+        """Test that an authorized transaction is preferred over a done one."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+            reference="Done Transaction",
+        )
+        self.dummy_provider.support_manual_capture = "partial"
+        tx_authorized = self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="authorized",
+            reference="Authorized Transaction",
+        )
+        self.assertEqual(self.sale_order._get_portal_display_transaction(), tx_authorized)
+
+    def test_get_portal_display_transaction_prefers_pending_over_authorized(self):
+        """Test that the pending transaction is preferred over an authorized one."""
+        self.dummy_provider.support_manual_capture = "partial"
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="authorized",
+            reference="Authorized Transaction",
+        )
+        tx_pending = self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="pending",
+            reference="Pending Transaction",
+        )
+        self.assertEqual(self.sale_order._get_portal_display_transaction(), tx_pending)
+
+    def test_get_portal_display_transaction_empty_when_still_underpaid(self):
+        """Test that no transaction is displayed while the order is still underpaid."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 4,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        self.assertFalse(self.sale_order._get_portal_display_transaction())
+
+    def test_amount_max_ignores_pending_transactions(self):
+        """Test that the maximum payable amount ignores pending transactions."""
+        self.sale_order.action_confirm()
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 4,
+            sale_order_ids=[self.sale_order.id],
+            state="pending",
+        )
+        with MockRequest(self.env):
+            tx_values = CustomerPortal()._get_payment_values(self.sale_order, is_down_payment=False)
+        self.assertEqual(tx_values["amount_max"], self.sale_order.amount_total)
+
+    def test_suggested_amount_excludes_paid_and_pending_when_order_unconfirmed(self):
+        """Test that the suggested payment amount excludes both paid and pending transactions."""
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 4,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+            reference="Done Transaction",
+        )
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 4,
+            sale_order_ids=[self.sale_order.id],
+            state="pending",
+            reference="Pending Transaction",
+        )
+        with MockRequest(self.env):
+            tx_values = CustomerPortal()._get_payment_values(self.sale_order, is_down_payment=False)
+        self.assertEqual(tx_values["amount"], self.sale_order.amount_total / 2)

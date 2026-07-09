@@ -27,7 +27,7 @@
 
             <div t-if="not cart_has_blocking_alerts and website_sale_order.amount_total" name="website_sale_non_free_cart">
                 <div id="payment_method" class="o_not_editable mb-3">
-                    <t t-call="payment.form"/>
+                    <t t-call="payment.form" show_amount_input="True"/>
                 </div>
             </div>
             <h4 t-else="" class="mb-3">
