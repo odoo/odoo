@@ -3,7 +3,7 @@
     <t t-inherit="mail.MessagingMenu" t-inherit-mode="extension">
         <xpath expr="//*[@t-name='mail.MessagingMenu']" position="inside">
             <Dropdown t-if="!this.env.inDiscussApp" state="this.dropdown" beforeOpen.bind="this.beforeOpen" position="'bottom-end'" menuClass="this.discussSystray.menuClass" bottomSheet="false">
-                <button t-att-class="this.discussSystray.class">
+                <button t-att-class="this.discussSystray.class" data-available-offline="">
                     <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => this.store.discuss.activeTab = this.ui.isSmall and this.store.discuss.activeTab === 'notification' ? 'notification' : this.store.discuss.activeTab"></i>
                     <span t-if="this.counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-out="this.counter"/></span>
                 </button>
@@ -102,6 +102,6 @@
     </t>
 
     <t t-name="mail.MessagingMenu.headerFilter">
-        <button class="o-mail-MessagingMenu-headerFilter btn btn-sm btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="this.store.discuss.activeTab === name ? 'fw-bold o-active shadow-sm' : 'text-muted'" t-out="label" type="button" role="tab" t-on-click="() => this.store.discuss.activeTab = name"/>
+        <button class="o-mail-MessagingMenu-headerFilter btn btn-sm btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="this.store.discuss.activeTab === name ? 'fw-bold o-active shadow-sm' : 'text-muted'" t-out="label" type="button" role="tab" t-on-click="() => this.store.discuss.activeTab = name" data-available-offline=""/>
     </t>
 </templates>

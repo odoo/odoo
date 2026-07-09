@@ -16,6 +16,7 @@ export class PinnedMessagesPanel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.offlineService = useService("offline");
         this.props = props({
             channel: t.instanceOf(this.store["discuss.channel"].Class),
             close: t.function([t.instanceOf(MouseEvent)]).optional(),
@@ -27,9 +28,12 @@ export class PinnedMessagesPanel extends Component {
     }
 
     /**
-     * Get the message to display when nothing is pinned on this channel.
+     * Get the message to display when nothing is pinned on this channel or client is offline.
      */
     get emptyText() {
+        if (this.offlineService.offline && this.props.channel.pinnedMessagesState !== "loaded") {
+            return _t("Go online to load pinned messages.");
+        }
         return _t("This channel doesn't have any pinned messages.");
     }
 }

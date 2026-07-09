@@ -13,6 +13,7 @@ export class SubChannelList extends Component {
 
     setup() {
         this.store = useService("mail.store");
+        this.offlineService = useService("offline");
         this.props = props({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
             close: types.function([types.instanceOf(MouseEvent)]).optional(),

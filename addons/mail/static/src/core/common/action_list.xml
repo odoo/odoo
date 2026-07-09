@@ -108,7 +108,7 @@
         [this.action.btnClass ?? '']: true,
         [this.action.tagClassNames]: true,
     })"/>
-    <t t-set="attrs" t-value="{ 'aria-label': this.action.name, 'disabled': this.action.disabledCondition, 'name': this.action.id, 'data-sequence': this.action.sequence, 'data-sequence-group': this.action.sequenceGroup, 'data-sequence-quick': this.action.sequenceQuick }"/>
+    <t t-set="attrs" t-value="{ 'aria-label': this.action.name, 'disabled': this.action.disabledCondition, 'name': this.action.id, 'data-sequence': this.action.sequence, 'data-sequence-group': this.action.sequenceGroup, 'data-sequence-quick': this.action.sequenceQuick, ...this.action.btnAttrs }"/>
     <t t-if="this.action.component and this.action.componentCondition" t-component="this.action.component" t-props="this.action.componentProps"/>
     <DropdownItem t-elif="this.props.dropdown" class="btnClass + ' d-flex align-items-center dropdown-item_active_noarrow ' + (this.ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.onSelected(this.action, ev)" attrs="attrs">
         <t t-call="mail.Action.content"/>

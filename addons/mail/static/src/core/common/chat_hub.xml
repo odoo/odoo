@@ -35,7 +35,7 @@
             <div t-if="this.compactCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
                 <t t-out="this.compactCounter"/>
             </div>
-            <button class="o-mail-ChatHub-bubbleBtn btn fs-2 shadow" t-on-click="this.expand">
+            <button class="o-mail-ChatHub-bubbleBtn btn fs-2 shadow" t-on-click="this.expand" data-available-offline="">
                 <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fa fa-comments"/>
             </button>
         </div>

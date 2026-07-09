@@ -13,7 +13,8 @@
             <div class="o-mail-SubChannelList mw-100 w-100 h-100" t-att-class="{ 'align-items-center justify-content-center': this.search.results.length === 0 }">
                 <div t-if="this.search.results.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
                     <p class="my-1 text-center fst-italic text-500">
-                        <t t-if="this.search.searching">No threads found.</t>
+                        <t t-if="this.offlineService.offline and !this.props.channel.loadSubChannelsDone">Go online to load threads.</t>
+                        <t t-elif="this.search.searching">No threads found.</t>
                         <t t-else="">This conversation has no threads yet.</t>
                     </p>
                 </div>
