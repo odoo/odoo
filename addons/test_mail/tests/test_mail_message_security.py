@@ -929,6 +929,40 @@ class TestMailMessageAccess(MessageAccessCommon):
         self.assertEqual(found_por, messages_all.filtered(lambda m: m.res_id != records[2].id), 'Should filter like read')
         found_por.read(['subject'])
 
+    def test_search_excludes_ir_access_from_enumeration(self):
+        """ Searching generic messages shouldn't include ir.access tracking messages
+        because their presence raise ValueError due to MAX_SEARCH_LIMIT being exceeded.
+        """
+        ir_access_record = self.env['ir.access'].search([], limit=1)
+        if not ir_access_record:
+            self.skipTest("No ir.access records found")
+
+        # Create several messages on ir.access to simulate a production database.
+        ir_access_msgs = self.env['mail.message'].sudo()
+        for i in range(3):
+            ir_access_msgs |= ir_access_record.sudo().message_post(
+                body=f'IrAccessMsgTest Tracking {i}',
+                message_type='tracking',
+                subtype_id=self.ref('mail.mt_note'),
+            ).sudo()
+
+        # Create a regular message on a non-ir.access record
+        regular_msg = self.record_public.message_post(
+            body='IrAccessMsgTest Regular Message',
+            message_type='comment',
+            subtype_id=self.ref('mail.mt_comment'),
+        )
+
+        # Patch MAX_SEARCH_LIMIT to 2, below the 3 ir.access messages created.
+        with patch('odoo.addons.mail.models.mail_message.MAX_SEARCH_LIMIT', 2):
+            found = self.env['mail.message'].with_user(self.user_employee).search([
+                ('body', 'ilike', 'IrAccessMsgTest'),
+            ])
+
+        self.assertIn(regular_msg, found)
+        for msg in ir_access_msgs:
+            self.assertNotIn(msg, found, "ir.access messages should not appear in general search")
+
 
 @tagged('mail_message', 'security', 'post_install', '-at_install')
 class TestMessageSubModelAccess(MessageAccessCommon):
