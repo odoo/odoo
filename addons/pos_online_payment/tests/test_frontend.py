@@ -355,6 +355,97 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             self.assertTrue(all(config_online_pm_data))
             self.start_pos_tour('test_payment_method_customer_required')
 
+    def test_online_payment_with_cash_rounding_only_cash_method(self):
+        """ With cash rounding only for cash payment methods, the online payment
+            must settle the exact residual (total 15.28, cash 10.00 -> 5.28
+            online, not 5.30) and the order must then be considered paid.
+        """
+        rounding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding 0.05 HALF-UP',
+            'rounding': 0.05,
+            'rounding_method': 'HALF-UP',
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company.default_cash_difference_income_account_id.id,
+            'loss_account_id': self.company.default_cash_difference_expense_account_id.id,
+        })
+        self.pos_config.write({
+            'rounding_method': rounding_method.id,
+            'cash_rounding': True,
+            'only_round_cash_method': True,
+        })
+        product = self.env['product.product'].create({
+            'name': 'OP Cash Rounding Product',
+            'available_in_pos': True,
+            'list_price': 15.28,
+            'taxes_id': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        current_session = self.pos_config.current_session_id
+        current_session.set_opening_control(0, None)
+
+        # Simulate a cashier saving a draft order with a cash payment of 10.00
+        order_uid = '00077-001-0001'
+        order_data = {
+            'uuid': order_uid,
+            'name': 'Order ' + order_uid,
+            'session_id': current_session.id,
+            'user_id': self.pos_user.id,
+            'partner_id': False,
+            'access_token': str(uuid.uuid4()),
+            'amount_paid': 10.0,
+            'amount_return': 0,
+            'state': 'draft',
+            'amount_tax': 0,
+            'amount_total': 15.28,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'lines': [[0, 0, {
+                'product_id': product.id,
+                'qty': 1,
+                'discount': 0,
+                'tax_ids': [],
+                'price_unit': 15.28,
+                'price_subtotal': 15.28,
+                'price_subtotal_incl': 15.28,
+                'pack_lot_ids': [],
+            }]],
+            'payment_ids': [[0, 0, {
+                'amount': 10.0,
+                'payment_method_id': self.cash_payment_method.id,
+            }]],
+        }
+        create_result = self.env['pos.order'].with_user(self.pos_user).sync_from_ui([order_data])
+        order_id = next(result_order_data for result_order_data in create_result['pos.order'] if result_order_data['uuid'] == order_uid)['id']
+        order = self.env['pos.order'].browse(order_id)
+        self.assertEqual(order.state, 'draft')
+        self.assertAlmostEqual(order.amount_paid, 10.0)
+
+        # The amount to pay online is the exact residual, not rounded
+        self.assertAlmostEqual(order.get_amount_unpaid(), 5.28)
+
+        # Simulate the cashier requesting an online payment for the residual
+        op_data = order.with_user(self.pos_user).get_and_set_online_payments_data(5.28)
+        self.assertEqual(op_data['id'], order.id)
+        self.assertTrue('paid_order' not in op_data)
+        self.assertTrue('deleted' not in op_data)
+        self.assertAlmostEqual(op_data['amount_unpaid'], 5.28)
+        self.assertAlmostEqual(order.next_online_payment_amount, 5.28)
+
+        # Simulate the customer paying the residual online
+        self._fake_online_payment(order.id, order.access_token, self.payment_provider.id)
+
+        self.assertEqual(order.state, 'paid')
+        self.assertAlmostEqual(order.amount_paid, 15.28)
+
+        # Simulate the cashier closing the session (to detect eventual accounting issues)
+        total_cash_payment = sum(current_session.order_ids.filtered(lambda o: o.state != 'cancel').payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        current_session.post_closing_cash_details(total_cash_payment)
+        close_result = current_session.close_session_from_ui()
+        self.assertTrue(close_result['successful'])
+        self.assertEqual(current_session.state, 'closed', 'Session was not properly closed')
+        self.assertEqual(order.state, 'done')
+
     @classmethod
     def tearDownClass(cls):
         # Restore company values after the tests

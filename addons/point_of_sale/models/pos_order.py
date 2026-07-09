@@ -772,11 +772,14 @@ class PosOrder(models.Model):
         return float_is_zero(self._get_rounded_amount(amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
     def _get_rounded_amount(self, amount, force_round=False):
-        # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
-        if self.config_id.cash_rounding \
-           and (force_round or (not self.config_id.only_round_cash_method \
-           or any(p.payment_method_id.is_cash_count for p in self.payment_ids))):
-            amount = float_round(amount, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
+        if self.config_id.cash_rounding:
+            rounding_method = self.config_id.rounding_method
+            if force_round or not self.config_id.only_round_cash_method:
+                amount = float_round(amount, precision_rounding=rounding_method.rounding, rounding_method=rounding_method.rounding_method)
+            elif any(p.payment_method_id.is_cash_count for p in self.payment_ids):
+                # Only round the residual settled in cash: non-cash payments pay their exact share.
+                non_cash_amount = sum(p.amount for p in self.payment_ids if not p.payment_method_id.is_cash_count)
+                amount = non_cash_amount + float_round(amount - non_cash_amount, precision_rounding=rounding_method.rounding, rounding_method=rounding_method.rounding_method)
         currency = self.currency_id
         return currency.round(amount) if currency else amount
 
