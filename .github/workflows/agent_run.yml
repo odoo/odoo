@@ -1,0 +1,116 @@
+# .github/workflows/agent_run.yml (dans chaque repo cible)
+# Déclenche l'agent (fcc-claude) quand on pose le label 🤖 agent:run sur une issue.
+name: Agent run
+
+on:
+  issues:
+    types: [labeled]
+
+# Une seule exécution de l'agent par issue à la fois (on n'annule pas un run en cours).
+concurrency:
+  group: agent-run-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  run:
+    if: github.event.label.name == '🤖 agent:run'
+    runs-on: self-hosted   # runner sur le VPS (fcc-claude + auth déjà en place)
+    timeout-minutes: 30
+    permissions:
+      contents: write       # créer branche + commit + push
+      pull-requests: write  # ouvrir la PR
+      issues: write         # commenter l'issue
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurer git pour les pushes de l'agent
+        run: |
+          git config user.name "alpha barry"
+          git config user.email "alpha@users.noreply.github.com"
+          git config url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
+
+      - name: Récupérer l'issue
+        id: issue
+        run: |
+          NUMBER="${{ github.event.issue.number }}"
+          TITLE="$(gh issue view "$NUMBER" --json title --jq '.title')"
+          BODY="$(gh issue view "$NUMBER" --json body --jq '.body // ""')"
+          LABELS="$(gh issue view "$NUMBER" --json labels --jq '.labels[].name' | paste -sd ',' -)"
+          {
+            printf 'TITLE<<EOF\n'
+            printf '%s\n' "$TITLE"
+            printf 'EOF\n'
+            printf 'BODY<<EOF\n'
+            printf '%s\n' "$BODY"
+            printf 'EOF\n'
+            printf 'LABELS<<EOF\n'
+            printf '%s\n' "$LABELS"
+            printf 'EOF\n'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Lancer l'agent
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ steps.issue.outputs.TITLE }}
+          ISSUE_BODY: ${{ steps.issue.outputs.BODY }}
+          ISSUE_LABELS: ${{ steps.issue.outputs.LABELS }}
+        run: |
+          fcc-claude --yes "$(cat <<PROMPT
+          Tu es un agent de développement autonome travaillant sur ce dépôt.
+          Une issue GitHub vient de t'être assignée.
+
+          ═══════════════════════════════════════════════
+          ISSUE #${ISSUE_NUMBER} : ${ISSUE_TITLE}
+          ═══════════════════════════════════════════════
+
+          ${ISSUE_BODY}
+
+          ═══════════════════════════════════════════════
+          LABELS DE CONTEXTE : ${ISSUE_LABELS}
+          ═══════════════════════════════════════════════
+
+          ═══════════════════════════════════════════════
+          CONSIGNES OBLIGATOIRES (NON NÉGOCIABLES)
+          ═══════════════════════════════════════════════
+
+          1. AVANT DE CODER QUOI QUE CE SOIT, lis TOUS les fichiers présents dans
+             .claude/Skills/ — en priorité .claude/Skills/git.md. Ce sont les règles
+             du projet. Tu DOIS les connaître avant d'écrire la moindre ligne de code.
+
+          2. Les labels de contexte te donnent le type de tâche (type:*) et le domaine
+             concerné (area:*). Utilise-les pour t'orienter :
+             - Pour chaque label area:*, cherche un skill correspondant dans .claude/Skills/
+               (ex: area:frontend → .claude/Skills/frontend.md, area:backend → .claude/Skills/backend.md)
+             - Si le skill existe, lis-le et applique ses conventions spécifiques
+             - Adapte ton exploration du codebase au domaine concerné (dossiers, patterns)
+             - Le label type:* indique la nature du changement : bug (corriger sans casser),
+               feature (nouveau code isolé), refactor (ne pas changer le comportement),
+               perf (mesurer avant/après), test (couverture uniquement), docs (docs uniquement)
+
+          3. Respecte STRICTEMENT les skills. En particulier la convention git :
+             - branche au format <type>/<issue>-<description>  (ex: feat/42-oauth-login)
+             - commits au format Conventional Commits          (ex: feat(auth): add oauth login)
+             - PR avec "Closes #${ISSUE_NUMBER}" en première ligne de la description
+             - titre de PR = futur commit de squash (même format que le commit)
+             - JAMAIS de commit de merge, JAMAIS de push sur main
+
+          4. Implémente la solution décrite par l'issue #${ISSUE_NUMBER}.
+
+          5. Crée la branche, code, commite, pousse, puis ouvre la PR avec gh.
+
+          6. NE MERGE PAS la PR toi-même. Le squash-merge se fait après review humaine.
+
+          7. Si tu ne peux pas résoudre l'issue entièrement, explique pourquoi dans un
+             commentaire sur l'issue #${ISSUE_NUMBER} et ne pas ouvrir de PR bancale.
+
+          8. Quand tu as fini, poste un commentaire sur l'issue #${ISSUE_NUMBER} avec le
+             lien de la PR et un résumé de ce que tu as fait.
+
+          Numéro de l'issue : #${ISSUE_NUMBER}
+          PROMPT
+          )"
