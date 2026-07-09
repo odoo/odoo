@@ -40,6 +40,7 @@
         <field name="report_file">l10n_th.report_commercial_invoice</field>
         <field name="binding_model_id" ref="account.model_account_move"/>
         <field name="binding_type">report</field>
+        <field name="domain">[('country_code', '=', 'TH'), ('journal_id.type', '=', 'sale')]</field>
     </record>
 
     <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
