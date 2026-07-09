@@ -1142,6 +1142,79 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         is_anonymous_cart = order_sudo._is_anonymous_cart()
         is_main_address = is_anonymous_cart or order_sudo.partner_id.id == partner_sudo.id
+<<<<<<< af2df920a2da6f433bcb3f8eb40b67767cf99d0d
+||||||| cb7db58315eb778cf0ff06e0f8ae0c5ae9da49d1
+        # Validate the address values and highlights the problems in the form, if any.
+        invalid_fields, missing_fields, error_messages = self._validate_address_values(
+            address_values,
+            partner_sudo,
+            address_type,
+            use_delivery_as_billing,
+            required_fields,
+            is_main_address=is_main_address,
+            **extra_form_data,
+        )
+        if error_messages:
+            return json.dumps({
+                'invalid_fields': list(invalid_fields | missing_fields),
+                'messages': error_messages,
+            })
+
+        is_new_address = False
+        if not partner_sudo:  # Creation of a new address.
+            is_new_address = True
+            self._complete_address_values(
+                address_values, address_type, use_delivery_as_billing, order_sudo
+            )
+            create_context = clean_context(request.env.context)
+            create_context.update({
+                'tracking_disable': True,
+                'no_vat_validation': True,  # Already verified in _validate_address_values
+            })
+            partner_sudo = request.env['res.partner'].sudo().with_context(
+                create_context
+            ).create(address_values)
+        elif not self._are_same_addresses(address_values, partner_sudo):
+            partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
+
+=======
+        # Validate the address values and highlights the problems in the form, if any.
+        invalid_fields, missing_fields, error_messages = self._validate_address_values(
+            address_values,
+            partner_sudo,
+            address_type,
+            use_delivery_as_billing,
+            required_fields,
+            is_main_address=is_main_address,
+            **extra_form_data,
+        )
+        if error_messages:
+            return json.dumps({
+                'invalid_fields': list(invalid_fields | missing_fields),
+                'messages': error_messages,
+            })
+
+        is_new_address = False
+        if not partner_sudo:  # Creation of a new address.
+            is_new_address = True
+            self._complete_address_values(
+                address_values, address_type, use_delivery_as_billing, order_sudo
+            )
+            create_context = clean_context(request.env.context)
+            create_context.update({
+                'tracking_disable': True,
+                'no_vat_validation': True,  # Already verified in _validate_address_values
+            })
+            partner_sudo = request.env['res.partner'].sudo().with_context(
+                create_context
+            ).create(address_values)
+        elif not self._are_same_addresses(address_values, partner_sudo):  # Keep the same partner if nothing changed.
+            write_values = address_values.copy()
+            if partner_sudo.parent_id:
+                write_values.pop('company_name', None)  # Avoid hiding parent link in partner form UI.
+            partner_sudo.write(write_values)
+
+>>>>>>> 0d7ceb2546aef991f49a518a94cee1842cc530a6
         partner_fnames = set()
         if is_main_address:  # Main customer address updated.
             partner_fnames.add('partner_id')  # Force the re-computation of partner-based fields.
