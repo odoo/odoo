@@ -76,7 +76,7 @@ registerWebsitePreviewTour(
             trigger: ".o_customize_tab [data-container-title='Image'] span[title='Size']",
         },
         {
-            trigger: ".o-hb-image-size-info[title=Size]:contains(0.5 kB)",
+            trigger: ".o-hb-image-size-info[title=Size]:contains(0.6 kB)",
         },
         {
             content: "replace image",
