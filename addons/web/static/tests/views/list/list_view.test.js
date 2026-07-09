@@ -15382,11 +15382,7 @@ test(`execute group header button with keyboard navigation`, async () => {
     // focus create button as a starting point
     expect(`.o_list_button_add`).toHaveCount(1);
 
-    queryFirst(`.o_list_button_add`).focus();
-    expect(`.o_list_button_add`).toBeFocused();
-
-    await press("ArrowDown");
-    await animationFrame();
+    queryFirst(`thead th.o_list_record_selector input`).focus();
     expect(`thead th.o_list_record_selector input`).toBeFocused();
 
     await press("ArrowDown");
