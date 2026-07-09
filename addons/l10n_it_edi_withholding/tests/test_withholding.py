@@ -137,6 +137,11 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             ]
         })
 
+        cls.inps_purchase_tax_TC02 = cls.inps_purchase_tax.copy({
+            'name': '4% INPS (TC02)',
+            'l10n_it_pension_fund_type': 'TC02',
+        })
+
         cls.withholding_tax_invoice._post()
         cls.pension_fund_tax_invoice._post()
         cls.enasarco_tax_invoice._post()
@@ -256,6 +261,102 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 | self.company.account_purchase_tax_id
             ))
 
+    def test_two_pension_fund_taxes_import_same_vat(self):
+        """
+            Test that different Pension Fund taxes (TipoCassa) applied to the
+            same VAT tax are correctly applied to their respective invoice
+            lines based on the AssoSoftware 'RiferimentoTesto' tags.
+            Total     VAT       Detail        RiferimentoTesto      Pension Fund
+            350.00    22%       AswCassPre                      ->  TC02 + TC22 4% on VAT 22%
+            300.00    22%       AswCassPre    TC02 (4%)         ->  TC02 4% on VAT 22%
+            50.00     22%       AswCassPre    TC22 (4%)         ->  TC22 4% on VAT 22%
+            50.00     22%       AswCassPre    TC22 (4%)         ->  TC22 4% on VAT 22%
+        """
+
+        applied_xml = """
+            <xpath expr="//DatiGeneraliDocumento/DatiCassaPrevidenziale[1]" position="after">
+                <DatiCassaPrevidenziale>
+                    <TipoCassa>TC02</TipoCassa>
+                    <AlCassa>4.00</AlCassa>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                </DatiCassaPrevidenziale>
+            </xpath>
+            <xpath expr="//DettaglioLinee[NumeroLinea='2']/AltriDatiGestionali/RiferimentoTesto" position="replace">
+                <RiferimentoTesto>TC02 (4%)</RiferimentoTesto>
+            </xpath>
+        """
+
+        invoice = self._assert_import_invoice('IT00470550013_pfund.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 810.45,
+            'amount_tax': 60.45,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.get_real_client_invoice_data().lines]
+        }], applied_xml)
+
+        self.assertEqual(
+            [line.tax_ids for line in invoice.invoice_line_ids], [
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax | self.inps_purchase_tax_TC02,
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax_TC02,
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+            ]
+        )
+
+    def test_two_pension_fund_taxes_with_different_vat_with_asw_tag(self):
+        """
+            Test that different Pension Fund taxes (TipoCassa) applied to
+            different VAT taxes are correctly applied to their respective
+            invoice lines based on the AssoSoftware 'RiferimentoTesto' tags.
+            Total     VAT       Detail        RiferimentoTesto      Pension Fund
+            350.00    22%       AswCassPre                      ->  TC22 4% on VAT 22%
+            300.00    0% N2.1   AswCassPre    TC02 (4%)         ->  TC02 4% on VAT 0% N2.1
+            50.00     22%       AswCassPre    TC22 (4%)         ->  TC22 4% on VAT 22%
+            50.00     22%       AswCassPre    TC22 (4%)         ->  TC22 4% on VAT 22%
+        """
+
+        applied_xml = """
+            <xpath expr="//DatiGeneraliDocumento/DatiCassaPrevidenziale[1]" position="after">
+                <DatiCassaPrevidenziale>
+                    <TipoCassa>TC02</TipoCassa>
+                    <AlCassa>4.00</AlCassa>
+                    <AliquotaIVA>0.00</AliquotaIVA>
+                    <Natura>N2.1</Natura>
+                </DatiCassaPrevidenziale>
+            </xpath>
+            <xpath expr="//DettaglioLinee[NumeroLinea='2']/AliquotaIVA" position="replace">
+                <AliquotaIVA>0.00</AliquotaIVA>
+                <Natura>N2.1</Natura>
+            </xpath>
+            <xpath expr="//DettaglioLinee[NumeroLinea='2']/AltriDatiGestionali/RiferimentoTesto" position="replace">
+                <RiferimentoTesto>TC02 (4%)</RiferimentoTesto>
+            </xpath>
+        """
+
+        invoice = self._assert_import_invoice('IT00470550013_pfund.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 726.96,
+            'amount_tax': -23.04,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.get_real_client_invoice_data().lines]
+        }], applied_xml)
+
+        self.assertEqual(
+            [line.tax_ids for line in invoice.invoice_line_ids],
+            [
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+                self.vat_0_N2_1_purchase             | self.withholding_purchase_tax | self.inps_purchase_tax_TC02,  # noqa: E221
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+            ]
+        )
+
     def test_pension_fund_taxes_import(self):
         invoice_data = self.get_real_client_invoice_data()
         invoice = self._assert_import_invoice('IT00470550013_pfun2.xml', [{
@@ -276,7 +377,6 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
     def test_pension_fund_taxes_import_zero_vat_rate(self):
         """ Test that pension fund taxes with a 0.00% VAT rate are correctly imported."""
 
-        self.inps_purchase_tax.write({'l10n_it_exempt_reason': 'N2.1'})
         invoice_data = self.get_real_client_invoice_data()
         invoice = self._assert_import_invoice('IT00470550013_pfun3.xml', [{
             'invoice_date': datetime.date(2022, 3, 24),
@@ -298,12 +398,12 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
     def test_import_pension_fund_specific_natura(self):
         """ Ensure that the pension fund tax is only applied to lines matching the VAT rate and the exemption reason (Natura) """
 
-        self.env = self.env['base'].with_company(self.company_data_2['company']).env
         pension_tax = self.env['account.tax'].search([
             ('amount', '=', 4.0),
             ('type_tax_use', '=', 'purchase'),
+            *self.env['account.tax']._check_company_domain(self.company),
+            ('l10n_it_pension_fund_type', '=', 'TC22'),
         ], limit=1)
-        pension_tax.write({'l10n_it_exempt_reason': 'N2.1'})
 
         applied_xml = """
             <xpath expr="//FatturaElettronicaBody/DatiBeniServizi" position="replace">
@@ -348,7 +448,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             </xpath>
         """
 
-        invoices = self._assert_import_invoice('IT00470550013_pfun3.xml', [{
+        invoice = self._assert_import_invoice('IT00470550013_pfun3.xml', [{
             'move_type': 'in_invoice',
             'amount_untaxed': 752.00,
             'amount_tax': 30.00,
@@ -357,10 +457,13 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 {'quantity': 1.0, 'price_unit': 2.00},
             ],
         }], applied_xml)
-        line_1 = invoices.invoice_line_ids[0]
-        line_2 = invoices.invoice_line_ids[1]
-        self.assertIn(pension_tax.id, line_1.tax_ids.ids)
-        self.assertNotIn(pension_tax.id, line_2.tax_ids.ids)
+        self.assertEqual(
+            [line.tax_ids for line in invoice.invoice_line_ids],
+            [
+                self.vat_0_N2_1_purchase | pension_tax,
+                self.vat_0_N1_purchase,
+            ]
+        )
 
     ####################################################
     # ENASARCO TAX
