@@ -339,6 +339,8 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
+        if not self.env.registry.ready:
+            self._read(["is_company", "parent_id"])
         for partner in self:
             if partner.is_company or not partner.parent_id:
                 partner.commercial_partner_id = partner
@@ -347,6 +349,8 @@ class Partner(models.Model):
 
     @api.depends('company_name', 'parent_id.is_company', 'commercial_partner_id.name')
     def _compute_commercial_company_name(self):
+        if not self.env.registry.ready:
+            self._read(["company_name"])
         for partner in self:
             p = partner.commercial_partner_id
             partner.commercial_company_name = p.is_company and p.name or partner.company_name
@@ -760,6 +764,8 @@ class Partner(models.Model):
     def _get_name(self):
         """ Utility method to allow name_get to be overrided without re-browse the partner """
         partner = self
+        if not self.env.registry.ready:
+            partner._read(["name"])
         name = partner.name or ''
 
         if partner.company_name or partner.parent_id:
