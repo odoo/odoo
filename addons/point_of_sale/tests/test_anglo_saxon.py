@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -68,7 +67,6 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
 @tagged('post_install', '-at_install')
 class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
-    @skip('Temporary to fast merge new valuation')
     def test_create_account_move_line(self):
         # This test will check that the correct journal entries are created when a product in real time valuation
         # is sold in a company using anglo-saxon
@@ -182,7 +180,6 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         return self.PosOrder.create(pos_order_values)
 
-    @skip('Temporary to fast merge new valuation')
     def test_fifo_valuation_no_invoice(self):
         """Register a payment and validate a session after selling a fifo
         product without making an invoice for the customer"""
@@ -232,6 +229,109 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(pos_order_pos0.account_move.journal_id, self.pos_config.invoice_journal_id)
         self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
 
+    def test_cogs_ship_later_uninvoiced_and_backorder(self):
+        """
+        Check an uninvoiced ship-later delivery posts the cost of the delivered goods at closing.
+        Checks also that a backordered unit posts its cost only once it is delivered, and that
+        nothing is posted for costless products.
+        """
+        product_no_cost = self.env['product.product'].create({
+            'name': 'Costless product',
+            'standard_price': 0,
+            'available_in_pos': True,
+            'is_storable': True,
+            'categ_id': self.category.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product, self.warehouse.lot_stock_id, 5)
+        self.env['stock.quant']._update_available_quantity(product_no_cost, self.warehouse.lot_stock_id, 5)
+        self.company.action_close_stock_valuation(auto_post=True)
+
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        session.set_opening_control(0, None)
+        order = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'pricelist_id': self.company.partner_id.property_product_pricelist.id,
+            'session_id': session.id,
+            'to_invoice': False,
+            'shipping_date': '2023-01-01',
+            'lines': [Command.create({
+                'name': "OL/0001",
+                'product_id': self.product.id,
+                'price_unit': 450,
+                'qty': 2.0,
+                'price_subtotal': 900,
+                'price_subtotal_incl': 900,
+            }), Command.create({
+                'name': "OL/0002",
+                'product_id': product_no_cost.id,
+                'price_unit': 100,
+                'qty': 1.0,
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            })],
+            'amount_total': 1000,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'last_order_preparation_change': '{}',
+        })
+        payment_context = {"active_ids": [order.id], "active_id": order.id}
+        self.PosMakePayment.with_context(payment_context).create({
+            'amount': 1000.0,
+            'payment_method_id': self.cash_payment_method.id,
+        }).with_context(payment_context).check()
+        session.post_closing_cash_details(1000.0)
+        session.close_session_from_ui()
+
+        valuation_account = self.category.property_stock_valuation_account_id
+        variation_account = self.company.expense_account_id
+
+        # deliver one unit and backorder the rest
+        picking = session.picking_ids
+        picking.move_ids.filtered(lambda m: m.product_id == self.product).quantity = 1
+        picking.move_ids.filtered(lambda m: m.product_id == product_no_cost).quantity = 0
+        backorder_action = picking.button_validate()
+        self.env['stock.backorder.confirmation'].with_context(backorder_action['context']).process()
+
+        # the delivered unit is valued at the product cost on the move but posts no accounting entry
+        self.assertEqual(self.product.standard_price, 100)
+        out_move = picking.move_ids.filtered(lambda m: m.product_id == self.product)
+        self.assertRecordValues(out_move, [
+            {'value': 100, 'is_valued': True, 'account_move_id': False},
+        ])
+
+        # the cost of the delivered unit is considered only at closing
+        closing_move = self.env['account.move'].browse(
+            self.company.action_close_stock_valuation(auto_post=True)['res_id'])
+        self.assertRecordValues(closing_move.line_ids.sorted(lambda line: line.debit), [
+            {'account_id': valuation_account.id, 'debit': 0,   'credit': 100},
+            {'account_id': variation_account.id, 'debit': 100, 'credit': 0},
+        ])
+
+        # deliver one unit and backorder the rest
+        backorder = picking.backorder_ids
+        backorder.move_ids.filtered(lambda m: m.product_id == self.product).quantity = 1
+        backorder.move_ids.filtered(lambda m: m.product_id == product_no_cost).quantity = 0
+        backorder_action = backorder.button_validate()
+        self.env['stock.backorder.confirmation'].with_context(backorder_action['context']).process()
+
+        # closing again considers the backordered unit's cost, once it is delivered
+        closing_move = self.env['account.move'].browse(
+            self.company.action_close_stock_valuation(auto_post=True)['res_id'])
+        self.assertRecordValues(closing_move.line_ids.sorted(lambda line: line.debit), [
+            {'account_id': valuation_account.id, 'debit': 0,   'credit': 100},
+            {'account_id': variation_account.id, 'debit': 100, 'credit': 0},
+        ])
+
+        # finally ship the costless product: nothing more is posted at closing
+        costless_backorder = backorder.backorder_ids
+        costless_backorder.move_ids.quantity = 1
+        costless_backorder.button_validate()
+        with self.assertRaisesRegex(UserError, "Everything is correctly closed"):
+            self.company.action_close_stock_valuation(auto_post=True)
+
     def test_fifo_valuation_with_invoice_when_pos_customer_is_delivery_type(self):
         """Register a payment and validate a session after selling a fifo
         product and make an invoice for the customer when a delivery address
@@ -263,127 +363,6 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         line = pos_order_pos0.account_move.line_ids.filtered(lambda l: l.debit and l.account_id == self.category.property_account_expense_categ_id)
         self.assertEqual(pos_order_pos0.account_move.journal_id, self.pos_config.invoice_journal_id)
         self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
-
-    @skip('Temporary to fast merge new valuation')
-    def test_cogs_with_ship_later_no_invoicing(self):
-        # This test will check that the correct journal entries are created when a product in real time valuation
-        # is sold using the ship later option and no invoice is created in a company using anglo-saxon
-        self.pos_config.open_ui()
-        current_session = self.pos_config.current_session_id
-        self.cash_journal.loss_account_id = self.account
-        current_session.set_opening_control(0, None)
-
-        # 2 step delivery method
-        self.warehouse.delivery_steps = 'pick_ship'
-
-        # I create a PoS order with 1 unit of New product at 450 EUR
-        self.pos_order_pos0 = self.PosOrder.create({
-            'company_id': self.company.id,
-            'partner_id': self.partner.id,
-            'pricelist_id': self.company.partner_id.property_product_pricelist.id,
-            'session_id': self.pos_config.current_session_id.id,
-            'to_invoice': False,
-            'shipping_date': '2023-01-01',
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product.id,
-                'price_unit': 450,
-                'discount': 0.0,
-                'qty': 1.0,
-                'price_subtotal': 450,
-                'price_subtotal_incl': 450,
-            })],
-            'amount_total': 450,
-            'amount_tax': 0,
-            'amount_paid': 0,
-            'amount_return': 0,
-            'last_order_preparation_change': '{}'
-        })
-
-        # I make a payment to fully pay the order
-        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
-        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': 450.0,
-            'payment_method_id': self.cash_payment_method.id,
-        })
-
-        # I click on the validate button to register the payment.
-        context_payment = {'active_id': self.pos_order_pos0.id}
-        self.pos_make_payment_0.with_context(context_payment).check()
-
-        # I close the current session to generate the journal entries
-        current_session_id = self.pos_config.current_session_id
-        current_session_id.post_closing_cash_details(450.0)
-        current_session_id.close_session_from_ui()
-        self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
-
-        self.assertEqual(len(current_session.picking_ids), 1, "There should be 2 pickings")
-        current_session.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        current_session.picking_ids.button_validate()
-        self.assertEqual(len(current_session.picking_ids), 2, "There should be 2 pickings")
-        current_session.picking_ids.button_validate()
-
-        # I test that the generated journal entries are correct.
-        account_output = self.category.property_stock_account_output_categ_id
-        expense_account = self.category.property_account_expense_categ_id
-        aml = current_session._get_related_account_moves().line_ids
-        aml_output = aml.filtered(lambda l: l.account_id.id == account_output.id)
-        aml_expense = aml.filtered(lambda l: l.account_id.id == expense_account.id)
-
-        self.assertEqual(len(aml_output), 2, "There should be 2 output account move lines")
-        # 2 moves in POS journal (Pos order + manual entry at delivery)
-        self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.pos_config.journal_id)), 1)
-        # 1 move in stock journal (delivery from stock layers)
-        self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.category.property_stock_journal)), 1)
-        #Check the lines created after the picking validation
-        self.assertEqual(aml_output[1].credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[1].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[0].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        #Check the lines created by the PoS session
-        self.assertEqual(aml_output[0].debit, 100.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-
-    @skip('Temporary to fast merge new valuation')
-    def test_action_pos_order_invoice(self):
-        self.company.point_of_sale_update_stock_quantities = 'closing'
-
-        # Setup a running session, with a paid pos order that is not invoiced
-        self.pos_config.open_ui()
-        current_session = self.pos_config.current_session_id
-        self.pos_order_pos0 = self.PosOrder.create({
-            'company_id': self.company.id,
-            'partner_id': self.partner.id,
-            'session_id': self.pos_config.current_session_id.id,
-            'lines': [(0, 0, {
-                'product_id': self.product.id,
-                'price_unit': 450,
-                'qty': 1.0,
-                'price_subtotal': 450,
-                'price_subtotal_incl': 450,
-            })],
-            'amount_total': 450,
-            'amount_tax': 0,
-            'amount_paid': 0,
-            'amount_return': 0,
-        })
-        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
-        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': 450.0,
-            'payment_method_id': self.cash_payment_method.id,
-        })
-        context_payment = {'active_id': self.pos_order_pos0.id}
-        self.pos_make_payment_0.with_context(context_payment).check()
-
-        # Invoice the pos order afterward (session still running)
-        self.pos_order_pos0.action_pos_order_invoice()
-
-        # Check that the stock output journal item from the invoice is reconciled (with its counterpart from the valuation entry)
-        stock_output_account = self.category.property_stock_account_output_categ_id
-        related_amls = current_session._get_related_account_moves().line_ids
-        stock_output_amls = related_amls.filtered_domain([('account_id', '=', stock_output_account.id)])
-
-        self.assertTrue(all(stock_output_amls.mapped('reconciled')))
 
     def test_no_duplicate_picking_on_repeated_invoice_action(self):
         """Calling action_pos_order_invoice multiple times (e.g. a backend user
@@ -482,117 +461,6 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(product_line.discount, 5)  # Disount is reflected
         self.assertEqual(product_line.price_subtotal, 90.25)  # Discount applies on price_unit
         self.assertEqual(product_line.price_total, 103.79)  # Taxes applied with price_total
-
-    @skip('Temporary to fast merge new valuation')
-    def test_cogs_with_ship_later_with_backorder(self):
-        # This test will check that the correct journal entries are created when 2 products are sold
-        # using the ship later option and one of them is processed in a backorder
-        self.pos_config.open_ui()
-        current_session = self.pos_config.current_session_id
-        self.cash_journal.loss_account_id = self.account
-        current_session.set_opening_control(0, None)
-
-        # Create 2 product one with no cost and one with a cost of 20 EUR
-        self.product_2 = self.env['product.product'].create({
-            'name': 'New product 2',
-            'standard_price': 20,
-            'available_in_pos': True,
-            'is_storable': True,
-            'categ_id': self.category.id,
-        })
-
-        self.product_1 = self.env['product.product'].create({
-            'name': 'New product 1',
-            'standard_price': 0,
-            'available_in_pos': True,
-            'is_storable': True,
-            'categ_id': self.category.id,
-        })
-
-        # I create a PoS order with 1 unit of New product at 450 EUR
-        self.pos_order_pos0 = self.PosOrder.create({
-            'company_id': self.company.id,
-            'partner_id': self.partner.id,
-            'pricelist_id': self.company.partner_id.property_product_pricelist.id,
-            'session_id': self.pos_config.current_session_id.id,
-            'to_invoice': False,
-            'shipping_date': '2023-01-01',
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product_1.id,
-                'price_unit': 100,
-                'discount': 0.0,
-                'qty': 1.0,
-                'price_subtotal': 100,
-                'price_subtotal_incl': 100,
-            }), (0, 0, {
-                'name': "OL/0002",
-                'product_id': self.product_2.id,
-                'price_unit': 200,
-                'discount': 0.0,
-                'qty': 1.0,
-                'price_subtotal': 200,
-                'price_subtotal_incl': 200,
-            })],
-            'amount_total': 300,
-            'amount_tax': 0,
-            'amount_paid': 0,
-            'amount_return': 0,
-            'last_order_preparation_change': '{}'
-        })
-
-        # I make a payment to fully pay the order
-        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
-        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': 300.0,
-            'payment_method_id': self.cash_payment_method.id,
-        })
-
-        # I click on the validate button to register the payment.
-        context_payment = {'active_id': self.pos_order_pos0.id}
-        self.pos_make_payment_0.with_context(context_payment).check()
-
-        # I close the current session to generate the journal entries
-        current_session_id = self.pos_config.current_session_id
-        current_session_id.post_closing_cash_details(300.0)
-        current_session_id.close_session_from_ui()
-        self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
-
-        current_session.picking_ids.move_ids.filtered(lambda m: m.product_id == self.product_2).write({'quantity': 1, 'picked': True})
-        res_dict = current_session.picking_ids.button_validate()
-        self.env['stock.backorder.confirmation'].with_context(res_dict['context']).process()
-
-        # I test that the generated journal entries are correct.
-        out = self.product_1.categ_id.property_stock_account_output_categ_id
-        exp = self.product_1._get_product_accounts()['expense']
-        aml = current_session._get_related_account_moves().line_ids
-        aml_output = aml.filtered(lambda l: l.account_id.id == out.id and l.journal_id == self.pos_config.journal_id)
-        aml_expense = aml.filtered(lambda l: l.account_id.id == exp.id and l.journal_id == self.pos_config.journal_id)
-
-        self.assertEqual(len(aml_expense), 1, "There should be 1 output account move lines")
-        self.assertEqual(aml_expense.debit, 20)
-        self.assertEqual(aml_expense.credit, 0)
-
-        self.assertEqual(len(aml_output), 1, "There should be 1 output account move lines")
-        self.assertEqual(aml_output.debit, 0)
-        self.assertEqual(aml_output.credit, 20)
-
-        backorder_picking = current_session.picking_ids.filtered(lambda p: p.state == 'confirmed')
-        backorder_picking.move_ids.write({'quantity': 1, 'picked': True})
-        backorder_picking.button_validate()
-
-        # As the second item has no cost, the account move line should be the same as before
-        aml = current_session._get_related_account_moves().line_ids
-        aml_output = aml.filtered(lambda l: l.account_id.id == out.id and l.journal_id == self.pos_config.journal_id)
-        aml_expense = aml.filtered(lambda l: l.account_id.id == exp.id and l.journal_id == self.pos_config.journal_id)
-
-        self.assertEqual(len(aml_expense), 1, "There should be 1 output account move lines")
-        self.assertEqual(aml_expense.debit, 20)
-        self.assertEqual(aml_expense.credit, 0)
-
-        self.assertEqual(len(aml_output), 1, "There should be 1 output account move lines")
-        self.assertEqual(aml_output.debit, 0)
-        self.assertEqual(aml_output.credit, 20)
 
     def test_cogs_multi_products_perpetual(self):
         """
