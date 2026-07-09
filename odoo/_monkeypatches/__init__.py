@@ -8,12 +8,13 @@ already imported when the monkey patcher runs, or right after that module is
 imported otherwise.
 """
 
+import copy
 import importlib
 import os
 import pkgutil
 import sys
 import time
-from types import ModuleType, SimpleNamespace
+from types import ModuleType
 
 
 class PatchImportHook:
@@ -38,13 +39,14 @@ class PatchImportHook:
         for finder in sys.meta_path[idx + 1:]:
             spec = finder.find_spec(fullname, path, target)
             if spec is not None:
-                # we found a spec, change the loader
-
+                # we found a spec, change the loader exec_module to run our patch after the module is loaded
                 def exec_module(module: ModuleType, exec_module=spec.loader.exec_module) -> None:
                     exec_module(module)
                     patch_module(module.__name__)
 
-                spec.loader = SimpleNamespace(create_module=spec.loader.create_module, exec_module=exec_module)
+                loader = copy.copy(spec.loader)
+                loader.exec_module = exec_module
+                spec.loader = loader
                 return spec
         raise ImportError(f"Could not load the module {fullname!r} to patch")
 
