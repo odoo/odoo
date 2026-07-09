@@ -1,17 +1,17 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart, onWillUpdateProps, proxy, useProps, t } from "@odoo/owl";
-import { FormActionFieldsOption } from "./form_action_fields_option";
-import {
-    getDependencyEl,
-    getFieldName,
-    getMultipleInputs,
-    isFieldCustom,
-    getCurrentFieldInputEl,
-    getModelName,
-} from "./utils";
+import { asyncComputed, computed, onWillStart, t, useProps } from "@odoo/owl";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { FormActionFieldsOption } from "./form_action_fields_option";
+import {
+    getCurrentFieldInputEl,
+    getDependencyEl,
+    getFieldName,
+    getModelName,
+    getMultipleInputs,
+    isFieldCustom,
+} from "./utils";
 
 const { DateTime } = luxon;
 
@@ -24,11 +24,21 @@ export const formFieldOptionProps = {
 export class FormFieldOption extends BaseOptionComponent {
     static template = "website.s_website_form_field_option";
     static dependencies = ["websiteFormOption"];
-    props = useProps(formFieldOptionProps);
     static components = { FormActionFieldsOption };
+
+    props = useProps(formFieldOptionProps);
+
+    loadedFieldOptionData = computed(() => {
+        const error = this.fieldOptionData.error();
+        if (error) {
+            throw error;
+        }
+        return this.fieldOptionData.loading() ? null : this.fieldOptionData();
+    });
 
     setup() {
         super.setup();
+
         this.customFieldsData = [
             { name: _t("Text"), value: "char" },
             { name: _t("Long Text"), value: "text" },
@@ -45,15 +55,6 @@ export class FormFieldOption extends BaseOptionComponent {
             { name: _t("Date & Time"), value: "datetime" },
             { name: _t("File Upload"), value: "binary" },
         ];
-        const { loadFieldOptionData } = this.dependencies.websiteFormOption;
-        this.state = proxy({
-            availableFields: [],
-            conditionInputs: [],
-            conditionValueList: [],
-            dependencyEl: null,
-            valueList: null,
-            fieldTypeItems: [],
-        });
         this.domState = useDomState((el) => {
             const modelName = getModelName(el.closest("form"));
             const fieldName = getFieldName(el);
@@ -131,29 +132,33 @@ export class FormFieldOption extends BaseOptionComponent {
             return { value: getFieldName(el) === "state_id" && hasCountryField };
         });
 
-        onWillStart(async () => {
-            const el = this.env.getEditingElement();
-            const fieldOptionData = await loadFieldOptionData(el);
-            this.state.fields = fieldOptionData.fields;
-            this.state.availableFields.push(...fieldOptionData.availableFields);
-            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
-            this.state.valueList = fieldOptionData.valueList;
-            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
-            this.computeFieldTypeItems(fieldOptionData);
-        });
-        onWillUpdateProps(async (props) => {
-            const el = this.env.getEditingElement();
-            const fieldOptionData = await loadFieldOptionData(el);
-            this.state.fields = fieldOptionData.fields;
-            this.state.availableFields.length = 0;
-            this.state.availableFields.push(...fieldOptionData.availableFields);
-            this.state.conditionInputs.length = 0;
-            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
-            this.state.valueList = fieldOptionData.valueList;
-            this.state.conditionValueList.length = 0;
-            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
-            this.computeFieldTypeItems(fieldOptionData);
-        });
+        this.fieldOptionData = asyncComputed(
+            async () => {
+                this.props.redrawSequence;
+                const { loadFieldOptionData } = this.dependencies.websiteFormOption;
+                const el = this.env.getEditingElement();
+                const data = await loadFieldOptionData(el);
+                const fieldKey = isFieldCustom(el) ? el.dataset.type : getFieldName(el);
+                return {
+                    ...data,
+                    fieldKey,
+                    fieldTypeItems: this.computeFieldTypeItems(data),
+                };
+            },
+            {
+                initial: {
+                    fields: undefined,
+                    availableFields: [],
+                    conditionInputs: [],
+                    valueList: null,
+                    conditionValueList: [],
+                    fieldKey: undefined,
+                    fieldTypeItems: [],
+                },
+            }
+        );
+
+        onWillStart(() => this.fieldOptionData.currentPromise());
         // TODO select field's hack ?
     }
     get canHaveTextValidationCondition() {
@@ -299,7 +304,10 @@ export class FormFieldOption extends BaseOptionComponent {
     }
     get isExistingFieldSelectTypeMultiple() {
         const el = this.env.getEditingElement();
-        return !isFieldCustom(el) && this.state.fields[getFieldName(el)].type === "many2many";
+        return (
+            !isFieldCustom(el) &&
+            this.fieldOptionData().fields[getFieldName(el)].type === "many2many"
+        );
     }
     get isOtherOptionSupported() {
         const el = this.env.getEditingElement();
@@ -334,10 +342,7 @@ export class FormFieldOption extends BaseOptionComponent {
      * Dynamic key to force BuilderList to re-render when field type changes.
      */
     get getFieldKey() {
-        if (this.domState.elClassList.includes("s_website_form_custom")) {
-            return this.domState.elDataset.type;
-        }
-        return this.domState.fieldName;
+        return this.fieldOptionData().fieldKey;
     }
     /**
      * Generate the entries for the field type selector.
@@ -366,7 +371,7 @@ export class FormFieldOption extends BaseOptionComponent {
                 "data-action-value": field.name,
             },
         }));
-        this.state.fieldTypeItems = [
+        return [
             { label: _t("Custom Field"), choices: customFieldItems },
             { label: _t("Existing fields"), choices: existingFieldItems },
         ];
