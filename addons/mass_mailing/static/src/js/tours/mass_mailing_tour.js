@@ -73,9 +73,18 @@
         content: _t("Save your changes."),
         run: 'click',
     }, {
-        trigger: '.o_favorite',
-        content: _t('Click on the star to add this mailing to your templates.'),
+        trigger: '.o_action_manager button[data-tooltip="Actions"]',
+        content: _t('Click on the actions gear icon.'),
         run: 'click',
+    },
+    {
+        trigger: '.o-dropdown-item.o_save_as_template',
+        content: _t('Click on the "Save as Template" button to add this mailing to your templates.'),
+        run: 'click',
+    },
+    {
+        trigger: '.o_notification_content',
+        content: 'Wait for the template creation to finish.'
     },
     ...stepUtils.statusbarButtonsSteps(
         "Test",

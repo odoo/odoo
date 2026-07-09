@@ -4,6 +4,7 @@
 from ast import literal_eval
 
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
+from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged, users
 
 
@@ -88,3 +89,15 @@ class TestMassMailValues(MassSMSCommon):
 
         new_mailing = self.env['mailing.mailing'].new()
         self.assertDictEqual(new_mailing.get_sms_link_replacements_placeholders(), expected)
+
+    @users('user_marketing')
+    def test_mailing_template_constrains(self):
+        """Mailing templates are only supported for 'mail' mailing."""
+        mail_mailing, sms_mailing = self.env['mailing.mailing'].create([
+            {'subject': 'Mail Mailing', 'mailing_type': 'mail'},
+            {'subject': 'SMS Mailing', 'mailing_type': 'sms'}
+        ])
+
+        mail_mailing.is_template = True
+        with self.assertRaises(ValidationError, msg='Templates are only supported for Email mailings.'):
+            sms_mailing.is_template = True
