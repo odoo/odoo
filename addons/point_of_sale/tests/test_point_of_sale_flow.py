@@ -3144,3 +3144,77 @@ class TestPointOfSaleFlow(CommonPosTest):
             10.0,
             "The return move should be valued at the historical cost of the original sale ($10), not the current standard price ($20)."
         )
+
+    def test_intercompany_vendor_with_invoice(self):
+        """
+        Tests that we do not get an access error while trying to sell a
+        product that has a replenishment rule in another company.
+        """
+        if self.env['ir.module.module']._get('purchase').state != 'installed':
+            self.skipTest("Purchase module is required for this test to run")
+
+        company_a = self.env.company
+        company_data_2 = self.setup_other_company(name='Company B')
+        company_b = company_data_2['company']
+        partner_a, partner_b = self.env['res.partner'].create([
+            {'name': 'Partner A'},
+            {'name': 'Partner B'},
+        ])
+        product = self.env['product.product'].create({
+            'name': 'Office Lamp',
+            'default_code': 'LAMP01',
+            'is_storable': True,
+            'available_in_pos': True,
+            'seller_ids': [
+                Command.create({'partner_id': partner_a.id, 'company_id': company_b.id, 'min_qty': 1.0, 'price': 10.0}),
+                Command.create({'partner_id': partner_a.id, 'company_id': company_a.id, 'min_qty': 1.0, 'price': 10.0}),
+                Command.create({'partner_id': partner_b.id, 'company_id': company_a.id, 'min_qty': 1.0, 'price': 10.0}),
+            ]
+        })
+        vendor_a = product.seller_ids.filtered(lambda s: s.company_id == company_a and s.partner_id == partner_a)
+        self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'company_id': company_a.id,
+            'product_min_qty': 1.0,
+            'product_max_qty': 5.0,
+            'supplier_id': vendor_a.id,
+        })
+        payment_method_b = self.env['pos.payment.method'].create({
+            'name': 'Cash B',
+            'company_id': company_b.id,
+        })
+        pos_config_b = self.env['pos.config'].with_company(company_b).create({
+            'name': 'POS Company B',
+            'company_id': company_b.id,
+        })
+        pos_config_b.open_ui()
+        current_session_b = pos_config_b.current_session_id
+
+        order_data = {
+            'company_id': company_b.id,
+            'session_id': current_session_b.id,
+            'partner_id': partner_b.id,
+            'lines': [[0, 0, {
+                'product_id': product.id,
+                'full_product_name': 'Office Lamp',
+                'price_unit': 100,
+                'qty': 1,
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            }]],
+            'payment_ids': [[0, 0, {
+                'amount': 100,
+                'payment_method_id': payment_method_b.id
+            }]],
+            'amount_paid': 100.0,
+            'amount_total': 100.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': True,
+        }
+        self.env.invalidate_all()
+        self.env['pos.order'].with_company(company_b).env['pos.order'].sync_from_ui([order_data])
+
+        order = self.env['pos.order'].search([('session_id', '=', current_session_b.id)])
+        self.assertEqual(len(order), 1)
+        self.assertTrue(order.account_move)
