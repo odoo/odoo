@@ -1,4 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export class HeaderElementsOption extends BaseOptionComponent {
@@ -10,7 +11,9 @@ export class HeaderElementsOption extends BaseOptionComponent {
         super.setup();
         this.customizeWebsite = this.dependencies.customizeWebsite;
         const views = ["website.option_header_brand_logo", "website.option_header_brand_name"];
-        this.customizeWebsite.loadConfigKey({ views });
+        onWillStart(async () => {
+            await this.customizeWebsite.loadConfigKey({ views });
+        });
     }
 
     get websiteLogoParams() {
