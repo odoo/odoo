@@ -20,7 +20,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryFirst, queryValue } from "@odoo/hoot-dom";
+import { press, queryFirst, queryOne, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -76,7 +76,8 @@ test("load more messages from channel (auto-load on scroll)", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains("button", { text: "Load More", before: [".o-mail-Message", { count: 30 }] });
+    await contains("button:text(Load More)", { before: [".o-mail-Message", { count: 30 }] });
+    expect(getComputedStyle(queryOne("button:text(Load More)")).opacity).toBe("1");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
     await contains(".o-mail-Message", { count: 60 });
