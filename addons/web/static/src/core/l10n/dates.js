@@ -174,11 +174,11 @@ export function getLocalYearAndWeek(date) {
     let diffDays, year;
     if (date < jan4) {
         // count from previous year if week falls before Jan 4
-        diffDays = date.diff(jan4.minus({ years: 1 }), "day").days
-        year = date.year - 1
+        diffDays = date.diff(jan4.minus({ years: 1 }), "day").days;
+        year = date.year - 1;
     } else {
         diffDays = date.diff(jan4, "day").days;
-        year = date.year
+        year = date.year;
     }
     return {
         year: year,
