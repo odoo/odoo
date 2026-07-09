@@ -318,6 +318,23 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
         {
             trigger: ".o_rating_popup_composer span:text(Edit Review)",
         },
+        // Click the 4 star row: only "New comment from admin" should remain visible.
+        {
+            trigger: "#chatterRoot:shadow .o_website_rating_table_row[data-star='4']",
+            run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter .o-mail-Message:count(1) .o-mail-Message-body:text(New comment from admin)",
+        },
+        // Reset the filter before continuing.
+        {
+            trigger: "#chatterRoot:shadow .o_website_rating_selection_reset",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Chatter .o-mail-Message:count(2)",
+        },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-body:contains(Admin edited this review.)",
             run: "hover && click #chatterRoot:shadow .o-mail-Message:contains(Admin edited this review.) [title='Expand']",
