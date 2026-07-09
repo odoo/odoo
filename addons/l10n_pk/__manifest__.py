@@ -24,6 +24,9 @@ Activates:
         'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
+    'data': [
+        'views/account_tax_views.xml',
+    ],
     'demo': [
         'demo/res_partner_demo.xml',
         'demo/demo_company.xml',
