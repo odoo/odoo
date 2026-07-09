@@ -1,3 +1,4 @@
+import { Component, xml } from "@odoo/owl";
 import { expect, test } from "@odoo/hoot";
 import {
     contains,
@@ -9,6 +10,7 @@ import {
     mountView,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -58,6 +60,34 @@ test("Show copy button even on empty field", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 2 });
 
     expect(".o_field_CopyClipboardChar[name='char_field'] .o_clipboard_button").toHaveCount(1);
+});
+
+test("does not crash when the field is locally updated to false", async () => {
+    class ClearButton extends Component {
+        static template = xml`<button class="o_test_clear_button" t-on-click="onClick">Clear</button>`;
+        static props = ["*"];
+        onClick() {
+            this.props.record.update({ [this.props.name]: false });
+        }
+    }
+    registry.category("fields").add("clear_button", { component: ClearButton });
+
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+            <form>
+                <group>
+                    <field name="char_field" widget="CopyClipboardChar"/>
+                    <field name="char_field" widget="clear_button"/>
+                </group>
+            </form>`,
+    });
+
+    expect(".o_field_CopyClipboardChar[name='char_field'] input").toHaveValue("char value");
+    await contains(".o_test_clear_button").click();
+    expect(".o_field_CopyClipboardChar[name='char_field'] input").toHaveValue("");
 });
 
 test("Show copy button even on readonly empty field", async () => {
