@@ -47,10 +47,16 @@ class PeppolIAPConnector:
             raise UserError(self.env._("Odoo Peppol Proxy returned an invalid response."))
         return response_vals
 
-    def can_connect(self, *, peppol_identifier, db_uuid, callback_url, connect_token):
+    def can_connect(self, *, peppol_identifier, db_uuid, callback_url, connect_token, contact_email=None, webhook_url=None):
         assert self.proxy_mode != 'demo'
-        params = {'dbuuid': db_uuid, 'peppol_identifier': peppol_identifier, 'callback_url': callback_url, 'connect_token': connect_token}
-        return self.request_public_http('GET', '/api/peppol/2/can_connect', params=params)
+        return self.request_public_http('GET', '/api/peppol/2/can_connect', params={
+            'dbuuid': db_uuid,
+            'peppol_identifier': peppol_identifier,
+            'callback_url': callback_url,
+            'connect_token': connect_token,
+            'contact_email': contact_email,
+            'webhook_url': webhook_url,
+        })
 
     def create_connection(self, *, peppol_identifier, db_uuid, public_key, auth_token=None, **company_details):
         assert self.proxy_mode != 'demo'
