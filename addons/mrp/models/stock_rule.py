@@ -124,9 +124,7 @@ class StockRule(models.Model):
             # Otherwise, fallback to SUPERUSER_ID (e.g., MO generated from sales orders).
             user_id = (self.env.context.get('manual_replenishment') and self.env.uid) or SUPERUSER_ID
             productions = self.env['mrp.production'].with_user(user_id).sudo().with_company(company_id).create(productions_vals_list)
-            for mo in productions:
-                if self._should_auto_confirm_procurement_mo(mo):
-                    mo.action_confirm()
+            productions.filtered(self._should_auto_confirm_procurement_mo).action_confirm()
             productions._post_run_manufacture(new_productions_values_by_company[company_id]['procurements'])
         return True
 
