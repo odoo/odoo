@@ -3,13 +3,15 @@
 import logging
 import re
 
+from lxml import html as lxml_html
+from lxml.etree import ParserError as LxmlParserError
+from odoo.addons.website.tools import text_from_html
 from werkzeug.urls import url_join
 
-from odoo import api, fields, models, _
-from odoo.addons.website.tools import text_from_html
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
-from odoo.exceptions import AccessError
 from odoo.tools import escape_psql
 from odoo.tools.json import scriptsafe as json_safe
 
@@ -385,3 +387,33 @@ class WebsiteSearchableMixin(models.AbstractModel):
                         text = text_from_html(data[html_field], True)
                         data[html_field] = text
         return results_data
+
+
+class WebsiteUserGeneratedContentMixin(models.AbstractModel):
+    """
+    Mixin for models that render user-generated HTML.
+    """
+
+    _name = "website.ugc.mixin"
+    _description = "User Generated Content Mixin"
+
+    def _add_rel_to_links(self, html, rel_attributes):
+        """
+        Add elements to link attributes (eg. nofollow, noopener)
+
+        :param html: HTML content to process
+        :param rel_attributes: rel attributes to add
+        """
+        if not html:
+            return html
+        try:
+            tree = lxml_html.fragment_fromstring(str(html), create_parent=True)
+            for link in tree.iter("a"):
+                rels = set(link.get("rel", "").split())
+                rels.update(rel_attributes)
+                link.set("rel", " ".join(rels))
+            return "".join(
+                str(lxml_html.tostring(child, encoding="unicode")) for child in tree
+            )
+        except LxmlParserError:
+            return html

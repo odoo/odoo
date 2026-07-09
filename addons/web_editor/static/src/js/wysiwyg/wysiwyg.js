@@ -449,7 +449,7 @@ export class Wysiwyg extends Component {
             },
             getReadOnlyAreas: this.options.getReadOnlyAreas,
             getUnremovableElements: this.options.getUnremovableElements,
-            defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
+            defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc nofollow' } : {},
             allowCommandVideo: this.options.allowCommandVideo,
             disableTransform: this.options.disableTransform,
             allowInlineAtRoot: this.options.allowInlineAtRoot,
@@ -1555,7 +1555,7 @@ export class Wysiwyg extends Component {
                     }
                     getDeepRange(this.$editable[0], {range: data.range, select: true});
                     if (this.options.userGeneratedContent) {
-                        data.rel = 'ugc';
+                        data.rel = 'ugc nofollow';
                     }
                     data.linkDialog.applyLinkToDom(data);
                     this.odooEditor.historyUnpauseSteps();

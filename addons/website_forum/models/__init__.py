@@ -8,5 +8,6 @@ from . import forum_tag
 from . import gamification_challenge
 from . import gamification_karma_tracking
 from . import ir_attachment
+from . import mail_message
 from . import res_users
 from . import website

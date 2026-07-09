@@ -432,7 +432,7 @@ class Post(models.Model):
                 escaped_match = re.escape(match)  # replace parenthesis or special char in regex
                 url_match = re.match(r'^.*href="(.*)".*', match) # extracting the link allows to rebuild a clean link tag
                 url = url_match.group(1)
-                content = re.sub(escaped_match, f'<a rel="nofollow" href="{url}">', content)
+                content = re.sub(escaped_match, f'<a rel="nofollow ugc" href="{url}">', content)
 
         if self.env.user.karma < forum.karma_editor:
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'

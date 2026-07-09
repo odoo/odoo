@@ -563,7 +563,7 @@
                             Author
                         </span>
                     </header>
-                    <div t-field="message.body" class="o_wforum_readable oe_no_empty small text-break"/>
+                    <div t-out="message._add_rel_to_links(message.body, ['ugc', 'nofollow'])" class="o_wforum_readable oe_no_empty small text-break"/>
                 </div>
                 <div t-if="can_interact_with_post" class="dropdown ms-auto">
                     <a class="btn text-muted" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
