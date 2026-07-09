@@ -128,6 +128,7 @@
             <div
                 class="row o_portal_sale_sidebar"
                 t-att-data-order-amount-total="sale_order.amount_total"
+                t-att-data-is-partially-paid="'true' if sale_order._is_partially_paid() else 'false'"
             >
                 <t t-set="sidebar_invoices"
                     t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)"/>
@@ -174,7 +175,7 @@
                         class="alert alert-success mt-3"
                         role="alert"
                     >
-                        Amount paid:
+                        Paid:
                     <span
                             t-field="sale_order.amount_paid"
                             t-options="{
@@ -530,11 +531,6 @@
                 <t
                     t-set="prepayment_amount"
                     t-value="sale_order._get_prepayment_required_amount()"
-                />
-                <t
-                    t-set="prepayment_available"
-                    t-value="sale_order.prepayment_percent
-                             and sale_order.prepayment_percent != 1.0"
                 />
                 <t t-set="full_prepayment" t-value="amount == prepayment_amount"/>
                 <t

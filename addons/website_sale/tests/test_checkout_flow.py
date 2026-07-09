@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import patch, tagged
 from odoo.tests.common import HttpCase
@@ -15,13 +16,13 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 @tagged("post_install", "-at_install")
 class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
-        'website.group_website_designer',  # website config (account_on_checkout, ...)
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
+        "website.group_website_designer",  # website config (account_on_checkout, ...)
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -254,3 +255,48 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
 
         self.assertEqual(response["redirect"], "/shop/payment")
         self.assertIn("Prices have changed.", response["state_message"])
+
+    def test_add_to_cart_blocked_when_partially_paid(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.cart.amount_total / 2,
+            sale_order_ids=[self.cart.id],
+            state="done",
+        )
+        with self.mock_request(sale_order_id=self.cart.id), self.assertRaises(UserError):
+            self.CartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id.id,
+                product_id=self.product.id,
+                quantity=1,
+            )
+
+    def test_update_cart_blocked_when_partially_paid(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.cart.amount_total / 2,
+            sale_order_ids=[self.cart.id],
+            state="done",
+        )
+        with self.mock_request(sale_order_id=self.cart.id), self.assertRaises(UserError):
+            self.CartController.update_cart(line_id=self.cart.order_line[0].id, quantity=1)
+
+    def test_user_is_redirected_to_payment_page_when_partially_paid(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.cart.amount_total / 2,
+            sale_order_ids=[self.cart.id],
+            state="done",
+        )
+        with self.mock_request(path="/shop/payment/validate", sale_order_id=self.cart.id):
+            response = self.CheckoutController.shop_payment_validate()
+        self.assert_redirected_to(response, "/shop/payment")
+
+    def test_skip_cart_reset_when_partially_paid(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.cart.amount_total / 2,
+            sale_order_ids=[self.cart.id],
+            state="done",
+        )
+        with self.mock_request(sale_order_id=self.cart.id) as request:
+            self.assertEqual(request.cart, self.cart)
