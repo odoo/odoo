@@ -269,10 +269,10 @@ describe("Popup visibility", () => {
             enableIframeTransitions: true,
         });
 
-        await contains(".o_we_invisible_entry i.fa-eye").click();
-        await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+        await contains(".o_we_invisible_entry i[data-icon='visibility']").click();
+        await contains(".o_we_invisible_entry i[data-icon='visibility_off']").click();
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
-            contains(".o_we_invisible_entry i.fa-eye").click()
+            contains(".o_we_invisible_entry i[data-icon='visibility']").click()
         );
         expect(":iframe body").not.toHaveClass("modal-open");
         expect(".o_we_invisible_entry i").toHaveClass("fa-eye-slash");
@@ -281,12 +281,12 @@ describe("Popup visibility", () => {
         expect(":iframe .s_popup > .modal").toHaveStyle("display: none");
         expect(":iframe .s_popup > .modal").not.toHaveClass("show");
 
-        await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+        await contains(".o_we_invisible_entry i[data-icon='visibility_off']").click();
         await waitFor(":iframe .s_popup:not(.d-none)");
 
-        await contains(".o_we_invisible_entry i.fa-eye").click();
+        await contains(".o_we_invisible_entry i[data-icon='visibility']").click();
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
-            contains(".o_we_invisible_entry i.fa-eye-slash").click()
+            contains(".o_we_invisible_entry i[data-icon='visibility_off']").click()
         );
         // Wait for everything to settle, without the delay, we may not catch a
         // potential inconsistency.

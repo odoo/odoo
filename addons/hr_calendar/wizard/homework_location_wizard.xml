@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Location">
                 <group col="12" class="mb-2 d-flex">
-                    <i class="fa fa-clock-o ms-1" title="Date"/>
+                    <i class="oi ms-1" data-icon="schedule" title="Date"/>
                     <field name="date" nolabel="1" class="oe_inline o_input_5ch" default_focus="0"/>
                     <field name="weekly" class="oe_inline" nolabel="1" default_focus="1"/>
                     <span class="w-100">
@@ -15,7 +15,7 @@
                 </group>
                 <group>
                     <div class="o_row">
-                        <i class="fa fa-map-marker mx-2 pt-2" title="Location"/>
+                        <i class="oi mx-2 pt-2" data-icon="location_on" title="Location"/>
                         <field name="work_location_id"
                                class="mb-n3"
                                nolabel="1"

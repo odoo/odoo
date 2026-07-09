@@ -22,7 +22,7 @@
                 <span t-if="this.props.requires_allocation and data.closest_allocation_expire !== false"
                     t-att-class="'o_timeoff_validity' + (this.warning() ? ' text-warning' : '')">
                     Validity <t t-out="data.closest_allocation_expire"/>
-                    <i t-if="this.warning()" class="fa fa-exclamation-triangle ms-1"/>
+                    <i t-if="this.warning()" class="oi ms-1" data-icon="warning"/>
                 </span>
                 <span t-else="" class="o_timeoff_validity">
                     <t t-if="this.props.requires_allocation" name="duration_type">Available</t>
@@ -90,7 +90,7 @@
             </span>
             <span class="d-inline-block m-0 mb-3"
                 t-if="this.props.closest &amp;&amp; this.props.closest &lt; this.props.left">
-                <i class="fa fa-warning"/> Only <t t-out="this.props.closest"/>
+                <i class="oi" data-icon="warning"/> Only <t t-out="this.props.closest"/>
                 <t t-if="this.props.unit_of_measure == 'hour'"> hours</t>
                 <t t-else=""> days</t>
                 can be used before the allocation expires.

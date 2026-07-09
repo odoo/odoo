@@ -10,10 +10,10 @@
                 role="status"
             >
                 <t t-if="this.spinner()">
-                    <i class="fa fa-spin fa-circle-o-notch" title="Loading..." aria-hidden="true"/>
+                    <i class="oi oi-spin" data-icon="autorenew" title="Loading..." aria-hidden="true"/>
                     <p class="visually-hidden">Search is loading...</p>
                 </t>
-                <i t-else="" class="oi oi-search" aria-hidden="true"/>
+                <i t-else="" class="oi" data-icon="search" aria-hidden="true"/>
             </label>
             <input
                 t-att-id="`${this.uniqueId}-input`"
@@ -37,7 +37,7 @@
                 aria-label="Clear"
                 title="Clear"
             >
-                <i class="fa fa-times-circle" aria-hidden="true"/>
+                <i class="oi oi-filled" data-icon="cancel" aria-hidden="true"/>
             </button>
         </div>
     </t>

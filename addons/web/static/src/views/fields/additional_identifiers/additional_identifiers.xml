@@ -5,7 +5,7 @@
         <div class="ms-2 d-inline-block">
              <Dropdown t-if="this.identifiersInDropdown.length > 0">
                 <button class="btn btn-link p-0" type="button">
-                    <i class="fa fa-plus me-1"/>
+                    <i class="oi me-1" data-icon="add"/>
                 </button>
                 <t t-set-slot="content">
                     <DropdownItem t-foreach="this.identifiersInDropdown" t-as="identifier" t-key="identifier.identifierType"

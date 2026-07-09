@@ -54,7 +54,7 @@ export class IconPlugin extends Plugin {
             {
                 id: "toggleSpinIcon",
                 description: _t("Toggle icon spin"),
-                icon: "fa-play",
+                icon: "play_arrow",
                 run: this.toggleSpinIcon.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -127,7 +127,7 @@ export class IconPlugin extends Plugin {
                 id: "icon_replace",
                 groupId: "icon_replace",
                 commandId: "replaceIcon",
-                icon: "fa-file-image-o",
+                icon: "image",
             },
         ],
         click_overrides: this.onClickIcon.bind(this),

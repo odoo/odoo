@@ -96,7 +96,7 @@
                         role="button"
                         t-attf-class="btn btn-secondary btn-back btn-lg {{this.ui.isSmall ? 'opacity-75' : ''}}"
                         t-on-click="() => this.onClickBack()">
-                        <i t-if="this.ui.isSmall" class="oi oi-chevron-left"/>
+                        <i t-if="this.ui.isSmall" class="oi" data-icon="chevron_backward"/>
                         <span t-if="!this.ui.isSmall">Back</span>
                     </button>
                 </t>

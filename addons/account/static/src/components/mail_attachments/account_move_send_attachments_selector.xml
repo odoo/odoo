@@ -7,7 +7,7 @@
             </t>
             <Dropdown menuClass="'account-move-send-attachments-selector-dropdown d-flex flex-column'" disabled="this.dropdownAttachments.length == 0">
                 <button class="btn btn-light w-auto" data-hotkey="a" title="Add Attachment" t-on-click="() => this.triggerFileUpload(this.dropdownAttachments.length == 0)">
-                    <i class="fa fa-fw fa-paperclip"/>
+                    <i class="oi oi-fw" data-icon="attach_file"/>
                 </button>
                 <t t-set-slot="content">
                     <div class="overflow-y-auto">

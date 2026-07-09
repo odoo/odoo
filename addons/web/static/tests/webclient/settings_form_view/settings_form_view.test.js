@@ -111,7 +111,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
                     <block title="Title of group Bar">
                         <setting help="this is bar" info="this is bar info" documentation="/applications/technical/web/settings/this_is_a_test.html">
                             <field name="bar"/>
-                            <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
+                            <button name="buttonName" icon="east" type="action" string="Manage Users" class="btn-link"/>
                         </setting>
                         <setting>
                             <label string="Big BAZ" for="baz"/>
@@ -286,7 +286,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
                     <block title="Title of group Bar">
                         <setting help="this is bar" info="this is bar info" documentation="/applications/technical/web/settings/this_is_a_test.html">
                             <field name="bar"/>
-                            <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
+                            <button name="buttonName" icon="east" type="action" string="Manage Users" class="btn-link"/>
                         </setting>
                         <setting>
                             <label string="Big BAZ" for="baz"/>
@@ -2027,7 +2027,7 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
             </form>
         `,
     });
-    expect('.o_field_widget[name="file"] .fa-download').toHaveCount(1, {
+    expect('.o_field_widget[name="file"] [data-icon="download"]').toHaveCount(1, {
         message: "Download button should be display in settings form view",
     });
     expect('.o_field_widget[name="file"].o_field_binary .o_input').toHaveValue("coucou.txt", {
@@ -2050,7 +2050,7 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
         }
     };
     after(on(document, "click", onDownloadClick));
-    await click(".fa-download");
+    await click("[data-icon='download']");
     await def.promise;
 
     await click(".o_field_binary .o_clear_file_button");
@@ -2272,7 +2272,7 @@ test("settings search is accent-insensitive", async () => {
                     <block title="Title of group Bâr">
                         <setting help="this is bàr" documentation="/applications/technical/web/settings/this_is_a_test.html">
                             <field name="bar"/>
-                            <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
+                            <button name="buttonName" icon="east" type="action" string="Manage Users" class="btn-link"/>
                         </setting>
                         <setting string="Big BÄZ" help="this is a báz">
                             <field name="baz"/>

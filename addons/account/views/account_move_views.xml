@@ -879,7 +879,7 @@
                                 type="object"
                                 class="btn btn-link text-danger ms-auto d-flex align-items-center gap-1"
                                 invisible="not has_draft_move_duplicate">
-                            <i class="fa fa-trash text-danger"/>
+                            <i class="oi oi-filled text-danger" data-icon="delete"/>
                             <span class="text-danger" invisible="duplicated_ref_ids.length == 1">Delete all duplicates</span>
                             <span class="text-danger" invisible="duplicated_ref_ids.length &gt; 1">Delete duplicate</span>
                         </button>
@@ -989,7 +989,7 @@
                                     groups="account.group_account_invoice,account.group_account_readonly"
                                     invisible="move_type == 'entry'"
                                     class="oe_stat_button"
-                                    icon="fa-bars"
+                                    icon="menu"
                                     type="object">
                                     <div class="o_stat_info">
                                         <span class="o_stat_text">Journal Items</span>
@@ -997,7 +997,7 @@
                             </button>
                             <button name="action_open_reversal_moves"
                                     class="oe_stat_button"
-                                    icon="fa-pencil-square-o"
+                                    icon="edit_square"
                                     type="object"
                                     invisible="reversal_move_count == 0">
                                 <field name="reversal_move_count" string="Credit Notes" widget="statinfo" invisible="move_type != 'out_invoice'"/>
@@ -1005,7 +1005,7 @@
                             </button>
                             <button name="action_open_reversed_entry"
                                     class="oe_stat_button"
-                                    icon="fa-pencil-square-o"
+                                    icon="edit_square"
                                     type="object"
                                     invisible="not reversed_entry_id">
                                 <span class="o_stat_text" invisible="move_type != 'out_refund'">Invoice</span>

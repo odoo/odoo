@@ -9,7 +9,7 @@
                     <t t-if="line.product_id == down_payment_product">
                         <t t-set="sale_orders" t-value="pos_orders[0].lines.filtered(lambda l: l.product_id == down_payment_product and l.price_subtotal_incl == line.price_total).mapped('sale_order_origin_id')"/>
                         <t t-if="sale_orders">
-                            <div style="font-weight: bold"><i class="fa fa-shopping-basket me-1"/> <t t-out="sale_orders[0].name"/> </div>
+                            <div style="font-weight: bold"><i class="oi me-1" data-icon="shopping_basket"/> <t t-out="sale_orders[0].name"/> </div>
                         </t>
                     </t>
                 </div>

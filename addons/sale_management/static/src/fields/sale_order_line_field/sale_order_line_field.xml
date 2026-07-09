@@ -20,7 +20,7 @@
                     'title': this.env.getSaveAsTemplateButtonTooltip(record),
                 }"
             >
-                <i class="me-1 fa fa-fw fa-save"/>
+                <i class="oi oi-fw me-1" data-icon="save"/>
                 <span>Save as Template</span>
             </DropdownItem>
         </t>
@@ -84,7 +84,7 @@
                                     title="Delete"
                                     t-on-click.stop.prevent="() => this.env.onDeleteSectionTemplate(sectionTemplate.id)"
                                 >
-                                    <i class="fa fa-trash"/>
+                                    <i class="oi oi-filled" data-icon="delete"/>
                                 </a>
                             </div>
                         </DropdownItem>

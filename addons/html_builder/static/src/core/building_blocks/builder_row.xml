@@ -22,7 +22,7 @@
                 t-att-aria-expanded="this.state.expanded ? 'true' : 'false'"
                 t-att-aria-controls="this.collapseContentId">
                 <i
-                    class="fa fa-caret-right"
+                    class="oi" data-icon="arrow_right"
                     role="img"
                 />
             </button>
@@ -39,7 +39,7 @@
                         <span class="text-nowrap text-truncate" t-out="this.props.label" t-custom-ref="label"/>
                         <i
                             t-if="this.props.tooltip"
-                            class="fa fa-question icon-sup"
+                            class="oi icon-sup" data-icon="question_mark"
                             t-att-class="this.env.langDir.builder === 'rtl' ? 'fa-flip-horizontal' : ''"
                         />
                     </div>

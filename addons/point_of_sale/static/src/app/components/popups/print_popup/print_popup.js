@@ -49,7 +49,7 @@ export class PrintPopup extends Component {
                 label: _t("Simplified Receipt"),
                 method: () => this.doSimplifiedPrint.call(),
                 status: this.doSimplifiedPrint.status,
-                icon: "fa-file-text-o",
+                icon: "article",
                 isPrimary: false,
             },
         ];

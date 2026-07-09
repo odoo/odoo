@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: "button.oe_stat_button:has(i.fa-pencil)",
+    trigger: "button.oe_stat_button:has(i[data-icon='edit'])",
     run: "click",
 }, {
     trigger: ".o_copy_paste_email",

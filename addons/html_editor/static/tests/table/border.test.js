@@ -10,7 +10,7 @@ test("should apply border color", async () => {
         </tr></tbody></table>`
     );
     await expandToolbar();
-    await contains(".btn:has(.fa-pencil)").click();
+    await contains(".btn:has([data-icon='edit'])").click();
     await contains("[data-color='#F7C6CE']").click();
     expect("td").toHaveStyle({ "border-color": "rgb(247, 198, 206)" }, { inline: true });
 });
@@ -45,8 +45,8 @@ test("should remove only border color on color delete", async () => {
             <td class="o_selected_td" style="border-color: #FF9C00; border-width: 1px; border-style: solid;">11[]</td>
         </tr></tbody></table>`);
     await expandToolbar();
-    await contains(".btn:has(.fa-pencil)").click();
-    await contains(".o_font_color_selector .fa-trash").click();
+    await contains(".btn:has([data-icon='edit'])").click();
+    await contains(".o_font_color_selector [data-icon='delete']").click();
     expect("td").not.toHaveStyle("border-color", { inline: true });
     expect("td").toHaveStyle(
         {

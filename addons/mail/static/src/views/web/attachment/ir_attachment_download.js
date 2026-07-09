@@ -46,7 +46,7 @@ export const IrAttachmentDownload = (component) =>
                 downloadAttachments: {
                     callback: () => this.onDownload(),
                     description: _t("Download"),
-                    icon: "fa fa-download",
+                    icon: "download",
                     isAvailable: () =>
                         this.model.root.selection.some((a) => a.data.type === "binary"),
                     sequence: 15,

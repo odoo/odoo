@@ -209,7 +209,7 @@
                                             </div>
                                             <div class="col-1">
                                                 <button t-if="record.attachment_is_visible and record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link text-nowrap">
-                                                    <i class="fa fa-paperclip" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
+                                                    <i class="oi" data-icon="attach_file" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
                                                 </button>
                                             </div>
                                             <div class="o_hr_holidays_button col-2 d-flex justify-content-start gap-2">
@@ -286,7 +286,7 @@
                                 </span>
                             </main>
                             <button t-if="record.attachment_is_visible and record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link me-4 text-nowrap">
-                                <i class="fa fa-paperclip" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
+                                <i class="oi" data-icon="attach_file" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
                             </button>
                             <div class="o_hr_holidays_button d-grid align-self-start pt-1">
                                 <span

@@ -274,5 +274,5 @@ test("action buttons are form-only: a list cell shows the number with no buttons
     expect("tbody td:not(.o_list_record_selector) span:first-child:eq(0)").toHaveText("yop");
     // ...but no Call/SMS/WhatsApp button and no overflow dropdown (form-only).
     expect(".o_field_widget .o_phone_form_link").toHaveCount(0);
-    expect(".o_field_widget .fa-ellipsis-v").toHaveCount(0);
+    expect(".o_field_widget [data-icon='more_vert']").toHaveCount(0);
 });

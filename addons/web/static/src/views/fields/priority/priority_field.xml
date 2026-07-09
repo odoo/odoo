@@ -7,9 +7,9 @@
                 <t t-if="!value_first">
                     <t t-if="this.props.readonly">
                         <span
-                            class="o_priority_star fa"
+                            class="oi o_priority_star"
                             role="radio"
-                            t-att-class="value_index lte this.index ? 'fa-star' : 'fa-star-o'"
+                            t-att-data-icon="value_index lte this.index ? 'star' : 'star'"
                             tabindex="0"
                             t-att-data-tooltip="this.getTooltip(value[0],value[1])"
                             t-att-aria-checked="value_index === this.index ? 'true' : 'false'"
@@ -18,9 +18,9 @@
                     </t>
                     <t t-else="">
                         <button
-                            class="o_priority_star btn btn-link btn-link-inline fa p-0"
+                            class="oi o_priority_star btn btn-link btn-link-inline p-0"
                             role="radio"
-                            t-att-class="value_index lte this.index ? 'fa-star' : 'fa-star-o opacity-25 opacity-100-hover'"
+                            t-att-data-icon="value_index lte this.index ? 'star' : 'star'"
                             tabindex="0"
                             t-att-data-tooltip="this.getTooltip(value[0], value[1])"
                             t-att-aria-checked="value_index === this.index ? 'true' : 'false'"

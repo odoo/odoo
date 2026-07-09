@@ -60,7 +60,7 @@
                 <div class="container text-center">
                     <!-- Payment not found -->
                     <div t-if="payment_not_found">
-                        <i class="fa fa-paper-plane-o fa-5x mb-4 text-primary"/>
+                        <i class="oi oi-5x mb-4 text-primary" data-icon="send"/>
                         <h3 class="display-3">Your payment is on its way!</h3>
                         <p class="fs-5">
                             You should receive an email confirming your payment within a few minutes.<br />
@@ -79,7 +79,7 @@
                         <h3 class="display-3">Almost there!</h3>
                         <p class="fs-5">We're confirming your payment.</p>
                         <a t-att-href="tx.landing_route" role="button" class="btn btn-link link-primary skip-link">
-                            Skip <i class="fa fa-long-arrow-right ms-1"/>
+                            Skip <i class="oi ms-1" data-icon="east"/>
                         </a>
                     </div>
                 </div>

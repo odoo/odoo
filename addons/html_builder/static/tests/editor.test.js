@@ -175,7 +175,7 @@ test("Reset transform button should appear after transforming image", async () =
     await animationFrame();
     await click("[data-action-id=transformImage]");
     await expectElementCount(".transfo-container", 1);
-    const rotateBtn = queryOne(".transfo-controls .fa-repeat");
+    const rotateBtn = queryOne(".transfo-controls [data-icon='redo']");
     const btnRect = rotateBtn.getBoundingClientRect(rotateBtn);
     await manuallyDispatchProgrammaticEvent(rotateBtn, "mousedown", {
         clientX: btnRect.left + 5,
@@ -192,7 +192,7 @@ test("Reset transform button should appear after transforming image", async () =
     expect(img.style.transform).not.toEqual("");
     await expectElementCount("[data-action-id=resetTransformImage]", 1);
     await animationFrame();
-    await click("button.fa-undo");
+    await click("button[data-icon='undo']");
     expect(img.style.transform).toEqual("");
 });
 
@@ -233,7 +233,7 @@ describe("toolbar dropdowns", () => {
     test("text alignment dropdown should close on click", async () => {
         const { p } = await setup();
         click(".o-we-toolbar .btn[name='text_align']");
-        const alignCenterButtonSelector = ".dropdown-menu button.fa-align-center";
+        const alignCenterButtonSelector = ".dropdown-menu button[data-icon='format_align_center']";
         await focusAndClick(alignCenterButtonSelector);
         await animationFrame();
         expectElementCount(alignCenterButtonSelector, 0);

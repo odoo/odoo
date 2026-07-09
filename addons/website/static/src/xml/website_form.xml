@@ -4,21 +4,21 @@
     <!-- Success status -->
     <t t-name="website.s_website_form_status_success">
         <span id="s_website_form_result" class="me-2 small text-success">
-            <i class="fa fa-paper-plane me-1" role="img" aria-hidden="true" title="Success"/>The form has been sent successfully.
+            <i class="oi oi-filled me-1" data-icon="send" role="img" aria-hidden="true" title="Success"/>The form has been sent successfully.
         </span>
     </t>
 
     <!-- Error status -->
     <t t-name="website.s_website_form_status_error">
         <span id="s_website_form_result" class="me-2 small text-danger">
-            <i class="fa fa-close me-1" role="img" aria-hidden="true" title="Error"/>
+            <i class="oi me-1" data-icon="close" role="img" aria-hidden="true" title="Error"/>
             <t t-out="message"/>
         </span>
     </t>
 
     <t t-name="website.s_website_form_status_custom_error">
         <span class="s_website_form_custom_error me-2 small text-danger">
-            <i class="fa fa-close me-1" role="presentation"/>
+            <i class="oi me-1" data-icon="close" role="presentation"/>
             <t t-out="message"/>
         </span>
     </t>
@@ -28,7 +28,7 @@
         <div class="o_file_block col-4">
             <div class="o_file_wrap mb-1 px-2 py-1">
                 <div class="o_file_name d-inline-block w-75 pt-1" t-att-title="this.fileName" t-out="this.fileName"/>
-                <i class="o_file_delete fa fa-times mt-1 float-end"/>
+                <i class="oi o_file_delete mt-1 float-end" data-icon="close"/>
             </div>
         </div>
     </t>

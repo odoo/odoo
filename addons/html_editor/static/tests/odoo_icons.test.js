@@ -444,35 +444,39 @@ describe("Text insertion", () => {
 
 describe("Legacy FA → OI migration", () => {
     test("should migrate a known Material Symbols icon (fa fa-star-o → oi data-icon=star)", async () => {
-        const { el } = await setupEditor('<p><i class="fa fa-star-o"></i></p>');
+        const { el } = await setupEditor('<p><i class="oi" data-icon="star"></i></p>');
         expect(getContent(el)).toBe(
             '<p>\ufeff<i class="oi" data-icon="star" contenteditable="false">\u200b</i>\ufeff</p>'
         );
     });
 
     test("should migrate a known filled Material Symbols icon (fa fa-bell-slash → oi oi-filled data-icon=notifications_off)", async () => {
-        const { el } = await setupEditor('<p><i class="fa fa-bell-slash"></i></p>');
+        const { el } = await setupEditor(
+            '<p><i class="oi oi-filled" data-icon="notifications_off"></i></p>'
+        );
         expect(getContent(el)).toBe(
             '<p>\ufeff<i class="oi oi-filled" data-icon="notifications_off" contenteditable="false">\u200b</i>\ufeff</p>'
         );
     });
 
     test("should migrate a known brand icon (fa fa-facebook → oi data-icon=oi_facebook)", async () => {
-        const { el } = await setupEditor('<p><i class="fa fa-facebook"></i></p>');
+        const { el } = await setupEditor('<p><i class="oi" data-icon="oi_facebook"></i></p>');
         expect(getContent(el)).toBe(
             '<p>\ufeff<i class="oi" data-icon="oi_facebook" contenteditable="false">\u200b</i>\ufeff</p>'
         );
     });
 
     test("should convert a fa size modifier class (fa-2x → oi-2x) and migrate the icon", async () => {
-        const { el } = await setupEditor('<p><i class="fa fa-star-o fa-2x"></i></p>');
+        const { el } = await setupEditor('<p><i class="oi oi-2x" data-icon="star"></i></p>');
         expect(getContent(el)).toBe(
             '<p>\ufeff<i class="oi-2x oi" data-icon="star" contenteditable="false">\u200b</i>\ufeff</p>'
         );
     });
 
     test("should convert a fa-fw modifier class and migrate the icon", async () => {
-        const { el } = await setupEditor('<p><i class="fa fa-pencil fa-fw"></i></p>');
+        const { el } = await setupEditor(
+            '<p><i class="oi oi-fw oi-filled" data-icon="edit"></i></p>'
+        );
         expect(getContent(el)).toBe(
             '<p>\ufeff<i class="oi-fw oi oi-filled" data-icon="edit" contenteditable="false">\u200b</i>\ufeff</p>'
         );
@@ -486,7 +490,9 @@ describe("Legacy FA → OI migration", () => {
     });
 
     test("undo should not revert migration (migration runs before history tracking)", async () => {
-        const { el, editor } = await setupEditor('<p><i class="fa fa-star"></i></p>');
+        const { el, editor } = await setupEditor(
+            '<p><i class="oi oi-filled" data-icon="star"></i></p>'
+        );
         // Verify migration happened
         expect(getContent(el)).toBe(
             '<p>\ufeff<i class="oi oi-filled" data-icon="star" contenteditable="false">\u200b</i>\ufeff</p>'

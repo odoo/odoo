@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProgressBar">
         <t t-if="this.props.addressNeeded">
-            <div class="text-center pb-2"><i class="fa fa-motorcycle fa-lg"/></div>
+            <div class="text-center pb-2"><i class="oi oi-lg" data-icon="two_wheeler"/></div>
         </t>
         <t t-else="">
-            <div class="text-center pb-2"><i class="fa fa-shopping-bag fa-lg"/></div>
+            <div class="text-center pb-2"><i class="oi oi-lg" data-icon="shopping_bag"/></div>
         </t>
         <div class="progress pos-progress-bar">
             <div class="progress-bar" t-att-style="'width: ' + this.barWidth + '%'"/>

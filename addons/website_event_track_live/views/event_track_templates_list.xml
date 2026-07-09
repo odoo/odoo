@@ -11,7 +11,7 @@
     <!-- ADD YOUTUBE ICON -->
     <xpath expr="//div[hasclass('col-12')]//span[@t-field='track.name']" position="before">
         <i t-if="track.date and track.youtube_video_url and (track.is_track_soon or track.is_track_live or track.is_youtube_replay)"
-            class="fa fa-youtube-play text-danger me-1"/>
+            class="oi text-danger me-1" data-icon="oi_youtube-play"/>
     </xpath>
 </template>
 

@@ -202,7 +202,7 @@ test("Undoing an action that deactivates target followed by another action does 
     expect(".options-container").toHaveCount(0);
     expect("button[data-name='blocks']").toHaveClass("active");
 
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
 
     await contains("[data-action-id='otherAction']").click();

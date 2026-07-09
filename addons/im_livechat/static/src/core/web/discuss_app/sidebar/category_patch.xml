@@ -3,7 +3,7 @@
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
         <xpath expr="//*[@name='threadAvatar']" position="before">
             <i t-if="this.store.discuss.isSidebarCompact and this.channel().discussAppCategory.eq(this.store.discuss.livechatLookingForHelpCategory) and this.channel().matchesSelfExpertise"
-               class="fa fa-star o-mail-favorite position-absolute top-0 start-0 z-1"
+               class="oi oi-filled o-mail-favorite position-absolute top-0 start-0 z-1" data-icon="star"
                role="image"
                title="Relevant to your expertise"
             />

@@ -2065,7 +2065,7 @@ tests = [
                             </small>
                             <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': (env.inChatWindow and isAlignedRight) or (isPersistentMessageFromAnotherThread) }" t-att-title="props.message.scheduledDateSimple">
                                 <span class="text-600 cursor-pointer">
-                                    <i class="fa fa-calendar-o"/>
+                                    <i class="oi" data-icon="calendar_today"/>
                                 </span>
                             </div>
                             <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
@@ -2128,7 +2128,7 @@ tests = [
                                                             <t t-if="message.translationSource" t-esc="translatedFromText"/>
                                                         </p>
                                                         <p class="fst-italic text-muted small" t-if="message.translationErrors">
-                                                            <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
+                                                            <i class="oi text-danger" data-icon="warning" role="img" aria-label="Translation Failure"/>
                                                             <t t-if="message.translationErrors" t-esc="translationFailureText"/>
                                                         </p>
                                                         <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_id?.description) ?? message.subtype_id?.description"/>
@@ -2217,7 +2217,7 @@ tests = [
                             </small>
                             <div t-if="this.props.message.scheduledDatetime" t-att-class="{ 'ms-2': (this.env.inChatWindow and this.isAlignedRight) or (this.isPersistentMessageFromAnotherThread) }" t-att-title="this.props.message.scheduledDateSimple">
                                 <span class="text-600 cursor-pointer">
-                                    <i class="fa fa-calendar-o"/>
+                                    <i class="oi" data-icon="calendar_today"/>
                                 </span>
                             </div>
                             <t t-if="this.isAlignedRight" t-call="mail.Message.notification"/>
@@ -2280,7 +2280,7 @@ tests = [
                                                             <t t-if="this.message.translationSource" t-esc="this.translatedFromText"/>
                                                         </p>
                                                         <p class="fst-italic text-muted small" t-if="this.message.translationErrors">
-                                                            <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
+                                                            <i class="oi text-danger" data-icon="warning" role="img" aria-label="Translation Failure"/>
                                                             <t t-if="this.message.translationErrors" t-esc="this.translationFailureText"/>
                                                         </p>
                                                         <t t-if="this.showSubtypeDescription" t-out="this.props.messageSearch?.highlight(this.message.subtype_id?.description) ?? this.message.subtype_id?.description"/>
@@ -2769,7 +2769,7 @@ test_vars = [
                             onSelected="() => this.toggleIsOptional(this.record)"
                             attrs="{ 'class': this.disableOptionalButton(this.record) ? 'disabled' : '' }"
                         >
-                            <i class="me-1 fa fa-fw fa-dot-circle-o"/>
+                            <i class="oi oi-fw me-1" data-icon="radio_button_checked"/>
                             <span t-if="record.data.is_optional">Unset Optional</span>
                             <span t-else="">Set Optional</span>
                         </DropdownItem>
@@ -2789,7 +2789,7 @@ test_vars = [
                             onSelected="() => this.toggleIsOptional(this.record)"
                             attrs="{ 'class': this.disableOptionalButton(this.record) ? 'disabled' : '' }"
                         >
-                            <i class="me-1 fa fa-fw fa-dot-circle-o"/>
+                            <i class="oi oi-fw me-1" data-icon="radio_button_checked"/>
                             <span t-if="record.data.is_optional">Unset Optional</span>
                             <span t-else="">Set Optional</span>
                         </DropdownItem>

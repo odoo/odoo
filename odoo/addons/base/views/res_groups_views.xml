@@ -116,15 +116,15 @@
                   <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button type="object" name="action_view_implied_ids"
-                            class="oe_stat_button" icon="oi-arrow-down">
+                            class="oe_stat_button" icon="south">
                             <field name="implied_count" widget="statinfo" string="Implied Groups"/>
                         </button>
                         <button type="object" name="action_view_implied_by_ids"
-                            class="oe_stat_button" icon="oi-arrow-up">
+                            class="oe_stat_button" icon="north">
                             <field name="implied_by_count" widget="statinfo" string="Implying Groups"/>
                         </button>
                         <button type="object" name="action_view_access_ids"
-                            class="oe_stat_button" icon="fa-lock">
+                            class="oe_stat_button" icon="lock">
                             <field name="access_count" widget="statinfo" string="Access Rights"/>
                         </button>
                     </div>
@@ -188,7 +188,7 @@
                                 <setting help="Sets in which scope this group appears on the users access rights page">
                                     <field name="privilege_id" placeholder="No scope"/>
                                     <div>
-                                        <button type="action" name="base.action_res_groups_privilege" string="Manage Scopes" icon="oi-arrow-right" class="oe_link"/>
+                                        <button type="action" name="base.action_res_groups_privilege" string="Manage Scopes" icon="east" class="oe_link"/>
                                     </div>
                                 </setting>
                                 <setting help="Defines the number of days the API keys will be alive for users in this group">

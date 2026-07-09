@@ -20,23 +20,23 @@
                         <div class="s_share">
                             <a class="btn border bg-white" aria-label="Share on Facebook" title="Share on Facebook"
                                t-on-click.prevent="() => this.onSocialShareClick(`https://www.facebook.com/sharer/sharer.php?u=${this.props.url}`)">
-                                <i class="fa fa-facebook-square fa-fw"/>
+                                <i class="oi oi-fw" data-icon="oi_facebook-square"/>
                             </a>
                             <a class="btn border bg-white" aria-label="Share on X" title="Share on X"
                                t-on-click.prevent="() => this.onSocialShareClick(`https://twitter.com/intent/tweet?text=${this.props.name}&amp;url=${this.props.url}`)">
-                                <i class="fa fa-twitter fa-fw"/>
+                                <i class="oi oi-fw" data-icon="oi_twitter"/>
                             </a>
                             <a class="btn border bg-white" aria-label="Share on LinkedIn" title="Share on LinkedIn"
                                t-on-click.prevent="() => this.onSocialShareClick(`http://www.linkedin.com/sharing/share-offsite/?url=${this.props.url}`)">
-                                <i class="fa fa-linkedin fa-fw"/>
+                                <i class="oi oi-fw" data-icon="oi_linkedin"/>
                             </a>
                             <a class="btn border bg-white" aria-label="Share on Whatsapp" title="Share on Whatsapp"
                                t-on-click.prevent="() => this.onSocialShareClick(`https://wa.me/?text=${window.location.href}`)">
-                                <i class="fa fa-whatsapp fa-fw"/>
+                                <i class="oi oi-fw" data-icon="oi_whatsapp"/>
                             </a>
                             <a class=" btn border bg-white" aria-label="Share on Pinterest" title="Share on Pinterest"
                                t-on-click.prevent="() => this.onSocialShareClick(`http://pinterest.com/pin/create/button/?url=${window.location.href}`)">
-                                <i class="fa fa-pinterest fa-fw"/>
+                                <i class="oi oi-fw" data-icon="oi_pinterest"/>
                             </a>
                         </div>
                     </div>

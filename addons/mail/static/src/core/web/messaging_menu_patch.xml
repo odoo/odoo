@@ -4,7 +4,7 @@
         <xpath expr="//*[@t-name='mail.MessagingMenu']" position="inside">
             <Dropdown t-if="!this.env.inDiscussApp" state="this.dropdown" beforeOpen.bind="this.beforeOpen" position="'bottom-end'" menuClass="this.discussSystray.menuClass" bottomSheet="false">
                 <button t-att-class="this.discussSystray.class">
-                    <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => this.store.discuss.activeTab = this.ui.isSmall and this.store.discuss.activeTab === 'notification' ? 'notification' : this.store.discuss.activeTab"></i>
+                    <i class="oi oi-lg oi-filled" data-icon="forum" role="img" aria-label="Messages" t-on-click="() => this.store.discuss.activeTab = this.ui.isSmall and this.store.discuss.activeTab === 'notification' ? 'notification' : this.store.discuss.activeTab"></i>
                     <span t-if="this.counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-out="this.counter"/></span>
                 </button>
                 <t t-set-slot="content">
@@ -23,8 +23,8 @@
                         <t t-call="mail.MessagingMenu.headerFilter" name="'notification'" label.translate="Notifications"/>
                         <t t-call="mail.MessagingMenu.headerFilter" name="'chat'" label.translate="Chats"/>
                         <t t-call="mail.MessagingMenu.headerFilter" name="'channel'" label.translate="Channels"/>
-                        <button t-if="(this.threads.length + this.visibleStandaloneMessages.length) >= 20 and this.store.channels.status !== 'fetching'" class="btn btn-sm btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="this.toggleSearch"><i class="fa fa-fw fa-search"/></button>
-                        <button t-if="this.store.channels.status === 'fetching'" class="btn btn-sm btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
+                        <button t-if="(this.threads.length + this.visibleStandaloneMessages.length) >= 20 and this.store.channels.status !== 'fetching'" class="btn btn-sm btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="this.toggleSearch"><i class="oi oi-fw" data-icon="search"/></button>
+                        <button t-if="this.store.channels.status === 'fetching'" class="btn btn-sm btn-light py-1 rounded-0" disabled="true" type="button"><i class="oi oi-fw oi-spin" data-icon="autorenew"/></button>
                     </t>
                 </t>
             </div>
@@ -49,10 +49,10 @@
                     <t t-set-slot="name"><t  t-out="this.installationRequest.displayName"/></t>
                     <t t-set-slot="sideContent">
                         <div class="d-flex align-items-center justify-content-center o-gap-1_5" t-att-class="{ 'o-pe-0_5': !this.ui.isSmall }">
-                            <a t-if="this.ui.isSmall" class="btn fa fa-cloud-download px-0"/>
+                            <a t-if="this.ui.isSmall" class="oi btn px-0" data-icon="cloud_download"/>
                             <t t-else="">
                                 <a class="btn btn-primary px-1 py-0 smaller">Install</a>
-                                <span t-if="!this.hasTouch()" t-on-click.stop="() => this.pwa.decline()" class="text-dark bg-transparent oi oi-close opacity-50 opacity-100-hover" title="Dismiss"></span>
+                                <span t-if="!this.hasTouch()" t-on-click.stop="() => this.pwa.decline()" class="oi text-dark bg-transparent opacity-50 opacity-100-hover" data-icon="close_small" title="Dismiss"></span>
                             </t>
                         </div>
                     </t>
@@ -70,10 +70,10 @@
                     <t t-set-slot="name"><t t-out="this.notificationRequest.displayName"/></t>
                     <t t-set-slot="sideContent">
                         <div class="d-flex align-items-center justify-content-center o-gap-1_5" t-att-class="{ 'o-pe-0_5': !this.ui.isSmall }">
-                            <a t-if="this.ui.isSmall" class="btn fa fa-bell px-0"/>
+                            <a t-if="this.ui.isSmall" class="oi oi-filled btn px-0" data-icon="notifications"/>
                             <t t-else="">
                                 <a class="btn btn-primary btn-sm px-1 py-0">Enable</a>
-                                <span t-if="!this.hasTouch()" t-on-click.stop="() => this.store.isNotificationPermissionDismissed = true" class="text-dark bg-transparent oi oi-close opacity-50 opacity-100-hover" title="Dismiss"></span>
+                                <span t-if="!this.hasTouch()" t-on-click.stop="() => this.store.isNotificationPermissionDismissed = true" class="oi text-dark bg-transparent opacity-50 opacity-100-hover" data-icon="close_small" title="Dismiss"></span>
                             </t>
                         </div>
                     </t>

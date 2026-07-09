@@ -23,7 +23,7 @@
                     <div class="d-flex align-items-center justify-content-between gap-2">
                         <h3 class="section-title">Inventory</h3>
                         <button class="btn btn-lg lh-lg text-nowrap" t-on-click="this.openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
-                            <i class="fa fa-clock-o me-1" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
+                            <i class="oi me-1" data-icon="schedule" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
                             <span t-if="!this.state.activeSnooze and !this.ui.isSmall">Snooze</span>
                             <span class="m-0" t-if="this.state.activeSnooze" style="font-variant-numeric: tabular-nums;">
                                 <t t-out="this.state.countdown" />
@@ -32,7 +32,7 @@
                     </div>
                     <div class="section-inventory-body">
                         <div>
-                            <i t-attf-class="fa fa-circle text-{{ productInfo.free_qty &gt; 0 ? 'success' : 'danger' }} me-2"></i>
+                            <i t-attf-class="oi oi-filled text-{{ productInfo.free_qty &gt; 0 ? 'success' : 'danger' }} me-2" data-icon="circle"></i>
                             On hand: <span class="me-1 fw-bolder on-hand"><t t-out="productInfo.free_qty"/></span>
                             <t t-out="productInfo.uom"/>
                         </div>

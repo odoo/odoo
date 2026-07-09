@@ -24,7 +24,7 @@
                 <div id="tasks_stats" position="after">
                     <div t-if="record.display_timesheet_stats.raw_value"
                          t-attf-class="{{ record.timesheet_percentage.raw_value > 100 ? 'text-danger' : (record.timesheet_percentage.raw_value >= 80 ? 'text-warning' : '') }}">
-                        <span class="fa fa-fw fa-clock-o me-1" title="Time"/><field name="timesheet_time"/>
+                        <span class="oi oi-fw me-1" data-icon="schedule" title="Time"/><field name="timesheet_time"/>
                         <t t-if="record.allocated_time.raw_value">
                             / <field name="allocated_time"/>
                         </t> <field name="uom_id"/>

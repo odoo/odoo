@@ -43,7 +43,7 @@ export class VideoPlugin extends Plugin {
                 return {
                     title: _t("Embed %s Video", platform.name),
                     description: _t("Embed the %s video in the document.", platform.name),
-                    icon: "fa-play-circle",
+                    icon: "play_circle",
                     run: () => this.insertVideoElement(urlMatch, platform),
                 };
             }

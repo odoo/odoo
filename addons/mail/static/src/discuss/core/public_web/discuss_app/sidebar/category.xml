@@ -24,19 +24,19 @@
         <div class="o-mail-DiscussSidebarCategory position-relative d-flex align-items-center rounded opacity-trigger-hover" t-att-class="{ 'mx-2 my-1 ps-1 position-relative': this.store.discuss.isSidebarCompact, 'mt-1 mx-2 o-ps-1_5 pe-1': !this.store.discuss.isSidebarCompact }" t-attf-class="#{this.category.extraClass}" name="header" t-custom-ref="root">
             <button t-att-disabled="this.isToggleFoldDisabled" class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start" t-att-class="{ 'align-items-baseline o-gap-0_5': !this.store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact gap-1': this.store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
                 <t t-if="this.store.discuss.isSidebarCompact">
-                    <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xxsmaller o-mt-0_5" t-att-class="{
-                        'oi oi-chevron-down': !this.isToggleFoldDisabled and this.isOpen,
-                        'oi oi-chevron-right': this.isToggleFoldDisabled or !this.isOpen,
+                    <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xxsmaller o-mt-0_5" t-att-data-icon="{
+                        'keyboard_arrow_down': !this.isToggleFoldDisabled and this.isOpen,
+                        'chevron_forward': this.isToggleFoldDisabled or !this.isOpen,
                     }"/>
-                    <span class="rounded p-1"><i t-if="this.store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin"/><i t-else="" class="fa-fw fa-lg" t-att-class="this.category.icon ?? 'fa fa-user'"/></span>
+                    <span class="rounded p-1"><i t-if="this.store.channels.status === 'fetching'" class="oi oi-fw oi-spin" data-icon="autorenew"/><i t-else="" class="fa-fw fa-lg" t-att-data-icon="this.category.icon ?? 'person'"/></span>
                 </t>
                 <t t-else="">
                     <span class="o-mail-DiscussSidebarCategory-title text-break smaller d-flex align-items-center gap-1" t-att-class="{ 'fs-bold': this.category.open }">
-                        <i class="fa-fw opacity-75" t-att-class="this.category.icon ?? 'fa fa-user'"/>
+                        <i class="fa-fw opacity-75" t-att-data-icon="this.category.icon ?? 'person'"/>
                         <t name="titleText" t-out="this.category.name"/>
                     </span>
-                    <span t-if="this.store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50 ps-1"/></span>
-                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa-fw align-self-center ps-1" t-att-class="(!this.isToggleFoldDisabled and this.isOpen) ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+                    <span t-if="this.store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="oi oi-fw oi-spin o-mail-DiscussSidebarCategory-icon o-xxsmaller opacity-50 ps-1" data-icon="autorenew"/></span>
+                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa-fw align-self-center ps-1" t-att-data-icon="(!this.isToggleFoldDisabled and this.isOpen) ? 'keyboard_arrow_down' : 'chevron_forward'"/>
                 </t>
             </button>
             <t t-if="this.actions.length and !this.store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCategory.actions"/>

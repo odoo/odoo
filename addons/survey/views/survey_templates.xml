@@ -156,7 +156,7 @@
             <div class="p-4 p-md-5">
                 <div t-if="answer.is_session_answer" class="mb-4 text-muted text-center">
                     <span>
-                        <i class="fa fa-info-circle me-2" aria-hidden="true"/>
+                        <i class="oi oi-filled me-2" data-icon="info" aria-hidden="true"/>
                         The session will begin automatically when the host starts.
                     </span>
                 </div>
@@ -176,7 +176,7 @@
                 <small class="o_survey_enter d-none d-md-inline-block text-muted">or press Enter</small>
                 <span class="d-inline-block ms-md-auto mt-2 mt-md-0 px-3 py-2 border rounded"
                     t-if="survey.is_time_limited and not answer.is_session_answer">
-                    <i class="fa fa-lg fa-clock-o me-2 text-muted" aria-hidden="true"/>
+                    <i class="oi oi-lg me-2 text-muted" data-icon="schedule" aria-hidden="true"/>
                     <span t-field="survey.time_limit"
                         t-options="{'widget': 'duration', 'unit': 'minute'}"/>
                 </span>
@@ -324,13 +324,13 @@
                         role="button"
                         class="btn btn-primary"
                         t-att-href="'/survey/%s/get_certification' % survey.id">
-                        <i class="fa fa-fw fa-trophy" aria-hidden="true"/>Download certification
+                        <i class="oi oi-fw oi-filled" data-icon="trophy" aria-hidden="true"/>Download certification
                     </a>
                     <a t-if="survey.scoring_type != 'scoring_without_answers'"
                         role="button"
                         class="o_survey_review btn btn-light w-100 w-md-auto"
                         t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">
-                        <i class="fa fa-fw fa-bar-chart me-2" aria-hidden="true"/>Review answers
+                        <i class="oi oi-fw me-2" data-icon="bar_chart" aria-hidden="true"/>Review answers
                     </a>
                 </div>
             </div>

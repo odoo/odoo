@@ -152,7 +152,7 @@ test.skip("HtmlMail add icon and save inline html", async function () {
     await press("enter");
 
     await contains("button.nav-link:contains('Icons')").click();
-    await contains("span.fa-glass").click();
+    await contains("span[data-icon='local_bar']").click();
 
     await clickSave();
     await expect.waitForSteps(["web_save"]);

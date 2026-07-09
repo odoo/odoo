@@ -3174,7 +3174,7 @@ test("properties: Create a property with an onchange methods", async () => {
         actionMenus: {},
     });
     await toggleActionMenu();
-    await contains(".o_popover span .fa-cogs").click();
+    await contains(".o_popover span [data-icon='settings_applications']").click();
     await runAllTimers();
     await addPropertyDefinition();
     expect.verifySteps([

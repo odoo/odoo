@@ -135,7 +135,7 @@ export class ImagePlugin extends Plugin {
                     getDisplay: () => this.imageSize,
                     items: IMAGE_SIZE,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    icon: "fa-expand",
+                    icon: "expand_content",
                     onSelected: (item) => {
                         this.resizeImage({ size: item.value });
                         this.updateImageParams();

@@ -66,7 +66,7 @@ const _assertContainsSmsNotification = async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
-    await contains(".o-mail-Message-notification i.fa-mobile");
+    await contains(".o-mail-Message-notification i[data-icon='smartphone']");
 };
 
 const _assertContainsPopoverWithIcon = async (iconClassName) => {

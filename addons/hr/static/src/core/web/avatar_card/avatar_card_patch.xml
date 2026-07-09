@@ -32,7 +32,7 @@
 
         <xpath expr="//button[@t-custom-ref='viewProfileBtn']" position="after">
             <Dropdown t-if="this.canActivateEmployeeCompany" position="'bottom-start'">
-                <button class="btn btn-secondary btn-sm dropdown-toggle">View Profile<i class="fa fa-fw fa-caret-down ms-1"/></button>
+                <button class="btn btn-secondary btn-sm dropdown-toggle">View Profile<i class="oi oi-fw ms-1" data-icon="arrow_drop_down"/></button>
                 <t t-set-slot="content">
                     <DropdownItem onSelected="() => this.onClickViewEmployeeProfile()">Open Employee Profile (activates company)</DropdownItem>
                     <DropdownItem onSelected="() => this.onClickViewProfile()">Open Contact Profile</DropdownItem>

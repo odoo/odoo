@@ -37,6 +37,6 @@ test("Age verification popup options works correctly", async () => {
     expect("[data-label='Minimum Age'] input").toHaveCount(1);
 
     expect(":iframe #verification_error").not.toBeVisible();
-    await contains(".fa-eye-slash[data-class-action='d-none']").click();
+    await contains("[data-icon='visibility_off'][data-class-action='d-none']").click();
     expect(":iframe #verification_error").toBeVisible();
 });

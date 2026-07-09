@@ -19,14 +19,14 @@ test("can add, replace, and remove emojis to a poll option", async () => {
     await click(".o-mail-Composer button[title='More Actions']");
     await click(".o-dropdown-item:text('Create Poll')");
     await contains(".modal-header:text('Create Poll')");
-    await click(".o-mail-CreatePollOptionDialog:first .fa-smile-o");
+    await click(".o-mail-CreatePollOptionDialog:first [data-icon='sentiment_satisfied']");
     await click(".o-Emoji:text('😀')");
     await click(".o-mail-CreatePollOptionDialog:first span:text('😀')");
     await click(".o-dropdown-item:text('Replace Emoji')");
     await click(".o-Emoji:text('😁')");
     await click(".o-mail-CreatePollOptionDialog:first span:text('😁')");
     await click(".o-dropdown-item:text('Remove Emoji')");
-    await contains(".o-mail-CreatePollOptionDialog:first .fa-smile-o");
+    await contains(".o-mail-CreatePollOptionDialog:first [data-icon='sentiment_satisfied']");
 });
 
 test("poll creation should be disabled during message editing", async () => {

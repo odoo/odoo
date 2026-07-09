@@ -40,7 +40,7 @@ import { debounce } from "@web/core/utils/timing";
  *                  id: myCommand,
  *                  run: myCommandFunction,
  *                  description: _t("Apply my command"),
- *                  icon: "fa-bug",
+ *                  icon: "bug_report",
  *              },
  *          ],
  *          power_buttons: [

@@ -74,7 +74,7 @@ test("Should remove all shape related dataset items when removing the shape", as
     await waitSidebarUpdated();
 
     await contains(
-        "[data-label='Shape'] button[data-action-id='setImageShape'] i.oi-close"
+        "[data-label='Shape'] button[data-action-id='setImageShape'] i[data-icon='close_small']"
     ).click();
     await waitSidebarUpdated();
 

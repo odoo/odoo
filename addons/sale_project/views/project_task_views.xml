@@ -418,7 +418,7 @@
             </field>
             <xpath expr="//div[@name='deadline']" position="before">
                 <div t-if="record.sale_line_display_name.raw_value and record.quantity_percentage.raw_value" class="d-flex gap-1" name="sale_line" title="Sales Order Item">
-                    <i class="fa fa-money px-1 mt-1"/>
+                    <i class="oi px-1 mt-1" data-icon="payments"/>
                     <span>
                         <field name="sale_line_display_name"/>
                         (<field name="quantity_percentage" widget="percentage" class="d-contents"/>)

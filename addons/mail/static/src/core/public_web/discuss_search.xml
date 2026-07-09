@@ -32,7 +32,7 @@
 <t t-name="mail.DiscussSearch.inputContainer">
     <div class="o-mail-DiscussSearch-inputContainer border border-secondary position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1 flex-basis-0 min-w-0 rounded-2" t-on-click="this.onClickSearchConversations">
         <div class="d-flex w-100 align-items-center justify-content-center gap-1" t-att-class="{ 'p-2': this.store.discuss.isSidebarCompact and !this.ui.isSmall }">
-            <i class="oi oi-search opacity-50"/>
+            <i class="oi opacity-50" data-icon="search"/>
             <input t-if="this.ui.isSmall or !this.store.discuss.isSidebarCompact" class="form-control rounded-2 border-0 bg-inherit px-0 w-auto text-center" t-att-class="{ 'lh-1': !this.ui.isSmall }" disabled="true" placeholder="Search" size="8" tabindex="0"/>
         </div>
         <div class="o-mail-DiscussSearch-inputClickable position-absolute z-1 opacity-0 cursor-pointer w-100 h-100"/>

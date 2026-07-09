@@ -117,7 +117,7 @@ test("Shouldn't be able to drop a popup in the cookie bar", async () => {
         loadAssetsFrontendJS: true,
     });
 
-    await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+    await contains(".o_we_invisible_entry i[data-icon='visibility_off']").click();
 
     await contains("#blocks-tab").click();
     await contains(".o_snippets_container .o_snippet_thumbnail button").click();

@@ -85,7 +85,7 @@
         </div>
         <span t-if="this.props.thread.hasLoadingFailedError" class="o-xsmaller text-muted" t-out="window.String(this.props.thread.hasLoadingFailedError)"/>
         <button class="btn btn-link" t-on-click="this.onClickRetry">
-            <i class="fa fa-refresh"/>
+            <i class="oi" data-icon="refresh"/>
             Try again
         </button>
     </div>

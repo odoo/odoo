@@ -9,7 +9,10 @@ registry.category("web_tour.tours").add("mail_poll_tour.js", {
         { trigger: ".modal-header:text('Create Poll')" },
         { trigger: "input[name='poll_question']", run: "edit What is your favorite color?" },
         { trigger: "button:contains('Add another option'):enabled" },
-        { trigger: ".o-mail-CreatePollOptionDialog:eq(0) .fa-smile-o", run: "click" },
+        {
+            trigger: ".o-mail-CreatePollOptionDialog:eq(0) [data-icon='sentiment_satisfied']",
+            run: "click",
+        },
         { trigger: ".o-Emoji:text('❤️')", run: "click" },
         { trigger: ".o-mail-CreatePollOptionDialog:eq(0):text('❤️')" },
         { trigger: ".o-mail-CreatePollOptionDialog input:eq(0)", run: "edit Red" },

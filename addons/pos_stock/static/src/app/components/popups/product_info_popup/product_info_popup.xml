@@ -14,7 +14,7 @@
                         <div t-attf-class="{{ this.ui.isSmall ? 'col-4 flex-column' : 'col flex-row' }} d-flex align-items-center">
                             <span t-if="this.ui.isSmall" class="text-muted mb-1">On hand</span>
                             <div>
-                                <i t-attf-class="fa fa-circle text-{{ warehouse.available_quantity &gt; 0 ? 'success' : 'danger' }} me-1"></i>
+                                <i t-attf-class="oi oi-filled text-{{ warehouse.available_quantity &gt; 0 ? 'success' : 'danger' }} me-1" data-icon="circle"></i>
                                 <span class="fw-bolder on-hand"><t t-out="warehouse.available_quantity"/></span>
                                 <span class="ms-1"><t t-out="warehouse.uom"/></span>
                                 <span t-if="!this.ui.isSmall" class="ms-1">on hand</span>

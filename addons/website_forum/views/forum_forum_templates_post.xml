@@ -414,14 +414,14 @@
                                 <div class="dropdown-menu css_editable_mode_hidden">
                                     <div class="s_share o_no_link_popover text-center">
                                         <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank" aria-label="Facebook">
-                                            <i class="fa fa-facebook fa-stack"/>
+                                            <i class="oi oi-stack" data-icon="oi_facebook"/>
                                         </a>
                                         <t t-set="_hashtags" t-value="(' %23' + post_type) if post_type else ''"/>
                                         <a t-attf-href="https://twitter.com/intent/tweet?text={title}#{_hashtags}&amp;url={url}" class="s_share_twitter" target="_blank" aria-label="Twitter">
-                                            <i class="fa fa-twitter fa-stack"/>
+                                            <i class="oi oi-stack" data-icon="oi_twitter"/>
                                         </a>
                                         <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" class="s_share_linkedin" target="_blank" aria-label="LinkedIn">
-                                            <i class="fa fa-linkedin fa-stack"/>
+                                            <i class="oi oi-stack" data-icon="oi_linkedin"/>
                                         </a>
                                     </div>
                                 </div>

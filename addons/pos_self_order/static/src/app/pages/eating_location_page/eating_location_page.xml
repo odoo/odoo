@@ -38,7 +38,7 @@
                             </t>
                             <span class="px-3 py-3 fw-bold"  t-out="preset.name"/>
                             <span t-if="this.ui.size lte this.SIZES.XS and preset.use_timing" class="badge text-bg-secondary rounded-pill p-2 m-2 bg-opacity-75 position-absolute end-0">
-                                <i class="fa fa-clock-o pe-1" />
+                                <i class="oi pe-1" data-icon="schedule" />
                                 <t t-out="preset.interval_time"/> min
                             </span>
                        </article>

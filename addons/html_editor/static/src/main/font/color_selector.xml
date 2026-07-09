@@ -6,7 +6,7 @@
             <i class="oi oi-fw py-1" data-icon="text_fields" t-att-style="this.getSelectedColorStyle()"/>
         </t>
         <t t-elif="this.props.type === 'custom'">
-            <i class="fa fa-fw py-1" t-attf-class="{{this.props.customIconClass}}" t-att-style="this.getSelectedColorStyle()"/>
+            <i class="oi oi-fw py-1" t-attf-class="{{this.props.customIconClass}}" t-att-style="this.getSelectedColorStyle()"/>
         </t>
         <t t-else="">
             <i class="oi oi-fw py-1" data-icon="colors" t-att-style="this.getSelectedColorStyle()"/>

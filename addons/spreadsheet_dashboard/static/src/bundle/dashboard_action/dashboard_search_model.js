@@ -96,7 +96,7 @@ export class DashboardSearchModel {
             facets.push({
                 id,
                 type: "favorite",
-                icon: "fa fa-star",
+                icon: "star",
                 values: [label],
             });
         };

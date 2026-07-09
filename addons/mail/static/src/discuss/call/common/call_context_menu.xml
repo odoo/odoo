@@ -4,11 +4,11 @@
         <div class="o-discuss-CallContextMenu d-flex flex-column gap-1 p-2 rounded">
             <t t-if="!this.isSelf">
                 <button class="btn o-discuss-CallContextMenu-item d-flex align-items-center gap-2 w-100 px-2 py-1 border-0 rounded text-reset text-start cursor-pointer" t-on-click="this.togglePin">
-                    <i class="fa fa-fw fa-thumb-tack opacity-75"/><t t-if="this.isPinned">Unpin</t><t t-else="">Pin</t>
+                    <i class="oi oi-fw opacity-75" data-icon="push_pin"/><t t-if="this.isPinned">Unpin</t><t t-else="">Pin</t>
                 </button>
                 <div class="o-discuss-CallContextMenu-row d-flex align-items-center gap-2 w-100 px-2 py-1">
                     <button class="btn o-discuss-CallContextMenu-muteToggle border-0 p-0 lh-1 cursor-pointer text-reset" t-on-click="this.toggleLocallyMute" t-att-title="this.muteLabel" t-att-aria-label="this.muteLabel">
-                        <i class="fa fa-fw" t-att-class="(this.isLocallyMuted or this.state.rangeVolume === 0) ? 'fa-volume-off' : 'fa-volume-up'"/>
+                        <i class="oi oi-fw" t-att-data-icon="(this.isLocallyMuted or this.state.rangeVolume === 0) ? 'volume_off' : 'volume_up'"/>
                     </button>
                     <div class="position-relative flex-grow-1">
                         <input type="range" min="0.0" max="1" step="0.01" class="form-range h-auto" t-att-value="this.volume" t-model.proxy="this.state.rangeVolume" t-on-change="this.onChangeVolume"/>
@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <button t-if="this.canModerate" class="btn o-discuss-CallContextMenu-item o-danger d-flex align-items-center gap-2 w-100 px-2 py-1 border-0 rounded text-danger text-start cursor-pointer" t-on-click="this.onClickRemoveFromCall">
-                    <i class="fa fa-fw fa-times-circle"/>Remove from call
+                    <i class="oi oi-fw oi-filled" data-icon="cancel"/>Remove from call
                 </button>
             </t>
             <t t-if="this.env.debug and !this.isSelf and this.rtc.connectionType === this.rtcConnectionTypes.P2P">

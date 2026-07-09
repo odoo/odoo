@@ -284,7 +284,7 @@
                             <field name="name"/>
                         </div>
                         <footer>
-                            <i class="fa fa-hourglass-half me-1" title="time remaining"/>
+                            <i class="oi me-1" data-icon="hourglass_bottom" title="time remaining"/>
                             <div class="o_kanban_workorder_remaining" data-tooltip="Remaining Time" t-att-class="record.remaining_time.raw_value &lt; 0 ? 'o_wo_red' : ''">
                                 <field name="remaining_time" class="mx-1" widget="float_time" options="{'unit': 'minutes'}"/>
                             </div>
@@ -294,7 +294,7 @@
                                      'o_wo_red': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
                                      '': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
                                  }">
-                                <i class="fa fa-clock-o me-1 my-auto" title="planned date start"></i>
+                                <i class="oi me-1 my-auto" data-icon="schedule" title="planned date start"></i>
                                 <div data-tooltip="Scheduled Date">
                                     <field name="date_start" class="pe-2"/>
                                 </div>
@@ -366,7 +366,7 @@
                     </div>
                 </div>
                 <div class="oe_button_box" name="button_box">
-                    <button class="oe_stat_button" name="action_view_backorders" type="object" icon="fa-wrench" invisible="backorder_count &lt; 2">
+                    <button class="oe_stat_button" name="action_view_backorders" type="object" icon="build" invisible="backorder_count &lt; 2">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="backorder_count"/></span>
                             <span class="o_stat_text">Productions</span>
