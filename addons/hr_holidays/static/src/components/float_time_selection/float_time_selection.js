@@ -4,6 +4,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { FloatTimeSelectionPopover } from "./float_time_selection_popover";
 
 import { FloatTimeField, floatTimeField } from "@web/views/fields/float_time/float_time_field";
+import { parseDuration } from "@web/views/fields/parsers";
 const { DateTime } = luxon;
 
 function floatToHoursMinutes(floatValue) {
@@ -44,19 +45,8 @@ export class FloatTimeSelectionField extends FloatTimeField {
 
     get formattedValue() {
         const unitAmount = super.formattedValue;
-        let hours = 0;
-        let minutes = 0;
-
-        unitAmount.split(" ").forEach((data) => {
-            if (data.endsWith("h")) {
-                hours = parseInt(data);
-            } else if (data.endsWith("m")) {
-                minutes = parseInt(data);
-            }
-        });
-
-        return DateTime.fromObject(
-            { hour: hours, minute: minutes },
+        const duration = parseDuration(unitAmount);
+        return DateTime.fromObject(duration,
             { numberingSystem: "latn", zone: "default" }
         ).toFormat("h:mm a");
     }
