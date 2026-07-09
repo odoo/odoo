@@ -716,6 +716,165 @@ class TestUpdateEvents(TestCommon):
 
     @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_remove_attendee_of_simple_event_from_outlook_organizer_calendar(self, mock_get_events):
+        """ An attendee removed on Outlook is removed from the Odoo event. """
+
+        # arrange
+        attendee_partner = self.attendee_user.partner_id
+        self.assertIn(attendee_partner, self.simple_event.partner_ids)
+        mock_get_events.return_value = (
+            MicrosoftEvent([dict(
+                self.simple_event_from_outlook_organizer,
+                attendees=[],
+                lastModifiedDateTime=_modified_date_in_the_future(self.simple_event)
+            )]),
+            None,
+        )
+
+        # act
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        self.assertNotIn(attendee_partner, self.simple_event.partner_ids)
+        self.assertNotIn(attendee_partner, self.simple_event.attendee_ids.partner_id)
+        self.assertIn(self.organizer_user.partner_id, self.simple_event.partner_ids)
+
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_remove_attendee_of_recurrence_from_outlook_organizer_calendar(self, mock_get_events):
+        """ An attendee removed from the series on Outlook is removed from every event. """
+
+        # arrange
+        attendee_partner = self.attendee_user.partner_id
+        organizer_partner = self.organizer_user.partner_id
+        recurrence_events = self.recurrence.calendar_event_ids
+        recurrence_events.with_context(dont_notify=True).write({'partner_ids': [(4, organizer_partner.id)]})
+        for event in recurrence_events:
+            self.assertIn(attendee_partner, event.partner_ids)
+        # only the seriesMaster is modified, so the recurrence update must handle it
+        events = [dict(e, attendees=[]) for e in self.recurrent_event_from_outlook_organizer]
+        events[0]['lastModifiedDateTime'] = _modified_date_in_the_future(self.recurrent_base_event)
+        mock_get_events.return_value = (MicrosoftEvent(events), None)
+
+        # act
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        for event in recurrence_events:
+            self.assertNotIn(attendee_partner, event.partner_ids)
+            self.assertNotIn(attendee_partner, event.attendee_ids.partner_id)
+            self.assertIn(self.organizer_user.partner_id, event.partner_ids)
+
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_update_recurrence_keeps_attendee_removed_from_exception(self, mock_get_events):
+        """ An update of the series doesn't bring back an attendee removed from an exception. """
+
+        # arrange
+        attendee_partner = self.attendee_user.partner_id
+        recurrence_events = self.recurrence.calendar_event_ids.sorted('start')
+        exception = recurrence_events[1]
+        exception.with_context(dont_notify=True).write({'partner_ids': [(3, attendee_partner.id)]})
+        self.assertNotIn(attendee_partner, exception.partner_ids)
+        events = [dict(e) for e in self.recurrent_event_from_outlook_organizer]
+        events[0]['subject'] = 'renamed'
+        events[0]['lastModifiedDateTime'] = _modified_date_in_the_future(self.recurrent_base_event)
+        exception_from_outlook = next(e for e in events if e.get('id') == exception.microsoft_id)
+        exception_from_outlook.update(type='exception', attendees=[])
+        mock_get_events.return_value = (MicrosoftEvent(events), None)
+
+        # act
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        self.assertNotIn(attendee_partner, exception.partner_ids)
+        self.assertNotIn(attendee_partner, exception.attendee_ids.partner_id)
+        for event in recurrence_events - exception:
+            self.assertIn(attendee_partner, event.partner_ids)
+            self.assertIn(attendee_partner, event.attendee_ids.partner_id)
+
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_add_attendee_of_exception_to_recurrence_from_outlook_organizer_calendar(self, mock_get_events):
+        """ An attendee of an exception added to the series gets an attendee on every event. """
+
+        # arrange
+        new_partner = self.env['res.partner'].create({'name': 'New Attendee', 'email': 'new.attendee@example.com'})
+        recurrence_events = self.recurrence.calendar_event_ids.sorted('start')
+        exception = recurrence_events[1]
+        exception.with_context(dont_notify=True).write({'partner_ids': [(4, new_partner.id)]})
+        new_attendee = {
+            'emailAddress': {'address': new_partner.email, 'name': new_partner.name},
+            'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'},
+            'type': 'required',
+        }
+        events = [dict(e) for e in self.recurrent_event_from_outlook_organizer]
+        events[0]['attendees'] = events[0]['attendees'] + [new_attendee]
+        events[0]['lastModifiedDateTime'] = _modified_date_in_the_future(self.recurrent_base_event)
+        exception_from_outlook = next(e for e in events if e.get('id') == exception.microsoft_id)
+        exception_from_outlook.update(type='exception', attendees=exception_from_outlook['attendees'] + [new_attendee])
+        mock_get_events.return_value = (MicrosoftEvent(events), None)
+
+        # act
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        for event in recurrence_events:
+            self.assertIn(new_partner, event.partner_ids)
+            self.assertIn(new_partner, event.attendee_ids.partner_id)
+
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_keep_organizer_with_another_email_from_outlook_attendee_calendar(self, mock_get_events):
+        """ The organizer is kept even if its Odoo email differs from the Outlook one. """
+
+        # arrange
+        organizer_partner = self.organizer_user.partner_id
+        self.assertIn(organizer_partner, self.simple_event.partner_ids)
+        organizer_partner.email = 'mike.organizer.new@example.com'
+        mock_get_events.return_value = (
+            MicrosoftEvent([dict(
+                dict(self.simple_event_from_outlook_organizer, id='789'),  # same iCalUId but different id
+                subject='updated by the attendee',
+                isOrganizer=False,
+                lastModifiedDateTime=_modified_date_in_the_future(self.simple_event)
+            )]), None
+        )
+
+        # act
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        self.assertEqual(self.simple_event.name, 'updated by the attendee')
+        self.assertIn(organizer_partner, self.simple_event.partner_ids)
+        self.assertIn(organizer_partner, self.simple_event.attendee_ids.partner_id)
+
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_update_attendee_state_of_recurrence_from_outlook_organizer_calendar(self, mock_get_events):
+        """ An attendee accepting the series on Outlook is accepted on every event. """
+
+        # arrange
+        attendee_partner = self.attendee_user.partner_id
+        recurrence_events = self.recurrence.calendar_event_ids
+        # only the seriesMaster is modified, so the recurrence update must handle it
+        events = [
+            dict(e, attendees=[dict(e['attendees'][0], status={'response': 'accepted'})])
+            for e in self.recurrent_event_from_outlook_organizer
+        ]
+        events[0]['lastModifiedDateTime'] = _modified_date_in_the_future(self.recurrent_base_event)
+        mock_get_events.return_value = (MicrosoftEvent(events), None)
+
+        # act
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        for event in recurrence_events:
+            attendee = event.attendee_ids.filtered(lambda a: a.partner_id == attendee_partner)
+            self.assertEqual(attendee.state, 'accepted')
+
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_name_of_one_event_of_recurrence_from_outlook_organizer_calendar(self, mock_get_events):
         """
         Update one event name from a recurrence from Outlook organizer calendar.
@@ -1208,12 +1367,12 @@ class TestUpdateEvents(TestCommon):
             self.assertEqual(e.name, ms_events_to_update[e.microsoft_id])
             self.assertEqual(e.follow_recurrence, True)
 
-    def _prepare_outlook_events_for_all_events_start_date_update(self, nb_of_events):
+    def _prepare_outlook_events_for_all_events_start_date_update(self, nb_of_events, new_start_date=None):
         """
         Utility method to avoid repeating data preparation for all tests
         about updating the start date of all events of a recurrence
         """
-        new_start_date = datetime(2021, 9, 21, 10, 0, 0)
+        new_start_date = new_start_date or datetime(2021, 9, 21, 10, 0, 0)
         new_end_date = new_start_date + timedelta(hours=1)
 
         # prepare recurrence based on self.recurrent_event_from_outlook_organizer[0] which is the Outlook recurrence
@@ -1294,6 +1453,33 @@ class TestUpdateEvents(TestCommon):
                 e.start.strftime("%Y-%m-%dT%H:%M:%S.0000000"),
                 ms_events_to_update[e.microsoft_id]["dateTime"]
             )
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_update_start_later_of_all_events_of_recurrence_updates_attendees(self, mock_get_events):
+        """ Moving the series later recreates it: no MissingError, the attendees follow Outlook. """
+
+        # arrange
+        removed_partner = self.env['res.partner'].create({'name': 'Removed Attendee', 'email': 'removed@example.com'})
+        self.recurrence.calendar_event_ids.with_context(dont_notify=True).write(
+            {'partner_ids': [(4, self.organizer_user.partner_id.id), (4, removed_partner.id)]}
+        )
+        # later than the base event, to recreate the recurrence; Outlook only keeps the attendee user
+        events = self._prepare_outlook_events_for_all_events_start_date_update(
+            self.recurrent_events_count, new_start_date=datetime(2021, 9, 23, 10, 0, 0),
+        )
+        mock_get_events.return_value = (MicrosoftEvent(events), None)
+
+        # act
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        recurrence = self.env['calendar.recurrence'].search([], limit=1, order='id desc')
+        self.assertTrue(recurrence.calendar_event_ids)
+        for event in recurrence.calendar_event_ids:
+            self.assertIn(self.attendee_user.partner_id, event.attendee_ids.partner_id)
+            self.assertIn(self.organizer_user.partner_id, event.partner_ids)
+            self.assertNotIn(removed_partner, event.partner_ids)
+            self.assertNotIn(removed_partner, event.attendee_ids.partner_id)
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_start_of_all_events_of_recurrence_with_more_events(self, mock_get_events):
