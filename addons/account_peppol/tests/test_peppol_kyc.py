@@ -75,7 +75,7 @@ class TestPeppolKYC(HttpCase):
             self.assertFalse(wizard.display_no_auth_buttons)
             result = wizard.button_register_peppol_participant(selected_auth='itsme')
             connect_token = mocked_can_connect.call_args.kwargs['connect_token']
-        self.assertEqual(result, {'type': 'ir.actions.act_url', 'url': 'test_authorization_url', 'target': 'new'})
+        self.assertEqual(result, {'type': 'ir.actions.act_url', 'url': 'test_authorization_url', 'target': 'self'})
         self.assertEqual(company.account_peppol_proxy_state, 'not_registered')
 
         # a window is opened with the url above, the KYC flow happens and calls back
@@ -89,8 +89,8 @@ class TestPeppolKYC(HttpCase):
             })
         self.assertTrue(response.history[0].is_redirect)
         self.assertEqual(response.status_code, 200)
-        # callback-action closes the window opened for the authentication and displays a notification
-        self.assertIn('/odoo/peppol-auth-callback-action?success=True', response.url)
+        # the tab is redirect back home and the "peppol_auth_service" shows the result notification
+        self.assertIn('/odoo', response.url)
         connect_mock.assert_called_once()
         self.assertEqual(company.account_peppol_proxy_state, 'smp_registration')
         self.assertRecordValues(company.account_peppol_edi_user, [{
@@ -152,7 +152,7 @@ class TestPeppolKYC(HttpCase):
 
         result = wizard.button_register_peppol_participant(selected_auth='itsme')
 
-        self.assertEqual(result, {'type': 'ir.actions.act_url', 'url': 'test_authorization_url', 'target': 'new'})
+        self.assertEqual(result, {'type': 'ir.actions.act_url', 'url': 'test_authorization_url', 'target': 'self'})
         self.assertEqual(company.account_peppol_proxy_state, 'not_registered')
 
         with self._mock_create_connection_method() as connect_mock:
@@ -163,7 +163,7 @@ class TestPeppolKYC(HttpCase):
             })
         self.assertTrue(response.history[0].is_redirect)
         self.assertEqual(response.status_code, 200)
-        self.assertIn('/odoo/peppol-auth-callback-action?success=False', response.url)
+        self.assertIn('/odoo', response.url)
         connect_mock.assert_not_called()
         self.assertEqual(company.account_peppol_proxy_state, 'not_registered')
         self.assertFalse(company.account_peppol_edi_user)
