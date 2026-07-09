@@ -1054,6 +1054,14 @@ $-product-radius-map: (
         z-index: 2;
     }
 
+    // Prevents product_details from creating a stacking context when containing
+    // an open age verification snippet. Otherwise the snippet renders below the
+    // blurred background.
+    &:has(.s_age_verification_popup .show) {
+        z-index: auto;
+        position: relative !important;
+    }
+
     @include media-breakpoint-up(lg) {
         padding-top: var(--o-wsale-product-col-details-padding-top-lg, 0px);
     }
