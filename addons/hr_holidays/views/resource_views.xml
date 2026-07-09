@@ -100,7 +100,7 @@
     </record>
 
     <record id="open_view_public_holiday" model="ir.actions.act_window">
-        <field name="name">Public Holidays</field>
+        <field name="name">Closure Days</field>
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">list,form</field>
         <field name="domain">[('resource_id', '=', False)]</field>
@@ -108,7 +108,7 @@
         <field name="context">{'search_default_filter_date': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
-                No Public Holidays yet!
+                No Closure Days yet!
             </p>
             <p>
                 Public Holidays are non-working days that don't impact employees' balances

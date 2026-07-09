@@ -23,3 +23,9 @@ class ResCompany(models.Model):
                     "The company country cannot be changed while time off leaves "
                     "or allocations with the country exist."
                 ))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super().create(vals_list)
+        self.env['resource.calendar.leaves']._cron_generate_public_holidays()
+        return companies
