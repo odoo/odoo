@@ -1501,7 +1501,6 @@ class HrLeave(models.Model):
             'elligible_for_accrual_rate': self.work_entry_type_id.elligible_for_accrual_rate,
         }
 
-
     def _create_resource_leave(self):
         """ This method will create entry in resource calendar time off object at the time of holidays validated
         :returns: created `resource.calendar.leaves`
@@ -1656,7 +1655,8 @@ class HrLeave(models.Model):
             'LEAVE229',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis
             'LEAVE271',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis (Short Term Employee)
             'LEAVE117',  # Work Accident (Unpaid)
-            'LEAVE207',  # Public Holiday during periods of economic unemployment
+            'LEAVE086',  # Public holiday during temporary unemployment - no onss
+            'LEAVE207',  # Public holiday during temporary unemployment - with onss
         ]
         return self.filtered(
             lambda l: l.employee_id and not l.number_of_days and not l.number_of_hours and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)

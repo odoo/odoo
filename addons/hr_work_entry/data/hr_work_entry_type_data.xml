@@ -716,6 +716,15 @@
         <field name="amount_rate">0.0</field>
     </record>
 
+    <record id="l10n_be_work_entry_type_economic_unemployment_refused_by_administration" model="hr.work.entry.type">
+        <field name="name">Technical unemployment paid due to a refused request</field>
+        <field name="code">LEAVE2049</field>
+        <field name="color">5</field>
+        <field name="display_code">ECO</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+
     <record id="l10n_be_work_entry_type_maternity" model="hr.work.entry.type">
         <field name="name">Maternity Time Off</field>
         <field name="code">LEAVE210</field>
@@ -1228,6 +1237,16 @@
         <field name="display_code">SCT</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">working_time</field>
+    </record>
+
+    <record id="l10n_be_work_entry_type_public_holiday_temporary_unemployment_no_onss" model="hr.work.entry.type">
+        <field name="name">Public holiday during unemployment paid with taxable salary only (no onss)</field>
+        <field name="code">LEAVE086</field>
+        <field name="color">5</field>
+        <field name="amount_rate">0.8588</field>
+        <field name="display_code">PUT</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
     </record>
 
     <record id="l10n_be_work_entry_type_public_holiday_temporary_unemployment" model="hr.work.entry.type">
