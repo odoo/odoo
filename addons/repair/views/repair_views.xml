@@ -34,7 +34,7 @@
                 <field name="product_id" readonly="1" optional="show"/>
                 <field name="parts_availability_state" column_invisible="True"/>
                 <field name="parts_availability"
-                    invisible="state not in ['confirmed', 'under_repair']"
+                    invisible="state != 'confirmed'"
                     optional="hide"
                     decoration-success="parts_availability_state == 'available'"
                     decoration-warning="parts_availability_state == 'expected'"
@@ -50,7 +50,6 @@
                 <field name="state" optional="show" widget='badge'
                     decoration-success="state == 'done'"
                     decoration-info="state == 'confirmed'"
-                    decoration-warning="state == 'under_repair'"
                     decoration-danger="state == 'cancel'"
                     decoration-muted="state == 'draft'"
                 />
@@ -69,14 +68,13 @@
                 <field name="reserve_visible" invisible="1"/>
                <header>
                    <button name="action_validate" invisible="state != 'draft'" type="object" string="Confirm Repair" class="oe_highlight" data-hotkey="v"/>
-                   <button name="action_repair_start" invisible="state != 'confirmed'" type="object" string="Start Repair" class="oe_highlight" data-hotkey="q"/>
-                   <button name="action_repair_end" invisible="state != 'under_repair'" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
+                   <button name="action_repair_end" invisible="state != 'confirmed'" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
                    <button name="action_assign" invisible="not reserve_visible" string="Reserve" type="object"/>
                    <button name="action_create_sale_order" type="object" string="Quote" invisible="not can_create_sale_or_invoice"/>
                    <button name="action_create_invoice" type="object" string="Invoice" invisible="not (can_create_sale_or_invoice or can_create_extra_invoice) or state != 'done'"/>
                    <button name="action_repair_cancel_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="z"/>
                    <button name="action_repair_cancel" string="Cancel" type="object" invisible="state in ('done', 'cancel')" data-hotkey="l"/>
-                   <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,under_repair,done"/>
+                   <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                </header>
                <sheet string="Repairs order">
                     <div class="oe_button_box" name="button_box">
@@ -136,7 +134,7 @@
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                             <field name="parts_availability_state" invisible="True"/>
                             <field name="parts_availability"
-                                invisible="state not in ['confirmed', 'under_repair']"
+                                invisible="state != 'confirmed'"
                                 decoration-success="parts_availability_state == 'available'"
                                 decoration-warning="parts_availability_state == 'expected'"
                                 decoration-danger="parts_availability_state == 'late'"/>
@@ -244,7 +242,8 @@
                     <t t-name="card">
                         <div class="row">
                             <field name="name" class="col-6 fw-bolder mb-1"/>
-                            <field name="state" class="col-6 text-end mb-1" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'secondary'}}"/>
+                            <field name="state" class="col-6 text-end mb-1" widget="label_selection"
+                                options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success'}}"/>
                             <div class="col-6 text-muted">
                                 <field name="product_id" />
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
@@ -270,8 +269,7 @@
                 <field name="sale_order_id"/>
                 <filter string="New" domain="[('state', '=', 'draft')]" name="filter_draft" />
                 <filter string="Confirmed" domain="[('state', '=', 'confirmed')]" name="filter_confirmed" />
-                <filter string="Under Repair" name="filter_under_repair" domain="[('state', '=', 'under_repair')]"/>
-                <filter string="Repaired" name="filter_done" domain="[('state', '=', 'done')]"/>
+                <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
                 <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                 <filter string="Returned" name="returned" domain="[('picking_id', '!=', False), ('picking_id.state', '=', 'done')]"/>
                 <separator/>
