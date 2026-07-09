@@ -3860,7 +3860,7 @@ class AccountEdiUBL(models.AbstractModel):
         tree = collected_values['tree']
         file_document_sign = collected_values['file_document_sign']
         currency = collected_values['currency_values']['currency']
-        tax_exclusive_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
+        tax_exclusive_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')
         if not tax_exclusive_amount_str:
             return
 
@@ -3869,7 +3869,7 @@ class AccountEdiUBL(models.AbstractModel):
         payable_rounding_amount = file_document_sign * float(payable_rounding_amount_str or 0.0)
         expected_untaxed_amount = tax_exclusive_amount + payable_rounding_amount
         invoice = collected_values['invoice']
-        difference = currency.round(expected_untaxed_amount - invoice.amount_untaxed)
+        difference = currency.round(expected_untaxed_amount - invoice.amount_total)
         for line_collected_values in collected_values['lines_collected_values']:
             for charge in line_collected_values['charges']:
                 attempt_tax_values = charge.get('attempt_tax_values')
