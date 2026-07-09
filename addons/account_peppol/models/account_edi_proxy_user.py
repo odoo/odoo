@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import re
 from datetime import timedelta
 from lxml import etree
 
@@ -13,6 +14,12 @@ from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
+REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE = re.compile(
+    rb'(<(?P<tag>(?:[A-Za-z_][A-Za-z0-9_.-]*:)?EmbeddedDocumentBinaryObject)\b[^<>]*>)'
+    rb'(?P<data>.*?)'
+    rb'(</(?P=tag)\s*>)',
+    re.DOTALL,
+)
 
 
 class Account_Edi_Proxy_ClientUser(models.Model):
@@ -190,11 +197,19 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         self.ensure_one()
         journal = journal or self.company_id.peppol_purchase_journal_id
         move_type = 'in_invoice'
+        error_msg = "The Peppol XML file is invalid or empty for attachment ID %s"
 
         try:
             xml_tree = etree.fromstring(attachment.raw)
-        except (etree.XMLSyntaxError, ValueError):
-            _logger.exception("The Peppol XML file is invalid or empty for attachment ID %s", attachment.id)
+        except etree.XMLSyntaxError:
+            try:
+                xml_tree = etree.fromstring(REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE.sub(b'', attachment.raw))
+            except (etree.XMLSyntaxError, ValueError):
+                _logger.exception(error_msg, attachment.id)
+                return journal, move_type
+            _logger.warning("The Peppol XML file was trimmed after huge node tree error for attachment ID %s", attachment.id)
+        except ValueError:
+            _logger.exception(error_msg, attachment.id)
             return journal, move_type
 
         invoice_type_code = xml_tree.findtext('.//{*}InvoiceTypeCode')
