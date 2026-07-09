@@ -6,7 +6,7 @@
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
             <search string="Search Time Type">
-                <field name="name" string="Time Types"/>
+                <field name="name" string="Time Types" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
                 <field name="create_calendar_meeting"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>

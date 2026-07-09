@@ -570,6 +570,24 @@
         <field name="request_unit">hour</field>
     </record>
 
+    <!-- LEAVE6665  -->
+    <record id="hr_work_entry.l10n_be_work_entry_type_economic_unemployment" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">hr</field>
+        <field name="unit_of_measure">day</field>
+        <field name="color">18</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <!-- LEAVE2049 -->
+    <record id="hr_work_entry.l10n_be_work_entry_type_economic_unemployment_refused_by_administration" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="time_off_selectable">False</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
 <!-- CH: Switzerland -->
 
     <record id="hr_work_entry.l10n_ch_swissdec_unpaid_wt" model="hr.work.entry.type">
