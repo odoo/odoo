@@ -141,5 +141,15 @@
         .o_form_label:has(+ .o_outlined) {
             @extend %-o-field-label;
         }
+
+        button.fa.o_priority_star {
+            --secondary-bg: transparent;
+            &.fa-star {
+                --body-color: #{ $o-main-favorite-color };
+            }
+            &.fa-star-o {
+                --body-color: #{ $o-main-color-muted };
+            }
+        }
     }
 }
