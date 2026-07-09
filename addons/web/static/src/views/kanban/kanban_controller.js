@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { onWillRender, render, useRef, useSubEnv } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -25,7 +25,17 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, onMounted, onWillStart, plugin, props, proxy, t, useEffect } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillStart,
+    plugin,
+    props,
+    proxy,
+    t,
+    useEffect,
+} from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { QuickCreateState } from "./kanban_record_quick_create";
 
@@ -154,30 +164,39 @@ export class KanbanController extends Component {
                 return state;
             },
         });
-        useLayoutEffect(
-            (isReady) => {
-                if (isReady) {
-                    if (this.env.isSmall && this.model.root.isGrouped) {
-                        const { scrollPositions } = this.props.state || {};
-                        if (scrollPositions) {
-                            const { scrollLeft, columnScrollTops } = scrollPositions;
-                            this.rootRef.el.querySelector(".o_renderer").scrollLeft = scrollLeft;
-                            const groups = this.model.root.groups;
-                            for (const [serverValue, scrollTop] of columnScrollTops) {
-                                const group = groups.find((g) => g.serverValue === serverValue);
-                                if (group) {
-                                    const sel = `.o_kanban_group[data-id=${group.id}]`;
-                                    this.rootRef.el.querySelector(sel).scrollTop = scrollTop;
-                                }
-                            }
+        let lastIsReady;
+        // Subscribe the render to the `isReady` signal, so the view re-renders
+        // once the model is ready (e.g. to display the pager after the first load).
+        onWillRender(() => void this.model.isReady());
+        const restoreScroll = () => {
+            const isReady = this.model.isReady();
+            if (isReady === lastIsReady) {
+                return;
+            }
+            lastIsReady = isReady;
+            if (!isReady || !this.rootRef.el) {
+                return;
+            }
+            if (this.env.isSmall && this.model.root.isGrouped) {
+                const { scrollPositions } = this.props.state || {};
+                if (scrollPositions) {
+                    const { scrollLeft, columnScrollTops } = scrollPositions;
+                    this.rootRef.el.querySelector(".o_renderer").scrollLeft = scrollLeft;
+                    const groups = this.model.root.groups;
+                    for (const [serverValue, scrollTop] of columnScrollTops) {
+                        const group = groups.find((g) => g.serverValue === serverValue);
+                        if (group) {
+                            const sel = `.o_kanban_group[data-id=${group.id}]`;
+                            this.rootRef.el.querySelector(sel).scrollTop = scrollTop;
                         }
-                    } else {
-                        setScrollFromState();
                     }
                 }
-            },
-            () => [this.model.isReady()]
-        );
+            } else {
+                setScrollFromState();
+            }
+        };
+        onMounted(restoreScroll);
+        onPatched(restoreScroll);
         usePager(() => {
             const root = this.model.root;
             const { count, hasLimitedCount, isGrouped, limit, offset } = root;
@@ -201,12 +220,25 @@ export class KanbanController extends Component {
         onMounted(() => {
             this.firstLoad = false;
         });
-        useLayoutEffect(
-            () => {
+        let lastSelectionLength;
+        let lastIsDomainSelected;
+        onMounted(() => {
+            lastSelectionLength = this.model.root.selection?.length;
+            lastIsDomainSelected = this.model.root.isDomainSelected;
+            this.onSelectionChanged();
+        });
+        onPatched(() => {
+            const selectionLength = this.model.root.selection?.length;
+            const { isDomainSelected } = this.model.root;
+            if (
+                selectionLength !== lastSelectionLength ||
+                isDomainSelected !== lastIsDomainSelected
+            ) {
+                lastSelectionLength = selectionLength;
+                lastIsDomainSelected = isDomainSelected;
                 this.onSelectionChanged();
-            },
-            () => [this.model.root.selection?.length, this.model.root.isDomainSelected]
-        );
+            }
+        });
         onWillStart(async () => {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
         });
