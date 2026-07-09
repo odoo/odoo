@@ -106,6 +106,11 @@ class RecurrenceRule(models.Model):
         vals['event_tz'] = microsoft_event.start.get('timeZone')
         super()._write_from_microsoft(microsoft_event, vals)
         new_event_values = self.env["calendar.event"]._microsoft_to_odoo_values(microsoft_event)
+        # Attendee/partner commands are id-specific per occurrence and must not be
+        # broadcast to the whole recurrence (see _odoo_attendee_commands_m). We drop
+        # them from the shared values and re-apply them per event below.
+        new_event_values.pop('attendee_ids', None)
+        new_event_values.pop('partner_ids', None)
         # Edge case:  if the base event was deleted manually in 'self_only' update, skip applying recurrence.
         # Also skip when the base event is an exception (follow_recurrence=False), because its
         # modified time will differ from the seriesMaster pattern without the master having changed,
@@ -121,9 +126,17 @@ class RecurrenceRule(models.Model):
             # We can't call _cancel because events without user_id would not be deleted
             (self.calendar_event_ids - base_event_id).microsoft_id = False
             (self.calendar_event_ids - base_event_id).unlink()
-            base_event_id.with_context(dont_notify=True).write(dict(
-                new_event_values, microsoft_id=False, need_sync_m=False
-            ))
+            attendee_commands, partner_commands = self.env["calendar.event"].with_context(
+                microsoft_attendee_event=base_event_id
+            )._odoo_attendee_commands_m(microsoft_event)
+            base_values = dict(
+                new_event_values, attendee_ids=attendee_commands, microsoft_id=False, need_sync_m=False
+            )
+            if partner_commands:
+                # Add partner_commands only if set from Microsoft. The write method on calendar_events will
+                # override attendee commands if the partner_ids command is set but empty.
+                base_values['partner_ids'] = partner_commands
+            base_event_id.with_context(dont_notify=True).write(base_values)
             if self.rrule == current_rrule:
                 # if the rrule has changed, it will be recalculated below
                 # There is no detached event now
@@ -140,6 +153,20 @@ class RecurrenceRule(models.Model):
                 if field not in time_fields
                 }, need_sync_m=False)
             )
+            # Attendees are written per event so the delete/update commands only
+            # target attendees actually linked to each occurrence.
+            for event in self.calendar_event_ids:
+                attendee_commands, partner_commands = self.env["calendar.event"].with_context(
+                    microsoft_attendee_event=event
+                )._odoo_attendee_commands_m(microsoft_event)
+                if not attendee_commands and not partner_commands:
+                    continue
+                event_values = {'attendee_ids': attendee_commands, 'need_sync_m': False, 'recurrence_update': 'self_only'}
+                if partner_commands:
+                    # Add partner_commands only if set from Microsoft. The write method on calendar_events will
+                    # override attendee commands if the partner_ids command is set but empty.
+                    event_values['partner_ids'] = partner_commands
+                event.with_context(no_mail_to_attendees=True, dont_notify=True).write(event_values)
         # We apply the rrule check after the time_field check because the microsoft ids are generated according
         # to base_event start datetime.
         if self.rrule != current_rrule:
