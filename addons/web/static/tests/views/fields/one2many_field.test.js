@@ -8143,7 +8143,7 @@ test("one2many with default value: edit line to make it invalid", async () => {
 
     // edit the line and enter an invalid value for int_field
     await contains(".o_data_row .o_data_cell:eq(1)").click();
-    await contains(".o_field_widget[name=int_field] input").edit("e", { confirm: false });
+    await contains(".o_field_widget[name=int_field] input").edit("-", { confirm: false });
     await contains(".o_form_view").click();
 
     expect(".o_data_row.o_selected_row").toHaveCount(1, {
@@ -8175,7 +8175,7 @@ test("one2many with invalid value and click on another row", async () => {
     expect(".o_data_row:eq(0)").toHaveClass("o_selected_row");
     expect(".o_data_row:eq(1)").not.toHaveClass("o_selected_row");
 
-    await contains(".o_data_row [name='int_field'] input").edit("abc", { confirm: false });
+    await contains(".o_data_row [name='int_field'] input").edit("-", { confirm: false });
     await contains(".o_data_row:eq(1) .o_data_cell").click();
     // Stays on the invalid row
     expect(".o_data_row.o_selected_row").toHaveCount(1);

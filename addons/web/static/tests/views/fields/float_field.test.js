@@ -235,7 +235,7 @@ test("use incorrect formula", async () => {
         arch: `<form><field name="float_field" options="{ 'digits': [0, 3] }" /></form>`,
     });
 
-    await contains(".o_field_widget[name=float_field] input").edit("=abc", { confirm: false });
+    await contains(".o_field_widget[name=float_field] input").edit("=-", { confirm: false });
     await clickSave();
 
     expect(".o_field_widget[name=float_field]").toHaveClass("o_field_invalid", {
@@ -243,7 +243,7 @@ test("use incorrect formula", async () => {
     });
     expect(".o_form_editable").toHaveCount(1, { message: "form view should still be editable" });
 
-    await contains(".o_field_widget[name=float_field] input").edit("=3:2?+4", { confirm: false });
+    await contains(".o_field_widget[name=float_field] input").edit("=3*-", { confirm: false });
     await clickSave();
 
     expect(".o_form_editable").toHaveCount(1, { message: "form view should still be editable" });
