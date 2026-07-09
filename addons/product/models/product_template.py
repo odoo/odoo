@@ -377,7 +377,9 @@ class ProductTemplate(models.Model):
 
     @api.depends('type')
     def _compute_is_storable(self):
-        self.filtered(lambda t: t.type != 'consu' and t.is_storable).is_storable = False
+        stored = self.filtered(lambda t: t.type == 'consu')
+        stored.is_storable = True
+        (self - stored).is_storable = False
 
     @api.depends('product_variant_count', 'is_storable')
     def _compute_show_qty_update_button(self):
