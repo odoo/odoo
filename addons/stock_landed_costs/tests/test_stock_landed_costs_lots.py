@@ -35,8 +35,7 @@ class TestStockLandedCostsLots(TestLotValuation):
         })
         product2 = self.env['product.product'].create({
             'name': 'product2',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'lot_valuated': True,
             'categ_id': self.env.ref('product.product_category_goods').id,
         })
@@ -130,8 +129,7 @@ class TestStockLandedCostsLots(TestLotValuation):
         """
         product1 = self.env['product.product'].create({
             'name': 'product2',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'lot_valuated': True,
             'categ_id': self.env.ref('product.product_category_goods').id,
         })

@@ -39,7 +39,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
 
         cls.cola = cls.env['product.product'].create({
             'name': 'Coca-Cola',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 2.2,
             'taxes_id': False,
             'available_in_pos': True,
@@ -48,7 +48,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         })
         cls.free = cls.env['product.product'].create({
             'name': 'Free',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 0,
             'taxes_id': False,
             'available_in_pos': True,
@@ -57,7 +57,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         })
         cls.fanta = cls.env['product.product'].create({
             'name': 'Fanta',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 2.2,
             'taxes_id': False,
             'available_in_pos': True,
@@ -65,7 +65,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         })
         cls.ketchup = cls.env['product.product'].create({
             'name': 'Ketchup',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 0,
             'taxes_id': False,
             'available_in_pos': True,

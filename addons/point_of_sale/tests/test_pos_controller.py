@@ -20,7 +20,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         })
         self.product1 = self.env['product.product'].create({
             'name': 'Test Product 1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 10.0,
             'taxes_id': False,
         })
@@ -81,7 +81,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
 
         self.product1 = self.env['product.product'].create({
             'name': 'Test Product 1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 10.0,
             'taxes_id': False,
         })
@@ -115,7 +115,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
 
         self.product1 = self.env['product.product'].create({
             'name': 'Test Product 1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 10.0,
             'taxes_id': False,
         })
@@ -161,7 +161,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
 
         self.product1 = self.env['product.product'].create({
             'name': 'Test Product 1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 10.0,
             'taxes_id': False,
         })

@@ -26,7 +26,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         cls.mto_product = cls.env['product.product'].create({
             'name': 'SuperProduct',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, (cls.mto_route + cls.buy_route).ids)],
             'seller_ids': [(0, 0, {
                 'partner_id': cls.vendor.id,
@@ -34,7 +34,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         })
         cls.mto_product_without_seller = cls.env['product.product'].create({
             'name': 'SuperProduct',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set((cls.mto_route + cls.buy_route).ids)],
         })
         cls.warehouse = cls.env['stock.warehouse'].create({
@@ -204,7 +204,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         vendor_2 = self.env['res.partner'].create({'name': 'Lovely Vendor'})
         product_2 = self.env['product.product'].create({
             'name': 'LovelyProduct',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set((self.mto_route + self.buy_route).ids)],
             'seller_ids': [Command.create({
                 'partner_id': vendor_2.id,
@@ -359,7 +359,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         product = self.env['product.product'].create({
             'name': 'Test Product',
             'route_ids': [Command.set((self.mto_route + self.buy_route).ids)],
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         sale_order = self.env['sale.order'].create({
@@ -419,7 +419,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
     def test_purchase_order_uom(self):
         fuzzy_drink = self.env['product.product'].create({
             'name': 'Fuzzy Drink',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set((self.mto_route + self.buy_route).ids)],
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'seller_ids': [Command.create({
@@ -508,7 +508,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         })
         product = self.env['product.product'].create({
             'name': 'Fifou',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': fifo_categ.id,
         })
 

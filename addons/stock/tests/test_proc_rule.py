@@ -47,7 +47,7 @@ class TestProcRule(TransactionCase):
         rule but finds nothing else than itself and so get stuck in a recursion error."""
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         reception_route = warehouse.reception_route_id
-        self.product.is_storable = True
+        self.product.store_by = 'quantity'
 
         # Creates a delivery for this product, that way, this product will be to resupply.
         picking_form = Form(self.env['stock.picking'])
@@ -140,7 +140,7 @@ class TestProcRule(TransactionCase):
 
         # Create a warehouse and a product
         warehouse = self.env['stock.warehouse'].search([], limit=1)
-        product = self.env['product.product'].create({'name': 'Test Product', 'is_storable': True})
+        product = self.env['product.product'].create({'name': 'Test Product', 'store_by': 'quantity'})
 
         # Create routes with different sequences to simulate prioritization.
         route_low_priority = self.env['stock.route'].create({'name': 'Route 1', 'sequence': 10})
@@ -215,7 +215,7 @@ class TestProcRule(TransactionCase):
 
     def test_reordering_rule_1(self):
         # Required for `location_id` to be visible in the view
-        self.product.is_storable = True
+        self.product.store_by = 'quantity'
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
@@ -266,12 +266,12 @@ class TestProcRule(TransactionCase):
 
         self.productA = self.env['product.product'].create({
             'name': 'Desk Combination',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         self.productB = self.env['product.product'].create({
             'name': 'Desk Decoration',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         warehouse = self.env['stock.warehouse'].search([], limit=1)
@@ -348,7 +348,7 @@ class TestProcRule(TransactionCase):
         stock_location = self.stock_location = self.env.ref('stock.stock_location_stock')
         self.productA = self.env['product.product'].create({
             'name': 'Desk Combination',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         pack_of_10 = self.env['uom.uom'].create({
             'name': 'pack of 10',
@@ -424,7 +424,7 @@ class TestProcRule(TransactionCase):
         ])
         product = self.env['product.product'].create({
             'name': 'Super Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [route_2.id, route_3.id]
         })
         moves = self.env['stock.move'].create([{
@@ -468,7 +468,7 @@ class TestProcRule(TransactionCase):
         })
         product = self.env['product.product'].create({
             'name': 'Rep Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         move = self.env['stock.move'].create({
             'location_id': replenish_loc.id,
@@ -520,17 +520,17 @@ class TestProcRule(TransactionCase):
         products = self.env['product.product'].create([
             {
                 'name': 'Lovely product',
-                'is_storable': True,
+                'store_by': 'quantity',
                 'route_ids': [Command.set([])],
             },
             {
                 'name': 'Lovely product with route',
-                'is_storable': True,
+                'store_by': 'quantity',
                 'route_ids': [Command.set(lovely_route.ids)],
             },
             {
                 'name': 'Lovely product with categ route',
-                'is_storable': True,
+                'store_by': 'quantity',
                 'route_ids': [Command.set([])],
                 'categ_id': lovely_category.id,
             },
@@ -739,12 +739,12 @@ class TestProcRule(TransactionCase):
         product_1 = self.env['product.product'].create({
             'name': 'product_1',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         product_2 = self.env['product.product'].create({
             'name': 'product_2',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         self.env['stock.quant'].create({
@@ -982,7 +982,7 @@ class TestProcRule(TransactionCase):
         })
         product = self.env['product.product'].create({
             'name': 'Lead Time Route Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         resupply_route = warehouse_b.resupply_route_ids
         destination_rule = resupply_route.rule_ids.filtered(

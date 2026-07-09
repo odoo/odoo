@@ -10,7 +10,7 @@ class TestStockWarehouseOrderpoint(HttpCase):
         cls.product = cls.env['product.product'].create({
             'name': 'Book Shelf',
             'lst_price': 1750.00,
-            'is_storable': True,
+            'store_by': 'quantity',
             'purchase_ok': True,
         })
         cls.res_partner_1 = cls.env['res.partner'].create({

@@ -12,7 +12,7 @@ class TestMrpQuant(TestMrpCommon):
         product_kit = self.env['product.product'].create({
             'name': 'This product will be a kit',
             'type': 'consu',
-            'is_storable': True
+            'store_by': 'quantity'
         })
 
         delivery = self.env['stock.picking'].create({
@@ -40,7 +40,7 @@ class TestMrpQuant(TestMrpCommon):
         product_normal = self.env['product.product'].create({
             'name': 'Normal Product Test',
             'type': 'consu',
-            'is_storable': True
+            'store_by': 'quantity'
         })
 
         # Should work without error

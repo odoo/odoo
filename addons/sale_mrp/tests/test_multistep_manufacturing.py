@@ -191,7 +191,7 @@ class TestMultistepManufacturing(TestMrpCommon):
         delivery (to the client) can be made from stock.
         '''
         self.warehouse.manufacture_steps = 'pbm_sam'
-        self.sale_order.order_line.product_id.is_storable = True
+        self.sale_order.order_line.product_id.store_by = 'quantity'
         self.env['stock.quant']._update_available_quantity(
             self.sale_order.order_line.product_id,
             self.sale_order.warehouse_id.lot_stock_id,
@@ -217,10 +217,10 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.warehouse.mto_pull_id.route_id.rule_ids.procure_method = "make_to_stock"
 
         product_1, product_2, raw_1, raw_2 = self.env["product.product"].create([
-            {"name": "product 1", "uom_id": self.uom_unit.id, "is_storable": True},
-            {"name": "product 2", "uom_id": self.uom_unit.id, "is_storable": True},
-            {"name": "raw 1", "uom_id": self.uom_unit.id, "is_storable": True},
-            {"name": "raw 2", "uom_id": self.uom_unit.id, "is_storable": True},
+            {"name": "product 1", "uom_id": self.uom_unit.id, "store_by": "quantity"},
+            {"name": "product 2", "uom_id": self.uom_unit.id, "store_by": "quantity"},
+            {"name": "raw 1", "uom_id": self.uom_unit.id, "store_by": "quantity"},
+            {"name": "raw 2", "uom_id": self.uom_unit.id, "store_by": "quantity"},
         ])
         bom_1, bom_2 = self.env["mrp.bom"].create([{
                 "product_tmpl_id": product_1.product_tmpl_id.id,

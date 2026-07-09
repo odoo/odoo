@@ -19,7 +19,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         vendor2 = self.env['res.partner'].create({'name': 'BBB', 'email': 'from.test2@example.com'})
         product_test = self.env['product.product'].create({
             'name': 'Usb Keyboard',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': unit,
             'route_ids': [(6, 0, [route_buy, route_mto])]
         })
@@ -108,7 +108,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         product_1 = self.env['product.product'].create({
             'name': 'product1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': unit,
             'seller_ids': [Command.create({
                 'partner_id': vendor1.id,
@@ -118,7 +118,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         })
         product_2 = self.env['product.product'].create({
             'name': 'product2',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': unit,
             'seller_ids': [Command.create({
                 'partner_id': vendor1.id,

@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class TestTraceability(TestMrpCommon):
-    TRACKING_TYPES = ['none', 'serial', 'lot']
+    STORAGE_TYPES = ['quantity', 'serial', 'lot']
 
     @classmethod
     def setUpClass(cls):
@@ -23,15 +23,14 @@ class TestTraceability(TestMrpCommon):
     def _create_product(self, tracking):
         return self.env['product.product'].create({
             'name': 'Product %s' % tracking,
-            'is_storable': True,
-            'tracking': tracking,
+            'store_by': tracking,
         })
 
     def test_tracking_types_on_mo(self):
-        finished_no_track = self._create_product('none')
+        finished_no_track = self._create_product('quantity')
         finished_lot = self._create_product('lot')
         finished_serial = self._create_product('serial')
-        consumed_no_track = self._create_product('none')
+        consumed_no_track = self._create_product('quantity')
         consumed_lot = self._create_product('lot')
         consumed_serial = self._create_product('serial')
         Lot = self.env['stock.lot']
@@ -92,7 +91,7 @@ class TestTraceability(TestMrpCommon):
 
             # Start MO production
             mo_form = Form(mo)
-            if finished_product.tracking in ['lot', 'serial']:
+            if finished_product.store_by in ['lot', 'serial']:
                 mo_form.lot_producing_ids.set(self.env['stock.lot'].create({'name': 'Serial or Lot finished', 'product_id': finished_product.id}))
             mo = mo_form.save()
 
@@ -143,28 +142,23 @@ class TestTraceability(TestMrpCommon):
     def test_tracking_on_byproducts(self):
         product_final = self.env['product.product'].create({
             'name': 'Finished Product',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         product_1 = self.env['product.product'].create({
             'name': 'Raw 1',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         product_2 = self.env['product.product'].create({
             'name': 'Raw 2',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         byproduct_1 = self.env['product.product'].create({
             'name': 'Byproduct 1',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         byproduct_2 = self.env['product.product'].create({
             'name': 'Byproduct 2',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         bom_1 = self.env['mrp.bom'].create({
             'product_id': product_final.id,
@@ -362,11 +356,10 @@ class TestTraceability(TestMrpCommon):
         """
         productA, productB, productC = self.env['product.product'].create([{
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
         }, {
             'name': 'Product B',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         }, {
             'name': 'Product C',
             'type': 'consu',
@@ -506,10 +499,8 @@ class TestTraceability(TestMrpCommon):
         and rebuild a product with SN in the components
         """
         component = self.bom_4.bom_line_ids.product_id
-        component.write({
-            'is_storable': True,
-            'tracking': 'serial',
-        })
+        component.store_by = 'serial'
+
         serial_number = self.env['stock.lot'].create({
             'product_id': component.id,
             'name': 'Super Serial',
@@ -748,7 +739,7 @@ class TestTraceability(TestMrpCommon):
     def test_assign_stock_move_date_on_mark_done(self):
         product_final = self.env['product.product'].create({
             'name': 'Finished Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         with freeze_time('2024-01-15'):
             production = self.env['mrp.production'].create({
@@ -769,10 +760,7 @@ class TestTraceability(TestMrpCommon):
         Consume SN -> Should raise an error as it has already been consumed
         """
         component = self.bom_4.bom_line_ids.product_id
-        component.write({
-            'is_storable': True,
-            'tracking': 'serial',
-        })
+        component.store_by = 'serial'
 
         sn_lot01, sn_lot02 = self.env['stock.lot'].create([{
             'product_id': component.id,
@@ -827,10 +815,7 @@ class TestTraceability(TestMrpCommon):
         -> We should not raise any UserError
         """
         component = self.bom_4.bom_line_ids.product_id
-        component.write({
-            'is_storable': True,
-            'tracking': 'serial',
-        })
+        component.store_by = 'serial'
 
         sn = self.env['stock.lot'].create({
             'product_id': component.id,
@@ -889,10 +874,7 @@ class TestTraceability(TestMrpCommon):
         -> We should not raise any UserError
         """
         component = self.bom_4.bom_line_ids.product_id
-        component.write({
-            'is_storable': True,
-            'tracking': 'serial',
-        })
+        component.store_by = 'serial'
 
         sn = self.env['stock.lot'].create({
             'product_id': component.id,

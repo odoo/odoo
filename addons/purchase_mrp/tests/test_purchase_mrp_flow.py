@@ -139,7 +139,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
     def _create_storable_product(cls, name, uom_id, routes=False):
         return cls.env['product.product'].create({
             'name': name,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.env.ref('product.product_category_goods').id,
             'uom_id': uom_id.id,
             'route_ids': [Command.set(routes.ids if routes else [])],
@@ -462,7 +462,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         component = self.env['product.product'].create({
             'name': 'component',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['product.supplierinfo'].create({
             'product_id': component.id,
@@ -471,7 +471,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         })
         finished = self.env['product.product'].create({
             'name': 'finished',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.warehouse.orderpoint'].create({
             'name': 'A RR',
@@ -564,7 +564,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         product = self.env['product.product'].create({
             'name': 'super product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [(0, 0, {'partner_id': vendor.id})],
             'route_ids': [(4, manu_route.id), (4, buy_route.id)],
         })
@@ -597,7 +597,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         product = self.env['product.product'].create({
             'name': 'super product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [(0, 0, {'partner_id': vendor.id})],
             'route_ids': buy_route,
         })
@@ -641,7 +641,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.kit_1.route_ids = self.kit_3.route_ids = [Command.set([self.warehouse.manufacture_pull_id.route_id.id])]
         bom1, bom2 = self.kit_1.bom_ids, self.kit_3.bom_ids
         bom1.type = bom2.type = 'normal'
-        self.component_f.is_storable = self.component_g.is_storable = False
+        (self.component_f | self.component_g).store_by = 'untracked'
         # CASE 1: Non-storable component shows -> Lead Time: 0 Days
         popover_data = json.loads(bom2.json_popover)
         self.assertEqual(popover_data.get('delay'), "0 Days")
@@ -680,7 +680,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         product = self.env['product.product'].create({
             'name': 'super product',
-            'is_storable': True,
+            'store_by': 'quantity',
             #set route to manufacture + buy
             'route_ids': [
                 (4, self.env.ref('mrp.route_warehouse0_manufacture').id),
@@ -714,7 +714,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
     def test_mo_overview(self):
         component = self.env['product.product'].create({
             'name': 'component',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 80,
             'seller_ids': [(0, 0, {
                 'partner_id': self.env['res.partner'].create({'name': 'super vendor'}).id,
@@ -724,7 +724,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         })
         finished_product = self.env['product.product'].create({
             'name': 'finished_product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['mrp.bom'].create({
             'product_tmpl_id': finished_product.product_tmpl_id.id,
@@ -764,8 +764,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         """
         location = self.stock_location
         uom_unit = self.env.ref('uom.product_uom_unit')
-        final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'is_storable': True})
-        component_product = self.env['product.product'].create({'name': 'Compo 1', 'is_storable': True})
+        final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'store_by': 'quantity'})
+        component_product = self.env['product.product'].create({'name': 'Compo 1', 'store_by': 'quantity'})
 
         self.env['stock.quant']._update_available_quantity(component_product, location, 3.0)
 
@@ -817,8 +817,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             With an incoming PO for the first and second line.
         """
         uom_unit = self.env.ref('uom.product_uom_unit')
-        final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'is_storable': True})
-        component_product = self.env['product.product'].create({'name': 'Compo 1', 'is_storable': True})
+        final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'store_by': 'quantity'})
+        component_product = self.env['product.product'].create({'name': 'Compo 1', 'store_by': 'quantity'})
 
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': final_product_tmpl.id,
@@ -918,7 +918,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         """ Test bom overview with different vendor minimum quantities, see if it picks the right ones.
         """
         buy_route = self.warehouse.buy_pull_id.route_id
-        final = self.env['product.product'].create({'name': 'Final', 'type': 'consu', 'is_storable': True})
+        final = self.env['product.product'].create({'name': 'Final', 'store_by': 'quantity'})
         # Compo A has 2 vendors, one faster but with a min qty of 5, the other with more delay but without a min qty
         self.component_a.write({
             'route_ids': [Command.link(buy_route.id)],
@@ -1002,7 +1002,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         kit, cmp1, cmp2 = self.env['product.product'].create([{
             'name': name,
             'standard_price': 0,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': fifo_category.id,
         } for name in ['Kit', 'Cmp1', 'Cmp2']])
         kit.uom_id = self.uom_gm.id
@@ -1171,7 +1171,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         prod, compo = self.env['product.product'].create([{
         'name': name,
-        'type': 'consu',
+        'store_by': 'untracked',
         'categ_id': avco_category.id,
         'route_ids': [(4, route_id)],
         } for name, route_id in [('product a', manufacture_route.id), ('component a', buy_route.id)]])
@@ -1214,7 +1214,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'property_valuation': 'real_time'
         })
         self.component_a.categ_id = avco_category
-        self.component_a.is_storable = True
         self.component_a.lot_valuated = True
         lot_a = self.env['stock.lot'].create({
             'name': 'lot_a',
@@ -1291,14 +1290,14 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         kit_product = self.env['product.product'].create({
             'name': 'kit prod',
             'purchase_method': 'purchase',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 10,
             'list_price': 20,
             'categ_id': avco_category.id,
         })
         components = self.env['product.product'].create([{
             'name': f'comp {i}',
-            'is_storable': True,
+            'store_by': 'quantity',
             'purchase_method': 'purchase',
             'standard_price': 5,
             'list_price': 5,

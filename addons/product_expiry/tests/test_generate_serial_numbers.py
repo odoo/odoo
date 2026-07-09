@@ -18,8 +18,7 @@ class TestStockLot(StockGenerateCommon):
         super().setUpClass()
         cls.product_lot = cls.env['product.product'].create({
             'name': 'Tracked by Lot Numbers',
-            'tracking': 'lot',
-            'is_storable': True,
+            'store_by': 'lot',
             'use_expiration_date': True,
         })
 
@@ -265,8 +264,7 @@ class TestProductExpiryTour(TestStockPickingTour):
         """
         product_exp = self.env['product.product'].create({
             'name': 'Product Exp',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'use_expiration_date': True,
             'expiration_time': 2,
         })

@@ -54,6 +54,6 @@ class ProductTemplate(models.Model):
         ' raised on the lot/serial number. It will be computed on the lot/serial number.')
 
     def write(self, vals):
-        if vals.get('tracking') == 'none':
-            vals['use_expiration_date'] = False
+        if 'tracking' in vals:
+            vals['use_expiration_date'] = bool(vals['tracking'])
         return super().write(vals)

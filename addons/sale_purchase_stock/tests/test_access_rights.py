@@ -39,7 +39,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
 
         product = self.env['product.product'].create({
             'name': 'SuperProduct',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [Command.create({
                 'partner_id': vendor.id,
                 'price': 8,
@@ -84,7 +84,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         """
         product = self.env['product.product'].create({
             'name': 'SuperProduct',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [Command.create({
                 'partner_id': self.partner_a.id,
                 'price': 8,

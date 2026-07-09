@@ -1120,7 +1120,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_sofa = self.env["product.template"].create(
             {
                 "name": "Combo product Sofa",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 40,
             }
@@ -1457,7 +1457,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.product_test = self.env['product.product'].create({
             'name': 'Product Test',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'list_price': 100,
             'taxes_id': [(6, 0, self.tax1.ids)],
@@ -2019,7 +2019,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         product_template = self.env['product.template'].create({
             'name': 'Dynamic Product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
         })
         self.env['product.template.attribute.line'].create({
@@ -2703,7 +2703,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         product_cord = self.env['product.product'].create({
             'name': 'Cord',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'uom_id': test_uom_unit.id,
             'uom_ids': [pack_of_12_unit.id],
@@ -3430,7 +3430,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_1 = self.env["product.product"].create(
             {
                 "name": "Second Product 1",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 10,
                 "taxes_id": [],
@@ -3441,7 +3441,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_2 = self.env["product.product"].create(
             {
                 "name": "Second Product 2",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 11,
                 "taxes_id": [],
@@ -3452,7 +3452,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_3 = self.env["product.product"].create(
             {
                 "name": "Second Product 3",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 16,
                 "taxes_id": [],
@@ -3483,7 +3483,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_4 = self.env["product.product"].create(
             {
                 "name": "Second Product 4",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 20,
                 "taxes_id": [],
@@ -3494,7 +3494,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_5 = self.env["product.product"].create(
             {
                 "name": "Second Product 5",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 25,
                 "taxes_id": [],
@@ -3521,7 +3521,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_6 = self.env["product.product"].create(
             {
                 "name": "Second Product 6",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 30,
                 "taxes_id": [],
@@ -3532,7 +3532,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_7 = self.env["product.product"].create(
             {
                 "name": "Second Product 7",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 32,
                 "taxes_id": [],
@@ -3543,7 +3543,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_8 = self.env["product.product"].create(
             {
                 "name": "Second Product 8",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 40,
                 "taxes_id": [],
@@ -3554,7 +3554,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         combo_product_9 = self.env["product.product"].create(
             {
                 "name": "Second Product 9",
-                "is_storable": True,
+                "store_by": "quantity",
                 "available_in_pos": True,
                 "list_price": 50,
                 "taxes_id": [],

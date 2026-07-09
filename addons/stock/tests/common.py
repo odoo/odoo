@@ -155,11 +155,11 @@ class TestStockCommon(ProductVariantsCommon):
             cls.productD,
             cls.productE,
         ) = cls.ProductObj.create([
-            {'name': 'Product A', 'is_storable': True},
-            {'name': 'Product B', 'is_storable': True},
-            {'name': 'Product C', 'is_storable': True},
-            {'name': 'Product D', 'is_storable': True},
-            {'name': 'Product E', 'is_storable': True},
+            {'name': 'Product A', 'store_by': 'quantity'},
+            {'name': 'Product B', 'store_by': 'quantity'},
+            {'name': 'Product C', 'store_by': 'quantity'},
+            {'name': 'Product D', 'store_by': 'quantity'},
+            {'name': 'Product E', 'store_by': 'quantity'},
         ])
 
         # Configure unit of measure.
@@ -167,8 +167,8 @@ class TestStockCommon(ProductVariantsCommon):
         cls.uom_gm = cls.uom_gram
 
         cls.kgB, cls.gB = cls.ProductObj.create([
-            {'name': 'kg-B', 'is_storable': True, 'uom_id': cls.uom_kg.id},
-            {'name': 'g-B', 'is_storable': True, 'uom_id': cls.uom_gm.id}
+            {'name': 'kg-B', 'store_by': 'quantity', 'uom_id': cls.uom_kg.id},
+            {'name': 'g-B', 'store_by': 'quantity', 'uom_id': cls.uom_gm.id}
         ])
 
         cls.group_user.write({'implied_ids': [

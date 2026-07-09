@@ -19,7 +19,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         cls.product_1 = cls.env['product.product'].create({
             'name': 'Other Product',
             'standard_price': 115,
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.env['product.supplierinfo'].create([{
             'partner_id': cls.vendor.id,
@@ -108,7 +108,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         product_2, product_3, product_4, product_5, product_6 = self.env['product.product'].create([{
             'name': f'Product {i + 1}',
             'standard_price': price,
-            'is_storable': True,
+            'store_by': 'quantity',
         } for (i, price) in enumerate([25, 50, 100, 50, 25])])
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 42)
         self.env['stock.quant']._update_available_quantity(product_2, self.stock_location, 15)
@@ -419,7 +419,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         product_ad = self.env['product.product'].create([{
             'name': 'Product AD',
             'standard_price': 60,
-            'is_storable': True,
+            'store_by': 'quantity',
         }])
 
         self.env['product.supplierinfo'].create([{
@@ -510,7 +510,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         product_ad = self.env['product.product'].create([{
             'name': 'Product AD',
             'standard_price': 60,
-            'is_storable': True,
+            'store_by': 'quantity',
         }])
 
         self.env['product.supplierinfo'].create([{
@@ -585,7 +585,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         product = self.env['product.product'].create({
             'name': 'Product 7',
             'standard_price': 20,
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['product.supplierinfo'].create([{
             'partner_id': self.vendor.id,
@@ -627,7 +627,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         test_product = self.env['product.product'].create([{
             'name': "test_product",
             'categ_id': test_category.id,
-            'is_storable': True,
+            'store_by': 'quantity',
         }])
         self.env['product.supplierinfo'].create([{
             'partner_id': self.vendor.id,

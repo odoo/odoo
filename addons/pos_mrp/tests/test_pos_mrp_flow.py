@@ -168,7 +168,7 @@ class TestPosMrp(CommonPosMrpTest):
         product_test = self.env['product.template'].create({
             'name': 'Test product',
             'categ_id': category.id,
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'attribute_line_ids': [Command.create({
                 'attribute_id': attribute_size.id,
@@ -263,7 +263,7 @@ class TestPosMrp(CommonPosMrpTest):
         # Create the configurable product with attributes
         self.configurable_product = self.env['product.product'].create({
             'name': 'Configurable Chair',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'list_price': 100,
         })
@@ -277,19 +277,19 @@ class TestPosMrp(CommonPosMrpTest):
         # Create the component products
         self.component_common = self.env['product.product'].create({
             'name': 'Common Frame',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 50,
         })
 
         self.component_red = self.env['product.product'].create({
             'name': 'Red Cushion',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 20,
         })
 
         self.component_blue = self.env['product.product'].create({
             'name': 'Blue Cushion',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 20,
         })
 
@@ -410,7 +410,7 @@ class TestPosMrp(CommonPosMrpTest):
         self.product_product_comp_one.standard_price = 12000
         self.product_product_comp_one.uom_id = self.env.ref('uom.product_uom_dozen').id
         self.product_product_comp_one.categ_id = self.category_fifo_realtime
-        self.product_product_comp_one.is_storable = True
+        self.product_product_comp_one.store_by = 'quantity'
 
         # Edit kit product UoM
         self.bom_one_line.bom_line_ids[0].uom_id = self.env.ref('uom.product_uom_unit').id

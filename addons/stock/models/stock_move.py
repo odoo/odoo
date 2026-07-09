@@ -645,7 +645,7 @@ Please change the quantity done or the rounding precision in your settings.""",
            remaining demand and the available quantity of the lot if none is available.
         """
         for move in self:
-            if move.product_id.tracking == 'none':
+            if not move.product_id.tracking:
                 continue
             if move.state == 'assigned' and all(ml.lot_id in move.lot_ids for ml in move.move_line_ids) and move.move_line_ids.lot_id == move.lot_ids:
                 continue
@@ -1508,7 +1508,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         Updates the quantity of the move to match the quantity resulting from the `_set_lot_ids`.
         """
         product = self.product_id
-        if product.tracking == 'none':
+        if not product.tracking:
             return
 
         assigned_quantity = 0

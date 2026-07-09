@@ -19,7 +19,7 @@ class TestVirtualAvailable(TestStockCommon):
 
         # Make `product3` a storable product for this test. Indeed, creating quants
         # and playing with owners is not possible for consumables.
-        cls.product_3.is_storable = True
+        cls.product_3.store_by = 'quantity'
         cls.picking_type_out.reservation_method = 'manual'
 
         cls.env['stock.quant'].create({
@@ -114,7 +114,7 @@ class TestVirtualAvailable(TestStockCommon):
         another_company = self.env['res.company'].create({'name': 'Second Company'})
         product = self.env['product.product'].create({
             'name': 'Product [TEST - Change Company]',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         # Creates a quant for productA in the first company.
         self.env['stock.quant'].create({
@@ -168,7 +168,7 @@ class TestVirtualAvailable(TestStockCommon):
         and exist quant in vendor/customer location"""
         product = self.env['product.product'].create({
             'name': 'Product Single Company',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         # Creates a quant for company 1.
         self.env['stock.quant'].create({
@@ -204,7 +204,7 @@ class TestVirtualAvailable(TestStockCommon):
     def test_search_qty_available(self):
         product = self.env['product.product'].create({
             'name': 'Brand new product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         result = self.env['product.product'].search([
             ('qty_available', '=', 0),
@@ -321,36 +321,35 @@ class TestVirtualAvailable(TestStockCommon):
     def test_change_type_tracked_product(self):
         product = self.env['product.template'].create({
             'name': 'Brand new product',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         product_form = Form(product)
         product_form.type = 'service'
         product = product_form.save()
-        self.assertEqual(product.tracking, False)
+        self.assertEqual(product.store_by, 'untracked')
 
-        product.is_storable = True
-        product.tracking = 'serial'
-        self.assertEqual(product.tracking, 'serial')
+        product.store_by = 'serial'
+        self.assertEqual(product.store_by, 'serial')
         # change the type from "product.product" form
         product_form = Form(product.product_variant_id)
         product_form.type = 'service'
         product = product_form.save()
-        self.assertEqual(product.tracking, False)
+        self.assertEqual(product.store_by, 'untracked')
 
     def test_duplicate_service_with_legacy_tracking_keeps_is_storable_false(self):
-        """Test that an imported service template with tracking='none' compute the is_storable field to False"""
+        """Test that an imported service template with tracking=False compute the is_storable field to False"""
         template = self.env['product.template'].create({
             'name': 'Imported service',
             'type': 'service',
         })
-        # Simulate a import, with column "tracking" set to "none"
-        template.tracking = 'none'
-        self.assertEqual(template.tracking, 'none')
+        # Simulate a import, with column "tracking" set to False
+        template.tracking = False
+        self.assertFalse(template.tracking)
         self.assertFalse(template.is_storable)
+        self.assertEqual(template.store_by, 'untracked')
 
     def test_domain_locations_only_considers_selected_companies(self):
-        product = self.env['product.product'].create({'name': 'Product', 'is_storable': True})
+        product = self.env['product.product'].create({'name': 'Product', 'store_by': 'quantity'})
         company_a = self.env['res.company'].create({'name': 'Company A'})
         company_b = self.env['res.company'].create({'name': 'Company B'})
         warehouse_a = self.env['stock.warehouse'].search([('company_id', '=', company_a.id)])
@@ -375,8 +374,7 @@ class TestVirtualAvailable(TestStockCommon):
         self.picking_out.action_assign()
         # At this point product_3 should have the quantity reserved
         self.product_3.active = False
-
-        self.product_3.write({'is_storable': False})
+        self.product_3.store_by = 'untracked'
 
         self.picking_out.button_validate()
 
@@ -386,8 +384,7 @@ class TestVirtualAvailable(TestStockCommon):
         """
         product = self.env['product.product'].create({
             'name': 'Test Qty Available Product',
-            'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.assertEqual(product.qty_available, 0.0)
 
@@ -469,7 +466,7 @@ class TestProductPostInstall(TestStockCommon):
         This adjustment is necessary to ensure a proper valorisation of goods.
         """
         product = self.product
-        self.assertFalse(product.is_storable)
+        self.assertEqual(product.store_by, 'untracked')
         product.uom_ids += self.uom_dozen
         transit_location = self.env['stock.location'].create({
             'name': 'Lovely transit-location',
@@ -521,7 +518,7 @@ class TestProductPostInstall(TestStockCommon):
         ])
         pickings.action_confirm()
         pickings.button_validate()
-        product.is_storable = True
+        product.store_by = 'quantity'
         self.assertEqual(product.qty_available, 0.0)
         inventory_adjustments = self.env['stock.move'].search([('location_dest_usage', '=', 'inventory')], order='product_qty')
         self.assertRecordValues(inventory_adjustments, [

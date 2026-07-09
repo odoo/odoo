@@ -48,7 +48,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
     def _create_product(self):
         product_template = self.env['product.template'].create({
             'name': 'Super product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.env.ref('product.product_category_goods').id,
         })
         product_template.categ_id.property_cost_method = 'fifo'
@@ -376,7 +376,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         product2 = self.env['product.product'].create({
             'name': 'product2',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 10,
             'list_price': 20,
             'invoice_policy': 'order',
@@ -408,7 +408,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         product2 = self.env['product.product'].create({
             'name': 'product2',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': categ_average.id,
             'standard_price': 10,
             'list_price': 20,

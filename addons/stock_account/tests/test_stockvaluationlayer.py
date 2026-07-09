@@ -118,12 +118,12 @@ class TestStockValuationStandard(TestStockValuationCommon):
     def test_empty_stock_move_valuation(self):
         product1 = self.env['product.product'].create({
             'name': 'p1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.env.ref('product.product_category_expenses').id,
         })
         product2 = self.env['product.product'].create({
             'name': 'p2',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.env.ref('product.product_category_expenses').id,
         })
         picking = self.env['stock.picking'].create({

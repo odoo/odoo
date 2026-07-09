@@ -630,7 +630,7 @@ class TestPacking(TestPackingCommon):
     def test_partial_put_in_pack(self):
         """ Create a simple move in a delivery. Reserve the quantity but set as quantity done only a part.
         Call Put In Pack button. """
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
         lot1 = self.env['stock.lot'].create({
             'product_id': self.productA.id,
             'name': '00001',
@@ -661,7 +661,7 @@ class TestPacking(TestPackingCommon):
     def test_serial_partial_put_in_pack(self):
         """ Create a simple delivery order with a serial tracked product. Then split the move lines into two
          different packages. """
-        self.productA.tracking = 'serial'
+        self.productA.store_by = 'serial'
         self.warehouse_1.delivery_steps = 'ship_only'
         serials = self.env['stock.lot'].create([{
             'product_id': self.productA.id,
@@ -1605,7 +1605,7 @@ class TestPacking(TestPackingCommon):
 
     def test_put_in_pack_partial_different_destinations(self):
         """ Test putting some of the move lines of a pikcing with different destinations in a package """
-        self.productA.tracking = 'serial'
+        self.productA.store_by = 'serial'
 
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_in.id,
@@ -1771,8 +1771,7 @@ class TestPackagePropagation(TestPackingCommon):
         })
         self.productA = self.env['product.product'].create({
             'name': 'productA',
-            'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)
         self.env['stock.rule'].run([

@@ -24,17 +24,17 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         # Create product refrigerator & oven
         cls.product_component1 = cls.env['product.product'].create({
             'name': 'Component1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 1.0,
         })
         cls.product_component2 = cls.env['product.product'].create({
             'name': 'Component2',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 2.0,
         })
         cls.product_refrigerator = cls.env['product.product'].create({
             'name': 'Refrigerator',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.env.ref('product.product_category_goods').id,
         })
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
@@ -186,12 +186,12 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         # Create product refrigerator & oven
         byproduct1 = self.env['product.product'].create({
             'name': 'Byproduct1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.env.ref('product.product_category_goods').id,
         })
         byproduct2 = self.env['product.product'].create({
             'name': 'Byproduct2',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.env.ref('product.product_category_goods').id,
         })
         self.bom_refri.write({
