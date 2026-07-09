@@ -11,7 +11,8 @@ patch(SlideUploadDialog.prototype, {
         this.pagesTemplates["certification"] =
             "website_slides_survey.SlideCategoryTutorial.Certification";
         this.slideCategoryData["certification"] = {
-            icon: "fa-trophy",
+            icon: "trophy",
+            icon_class: "oi-filled",
             label: _t("Certification"),
         };
     },

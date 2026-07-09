@@ -122,15 +122,15 @@ class StatusPage extends Component {
                     <table class="table table-hover table-sm">
                         <tbody>
                             <tr>
-                                <td class="col-3"><i class="me-1 fa fa-fw fa-id-card"/>Identifier</td>
+                                <td class="col-3"><i class="oi oi-fw oi-filled me-1" data-icon="badge"/>Identifier</td>
                                 <td class="col-3" t-out="this.data().identifier"/>
                             </tr>
                             <tr>
-                                <td class="col-3"><i class="me-1 fa fa-fw fa-address-book"/>Mac Address</td>
+                                <td class="col-3"><i class="oi oi-fw oi-filled me-1" data-icon="contact_page"/>Mac Address</td>
                                 <td class="col-3" t-out="this.data().mac_address"/>
                             </tr>
                             <tr t-if="this.data().server_status">
-                                <td class="col-3"><i class="me-1 fa fa-fw fa-database"/>Database</td>
+                                <td class="col-3"><i class="oi oi-fw me-1" data-icon="database"/>Database</td>
                                 <td class="col-3" t-out="this.data().server_status"/>
                             </tr>
                         </tbody>
@@ -140,7 +140,7 @@ class StatusPage extends Component {
                     <table class="table table-hover table-sm" t-if="this.data().network_interfaces.length > 0">
                         <tbody>
                             <tr t-foreach="this.data().network_interfaces" t-as="interface" t-key="interface.id">
-                                <td class="col-3"><i t-att-class="'me-1 fa fa-fw fa-' + (interface.is_wifi ? 'wifi' : 'sitemap')"/><t t-out="interface.is_wifi ? interface.ssid : 'Ethernet'"/></td>
+                                <td class="col-3"><i class="oi oi-fw me-1" t-att-data-icon="'interface.is_wifi ? 'wifi' : 'account_tree'"/><t t-out="interface.is_wifi ? interface.ssid : 'Ethernet'"/></td>
                                 <td class="col-3" t-out="interface.ip"/>
                             </tr>
                         </tbody>
@@ -151,7 +151,7 @@ class StatusPage extends Component {
                             <tbody>
                                 <tr t-foreach="Object.keys(this.data().devices)" t-as="deviceType" t-key="deviceType">
                                     <td class="device-type col-3">
-                                        <i t-att-class="'me-1 fa fa-fw fa- ' + this.icons[deviceType]"/>
+                                        <i class="oi oi-fw me-1" t-att-data-icon="this.icons[deviceType]"/>
                                         <t t-out="deviceType.replaceAll('_', ' ') + (deviceType === 'unsupported' ? '' : 's')"/>
                                     </td>
                                     <td class="col-3">

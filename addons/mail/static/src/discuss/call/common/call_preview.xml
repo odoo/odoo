@@ -15,7 +15,7 @@
                         </t>
                         <t t-else="">
                             <div class="d-flex flex-column align-items-center" t-att-class="{'mb-4': !this.env.inWelcomePage}">
-                                <i class="fa fa-camera fa-4x mb-2 opacity-50"/>
+                                <i class="oi oi-4x mb-2 opacity-50" data-icon="photo_camera"/>
                                 <span class="fs-4 fw-bold">No Camera Preview</span>
                                 <small class="opacity-50">
                                     <t t-if="this.rtc.cameraPermission !== 'granted'">Please allow access in your browser settings.</t>
@@ -36,16 +36,16 @@
         </div>
         <div t-if="this.props.hasSettingsAtBottom" class="d-flex justify-content-center gap-2 flex-wrap flex-lg-nowrap w-100 mw-100 mt-2">
             <div class="o-mail-CallPreview-deviceSelect">
-                <DeviceSelect icon="'fa fa-fw fa-microphone'" kind="'audioinput'"/>
+                <DeviceSelect icon_class="'oi oi-fw'" icon="'mic'" kind="'audioinput'"/>
             </div>
             <div class="o-mail-CallPreview-deviceSelect">
-                <DeviceSelect icon="'fa fa-fw fa-volume-up'" kind="'audiooutput'"/>
+                <DeviceSelect icon_class="'oi oi-fw'" icon="'volume_up'" kind="'audiooutput'"/>
             </div>
             <div class="o-mail-CallPreview-deviceSelect">
-                <DeviceSelect icon="'fa fa-fw fa-video-camera'" kind="'videoinput'"/>
+                <DeviceSelect icon_class="'oi oi-fw oi-filled'" icon="'videocam'" kind="'videoinput'"/>
             </div>
             <a role="button" class="btn btn-secondary" t-on-click="this.onClickSettings" title="Advanced Settings">
-                <i class="fa fa-fw fa-gear"/>
+                <i class="oi oi-fw oi-filled" data-icon="settings"/>
             </a>
         </div>
     </t>

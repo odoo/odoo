@@ -55,7 +55,7 @@ export function enterPin(pin) {
 export function clickLockButton() {
     return {
         content: "Click on the menu button",
-        trigger: ".pos-rightheader i.fa-unlock",
+        trigger: ".pos-rightheader i[data-icon='lock_open']",
         run: "click",
     };
 }

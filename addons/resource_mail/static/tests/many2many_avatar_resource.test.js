@@ -19,7 +19,7 @@ beforeEach(async () => {
     /* 1. Create data
         3 type of resources will be tested in the widget:
         - material resource (resourceComputer)
-            - fa-wrench should be used instead of avatar
+            - "build" icon should be used instead of avatar
             - clicking the icon should not open any popover
         - human resource not linked to a user (resourceMarie)
             (- avatar of the resource should not be displayed)
@@ -84,7 +84,7 @@ test("many2many_avatar_resource widget in form view", async () => {
             </form>`,
     });
     await contains("img.o_m2m_avatar", { count: 2 });
-    await contains(".fa-wrench", { count: 1 });
+    await contains("[data-icon='build']", { count: 1 });
     // Second and third records in widget should display employee avatars
     const avatarImages = queryAll(".many2many_tags_avatar_field_container .o_tag img");
     expect(avatarImages[0]).toHaveAttribute(
@@ -96,7 +96,7 @@ test("many2many_avatar_resource widget in form view", async () => {
         `/web/image/resource.resource/${data.resourcePierreId}/avatar_128`
     );
     // 1. Clicking on material resource's icon
-    await click(".many2many_tags_avatar_field_container .o_tag i.fa-wrench");
+    await click(".many2many_tags_avatar_field_container .o_tag i[data-icon='build']");
     await contains(".o_avatar_card", { count: 0 });
 
     // 2. Clicking on human resource's avatar with no user associated
@@ -140,9 +140,9 @@ test("many2many_avatar_resource widget in list view", async () => {
         "Two human resources with avatar should be displayed",
     );
     await contains(
-        "i.fa-wrench.o_m2m_avatar",
+        "i[data-icon='build'].o_m2m_avatar",
         { count: 1, target: row1 },
-        "One material resource with fa-wrench icon should be displayed",
+        "One material resource with 'build' icon should be displayed",
     );
     await contains(
         "div.o_tag_badge_text",
@@ -166,7 +166,7 @@ test("many2many_avatar_resource widget in list view", async () => {
     expect(tagMarie).toHaveAttribute("data-src", `/web/image/resource.resource/${data.resourceMarieId}/avatar_128`);
     expect(tagPierre).toHaveAttribute("data-src", `/web/image/resource.resource/${data.resourcePierreId}/avatar_128`);
     // 1. Clicking on material resource's icon
-    await click(".many2many_tags_avatar_field_container .o_tag i.fa-wrench");
+    await click(".many2many_tags_avatar_field_container .o_tag i[data-icon='build']");
     await contains(".o_avatar_card", { count: 0 });
     // 2. Clicking on human resource's avatar with no user associated
     await click(tagMarie);
@@ -221,9 +221,9 @@ test("many2many_avatar_resource widget in kanban view", async () => {
 
     const [ card1, card2 ] = queryAll(".oe_kanban_content");
     await contains(
-        "i.fa-wrench.o_m2m_avatar",
+        "i.o_m2m_avatar[data-icon='build']",
         { count: 1, target: card1 },
-        "One material resource with fa-wrench icon should be displayed",
+        "One material resource with 'build' icon should be displayed",
     );
     await contains(
         "img.o_m2m_avatar",
@@ -255,15 +255,15 @@ test("many2many_avatar_resource widget in kanban view", async () => {
     expect(".o-overlay-container input").toBeFocused();
     expect(".o-overlay-container .o_tag").toHaveCount(1);
     expect(".o-overlay-container .o_avatar_many2x_autocomplete").toHaveCount(3);
-    expect(".o-overlay-container .o_avatar_many2x_autocomplete i.o_material_resource.fa-wrench").toHaveCount(1);
+    expect(".o-overlay-container .o_avatar_many2x_autocomplete i.o_material_resource[data-icon='build']").toHaveCount(1);
     expect(".o-overlay-container .o_avatar_many2x_autocomplete img").toHaveCount(2);
     await webContains(
-        ".o-overlay-container .o_avatar_many2x_autocomplete i.o_material_resource.fa-wrench",
+        ".o-overlay-container .o_avatar_many2x_autocomplete i.o_material_resource[data-icon='build']",
         { visible: false },
         "Adding the wrench"
     ).click();
     await animationFrame();
-    await click(".o_kanban_record:nth-child(2) .many2many_tags_avatar_field_container .o_tag i.fa-wrench");
+    await click(".o_kanban_record:nth-child(2) .many2many_tags_avatar_field_container .o_tag i[data-icon='build']");
     await contains(".o_avatar_card", { count: 0 });
 
     // 1. Deleting the wrench

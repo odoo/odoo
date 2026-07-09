@@ -13,12 +13,12 @@
                             <field name="pos_self_ordering_mode" invisible="not pos_config_id"/>
                         </div>
                         <div class="d-flex flex-column align-items-start w-50" invisible="pos_self_ordering_mode == 'nothing'">
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="preview_self_order_app" type="object" string="Preview Web interface"/>
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="custom_link_action" type="object" string="Home buttons"/>
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="generate_qr_codes_page" type="object" string="Print QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="generate_qr_codes_zip" type="object" string="Download QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="get_pos_qr_stands" type="object" string="Free Metal / Wood Stands" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
-                            <button groups="base.group_no_one" class="btn-link p-0" icon="oi-arrow-right" name="update_access_tokens" type="object" string="Reset QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
+                            <button class="btn-link p-0" icon="east" name="preview_self_order_app" type="object" string="Preview Web interface"/>
+                            <button class="btn-link p-0" icon="east" name="custom_link_action" type="object" string="Home buttons"/>
+                            <button class="btn-link p-0" icon="east" name="generate_qr_codes_page" type="object" string="Print QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
+                            <button class="btn-link p-0" icon="east" name="generate_qr_codes_zip" type="object" string="Download QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
+                            <button class="btn-link p-0" icon="east" name="get_pos_qr_stands" type="object" string="Free Metal / Wood Stands" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
+                            <button groups="base.group_no_one" class="btn-link p-0" icon="east" name="update_access_tokens" type="object" string="Reset QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
                         </div>
                         <div class="content-group row mt-4" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
                             <label for="pos_self_ordering_service_mode" class="col-lg-4" string="Service at" />
@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <div>
-                            <button name="%(base.action_view_base_language_install)d" icon="oi-arrow-right" type="action" string="Add Languages" class="btn-link"/>
+                            <button name="%(base.action_view_base_language_install)d" icon="east" type="action" string="Add Languages" class="btn-link"/>
                         </div>
                     </setting>
                     <setting string="Background" help="Personalize the Interface" invisible="pos_self_ordering_mode == 'nothing'">

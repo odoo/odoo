@@ -35,7 +35,7 @@ export class TodoFormController extends FormControllerWithHTMLExpander {
             ...super.getStaticActionMenuItems(),
             openHistoryDialog: {
                 sequence: 50,
-                icon: "fa fa-history",
+                icon: "history",
                 description: _t("Version History"),
                 callback: () => this.openHistoryDialog(),
             },

@@ -11,8 +11,8 @@
                         <div class="d-flex gap-5">
                             <button name="action_create_alternative" type="object" class="btn-link d-block" help="Create a call for tender by adding alternative requests for quotation to different vendors.
                                 Make your choice by selecting the best combination of lead time, OTD and/or total amount.
-                                By comparing product lines you can also decide to order some products from one vendor and others from another vendor." string="Create Alternative" icon="fa-copy"/>
-                            <button name="action_compare_alternative_lines" type="object" class="btn-link d-block" string="Compare Product Lines" icon="fa-bar-chart" invisible="not alternative_po_ids"/>
+                                By comparing product lines you can also decide to order some products from one vendor and others from another vendor." string="Create Alternative" icon="content_copy"/>
+                            <button name="action_compare_alternative_lines" type="object" class="btn-link d-block" string="Compare Product Lines" icon="bar_chart" invisible="not alternative_po_ids"/>
                         </div>
                     </group>
                     <field name="alternative_po_ids" readonly="not id" widget="many2many_alt_pos" context="{'quotation_only': True}">
@@ -63,9 +63,9 @@
                 <field name="currency_id" column_invisible="True"/> <!-- Invisible fields -->
                 <field name="price_total_cc" string="Company Total" widget="monetary"/>
                 <field name="company_currency_id" column_invisible="True"/> <!-- Invisible fields -->
-                <button name="action_choose" string="Choose" type="object" class="o_clear_qty_buttons" icon="fa-bullseye"
+                <button name="action_choose" string="Choose" type="object" class="o_clear_qty_buttons" icon="crisis_alert"
                     invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase']"/>
-                <button name="action_clear_quantities" string="Clear" type="object" class="o_clear_qty_buttons" icon="fa-times"
+                <button name="action_clear_quantities" string="Clear" type="object" class="o_clear_qty_buttons" icon="close"
                     invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase']"/>
             </list>
         </field>

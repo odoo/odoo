@@ -10,12 +10,12 @@
             t-att-data-can-self-mark-uncompleted="canSelfMarkUncompleted"
             t-att-data-is-member="isMember"> <!-- The template is only used for members -->
             <button class="o_wslides_button_complete btn btn-sm" t-if="slideCompleted and canSelfMarkUncompleted or !slideCompleted and canSelfMarkCompleted">
-                <i t-if="slideCompleted" class="o_wslides_slide_completed fa fa-check-circle fa-fw text-success fa-lg" t-att-data-slide-id="slideId" title="Mark as not done"/>
-                <i t-else="" t-attf-class="fa #{uncompletedIcon or 'fa-circle-thin'} fa-fw fa-lg" t-att-data-slide-id="slideId" title="Mark as done"/>
+                <i t-if="slideCompleted" class="o_wslides_slide_completed oi oi-filled oi-fw oi-lg text-success" data-icon="check_circle" t-att-data-slide-id="slideId" title="Mark as not done"/>
+                <i t-else="" class="oi oi-fw oi-lg" t-attf-data-icon="#{uncompletedIcon or 'radio_button_unchecked'}" t-att-data-slide-id="slideId" title="Mark as done"/>
             </button>
             <button class="o_wslides_button_complete btn btn-sm border-0" t-else="" disabled="1">
-                <i t-if="slideCompleted" class="o_wslides_slide_completed fa fa-check fa-fw text-success fa-lg" t-att-data-slide-id="slideId" title="Can not be marked as not done"/>
-                <i t-else="" t-attf-class="fa #{uncompletedIcon or 'fa-circle-thin'} fa-fw fa-lg" t-att-data-slide-id="slideId" title="Can not be marked as done"/>
+                <i t-if="slideCompleted" class="o_wslides_slide_completed oi oi-fw oi-lg text-success" data-icon="check" t-att-data-slide-id="slideId" title="Can not be marked as not done"/>
+                <i t-else="" class="oi oi-fw oi-lg" t-attf-data-icon="#{uncompletedIcon or 'radio_button_unchecked'}" t-att-data-slide-id="slideId" title="Can not be marked as done"/>
             </button>
         </div>
     </t>

@@ -18,7 +18,7 @@
         t-att-tabindex="this.props.tabindex"
         t-custom-click.stop="this.onClick"
     >
-      <t t-if="this.icon" t-tag="this.icon.tag" t-att-class="this.icon.class + (this.buttonLabel ? ' me-1' : '')" t-att-src="this.icon.src"/>
+      <t t-if="this.icon" t-tag="this.icon.tag" t-att-class="this.icon.class + (this.buttonLabel ? ' me-1' : '') + ' ' + this.props.icon_class" t-att-src="this.icon.src" t-att-data-icon="this.icon.name"/>
       <t t-call-slot="contents"><span t-if="this.buttonLabel" t-out="this.buttonLabel"/></t>
     </t>
   </t>

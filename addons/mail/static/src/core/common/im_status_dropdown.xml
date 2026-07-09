@@ -3,17 +3,17 @@
     <t t-name="mail.ImStatusDropdown">
         <Dropdown menuClass="'o-mail-ImStatusDropdown'">
             <a href="#" t-att-class="{ 'd-block text-body py-2 d-flex flex-row align-items-baseline gap-2': this.env.isSmall }">
-                <ImStatus user="this.store.self_user"/> <span t-out="this.readableImStatus"/> <i t-if="this.env.isSmall" class="oi oi-chevron-right ms-auto mt-1"/>
+                <ImStatus user="this.store.self_user"/> <span t-out="this.readableImStatus"/> <i t-if="this.env.isSmall" class="oi ms-auto mt-1" data-icon="chevron_forward"/>
             </a>
             <t t-set-slot="content">
-                <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'online' }" onSelected="() => this.setManualImStatus('online')"><i class="fa fa-circle text-success me-1" title="Online" role="img"/> Online</DropdownItem>
+                <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'online' }" onSelected="() => this.setManualImStatus('online')"><i class="oi oi-filled text-success me-1" data-icon="circle" title="Online" role="img"/> Online</DropdownItem>
                 <hr class="my-1"/>
-                <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'away' }" onSelected="() => this.setManualImStatus('away')"><i class="fa fa-adjust o-yellow me-1" title="Away" role="img"/> Away</DropdownItem>
+                <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'away' }" onSelected="() => this.setManualImStatus('away')"><i class="oi o-yellow me-1" data-icon="contrast" title="Away" role="img"/> Away</DropdownItem>
                 <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'busy' }" onSelected="() => this.setManualImStatus('busy')">
-                    <i class="fa fa-minus-circle text-danger me-1" title="Busy" role="img"/> Do Not Disturb
+                    <i class="oi text-danger me-1" data-icon="remove_circle" title="Busy" role="img"/> Do Not Disturb
                     <div class="small text-muted">You will not receive any notifications</div>
                 </DropdownItem>
-                <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'offline' }" onSelected="() => this.setManualImStatus('offline')"><i class="fa fa-circle-o text-700 opacity-75 me-1" title="Offline" role="img"/> Offline</DropdownItem>
+                <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'offline' }" onSelected="() => this.setManualImStatus('offline')"><i class="oi text-700 opacity-75 me-1" data-icon="circle" title="Offline" role="img"/> Offline</DropdownItem>
             </t>
         </Dropdown>
     </t>

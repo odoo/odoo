@@ -70,7 +70,7 @@
 </t>
 
 <t t-name="mail.Thread.jumpPresent">
-    <button t-if="this.props.showJumpPresent and this.state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light shadow-sm border border-secondary" t-att-class="{ 'bottom-0': this.env.inChatter and !this.env.inChatter.aside }" t-custom-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi text-muted" t-att-class="{ 'oi-chevron-down': this.props.order === 'asc', 'oi-chevron-up': this.props.order !== 'asc' }"/></button>
+    <button t-if="this.props.showJumpPresent and this.state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light shadow-sm border border-secondary" t-att-class="{ 'bottom-0': this.env.inChatter and !this.env.inChatter.aside }" t-custom-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi text-muted" t-attf-data-icon="{{ this.props.order === 'asc' ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}"/></button>
 </t>
 
 <t t-name="mail.Thread.loadOlder">
@@ -114,7 +114,7 @@
                 'mt-2': !this.env.inChatWindow,
             }">
                 <img t-if="!this.channel?.parent_channel_id" class="rounded-3 object-fit-cover" t-att-src="this.channel.avatarUrl" alt="Thread Image"/>
-                <i t-else="" class="fa fa-comments-o text-muted" role="presentation"/>
+                <i t-else="" class="oi text-muted" data-icon="forum" role="presentation"/>
             </div>
             <div role="heading" aria-level="1" class="text-break" t-att-class="{ 'fs-1': !this.env.inChatWindow, 'fs-3': this.env.inChatWindow }" t-out="this.startMessageTitle"/>
         </div>

@@ -86,7 +86,7 @@
         <t t-set-slot="footer">
             <button class="btn btn-primary" t-att-disabled="this.state.loading" t-on-click="this.onClickSave">
                 <t t-if="this.state.loading">
-                    <i class="fa fa-icon fa-icon"/>
+                    <i class="oi oi-spin" data-icon="autorenew"/>
                 </t>
                 Save and Reload
             </button>

@@ -133,7 +133,8 @@ registry.category("web_tour.tours").add("snippet_popup_and_animations", {
         },
         {
             content: "Close the Popup",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i.fa-eye",
+            trigger:
+                ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i[data-icon='visibility']",
             run: "click",
         },
         {
@@ -191,7 +192,7 @@ registry.category("web_tour.tours").add("snippet_popup_and_animations", {
         },
         {
             content: "Click on the 'undo' button",
-            trigger: ".o-snippets-top-actions button.fa-undo",
+            trigger: ".o-snippets-top-actions button[data-icon='undo']",
             run: "click",
         },
         {

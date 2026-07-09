@@ -147,7 +147,7 @@
                     title="Add an address"
                     aria-label="Add an address"
                 >
-                    <i class="oi oi-plus me-2"/>Add Address
+                    <i class="oi me-2" data-icon="add"/>Add Address
                 </a>
             </div>
             <t t-call="website_sale.address_list"
@@ -173,7 +173,7 @@
                     title="Add an address"
                     aria-label="Add an address"
                 >
-                    <i class="oi oi-plus me-2"/>Add Address
+                    <i class="oi me-2" data-icon="add"/>Add Address
                 </a>
             </div>
             <div t-if="has_delivery" class="form-check form-switch mt-2">
@@ -288,14 +288,14 @@
     <template id="website_sale.address_edit_button" name="Address edit button">
         <t t-if="xmlid != 'website_sale.confirmation'">
             <a t-if="order.partner_invoice_id.country_id" class="float-end no-decoration" href="/shop/checkout">
-                <i class="fa fa-pencil me-1"/>Edit
+                <i class="oi oi-filled me-1" data-icon="edit"/>Edit
             </a>
             <a
                 t-else=""
                 class="float-end no-decoration"
                 t-attf-href="/shop/address?partner_id={{order.partner_invoice_id.id}}&amp;address_type=billing"
             >
-                <i class="fa fa-pencil me-1"/>Want an invoice?
+                <i class="oi oi-filled me-1" data-icon="edit"/>Want an invoice?
             </a>
         </t>
     </template>

@@ -198,7 +198,7 @@ export const FAKE_MODEL = {
             "calendar"
         ),
         description: Field.parseFieldNode(
-            createElement("field", { name: "description" , class: "text-wrap"}),
+            createElement("field", { name: "description", class: "text-wrap" }),
             { event: { fields: FAKE_FIELDS } },
             "event",
             "calendar"
@@ -473,7 +473,7 @@ export async function selectAllDayRange(startDate, endDate) {
 }
 export async function closeCwPopOver() {
     if (getMockEnv().isSmall) {
-        await contains(`.oi-arrow-left`).click();
+        await contains(`[data-icon="west"]`).click();
     } else {
         await contains(`.o_cw_popover_close`).click();
     }
@@ -642,7 +642,7 @@ export async function resizeEventToTime(eventId, dateTime) {
  * @param {string} date
  * @returns {Promise<void>}
  */
-export async function resizeEventToDate(eventId, date, fromStart=false) {
+export async function resizeEventToDate(eventId, date, fromStart = false) {
     const eventEl = findEvent(eventId);
     const slot = findAllDaySlot(date);
 
@@ -652,7 +652,9 @@ export async function resizeEventToDate(eventId, date, fromStart=false) {
     await animationFrame();
 
     // Show the resizer
-    const resizer = queryFirst(fromStart ? ".fc-event-resizer-start" : ".fc-event-resizer-end", { root: eventEl });
+    const resizer = queryFirst(fromStart ? ".fc-event-resizer-start" : ".fc-event-resizer-end", {
+        root: eventEl,
+    });
     Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });
 
     instantScrollTo(slot);

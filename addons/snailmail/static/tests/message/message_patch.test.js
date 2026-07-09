@@ -31,8 +31,8 @@ test("Sent", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-notification i.fa-paper-plane");
-    await contains(".o-snailmail-SnailmailNotificationPopover i.fa-check");
+    await click(".o-mail-Message-notification i[data-icon='send']");
+    await contains(".o-snailmail-SnailmailNotificationPopover i[data-icon='check']");
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Sent" });
 });
 
@@ -56,8 +56,8 @@ test("Cancelled", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-notification i.fa-paper-plane");
-    await contains(".o-snailmail-SnailmailNotificationPopover i.fa-trash-o");
+    await click(".o-mail-Message-notification i[data-icon='send']");
+    await contains(".o-snailmail-SnailmailNotificationPopover i[data-icon='delete']");
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Cancelled" });
 });
 
@@ -81,8 +81,8 @@ test("Pending", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-notification i.fa-paper-plane");
-    await contains(".o-snailmail-SnailmailNotificationPopover i.fa-clock-o");
+    await click(".o-mail-Message-notification i[data-icon='send']");
+    await contains(".o-snailmail-SnailmailNotificationPopover i[data-icon='schedule']");
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Awaiting Dispatch" });
 });
 
@@ -107,7 +107,7 @@ test("No Price Available", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await click(".o-mail-Message-notification i[data-icon='send']");
     await contains(".o-snailmail-SnailmailNotificationPopover", {
         text: "(Country Not Supported)",
     });
@@ -134,7 +134,7 @@ test("Credit Error", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await click(".o-mail-Message-notification i[data-icon='send']");
     await contains(".o-snailmail-SnailmailNotificationPopover", {
         text: "(Insufficient Credits)",
     });
@@ -161,7 +161,7 @@ test("Trial Error", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await click(".o-mail-Message-notification i[data-icon='send']");
     await contains(".o-snailmail-SnailmailNotificationPopover", {
         text: "(No IAP Credits)",
     });
@@ -188,7 +188,7 @@ test("Format Error", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await click(".o-mail-Message-notification i[data-icon='send']");
     await contains(".o-snailmail-SnailmailNotificationPopover", {
         text: "(Format Error)",
     });
@@ -211,7 +211,7 @@ test("Missing Required Fields", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await click(".o-mail-Message-notification i[data-icon='send']");
     await contains(".o-snailmail-SnailmailNotificationPopover", {
         text: "(Missing Required Fields)",
     });

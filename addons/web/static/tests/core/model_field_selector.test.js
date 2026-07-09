@@ -871,28 +871,28 @@ test("clear button (allowEmpty=true)", async () => {
 
     expect(getModelFieldSelectorValues()).toEqual(["baaarrr"]);
     expect(".o_model_field_selector_warning").toHaveCount(1);
-    expect(".o_model_field_selector .fa.fa-times").toHaveCount(1);
+    expect(".o_model_field_selector [data-icon='close']").toHaveCount(1);
 
     // clear when popover is not open
-    await contains(".o_model_field_selector .fa.fa-times").click();
+    await contains(".o_model_field_selector [data-icon='close']").click();
     expect(getModelFieldSelectorValues()).toEqual([]);
     expect(".o_model_field_selector_warning").toHaveCount(0);
-    expect(".o_model_field_selector .fa.fa-times").toHaveCount(0);
+    expect(".o_model_field_selector [data-icon='close']").toHaveCount(0);
     expect.verifySteps([`path is ""`]);
 
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name").click();
     expect(getModelFieldSelectorValues()).toEqual(["Bar"]);
     expect(".o_model_field_selector_warning").toHaveCount(0);
-    expect(".o_model_field_selector .fa.fa-times").toHaveCount(1);
+    expect(".o_model_field_selector [data-icon='close']").toHaveCount(1);
     expect.verifySteps([`path is "bar"`]);
 
     // clear when popover is open
     await openModelFieldSelectorPopover();
-    await contains(".o_model_field_selector .fa.fa-times").click();
+    await contains(".o_model_field_selector [data-icon='close']").click();
     expect(getModelFieldSelectorValues()).toEqual([]);
     expect(".o_model_field_selector_warning").toHaveCount(0);
-    expect(".o_model_field_selector .fa.fa-times").toHaveCount(0);
+    expect(".o_model_field_selector [data-icon='close']").toHaveCount(0);
     expect.verifySteps([`path is ""`]);
 });
 

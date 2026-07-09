@@ -75,20 +75,20 @@
     &.o_event_dot {
         &.o_attendee_status_needsAction {
             &:before {
-                content: "\f1db"; // fa-circle-thin
+                content: "radio_button_unchecked";
             }
         }
 
         &.o_attendee_status_tentative:before {
-            content: "\f059"; // fa-question-circle
+            content: "help";
         }
 
         &.o_attendee_status_declined:before {
-            content: "\f05e"; // fa-ban
+            content: "block";
         }
 
         &.o_attendee_status_alone {
-            content: "\f06a"; // fa-exclamation-circle
+            content: "error";
         }
     }
 

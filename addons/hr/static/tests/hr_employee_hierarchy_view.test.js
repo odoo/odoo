@@ -82,7 +82,7 @@ test("load hierarchy view", async () => {
     expect(".o_hierarchy_node_button.btn-primary .o_hierarchy_icon").toHaveCount(0, {
         message: "the icon has been replaced in that js_class",
     });
-    expect(".o_hierarchy_node_button.btn-primary .fa-caret-right").toHaveCount(1, {
+    expect(".o_hierarchy_node_button.btn-primary [data-icon='arrow_right']").toHaveCount(1, {
         message: "the icon has been replaced in that js_class",
     });
     expect(".o_hierarchy_node_button.btn-primary").toHaveText("1 people");
@@ -90,7 +90,7 @@ test("load hierarchy view", async () => {
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node").toHaveCount(1);
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node_content").toHaveText("Albert");
     expect(".o_hierarchy_node_button.btn-secondary").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-secondary .fa-caret-down").toHaveCount(1);
+    expect(".o_hierarchy_node_button.btn-secondary [data-icon='arrow_drop_down']").toHaveCount(1);
     expect(".o_hierarchy_node_button.btn-secondary").toHaveText("2 people");
 });
 
@@ -111,9 +111,9 @@ test("display the avatar of the parent when there is more than one node in the s
 });
 
 test("hierarchy with a self manager employee", async () => {
-    Employee._records = [{ id: 1, name: "Albert", parent_id: 1, child_ids: [1] }]
+    Employee._records = [{ id: 1, name: "Albert", parent_id: 1, child_ids: [1] }];
     await mountView({
-        context:{
+        context: {
             hierarchy_res_id: 1,
         },
         type: "hierarchy",
@@ -128,15 +128,15 @@ test("hierarchy with a self manager employee", async () => {
     expect(".o_hierarchy_node").toHaveCount(1);
 });
 
-test("hierarchy with a cycle", async () =>{
+test("hierarchy with a cycle", async () => {
     Employee._records = [
-                { id: 1, name: "Albert", parent_id: 4, child_ids: [2, 3] },
-                { id: 2, name: "Georges", parent_id: 1, child_ids: [] },
-                { id: 3, name: "Josephine", parent_id: 1, child_ids: [4] },
-                { id: 4, name: "Louis", parent_id: 3, child_ids: [1] },
-            ]
+        { id: 1, name: "Albert", parent_id: 4, child_ids: [2, 3] },
+        { id: 2, name: "Georges", parent_id: 1, child_ids: [] },
+        { id: 3, name: "Josephine", parent_id: 1, child_ids: [4] },
+        { id: 4, name: "Louis", parent_id: 3, child_ids: [1] },
+    ];
     await mountView({
-        context:{
+        context: {
             hierarchy_res_id: 1,
         },
         type: "hierarchy",

@@ -200,7 +200,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
     run: "edit S",
 }, {
-    trigger: '[name="sale_line_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
+    trigger: '[name="sale_line_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.oi))',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
     run: "click",
 },
@@ -220,7 +220,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select an employee to link a Sales Order Item on his timesheets into this project.',
     run: 'click',
 }, {
-    trigger: '[name="employee_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
+    trigger: '[name="employee_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.oi))',
     content: 'Select the first employee in the autocomplete dropdown',
     run: "click",
 }, {
@@ -228,7 +228,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select the Sales Order Item to link to the timesheets of this employee.',
     run: "edit S",
 }, {
-    trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
+    trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.oi))',
     content: 'Select the first Sales Order Item in the autocomplete dropdown.',
     run: "click",
 }, {
@@ -266,7 +266,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select the first sale order of the list',
     run: "edit Prepaid",
 }, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
+    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.oi))',
     content: 'Select the first item on the autocomplete dropdown',
     run: "click",
 }, {
@@ -278,7 +278,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Open the project',
     run: "click",
 }, {
-    trigger: ".o_control_panel_navigation button i.fa-sliders",
+    trigger: ".o_control_panel_navigation button i[data-icon='tune']",
     content: 'Open embedded actions',
     run: "click",
 }, {

@@ -30,7 +30,7 @@
                             <p>Check our <a class="o_translate_inline" href="/event" title="List of Future Events" aria-label="Link to list of future events">list of future events</a>.</p>
                             <div class="o_not_editable my-3" groups="event.group_event_manager">
                                 <a class="btn o_wevent_cta mb-4" target="_blank" t-attf-href="/odoo/event.event/{{event.id}}">
-                                    <span class="fa fa-gear me-1"/> Configure Booths
+                                    <span class="oi oi-filled me-1" data-icon="settings"/> Configure Booths
                                 </a>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                                 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                                     <h5 class="my-0">Location</h5>
                                     <div t-if="event.exhibition_map" class="ms-2 small">
-                                        <a class="text-decoration-none text-center" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fa fa-map-o me-1"/>View Plan</a>
+                                        <a class="text-decoration-none text-center" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="oi me-1" data-icon="map"/>"View Plan</a>
                                         <div role="dialog" id="mapModal" class="modal" tabindex="-1">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
@@ -97,7 +97,7 @@
                                 <div class="col-12 o_wbooth_booths d-flex flex-wrap align-items-center gap-2" t-att-data-selected-booth-ids="selected_booth_ids or ''"/>
                                 <div class="row">
                                     <div class="alert alert-danger col-12 o_wbooth_unavailable_booth_alert d-none" role="alert">
-                                        <i class="fa fa-exclamation-triangle"/>
+                                        <i class="oi" data-icon="warning"/>
                                         <span>Sorry, several booths are now sold out. Please change your choices before validating again.</span>
                                     </div>
                                 </div>
@@ -123,14 +123,14 @@
         <ul class="o_wevent_booth_order_progress d-none d-md-block list-unstyled px-3 py-2 text-bg-light rounded m-0">
             <li t-attf-class="position-relative float-start m-0 text-center">
                 <a t-if="step!='STEP_BOOTH_SELECTION'" class="d-inline-flex align-items-center text-decoration-none" t-attf-href="/event/#{slug(event)}/booth?#{keep_query('booth_category_id', 'booth_ids')}">
-                    <span>Booth Selection</span><span class="fa fa-angle-right d-inline-block align-middle mx-2 mx-lg-3 opacity-75"/>
+                    <span>Booth Selection</span><span class="oi d-inline-block align-middle mx-2 mx-lg-3 opacity-75" data-icon="keyboard_arrow_right"/>
                 </a>
                 <span t-else="" class="d-inline-flex align-items-center text-decoration-none text-reset">
-                    <span>Booth Selection</span><span class="fa fa-angle-right d-inline-block align-middle mx-2 mx-lg-3 opacity-75"/>
+                    <span>Booth Selection</span><span class="oi d-inline-block align-middle mx-2 mx-lg-3 opacity-75" data-icon="keyboard_arrow_right"/>
                 </span>
             </li>
             <li t-attf-class="d-inline-flex align-items-center position-relative float-start m-0 text-center #{'' if step=='STEP_DETAILS_FORM' else 'opacity-75'}">
-                Contact Details<span class="fa fa-angle-right d-inline-block align-middle mx-2 mx-lg-3 opacity-75"/>
+                Contact Details<span class="oi d-inline-block align-middle mx-2 mx-lg-3 opacity-75" data-icon="keyboard_arrow_right"/>
             </li>
             <li class="position-relative float-start m-0 text-center opacity-75">
                 <span>Confirmed</span>

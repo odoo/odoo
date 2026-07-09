@@ -17,7 +17,7 @@
                             <span class="d-flex flex-grow-1 align-items-center">
                                 <span class="mx-2 text-truncate fs-6" t-out="this.props.message.getPersonaName(persona)"/>
                                 <div class="flex-grow-1"/>
-                                <button t-if="this.props.message.effectiveSelf.eq(persona)" class="btn btn-light fa fa-trash rounded-pill bg-inherit border-0" title="Remove" t-on-click.stop="() => reaction.remove()"/>
+                                <button t-if="this.props.message.effectiveSelf.eq(persona)" class="btn btn-light oi oi-filled rounded-pill bg-inherit border-0" data-icon="delete" title="Remove" t-on-click.stop="() => reaction.remove()"/>
                             </span>
                         </div>
                     </TabPanel>

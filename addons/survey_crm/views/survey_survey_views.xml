@@ -13,7 +13,8 @@
                     type="object"
                     class="oe_stat_button"
                     invisible="not (survey_type in ['survey', 'live_session', 'custom'] and lead_count != 0)"
-                    icon="fa-star">
+                    icon="star"
+                    icon_class="oi-filled">
                     <field string="Leads" name="lead_count" widget="statinfo"/>
                 </button>
             </xpath>
@@ -23,7 +24,7 @@
             </xpath>
 
             <xpath expr="//list//field[@name='title']" position="after">
-                <button type="button" icon="fa-star" title="This question generates leads"
+                <button type="button" icon="star" icon_class="oi-filled" title="This question generates leads"
                         invisible="not (survey_type in ['survey', 'live_session', 'custom'] and generate_lead)"/>
             </xpath>
         </field>

@@ -1,15 +1,15 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ListSelector">
         <Dropdown state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef" focusToggleOnClosed="false">
-            <button t-custom-ref="listSelector" class="btn btn-light fa fa-list-ul" t-att-title="this.props.title" name="list_selector"/>
+            <button t-custom-ref="listSelector" class="btn btn-light oi" data-icon="format_list_bulleted" t-att-title="this.props.title" name="list_selector"/>
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">
                     <t t-set="activeMode" t-value="this.getActiveMode()"/>
                     <t t-foreach="this.props.getButtons()" t-as="button" t-key="button_index">
                         <DropdownItem
                             tag="'button'"
-                            attrs="{ name: button.id, title: button.description }"
-                            class="{'dropdown-item_active_noarrow btn btn-light fa': true, [button.icon]: true, active: activeMode === button.mode }"
+                            attrs="{ name: button.id, title: button.description, 'data-icon': button.icon }"
+                            class="{'dropdown-item_active_noarrow btn btn-light oi': true, active: activeMode === button.mode }"
                             onSelected="button.run"
                             t-on-pointerdown.prevent="() => {}"
                         />

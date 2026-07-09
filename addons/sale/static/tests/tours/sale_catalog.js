@@ -50,12 +50,12 @@ registry.category("web_tour.tours").add('sale_catalog', {
         },
         {
             content: "Add the product to the SO",
-            trigger: '.o_kanban_record:contains("Restricted Product") .fa-shopping-cart',
+            trigger: '.o_kanban_record:contains("Restricted Product") [data-icon="shopping_cart"]',
             run: 'click',
         },
         {
             content: "Wait for product to be added",
-            trigger: '.o_kanban_record:contains("Restricted Product"):not(:has(.fa-shopping-cart))',
+            trigger: '.o_kanban_record:contains("Restricted Product"):not(:has([data-icon="shopping_cart"]))',
         },
         {
             content: "Input a custom quantity",
@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add('sale_catalog', {
         },
         {
             content: "Increase the quantity",
-            trigger: '.o_kanban_record:contains("Restricted Product") .oi-plus',
+            trigger: '.o_kanban_record:contains("Restricted Product") [data-icon="add"]',
             run: 'click',
         },
         {

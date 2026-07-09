@@ -19,7 +19,7 @@
         --o-hb-row-color: var(--o-hb-row-color-popover, #{$o-we-bg-lightest});
         --o-hb-row-color-active: var(--o-hb-row-color-active-popover, #{$o-we-bg-darkest});
         --o-hb-row-sublevel-color: var(--o-hb-row-sublevel-color-popover, #{mix($o-we-bg-lighter, $o-we-fg-light)});
-        .hb-row-content:has(button.fa-trash) {
+        .hb-row-content:has(button[data-icon="delete"]) {
             align-items: stretch;
         }
         .hb-row-label {
@@ -76,7 +76,7 @@
 
     .o_hb_collapse_toggler {
         position: absolute;
-        padding-left: $o-hb-row-spacing;
+        padding-left: 0;
         align-self: baseline;
         z-index: $_z-index + 1;
         box-shadow: none;

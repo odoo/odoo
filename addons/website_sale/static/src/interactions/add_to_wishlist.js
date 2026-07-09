@@ -38,10 +38,9 @@ export class AddToWishlist extends Interaction {
         wishlistUtils.updateWishlistNavBar();
         button.disabled = true;
         if (button.classList.contains('o_add_wishlist')) {
-            const iconEl = button.querySelector('.fa');
+            const iconEl = button.querySelector('.oi');
             if (iconEl) {
-                iconEl.classList.remove('fa-heart-o');
-                iconEl.classList.add('fa-heart');
+                iconEl.classList.add('oi-filled');
             }
         }
         const saveForLaterButton = document.querySelector('#wsale_save_for_later_button');

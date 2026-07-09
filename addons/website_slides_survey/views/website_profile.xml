@@ -27,7 +27,7 @@
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-light" aria-label="Search" title="Search">
-                                    <i class="oi oi-search"/>
+                                    <i class="oi" data-icon="search"/>
                                 </button>
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                     <p t-if="certification_search_terms">No certification found for the given search term.</p>
                     <p t-else="">You have not taken any certification yet.</p>
                     <a href="/slides?slide_category=certification">
-                        <i class="oi oi-arrow-right"/> See Certifications
+                        <i class="oi" data-icon="east"/> See Certifications
                     </a>
                 </t>
                 <div t-else="" class="card p-3 mb-3" t-foreach="user_inputs" t-as="user_input">
@@ -76,7 +76,7 @@
                                     <small class="fw-bold">Score: <span t-out="certificate.scoring_percentage"/> %</small>
                                     <div class="float-end">
                                         <a role="button" class="float-end" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
-                                            <i class="fa fa-download" aria-label="Download certification" title="Download Certification"/>
+                                            <i class="oi" data-icon="download" aria-label="Download certification" title="Download Certification"/>
                                         </a>
                                         <a role="button" class="o_wslides_share me-2"
                                            t-att-data-id="certificate.slide_id.channel_id.id"
@@ -84,7 +84,7 @@
                                            t-att-data-url="certificate.slide_id.channel_id.website_absolute_url"
                                            t-att-data-email-sharing="bool(certificate.slide_id.channel_id.share_channel_template_id)"
                                            data-is-channel="True">
-                                            <i class="fa fa-share-alt" aria-label="Share" title="Share"/>
+                                            <i class="oi" data-icon="family_history" aria-label="Share" title="Share"/>
                                         </a>
                                     </div>
                                 </div>
@@ -98,14 +98,14 @@
             <div class="text-muted d-inline-block">
                 Certifications are exams that you successfully passed. <br />
                 <a href="/slides?slide_type=certification" class="btn-link">
-                    <i class="fa fa-arrow-right"></i> Get Certified
+                    <i class="oi" data-icon="arrow_forward"></i> Get Certified
                 </a>
             </div>
         </t>
         <t t-else="">
             <div class="text-muted d-inline-block">No certifications yet!</div>
             <div class="text-end d-inline-block pull-right">
-                <a href="/slides?slide_category=certification" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Certifications</a>
+                <a href="/slides?slide_category=certification" class="btn btn-link btn-sm"><i class="oi me-1" data-icon="east"/>All Certifications</a>
             </div>
         </t>
     </template>

@@ -62,7 +62,7 @@ patch(DiscussApp.prototype, {
                 return {
                     extraClass: "o-mail-DiscussSidebarCategory-livechat",
                     hideWhenEmpty: true,
-                    icon: "fa fa-commenting-o",
+                    icon: "mode_comment",
                     id: `im_livechat.category_default`,
                     name: _t("Live Chat"),
                     sequence: 17,
@@ -77,7 +77,7 @@ patch(DiscussApp.prototype, {
                 }
                 return {
                     extraClass: "o-mail-DiscussSidebarCategory-livechatNeedHelp",
-                    icon: "fa fa-exclamation-circle",
+                    icon: "error",
                     id: `im_livechat.category_need_help`,
                     name: _t("Looking for help"),
                     sequence: 15,

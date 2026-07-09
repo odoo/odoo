@@ -14,7 +14,7 @@
                                 name="action_view_webhook_logs"
                                 string="Logs"
                                 class="oe_stat_button"
-                                icon="fa-list"
+                                icon="format_list_bulleted"
                             />
                         </div>
                         <field name="active" invisible="1" />
@@ -56,7 +56,7 @@
                                         />
                                         <field name="trg_field_ref_model_name" invisible="1" />
                                     </div>
-                                    <div class="text-muted" invisible="trigger != 'on_change'"><i class="fa fa-warning"/> Automation rules triggered by UI changes will be executed <em>every time</em> the watched fields change, <em>whether you save or not</em>.</div>
+                                    <div class="text-muted" invisible="trigger != 'on_change'"><i class="oi" data-icon="warning"/> Automation rules triggered by UI changes will be executed <em>every time</em> the watched fields change, <em>whether you save or not</em>.</div>
                                 </div>
                                 <label for="url" string="Secret URL" invisible="trigger != 'on_webhook'"/>
                                 <div class="d-flex flex-row" invisible="trigger != 'on_webhook'">
@@ -65,7 +65,7 @@
                                         type="object"
                                         name="action_rotate_webhook_uuid"
                                         class="oe_inline btn btn-link flex-shrink-0 px-1 py-0"
-                                        icon="fa-refresh"
+                                        icon="refresh"
                                         string="Renew"
                                         help="If renewed, update the secret URL in the third-party app that calls this webhook."
                                     />
@@ -80,7 +80,7 @@
                                         type="object"
                                         name="action_open_scheduled_action"
                                         string="Scheduled action"
-                                        icon="oi-arrow-right"
+                                        icon="east"
                                         class="oe_inline btn-link mt-n1"
                                         groups="base.group_no_one"
                                     />
@@ -125,7 +125,7 @@
                                 <div invisible="trigger != 'on_webhook'">
                                     <field name="record_getter" string="Target Record"/>
                                     <div>
-                                        <div  class="text-muted"><i class="fa fa-info-circle"/> The default target record getter will work out-of-the-box for any webhook coming from another Odoo instance.</div>
+                                        <div  class="text-muted"><i class="oi" data-icon="info"/> The default target record getter will work out-of-the-box for any webhook coming from another Odoo instance.</div>
                                         <span class="text-muted"> Available variables: </span>
                                         <ul class="text-muted">
                                             <li><code>env</code>: environment on which the action is triggered</li>
@@ -217,7 +217,7 @@
                                 </div>
                             </div>
                             <div class="d-none d-md-flex flex-grow-1 align-items-center gap-3 o_automation_actions" data-name="more-info">
-                                <i class="fa fa-2x fa-arrow-right text-primary" title="Actions" />
+                                <i class="oi oi-2x text-primary" data-icon="arrow_forward" title="Actions" />
                                 <field name="action_server_ids" widget="base_automation_actions_one2many" class="align-self-center w-100 me-md-3" />
                             </div>
                         </t>

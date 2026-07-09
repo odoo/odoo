@@ -62,21 +62,21 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="create_action" type="object"
-                                    invisible="binding_model_id" icon="fa-plus-square"
+                                    invisible="binding_model_id" icon="add_box" icon_class="oi-filled"
                                     help="Display an option on related documents to print this report" class="oe_stat_button">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Add to the 'Print' menu</span>
                                     </div>
                             </button>
                             <button name="unlink_action" type="object"
-                                    invisible="not binding_model_id" icon="fa-minus-square"
+                                    invisible="not binding_model_id" icon="indeterminate_check_box" icon_class="oi-filled"
                                     help="Remove the contextual action related to this report" class="oe_stat_button">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Remove from the 'Print' menu</span>
                                     </div>
                             </button>
                             <button name="associated_view" type="object"
-                                    invisible="'qweb' not in report_type" icon='fa-code'
+                                    invisible="'qweb' not in report_type" icon='code'
                                     class="oe_stat_button">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Qweb Views</span>
@@ -362,7 +362,7 @@
                                 name="action_open_parent_action"
                                 invisible="not parent_id"
                                 class="oe_stat_button"
-                                icon="fa-database"
+                                icon="database"
                             >
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Parent Action</span>
@@ -374,7 +374,7 @@
                                 invisible="not ir_cron_ids or context.key != 'server_action'"
                                 context="{'key': 'ir_cron'}"
                                 class="oe_stat_button"
-                                icon="fa-refresh"
+                                icon="refresh"
                             >
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Scheduled Action</span>
@@ -403,7 +403,7 @@
                                 <field name="state" widget="badges_selection" options="{'allowed_selection_field': 'allowed_states'}"/>
                             </div>
                             <div class="alert alert-warning" role="alert" invisible="not warning">
-                                <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="warning" nolabel="1"/>
+                                <i class="oi pe-2" data-icon="warning" title="Warning"/><field class="d-inline" name="warning" nolabel="1"/>
                             </div>
                             <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                                 <field name="evaluation_type" class="oe_inline"/>
@@ -497,7 +497,8 @@
                                         <widget name="documentation_link"
                                                 path="/developer/reference/backend/orm.html"
                                                 label="ORM API Documentation"
-                                                icon="oi oi-fw oi-arrow-right me-1"/>
+                                                icon="east"
+                                                icon_class="oi-fw"/>
                                     </p>
                                     <div >
                                         <p>Example of Python code:</p>
@@ -538,26 +539,34 @@ env['res.partner'].create({'name': partner_name})
                             <i
                                 data-name="server_action_icon"
                                 t-att-title="record.state.value"
-                                class="fa fa-fw"
+                                class="oi oi-fw"
                                 t-att-class="{
-                                    'code': 'fa-code',
-                                    'object_create': 'fa-plus-square',
-                                    'object_copy': 'fa-clone',
-                                    'object_write': 'fa-pencil',
-                                    'multi': 'fa-list-ul',
-                                    'mail_post': 'fa-envelope',
-                                    'followers': 'fa-user',
-                                    'remove_followers': 'fa-user-times',
-                                    'next_activity': 'fa-clock-o',
-                                    'sms': 'fa-mobile',
-                                    'webhook': 'fa-paper-plane',
-                                    'whatsapp': 'fa-whatsapp',
-                                    'ai': 'fa-magic',
-                                }[record.state.raw_value] || 'fa-circle-thin'"
+                                    'object_create': 'oi-filled',
+                                    'object_write': 'oi-filled',
+                                    'mail_post': 'oi-filled',
+                                    'followers': 'oi-filled',
+                                    'remove_followers': 'oi-filled',
+                                    'webhook': 'oi-filled',
+                                }[record.state.raw_value]"
+                                t-att-data-icon="{
+                                    'code': 'code',
+                                    'object_create': 'add_box',
+                                    'object_copy': 'content_copy',
+                                    'object_write': 'edit',
+                                    'multi': 'format_list_bulleted',
+                                    'mail_post': 'mail',
+                                    'followers': 'person',
+                                    'remove_followers': 'person_remove',
+                                    'next_activity': 'schedule',
+                                    'sms': 'smartphone',
+                                    'webhook': 'send',
+                                    'whatsapp': 'oi_whatsapp',
+                                    'ai': 'wand_stars',
+                                }[record.state.raw_value] || 'radio_button_unchecked'"
                             />
-                            <i class="fa fa-warning text-warning px-2 m-0" invisible="not warning" t-att-title="record.warning.raw_value"/>
+                            <i class="oi text-warning px-2 m-0" data-icon="warning" invisible="not warning" t-att-title="record.warning.raw_value"/>
                             <field name="name" class="text-truncate" />
-                            <button type="delete" name="delete" class="btn fa fa-trash fa-xl px-3 ms-auto" title="Delete Action" />
+                            <button type="delete" name="delete" class="btn oi oi-filled px-3 ms-auto" data-icon="delete" title="Delete Action" />
                         </t>
                     </templates>
                 </kanban>
@@ -663,10 +672,10 @@ env['res.partner'].create({'name': partner_name})
                     <field name="sequence" widget='handle'/>
                     <field name="action_id"/>
                     <field name="state" readonly="1"/>
-                    <button name="action_launch" invisible="state != 'open'" string="Launch" type="object" icon="fa-cogs" help="Launch Configuration Wizard"/>
+                    <button name="action_launch" invisible="state != 'open'" string="Launch" type="object" icon="settings_applications" help="Launch Configuration Wizard"/>
                     <button name="action_open" invisible="state != 'done'"
                             string="Todo" type="object" help="Set as Todo"
-                            icon="fa-exchange"/>
+                            icon="swap_horiz"/>
                 </list>
             </field>
         </record>
@@ -678,11 +687,11 @@ env['res.partner'].create({'name': partner_name})
                   <header>
                         <button name="action_launch"
                             invisible="state != 'open'" string="Launch"
-                            type="object" icon="fa-cogs" class="oe_highlight"
+                            type="object" icon="settings_applications" class="oe_highlight"
                             help="Launch Configuration Wizard"/>
                         <button name="action_open" invisible="state != 'done'"
                             string="Set as Todo" type="object"
-                            icon="fa-exchange" class="oe_highlight"/>
+                            icon="swap_horiz" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="open,done" nolabel="1" readonly="1" />
                   </header>
                   <sheet>

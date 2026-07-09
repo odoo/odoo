@@ -83,9 +83,9 @@
         <BuilderRow label.translate="Link Style" extraLabelClass="'fw-bolder'">
             <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `--link-color` }"/>
-            <BuilderButton icon="'fa-fw fa-bold'" actionParam="{ variable: `--link-font-weight` }" actionValue="'bolder'"/>
-            <BuilderButton icon="'fa-fw fa-italic'" actionParam="{ variable: `--link-font-style` }" actionValue="'italic'"/>
-            <BuilderButton icon="'fa-fw fa-underline'" actionParam="{ variable: `--link-text-decoration-line`}" actionValue="'underline'"/>
+            <BuilderButton icon="'format_bold'" iconClass="'oi-fw'" actionParam="{ variable: `--link-font-weight` }" actionValue="'bolder'"/>
+            <BuilderButton icon="'format_italic'" iconClass="'oi-fw'" actionParam="{ variable: `--link-font-style` }" actionValue="'italic'"/>
+            <BuilderButton icon="'format_underlined'" iconClass="'oi-fw'" actionParam="{ variable: `--link-text-decoration-line`}" actionValue="'underline'"/>
         </BuilderRow>
         <BuilderRow label.translate="Font Family" level="1">
             <FontFamilyPicker action="'mass_mailing.CustomizeMailingVariable'" actionParam="{variable: `--link-font-family`}"/>
@@ -105,9 +105,9 @@
         </BuilderRow>
         <BuilderRow>
             <FontFamilyPicker extraClass="'ps-2'" action="'mass_mailing.CustomizeMailingVariable'" actionParam="{variable: `${prefix}font-family`}"/>
-            <BuilderButton icon="'fa-fw fa-bold'" actionParam="{ variable: `${prefix}font-weight` }" actionValue="'bolder'"/>
-            <BuilderButton icon="'fa-fw fa-italic'" actionParam="{ variable: `${prefix}font-style` }" actionValue="'italic'"/>
-            <BuilderButton icon="'fa-fw fa-underline'" actionParam="{ variable: `${prefix}text-decoration-line`}" actionValue="'underline'"/>
+            <BuilderButton icon="'format_bold'" actionParam="{ variable: `${prefix}font-weight` }" actionValue="'bolder'"/>
+            <BuilderButton icon="'format_italic'" actionParam="{ variable: `${prefix}font-style` }" actionValue="'italic'"/>
+            <BuilderButton icon="'format_underlined'" actionParam="{ variable: `${prefix}text-decoration-line`}" actionValue="'underline'"/>
         </BuilderRow>
     </BuilderContext>
 </t>
@@ -127,9 +127,9 @@
         </BuilderRow>
         <BuilderRow label.translate="Font Family" level="1">
             <FontFamilyPicker action="'mass_mailing.CustomizeMailingVariable'" actionParam="{ variable: `${prefix}font-family`}"/>
-            <BuilderButton icon="'fa-fw fa-bold'" actionParam="{ variable: `${prefix}font-weight` }" actionValue="'bolder'"/>
-            <BuilderButton icon="'fa-fw fa-italic'" actionParam="{ variable: `${prefix}font-style` }" actionValue="'italic'"/>
-            <BuilderButton icon="'fa-fw fa-underline'" actionParam="{ variable: `${prefix}text-decoration-line`}" actionValue="'underline'"/>
+            <BuilderButton icon="'format_bold'" actionParam="{ variable: `${prefix}font-weight` }" actionValue="'bolder'"/>
+            <BuilderButton icon="'format_italic'" actionParam="{ variable: `${prefix}font-style` }" actionValue="'italic'"/>
+            <BuilderButton icon="'format_underlined'" actionParam="{ variable: `${prefix}text-decoration-line`}" actionValue="'underline'"/>
         </BuilderRow>
         <BuilderRow label.translate="Border" level="1">
             <BuilderNumberInput actionParam="{ variable: `${prefix}border-width` }" unit="'px'" saveUnit="'px'" min="0"

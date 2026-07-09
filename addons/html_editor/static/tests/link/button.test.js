@@ -203,7 +203,7 @@ describe("Custom button style", () => {
     test("should convert selected text to a button", async () => {
         const { el } = await setupEditor("<p>[Hello]</p>");
 
-        await contains(".o-we-toolbar .fa-link").click();
+        await contains(".o-we-toolbar [data-icon='link']").click();
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/", {
             confirm: false,
         });

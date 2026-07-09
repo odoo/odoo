@@ -7,20 +7,20 @@
                 <t t-if="!!this.props.additionalData.in_store_stock_data.in_stock">
                     <t t-if="!!this.props.additionalData.in_store_stock_data.show_quantity">
                         <span class="badge text-bg-warning mt-1 align-self-start">
-                            <i class="fa fa-circle text-warning me-2"/>
+                            <i class="oi oi-filled text-warning me-2" data-icon="circle"/>
                             <t t-out="this.props.additionalData.in_store_stock_data.quantity"/> <t t-out="this.props.additionalData.in_store_stock_data.uom_name"/>
                             in stock
                         </span>
                     </t>
                     <t t-else="">
                         <span class="badge text-bg-success mt-1 align-self-start">
-                            <i class="fa fa-circle text-success me-2"/>Available
+                            <i class="oi oi-filled text-success me-2" data-icon="circle"/>Available
                         </span>
                     </t>
                 </t>
                 <t t-else="">
                     <span class="badge text-bg-danger mt-1 align-self-start">
-                        <i class="fa fa-circle text-danger me-2"/>Out of stock
+                        <i class="oi oi-filled text-danger me-2" data-icon="circle"/>Out of stock
                     </span>
                 </t>
             </t>

@@ -95,27 +95,27 @@
             t-att-aria-label="sameLangDir ? backward : forward"
             t-att-class="{ disabled: !this.state.hasMultiItems }"
             t-on-click="sameLangDir ? slidePrev : slideNext">
-        <span class="fa fa-fw fa-angle-left"/>
+        <span class="oi oi-fw" data-icon="keyboard_arrow_left"/>
     </button>
     <button class="btn btn-primary py-0 px-1 me-2"
             t-att-title="sameLangDir ? forward : backward"
             t-att-aria-label="sameLangDir ? forward : backward"
             t-att-class="{ disabled: !this.state.hasMultiItems }"
             t-on-click="sameLangDir ? slideNext : slidePrev">
-        <span class="fa fa-fw fa-angle-right"/>
+        <span class="oi oi-fw" data-icon="keyboard_arrow_right"/>
     </button>
     <button class="btn btn-success ms-0 py-0 px-1 me-1"
             title="Add Slide"
             aria-label="Add Slide"
             t-on-click="this.addSlide">
-        <span class="oi fa-fw oi-plus"/>
+        <span class="oi oi-fw" data-icon="add"/>
     </button>
     <button class="btn btn-danger py-0 px-1"
             t-att-class="{ disabled: !this.state.hasMultiItems }"
             title="Remove Slide"
             aria-label="Remove Slide"
             t-on-click="this.removeSlide">
-        <span class="oi fa-fw oi-minus"/>
+        <span class="oi oi-fw" data-icon="remove"/>
     </button>
 </t>
 

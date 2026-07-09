@@ -13,13 +13,13 @@
                     <div class="d-flex flex-column o_card_user_infos overflow-hidden">
                         <span t-if="this.name" class="o-mail-avatar-card-name fw-bold" t-out="this.name"/>
                         <a t-if="this.email" t-att-href="'mailto:'+this.email" t-att-title="this.email" class="text-truncate">
-                            <i class="fa fa-fw fa-envelope me-1"/><t t-out="this.email"/>
+                            <i class="oi oi-fw oi-filled me-1" data-icon="mail"/><t t-out="this.email"/>
                         </a>
                         <a t-if="this.phone" class="o-mail-avatar-card-tel text-truncate" t-att-title="this.phone" t-att-href="'tel:'+this.phone">
-                            <i class="fa fa-fw fa-phone me-1"/><t t-out="this.phone"/>
+                            <i class="oi oi-fw oi-filled me-1" data-icon="phone"/><t t-out="this.phone"/>
                         </a>
                         <div t-if="this.partnerLocalDateTimeFormatted()" class="o-mail-avatar-card-localtime text-muted">
-                            <i class="fa fa-fw fa-clock-o me-1"/><t t-out="this.partnerLocalDateTimeFormatted()"/>
+                            <i class="oi oi-fw oi-filled me-1" data-icon="schedule"/><t t-out="this.partnerLocalDateTimeFormatted()"/>
                         </div>
                         <div t-if="this.store.self_user?.share === false" class="o_avatar_card_buttons d-flex gap-2 mt-2">
                             <button t-if="this.user?.share === false" class="btn btn-secondary btn-sm" t-on-click.stop="this.onSendClick">Send message</button>

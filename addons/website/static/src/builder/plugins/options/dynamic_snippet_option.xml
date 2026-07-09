@@ -46,8 +46,8 @@
     </BuilderRow>
     <BuilderRow label.translate="Cover Image" t-if="isSingleMode and !!this.showCoverImageOption?.()">
         <BuilderButtonGroup>
-            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" classAction="'s_dynamic_snippet_cover_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" classAction="''" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" classAction="'s_dynamic_snippet_cover_left'" icon="'horizontal_align_left'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" classAction="''" icon="'horizontal_align_right'"/>
         </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow id="this.number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!this.dynamicOptionParams.domState.filterId or isSingleMode">

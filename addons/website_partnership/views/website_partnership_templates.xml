@@ -130,7 +130,7 @@
     <xpath expr="//div" position="before">
         <t t-set="contact_details" t-value="False"/>
         <div t-if="not edit_page" class="mt-4 mb-3">
-            <a id="link_back_to_partners" t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or '' }" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back</a>
+            <a id="link_back_to_partners" t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or '' }" aria-label="Back to partners list"><i class="oi me-2" data-icon="chevron_backward"/>Back</a>
         </div>
     </xpath>
 
@@ -148,14 +148,14 @@
                 <div id="search_input_group" class="input-group" role="search">
                     <input id="search_input_text" type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
                     <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
-                        <i class="oi oi-search"/>
+                        <i class="oi" data-icon="search"/>
                     </button>
                 </div>
             </form>
             <button class="btn btn-light position-relative ms-2 d-lg-none"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#o_wcrm_offcanvas">
-                <i class="fa fa-sliders"/>
+                <i class="oi" data-icon="tune"/>
             </button>
         </div>
     </xpath>

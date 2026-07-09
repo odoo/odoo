@@ -3,7 +3,7 @@
     <t t-name="mail.Many2ManyTagsAvatarUserField" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
         <xpath expr="//Many2XAutocomplete" position="inside">
             <t t-set-slot="inviteTeammates" t-slot-scope="inviteTeammatesScope">
-                <i class="fa fa-envelope-o fa-lg me-2 d-inline"/>
+                <i class="oi oi-lg me-2 d-inline" data-icon="mail"/>
                 <t t-out="inviteTeammatesScope.label"/>
             </t>
         </xpath>
@@ -12,7 +12,7 @@
     <t t-name="mail.ListMany2ManyTagsAvatarUserField" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
         <xpath expr="//Many2XAutocomplete" position="inside">
             <t t-set-slot="inviteTeammates" t-slot-scope="inviteTeammatesScope">
-                <i class="fa fa-envelope-o fa-lg me-2 d-inline"/>
+                <i class="oi oi-lg me-2 d-inline" data-icon="mail"/>
                 <t t-out="inviteTeammatesScope.label"/>
             </t>
         </xpath>

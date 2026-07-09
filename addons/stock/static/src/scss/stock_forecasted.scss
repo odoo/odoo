@@ -6,21 +6,23 @@
         &.o_priority_star {
             background-color: transparent;
             font-size: 1.35em;
-            &.fa-star-o {
+
+            &[data-icon="star"] {
                 color: #a8a8a8;
+
                 &:hover {
+                    --o-mi-fill: 1;
+
                     color: gold;
-                    &:before{
-                        content: "\f005";
-                    }
                 }
-            }
-            &.fa-star {
-                color: gold;
-                &:hover {
-                    color: #a8a8a8;
-                    &:before{
-                        content: "\f006";
+
+                &.oi-filled {
+                    color: gold;
+
+                    &:hover {
+                        --o-mi-fill: 0;
+
+                        color: #a8a8a8;
                     }
                 }
             }

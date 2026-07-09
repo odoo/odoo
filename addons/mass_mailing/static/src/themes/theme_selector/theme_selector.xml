@@ -21,12 +21,12 @@
                             </div>
                         </t>
                     <div class="d-flex flex-row align-items-center mb-2 w-100">
-                        <i class="fa fa-star me-2"/>
+                        <i class="oi oi-filled me-2" data-icon="star"/>
                         <h5 class="text-truncate mb-0" t-out="template.subject"/>
                         <div class="lh-1 ms-auto o_mail_template_remove_favorite" 
                             aria-label="Remove from Templates" aria-role="button"
                             t-on-click="(ev) => this.onRemoveFavorite(ev, template_index)" title="Remove from Templates">
-                            <i class="fa fa-trash ps-2 me-1" t-att-data-id="template.id"/>
+                            <i class="oi oi-filled ps-2 me-1" data-icon="delete" t-att-data-id="template.id"/>
                         </div> 
                     </div>
                 </div>

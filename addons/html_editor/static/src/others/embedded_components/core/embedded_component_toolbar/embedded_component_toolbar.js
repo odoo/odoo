@@ -14,6 +14,7 @@ export class EmbeddedComponentToolbarButton extends Component {
         buttonRef: { type: Function, optional: true },
         hidden: { type: Boolean, optional: true },
         icon: { type: String, optional: true },
+        icon_class: { type: String, optional: true },
         label: String,
         name: { type: String, optional: true },
         onClick: Function,

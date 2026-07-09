@@ -8,7 +8,7 @@
                     Add <t t-out="this.relatedFieldName"/>
                 </div>
                 <button class="o_quick_create_button btn d-flex align-items-center justify-content-between flex-nowrap py-0 px-1">
-                    <i class="fa fa-angle-double-right" role="img" aria-label="Add column" title="Add column" />
+                    <i class="oi" data-icon="keyboard_double_arrow_right" role="img" aria-label="Add column" title="Add column" />
                 </button>
             </div>
             <div t-else="" class="pt-3 pb-2">
@@ -23,10 +23,10 @@
                             t-on-keydown="this.onInputKeydown"
                         />
                         <button class="btn btn-primary o_kanban_add" type="button" t-on-click="this.validate">
-                            <i class="fa fa-check"/>
+                            <i class="oi" data-icon="check"/>
                         </button>
                         <button class="btn btn-danger o_kanban_remove" type="button" t-on-click="this.fold">
-                            <i class="fa fa-times"/>
+                            <i class="oi" data-icon="close"/>
                         </button>
                     </div>
                 </div>

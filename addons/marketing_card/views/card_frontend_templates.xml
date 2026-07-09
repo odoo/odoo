@@ -23,11 +23,11 @@
                     <h4>Select where to share</h4>
                     <div class="o_no_link_popover">
                         <div id="url-div">
-                            <a class="fa fa-facebook rounded" t-attf-href="https://www.facebook.com/sharer/sharer.php?u={{share_url_quoted}}" target="_blank"/>
-                            <a class="fa fa-twitter rounded" t-attf-href="https://twitter.com/intent/tweet?url={{share_url_quoted}}{{'&amp;text=%s' % quote(campaign.post_suggestion) if campaign.post_suggestion else ''}}" target="_blank"/>
-                            <a class="fa fa-linkedin rounded" t-attf-href="/cards/{{card_slug if card_slug else card.id}}/share/linkedin" target="_blank"/>
-                            <a class="fa fa-whatsapp rounded" t-attf-href="https://wa.me/?text={{share_url_quoted}}" target="_blank"/>
-                            <a class="fa fa-pinterest rounded" t-attf-href="https://pinterest.com/pin/create/button/?url={{share_url_quoted}}" target="_blank"/>
+                            <a class="oi rounded" data-icon="oi_facebook" t-attf-href="https://www.facebook.com/sharer/sharer.php?u={{share_url_quoted}}" target="_blank"/>
+                            <a class="oi rounded" data-icon="oi_twitter" t-attf-href="https://twitter.com/intent/tweet?url={{share_url_quoted}}{{'&amp;text=%s' % quote(campaign.post_suggestion) if campaign.post_suggestion else ''}}" target="_blank"/>
+                            <a class="oi rounded" data-icon="oi_linkedin" t-attf-href="/cards/{{card_slug if card_slug else card.id}}/share/linkedin" target="_blank"/>
+                            <a class="oi rounded" data-icon="oi_whatsapp" t-attf-href="https://wa.me/?text={{share_url_quoted}}" target="_blank"/>
+                            <a class="oi rounded" data-icon="oi_pinterest" t-attf-href="https://pinterest.com/pin/create/button/?url={{share_url_quoted}}" target="_blank"/>
                         </div>
                     </div>
                 </div>

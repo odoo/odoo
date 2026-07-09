@@ -25,7 +25,7 @@ export class FilePlugin extends Plugin {
             id: "uploadFile",
             title: _t("Upload a file"),
             description: _t("Add a download box"),
-            icon: "fa-upload",
+            icon: "upload",
             run: this.uploadAndInsertFiles.bind(this),
             isAvailable: (selection) =>
                 this.isUploadCommandAvailable(selection) && isHtmlContentSupported(selection),

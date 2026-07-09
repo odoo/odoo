@@ -71,7 +71,7 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     );
     expect("table tr").toHaveCount(2);
 
-    await contains("button.fa-minus").click();
+    await contains("button[data-icon='remove']").click();
     expect.verifySteps(["name_search", "name_search"]);
     expect(editableContent).toHaveInnerHTML(
         `<div class="test-options-target" data-test="[{&quot;id&quot;:2,&quot;display_name&quot;:&quot;Second&quot;,&quot;name&quot;:&quot;Second&quot;}]">b</div>`

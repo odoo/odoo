@@ -30,7 +30,7 @@
                 <button class="btn btn-outline-secondary" t-on-click="this.props.onClickClose">Close</button>
                 <button t-if="this.allowNewSession" class="btn btn-outline-secondary" t-on-click="this.props.onClickNewSession">New Session</button>
             </div>
-            <a t-if="this.store.can_download_transcript" class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="this.props.thread.channel?.transcriptUrl"><i class="pe-2 fa fa-download"/>Download Conversation</a>
+            <a t-if="this.store.can_download_transcript" class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="this.props.thread.channel?.transcriptUrl"><i class="pe-2 oi" data-icon="download"/>Download Conversation</a>
         </div>
     </div>
 </div>

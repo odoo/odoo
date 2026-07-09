@@ -248,7 +248,7 @@ class PosOrder(models.Model):
         body = Markup(
             """
                 <span class='o-mail-Message-trackingOld text-muted fw-bold'>{message}<span/>
-                <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
+                <i class='o-mail-Message-trackingSeparator oi mx-1 text-600' data-icon='east'/>
                 <span class='o-mail-Message-trackingNew text-info fw-bold'>{order_name}</span>
             """
         ).format(message=_('Loyalty coupon sold'), order_name=self._get_html_link())

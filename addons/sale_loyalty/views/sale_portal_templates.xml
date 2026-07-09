@@ -37,7 +37,7 @@
                                 (<span t-out="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>)
                                 <strong t-out="gift_card.code"/>
                                 <button class="btn btn-sm btn-secondary copy-to-clipboard" t-att-data-clipboard-text="gift_card.code">
-                                    <span class="fa fa-clipboard"/> Copy
+                                    <span class="oi" data-icon="assignment"/> Copy
                                 </button>
                             </td>
                         </t>

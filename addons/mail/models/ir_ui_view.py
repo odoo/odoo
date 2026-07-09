@@ -11,4 +11,4 @@ class IrUiView(models.Model):
         return view_type == "activity" or super()._is_qweb_based_view(view_type)
 
     def _get_view_info(self):
-        return {'activity': {'icon': 'fa fa-clock-o'}} | super()._get_view_info()
+        return {'activity': {'icon': 'schedule'}} | super()._get_view_info()

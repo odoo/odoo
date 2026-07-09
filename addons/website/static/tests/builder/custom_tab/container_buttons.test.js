@@ -336,7 +336,8 @@ test("applying option container button should wait for actions in progress", asy
         getButtons(target) {
             return [
                 {
-                    class: "test_button fa fa-shield",
+                    class: "test_button oi",
+                    icon: "security",
                     title: "Test",
                     handler: () => {
                         target.classList.add("overlayButton");
@@ -468,7 +469,7 @@ test("Custom snippet appears in block and inner content on save and is removed o
     await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     await contains(
-        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe button:has(.fa-trash)"
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe button:has([data-icon='delete'])"
     ).click();
     await contains(".o_dialog .btn:contains('Delete Block')").click();
     expect.verifySteps(["delete snippet"]);

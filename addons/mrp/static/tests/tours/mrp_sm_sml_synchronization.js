@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            trigger: ".fa-list",
+            trigger: "[data-icon='format_list_bulleted']",
             run: "click",
         },
         {
@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: 'edit 5',
         },
         {
-            trigger: ".fa-list",
+            trigger: "[data-icon='format_list_bulleted']",
             run: "click",
         },
         {
@@ -143,7 +143,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: 'edit 7',
         },
         {
-            trigger: ".fa-list",
+            trigger: "[data-icon='format_list_bulleted']",
             run: "click",
         },
         {

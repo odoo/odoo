@@ -15,7 +15,7 @@
         </xpath>
         <xpath expr="//*[hasclass('o_control_panel_main_buttons')]" position="inside">
             <button class="o_switch_theme btn btn-secondary d-none d-md-inline-block me-1" t-on-click.stop="this.back">
-                <i class="oi oi-arrow-left" role="img" aria-label="Go Back"/>
+                <i class="oi" data-icon="west" role="img" aria-label="Go Back"/>
             </button>
         </xpath>
         <xpath expr="//*[hasclass('o_control_panel_actions')]" position="attributes">
@@ -26,11 +26,11 @@
                 <div class="btn-group">
                     <input class="btn-check" id="themeViewerDesktop" type="radio" name="viewer" data-mode='desktop' autocomplete="off" checked="checked"/>
                     <label class="btn btn-secondary" for="themeViewerDesktop" t-on-click="this.onDesktopClick">
-                        <i class="fa fa-fw fa-desktop" role="img" aria-label="Desktop"/>
+                        <i class="oi oi-fw" data-icon="desktop_windows" role="img" aria-label="Desktop"/>
                     </label>
                     <input class="btn-check"  id="themeViewerMobile" type="radio" name="viewer" data-mode='mobile' autocomplete="off"/>
                     <label class="btn btn-secondary" for="themeViewerMobile" t-on-click="this.onMobileClick">
-                        <i class="fa fa-fw fa-mobile" role="img" aria-label="Mobile"/>
+                        <i class="oi oi-fw" data-icon="smartphone" role="img" aria-label="Mobile"/>
                     </label>
                 </div>
             </div>
@@ -71,7 +71,7 @@
         <xpath expr="//div[hasclass('o_control_panel_actions')]" position="replace"/>
         <xpath expr="//div[hasclass('o_control_panel_navigation')]" position="replace">
             <a class="btn btn-secondary align-self-center" t-on-click="this.close" aria-label="Close" data-tooltip="Close">
-                <i class="oi oi-close" role="img" aria-label="close"/>
+                <i class="oi" data-icon="close_small" role="img" aria-label="close"/>
             </a>
         </xpath>
     </t>

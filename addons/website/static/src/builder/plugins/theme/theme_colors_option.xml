@@ -67,7 +67,7 @@
                                             <div class="d-flex flex-column h-100 justify-content-center">
                                                 <BuilderSelect action="'changeColorPalette'" actionParam="'color-palettes-name'" dropdownContainerClass="'o-color-palette-dropdown'">
                                                     <t t-set-slot="fixedButton">
-                                                        <Image class="'h-100'" src="'/website/static/src/img/snippets_options/palette.svg'"/>
+                                                        <i class="oi oi-filled fs-4" data-icon="palette"/>
                                                     </t>
                                                     <t t-foreach="this.palettes" t-as="palette" t-key="palette.name">
                                                         <BuilderSelectItem actionValue="`'${palette.name}'`">

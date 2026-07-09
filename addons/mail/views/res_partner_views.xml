@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='email']" position="before">
                     <field name="is_blacklisted" invisible="1"/>
-                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                    <button name="mail_action_blacklist_remove" class="oi text-danger" data-icon="block"
                         title="This email is blacklisted for mass mailings. Click to unblacklist."
                         type="object" context="{'default_email': email}" groups="base.group_user"
                         invisible="not is_blacklisted"/>

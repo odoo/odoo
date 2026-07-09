@@ -4,7 +4,7 @@
         <xpath expr="//ul[hasclass('info-list')]" position="inside" >
             <t t-if="this.line.sale_order_origin_id?.name">
                 <li>
-                    <i class="fa fa-shopping-basket me-1" role="img" aria-label="SO" title="SO"/>
+                    <i class="oi me-1" data-icon="shopping_basket" role="img" aria-label="SO" title="SO"/>
                     <t t-out="this.line.sale_order_origin_id?.name" />
                 </li>
                 <table t-if="this.line.saleDetails" class="sale-order-info">

@@ -17,6 +17,6 @@ class AuthOauthProvider(models.Model):
     validation_endpoint = fields.Char(string='UserInfo URL', required=True)  # OAuth provider URL to get user information
     data_endpoint = fields.Char()
     enabled = fields.Boolean(string='Allowed')
-    css_class = fields.Char(string='CSS class', default='fa fa-fw fa-sign-in text-primary')
+    css_class = fields.Char(string='CSS class', default='oi oi-fw text-primary')
     body = fields.Char(required=True, string="Login button label", help='Link text in Login Dialog', translate=True)
     sequence = fields.Integer(default=10)

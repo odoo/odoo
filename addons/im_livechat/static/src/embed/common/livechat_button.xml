@@ -11,7 +11,7 @@
         t-on-click="this.onClick"
         title="Chat with us"
     >
-        <i class="fa fa-commenting" style="font-size: 22px;"/>
+        <i class="oi oi-filled" data-icon="mode_comment" style="font-size: 22px;"/>
         <div t-if="this.store.livechat_rule?.action === 'display_button_and_text'" class="o-livechat-LivechatButton-notification text-nowrap position-absolute bg-100 py-2 px-3 rounded" style="max-width: 75vw;" t-att-class="{'o-livechat-LivechatButton-animate': this.state.animateNotification}">
             <p class="m-0 text-dark text-truncate" t-out="this.livechatService.options.button_text"/>
         </div>

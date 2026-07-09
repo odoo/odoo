@@ -57,7 +57,7 @@ class Partner extends models.Model {
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="action" name="1" icon="fa-star" context="{'default_partner': id}">
+                        <button class="oe_stat_button" type="action" name="1" icon="star" icon_class="oi-filled" context="{'default_partner': id}">
                             <field string="Partners" name="o2m" widget="statinfo"/>
                         </button>
                     </div>
@@ -278,10 +278,10 @@ test("can display embedded actions linked to the current action", async () => {
     await getService("action").doAction(1);
     expect(".o_control_panel").toHaveCount(1, { message: "should have rendered a control panel" });
     expect(".o_kanban_view").toHaveCount(1, { message: "should have rendered a kanban view" });
-    expect(".o_control_panel_navigation > button > i.fa-sliders").toHaveCount(1, {
+    expect(".o_control_panel_navigation > button > i[data-icon='tune']").toHaveCount(1, {
         message: "should display the toggle embedded button",
     });
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     expect(".o_embedded_actions").toHaveCount(1, { message: "should display the embedded" });
     expect(".o_embedded_actions > button > span").toHaveText("Partners Action 1", {
         message:
@@ -300,7 +300,7 @@ test("can display embedded actions linked to the current action", async () => {
 test("can toggle visibility of embedded actions", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await waitFor(".o_popover.dropdown-menu");
     expect(".o_popover.dropdown-menu .dropdown-item").toHaveCount(4, {
         message: "Three embedded actions should be displayed in the dropdown + button 'Save View'",
@@ -327,7 +327,7 @@ test("can toggle visibility of embedded actions", async () => {
 test("can click on a embedded action and execute the corresponding action (with xml_id)", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
@@ -354,7 +354,7 @@ test("can click on a embedded action and execute the corresponding action (with 
         views: [[false, "kanban"]],
     }));
     await getService("action").doAction(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 3')"
@@ -381,7 +381,7 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
         views: [[false, "kanban"]],
     }));
     await getService("action").doAction(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
@@ -426,7 +426,7 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     });
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
@@ -492,7 +492,7 @@ test("a view coming from a embedded with python_method can be saved in the embed
     });
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 3')"
@@ -531,13 +531,13 @@ test("a view coming from a embedded with python_method can be saved in the embed
 test("the embedded actions should not be displayed when switching view", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
     await contains(".o_embedded_actions > button > span:contains('Embedded Action 2')").click();
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await contains("button.o_switch_view.o_kanban").click();
     expect(".o_embedded_actions").toHaveCount(0, {
         message: "The embedded actions menu should not be displayed",
@@ -548,7 +548,7 @@ test("User can move the main (first) embedded action", async () => {
     mockTouch(true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await contains(
         ".o_bottom_sheet_sheet .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
@@ -571,7 +571,7 @@ test("User can move the main (first) embedded action", async () => {
 test("User can unselect the main (first) embedded action", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await waitFor(".o_popover.dropdown-menu");
     const dropdownItem =
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Partners Action 1')";
@@ -606,7 +606,7 @@ test("User should be redirected to the first embedded action set in user setting
         name: 1,
         type: "action",
     });
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     expect(".o_embedded_actions > button:first-child").toHaveClass("active", {
         message: "First embedded action in order should have the 'active' class",
     });
@@ -632,7 +632,7 @@ test("execute a regular action from an embedded action", async () => {
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
 
-    await contains(".o_control_panel_navigation button .fa-sliders").click();
+    await contains(".o_control_panel_navigation button [data-icon='tune']").click();
     expect(".o_control_panel .o_embedded_actions button:not(.dropdown-toggle)").toHaveCount(1);
 
     await waitFor(".o_popover.dropdown-menu");
@@ -664,7 +664,7 @@ test("custom embedded action loaded first", async () => {
         type: "action",
     });
     expect(".o_list_view").toHaveCount(1);
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     expect(".o_embedded_actions > button:first-child").toHaveClass("active", {
         message: "First embedded action in order should have the 'active' class",
     });
@@ -697,7 +697,7 @@ test("test get_embedded_actions_settings rpc args", async () => {
     await getService("action").doAction(1, {
         additionalContext: { active_id: 5 },
     });
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     expect.verifySteps(["get_embedded_actions_settings"]);
 });
 
@@ -728,7 +728,7 @@ test("an action containing embedded actions should reload if the page is refresh
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     // First, we create a new (custom) embedded action based on the current one
-    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_control_panel_navigation > button > i[data-icon='tune']").click();
     await waitFor(".o_popover.dropdown-menu");
     await contains(".o_save_current_view ").click();
     await contains(".o_save_favorite ").click();

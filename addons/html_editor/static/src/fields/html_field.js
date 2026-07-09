@@ -361,7 +361,7 @@ export class HtmlField extends Component {
                     {
                         id: "codeview",
                         description: _t("Code view"),
-                        icon: "fa-code",
+                        icon: "code",
                         run: this.toggleCodeView.bind(this),
                         isAvailable: isHtmlContentSupported,
                     },

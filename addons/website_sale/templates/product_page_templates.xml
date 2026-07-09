@@ -54,7 +54,8 @@
                                             t-att-href="keep(cat.website_url)"
                                         >
                                             <i
-                                                class="oi oi-chevron-left d-lg-none me-1"
+                                                class="oi d-lg-none me-1"
+                                                data-icon="chevron_backward"
                                                 role="img"
                                             />
                                             <t t-out="cat.name"/>
@@ -66,7 +67,7 @@
                                 </li>
                                 <li class="breadcrumb-item d-lg-none">
                                     <a t-att-href="keep(category.website_url or shop_path)">
-                                        <i class="oi oi-chevron-left me-2" role="img"/>
+                                        <i class="oi me-2" data-icon="chevron_backward" role="img"/>
                                         <t t-if="category.name" t-out="category.name"/>
                                         <t t-else="" t-call="website_sale.all_products_link_name"/>
                                     </a>
@@ -171,13 +172,13 @@
                                                 />
                                                 <t
                                                     t-set="icon"
-                                                    t-value="attachment_sudo.type == 'url' and 'fa-link' or 'fa-download'"
+                                                    t-value="attachment_sudo.type == 'url' and 'link' or 'download'"
                                                 />
                                                 <a
                                                     class="list-group-item list-group-item-action"
                                                     t-att-href="'/shop/' + slug(product) + '/document/' + str(document_sudo.id)"
                                                     t-att-target="target">
-                                                    <i t-att-class="'fa ' + icon + ' me-2'"/>
+                                                    <i class="oi me-2" t-att-data-icon="icon"/>
                                                     <t t-out="attachment_sudo.name"/>
                                                 </a>
                                             </t>
@@ -578,7 +579,7 @@
                     t-att-data-product-type="product.type"
                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                 >
-                    <i class="fa fa-shopping-cart me-2"/>
+                    <i class="oi me-2" data-icon="shopping_cart"/>
                     Add to cart
                 </button>
             </div>
@@ -883,7 +884,7 @@
                     aria-label="Remove one"
                     title="Remove one"
                 >
-                    <i class="oi oi-minus text-600"/>
+                    <i class="oi text-600" data-icon="remove"/>
                 </button>
                 <input
                     type="text"
@@ -898,7 +899,7 @@
                     aria-label="Add one"
                     title="Add one"
                 >
-                    <i class="oi oi-plus text-600"/>
+                    <i class="oi text-600" data-icon="add"/>
                 </button>
             </div>
         </div>
@@ -935,7 +936,7 @@
                 t-att-data-product-type="product.type"
                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
             >
-                <i class="fa fa-bolt me-2"/>
+                <i class="oi me-2" data-icon="flash_on"/>
                 Buy now
             </button>
         </xpath>
@@ -1110,7 +1111,8 @@
                 <t t-if="len(product_images) > 1">
                     <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
                         <i
-                            class="oi oi-chevron-left oe_unmovable border bg-white text-900"
+                            class="oi oe_unmovable border bg-white text-900"
+                            data-icon="chevron_backward"
                             role="img"
                             aria-label="Previous"
                             title="Previous"
@@ -1118,7 +1120,8 @@
                     </a>
                     <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
                         <i
-                            class="oi oi-chevron-right oe_unmovable border bg-white text-900"
+                            class="oi oe_unmovable border bg-white text-900"
+                            data-icon="chevron_forward"
                             role="img"
                             aria-label="Next"
                             title="Next"
@@ -1176,7 +1179,8 @@
                     />
                     <i
                         t-if="product_image._name == 'product.image' and product_image.video_url"
-                        class="fa fa-2x fa-play-circle o_product_video_thumb bg-black-50 text-center"
+                        class="oi oi-filled oi-2x o_product_video_thumb bg-black-50 text-center"
+                        data-icon="play_circle"
                     />
                 </li>
             </ol>
@@ -1266,7 +1270,7 @@
                         </t>
                         <t t-else=''>
                             <a target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>
-                                <i class='fa fa-file'></i>
+                                <i class="oi oi-filled" data-icon="description"></i>
                             </a>
                         </t>
                         <br/>
@@ -1307,7 +1311,7 @@
                     t-att-data-product-id="product_variant.id"
                     t-att-data-product-template-id="product.id"
                 >
-                    <span class="fa fa-exchange"/>
+                    <span class="oi" data-icon="swap_horiz"/>
                     <span t-att-class="'d-inline ms-2' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale.product_add_to_wishlist') else '')">Add to compare</span>
                 </button>
             </t>
@@ -1349,7 +1353,7 @@
                 t-att-data-product-template-id="product.id"
                 title="Add to wishlist"
             >
-                <i class="fa fa-heart-o me-2 me-lg-0" role="img" aria-label="Add to wishlist"/>
+                <i class="oi me-2 me-lg-0" data-icon="favorite" role="img" aria-label="Add to wishlist"/>
                 <t
                     t-set="_span_classes"
                     t-valuef="d-inline"

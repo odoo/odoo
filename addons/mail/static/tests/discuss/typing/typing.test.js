@@ -668,7 +668,9 @@ test("[text composer] chat: correspondent is typing", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon.fa-circle.text-success");
+    await contains(
+        ".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon[data-icon='circle'].text-success"
+    );
     // simulate receive typing notification from demo "is typing"
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -684,7 +686,9 @@ test("[text composer] chat: correspondent is typing", async () => {
             is_typing: false,
         })
     );
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon.fa-circle.text-success");
+    await contains(
+        ".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon[data-icon='circle'].text-success"
+    );
 });
 
 test("Do not show typing indicator when channel is muted", async () => {
@@ -768,7 +772,9 @@ test("chat: correspondent is typing", async () => {
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon.fa-circle.text-success");
+    await contains(
+        ".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon[data-icon='circle'].text-success"
+    );
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
@@ -782,7 +788,9 @@ test("chat: correspondent is typing", async () => {
             is_typing: false,
         })
     );
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon.fa-circle.text-success");
+    await contains(
+        ".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon[data-icon='circle'].text-success"
+    );
 });
 
 test("[text composer] chat: correspondent is typing in chat window", async () => {

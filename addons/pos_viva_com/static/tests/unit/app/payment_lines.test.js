@@ -41,7 +41,7 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(comp.getPaymentActionState(paymentline))).toEqual({
         id: "viva_continue_app",
         title: "Continue on Viva app",
-        icon: "fa fa-mobile",
+        icon: "smartphone",
         actions: [
             {
                 id: "viva_reset_integration",
@@ -57,7 +57,8 @@ test("getPaymentActionState", async () => {
     comp.vivaApp = { isIntegrated: () => false };
     expect(normalizeActionState(comp.getPaymentActionState(paymentline))).toEqual({
         id: "waiting_card",
-        icon: "fa fa-circle-o-notch fa-spin",
+        icon: "autorenew",
+        icon_class: "oi-spin",
         title: "Waiting for card",
         actions: [
             {

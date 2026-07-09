@@ -143,13 +143,13 @@ class TranslationToolsTestCase(BaseCase):
         source = """<form string="Form stuff">
                         <div>
                             <label for="stuff"/>
-                            <span class="fa fa-globe" title="Title stuff"/>
+                            <span class="oi" data-icon="public" title="Title stuff"/>
                         </div>
                     </form>"""
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
         self.assertItemsEqual(terms,
-            ['Form stuff', '<span class="fa fa-globe" title="Title stuff"/>'])
+            ['Form stuff', '<span class="oi" data-icon="public" title="Title stuff"/>'])
 
     def test_translate_xml_inline5(self):
         """ Test xml_translate() with inline elements with empty translated attrs only. """
@@ -157,7 +157,7 @@ class TranslationToolsTestCase(BaseCase):
         source = """<form string="Form stuff">
                         <div>
                             <label for="stuff"/>
-                            <span class="fa fa-globe" title=""/>
+                            <span class="oi" data-icon="public" title=""/>
                         </div>
                     </form>"""
         result = xml_translate(terms.append, source)
@@ -350,10 +350,10 @@ class TranslationToolsTestCase(BaseCase):
 
         # text and elements
         make_xml = '<form string="X">{}</form>'.format
-        term = '<i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"/>'
+        term = '<i class="oi oi-filled" data-icon="circle" role="img" aria-label="Invalid" title="Invalid"/>'
 
         # {legal: legal}
-        valid = '<i class="fa fa-circle" role="img" aria-label="Non-valide" title="Non-valide"/>X'
+        valid = '<i class="oi oi-filled" data-icon="circle" role="img" aria-label="Non-valide" title="Non-valide"/>X'
         self.assertEqual(
             xml_translate({term: valid}.get, make_xml(term)),
             make_xml(valid),
@@ -361,7 +361,7 @@ class TranslationToolsTestCase(BaseCase):
         )
 
         # {legal: illegal(has no text)}
-        invalid = '<i class="fa fa-circle" role="img"/>'
+        invalid = '<i class="oi oi-filled" data-icon="circle" role="img"/>'
         self.assertEqual(
             xml_translate({term: invalid}.get, make_xml(term)),
             make_xml(term),
@@ -435,9 +435,9 @@ class TranslationToolsTestCase(BaseCase):
 
     def test_translate_html_i(self):
         """ Test xml_translate() and html_translate() with <i> elements. """
-        source = """<p>A <i class="fa-check"></i> B</p>"""
+        source = """<p>A <i class="oi" data-icon="check"></i> B</p>"""
         result = xml_translate(lambda term: term, source)
-        self.assertEqual(result, """<p>A <i class="fa-check"/> B</p>""")
+        self.assertEqual(result, """<p>A <i class="oi" data-icon="check"/> B</p>""")
         result = html_translate(lambda term: term, source)
         self.assertEqual(result, source)
 

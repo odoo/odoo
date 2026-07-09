@@ -14,7 +14,7 @@
                             name="action_open_lines"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-file-text-o">
+                            icon="article">
                             <field name="line_count" string="References" widget="statinfo"/>
                         </button>
                     </div>
@@ -50,13 +50,13 @@
                 <field name="res_name" column_invisible="True"/>
                 <field name="res_model" column_invisible="True"/>
                 <field name="resource_ref" options="{'model_field': 'res_model_id', 'no_create': True}" invisible="not resource_ref"/>
-                <button name="action_open_record" type="object" icon="fa-external-link" invisible="not resource_ref" title="Open Record"/>
+                <button name="action_open_record" type="object" icon="open_in_new" invisible="not resource_ref" title="Open Record"/>
                 <field name="res_id" string="ID"/>
                 <field name="has_active" column_invisible="True"/>
                 <field name="execution_details" column_invisible="True"/>
                 <field name="is_active" widget="boolean_toggle" invisible="is_unlinked or not has_active"/>
                 <field name="is_unlinked" column_invisible="True"/>
-                <button name="action_unlink" string="Delete" type="object" icon="fa-trash" invisible="is_unlinked" confirm="This operation is irreversible. Do you wish to proceed to the record deletion?"/>
+                <button name="action_unlink" string="Delete" type="object" icon="delete" icon_class="oi-filled" invisible="is_unlinked" confirm="This operation is irreversible. Do you wish to proceed to the record deletion?"/>
             </list>
         </field>
     </record>

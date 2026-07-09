@@ -16,7 +16,7 @@
                                     <widget name='res_config_invite_users'/>
                                 </setting>
                                 <setting id="active_user_setting">
-                                    <span class="fa fa-lg fa-users" aria-label="Number of active users"/>
+                                    <span class="oi oi-lg oi-filled" data-icon="group" aria-label="Number of active users"/>
                                     <field name='active_user_count' class="w-auto ps-3 fw-bold"/>
                                     <span class='o_form_label' invisible="active_user_count &gt; 1">
                                         Active User
@@ -24,9 +24,9 @@
                                     <span class='o_form_label' invisible="active_user_count &lt;= 1">
                                         Active Users
                                     </span>
-                                    <widget name="documentation_link" path="/applications/general/users.html" icon="fa-question-circle"/>
+                                    <widget name="documentation_link" path="/applications/general/users.html" icon="help"/>
                                     <br/>
-                                    <button name="%(base.action_res_users)d" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link o_web_settings_access_rights"/>
+                                    <button name="%(base.action_res_users)d" icon="east" type="action" string="Manage Users" class="btn-link o_web_settings_access_rights"/>
                                 </setting>
                             </block>
                         </div>
@@ -45,10 +45,10 @@
                                         </span>
                                     </div>
                                     <div class="mt8">
-                                        <button name="%(base.action_view_base_language_install)d" icon="oi-arrow-right" type="action" string="Add Languages" class="btn-link"/>
+                                        <button name="%(base.action_view_base_language_install)d" icon="east" type="action" string="Add Languages" class="btn-link"/>
                                     </div>
                                     <div class="mt8" groups="base.group_no_one">
-                                        <button name="%(base.res_lang_act_window)d" icon="oi-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
+                                        <button name="%(base.res_lang_act_window)d" icon="east" type="action" string="Manage Languages" class="btn-link"/>
                                     </div>
                                 </setting>
                             </block>
@@ -62,7 +62,7 @@
                                     <br/>
                                     <field name="company_informations" class="text-muted" style="width: 90%;"/>
                                     <br/>
-                                    <button name="open_company" icon="oi-arrow-right" type="object" string="Update Info" class="btn-link"/>
+                                    <button name="open_company" icon="east" type="object" string="Update Info" class="btn-link"/>
                                 </setting>
                                 <setting id="companies_setting">
                                     <field name='company_count' nolabel="1" class="w-auto ps-1 fw-bold"/>
@@ -74,7 +74,7 @@
                                     </span>
                                     <br/>
                                     <div class="mt8">
-                                        <button name="%(base.action_res_company_form)d" icon="oi-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
+                                        <button name="%(base.action_res_company_form)d" icon="east" type="action" string="Manage Companies" class="btn-link"/>
                                     </div>
                                 </setting>
                                 <setting id="document_layout_setting" string="Document Layout" help="Choose the layout of your documents" company_dependent="1">
@@ -83,11 +83,11 @@
                                             <label for="external_report_layout_id" string="Layout" class="col-3 col-lg-3 o_light_label"/>
                                             <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
                                         </div>
-                                            <button name="%(web.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="oi-arrow-right"/>
+                                            <button name="%(web.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="east"/>
                                             <br groups="base.group_no_one"/>
-                                            <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one" icon="oi-arrow-right"/>
+                                            <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one" icon="east"/>
                                             <br groups="base.group_no_one"/>
-                                            <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one" icon="oi-arrow-right"/>
+                                            <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one" icon="east"/>
                                     </div>
                                 </setting>
                                 <field name="company_id" invisible="1"/>
@@ -117,12 +117,12 @@
                         <setting string="Default Access Rights" help="Set custom access rights for new users" title="By default, new users get highest access rights for all installed apps. If unchecked, new users will only have basic employee access." id="access_rights">
                             <div class="content-group">
                                 <div class="mt8">
-                                    <button type="object" name="open_new_user_default_groups" string="Default Access Rights" icon="oi-arrow-right" class="btn-link"/>
+                                    <button type="object" name="open_new_user_default_groups" string="Default Access Rights" icon="east" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
                         <setting string="API Keys" help="API Keys allow your users to access Odoo with external tools when multi-factor authentication is enabled." groups="base.group_system">
-                            <button type="action" name="%(base.action_apikeys_admin)d" string="Manage API Keys" icon="oi-arrow-right" class="btn-link"/>
+                            <button type="action" name="%(base.action_apikeys_admin)d" string="Manage API Keys" icon="east" class="btn-link"/>
                         </setting>
                         <setting string="Import &amp; Export" help="Allow users to import data from CSV/XLS/XLSX/ODS files" documentation="/applications/general/export_import_data.html" groups="base.group_no_one" id="allow_import">
                             <field name="module_base_import" />

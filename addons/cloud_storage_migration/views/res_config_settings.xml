@@ -23,19 +23,20 @@
                                 string="Cron Job"
                                 type="action"
                                 class="btn-link ps-0"
-                                icon="fa-clock-o"/>
+                                icon="schedule"/>
                         <button name="action_open_cloud_storage_migration_configurations"
                                 string="Parameters"
                                 type="object"
                                 class="btn-link"
-                                icon="fa-cog"/>
+                                icon="settings"
+                                icon_class="oi-filled"/>
                         <field name="cloud_storage_migration_progress" widget="progressbar"/>
                     </div>
                     <button name="%(cloud_storage_migration.action_cloud_storage_migration_report)d" 
                         string="Attachments Report"
                         type="action"
                         class="btn-link"
-                        icon="fa-bar-chart"/>
+                        icon="bar_chart"/>
                     <div>
                         <label class="o_light_label mr8" for="cloud_storage_migration_message_model_ids"/>
                         <field name="cloud_storage_migration_message_model_ids" widget="many2many_tags"/>

@@ -15,7 +15,7 @@ const base64Img =
 test("can add link to inline image + text", async () => {
     const { el } = await setupEditor(`<p>ab[cd<img src="${base64Img}">ef]g</p>`);
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .fa-link");
+    await click(".o-we-toolbar [data-icon='link']");
     await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
         "http://test.test/"
     );
@@ -26,7 +26,7 @@ test("can add link to inline image + text", async () => {
 test("can undo add link to inline image + text", async () => {
     const { editor, el } = await setupEditor(`<p>ab[cd<img src="${base64Img}">ef]g</p>`);
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .fa-link");
+    await click(".o-we-toolbar [data-icon='link']");
     await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
         "http://test.test/"
     );
@@ -56,7 +56,7 @@ test("can remove link from a selection of an inline image + text", async () => {
         `<p>ab<a href="http://test.test/">c[d<img src="${base64Img}">e]f</a>g</p>`
     );
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .fa-unlink");
+    await click(".o-we-toolbar [data-icon='link_off']");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         `<p>ab<a href="http://test.test/">c</a>[d<img src="${base64Img}">e]<a href="http://test.test/">f</a>g</p>`
     );
@@ -66,7 +66,7 @@ test("can remove link from a selection (ltr) with multiple inline images", async
         `<p>ab<a href="http://test.test/">c[d<img src="${base64Img}">e<img src="${base64Img}">f]g</a>h</p>`
     );
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .fa-unlink");
+    await click(".o-we-toolbar [data-icon='link_off']");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         `<p>ab<a href="http://test.test/">c</a>[d<img src="${base64Img}">e<img src="${base64Img}">f]<a href="http://test.test/">g</a>h</p>`
     );
@@ -76,7 +76,7 @@ test("can remove link from a selection (rtl) with multiple inline images", async
         `<p>ab<a href="http://test.test/">c]d<img src="${base64Img}">e<img src="${base64Img}">f[g</a>h</p>`
     );
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .fa-unlink");
+    await click(".o-we-toolbar [data-icon='link_off']");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         `<p>ab<a href="http://test.test/">c</a>]d<img src="${base64Img}">e<img src="${base64Img}">f[<a href="http://test.test/">g</a>h</p>`
     );
@@ -86,7 +86,7 @@ test("can remove link from a selection (ltr) with multiple inline images acrossi
         `<p>ab<a href="http://test.test/">c[d<img src="${base64Img}">e</a>xx<a href="http://test.test/">f<img src="${base64Img}">g]h</a>i</p>`
     );
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .fa-unlink");
+    await click(".o-we-toolbar [data-icon='link_off']");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         `<p>ab<a href="http://test.test/">c</a>[d<img src="${base64Img}">exxf<img src="${base64Img}">g]<a href="http://test.test/">h</a>i</p>`
     );
@@ -96,7 +96,7 @@ test("can remove link from a selection (rtl) with multiple inline images acrossi
         `<p>ab<a href="#">c]d<img src="${base64Img}">e</a>xx<a href="#">f<img src="${base64Img}">g[h</a>i</p>`
     );
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .fa-unlink");
+    await click(".o-we-toolbar [data-icon='link_off']");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         `<p>ab<a href="#">c</a>]d<img src="${base64Img}">exxf<img src="${base64Img}">g[<a href="#">h</a>i</p>`
     );
@@ -169,7 +169,7 @@ test("label field should be hidden if <a> content is not text only", async () =>
 test("when you open image link popover, url input should be focus by default", async () => {
     const { el } = await setupEditor(`<p>[<img src="${base64Img}">]</p>`);
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .fa-link");
+    await click(".o-we-toolbar [data-icon='link']");
     await waitFor(".o-we-linkpopover", { timeout: 1500 });
     expect(".o-we-linkpopover input.o_we_href_input_link").toBeFocused();
 

@@ -13,7 +13,7 @@ class ListActivityButton extends ActivityButton {
         super.setup();
         this.props = props({ record: types.instanceOf(Record), slots: types.object().optional() });
         this.defaultActivityStateClass = "";
-        this.defaultActivityDecorationClass = "fa-clock-o";
+        this.defaultActivityDecorationClass = "schedule";
     }
 }
 

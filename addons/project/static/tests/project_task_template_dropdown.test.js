@@ -119,7 +119,7 @@ for (const [viewType, newButtonClass] of [
         await hover("button.dropdown-item:contains('Template Task 1')");
         await animationFrame();
 
-        await contains(".o_template_icon_group:first > i.fa-trash").click();
+        await contains(".o_template_icon_group:first > i[data-icon='delete'].oi-filled").click();
         expect(".modal-body").toHaveCount(1, {
             message: "A confirmation modal should appear when deleting a template",
         });
@@ -128,7 +128,7 @@ for (const [viewType, newButtonClass] of [
         expect.verifySteps(["unlink"]);
 
         await animationFrame();
-        await contains(".o_template_icon_group:first > i.fa-pencil").click();
+        await contains(".o_template_icon_group:first > i[data-icon='edit']").click();
         expect.verifySteps(["task template opened"]);
 
     });

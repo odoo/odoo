@@ -11,13 +11,13 @@
         <div class="o_website_rating_static" t-att-style="inline_mode and 'display:inline'" t-att-title="rating_avg">
             <t t-if="rating_style_compressed">
                 <t t-if="rating_avg &lt;= 2">
-                    <i class="fa fa-star-o" role="img"></i>
+                    <i class="oi" data-icon="star" role="img"></i>
                 </t>
                 <t t-elif="rating_avg &gt;= 2.1 and rating_avg &lt;= 3.5">
-                    <i class="fa fa-star-half-o" role="img"></i>
+                    <i class="oi" data-icon="star_half" role="img"></i>
                 </t>
                 <t t-else="">
-                    <i class="fa fa-star" role="img"></i>
+                    <i class="oi oi-filled" data-icon="star" role="img"></i>
                 </t>
                 <small class="text-muted ms-1">
                     <t t-out="rating_avg"/>
@@ -25,13 +25,13 @@
             </t>
             <t t-else="">
                 <t t-foreach="range(0, val_integer)" t-as="num">
-                    <i class="fa fa-star" role="img"></i>
+                    <i class="oi oi-filled" data-icon="star" role="img"></i>
                 </t>
                 <t t-if="val_decimal">
-                    <i class="fa fa-star-half-o" role="img"></i>
+                    <i class="oi" data-icon="star_half" role="img"></i>
                 </t>
                 <t t-foreach="range(0, empty_star)" t-as="num">
-                    <i class="fa fa-star-o" role="img"></i>
+                    <i class="oi" data-icon="star" role="img"></i>
                 </t>
                 <small class="text-muted ms-1">
                     (<t t-out="rating_count"/>)
@@ -72,7 +72,7 @@
             t-att-data-disable_composer="disable_composer"
             t-att-data-display_composer="display_composer"
             t-att-data-link_btn_classes="_link_btn_classes"
-            t-att-data-icon="icon"
+            t-att-data-rating-icon="icon"
             t-att-data-text_classes="_text_classes"
             t-att-data-hide_rating_avg="hide_rating_avg"
             t-att-data-is_fullscreen="is_fullscreen">
@@ -81,7 +81,7 @@
                 <button t-if="display_composer" type="button"
                     t-att-class="'btn ' + _link_btn_classes or 'btn-primary'"
                     data-bs-toggle="modal" data-bs-target="#ratingpopupcomposer">
-                    <i t-if="icon" t-att-class="icon"/>
+                    <i t-if="icon" t-attf-class="oi {{icon_class}}" t-att-data-icon="icon"/>
                     <span t-attf-class="#{_text_classes} o_rating_popup_composer_text">
                         <t t-if="is_fullscreen">Review</t>
                         <t t-elif="default_message_id">Edit Review</t>

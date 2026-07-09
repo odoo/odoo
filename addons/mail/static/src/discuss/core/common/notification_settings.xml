@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.NotificationSettings">
-        <ActionPanel t-if="!this.env[this.DROPDOWN_NESTING] and this.env.inChatWindow" close="this.props.close" title.translate="Notification Settings" resizable="!!this.env.inMeetingView" initialWidth="400" icon="'fa fa-bell'">
+        <ActionPanel t-if="!this.env[this.DROPDOWN_NESTING] and this.env.inChatWindow" close="this.props.close" title.translate="Notification Settings" resizable="!!this.env.inMeetingView" initialWidth="400" icon="'notifications'" icon_class="'oi-filled'">
             <t t-call="discuss.NotificationSettings.content"/>
         </ActionPanel>
         <t t-else="" t-call="discuss.NotificationSettings.content"/>
@@ -21,7 +21,7 @@
                     }" t-custom-ref="mute-button">
                         <span class="text-wrap text-start text-break">Mute Conversation</span>
                         <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
-                        <i t-if="!this.env[this.DROPDOWN_NESTING]" class="fa fa-caret-right fa-lg mx-2"/>
+                        <i t-if="!this.env[this.DROPDOWN_NESTING]" class="oi oi-lg mx-2" data-icon="arrow_right"/>
                     </button>
                     <t t-set-slot="content">
                         <t t-call="discuss.NotificationSettings.muteSttings"/>

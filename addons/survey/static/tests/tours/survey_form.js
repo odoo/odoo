@@ -70,17 +70,17 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     },
     {
         content: "Check that Question 2 has 'normal' trigger icon",
-        trigger: "tr:contains('Question 2') button i.fa-code-fork",
+        trigger: "tr:contains('Question 2') button i[data-icon='fork_right']",
     }, {
         content: "Check that Question 3 has 'normal' trigger icon",
-        trigger: "tr:contains('Question 3') button i.fa-code-fork",
+        trigger: "tr:contains('Question 3') button i[data-icon='fork_right']",
     }, {
         content: "Move Question 3 above its trigger (Question 2)",
         trigger: "div[name=question_and_page_ids] table tr:eq(3) div[name=sequence]",
         run: "drag_and_drop(div[name=question_and_page_ids] table tr:eq(2))",
     }, {
         content: "Check that Question 3 has 'warning' trigger icon",
-        trigger: "tr:contains('Question 3') button i.fa-exclamation-triangle",
+        trigger: "tr:contains('Question 3') button i[data-icon='warning']",
     }, {
         content: "Open that question to check the server's misplacement evaluation agrees",
         trigger: "tr.o_data_row td:contains('Question 3')",
@@ -116,7 +116,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     },
     {
         content: "Check that Question 3 has its 'normal' trigger icon back",
-        trigger: "tr:contains('Question 3') button i.fa-code-fork",
+        trigger: "tr:contains('Question 3') button i[data-icon='fork_right']",
     }, {
         content: "Move Question 3 back below Question 2",
         trigger: "div[name=question_and_page_ids] table tr:eq(2) div[name=sequence]",
@@ -157,7 +157,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "drag_and_drop(div[name=question_and_page_ids] table tr:eq(4))",
     }, {
         content: "Check that Question 3 has 'warning' trigger icon",
-        trigger: "tr:contains('Question 3') button i.fa-exclamation-triangle",
+        trigger: "tr:contains('Question 3') button i[data-icon='warning']",
     }, {
         content: "Open that question again",
         trigger: "tr.o_data_row td:contains('Question 3')",
@@ -185,7 +185,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     },
     {
         content: "Check that Question 3 has its 'normal' trigger icon back",
-        trigger: "tr:contains('Question 3') button i.fa-code-fork",
+        trigger: "tr:contains('Question 3') button i[data-icon='fork_right']",
     }, {
         content: "Move Question 1 back above Question 2",
         trigger: "div[name=question_and_page_ids] table tr:eq(3) div[name=sequence]",
@@ -214,7 +214,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button)):not(:visible)",
     }, {
         content: "Check that Question 2 however still has a trigger icon",
-        trigger: "tr:contains('Question 2') button i.fa-code-fork",
+        trigger: "tr:contains('Question 2') button i[data-icon='fork_right']",
     }, {
         content: "Delete Question 1",
         trigger: "tr:contains('Question 1') button[name=delete]",

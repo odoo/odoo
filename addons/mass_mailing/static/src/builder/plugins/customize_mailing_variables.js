@@ -98,7 +98,7 @@ export const CUSTOMIZE_MAILING_VARIABLES = Object.assign(
     generateSimpleMailingVariables("text-container", ["p", "ul"], textContainerProperties),
     generateSimpleMailingVariables(
         "link",
-        ["a:not(.btn):not(:has(.fa, img))", "a.btn.btn-link"],
+        ["a:not(.btn):not(:has(.oi, img))", "a.btn.btn-link"],
         textProperties.filter((prop) => prop !== "font-size")
     ),
     generateSimpleMailingVariables(

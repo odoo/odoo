@@ -42,7 +42,7 @@ export class PrintPopup extends Component {
                 label: _t("Full Receipt"),
                 method: () => this.doFullPrint.call(),
                 status: this.doFullPrint.status,
-                icon: "fa-print",
+                icon: "print",
                 isPrimary: true,
             },
             {
@@ -58,7 +58,7 @@ export class PrintPopup extends Component {
                 label: _t("Gift Receipt"),
                 method: () => this.doBasicPrint.call(),
                 status: this.doBasicPrint.status,
-                icon: "fa-gift",
+                icon: "card_giftcard",
                 isPrimary: false,
             });
         }

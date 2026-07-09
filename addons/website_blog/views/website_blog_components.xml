@@ -34,7 +34,7 @@
                        data-bs-toggle="offcanvas"
                        data-bs-target="#o_wblog_offcanvas"
                        aria-controls="o_wblog_offcanvas">
-                        <i class="fa fa-navicon" role="img"/>
+                        <i class="oi" data-icon="menu" role="img"/>
                     </a>
                     <div id="o_wblog_offcanvas" class="offcanvas offcanvas-end d-lg-none">
                         <div class="offcanvas-header">
@@ -101,7 +101,7 @@
         <t t-foreach="tags" t-as="tag">
             <t t-if="tag.post_ids">
                 <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
-                    <i class="fa fa-tag me-2"/>
+                    <i class="oi me-2" data-icon="label"/>
                     <t t-out="tag.name"/>
                     <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'">×</a>
                 </span>
@@ -164,7 +164,7 @@
         <li t-if="len(blogs) &gt; 1" class="breadcrumb-item d-none d-lg-inline"><a href="/blog">All Blogs</a></li>
         <li class="breadcrumb-item">
             <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}">
-                <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="blog.name"/>
+                <i class="oi d-lg-none me-1" data-icon="chevron_backward" role="presentation"/><t t-out="blog.name"/>
             </a>
         </li>
         <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-out="blog_post.name"/></li>
@@ -174,7 +174,7 @@
 <!--  Template: Blog Post Information-->
 <template id="blog_post_info" name="Blog Post Info">
     <div id="o_wblog_post_info" class="text-muted mb-2">
-        <i class="fa fa-clock-o fa-fw"/>
+        <i class="oi oi-fw" data-icon="schedule"/>
         <span t-if="blog_post.published_date" t-field="blog_post.published_date" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
         <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
         <span style="display: inline-flex">by
@@ -184,7 +184,7 @@
         </span>
         <t t-if="is_view_active('website_blog.opt_blog_post_comment')">
             <span t-if="blog_post.message_ids" class="text-nowrap o_not_editable">|
-            <i class="fa fa-comment ms-1 text-muted"/>
+            <i class="oi oi-filled ms-1 text-muted" data-icon="chat_bubble"/>
             <a href="#discussion">
                 <t t-out="len(blog_post.message_ids)"/>
                 <t t-if="len(blog_post.message_ids) > 1">Comments</t>
@@ -207,7 +207,7 @@ Options:
 <template id="sidebar_blog_index" name="Sidebar - Blog page">
     <div id="o_wblog_sidebar" class="w-100">
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_1"/>
-        <a t-if="blog" title="RSS" t-attf-href="/blog/#{slug(blog)}/feed" class="fa fa-rss-square float-end"/>
+        <a t-if="blog" title="RSS" t-attf-href="/blog/#{slug(blog)}/feed" class="oi float-end" data-icon="rss_feed"/>
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">About us</h6>
             <div>

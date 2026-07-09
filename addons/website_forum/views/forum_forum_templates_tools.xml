@@ -7,18 +7,18 @@
 
 <template id="show_flag_validator">
     <a href="#" t-att-data-post-id="object.id" t-attf-data-action="validate" t-attf-class="o_wforum_flag_validator flag_validator btn btn-success #{'' if object.state == 'flagged' else 'd-none'} my-2 me-2" title="Validate" data-bs-toggle="tooltip" data-bs-placement="top">
-        <i class="fa fa-check"/> Accept
+        <i class="oi" data-icon="check"/> Accept
     </a>
     <a href="#" t-attf-data-action="/forum/#{object.id}/ask_for_mark_as_offensive" t-attf-class="o_wforum_flag_mark_as_offensive flag_validator #{'' if object.state == 'flagged' else 'd-none'} btn btn-danger my-2 me-2" title="Mark as Offensive"  data-bs-toggle="tooltip" data-bs-placement="top">
-        <i class="fa fa-times"/> Reject
+        <i class="oi" data-icon="close"/> Reject
     </a>
 </template>
 
 <template id="link_button">
     <form t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <button t-if="label" t-attf-class="#{('fa ' + icon) if icon and not label else ''} #{ 'dropdown-item ps-3' if inDropdown else 'btn'} #{classes}#{ ' karma_required text-muted' if karma > 0 else ''}" t-attf-data-karma="#{karma}" t-att-title="title">
-            <i t-if="icon and label" t-attf-class="fa fa-fw #{icon} #{ 'me-1' if inDropdown else ''}"/>
+        <button t-if="label" t-attf-class="#{('oi ' + icon + icon_class) if icon and not label else ''} #{ 'dropdown-item ps-3' if inDropdown else 'btn'} #{classes}#{ ' karma_required text-muted' if karma > 0 else ''}" t-attf-data-karma="#{karma}" t-att-title="title">
+            <i t-if="icon and label" t-attf-class="oi oi-fw #{icon} #{icon_class} #{ 'me-1' if inDropdown else ''}"/>
             <t t-out="label"/>
         </button>
         <t t-if="flag_validator" t-call="website_forum.show_flag_validator"/>
@@ -110,7 +110,7 @@
             t-att-data-karma="forum.karma_upvote"
             t-att-data-can-upvote="can_upvote"
             aria-label="Upvote" title="Upvote">
-            <i class="fa fa-caret-up" data-bs-toggle="tooltip" data-bs-placement="top" title="Upvote"/>
+            <i class="oi" data-icon="arrow_drop_up" data-bs-toggle="tooltip" data-bs-placement="top" title="Upvote"/>
         </button>
         <small t-attf-class="vote_count #{ 'text-success' if own_vote == 1 else 'text-danger' if own_vote == -1 else ('text-muted opacity-75' if post.vote_count == 0 and not own_vote else '') }"
             t-out="post.vote_count"/>
@@ -120,7 +120,7 @@
             t-att-data-karma="forum.karma_downvote"
             t-att-data-can-downvote="can_downvote"
             aria-label="Downvote" title="Downvote">
-            <i class="fa fa-caret-down" data-bs-toggle="tooltip" data-bs-placement="top" title="Downvote"/>
+            <i class="oi" data-icon="arrow_drop_down" data-bs-toggle="tooltip" data-bs-placement="top" title="Downvote"/>
         </button>
         <t t-out="0"/>
     </div>

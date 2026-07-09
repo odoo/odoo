@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("self_combo_selector", {
         Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         {
-            trigger: ".btn .oi-plus",
+            trigger: ".btn [data-icon='add']",
             run: "click",
         },
         ...CartPage.checkCombo("Office Combo", [
@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add("test_self_order_combo_multiple_qty", {
         Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         {
-            trigger: ".btn .oi-plus",
+            trigger: ".btn [data-icon='add']",
             run: "click",
         },
         Utils.clickBtn("Order"),
@@ -134,11 +134,11 @@ registry.category("web_tour.tours").add("test_self_order_combo_multiple_qty", {
         Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         {
-            trigger: ".btn .oi-plus",
+            trigger: ".btn [data-icon='add']",
             run: "click",
         },
         {
-            trigger: ".btn .oi-plus",
+            trigger: ".btn [data-icon='add']",
             run: "click",
         },
         Utils.clickBtn("Order"),

@@ -1,44 +1,46 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-import { HrPresenceStatus, hrPresenceStatus } from "@hr/components/hr_presence_status/hr_presence_status";
-import { HrPresenceStatusPrivate, hrPresenceStatusPrivate } from "@hr/components/hr_presence_status_private/hr_presence_status_private";
+import {
+    HrPresenceStatus,
+    hrPresenceStatus,
+} from "@hr/components/hr_presence_status/hr_presence_status";
+import {
+    HrPresenceStatusPrivate,
+    hrPresenceStatusPrivate,
+} from "@hr/components/hr_presence_status_private/hr_presence_status_private";
 
 const patchHrPresenceStatus = () => ({
-
     get label() {
         if (this.value.includes("holiday")) {
-            return _t("%(label)s, back on %(date)s",
-                {
-                    label: this.value !== false
+            return _t("%(label)s, back on %(date)s", {
+                label:
+                    this.value !== false
                         ? this.options.find(([value, label]) => value === this.value)[1]
                         : "",
-                    date: this.props.record.data['leave_date_to'].toLocaleString(
-                        {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric',
-                        }
-                    )
-                }
-            )
+                date: this.props.record.data["leave_date_to"].toLocaleString({
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                }),
+            });
         } else if (this.location) {
-            return this.props.record.data.work_location_name || _t("Unspecified")
+            return this.props.record.data.work_location_name || _t("Unspecified");
         }
-        return super.label
+        return super.label;
     },
 
     get icon() {
         if (this.value?.includes("holiday")) {
-            return "fa-plane";
+            return "travel";
         } else if (this.location) {
             switch (this.location) {
                 case "home":
-                    return "fa-home";
+                    return "home";
                 case "office":
-                    return "fa-building";
+                    return "business";
                 case "other":
-                    return "fa-map-marker";
+                    return "location_on";
             }
         }
         return super.icon;
@@ -46,11 +48,18 @@ const patchHrPresenceStatus = () => ({
 
     get color() {
         if (this.value?.includes("holiday")) {
-            return `${this.value === "presence_holiday_present" ? "text-success" : "o_icon_employee_absent"}`;
+            return `${
+                this.value === "presence_holiday_present"
+                    ? "text-success"
+                    : "o_icon_employee_absent"
+            }`;
         } else if (this.location) {
             let color = "text-muted";
             if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
-                color = this.props.record.data.hr_presence_state === "present" ?  "text-success" : "o_icon_employee_absent";
+                color =
+                    this.props.record.data.hr_presence_state === "present"
+                        ? "text-success"
+                        : "o_icon_employee_absent";
             }
             return color;
         }
@@ -65,21 +74,21 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 // Applies patch on one component and the other should be affected also, since it's extended from it.
 patch(HrPresenceStatusPrivate.prototype, {
     get label() {
-        if (this.props.record.data.current_work_entry_type_id){
+        if (this.props.record.data.current_work_entry_type_id) {
             let label = this.props.record.data.current_work_entry_type_id.display_name;
             if (this.props.record.data.leave_date_to) {
-                label += _t(", back on ") + this.props.record.data['leave_date_to'].toLocaleString(
-                    {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                    }
-                )
+                label +=
+                    _t(", back on ") +
+                    this.props.record.data["leave_date_to"].toLocaleString({
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                    });
             }
             return label;
         }
         return super.label;
-    }
+    },
 });
 
 Object.assign(hrPresenceStatus, {
@@ -93,6 +102,6 @@ Object.assign(hrPresenceStatusPrivate, {
     fieldDependencies: [
         ...hrPresenceStatusPrivate.fieldDependencies,
         ...hrPresenceStatus.fieldDependencies,
-        { name: "current_work_entry_type_id", type:"many2one"},
+        { name: "current_work_entry_type_id", type: "many2one" },
     ],
 });

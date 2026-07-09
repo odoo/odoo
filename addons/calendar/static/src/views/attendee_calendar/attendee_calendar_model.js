@@ -24,9 +24,8 @@ export class AttendeeCalendarModel extends CalendarModel {
     async load() {
         const res = await super.load(...arguments);
         if (!this._loaded) {
-            const { credential_status, sync_status, sync_email, default_duration } = await this.orm.call(
-                "res.users", "get_calendar_model_data",
-            );
+            const { credential_status, sync_status, sync_email, default_duration } =
+                await this.orm.call("res.users", "get_calendar_model_data");
             this.syncStatus = sync_status;
             this.credentialStatus = credential_status;
             this.syncEmail = sync_email;
@@ -228,7 +227,7 @@ export class AttendeeCalendarModel extends CalendarModel {
     normalizeRecord(rawRecord) {
         const normalizedRecord = super.normalizeRecord(rawRecord);
         if (rawRecord.effective_privacy === "private") {
-            normalizedRecord.titleIcon = "fa fa-lock";
+            normalizedRecord.titleIcon = "lock";
         }
         return normalizedRecord;
     }

@@ -379,7 +379,7 @@
 
     {
         content: "switch to the second form view to test one2many with editable list (toggle menu dropdown)",
-        trigger: 'button[data-menu-xmlid="test_orm.menu_main"], li.o_extra_menu_items a i.fa-plus',
+        trigger: 'button[data-menu-xmlid="test_orm.menu_main"], li.o_extra_menu_items a i[data-icon="add"]',
         run: "click",
     }, {
         content: "switch to the second form view to test one2many with editable list (open submenu)",
@@ -513,7 +513,7 @@
     },
     {
         content: "switch to the third form view to test onchange changing one2many (toggle menu dropdown)",
-        trigger: 'button[data-menu-xmlid="test_orm.menu_main"], li.o_extra_menu_items a i.fa-plus',
+        trigger: 'button[data-menu-xmlid="test_orm.menu_main"], li.o_extra_menu_items a i[data-icon="add"]',
         run: "click",
     }, {
         content: "switch to the thied form view to test onchange changing one2many (open submenu)",

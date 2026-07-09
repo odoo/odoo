@@ -7,7 +7,8 @@
             <button
                 t-if="!this.props.readonly and this.isConfigurableTemplate"
                 type="button"
-                class="btn btn-link fa fa-pencil px-2"
+                class="btn btn-link oi oi-filled px-2"
+                data-icon="edit"
                 tabindex="-1"
                 draggable="false"
                 t-att-aria-label="this.configurationButtonHelp"

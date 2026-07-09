@@ -49,23 +49,23 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_contacts"
-                                type="object" icon="fa-user" class="oe_stat_button">
+                                type="object" icon="person" icon_class="oi-filled" class="oe_stat_button">
                             <field name="contact_count" string="Recipients" widget="statinfo"/>
                         </button>
                         <button name="action_view_mailings"
-                                type="object" icon="fa-envelope-o" class="oe_stat_button">
+                                type="object" icon="mail" class="oe_stat_button">
                             <field name="mailing_count" string="Mailings" widget="statinfo"/>
                         </button>
                         <button name="action_view_contacts_bouncing"
-                                type="object" icon="fa-exchange" class="oe_stat_button">
+                                type="object" icon="swap_horiz" class="oe_stat_button">
                                 <field name="contact_pct_bounce" widget="statinfo" string="% Bounce"/>
                         </button>
                         <button name="action_view_contacts_opt_out"
-                                type="object" icon="fa-bell-slash-o" class="oe_stat_button">
+                                type="object" icon="notifications_off" class="oe_stat_button">
                                 <field name="contact_pct_opt_out" widget="statinfo" string="% Opt-out"/>
                         </button>
                         <button name="action_view_contacts_blacklisted"
-                                type="object" icon="fa-ban" class="oe_stat_button">
+                                type="object" icon="block" class="oe_stat_button">
                                 <field name="contact_pct_blacklisted" widget="statinfo" string="% Blacklist"/>
                         </button>
                     </div>
@@ -161,7 +161,7 @@
                                     <field name="contact_count_email" class="fw-normal"/>
                                     <br/>
                                     <span class="text-muted">
-                                        <i class="fa fa-envelope-o"/> Contacts
+                                        <i class="oi" data-icon="mail"/> Contacts
                                     </span>
                                 </a>
                                 <a class="me-sm-0 me-3 fs-4 fw-light lh-1 text-truncate" tabindex="-1"

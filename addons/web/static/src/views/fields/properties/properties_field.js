@@ -172,7 +172,7 @@ export class PropertiesField extends Component {
         useSortable({
             enable: () => !this.props.readonly && this.state.canChangeDefinition,
             ref: this.propertiesRef,
-            handle: ".o_field_property_label .oi-draggable",
+            handle: ".o_field_property_label [data-icon='drag_indicator']",
             // on mono-column layout, allow to move before a separator to make the usage more fluid
             elements:
                 this.renderedColumnsCount === 1
@@ -242,7 +242,7 @@ export class PropertiesField extends Component {
         useSortable({
             enable: () => !this.props.readonly && this.state.canChangeDefinition,
             ref: this.propertiesRef,
-            handle: ".o_field_property_group_label .oi-draggable",
+            handle: ".o_field_property_group_label [data-icon='drag_indicator']",
             elements: ".o_property_group:not([property-name=''])",
             cursor: "grabbing",
             onDragStart: ({ element }) => {

@@ -5,7 +5,7 @@
             <label class="col-sm-2 col-form-label" for="pin_address">API Key</label>
             <div class="col">
                 <div class="input-group">
-                    <div class="input-group-text"><i class="fa fa-key"/></div>
+                    <div class="input-group-text"><i class="oi" data-icon="key"/></div>
                     <input type="text" class="form-control" id="api_key_input"
                             t-att-class="{ 'is-invalid': this.state.apiKeyValidation and !this.state.apiKeyValidation.isValid and this.state.apiKeyValidation.message }"
                             t-custom-model="this.state.apiKey"
@@ -18,12 +18,12 @@
                     Hint: How to use Google Map on your website (Contact Us page and as a snippet)
                     <br/>
                     <a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=maps-backend.googleapis.com,static-maps-backend.googleapis.com,places-backend.googleapis.com&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
-                        <i class="oi oi-arrow-right"/>
+                        <i class="oi" data-icon="east"/>
                         Create a Google Project and Get a Key
                     </a>
                     <br/>
                     <a target="_blank" href="https://cloud.google.com/maps-platform/pricing">
-                        <i class="oi oi-arrow-right"/>
+                        <i class="oi" data-icon="east"/>
                         Enable billing on your Google Project
                     </a>
                 </div>

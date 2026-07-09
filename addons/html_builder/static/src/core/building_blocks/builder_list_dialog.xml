@@ -9,7 +9,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="m-0">Excluded records</h4>
                         <button class="btn btn-sm btn-link p-0" t-on-click="this.includeAll">
-                            <i class="fa fa-plus me-1" />Include all</button>
+                            <i class="oi me-1" data-icon="add" />Include all</button>
                     </div>
                     <div class="o_list_panel overflow-auto border mt-2">
                         <h3 t-if="this.searchExcluded.length === 0" class="text-center text-muted my-2">No record.</h3>
@@ -18,7 +18,7 @@
                                 t-on-click="() => this.include(record)">
                                 <div class="d-flex align-items-center">
                                     <span class="overflow-hidden w-100" t-out="record.display_name" />
-                                    <span title="Include record" class="fa fa-plus float-end m-1 pe-2" />
+                                    <span title="Include record" class="oi float-end m-1 pe-2" data-icon="add"/>
                                 </div>
                             </div>
                         </t>
@@ -28,7 +28,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="m-0">Included records</h4>
                         <button class="btn btn-sm btn-link p-0" t-on-click="this.excludeAll">
-                            <i class="fa fa-minus me-1" />Exclude all</button>
+                            <i class="oi me-1" data-icon="remove"/>Exclude all</button>
                     </div>
                     <div class="o_list_panel overflow-auto border mt-2">
                         <h3 t-if="this.searchIncluded.length === 0" class="text-center text-muted my-2">No record.</h3>
@@ -37,7 +37,7 @@
                                 t-on-click="() => this.exclude(record)">
                                 <div class="d-flex align-items-center">
                                     <span class="overflow-hidden w-100" t-out="record.display_name" />
-                                    <span class="fa fa-minus m-1 pe-2 float-end" title="Exclude record" />
+                                    <span class="oi m-1 pe-2 float-end" data-icon="remove" title="Exclude record" />
                                 </div>
                             </div>
                         </t>

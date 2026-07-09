@@ -8,7 +8,7 @@
             <a t-if="this.state.showCloseButton"
                href="#" class="btn" style="position: absolute; right: 0; top: 0; margin: 15px;"
                t-on-click="this.close">
-                <i class="oi oi-close oi-large" role="presentation"/>
+                <i class="oi oi-lg" data-icon="close_small" role="presentation"/>
             </a>
 
             <div class="o_website_loader_odoo_logo mb-5" style="height: 31px; width: 78px;"/>
@@ -18,13 +18,13 @@
 
             <t t-foreach="this.state.loadingSteps" t-as="step" t-key="step_index">
                 <div t-if="step.completed" class="o_website_loader_tip d-flex gap-2 h3-fs mb-2">
-                    <div><i class="o_website_loader_check fa fa-check fa-fw text-success" role="presentation"/></div>
+                    <div><i class="o_website_loader_check oi oi-fw text-success" data-icon="check" role="presentation"/></div>
                     <span class="o_website_loader_done" t-out="step.description"/>
                 </div>
             </t>
 
             <div t-if="this.state.currentLoadingStep" class="o_website_loader_tip d-flex gap-2 h3-fs">
-                <div><i class="fa fa-circle-o-notch fa-spin fa-fw" role="presentation"/></div>
+                <div><i class="oi oi-spin oi-fw" data-icon="autorenew" role="presentation"/></div>
                 <span t-out="this.state.currentLoadingStep.description"/>
             </div>
 

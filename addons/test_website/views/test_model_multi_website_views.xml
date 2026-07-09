@@ -11,7 +11,7 @@
                 <t t-name="card">
                     <field name="name" class="text-truncate fw-bolder mb-auto"/>
                     <div class="text-muted fw-bolder" t-if="record.website_id.value" groups="website.group_multi_website">
-                        <i class="fa fa-globe me-1" title="Website"/>
+                        <i class="oi me-1" data-icon="public" title="Website"/>
                         <field name="website_id"/>
                     </div>
                     <div class="d-flex border-top mt-2 pt-2">

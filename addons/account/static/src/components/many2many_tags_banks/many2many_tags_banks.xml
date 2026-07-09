@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="account.BankTag">
         <BadgeTag color="this.props.color" onClick="this.props.onClick" onDelete="this.props.onDelete" tooltip="this.props.tooltip" crossTooltip="this.props.crossTooltip">
-            <i t-if="this.props.allowOutPayment" class="me-1 fa fa-shield text-success" data-tooltip="Trusted"/>
-            <i t-else="" class="me-1 fa fa-exclamation-circle text-danger" data-tooltip="Untrusted"/>
+            <i t-if="this.props.allowOutPayment" class="me-1 oi text-success" data-icon="security" data-tooltip="Trusted"/>
+            <i t-else="" class="me-1 oi text-danger" data-icon="error" data-tooltip="Untrusted"/>
             <div class="o_tag_badge_text" t-out="this.props.text"/>
         </BadgeTag>
     </t>
@@ -11,7 +11,7 @@
     <t t-name="account.FieldMany2ManyTagsBanks" t-inherit="web.Many2ManyTagsField" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="inside">
             <button class="o_external_button btn btn-link text-action px-1 py-0" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openBanksListView(isMiddleClick)">
-                <i class="oi" t-att-class="this.env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
+                <i class="oi" t-att-data-icon="this.env.inDialog ? 'open_in_browser' : 'east'"/>
             </button>
         </xpath>
     </t>

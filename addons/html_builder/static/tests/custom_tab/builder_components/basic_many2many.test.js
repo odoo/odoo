@@ -75,7 +75,7 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
     ]);
     expect("table tr").toHaveCount(2);
 
-    await contains("button.fa-minus").click();
+    await contains("button[data-icon='remove']").click();
     expect(selection).toEqual([{ id: 2, name: "Second", display_name: "Second" }]);
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");

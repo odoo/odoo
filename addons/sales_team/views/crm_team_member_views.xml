@@ -60,7 +60,7 @@
                         <main class="ms-3">
                             <field name="user_id" class="fw-bold fs-5"/>
                             <a type="open" class="nav-link p-0" name="crm_team_id_field">
-                                <i class="fa fa-fw me-1 fa-users text-primary" title="Sales Team"/>
+                                <i class="oi oi-fw oi-filled me-1 text-primary" data-icon="group" title="Sales Team"/>
                                 <field name="crm_team_id"/>
                             </a>
                         </main>
@@ -115,23 +115,23 @@
                             </h1>
                             <label for="crm_team_id" class="d-md-none" invisible="not user_id"/>
                             <div name="crm_team_id" class="d-flex align-items-baseline w-md-50 gap-2" invisible="not user_id">
-                                <i class="d-none d-md-block fa fa-users" title="Sales Team"/>
+                                <i class="d-none d-md-block oi oi-filled" data-icon="group" title="Sales Team"/>
                                 <field id="crm_team_id" name="crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"
                                     placeholder="Sales Team"/>
                             </div>
                             <label for="company_id" class="d-md-none" groups="base.group_multi_company"/>
                             <div class="d-flex align-items-baseline w-md-50 gap-2" groups="base.group_multi_company">
-                                <i class="d-none d-md-block fa fa-building" title="Company"/>
+                                <i class="d-none d-md-block oi oi-filled" data-icon="business" title="Company"/>
                                 <field name="company_id"/>
                             </div>
                             <label for="email" class="d-md-none" invisible="not user_id"/>
                             <div class="d-flex align-items-baseline w-md-50 gap-2" invisible="not user_id">
-                                <i class="d-none d-md-block fa fa-envelope" title="Email"/>
+                                <i class="d-none d-md-block oi oi-filled" data-icon="mail" title="Email"/>
                                 <field name="email" placeholder="Email"/>
                             </div>
                             <label for="phone" class="d-md-none" invisible="not user_id"/>
                             <div class="d-flex align-items-baseline w-md-50 gap-2" invisible="not user_id">
-                                <i class="d-none d-md-block fa fa-phone" title="Phone"/>
+                                <i class="d-none d-md-block oi oi-filled" data-icon="phone" title="Phone"/>
                                 <field name="phone" placeholder="Phone"/>
                             </div>
                         </group>

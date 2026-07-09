@@ -24,7 +24,7 @@
                 <span t-out="this.line.state" t-attf-class="badge flex-shrink-0 rounded-pill text-bg-#{this.badgeClass}"/>
             </div>
             <div t-if="this.line.note" class="p-2 rounded bg-100 text-muted">
-                <i class="fa fa-fw fa-sticky-note pe-2"/>
+                <i class="oi oi-fw oi-filled pe-2" data-icon="sticky_note_2"/>
                 <t t-out="this.line.note"/>
             </div>
             <div class="d-flex justify-content-between">
@@ -45,7 +45,7 @@
                         t-on-click="() => this.updateQuantity(-1)"
                         aria-label="Decrease quantity"
                     >
-                        <i class="oi oi-minus" role="img"/>
+                        <i class="oi" data-icon="remove" role="img"/>
                     </button>
                     <input
                         type="text"
@@ -59,7 +59,7 @@
                         t-on-click="() => this.updateQuantity(1)"
                         aria-label="Increase quantity"
                     >
-                        <i class="oi oi-plus" role="img"/>
+                        <i class="oi" data-icon="add" role="img"/>
                     </button>
                 </div>
                 <span class="align-content-end fs-3">
@@ -184,7 +184,7 @@
                         t-attf-class="{{this.hasLines and this.state.infos.lines.some(line => ['sent', 'confirmed'].includes(line.raw_state)) ? '' : 'mt-2'}}"
                         name="o_lunch_balance" role="status" tabindex="0" t-attf-aria-label="Available Balance {{this.state.infos.wallet}} {{currency.symbol}}"
                     >
-                        <span><i class="fa fa-money me-2"/>Available Balance</span>
+                        <span><i class="oi me-2" data-icon="payments"/>Available Balance</span>
                         <LunchCurrency currency="currency" amount="this.state.infos.wallet"/>
                     </span>
                     <h4 class="mt-3 pt-3 border-top">Your Order</h4>
@@ -272,7 +272,8 @@
                 <div class="offcanvas-header">
                     <button
                         type="button"
-                        class="btn btn-secondary oi oi-chevron-left"
+                        class="btn btn-secondary oi"
+                        data-icon="chevron_backward"
                         data-bs-dismiss="offcanvas"
                         aria-label="Close"
                     />

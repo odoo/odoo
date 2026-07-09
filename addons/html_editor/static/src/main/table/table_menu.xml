@@ -5,7 +5,8 @@
                 t-custom-ref="menuRef"
                 t-att-data-type="this.props.type"
                 class="o-we-table-menu oi"
-                t-attf-class="oi-ellipsis-{{ this.props.type === 'column' ? 'h w-100' : 'v h-100 px-0' }}"
+                t-attf-class="{{ this.props.type === 'column' ? 'w-100' : 'h-100 px-0' }}"
+                t-attf-data-icon="{{ this.props.type === 'column' ? 'more_horiz' : 'more_vert' }}"
                 title="Click to open options&#10;Drag to move"
                 t-on-pointerdown.prevent="() => {}"
             />
@@ -15,9 +16,10 @@
                         <DropdownItem onSelected="() => !item.disable and this.onSelected(item)">
                             <div class="user-select-none d-flex align-items-center" t-att-name="item.name" t-att-title="item.disable ? item.tooltip : ''" t-att-class="item.disable ? 'disabled text-muted' : ''">
                                 <span t-if="item.icon"
-                                    class="fa text-center"
+                                    class="oi text-center"
+                                    t-att-class="item.icon_class"
                                     style="width:16px;"
-                                    t-att-class="item.icon"/>
+                                    t-att-data-icon="item.icon"/>
                                 <span class="ms-2" t-out="item.text"/>
                             </div>
                         </DropdownItem>

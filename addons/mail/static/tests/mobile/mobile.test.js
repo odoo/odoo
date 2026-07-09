@@ -58,12 +58,12 @@ test("show loading on initial opening", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin");
+    await contains(".o-mail-MessagingMenu [data-icon='autorenew'].oi-spin");
     await contains(".o-mail-NotificationItem-name:text('General')", { count: 0 });
     await expect.waitForSteps(["before channels_as_member"]);
     resolve();
     await waitStoreFetch("channels_as_member");
-    await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin", { count: 0 });
+    await contains(".o-mail-MessagingMenu [data-icon='autorenew'].oi-spin", { count: 0 });
     await contains(".o-mail-NotificationItem-name:text('General')");
 });
 
@@ -87,7 +87,7 @@ test("enter key should create a newline in composer", async () => {
     await insertText(".o-mail-Composer-input", "Test\n");
     await press("Enter");
     await insertText(".o-mail-Composer-input", "Other");
-    await click(".fa-paper-plane-o");
+    await click("[data-icon='send']");
     await contains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
 });
 

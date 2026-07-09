@@ -12,7 +12,7 @@
                         <t t-set="popover_content">
                             <div t-field="sponsor.name" class="h5"/>
                             <div t-if="sponsor.url" class="d-flex align-items-baseline">
-                                <i class="fa fa-globe me-2"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
+                                <i class="oi me-2" data-icon="public"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
                             </div>
                         </t>
                         <a class="o_wevent_sponsor o_wevent_sponsor_card h-100 rounded text-decoration-none position-relative" tabindex="0" role="button"

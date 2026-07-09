@@ -358,8 +358,8 @@ describe("operations", () => {
         await fill("2");
         expect.verifySteps(["customAction 102"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("102");
-        expect(".o-snippets-top-actions .fa-undo").not.toBeEnabled();
-        expect(".o-snippets-top-actions .fa-repeat").not.toBeEnabled();
+        expect(".o-snippets-top-actions [data-icon='undo']").not.toBeEnabled();
+        expect(".o-snippets-top-actions [data-icon='redo']").not.toBeEnabled();
     });
     test("should commit changes", async () => {
         addBuilderAction({
@@ -390,8 +390,8 @@ describe("operations", () => {
         await click(document.body);
         await animationFrame();
         expect.verifySteps(["customAction 102"]);
-        expect(".o-snippets-top-actions .fa-undo").toBeEnabled();
-        expect(".o-snippets-top-actions .fa-repeat").not.toBeEnabled();
+        expect(".o-snippets-top-actions [data-icon='undo']").toBeEnabled();
+        expect(".o-snippets-top-actions [data-icon='redo']").not.toBeEnabled();
     });
     test("should commit changes after an undo", async () => {
         addBuilderAction({
@@ -420,7 +420,7 @@ describe("operations", () => {
         await click(document.body);
         expect.verifySteps(["customAction 102", "customAction 102"]);
         await animationFrame();
-        click(".o-snippets-top-actions .fa-undo");
+        click(".o-snippets-top-actions [data-icon='undo']");
         await animationFrame();
         expect(":iframe .test-options-target").toHaveInnerHTML("10");
         await click(".options-container input");

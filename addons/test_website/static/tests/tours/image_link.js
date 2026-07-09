@@ -78,7 +78,7 @@ registerWebsitePreviewTour(
         {
             content: "check popover content has mail URL",
             trigger:
-                ".o-we-linkpopover:has(.fa-envelope-o) a.o_we_url_link[href='mailto:test@test.com']:contains(mailto:test@test.com)",
+                ".o-we-linkpopover:has([data-icon='mail']) a.o_we_url_link[href='mailto:test@test.com']:contains(mailto:test@test.com)",
         },
         {
             content: "enter phone URL",
@@ -90,7 +90,7 @@ registerWebsitePreviewTour(
         {
             content: "check popover content has phone URL",
             trigger:
-                ".o-we-linkpopover:has(.fa-phone) a.o_we_url_link[href='tel:555-2368']:contains(tel:555-2368)",
+                ".o-we-linkpopover:has([data-icon='phone']) a.o_we_url_link[href='tel:555-2368']:contains(tel:555-2368)",
         },
         {
             content: "remove URL",

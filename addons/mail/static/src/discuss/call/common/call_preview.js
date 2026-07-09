@@ -171,7 +171,8 @@ export class CallPreview extends Component {
         };
         const videoBlurAction = {
             condition: () => this.state.videoStream !== null,
-            icon: () => "fa fa-fw fa-photo",
+            icon: () => "image",
+            iconClass: () => "oi oi-fw",
             isActive: ({ store }) => store.settings.useBlur,
             name: ({ action }) =>
                 action.isActive ? _t("Disable background blur") : _t("Enable background blur"),

@@ -13,7 +13,7 @@ test("set o_editable_media class on contenteditable false media elements", async
     }
     await setupEditor(
         `
-        <div class="wrapper" contenteditable="false"><i class="fa fa-shopping-cart fa-stack"></i></div>`,
+        <div class="wrapper" contenteditable="false"><i class="oi oi-stack" data-icon="shopping_cart"></i></div>`,
         {
             config: { includePlugins: [TestPlugin] },
         }

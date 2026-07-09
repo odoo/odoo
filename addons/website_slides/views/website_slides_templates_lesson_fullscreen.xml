@@ -16,7 +16,7 @@
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
                     <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
-                        <i class="fa fa-bars"/><span class="d-none d-md-inline-block ms-1">Lessons</span>
+                        <i class="oi" data-icon="menu"/><span class="d-none d-md-inline-block ms-1">Lessons</span>
                     </a>
                     <a class="o_wslides_fs_review d-flex align-items-center" title="Reviews" t-if="slide.channel_id.allow_comment">
                         <t t-call="portal_rating.rating_stars_static_popup_composer"
@@ -33,7 +33,8 @@
                             force_submit_url="'/mail/message/update_content' if last_message_id else False"
                             disable_composer="not channel.can_review"
                             _link_btn_classes.f="d-inline-block text-white fw-light shadow-none"
-                            icon.f="fa fa-pencil"
+                            icon.f="edit"
+                            icon_class.f="oi-filled"
                             _text_classes.f="d-none d-md-inline-block"
                             hide_rating_avg="True"
                             is_fullscreen="True"/>
@@ -41,14 +42,14 @@
                 </div>
                 <div class="d-flex ms-auto">
                     <a class="o_wslides_share d-flex align-items-center px-3" href="#" title="Share">
-                        <i class="fa fa-share-alt"/>
+                        <i class="oi" data-icon="family_history"/>
                         <span class="d-none d-md-inline-block ms-2">Share</span>
                     </a>
                     <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}" title="Exit Fullscreen">
-                        <i class="fa fa-sign-out"/><span class="d-none d-md-inline-block ms-1">Exit Fullscreen</span>
+                        <i class="oi" data-icon="logout"/><span class="d-none d-md-inline-block ms-1">Exit Fullscreen</span>
                     </a>
                     <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}" title="Back to course">
-                        <i class="fa fa-home"/><span class="d-none d-md-inline-block ms-1">Back to course</span>
+                        <i class="oi" data-icon="home"/><span class="d-none d-md-inline-block ms-1">Back to course</span>
                     </a>
                 </div>
             </div>
@@ -64,7 +65,7 @@
                             </a>
                             <div t-if="not is_public_user">
                                 <span t-attf-class="o_wslides_channel_completion_completed badge text-bg-success #{'d-none' if not slide.channel_id.completed else ''}">
-                                    <i class="fa fa-check"/> Completed
+                                    <i class="oi" data-icon="check"/> Completed
                                 </span>
                                 <div t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} w-100 align-items-center">
                                     <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
@@ -103,8 +104,8 @@
             t-attf-href="#collapse-#{category.id if category else 0}" t-attf-aria-controls="collapse-#{category.id if category else 0}">
             <b t-field="category.name"/>
             <div class="flex-grow-1"/>
-            <i class="fa fa-fw fa-caret-left" role="img"/>
-            <i class="fa fa-fw fa-caret-down" role="img"/>
+            <i class="oi oi-fw" data-icon="arrow_left" role="img"/>
+            <i class="oi oi-fw" data-icon="arrow_drop_down" role="img"/>
         </a>
         <ul t-attf-class="o_wslides_fs_sidebar_section_slides position-relative px-0 pb-1 my-0 mx-n3 collapse #{'show' if category_collapsed else ''}"
             t-attf-id="collapse-#{category.id if category else 0}">
@@ -137,14 +138,14 @@
                         <a t-if="can_access" class="d-block" href="#">
                             <div class="d-flex">
                                 <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"/>
-                                <i t-else="" t-attf-class="fa #{slide.slide_icon_class} me-2"/>
+                                <i t-else="" class="oi me-2" t-attf-data-icon="#{slide.slide_icon_class}"/>
                                 <div class="o_wslides_fs_slide_name text-truncate" t-out="slide.name"/>
                             </div>
                         </a>
                         <span t-else="" class="d-block" href="#">
                             <div class="d-flex">
                                 <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"/>
-                                <i t-else="" t-attf-class="fa #{slide.slide_icon_class} me-2 text-600"/>
+                                <i t-else="" class="oi me-2 text-600" t-attf-data-icon="#{slide.slide_icon_class}"/>
                                 <div class="o_wslides_fs_slide_name text-600 text-truncate" t-out="slide.name"/>
                             </div>
                         </span>
@@ -152,17 +153,17 @@
                             <t t-if="can_access_channel" t-foreach="slide.slide_resource_ids" t-as="resource">
                                 <li class="ps-1 mb-1">
                                     <a t-if="resource.resource_type == 'url'" class="o_wslides_fs_slide_link" t-att-href="resource.link" target="_blank">
-                                        <i class="fa fa-link me-2"/><span t-out="resource.name"/>
+                                        <i class="oi me-2" data-icon="link"/><span t-out="resource.name"/>
                                     </a>
                                     <a t-else="" class="o_wslides_fs_slide_link ps-0" t-att-href="resource.download_url">
-                                        <i class="fa fa-download me-2"/><span t-out="resource.name"/>
+                                        <i class="oi me-2" data-icon="download"/><span t-out="resource.name"/>
                                     </a>
                                 </li>
                             </t>
                             <div t-else="" class="o_wslides_js_course_join o_wslides_no_access ps-0">
                                 <li t-if="slide.channel_id.enroll == 'public' or (slide.channel_id.enroll == 'invite' and slide.channel_id.is_member_invited)"
                                     class="o_wslides_fs_slide_link mb-1">
-                                    <i class="fa fa-download me-1"/>
+                                    <i class="oi me-1" data-icon="download"/>
                                     <t t-call="website_slides.join_course_link" for_resources="1"/>
                                 </li>
                             </div>
@@ -183,10 +184,10 @@
                                 t-att-data-session-answers="session_answers"
                                 t-att-data-website-share-url="slide.website_share_url">
                                 <a t-if="can_access" class="o_wslides_fs_slide_quiz o_wslides_fs_slide_name" href="#" t-att-index="i">
-                                    <i class="fa fa-flag-checkered text-warning"/>Quiz
+                                    <i class="oi text-warning" data-icon="sports_score"/>Quiz
                                 </a>
                                 <span t-else="" class="text-600">
-                                    <i class="fa fa-flag-checkered text-warning"/>Quiz
+                                    <i class="oi text-warning" data-icon="sports_score"/>Quiz
                                 </span>
                             </li>
                         </ul>

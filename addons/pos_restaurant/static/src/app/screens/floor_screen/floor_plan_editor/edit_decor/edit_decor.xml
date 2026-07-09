@@ -162,19 +162,19 @@
         <div class="d-flex flex-wrap gap-2">
              <button class="btn btn-outline-secondary align-items-center"
                      t-on-click="() => this.moveLayer('bottom')" title="Send to back">
-                    <i class="fa fa-arrow-down" style="border-bottom: 2px solid; padding-bottom:1px; transform: scale(0.8);"/>
+                    <i class="oi" data-icon="arrow_downward" style="border-bottom: 2px solid; padding-bottom:1px; transform: scale(0.8);"/>
              </button>
              <button class="btn btn-outline-secondary"
                      t-on-click="() => this.moveLayer('down')" title="Send backward">
-                 <i class="fa fa-arrow-down"/>
+                 <i class="oi" data-icon="arrow_downward"/>
              </button>
              <button class="btn btn-outline-secondary"
                      t-on-click="() => this.moveLayer('up')" title="Bring forward">
-                 <i class="fa fa-arrow-up"/>
+                 <i class="oi" data-icon="arrow_upward"/>
              </button>
             <button class="btn btn-outline-secondary d-flex align-items-center"
                      t-on-click="() => this.moveLayer('top')" title="Send to front">
-                    <i class="fa fa-arrow-up" style="border-top: 2px solid; padding-top:1px; transform: scale(0.8);"/>
+                    <i class="oi" data-icon="arrow_upward" style="border-top: 2px solid; padding-top:1px; transform: scale(0.8);"/>
              </button>
         </div>
     </t>
@@ -209,17 +209,17 @@
             <button class="btn btn-outline-secondary"
                     t-att-class="{'active': this.element.fontWeight  === 'bold'  }"
                     t-on-click="() => this.toggleElementValue('fontWeight','bold')" title="Bold">
-                <i class="fa fa-bold fa-fw"/>
+                <i class="oi oi-fw" data-icon="format_bold"/>
             </button>
             <button class="btn btn-outline-secondary"
                     t-att-class="{'active': this.element.fontStyle  === 'italic'  }"
                     t-on-click="() => this.toggleElementValue('fontStyle','italic')" title="Italic">
-                <i class="fa fa-italic fa-fw"/>
+                <i class="oi oi-fw" data-icon="format_italic"/>
             </button>
             <button class="btn btn-outline-secondary"
                     t-att-class="{'active': this.element.textDecoration  === 'underline'  }"
                     t-on-click="() => this.toggleElementValue('textDecoration', 'underline')" title="Underline">
-                <i class="fa fa-underline fa-fw"/>
+                <i class="oi oi-fw" data-icon="format_underline"/>
             </button>
         </div>
 
@@ -228,17 +228,17 @@
             <button class="btn btn-outline-secondary"
                     t-att-class="{'active': this.element.textAlign  === 'left'  }"
                     t-on-click="() => this.updateElement({textAlign:'left'})">
-                <i class="fa fa-align-left fa-fw"/>
+                <i class="oi oi-fw" data-icon="format_align_left"/>
             </button>
             <button class="btn btn-outline-secondary"
                     t-att-class="{'active': this.element.textAlign  === 'center'  }"
                     t-on-click="() => this.updateElement({textAlign:'center'})">
-                <i class="fa fa-align-center fa-fw"/>
+                <i class="oi oi-fw" data-icon="format_align_center"/>
             </button>
             <button class="btn btn-outline-secondary"
                     t-att-class="{'active': this.element.textAlign  === 'right'  }"
                     t-on-click="() => this.updateElement({textAlign:'right'})">
-                <i class="fa fa-align-right fa-fw"/>
+                <i class="oi oi-fw" data-icon="format_align_right"/>
             </button>
         </div>
     </t>

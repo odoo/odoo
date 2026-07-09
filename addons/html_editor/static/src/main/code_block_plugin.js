@@ -25,15 +25,13 @@ export class CodeBlockPlugin extends Plugin {
     static dependencies = ["baseContainer", "dom", "selection", "split", "lineBreak", "delete"];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        font_type_items: [
-            withSequence(50, { name: _t("Code"), tagName: "pre" }),
-        ],
+        font_type_items: [withSequence(50, { name: _t("Code"), tagName: "pre" })],
         user_commands: [
             {
                 id: "setTagPre",
                 title: _t("Code"),
                 description: _t("Add a code section"),
-                icon: "fa-code",
+                icon: "code",
                 run: () => this.dependencies.dom.setBlock({ tagName: "pre" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },

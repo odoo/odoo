@@ -43,7 +43,7 @@ class TestModel(models.Model):
                 'name': {'name': 'name', 'type': 'text', 'match': True},
                 'website_url': {'name': 'name', 'type': 'text', 'truncate': False},
             },
-            'icon': 'fa-check-square-o',
+            'icon': 'check_box',
             'order': 'name asc, id desc',
             'group_name': self.env._("Test Models"),
         }

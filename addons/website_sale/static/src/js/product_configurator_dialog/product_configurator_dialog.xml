@@ -27,7 +27,7 @@
                     t-on-click="() => this.onConfirm({goToCart: false})"
                     t-att-disabled="!this.isPossibleConfiguration() || !this.canBeSold()"
                 >
-                    <i class="fa fa-shopping-cart"/>
+                    <i class="oi" data-icon="shopping_cart"/>
                     Add to cart
                 </button>
                 <button
@@ -37,7 +37,7 @@
                     t-att-disabled="!this.isPossibleConfiguration() || !this.canBeSold()"
                 >
                     Go to Checkout
-                    <i class="fa fa-angle-right ms-2"/>
+                    <i class="oi ms-2" data-icon="keyboard_arrow_right"/>
                 </button>
             </div>
         </button>

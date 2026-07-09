@@ -8,7 +8,7 @@
                     <!-- Desktop Mode -->
                     <div t-if="url_from" class="o_wprofile_all_users_nav_btn_container col pe-0 flex-grow-0 d-none d-md-flex">
                         <a t-att-href="url_from" class="o_wprofile_all_users_nav_btn btn text-nowrap">
-                            <i class="oi oi-chevron-left small"/> <t t-out="url_from_label"/>
+                            <i class="oi small" data-icon="chevron_backward"/> <t t-out="url_from_label"/>
                         </a>
                     </div>
                     <nav aria-label="breadcrumb" class="col d-none d-md-flex">
@@ -27,7 +27,7 @@
                         <form t-attf-action="/profile/users" role="search" method="get">
                             <div class="input-group o_wprofile_course_nav_search ms-1 position-relative">
                                 <button class="btn btn-link text-white border-1 rounded-0 pe-1 me-2" type="submit" aria-label="Search" title="Search">
-                                    <i class="fa fa-search border-1"></i>
+                                    <i class="oi border-1" data-icon="search"></i>
                                 </button>
                                 <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white ms-auto" name="search" placeholder="Search users"/>
                                 <input type="hidden" name="group_by" t-att-value="group_by"/>
@@ -40,7 +40,7 @@
                         <div class="btn-group d-flex justify-content-between gap-1" role="group" aria-label="Mobile sub-nav">
                             <div t-if="url_from" class="btn-group">
                                 <a t-att-href="url_from" class="btn bg-black-25 text-white">
-                                    <i class="oi oi-chevron-left small"/>
+                                    <i class="oi small" data-icon="chevron_backward"/>
                                 </a>
                             </div>
 
@@ -55,13 +55,13 @@
                             </div>
 
                             <div class="btn-group">
-                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="oi" data-icon="search"></i></a>
                                 <div class="dropdown-menu dropdown-menu-end w-100">
                                     <form class="px-3" t-attf-action="/profile/users" role="search" method="get">
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="search" placeholder="Search users"/>
                                             <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
-                                                <i class="fa fa-search"/>
+                                                <i class="oi" data-icon="search"/>
                                             </button>
                                         </div>
                                     </form>
@@ -103,7 +103,7 @@
                             <a class="btn o_wprofile_editor btn-primary d-inline-block d-md-none"
                                 t-if="(env.user == user and user.karma != 0) or env.user._is_admin()"
                                 t-att-data-user-id="user.id" t-att-data-can-edit-country="'true' if user.partner_id._can_edit_country() else None">
-                                <i class="fa fa-pencil me-1"/>EDIT
+                                <i class="oi oi-filled me-1" data-icon="edit"/>EDIT
                             </a>
                         </div>
                     </div>
@@ -116,20 +116,20 @@
                             </h1>
                             <a class="btn o_wprofile_editor btn-primary d-none d-md-inline-block" t-if="(env.user == user and user.karma != 0) or env.user._is_admin()"
                                 t-att-data-user-id="user.id" t-att-data-can-edit-country="'true' if user.partner_id._can_edit_country() else None">
-                                <i class="fa fa-pencil me-2"/>EDIT PROFILE
+                                <i class="oi oi-filled me-2" data-icon="edit"/>EDIT PROFILE
                             </a>
                         </div>
 
                         <div class="d-flex flex-column justify-content-center flex-grow-1 mb-0 mb-md-5">
                             <div t-if="user.partner_id.parent_name" class="lead mb-2">
-                                <i class="fa fa-building-o fa-fw me-1"/><span t-field="user.partner_id.parent_name"/>
+                                <i class="oi oi-fw me-1" data-icon="business"/><span t-field="user.partner_id.parent_name"/>
                             </div>
                             <div t-if="user.city or user.country_id" class="lead mb-2">
-                                <i class="fa fa-map-marker fa-fw me-1"/>
+                                <i class="oi oi-fw me-1" data-icon="location_on"/>
                                 <span t-field="user.city"/><span class="text-nowrap ms-1" t-if="user.country_id">(<span t-field="user.country_id"/>)</span>
                             </div>
                             <div t-if="user.website" class="lead mb-2">
-                                <i class="fa fa-globe fa-fw me-1"/><span t-field="user.website"/>
+                                <i class="oi oi-fw me-1" data-icon="public"/><span t-field="user.website"/>
                             </div>
                         </div>
                     </div>
@@ -197,7 +197,7 @@
                                 <t t-if="env.user == user and user.karma != 0 or env.user._is_admin()">
                                     <a href="#" class="o_wprofile_editor btn btn-link float-end"
                                         t-att-data-user-id="user.id" t-att-data-can-edit-country="'true' if user.partner_id._can_edit_country() else None" data-focus-website-description="true">
-                                        <i class="fa fa-pencil me-1"/>Edit
+                                        <i class="oi oi-filled me-1" data-icon="edit"/>Edit
                                     </a>
                                 </t>
                                 <h5 class="border-bottom pb-1">Biography</h5>
@@ -290,18 +290,18 @@
          <div class="mb-3" t-elif="env.user == user">
             Badges are your collection of achievements. Wear them proudly! <br />
             <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}"
-            class="btn-link"><i class="fa fa-arrow-right"/> Get Badges</a>
+            class="btn-link"><i class="oi" data-icon="arrow_forward"/> Get Badges</a>
             <a t-else="" t-attf-href="/profile/ranks_badges"
-            class="btn-link"><i class="fa fa-arrow-right"/> Get Badges</a>
+            class="btn-link"><i class="oi" data-icon="arrow_forward"/> Get Badges</a>
         </div>
         <div t-else="" class="mb-3 d-inline-block">
             <p class="text-muted">No badges yet!</p>
         </div>
         <div t-if="env.user.id != user.id" class="text-end d-inline-block pull-right">
             <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}"
-            class="btn-link btn-sm"><i class="oi oi-arrow-right"/> All Badges</a>
+            class="btn-link btn-sm"><i class="oi" data-icon="east"/> All Badges</a>
             <a t-else="" t-attf-href="/profile/ranks_badges"
-            class="btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Badges</a>
+            class="btn-link btn-sm"><i class="oi me-1" data-icon="east"/>All Badges</a>
         </div>
     </template>
 
@@ -535,19 +535,19 @@
     <template id="pager_nobox" name="Pager (not box display)">
         <ul t-if="pager['page_count'] > 1" t-attf-class="o_wprofile_pager fw-bold pagination m-0">
             <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == 1 else ''}">
-                <a t-att-href=" pager['page_first']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="fa fa-step-backward"/></a>
+                <a t-att-href=" pager['page_first']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="oi" data-icon="skip_previous"/></a>
             </li>
             <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == 1 else ''}">
-                <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="fa fa-caret-left"/></a>
+                <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="oi" data-icon="arrow_left"/></a>
             </li>
             <t t-foreach="pager['pages']" t-as="page">
                 <li t-attf-class="page-item #{'active disabled bg-primary rounded-circle' if page['num'] == pager['page']['num'] else ''}"> <a t-att-href="page['url']" class="page-link" t-out="page['num']"/></li>
             </t>
             <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
-                <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-caret-right"/></a>
+                <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="oi" data-icon="arrow_right"/></a>
             </li>
             <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
-                <a t-att-href=" pager['page_last']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-step-forward"/></a>
+                <a t-att-href=" pager['page_last']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="oi" data-icon="skip_next"/></a>
             </li>
         </ul>
     </template>

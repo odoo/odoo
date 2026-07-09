@@ -41,9 +41,9 @@
                 <field name="partner_id"/>
                 <field name="failure_type"/>
                 <field name="state" widget="badge" decoration-info="state == 'outgoing'" decoration-muted="state == 'canceled'" decoration-success="state == 'sent'" decoration-danger="state == 'error'"/>
-                <button name="send" string="Send Now" type="object" icon="fa-paper-plane" invisible="state != 'outgoing'"/>
-                <button name="action_set_outgoing" string="Retry" type="object" icon="fa-repeat" invisible="state not in ('error', 'canceled')"/>
-                <button name="action_set_canceled" string="Cancel" type="object" icon="fa-times-circle" invisible="state not in ('error', 'outgoing')"/>
+                <button name="send" string="Send Now" type="object" icon="send" icon_class="oi-filled" invisible="state != 'outgoing'"/>
+                <button name="action_set_outgoing" string="Retry" type="object" icon="redo" icon_class="oi-filled" invisible="state not in ('error', 'canceled')"/>
+                <button name="action_set_canceled" string="Cancel" type="object" icon="cancel" invisible="state not in ('error', 'outgoing')"/>
             </list>
         </field>
     </record>

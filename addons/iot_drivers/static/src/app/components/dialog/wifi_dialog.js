@@ -162,7 +162,7 @@ export class WifiDialog extends Component {
                     <div class="mb-3 d-flex gap-1">
                         <input name="password" t-att-type="this.isPasswordVisible() ? '' : 'password'" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-model="this.form.password" placeholder="Wi-Fi password"/>
                         <button class="btn btn-secondary" type="button" t-on-click="this.togglePasswordVisibility">
-                            <i t-att-class="'fa fa-eye' + (this.isPasswordVisible() ? '-slash' : '')"></i>
+                            <i class="oi" t-att-data-icon="this.isPasswordVisible() ? 'visibility_off' : 'visibility'"></i>
                         </button>
                     </div>
                 </div>

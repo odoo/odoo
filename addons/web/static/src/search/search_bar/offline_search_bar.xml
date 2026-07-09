@@ -13,14 +13,14 @@
             >
                 <div class="d-flex w-100">
                     <div class="form-control d-print-contents d-flex align-items-center py-1 border-end-0 rounded-end-0" role="search" aria-autocomplete="list">
-                        <i class="d-print-none oi oi-search me-2" role="img"/>
+                        <i class="d-print-none oi me-2" data-icon="search" role="img"/>
                         <div class="d-flex flex-grow-1 flex-wrap gap-1 mw-100">
                             <t t-call="web.OfflineSearchBar.Facets" facets="this.currentSearch.facets"/>
                             <div t-if="this.canRemoveSearch()" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 cursor-pointer" data-tooltip="Clear search" t-on-click.stop="this.onRemoveSearch">
-                                <i class="oi oi-close small"/>
+                                <i class="oi small" data-icon="close"/>
                             </div>
                             <div t-elif="this.currentSearch.facets.length" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 opacity-50" data-tooltip="Can't remove that search">
-                                <i class="oi oi-close small"/>
+                                <i class="oi small" data-icon="close"/>
                             </div>
                             <input type="text"
                                 class="o_input d-print-none flex-grow-1 w-auto border-0"

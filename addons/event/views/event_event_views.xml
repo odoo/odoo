@@ -25,7 +25,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button name="%(event.event_registration_action_stats_from_event)d"
-                                type="action" class="oe_stat_button" icon="fa-line-chart">
+                                type="action" class="oe_stat_button" icon="show_chart">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">
                                     Registration
@@ -36,14 +36,15 @@
                                 type="action"
                                 context="{'search_default_expected': True}"
                                 class="oe_stat_button"
-                                icon="fa-users"
+                                icon="group"
+                                icon_class="oi-filled"
                                 help="Total Registrations for this Event">
                             <field name="seats_taken" widget="statinfo" string="Attendees"/>
                         </button>
                         <button name="action_open_slot_calendar"
                                 type="object"
                                 class="oe_stat_button"
-                                icon="fa-calendar"
+                                icon="calendar_today"
                                 invisible="not is_multi_slots">
                             <field name="event_slot_count" widget="statinfo" string="Slots"/>
                         </button>
@@ -113,11 +114,11 @@
                                     <field name="mail_count_done"/>
                                     <field name="mail_state" widget="event_icon_selection" string=" " nolabel="1"
                                         options="{
-                                            'error': 'fa fa-exclamation-triangle',
-                                            'sent': 'fa fa-check',
-                                            'scheduled': 'fa fa-hourglass-half',
-                                            'running': 'fa fa-cogs',
-                                            'cancelled': 'fa fa-times-circle'
+                                            'error': ['warning', ''],
+                                            'sent': ['check', ''],
+                                            'scheduled': ['hourglass_bottom', ''],
+                                            'running': ['settings_applications', ''],
+                                            'cancelled': ['cancel', 'oi-filled'],
                                         }"/>
                                 </list>
                             </field>
@@ -137,7 +138,7 @@
                                     <button name="action_view_question_answers"
                                         type="object"
                                         class="p-0"
-                                        icon="fa-bar-chart pe-1"
+                                        icon="bar_chart"
                                         string="Stats"
                                         title="Answer Breakdown"
                                         context="{'search_default_event_id': parent.id}"
@@ -242,7 +243,7 @@
                             </div>
                             <div><t t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
                                 <div t-if="record.date_begin.raw_value !== record.date_end.raw_value">
-                                    <i class="oi oi-arrow-right me-2" title="End date"/>
+                                    <i class="oi me-2" data-icon="east" title="End date"/>
                                     <t t-out="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
                                 </div>
                         </aside>
@@ -252,12 +253,12 @@
                                     <field name="name"/>
                                 </div>
                                 <div class="d-flex ps-1">
-                                    <i class="fa fa-map-marker mt-1 me-2 text-center ps-1" title="Location"/>
+                                    <i class="oi mt-1 me-2 text-center ps-1" data-icon="location_on" title="Location"/>
                                     <field t-if="record.address_id.value" name="address_id" class="ms-1"/>
                                     <span t-else="" class="ms-1">Online Event</span>
                                 </div>
                                 <div t-if="record.seats_taken.raw_value" class="d-flex ps-1">
-                                    <i class="fa fa-group mt-1 me-2 text-center" title="Attendees"/>
+                                    <i class="oi oi-filled mt-1 me-2 text-center" data-icon="group" title="Attendees"/>
                                     <field name="seats_taken" class="me-1"/> Attendees
                                 </div>
                             </div>

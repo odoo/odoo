@@ -9,10 +9,10 @@
             </a>
             <div t-if="this.props.follower.isEditable" class="d-flex align-items-center me-2">
                 <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Edit Notification Preferences" aria-label="Edit Notification Preferences" t-on-click="(ev) => this.onClickEdit(ev)">
-                    <i class="fa fa-fw fa-pencil"/>
+                    <i class="oi oi-fw oi-filled" data-icon="edit"/>
                 </span>
                 <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Remove this follower" aria-label="Remove this follower" t-on-click.stop="(ev) => this.onClickRemove(ev)">
-                    <i class="oi fa-fw oi-close"/>
+                    <i class="oi oi-fw" data-icon="close_small"/>
                 </span>
             </div>
         </DropdownItem>

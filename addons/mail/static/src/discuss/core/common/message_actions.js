@@ -10,7 +10,7 @@ registerMessageAction("set-new-message-separator", {
         !message.hasNewMessageSeparator &&
         message.persistent &&
         !message.isEmpty,
-    icon: "fa fa-eye-slash",
+    icon: "visibility_off",
     name: _t("Mark as Unread"),
     onSelected: ({ message }) => {
         const selfMember = message.channel_id?.self_member_id;

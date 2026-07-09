@@ -3,7 +3,7 @@
     <t t-name="mail.VoiceRecorder">
         <div class="o-mail-VoiceRecorder d-flex align-items-stretch gap-2 flex-shrink-0 pe-2">
             <button class="btn btn-secondary rounded-circle border-0 py-0 o-px-1_5 o-hasBtnBg" t-on-click="this.props.state.cancelRecording" t-att-title="this.cancelTitle">
-                <i class="fa fa-times"/>
+                <i class="oi" data-icon="close"/>
             </button>
             <small class="o-mail-VoiceRecorder-elapsed flex-shrink-0 align-self-center" t-att-class="{ 'text-danger': this.props.state.limitWarning }" t-out="this.props.state.elapsed"/>
             <div class="o-mail-VoiceRecorder-visualizer d-flex align-items-center justify-content-center gap-1 flex-shrink-0 my-2">
@@ -13,7 +13,7 @@
                 </t>
             </div>
             <button class="btn btn-primary rounded-circle border-0 py-0 text-bg-primary opacity-100 o-px-1_5 o-hasBtnBg" t-on-click="this.props.state.onClick" t-att-title="this.title">
-                <i class="fa fa-fw fa-check"/>
+                <i class="oi" data-icon="check"/>
             </button>
         </div>
     </t>

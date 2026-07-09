@@ -97,8 +97,8 @@
                                     <div class="d-flex flex-grow-1 flex-column my-0 my-lg-2">
                                         <div class="d-flex">
                                             <field name="display_name" class="fw-bold"/>
-                                            <span t-if="record.is_connected.raw_value" class="fa fa-circle text-success ms-2 my-1" aria-label="Online" title="Online"/>
-                                            <span t-else="" class="fa fa-circle text-danger ms-2 my-1" aria-label="Offline" title="Offline"/>
+                                            <span t-if="record.is_connected.raw_value" class="oi oi-filled text-success ms-2 my-1" data-icon="circle" aria-label="Online" title="Online"/>
+                                            <span t-else="" class="oi oi-filled text-danger ms-2 my-1" data-icon="circle" aria-label="Offline" title="Offline"/>
                                         </div>
                                         <!-- Double check is necessary for sample view (or error image are shown) -->
                                         <div t-if="record.country_id.raw_value and record.country_flag.raw_value">
@@ -152,23 +152,23 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button o_stat_button_info" disabled="1" invisible="not is_connected">
-                            <i class="fa fa-fw o_button_icon fa-circle text-success" title="Connected"/>
+                            <i class="oi oi-filled oi-fw o_button_icon text-success" data-icon="circle" title="Connected"/>
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Connected</span>
                             </div>
                         </button>
                         <button class="oe_stat_button o_stat_button_info" disabled="1" invisible="is_connected">
-                            <i class="fa fa-fw o_button_icon fa-circle text-danger" title="Offline"/>
+                            <i class="oi oi-filled oi-fw o_button_icon text-danger" data-icon="circle" title="Offline"/>
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Offline</span>
                             </div>
                         </button>
-                        <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" disabled="1" icon="fa-globe">
+                        <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" disabled="1" icon="public">
                             <field name="visit_count" widget="statinfo" string="Visits"/>
                         </button>
                         <button name="%(website.website_visitor_page_action)d" type="action"
                                 class="oe_stat_button"
-                                icon="fa-tags">
+                                icon="sell">
                             <field name="visitor_page_count" widget="statinfo" string="Page Views"/>
                         </button>
                     </div>
@@ -213,7 +213,7 @@
                 <field name="page_ids" widget="many2many_tags" string="Pages"/>
                 <field name="last_visited_page_id" string="Last Page" optional="hide"/>
                 <button string="Email" name="action_send_mail" type="object"
-                    icon="fa-envelope" invisible="not email"/>
+                    icon="mail" icon_class="oi-filled" invisible="not email"/>
             </list>
         </field>
     </record>

@@ -26,7 +26,7 @@
             </field>
             <field name="date_end" position="after">
                 <field name="attachment_number" optional="show" />
-                <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip"/>
+                <button name="action_get_attachment_view" string="Attachments" type="object" icon="attach_file"/>
             </field>
         </field>
     </record>
@@ -42,7 +42,7 @@
             <field name="date_end" position="after">
                 <field name="driver_id" string="Current Driver" optional="hide"/>
                 <field name="attachment_number" optional="show" />
-                <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip" />
+                <button name="action_get_attachment_view" string="Attachments" type="object" icon="attach_file" />
             </field>
         </field>
     </record>
@@ -59,7 +59,7 @@
                 <field name="future_driver_employee_id" invisible="1"/>
             </xpath>
             <button name="open_assignation_logs" position="before">
-                <button name="action_open_employee" type="object" class="oe_stat_button" icon="fa-id-card-o" groups="hr.group_hr_user" invisible="not driver_employee_id">
+                <button name="action_open_employee" type="object" class="oe_stat_button" icon="badge" groups="hr.group_hr_user" invisible="not driver_employee_id">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">1</span>
                         <span class="o_stat_text">Employee</span>

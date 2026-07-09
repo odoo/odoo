@@ -23,7 +23,7 @@
                        t-if="!this.isActiveItem('no_end_action_opt') and !this.isActiveItem('redirect_end_action_opt')"
                        action="'previewEndMessage'"
                        preview="false"
-                       icon="'fa-eye'"/>
+                       icon="'visibility'"/>
     </BuilderRow>
     <BuilderRow t-if="this.isActiveItem('redirect_end_action_opt')"
                 label.translate="URL">
@@ -166,9 +166,9 @@
         </BuilderRow>
         <BuilderRow label.translate="Alignment" level="2">
             <BuilderButtonGroup applyTo="'.s_countdown_inline_wrapper'">
-                <BuilderButton ltrRtlMapping="'left-right'" icon="'fa-align-left'" title.translate="Left" classAction="''"/>
-                <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'align-self-center text-center'"/>
-                <BuilderButton ltrRtlMapping="'left-right'" icon="'fa-align-right'" title.translate="Right" classAction="'align-self-end text-end'"/>
+                <BuilderButton ltrRtlMapping="'left-right'" icon="'format_align_left'" title.translate="Left" classAction="''"/>
+                <BuilderButton icon="'format_align_center'" title.translate="Center" classAction="'align-self-center text-center'"/>
+                <BuilderButton ltrRtlMapping="'left-right'" icon="'format_align_right'" title.translate="Right" classAction="'align-self-end text-end'"/>
             </BuilderButtonGroup>
         </BuilderRow>
         <BuilderRow label.translate="Font Monospace" applyTo="'.s_countdown_inline'" level="2">

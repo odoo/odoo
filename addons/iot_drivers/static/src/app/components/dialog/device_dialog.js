@@ -6,24 +6,24 @@ import { Dialog } from "./dialog.js";
 const { Component, xml } = owl;
 
 export const DEVICE_ICONS = {
-    camera: "fa-camera",
-    device: "fa-plug",
-    display: "fa-desktop",
-    fiscal_data_module: "fa-dollar",
-    keyboard: "fa-keyboard-o",
-    payment: "fa-credit-card",
-    printer: "fa-print",
-    scale: "fa-balance-scale",
-    scanner: "fa-barcode",
-    unsupported: "fa-question",
+    camera: "photo_camera",
+    device: "power",
+    display: "desktop_windows",
+    fiscal_data_module: "attach_money",
+    keyboard: "keyboard",
+    payment: "credit_card",
+    printer: "print",
+    scale: "balance",
+    scanner: "barcode",
+    unsupported: "help",
 };
 
 export const CONNECTION_ICONS = {
-    hdmi: "fa-desktop",
-    direct: "fa-usb",
-    serial: "fa-usb",
-    network: "fa-sitemap",
-    bluetooth: "fa-bluetooth",
+    hdmi: "desktop_windows",
+    direct: "usb",
+    serial: "usb",
+    network: "account_tree",
+    bluetooth: "bluetooth",
 };
 
 export class DeviceDialog extends Component {
@@ -61,7 +61,7 @@ export class DeviceDialog extends Component {
                     <div t-foreach="Object.keys(this.devices)" t-as="deviceType" t-key="deviceType" class="accordion-item">
                         <h2 class="accordion-header" t-att-id="'heading-' + deviceType">
                             <button class="accordion-button px-3 d-flex gap-3 collapsed" type="button" data-bs-toggle="collapse" t-att-data-bs-target="'#collapse-' + deviceType" t-att-aria-controls="'collapse-' + deviceType">
-                                <span t-att-class="'color-primary fa fa-fw fa-2x ' + this.icons[deviceType]"/>
+                                <span class="oi oi-fw oi-2x" t-att-data-icon="this.icons[deviceType]"/>
                                 <span class="fs-5 fw-bold" t-out="this.devices[deviceType].length"/>
                                 <span class="fs-5" t-out="this.formatDeviceType(deviceType, this.devices[deviceType].length)"/>
                             </button>
@@ -71,7 +71,7 @@ export class DeviceDialog extends Component {
                                 <div t-foreach="this.devices[deviceType]" t-as="device" t-key="device.identifier" class="d-flex flex-column bg-light rounded p-2 gap-1">
                                     <span t-out="device.name" class="one-line"/>
                                     <span class="text-secondary one-line">
-                                        <span t-att-class="'me-2 fa fa-fw ' + this.connectionIcons[device.connection]"/>
+                                        <span class="oi oi-fw me-2" t-att-data-icon="this.connectionIcons[device.connection]"/>
                                         <t t-out="device.identifier"/>
                                     </span>
                                 </div>

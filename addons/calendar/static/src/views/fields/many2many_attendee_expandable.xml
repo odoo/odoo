@@ -14,7 +14,7 @@
                         <br/><t t-out="this.declinedCount"/> declined
                         <br/><t t-out="this.uncertainCount"/> uncertain
                     </div>
-                    <i role="button" t-on-click="this.onExpanderClick" t-att-class="this.state.expanded ? 'oi oi-chevron-up' : 'oi oi-chevron-down'"></i>
+                    <i role="button" t-on-click="this.onExpanderClick" class="oi" t-att-data-icon="this.state.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"></i>
                 </div>
             </t>
         </xpath>

@@ -11,14 +11,17 @@ export class HrPresenceStatus extends Component {
     };
 
     get classNames() {
-        return `o_employee_availability fa ${this.icon} fa-fw o_button_icon hr_presence align-middle ${this.color}`;
+        return `o_employee_availability oi ${this.iconClass} oi-fw o_button_icon hr_presence align-middle ${this.color}`;
     }
 
     get color() {
         if (this.location) {
             let color = "text-muted";
             if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
-                color = this.props.record.data.hr_presence_state === "present" ?  "text-success" : "o_icon_employee_absent";
+                color =
+                    this.props.record.data.hr_presence_state === "present"
+                        ? "text-success"
+                        : "o_icon_employee_absent";
             }
             return color;
         }
@@ -38,14 +41,18 @@ export class HrPresenceStatus extends Component {
         if (this.location) {
             switch (this.location) {
                 case "home":
-                    return "fa-home";
+                    return "home";
                 case "office":
-                    return "fa-building";
+                    return "business";
                 case "other":
-                    return "fa-map-marker";
+                    return "location_on";
             }
         }
-        return "fa-circle";
+        return "circle";
+    }
+
+    get iconClass() {
+        return this.location === "office" || !this.location ? "oi-filled" : "";
     }
 
     get location() {
@@ -77,7 +84,16 @@ export class HrPresenceStatus extends Component {
 }
 
 export const hrPresenceStatus = {
-    additionalClasses: ["position-absolute", "d-flex", "align-items-center", "justify-content-center", "bg-light", "rounded-circle","top-0", "end-0"],
+    additionalClasses: [
+        "position-absolute",
+        "d-flex",
+        "align-items-center",
+        "justify-content-center",
+        "bg-light",
+        "rounded-circle",
+        "top-0",
+        "end-0",
+    ],
     component: HrPresenceStatus,
     fieldDependencies: [
         { name: "active", type: "boolean" },
@@ -88,4 +104,4 @@ export const hrPresenceStatus = {
     displayName: _t("HR Presence Status"),
 };
 
-registry.category("fields").add("hr_presence_status", hrPresenceStatus)
+registry.category("fields").add("hr_presence_status", hrPresenceStatus);

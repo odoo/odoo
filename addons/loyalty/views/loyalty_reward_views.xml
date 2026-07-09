@@ -95,16 +95,16 @@
                                     <div class="fw-bold text-decoration-underline mt-3">Applied to:</div>
 
                                     <div t-if="record.discount_product_ids.raw_value.length > 0" class="d-flex">
-                                        <i class="fa fa-cube fa-fw" title="Products"/> <field name="discount_product_ids" widget="many2many_tags"/>
+                                        <i class="oi oi-fw" data-icon="deployed_code" title="Products"/> <field name="discount_product_ids" widget="many2many_tags"/>
                                     </div>
                                     <div t-if="record.discount_product_category_id.raw_value" class="d-flex">
-                                        <i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="discount_product_category_id"/>
+                                        <i class="oi oi-fw" data-icon="inventory_2" title="Product Categories"/> <field name="discount_product_category_id"/>
                                     </div>
                                     <div t-if="record.discount_product_tag_id.raw_value" class="d-flex">
-                                        <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="discount_product_tag_id"/>
+                                        <i class="oi oi-fw" data-icon="sell" title="Product Tags"/> <field name="discount_product_tag_id"/>
                                     </div>
                                     <div t-if="record.discount_product_domain.raw_value &amp;&amp; record.discount_product_domain.raw_value !== '[]'" groups="base.group_no_one" class="d-flex">
-                                        <i class="fa fa-search fa-fw" title="Product Domain"/> <field name="discount_product_domain"/>
+                                        <i class="oi oi-fw" data-icon="search" title="Product Domain"/> <field name="discount_product_domain"/>
                                     </div>
                                 </t>
 
@@ -120,10 +120,10 @@
                             <t t-elif="record.reward_type.raw_value === 'product'">
                                 <div class="mb-3">Free product</div>
                                 <div t-if="record.reward_product_id.raw_value" class="d-flex">
-                                    <i class="fa fa-cube fa-fw" title="Product Domain"/><field name="reward_product_id" class="me-1"/> <t t-if="record.reward_product_qty.raw_value > 1"> x <field name="reward_product_qty" class="ms-1"/></t>
+                                    <i class="oi oi-fw" data-icon="deployed_code" title="Product Domain"/><field name="reward_product_id" class="me-1"/> <t t-if="record.reward_product_qty.raw_value > 1"> x <field name="reward_product_qty" class="ms-1"/></t>
                                 </div>
                                 <div t-if="record.reward_product_tag_id.raw_value" class="d-flex">
-                                    <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="reward_product_tag_id"/>
+                                    <i class="oi oi-fw" data-icon="sell" title="Product Tags"/> <field name="reward_product_tag_id"/>
                                 </div>
                             </t>
                         </div>

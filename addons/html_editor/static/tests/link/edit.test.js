@@ -390,7 +390,7 @@ describe("format links", () => {
     test("clicking the discard button should revert the link creation", async () => {
         const { el } = await setupEditor("<p>[link1]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
 
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#", {
             confirm: false,

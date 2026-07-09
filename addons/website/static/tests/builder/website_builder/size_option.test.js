@@ -18,9 +18,9 @@ test("Size option should be present when scroll down button is enabled", async (
     await contains("[data-label='Scroll Down Button'] input").click();
     await waitFor(sizeOptionSelector);
     expect(`${sizeOptionSelector} .o-hb-button-group button`).toHaveCount(5);
-    await contains(`[data-class-action='fa-2x']`).click();
+    await contains(`[data-class-action='oi-2x']`).click();
     const scrollDownButtonEl = queryOne(":iframe .o_scroll_button");
-    const angleDownIconEl = scrollDownButtonEl.querySelector(".fa-angle-down");
+    const angleDownIconEl = scrollDownButtonEl.querySelector("[data-icon='keyboard_arrow_down']");
     const computedStyle = getComputedStyle(scrollDownButtonEl);
     const iconFontSize = getComputedStyle(angleDownIconEl).fontSize;
     expect(computedStyle.width).toBe(iconFontSize);

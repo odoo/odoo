@@ -30,7 +30,7 @@
             <AvatarStack t-if="!this.env.inMessage" containerClass="'ms-1'" personas="this.channel().channel_member_ids.map((m) => m.persona)" size="22" spacing="10" total="this.channel().member_count"/>
             <span t-elif="this.channel().message_count" class="text-primary smaller flex-shrink-0 d-flex fw-bold align-items-center ms-1">
                 <t t-out="this.messageCountText"/>
-                <i class="o-xxsmaller o-ms-0_5 oi oi-chevron-right"/>
+                <i class="o-xxsmaller o-ms-0_5 oi" data-icon="chevron_forward"/>
             </span>
         </div>
     </t>
@@ -45,7 +45,7 @@
             <AvatarStack t-if="!this.env.inMessage" containerClass="'ms-1'" personas="this.channel().channel_member_ids.map((m) => m.persona)" size="22" spacing="10" total="this.channel().member_count"/>
             <span t-elif="this.channel().message_count" class="text-primary smaller flex-shrink-0 d-flex fw-bold align-items-center ms-1">
                 <t t-out="this.messageCountText"/>
-                <i class="o-xxsmaller o-ms-0_5 oi oi-chevron-right"/>
+                <i class="o-xxsmaller o-ms-0_5 oi" data-icon="chevron_forward"/>
             </span>
         </div>
     </t>

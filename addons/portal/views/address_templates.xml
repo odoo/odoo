@@ -21,7 +21,7 @@
                         title="Add an address"
                         aria-label="Add an address"
                     >
-                        <i class="oi oi-plus me-2"/>Add Address
+                        <i class="oi me-2" data-icon="add"/>Add Address
                     </a>
                 </div>
                 <t t-call="portal.address_list" addresses="delivery_addresses"/>
@@ -37,7 +37,7 @@
                         title="Add an address"
                         aria-label="Add an address"
                     >
-                        <i class="oi oi-plus me-2"/>Add Address
+                        <i class="oi me-2" data-icon="add"/>Add Address
                     </a>
                 </div>
                 <div class="form-check form-switch mt-2">
@@ -134,7 +134,7 @@
                             title="Edit this address"
                             aria-label="Edit this address"
                         >
-                            <i class="fa fa-fw fa-pencil"/>
+                            <i class="oi oi-fw oi-filled" data-icon="edit"/>
                         </a>
                         <t t-if="show_removal">
                             <span class="d-block border-start border-2 my-2"/>
@@ -145,7 +145,7 @@
                                 aria-label="Remove this address"
                                 t-att-data-partner-id="contact.id"
                             >
-                                <i class="fa fa-fw fa-trash"/>
+                                <i class="oi oi-fw oi-filled" data-icon="delete"/>
                             </a>
                         </t>
                     </div>
@@ -388,7 +388,7 @@
                 t-att-href="discard_url or '/my/'"
                 class="btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3"
             >
-                <i class="fw-light fa fa-angle-left me-2"/>Discard
+                <i class="fw-light oi me-2" data-icon="keyboard_arrow_left"/>Discard
             </a>
             <div class="position-relative w-100 d-flex d-md-none justify-content-center align-items-center order-2 my-2 opacity-75">
                 <hr class="w-100"/>
@@ -397,7 +397,7 @@
             </div>
             <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3">
                 <t name="save_address_label">Save Address</t>
-                <i class="fw-light fa fa-angle-right ms-2"/>
+                <i class="fw-light oi ms-2" data-icon="keyboard_arrow_right"/>
             </button>
         </div>
     </template>
@@ -415,7 +415,7 @@
                             <i class="fa fa-pencil" title="Edit"/>
                         </button>
                         <button class="btn btn-outline-secondary o_portal_profile_pic_clear oe_unremovable" aria-label="Clear">
-                            <i class="fa fa-trash-o" title="Clear"/>
+                            <i class="oi" data-icon="delete" title="Clear"/>
                         </button>
                     </div>
                 </div>

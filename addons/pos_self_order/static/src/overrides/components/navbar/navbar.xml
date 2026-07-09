@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <xpath expr="//DropdownItem/i[hasclass('fa-download')]/.." position="before">
+        <xpath expr="//DropdownItem/i[@data-icon='download']/.." position="before">
             <DropdownItem t-if="this.ui.isSmall and this.pos.config.module_pos_restaurant" onSelected="() => this.pos.redirectToQrForm()">
-                <i class="fa fa-fw fa-qrcode" aria-hidden="true" /> Get QR Codes
+                <i class="oi oi-fw" data-icon="qr_code" aria-hidden="true" /> Get QR Codes
             </DropdownItem>
         </xpath>
     </t>

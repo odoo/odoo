@@ -54,7 +54,7 @@ export class MediaPlugin extends Plugin {
             {
                 id: "replaceImage",
                 description: _t("Replace media"),
-                icon: "fa-file-image-o",
+                icon: "image",
                 run: this.replaceImage.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -64,7 +64,7 @@ export class MediaPlugin extends Plugin {
                 description: this.config.allowVideo
                     ? _t("Insert image, icon or video")
                     : _t("Insert image or icon"),
-                icon: "fa-file-image-o",
+                icon: "image",
                 run: (params, context = {}) =>
                     this.openMediaDialog({
                         activeTab: this.getActiveDialogTab(context.searchTerm),

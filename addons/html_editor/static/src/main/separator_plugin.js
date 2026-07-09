@@ -26,7 +26,7 @@ export class SeparatorPlugin extends Plugin {
                 id: "insertSeparator",
                 title: _t("Separator"),
                 description: _t("Insert a horizontal rule separator"),
-                icon: "fa-minus",
+                icon: "remove",
                 run: this.insertSeparator.bind(this),
                 isAvailable: isHtmlContentSupported,
             },

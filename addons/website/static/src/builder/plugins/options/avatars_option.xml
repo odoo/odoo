@@ -21,9 +21,9 @@
 
     <BuilderRow label.translate="Alignment">
         <BuilderButtonGroup>
-            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" classAction="''" icon="'fa-fw fa-align-left'"/>
-            <BuilderButton title.translate="Center" classAction="'o_avatars_center'" icon="'fa-fw fa-align-center'"/>
-            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" classAction="'o_avatars_end'" icon="'fa-fw fa-align-right'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" classAction="''" icon="'format_align_left'" iconClass="'oi-fw'" />
+            <BuilderButton title.translate="Center" classAction="'o_avatars_center'" icon="'format_align_center'" iconClass="'oi-fw'" />
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" classAction="'o_avatars_end'" icon="'format_align_right'" iconClass="'oi-fw'" />
         </BuilderButtonGroup>
     </BuilderRow>
 
@@ -40,8 +40,8 @@
 
     <BuilderRow label.translate="Direction" t-if="this.isActiveItem('avatars_label_opt')" level="1">
         <BuilderButtonGroup>
-            <BuilderButton className="'fa fa-fw fa-long-arrow-right'" title.translate="Row" classAction="'flex-row'"/>
-            <BuilderButton className="'fa fa-fw fa-long-arrow-down'" title.translate="Column" classAction="'flex-column'"/>
+            <BuilderButton icon="'east'" iconClass="'oi-fw'" title.translate="Row" classAction="'flex-row'"/>
+            <BuilderButton icon="'south'" iconClass="'oi-fw'" title.translate="Column" classAction="'flex-column'"/>
         </BuilderButtonGroup>
     </BuilderRow>
 
@@ -57,13 +57,13 @@
 
 <t t-name="website.AvatarsHeaderMiddleButtons">
     <button class="btn btn-success-color-hover ms-0 py-0 px-1 me-1" aria-label="Add Avatar" t-on-click="this.addAvatar">
-        <span class="oi oi-fw oi-plus"/>
-        <span class="oi oi-user"/>
+        <span class="oi oi-fw" data-icon="add"/>
+        <span class="oi oi-filled" data-icon="person"/>
     </button>
     <button class="btn btn-danger-color-hover py-0 px-1 me-3" t-att-disabled="this.state.disableRemoveButton"
             aria-label="Remove Avatar" t-on-click="this.removeAvatar">
-        <span class="oi oi-fw oi-minus"/>
-        <span class="oi oi-user"/>
+        <span class="oi oi-fw" data-icon="remove"/>
+        <span class="oi oi-filled" data-icon="person"/>
     </button>
 </t>
 

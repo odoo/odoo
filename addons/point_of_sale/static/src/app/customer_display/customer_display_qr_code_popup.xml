@@ -14,7 +14,7 @@
                                 <div class="small mb-3">
                                     <t t-set="customerDisplayURL" t-value="this.props.customerDisplayURL"/>
                                     <a t-att-href="customerDisplayURL" target="_blank" t-out="customerDisplayURL" />
-                                    <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText.translate="Link copied to clipboard" icon="'fa-clone'"/>
+                                    <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText.translate="Link copied to clipboard" icon="'content_copy'"/>
                                 </div>
                             </div>
                             <button t-on-click="this.props.close" class="button btn btn-secondary mb-3 rounded-3">

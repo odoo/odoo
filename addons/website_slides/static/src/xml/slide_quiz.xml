@@ -21,16 +21,16 @@
                                         t-att-name="question.id"
                                         t-att-value="answer.id"
                                         class="d-none"/>
-                                    <i t-att-class="'fa fa-circle text-400' + (!(slide.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')"></i>
-                                    <i class="fa fa-times-circle text-danger d-none"></i>
-                                    <i t-att-class="'fa fa-check-circle text-success' + (slide.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')"></i>
+                                    <i t-att-class="'oi oi-filled text-400' + (!(slide.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')" data-icon="circle"></i>
+                                    <i class="oi oi-filled text-danger d-none" data-icon="cancel"></i>
+                                    <i t-att-class="'oi oi-filled text-success' + (slide.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')" data-icon="check_circle"></i>
                                 </label>
                                 <span t-out="answer.text_value"/>
                             </a>
                             <t t-if="slide.completed and answer.is_correct" t-set="correct_answer_comment" t-value="answer.comment"/>
                         </t>
                         <div t-attf-class="o_wslides_quiz_answer_info list-group-item list-group-item-info #{correct_answer_comment ? '' : 'd-none'}">
-                            <i class="fa fa-info-circle"/>
+                            <i class="oi" data-icon="info"/>
                             <span class="o_wslides_quiz_answer_comment ms-2">
                                 <t t-if="correct_answer_comment" t-out="correct_answer_comment"/>
                             </span>
@@ -109,7 +109,7 @@
                         </span>
                     </span>
                     <div class="ms-3 d-none text-danger o_wslides_js_quiz_submit_error">
-                        <i class="fa fa-close me-1"/>
+                        <i class="oi me-1" data-icon="close"/>
                         <span class="o_wslides_js_quiz_submit_error_text"></span>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                         Reset
                     </button>
                     <button t-if="slide.completed &amp;&amp; slide.hasNext" class="btn btn-primary o_wslides_quiz_continue">
-                        Continue <i class="oi oi-chevron-right ms-1"/>
+                        Continue <i class="oi ms-1" data-icon="chevron_forward"/>
                     </button>
                 </div>
             </div>

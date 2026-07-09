@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { handleCheckIdentity } from "@portal/interactions/portal_security";
 
 export class RevokeTrustedDevice extends Interaction {
-    static selector = "#totp_wizard_view + * .fa.fa-trash.text-danger";
+    static selector = "#totp_wizard_view + * [data-icon='delete'].text-danger";
     dynamicContent = {
         _root: { "t-on-click.prevent": this.onClick },
     };

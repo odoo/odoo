@@ -19,7 +19,7 @@ test("Drag and drop a section and then undo", async () => {
     await setupWebsiteBuilderWithSnippet(["s_text_image", "s_three_columns"]);
     await contains(":iframe section.s_text_image").click();
     expect(".overlay .o_overlay_options .o_move_handle.o_draggable").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     const { moveTo, drop } = await contains(".o_overlay_options .o_move_handle").drag();
     expect(":iframe .oe_drop_zone").toHaveCount(2);
@@ -34,9 +34,9 @@ test("Drag and drop a section and then undo", async () => {
     expect(":iframe .oe_drop_zone").toHaveCount(0);
     expect(":iframe section.s_text_image:nth-child(2)").toHaveCount(1);
     await waitForEndOfOperation();
-    expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").toBeEnabled();
 
-    await contains(".o-website-builder_sidebar .fa-undo").click();
+    await contains(".o-website-builder_sidebar [data-icon='undo']").click();
     expect(":iframe section.s_text_image:nth-child(1)").toHaveCount(1);
 });
 
@@ -44,7 +44,7 @@ test("Drag and drop at the same position should not add a commit in the history"
     await setupWebsiteBuilderWithSnippet(["s_text_image", "s_three_columns"]);
     await contains(":iframe section.s_text_image").click();
     expect(".overlay .o_overlay_options .o_move_handle.o_draggable").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     const { moveTo, drop } = await contains(".o_overlay_options .o_move_handle").drag();
     expect(":iframe .oe_drop_zone").toHaveCount(2);
@@ -61,7 +61,7 @@ test("Drag and drop at the same position should not add a commit in the history"
     expect(":iframe .oe_drop_zone").toHaveCount(0);
     expect(":iframe section.s_text_image:nth-child(1)").toHaveCount(1);
     await waitForEndOfOperation();
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 });
 
 test("Drag and drop at the same place a section with connection shape", async () => {
@@ -85,7 +85,7 @@ test("Drag and drop a column toggles the grid mode", async () => {
     });
     await contains(":iframe section.s_text_image .row > div:nth-child(1)").click();
     expect(".overlay .o_overlay_options .o_move_handle.o_draggable").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
     expect(":iframe section.s_text_image .row").not.toHaveClass("o_grid_mode");
 
     const { moveTo, drop } = await contains(".o_overlay_options .o_move_handle").drag();
@@ -103,7 +103,7 @@ test("Drag and drop a column toggles the grid mode", async () => {
     expect(":iframe section.s_text_image .row > .o_we_drag_helper").toHaveCount(0);
     expect(":iframe section.s_text_image .row.o_grid_mode > .o_grid_item").toHaveCount(2);
     await waitForEndOfOperation();
-    expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").toBeEnabled();
 });
 
 test("Drag and drop an image should drag the closest draggable element but not if it is a section", async () => {
@@ -169,7 +169,7 @@ test("Drag and drop an inner content as a grid item", async () => {
     await dragUtils.drop(getDragHelper());
     await waitForEndOfOperation();
     expect(":iframe .o_grid_item:only-child div.s_alert").toHaveCount(1);
-    await contains(".o-website-builder_sidebar .fa-undo").click();
+    await contains(".o-website-builder_sidebar [data-icon='undo']").click();
     expect(":iframe div.s_alert").toHaveCount(0);
 
     // Drag over the grid and drop it as a grid item.
@@ -193,7 +193,7 @@ test("Drag and drop an inner content as a grid item", async () => {
         gridColumnStart: 1,
         gridColumnEnd: 7,
     });
-    await contains(".o-website-builder_sidebar .fa-undo").click();
+    await contains(".o-website-builder_sidebar [data-icon='undo']").click();
     expect(":iframe div.s_alert").toHaveCount(0);
 
     // Drop near the grid (should become a grid item in the top left corner).

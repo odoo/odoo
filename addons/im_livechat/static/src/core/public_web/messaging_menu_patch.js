@@ -18,8 +18,7 @@ const messagingMenuPatch = {
                     0
                 ),
                 id: "livechat",
-                icon: "fa fa-commenting-o",
-                activeIcon: "fa fa-commenting",
+                icon: "mode_comment",
                 label: _t("Live Chats"),
                 sequence: 60,
             });

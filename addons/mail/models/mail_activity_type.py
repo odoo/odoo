@@ -40,7 +40,7 @@ class MailActivityType(models.Model):
     delay_from = fields.Selection([
         ('current_date', 'after previous activity completion date'),
         ('previous_activity', 'after previous activity deadline')], string="Delay Type", help="Type of delay", required=True, default='previous_activity')
-    icon = fields.Char('Icon', help="Font awesome icon e.g. fa-tasks")
+    icon = fields.Char('Icon', help="Material Symbols icon e.g. checklist")
     decoration_type = fields.Selection([
         ('warning', 'Alert'),
         ('danger', 'Error')], string="Decoration Type",

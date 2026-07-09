@@ -17,13 +17,13 @@
     </div>
     <div class="o_notification_indicator d-flex align-items-center justify-content-center pt-2">
         <t t-if="!this.props.hasError and !this.props.uploaded">
-            <i class="fa fa-circle-o-notch fa-spin fs-4"/>
-            <span class="fa fa-trash cursor-pointer fs-4 p-1 mx-1" t-on-click="this.props.cancelUpload" title="Cancel Upload"/>
+            <i class="oi oi-spin fs-4" data-icon="autorenew"/>
+            <span class="oi oi-filled cursor-pointer fs-4 p-1 mx-1" data-icon="delete" t-on-click="this.props.cancelUpload" title="Cancel Upload"/>
         </t>
         <span t-if="this.props.uploaded" class="o_notification_indicator_success d-flex align-items-center justify-content-center p-1 rounded-5 text-bg-success smaller">
-            <i class="fa fa-check"/>
+            <i class="oi" data-icon="check"/>
         </span>
-        <i t-if="this.props.hasError" class="fa fa-exclamation-triangle fs-4 text-danger"/>
+        <i t-if="this.props.hasError" class="oi fs-4 text-danger" data-icon="warning"/>
     </div>
 </t>
 

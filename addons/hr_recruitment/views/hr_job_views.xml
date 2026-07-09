@@ -93,7 +93,7 @@
                                                 </div>
                                         </div>
                                         <div t-if="record.alias_email.value" class="d-flex align-items-baseline mt-1 small text-muted">
-                                            <i class="fa fa-envelope flex-shrink-0 me-1 text-center" title="Email"></i>
+                                            <i class="oi oi-filled flex-shrink-0 me-1 text-center" data-icon="mail" title="Email"></i>
                                             <field name="alias_id" class="d-flex flex-wrap"
                                                 groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                                         </div>
@@ -134,7 +134,7 @@
                                         <div class="d-flex justify-content-sm-start justify-content-xl-start mt-1">
                                             <div class="position-relative">
                                                 <button name="action_open_activities" type="object" class="px-2 pt-2 pb-1">
-                                                    <i class="fa fa-2x fa-clock-o" role="img" aria-label="Activities"></i>
+                                                    <i class="oi oi-2x" data-icon="schedule" role="img" aria-label="Activities"></i>
                                                     <span class="activity_badge position-absolute translate-middle badge rounded-pill bg-danger text-light" t-if="record.activity_count.raw_value > 0">
                                                         <field name="activity_count"/>
                                                     </span> 
@@ -196,7 +196,7 @@
                                         <div class="col-1 align-content-end me-1" style="max-width: 1.5rem;"
                                             groups="hr_recruitment.group_hr_recruitment_interviewer">
                                             <div class="d-flex flex-row justify-content-center">
-                                                <i class="fa fa-user" title="new_applications_icon" aria-hidden="true"/>
+                                                <i class="oi oi-filled" data-icon="person" title="new_applications_icon" aria-hidden="true"/>
                                             </div>
                                         </div>
                                         <div class="col align-content-end">
@@ -344,7 +344,8 @@
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"
-                    icon="fa-pencil"
+                    icon="edit"
+                    icon_class="oi-filled"
                     name="%(action_hr_job_applications)d"
                     context="{'default_recruiter': recruiter_id, 'active_test': False}"
                     type="action">
@@ -352,7 +353,7 @@
                 </button>
                 <button class="oe_stat_button"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"
-                    icon="fa-file-text-o"
+                    icon="article"
                     name="action_open_attachments"
                     type="object"
                     invisible="documents_count == 0">
@@ -361,7 +362,8 @@
                 <button name="action_open_employees"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"
                     class="oe_stat_button"
-                    icon="fa-users"
+                    icon="group"
+                    icon_class="oi-filled"
                     invisible="not employee_count"
                     type="object">
                     <field name="employee_count" widget="statinfo" string="Employees"/>
@@ -409,8 +411,8 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_favorite_jobs']" position="after">
                 <searchpanel class="w-auto">
-                    <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                    <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    <field name="company_id" groups="base.group_multi_company" icon="business" icon_class="oi-filled" enable_counters="1"/>
+                    <field name="department_id" icon="group" icon_class="oi-filled" enable_counters="1"/>
                 </searchpanel>
                 <filter string="My Job Positions" name="my_positions" domain="[('recruiter_id.user_id', '=', uid)]"/>
             </xpath>

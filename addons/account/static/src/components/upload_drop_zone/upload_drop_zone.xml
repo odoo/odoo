@@ -18,8 +18,8 @@
                     </div>
                     <t t-if="this.props.visible">
                         <div class="position-absolute upload_badge pe-none">
-                            <i class="fa fa-circle fa-stack-2x text-primary"/>
-                            <i class="fa fa-upload fa-stack-1x fa-inverse"/>
+                            <i class="oi oi-stack-2x text-primary" data-icon="circle"/>
+                            <i class="oi oi-stack-1x" data-icon="upload"/>
                         </div>
                    </t>
                     <div class="h3 pe-none" t-att-class="{'text-primary': this.props.visible}">
@@ -42,9 +42,9 @@
                         src="/account/static/src/img/bill.svg"
                         style="height: auto; width: 120px;"
                     />
-                    <span class="position-absolute fa-stack-2x mt-2">
-                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                        <i class="fa fa-upload fa-stack-1x fa-inverse"></i>
+                    <span class="position-absolute oi-stack-2x mt-2">
+                        <i class="oi oi-stack-2x oi-filled text-primary" data-icon="circle"></i>
+                        <i class="oi oi-stack-1x" data-icon="upload"></i>
                     </span>
                     <h2 class="mt-5 fw-bold text-primary text-center">
                         <t t-out="this.props.dropZoneTitle"/>

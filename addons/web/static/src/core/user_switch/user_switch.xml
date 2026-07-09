@@ -12,12 +12,12 @@
                                     <img class="o_avatar o_user_avatar rounded me-2" t-attf-src="{{this.getAvatarUrl(user)}}" t-att-alt="user.login"/>
                                     <t t-out="user.name" />
                                 </span>
-                                <i class="fa fa-times" title="Remove user from switcher" t-on-click.stop="() => this.remove(user)"/>
+                                <i class="oi" data-icon="close" title="Remove user from switcher" t-on-click.stop="() => this.remove(user)"/>
                             </button>
                         </t>
                     </div>
                     <button type="button" class="btn btn-link btn-sm w-100" t-on-click="() => this.fillForm()">
-                        <i class="fa fa-user-circle-o"/> <span class="ms-1">Use another user</span>
+                        <i class="oi" data-icon="account_circle"/> <span class="ms-1">Use another user</span>
                     </button>
                 </div>
             </t>

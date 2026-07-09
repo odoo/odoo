@@ -10,7 +10,7 @@
             <BuilderRow level="1" label.translate="Domain" extraLabelClass="'align-self-end'">
                 <div t-if="this.state.facets?.length" class="d-flex flex-column">
                     <div class="d-inline-flex align-items-center pt-1" t-foreach="this.state.facets" t-as="facet" t-key="facet_index">
-                        <span class="fa fa-filter pe-1"/>
+                        <span class="oi oi-filled pe-1" data-icon="filter_alt"/>
                         <span t-out="facet"/>
                     </div>
                 </div>

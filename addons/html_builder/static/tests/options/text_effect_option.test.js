@@ -27,7 +27,7 @@ test("apply preset", async () => {
         focusNode: p,
         focusOffset: 1,
     });
-    await contains(".oi-ellipsis-v").click();
+    await contains("[data-icon='more_vert']").click();
     await contains(".o-select-text-effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
     await waitForNone(".o_text_effect_popover");
@@ -45,7 +45,7 @@ test("open applies blurred black by default", async () => {
         focusNode: p,
         focusOffset: 1,
     });
-    await contains(".oi-ellipsis-v").click();
+    await contains("[data-icon='more_vert']").click();
     await contains(".o-select-text-effect").click();
 
     expect(".o_text_effect_popover").toHaveCount(1);
@@ -88,7 +88,7 @@ test("remove", async () => {
         focusNode: p,
         focusOffset: 1,
     });
-    await contains(".oi-ellipsis-v").click();
+    await contains("[data-icon='more_vert']").click();
     await contains(".o-select-text-effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
     await waitForNone(".o_text_effect_popover");
@@ -130,7 +130,7 @@ test("custom opens the option", async () => {
         focusNode: p,
         focusOffset: 1,
     });
-    await contains(".oi-ellipsis-v").click();
+    await contains("[data-icon='more_vert']").click();
     await contains(".o-select-text-effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Custom')").click();
     expect(".o_text_effect_popover:contains('Text Shadow')").toHaveCount(1);
@@ -368,7 +368,7 @@ describe("nesting", () => {
             focusNode: p,
             focusOffset: 1,
         });
-        await contains(".oi-ellipsis-v").click();
+        await contains("[data-icon='more_vert']").click();
         await contains(".o-select-text-effect").click();
         await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
         await waitForNone(".o_text_effect_popover");
@@ -404,7 +404,7 @@ describe("nesting", () => {
             focusNode: p,
             focusOffset: 1,
         });
-        await contains(".oi-ellipsis-v").click();
+        await contains("[data-icon='more_vert']").click();
 
         // Apply font size
         await contains(":iframe input").click();
@@ -443,18 +443,18 @@ describe("nesting", () => {
             focusNode: p,
             focusOffset: 1,
         });
-        await contains(".oi-ellipsis-v").click();
+        await contains("[data-icon='more_vert']").click();
         await contains(".o-select-text-effect").click();
         await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
         await waitForNone(".o_text_effect_popover");
         expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");
 
         // Apply bold
-        await contains(".fa-bold").click();
+        await contains("[data-icon='format_bold']").click();
         await waitFor(":iframe strong");
 
         // Remove bold
-        await contains(".fa-bold").click();
+        await contains("[data-icon='format_bold']").click();
         await waitForNone(":iframe strong");
         expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");
     });
@@ -472,11 +472,11 @@ describe("nesting", () => {
         });
 
         // Apply bold
-        await contains(".fa-bold").click();
+        await contains("[data-icon='format_bold']").click();
         await waitFor(":iframe strong");
 
         // Apply text effect
-        await contains(".oi-ellipsis-v").click();
+        await contains("[data-icon='more_vert']").click();
         await contains(".o-select-text-effect").click();
         await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
         await waitForNone(".o_text_effect_popover");
@@ -484,7 +484,7 @@ describe("nesting", () => {
         await waitFor(":iframe strong span[data-text-effect]");
 
         // Remove bold
-        await contains(".fa-bold").click();
+        await contains("[data-icon='format_bold']").click();
         await waitForNone(":iframe strong");
         expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");
     });

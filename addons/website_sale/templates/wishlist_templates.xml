@@ -81,7 +81,8 @@
                                             >
                                                 <span class="d-inline-flex align-items-baseline">
                                                     <i
-                                                        class="fa fa-fw fa-envelope o_not-animable"
+                                                        class="oi oi-fw oi-filled o_not-animable"
+                                                        data-icon="mail"
                                                         role="presentation"
                                                     />
                                                     <span class="o_label small ms-1">
@@ -102,7 +103,8 @@
                                             >
                                                 <span class="d-inline-flex align-items-baseline">
                                                     <i
-                                                        class="fa fa-fw fa-shopping-cart o_not-animable"
+                                                        class="oi oi-fw o_not-animable"
+                                                        data-icon="shopping_cart"
                                                         role="presentation"
                                                     />
                                                     <span class="o_label small ms-1">
@@ -117,12 +119,12 @@
                                                     aria-label="Add to compare"
                                                     t-att-data-product-id="wish.product_id.id"
                                                 >
-                                                    <i class="fa fa-fw fa-exchange" role="presentation"/>
+                                                    <i class="oi oi-fw" data-icon="swap_horiz" role="presentation"/>
                                                 </button>
 
                                                 <!-- Render placeholder when product is not comparable to ensure alignment -->
                                                 <div t-else="" class="o_add_to_compare_placeholder btn btn-light pe-none opacity-0">
-                                                    <i class="fa fa-exchange fa-fw" aria-hidden="true"/>
+                                                    <i class="oi oi-fw" data-icon="swap_horiz" aria-hidden="true"/>
                                                 </div>
                                             </t>
                                         </div>
@@ -135,7 +137,7 @@
                                             class="btn btn-light o_wish_rm z-3 rounded-pill lh-1"
                                             title="Remove from wishlist"
                                         >
-                                            <i class="oi oi-close" role="presentation"/>
+                                            <i class="oi" data-icon="close" role="presentation"/>
                                         </button>
                                     </t>
                                     <t t-set="product_extra_information">
@@ -192,7 +194,8 @@
             t-att-title="in_wish and btnTitleActive or btnTitle"
         >
             <span
-                t-attf-class="fa o_not-animable #{in_wish and 'fa-heart' or 'fa-heart-o'}"
+                t-attf-class="oi o_not-animable #{in_wish and 'oi-filled' or ''}"
+                data-icon="favorite"
                 role="presentation"
             />
             <span t-if="not in_wish" class="o_label small ms-2">Add to wishlist</span>

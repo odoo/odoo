@@ -66,7 +66,7 @@
                         t-attf-class="btn btn-primary #{cart_has_blocking_alerts and 'disabled'} w-100"
                         t-att-href="next_website_checkout_step_href">
                         <span t-field="next_website_checkout_step.main_button_label"/>
-                        <i class="fa fa-angle-right ms-2 fw-light"/>
+                        <i class="oi ms-2 fw-light" data-icon="keyboard_arrow_right"/>
                     </a>
                 </t>
             </t>
@@ -80,13 +80,13 @@
                     t-att-href="previous_website_checkout_step.step_href"
                     class="my-4 my-lg-0 text-center"
                 >
-                    <i class="fa fa-angle-left me-2 fw-light"/>
+                    <i class="oi me-2 fw-light" data-icon="keyboard_arrow_left"/>
                     <span t-field="previous_website_checkout_step.back_button_label"/>
                 </a>
             </t>
             <t t-else="">
                 <a t-att-href="'/shop'" class="my-4 my-lg-0 text-center">
-                    <i class="fa fa-angle-left me-2 fw-light"/>
+                    <i class="oi me-2 fw-light" data-icon="keyboard_arrow_left"/>
                     Continue shopping
                 </a>
             </t>
@@ -246,7 +246,7 @@
                                     class="o_cart_item_count badge ms-1 top-0 bg-primary"
                                     t-out="str(website_sale_order.cart_quantity)"
                                 />
-                                <i class="fa fa-angle-right ms-2" role="img"/>
+                                <i class="oi ms-2" data-icon="keyboard_arrow_right" role="img"/>
                             </button>
                             <t
                                 t-if="show_navigation_button"
@@ -267,7 +267,7 @@
                                     class="o_wsale_scrollable_table_badge o_wsale_scrollable_table_badge_mobile d-none badge position-absolute start-50 z-1 translate-middle py-2 px-3 pe-none"
                                 >
                                     <t t-out="str(website_sale_order.cart_quantity)"/> items - Scroll for more
-                                    <i class="oi oi-arrow-down ms-1" aria-hidden="true"/>
+                                    <i class="oi ms-1" data-icon="south" aria-hidden="true"/>
                                 </span>
                                 <a href="/shop/cart" class="btn btn-link w-100">
                                     Coupon, Gift card, Promo-code?
@@ -342,7 +342,7 @@
                         class="o_wsale_scrollable_table_badge o_wsale_scrollable_table_badge_desktop badge d-none d-lg-inline py-2 px-3 position-absolute start-50 z-1 translate-middle pe-none"
                     >
                         <t t-out="str(website_sale_order.cart_quantity)"/> items - Scroll for more
-                        <i class="oi oi-arrow-down ms-1" aria-hidden="true"/>
+                        <i class="oi ms-1" data-icon="south" aria-hidden="true"/>
                     </span>
                     <tbody>
                         <tr

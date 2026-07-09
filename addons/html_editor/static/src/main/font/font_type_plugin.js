@@ -77,7 +77,7 @@ export class FontTypePlugin extends Plugin {
         user_commands: [
             {
                 id: "setTagHeading",
-                icon: "fa-header",
+                icon: "title",
                 run: ({ level } = {}) =>
                     this.dependencies.dom.setBlock({ tagName: `H${level ?? 1}` }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
@@ -86,7 +86,7 @@ export class FontTypePlugin extends Plugin {
                 id: "setTagParagraph",
                 title: _t("Text"),
                 description: _t("Paragraph block"),
-                icon: "fa-paragraph",
+                icon: "format_paragraph",
                 run: () => {
                     this.dependencies.dom.setBlock({
                         tagName: this.dependencies.baseContainer.getDefaultNodeName(),
@@ -98,7 +98,7 @@ export class FontTypePlugin extends Plugin {
                 id: "setTagQuote",
                 title: _t("Quote"),
                 description: _t("Add a blockquote section"),
-                icon: "fa-quote-right",
+                icon: "format_quote",
                 run: () => this.dependencies.dom.setBlock({ tagName: "blockquote" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },

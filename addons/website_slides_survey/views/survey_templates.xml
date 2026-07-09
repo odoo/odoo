@@ -7,7 +7,7 @@
                     <a role="button" class="o_wslides_share btn btn-light" href="#"
                        t-att-data-id="channel_id.id" t-att-data-name="channel_id.name" t-att-data-url="channel_id.website_absolute_url"
                        data-is-channel="True" t-att-data-email-sharing="bool(channel_id.share_channel_template_id)">
-                        <i class="fa fa-share-alt d-none d-md-inline" aria-label="Share certification" title="Share certification"/>
+                        <i class="oi oi-filled d-none d-md-inline" data-icon="share" aria-label="Share certification" title="Share certification"/>
                         <span class="d-md-none">Share certification</span>
                     </a>
                 </t>
@@ -15,7 +15,7 @@
             <xpath expr="//div[contains(@t-attf-class, 'o_survey_finished')]//h1" position="before">
                 <div t-if="channel_id" class="mb-3">
                     <a t-att-href="channel_id.website_absolute_url">
-                        <i class="oi oi-chevron-left me-2" aria-hidden="true"/>Go back to course
+                        <i class="oi me-2" data-icon="chevron_backward" aria-hidden="true"/>Go back to course
                     </a>
                 </div>
             </xpath>

@@ -4,14 +4,14 @@
     <t t-name="html_editor.VideoSettings">
         <Dropdown state="this.props.dropdown">
             <button t-custom-ref="menuRef" class="btn btn-light shadow border py-1 px-1 ms-1 video-options-button" title="More options">
-                <i class="oi oi-fw oi-ellipsis-v" />
+                <i class="oi oi-fw" data-icon="more_vert"/>
             </button>
             <t t-set-slot="content">
                 <DropdownItem class="'video-replace-button'" onSelected="this.props.replaceVideo">
-                    <i class="fa-fw fa fa-exchange me-1"></i>Replace
+                    <i class="oi oi-fw me-1" data-icon="swap_horiz"></i>Replace
                 </DropdownItem>
                 <DropdownItem onSelected="this.props.removeVideo" class="'video-delete-button text-danger'">
-                    <i class="fa fa-fw fa-trash me-1"></i>Remove
+                    <i class="oi oi-fw oi-filled me-1" data-icon="delete"></i>Remove
                 </DropdownItem>
             </t>
         </Dropdown>

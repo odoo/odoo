@@ -7,12 +7,15 @@ registerThreadAction("hr-view-profile", {
         owner.props.chatWindow?.isOpen &&
         channel.correspondent?.partner_id?.employeeId &&
         !owner.isDiscussSidebarChannelActions,
-    icon: "fa fa-fw fa-id-card",
+    icon: "badge",
+    iconClass: "oi-filled",
     name: _t("View Profile"),
     onSelected: async ({ channel, store }) => {
-        const action = await store.env.services.orm.call("hr.employee", "get_record_default_action", [
-            channel.correspondent.partner_id?.employeeId,
-        ]);
+        const action = await store.env.services.orm.call(
+            "hr.employee",
+            "get_record_default_action",
+            [channel.correspondent.partner_id?.employeeId]
+        );
         store.env.services.action.doAction(action);
     },
     async setup({ channel }) {

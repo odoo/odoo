@@ -11,7 +11,10 @@ export class IconSelectionField extends Component {
     };
 
     get icon() {
-        return this.props.icons[this.props.record.data[this.props.name]];
+        return this.props.icons[this.props.record.data[this.props.name]][0];
+    }
+    get iconClass() {
+        return this.props.icons[this.props.record.data[this.props.name]][1];
     }
     get title() {
         return (

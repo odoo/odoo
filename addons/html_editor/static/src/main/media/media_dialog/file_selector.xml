@@ -21,10 +21,10 @@
                     <t t-out="this.props.addText"/>
             </button>
             <div class="d-flex align-items-center">
-                <span t-if="this.state.urlInput and this.state.isValidatingUrl" class="o_we_url_loading mx-2 fa fa-lg fa-circle-o-notch fa-spin" title="Loading..."/>
-                <span t-elif="this.state.urlInput and this.state.isValidUrl and this.state.isValidFileFormat" class="o_we_url_success text-success mx-2 fa fa-lg fa-check" title="The URL seems valid."/>
-                <span t-elif="this.state.urlInput and !this.state.isValidUrl" class="o_we_url_error text-danger mx-2 oi oi-large oi-close" title="The URL does not seem to work."/>
-                <span t-elif="this.props.urlWarningTitle and this.state.urlInput and this.state.isValidUrl and !this.state.isValidFileFormat" class="o_we_url_warning text-warning mx-2 fa fa-lg fa-warning" t-att-title="this.props.urlWarningTitle"/>
+                <span t-if="this.state.urlInput and this.state.isValidatingUrl" class="o_we_url_loading mx-2 oi oi-lg oi-spin" data-icon="autorenew" title="Loading..."/>
+                <span t-elif="this.state.urlInput and this.state.isValidUrl and this.state.isValidFileFormat" class="o_we_url_success text-success mx-2 oi oi-lg" data-icon="check" title="The URL seems valid."/>
+                <span t-elif="this.state.urlInput and !this.state.isValidUrl" class="o_we_url_error text-danger mx-2 oi oi-lg" data-icon="close_small" title="The URL does not seem to work."/>
+                <span t-elif="this.props.urlWarningTitle and this.state.urlInput and this.state.isValidUrl and !this.state.isValidFileFormat" class="o_we_url_warning text-warning mx-2 oi oi-lg" data-icon="warning" t-att-title="this.props.urlWarningTitle"/>
             </div>
         </div>
         <input type="file" class="d-none o_file_input" t-on-change="this.onChangeFileInput" t-custom-ref="file-input" t-att-accept="this.props.accept" t-att-multiple="this.props.multiSelect and 'multiple'"/>
@@ -71,7 +71,8 @@
             </div>
         </div>
         <div t-if="this.state.canScrollAttachments"
-            class="position-sticky d-flex align-items-center mx-auto btn btn-primary rounded-circle oi oi-chevron-down o_scroll_attachments"
+            class="position-sticky d-flex align-items-center mx-auto btn btn-primary rounded-circle oi o_scroll_attachments"
+            data-icon="keyboard_arrow_down"
             t-on-click="this.handleScrollAttachments"/>
     </div>
 </t>

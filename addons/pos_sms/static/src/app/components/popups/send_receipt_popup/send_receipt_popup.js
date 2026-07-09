@@ -18,7 +18,8 @@ patch(SendReceiptPopup.prototype, {
             list.find((item) => item.model === "phone").buttons.push({
                 click: () => this.actionSendReceiptOnSMS(),
                 status: this.sendReceipt.lastArgs?.[0]?.name == "SMS" && this.sendReceipt.status,
-                icon: "fa-lg fa-mobile",
+                icon: "smartphone",
+                icon_class: "oi-lg",
                 disabled: () => !this.isValidPhone,
             });
         }

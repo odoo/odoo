@@ -87,7 +87,7 @@ registry.category("web_tour.tours").add("website_update_column_count", {
         },
         {
             content: `Target the "Columns" group`,
-            trigger: `.options-container[data-container-title="Columns"]:has(.options-container-label i.fa-caret-right) button[title="Select only this block"]`,
+            trigger: `.options-container[data-container-title="Columns"]:has(.options-container-label i[data-icon='arrow_right']) button[title="Select only this block"]`,
             run: "click",
         },
         {
@@ -113,7 +113,7 @@ registry.category("web_tour.tours").add("website_update_column_count", {
         },
         {
             content: `Wait for "Columns" group update`,
-            trigger: `.options-container[data-container-title="Columns"]:has(.options-container-label i.fa-caret-right)`,
+            trigger: `.options-container[data-container-title="Columns"]:has(.options-container-label i[data-icon='arrow_right'])`,
         },
         {
             content: "Add a fake resized class on mobile to the 2nd item",
