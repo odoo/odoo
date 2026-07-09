@@ -7,13 +7,13 @@
             <t t-if="resModel">
                 <t t-if="this.props.isFoldable and this.state.folded and this.state.isValid !== false">
                     <div class="d-flex align-items-center" t-on-click="() => this.state.folded = false">
-                        <i data-tooltip="Modify filter" class="fa fa-lg fa-caret-right pe-2"/>
+                        <i data-tooltip="Modify filter" class="oi oi-lg pe-2" data-icon="arrow_right"/>
                         <div class="d-print-contents">
                             <t t-if="!this.state.facets.length">
                                 <span>Match <strong>all records</strong></span>
                                 <t t-if="!this.props.readonly">
                                     <button class="btn btn-sm btn-primary o_domain_add_first_node_button mx-2" t-on-click.stop="() => this.addCondition()">
-                                        <i class="fa fa-plus"/> Add condition
+                                        <i class="oi" data-icon="add"/> Add condition
                                     </button>
                                 </t>
                             </t>
@@ -23,7 +23,7 @@
                                     tabindex="0"
                                     >
                                     <div class="o_searchview_facet_label rounded-start-2 btn btn-primary rounded-end-0 p-0" role="button">
-                                        <i class="px-1 small fa fa-filter" role="image"/>
+                                        <i class="px-1 small oi oi-filled" data-icon="filter_alt" role="image"/>
                                     </div>
                                     <div class="o_facet_values d-flex align-items-center px-2 bg-200 rounded-end-2 text-wrap">
                                         <small class="o_facet_value" t-out="facet"/>
@@ -41,7 +41,7 @@
                 <t t-else="">
                     <div class="d-flex">
                         <a t-if="this.props.isFoldable and this.state.isValid" t-on-click="this.fold">
-                            <i class="fa fa-lg fa-caret-down pe-2"></i>
+                            <i class="oi oi-lg pe-2" data-icon="arrow_drop_down"></i>
                         </a>
                         <DomainSelector
                             resModel="resModel"
@@ -54,9 +54,9 @@
                         />
                     </div>
                     <div class="o_field_domain_panel d-flex align-items-center gap-2 mt-1">
-                        <i class="oi oi-arrow-right" role="img" aria-label="Domain" title="Domain" />
+                        <i class="oi" data-icon="east" role="img" aria-label="Domain" title="Domain" />
                         <t t-if="this.state.isValid === null and this.state.recordCount === null">
-                            <i class="fa fa-circle-o-notch fa-spin ms-2" role="img" aria-label="Loading" title="Loading" />
+                            <i class="oi oi-spin ms-2" data-icon="autorenew" role="img" aria-label="Loading" title="Loading" />
                         </t>
                         <t t-else="">
                             <t t-if="this.state.isValid">
@@ -66,12 +66,13 @@
                             </t>
                             <t t-else="">
                                 <span class="text-warning" role="alert">
-                                    <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning" /> Invalid domain
+                                    <i class="oi" data-icon="warning" role="img" aria-label="Warning" title="Warning" /> Invalid domain
                                 </span>
                             </t>
                             <t t-if="!!this.env.debug and !this.props.readonly">
                                 <button
-                                    class="btn btn-sm btn-icon fa fa-refresh o_refresh_count"
+                                    class="btn btn-sm btn-icon oi o_refresh_count"
+                                    data-icon="refresh"
                                     role="img"
                                     aria-label="Refresh"
                                     title="Refresh"

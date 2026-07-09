@@ -8,14 +8,18 @@
                     <t t-if="section.filters.length gt 0">
                         <t t-foreach="this.getSortedFilters(section)" t-as="filter" t-key="filter.value">
                             <span t-if="filter.active" class="d-flex align-items-center text-nowrap ms-1 me-2">
-                                <i class="fa fa-fw" t-att-class="this.getFilterColor(filter) !== 'o_color_false' ? 'fa-circle ' + this.getFilterColor(filter) : 'fa-circle-o'"/>
+                                <i
+                                    class="oi oi-fw"
+                                    t-att-class="this.getFilterColor(filter) !== 'o_color_false' ? 'oi-filled' + this.getFilterColor(filter) : ''"
+                                    data-icon="circle"
+                                />
                                 <span name="filter_label" class="ms-1 fw-bold text-nowrap" t-out="filter.label" />
                             </span>
                         </t>
                     </t>
                 </t>
             </div>
-            <i t-attf-class="oi fa-fw oi-chevron-{{this.caretDirection}} ms-2" name="expand_filter_button"/>
+            <i class="oi oi-fw ms-2" t-attf-data-icon="{{this.caretDirection}}" name="expand_filter_button"/>
         </div>
     </t>
 

@@ -543,7 +543,7 @@ describe("Selection collapsed", () => {
 
         test("should remove a media element inside a p", async () => {
             await testEditor({
-                contentBefore: `<p>abc</p><p style="margin-bottom: 0px;"><span class="oi" data-icon="fa-icon" contenteditable="false"></span>[]def</p>`,
+                contentBefore: `<p>abc</p><p style="margin-bottom: 0px;"><span class="oi" data-icon="icon" contenteditable="false"></span>[]def</p>`,
                 stepFunction: deleteBackward,
                 contentAfter: `<p>abc</p><p style="margin-bottom: 0px;">[]def</p>`,
             });

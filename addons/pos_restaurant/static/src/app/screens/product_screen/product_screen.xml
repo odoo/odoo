@@ -27,7 +27,7 @@
                             t-on-click="() => this.doReprintOrder.call()"
                             t-elif="this.pos.ticketPrinter.hasPreparationPrinters and this.currentOrder.lastPrints.length"
                             t-att-disabled="this.doReprintOrder.status === 'loading'">
-                        <i class="fa fa-cutlery" aria-hidden="true"></i>
+                        <i class="oi" data-icon="restaurant" aria-hidden="true"></i>
                     </button>
                     <button
                         class="btn-switchpane new-button btn btn-lg flex-grow-1 lh-sm btn-secondary"

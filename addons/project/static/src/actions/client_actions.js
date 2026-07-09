@@ -18,7 +18,7 @@ export function showTemplateUndoNotification(
         buttons: [
             {
                 name: _t("Undo"),
-                icon: "fa-undo",
+                icon: "undo",
                 onClick: async () => {
                     const res = await env.services.orm.call(model, undoMethod, [recordId]);
                     if (undoCallback) {

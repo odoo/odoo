@@ -31,5 +31,5 @@ test("Check the resource avatar icon", async () => {
     });
 
     expect(".img").toHaveCount(1);
-    expect(".fa-wrench").toHaveCount(1);
+    expect("[data-icon='build']").toHaveCount(1);
 });

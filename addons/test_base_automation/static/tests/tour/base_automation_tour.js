@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
         },
         {
             content: "Select model contact",
-            trigger: ".dropdown-menu li a:contains(Contact):not(:has(.fa-spin))",
+            trigger: ".dropdown-menu li a:contains(Contact):not(:has(.oi-spin))",
             run: "click",
         },
         {
@@ -104,7 +104,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger:
-                ".dropdown-menu li a:contains(test_base_automation.project):not(:has(.fa-spin))",
+                ".dropdown-menu li a:contains(test_base_automation.project):not(:has(.oi-spin))",
             run: "click",
         },
         {
@@ -147,7 +147,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "edit test",
         },
         {
-            trigger: ".dropdown-menu li a:contains(test):not(:has(.fa-spin))",
+            trigger: ".dropdown-menu li a:contains(test):not(:has(.oi-spin))",
             run: "click",
         },
         {
@@ -220,7 +220,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "edit High",
         },
         {
-            trigger: ".dropdown-menu li a:contains(High):not(:has(.fa-spin))",
+            trigger: ".dropdown-menu li a:contains(High):not(:has(.oi-spin))",
             run: "click",
         },
         {
@@ -345,7 +345,7 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_create_acti
             trigger: "div[name='action_server_ids']:contains(Create Contact with name NameX)",
         },
         {
-            trigger: "body:has(.fa.fa-plus-square:count(1))",
+            trigger: "body:has([data-icon='add_box']:count(1))",
         },
     ],
 });

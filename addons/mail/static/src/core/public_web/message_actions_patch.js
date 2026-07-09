@@ -8,7 +8,7 @@ registerMessageAction("pin", {
         store.self_user &&
         message.thread &&
         (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
-    icon: "fa fa-thumb-tack",
+    icon: "push_pin",
     name: _t("Pin"),
     onSelected: ({ action, message }) =>
         (message.channel_id || message.thread).messagePin(message, { rootRef: action.actionRef }),
@@ -22,7 +22,7 @@ registerMessageAction("unpin", {
         store.self_user &&
         message.thread &&
         (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
-    icon: "fa fa-thumb-tack",
+    icon: "push_pin",
     name: _t("Unpin"),
     onSelected: ({ action, message }) =>
         (message.channel_id || message.thread).messageUnpin(message, { rootRef: action.actionRef }),

@@ -25,7 +25,7 @@ export class UserSignaturePlugin extends Plugin {
                 id: "insertUserSignature",
                 title: _t("Signature"),
                 description: _t("Insert your email signature"),
-                icon: "fa-pencil-square-o",
+                icon: "edit_square",
                 run: this.insertUserSignature.bind(this),
                 isAvailable: (selection) =>
                     isHtmlContentSupported(selection) &&

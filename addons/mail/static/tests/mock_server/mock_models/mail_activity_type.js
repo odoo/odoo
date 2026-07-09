@@ -6,20 +6,20 @@ export class MailActivityType extends models.ServerModel {
     _records = [
         {
             id: 1,
-            icon: "fa-envelope",
+            icon: "mail",
             name: "Email",
             active: true,
         },
         {
             id: 2,
             category: "phonecall",
-            icon: "fa-phone",
+            icon: "phone",
             name: "Call",
             active: true,
         },
         {
             id: 28,
-            icon: "fa-upload",
+            icon: "upload",
             name: "Upload Document",
             active: true,
         },

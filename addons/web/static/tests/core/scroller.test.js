@@ -16,7 +16,7 @@ test("Ignore empty hrefs", async () => {
                 <a href="#" class="inactive_link">This link does nothing</a>
                 <button class="btn btn-secondary">
                     <a href="#">
-                        <i class="fa fa-trash"/>
+                        <i class="oi oi-filled" data-icon="delete"/>
                     </a>
                 </button>
             </div>`;
@@ -30,7 +30,7 @@ test("Ignore empty hrefs", async () => {
     await click(".inactive_link");
     await animationFrame();
 
-    await click(".fa.fa-trash");
+    await click("[data-icon='delete'].oi-filled");
     await animationFrame();
 
     expect(browser.location.hash).toBe("#testscroller");

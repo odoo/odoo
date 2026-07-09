@@ -9,14 +9,14 @@
       disabled="!this.props.model"
     >
       <button t-att-class="this.togglerClass">
-        <i class="fa fa-share-alt"/>
+        <i class="oi" data-icon="share"/>
         Share
       </button>
       <t t-set-slot="content">
         <t>
           <div class="d-flex mx-3">
             <div class="align-self-center d-flex justify-content-center align-items-center flex-shrink-0">
-              <i class="fa fa-globe fa-2x" title="Share to web"></i>
+              <i class="oi oi-2x" data-icon="public" title="Share to web"></i>
             </div>
             <div class="flex-grow-1 px-3">
               <div class="lead">Spreadsheet published</div>
@@ -26,10 +26,10 @@
           <div class="mx-3 px-2 border rounded-2">
             <div t-if="this.state.url" class="d-flex justify-content-between gap-2">
               <span class="text-truncate" t-out="this.state.url"/>
-              <CopyButton className="'btn-sm p-0'" content="this.state.url" successText="this.copiedText" icon="'fa-clipboard'"/>
+              <CopyButton className="'btn-sm p-0'" content="this.state.url" successText="this.copiedText" icon="'assignment'"/>
             </div>
             <div t-else="" class="o_loading_state d-flex align-items-center justify-content-center">
-              <i class="fa fa-circle-o-notch fa-spin px-2"/><span>Generating sharing link</span>
+              <i class="oi oi-spin px-2" data-icon="autorenew"/><span>Generating sharing link</span>
             </div>
           </div>
         </t>

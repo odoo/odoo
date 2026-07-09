@@ -23,11 +23,11 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the popup is visible.",
-            trigger: ".o_we_invisible_root_parent i.fa-eye",
+            trigger: ".o_we_invisible_root_parent i[data-icon='visibility']",
         },
         {
             content: "Check that the banner is invisible.",
-            trigger: "ul .o_we_invisible_entry i.fa-eye-slash",
+            trigger: "ul .o_we_invisible_entry i[data-icon='visibility_off']",
         },
     ]
 );

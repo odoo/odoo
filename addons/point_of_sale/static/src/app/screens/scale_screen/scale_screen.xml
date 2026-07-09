@@ -4,7 +4,7 @@
         <Dialog size="'md'" t-if="this.scale.product">
             <t t-set-slot="header">
                 <t t-if="this.uiService.isSmall">
-                    <button class="btn oi oi-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="this.close"/>
+                    <button class="oi btn" data-icon="west" data-bs-dismiss="modal" aria-label="Close" t-on-click="this.close"/>
                 </t>
                 <h4 class="modal-title text-break text-center w-100 ms-4" t-att-class="{ 'me-auto': this.uiService.isSmall }">
                     <t t-out="this.scale.product.name"/>
@@ -22,7 +22,7 @@
                     <div class="d-flex gap-5 align-items-center mb-2">
                     <div class="w-50">
                         <button class="btn btn-primary w-50 fs-3" t-att-disabled="this.scale.loading" t-on-click="() => this.scale.requestTare()">
-                            <i t-if="this.scale.tareRequested" class="fa fa-circle-o-notch fa-spin"/>
+                            <i t-if="this.scale.tareRequested" class="oi oi-spin" data-icon="autorenew"/>
                             <t t-else="">Tare</t>
                         </button>
                         </div>
@@ -44,12 +44,12 @@
             <t t-set-slot="footer">
                 <div class="d-flex flex-grow-1 gap-2">
                     <button class="btn btn-secondary w-100" t-att-disabled="this.scale.loading" t-on-click="() => this.scale.readWeight()">
-                        <i t-if="this.scale.loading and !this.scale.tareRequested" class="fa fa-spinner fa-spin"/>
+                        <i t-if="this.scale.loading and !this.scale.tareRequested" class="oi oi-spin" data-icon="progress_activity"/>
                         <t t-else="">Get Weight</t>
                     </button>
                     <button class="btn btn-lg btn-primary d-flex justify-content-center align-items-center w-100" t-on-click="this.confirm" t-att-disabled="!this.scale.isWeightValid">
                         Order
-                        <i class="fa fa-angle-double-right ms-2"/>
+                        <i class="oi ms-2" data-icon="keyboard_double_arrow_right"/>
                     </button>
                 </div>
             </t>

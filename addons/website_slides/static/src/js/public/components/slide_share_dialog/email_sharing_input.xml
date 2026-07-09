@@ -8,7 +8,7 @@
                        class="form-control" t-att-class="{'is-invalid': this.state.isInvalid}"
                        t-on-keypress="this.onKeyPress"/>
                 <button type="button" class="btn btn-primary" t-on-click.stop="this.onShareByEmailClick">
-                    <i class="fa fa-envelope-o mx-1"/>Send Email
+                    <i class="oi mx-1" data-icon="mail"/>Send Email
                 </button>
             </div>
             <div t-if="this.state.isDone or this.isWebsiteUser" class="alert alert-info" role="alert">

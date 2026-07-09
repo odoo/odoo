@@ -7,7 +7,7 @@ export class MRPBooleanIconField extends Component {
     static template = "mrp.MRPBooleanIconField";
     props = props({
         ...standardFieldProps,
-        icon: t.string().optional("fa-check-square-o"),
+        icon: t.string().optional("check_box"),
         label: t.string().optional(),
     });
 }

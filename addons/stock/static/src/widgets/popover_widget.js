@@ -16,7 +16,7 @@ export class PopoverComponent extends Component {
  * Widget Popover for JSON field (char), renders a popover above an icon button on click
  * {
  *  'msg': '<CONTENT OF THE POPOVER>' required if not 'popoverTemplate' is given,
- *  'icon': '<FONT AWESOME CLASS>' default='fa-info-circle',
+ *  'icon': '<MATERIAL SYMBOLS NAME>' default='info',
  *  'color': '<COLOR CLASS OF ICON>' default='text-primary',
  *  'position': <POSITION OF THE POPOVER> default='top',
  *  'popoverTemplate': '<TEMPLATE OF THE POPOVER>' default='stock.popoverContent'
@@ -35,7 +35,7 @@ export class PopoverWidgetField extends Component {
         const position = this.jsonValue.position || "top";
         this.popover = usePopover(this.constructor.components.Popover, { position });
         this.color = this.jsonValue.color || 'text-primary';
-        this.icon = this.jsonValue.icon || 'fa-info-circle';
+        this.icon = this.jsonValue.icon || 'info';
     }
 
     showPopup(ev){

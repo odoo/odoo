@@ -24,7 +24,7 @@
 
 <t t-name="website.PageDependencies">
     <t t-if="this.state.dependencies === null">
-        <span class="text-muted"><i class="fa fa-spinner fa-spin me-1"/>Checking links...</span>
+        <span class="text-muted"><i class="oi oi-spin me-1" data-icon="progress_activity"/>Checking links...</span>
     </t>
     <t t-elif="this.state.dependencyCount > 0">
         <t t-if="this.props.mode === 'popover'">
@@ -42,7 +42,7 @@
                 t-attf-aria-controls="collapseDependencies{{ dependency_index }}"
                 t-attf-href="#collapseDependencies{{ dependency_index }}"
                 aria-expanded="false">
-                    <i class="fa fa-caret-right me-1"/>
+                    <i class="oi me-1" data-icon="arrow_right"/>
                     <t t-out="dependency"/>:
                     <span class="text-muted"> <t t-out="dependency_value.length"/> found(s)</span>
                 </a>
@@ -100,8 +100,8 @@
 
 <t t-name="website.PagePropertiesDialogButtons" t-inherit="web.FormViewDialog.ToOne.buttons">
     <xpath expr="//button[hasclass('o_form_button_cancel')]" position="after">
-        <button class="btn btn-link order-last ms-auto" t-on-click="this.props.clonePage"><i class="fa fa-fw fa-clone"/>Duplicate Page</button>
-        <button class="btn btn-link order-last" t-on-click="this.props.deletePage"><i class="fa fa-fw fa-trash"/>Delete Page</button>
+        <button class="btn btn-link order-last ms-auto" t-on-click="this.props.clonePage"><i class="oi oi-fw" data-icon="content_copy"/>Duplicate Page</button>
+        <button class="btn btn-link order-last" t-on-click="this.props.deletePage"><i class="oi oi-fw oi-filled" data-icon="delete"/>Delete Page</button>
     </xpath>
 </t>
 

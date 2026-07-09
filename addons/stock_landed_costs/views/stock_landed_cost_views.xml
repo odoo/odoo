@@ -15,7 +15,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="action_view_pickings" icon="fa-truck"
+                            <button class="oe_stat_button" name="action_view_pickings" icon="local_shipping"
                                 type="object" invisible="pickings_count == 0">
                                 <field name="pickings_count" string="Transfers" widget="statinfo"/>
                             </button>
@@ -159,7 +159,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <i class="fa fa-clock-o" title="Date" role="img" aria-label="Date"/><field name="date"/>
+                                    <i class="oi" data-icon="schedule" title="Date" role="img" aria-label="Date"/><field name="date"/>
                                 </div>
                                 <field name="account_journal_id" class="col-6 text-end" readonly="state == 'done'"/>
                             </div>

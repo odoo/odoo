@@ -17,6 +17,7 @@ export class DeviceSelect extends Component {
         super.setup();
         this.props = props({
             icon: t.string().optional(),
+            icon_class: t.string().optional(),
             kind: t.selection(["audioinput", "videoinput", "audiooutput"]),
             label: t.string().optional(),
             menuClass: t.string().optional(),

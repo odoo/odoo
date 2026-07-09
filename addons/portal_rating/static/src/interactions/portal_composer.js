@@ -50,10 +50,14 @@ patch(PortalComposer.prototype, {
                     const decimal = this.starValue - index;
                     const starIndex = [...el.parentElement.children].indexOf(el) + 1; // index counts from 1 to 5
                     return {
-                        "fa-star-o": starIndex > index,
-                        "fa-star-half-o": decimal && starIndex === index,
-                        "fa-star": decimal ? starIndex < index : starIndex <= index,
+                        "oi-filled": decimal ? starIndex < index : starIndex <= index,
                     };
+                },
+                "t-att-data-icon": (el) => {
+                    const index = Math.floor(this.starValue);
+                    const decimal = this.starValue - index;
+                    const starIndex = [...el.parentElement.children].indexOf(el) + 1; // index counts from 1 to 5
+                    return decimal && starIndex === index ? "star_half" : "star";
                 },
             },
         });

@@ -30,7 +30,7 @@
                     <button name="action_open_product_template_attribute_lines"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-bars"
+                            icon="menu"
                             invisible="not number_related_products">
                         <div class="o_stat_info">
                             <span class="o_stat_value"><field name="number_related_products"/></span>
@@ -76,7 +76,7 @@
                                     name="action_add_to_products"
                                     string="Add to products"
                                     type="object"
-                                    icon="fa-plus"
+                                    icon="add"
                                     column_invisible="parent.number_related_products &lt; 1"
                                     invisible="pav_attribute_line_ids"
                                 />
@@ -84,7 +84,7 @@
                                     name="action_update_prices"
                                     string="Update extra prices"
                                     type="object"
-                                    icon="fa-refresh"
+                                    icon="refresh"
                                     column_invisible="parent.number_related_products &lt; 1"
                                     invisible="not pav_attribute_line_ids or not default_extra_price_changed"
                                 />

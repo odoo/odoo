@@ -160,9 +160,9 @@ test("Change gallery restore the container to the cloned equivalent image", asyn
     // The container include the new image equivalent to the old selected image
     expectOptionContainerToInclude(queryOne(":iframe img[data-index='1']"));
 
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expectOptionContainerToInclude(queryOne(":iframe img[data-index='1']"));
-    await contains(".o-snippets-top-actions .fa-repeat").click();
+    await contains(".o-snippets-top-actions [data-icon='redo']").click();
     expectOptionContainerToInclude(queryOne(":iframe img[data-index='1']"));
 });
 

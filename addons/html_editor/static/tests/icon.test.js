@@ -367,7 +367,9 @@ test("should be able to unlink an icon", async () => {
 });
 
 test("icon toolbar when only an icon is selected", async () => {
-    await setupEditor(`<p>[<span class="fa fa-glass" contenteditable="false"></span>]</p>`);
+    await setupEditor(
+        `<p>[<span class="oi" data-icon="local_bar" contenteditable="false"></span>]</p>`
+    );
     await waitFor(".o-we-toolbar");
 
     // Check that the toolbar contains exactly these 5 groups

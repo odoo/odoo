@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelMemberList">
-        <ActionPanel close="this.props.close" title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'oi oi-users'">
+        <ActionPanel close="this.props.close" title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'group'" icon_class="'oi-filled'">
             <div class="o-discuss-ChannelMemberList-search d-flex flex-nowrap gap-1">
                 <SearchInput search="this.search" placeholder.translate="Search members"/>
                 <button name="inviteButton" t-on-click="() => this.openChannelInvitationDialog(this.env, this.props.channel)" class="btn btn-sm btn-primary text-nowrap" title="Add People" aria-label="Add People">Add People</button>

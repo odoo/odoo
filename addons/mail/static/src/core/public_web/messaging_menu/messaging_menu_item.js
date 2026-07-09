@@ -152,7 +152,7 @@ export class MessagingMenuItem extends Component {
                 onSwipeRight: isNotificationTab
                     ? {
                           action: () => this.message?.setDone(),
-                          icon: "fa-check-circle",
+                          icon: "check_circle",
                           bgColor: "bg-success",
                       }
                     : undefined,

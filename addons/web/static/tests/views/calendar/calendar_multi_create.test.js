@@ -445,7 +445,7 @@ test("multi_create: basic creation (datetime field)", async () => {
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
-    await expect(".o_popover .o_popover_body div:eq(1) .fa-clock-o").toHaveCount(1);
+    await expect(".o_popover .o_popover_body div:eq(1) [data-icon='schedule']").toHaveCount(1);
     await expect(".o_popover .o_popover_body div:eq(1)").toHaveText(
         "08:00 - 11:30\n(3 hours, 30 minutes)"
     );
@@ -457,7 +457,7 @@ test("multi_create: basic creation (datetime field)", async () => {
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
-    await expect(".o_popover .o_popover_body div:eq(1) .fa-clock-o").toHaveCount(1);
+    await expect(".o_popover .o_popover_body div:eq(1) [data-icon='schedule']").toHaveCount(1);
     await expect(".o_popover .o_popover_body div:eq(1)").toHaveText(
         "08:00 - 11:30\n(3 hours, 30 minutes)"
     );
@@ -640,7 +640,7 @@ test("multi_create: delete", async () => {
     await drop(".fc-day[data-date='2019-04-03']");
     await animationFrame();
 
-    await contains(".o_multi_selection_buttons .btn .fa-trash").click();
+    await contains(".o_multi_selection_buttons .btn [data-icon='delete'].oi-filled").click();
     await animationFrame();
     expect(".o_dialog .modal-body").toHaveText(
         "Are you sure you want to delete the 3 selected records?"
@@ -854,7 +854,7 @@ test(`multi_create: no button "Delete" if no record selected`, async () => {
 
     await contains(".fc-day[data-date='2019-03-04']").click();
     expect(".o_multi_selection_buttons").toHaveCount(1);
-    expect(".o_multi_selection_buttons .btn .fa-trash").toHaveCount(0);
+    expect(".o_multi_selection_buttons .btn [data-icon='delete'].oi-filled").toHaveCount(0);
 });
 
 test.tags("desktop");

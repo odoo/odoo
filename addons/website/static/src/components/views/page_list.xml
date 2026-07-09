@@ -4,7 +4,7 @@
 <t t-name="website.PageListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
     <xpath expr="//Field//ancestor::td/*[1]" position="before">
         <t t-if="column.name === 'name' and record.data.is_homepage and record.mode !== 'edit'">
-            <i class="fa fa-fw fa-home fa-lg" title="Home page of the current website"/>
+            <i class="oi oi-fw oi-lg" data-icon="home" title="Home page of the current website"/>
         </t>
     </xpath>
 </t>

@@ -454,10 +454,10 @@ test("Shows owner / admin in members panel + member actions for channel owner", 
     await contains(".o-discuss-ChannelMember:has(:text(John))");
     await contains(".o-discuss-ChannelMember:has(:text(Mario))");
     await contains(
-        ".o-discuss-ChannelMember:text('Owner') .fa-star.text-warning[title='Channel Owner']"
+        ".o-discuss-ChannelMember:text('Owner') [data-icon='star'].text-warning[title='Channel Owner']"
     );
     await contains(
-        ".o-discuss-ChannelMember:text('Demo') .fa-star.text-primary[title='Channel Admin']"
+        ".o-discuss-ChannelMember:text('Demo') [data-icon='star'].text-primary[title='Channel Admin']"
     );
     await click(".o-discuss-ChannelMember:text('Owner') [title='Member Actions']");
     await contains(".o-dropdown-item", { count: 2 });

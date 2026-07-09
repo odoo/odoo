@@ -17,8 +17,8 @@ const messagingMenuModelPatch = {
             compute() {
                 return {
                     id: MENU_TABS.LIVECHAT,
-                    icon: "fa fa-commenting-o",
-                    activeIcon: "fa fa-commenting",
+                    icon: "mode_comment",
+                    activeIcon: "mode_comment",
                     label: _t("Live Chats"),
                     sequence: 90,
                     emptyState: {

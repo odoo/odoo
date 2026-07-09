@@ -134,10 +134,10 @@
                 <h4>Help</h4>
                 <t t-foreach="this.props.importTemplates" t-as="template" t-key="template">
                     <a class="d-block my-2" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
-                        <i class="fa fa-download"/> <span><t t-out="template.label"/></span>
+                        <i class="oi" data-icon="download"/> <span><t t-out="template.label"/></span>
                     </a>
                 </t>
-                <DocumentationLink path="'/applications/general/export_import_data.html'" label.translate="Documentation" icon="'fa-question-circle'"/>
+                <DocumentationLink path="'/applications/general/export_import_data.html'" label.translate="Documentation" icon="'help'"/>
             </div>
         </div>
     </t>

@@ -98,8 +98,7 @@ export class CallInvitation extends Component {
                         this.state.showCameraPreview
                             ? _t("Hide camera preview")
                             : _t("Show camera preview"),
-                    icon: () =>
-                        this.state.showCameraPreview ? "fa fa-chevron-up" : "fa fa-chevron-down",
+                    icon: () => (this.state.showCameraPreview ? "expand_less" : "expand_more"),
                     onSelected: () => {
                         this.state.showCameraPreview = !this.state.showCameraPreview;
                         if (this.state.showCameraPreview) {

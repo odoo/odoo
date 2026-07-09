@@ -29,11 +29,11 @@ class TestWebsiteControllerPage(HttpCase):
                 <div t-attf-class="listing_layout_switcher btn-group ms-3" t-att-data-active-classes="_activeClasses" t-att-data-view-id="view_id">
                     <input type="radio" class="btn-check" name="wstudio_layout" id="o_wstudio_apply_grid" value="grid" t-att-checked="'checked' if layout_mode != 'list' else None"/>
                     <label t-attf-class="btn btn-light #{_activeClasses if layout_mode != 'list' else None} o_wstudio_apply_grid" title="Grid" for="o_wstudio_apply_grid">
-                        <i class="fa fa-th-large"/>
+                        <i class="oi" data-icon="view_module"/>
                     </label>
                     <input type="radio" class="btn-check" name="wstudio_layout" id="o_wstudio_apply_list" t-att-checked="'checked' if layout_mode == 'list' else None" value="list"/>
                     <label t-attf-class="btn btn-light #{_activeClasses if layout_mode == 'list' else None} o_wstudio_apply_list" title="List" for="o_wstudio_apply_list">
-                        <i class="oi oi-view-list"/>
+                        <i class="oi" data-icon="view_list"view_list/>
                     </label>
                 </div>
 

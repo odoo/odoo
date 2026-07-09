@@ -9,7 +9,7 @@
                 title="Toggle Mobile Preview"
                 aria-label="Toggle Mobile Preview"
                 data-hotkey="M">
-            <i class="fa fa-mobile fa-2x"/>
+            <i class="oi oi-2x" data-icon="smartphone"/>
         </button>
     </xpath>
 </t>
@@ -31,7 +31,7 @@
                         <input type="search" data-hotkey="S" class="o_add_snippet_dialog_search form-control pe-4" placeholder="Search for a block"
                             aria-label="Search for a block" t-model.proxy="this.state.search" t-ref="this.autofocusRef"/>
                         <span class="input-group-text position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent text-muted">
-                            <i class="oi oi-search" aria-hidden="true"></i>
+                            <i class="oi" data-icon="search" aria-hidden="true"></i>
                         </span>
                     </div>
                     <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto"
@@ -64,7 +64,7 @@
                     </t>
                     <t t-elif="!this.state.showIframe">
                         <div class="o_add_snippet_dialog_iframe_loader d-flex flex-column justify-content-center text-center h-100 p-4" role="status">
-                            <i class="fa fa-3x fa-circle-o-notch fa-spin"></i>
+                            <i class="oi oi-3x oi-spin" data-icon="autorenew"></i>
                             <p class="h3 mt-3">
                                 Almost there! Snippets are incoming, grab a coffee and relax!
                             </p>

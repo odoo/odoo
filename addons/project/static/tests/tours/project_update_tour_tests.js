@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: "button[name='action_view_tasks']",
     run: "click",
 }, {
-    trigger: ".o_control_panel_navigation button i.fa-sliders",
+    trigger: ".o_control_panel_navigation button i[data-icon='tune']",
     content: 'Open embedded actions',
     run: "click",
 }, {

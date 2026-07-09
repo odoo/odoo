@@ -231,7 +231,7 @@ export class AttendeeCalendarModel extends CalendarModel {
     normalizeRecord(rawRecord) {
         const normalizedRecord = super.normalizeRecord(rawRecord);
         if (rawRecord.effective_privacy === "private") {
-            normalizedRecord.titleIcon = "fa fa-lock";
+            normalizedRecord.titleIcon = "lock";
         }
         return normalizedRecord;
     }

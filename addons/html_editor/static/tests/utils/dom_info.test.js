@@ -580,7 +580,7 @@ describe("isEmptyBlock", () => {
     });
 
     test("should identify span with icon classes as non-empty", () => {
-        const [span] = insertTestHtml('<span class="fa fa-trash-o"></span>');
+        const [span] = insertTestHtml('<span class="oi" data-icon="delete"></span>');
         const result = isEmptyBlock(span);
         expect(result).toBe(false);
     });

@@ -39,8 +39,8 @@ export class MessagingMenu extends Record {
                 important: false,
                 recordType: "mail.message",
                 includesMessage: (msg) => msg.is_bookmarked,
-                icon: "fa fa-bookmark-o",
-                activeIcon: "fa fa-bookmark",
+                icon: "bookmark",
+                activeIcon: "bookmark",
                 sequence: 120,
                 label: _t("Bookmarks"),
                 hideWhenZeroCounter: true,
@@ -72,8 +72,8 @@ export class MessagingMenu extends Record {
                 recordType: "mail.message",
                 includesMessage: (msg) =>
                     (msg.needaction || msg.needaction_done) && this.notificationMatchesExtra(msg),
-                icon: "fa fa-bell-o",
-                activeIcon: "fa fa-bell",
+                icon: "notifications",
+                activeIcon: "notifications",
                 sequence: 60,
                 label: _t("Notifications"),
                 emptyState: {

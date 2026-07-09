@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallSettings">
-        <ActionPanel t-if="this.props.withActionPanel" close="this.props.close" title.translate="Voice &amp; Video Settings" icon="'fa fa-gear'">
+        <ActionPanel t-if="this.props.withActionPanel" close="this.props.close" title.translate="Voice &amp; Video Settings" icon="'settings'" icon_class="'oi-filled'">
             <t t-call="discuss.CallSettings.content" />
         </ActionPanel>
         <t t-else="" t-call="discuss.CallSettings.content" />
@@ -13,13 +13,13 @@
             <Tabs direction="'h'" initialTabId="this.props.initialTab or 'voice'">
                 <t t-set-slot="headers">
                     <TabHeader id="'voice'" title.translate="Voice &amp; Audio">
-                        <div class="py-1 px-2"><i class="fa fa-microphone me-2"/>Voice &amp; Audio</div>
+                        <div class="py-1 px-2"><i class="oi me-2" data-icon="mic"/>Voice &amp; Audio</div>
                     </TabHeader>
                     <TabHeader id="'video'" title.translate="Video">
-                        <div class="py-1 px-2"><i class="fa fa-video-camera me-2"/>Video</div>
+                        <div class="py-1 px-2"><i class="oi oi-filled me-2" data-icon="videocam"/>Video</div>
                     </TabHeader>
                     <TabHeader t-if="this.env.debug" id="'technical'" title.translate="Technical">
-                        <div class="py-1 px-2"><i class="fa fa-cogs me-2"/>Technical</div>
+                        <div class="py-1 px-2"><i class="oi me-2" data-icon="settings_applications"/>Technical</div>
                     </TabHeader>
                 </t>
                 <t t-set-slot="panels">
@@ -28,13 +28,13 @@
                             <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS() ? 'flex-column' : 'flex-row'">
                                 <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS() ? 'w-100' : 'w-50'" aria-label="Microphone">
                                     <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
-                                        <i class="fa fa-microphone text-muted ms-1 me-2"/>Microphone
+                                        <i class="oi text-muted ms-1 me-2" data-icon="mic"/>Microphone
                                     </span>
                                     <DeviceSelect kind="'audioinput'"/>
                                 </div>
                                 <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS() ? 'w-100' : 'w-50'" aria-label="Speakers">
                                     <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
-                                        <i class="fa fa-volume-up text-muted ms-1 me-2"/>Speakers
+                                        <i class="oi text-muted ms-1 me-2" data-icon="volume_up"/>Speakers
                                     </span>
                                     <DeviceSelect kind="'audiooutput'"/>
                                 </div>
@@ -51,10 +51,10 @@
                                     <div class="o-pb-2_5 pt-1 o-px-2_5">
                                         <t t-if="!this.store.settings.usePushToTalk">
                                             <div class="d-flex flex-column gap-2">
-                                                <span class="text-muted o-ps-0_5 pt-2"><i class="fa fa-info-circle me-2"/>Adjust the slider to set the voice detection sensitivity.</span>
+                                                <span class="text-muted o-ps-0_5 pt-2"><i class="oi oi-filled me-2" data-icon="info"/>Adjust the slider to set the voice detection sensitivity.</span>
                                                 <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS() ? 'flex-column' : 'flex-row'">
                                                     <button class="btn px-3 flex-shrink-0" t-att-class="this.microphoneVolume.isActive ? 'btn-danger' : 'btn-secondary'" t-on-click="this.microphoneVolume.toggle" t-att-disabled="!this.microphoneVolume.isReady">
-                                                        <i class="fa me-2" t-att-class="this.microphoneVolume.isActive ? 'fa-stop' : 'fa-microphone'"/>
+                                                        <i class="oi me-2" t-att-data-icon="this.microphoneVolume.isActive ? 'stop' : 'mic'"/>
                                                         <t t-out="this.microphoneVolume.isActive ? this.stopText : this.testText"/>
                                                     </button>
                                                     <div class="d-flex align-items-center flex-grow-1 gap-2 border rounded px-2 py-1">
@@ -67,14 +67,14 @@
                                         <t t-else="">
                                             <div class="d-flex flex-column gap-2">
                                                 <span class="text-muted o-ps-0_5 pt-2">
-                                                    <i class="fa fa-info-circle me-2"/>
+                                                    <i class="oi oi-filled me-2" data-icon="info"/>
                                                     <t t-if="this.isMobileOS()">Delay after releasing push-to-talk</t>
                                                     <t t-elif="this.store.settings.isRegisteringKey">Press any key to register it as your shortcut.</t>
                                                     <t t-else="">Click the button below to register a new shortcut.</t>
                                                 </span>
                                                 <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS() ? 'flex-column' : 'flex-row'">
                                                     <button t-if="!this.isMobileOS()" class="btn px-4 flex-shrink-0" t-att-class="this.store.settings.isRegisteringKey ? 'btn-danger' : 'btn-secondary'" t-on-click="this.onClickRegisterKeyButton" aria-label="Register new shortcut">
-                                                        <i class="fa me-2" t-att-class="this.store.settings.isRegisteringKey ? 'fa-times' : 'fa-keyboard-o'"/>
+                                                        <i class="oi me-2" t-att-data-icon="this.store.settings.isRegisteringKey ? 'close' : 'keyboard'"/>
                                                         <t t-out="this.store.settings.pushToTalkKeyText"/>
                                                     </button>
                                                     <div class="d-flex align-items-center flex-grow-1 gap-2 border rounded px-2 py-1">
@@ -94,7 +94,7 @@
                         <div class="d-flex flex-column my-2 p-1">
                             <div class="d-flex flex-column flex-grow-1 gap-1" aria-label="Camera">
                                 <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
-                                    <i class="fa fa-video-camera text-muted ms-1 me-2"/>Camera
+                                    <i class="oi oi-filled text-muted ms-1 me-2" data-icon="videocam"/>Camera
                                 </span>
                                 <DeviceSelect kind="'videoinput'"/>
                             </div>
@@ -142,7 +142,7 @@
                                     description.translate="Save detailed RTC connection logs for troubleshooting."
                                     value="this.store.settings.logRtc"
                                     onchange="this.onChangeLogRtc"/>
-                                <button class="btn btn-secondary rounded-top-0" t-on-click="this.onClickDownloadLogs"><i class="fa fa-download me-2"/><span>Download Logs</span></button>
+                                <button class="btn btn-secondary rounded-top-0" t-on-click="this.onClickDownloadLogs"><i class="oi me-2" data-icon="download"/><span>Download Logs</span></button>
                             </div>
                         </div>
                     </TabPanel>

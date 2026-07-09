@@ -66,7 +66,7 @@ export class TableBorderPlugin extends Plugin {
                 props: {
                     ...this.dependencies.colorUi.getPropsForColorSelector("foreground"),
                     type: "custom",
-                    customIconClass: "fa-pencil",
+                    customIcon: "edit",
                     enabledTabs: ["solid", "custom"],
                     colorPrefix: "--",
                     getSelectedColors: () => {

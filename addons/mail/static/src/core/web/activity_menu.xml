@@ -4,7 +4,7 @@
 <t t-name="mail.ActivityMenu">
     <Dropdown position="'bottom-end'" state="this.dropdown" beforeOpen.bind="this.onBeforeOpen" menuClass="this.discussSystray.menuClass" bottomSheet="false">
         <button>
-            <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"></i>
+            <i class="oi" data-icon="schedule" role="img" aria-label="Activities"></i>
             <span t-if="this.store.activityCounter" class="o-mail-ActivityMenu-counter badge rounded-pill"><t t-out="this.store.activityCounter"/></span>
         </button>
         <t t-set-slot="content">

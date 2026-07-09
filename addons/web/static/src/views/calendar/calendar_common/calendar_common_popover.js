@@ -231,7 +231,7 @@ export class CalendarCommonPopover extends Component {
                 : "";
             items.push(`
                 <div class="d-flex align-items-baseline gap-2">
-                    <i class="fa fa-fw fa-calendar text-400"/>
+                    <i class="oi oi-fw oi-filled text-400" data-icon="calendar_today"/>
                     <span class="fw-bold">${this.date}</span>${duration}
                 </div>
             `);
@@ -242,7 +242,7 @@ export class CalendarCommonPopover extends Component {
                 : "";
             items.push(`
                 <div class="d-flex align-items-baseline gap-2">
-                    <i class="fa fa-fw fa-clock-o text-400"/>
+                    <i class="oi oi-fw text-400" data-icon="schedule"/>
                     <span class="fw-bold">${this.time}</span>${duration}
                 </div>
             `);
@@ -260,7 +260,7 @@ export class CalendarCommonPopover extends Component {
             let label = "";
             if (!fieldNode.options.noLabel && fieldNode.type !== "properties") {
                 label = fieldNode.options.icon
-                    ? `<i class="${fieldNode.options.icon} text-400" title="${fieldNode.string}"/>`
+                    ? `<i class="oi text-400" title="${fieldNode.string}" data-icon="${fieldNode.options.icon}"/>`
                     : `<span class="fw-bold">${fieldNode.string}</span>`;
             }
             const invisible = fieldNode.invisible ? `invisible="${fieldNode.invisible}"` : "";

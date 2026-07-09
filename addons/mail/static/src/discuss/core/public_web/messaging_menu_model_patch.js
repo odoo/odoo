@@ -27,7 +27,8 @@ const messagingMenuPatch = {
                         c.self_member_id?.is_pinned &&
                         ["chat", "group"].includes(c.channel_type) &&
                         !c.isMeetingOrMeetingChild,
-                    icon: "oi oi-users",
+                    icon: "group",
+                    icon_class: "oi-filled",
                     sequence: 15,
                     label: _t("Chats"),
                     emptyState: {
@@ -47,7 +48,7 @@ const messagingMenuPatch = {
                             ? [
                                   {
                                       id: "new_chat",
-                                      icon: "oi oi-plus",
+                                      icon: "add",
                                       text: _t("Chat"),
                                       onClick: () => openChannelInvitationDialog(this.store.env),
                                   },
@@ -67,7 +68,7 @@ const messagingMenuPatch = {
                         Boolean(
                             c.isLocallyPinned || c.self_member_id?.is_pinned || c.needactionCounter
                         ),
-                    icon: "fa fa-hashtag",
+                    icon: "tag",
                     sequence: 30,
                     label: _t("Channels"),
                     emptyState: {
@@ -81,7 +82,7 @@ const messagingMenuPatch = {
                                   {
                                       id: "new_channel",
                                       text: _t("Channel"),
-                                      icon: "oi oi-plus",
+                                      icon: "add",
                                       title: _t("New channel"),
                                       onClick: () =>
                                           this.store.env.services.action.doAction(
@@ -103,7 +104,8 @@ const messagingMenuPatch = {
                         c.channel_type === "group" &&
                         c.self_member_id?.is_pinned &&
                         c.isMeetingOrMeetingChild,
-                    icon: "fa fa-video-camera",
+                    icon: "videocam",
+                    icon_class: "oi-filled",
                     sequence: 45,
                     label: _t("Meetings"),
                     emptyState: {

@@ -4,12 +4,12 @@
         <div class="o_group_config d-print-none d-flex">
             <Dropdown menuClass="'o-dropdown--group-config-menu'" position="'bottom-end'">
                 <button class="btn px-2 py-0" tabindex="-1">
-                    <i class="fa fa-gear opacity-50 opacity-100-hover" role="img" aria-label="Settings" title="Settings"/>
+                    <i class="oi oi-filled ar opacity-50 opacity-100-hover" data-icon="settings" role="img" aria-label="Settings" title="Settings"/>
                 </button>
                 <t t-set-slot="content">
                     <t t-foreach="this.configItems" t-as="item" t-key="item.key">
                         <DropdownItem t-if="item.isVisible" class="item.class" onSelected="() => item.method()">
-                            <i t-if="item.icon" class="fa pe-2" t-att-class="item.icon"/>
+                            <i t-if="item.icon" class="oi pe-2" t-att-class="item.icon_class" t-att-data-icon="item.icon"/>
                             <t t-out="item.label"/>
                         </DropdownItem>
                     </t>

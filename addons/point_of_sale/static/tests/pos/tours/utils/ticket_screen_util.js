@@ -307,7 +307,7 @@ export function sendEmail(email, expectSuccess = true) {
             run: `edit ${email}`,
         },
         {
-            trigger: `.modal-body .fa-paper-plane`,
+            trigger: `.modal-body [data-icon='send']`,
             run: "click",
         },
         ...(expectSuccess ? [{ trigger: `.modal-body .text-success` }] : []),

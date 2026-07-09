@@ -78,7 +78,7 @@ test("should add opacity to custom background colors but not to theme colors", a
         `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[test]</font></p>`
     );
     // Verify paintbrush border bottom color has no opacity.
-    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    expect("i[data-icon='colors']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
 
     await contains(".o-select-color-background").click();
     expect(".o_font_color_selector").toHaveCount(1);
@@ -148,7 +148,7 @@ test("can render and apply gradient color", async () => {
         "button[data-color='linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)']"
     );
     await animationFrame();
-    expect("i.fa-font").toHaveStyle({
+    expect("i[data-icon='text_fields']").toHaveStyle({
         borderImage:
             "linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%) 1 / 1 / 0 stretch",
     });
@@ -421,7 +421,7 @@ test("Can reset a color", async () => {
     expect(".tested").not.toHaveInnerHTML("test");
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
-    await click("button.fa-trash");
+    await click("button[data-icon='delete'].oi-filled");
     await animationFrame();
     expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(0);
     expect(".tested").toHaveInnerHTML("test");
@@ -442,7 +442,7 @@ test("can reset a font color when both color and background-color are applied", 
     );
     await expectElementCount(".o-we-toolbar", 1);
     await click(".o-we-toolbar .o-select-color-foreground");
-    await contains(".o_font_color_selector button.fa-trash").click();
+    await contains(".o_font_color_selector button[data-icon='delete']").click();
     await animationFrame();
     expect(getContent(el)).toBe(
         `<p><font style="background-color: rgb(0, 0, 255);">[test]</font></p>`
@@ -461,7 +461,7 @@ test("can reset a text gradient on partial selection when background gradient an
     );
     await expectElementCount(".o-we-toolbar", 1);
     await click(".o-we-toolbar .o-select-color-foreground");
-    await contains(".o_font_color_selector button.fa-trash").click();
+    await contains(".o_font_color_selector button[data-icon='delete']").click();
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
@@ -488,7 +488,7 @@ test("can reset a background color when both color and background-color are appl
     );
     await expandToolbar();
     await click(".o-we-toolbar .o-select-color-background");
-    await contains(".o_font_color_selector button.fa-trash").click();
+    await contains(".o_font_color_selector button[data-icon='delete']").click();
     await animationFrame();
     expect(getContent(el)).toBe(
         `<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[test]</font></p>`
@@ -507,7 +507,7 @@ test("can reset a background gradient on partial selection when background gradi
     );
     await expandToolbar();
     await click(".o-we-toolbar .o-select-color-background");
-    await contains(".o_font_color_selector button.fa-trash").click();
+    await contains(".o_font_color_selector button[data-icon='delete']").click();
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
@@ -535,17 +535,17 @@ test("selected text color is shown in the toolbar and update when hovering", asy
     await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await animationFrame();
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
     // Hover a color
     await hover("button[data-color='#FF00FF']");
     await animationFrame();
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
+    expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
     // Hover out
     await hover(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
 });
 
 test("selected text color is shown in the toolbar and update when clicking", async () => {
@@ -558,12 +558,12 @@ test("selected text color is shown in the toolbar and update when clicking", asy
     await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await animationFrame();
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
     await click("button[data-color='#FF00FF']");
     await animationFrame();
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
+    expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
 });
 
 test("selected text color using color function is shown in the toolbar", async () => {
@@ -575,7 +575,9 @@ test("selected text color using color function is shown in the toolbar", async (
 
     await expandToolbar();
     await animationFrame();
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgba(102, 50, 205, 0.4)" });
+    expect("i[data-icon='text_fields']").toHaveStyle({
+        borderBottomColor: "rgba(102, 50, 205, 0.4)",
+    });
 });
 
 test("selected text color is not shown in the toolbar after removeFormat", async () => {
@@ -590,14 +592,14 @@ test("selected text color is not shown in the toolbar after removeFormat", async
 
     await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
-    await click(".btn .fa-eraser");
+    expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    await click(".btn [data-icon='ink_eraser']");
     await animationFrame();
     expect(getContent(el)).toBe(`<p>
             <font style="color: rgb(255, 0, 0);">t</font>[es]<font style="color: rgb(255, 0, 0);">t</font>
         </p>`);
     await animationFrame();
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: defaultTextColor });
+    expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: defaultTextColor });
 });
 
 test("selected color is shown and updates when selection change", async () => {
@@ -607,15 +609,17 @@ test("selected color is shown and updates when selection change", async () => {
     await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await animationFrame();
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(150, 255, 0)" });
+    expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: "rgb(150, 255, 0)" });
     setSelection({
         anchorNode: el.firstChild,
         anchorOffset: 0,
         focusNode: el.firstChild,
         focusOffset: 1,
     });
-    await waitUntil(() => queryOne("i.fa-font").style.borderBottomColor === "rgb(255, 156, 0)");
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 156, 0)" });
+    await waitUntil(
+        () => queryOne("i[data-icon='text_fields']").style.borderBottomColor === "rgb(255, 156, 0)"
+    );
+    expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: "rgb(255, 156, 0)" });
 });
 
 test("selected background color using color function is shown in the toolbar", async () => {
@@ -627,7 +631,9 @@ test("selected background color using color function is shown in the toolbar", a
 
     await expandToolbar();
     await animationFrame();
-    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgba(102, 50, 205, 0.4)" });
+    expect("i[data-icon='colors']").toHaveStyle({
+        borderBottomColor: "rgba(102, 50, 205, 0.4)",
+    });
 });
 
 test("selected background color is shown in the toolbar and update when clicking", async () => {
@@ -639,12 +645,12 @@ test("selected background color is shown in the toolbar and update when clicking
 
     await expandToolbar();
     await animationFrame();
-    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    expect("i[data-icon='colors']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
     await click(".o-select-color-background");
     await animationFrame();
     await click("button[data-color='#FF00FF']");
     await animationFrame();
-    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
+    expect("i[data-icon='colors']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
 });
 
 test("clicking on button color parent does not crash", async () => {
@@ -865,7 +871,7 @@ test("solid tab color navigation using keys", async () => {
     await press("Tab");
     expect('.o_font_color_selector button:contains("Gradient")').toBeFocused();
     await press("Tab");
-    expect(".o_font_color_selector button.fa-trash").toBeFocused();
+    expect(".o_font_color_selector button[data-icon='delete'].oi-filled").toBeFocused();
     await press("Tab");
     expect('.o_font_color_selector button[data-color="o-color-1"]').toBeFocused();
     await press("ArrowDown");
@@ -1344,7 +1350,7 @@ describe("color preview", () => {
 
         await expandToolbar();
         await animationFrame();
-        expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+        expect("i[data-icon='text_fields']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
         await click(".o-select-color-foreground");
         await animationFrame();
         await press("Tab"); // Tab to Custom

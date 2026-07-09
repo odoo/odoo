@@ -7,7 +7,7 @@ MEMBER_CATEGORIES.push(
         sequence: 5,
         label: _t("In this call"),
         sequenceGroup: 10,
-        icon: "fa fa-video-camera",
+        icon: "videocam",
         headerClass: "text-success pt-0",
         /** @param {import("models").DiscussChannel} channel */
         getMembers: (channel) =>
@@ -20,7 +20,7 @@ MEMBER_CATEGORIES.push(
         sequence: 8,
         label: _t("Also invited"),
         sequenceGroup: 10,
-        icon: "fa fa-clock-o",
+        icon: "schedule",
         headerClass: "text-warning pt-3",
         /** @param {import("models").DiscussChannel} channel */
         getMembers: (channel) =>

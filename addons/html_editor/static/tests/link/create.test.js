@@ -166,7 +166,7 @@ describe("link creation by toolbar", () => {
     test("should convert all selected text to link", async () => {
         const { el } = await setupEditor("<p>[Hello]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
             "http://test.test/"
         );
@@ -177,7 +177,7 @@ describe("link creation by toolbar", () => {
     test("discard should close the popover (in iframe)", async () => {
         await setupEditor("<p>[Hello]</p>", { props: { iframe: true } });
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover", { timeout: 1500 });
         await click(".o_we_discard_link");
         await animationFrame();
@@ -186,7 +186,7 @@ describe("link creation by toolbar", () => {
     test("should convert valid url to https link", async () => {
         const { el } = await setupEditor("<p>[Hello]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
             "google.com"
         );
@@ -197,7 +197,7 @@ describe("link creation by toolbar", () => {
     test("should convert valid http url to http link", async () => {
         const { el } = await setupEditor("<p>[Hello]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
             "http://google.com"
         );
@@ -210,7 +210,7 @@ describe("link creation by toolbar", () => {
             '<p>Hello this is [a <b>new</b> <u>link</u> <span style="color:red">keeping</span> style]!</p>'
         );
         await waitFor(".o-we-toolbar");
-        click(".o-we-toolbar .fa-link");
+        click(".o-we-toolbar [data-icon='link']");
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>Hello this is <a href="http://test.test/">a <b>new</b> <u>link</u> keeping style[]</a>!</p>'
@@ -221,7 +221,7 @@ describe("link creation by toolbar", () => {
             '<p>Hello this is [a <b>new</b> <u>link</u> <span style="background-color:red">keeping</span> style]!</p>'
         );
         await waitFor(".o-we-toolbar");
-        click(".o-we-toolbar .fa-link");
+        click(".o-we-toolbar [data-icon='link']");
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>Hello this is <a href="http://test.test/">a <b>new</b> <u>link</u> keeping style[]</a>!</p>'
@@ -232,7 +232,7 @@ describe("link creation by toolbar", () => {
             '<p>Hello this is a <b>ne[w</b> <u>link</u> <span style="color:red">keep]ing</span> style!</p>'
         );
         await waitFor(".o-we-toolbar");
-        click(".o-we-toolbar .fa-link");
+        click(".o-we-toolbar [data-icon='link']");
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>Hello this is a <b>ne</b><a href="http://test.test/"><b>w</b> <u>link</u> keep[]</a><span style="color:red">ing</span> style!</p>'
@@ -244,7 +244,7 @@ describe("link creation by toolbar", () => {
         // link button should be enabled
         expect('.o-we-toolbar button[name="link"]').not.toHaveClass("disabled");
         expect('.o-we-toolbar button[name="link"]').not.toHaveAttribute("disabled");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
             "http://test.test/"
         );
@@ -264,7 +264,7 @@ describe("link creation by toolbar", () => {
     test("when you open link popover, url input should be focus by default", async () => {
         const { el } = await setupEditor("<p>[Hello]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover", { timeout: 1500 });
         expect(".o-we-linkpopover input.o_we_href_input_link").toBeFocused();
 
@@ -280,7 +280,7 @@ describe("link creation by toolbar", () => {
         const { el } = await setupEditor('<p>aaaa[b<a href="http://test.com/">cd</a>e]f</p>');
         await waitFor(".o-we-toolbar");
 
-        await click(".o-we-toolbar .fa-unlink");
+        await click(".o-we-toolbar [data-icon='link_off']");
         await tick();
         expect(cleanLinkArtifacts(getContent(el))).toBe("<p>aaaa[bcde]f</p>");
         const pNode = queryOne("p");
@@ -291,7 +291,7 @@ describe("link creation by toolbar", () => {
             focusOffset: 3,
         });
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
             "http://test.test/"
         );
@@ -302,7 +302,7 @@ describe("link creation by toolbar", () => {
     test("should remove link when click away without inputting url", async () => {
         const { el } = await setupEditor("<p>H[el]lo</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover", { timeout: 1500 });
         const pNode = queryOne("p");
         setSelection({
@@ -318,7 +318,7 @@ describe("link creation by toolbar", () => {
         const { el } = await setupEditor('<p>a[b<a href="http://test.com/">c]d</a>ef</p>');
         await waitFor(".o-we-toolbar");
 
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await expectElementCount(".o-we-linkpopover", 1);
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>a<a href="http://test.com/">bcd[]</a>ef</p>'
@@ -328,7 +328,7 @@ describe("link creation by toolbar", () => {
         const { el } = await setupEditor('<p>a[b<a href="http://test.com/">cd</a>e]f</p>');
         await waitFor(".o-we-toolbar");
 
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await expectElementCount(".o-we-linkpopover", 1);
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>a<a href="http://test.com/">bcde[]</a>f</p>'
@@ -338,7 +338,7 @@ describe("link creation by toolbar", () => {
         await setupEditor('<p><strong>abc<a href="http://test.com/">de</a>te[st</strong> m]e</p>');
         await waitFor(".o-we-toolbar");
 
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover", { timeout: 1500 });
         expect(".o_we_label_link").toHaveValue("st m");
         expect(".o_we_href_input_link").toHaveValue("");
@@ -346,7 +346,7 @@ describe("link creation by toolbar", () => {
     test("create a link and undo it (1)", async () => {
         const { el, editor } = await setupEditor("<p>[Hello]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         // not validated link shouldn't affect the DOM yet
         expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[Hello]</p>");
         await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
@@ -362,7 +362,7 @@ describe("link creation by toolbar", () => {
     test("create a link and undo it (2)", async () => {
         const { el, editor } = await setupEditor("<p><b>[Hello]</b></p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         // not validated link shouldn't affect the DOM yet
         expect(cleanLinkArtifacts(getContent(el))).toBe("<p><b>[Hello]</b></p>");
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/");
@@ -377,7 +377,7 @@ describe("link creation by toolbar", () => {
             `<p>[<a href="https://www.test.com">Hello</a> my friend]</p>`
         );
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover", { timeout: 1500 });
         expect(queryFirst(".o-we-linkpopover a").href).toBe("https://www.test.com/");
         expect(cleanLinkArtifacts(getContent(el))).toBe(

@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { fonts } from "@html_editor/utils/fonts";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -21,24 +20,20 @@ export class AlertIconAction extends BuilderAction {
         if (!icon) {
             return;
         }
-        fonts.computeFonts();
-        const allFaIcons = fonts.fontIcons[0].alias;
-        icon.classList.remove(...allFaIcons);
-        icon.classList.add(className);
+        icon.dataset.icon = className;
     }
     clean({ editingElement, params: { mainParam: className } }) {
         const icon = editingElement.querySelector(".s_alert_icon");
         if (!icon) {
             return;
         }
-        icon.classList.remove(className);
     }
     isApplied({ editingElement, params: { mainParam: className } }) {
         const iconEl = editingElement.querySelector(".s_alert_icon");
         if (!iconEl) {
             return;
         }
-        return iconEl.classList.contains(className);
+        return iconEl.dataset?.icon?.includes(className);
     }
 }
 registry.category("builder-plugins").add(AlertOptionPlugin.id, AlertOptionPlugin);

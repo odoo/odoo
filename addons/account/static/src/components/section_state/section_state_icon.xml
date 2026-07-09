@@ -4,8 +4,9 @@
     <t t-name="account.SectionStateIcon">
         <t t-if="['line_section', 'line_subsection'].includes(this.props.record.data.display_type)">
             <i
-                class="ms-1 mt-1 text-muted"
+                class="oi ms-1 mt-1 text-muted"
                 t-att-class="this.iconClass"
+                t-att-data-icon="this.icon"
                 aria-hidden="true"
             />
         </t>

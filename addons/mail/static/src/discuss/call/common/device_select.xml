@@ -20,7 +20,7 @@
                     <span class="flex-grow-1"/>
                 </t>
                 <t t-else="">
-                    <i t-if="this.props.icon" t-att-class="this.props.icon"/>
+                    <i t-if="this.props.icon" class="oi" t-att-class="this.props.icon_class" t-att-data-icon="this.props.icon"/>
                     <span
                         class="pe-2 text-start text-truncate"
                         t-attf-class="{{ this.props.icon ? 'ps-2' : '' }}"
@@ -43,7 +43,7 @@
                     <span class="flex-grow-1"/>
                 </t>
                 <t t-else="">
-                    <i t-if="this.props.icon" t-att-class="this.props.icon"/>
+                    <i t-if="this.props.icon" class="oi" t-att-class="this.props.icon_class" t-att-data-icon="this.props.icon"/>
                     <span
                         class="text-truncate flex-grow-1"
                         t-attf-class="{{ this.props.icon ? 'ps-2' : '' }}"

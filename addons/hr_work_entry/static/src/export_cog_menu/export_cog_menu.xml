@@ -4,12 +4,12 @@
     <t t-name="hr_work_entry.ExportWorkEntriesCogMenu">
         <div t-if="is_actionmenu">
             <button type="button" class="btn btn-secondary" t-on-click="this.exportWorkEntries">
-                <i class="fa fa-users me-1"/>
+                <i class="oi oi-filled me-1" data-icon="group"/>
                 Export Time Entries
             </button>
         </div>
         <DropdownItem t-else="" onSelected.bind="this.exportWorkEntries">
-            <i class="fa fa-users me-1"/>
+            <i class="oi oi-filled me-1" data-icon="group"/>
             Export Time Entries
         </DropdownItem>
     </t>

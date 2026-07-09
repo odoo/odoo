@@ -8,7 +8,7 @@ let numNavChildren;
 const addNavItem = [
     {
         content: "Add a menu item",
-        trigger: ".modal-dialog .fa-plus-circle:first-child",
+        trigger: ".modal-dialog [data-icon='add_circle']:first-child",
         run: "click",
     },
     {

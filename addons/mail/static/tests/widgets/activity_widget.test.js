@@ -44,14 +44,14 @@ test("list activity widget with no activity", async () => {
         arch: `<list><field name="activity_ids" widget="list_activity"/></list>`,
     });
     await expect.waitForSteps(["web_search_read"]);
-    await contains(".o-mail-ActivityButton i.fa-clock-o");
+    await contains(".o-mail-ActivityButton i[data-icon='schedule']");
     await contains(".o-mail-ListActivity-summary", { textContent: "" });
 });
 
 test("list activity widget with activities", async () => {
     const pyEnv = await startServer();
     const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([
-        { name: "Type 1", icon: "fa-phone" },
+        { name: "Type 1", icon: "phone" },
         { name: "Type 2" },
     ]);
     const user2Id = pyEnv["res.users"].create({});
@@ -88,13 +88,13 @@ test("list activity widget with activities", async () => {
     });
     await contains(":nth-child(1 of .o_data_row)", {
         contains: [
-            [".o-mail-ActivityButton i.text-warning.fa-phone"],
+            [".o-mail-ActivityButton i.text-warning[data-icon='phone']"],
             [".o-mail-ListActivity-summary:text('Call with Al')"],
         ],
     });
     await contains(":nth-child(2 of .o_data_row)", {
         contains: [
-            [".o-mail-ActivityButton i.text-success.fa-tasks"],
+            [".o-mail-ActivityButton i.text-success[data-icon='checklist']"],
             [".o-mail-ListActivity-summary:text('Type 2')"],
         ],
     });
@@ -105,7 +105,7 @@ test("list activity widget with exception", async () => {
     const activityId = pyEnv["mail.activity"].create({
         summary: "Call with Al",
         activity_type_id: pyEnv["mail.activity.type"].create({
-            icon: "fa-warning",
+            icon: "warning",
         }),
         res_model: "res.users",
         res_id: serverState.userId,
@@ -114,14 +114,14 @@ test("list activity widget with exception", async () => {
         activity_ids: [activityId],
         activity_state: "today",
         activity_exception_decoration: "warning",
-        activity_exception_icon: "fa-warning",
+        activity_exception_icon: "warning",
     });
     pyEnv["res.users"]._applyComputesAndValidate();
     await start();
     await openListView("res.users", {
         arch: "<list><field name='activity_ids' widget='list_activity'/></list>",
     });
-    await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
+    await contains(".o-mail-ActivityButton i.text-warning[data-icon='warning']");
     await contains(".o-mail-ListActivity-summary:text('Warning')");
 });
 
@@ -331,7 +331,7 @@ test("list activity exception widget with activity", async () => {
     pyEnv["res.users"].write([user2Id], {
         activity_ids: [activityId_2],
         activity_exception_decoration: "warning",
-        activity_exception_icon: "fa-warning",
+        activity_exception_icon: "warning",
     });
     pyEnv["res.users"]._applyComputesAndValidate();
 

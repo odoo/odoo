@@ -78,10 +78,10 @@
                       </td>
                       <td id="order_badge" class="text-center">
                           <span t-if="order.invoice_status == 'to invoice'" class="badge rounded-pill text-bg-info">
-                              <i class="fa fa-fw fa-file-text" role="img" aria-label="Waiting for Bill" title="Waiting for Bill"></i><span class="d-none d-md-inline"> Waiting for Bill</span>
+                              <i class="oi oi-fw oi-filled" data-icon="article" role="img" aria-label="Waiting for Bill" title="Waiting for Bill"></i><span class="d-none d-md-inline"> Waiting for Bill</span>
                           </span>
                           <span t-if="order.state == 'cancel'" class="badge rounded-pill text-bg-secondary">
-                              <i class="fa fa-fw fa-remove" role="img" aria-label="Cancelled" title="Cancelled"></i><span class="d-none d-md-inline"> Cancelled</span>
+                              <i class="oi oi-fw" data-icon="close" role="img" aria-label="Cancelled" title="Cancelled"></i><span class="d-none d-md-inline"> Cancelled</span>
                           </span>
                       </td>
                       <td id="order_total" class="text-end"><span t-field="order.amount_total"/></td>
@@ -105,7 +105,7 @@
               </t>
               <t t-set="entries">
                   <div class="d-flex flex-column gap-4 mt-3">
-                      <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/>Download / Print</a>
+                      <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="oi me-1" data-icon="print"/>Download / Print</a>
                       <div class="navspy flex-grow-1 ps-0" t-ignore="true" role="complementary">
                           <ul class="nav flex-column bs-sidenav"></ul>
                       </div>
@@ -241,9 +241,9 @@
                                       </a>
                                       <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                   </div>
-                                  <span t-if="i.payment_state in ('paid', 'in_payment')" class="badge rounded-pill text-bg-success small"><i class="fa fa-fw fa-check"/>Paid</span>
-                                  <span t-elif="i.payment_state == 'reversed'" class="badge rounded-pill text-bg-success small"><i class="fa fa-fw fa-check"/>Reversed</span>
-                                  <span t-else="" class="small badge rounded-pill text-bg-primary"><i class="fa fa-fw fa-clock-o"/>Waiting Payment</span>
+                                  <span t-if="i.payment_state in ('paid', 'in_payment')" class="badge rounded-pill text-bg-success small"><i class="oi oi-fw" data-icon="check"/>Paid</span>
+                                  <span t-elif="i.payment_state == 'reversed'" class="badge rounded-pill text-bg-success small"><i class="oi oi-fw" data-icon="check"/>Reversed</span>
+                                  <span t-else="" class="small badge rounded-pill text-bg-primary"><i class="oi oi-fw" data-icon="schedule"/>Waiting Payment</span>
                               </div>
                           </t>
                       </ul>

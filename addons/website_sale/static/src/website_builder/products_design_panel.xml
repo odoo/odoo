@@ -153,7 +153,7 @@
                 >
                     <i
                         class="oi me-2"
-                        t-att-class="style.type == 'catalog' ? 'oi-apps' : 'oi-view-list'"
+                        t-att-data-icon="style.type == 'catalog' ? 'apps' : 'view_list'"
                     />
                     <span t-out="style.label"/>
                 </div>
@@ -185,7 +185,7 @@
                         <div t-else="" class="d-flex align-items-center ps-1">
                             <i
                                 class="oi me-2"
-                                t-att-class="style.type == 'catalog' ? 'oi-apps' : 'oi-view-list'"
+                                t-att-data-icon="style.type == 'catalog' ? 'apps' : 'view_list'"
                             />
                             <t t-out="style.label"/>
                         </div>
@@ -200,7 +200,8 @@
         <t t-call="website_sale.ProductsDesignPanelPresets" showImages="false"/>
         <BuilderSlidingPanel
             label.translate="Design"
-            extraClasses="'btn-primary fa fa-paint-brush'"
+            extraClasses="'btn-primary oi'"
+            icon="'design_services'"
             openByDefault="this.props.openByDefault"
         >
             <t t-set-slot="content">
@@ -574,14 +575,14 @@
                 >
                     <BuilderButton
                         title.translate="Add to Cart"
-                        icon="'fa-shopping-cart'"
+                        icon="'shopping_cart'"
                         classAction="'o_wsale_products_opt_has_cta'"
                         id="'wsale_products_opt_add_to_cart'"
                     />
                     <BuilderButton
                         t-if="this.props.recordName === 'shop_opt_products_design_classes'"
                         title.translate="Compare"
-                        icon="'fa-exchange'"
+                        icon="'swap_horiz'"
                         classAction="'o_wsale_products_opt_has_comparison'"
                     />
                     <span/><!-- Spacer -->
@@ -618,7 +619,8 @@
                 >
                     <BuilderButton
                         title.translate="Wishlist"
-                        icon="'fa-heart'"
+                        icon="'favorite'"
+                        iconClass="'oi-filled'"
                         classAction="'o_wsale_products_opt_has_wishlist'"
                     />
                     <BuilderSelect t-if="isOnHoverAvailable">
@@ -660,7 +662,7 @@
                             classAction="'o_wsale_products_opt_actions_promote'">
                             <div class="d-flex align-items-center">
                                 <span class="me-1">Promote</span>
-                                <i class="fa fa-shopping-cart ms-2"/>
+                                <i class="oi ms-2" data-icon="shopping_cart"/>
                             </div>
                         </BuilderSelectItem>
                         <BuilderSelectItem

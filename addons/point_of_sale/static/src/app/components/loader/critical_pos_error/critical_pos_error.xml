@@ -14,7 +14,7 @@
                         </button>
                         <div t-if="this.state.expanded" class="bg-100 mb-0 clearfix mt-3 position-relative o_error_detail">
                             <button class="btn position-absolute bg-100" t-on-click="this.copyToClipboard">
-                                <i class="fa fa-clipboard" />
+                                <i class="oi" data-icon="assignment" />
                             </button>
                             <div class="ps-3 pt-3">
                                 <pre t-out="this.props.error.stack"/>

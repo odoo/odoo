@@ -9,7 +9,7 @@
         <section position="before">
             <section t-if="this.showSections" class="o_search_panel_sections mt-4 pb-4 border-bottom">
                 <header class="d-flex align-items-center cursor-default gap-2 mb-3 ps-2">
-                    <i class="fa fa-filter text-primary"/>
+                    <i class="oi oi-filled" data-icon="filter_alt"/>
                     <b class="text-uppercase">Sections</b>
                     <div class="d-flex align-items-center ms-auto">
                         <span class="me-2">Filter</span>
@@ -43,11 +43,13 @@
                             <t t-set="section" t-value="this.state.sections.get(sectionId)"/>
                             <span
                                 t-if="sectionId"
-                                class="o_row_handle oi oi-draggable ui-sortable-handle"
+                                class="o_row_handle ui-sortable-handle oi"
+                                data-icon="drag_indicator"
                             />
                             <i
                                 t-else=""
-                                class="fa fa-pencil"
+                                class="oi oi-filled"
+                                data-icon="edit"
                                 t-on-click="() => this.enableSectionInput('top')"
                             />
                             <input

@@ -4,7 +4,8 @@
        t-inherit="stock_account.StockValuationReport.InventoryValuationLine"
        t-inherit-mode="primary">
         <xpath expr="//div[hasclass('wrapper')]//button//i" position="attributes">
-            <attribute name="t-attf-class">fa fa-#{this.state.displaySublines ? 'check-' : ''}square-o</attribute>
+            <attribute name="t-att-class"/>
+            <attribute name="t-att-data-icon">this.state.displaySublines ? 'check_box' : 'square'</attribute>
         </xpath>
         <xpath expr="//t[@t-foreach='this.props.sublines']//StockValuationReportLine" position="replace">
             <t t-if="line.lines">

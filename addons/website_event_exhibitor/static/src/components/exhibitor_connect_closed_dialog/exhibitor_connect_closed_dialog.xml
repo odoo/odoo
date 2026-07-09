@@ -59,13 +59,13 @@
                             </div>
                             <span class="text-muted" t-if="this.sponsorData.subtitle" t-out="this.sponsorData.subtitle"/>
                             <span t-if="this.sponsorData.url">
-                                <i class="fa fa-globe me-2"/><a t-att-href="this.sponsorData.url"><span t-out="this.sponsorData.url"/></a>
+                                <i class="oi me-2" data-icon="public"/><a t-att-href="this.sponsorData.url"><span t-out="this.sponsorData.url"/></a>
                             </span>
                             <span t-if="this.sponsorData.email">
-                                <i class="fa fa-envelope me-2"/><a t-att-mailto="this.sponsorData.email"><span t-out="this.sponsorData.email"/></a>
+                                <i class="oi oi-filled me-2" data-icon="mail"/><a t-att-mailto="this.sponsorData.email"><span t-out="this.sponsorData.email"/></a>
                             </span>
                             <span t-if="this.sponsorData.phone">
-                                <i class="fa fa-phone me-2"/><span t-out="this.sponsorData.phone"/>
+                                <i class="oi oi-filled me-2" data-icon="phone"/><span t-out="this.sponsorData.phone"/>
                             </span>
                         </div>
                         <img t-if="this.sponsorData.country_flag_url"

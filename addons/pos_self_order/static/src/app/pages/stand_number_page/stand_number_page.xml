@@ -21,7 +21,7 @@
             <div class="d-flex py-3 w-100 bg-light border-top ">
                <div class="o_self_footer container o_self_container d-flex justify-content-between ">
                  <button class="btn btn-secondary btn-lg" t-on-click="() => this.router.back()">
-                     <i class="oi oi-chevron-left d-md-none" />
+                     <i class="oi d-md-none" data-icon="chevron_backward"/>
                      <span class="d-none d-md-inline">Back</span>
                  </button>
                  <button class="btn btn-primary btn-lg" t-att-disabled="!this.state.standNumber" t-on-click="this.confirm" t-out="this.actionBtnText"/>

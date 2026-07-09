@@ -25,7 +25,7 @@
                 action="'setImageShape'"
                 actionValue=""
                 preview="false"
-                icon="'oi-close'"
+                icon="'close_small'"
                 className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'"
                 t-if="this.state.hasShape"/>
         </div>
@@ -46,27 +46,27 @@
         <BuilderRow label.translate="Transform" level="1" t-if="this.state.showImageShapeTransform" preview="false">
             <BuilderButton
                 title.translate="Horizontal flip"
-                icon="'oi-arrows-h'"
+                icon="'arrow_range'"
                 action="'flipImageShape'"
                 actionParam="{axis: 'x'}"/>
             <BuilderButton
                 title.translate="Vertical flip"
-                icon="'oi-arrows-v'"
+                icon="'height'"
                 action="'flipImageShape'"
                 actionParam="{axis: 'y'}"/>
             <BuilderButton
                 title.translate="Rotate left"
-                icon="'fa-rotate-left'"
+                icon="'undo'"
                 action="'rotateImageShape'"
                 actionParam="{side: 'left'}"/>
             <BuilderButton
                 title.translate="Rotate right"
-                icon="'fa-rotate-right'"
+                icon="'redo'"
                 action="'rotateImageShape'"
                 actionParam="{side: 'right'}"/>
             <BuilderButton
                 title.translate="Reset shape transformation"
-                icon="'oi-close'"
+                icon="'close_small'"
                 action="'resetImageShapeTransformation'"
                 className="'btn-danger-color-hover'"
                 t-if="this.state.hasShapeTransformation"/>

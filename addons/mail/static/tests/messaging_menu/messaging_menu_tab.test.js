@@ -84,7 +84,7 @@ test("create new chat from chat tab", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openMessagingMenu();
-    await click("button:has(.oi-plus):text(Chat)");
+    await click("button:has([data-icon='add']):text(Chat)");
     await contains(".o-discuss-ChannelInvitation");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
     await click("button[title='Create Chat']:enabled");
@@ -102,7 +102,7 @@ test("create new group chat from chat tab", async () => {
     pyEnv["res.users"].create({ partner_id: partner2Id });
     await start();
     await openMessagingMenu();
-    await click("button:has(.oi-plus):text(Chat)");
+    await click("button:has([data-icon='add']):text(Chat)");
     await contains(".o-discuss-ChannelInvitation");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner1'))");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
@@ -242,7 +242,7 @@ test("favorite channels are displayed first", async () => {
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await contains(".o-mail-MessagingMenuItem", { count: 2 });
-    await contains(".o-mail-MessagingMenuItem:eq(0):has(:text(Gamma):has(.fa-star))");
+    await contains(".o-mail-MessagingMenuItem:eq(0):has(:text(Gamma):has([data-icon='star']))");
     await contains(".o-mail-MessagingMenuItem:eq(1):has(:text(Alpha'))");
 });
 

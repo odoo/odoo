@@ -4,7 +4,7 @@
         <xpath expr="//span[hasclass('o-mail-ActivityListPopoverItem-name')]" position="replace">
             <div class="d-flex flex-column text-truncate flex-grow-1 flex-basis-0">
                 <span class="o-mail-ActivityListPopoverItem-name d-flex flex-nowrap align-items-center">
-                    <i t-attf-class="fa {{this.activity().icon}} fa-fw lh-base me-1"/>
+                    <i class="oi oi-fw lh-base me-1" t-att-data-icon="this.activity().icon"/>
                     <b t-if="this.activity().summary" class="fw-normal text-900 text-truncate" t-out="this.activity().summary"/>
                     <b t-elif="this.activity().activity_type_id?.name" class="fw-normal text-900 text-truncate" t-out="this.activity().activity_type_id.name"/>
                 </span>
@@ -16,13 +16,13 @@
             </div>
             <Dropdown>
                 <button class="o-mail-ActivityListPopoverItem-reschedulebtn btn btn-sm btn-info btn-link" type="button" title="Reschedule" aria-label="Reschedule">
-                    <i class="fa fa-calendar o_button_icon"/>
+                    <i class="oi oi-filled o_button_icon" data-icon="calendar_today"/>
                 </button>
                 <t t-set-slot="content">
                     <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.today)">
                         <div class="d-flex justify-content-between">
                             <span>
-                                <i class="oi oi-schedule-today me-1"/> Today
+                                <i class="oi me-1" data-icon="early_on"/> Today
                             </span>
                             <span t-out="this.targetDays.today.day.weekdayShort" class="ms-2 text-muted"/>
                         </div>
@@ -30,7 +30,7 @@
                     <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.tomorrow)">
                         <div class="d-flex justify-content-between">
                             <span>
-                                <i class="oi oi-schedule-tomorrow me-1"/> Tomorrow
+                                <i class="oi me-1" data-icon="event_upcoming"/> Tomorrow
                             </span>
                             <span t-out="this.targetDays.tomorrow.day.weekdayShort" class="ms-2 text-muted"/>
                         </div>
@@ -38,7 +38,7 @@
                     <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.nextWeek)">
                         <div class="d-flex justify-content-between">
                             <span>
-                                <i class="oi oi-schedule-later me-1"/> Next Week
+                                <i class="oi me-1" data-icon="calendar_clock"/> Next Week
                             </span>
                             <span t-out="this.targetDays.nextWeek.day.weekdayShort" class="ms-2 text-muted"/>
                         </div>
@@ -56,7 +56,7 @@
                 title="View Meeting" aria-label="View Meeting"
                 class="o-mail-ActivityListPopoverItem-viewmeetingbtn btn btn-sm btn-success btn-link"
                 t-on-click="(ev) => this.calendarProps.onViewMeeting(ev, { eventAtRender })">
-                <i class="fa fa-eye"/>
+                <i class="oi" data-icon="visibility"/>
             </button>
         </xpath>
     </t>

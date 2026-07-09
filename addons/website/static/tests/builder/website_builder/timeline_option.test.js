@@ -50,12 +50,12 @@ test("add milestones in timeline", async () => {
 test("Use the overlay buttons of a timeline card", async () => {
     await setupWebsiteBuilderWithSnippet("s_timeline");
     await contains(":iframe .s_timeline_card").click();
-    expect(".o_overlay_options .fa-angle-right").toHaveCount(1);
-    expect(".o_overlay_options .fa-angle-left").toHaveCount(0);
+    expect(".o_overlay_options [data-icon='keyboard_arrow_right']").toHaveCount(1);
+    expect(".o_overlay_options [data-icon='keyboard_arrow_left']").toHaveCount(0);
 
-    await contains(".o_overlay_options .fa-angle-right").click();
-    expect(".o_overlay_options .fa-angle-right").toHaveCount(0);
-    expect(".o_overlay_options .fa-angle-left").toHaveCount(1);
+    await contains(".o_overlay_options [data-icon='keyboard_arrow_right']").click();
+    expect(".o_overlay_options [data-icon='keyboard_arrow_right']").toHaveCount(0);
+    expect(".o_overlay_options [data-icon='keyboard_arrow_left']").toHaveCount(1);
 });
 
 test("last timeline element cannot be removed", async () => {

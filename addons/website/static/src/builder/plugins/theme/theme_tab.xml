@@ -54,7 +54,9 @@
                 id="'body_bg_image_opt'"
                 title.translate="Image"
                 preview="false"
-                className="'ms-auto fa fa-fw fa-camera px-2'"
+                className="'ms-auto px-2'"
+                icon="'photo_camera'"
+                iconClass="'oi-fw'"
             />
         </BuilderRow>
         <BuilderRow label.translate="Background" level="1" t-if="!this.isActiveItem('layout_full_opt')">
@@ -66,7 +68,7 @@
             <BuilderButton action="'replaceBodyBgImage'" title.translate="Replace Image" preview="false" type="'global'">
                 Replace
             </BuilderButton>
-            <BuilderButton action="'removeBodyBgImage'" preview="false" icon="'oi-close'" className="'btn-danger-color-hover'"/>
+            <BuilderButton action="'removeBodyBgImage'" preview="false" icon="'close_small'" className="'btn-danger-color-hover'"/>
             <ImageSize/>
         </BuilderRow>
         <BuilderRow label.translate="Position" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
@@ -74,7 +76,7 @@
                 <BuilderSelectItem actionValue="'image'">Cover</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'pattern'" id="'body_bg_repeat_opt'">Repeat pattern</BuilderSelectItem>
             </BuilderSelect>
-            <BuilderButton icon="'fa-crosshairs'" title.translate="Background Position" preview="false" action="'bodyBgPositionOverlay'"/>
+            <BuilderButton icon="'my_location'" title.translate="Background Position" preview="false" action="'bodyBgPositionOverlay'"/>
         </BuilderRow>
         <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'">
             <BuilderRow label.translate="Width" level="2">
@@ -85,6 +87,12 @@
             </BuilderRow>
         </BuilderContext>
     </BuilderContext>
+    <BuilderRow label.translate="Icons">
+        <BuilderButtonGroup action="'customizeWebsiteVariable'" actionParam="'icon-font-family'">
+            <BuilderButton className="'w-50'" actionValue="''">Rounded</BuilderButton>
+            <BuilderButton className="'w-50'" actionValue="'material_symbols_sharp'">Sharp</BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
 </t>
 
 <t t-name="website.ThemeParagraphOption">
@@ -134,16 +142,16 @@
 <t t-name="website.ThemeInputOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Padding" tooltip.translate="Vertical and Horizontal padding" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
-            <BuilderNumberInput actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
+            <BuilderNumberInput actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
+            <BuilderNumberInput actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
-                    <BuilderNumberInput actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
+                    <BuilderNumberInput actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
+                    <BuilderNumberInput actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
-                    <BuilderNumberInput actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
+                    <BuilderNumberInput actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
+                    <BuilderNumberInput actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
                 </BuilderRow>
             </t>
         </BuilderRow>

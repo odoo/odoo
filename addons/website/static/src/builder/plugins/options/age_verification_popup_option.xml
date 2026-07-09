@@ -13,7 +13,7 @@
             </BuilderSelect>
             <BuilderButton id="'error_message_opt'"
                 title.translate="Show Rejection Message"
-                className="'fa ' + (this.isActiveItem('error_message_opt') ? 'fa-eye' : 'fa-eye-slash')"
+                icon="this.isActiveItem('error_message_opt') ? 'visibility' : 'visibility_off'"
                 classAction="'d-none'" inverseAction="true" applyTo="'#verification_error'"
                 preview="false"/>
         </BuilderRow>
@@ -61,7 +61,7 @@
                 name="age_verification_birth_date"
                 placeholder="Enter your birth date"
                 aria-label="Select your birth date"/>
-            <div class="input-group-text o_input_group_date_icon"><i class="fa fa-calendar"></i></div>
+            <div class="input-group-text o_input_group_date_icon"><i class="oi oi-filled" data-icon="calendar_today"></i></div>
         </div>
         <p><a href="#" class="o_age_verification_btn o_age_verification_date_btn btn btn-primary mt-2 oe_unremovable">Verify</a></p>
     </div>

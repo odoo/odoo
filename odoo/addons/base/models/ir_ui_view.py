@@ -2056,7 +2056,7 @@ actual arch.
 
         if node.get('icon'):
             description = 'A button with icon attribute (%s)' % node.get('icon')
-            self._validate_fa_class_accessibility(node, description)
+            self._validate_data_icon_accessibility(node, description)
 
     def _validate_tag_groupby(self, node, name_manager, node_info):
         # groupby nodes should be considered as nested view because they may
@@ -2236,6 +2236,10 @@ actual arch.
                     msg = 'aria-controls in tablink cannot contains "#"'
                     self._log_view_warning(msg, node)
 
+            elif attr == 'data-icon':
+                description = 'A <%s> with data-icon attribute (%s)' % (node.tag, expr)
+                self._validate_data_icon_accessibility(node, description)
+
             elif attr == "role" and expr in ('presentation', 'none'):
                 msg = ("A role cannot be `none` or `presentation`. "
                     "All your elements must be accessible with screen readers, describe it.")
@@ -2293,10 +2297,6 @@ actual arch.
                         "be read immediately.")
                 self._log_view_warning(msg, node)
 
-        if any(klass.startswith('fa-') for klass in classes):
-            description = 'A <%s> with fa class (%s)' % (node.tag, expr)
-            self._validate_fa_class_accessibility(node, description)
-
         if any(klass.startswith('btn') for klass in classes):
             if node.tag in ('a', 'button', 'select'):
                 pass
@@ -2312,7 +2312,7 @@ actual arch.
                         "btn-group/btn-toolbar/btn-addr")
                 self._log_view_warning(msg, node)
 
-    def _validate_fa_class_accessibility(self, node, description):
+    def _validate_data_icon_accessibility(self, node, description):
         valid_aria_attrs = {
             *att_names('title'), *att_names('aria-label'), *att_names('aria-labelledby'),
         }
@@ -2320,7 +2320,7 @@ actual arch.
 
         ## Following or preceding text
         if (node.tail or '').strip() or (node.getparent().text or '').strip():
-            # text<i class="fa-..."/> or <i class="fa-..."/>text or
+            # text<i class="oi" data-icon="..."/> or <i class="oi" data-icon="..."/>text or
             return
 
         ## Following or preceding text in span
@@ -2349,7 +2349,7 @@ actual arch.
         ## And we ignore all elements with describing in children
         def contains_description(node, depth=0):
             if depth > 2:
-                _logger.warning('excessive depth in fa')
+                _logger.warning('excessive depth in data-icon')
             if any(node.get(attr) for attr in valid_t_attrs):
                 return True
             if has_title_or_aria_label(node):

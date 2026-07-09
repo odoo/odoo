@@ -28,7 +28,8 @@
                                 <t t-if="button.icon">
                                     <span t-if="button.icon.startsWith('fa-')" t-att-class="'fa fa-fw ' + button.icon"/>
                                     <span t-elif="button.icon.startsWith('oi-')" t-att-class="'oi oi-fw ' + button.icon"/>
-                                    <t t-else="" t-call="{{ button.icon }}"/>
+                                    <t t-elif="button.icon.includes('.')" t-call="{{ button.icon }}"/>
+                                    <span t-else="" t-attf-class="oi oi-fw {{button.icon_class || ''}}" t-att-data-icon="button.icon"/>
                                 </t>
                                 <span t-if="button.text" t-out="button.text"/>
                             </button>

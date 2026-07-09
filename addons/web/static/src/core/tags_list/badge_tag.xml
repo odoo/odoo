@@ -8,7 +8,7 @@
             </t>
             <t t-if="this.props.onDelete">
                 <a class="o_delete ps-1 opacity-75 opacity-100-hover" href="#" tabindex="-1" t-att-aria-label="this.props.crossTooltip" t-att-data-tooltip="this.props.crossTooltip" t-on-click.stop.prevent="() => this.props.onDelete()">
-                    <i class="oi oi-close"/>
+                    <i class="oi" data-icon="close_small"/>
                 </a>
             </t>
         </span>

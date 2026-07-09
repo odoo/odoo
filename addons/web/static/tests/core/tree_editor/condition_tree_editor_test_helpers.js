@@ -177,7 +177,7 @@ export const SELECTORS = {
     operatorEditor: ".o_tree_editor_condition > .o_tree_editor_editor:nth-child(2)",
     valueEditor: ".o_tree_editor_condition > .o_tree_editor_editor:nth-child(3)",
     editor: ".o_tree_editor_editor",
-    clearNotSupported: ".o_input .fa-times",
+    clearNotSupported: ".o_input [data-icon='close']",
     tag: ".o_input .o_tag",
     toggleArchive: ".form-switch",
     complexCondition: ".o_tree_editor_complex_condition",

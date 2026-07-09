@@ -36,7 +36,7 @@
             t-att-data-slide-category="this.props.slideCategory"
             class="content-type d-flex flex-column align-items-center mb-4 btn rounded border text-600 p-3"
         >
-            <i t-attf-class="fa #{this.props.categoryData.icon} mb-2 fa-3x"/>
+            <i t-attf-class="oi oi-3x #{this.props.categoryData.icon_class} mb-2" t-attf-data-icon="#{this.props.categoryData.icon}"/>
             <t t-out="this.props.categoryData.label"/>
         </a>
     </t>
@@ -46,7 +46,7 @@
             href="#" t-on-click="() => this.props.onClickInstallModuleIcon(this.props.moduleId)"
             t-att-title="this.props.title"
             t-att-data-module-id="this.props.moduleId">
-            <i class="fa fa-trophy"/> <t t-out="this.props.motivational"/><span class="text-primary"> Install the <t t-out="this.props.title"/> app.</span>
+            <i class="oi oi-filled" data-icon="trophy"/> <t t-out="this.props.motivational"/><span class="text-primary"> Install the <t t-out="this.props.title"/> app.</span>
         </a>
     </t>
 </templates>

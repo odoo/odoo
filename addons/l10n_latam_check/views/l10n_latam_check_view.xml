@@ -112,16 +112,16 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button  icon="fa-bars" type="object" name="button_open_check_operations" invisible="payment_method_code != 'new_third_party_checks'">
+                        <button  icon="menu" type="object" name="button_open_check_operations" invisible="payment_method_code != 'new_third_party_checks'">
                             <span>Operations</span>
                         </button>
-                        <button  icon="fa-bars" type="object" name="button_open_payment" invisible="payment_method_code != 'own_checks'">
+                        <button  icon="menu" type="object" name="button_open_payment" invisible="payment_method_code != 'own_checks'">
                             <span>Payment</span>
                         </button>
-                        <button  icon="fa-bars" type="object" invisible="not outstanding_line_id" name="action_show_journal_entry" groups="account.group_account_user,account.group_account_readonly">
+                        <button  icon="menu" type="object" invisible="not outstanding_line_id" name="action_show_journal_entry" groups="account.group_account_user,account.group_account_readonly">
                             <span>Journal Entry</span>
                         </button>
-                        <button  icon="fa-bars" type="object" invisible="not issue_state or issue_state == 'handed'" name="action_show_reconciled_move" groups="account.group_account_user,account.group_account_readonly">
+                        <button  icon="menu" type="object" invisible="not issue_state or issue_state == 'handed'" name="action_show_reconciled_move" groups="account.group_account_user,account.group_account_readonly">
                             <span>Reconciled move</span>
                         </button>
                     </div>

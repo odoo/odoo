@@ -12,28 +12,28 @@
                     </t>
                 </span>
                 <button t-if="this.hasAssignButton" class="o-mail-ActivityListPopoverItem-assignbtn btn btn-sm btn-success btn-link" title="Assign" aria-label="Assign" t-on-click="this.onClickAssignButton">
-                    <i class="fa fa-user" role="img" aria-label="Assign"/>
+                    <i class="oi oi-filled" data-icon="person" role="img" aria-label="Assign"/>
                 </button>
                 <t t-if="this.activity().can_write">
                     <FileUploader t-if="this.hasFileUploader" onUploaded.bind="this.onFileUploaded">
                         <t t-set-slot="toggler">
                             <button class="btn btn-sm btn-success btn-link" title="Upload file" aria-label="Upload File">
-                                <i class="fa fa-upload"/>
+                                <i class="oi" data-icon="upload"/>
                             </button>
                         </t>
                     </FileUploader>
                     <button t-if="this.hasMarkDoneButton" class="o-mail-ActivityListPopoverItem-markAsDone btn btn-sm btn-success btn-link" title="Mark as done" aria-label="Mark as done" t-on-click="this.toggleFn(this.hasMarkDoneView)">
-                        <i class="fa fa-check"/>
+                        <i class="oi" data-icon="check"/>
                     </button>
                 </t>
                 <button t-if="this.hasEditButton" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" title="Edit" aria-label="Edit" t-on-click="this.onClickEditActivityButton">
-                    <i class="fa fa-pencil"/>
+                    <i class="oi oi-filled" data-icon="edit"/>
                 </button>
             </div>
             <div class="o-mail-ActivityListPopoverItem-user d-flex align-items-center flex-wrap mx-3">
                 <img class="me-2 rounded object-fit-cover" t-if="this.activity().user_id?.partner_id" t-att-src="this.activity().user_id.partner_id.avatarUrl" style="max-width: 1.5rem; max-height: 1.5rem;"/>
                 <div t-elif="this.activity().role_id" class="me-2 rounded bg-200 text-600 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 1.5rem; height: 1.5rem;">
-                    <i class="fa fa-users" role="img" title="Role" aria-label="Role" style="font-size: 12px;"/>
+                    <i class="oi oi-filled" data-icon="group" role="img" title="Role" aria-label="Role" style="font-size: 12px;"/>
                 </div>
                 <div class="mt-1">
                     <small t-if="this.activity().user_id" class="text-truncate">

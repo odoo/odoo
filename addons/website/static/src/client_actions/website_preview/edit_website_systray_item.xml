@@ -7,12 +7,12 @@
                 class="o-website-btn-custo-primary btn d-flex align-items-center rounded-0 border-0 px-3"
                 t-on-click="this.onClickEditPage"
                 accesskey="a">
-            <span t-if="this.websiteContext.edition" role="img" aria-label="Loading" class="fa fa-circle-o-notch fa-spin"/>
+            <span t-if="this.websiteContext.edition" role="img" aria-label="Loading" class="oi oi-spin" data-icon="autorenew"/>
             <t t-else="">Edit</t>
         </button>
         <Dropdown t-else="">
             <button class="o-website-btn-custo-primary o-dropdown-toggle-custo btn rounded-0 border-0 px-3" accesskey="a" t-on-click="this.onEditDropdownClick">
-                <span t-if="this.websiteContext.edition" role="img" aria-label="Loading" class="fa fa-circle-o-notch fa-spin"/>
+                <span t-if="this.websiteContext.edition" role="img" aria-label="Loading" class="oi oi-spin" data-icon="autorenew"/>
                 <t t-else="">Edit</t>
             </button>
             <t t-set-slot="content">

@@ -28,7 +28,7 @@
     <t t-name="web.EmbeddedActionsDropdown">
         <Dropdown menuClass="'o_embedded_actions_dropdown_menu'">
             <button name="openEmbeddedActions" class="btn btn-secondary">
-                <i class="fa fa-fw fa-sliders"/>
+                <i class="oi oi-fw" data-icon="tune"/>
             </button>
             <t t-set-slot="content">
                 <t t-foreach="this.props.state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
@@ -39,7 +39,7 @@
                     >
                         <div class="d-flex p-0 pe-1 align-items-center justify-content-between">
                             <span t-out="action.name"/>
-                            <i t-if="action.is_deletable" class="o_icon_right btn btn-link text-danger p-0 position-absolute end-0 fa fa-trash-o" title="Delete item" t-on-click.stop="() => this.props.state.openConfirmationDialog(action)" />
+                            <i t-if="action.is_deletable" class="oi o_icon_right btn btn-link text-danger p-0 position-absolute end-0" data-icon="delete" title="Delete item" t-on-click.stop="() => this.props.state.openConfirmationDialog(action)" />
                         </div>
                     </DropdownItem>
                 </t>

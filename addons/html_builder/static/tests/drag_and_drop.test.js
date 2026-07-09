@@ -25,7 +25,7 @@ test("Drag and drop basic test", async () => {
 
     await contains(":iframe section.section-1").click();
     expect(".overlay .o_overlay_options .o_move_handle.o_draggable").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     const { moveTo, drop } = await contains(".o_overlay_options .o_move_handle").drag();
     expect(":iframe .oe_drop_zone").toHaveCount(2);
@@ -40,7 +40,7 @@ test("Drag and drop basic test", async () => {
     expect(":iframe .oe_drop_zone").toHaveCount(0);
     expect(":iframe section.section-1:nth-child(2)").toHaveCount(1);
     await waitForEndOfOperation();
-    expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").toBeEnabled();
 });
 
 test("Can drop a snippet outside a dropzone in a rtl language", async () => {

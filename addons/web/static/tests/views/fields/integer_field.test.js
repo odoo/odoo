@@ -107,11 +107,11 @@ test("no need to focus out of the input to save the record after correcting an i
     expect(".o_field_widget input").toHaveValue("10");
     await fieldInput("price").edit("a");
     expect(".o_field_widget input").toHaveValue("a");
-    expect(".o_form_status_indicator span i.fa-warning").toHaveCount(1);
+    expect(".o_form_status_indicator span i[data-icon='warning']").toHaveCount(1);
     expect(".o_form_button_save[disabled]").toHaveCount(1);
     await fieldInput("price").edit("1");
     expect(".o_field_widget input").toHaveValue("1");
-    expect(".o_form_status_indicator span i.fa-warning").toHaveCount(0);
+    expect(".o_form_status_indicator span i[data-icon='warning']").toHaveCount(0);
     expect(".o_form_button_save[disabled]").toHaveCount(0);
     await clickSave(); // makes sure there is an enabled save button
 });

@@ -28,7 +28,7 @@ test("in form view", async () => {
     });
     expect(`.o_field_email input[type="email"]`).toHaveCount(1);
     expect(`.o_field_email input[type="email"]`).toHaveValue("john.doe@odoo.com");
-    expect(`.o_field_email a i.fa-envelope`).toHaveCount(1);
+    expect(`.o_field_email a i[data-icon="mail"].oi-filled`).toHaveCount(1);
     expect(`.o_field_email a`).toHaveAttribute("href", "mailto:john.doe@odoo.com");
     await fieldInput("email").edit("new@odoo.com");
     expect(`.o_field_email input[type="email"]`).toHaveValue("new@odoo.com");

@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "edit Second review",
         },
         {
-            trigger: ".modal.modal_shown .modal-body i.fa.fa-star:eq(2)",
+            trigger: ".modal.modal_shown .modal-body i[data-icon='star'].oi-filled:eq(2)",
             run: "click",
         },
         {
@@ -110,7 +110,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "edit Second review is edited in rating composer",
         },
         {
-            trigger: ".modal.modal_shown .modal-body i.fa.fa-star:eq(1)",
+            trigger: ".modal.modal_shown .modal-body i[data-icon='star'].oi-filled:eq(1)",
             run: "click",
         },
         {

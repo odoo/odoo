@@ -128,7 +128,7 @@ test("button clipboard copy error traceback", async () => {
     });
     await click("main summary");
     await animationFrame();
-    await click(".fa-clipboard");
+    await click("[data-icon='assignment']");
     await tick();
 });
 
@@ -152,7 +152,7 @@ test("Display a tooltip on clicking copy button", async () => {
     });
     await click("main summary");
     await animationFrame();
-    await click(".fa-clipboard");
+    await click("[data-icon='assignment']");
 });
 
 test("WarningDialog", async () => {

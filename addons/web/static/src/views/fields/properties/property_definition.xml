@@ -102,7 +102,7 @@
                             className="'d-inline-block me-2'"
                         />
                         <div t-if="this.state.matchingRecordsCount !== undefined" class="d-inline-block">
-                            <i class="oi oi-arrow-right" role="img" title="Domain"/>
+                            <i class="oi" data-icon="east" role="img" title="Domain"/>
                             <button class="btn btn-sm btn-secondary" type="button"
                                 t-on-click.stop="this.onButtonDomainClick">
                                 <t t-out="this.state.matchingRecordsCount"/> record(s)
@@ -199,7 +199,7 @@
                     class="ms-auto btn btn-danger o_field_property_definition_delete"
                     title="Remove Property"
                     t-on-click="this.props.onDelete">
-                    <i class="fa fa-trash"/> Delete
+                    <i class="oi oi-filled" data-icon="delete"/> Delete
                 </button>
             </div>
         </div>

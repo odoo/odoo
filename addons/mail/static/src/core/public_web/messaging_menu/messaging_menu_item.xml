@@ -31,7 +31,7 @@
                             t-att-title="this.actionsButtonTitle"
                             t-on-click.stop="() => this.actionsDropdownState.isOpen ? this.actionsDropdownState.close() : this.actionsDropdownState.open()"
                         >
-                            <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
+                            <i role="img" class="oi oi-fw oi-lg" data-icon="more_horiz"/>
                         </button>
                         <t t-set-slot="content">
                             <t t-set="partitionedActions" t-value="this.actionsPartition"/>

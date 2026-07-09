@@ -53,7 +53,7 @@ test("render only its target on non-touch devices", async () => {
         static components = { ActionSwiper };
         static template = xml`
                 <div class="d-flex">
-                    <ActionSwiper onLeftSwipe="{action: () => {}, icon: 'fa-circle', bgColor: 'bg-warning'}">
+                    <ActionSwiper onLeftSwipe="{action: () => {}, icon: 'circle', icon_class: 'oi-filled', bgColor: 'bg-warning'}">
                         <div class="target-component"/>
                     </ActionSwiper>
                 </div>
@@ -69,7 +69,8 @@ test("only render the necessary divs", async () => {
         props: {
             onRightSwipe: {
                 action: () => {},
-                icon: "fa-circle",
+                icon: "circle",
+                icon_class: "oi-filled",
                 bgColor: "bg-warning",
             },
             slots: {},
@@ -81,7 +82,8 @@ test("only render the necessary divs", async () => {
         props: {
             onLeftSwipe: {
                 action: () => {},
-                icon: "fa-circle",
+                icon: "circle",
+                icon_class: "oi-filled",
                 bgColor: "bg-warning",
             },
             slots: {},
@@ -99,7 +101,8 @@ test("render with the height of its content", async () => {
                 <div class="o-container d-flex" style="width: 200px; height: 200px; overflow: auto">
                     <ActionSwiper onRightSwipe = "{
                         action: () => this.onRightSwipe(),
-                        icon: 'fa-circle',
+                        icon: 'circle',
+                        icon_class: 'oi-filled',
                         bgColor: 'bg-warning'
                     }">
                         <div class="target-component" style="height: 800px">This element is very high and
@@ -130,7 +133,8 @@ test("can perform actions by swiping to the right", async () => {
             <div class="d-flex">
                 <ActionSwiper onRightSwipe = "{
                     action: () => this.onRightSwipe(),
-                    icon: 'fa-circle',
+                    icon: 'circle',
+                    icon_class: 'oi-filled',
                     bgColor: 'bg-warning'
                 }">
                     <div class="target-component" style="width: 200px; height: 80px">Test</div>
@@ -192,12 +196,12 @@ test("can perform actions by swiping in both directions", async () => {
                         <ActionSwiper
                             onRightSwipe = "{
                                 action: () => this.onRightSwipe(),
-                                icon: 'fa-circle',
+                                icon_class: 'oi-filled',
                                 bgColor: 'bg-warning'
                             }"
                             onLeftSwipe = "{
                                 action: () => this.onLeftSwipe(),
-                                icon: 'fa-check',
+                                icon: 'check',
                                 bgColor: 'bg-success'
                             }">
                                 <div class="target-component" style="width: 250px; height: 80px">Swipe in both directions</div>
@@ -270,12 +274,13 @@ test("invert the direction of swipes when language is rtl", async () => {
                         <ActionSwiper
                             onRightSwipe = "{
                                 action: () => this.onRightSwipe(),
-                                icon: 'fa-circle',
+                                icon: 'circle',
+                                icon_class: 'oi-filled',
                                 bgColor: 'bg-warning'
                             }"
                             onLeftSwipe = "{
                                 action: () => this.onLeftSwipe(),
-                                icon: 'fa-check',
+                                icon: 'check',
                                 bgColor: 'bg-success'
                             }">
                                 <div class="target-component" style="width: 250px; height: 80px">Swipe in both directions</div>
@@ -310,12 +315,12 @@ test("swiping when the swiper contains scrollable areas", async () => {
                 <ActionSwiper
                     onRightSwipe = "{
                         action: () => this.onRightSwipe(),
-                        icon: 'fa-circle',
+                        icon_class: 'oi-filled',
                         bgColor: 'bg-warning'
                     }"
                     onLeftSwipe = "{
                         action: () => this.onLeftSwipe(),
-                        icon: 'fa-check',
+                        icon: 'check',
                         bgColor: 'bg-success'
                     }">
                         <div class="target-component" style="width: 200px; height: 300px">
@@ -478,12 +483,12 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
                 <ActionSwiper
                     onRightSwipe="{
                         action: () => this.onRightSwipe(),
-                        icon: 'fa-circle',
+                        icon_class: 'oi-filled',
                         bgColor: 'bg-warning'
                     }"
                     onLeftSwipe="{
                         action: () => this.onLeftSwipe(),
-                        icon: 'fa-check',
+                        icon: 'check',
                         bgColor: 'bg-success'
                     }">
                         <div class="target-component" style="width: 200px; height: 300px">
@@ -625,7 +630,7 @@ test("an async action is awaited before being executed", async () => {
                 <div class="d-flex">
                    <ActionSwiper animationType="'forwards'" onRightSwipe = "{
                        action: () => this.onRightSwipe(),
-                       icon: 'fa-circle',
+                       icon_class: 'oi-filled',
                        bgColor: 'bg-warning',
                    }">
                        <span>test</span>

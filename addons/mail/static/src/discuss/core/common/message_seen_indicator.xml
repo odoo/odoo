@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.MessageSeenIndicator">
         <span t-if="this.props.message.channel_id?.exists()" class="o-mail-MessageSeenIndicator position-relative opacity-25 cursor-pointer" t-att-class="{ 'o-hasEveryoneSeen opacity-75': this.props.message.hasEveryoneSeen }" t-att-title="this.summary" t-attf-class="{{ this.props.className }}" t-on-click="this.openDialog">
-            <i class="fa fa-check ps-1"/><i t-if="this.props.message.hasEveryoneSeen" class="o-second start-0 fa fa-check position-absolute"/>
+            <i class="oi ps-1" data-icon="check"/><i t-if="this.props.message.hasEveryoneSeen" class="o-second start-0 position-absolute oi" data-icon="check"/>
         </span>
     </t>
 

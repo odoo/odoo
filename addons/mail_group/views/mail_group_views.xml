@@ -69,15 +69,17 @@
                                 type="action"
                                 context="{'search_default_mail_group_id': id}"
                                 class="oe_stat_button"
-                                icon="fa-users"
+                                icon="group"
+                                icon_class="oi-filled"
                                 help="Members of this group">
                             <field name="member_count" widget="statinfo" string="Members"/>
                         </button>
-                       <button name="%(mail_group.mail_group_message_action)d"
+                        <button name="%(mail_group.mail_group_message_action)d"
                                 type="action"
                                 context="{'search_default_mail_group_id': id}"
                                 class="oe_stat_button"
-                                icon="fa-envelope"
+                                icon="mail"
+                                icon_class="oi-filled"
                                 help="All messages of this group">
                             <field name="mail_group_message_count" widget="statinfo" string="Emails"/>
                         </button>
@@ -85,7 +87,7 @@
                                 type="action"
                                 context="{'search_default_mail_group_id': id, 'search_default_moderation_status': 'pending_moderation'}"
                                 class="oe_stat_button"
-                                icon="fa-commenting-o"
+                                icon="mode_comment"
                                 help="Emails waiting an action for this group"
                                 invisible="not (moderation and mail_group_message_moderation_count != 0)">
                             <field name="mail_group_message_moderation_count" widget="statinfo" string="To Review"/>
@@ -95,7 +97,7 @@
                                 context="{'search_default_mail_group_id': id}"
                                 invisible="not (moderation and moderation_rule_count != 0)"
                                 class="oe_stat_button"
-                                icon="fa-gavel"
+                                icon="gavel"
                                 help="Moderated emails in this group">
                             <field name="moderation_rule_count" widget="statinfo" string="Moderations"/>
                         </button>
@@ -125,7 +127,7 @@
                                                 class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
                                         </div>
                                     </div>
-                                    <button icon="oi-arrow-right" type="action" name="%(base_setup.action_general_configuration)d"
+                                    <button icon="east" type="action" name="%(base_setup.action_general_configuration)d"
                                             string="Choose or configure a custom domain" class="p-0 btn-link"
                                             invisible="alias_domain_id"/>
                                 </div>

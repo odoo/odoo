@@ -28,8 +28,8 @@ test("PasswordField: readonly in form view", async () => {
     });
 
     expect(".o_field_password input[type=password].o_disabled").toHaveCount(1);
-    await contains(".o_field_password button.fa-eye").click();
-    expect(".o_field_password button.fa-eye-slash").toHaveCount(1);
+    await contains(".o_field_password button[data-icon='visibility']").click();
+    expect(".o_field_password button[data-icon='visibility_off']").toHaveCount(1);
     expect(".o_field_password input").toHaveCount(0);
     expect(".o_field_password span").toHaveText("secret");
 });
@@ -51,7 +51,7 @@ test("PasswordField: edition in form view", async () => {
     await clickSave();
 
     // reveal and edit
-    await contains(".o_field_password button.fa-eye").click();
+    await contains(".o_field_password button[data-icon='visibility']").click();
     expect(".o_field_password input[type=text]").toHaveValue("newsecret1");
     await contains(".o_field_password input").edit("newsecret2");
     await clickSave();
@@ -67,8 +67,8 @@ test("PasswordField in non-editable list view", async () => {
     });
 
     expect(".o_field_password input[type=password].o_disabled").toHaveCount(1);
-    await contains(".o_field_password button.fa-eye").click();
-    expect(".o_field_password button.fa-eye-slash").toHaveCount(1);
+    await contains(".o_field_password button[data-icon='visibility']").click();
+    expect(".o_field_password button[data-icon='visibility_off']").toHaveCount(1);
     expect(".o_field_password input").toHaveCount(0);
     expect(".o_field_password span").toHaveText("secret");
 });
@@ -86,7 +86,7 @@ test("PasswordField: edition in editable list view", async () => {
     expect(".o_field_password input[type=password].o_disabled").toHaveCount(1);
     await contains(".o_data_row td.o_data_cell").click();
     expect(".o_field_password input[type=password]:not([disabled])").toHaveCount(1);
-    await contains(".o_field_password button.fa-eye").click();
+    await contains(".o_field_password button[data-icon='visibility']").click();
     expect(".o_field_password input[type=text]").toHaveValue("secret");
     await contains(".o_field_password input").edit("newsecret");
 
@@ -111,8 +111,8 @@ test("PasswordField on readonly text field in form view", async () => {
     });
 
     expect(".o_field_password input[type=password].o_disabled").toHaveCount(1);
-    await contains(".o_field_password button.fa-eye").click();
-    expect(".o_field_password button.fa-eye-slash").toHaveCount(1);
+    await contains(".o_field_password button[data-icon='visibility']").click();
+    expect(".o_field_password button[data-icon='visibility_off']").toHaveCount(1);
     expect(".o_field_password input").toHaveCount(0);
     expect(".o_field_password span").toHaveText("my long bio");
 });
@@ -129,7 +129,7 @@ test("PasswordField on text field: edition in form view", async () => {
     });
 
     expect(".o_field_password input[type=password]").toHaveCount(1);
-    await contains(".o_field_password button.fa-eye").click();
+    await contains(".o_field_password button[data-icon='visibility']").click();
     expect(".o_field_password input[type=text]").toHaveValue("my long bio");
     await contains(".o_field_password input").edit("updated bio");
     await clickSave();

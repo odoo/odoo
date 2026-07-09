@@ -23,12 +23,12 @@
                 <button type="button" class="btn btn-secondary o_pager_previous px-2 rounded-start" aria-label="Previous" tabindex="-1"
                     data-tooltip="Previous" t-att-data-hotkey="this.props.withAccessKey ? 'p' : false" data-available-offline=""
                     t-att-disabled="this.state.isDisabled or this.isSinglePage"  t-on-click.stop="() => this.navigate(-1)">
-                    <i class="oi oi-chevron-left"/>
+                    <i class="oi" data-icon="arrow_back_ios_new"/>
                 </button>
                 <button type="button" class="btn btn-secondary o_pager_next px-2 rounded-end" aria-label="Next" tabindex="-1"
                     data-tooltip="Next" t-att-data-hotkey="this.props.withAccessKey ? 'n' : false" data-available-offline=""
                     t-att-disabled="this.state.isDisabled or this.isSinglePage" t-on-click.stop="() => this.navigate(1)">
-                    <i class="oi oi-chevron-right"/>
+                    <i class="oi" data-icon="arrow_forward_ios"/>
                 </button>
             </span>
         </nav>

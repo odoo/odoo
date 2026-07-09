@@ -41,14 +41,14 @@ export class CallDebriefMediaControls extends Component {
         return this.formatDuration(this.props.totalDuration);
     }
 
-    get volumeIconClass() {
+    get volumeIcon() {
         if (this.props.isMuted || this.props.volume === 0) {
-            return "fa-volume-off";
+            return "volume_off";
         }
         if (this.props.volume < 0.5) {
-            return "fa-volume-down";
+            return "volume_down";
         }
-        return "fa-volume-up";
+        return "volume_up";
     }
 
     get playPauseTooltip() {

@@ -8,7 +8,8 @@
                   menuClass="'p-0'"
                   state="this.dropdown">
             <button>
-                <i class="fa fa-circle"
+                <i class="oi oi-filled"
+                   data-icon="circle"
                    t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
                    role="img"
                    aria-label="Attendance"/>
@@ -77,7 +78,7 @@
                                 t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'primary' }} w-100">
                             <span t-if="!this.state.checkedIn">Check in</span>
                             <span t-else="">Check out</span>
-                            <i t-attf-class="fa fa-sign-{{ this.state.checkedIn ? 'out' : 'in' }} ms-1"/>
+                            <i class="oi ms-1" t-attf-data-icon="{{ this.state.checkedIn ? 'logout' : 'login' }}"/>
                         </button>
                     </div>
                 </div>

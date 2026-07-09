@@ -11,7 +11,7 @@
                 <tr t-foreach="items" t-as="item" t-key="item.fabricatedKey" t-att-data-id="item.id">
                     <td>
                         <button class="btn o_drag_handle">
-                            <i class="oi oi-draggable"/>
+                            <i class="oi" data-icon="drag_indicator"/>
                         </button>
                     </td>
                     <td width="100%">
@@ -25,7 +25,8 @@
                     </td>
                     <td style="'min-width: 2.5em'">
                         <BuilderButton
-                            className="`fa fa-fw fa-minus text-danger bg-transparent border-0 ${itemsLength === 1 ? 'disabled': ''}`"
+                            icon="'remove'"
+                            className="`oi-fw text-danger bg-transparent border-0 ${itemsLength === 1 ? 'disabled': ''}`"
                             title.translate="Remove link"
                             action="'deleteSocialMediaLink'"
                             applyTo="`a:nth-of-type(${item.domPosition})`"

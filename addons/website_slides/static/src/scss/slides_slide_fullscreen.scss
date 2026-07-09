@@ -100,7 +100,7 @@
                 i {
                     line-height: unset;
 
-                    &.fa-flag-checkered {
+                    &[data-icon="sports_score"] {
                         padding-left: 3px;
                         padding-right: 7px;
                     }
@@ -127,7 +127,7 @@
 
     .o_wslides_js_lesson_quiz_question {
         .list-group-item  {
-            input:checked + i.fa-circle {
+            input:checked + i[data-icon="circle"] {
                 color: $primary !important;
             }
         }

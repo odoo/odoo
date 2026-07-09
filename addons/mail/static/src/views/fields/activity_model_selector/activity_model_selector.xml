@@ -2,7 +2,7 @@
     <div t-name="mail.ActivityModelSelector" class="o_field_widget o_field_many2one flex-row">
         <t t-if="this.state.resModelName">
             <span t-out="this.state.resModelName" class="text-truncate"/>
-            <button t-on-click="() => this.onRecordReset()" class="btn fa fa-close"/>
+            <button t-on-click="() => this.onRecordReset()" class="btn oi" data-icon="close"/>
         </t>
         <t t-else="">
             <div class="o_input_dropdown">

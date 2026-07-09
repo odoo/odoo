@@ -163,7 +163,7 @@ const StorePatch = {
                 buttons: [
                     {
                         name: _t("Undo"),
-                        icon: "fa-undo",
+                        icon: "undo",
                         onClick: () => {
                             orm.silent.call("mail.message", "mark_as_unread", [readMessageIds]);
                             close();

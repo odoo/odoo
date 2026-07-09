@@ -27,7 +27,7 @@ class ResPartner(models.Model):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             return data_list
         for partner in self.filtered('pos_order_count'):
-            stat_info = {'iconClass': 'fa-shopping-bag', 'value': partner.pos_order_count, 'label': _('Shopping cart')}
+            stat_info = {'icon': 'shopping_bag', 'value': partner.pos_order_count, 'label': _('Shopping cart')}
             data_list[partner.id].append(stat_info)
         return data_list
 

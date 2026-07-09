@@ -20,7 +20,7 @@ export class ImageCropPlugin extends Plugin {
                 id: "cropImage",
                 run: this.openCropImage.bind(this),
                 description: _t("Crop image"),
-                icon: "fa-crop",
+                icon: "crop",
                 isAvailable: isHtmlContentSupported,
             },
         ],

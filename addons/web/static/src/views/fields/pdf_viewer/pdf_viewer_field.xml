@@ -11,19 +11,22 @@
                     >
                         <t t-set-slot="toggler">
                             <button
-                                class="btn btn-secondary fa fa-pencil o_select_file_button"
+                                class="btn btn-secondary oi oi-filled o_select_file_button"
+                                data-icon="edit"
                                 data-tooltip="Edit"
                                 aria-label="Edit"
                             />
                         </t>
                             <button
-                                class="btn btn-secondary fa fa-download"
+                                class="btn btn-secondary oi"
+                                data-icon="download"
                                 data-tooltip="Download"
                                 aria-label="Download"
                                 t-on-click="this.onFileDownload"
                             />
                         <button
-                            class="btn btn-secondary fa fa-trash o_clear_file_button"
+                            class="btn btn-secondary oi oi-filled o_clear_file_button"
+                            data-icon="edit"
                             data-tooltip="Clear"
                             aria-label="Clear"
                             t-on-click="this.onFileRemove"

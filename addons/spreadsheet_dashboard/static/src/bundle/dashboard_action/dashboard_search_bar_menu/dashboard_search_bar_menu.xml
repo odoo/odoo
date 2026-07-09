@@ -14,7 +14,7 @@
                 <t t-set="sharedFavoritesItems" t-value="this.sharedFavorites" />
                 <t t-set="favoriteItems" t-value="this.favorites" />
                 <div class="px-3 fs-5 mb-2">
-                    <i class="me-2 text-favourite" t-att-class="this.facet_icons.favorite"/>
+                    <i class="oi oi-filled me-2 text-favourite" t-att-data-icon="this.facet_icons.favorite"/>
                     <h5 class="o_dropdown_title d-inline">Favorites</h5>
                 </div>
                 <t t-foreach="favoriteItems" t-as="item" t-key="item.id">

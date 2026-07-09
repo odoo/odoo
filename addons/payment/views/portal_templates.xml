@@ -217,7 +217,7 @@
                         <div class="row">
                             <div class="col offset-md-3 ps-0">
                                 <a role="button" class="btn btn-primary float-end" href="/my/home">
-                                    Go to my Account <i class="oi oi-arrow-right ms-2"/>
+                                    Go to my Account <i class="oi ms-2" data-icon="east"/>
                                 </a>
                             </div>
                         </div>
@@ -238,7 +238,7 @@
                 <ol class="breadcrumb px-0 mt16">
                     <li id="o_payment_portal_home" class="breadcrumb-item">
                         <a href="/my/home">
-                            <i class="fa fa-home"
+                            <i class="oi" data-icon="home"
                                role="img"
                                title="Home"
                                aria-label="Home"/>
@@ -281,19 +281,20 @@
         <t t-set="status_message" t-value="tx._get_status_message()"/>
         <t t-if="tx.state == 'draft'">
             <t t-set="alert_style" t-value="'warning'"/>
-            <t t-set="alert_icon" t-value="'fa-exclamation-triangle'"/>
+            <t t-set="alert_icon" t-value="'warning'"/>
         </t>
         <t t-elif="tx.state == 'pending'">
             <t t-set="alert_style" t-value="'info'"/>
-            <t t-set="alert_icon" t-value="'fa-info-circle'"/>
+            <t t-set="alert_icon" t-value="'info'"/>
+            <t t-set="alert_icon_class" t-value="'oi-filled'"/>
         </t>
         <t t-elif="tx.state == 'authorized' or tx.state == 'done'">
             <t t-set="alert_style" t-value="'success'"/>
-            <t t-set="alert_icon" t-value="'fa-check'"/>
+            <t t-set="alert_icon" t-value="'check'"/>
         </t>
         <t t-elif="tx.state == 'cancel' or tx.state == 'error'">
             <t t-set="alert_style" t-value="'danger'"/>
-            <t t-set="alert_icon" t-value="'fa-exclamation-triangle'"/>
+            <t t-set="alert_icon" t-value="'warning'"/>
         </t>
 
         <t
@@ -306,7 +307,7 @@
             t-attf-class="{{o_payment_status_alert_class}}"
         >
             <div id="o_payment_status_icon">
-                <i t-attf-class="fa {{alert_icon}}"/>
+                <i t-attf-class="oi {{alert_icon_class}}" t-att-data-icon="alert_icon"/>
             </div>
             <div id="o_payment_status_message" class="w-100">
                 <t t-out="status_message"/>

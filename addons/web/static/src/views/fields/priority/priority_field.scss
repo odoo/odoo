@@ -2,11 +2,12 @@
     gap: 0.5em;
     > .o_priority_star {
         font-size: 1.25em !important;
-        &.fa-star-o {
+        &[data-icon="star"] {
             color: $o-main-color-muted;
-        }
-        &.fa-star {
-            color: $o-main-favorite-color;
+
+            &.oi-filled {
+                color: $o-main-favorite-color;
+            }
         }
     }
 }

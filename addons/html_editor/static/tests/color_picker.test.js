@@ -26,7 +26,7 @@ test("basic rendering", async () => {
     });
     expect(".o_font_color_selector").toHaveCount(1);
     expect(".o_font_color_selector .btn-tab").toHaveCount(2);
-    expect(".o_font_color_selector .btn.fa-trash").toHaveCount(1);
+    expect(".o_font_color_selector .btn[data-icon='delete'].oi-filled").toHaveCount(1);
     expect(".o_font_color_selector .o_colorpicker_section").toHaveCount(1);
     expect(".o_font_color_selector .o_colorpicker_section .o_color_button").toHaveCount(5);
     expect(".o_font_color_selector .o_color_section .o_color_button[data-color]").toHaveCount(

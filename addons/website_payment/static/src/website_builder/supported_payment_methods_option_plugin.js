@@ -23,7 +23,8 @@ export class SupportedPaymentMethodsOptionPlugin extends Plugin {
             return [];
         }
         return [{
-            class: 'fa fa-fw fa-rotate-right btn btn-outline-info',
+            class: 'btn btn-outline-info oi oi-fw',
+            icon: 'redo',
             title: _t("Reload the payment methods"),
             // Force the interaction to call the server again in case the user made backend changes.
             handler: () => this.dependencies.edit_interaction.restartInteractions(editingElement),

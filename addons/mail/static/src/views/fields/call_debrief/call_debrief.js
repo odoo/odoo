@@ -425,7 +425,7 @@ export class CallDebrief extends Component {
         }
         this.state.isPlaying = false;
         if (feedback !== false) {
-            this.showVideoFeedback(typeof feedback === "string" ? feedback : undefined, "fa-pause");
+            this.showVideoFeedback(typeof feedback === "string" ? feedback : undefined, "pause");
         }
     }
 
@@ -549,7 +549,7 @@ export class CallDebrief extends Component {
                 this.showVideoFeedback(_t("Playback Error"));
             });
             this.state.isPlaying = true;
-            this.showVideoFeedback(undefined, "fa-play");
+            this.showVideoFeedback(undefined, "play_arrow");
         }
     }
 
@@ -559,7 +559,7 @@ export class CallDebrief extends Component {
             Math.min(this.callDurationSeconds, this.state.currentTime + delta)
         );
         this.setPlaybackTime({ timestamp: newTime });
-        const direction = delta > 0 ? "fa-forward" : "fa-backward";
+        const direction = delta > 0 ? "fast_forward" : "fast_rewind";
         this.showVideoFeedback(undefined, direction);
     }
 
@@ -592,7 +592,7 @@ export class CallDebrief extends Component {
         if (!this.state.isMuted && this.state.volume === 0) {
             this.state.volume = 0.5;
         }
-        this.showVideoFeedback(undefined, this.state.isMuted ? "fa-volume-off" : "fa-volume-up");
+        this.showVideoFeedback(undefined, this.state.isMuted ? "volume_off" : "volume_up");
     }
 
     toggleFullscreen() {

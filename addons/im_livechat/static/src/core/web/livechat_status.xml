@@ -9,8 +9,9 @@
         }">
             <i
                  t-if="btn.icon"
-                 class="o-livechat-LivechatStatusLabel-icon"
-                 t-attf-class="{{ btn.icon }}"
+                 class="o-livechat-LivechatStatusLabel-icon oi"
+                 t-att-class="btn.iconClass"
+                 t-att-data-icon="btn.icon"
             />
         </span>
     </t>
@@ -26,8 +27,9 @@
             'o-help': livechatThread.channel.livechat_status === 'need_help',
         }">
             <t t-set="livechatStatusButton" t-value="this.store.livechatStatusButtons.find(btn => btn.status === livechatThread.channel.livechat_status)"/>
-            <i class="o-livechat-LivechatStatusLabel-icon fa-fw" t-attf-class="{{ livechatThread.channel.livechat_end_dt ? ('fa fa-flag-checkered' + (small ? ' o-xsmaller' : '')) : small ? livechatStatusButton?.iconSmall : livechatStatusButton?.icon }}" t-att-class="{
+            <i class="o-livechat-LivechatStatusLabel-icon oi oi-fw" t-att-data-icon="livechatThread.channel.livechat_end_dt ? 'sports_score' : (small ? livechatStatusButton?.iconSmall : livechatStatusButton?.icon)" t-att-class="{
                 'o-white': livechatThread.channel.livechat_end_dt,
+                'o-xsmaller': livechatThread.channel.livechat_end_dt and small,
             }"/>
         </span>
     </t>

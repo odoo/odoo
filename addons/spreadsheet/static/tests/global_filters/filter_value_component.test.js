@@ -260,7 +260,7 @@ test("Filter with showClear should display the clear icon", async function () {
         filter: model.getters.getGlobalFilter("42"),
         showClear: true,
     });
-    expect(".fa-times").toHaveCount(1);
+    expect("[data-icon='close_small']").toHaveCount(1);
 });
 
 test("Filter without showClear should not display the clear icon", async function () {
@@ -279,7 +279,7 @@ test("Filter without showClear should not display the clear icon", async functio
         model,
         filter: model.getters.getGlobalFilter("42"),
     });
-    expect(".fa-times").toHaveCount(0);
+    expect("[data-icon='close']").toHaveCount(0);
 });
 
 test("relational filter with a contextual domain", async function () {

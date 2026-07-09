@@ -56,15 +56,10 @@
     <BuilderRow label.translate="Text Position" applyTo="':scope > .row'">
         <!-- Don't use the standard Vert. Alignement option to not suggest
             Equal Height, which is useless for this snippet. -->
-        <BuilderButtonGroup t-if="this.isActiveItem('media_left_opt')">
-            <BuilderButton title.translate="Align Top" classAction="'align-items-start'" iconImg="'/website/static/src/img/snippets_options/align_top_right.svg'"/>
-            <BuilderButton title.translate="Align Middle" classAction="'align-items-center'" iconImg="'/website/static/src/img/snippets_options/align_middle_right.svg'"/>
-            <BuilderButton title.translate="Align Bottom" classAction="'align-items-end'" iconImg="'/website/static/src/img/snippets_options/align_bottom_right.svg'"/>
-        </BuilderButtonGroup>
-        <BuilderButtonGroup t-if="!this.isActiveItem('media_left_opt')">
-            <BuilderButton title.translate="Align Top" classAction="'align-items-start'" iconImg="'/html_builder/static/img/snippets_options/align_top.svg'"/>
-            <BuilderButton title.translate="Align Middle" classAction="'align-items-center'" iconImg="'/html_builder/static/img/snippets_options/align_middle.svg'"/>
-            <BuilderButton title.translate="Align Bottom" classAction="'align-items-end'" iconImg="'/html_builder/static/img/snippets_options/align_bottom.svg'"/>
+        <BuilderButtonGroup>
+            <BuilderButton title.translate="Align Top" classAction="'align-items-start'" icon="'vertical_align_top'"/>
+            <BuilderButton title.translate="Align Middle" classAction="'align-items-center'" icon="'vertical_align_center'"/>
+            <BuilderButton title.translate="Align Bottom" classAction="'align-items-end'" icon="'vertical_align_bottom'"/>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>

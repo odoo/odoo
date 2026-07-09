@@ -123,10 +123,10 @@ describe("Popup options: popup in page before edit", () => {
 
     test("closing s_popup with the X button updates the invisible elements panel", async () => {
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
-            contains(".o_we_invisible_entry .fa-eye-slash").click()
+            contains(".o_we_invisible_entry [data-icon='visibility_off']").click()
         );
         await waitFor(":iframe .s_popup .modal", { visible: true });
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
         expect(":iframe .s_popup .modal").toBeVisible();
         expect(":iframe .s_popup").not.toHaveClass("d-none");
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
@@ -134,7 +134,7 @@ describe("Popup options: popup in page before edit", () => {
         );
         expect(":iframe .s_popup .modal").not.toBeVisible();
         expect(":iframe .s_popup").toHaveClass("d-none");
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility_off");
         // Ensure that no mutations were registered in the `domObserver` plugin.
         // `commit` returns the written commit, or `false` if there were no mutations.
         expect(builder.getEditor().shared.history.commit()).toBe(false);
@@ -143,31 +143,31 @@ describe("Popup options: popup in page before edit", () => {
     test("editing s_popup, then closing it, then undo show it again", async () => {
         const editor = builder.getEditor();
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
-            contains(".o_we_invisible_entry .fa-eye-slash").click()
+            contains(".o_we_invisible_entry [data-icon='visibility_off']").click()
         );
         await waitFor(":iframe .s_popup .modal", { visible: true });
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
         expect(":iframe .s_popup .modal").toBeVisible();
         setSelection({ anchorNode: queryOne(":iframe .s_popup section p"), anchorOffset: 0 });
         await insertText(editor, "Other content");
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
             contains(":iframe .s_popup button.js_close_popup").click()
         );
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility_off");
         expect(":iframe .s_popup .modal").not.toBeVisible();
         expect(editor.shared.history.canUndo()).toBe(true);
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () => undo(editor));
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
         expect(":iframe .s_popup .modal").toBeVisible();
     });
 
     test("changing background color of s_popup, then closing it, then undo, then redo keep it visible", async () => {
         const editor = builder.getEditor();
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
-            contains(".o_we_invisible_entry .fa-eye-slash").click()
+            contains(".o_we_invisible_entry [data-icon='visibility_off']").click()
         );
         await waitFor(":iframe .s_popup .modal", { visible: true });
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
         expect(":iframe .s_popup .modal").toBeVisible();
         await contains("[data-label=Backdrop] button.o_we_color_preview").click();
         await contains("button.o_color_button[data-color='#FF0000']").click();
@@ -178,11 +178,11 @@ describe("Popup options: popup in page before edit", () => {
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
             contains(":iframe .s_popup button.js_close_popup").click()
         );
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility_off");
         expect(":iframe .s_popup .modal").not.toBeVisible();
         expect(editor.shared.history.canUndo()).toBe(true);
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () => undo(editor));
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
         expect(":iframe .s_popup .modal").toBeVisible();
         redo(editor);
         expect(":iframe .s_popup .modal").toHaveStyle({
@@ -197,26 +197,28 @@ describe("Popup options: popup in page before edit", () => {
         await contains(":iframe .s_cover").click();
         await contains("button:contains(Grid)").click(); // arbitrary thing to undo
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
-            contains(".o_we_invisible_entry .fa-eye-slash").click()
+            contains(".o_we_invisible_entry [data-icon='visibility_off']").click()
         );
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
             undo(builder.getEditor())
         );
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility_off");
     });
 
     test("emptied s_popup are removed and the options are updated correctly", async () => {
         const editor = builder.getEditor();
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
-            contains(".o_we_invisible_entry .fa-eye-slash").click()
+            contains(".o_we_invisible_entry [data-icon='visibility_off']").click()
         );
         await waitFor(":iframe .s_popup .modal", { visible: true });
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
         expect(":iframe .s_popup .modal").toBeVisible();
 
         await contains(":iframe section p:contains('Popup content')").click();
-        await contains("div[data-container-title='Block'] button.fa-trash").click();
+        await contains(
+            "div[data-container-title='Block'] button[data-icon='delete'].oi-filled"
+        ).click();
         expect(":iframe .s_popup").toHaveCount(0);
         expect("div[data-container-title='Block']").toHaveCount(0);
 
@@ -240,9 +242,9 @@ describe("Popup options: popup in page before edit", () => {
         expect(":iframe .s_popup").toHaveCount(1);
         expect("div[data-container-title='Block']").toHaveCount(1);
 
-        contains(".o_we_invisible_entry .fa-eye").click();
+        contains(".o_we_invisible_entry [data-icon='visibility']").click();
         await animationFrame();
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility_off");
 
         expect(editor.shared.history.canRedo()).toBe(true);
         redo(editor);
@@ -255,7 +257,7 @@ describe("Popup options: popup in page before edit", () => {
         await animationFrame();
         expect(":iframe .s_popup").toHaveCount(1);
         expect("div[data-container-title='Block']").toHaveCount(1);
-        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
     });
 });
 
@@ -267,30 +269,30 @@ describe("Popup visibility", () => {
             enableIframeTransitions: true,
         });
 
-        await contains(".o_we_invisible_entry i.fa-eye").click();
-        await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+        await contains(".o_we_invisible_entry i[data-icon='visibility']").click();
+        await contains(".o_we_invisible_entry i[data-icon='visibility_off']").click();
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
-            contains(".o_we_invisible_entry i.fa-eye").click()
+            contains(".o_we_invisible_entry i[data-icon='visibility']").click()
         );
         expect(":iframe body").not.toHaveClass("modal-open");
-        expect(".o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+        expect(".o_we_invisible_entry i").toHaveAttribute("data-icon", "visibility_off");
         expect(":iframe .s_popup").toHaveClass("d-none");
         expect(":iframe .s_popup").toHaveAttribute("data-invisible", "1");
         expect(":iframe .s_popup > .modal").toHaveStyle("display: none");
         expect(":iframe .s_popup > .modal").not.toHaveClass("show");
 
-        await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+        await contains(".o_we_invisible_entry i[data-icon='visibility_off']").click();
         await waitFor(":iframe .s_popup:not(.d-none)");
 
-        await contains(".o_we_invisible_entry i.fa-eye").click();
+        await contains(".o_we_invisible_entry i[data-icon='visibility']").click();
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
-            contains(".o_we_invisible_entry i.fa-eye-slash").click()
+            contains(".o_we_invisible_entry i[data-icon='visibility_off']").click()
         );
         // Wait for everything to settle, without the delay, we may not catch a
         // potential inconsistency.
         await delay(100);
         expect(":iframe body").toHaveClass("modal-open");
-        expect(".o_we_invisible_entry i").toHaveClass("fa-eye");
+        expect(".o_we_invisible_entry i").toHaveAttribute("data-icon", "visibility");
         expect(":iframe .s_popup").not.toHaveClass("d-none");
         expect(":iframe .s_popup").not.toHaveAttribute("data-invisible");
         expect(":iframe .s_popup > .modal").toHaveStyle("display: block");

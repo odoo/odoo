@@ -5,22 +5,22 @@
     <BuilderRow label.translate="Re-order" disabled="!this.state.hasMultiItems">
         <BuilderButtonGroup preview="false" action="'setGalleryElementPosition'">
             <BuilderButton ltrRtlMapping="'first-last'" isLabelLinkedToContent="true"
-                icon="'fa-angle-double-left'"
+                icon="'keyboard_double_arrow_left'"
                 title.translate="Move to first"
                 actionValue="'first'"
                 className="!this.state.hasMultiItems || this.state.isFirstItem ? 'disabled' : ''"/>
             <BuilderButton ltrRtlMapping="'prev-next'" isLabelLinkedToContent="true"
-                icon="'fa-angle-left'"
+                icon="'keyboard_arrow_left'"
                 title.translate="Move to previous"
                 actionValue="'prev'"
                 className="!this.state.hasMultiItems ? 'disabled' : ''"/>
             <BuilderButton ltrRtlMapping="'prev-next'" isLabelLinkedToContent="true"
-                icon="'fa-angle-right'"
+                icon="'keyboard_arrow_right'"
                 title.translate="Move to next"
                 actionValue="'next'"
                 className="!this.state.hasMultiItems ? 'disabled' : ''"/>
             <BuilderButton ltrRtlMapping="'first-last'" isLabelLinkedToContent="true"
-                icon="'fa-angle-double-right'"
+                icon="'keyboard_double_arrow_right'"
                 title.translate="Move to last"
                 actionValue="'last'"
                 className="!this.state.hasMultiItems || this.state.isLastItem ? 'disabled' : ''"/>

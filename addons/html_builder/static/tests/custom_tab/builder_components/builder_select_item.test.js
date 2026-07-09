@@ -73,9 +73,9 @@ test("set the label of the select from the active select item and be updated on 
     expect(".we-bg-options-container .dropdown").toHaveText("B");
     await animationFrame();
     expect(".o-overlay-item [data-attribute-action-value='b']").not.toHaveCount();
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect(".we-bg-options-container .dropdown").toHaveText("A");
-    await contains(".o-snippets-top-actions .fa-repeat").click();
+    await contains(".o-snippets-top-actions [data-icon='redo']").click();
     expect(".we-bg-options-container .dropdown").toHaveText("B");
 });
 test("set the label of the select after SVG Image children are inserted", async () => {
@@ -382,7 +382,7 @@ test("isApplied shouldn't be called when the element is removed from the DOM", a
     });
     await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
-    await contains(".fa-trash ").click();
+    await contains("[data-icon='delete'].oi-filled").click();
     expect(":iframe .test").toHaveCount(0);
 });
 
