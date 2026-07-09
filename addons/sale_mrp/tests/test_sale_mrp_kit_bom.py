@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 from odoo.tests import Form, tagged
 
 from odoo import Command
@@ -89,7 +87,6 @@ class TestSaleMrpKitBom(BaseCommon):
                 # The actual test, there should be no traceback here
                 order_line_change.product_id = product_variant_ids[1]
 
-    @skip('Temporary to fast merge new valuation')
     def test_sale_mrp_kit_cost(self):
         """
          Check the total cost of a KIT:
@@ -151,9 +148,9 @@ class TestSaleMrpKitBom(BaseCommon):
         })
         so.action_confirm()
         line = so.order_line
-        purchase_price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
         self.assertEqual(line.move_ids.mapped('description_picking'), ['Kit Product - 1/2', 'Kit Product - 2/2'])
-        self.assertEqual(purchase_price, 92, "The purchase price must be the total cost of the components multiplied by their unit of measure")
+        self.kit_product.button_bom_cost()
+        self.assertEqual(self.kit_product.standard_price, 92, "The cost of the kit must be the total cost of the components multiplied by their unit of measure")
 
     def test_sale_mrp_kit_sale_price(self):
         """Check the total sale price of a KIT:

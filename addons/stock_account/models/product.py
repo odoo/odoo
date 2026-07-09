@@ -679,8 +679,10 @@ class ProductProduct(models.Model):
                             and product.uom_id.compare(product.qty_available, 0) > 0
                     ):
                         new_avg_cost = (previous_qty * product.standard_price + added_value) / product.qty_available
-                    else:
+                    elif not product.uom_id.is_zero(added_qty):
                         new_avg_cost = added_value / added_qty
+                    else:
+                        continue
                     product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_avg_cost
                 products = products - products_with_incremental_recompute
 
