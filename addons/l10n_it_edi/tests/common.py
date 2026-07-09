@@ -128,6 +128,24 @@ class TestItEdi(AccountTestInvoicingCommon):
             'amount_type': 'percent',
         })
 
+        cls.vat_0_N1_purchase = cls.env['account.tax'].with_company(cls.company).create({
+            'name': "VAT 0% Natura N1",
+            'amount': 0.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'l10n_it_exempt_reason': 'N1',
+            'invoice_legal_notes': 'Test',
+        })
+
+        cls.vat_0_N2_1_purchase = cls.env['account.tax'].with_company(cls.company).create({
+            'name': "VAT 0% Natura N2.1",
+            'amount': 0.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'l10n_it_exempt_reason': 'N2.1',
+            'invoice_legal_notes': 'Test',
+        })
+
         cls.module = 'l10n_it_edi'
 
     def _assert_export_invoice(self, invoice, filename):
