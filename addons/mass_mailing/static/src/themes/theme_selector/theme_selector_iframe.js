@@ -1,5 +1,4 @@
 import { ThemeSelector } from "./theme_selector";
-import { assets, AssetsLoadingError, getBundle } from "@web/core/assets";
 import {
     Component,
     markup,
@@ -10,14 +9,14 @@ import {
     signal,
     useApp,
     useOnChange,
+    useScope,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { localization } from "@web/core/l10n/localization";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
-
-const CSSSheetsCache = new Map();
+import { getStyleSheets } from "../../util/assets_utils";
 
 export class ThemeSelectorIframe extends Component {
     static template = "mass_mailing.ThemeSelectorIframe";
@@ -40,6 +39,7 @@ export class ThemeSelectorIframe extends Component {
                 promise: undefined,
             }),
         };
+        this.scope = useScope();
         onMounted(() => {
             this.setupIframe();
         });
@@ -70,7 +70,11 @@ export class ThemeSelectorIframe extends Component {
     getThemeSelectorProps() {
         Object.assign(this.themeSelectorProps, {
             config: this.props.config,
-            styleSheetsPromise: this.getStyleSheets(),
+            styleSheetsPromise: getStyleSheets(
+                this.scope,
+                this.iframeRef(),
+                "mass_mailing.assets_iframe_style"
+            ),
             themesPromise: this.themeService.load(),
             iframeRef: this.iframeRef,
         });
@@ -127,71 +131,5 @@ export class ThemeSelectorIframe extends Component {
 
     loadIframeAssets() {
         return loadIframeBundles(this.iframeRef(), ["mass_mailing.assets_iframe_theme_selector"]);
-    }
-
-    /**
-     * Get common stylesheets used for every favorite mail template
-     *
-     * @returns {Promise<Array<CSSStyleSheet>>}
-     */
-    async getStyleSheets() {
-        const { cssLibs } = await getBundle("mass_mailing.assets_iframe_style");
-        const loadCSSPromises = [];
-        if (cssLibs) {
-            loadCSSPromises.push(...cssLibs.map((url) => this.loadCSSSheets(url)));
-        }
-        const cssTexts = await Promise.all(loadCSSPromises);
-        if (status(this) === "destroyed") {
-            return [];
-        }
-        const sheetPromises = [];
-        for (const cssText of cssTexts) {
-            const win = this.iframeRef().contentDocument.defaultView;
-            const sheet = new win.CSSStyleSheet();
-            sheetPromises.push(sheet.replace(cssText).then(() => sheet));
-        }
-        return Promise.all(sheetPromises);
-    }
-
-    /**
-     * Custom load which does not add the CSSStyleSheet in the current document
-     */
-    loadCSSSheets(url, retryCount = 0) {
-        if (CSSSheetsCache.has(url)) {
-            return CSSSheetsCache.get(url);
-        }
-        const promise = new Promise((resolve, reject) =>
-            fetch(url)
-                .then((response) => {
-                    if (!response.ok) {
-                        reject(
-                            new AssetsLoadingError(`The loading of ${url} failed`, {
-                                cause: response.status,
-                            })
-                        );
-                    }
-                    return response.text();
-                })
-                .then(resolve)
-                .catch(async (error) => {
-                    CSSSheetsCache.delete(url);
-                    if (retryCount < assets.retries.count) {
-                        const delay = assets.retries.delay + assets.retries.extraDelay * retryCount;
-                        await new Promise((res) => setTimeout(res, delay));
-                        this.loadCSSSheets(url, retryCount + 1)
-                            .then(resolve)
-                            .catch((reason) => {
-                                CSSSheetsCache.delete(url);
-                                reject(reason);
-                            });
-                    } else {
-                        reject(
-                            new AssetsLoadingError(`The loading of ${url} failed`, { cause: error })
-                        );
-                    }
-                })
-        );
-        CSSSheetsCache.set(url, promise);
-        return promise;
     }
 }
