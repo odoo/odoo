@@ -1,4 +1,5 @@
 import { Component, useRef, useState } from "@odoo/owl";
+import { download } from "@web/core/network/download";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
@@ -239,5 +240,12 @@ export class FileViewer extends Component {
         image.setAttribute("onerror", "window.print(); setTimeout(window.close, 10)");
         image.src = this.state.file.defaultSource;
         printWindow.document.body.appendChild(image);
+    }
+
+    onClickDownload() {
+        download({
+            data: {},
+            url: this.state.file.downloadUrl,
+        });
     }
 }
