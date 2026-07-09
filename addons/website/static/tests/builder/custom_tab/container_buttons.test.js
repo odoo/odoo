@@ -177,6 +177,56 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     ).toHaveCount(1);
 });
 
+test("Saved custom snippets drop root unremovable and unmovable classes", async () => {
+    const snippets = {
+        snippet_groups: [
+            '<div name="Custom" data-o-snippet-group="custom"><section data-snippet="s_snippet_group"></section></div>',
+        ],
+        snippet_structure: [
+            getSnippetStructure({
+                name: "Dummy Section",
+                groupName: "custom",
+                content: `
+                    <section data-snippet="s_dummy">
+                        <div class="container">
+                            <div>Content</div>
+                        </div>
+                    </section>
+                `,
+            }),
+        ],
+        snippet_custom: [],
+    };
+    await setupWebsiteBuilder(
+        `
+        <section
+            class="oe_unremovable oe_unmovable"
+            data-name="Dummy Section"
+            data-snippet="s_dummy"
+        >
+            <div class="container">
+                <div>Content</div>
+            </div>
+        </section>
+    `,
+        { snippets }
+    );
+
+    onRpc("ir.ui.view", "save_snippet", ({ kwargs }) => {
+        expect.step("save snippet");
+        const snippetEl = new DOMParser().parseFromString(kwargs.arch, "text/html").body
+            .firstElementChild;
+        expect(snippetEl).not.toHaveClass("oe_unremovable");
+        expect(snippetEl).not.toHaveClass("oe_unmovable");
+        return kwargs.name;
+    });
+
+    await contains(":iframe section[data-snippet='s_dummy']").click();
+    await animationFrame();
+    await contains(".oe_snippet_save").click();
+    expect.verifySteps(["save snippet"]);
+});
+
 test("Use the sidebar 'create anchor' buttons", async () => {
     const websiteContent = `
         <section class="first" data-name="Dummy Section" data-snippet="s_dummy">
