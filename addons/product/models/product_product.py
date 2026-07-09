@@ -347,7 +347,10 @@ class ProductProduct(models.Model):
         for product in self:
             product.code = product.default_code
             if read_access:
-                for supplier_info in product.seller_ids:
+                allowed_sellers = product.sudo().seller_ids.filtered(
+                    lambda s: not s.company_id or s.company_id in self.env.companies
+                )
+                for supplier_info in allowed_sellers:
                     if supplier_info.partner_id.id == product.env.context.get('partner_id'):
                         if supplier_info.product_id and supplier_info.product_id != product:
                             # Supplier info specific for another variant.
