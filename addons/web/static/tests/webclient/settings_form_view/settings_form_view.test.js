@@ -121,7 +121,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
                         </setting>
                     </block>
                     <block title="Title of group Foo">
-                        <setting help="this is foo" info="this is foo info" documentation="https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html">
+                        <setting help="this is foo help" info="this is foo info" documentation="https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html">
                             <field name="foo"/>
                         </setting>
                         <setting string="Personalize setting" help="this is full personalize setting">
@@ -151,7 +151,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(queryAllTexts(".settings .text-muted")).toEqual([
         "this is bar",
         "this is a baz",
-        "this is foo",
+        "this is foo help",
         "this is full personalize setting",
     ]);
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual([
@@ -216,6 +216,11 @@ test("change setting on nav bar click in base settings on desktop", async () => 
         { message: "only settings in group Foo is shown" }
     );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
+
+    await editSearch("this is foo help");
+    await runAllTimers(); // for skipping the debounce delay
+    expect(queryFirst(".highlighter")).toHaveText("this is foo help");
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(["Foo"]);
 
     await editSearch("Hide");
     await runAllTimers(); // for skipping the debounce delay

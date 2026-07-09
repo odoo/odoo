@@ -18,7 +18,7 @@ export class SearchableSetting extends Setting {
             highlightClass: {},
         });
         this.showAllContainer = this.env.showAllContainer;
-        this.labels = [this.labelString, this.props.title].filter(Boolean);
+        this.labels = [this.labelString, this.props.help].filter(Boolean);
         super.setup();
         onMounted(() => {
             if (browser.location.hash.substring(1) === this.props.id) {
