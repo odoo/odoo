@@ -51,7 +51,8 @@ class TestHolidayContract(TransactionCase):
                 (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Friday Evening', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
-            ]
+            ],
+            'tz': 'Europe/Brussels',
         })
         cls.calendar_40h = cls.env['resource.calendar'].create({'name': 'Default calendar'})
 
