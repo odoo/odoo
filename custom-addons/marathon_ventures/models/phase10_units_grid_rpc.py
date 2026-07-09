@@ -114,6 +114,48 @@ def _guess_daypart(start, end):
     return 'custom'
 
 
+def _program_daypart_payload(program):
+    """Return the program's custom dayparts serialised for the
+    frontend: [{value, label, start, end, range}]. Empty list when
+    the program has none configured (or program is falsy) so the
+    grid falls back to DAYPART_DEFAULT_TIMES."""
+    if not program or not getattr(program, 'daypart_ids', None):
+        return []
+    out = []
+    for dp in program.daypart_ids:
+        out.append({
+            'value': 'prog_%d' % dp.id,   # prefix avoids clashes with
+                                          # the hardcoded DAYPART keys
+            'label': dp.name or '',
+            'start': dp.start_time or None,
+            'end':   dp.end_time   or None,
+            'range': dp.time_range or '',
+        })
+    return out
+
+
+def _guess_daypart_with_program(start, end, program_dayparts):
+    """Program dayparts win when the (start, end) matches one; else
+    fall back to _guess_daypart's hardcoded lookup. Keeps the two
+    grids in exact sync on precedence."""
+    if program_dayparts:
+        for dp in program_dayparts:
+            if dp.get('start') == start and dp.get('end') == end:
+                return dp['value']
+        return 'custom'
+    return _guess_daypart(start, end)
+
+
+def _daypart_label_with_program(daypart, program_dayparts):
+    """Program dayparts win on label too. `daypart` is either a
+    'prog_<id>' key or one of the DAYPART_LABELS keys."""
+    if program_dayparts and daypart:
+        for dp in program_dayparts:
+            if dp['value'] == daypart:
+                return dp['label']
+    return DAYPART_LABELS.get(daypart, daypart or '')
+
+
 def _time_range_label(start, end, time_options_map):
     if not start and not end:
         return ''
@@ -136,6 +178,10 @@ class MvDealUnitsGridRpc(models.Model):
         self.ensure_one()
         weeks = mondays_for_start_date(self.units_start_date)
         weeks_iso = [w.isoformat() for w in weeks]
+        # Fetch the program's custom dayparts once so per-row
+        # classification stays cheap. Empty list -> fall back to the
+        # hardcoded DAYPART_DEFAULT_TIMES.
+        program_dayparts = _program_daypart_payload(self.program)
 
         all_scheds = self.env['mv.schedules'].search([
             ('deal_parent', '=', self.id),
@@ -222,12 +268,16 @@ class MvDealUnitsGridRpc(models.Model):
 
             days_bits = _days_bits_from_allowed(samp.days_allowed)
             days_mask = [b == '1' for b in days_bits]
-            daypart = _guess_daypart(samp.start_time, samp.end_time)
+            daypart = _guess_daypart_with_program(
+                samp.start_time, samp.end_time, program_dayparts,
+            )
             rows.append({
                 'id': sig,
                 'sig': sig,
                 'daypart': daypart,
-                'daypart_label': DAYPART_LABELS.get(daypart, daypart or ''),
+                'daypart_label': _daypart_label_with_program(
+                    daypart, program_dayparts,
+                ),
                 'time_range': _time_range_label(
                     samp.start_time, samp.end_time, time_options_map,
                 ),
@@ -274,6 +324,10 @@ class MvDealUnitsGridRpc(models.Model):
                 for v, lbl in self.env['mv.schedules']
                                  ._fields['start_time'].selection
             ],
+            # Program-specific dayparts. Empty list when the program
+            # has none configured -> frontend uses its hardcoded
+            # DAYPART_OPTIONS fallback.
+            'program_dayparts': program_dayparts,
             'daypart_times': [
                 {'value': k, 'start': v[0], 'end': v[1]}
                 for k, v in DAYPART_DEFAULT_TIMES.items()

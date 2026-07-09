@@ -79,6 +79,18 @@ export class MvUnitsGrid extends Component {
         const id = idOverride || this.dealId;
         if (!id) { this.state.loaded = true; return; }
         this.state.payload = await this.orm.call("mv.deal", "load_units_grid", [[id]], {});
+        // Program-specific dayparts: when the deal's program has any
+        // configured, use them for the daypart dropdown. Otherwise
+        // fall back to the hardcoded DAYPART_OPTIONS. We always
+        // keep the 'custom' entry as a final fallback so a planner
+        // can still enter a free-form time pair.
+        const progDp = (this.state.payload && this.state.payload.program_dayparts) || [];
+        if (progDp.length) {
+            const customFallback = DAYPART_OPTIONS.find((d) => d.value === "custom");
+            this.dayparts = customFallback ? [...progDp, customFallback] : [...progDp];
+        } else {
+            this.dayparts = DAYPART_OPTIONS;
+        }
         this.state.loaded = true;
         this.resetEdits();
     }

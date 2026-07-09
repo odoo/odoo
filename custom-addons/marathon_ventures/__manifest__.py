@@ -121,6 +121,7 @@
         'views/phase13_layout_views.xml',
         'views/phase14_report_types_views.xml',
         'views/phase14_reports_views.xml',
+        'views/phase16_program_daypart_views.xml',
         'views/menus_root_action.xml',
     ],
     'assets': {

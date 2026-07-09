@@ -14,6 +14,8 @@ from odoo.addons.marathon_ventures.models.phase12_deal_start_date import (
 from odoo.addons.marathon_ventures.models.phase10_units_grid_rpc import (
     _sig_from_schedule, _parse_sig, _days_bits_from_allowed,
     DAYPART_LABELS, _guess_daypart, _time_range_label,
+    _program_daypart_payload, _guess_daypart_with_program,
+    _daypart_label_with_program,
 )
 
 _logger = logging.getLogger(__name__)
@@ -64,6 +66,10 @@ class MvDealCappingRpc(models.Model):
         self.ensure_one()
         weeks = mondays_for_start_date(self.units_start_date)
         weeks_iso = [w.isoformat() for w in weeks]
+        # Program-specific dayparts (same precedence as Units Grid):
+        # if the program has any configured, use them for daypart
+        # labels; otherwise fall back to DAYPART_LABELS.
+        program_dayparts = _program_daypart_payload(self.program)
 
         all_scheds = self.env['mv.schedules'].search([
             ('deal_parent', '=', self.id),
@@ -132,12 +138,16 @@ class MvDealCappingRpc(models.Model):
                 row_effective += effective
 
             row_revenue = row_effective * (samp.rate or 0.0)
-            daypart = _guess_daypart(samp.start_time, samp.end_time)
+            daypart = _guess_daypart_with_program(
+                samp.start_time, samp.end_time, program_dayparts,
+            )
             days_bits = _days_bits_from_allowed(samp.days_allowed)
             rows.append({
                 'id': sig, 'sig': sig,
                 'daypart': daypart,
-                'daypart_label': DAYPART_LABELS.get(daypart, daypart or ''),
+                'daypart_label': _daypart_label_with_program(
+                    daypart, program_dayparts,
+                ),
                 'time_range': _time_range_label(
                     samp.start_time, samp.end_time, time_options_map,
                 ),
@@ -180,6 +190,9 @@ class MvDealCappingRpc(models.Model):
                 {'value': 'v_0',      'label': '0%',       'pct': 0},
                 {'value': 'ghost',    'label': 'Ghost',    'pct': 0},
             ],
+            # Program-specific dayparts. Empty list -> fall back to
+            # the hardcoded labels on the frontend.
+            'program_dayparts': program_dayparts,
         }
 
     def save_capping_grid(self, edits):
