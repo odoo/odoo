@@ -1,0 +1,68 @@
+# .github/workflows/agent_stop.yml (dans chaque repo cible)
+# Déclenché par le label 🤖 agent:stop. Annule les runs agent en cours pour cette issue.
+name: Agent stop
+
+on:
+  issues:
+    types: [labeled]
+
+concurrency:
+  group: agent-stop-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  stop:
+    if: github.event.label.name == '🤖 agent:stop'
+    runs-on: self-hosted
+    timeout-minutes: 2
+    permissions:
+      issues: write
+      actions: write
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Annuler les runs agent en cours pour cette issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          CANCELLED=0
+
+          # agent_run : la branche suit le format <type>/<issue>-<description>
+          echo "→ Recherche de runs agent_run.yml en cours pour l'issue #${ISSUE_NUMBER}..."
+          gh run list --workflow=agent_run.yml --status=in_progress \
+            --json databaseId,headBranch,displayTitle \
+            --jq ".[] | select(.headBranch | contains(\"/${ISSUE_NUMBER}-\")) | .databaseId" | \
+          while read run_id; do
+            gh run cancel "$run_id"
+            echo "  ✕ annulé run agent_run #$run_id"
+            CANCELLED=$((CANCELLED + 1))
+          done
+
+          # agent_plan : pas de branche (checkout main), filtre par le titre affiché
+          echo "→ Recherche de runs agent_plan.yml en cours pour l'issue #${ISSUE_NUMBER}..."
+          gh run list --workflow=agent_plan.yml --status=in_progress \
+            --json databaseId,displayTitle \
+            --jq ".[] | select(.displayTitle | contains(\"#${ISSUE_NUMBER}\")) | .databaseId" | \
+          while read run_id; do
+            gh run cancel "$run_id"
+            echo "  ✕ annulé run agent_plan #$run_id"
+            CANCELLED=$((CANCELLED + 1))
+          done
+
+          # gh run cancel rend la main tout de suite, pas besoin d'attendre
+          sleep 2
+
+      - name: Commenter et nettoyer
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment ${ISSUE_NUMBER} --body "$(cat <<EOF
+          🛑 Agent arrêté pour l'issue #${ISSUE_NUMBER}.
+
+          Tous les runs \`agent:run\` et \`agent:plan\` en cours ont été annulés.
+          EOF
+          )"
+
+          gh issue edit ${ISSUE_NUMBER} --remove-label "🤖 agent:stop"
