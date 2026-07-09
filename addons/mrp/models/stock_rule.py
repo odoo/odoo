@@ -117,9 +117,7 @@ class StockRule(models.Model):
             productions_vals_list = new_productions_values_by_company[company_id]['values']
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_vals_list)
-            for mo in productions:
-                if self._should_auto_confirm_procurement_mo(mo):
-                    mo.action_confirm()
+            productions.filtered(self._should_auto_confirm_procurement_mo).action_confirm()
             productions._post_run_manufacture(new_productions_values_by_company[company_id]['procurements'])
         return True
 
