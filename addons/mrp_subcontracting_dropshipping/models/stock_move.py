@@ -48,3 +48,10 @@ class StockMove(models.Model):
             if last_subcontract_production_move:
                 return last_subcontract_production_move._get_value_from_account_move(quantity, at_date=at_date)
         return super()._get_value_from_account_move(quantity, at_date=at_date)
+
+    def _get_partner_id(self):
+        if self.raw_material_production_id.subcontractor_id:
+            route = self.env.ref('stock_dropshipping.route_drop_shipping', raise_if_not_found=False)
+            if route and self.rule_id.route_id == route:
+                return self.raw_material_production_id.subcontractor_id.id
+        return super()._get_partner_id()
