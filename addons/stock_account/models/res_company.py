@@ -60,7 +60,7 @@ class ResCompany(models.Model):
         required=True,
     )
 
-    def action_close_stock_valuation(self, at_date=None, auto_post=False):
+    def action_close_stock_valuation(self, at_date=None, auto_post=False, raise_error_if_closed=True):
         self.ensure_one()
         if at_date and isinstance(at_date, str):
             at_date = fields.Date.from_string(at_date)
@@ -70,6 +70,9 @@ class ResCompany(models.Model):
         aml_vals_list = self.with_context(allowed_company_ids=self.ids)._action_close_stock_valuation(at_date=at_date)
 
         if not aml_vals_list:
+            # if we come from cron there might be no move to create for this company, but some for other companies
+            if not raise_error_if_closed:
+                return
             # No account moves to create, so nothing to display.
             raise UserError(_("Everything is correctly closed"))
         if not self.account_stock_journal_id:
@@ -157,7 +160,7 @@ class ResCompany(models.Model):
         ])
         companies = self.env['res.company'].search(domain)
         for company in companies:
-            company.action_close_stock_valuation(auto_post=True)
+            company.action_close_stock_valuation(auto_post=True, raise_error_if_closed=False)
 
     def _get_valuation_product_domain(self):
         return [('is_storable', '=', True)]
