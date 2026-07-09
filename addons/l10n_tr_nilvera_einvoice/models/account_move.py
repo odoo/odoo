@@ -1,10 +1,12 @@
 import uuid
 from base64 import b64decode
-from markupsafe import Markup
 from urllib.parse import quote, urlencode, urlparse
+
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 MOVE_TYPE_CATEGORY_MAP = {
@@ -67,12 +69,18 @@ class AccountMove(models.Model):
             return self.env['account.edi.xml.ubl.tr']
         return super()._get_ubl_cii_builder_from_xml_tree(tree)
 
+    def _l10n_tr_nilvera_get_sent(self):
+        return self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.l10n_tr_nilvera_send_status != "not_sent")
+
     def button_draft(self):
-        # EXTENDS account
-        for move in self:
-            if move.l10n_tr_nilvera_uuid and move.l10n_tr_nilvera_send_status != 'not_sent':
-                raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
+        if not self.env.context.get("l10n_tr_nilvera_force_cancel") and self._l10n_tr_nilvera_get_sent():
+            raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
         return super().button_draft()
+
+    @api.depends("l10n_tr_nilvera_uuid", "l10n_tr_nilvera_send_status")
+    def _compute_show_reset_to_draft_button(self):
+        super()._compute_show_reset_to_draft_button()
+        self._l10n_tr_nilvera_get_sent().show_reset_to_draft_button = False
 
     def _l10n_tr_nilvera_submit_einvoice(self, xml_file, customer_alias):
         self._l10n_tr_nilvera_submit_document(
