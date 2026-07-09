@@ -217,6 +217,7 @@ export class MassMailingHtmlField extends HtmlField {
     async toggleCodeView() {
         await this.commitChanges();
         this.state.showCodeView = !this.state.showCodeView;
+        this.state.isNewlySelectedTheme = false;
         this.state.key++;
     }
 
