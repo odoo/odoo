@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import csv
 from collections import defaultdict
-from datetime import UTC, datetime, time
+from datetime import UTC, date, datetime, time
 from zoneinfo import ZoneInfo
 
 from markupsafe import Markup, escape
 
 from odoo import Command, api, fields, models
-from odoo.tools import file_open, file_path
 from odoo.tools.date_utils import convert_timezone
 
 
@@ -28,7 +26,9 @@ class LoadPublicHolidaysWizard(models.TransientModel):
         for wizard in self:
             wizard.warning_message = False
             if wizard.year and wizard.year > 0:
-                prepared_public_holidays = wizard._prepare_public_holidays_data()
+                start_date = date(wizard.year, 1, 1)
+                end_date = date(wizard.year, 12, 31)
+                prepared_public_holidays = self.env['resource.calendar.leaves']._prepare_public_holidays_data(start_date, end_date)
                 warning_messages = wizard._get_warning_messages(prepared_public_holidays)
                 if warning_messages:
                     wizard.warning_message = Markup('<ul class="mb-0">%s</ul>') % Markup('').join(
@@ -41,7 +41,9 @@ class LoadPublicHolidaysWizard(models.TransientModel):
         for wizard in self:
             commands = [Command.clear()]
             if wizard.year and 2025 < wizard.year < 9999:
-                prepared_public_holidays = wizard._prepare_public_holidays_data()
+                start_date = date(wizard.year, 1, 1)
+                end_date = date(wizard.year, 12, 31)
+                prepared_public_holidays = self.env['resource.calendar.leaves']._prepare_public_holidays_data(start_date, end_date)
                 preview_values = [
                     public_holiday_value
                     for company_data in prepared_public_holidays['prepared_public_holidays'].values()
@@ -50,7 +52,7 @@ class LoadPublicHolidaysWizard(models.TransientModel):
                 commands.extend(
                     Command.create({
                         'name': preview_value['name'],
-                        'start_date': preview_value['start_date'],
+                        'start_date': preview_value['date_from'],
                         'company_id': preview_value['company_id'],
                     })
                     for preview_value in preview_values
@@ -68,7 +70,9 @@ class LoadPublicHolidaysWizard(models.TransientModel):
                     'message': self.env._("Please select a work entry type for all public holidays before adding them."),
                 },
             }
-        prepared_public_holidays = self._prepare_public_holidays_data()
+        start_date = date(self.year, 1, 1)
+        end_date = date(self.year, 12, 31)
+        prepared_public_holidays = self.env['resource.calendar.leaves']._prepare_public_holidays_data(start_date, end_date)
         warning_messages = self._get_warning_messages(prepared_public_holidays)
         notification_messages = []
         convert_datetime = self.env.context.get('public_holiday_convert_datetime', True)
@@ -94,82 +98,6 @@ class LoadPublicHolidaysWizard(models.TransientModel):
                 'message': '\n'.join(notification_messages) or self.env._("No public holidays were added."),
                 'next': next_action,
             },
-        }
-
-    def _prepare_public_holidays_data(self):
-        companies = self.env.companies
-        prepared_public_holidays = {}
-        companies_without_country = self.env['res.company']
-        companies_without_public_holidays = self.env['res.company']
-        companies_with_all_existing_holidays = self.env['res.company']
-        existing_holidays_dict = dict(self.env["resource.calendar.leaves"]._read_group(
-            domain=[
-                ('company_id', 'in', companies.ids),
-                ('date_from', '<=', datetime(self.year, 12, 31, 0, 0, 0)),
-                ('date_to', '>=', datetime(self.year, 1, 1, 0, 0, 0)),
-                ('resource_id', '=', False),
-            ],
-            groupby=['company_id'],
-            aggregates=['id:recordset'],
-        ))
-
-        for company in companies:
-            if not company.country_code:
-                companies_without_country |= company
-                continue
-
-            try:
-                csv_file_path = file_path(f"hr_holidays/data/public_holidays/public_holidays_{company.country_code.lower()}.csv")
-            except FileNotFoundError:
-                companies_without_public_holidays |= company
-                continue
-
-            company_tz = ZoneInfo(company.tz or self.env.user.tz or 'UTC')
-            public_holidays_values_dict = {}
-            has_holidays_for_year = False
-            with file_open(csv_file_path) as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    if not row.get("date") or not row.get("holiday"):
-                        continue
-                    holiday_date = datetime.strptime(row["date"], "%Y-%m-%d").date()
-                    if holiday_date.year > self.year:
-                        break
-                    if holiday_date.year != self.year:
-                        continue
-
-                    has_holidays_for_year = True
-                    holiday_start_utc = convert_timezone(datetime.combine(holiday_date, time.min), UTC, company_tz)
-                    holiday_end_utc = convert_timezone(datetime.combine(holiday_date, time.max), UTC, company_tz)
-                    overlapping = any(
-                        holiday.date_from <= holiday_end_utc and holiday.date_to >= holiday_start_utc
-                        for holiday in existing_holidays_dict.get(company, [])
-                    )
-                    if overlapping:
-                        continue
-
-                    holiday_name = row["holiday"].strip()
-                    if holiday_date in public_holidays_values_dict:
-                        public_holidays_values_dict[holiday_date]['name'] += f" / {holiday_name}"
-                    else:
-                        public_holidays_values_dict[holiday_date] = {
-                            'name': holiday_name,
-                            'start_date': holiday_date,
-                            'company_id': company.id,
-                        }
-
-            if public_holidays_values_dict:
-                prepared_public_holidays[company.id] = list(public_holidays_values_dict.values())
-            elif not has_holidays_for_year:
-                companies_without_public_holidays += company
-            else:
-                companies_with_all_existing_holidays += company
-
-        return {
-            'prepared_public_holidays': prepared_public_holidays,
-            'companies_without_country': companies_without_country,
-            'companies_without_public_holidays': companies_without_public_holidays,
-            'companies_with_all_existing_holidays': companies_with_all_existing_holidays,
         }
 
     def _get_warning_messages(self, prepared_public_holidays):

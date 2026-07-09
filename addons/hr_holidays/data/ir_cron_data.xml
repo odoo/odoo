@@ -18,4 +18,14 @@
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
     </record>
+
+    <record id="ir_cron_generate_public_holidays" model="ir.cron">
+        <field name="name">Time Off: Generate Public Holidays</field>
+        <field name="model_id" ref="model_resource_calendar_leaves"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_generate_public_holidays()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="nextcall" eval="(DateTime.now())"/>
+    </record>
 </odoo>
