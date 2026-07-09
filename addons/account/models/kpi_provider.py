@@ -68,7 +68,8 @@ def get_kpi_summary(cr, uid):
                     AND move.review_state IN ('todo', 'anomaly'))
                 OR (    move.state = 'posted'
                     AND journal.type = 'bank'
-                    AND (st_line.id IS NULL OR NOT st_line.is_reconciled)))
+                    AND st_line.id IS NOT NULL
+                    AND NOT st_line.is_reconciled))
       GROUP BY journal.type, journal_type_selection.name
     """, uid=uid))
 
