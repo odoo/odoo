@@ -46,17 +46,24 @@ class StockPicking(models.Model):
 
         if not self.l10n_ar_delivery_guide_number:
             picking_type = self.picking_type_id
+            sequence_start = picking_type.l10n_ar_sequence_number_start
+            sequence_end = picking_type.l10n_ar_sequence_number_end
             new_sequence_number = picking_type.l10n_ar_next_delivery_number
             delivery_guide_number = picking_type.l10n_ar_sequence_id.next_by_id()
-            if not int(picking_type.l10n_ar_sequence_number_start) <= new_sequence_number <= int(picking_type.l10n_ar_sequence_number_end):
+            if (
+                sequence_start
+                and sequence_end
+                and picking_type.l10n_ar_cai_authorization_code
+                and not (int(sequence_start) <= new_sequence_number <= int(sequence_end))
+            ):
                 raise UserError(_("The delivery guide number %s exceeds the range specified in the CAI. Please update the range or use a different CAI with a different range.", delivery_guide_number))
             self.l10n_ar_delivery_guide_number = delivery_guide_number
             self.l10n_ar_cai_data = {
                 'document_type_id': picking_type.l10n_ar_document_type_id.id,
                 'cai_authorization_code': picking_type.l10n_ar_cai_authorization_code,
-                'cai_expiration_date': picking_type.l10n_ar_cai_expiration_date.strftime('%Y-%m-%d'),
-                'sequence_number_start': picking_type.l10n_ar_sequence_number_start,
-                'sequence_number_end': picking_type.l10n_ar_sequence_number_end,
+                'cai_expiration_date': picking_type.l10n_ar_cai_expiration_date and picking_type.l10n_ar_cai_expiration_date.strftime('%Y-%m-%d'),
+                'sequence_number_start': sequence_start,
+                'sequence_number_end': sequence_end,
             }
 
     def l10n_ar_action_send_delivery_guide(self):
