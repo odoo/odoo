@@ -82,6 +82,21 @@
                         </div>
                     </t>
                 </div>
+                <div
+                    t-if="store.hasGifPickerFeature"
+                    class="o-discuss-GifPicker-klipyAttribution text-center border-top py-1 px-2"
+                >
+                    <a
+                        href="https://klipy.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="o-discuss-GifPicker-klipyAttribution-link text-decoration-none"
+                        title="KLIPY GIFs"
+                    >
+                        <span class="o-discuss-GifPicker-klipyAttribution-prefix">Powered by</span>
+                        <span class="o-discuss-GifPicker-klipyAttribution-brand">KLIPY</span>
+                    </a>
+                </div>
             </t>
         </div>
     </t>
@@ -99,6 +114,6 @@
     </t>
 
     <t t-name="discuss.GifPicker.searchInput">
-        <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for a GIF" t-model="localState.searchTerm" t-ref="autofocus" />
+        <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search KLIPY" t-model="localState.searchTerm" t-ref="autofocus" />
     </t>
 </templates>

@@ -154,6 +154,19 @@ test("Not loading of GIF categories when feature is not available", async () => 
     await waitForSteps(["/discuss/gif/categories"]);
 });
 
+test("GIF picker displays Klipy attribution when feature is enabled", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    onRpc("/discuss/gif/categories", () => rpc.categories);
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add GIFs']");
+    await contains(".o-discuss-GifPicker-klipyAttribution-link", {
+        text: "Powered by KLIPY",
+    });
+    await contains("a[href='https://klipy.com'][target='_blank']");
+});
+
 test("Searching for a GIF", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
@@ -161,7 +174,7 @@ test("Searching for a GIF", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
-    await insertText("input[placeholder='Search for a GIF']", "search");
+    await insertText("input[placeholder='Search KLIPY']", "search");
     await contains("i[aria-label='back']");
     await contains(".o-discuss-Gif", { count: 2 });
 });
@@ -176,7 +189,7 @@ test("Open a GIF category trigger the search for the category", async () => {
     await click("button[title='Add GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", { count: 2 });
-    await contains("input[placeholder='Search for a GIF']", { value: "cry" });
+    await contains("input[placeholder='Search KLIPY']", { value: "cry" });
 });
 
 test("Can have GIF categories with same name", async () => {
@@ -267,7 +280,7 @@ test("Searching for a GIF with a failling RPC should display an error", async ()
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
-    await insertText("input[placeholder='Search for a GIF']", "search");
+    await insertText("input[placeholder='Search KLIPY']", "search");
     await contains(".o-discuss-GifPicker-error");
 });
 
