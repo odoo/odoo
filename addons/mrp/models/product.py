@@ -2,21 +2,8 @@
 
 import collections
 from datetime import timedelta
-import operator as py_operator
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-
-
-PY_OPERATORS = {
-    '<': py_operator.lt,
-    '>': py_operator.gt,
-    '<=': py_operator.le,
-    '>=': py_operator.ge,
-    '=': py_operator.eq,
-    '!=': py_operator.ne,
-    'in': lambda elem, container: elem in container,
-    'not in': lambda elem, container: elem not in container,
-}
 
 
 class ProductTemplate(models.Model):
@@ -30,7 +17,6 @@ class ProductTemplate(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    is_kits = fields.Boolean(compute='_compute_is_kits', search='_search_is_kits')
 
     def _compute_bom_count(self):
         for product in self:
@@ -38,31 +24,11 @@ class ProductTemplate(models.Model):
                 ['|', ('product_tmpl_id', 'in', product.ids), ('byproduct_ids.product_id.product_tmpl_id', 'in', product.ids)]
             )
 
-    @api.depends_context('company')
-    def _compute_is_kits(self):
-        domain = [('product_tmpl_id', 'in', self.ids), ('type', '=', 'phantom'), '|', ('company_id', '=', False), ('company_id', '=', self.env.company.id)]
-        bom_mapping = self.env['mrp.bom'].sudo().search_read(domain, ['product_tmpl_id'])
-        kits_ids = set(b['product_tmpl_id'][0] for b in bom_mapping)
-        for template in self:
-            template.is_kits = (template.id in kits_ids)
-
-    def _search_is_kits(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-        bom_tmpl_query = self.env['mrp.bom'].sudo()._search(
-            [('company_id', 'in', [False] + self.env.companies.ids),
-             ('type', '=', 'phantom'), ('active', '=', True)])
-        return [('id', 'in', bom_tmpl_query.subselect('product_tmpl_id'))]
-
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
-        for template in self:
-            if template.is_kits:
-                template.show_on_hand_qty_status_button = template.product_variant_count <= 1
-                template.show_forecasted_qty_status_button = False
 
     def _should_open_product_quants(self):
-        return super()._should_open_product_quants() or self.is_kits
+        return super()._should_open_product_quants()
 
     def _compute_used_in_bom_count(self):
         for template in self:
@@ -127,7 +93,6 @@ class ProductProduct(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    is_kits = fields.Boolean(compute="_compute_is_kits", search='_search_is_kits')
 
     # Catalog related fields
     product_catalog_product_is_in_bom = fields.Boolean(
@@ -147,46 +112,8 @@ class ProductProduct(models.Model):
                 '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product.product_tmpl_id.ids),
             ])
 
-    @api.depends_context('company')
-    def _compute_is_kits(self):
-        domain = ['&', '&', ('type', '=', 'phantom'),
-                       '|', ('company_id', '=', False),
-                            ('company_id', '=', self.env.company.id),
-                       '|', ('product_id', 'in', self.ids),
-                            '&', ('product_id', '=', False),
-                                 ('product_tmpl_id', 'in', self.product_tmpl_id.ids)]
-        bom_mapping = self.env['mrp.bom'].sudo().search_read(domain, ['product_tmpl_id', 'product_id'])
-        kits_template_ids = set([])
-        kits_product_ids = set([])
-        for bom_data in bom_mapping:
-            if bom_data['product_id']:
-                kits_product_ids.add(bom_data['product_id'][0])
-            else:
-                kits_template_ids.add(bom_data['product_tmpl_id'][0])
-        for product in self:
-            product.is_kits = (product.id in kits_product_ids or product.product_tmpl_id.id in kits_template_ids)
-
-    def _search_is_kits(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-        bom_tmpl_query = self.env['mrp.bom'].sudo()._search(
-            [('company_id', 'in', [False] + self.env.companies.ids),
-             ('active', '=', True),
-             ('type', '=', 'phantom'), ('product_id', '=', False)])
-        bom_product_query = self.env['mrp.bom'].sudo()._search(
-            [('company_id', 'in', [False] + self.env.companies.ids),
-             ('type', '=', 'phantom'), ('product_id', '!=', False)])
-        return [
-            '|', ('product_tmpl_id', 'in', bom_tmpl_query.subselect('product_tmpl_id')),
-            ('id', 'in', bom_product_query.subselect('product_id'))
-        ]
-
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
-        for product in self:
-            if product.is_kits:
-                product.show_on_hand_qty_status_button = True
-                product.show_forecasted_qty_status_button = False
 
     def _compute_used_in_bom_count(self):
         for product in self:
@@ -229,15 +156,7 @@ class ProductProduct(models.Model):
         return actions
 
     def get_components(self):
-        """ Return the components list ids in case of kit product.
-        Return the product itself otherwise"""
-        self.ensure_one()
-        bom_kit = self.env['mrp.bom']._bom_find(self, bom_type='phantom')[self]
-        if bom_kit:
-            boms, bom_sub_lines = bom_kit.explode(self, 1)
-            return [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.is_storable]
-        else:
-            return super(ProductProduct, self).get_components()
+        return super().get_components()
 
     def action_used_in_bom(self):
         self.ensure_one()
@@ -267,97 +186,6 @@ class ProductProduct(models.Model):
                 continue
             product.mrp_product_qty = product.uom_id.round(mapped_data.get(product.id, 0))
 
-    def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
-        """ When the product is a kit, this override computes the fields :
-         - 'virtual_available'
-         - 'qty_available'
-         - 'incoming_qty'
-         - 'outgoing_qty'
-         - 'free_qty'
-
-        This override is used to get the correct quantities of products
-        with 'phantom' as BoM type.
-        """
-        bom_kits = self.env['mrp.bom'].sudo()._bom_find(self, bom_type='phantom')
-        kits = self.filtered(lambda p: bom_kits.get(p))
-        regular_products = self - kits
-        res = (
-            super(ProductProduct, regular_products)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
-            if regular_products
-            else {}
-        )
-        qties = self.env.context.get("mrp_compute_quantities", {})
-        qties.update(res)
-        # pre-compute bom lines and identify missing kit components to prefetch
-        bom_sub_lines_per_kit = {}
-        prefetch_component_ids = set()
-        for product in bom_kits:
-            __, bom_sub_lines = bom_kits[product].explode(product, 1)
-            bom_sub_lines_per_kit[product] = bom_sub_lines
-            for bom_line, __ in bom_sub_lines:
-                if bom_line.product_id.id not in qties:
-                    prefetch_component_ids.add(bom_line.product_id.id)
-        # compute kit quantities
-        for product in bom_kits:
-            bom_sub_lines = bom_sub_lines_per_kit[product]
-            # group lines by component
-            bom_sub_lines_grouped = collections.defaultdict(list)
-            for info in bom_sub_lines:
-                bom_sub_lines_grouped[info[0].product_id].append(info)
-            ratios_virtual_available = []
-            ratios_qty_available = []
-            ratios_incoming_qty = []
-            ratios_outgoing_qty = []
-            ratios_free_qty = []
-
-            for component, bom_sub_lines in bom_sub_lines_grouped.items():
-                component = component.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
-                qty_per_kit = 0
-                for bom_line, bom_line_data in bom_sub_lines:
-                    if not component.is_storable or bom_line.uom_id.is_zero(bom_line_data['qty']):
-                        # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
-                        # to avoid a division by zero. The same logic is applied to non-storable products as those
-                        # products have 0 qty available.
-                        continue
-                    uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                    qty_per_kit += bom_line.uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
-                if not qty_per_kit:
-                    continue
-                component_res = (
-                    qties.get(component.id)
-                    if component.id in qties
-                    else {
-                        "virtual_available": component.uom_id.round(component.virtual_available),
-                        "qty_available": component.uom_id.round(component.qty_available),
-                        "incoming_qty": component.uom_id.round(component.incoming_qty),
-                        "outgoing_qty": component.uom_id.round(component.outgoing_qty),
-                        "free_qty": component.uom_id.round(component.free_qty),
-                    }
-                )
-                ratios_virtual_available.append(component.uom_id.round(component_res["virtual_available"] / qty_per_kit, rounding_method='DOWN'))
-                ratios_qty_available.append(component.uom_id.round(component_res["qty_available"] / qty_per_kit, rounding_method='DOWN'))
-                ratios_incoming_qty.append(component.uom_id.round(component_res["incoming_qty"] / qty_per_kit, rounding_method='DOWN'))
-                ratios_outgoing_qty.append(component.uom_id.round(component_res["outgoing_qty"] / qty_per_kit, rounding_method='DOWN'))
-                ratios_free_qty.append(component.uom_id.round(component_res["free_qty"] / qty_per_kit, rounding_method='DOWN'))
-            if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
-                res[product.id] = {
-                    'virtual_available': component.uom_id.round(min(ratios_virtual_available) * bom_kits[product].product_qty) // 1,
-                    'qty_available': component.uom_id.round(min(ratios_qty_available) * bom_kits[product].product_qty) // 1,
-                    'incoming_qty': component.uom_id.round(min(ratios_incoming_qty) * bom_kits[product].product_qty) // 1,
-                    'outgoing_qty': component.uom_id.round(min(ratios_outgoing_qty) * bom_kits[product].product_qty) // 1,
-                    'free_qty': component.uom_id.round(min(ratios_free_qty) * bom_kits[product].product_qty) // 1,
-                }
-            else:
-                res[product.id] = {
-                    'virtual_available': 0,
-                    'qty_available': 0,
-                    'incoming_qty': 0,
-                    'outgoing_qty': 0,
-                    'free_qty': 0,
-                }
-
-        return res
-
     def action_view_bom(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.product_open_bom")
         template_ids = self.mapped('product_tmpl_id').ids
@@ -375,15 +203,7 @@ class ProductProduct(models.Model):
         return action
 
     def action_open_quants(self):
-        bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
-        components = self - self.env['product.product'].concat(bom_kits)
-        for product in bom_kits:
-            _boms, bom_sub_lines = bom_kits[product].explode(product, 1)
-            components |= self.env['product.product'].concat(l[0].product_id for l in bom_sub_lines)
-        res = super(ProductProduct, components).action_open_quants()
-        if bom_kits:
-            res['context'].pop('default_product_tmpl_id', None)
-        return res
+        return super().action_open_quants()
 
     def _match_all_variant_values(self, product_template_attribute_value_ids):
         """ It currently checks that all variant values (`product_template_attribute_value_ids`)
@@ -408,24 +228,7 @@ class ProductProduct(models.Model):
         return super()._count_returned_sn_products_domain(sn_lot, or_domains)
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
-        '''extending the method in stock.product to take into account kits'''
-        op = PY_OPERATORS.get(operator)
-        if not op:
-            return NotImplemented
-        product_ids = super(ProductProduct, self)._search_qty_available_new(operator, value, lot_id, owner_id, package_id)
-        kit_boms = self.env['mrp.bom'].search([('type', "=", 'phantom')])
-        kit_products = self.env['product.product']
-        for kit in kit_boms:
-            if kit.product_id:
-                kit_products |= kit.product_id
-            else:
-                kit_products |= kit.product_tmpl_id.product_variant_ids
-        for product in kit_products:
-            if op(product.qty_available, value):
-                product_ids.append(product.id)
-            elif product.id in product_ids:
-                product_ids.pop(product_ids.index(product.id))
-        return list(set(product_ids))
+        return super()._search_qty_available_new(operator, value, lot_id, owner_id, package_id)
 
     def action_archive(self):
         filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')

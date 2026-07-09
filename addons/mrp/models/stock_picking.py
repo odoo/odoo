@@ -130,7 +130,6 @@ class StockPickingType(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    has_kits = fields.Boolean(compute='_compute_has_kits')
     production_count = fields.Integer(
         "Count of MO generated",
         compute='_compute_mrp_production_ids',
@@ -147,11 +146,6 @@ class StockPicking(models.Model):
         related='move_ids.production_group_id',
     )
 
-    @api.depends('move_ids')
-    def _compute_has_kits(self):
-        for picking in self:
-            picking.has_kits = any(picking.move_ids.mapped('bom_line_id'))
-
     @api.depends('reference_ids.production_ids')
     def _compute_production_ids(self):
         for picking in self:
@@ -165,9 +159,7 @@ class StockPicking(models.Model):
             picking.production_count = len(mo)
 
     def action_detailed_operations(self):
-        action = super().action_detailed_operations()
-        action['context']['has_kits'] = self.has_kits
-        return action
+        return super().action_detailed_operations()
 
     def action_view_mrp_production(self):
         self.ensure_one()

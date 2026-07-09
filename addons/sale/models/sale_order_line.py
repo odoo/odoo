@@ -198,6 +198,13 @@ class SaleOrderLine(models.Model):
     # line.
     selected_combo_items = fields.Char(store=False)
     combo_item_id = fields.Many2one(comodel_name="product.combo.item")
+    kit_line_id = fields.Many2one(
+        string="Kit Component Line",
+        comodel_name="product.kit.line",
+        ondelete="set null",
+        copy=False,
+        index='btree_not_null',
+    )
 
     # Pricing fields
     tax_ids = fields.Many2many(
@@ -631,7 +638,7 @@ class SaleOrderLine(models.Model):
         lines_by_company = defaultdict(lambda: self.env["sale.order.line"])
         cached_taxes = {}
         for line in self:
-            if line.product_type == "combo":
+            if line.product_type in ("combo", "kit"):
                 line.tax_ids = False
                 continue
             lines_by_company[line.company_id] += line
@@ -772,6 +779,8 @@ class SaleOrderLine(models.Model):
 
         if self.product_type == "combo":
             return 0  # The display price of a combo line should always be 0.
+        if self.product_type == "kit":
+            return 0  # The display price of a kit line should always be 0 (price is on components).
         if self.combo_item_id:
             return self._get_combo_item_display_price()
         return self._get_display_price_ignore_combo()
@@ -1023,6 +1032,10 @@ class SaleOrderLine(models.Model):
         """
         self.qty_delivered_method = "manual"
         for line in self:
+            if line.product_id.type == "kit":
+                # Kit header lines are never delivered; delivery tracked on component lines.
+                line.qty_delivered_method = "manual"
+                continue
             if line.is_expense:
                 line.qty_delivered_method = "analytic"
             elif line.product_id.type == "service":
@@ -1306,7 +1319,10 @@ class SaleOrderLine(models.Model):
         """
         precision = self.env["decimal.precision"].precision_get("Product Unit")
         for line in self:
-            if line.state != "sale":
+            if line.product_id.type == "kit":
+                # Kit header lines are never invoiced directly; invoicing tracked on component lines.
+                line.invoice_status = "no"
+            elif line.state != "sale":
                 line.invoice_status = "no"
             elif line.is_downpayment and line.untaxed_amount_to_invoice == 0:
                 line.invoice_status = "invoiced"
@@ -1635,7 +1651,44 @@ class SaleOrderLine(models.Model):
                 msg = self.env._("Extra line with %s", line.product_id.display_name or line.name)
                 line.order_id.message_post(body=msg)
 
+        # Explode kit products into component lines
+        kit_lines = lines.filtered(
+            lambda l: l.product_id.type == "kit" and not l.kit_line_id and not l.linked_line_id
+        )
+        kit_lines._create_kit_component_lines()
+
         return lines
+
+    def _create_kit_component_lines(self):
+        """Create component lines for kit header lines."""
+        component_vals_list = []
+        for kit_line in self:
+            kit_product = kit_line.product_id
+            kit_qty = kit_line.product_uom_qty
+            kit_line.order_id.order_line = [Command.create({
+                'name': kit_line.name,
+                'display_type': "line_section",
+                })]
+            # kit_line.unlink()
+            for kit_component in kit_product.product_tmpl_id.kit_line_ids:
+                price = kit_line.price_unit or kit_line.product_id.lst_price
+                price_unit = (
+                    price * kit_component.price_ratio / 100.0
+                    if kit_component.price_ratio
+                    else 0.0
+                )
+                component_vals_list.append({
+                    "order_id": kit_line.order_id.id,
+                    "product_id": kit_component.product_id.id,
+                    "product_uom_qty": kit_qty * kit_component.product_qty,
+                    "product_uom_id": kit_component.uom_id.id,
+                    "price_unit": price_unit,
+                    "linked_line_id": kit_line.id,
+                    "kit_line_id": kit_component.id,
+                    "sequence": kit_line.sequence,
+                })
+        if component_vals_list:
+            self.with_context(sale_no_log_for_new_lines=True).create(component_vals_list)
 
     def _add_precomputed_values(self, vals_list):
         super()._add_precomputed_values(vals_list)
@@ -1677,6 +1730,11 @@ class SaleOrderLine(models.Model):
                     != 0
                 )
             )._update_line_quantity(values)
+            # Rescale kit component lines when the kit header qty changes
+            if not self.env.context.get("kit_rescale"):
+                kit_headers = self.filtered(lambda l: l.product_id.type == "kit")
+                if kit_headers:
+                    kit_headers._rescale_kit_component_lines(values["product_uom_qty"])
 
         if (
             "technical_price_unit" in values
@@ -1723,6 +1781,18 @@ class SaleOrderLine(models.Model):
                 )
 
         return super().write(values)
+
+    def _rescale_kit_component_lines(self, new_kit_qty):
+        """Update component quantities when a kit header line's quantity changes."""
+        for kit_line in self.filtered(lambda l: l.product_id.type == "kit"):
+            old_qty = kit_line.product_uom_qty
+            if not old_qty:
+                continue
+            ratio = new_kit_qty / old_qty
+            for component_line in kit_line.linked_line_ids.filtered("kit_line_id"):
+                component_line.with_context(
+                    kit_rescale=True
+                ).product_uom_qty = component_line.product_uom_qty * ratio
 
     def _get_protected_fields(self):
         """Give the fields that should not be modified on a locked SO.
@@ -1949,7 +2019,7 @@ class SaleOrderLine(models.Model):
         billable_lines = self.order_id.order_line.filtered(
             lambda line: (
                 not line.display_type
-                and line.product_type != "combo"
+                and line.product_type not in ("combo", "kit")
                 and self._is_line_in_section(line)
             )
         )
@@ -2152,6 +2222,9 @@ class SaleOrderLine(models.Model):
         if self.product_type == "combo":
             # Only consider combo item lines (not optional product lines)
             return self.linked_line_ids.filtered("combo_item_id")
+        if self.product_type == "kit":
+            # Only consider kit component lines for price display
+            return self.linked_line_ids.filtered("kit_line_id")
         return self
 
     # For `sale_management`, to control optional products on portal

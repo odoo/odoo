@@ -26,8 +26,7 @@ class MrpBom(models.Model):
     code = fields.Char('Reference')
     active = fields.Boolean('Active', default=True)
     type = fields.Selection([
-        ('normal', 'Manufacture this product'),
-        ('phantom', 'Kit')], 'BoM Type',
+        ('normal', 'Manufacture this product')], 'BoM Type',
         default='normal', required=True)
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product',
@@ -204,15 +203,7 @@ class MrpBom(models.Model):
 
     @api.onchange('bom_line_ids', 'product_qty', 'product_id', 'product_tmpl_id')
     def onchange_bom_structure(self):
-        if self.type == 'phantom' and self._origin and self.env['stock.move'].search_count([('bom_line_id', 'in', self._origin.bom_line_ids.ids)], limit=1):
-            return {
-                'warning': {
-                    'title': _('Warning'),
-                    'message': _(
-                        'The product has already been used at least once, editing its structure may lead to undesirable behaviours. '
-                        'You should rather archive the product and create a new one with a new bill of materials.'),
-                }
-            }
+        pass
 
     @api.onchange('product_tmpl_id')
     def onchange_product_tmpl_id(self):
@@ -330,7 +321,7 @@ class MrpBom(models.Model):
     def _compute_json_popover(self):
         warehouse = self.env.user._get_default_warehouse_id()
         self.json_popover = False
-        for bom in self.filtered(lambda bom: bom.type != 'phantom' and bom._origin):
+        for bom in self.filtered(lambda bom: bom._origin):
             bom_data = bom.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom, warehouse, bom.product_id, ignore_stock=True)
             component_info = max([c for c in bom_data.get('components', []) if c.get('is_storable')], key=lambda component: component.get('lead_time', 0) or component.get('availability_delay', 0) or component.get('manufacture_delay', 0), default={'lead_time': 0, 'availability_delay': 0, 'manufacture_delay': 0, 'name': ''})
             max_delay = int(component_info.get('lead_time') or component_info.get('availability_delay') or component_info.get('manufacture_delay') or 0)
@@ -351,13 +342,6 @@ class MrpBom(models.Model):
             else:
                 popover_data['bom_id'] = bom._origin.id
             bom.json_popover = json.dumps(popover_data)
-
-    @api.constrains('product_tmpl_id', 'product_id', 'type')
-    def check_kit_has_not_orderpoint(self):
-        product_ids = [pid for bom in self.filtered(lambda bom: bom.type == "phantom")
-                           for pid in (bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids)]
-        if self.env['stock.warehouse.orderpoint'].search_count([('product_id', 'in', product_ids)], limit=1):
-            raise ValidationError(_("You can not create a kit-type bill of materials for products that have at least one reordering rule."))
 
     @api.constrains('enable_batch_size', 'batch_size')
     def _check_valid_batch_size(self):
@@ -393,7 +377,7 @@ class MrpBom(models.Model):
         :rtype: defaultdict(`lambda: self.env['mrp.bom']`)
         """
         bom_by_product = defaultdict(lambda: self.env['mrp.bom'])
-        products = products.filtered(lambda p: p.type != 'service')
+        products = products.filtered(lambda p: p.type not in ('service', 'kit'))
         if not products:
             return bom_by_product
         domain = self._bom_find_domain(products, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
@@ -435,7 +419,7 @@ class MrpBom(models.Model):
         def update_product_boms():
             products = self.env['product.product'].browse(product_ids)
             product_boms.update(self._bom_find(products, picking_type=picking_type or self.picking_type_id,
-                company_id=self.company_id.id, bom_type='phantom'))
+                company_id=self.company_id.id))
             # Set missing keys to default value
             for product in products:
                 product_boms.setdefault(product, self.env['mrp.bom'])

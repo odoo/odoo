@@ -235,7 +235,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'uom': bom.uom_id if bom else product.uom_id,
             'uom_name': bom.uom_id.name if bom else product.uom_id.name,
             'route_type': route_info.get('route_type', ''),
-            'route_name': self.env._('Order') if bom.type == 'phantom' else route_info.get('route_name', ''),
+            'route_name': route_info.get('route_name', ''),
             'route_detail': route_info.get('route_detail', ''),
             'route_alert': route_info.get('route_alert', False),
             'currency': company.currency_id,
@@ -249,7 +249,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'bom_cost': 0,
             'level': level or 0,
             'has_attachments': has_attachments,
-            'phantom_bom': bom.type == 'phantom',
+            'phantom_bom': False,
             'parent_id': parent_bom and parent_bom.id or False,
         }
 
@@ -412,7 +412,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
     @api.model
     def _get_quantities_info(self, product, bom_uom, product_info, bom=False, parent_bom=False, parent_product=False):
-        calculate_quantity = product.is_storable or (bom and bom.type == 'phantom')
+        calculate_quantity = product.is_storable
         quantities_info = {
             'free_qty': max(product.uom_id._compute_quantity(product.free_qty, bom_uom), 0) if calculate_quantity else 0,
             'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if calculate_quantity else 0,

@@ -8,7 +8,6 @@
             <field name="inherit_id" ref="stock.product_template_form_view_stock"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_variant_count']" position="after">
-                    <field name="is_kits" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -134,7 +133,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="stock.action_product_stock_view">
-            <field name="domain">[('is_storable', '=', True), ('is_kits','=', False)]</field>
+            <field name="domain">[('is_storable', '=', True)]</field>
         </record>
     </data>
 </odoo>
