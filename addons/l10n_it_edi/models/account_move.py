@@ -1479,13 +1479,11 @@ class AccountMove(models.Model):
                 company,
                 tax_factor_percent,
                 ([('l10n_it_pension_fund_type', '=', pension_fund_type)]
-                 + type_tax_use_domain),
-                l10n_it_exempt_reason=pension_fund_natura)
+                 + type_tax_use_domain))
             if pension_fund_tax:
-                if vat_tax_factor_percent not in pension_fund_taxes:
-                    pension_fund_taxes[vat_tax_factor_percent] = pension_fund_tax
-                else:
-                    pension_fund_taxes[vat_tax_factor_percent] |= pension_fund_tax
+                key = (vat_tax_factor_percent, pension_fund_natura)
+                pension_fund_taxes.setdefault(key, self.env['account.tax'])
+                pension_fund_taxes[key] |= pension_fund_tax
             else:
                 message_to_log.append(Markup("%s<br/>%s") % (
                     _("Pension Fund tax not found"),
@@ -2569,24 +2567,17 @@ class AccountMove(models.Model):
         """
         pension_fund_map = extra_info.get('pension_fund_taxes', {})
         tax_rate = get_float(element, './/AliquotaIVA')
-        l10n_it_exemption_reason = get_text(element, "Natura")
+        l10n_it_exemption_reason = get_text(element, "Natura") or False
 
         if not tax_rate and not l10n_it_exemption_reason:
             return None
 
-        pension_fund_tax_candidates = pension_fund_map.get(tax_rate)
-        if not pension_fund_tax_candidates:
-            return None
-
-        if l10n_it_exemption_reason:
-            pension_fund_tax_candidates = pension_fund_tax_candidates.filtered(lambda t: t.l10n_it_exempt_reason == l10n_it_exemption_reason)
-        pension_fund_tax = pension_fund_tax_candidates[:1]
-
-        if not pension_fund_tax:
+        pension_fund_taxes = pension_fund_map.get((tax_rate, l10n_it_exemption_reason))
+        if not pension_fund_taxes:
             return None
 
         if not extra_info.get('pension_fund_assosoftware_tags'):
-            return pension_fund_tax
+            return pension_fund_taxes
 
         parent_selector = ".//AltriDatiGestionali[TipoDato[contains(text(),'AswCassPre')]]"
         parent_tag = element.xpath(parent_selector)
@@ -2596,12 +2587,12 @@ class AccountMove(models.Model):
         reference_tag = parent_tag[0].xpath("./RiferimentoTesto")
         if reference_tag and (match := re.match(r"(?P<kind>TC\d{2}) \((?P<tax_rate>\d+)%\)", reference_tag[0].text)):
             rate = float(match.group("tax_rate"))
-            match_kind = (match.group("kind") == pension_fund_tax.l10n_it_pension_fund_type)
-            match_rate = (float_compare(rate, pension_fund_tax.amount, precision_digits=2) == 0)
-            if match_kind and match_rate:
-                return pension_fund_tax
+            filtered_pension_fund_taxes = pension_fund_taxes.filtered(lambda t:
+                t.l10n_it_pension_fund_type == match.group("kind")
+                and float_compare(rate, t.amount, precision_digits=2) == 0)
+            return filtered_pension_fund_taxes or None
         elif not reference_tag:
-            return pension_fund_tax
+            return pension_fund_taxes
 
         return None
 

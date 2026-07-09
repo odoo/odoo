@@ -1006,12 +1006,12 @@ class TestItEdiImport(TestItEdi):
     def test_import_pension_fund_specific_natura(self):
         """ Ensure that the pension fund tax is only applied to lines matching the VAT rate and the exemption reason (Natura) """
 
-        self.env = self.env['base'].with_company(self.company_data_2['company']).env
         pension_tax = self.env['account.tax'].search([
             ('amount', '=', 4.0),
             ('type_tax_use', '=', 'purchase'),
+            *self.env['account.tax']._check_company_domain(self.company),
+            ('l10n_it_pension_fund_type', '=', 'TC22'),
         ], limit=1)
-        pension_tax.write({'l10n_it_exempt_reason': 'N2.1'})
 
         applied_xml = """
             <xpath expr="//FatturaElettronicaBody/DatiBeniServizi" position="replace">
@@ -1056,7 +1056,7 @@ class TestItEdiImport(TestItEdi):
             </xpath>
         """
 
-        invoices = self._assert_import_invoice('IT00470550013_pfun3.xml', [{
+        invoice = self._assert_import_invoice('IT00470550013_pfun3.xml', [{
             'move_type': 'in_invoice',
             'amount_untaxed': 752.00,
             'amount_tax': 30.00,
@@ -1065,7 +1065,10 @@ class TestItEdiImport(TestItEdi):
                 {'quantity': 1.0, 'price_unit': 2.00},
             ],
         }], applied_xml)
-        line_1 = invoices.invoice_line_ids[0]
-        line_2 = invoices.invoice_line_ids[1]
-        self.assertIn(pension_tax.id, line_1.tax_ids.ids)
-        self.assertNotIn(pension_tax.id, line_2.tax_ids.ids)
+        self.assertEqual(
+            [line.tax_ids for line in invoice.invoice_line_ids],
+            [
+                self.vat_0_N2_1_purchase | pension_tax,
+                self.vat_0_N1_purchase,
+            ]
+        )
