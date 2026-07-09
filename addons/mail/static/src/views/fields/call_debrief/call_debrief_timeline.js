@@ -1,22 +1,24 @@
 import { Component, onWillUnmount, signal, t, proxy, useProps } from "@odoo/owl";
 import { formatDuration } from "@mail/views/fields/call_debrief/call_debrief_utils";
 
+export const callDebriefTimelineProps = {
+    // Total length of the call in seconds.
+    totalDuration: t.number(),
+    // Array of media segment objects { id, startSec, endSec, duration, ... }
+    mediaSegments: t.array().optional(),
+    media: t.object().optional(),
+    // Callback function called when the user clicks/drags to seek: ({ timestamp }) => void
+    onSeek: t.function(),
+    // The current playback position in global call seconds.
+    currentTime: t.number().optional(),
+};
+
 export class CallDebriefTimeline extends Component {
     static template = "mail.CallDebriefTimeline";
+    props = useProps(callDebriefTimelineProps);
 
     setup() {
         super.setup();
-        this.props = useProps({
-            // Total length of the call in seconds.
-            totalDuration: t.number(),
-            // Array of media segment objects { id, startSec, endSec, duration, ... }
-            mediaSegments: t.array().optional(),
-            media: t.object().optional(),
-            // Callback function called when the user clicks/drags to seek: ({ timestamp }) => void
-            onSeek: t.function(),
-            // The current playback position in global call seconds.
-            currentTime: t.number().optional(),
-        });
         this.timeline = signal.ref();
         this.timestamp = signal.ref();
         this.isDragging = false;
