@@ -99,9 +99,14 @@ class ResCompany(models.Model):
             if not record.pdp_identifier:
                 continue
             match = PDP_identifier_re.match(record.pdp_identifier or '')
+            update = {
+                'peppol_eas': '0225',
+                'peppol_endpoint': record.pdp_identifier,  # Will be verified by `_check_peppol_fields` constraint
+            }
             siren = match and match.group(1)
             if not siren:
                 raise UserError(self.env._("The identifier %s is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage", record.pdp_identifier))
+<<<<<<< 45611e45e869d7ddb2d6ef197e4c3d69eebb40bc
             siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
             # Set the registry identifier first: writes `additional_identifiers`, which
             # would recompute `routing_scheme`/`routing_endpoint` and overwrite the 0225
@@ -109,6 +114,20 @@ class ResCompany(models.Model):
             if registry := (siret or siren):
                 record.partner_id._set_additional_identifier('FR_SIRET' if len(registry) == 14 else 'FR_SIREN', registry)
             record.partner_id.write({'routing_identifier': f'0225:{record.pdp_identifier}'})
+||||||| c1b76874c2ae137b640c7701690bdd7ac954562b
+            siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
+            record.partner_id.write({
+                'peppol_eas': '0225',
+                'peppol_endpoint': record.pdp_identifier,  # Will be verified by `_check_peppol_fields` constraint
+                'company_registry': siret or siren,
+            })
+=======
+            if not record.company_registry:
+                siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
+                update['company_registry'] = siret or siren
+
+            record.partner_id.write(update)
+>>>>>>> d821a7fdc570c06f28f6c5103b1806e0f3f13d14
 
     @api.depends('l10n_fr_pdp_annuaire_start_date', 'account_peppol_proxy_state')
     def _compute_l10n_fr_pdp_registered(self):
