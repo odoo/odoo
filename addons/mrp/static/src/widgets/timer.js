@@ -4,16 +4,7 @@ import { parseFloatTime } from "@web/views/fields/parsers";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import {
-    Component,
-    onWillUpdateProps,
-    onWillStart,
-    onWillDestroy,
-    useProps,
-    proxy,
-    signal,
-    t,
-} from "@odoo/owl";
+import { Component, onWillDestroy, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
 
 function formatMinutes(value) {
     if (value === false) {
@@ -48,41 +39,45 @@ export class MrpTimer extends Component {
             duration: this.props.value,
         });
         this.lastDateTime = Date.now();
-        this.ongoing = this.props.ongoing;
-        onWillStart(() => {
-            if (this.ongoing) {
+
+        // Runs on mount and whenever the timer is (re)started, the cleanup
+        // stopping the timers as soon as it is no longer ongoing.
+        useOnChange(
+            () => [this.props.ongoing],
+            (ongoing) => {
+                if (!ongoing) {
+                    return;
+                }
+                this.state.duration = this.props.value;
+                // Reset the reference time: the time elapsed before the timer
+                // started must not be mistaken for a sleep period.
+                this.lastDateTime = Date.now();
                 this._runTimer();
                 this._runSleepTimer();
+                return () => this._stopTimers();
             }
-        });
-        onWillUpdateProps((nextProps) => {
-            const rerun = !this.ongoing && nextProps.ongoing;
-            this.ongoing = nextProps.ongoing;
-            if (rerun) {
-                this.state.duration = nextProps.value;
-                this._runTimer();
-                this._runSleepTimer();
-            }
-        });
-        onWillDestroy(() => clearTimeout(this.timer));
+        );
     }
 
     get durationFormatted() {
         return formatMinutes(this.state.duration);
     }
 
+    _stopTimers() {
+        clearTimeout(this.tickTimer);
+        clearTimeout(this.sleepTimer);
+    }
+
     _runTimer() {
-        this.timer = setTimeout(() => {
-            if (this.ongoing) {
-                this.state.duration += 1 / 60;
-                this._runTimer();
-            }
+        this.tickTimer = setTimeout(() => {
+            this.state.duration += 1 / 60;
+            this._runTimer();
         }, 1000);
     }
 
     //updates the time when the computer wakes from sleep mode
     _runSleepTimer() {
-        this.timer = setTimeout(async () => {
+        this.sleepTimer = setTimeout(() => {
             const diff = Date.now() - this.lastDateTime - 10000;
             if (diff > 1000) {
                 this.state.duration += diff / (1000 * 60);
