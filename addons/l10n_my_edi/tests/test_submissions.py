@@ -357,6 +357,42 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         failed_invoice = self.submission_invoice.filtered(lambda inv: not inv.l10n_my_edi_state)
         self.assertEqual(len(failed_invoice), 1, 'One invoice has no state.')
 
+    def test_12b_partial_failure_only_cancels_failing_move(self):
+        """A batch submission where one document fails per-document validation must
+        cancel only the failing move; sibling moves whose submission succeeded must
+        remain posted."""
+        good_invoice = self.init_invoice(
+            'out_invoice', taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True,
+        )
+        bad_invoice = self.init_invoice(
+            'out_invoice', taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True,
+        )
+        bad_name = bad_invoice.name
+
+        def mock(_self, endpoint, params):
+            if endpoint == 'api/l10n_my_edi/1/submit_invoices':
+                return {
+                    'submission_uid': '999999999',
+                    'documents': [
+                        {
+                            'move_id': d['move_id'],
+                            'success': d['move_name'] != bad_name,
+                            'uuid': f"uuid-{d['move_id']}",
+                            'errors': [{'reference': 'Y503', 'target': 'TIN'}],
+                        }
+                        for d in params['documents']
+                    ],
+                }
+            if endpoint == 'api/l10n_my_edi/1/get_submission_statuses':
+                return {'statuses': {}, 'document_count': 0}
+            raise UserError(f'Unexpected endpoint: {endpoint}')
+
+        with patch(CONTACT_PROXY_METHOD, new=mock):
+            (good_invoice | bad_invoice).action_l10n_my_edi_send_invoice()
+
+        self.assertEqual(good_invoice.state, 'posted', 'Successful sibling must stay posted.')
+        self.assertEqual(bad_invoice.state, 'cancel', 'Failing invoice must be cancelled.')
+
     def test_13_multiple_cron_runs(self):
         """
         Simulate the cron running more than once; ensure that we correctly update l10n_my_edi_retry_at for valid invoices.
