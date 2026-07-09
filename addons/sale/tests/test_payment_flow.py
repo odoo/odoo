@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
@@ -700,3 +701,71 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             0.6 * self.sale_order.amount_total,
             msg="Cancelled invoices should not reduce the amount left to pay",
         )
+
+    def test_order_is_paid_with_multiple_transactions(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+            reference="Done Transaction 1",
+        )
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+            reference="Done Transaction 2",
+        )
+        self.assertTrue(self.sale_order._is_paid())
+
+    def test_order_is_not_paid_after_partial_payment(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        self.assertFalse(self.sale_order._is_paid())
+
+    def test_order_is_partially_paid_after_partial_payment(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        self.assertTrue(self.sale_order._is_partially_paid())
+
+    def test_order_is_not_partially_paid_when_fully_paid(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        self.assertFalse(self.sale_order._is_partially_paid())
+
+    def test_order_is_not_partially_paid_when_cancelled(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        self.sale_order.state = "cancel"
+        self.assertFalse(self.sale_order._is_partially_paid())
+
+    def test_order_is_not_partially_paid_when_no_paid_transactions(self):
+        self._create_transaction(flow="direct", sale_order_ids=[self.sale_order.id], state="draft")
+        self.assertFalse(self.sale_order._is_partially_paid())
+
+    def test_check_not_partially_paid_raises_user_error(self):
+        self._create_transaction(
+            flow="direct",
+            amount=self.sale_order.amount_total / 2,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        with self.assertRaises(UserError):
+            self.sale_order._check_not_partially_paid()

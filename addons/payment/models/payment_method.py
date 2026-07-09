@@ -61,7 +61,8 @@ class PaymentMethod(models.Model):
         store=True,
     )
 
-    # Feature support fields.
+    # === FEATURE SUPPORT FIELDS === #
+
     support_tokenization = fields.Boolean(
         string="Tokenization",
         help="Tokenization is the process of saving the payment details as a token that can later"
@@ -108,6 +109,12 @@ class PaymentMethod(models.Model):
         " customers.",
         comodel_name="res.currency",
         context={"active_test": False},
+    )
+
+    # === CONFIGURATION FIELDS === #
+
+    allow_amount_selection = fields.Boolean(
+        string="Amount Selection", help="Allow splitting payments across several payment methods."
     )
 
     # === SQL CONSTRAINTS === #

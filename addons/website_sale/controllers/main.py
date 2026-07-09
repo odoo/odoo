@@ -243,9 +243,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order=self._get_search_order(post),
             options=options,
         )
-        search_result = (
-            details[0].get("results", self.env["product.template"])
-        )
+        search_result = details[0].get("results", self.env["product.template"])
 
         return fuzzy_search_term, product_count, search_result
 
@@ -1657,6 +1655,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not (order_sudo := request.cart):
             return
 
+        # Prevent modifying the partner's address (fiscal position) if the cart is partially paid
+        order_sudo._check_not_partially_paid()
+
         ResPartner = self.env["res.partner"].sudo()
         partner_sudo = ResPartner.browse(partner_id).exists()
         children = ResPartner._search([
@@ -1683,10 +1684,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def system_page_extra_info(env):  # noqa: N805
         if not env.website.is_view_active("website_sale.extra_info"):
             return []
-        return [{
+        return [
+            {
                 "route_title": _lt("Shop Checkout - Extra Information"),
                 "route_url": "/shop/extra_info",
-            }]
+            }
+        ]
 
     @route(
         ["/shop/extra_info"],
@@ -1812,6 +1815,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 return request.redirect(redirect)
 
             order_sudo._validate_order()
+
+        if order_sudo._is_partially_paid():
+            # The payment is incomplete, keep the cart and redirect to the payment page
+            return request.redirect("/shop/payment")
 
         # clean context and session, then redirect to the confirmation page
         self.env.website.sale_reset()
@@ -2143,13 +2150,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
                 min_index = pavs._ids.index(min_id)
                 max_index = pavs._ids.index(max_id)
-                attribute_value_dict[attr_id] = pavs._ids[min_index:max_index + 1]
+                attribute_value_dict[attr_id] = pavs._ids[min_index : max_index + 1]
                 continue
 
             value_ids = []
             for attr_value in attr_values.split(","):
                 if value_id := unslug(attr_value)[1]:
-                    value_ids.append(value_id)
+                    value_ids.append(value_id)  # noqa: PERF401
 
             if value_ids:
                 attribute_value_dict[attr_id] = value_ids

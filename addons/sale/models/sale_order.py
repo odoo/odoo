@@ -168,8 +168,8 @@ class SaleOrder(models.Model):
 
     validity_date = fields.Date(
         string="Expiration",
-        help="Validity of the quotation."
-        " After this date, you will no longer be able to sign and pay it.",
+        help="Validity of the quotation. After this date, you will no longer be able to sign and"
+        " pay it.",
         compute="_compute_validity_date",
         store=True,
         readonly=False,
@@ -2742,17 +2742,49 @@ class SaleOrder(models.Model):
 
     # === TOOLING ===#
 
+    def _is_partially_paid(self):
+        """Return whether the sales order has a confirmed partial payment.
+
+        The order is not considered "partially" paid if it's fully paid.
+
+        :return: Whether the order is partially paid
+        :rtype: bool
+        """
+        self.ensure_one()
+
+        if self.state == "cancel":
+            return False  # Allow resetting the cart when it's canceled from the backend
+
+        if self._is_paid():
+            return False
+
+        return any(self.transaction_ids.filtered(lambda tx: tx.state in {"authorized", "done"}))
+
     def _is_paid(self):
         """Return whether the sale order is paid or not based on the linked transactions.
 
-        A sale order is considered paid if the sum of all the linked transaction is equal to or
-        higher than `self.amount_total`.
+        A sales order is considered paid if the sum of all the paid (i.e., `authorized` or `done`)
+        transactions' amount is equal to or higher than `self.amount_total`.
 
-        :return: Whether the sale order is paid or not.
+        :return: Whether the order is considered paid
         :rtype: bool
         """
         self.ensure_one()
         return self.currency_id.compare_amounts(self.amount_paid, self.amount_total) >= 0
+
+    def _check_not_partially_paid(self):
+        """Check if the order is partially paid, and raises an error if so.
+
+        :rtype: None
+        :raise UserError: If the error is partially paid
+        """
+        if self._is_partially_paid():
+            raise UserError(
+                self.env._(
+                    "It seems that there is already a payment in progress for your order; you can't"
+                    " modify it anymore."
+                )
+            )
 
     def _get_lang(self):
         self.ensure_one()

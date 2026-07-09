@@ -15,9 +15,12 @@ export class PaymentStatus extends Interaction {
         this.busService.addChannel(this.notificationChannel);
         this.busService.subscribe(this.notificationType, this.onProcessingCompleteBind);
 
+        // Keep the landing route in memory; it might be updated after each state processing
+        this.landingRoute = this.el.dataset.landingRoute;
+
         // Redirect automatically after 10 seconds in case the channel subscription fails
         this.redirectTimeout = this.waitForTimeout(() => {
-            this.redirectToLandingPage(this.el.dataset.landingRoute);
+            this.redirectToLandingPage();
         }, 10000);
     }
 
@@ -37,6 +40,7 @@ export class PaymentStatus extends Interaction {
         if (reference !== this.el.dataset.transactionReference) {  // Old notification replay
             return;  // Ignore notifications for other transactions than the one being monitored
         }
+        this.landingRoute = landing_route;  // The route might have been changed during processing
         if (PaymentStatus.getFinalStates(provider_code).has(state)) {
             this.redirectToLandingPage(landing_route);
         }
@@ -45,17 +49,16 @@ export class PaymentStatus extends Interaction {
     /**
      * Clean up bus subscriptions and the timer and redirect to the landing route.
      *
-     * @param {string} landingRoute - The landing route to be redirected to
      * @returns {void}
      */
-    redirectToLandingPage(landingRoute) {
+    redirectToLandingPage() {
         // Cleanup before leaving the page; make sure bus listener is disposed properly on redirect
         clearTimeout(this.redirectTimeout);
         this.busService.unsubscribe(this.notificationType, this.onProcessingCompleteBind);
         this.busService.deleteChannel(this.notificationChannel);
 
         // Redirect the user to the landing route
-        redirect(landingRoute);
+        redirect(this.landingRoute);
     }
 
     /**

@@ -202,6 +202,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 )
 
         backend_url = f"/odoo/action-{order_sudo._get_portal_return_action().id}/{order_sudo.id}"
+        prepayment_available = order_sudo.prepayment_percent and order_sudo.prepayment_percent < 1.0
         values = {
             "sale_order": order_sudo.with_context(lang=order_sudo._get_lang()),
             "product_documents": order_sudo._get_product_documents(),
@@ -210,6 +211,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             "backend_url": backend_url,
             "res_company": order_sudo.company_id,  # Used to display correct company logo
             "payment_amount": payment_amount,
+            "prepayment_available": prepayment_available,
             "advantage_tax_excl": advantage_tax_excl,
             "advantage_tax_incl": advantage_tax_incl,
         }
@@ -223,6 +225,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                         order_sudo, amount_selection, payment_amount
                     ),
                     payment_amount=payment_amount,
+                    prepayment_available=prepayment_available,
                 )
             )
         else:
@@ -260,12 +263,20 @@ class CustomerPortal(payment_portal.PaymentPortal):
             )
         return is_down_payment
 
-    def _get_payment_values(self, order_sudo, is_down_payment=False, payment_amount=None, **kwargs):
+    def _get_payment_values(
+        self,
+        order_sudo,
+        is_down_payment=False,
+        payment_amount=None,
+        prepayment_available=False,
+        **kwargs,
+    ):
         """Return the payment-specific QWeb context values.
 
         :param sale.order order_sudo: The sales order being paid.
         :param bool is_down_payment: Whether the current payment is a down payment.
         :param float payment_amount: The amount suggested in the payment link.
+        :param bool prepayment_available: Whether pre-payment is allowed
         :param dict kwargs: Forwarded to underlying methods
         :return: The payment-specific values.
         :rtype: dict
@@ -283,7 +294,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         elif order_sudo.state == "sale":
             amount = payment_amount or order_sudo.amount_total
         else:
-            amount = order_sudo.amount_total
+            amount = currency.round(order_sudo.amount_total - order_sudo.amount_paid)
 
         # Prepare the portal page values
         company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
@@ -304,6 +315,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             sale_order_id=order_sudo.id,
             **kwargs,
         )
+        payment_form_values["show_amount_input"] = not payment_amount and not prepayment_available
 
         payment_context = {
             "amount": amount,

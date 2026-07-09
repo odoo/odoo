@@ -528,6 +528,8 @@ class SaleOrder(models.Model):
         self.ensure_one()
         self = self.with_company(self.company_id)
 
+        self._check_not_partially_paid()  # Prevent modifying the cart if it's partially paid
+
         product = self.env["product.product"].browse(product_id)
         if not uom_id or not product._has_multiple_uoms():
             # Fall back on product uom if uom is not specified or if multi-uom is not

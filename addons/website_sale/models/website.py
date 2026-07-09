@@ -691,7 +691,9 @@ class Website(models.Model):
         return {
             "company_id": self.company_id.id,
             "partner_id": partner_sudo.id,
-            **(self.is_public_user() and {"fiscal_position_id": request.fiscal_position.id} or {}),
+            **(
+                (self.is_public_user() and {"fiscal_position_id": request.fiscal_position.id}) or {}
+            ),
             "pricelist_id": request.pricelist.id,
             "team_id": self.salesteam_id.id,
             "website_id": self.id,
@@ -803,11 +805,15 @@ class Website(models.Model):
                 self.sale_reset()
                 sale_order_sudo = SaleOrderSudo
 
-            if sale_order_sudo and (
-                sale_order_sudo.state != "draft"
-                or sale_order_sudo.get_portal_last_transaction().state
-                in {"pending", "authorized", "done"}
-                or sale_order_sudo.website_id != self
+            if (
+                sale_order_sudo
+                and not sale_order_sudo._is_partially_paid()
+                and (
+                    sale_order_sudo.state != "draft"
+                    or sale_order_sudo.get_portal_last_transaction().state
+                    in {"pending", "authorized", "done"}
+                    or sale_order_sudo.website_id != self
+                )
             ):
                 self.sale_reset()
                 sale_order_sudo = SaleOrderSudo
