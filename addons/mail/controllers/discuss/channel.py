@@ -9,6 +9,7 @@ from odoo.fields import Domain
 from odoo.http import request
 
 from odoo.addons.mail.controllers.webclient import WebclientController
+from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
 from odoo.addons.mail.tools.discuss import Store, mail_route
 from odoo.addons.mail.tools.store_handler import store_handler
 
@@ -110,11 +111,18 @@ class DiscussChannelWebclientController(WebclientController):
     @store_handler("/discuss/channel/messages", audience="everyone", readonly=False)
     def store_get_discuss_channel_messages(self, store: Store, channel_id, fetch_params=None):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        # public has no rights at all, manually apply share domain (-> maybe to be cleaned by discuss team at some point)
+        if is_public := request.env.user._is_public():
+            domain = SHARE_DOMAIN
+        else:
+            domain = None
         if channel:
             messages = self._resolve_messages(
                 store,
+                domain=domain,
                 thread=channel,
                 fetch_params=fetch_params,
+                sudo=is_public,
             )
             messages.set_message_done()
 

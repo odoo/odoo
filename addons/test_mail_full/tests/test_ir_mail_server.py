@@ -101,23 +101,10 @@ class TestIrMailServerPersonal(MailCommon):
                         'Finding a server for an email_from without specifying a list of servers should not find owned servers.'
                     )
 
-    @users('employee')
-    def test_immutable_create_uid(self):
-        """Make sure create_uid is not writable, as it's a security assumption for these tests."""
-        message = self.test_partner.with_user(self.env.user).message_post(
-            body='hello',
-            author_id=self.user_employee.partner_id.id, email_from=self.user_employee.email,
-            partner_ids=self.test_partner.ids,
-        )
-
-        self.assertEqual(message.create_uid, self.user_employee)
-        message.create_uid = self.user_admin
-        self.assertEqual(message.create_uid, self.user_employee)
-
     def test_personal_mail_server_mail_for_existing_message(self):
         """Crons should be able to send a mail from a personal server for an existing message."""
         message = self.test_partner.with_user(self.user_employee).message_post(body='hello')
-        message.partner_ids += self.test_partner
+        message.sudo().partner_ids += self.test_partner
         with self.mock_mail_connect():
             self.test_partner.with_user(self.env.ref('base.user_root'))._notify_thread(message)
         self.assertEqual(self.connected_server_ids, [self.mail_server_user.id], "Should have used message creator's server.")

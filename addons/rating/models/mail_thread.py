@@ -123,6 +123,8 @@ class MailThread(models.AbstractModel):
             raise ValueError(_('Wrong rating value. A rate should be between 0 and 5 (received %d).', rate))
         if token:
             rating = self.env['rating.rating'].search([('access_token', '=', token)], limit=1)
+        elif rating and not self.env.su:
+            rating = rating.with_user(self.env.user)  # avoid issue with is_current_user_or_guest_author
         if not rating:
             raise ValueError(_('Invalid token or rating.'))
 
@@ -149,7 +151,6 @@ class MailThread(models.AbstractModel):
                     rating.message_id,
                     body=rating_body,
                     scheduled_date=scheduled_datetime,
-                    strict=False,
                 )
             else:
                 self.message_post(
@@ -205,15 +206,14 @@ class MailThread(models.AbstractModel):
             self.env["rating.rating"].sudo().create(rating_vals_lst)
         return messages
 
-    def _get_allowed_message_params(self):
-        return super()._get_allowed_message_params() | {"rating_value"}
+    def _get_allowed_message_post_params(self):
+        return super()._get_allowed_message_post_params() | {"rating_value"}
 
-    def _message_update_content(self, message, /, *, body, rating_value=None, **kwargs):
+    def _message_update_content(self, message, *, body=None, rating_value=None, **kwargs):
+        # TDE note: highly suspicious
         if rating_value:
             message.rating_id.rating = rating_value
-            message.rating_id.feedback = tools.html2plaintext(body)
+            message.rating_id.feedback = tools.html2plaintext(body or '')
         elif rating_value is False:
-            rating_ids = message.rating_ids
-            rating_ids.message_id = False
-            rating_ids.unlink()
+            message.rating_ids.unlink()
         return super()._message_update_content(message, body=body, **kwargs)

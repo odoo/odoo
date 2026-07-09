@@ -1,14 +1,11 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.tests.common import tagged
-
-import json
-
 from odoo.tools import file_open, mute_logger
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'mail_controller')
 class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
     @classmethod

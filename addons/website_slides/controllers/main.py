@@ -136,7 +136,7 @@ class WebsiteSlides(WebsiteProfile):
             'next_slide': next_slide,
             'category_data': category_data,
             # rating and comments
-            'comments': request.env["mail.message"].search(
+            'comments': request.env["mail.message"].sudo().search(
                 PortalWebClientController._get_portal_message_fetch_domain(slide)
             ),
         })

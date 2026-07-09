@@ -1,4 +1,4 @@
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError
 from odoo import models
 
 
@@ -13,8 +13,8 @@ class MailThread(models.AbstractModel):
           * if no tracking;
         """
         super()._check_can_update_message_content(messages)
-        if messages.tracking_value_ids:
-            raise UserError(self.env._("Messages with tracking values cannot be modified"))
+        if messages.sudo().tracking_value_ids:
+            raise AccessError(self.env._("Messages with tracking values cannot be modified"))
 
     def _message_create(self, values_list):
         for values in values_list:

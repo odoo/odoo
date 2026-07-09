@@ -171,7 +171,7 @@ class MailMessage(models.Model):
     preview = fields.Char(
         'Preview', compute='_compute_preview',
         help='The text-only beginning of the body used as email preview.')
-    linked_message_ids = fields.Many2many("mail.message", compute="_compute_linked_message_ids")
+    linked_message_ids = fields.Many2many("mail.message", compute="_compute_linked_message_ids", compute_sudo=True)
     message_link_preview_ids = fields.One2many(
         "mail.message.link.preview", "message_id", groups="base.group_erp_manager"
     )
@@ -336,10 +336,16 @@ class MailMessage(models.Model):
         if not mids:
             self.linked_message_ids = self.env["mail.message"]
             return
-        # Remove any potential sudo from the env as linked messages are user input, returning them
+        # for public, limit to accessible records + share domain; for other
+        # remove any potential sudo from the env as linked messages are user input, returning them
         # as sudo could lead to users being able to read any arbitrary message through this feature.
         # Only allowed messages for the current user are acceptable.
-        linked_messages = self.sudo(False).search(Domain("id", "in", mids))
+        if self.env.user._is_public():
+            # sequential check, but already existing code, and public should not
+            # go through thousands of linked messages
+            linked_messages = self.sudo().search(Domain("id", "in", mids) & SHARE_DOMAIN)._get_with_access()
+        else:
+            linked_messages = self.sudo(False).search(Domain("id", "in", mids))
         for message in self:
             message.linked_message_ids = linked_messages.filtered(
                 lambda m, message=message: m.id in message_ids_by_message[message],
@@ -357,14 +363,29 @@ class MailMessage(models.Model):
                 message.record_name = False
 
     @api.depends('author_id', 'author_guest_id')
-    @api.depends_context('guest', 'uid')
+    @api.depends_context('guest', 'portal_data', 'uid')
     def _compute_is_current_user_or_guest_author(self):
         user = self.env.user
         guest = self.env['mail.guest']._get_guest_from_context()
+        # support context-based author check, using recordsets (non forgeable by rpc)
+        portal_data = self.env.context.get("portal_data", {})
+        portal_partner = portal_data.get("portal_partner")
+        if portal_partner:
+            portal_partner = portal_partner if isinstance(portal_partner, self.pool["res.partner"]) else None
+        portal_thread = portal_data.get("portal_thread")
+        if portal_thread:
+            portal_thread = portal_thread if isinstance(portal_thread, self.pool["mail.thread"]) else None
+
         for message in self:
             if not user._is_public() and (message.author_id and message.author_id == user.partner_id):
                 message.is_current_user_or_guest_author = True
             elif message.author_guest_id and message.author_guest_id == guest:
+                message.is_current_user_or_guest_author = True
+            elif (
+                portal_partner and portal_thread and message.model and message.res_id and
+                message.author_id == portal_partner and
+                message.model == portal_thread._name and message.res_id == portal_thread.id
+            ):
                 message.is_current_user_or_guest_author = True
             else:
                 message.is_current_user_or_guest_author = False
@@ -716,23 +737,29 @@ class MailMessage(models.Model):
     def _get_with_access(self, mode="read", **kwargs):
         if not self:
             return self
-        self.ensure_one()
         if self.env.user._is_admin():
             return self
-        # sanity check on kwargs
-        allowed_params = self.env[self.sudo().model or 'mail.thread']._get_allowed_access_params()
-        if invalid := (set((kwargs or {}).keys()) - allowed_params):
-            _logger.warning("Invalid parameters to _get_with_access: %s", invalid)
-        if self.sudo(False).has_access(mode):
-            return self
-        if self.model and self.res_id:
-            thread_su = self.env[self.model].browse(self.res_id).sudo()
-            for domain, access_mode in thread_su._mail_get_operation_for_mail_message_operation(mode):
-                if thread_su.filtered_domain(domain):
-                    if self.env[self.model]._get_thread_with_access(self.res_id, mode=access_mode, **kwargs):
-                        return self
-                    break
-        return self.browse()
+        valid = self.browse()
+
+        for res_model, model_messages in self.grouped('model').items():
+            # sanity check on kwargs
+            allowed_params = self.env[res_model or 'mail.thread']._get_allowed_access_params()
+            if invalid := (set((kwargs or {}).keys()) - allowed_params):
+                _logger.warning("Invalid parameters to _get_with_access: %s", invalid)
+
+            if model_messages.sudo(False).has_access(mode):
+                valid += model_messages
+                continue
+            if res_model and (res_ids := OrderedSet(filter(None, model_messages.mapped('res_id')))):
+                # note that this is still sequential (per document), currently ok
+                # as mostly called on 1 message - batch only for specific public
+                # access, where message count should be low
+                threads_su = self.env[res_model].browse(list(res_ids)).sudo()
+                for domain, access_mode in threads_su._mail_get_operation_for_mail_message_operation(mode):
+                    for thread_su in threads_su.filtered_domain(domain):
+                        if self.env[res_model]._get_thread_with_access(thread_su.id, mode=access_mode, **kwargs):
+                            valid += model_messages.filtered(lambda m: m.res_id == thread_su.id)
+        return valid
 
     @api.model_create_multi
     def create(self, vals_list):
