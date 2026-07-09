@@ -13,7 +13,6 @@ export class FormFieldOptionRedraw extends BaseOptionComponent {
         super.setup();
         this.count = 0;
         this.domState = useDomState((el) => {
-            this.count++;
             return {
                 redrawSequence: this.count++,
             };
