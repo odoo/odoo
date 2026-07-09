@@ -5,12 +5,21 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 @tagged("post_install", "-at_install")
 class TestStockOrderpointActivity(TestStockCommon):
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',  # FIXME: stock.group_stock_user
+    )
+
+    _test_user_name = 'Test Product & Inventory Manager'
+
     def test_orderpoint_activity_portal_context_leak(self):
 
         company_b = self.env["res.company"].search([("id", "!=", self.env.company.id)], limit=1)
         if not company_b:
             self.env.user.lang = "en_US"
-            company_b = self.env["res.company"].create({"name": "Thanks to Nature Test"})
+            company_b = self.env["res.company"].sudo().create({"name": "Thanks to Nature Test"})
+            company_ids = [self.env.user.sudo().company_id.id, company_b.id]
+            self.env = self.env(context=dict(self.env.context, allowed_company_ids=company_ids))
 
         warehouse_b = self.env["stock.warehouse"].search([("company_id", "=", company_b.id)], limit=1)
         if not warehouse_b:
@@ -31,7 +40,7 @@ class TestStockOrderpointActivity(TestStockCommon):
             }
         )
 
-        portal_user = self.env["res.users"].create(
+        portal_user = self.env["res.users"].sudo().create(
             {
                 "name": "Portal Customer",
                 "login": "portal_customer_nature_leak_test",

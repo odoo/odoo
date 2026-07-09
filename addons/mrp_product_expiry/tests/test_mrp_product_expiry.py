@@ -9,7 +9,12 @@ from odoo.exceptions import UserError
 
 class TestStockLot(TestStockCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',  # subject: producing MOs (implies stock.group_stock_user)
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):

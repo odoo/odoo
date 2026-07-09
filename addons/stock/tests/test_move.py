@@ -12,7 +12,12 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 @tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestStockMove(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',  # FIXME: stock.group_stock_user
+    )
+
+    _test_user_name = 'Test Stock & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -1912,7 +1917,7 @@ class TestStockMove(TestStockCommon):
         quantity available is not enough to reserve the move. Check also that it is not possible
         to set `quantity` with a value not honouring the UOM's rounding.
         """
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        self.env['decimal.precision'].sudo().search([('name', '=', 'Product Unit')]).digits = 0
 
         # 6 units are available in stock
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 6.0)
@@ -6061,7 +6066,7 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(picking.move_line_ids.location_dest_id, self.stock_location.child_ids[0])
 
     def test_inter_wh_and_forecast_availability(self):
-        dest_wh = self.env['stock.warehouse'].create({
+        dest_wh = self.env['stock.warehouse'].sudo().create({
             'name': 'Second Warehouse',
             'code': 'WH02',
         })
@@ -6945,6 +6950,9 @@ class TestStockMove(TestStockCommon):
     def test_picking_deadline_excludes_cancelled_move(self):
         """ Picking deadline must recompute on move cancellation and must not include cancelled moves. """
         today = fields.Datetime.now()
+        company_ids = [self.env.user.sudo().company_id.id, self.stock_location.sudo().company_id.id]
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=company_ids))
+
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'location_id': self.supplier_location.id,

@@ -10,7 +10,12 @@ from odoo import Command, fields
 
 class TestStockReplenish(TestStockCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_base_delay(self):
         """Open the replenish view and check if delay is taken into account
@@ -76,7 +81,10 @@ class TestStockReplenish(TestStockCommon):
         self.assertEqual(wizard._values['quantity'], 1)
 
     def test_replenish_route_from_another_company(self):
-        company = self.env['res.company'].create({'name': 'Company 2'})
+        company = self.env['res.company'].sudo().create({'name': 'Company 2'})
+        self.env.user.sudo().company_ids += company
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=[self.env.company.id, company.id]))
+        self.productA = self.productA.with_env(self.env)
         route = self.env['stock.route'].create({
             'name': 'Test Route',
             'company_id': company.id,

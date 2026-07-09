@@ -3,7 +3,13 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 class TestAnalyticToSaleStock(TestStockCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'sales_team.group_sale_manager',  # subject: sale orders & upsell lines (manager sees SOs created in setUp)
+        'analytic.group_analytic_accounting',  # subject: upsell analytic lines aggregated into delivered qty
+    )
+
+    _test_user_name = 'Test Sales User'
 
     @classmethod
     def setUpClass(cls):

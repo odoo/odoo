@@ -9,7 +9,16 @@ from odoo.tests.common import new_test_user
 @tagged('-post_install', 'at_install')  # test_resupply_route breaks post install
 class TestWarehouse(TestStockCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',  # FIXME: use base.group_stock_user
+        # FIXME: warehouse configuration writes res.groups (base.group_user.implied_ids)
+        # without sudo in stock.warehouse._check_multiwarehouse_group (stock/models/
+        # stock_warehouse.py) and creates res.company for multi-company scenarios.
+        'base.group_erp_manager',
+    )
+
+    _test_user_name = 'Test Stock & Product Manager'
 
     def test_inventory_product(self):
         self.product_1.is_storable = True
@@ -57,7 +66,7 @@ class TestWarehouse(TestStockCommon):
         When updating product quantity, new quant should have its location set
         to the stock location of the top warehouse.
         """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Mixed locations',
             'code': 'TEST',
             'sequence': 0,
@@ -221,20 +230,20 @@ class TestWarehouse(TestStockCommon):
         Create the move from Shop to Customer and ensure that all the pull
         rules are triggered in order to complete the move chain to Stock.
         """
-        warehouse_stock = self.env['stock.warehouse'].create({
+        warehouse_stock = self.env['stock.warehouse'].sudo().create({
             'name': 'Stock.',
             'code': 'STK',
         })
 
         distribution_partner = self.env['res.partner'].create({'name': 'Distribution Center'})
-        warehouse_distribution = self.env['stock.warehouse'].create({
+        warehouse_distribution = self.env['stock.warehouse'].sudo().create({
             'name': 'Dist.',
             'code': 'DIST',
             'resupply_wh_ids': [Command.set([warehouse_stock.id])],
             'partner_id': distribution_partner.id,
         })
 
-        warehouse_shop = self.env['stock.warehouse'].create({
+        warehouse_shop = self.env['stock.warehouse'].sudo().create({
             'name': 'Shop',
             'code': 'SHOP',
             'resupply_wh_ids': [Command.set([warehouse_distribution.id])],
@@ -305,23 +314,23 @@ class TestWarehouse(TestStockCommon):
         """
         customer_location = self.customer_location
 
-        warehouse_distribution_wavre = self.env['stock.warehouse'].create({
+        warehouse_distribution_wavre = self.env['stock.warehouse'].sudo().create({
             'name': 'Stock Wavre.',
             'code': 'WV',
         })
 
-        warehouse_shop_wavre = self.env['stock.warehouse'].create({
+        warehouse_shop_wavre = self.env['stock.warehouse'].sudo().create({
             'name': 'Shop Wavre',
             'code': 'SHWV',
             'resupply_wh_ids': [Command.set([warehouse_distribution_wavre.id])],
         })
 
-        warehouse_distribution_namur = self.env['stock.warehouse'].create({
+        warehouse_distribution_namur = self.env['stock.warehouse'].sudo().create({
             'name': 'Stock Namur.',
             'code': 'NM',
         })
 
-        warehouse_shop_namur = self.env['stock.warehouse'].create({
+        warehouse_shop_namur = self.env['stock.warehouse'].sudo().create({
             'name': 'Shop Namur',
             'code': 'SHNM',
             'resupply_wh_ids': [Command.set([warehouse_distribution_namur.id])],
@@ -441,7 +450,7 @@ class TestWarehouse(TestStockCommon):
     def test_add_resupply_warehouse_one_by_one(self):
         """ Checks that selecting a warehouse as a resupply warehouse one after another correctly sets the routes as well.
         """
-        warehouse_A, warehouse_B, warehouse_C = self.env['stock.warehouse'].create([{
+        warehouse_A, warehouse_B, warehouse_C = self.env['stock.warehouse'].sudo().create([{
             'name': code,
             'code': code,
         } for code in ['WH_A', 'WH_B', 'WH_C']])
@@ -460,11 +469,11 @@ class TestWarehouse(TestStockCommon):
     def test_toggle_resupply_warehouse(self):
         """ Checks that selecting then unselecting a warehouse as resupply correctly archives/unarchives the related route.
         """
-        warehouse_A = self.env['stock.warehouse'].create({
+        warehouse_A = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse A',
             'code': 'WH_A',
         })
-        warehouse_B = self.env['stock.warehouse'].create({
+        warehouse_B = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse B',
             'code': 'WH_B',
             'resupply_wh_ids': [Command.set(warehouse_A.ids)],
@@ -489,12 +498,12 @@ class TestWarehouse(TestStockCommon):
         - A reordering rule is set on the product to fill the second warehouse
         Ensure that the product can move all the way from the first to the second warehouse.
         """
-        warehouse_A = self.env['stock.warehouse'].create({
+        warehouse_A = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse A',
             'code': 'WH_A',
             'delivery_steps': 'pick_pack_ship',
         })
-        warehouse_B = self.env['stock.warehouse'].create({
+        warehouse_B = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse B',
             'code': 'WH_B',
             'reception_steps': 'three_steps',
@@ -545,11 +554,11 @@ class TestWarehouse(TestStockCommon):
         """ Verifies that when changing the delivery steps of a warehouse, it correctly adds/removes the extra rule
         that is required to resupply the Output location.
         """
-        warehouse_A = self.env['stock.warehouse'].create({
+        warehouse_A = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse X',
             'code': 'WH_X',
         })
-        warehouse_B = self.env['stock.warehouse'].create({
+        warehouse_B = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse Y',
             'code': 'WH_Y',
             'resupply_wh_ids': [Command.link(warehouse_A.id)],
@@ -592,7 +601,9 @@ class TestWarehouse(TestStockCommon):
             'name': 'My Company (Chicago)1',
             'currency_id': self.ref('base.USD')
         })
-        self.env['stock.warehouse'].create({
+        self.env.user.sudo().company_ids += company
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=[self.env.company.id, company.id]))
+        self.env['stock.warehouse'].sudo().create({
             'name': 'Chicago Warehouse2',
             'company_id': company.id,
             'code': 'Chic2',
@@ -769,7 +780,7 @@ class TestWarehouse(TestStockCommon):
         """ Check that the closest warehouse is selected
         in a warehouse within warehouse situation
         """
-        wh = self.env['stock.warehouse'].create({
+        wh = self.env['stock.warehouse'].sudo().create({
             'name': 'Main Test Warehouse',
             'code': 'MTWH',
         })
@@ -789,12 +800,12 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(location.warehouse_id, test_warehouse)
 
     def test_location_updates_wh(self):
-        warehouse_A = self.env['stock.warehouse'].create({
+        warehouse_A = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse X',
             'code': 'WH_X',
             'delivery_steps': 'pick_pack_ship'
         })
-        warehouse_B = self.env['stock.warehouse'].create({
+        warehouse_B = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse Y',
             'code': 'WH_Y',
             'delivery_steps': 'pick_pack_ship'
@@ -830,7 +841,8 @@ class TestWarehouse(TestStockCommon):
             {'name': 'COMP1'},
             {'name': 'COMP2'},
         ])
-        warehouses = self.env['stock.warehouse'].create([
+        self.env.user.sudo().company_ids += companies
+        warehouses = self.env['stock.warehouse'].sudo().create([
             {
                 'name': 'Warehouse 1',
                 'company_id': companies.ids[0],
@@ -871,7 +883,7 @@ class TestWarehouse(TestStockCommon):
         out_type = self.warehouse_1.out_type_id
         sequence = out_type.sequence_id
         end_of_prefix = 'LOREM/'
-        sequence.prefix += end_of_prefix
+        sequence.sudo().prefix += end_of_prefix
         self.warehouse_1.delivery_steps = 'pick_ship'
         self.assertTrue(sequence.prefix.endswith(end_of_prefix))
 
@@ -883,9 +895,10 @@ class TestWarehouse(TestStockCommon):
           one duplicate for each call _find_or_create_global_route.
         """
         company_2 = self.env["res.company"].create({"name": "Company 2"})
+        self.env.user.sudo().company_ids += company_2
 
         mto_route = self.warehouse_1.mto_pull_id.route_id
-        mto_route.rule_ids.unlink()  # Quick patch to be able to set a company on the route
+        mto_route.sudo().rule_ids.unlink()  # Quick patch to be able to set a company on the route
         mto_route.write({"name": "New Name (MTO)", "company_id": self.warehouse_1.company_id.id})
 
         self.env["stock.warehouse"].with_company(company_2).create({"name": "Warehouse 2", "code": "2"})
@@ -946,14 +959,19 @@ class TestWarehouse(TestStockCommon):
 
 @tagged('-at_install', 'post_install')
 class TestWarehousePostInstall(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_manual_resupply_from_wh_partner_propagation(self):
         """
         Check that the warehouse destination is set as delivery address
         when a product is manually resupplied from an other warehouse.
         """
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse 2',
             'company_id': self.env.company.id,
             'code': 'WHC2',

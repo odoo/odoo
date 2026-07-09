@@ -309,7 +309,7 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if 'company_id' in create_values and 'company_ids' not in create_values:
         create_values['company_ids'] = [(4, create_values['company_id'])]
 
-    return env['res.users'].with_context(**context).create(create_values)
+    return env['res.users'].sudo().with_context(**context).create(create_values)
 
 def loaded_demo_data(env):
     return bool(env.ref('base.user_demo', raise_if_not_found=False))

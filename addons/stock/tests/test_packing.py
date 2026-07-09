@@ -7,7 +7,11 @@ from odoo.tests import Form, tagged
 
 
 class TestPackingCommon(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -23,7 +27,12 @@ class TestPackingCommon(TestStockCommon):
 
 class TestPacking(TestPackingCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_put_in_pack(self):
         """ In a pick pack ship scenario, create two packs in pick and check that
@@ -1759,7 +1768,12 @@ class TestPacking(TestPackingCommon):
 @tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_reusable_package_propagation(self):
         """ Test a reusable package should not be propagated to the next picking

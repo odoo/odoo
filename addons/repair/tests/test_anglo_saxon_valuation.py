@@ -91,7 +91,14 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 @tagged('post_install', '-at_install')
 class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # product cost/category writes
+        'stock.group_stock_manager',  # subject: repair orders & deliveries
+        'account.group_account_invoice',  # anglo-saxon COGS entries asserted
+        'account.group_account_readonly',  # FIXME: valuation reads account.fiscal.year (account_accountant)
+    )
+
+    _test_user_name = 'Test Stock & Account User'
 
     def test_ro_invoice_double_valuation(self):
         """This test make sure that the valuation entry for a repair is created only once.
@@ -101,7 +108,7 @@ class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
         self.product_fifo_auto.taxes_id = False
         self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.warehouse.lot_stock_id, 5)
 
-        self.account_inventory = self.env['account.account'].create({
+        self.account_inventory = self.env['account.account'].sudo().create({
             'name': 'Inventory Account',
             'code': '100101',
             'account_type': 'asset_current',

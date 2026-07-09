@@ -36,7 +36,11 @@ class TestStockCommon(ProductVariantsCommon):
     references instead of obtaining global objects on their own. That's because,
     in the future, stock tests will be using a dedicated set of test data.
     """
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def _create_move(self, product, src_location, dst_location, **values):
         # TDE FIXME: user as parameter
@@ -56,6 +60,10 @@ class TestStockCommon(ProductVariantsCommon):
         # Some models use env.company in various methods, so we make sure they will find the stock company
         cls.env = cls.env(context=dict(cls.env.context, allowed_company_ids=[cls.company.id]))
         cls.env.ref('base.user_admin').company_ids |= cls.company
+        # The restricted test_user (see BaseCommon) is only a member of the main
+        # company; the tests here run in cls.company, so grant it access too.
+        if cls._test_user:
+            cls._test_user.company_ids |= cls.company
 
         cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
             'attendance_ids': [
@@ -209,6 +217,6 @@ class TestStockCommon(ProductVariantsCommon):
     def url_extract_rec_id_and_model(self, url):
         # Extract model and record ID
         action_match = re.findall(r'action-([^/]+)', url)
-        model_name = self.env.ref(action_match[0]).res_model
+        model_name = self.env.ref(action_match[0]).sudo().res_model
         rec_id = re.findall(r'/(\d+)$', url)[0]
         return rec_id, model_name

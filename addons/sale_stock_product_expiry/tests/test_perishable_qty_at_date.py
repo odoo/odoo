@@ -7,7 +7,13 @@ from odoo.tests import HttpCase, tagged
 @tagged('post_install', '-at_install')
 class TestPerishableQtyAtDate(TestStockCommon, HttpCase):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',  # setup: stock.lot / stock.quant fixtures for the perishable products
+        'sales_team.group_sale_salesman',  # setup: the sale.order whose forecast widget is tested
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @freeze_time("2025-10-01")
     def test_forecast_widget_perishable_qty_at_date(self):
@@ -23,7 +29,7 @@ class TestPerishableQtyAtDate(TestStockCommon, HttpCase):
             'sale_delay': i * 5,
         } for i in (1, 2)])
 
-        partner = self.env['res.partner'].create({'name': 'Buyer'})
+        partner = self.env['res.partner'].sudo().create({'name': 'Buyer'})
 
         # Create 3 lots with different expiration dates for each product_exp
         lot_records = self.env['stock.lot'].create([{
@@ -48,4 +54,4 @@ class TestPerishableQtyAtDate(TestStockCommon, HttpCase):
         self.assertEqual(sale_order.order_line[0].virtual_available_at_date, 200)
         self.assertEqual(sale_order.order_line[1].virtual_available_at_date, 100)
         url = f"odoo/sales/{sale_order.id}"
-        self.start_tour(url, 'test_forecast_widget_perishable_qty_at_date', login='admin', cookies={"cids": f"{self.company.id}"})
+        self.start_tour(url, 'test_forecast_widget_perishable_qty_at_date', login=self.env.user.login, cookies={"cids": f"{self.company.id}"})

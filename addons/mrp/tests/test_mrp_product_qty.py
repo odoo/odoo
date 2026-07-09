@@ -9,7 +9,14 @@ class TestMrpProductQty(TestMrpCommon):
     """Tests for ProductProduct._compute_mrp_product_qty which computes the
     total quantity of a product manufactured in the last 365 days based on
     done stock.move records linked to completed manufacturing orders."""
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'stock.group_stock_user',
+        'uom.group_uom',  # test_mrp_product_qty_uom_conversion sets uom_id (view field is groups="uom.group_uom")
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(self):

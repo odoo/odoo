@@ -13,7 +13,7 @@ class TestProjectStock(TestProjectCommon):
         self.project_pigs.partner_id = self.env['res.partner'].create({
             'name': 'Jeff Delaney',
         })
-        self.env['stock.warehouse'].create({
+        self.env['stock.warehouse'].sudo().create({
             'name': 'Hi mom!',
             'partner_id': self.project_pigs.partner_id.id,
             'code': 'Fireship',

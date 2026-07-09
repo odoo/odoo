@@ -18,11 +18,42 @@ _logger = logging.getLogger(__name__)
 @tagged('post_install', '-at_install')
 class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        # Subject-under-test business groups: these tests drive real
+        # subcontracting-purchase flows (PO creation, BoMs, routes, vendor
+        # pricelists, product configuration) under the restricted test user.
+        'purchase.group_purchase_user',      # purchase.order create
+        'mrp.group_mrp_manager',             # mrp.bom create/access
+        'stock.group_stock_manager',         # stock.route / stock.location write & create
+        'product.group_product_manager',     # product.product / product.category / product.supplierinfo write & create
+        # Subject-under-test: these tests post vendor bills (aml.move_id.action_post())
+        # to check subcontracting valuation -> account.move posting group.
+        'account.group_account_invoice',
+        # FIXME mrp_subcontracting mrp_subcontracting/tests/common.py:68 révélé par
+        # MrpSubcontractingPurchaseTest.test_subcontracting_multi_currency_price_diff :
+        # _setup_category_stock_journals() crée account.account/account.journal (master-data)
+        # sans sudo sous le user restreint -> nécessite le groupe Accounting/Administrator.
+        'account.group_account_manager',
+    )
+
+    _test_user_name = 'Test User'
 
     @classmethod
     def setUpClass(self):
         super().setUpClass()
+
+        # SETUP: TestStockValuationCommon.setUpClass creates a fresh company
+        # ('Inventory Test Company') and sets it as the sole allowed_company_ids
+        # AFTER the restricted _test_user was already created (in BaseCommon) with
+        # the original main company. The test then runs under _test_user with that
+        # company in context, so env.companies raises "Access to unauthorized or
+        # invalid companies". Grant the restricted test user access to the test
+        # company (res.users master data -> sudo).
+        if self._test_user:
+            self._test_user.sudo().write({
+                'company_ids': [Command.link(self.company.id)],
+            })
 
         self.finished2, self.comp3 = self.env['product.product'].create([{
             'name': 'SuperProduct',
@@ -310,7 +341,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         """
         (self.comp1 | self.comp2 | self.finished).categ_id = self.category_standard_auto
 
-        stock_price_diff_acc_id = self.env['account.account'].create({
+        stock_price_diff_acc_id = self.env['account.account'].sudo().create({
             'name': 'default_account_stock_price_diff',
             'code': 'STOCKDIFF',
             'account_type': 'asset_current',
@@ -358,9 +389,9 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
             currency and invoice currency differ
         """
         currency_grp = self.env.ref('base.group_multi_currency')
-        self.env.user.write({'group_ids': [(4, currency_grp.id)]})
+        self.env.user.sudo().write({'group_ids': [(4, currency_grp.id)]})
 
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.sudo().anglo_saxon_accounting = True
         product_category_all = self.product_category
         product_category_all.property_cost_method = 'standard'
         product_category_all.property_valuation = 'real_time'
@@ -377,11 +408,11 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.comp2.standard_price = 20.0
         self.finished.standard_price = 100
 
-        mock_currency = self.env['res.currency'].create({
+        mock_currency = self.env['res.currency'].sudo().create({
             'name': 'MOCK',
             'symbol': 'MC',
         })
-        self.env['res.currency.rate'].create({
+        self.env['res.currency.rate'].sudo().create({
             'name': '2023-01-01',
             'company_rate': 2.0,
             'currency_id': mock_currency.id,
@@ -499,7 +530,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
             ('company_id', '=', self.company.id),
         ], limit=1)
 
-        self.company.days_to_purchase = 2
+        self.company.sudo().days_to_purchase = 2
         # Case 1 Vendor lead time >= Manufacturing lead time + DTPMO
         seller = self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.finished.product_tmpl_id.id,
@@ -524,7 +555,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         while the resupply availability should be based on the calculated dtpmo.
         """
         # should be added in all cases
-        self.company.days_to_purchase = 5
+        self.company.sudo().days_to_purchase = 5
         self.comp2.bom_ids.unlink()
 
         self.finished.seller_ids.write({

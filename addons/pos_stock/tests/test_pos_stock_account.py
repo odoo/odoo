@@ -273,7 +273,7 @@ class TestPoSStock(TestPoSCommon):
         self.assertEqual(expense_account_move_line.balance, 0.0, "Expense account should be 0.0")
 
     def test_stock_duplicate_warehouse_with_PoS_operation_type(self):
-        wh = self.env['stock.warehouse'].create({
+        wh = self.env['stock.warehouse'].sudo().create({
             'name': 'WH1',
             'code': 'WH1',
             'company_id': self.env.company.id,

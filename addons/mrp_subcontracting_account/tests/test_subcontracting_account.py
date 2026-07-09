@@ -10,7 +10,14 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 @tagged('post_install', '-at_install')
 class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValuationCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'stock.group_stock_user',  # subcontracting flow: create stock.picking/stock.move/stock.lot
+        'stock.group_stock_manager',  # FIXME stock_account models/product.py révélé par TestAccountSubcontractingFlows.test_subcontracting_account_flow_1: stock move create writes product.value (crud=stock.group_stock_manager)
+        'account.group_account_invoice',  # test asserts on account.move.line entries
+        'mrp.group_mrp_user',  # FIXME mrp models/mrp_production.py:1141 révélé par TestAccountSubcontractingFlows.test_subcontracting_account_backorder: subcontracted receipt creates mrp.production/mrp.production.group
+    )
+
+    _test_user_name = 'Test User'
 
     @classmethod
     def setUpClass(cls):
@@ -26,7 +33,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         cls.comp2.standard_price = 20.0
 
     def test_subcontracting_account_flow_1(self):
-        (self.comp1 | self.comp2 | self.finished).categ_id = self.category_fifo_auto
+        (self.comp1 | self.comp2 | self.finished).sudo().categ_id = self.category_fifo_auto
         self._make_in_move(self.comp1, 10, unit_cost=10, location_dest_id=self.env.company.subcontracting_location_id.id)
         self._make_in_move(self.comp2, 10, unit_cost=20, location_dest_id=self.env.company.subcontracting_location_id.id)
         all_amls_ids = self.env['account.move.line'].search([]).ids
@@ -85,11 +92,11 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         ensure the extra cost asked from the subcontractor is added correctly on all the finished
         product valuation layer. Not only the first one. """
         todo_nb = 4
-        self.comp2.tracking = 'lot'
-        self.comp1.tracking = 'serial'
-        self.comp2.standard_price = 100
-        self.finished.tracking = 'serial'
-        self.finished.categ_id = self.category_fifo
+        self.comp2.sudo().tracking = 'lot'
+        self.comp1.sudo().tracking = 'serial'
+        self.comp2.sudo().standard_price = 100
+        self.finished.sudo().tracking = 'serial'
+        self.finished.sudo().categ_id = self.category_fifo
 
         picking_receipt = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_in.id,
@@ -168,11 +175,11 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         Suppose a subcontracted product P with two tracked components, P is FIFO
         Create a receipt for 10 x P, receive 5, then 3 and then 2
         """
-        self.product_category.property_cost_method = 'fifo'
-        self.comp1.tracking = 'lot'
-        self.comp1.standard_price = 10
-        self.comp2.tracking = 'lot'
-        self.comp2.standard_price = 20
+        self.product_category.sudo().property_cost_method = 'fifo'
+        self.comp1.sudo().tracking = 'lot'
+        self.comp1.sudo().standard_price = 10
+        self.comp2.sudo().tracking = 'lot'
+        self.comp2.sudo().standard_price = 20
 
         lot01, lot02 = self.env['stock.lot'].create([{
             'name': "Lot of %s" % product.name,
@@ -228,10 +235,10 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         When posting the account entries for receiving final product, the
         subcontracting cost will be adjusted based on the difference of the cost.
         """
-        (self.comp1 | self.comp2 | self.finished).categ_id = self.category_standard_auto
-        self.comp1.standard_price = 10
-        self.comp2.standard_price = 20
-        self.finished.standard_price = 40
+        (self.comp1 | self.comp2 | self.finished).sudo().categ_id = self.category_standard_auto
+        self.comp1.sudo().standard_price = 10
+        self.comp2.sudo().standard_price = 20
+        self.finished.sudo().standard_price = 40
 
         all_amls_ids = self.env['account.move.line'].search([]).ids
 
@@ -254,9 +261,9 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         """
         Test that the production stock account is optional, and we will fallback on input/output accounts.
         """
-        (self.comp1 | self.comp2 | self.finished).categ_id = self.category_fifo_auto
-        self.comp1.standard_price = 1.0
-        self.prod_location.valuation_account_id = False
+        (self.comp1 | self.comp2 | self.finished).sudo().categ_id = self.category_fifo_auto
+        self.comp1.sudo().standard_price = 1.0
+        self.prod_location.sudo().valuation_account_id = False
         all_amls_ids = self.env['account.move.line'].search([]).ids
         self._make_in_move(self.finished, 1, create_picking=True,
                                              partner_id=self.subcontractor_partner1.id).picking_id
@@ -267,7 +274,12 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
 
 
 class TestSubcontractingBOMCost(TestBomPriceCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'mrp.group_mrp_user',  # button_bom_cost -> mrp_account reads mrp.bom
+        'product.group_product_manager',  # button_bom_cost writes standard_price on product.product (write=product.group_product_manager)
+    )
+
+    _test_user_name = 'Test User'
 
     @classmethod
     def setUpClass(cls):
@@ -282,14 +294,14 @@ class TestSubcontractingBOMCost(TestBomPriceCommon):
 
     def test_01_compute_price_subcontracting_cost(self):
         """Test calculation of bom cost with subcontracting."""
-        suppliers = self.env['product.supplierinfo'].create([
+        suppliers = self.env['product.supplierinfo'].sudo().create([
             {
                 'partner_id': self.partner.id,
-                'product_tmpl_id': self.dining_table.product_tmpl_id.id,
+                'product_tmpl_id': self.dining_table.sudo().product_tmpl_id.id,
                 'price': 150.0,
             }, {
                 'partner_id': self.partner.id,
-                'product_tmpl_id': self.table_head.product_tmpl_id.id,
+                'product_tmpl_id': self.table_head.sudo().product_tmpl_id.id,
                 'price': 120.0,
                 'uom_id': self.dozen.id,
             },
@@ -328,7 +340,7 @@ class TestSubcontractingBOMCost(TestBomPriceCommon):
 
     def test_02_compute_price_subcontracting_cost(self):
         """Test calculation of bom cost with subcontracting and supplier in different currency."""
-        currency_a = self.env['res.currency'].create({
+        currency_a = self.env['res.currency'].sudo().create({
             'name': 'ZEN',
             'symbol': 'Z',
             'rounding': 0.01,
@@ -339,9 +351,9 @@ class TestSubcontractingBOMCost(TestBomPriceCommon):
             })],
         })
 
-        self.env['product.supplierinfo'].create([{
+        self.env['product.supplierinfo'].sudo().create([{
                 'partner_id': self.partner.id,
-                'product_tmpl_id': self.dining_table.product_tmpl_id.id,
+                'product_tmpl_id': self.dining_table.sudo().product_tmpl_id.id,
                 'price': 120.0,
                 'currency_id': currency_a.id,
         }])

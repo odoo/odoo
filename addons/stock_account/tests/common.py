@@ -16,7 +16,7 @@ class TestStockValuationCommon(BaseCommon):
         'account.group_account_invoice',
     )
 
-    _test_user_name = 'Test Stock User & Accountant'
+    _test_user_name = 'Stock Account User'
 
     @classmethod
     def _create_company(cls, **create_values):
@@ -107,7 +107,7 @@ class TestStockValuationCommon(BaseCommon):
         return self.other_currency
 
     def _use_multi_warehouses(self):
-        self.other_warehouse = self.env['stock.warehouse'].create({
+        self.other_warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Other Warehouse',
             'code': 'OWH',
             'company_id': self.company.id,

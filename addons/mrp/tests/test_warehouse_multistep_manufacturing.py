@@ -6,7 +6,19 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 
 class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'mrp.group_mrp_routings',  # view visibility (duration/workorder fields) granted to cls.env.user in Common
+        'mrp.group_mrp_byproducts',  # view visibility (byproducts) granted to mrp users in Common
+        'stock.group_stock_manager',  # setup: warehouse/route/rule/orderpoint/location/picking_type config in test bodies
+        'stock.group_adv_location',  # view visibility (manufacture_steps field on stock.warehouse)
+        'uom.group_uom',  # view visibility (uom_id) granted to cls.env.user in Common
+        'product.group_product_variant',  # view visibility (mrp.bom product_id) set via Form in test bodies
+        'point_of_sale.group_pos_manager',  # FIXME: remove this
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -94,11 +106,12 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         } for name in ('Pre 1', 'Pre 2')])
 
         # create 2 picking type having 2 different pre-prod location
-        pick_1 = self.picking_type_manu.copy({
+        # setup: copying a picking type writes ir.sequence via the sequence_code related inverse
+        pick_1 = self.picking_type_manu.sudo().copy({
             'sequence_code': 'PRE1',
             'default_location_src_id': pre_1.id,
         })
-        pick_2 = self.picking_type_manu.copy({
+        pick_2 = self.picking_type_manu.sudo().copy({
             'sequence_code': 'PRE2',
             'default_location_src_id': pre_2.id,
         })
@@ -521,14 +534,15 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             warehouse.manufacture_steps = 'pbm_sam'
 
         # picking with non default location
-        picking_type = self.env['stock.picking.type'].create({
+        # setup: creating a picking type + its ir.sequence is master-data preparation
+        picking_type = self.env['stock.picking.type'].sudo().create({
             'name': 'Manufacturing',
             'code': 'mrp_operation',
             'warehouse_id': warehouse.id,
             'default_location_src_id': self.warehouse_1.pbm_loc_id.copy().id,
             'default_location_dest_id': self.warehouse_1.sam_loc_id.copy().id,
             'sequence_code': 'TMP',
-            'sequence_id': self.env['ir.sequence'].create({
+            'sequence_id': self.env['ir.sequence'].sudo().create({
                 'code': 'mrp.production',
                 'name': 'tmp_production_sequence',
             }).id,
@@ -938,6 +952,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
     def test_manufacture_to_resupply_unchecks_and_unlinks_warehouse(self):
         """Unchecking Manufacture to Resupply should keep manufacture_to_resupply disabled."""
+        self.warehouse_1 = self.warehouse_1.sudo()  # FIXME: remove sudo
         manufacture_route = self.warehouse_1.manufacture_pull_id.route_id
         self.warehouse_1.manufacture_to_resupply = False
         # Invalidate recordset to avoid cached `manufacture_to_resupply`

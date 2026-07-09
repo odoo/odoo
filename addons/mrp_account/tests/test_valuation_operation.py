@@ -9,13 +9,20 @@ PRICE = 718.75 + 2 * 321.25 - 100  # component price + operations - glass cost
 
 class TestMrpValuationOperationStandard(TestBomPriceOperationCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'mrp.group_mrp_user',  # subject: manufacturing orders drive the valuation layers (implies stock.group_stock_user)
+        'mrp.group_mrp_routings',  # subject: work order / routing operations and their cost
+        'stock.group_stock_manager',  # setup: _make_in_move sets value_manual -> inverse creates product.value (stock.group_stock_manager)
+        'account.group_account_invoice',  # subject: stock valuation journal entries asserted by the tests
+    )
+
+    _test_user_name = 'Test User'
 
     def test_fifo_byproduct(self):
         """ Check that a MO byproduct with a cost share calculates correct svl """
-        self.glass.categ_id = self.category_fifo
-        self.glass.qty_available = 0
-        self.scrap_wood.categ_id = self.category_avco
+        self.glass.sudo().categ_id = self.category_fifo  # setup master-data
+        self.glass.sudo().qty_available = 0  # setup master-data
+        self.scrap_wood.sudo().categ_id = self.category_avco  # setup master-data
         byproduct_cost_share = 0.13
 
         self._make_in_move(self.glass, 1, 10)

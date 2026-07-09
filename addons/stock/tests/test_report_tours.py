@@ -33,12 +33,12 @@ class TestStockReportTour(HttpCase):
             'is_storable': True,
             'is_favorite': True,
         })
-        self.env['stock.warehouse'].create({
+        self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse A',
             'code': 'WH-A',
             'company_id': self.env.user.company_id.id,
         })
-        self.env['stock.warehouse'].create({
+        self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse B',
             'code': 'WH-B',
             'company_id': self.env.user.company_id.id,

@@ -11,7 +11,16 @@ from odoo.exceptions import UserError
 
 class TestProcurement(TestMrpCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'mrp.group_mrp_routings',  # view visibility (duration/workorder fields) granted to cls.env.user in Common
+        'mrp.group_mrp_byproducts',  # view visibility (byproducts) granted to mrp users in Common
+        'stock.group_stock_manager',  # setup: warehouse/route/rule/orderpoint/location/picking_type config in test bodies
+        'uom.group_uom',  # view visibility (uom_id) granted to cls.env.user in Common
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_procurement(self):
         """This test case when create production order check procurement is create"""
@@ -688,7 +697,7 @@ class TestProcurement(TestMrpCommon):
             'name': 'Roger'
         })
         # This needs to be tried with MTO route activated
-        mto_route = self.warehouse_1.mto_pull_id.route_id
+        mto_route = self.warehouse_1.sudo().mto_pull_id.route_id  # FIXME: remove the sudo()
         mto_route.action_unarchive()
         mto_route.rule_ids.procure_method = "make_to_order"
         # Setup for the secondary test
@@ -843,7 +852,8 @@ class TestProcurement(TestMrpCommon):
         stock_location02 = stock_location01.copy()
 
         manu_operation01 = self.picking_type_manu
-        manu_operation02 = manu_operation01.copy()
+        # setup: copying a picking type writes ir.sequence via the sequence_code related inverse
+        manu_operation02 = manu_operation01.sudo().copy()
         with Form(manu_operation02) as form:
             form.name = 'Manufacturing 02'
             form.sequence_code = 'MO2'
@@ -1459,7 +1469,8 @@ class TestProcurement(TestMrpCommon):
         """
         # Configure two BOMs with different auto_confirm_production settings on their manufacturing operation types.
         warehouse = self.warehouse_1
-        self.bom_1.picking_type_id = warehouse.manu_type_id.copy({'auto_confirm_production': False})
+        # setup: copying a picking type writes ir.sequence via the sequence_code related inverse
+        self.bom_1.picking_type_id = warehouse.manu_type_id.sudo().copy({'auto_confirm_production': False})
         self.bom_3.picking_type_id = warehouse.manu_type_id
 
         # Trigger procurement for two products whose BOMs use operation types with different auto_confirm_production settings.

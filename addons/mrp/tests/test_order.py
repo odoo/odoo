@@ -15,7 +15,17 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 
 class TestMrpOrder(TestMrpCommon, MailCase):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'mrp.group_mrp_routings',  # view visibility (duration/workorder fields) granted to cls.env.user in Common
+        'mrp.group_mrp_byproducts',  # view visibility (byproducts) granted to mrp users in Common
+        'stock.group_stock_manager',  # setup: warehouse/route/rule/orderpoint/location/picking_type config in test bodies
+        'uom.group_uom',  # view visibility (uom_id) granted to cls.env.user in Common
+        'hr.group_hr_manager',  # FIXME: used by self.env['hr.employee'].create(
+    )
+
+    _test_user_name = 'Test Product & Inventory Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -628,7 +638,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 Command.create({'product_id': self.product_8.id, 'product_qty': 4.16}),
             ]
         })
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        self.env['decimal.precision'].sudo().search([('name', '=', 'Product Unit')]).digits = 0
         production_form = Form(self.env['mrp.production'])
         production_form.product_id = self.product_6
         production_form.bom_id = bom_eff
@@ -1956,7 +1966,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         """
 
         # the overall decimal accuracy is set to 3 digits
-        precision = self.env.ref('uom.decimal_product_uom')
+        precision = self.env.ref('uom.decimal_product_uom').sudo()
         precision.digits = 3
 
         # define L and ml, L has rounding .001 but ml has rounding .01
@@ -3295,7 +3305,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         """
 
         self.bom_3.write({'uom_id': self.uom_unit.id})
-        self.env.company.tz = 'UTC'
+        self.env.company.sudo().tz = 'UTC'
 
         # Create an MO.
         mo_form = Form(self.env['mrp.production'])
@@ -3331,7 +3341,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
     def test_planning_cancelled_workorder(self):
         """Test when plan start time for workorders, cancelled workorders won't be taken into account.
         """
-        self.env.company.tz = 'Europe/Brussels'
+        self.env.company.sudo().tz = 'Europe/Brussels'
         workcenter_1 = self.env['mrp.workcenter'].create({
             'name': 'wc1',
             'time_start': 10,
@@ -3500,7 +3510,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             'relative_uom_id': self.uom_unit.id,
         })
         # Only consider whole units
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        self.env['decimal.precision'].sudo().search([('name', '=', 'Product Unit')]).digits = 0
 
         test_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_7_template.id,
@@ -3578,7 +3588,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         Test that the operation type set on the bom is set in the manufacturing order
         when selecting the BoM"""
         self.env.user.group_ids += self.env.ref("stock.group_adv_location")
-        picking_type = self.env['stock.picking.type'].create({
+        # setup: creating a picking type writes ir.sequence via the sequence_code related inverse
+        picking_type = self.env['stock.picking.type'].sudo().create({
             'name': 'new_picking_type',
             'code': 'internal',
             'sequence_code': 'NPT',
@@ -3608,7 +3619,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         """
         stock_location_1 = self.stock_location
         stock_location_2 = stock_location_1.copy()
-        picking_type_1 = self.env['stock.picking.type'].create({
+        # setup: creating/copying a picking type writes ir.sequence via the sequence_code related inverse
+        picking_type_1 = self.env['stock.picking.type'].sudo().create({
             'name': 'new_picking_type_1',
             'code': 'mrp_operation',
             'sequence_code': 'BWH/PT1/',
@@ -3643,7 +3655,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
     def test_onchange_bom_ids_and_picking_type(self):
         warehouse01 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse02, warehouse03 = self.env['stock.warehouse'].create([
+        # setup: creating a warehouse writes res.groups (implied_ids) via _check_multiwarehouse_group
+        warehouse02, warehouse03 = self.env['stock.warehouse'].sudo().create([
             {'name': 'Second Warehouse', 'code': 'WH02'},
             {'name': 'Third Warehouse', 'code': 'WH03'},
         ])
@@ -3682,12 +3695,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be adapted because of the found BoM '
                                                                             '(the selected picking type should be ignored)')
 
-        mo_form = Form(self.env['mrp.production'].with_context(default_picking_type_id=warehouse03.manu_type_id.id))
+        mo_form = Form(self.env['mrp.production'].sudo().with_context(default_picking_type_id=warehouse03.manu_type_id.id))  # FIXME: remove sudo()
         mo_form.product_id = finished_product
         self.assertFalse(mo_form.bom_id, 'Should not find any BoM, because of the defined picking type')
         self.assertEqual(mo_form.picking_type_id, warehouse03.manu_type_id)
 
-        mo_form = Form(self.env['mrp.production'].with_context(default_picking_type_id=warehouse01.manu_type_id.id))
+        mo_form = Form(self.env['mrp.production'].sudo().with_context(default_picking_type_id=warehouse01.manu_type_id.id))  # FIXME: remove sudo()
         mo_form.product_id = finished_product
         self.assertEqual(mo_form.bom_id, bom_wh01, 'Should select the BoM that matches the default picking type')
         self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be the default one')
@@ -3994,7 +4007,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
     def test_manufacture_lead_days(self):
         """Test the lead days computation for manufacturing route.
         """
-        self.env.company.horizon_days = 0
+        self.env.company.sudo().horizon_days = 0
         warehouse = self.warehouse_1
         rule = warehouse.manufacture_pull_id
 
@@ -4149,7 +4162,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         will be set too. As if the finish date is not set the planned workorder will not
         be shown in planning gantt view
         """
-        self.env.company.tz = 'Europe/Brussels'
+        self.env.company.sudo().tz = 'Europe/Brussels'
         mo = self.env['mrp.production'].create({
             'product_id': self.product.id,
             'uom_id': self.bom_1.uom_id.id,
@@ -4745,7 +4758,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
     def test_workorder_planning_validity_with_workcenters(self):
         # Create a workcenter with no pauses
         week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        resource_calendar = self.env['resource.calendar'].create({
+        resource_calendar = self.env['resource.calendar'].sudo().create({
             'name': 'Default Calendar',
             'company_id': False,
             'hours_per_day': 24,
@@ -5011,8 +5024,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
     def test_workcenter_with_resource_calendar_from_another_company(self):
         """Test that only the resource calendars from the same
         company as the work center can be set."""
-        new_company = self.env['res.company'].create({'name': "new company"})
-        resource_calendar = self.env['resource.calendar'].create({
+        new_company = self.env['res.company'].sudo().create({'name': "new company"})
+        resource_calendar = self.env['resource.calendar'].sudo().create({
             'name': 'Default Calendar',
             'company_id': new_company.id,
             'hours_per_day': 24,
@@ -5139,7 +5152,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location, lot_id=serial_number), 1)
 
     def test_product_qty_digits_precision(self):
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 5
+        self.env['decimal.precision'].sudo().search([('name', '=', 'Product Unit')]).digits = 5
         mo = self.env['mrp.production'].create({
             'bom_id': self.bom_1.id,
             'product_qty': 1.23456,
@@ -5259,7 +5272,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 (0, 12, 12, 24, 'Test full calendar 24h/5d'),
             ]
         ])
-        self.company.tz = 'UTC'
+        self.company.sudo().tz = 'UTC'
         workcenters = self.env['mrp.workcenter'].create([
             {
                 'name': f'Simple Workcenter {i}',
@@ -5484,7 +5497,16 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
 
 class TestMrpOrderPostInstall(TestMrpCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'mrp.group_mrp_routings',  # view visibility (duration/workorder fields) granted to cls.env.user in Common
+        'mrp.group_mrp_byproducts',  # view visibility (byproducts) granted to mrp users in Common
+        'stock.group_stock_manager',  # setup: warehouse/route/rule/orderpoint/location/picking_type config in test bodies
+        'uom.group_uom',  # view visibility (uom_id) granted to cls.env.user in Common
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):

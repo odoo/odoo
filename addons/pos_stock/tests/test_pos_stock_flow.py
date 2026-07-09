@@ -698,7 +698,7 @@ class TestPosStockFlow(CommonPosStockTest):
             'is_storable': True,
         })
 
-        self.warehouse = self.env['stock.warehouse'].create({
+        self.warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Test Warehouse',
             'code': 'TWH',
         })

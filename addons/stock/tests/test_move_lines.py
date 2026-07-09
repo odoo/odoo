@@ -11,7 +11,12 @@ from odoo.tests import tagged, Form
 
 
 class TestStockMoveLine(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -110,7 +115,7 @@ class TestStockMoveLine(TestStockCommon):
     def test_pick_from_5(self):
         """ check small quantities get handled correctly """
         precision = self.env.ref('uom.decimal_product_uom')
-        precision.digits = 6
+        precision.sudo().digits = 6
         self.product.uom_id = self.uom_kg
         move = self.env['stock.move'].create({
             'product_id': self.product.id,

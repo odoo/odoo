@@ -412,7 +412,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         warehouses of the same company.
         """
         main_warehouse = self.warehouse
-        second_warehouse = self.env['stock.warehouse'].create({
+        second_warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Second Warehouse',
             'code': 'WH02',
         })

@@ -12,7 +12,17 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 @tagged('post_install', '-at_install')
 class TestSaleStockMargin(TestStockValuationCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'sales_team.group_sale_salesman',  # sale.order margins are the subject
+        'stock.group_stock_manager',  # deliveries feeding the margin valuation
+        'product.group_product_manager',  # product/category create & cost writes
+        'account.group_account_invoice',
+        # FIXME: closing/valuation reads account.fiscal.year via
+        # account_accountant.res_company.compute_fiscalyear_dates() without sudo.
+        'account.group_account_readonly',
+    )
+
+    _test_user_name = 'Test Sales User'
 
     @classmethod
     def setUpClass(cls):
@@ -61,7 +71,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.company_currency = self.env.company.currency_id
         self.other_currency = self.env.ref('base.EUR') if self.company_currency == usd else usd
         date = fields.Date.subtract(fields.Date.today(), days=1)
-        self.env['res.currency.rate'].create([
+        self.env['res.currency.rate'].sudo().create([
             {'currency_id': self.company_currency.id, 'rate': 1, 'name': date},
             {'currency_id': self.other_currency.id, 'rate': 2, 'name': date},
         ])
@@ -251,16 +261,17 @@ class TestSaleStockMargin(TestStockValuationCommon):
         new_company_currency = self.env.ref('base.EUR') if main_company_currency == self.env.ref('base.USD') else self.env.ref('base.USD')
 
         date = fields.Date.subtract(fields.Date.today(), days=1)
-        self.env['res.currency.rate'].create([
+        self.env['res.currency.rate'].sudo().create([
             {'currency_id': main_company_currency.id, 'rate': 1, 'name': date, 'company_id': False},
             {'currency_id': new_company_currency.id, 'rate': 3, 'name': date, 'company_id': False},
         ])
 
-        new_company = self.env['res.company'].create({
+        new_company = self.env['res.company'].sudo().create({
             'name': 'Super Company',
             'currency_id': new_company_currency.id,
         })
-        self.env.user.company_id = new_company.id
+        self.env.user.sudo().company_ids += new_company
+        self.env.user.sudo().company_id = new_company.id
         self.env = self.env.user.with_company(new_company.id).env
 
         self.pricelist.currency_id = new_company_currency.id

@@ -7,9 +7,12 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 
 class TestMrpCommon(TestStockCommon):
-    _test_user_groups = ('mrp.group_mrp_user',)
 
-    _test_user_name = 'Test MRP User'
+    _test_user_groups = (
+        'mrp.group_mrp_user',
+    )
+
+    _test_user_name = 'Test MRP/Stock User'
 
     @classmethod
     def generate_mo(cls, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False):

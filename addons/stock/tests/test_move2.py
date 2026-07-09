@@ -15,7 +15,12 @@ from dateutil.relativedelta import relativedelta
 
 
 class TestPickShip(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',  # FIXME: stock.group_stock_user
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def create_pick_ship(self):
         picking_client = self.env['stock.picking'].create({
@@ -342,7 +347,7 @@ class TestPickShip(TestStockCommon):
         picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
         warehouse_1 = self.warehouse_1
         warehouse_1.delivery_steps = 'pick_pack_ship'
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Small Warehouse',
             'code': 'SWH'
         })
@@ -790,7 +795,7 @@ class TestPickShip(TestStockCommon):
         """ In a pick ship scenario, send two items to the customer, then return one in the ship
         location and one in a return location that is located in another warehouse.
         """
-        return_warehouse = self.env['stock.warehouse'].create({'name': 'return warehouse', 'code': 'rw'})
+        return_warehouse = self.env['stock.warehouse'].sudo().create({'name': 'return warehouse', 'code': 'rw'})
         return_location = self.env['stock.location'].create({
             'name': 'return internal',
             'usage': 'internal',
@@ -887,7 +892,15 @@ class TestPickShip(TestStockCommon):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestSinglePicking(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',
+        # FIXME: test_unlink_move_1 removes a move from a picking, which unlinks
+        # a stock.move; deleting stock.move requires stock.group_stock_manager.
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def test_backorder_1(self):
         """ Check the good behavior of creating a backorder for an available stock move.
@@ -1067,7 +1080,7 @@ class TestSinglePicking(TestStockCommon):
             'state': 'draft',
         })
         # Avoid to merge move3 and move4 for the test case
-        self.env['ir.config_parameter'].set_bool('stock.merge_only_same_date', True)
+        self.env['ir.config_parameter'].sudo().set_bool('stock.merge_only_same_date', True)
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 4,
@@ -1508,7 +1521,7 @@ class TestSinglePicking(TestStockCommon):
         """ Check the behavior of a picking when `use_create_lot` and `use_existing_lot` are
         set to False and there's a move for a tracked product.
         """
-        self.picking_type_out.write({
+        self.picking_type_out.sudo().write({
             'use_create_lots': False,
             'use_existing_lots': False,
         })
@@ -1540,7 +1553,7 @@ class TestSinglePicking(TestStockCommon):
         """ Check the behavior of a picking when `use_create_lot` and `use_existing_lot` are
         set to True and there's a move for a tracked product.
         """
-        self.picking_type_out.write({
+        self.picking_type_out.sudo().write({
             'use_create_lots': True,
             'use_existing_lots': True,
         })
@@ -1579,7 +1592,7 @@ class TestSinglePicking(TestStockCommon):
         """ Check the behavior of a picking when `use_create_lot` is set to True and
         `use_existing_lot` is set to False and there's a move for a tracked product.
         """
-        self.picking_type_out.write({
+        self.picking_type_out.sudo().write({
             'use_create_lots': True,
             'use_existing_lots': False,
         })
@@ -1618,7 +1631,7 @@ class TestSinglePicking(TestStockCommon):
         """ Check the behavior of a picking when `use_create_lot` is set to False and
         `use_existing_lot` is set to True and there's a move for a tracked product.
         """
-        self.picking_type_out.write({
+        self.picking_type_out.sudo().write({
             'use_create_lots': False,
             'use_existing_lots': True,
         })
@@ -1669,7 +1682,7 @@ class TestSinglePicking(TestStockCommon):
     def test_use_create_lot_use_existing_lot_5(self):
         """Check if a quant without lot exist, it will be decrease even if a
         quant with the right lot exists but is empty"""
-        self.picking_type_in.write({
+        self.picking_type_in.sudo().write({
             'use_create_lots': False,
             'use_existing_lots': False,
         })
@@ -1920,7 +1933,7 @@ class TestSinglePicking(TestStockCommon):
                         Move Input-> QC - Move QC -> Stock
         Move receipt 2 /
         """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'TEST WAREHOUSE',
             'code': 'TEST1',
             'reception_steps': 'three_steps',
@@ -1979,7 +1992,7 @@ class TestSinglePicking(TestStockCommon):
         do not have a stock reference, they should not merge in the next steps even if
         they share the same partner. Each receipt must generate its own Input→QC and QC→Stock moves.
         """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'TEST WAREHOUSE',
             'code': 'TEST1',
             'reception_steps': 'three_steps',
@@ -2201,7 +2214,7 @@ class TestSinglePicking(TestStockCommon):
         # Required for `owner_id` to be visible in the view
         self.env.user.group_ids += self.env.ref("stock.group_tracking_owner")
         """Make a receipt, set an owner and validate"""
-        owner1 = self.env['res.partner'].create({'name': 'owner'})
+        owner1 = self.env['res.partner'].sudo().create({'name': 'owner'})
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2234,7 +2247,7 @@ class TestSinglePicking(TestStockCommon):
         """ Checks picking's move lines will take in account the putaway rules
         to define the `location_dest_id`.
         """
-        partner = self.env['res.partner'].create({'name': 'Partner'})
+        partner = self.env['res.partner'].sudo().create({'name': 'Partner'})
         shelf_location = self.env['stock.location'].create({
             'name': 'shelf1',
             'usage': 'internal',
@@ -2340,7 +2353,7 @@ class TestSinglePicking(TestStockCommon):
         are reserved by the scheduler
         """
         product = self.productA
-        self.picking_type_out.reservation_method = 'at_confirm'
+        self.picking_type_out.sudo().reservation_method = 'at_confirm'
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -2367,7 +2380,7 @@ class TestSinglePicking(TestStockCommon):
         Check that a move line created and auto assigned to a picked move will also be picked
         """
         product = self.productA
-        self.picking_type_out.reservation_method = 'at_confirm'
+        self.picking_type_out.sudo().reservation_method = 'at_confirm'
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -2415,7 +2428,7 @@ class TestSinglePicking(TestStockCommon):
             }
             for i in range(lot_count)
         ])
-        locations = self.env['stock.location'].create([
+        locations = self.env['stock.location'].sudo().create([
             {
                 'name': f'Shell {lot_count - i}',
                 'usage': 'internal',
@@ -2537,7 +2550,7 @@ class TestSinglePicking(TestStockCommon):
         Check that changing the location/destination of a picking propagets the info
         to the related moves.
         """
-        new_location, new_destination = self.env['stock.location'].create([
+        new_location, new_destination = self.env['stock.location'].sudo().create([
             {
                 'name': f'Super location',
                 'usage': 'internal',
@@ -2818,7 +2831,12 @@ class TestSinglePicking(TestStockCommon):
 
 
 class TestStockUOM(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -2895,7 +2913,7 @@ class TestStockUOM(TestStockCommon):
         we reserve less than the quantity in stock
         """
         precision = self.env.ref('uom.decimal_product_uom')
-        precision.digits = 3
+        precision.sudo().digits = 3
 
         product_G = self.env['product.product'].create({
             'name': 'Product G',
@@ -2939,7 +2957,12 @@ class TestStockUOM(TestStockCommon):
 
 
 class TestRoutes(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -2962,7 +2985,7 @@ class TestRoutes(TestStockCommon):
         self.product_uom_qty = 42
 
         warehouse_1 = self.warehouse_1
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Small Warehouse',
             'code': 'SWH'
         })
@@ -3112,7 +3135,7 @@ class TestRoutes(TestStockCommon):
             'name': 'New_location',
             'usage': 'internal',
         })
-        picking_type = self.env['stock.picking.type'].create({
+        picking_type = self.env['stock.picking.type'].sudo().create({
             'name': 'new_picking_type',
             'code': 'internal',
             'sequence_code': 'NPT',
@@ -3241,7 +3264,12 @@ class TestRoutes(TestStockCommon):
 
 
 class TestAutoAssign(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def create_pick_ship(self):
         self.warehouse_1.delivery_route_id.rule_ids.action = 'pull'
@@ -3381,7 +3409,7 @@ class TestAutoAssign(TestStockCommon):
         """
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 0)
-        picking_type_out1 = self.picking_type_out.copy()
+        picking_type_out1 = self.picking_type_out.sudo().copy()
         picking_type_out2 = picking_type_out1.copy()
         picking_type_out3 = picking_type_out1.copy()
         picking_type_out4 = picking_type_out1.copy()
@@ -3534,12 +3562,12 @@ class TestAutoAssign(TestStockCommon):
         Check that the delivery orders generated by a manual pick of a 2 steps delivery
         warehouse are only merged if they are associated to the same partner.
         """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse test',
             'code': 'TEST',
             'delivery_steps': 'pick_ship',
         })
-        (partner_1, partner_2) = self.env['res.partner'].create([
+        (partner_1, partner_2) = self.env['res.partner'].sudo().create([
             {
                 "name": "Bob",
             },
@@ -3624,7 +3652,12 @@ class TestAutoAssign(TestStockCommon):
 
 
 class TestPickShipBackorder(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):

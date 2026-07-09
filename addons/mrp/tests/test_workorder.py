@@ -7,7 +7,16 @@ from odoo.tests import Form
 
 
 class TestWorkorder(TestMrpCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'mrp.group_mrp_routings',  # view visibility (duration/workorder fields) granted to cls.env.user in Common
+        'mrp.group_mrp_byproducts',  # view visibility (byproducts) granted to mrp users in Common
+        'stock.group_stock_manager',  # setup: warehouse/route/rule/orderpoint/location/picking_type config in test bodies
+        'uom.group_uom',  # view visibility (uom_id) granted to cls.env.user in Common
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_workorder_move_start_preserves_duration(self):
         """Moving only the start date of a planned work order (e.g. through the
@@ -22,9 +31,9 @@ class TestWorkorder(TestMrpCommon):
         180 -> 270 minutes). A non-UTC timezone is required to expose the drift: at
         UTC the round trip is exact and the bug does not reproduce.
         """
-        self.env.company.tz = 'Europe/Brussels'  # UTC+2
+        self.env.company.sudo().tz = 'Europe/Brussels'  # UTC+2
         # Continuous 8:00-16:00 calendar with no overhead.
-        calendar = self.env['resource.calendar'].create({
+        calendar = self.env['resource.calendar'].sudo().create({
             'name': 'Continuous 8-16',
             'attendance_ids': [Command.create({
                 'dayofweek': str(day), 'hour_from': 8.0, 'hour_to': 16.0,

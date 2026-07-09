@@ -6,9 +6,10 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 @tagged('-at_install', 'post_install')
 class TestBomPriceCommon(TestStockValuationCommon):
-    _test_user_groups = ('mrp.group_mrp_user',)
 
-    _test_user_name = 'Test MRP User'
+    _test_user_groups = ('base.group_user',)
+
+    _test_user_name = 'Test User'
 
     @classmethod
     def _create_product(cls, name, price, quantity=100, category=None):
@@ -151,9 +152,9 @@ class TestBomPriceCommon(TestStockValuationCommon):
 
 class TestBomPriceOperationCommon(TestBomPriceCommon):
     """ Common bom setup with workorder operations"""
-    _test_user_groups = ('mrp.group_mrp_user',)
+    _test_user_groups = ('base.group_user',)
 
-    _test_user_name = 'Test MRP User'
+    _test_user_name = 'Test User'
 
     @classmethod
     def setUpClass(cls):

@@ -65,7 +65,7 @@ class TestSubcontractingBasic(TransactionCase):
 
     def test_warehouse_subcontracting_resupply_type_code(self):
         """ Assert that default operation code of resupply subcontractors is 'internal'. """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse',
             'code': 'MYWH'
         })

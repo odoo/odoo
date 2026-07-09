@@ -533,12 +533,12 @@ class TestBatchPicking(TransactionCase):
 
             * Result: 8 pickings and 4 batchs
         """
-        warehouse_1 = self.env['stock.warehouse'].create({
+        warehouse_1 = self.env['stock.warehouse'].sudo().create({
             'name': 'WH 1',
             'code': 'WH1',
             'company_id': self.env.company.id,
         })
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'WH 2',
             'code': 'WH2',
             'company_id': warehouse_1.company_id.id,
@@ -970,7 +970,7 @@ class TestBatchPicking02(TransactionCase):
         With autobatch receipts, check that you can create backorders for
         pickings related to the batch.
         """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse test',
             'code': 'WHTEST',
             'company_id': self.env.company.id,

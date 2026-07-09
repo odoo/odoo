@@ -10,7 +10,16 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 @tagged('post_install', '-at_install')
 class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStockValuationCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # products/BoM for subcontracting
+        'stock.group_stock_manager',  # subject: routes, dropship pickings
+        'mrp.group_mrp_manager',  # subject: subcontracting BoM/production
+        'purchase.group_purchase_manager',  # subject: subcontracting purchase orders
+        'sales_team.group_sale_salesman',  # subject: sale orders driving dropship subcontracting
+        'account.group_account_invoice',  # subject: vendor bills / invoice posting
+    )
+
+    _test_user_name = 'Test Subcontracting User'
 
     @classmethod
     def setUpClass(cls):
@@ -423,7 +432,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         the final product (with a dropshipped component).
         """
 
-        portal_user = self.env['res.users'].create({
+        portal_user = self.env['res.users'].sudo().create({
             'name': 'portal user (subcontractor)',
             'partner_id': self.subcontractor_partner1.id,
             'login': 'subcontractor',

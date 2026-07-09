@@ -16,7 +16,7 @@ class TestPosStockMargin(TestPosMargin):
         super().setUp()
         self.config = self.basic_config
 
-        self.stock_location = self.env['stock.warehouse'].create({
+        self.stock_location = self.env['stock.warehouse'].sudo().create({
             'partner_id': self.env.user.partner_id.id,
             'name': 'Stock location',
             'code': 'WH'

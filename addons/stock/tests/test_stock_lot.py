@@ -8,7 +8,12 @@ from odoo.exceptions import ValidationError
 
 
 class TestLotSerial(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -167,7 +172,7 @@ class TestLotSerial(TestStockCommon):
         """
         Check that the reservation of is bypassed when a stock move is added after the picking is done
         """
-        customer = self.PartnerObj.create({'name': 'bob'})
+        customer = self.PartnerObj.sudo().create({'name': 'bob'})
         delivery_picking = self.env['stock.picking'].create({
             'partner_id': customer.id,
             'picking_type_id': self.picking_type_out.id,
@@ -240,11 +245,13 @@ class TestLotSerial(TestStockCommon):
     def test_lot_id_with_branch_company(self):
         """Test that a lot can be created in branch company when
         the product is limited to the parent company"""
-        branch_a = self.env['res.company'].create({
+        branch_a = self.env['res.company'].sudo().create({
             'name': 'Branch X',
             'country_id': self.env.company.country_id.id,
             'parent_id': self.env.company.id,
         })
+        self.env.user.sudo().company_ids += branch_a
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=[self.env.company.id, branch_a.id]))
         self.assertEqual(self.productB.tracking, 'serial')
         self.productB.company_id = self.env.company
         branch_a_warehouse = self.env['stock.warehouse'].search([('company_id', '=', branch_a.id)])
@@ -303,7 +310,7 @@ class TestLotSerial(TestStockCommon):
             lot_id=lot_b,
         )
 
-        customer = self.PartnerObj.create({'name': 'bob uniquename person to avoid conflicts with demo data'})
+        customer = self.PartnerObj.sudo().create({'name': 'bob uniquename person to avoid conflicts with demo data'})
         picking1 = self.env['stock.picking'].create({
             'name': 'Picking 1',
             'partner_id': customer.id,

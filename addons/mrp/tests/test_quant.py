@@ -6,7 +6,13 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 
 class TestMrpQuant(TestMrpCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'stock.group_stock_user',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_kit_product_reservation_flow(self):
         """Test that kit products are not cleaned"""

@@ -11,7 +11,16 @@ from odoo import fields, Command
 
 class TestMrpReplenish(TestMrpCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'mrp.group_mrp_routings',  # view visibility (duration/workorder fields) granted to cls.env.user in Common
+        'mrp.group_mrp_byproducts',  # view visibility (byproducts) granted to mrp users in Common
+        'stock.group_stock_manager',  # setup: warehouse/route/rule/orderpoint/location/picking_type config in test bodies
+        'uom.group_uom',  # view visibility (uom_id) granted to cls.env.user in Common
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def _create_wizard(self, product, warehouse):
         return self.env['product.replenish'].with_context(default_product_tmpl_id=product.product_tmpl_id.id).create({
@@ -37,7 +46,7 @@ class TestMrpReplenish(TestMrpCommon):
             self.assertEqual(fields.Datetime.from_string('2023-01-03 00:00:00'), wizard3.date_planned)
 
     def test_mrp_orderpoint_leadtime(self):
-        self.env.company.horizon_days = 0
+        self.env.company.sudo().horizon_days = 0
         route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
         route_manufacture.supplied_wh_id = self.warehouse_1
         route_manufacture.supplier_wh_id = self.warehouse_1
@@ -73,7 +82,8 @@ class TestMrpReplenish(TestMrpCommon):
         orderpoint."""
 
         self.product_4.route_ids = self.warehouse_1.manufacture_pull_id.route_id
-        picking_type_2 = self.picking_type_manu.copy({'sequence': 100})
+        # setup: copying a picking type writes ir.sequence via the sequence_code related inverse
+        picking_type_2 = self.picking_type_manu.sudo().copy({'sequence': 100})
         self.product_4.bom_ids.picking_type_id = picking_type_2
         rr = self.env['stock.warehouse.orderpoint'].create({
             'name': 'Cake RR',
@@ -384,14 +394,15 @@ class TestMrpReplenish(TestMrpCommon):
         """
         self.assertEqual(self.bom_2.type, 'phantom')
         self.assertEqual(self.bom_2.company_id, self.env.company)
-        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        company_2 = self.env['res.company'].sudo().create({'name': 'Company 2'})
         orderpoint = self.env['stock.warehouse.orderpoint'].with_company(company_2).create({
             'product_id': self.bom_2.product_id.id,
         })
         self.assertEqual(orderpoint.company_id, company_2)
 
     def test_product_replenish_wizard_multiple_manufacture_routes(self):
-        self.route_manufacture.copy()
+        # setup: copying a route fetches restricted translation fields on stock.route
+        self.route_manufacture.sudo().copy()
         wizard_form = Form(self.env['product.replenish'].with_context(
             default_product_tmpl_id=self.product_4.product_tmpl_id.id
         ))

@@ -11,7 +11,14 @@ PRICE = 718.75 - 100  # total price minus glass
 
 
 class TestMrpValuationStandard(TestBomPriceCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'mrp.group_mrp_user',  # subject: manufacturing orders drive the valuation layers (implies stock.group_stock_user)
+        'stock.group_stock_manager',  # setup: _make_in_move sets value_manual -> inverse creates product.value (stock.group_stock_manager)
+        'account.group_account_invoice',  # subject: stock valuation journal entries asserted by the tests
+        'product.group_product_manager',  # subject: action_bom_cost recomputes product standard_price (test_kit_product_valuation)
+    )
+
+    _test_user_name = 'Test User'
 
     def _get_production_cost_move_lines(self):
         return self.env['account.move.line'].search([
@@ -19,7 +26,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         ], order='date, id')
 
     def test_mo_journal_entry_ref_matches_mo_name(self):
-        self.glass.categ_id = self.category_fifo_auto
+        self.glass.sudo().categ_id = self.category_fifo_auto  # setup master-data
 
         self._make_in_move(self.glass, 1, 10)
         mo = self._create_mo(self.bom_1, 1)
@@ -31,8 +38,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(set(account_moves.mapped('ref')), {mo.name})
 
     def test_fifo_fifo_1(self):
-        self.glass.categ_id = self.category_fifo
-        self.dining_table.categ_id = self.category_fifo
+        self.glass.sudo().categ_id = self.category_fifo  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_fifo  # setup master-data
 
         self._make_in_move(self.glass, 1, 10)
         self._make_in_move(self.glass, 1, 20)
@@ -50,7 +57,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, 2 * PRICE + 10 + 20)
 
     def test_fifo_fifo_2(self):
-        self.glass.categ_id = self.category_fifo
+        self.glass.sudo().categ_id = self.category_fifo  # setup master-data
 
         self._make_in_move(self.glass, 1, 10)
         self._make_in_move(self.glass, 1, 20)
@@ -66,7 +73,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         """ This test creates an MO and then creates an unbuild
         orders and checks the stock valuation.
         """
-        self.glass.categ_id = self.category_fifo
+        self.glass.sudo().categ_id = self.category_fifo  # setup master-data
         # ---------------------------------------------------
         #       MO
         # ---------------------------------------------------
@@ -85,7 +92,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.glass.total_value, 30)
 
     def test_fifo_produce_deliver_return_unbuild(self):
-        self.glass.categ_id = self.category_fifo
+        self.glass.sudo().categ_id = self.category_fifo  # setup master-data
         self._make_in_move(self.glass, 1, 10)
 
         mo = self._create_mo(self.bom_1, 1)
@@ -108,8 +115,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         ])
 
     def test_fifo_avco_1(self):
-        self.glass.categ_id = self.category_fifo
-        self.dining_table.categ_id = self.category_avco
+        self.glass.sudo().categ_id = self.category_fifo  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_avco  # setup master-data
 
         self._make_in_move(self.glass, 1, 10)
         self._make_in_move(self.glass, 1, 20)
@@ -128,9 +135,9 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, 2 * PRICE + 10 + 20)
 
     def test_fifo_avco_2(self):
-        self.glass.categ_id = self.category_fifo
-        self.dining_table.categ_id = self.category_avco
-        self.dining_table.categ_id = self.category_fifo
+        self.glass.sudo().categ_id = self.category_fifo  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_avco  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_fifo  # setup master-data
 
         self._make_in_move(self.glass, 1, 10)
         self._make_in_move(self.glass, 1, 20)
@@ -143,9 +150,9 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, (PRICE * 2 + 10 + 20) / 2)
 
     def test_fifo_std_1(self):
-        self.glass.categ_id = self.category_fifo
-        self.dining_table.categ_id = self.category_standard
-        self.dining_table.standard_price = 8.8
+        self.glass.sudo().categ_id = self.category_fifo  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_standard  # setup master-data
+        self.dining_table.sudo().standard_price = 8.8  # setup master-data
 
         self._make_in_move(self.glass, 1, 10)
         self._make_in_move(self.glass, 1, 20)
@@ -162,9 +169,9 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, 8.8 * 2)
 
     def test_fifo_std_2(self):
-        self.glass.categ_id = self.category_fifo
-        self.dining_table.categ_id = self.category_standard
-        self.dining_table.standard_price = 8.8
+        self.glass.sudo().categ_id = self.category_fifo  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_standard  # setup master-data
+        self.dining_table.sudo().standard_price = 8.8  # setup master-data
 
         self._make_in_move(self.glass, 1, 10)
         self._make_in_move(self.glass, 1, 20)
@@ -177,8 +184,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, 8.8)
 
     def test_std_avco_1(self):
-        self.glass.categ_id = self.category_standard
-        self.dining_table.categ_id = self.category_avco
+        self.glass.sudo().categ_id = self.category_standard  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_avco  # setup master-data
 
         self._make_in_move(self.glass, 1)
         self._make_in_move(self.glass, 1)
@@ -196,8 +203,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, 2 * (PRICE + 100))
 
     def test_std_avco_2(self):
-        self.glass.categ_id = self.category_standard
-        self.dining_table.categ_id = self.category_avco
+        self.glass.sudo().categ_id = self.category_standard  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_avco  # setup master-data
 
         self._make_in_move(self.glass, 1)
         self._make_in_move(self.glass, 1)
@@ -212,7 +219,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, PRICE + 100)
 
         # Update component price
-        self.glass.standard_price = 0
+        self.glass.sudo().standard_price = 0  # setup master-data
 
         self._make_in_move(self.glass, 3)
         mo = self._create_mo(self.bom_1, 3)
@@ -222,8 +229,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.standard_price, (4 * PRICE + 100) / 4)
 
     def test_std_std_1(self):
-        self.glass.categ_id = self.category_standard
-        self.dining_table.categ_id = self.category_standard
+        self.glass.sudo().categ_id = self.category_standard  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_standard  # setup master-data
 
         self._make_in_move(self.glass, 1)
         self._make_in_move(self.glass, 1)
@@ -241,8 +248,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, 2000)
 
     def test_std_std_2(self):
-        self.glass.categ_id = self.category_standard
-        self.dining_table.categ_id = self.category_standard
+        self.glass.sudo().categ_id = self.category_standard  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_standard  # setup master-data
 
         self._make_in_move(self.glass, 1)
         self._make_in_move(self.glass, 1)
@@ -255,8 +262,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, 1000)
 
     def test_avco_avco_1(self):
-        self.glass.categ_id = self.category_avco
-        self.dining_table.categ_id = self.category_avco
+        self.glass.sudo().categ_id = self.category_avco  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_avco  # setup master-data
 
         self._make_in_move(self.glass, 1, 10)
         self._make_in_move(self.glass, 1, 20)
@@ -274,8 +281,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(self.dining_table.total_value, 2 * PRICE + 30)
 
     def test_avco_avco_2(self):
-        self.glass.categ_id = self.category_avco
-        self.dining_table.categ_id = self.category_avco
+        self.glass.sudo().categ_id = self.category_avco  # setup master-data
+        self.dining_table.sudo().categ_id = self.category_avco  # setup master-data
 
         self._make_in_move(self.glass, 1, 10)
         self._make_in_move(self.glass, 1, 20)
@@ -293,8 +300,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         validate it. From client side, such a behaviour is possible with
         the Barcode app.
         """
-        self.plywood_sheet.qty_available = 0
-        self.plywood_sheet.categ_id = self.category_avco
+        self.plywood_sheet.sudo().qty_available = 0  # setup master-data
+        self.plywood_sheet.sudo().categ_id = self.category_avco  # setup master-data
 
         receipt = self.env['stock.picking'].create({
             'location_id': self.customer_location.id,
@@ -319,7 +326,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         """Create move into/out of a production location, test we create account
         entries with the Production Cost account.
         """
-        self.dining_table.categ_id.property_cost_method = 'standard'
+        self.dining_table.categ_id.sudo().property_cost_method = 'standard'  # setup master-data
 
         # move into production location
         self._make_out_move(self.dining_table, 1, location_dest_id=self.prod_location.id)
@@ -407,7 +414,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
                 'categ_id': self.category_avco.id,
             },
         ])
-        bom = self.env['mrp.bom'].create({
+        bom = self.env['mrp.bom'].sudo().create({
             'product_id': final_product.id,
             'product_tmpl_id': final_product.product_tmpl_id.id,
             'product_qty': 1.0,

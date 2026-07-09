@@ -9,7 +9,18 @@ from unittest.mock import patch
 
 class TestPackingDelivery(TestPackingCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        # Delivery/packing scenarios are the subject under test: they create
+        # delivery.carrier, stock.package.type and write stock.location (via
+        # warehouse.delivery_steps), all of which require Inventory / Administrator.
+        'stock.group_stock_manager',
+        # test_multistep_delivery_tracking confirms a sale.order to drive the
+        # multistep delivery/tracking flow (the subject under test).
+        'sales_team.group_sale_salesman',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -44,7 +55,7 @@ class TestPackingDelivery(TestPackingCommon):
         self.env['stock.quant']._update_available_quantity(self.product_bw, self.stock_location, 20.0)
 
         picking_ship = self.env['stock.picking'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'A partner'}).id,
             'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -184,7 +195,7 @@ class TestPackingDelivery(TestPackingCommon):
         self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 20.0)
 
         picking_ship = self.env['stock.picking'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'A partner'}).id,
             'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -208,7 +219,7 @@ class TestPackingDelivery(TestPackingCommon):
         # Create and confirm the SO
         so = self.env['sale.order'].create({
             'name': 'Sale order',
-            'partner_id': self.env['res.partner'].create({'name': 'Rando le clodo'}).id,
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'Rando le clodo'}).id,
             'order_line': [
                 (0, 0, {'name': self.product_aw.name, 'product_id': self.product_aw.id, 'product_uom_qty': 1, 'price_unit': 1})
             ]
@@ -259,7 +270,7 @@ class TestPackingDelivery(TestPackingCommon):
         })
 
         delivery_1 = self.env['stock.picking'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'A partner'}).id,
             'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -297,16 +308,16 @@ class TestPackingDelivery(TestPackingCommon):
         """ In a multi-company environment, a reusable package which is used by 2+ companies can cause access errors
         on a company's picking history when it is in an in-use state (waiting to be unpacked)
         """
-        company_a_user = self.env['res.users'].create({
+        company_a_user = self.env['res.users'].sudo().create({
             'name': 'test user company a',
             'login': 'test@testing.testing',
             'password': 'password',
             'group_ids': [Command.set([self.env.ref('stock.group_stock_user').id])],
         })
         wh_a = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        wh_a.delivery_steps = 'pick_pack_ship'
-        company_b = self.env['res.company'].create({'name': 'Company B'})
-        wh_b = self.env['stock.warehouse'].with_company(company_b).create({
+        wh_a.sudo().delivery_steps = 'pick_pack_ship'
+        company_b = self.env['res.company'].sudo().create({'name': 'Company B'})
+        wh_b = self.env['stock.warehouse'].sudo().with_company(company_b).create({
             'name': 'Company B WH',
             'code': 'WH B',
             'delivery_steps': 'pick_pack_ship',
@@ -382,7 +393,7 @@ class TestPackingDelivery(TestPackingCommon):
         self.env['stock.quant']._update_available_quantity(self.product_bw, self.stock_location, 5.0)
 
         picking_ship = self.env['stock.picking'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'A partner'}).id,
             'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -516,7 +527,7 @@ class TestPackingDelivery(TestPackingCommon):
         Ensure outgoing pickings are not considered returns.
         '''
         picking_in = self.env['stock.picking'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'A partner'}).id,
             'picking_type_id': self.warehouse_1.in_type_id.id,
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,

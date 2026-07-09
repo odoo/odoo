@@ -405,7 +405,7 @@ class TestProcRule(TransactionCase):
         """ Create two warehouses + two moves
         verify that the replenishment view is consistent"""
         warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse_2, warehouse_3 = self.env['stock.warehouse'].create([{
+        warehouse_2, warehouse_3 = self.env['stock.warehouse'].sudo().create([{
             'name': 'Warehouse Two',
             'code': 'WH2',
             'resupply_wh_ids': [warehouse_1.id],
@@ -456,7 +456,7 @@ class TestProcRule(TransactionCase):
     def test_orderpoint_replenishment_view_2(self):
         """ Create a warehouse  + location to replenish warehouse instead of main location
         verify that the orderpoints created are for the replenish locations not the warehouse main location"""
-        warehouse_1 = self.env['stock.warehouse'].create({
+        warehouse_1 = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse 1',
             'code': 'WH1',
         })
@@ -560,7 +560,7 @@ class TestProcRule(TransactionCase):
 
     def test_orderpoint_compute_warehouse_location(self):
         warehouse_a = self.env['stock.warehouse'].search([], limit=1)
-        warehouse_b = self.env['stock.warehouse'].create({
+        warehouse_b = self.env['stock.warehouse'].sudo().create({
             'name': 'Test Warehouse',
             'code': 'TWH'
         })
@@ -628,7 +628,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint.qty_to_order_to_max, 0)
 
     def test_orderpoint_location_archive(self):
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Test Warehouse',
             'code': 'TWH'
         })
@@ -993,11 +993,11 @@ class TestProcRule(TransactionCase):
 
     def test_orderpoint_wizard_warehouse_option_lead_time(self):
         """Check the Warehouses tab lead time follows the selected resupply route."""
-        warehouse_a = self.env['stock.warehouse'].create({
+        warehouse_a = self.env['stock.warehouse'].sudo().create({
             'name': 'Lead Time Warehouse A',
             'code': 'LTWA',
         })
-        warehouse_b = self.env['stock.warehouse'].create({
+        warehouse_b = self.env['stock.warehouse'].sudo().create({
             'name': 'Lead Time Warehouse B',
             'code': 'LTWB',
             'resupply_wh_ids': [Command.link(warehouse_a.id)],
@@ -1056,7 +1056,7 @@ class TestProcRuleLoad(TransactionCase):
         """ Try 500 products with a 1000 RR(stock -> shelf1 and stock -> shelf2)
         Also randomly include 4 miss configuration.
         """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Test Warehouse',
             'code': 'TWH'
         })

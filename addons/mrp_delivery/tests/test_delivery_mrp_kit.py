@@ -9,7 +9,15 @@ from odoo.addons.base.tests.common import BaseCommon
 @tagged('post_install', '-at_install')
 class TestDeliveryMrpKitBom(BaseCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        # Subject under test: confirming a kit sale order and validating its
+        # delivery to compute the sale_price repartition on move lines.
+        'sales_team.group_sale_salesman',
+        'stock.group_stock_user',
+    )
+
+    _test_user_name = 'Test User'
 
     def test_sale_mrp_kit_sale_price_with_different_uoms(self):
         """Check the total sale price of a KIT:
@@ -22,9 +30,9 @@ class TestDeliveryMrpKitBom(BaseCommon):
             # sale price of Kit A = (8 * 10) + (5 * 2 * 12) = $ 200
         """
 
-        customer = self.env['res.partner'].create({'name': 'customer'})
+        customer = self.env['res.partner'].sudo().create({'name': 'customer'})
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        kit_product, component_a, component_b = self.env['product.product'].create([
+        kit_product, component_a, component_b = self.env['product.product'].sudo().create([
             {
                 'name': name,
                 'is_storable': True,
@@ -33,9 +41,9 @@ class TestDeliveryMrpKitBom(BaseCommon):
             } for (name, price) in zip(('Kit Product', 'Component A', 'Component B'), (200, 0.08, 5))
         ])
         component_a.uom_id = self.ref('uom.product_uom_cm')
-        self.env['stock.quant']._update_available_quantity(component_a, warehouse.lot_stock_id, 1000)
-        self.env['stock.quant']._update_available_quantity(component_b, warehouse.lot_stock_id, 24)
-        self.bom = self.env['mrp.bom'].create({
+        self.env['stock.quant'].sudo()._update_available_quantity(component_a, warehouse.lot_stock_id, 1000)
+        self.env['stock.quant'].sudo()._update_available_quantity(component_b, warehouse.lot_stock_id, 24)
+        self.bom = self.env['mrp.bom'].sudo().create({
             'product_tmpl_id': kit_product.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
@@ -89,7 +97,7 @@ class TestDeliveryMrpKitBom(BaseCommon):
                 - 1 x Compo 2, price 30
         """
 
-        kit_1, kit_2, component_1, component_2, give_away, service = self.env['product.product'].create([
+        kit_1, kit_2, component_1, component_2, give_away, service = self.env['product.product'].sudo().create([
             {
                 'name': name,
                 'list_price': price,
@@ -106,8 +114,8 @@ class TestDeliveryMrpKitBom(BaseCommon):
         ])
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         for product in [component_1, component_2, give_away]:
-            self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, quantity=20.0)
-        self.env['mrp.bom'].create([
+            self.env['stock.quant'].sudo()._update_available_quantity(product, warehouse.lot_stock_id, quantity=20.0)
+        self.env['mrp.bom'].sudo().create([
             {
                 'product_tmpl_id': kit_1.product_tmpl_id.id,
                 'product_qty': 1,
@@ -130,7 +138,7 @@ class TestDeliveryMrpKitBom(BaseCommon):
                 ],
             },
         ])
-        customer = self.env['res.partner'].create({
+        customer = self.env['res.partner'].sudo().create({
             'name': 'customer',
         })
         so = self.env['sale.order'].create({

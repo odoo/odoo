@@ -606,7 +606,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.env['stock.quant']._update_available_quantity(item1, warehouse1.lot_stock_id, 10)
         self.env['stock.quant']._update_reserved_quantity(item1, warehouse1.lot_stock_id, 3)
 
-        warehouse2 = self.env['stock.warehouse'].create({
+        warehouse2 = self.env['stock.warehouse'].sudo().create({
             'partner_id': self.partner_a.id,
             'name': 'Zizizatestwarehouse',
             'code': 'Test',
@@ -2058,7 +2058,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         with self.assertRaisesRegex(UserError, error_message):
             so.with_company(new_company).action_confirm()
         # check the flow with 2 available warehouses for that company
-        self.env['stock.warehouse'].create({'name': 'Warehouse 2', 'code': 'WH2', 'company_id': new_company.id})
+        self.env['stock.warehouse'].sudo().create({'name': 'Warehouse 2', 'code': 'WH2', 'company_id': new_company.id})
         # Since you have a warehouse which is not linked to the SO you should raise a UserError
         error_message = "You must set a warehouse on your sale order to proceed."
         with self.assertRaisesRegex(UserError, error_message):

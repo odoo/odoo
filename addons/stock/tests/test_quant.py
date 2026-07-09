@@ -14,7 +14,12 @@ from odoo.tests import tagged, Form
 
 class TestStockQuant(TestStockCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -1008,11 +1013,13 @@ class TestStockQuant(TestStockCommon):
         ### testing blocks on relocating quants from different companies
         package_03 = self.env['stock.package'].create({})
         package_04 = self.env['stock.package'].create({})
-        company_B = self.env['res.company'].create({
+        company_B = self.env['res.company'].sudo().create({
             'name': 'company B',
             'currency_id': self.env.ref('base.USD').id
         })
-        location_company_B = self.env['stock.location'].create({
+        self.env.user.sudo().company_ids += company_B
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=[self.env.company.id, company_B.id]))
+        location_company_B = self.env['stock.location'].sudo().create({
             'name': 'stock location company B',
             'usage': 'internal',
             'company_id': company_B.id
@@ -1083,8 +1090,8 @@ class TestStockQuant(TestStockCommon):
         generate barcodes longer than the given limit and use the given separator.
         """
         # Initial config.
-        self.env['ir.config_parameter'].set_int('stock.agg_barcode_max_length', 400)
-        self.env['ir.config_parameter'].set_str('stock.barcode_separator', ';')
+        self.env['ir.config_parameter'].sudo().set_int('stock.agg_barcode_max_length', 400)
+        self.env['ir.config_parameter'].sudo().set_str('stock.barcode_separator', ';')
         # Create some products with a valid EAN-13 and LN/SN for tracked ones.
         product_ean13 = self.env['product.product'].create({
             'name': 'Product Test EAN13',
@@ -1162,8 +1169,8 @@ class TestStockQuant(TestStockCommon):
         )
 
         # Use another separator and set a lower aggregate barcode's max length.
-        self.env['ir.config_parameter'].set_str('stock.barcode_separator', '|')
-        self.env['ir.config_parameter'].set_int('stock.agg_barcode_max_length', 160)
+        self.env['ir.config_parameter'].sudo().set_str('stock.barcode_separator', '|')
+        self.env['ir.config_parameter'].sudo().set_int('stock.agg_barcode_max_length', 160)
         aggregate_barcodes = quants.sorted(lambda q: q.product_id.id).get_aggregate_barcodes()
         # Check we have now two aggregate barcodes (306 char but limit at 160).
         self.assertEqual(len(aggregate_barcodes), 2)
@@ -1187,8 +1194,8 @@ class TestStockQuant(TestStockCommon):
         regardless the product's barcode is a valid EAN or not.
         """
         # Initial config.
-        self.env['ir.config_parameter'].set_int('stock.agg_barcode_max_length', 400)
-        self.env['ir.config_parameter'].set_str('stock.barcode_separator', ';')
+        self.env['ir.config_parameter'].sudo().set_int('stock.agg_barcode_max_length', 400)
+        self.env['ir.config_parameter'].sudo().set_str('stock.barcode_separator', ';')
         # Creates some product with not GS1 compliant barcodes.
         product = self.env['product.product'].create({
             'name': "Product Test",
@@ -1503,7 +1510,12 @@ class TestStockQuant(TestStockCommon):
 
 class TestStockQuantRemovalStrategy(TestStockCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -1728,7 +1740,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(products[0], self.stock_location, 1.0, package_id=packages[0])
         self.env['stock.quant']._update_available_quantity(products[1], self.stock_location, 1.0, package_id=packages[0])
         self.env['stock.quant']._update_available_quantity(products[2], self.stock_location, 1.0, package_id=packages[1])
-        sublocation = self.env['stock.location'].create({
+        sublocation = self.env['stock.location'].sudo().create({
             'name': 'sublocation',
             'location_id': self.stock_location.id,
         })
@@ -1756,7 +1768,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         ])
         delivery.action_confirm()
         # Make an internal transfer to move Pack 001 in a sublocation
-        self.picking_type_int.show_entire_packs = True
+        self.picking_type_int.sudo().show_entire_packs = True
         internal_transfer.action_add_entire_packs(packages[0].id)
         internal_transfer.action_confirm()
         internal_transfer.button_validate()

@@ -892,7 +892,7 @@ class TestRepair(TestRepairCommon):
         if prod_location:
             prod_location.usage = "internal"
         with self.assertRaises(UserError):
-            self.env['stock.warehouse'].create({
+            self.env['stock.warehouse'].sudo().create({
                 'name': 'ELCT',
                 'code': 'ET',
                 'company_id': company.id,
@@ -909,7 +909,7 @@ class TestRepair(TestRepairCommon):
         if inv_locations:
             inv_locations.write({'usage': "internal"})
         with self.assertRaises(UserError):
-            self.env['stock.warehouse'].create({
+            self.env['stock.warehouse'].sudo().create({
                 'name': 'ELCT',
                 'code': 'ET',
             })

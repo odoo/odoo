@@ -65,7 +65,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         self.assertEqual(forecast_report, [0, 100, 100, 100, -20, -20])
 
     def test_report_stock_quantity_stansit(self):
-        wh2 = self.env['stock.warehouse'].create({'name': 'WH2', 'code': 'WH2'})
+        wh2 = self.env['stock.warehouse'].sudo().create({'name': 'WH2', 'code': 'WH2'})
         transit_loc = self.wh.company_id.internal_transit_location_id
 
         self.move_transit_out = self.env['stock.move'].create({
@@ -188,7 +188,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         two_days_ago = today - timedelta(days=2)
         in_two_days = today + timedelta(days=2)
 
-        wh01, wh02 = self.env['stock.warehouse'].create([{
+        wh01, wh02 = self.env['stock.warehouse'].sudo().create([{
             'name': 'Warehouse 01',
             'code': 'WH01',
         }, {
@@ -240,7 +240,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             product = self.env['product.product'].with_context(to_date=inv_datetime).browse(product_id)
             return (product.qty_available, product.virtual_available)
         # We add a second warehouse and put the resuplying flow in push mechanic to test receipt in 2 steps with an external transfer
-        warehouse, warehouse_2 = self.wh, self.env['stock.warehouse'].create({
+        warehouse, warehouse_2 = self.wh, self.env['stock.warehouse'].sudo().create({
             'name': 'Resupplier warehouse',
             'code': 'WH02',
         })

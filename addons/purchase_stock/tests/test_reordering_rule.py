@@ -52,7 +52,7 @@ class TestReorderingRule(TransactionCase):
         """
         warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse_1.reception_steps = 'two_steps'
-        warehouse_2 = self.env['stock.warehouse'].create({'name': 'WH 2', 'code': 'WH2', 'company_id': self.env.company.id, 'partner_id': self.env.company.partner_id.id, 'reception_steps': 'one_step'})
+        warehouse_2 = self.env['stock.warehouse'].sudo().create({'name': 'WH 2', 'code': 'WH2', 'company_id': self.env.company.id, 'partner_id': self.env.company.partner_id.id, 'reception_steps': 'one_step'})
 
         # Create and set specific buyer for partner
         buyer_id = self.env['res.users'].create({
@@ -648,7 +648,7 @@ class TestReorderingRule(TransactionCase):
         """
         purchase_route = self.env.ref("purchase_stock.route_warehouse0_buy")
         # create a new warehouse to make sure it gets the mts/mto rule
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].sudo().create({
             "name": "test warehouse",
             "active": True,
             'reception_steps': 'one_step',
@@ -727,7 +727,7 @@ class TestReorderingRule(TransactionCase):
         contains a single POL with the cumulative quantity.
         """
         warehouse = self.env.ref("stock.warehouse0")
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse 2',
             'code': 'WH2',
             'resupply_wh_ids': warehouse.ids,

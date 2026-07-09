@@ -1760,7 +1760,7 @@ class TestReports(TestReportsCommon):
         receipts and deliveries.
         """
         # Warehouse config.
-        wh_2 = self.env['stock.warehouse'].create({
+        wh_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Other Warehouse',
             'code': 'OTHER',
         })

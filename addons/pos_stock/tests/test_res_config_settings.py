@@ -12,7 +12,7 @@ class TestPosStockResConfigSettings(TestPosStockCommon):
         warehouse_1 = self.env['stock.warehouse'].search(
             self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1
         )
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Second Warehouse',
             'code': 'WH2',
             'company_id': self.env.company.id,

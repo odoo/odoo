@@ -981,11 +981,11 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         informations when a kit is ordered
         """
 
-        warehouse_1 = self.env['stock.warehouse'].create({
+        warehouse_1 = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse 1',
             'code': 'WH1'
         })
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse 2',
             'code': 'WH2'
         })
@@ -1240,7 +1240,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'bom_id': bom_kit_uom_in_kit.id})
 
         # Create a simple warehouse to receives some products
-        warehouse_1 = self.env['stock.warehouse'].create({
+        warehouse_1 = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse 1',
             'code': 'WH1'
         })
@@ -1413,7 +1413,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
                 line.uom_id = self.uom_kg
 
         # Create a simple warehouse to receives some products
-        warehouse_1 = self.env['stock.warehouse'].create({
+        warehouse_1 = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse 1',
             'code': 'WH1'
         })
@@ -2808,7 +2808,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.component_c.write({"standard_price": 1, "categ_id": new_category.id})
 
         # We receive enough of each component in Warehouse 1 to make 2x kit_1
-        warehouse_1 = self.env['stock.warehouse'].create({
+        warehouse_1 = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse 1',
             'code': 'WH1'
         })

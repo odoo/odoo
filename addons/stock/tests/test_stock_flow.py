@@ -10,7 +10,12 @@ from odoo import Command, fields
 
 @tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestStockFlow(TestStockCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',
+    )
+
+    _test_user_name = 'Test Stock User & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -1148,7 +1153,7 @@ class TestStockFlow(TestStockCommon):
         """ Picking in without lots and picking out with"""
         # Change basic operation type not to get lots
         # Create product with lot tracking
-        self.picking_type_in.use_create_lots = False
+        self.picking_type_in.sudo().use_create_lots = False
         self.productA.tracking = 'lot'
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in.id,
@@ -1753,12 +1758,12 @@ class TestStockFlow(TestStockCommon):
         """Create 3 pickings with each has different backorder settings on its
         picking type. Check the backorder behavior for each picking.
         """
-        self.picking_type_in.create_backorder = 'ask'
-        picking_type_always = self.picking_type_in.copy({
+        self.picking_type_in.sudo().create_backorder = 'ask'
+        picking_type_always = self.picking_type_in.sudo().copy({
             'sequence_code': 'always',
             'create_backorder': 'always',
         })
-        picking_type_never = self.picking_type_in.copy({
+        picking_type_never = self.picking_type_in.sudo().copy({
             'sequence_code': 'never',
             'create_backorder': 'never',
         })
@@ -1835,10 +1840,11 @@ class TestStockFlow(TestStockCommon):
 
         # Need to add a new company on user.
         self.env.user.write({'company_ids': [Command.link(self.company_2.id)]})
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=[self.env.company.id, self.company_2.id]))
 
         warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
-        f = Form(self.env['stock.route'])
+        f = Form(self.env['stock.route'].sudo())
         f.name = 'From Company 1 to InterCompany'
         f.company_id = self.env.company
         with f.rule_ids.new() as rule:
@@ -1849,7 +1855,7 @@ class TestStockFlow(TestStockCommon):
             rule.procure_method = 'make_to_order'
         route_a = f.save()
         warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', self.company_2.id)], limit=1)
-        f = Form(self.env['stock.route'])
+        f = Form(self.env['stock.route'].sudo())
         f.name = 'From InterCompany to Company 2'
         f.company_id = self.company_2
         with f.rule_ids.new() as rule:
@@ -1898,10 +1904,11 @@ class TestStockFlow(TestStockCommon):
 
         # Need to add a new company on user.
         self.env.user.write({'company_ids': [Command.link(self.company_2.id)]})
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=[self.env.company.id, self.company_2.id]))
 
         warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
-        f = Form(self.env['stock.route'])
+        f = Form(self.env['stock.route'].sudo())
         f.name = 'From Company 1 to InterCompany'
         f.company_id = self.env.company
         with f.rule_ids.new() as rule:
@@ -1913,7 +1920,7 @@ class TestStockFlow(TestStockCommon):
         route_a = f.save()
 
         warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', self.company_2.id)], limit=1)
-        f = Form(self.env['stock.route'])
+        f = Form(self.env['stock.route'].sudo())
         f.name = 'From InterCompany to Company 2'
         f.company_id = self.company_2
         with f.rule_ids.new() as rule:
@@ -1924,12 +1931,14 @@ class TestStockFlow(TestStockCommon):
             rule.procure_method = 'make_to_stock'
         route_b = f.save()
 
-        company_3 = self.env['res.company'].create({
+        company_3 = self.env['res.company'].sudo().create({
             'name': 'Alaska Company'
         })
+        self.env.user.sudo().company_ids += company_3
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=[self.env.company.id, self.company_2.id, company_3.id]))
 
         warehouse_company_3 = self.env['stock.warehouse'].search([('company_id', '=', company_3.id)], limit=1)
-        f = Form(self.env['stock.route'])
+        f = Form(self.env['stock.route'].sudo())
         f.name = 'From InterCompany to Company 3'
         f.company_id = company_3
         with f.rule_ids.new() as rule:
@@ -1985,7 +1994,7 @@ class TestStockFlow(TestStockCommon):
         """ As it seems we keep breaking this thing over and over this small
         test ensure the scheduled_date is writable on a picking in state 'draft' or 'confirmed'
         """
-        partner = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
+        partner = self.env['res.partner'].sudo().create({'name': 'Hubert Bonisseur de la Bath'})
         product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
@@ -2192,7 +2201,7 @@ class TestStockFlow(TestStockCommon):
             picking.action_confirm()
             return picking
 
-        self.picking_type_out.reservation_method = 'at_confirm'
+        self.picking_type_out.sudo().reservation_method = 'at_confirm'
         out01 = create_picking(self.picking_type_out.id, self.stock_location.id, self.customer_location.id)
         out02 = create_picking(self.picking_type_out.id, self.stock_location.id, self.customer_location.id, sequence=2, delay=1)
         in01 = create_picking(self.picking_type_in.id, self.supplier_location.id, self.stock_location.id, delay=2)
@@ -2216,7 +2225,7 @@ class TestStockFlow(TestStockCommon):
          is set on 'At Confirmation' """
 
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10)
-        self.picking_type_out.reservation_method = 'at_confirm'
+        self.picking_type_out.sudo().reservation_method = 'at_confirm'
 
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out.id,
@@ -2284,8 +2293,8 @@ class TestStockFlow(TestStockCommon):
         """ Ensure that the partner_id of the picking entry is
         transmitted to the SM upon object creation.
         """
-        partner_1 = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
-        partner_2 = self.env['res.partner'].create({'name': 'Donald Clairvoyant du Bled'})
+        partner_1 = self.env['res.partner'].sudo().create({'name': 'Hubert Bonisseur de la Bath'})
+        partner_2 = self.env['res.partner'].sudo().create({'name': 'Donald Clairvoyant du Bled'})
         product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
@@ -2394,15 +2403,15 @@ class TestStockFlow(TestStockCommon):
         We trigger an orderpoint for each product
         There should be two pickings (out from WH01 + in to WH02)
         """
-        wh01_address, wh02_address = self.env['res.partner'].create([{
+        wh01_address, wh02_address = self.env['res.partner'].sudo().create([{
             'name': 'Address %s' % i,
             'parent_id': self.partner_1.id,
             'type': 'delivery',
         } for i in [1, 2]])
 
         warehouse01 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse01.partner_id = wh01_address
-        warehouse02 = self.env['stock.warehouse'].create({
+        warehouse01.sudo().partner_id = wh01_address
+        warehouse02 = self.env['stock.warehouse'].sudo().create({
             'name': 'Second Warehouse',
             'code': 'WH02',
             'partner_id': wh02_address.id,
@@ -2416,7 +2425,7 @@ class TestStockFlow(TestStockCommon):
         for product in products:
             product.route_ids = [(6, 0, warehouse02.resupply_route_ids.ids)]
             self.env['stock.quant']._update_available_quantity(product, wh01_stock_location, 10)
-            self.env['stock.warehouse.orderpoint'].create({
+            self.env['stock.warehouse.orderpoint'].sudo().create({
                 'name': 'RR for %s' % product.name,
                 'warehouse_id': warehouse02.id,
                 'location_id': wh02_stock_location.id,
@@ -2451,8 +2460,8 @@ class TestStockFlow(TestStockCommon):
         steps), the out-move should be automatically assigned.
         """
         self.env['ir.config_parameter'].sudo().set_bool('stock.picking_no_auto_reserve', False)
-        self.warehouse_1.out_type_id.reservation_method = 'by_date'
-        self.warehouse_1.reception_steps = 'two_steps'
+        self.warehouse_1.out_type_id.sudo().reservation_method = 'by_date'
+        self.warehouse_1.sudo().reception_steps = 'two_steps'
 
         out_move = self.env['stock.move'].create({
             'product_id': self.productA.id,
@@ -2649,7 +2658,7 @@ class TestStockFlow(TestStockCommon):
         Ensure that, when assigning a batch of moves with different destinations,
         putaway strategy correctly defaults to child locations.
         '''
-        view_a, view_b = self.env['stock.location'].create([{
+        view_a, view_b = self.env['stock.location'].sudo().create([{
             'name': 'View A',
             'usage': 'view',
             'location_id': self.stock_location.id,
@@ -2658,7 +2667,7 @@ class TestStockFlow(TestStockCommon):
             'usage': 'view',
             'location_id': self.stock_location.id,
         }])
-        child_a, child_b = self.env['stock.location'].create([{
+        child_a, child_b = self.env['stock.location'].sudo().create([{
             'name': 'Child A',
             'usage': 'internal',
             'location_id': view_a.id,
@@ -2696,7 +2705,11 @@ class TestStockFlow(TestStockCommon):
 
 class TestStockFlowTourPostInstall(TestStockCommon, HttpCase):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @users('pauline')  # pauline is the login of the basic stock_user
     def test_basic_stock_flow_with_minimal_access_rights(self):
@@ -2738,10 +2751,15 @@ class TestStockFlowTourPostInstall(TestStockCommon, HttpCase):
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_last_delivery_partner_field_on_lot(self):
-        partner = self.env['res.partner'].create({'name': 'Super Partner'})
+        partner = self.env['res.partner'].sudo().create({'name': 'Super Partner'})
 
         product = self.env['product.product'].create({
             'name': 'Super Product',
@@ -2813,14 +2831,14 @@ class TestStockFlowPostInstall(TestStockCommon):
         """
         stock_location_1 = self.stock_location
         stock_location_2 = stock_location_1.copy()
-        picking_type_1 = self.env['stock.picking.type'].create({
+        picking_type_1 = self.env['stock.picking.type'].sudo().create({
             'name': 'new_picking_type_1',
             'code': 'internal',
             'sequence_code': 'PT1/',
             'default_location_src_id': stock_location_1.id,
             'default_location_dest_id': self.customer_location.id,
         })
-        picking_type_2 = self.env['stock.picking.type'].create({
+        picking_type_2 = self.env['stock.picking.type'].sudo().create({
             'name': 'new_picking_type_2',
             'code': 'internal',
             'sequence_code': 'PT2/',

@@ -14,7 +14,16 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 @freeze_time(fields.Date.today())
 class TestBoM(TestMrpCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'mrp.group_mrp_routings',  # view visibility (duration/workorder fields) granted to cls.env.user in Common
+        'mrp.group_mrp_byproducts',  # view visibility (byproducts) granted to mrp users in Common
+        'stock.group_stock_manager',  # setup: warehouse/route/rule/orderpoint/location/picking_type config in test bodies
+        'uom.group_uom',  # view visibility (uom_id) granted to cls.env.user in Common
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -50,7 +59,7 @@ class TestBoM(TestMrpCommon):
 
     def test_02_explode_rounding(self):
         fns, cmp1, cmp2 = self.env['product.product'].create([{'name': 'FNS'}, {'name': 'CMP1'}, {'name': 'CMP2'}])
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 2
+        self.env['decimal.precision'].sudo().search([('name', '=', 'Product Unit')]).digits = 2
 
         fns_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': fns.product_tmpl_id.id,
@@ -189,11 +198,12 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(mrp_order.move_byproduct_ids.product_id, self.product_1 | self.product_3)
 
     def test_11_multi_level_variants(self):
-        tmp_picking_type = self.env['stock.picking.type'].create({
+        # setup: creating a picking type writes ir.sequence via the sequence_code related inverse
+        tmp_picking_type = self.env['stock.picking.type'].sudo().create({
             'name': 'Manufacturing',
             'code': 'mrp_operation',
             'sequence_code': 'TMP',
-            'sequence_id': self.env['ir.sequence'].create({
+            'sequence_id': self.env['ir.sequence'].sudo().create({
                 'code': 'mrp.production',
                 'name': 'tmp_production_sequence',
             }).id,
@@ -452,7 +462,7 @@ class TestBoM(TestMrpCommon):
         # We set the Product Unit digits to 5.
         # Because float_round(-384.0, 5) = -384.00000000000006
         # And float_round(-384.0, 2) = -384.0
-        precision = self.env.ref('uom.decimal_product_uom')
+        precision = self.env.ref('uom.decimal_product_uom').sudo()
         precision.digits = 5
 
         _ = self.env['mrp.bom'].create({
@@ -1992,7 +2002,8 @@ class TestBoM(TestMrpCommon):
         mo_form.bom_id = self.bom_1
         mo_form.picking_type_id = self.picking_type_manu
         mo_1 = mo_form.save()
-        picking_type_manu_clone = self.picking_type_manu.copy({'sequence_code': 'NEW_CODE'})
+        # setup: copying a picking type writes ir.sequence via the sequence_code related inverse
+        picking_type_manu_clone = self.picking_type_manu.sudo().copy({'sequence_code': 'NEW_CODE'})
         mo_1.picking_type_id = picking_type_manu_clone
         mo_1.action_confirm()
         picking = mo_1.picking_ids
