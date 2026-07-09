@@ -79,7 +79,7 @@ export class DynamicSnippetOptionPlugin extends Plugin {
             NumberOfRecordsAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        is_unremovable_selectors: ".s_dynamic_snippet_title",
+        region_properties: { is: ".s_dynamic_snippet_title", removable: false },
     };
     setup() {
         this.dynamicFiltersCache = new Cache(this._fetchDynamicFilters, JSON.stringify);

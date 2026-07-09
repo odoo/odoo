@@ -30,7 +30,7 @@ import { withSequence } from "../utils/resource";
  */
 export class FeffPlugin extends Plugin {
     static id = "feff";
-    static dependencies = ["selection"];
+    static dependencies = ["selection", "region"];
     static shared = ["addFeff", "removeFeffs", "surroundWithFeffs"];
 
     /** @type {import("plugins").EditorResources} */
@@ -100,7 +100,7 @@ export class FeffPlugin extends Plugin {
                 cursors,
                 (node) =>
                     node.hasAttribute("data-oe-zws-empty-inline") ||
-                    !(this.checkPredicates("is_node_removable_predicates", node) ?? true)
+                    !(this.dependencies.region.getProperty(node, "removable") ?? true)
             );
             restoreSpaces();
         }

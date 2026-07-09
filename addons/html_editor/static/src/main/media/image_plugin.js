@@ -72,16 +72,7 @@ export class ImagePlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_namespace_providers: [
-            (targetedNodes) => {
-                if (
-                    targetedNodes.length &&
-                    targetedNodes.every((node) => node.nodeName === "IMG")
-                ) {
-                    return this.toolbarNamespace;
-                }
-            },
-        ],
+        region_properties: { is: "IMG", toolbar: this.toolbarNamespace },
         toolbar_groups: [
             withSequence(26, { id: "image_modifiers", namespaces: ["image"] }),
             withSequence(26, { id: "image_size", namespaces: ["image"] }),

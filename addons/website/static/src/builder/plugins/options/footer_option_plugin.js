@@ -32,10 +32,9 @@ export class FooterOptionPlugin extends Plugin {
         },
         auto_unfold_container_providers: { selector: "#footer > section", target: "footer" },
         on_prepare_drag_handlers: this.prepareDrag.bind(this),
-        is_node_removable_predicates: (node) => {
-            if (node.id === "o_footer_scrolltop") {
-                return false;
-            }
+        region_properties: {
+            is: (node) => node.id === "o_footer_scrolltop",
+            removable: false,
         },
         immutable_link_selectors: [".o_cookie_policy_link_container a.oe_unremovable"],
         footer_templates_providers: [

@@ -145,11 +145,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 commandId: "s_hr",
             },
         ],
-        is_node_splittable_predicates: (node) => {
-            if (node.classList?.contains("s_blockquote")) {
-                return false;
-            }
-        },
+        region_properties: { is: ".s_blockquote", splittable: false },
     };
 
     insertSnippet(name) {

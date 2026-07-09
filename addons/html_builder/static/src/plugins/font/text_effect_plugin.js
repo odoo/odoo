@@ -66,11 +66,7 @@ export class TextEffectPlugin extends Plugin {
                 return true;
             }
         },
-        is_node_splittable_predicates: (node) => {
-            if (node.matches?.("[data-text-effect]")) {
-                return false;
-            }
-        },
+        region_properties: { is: "[data-text-effect]", splittable: false },
         clean_for_save_processors: this.removeEmptyTextEffects.bind(this),
         on_all_formats_removed_handlers: () => {
             for (const node of this.dependencies.selection.getTargetedNodes()) {

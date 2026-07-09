@@ -20,7 +20,7 @@ const PLACEHOLDER_SELECTOR = `[${PLACEHOLDER_ATTRIBUTE}]`;
 
 export class SelectionPlaceholderPlugin extends Plugin {
     static id = "selectionPlaceholder";
-    static dependencies = ["baseContainer", "history", "selection", "domObserver"];
+    static dependencies = ["baseContainer", "history", "selection", "domObserver", "region"];
     resources = {
         on_remote_history_commits_applied_handlers: this.updatePlaceholders.bind(this),
         normalize_processors: withSequence(100, this.updatePlaceholders.bind(this)),
@@ -38,24 +38,9 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        is_selection_blocker_predicates: (blocker) => {
-            if (isNotEditableNode(blocker)) {
-                return isBlock(blocker);
-            }
-        },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (
-                container.getAttribute("contenteditable") === "true" &&
-                !isPhrasingContent(container) &&
-                allowsParagraphRelatedElements(container)
-            ) {
-                return true;
-            }
-        },
-        should_show_power_buttons_predicates: ({ anchorNode }) => {
-            if (closestElement(anchorNode, PLACEHOLDER_SELECTOR)) {
-                return false;
-            }
+        region_properties: {
+            within: PLACEHOLDER_SELECTOR,
+            powerButtons: false,
         },
         move_node_blacklist_selectors: PLACEHOLDER_SELECTOR,
         system_node_selectors: PLACEHOLDER_SELECTOR,
@@ -79,12 +64,20 @@ export class SelectionPlaceholderPlugin extends Plugin {
      * everywhere we need them, and absent wherever they are not useful.
      */
     updatePlaceholders(root = this.editable) {
-        const isSelectionBlocker = (node) =>
-            this.checkPredicates("is_selection_blocker_predicates", node) ?? false;
+        // A non-editable block is a selection blocker by default; plugins
+        // override this per node via the `selectionBlocker` region property.
+        const isSelectionBlocker = (node) => {
+            const region = this.dependencies.region.getProperty(node, "selectionBlocker");
+            const base = isNotEditableNode(node) ? isBlock(node) : undefined;
+            const defined = [region, base].filter((r) => r !== undefined);
+            return defined.length ? defined.every(Boolean) : false;
+        };
         const placeholderParents = selectElements(this.editable, "*").filter(
             (container) =>
-                this.checkPredicates("can_contain_selection_placeholder_predicates", container) ??
-                false
+                this.dependencies.region.getProperty(container, "placeholderHost") ??
+                (container.getAttribute("contenteditable") === "true" &&
+                    !isPhrasingContent(container) &&
+                    allowsParagraphRelatedElements(container))
         );
 
         const marginUpdates = [];

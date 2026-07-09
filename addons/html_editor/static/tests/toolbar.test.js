@@ -1,6 +1,10 @@
 import { Editor } from "@html_editor/editor";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
-import { DELAY_TOOLBAR_OPEN, ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
+import {
+    DELAY_TOOLBAR_OPEN,
+    DISABLED_NAMESPACE,
+    ToolbarPlugin,
+} from "@html_editor/main/toolbar/toolbar_plugin";
 import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import {
@@ -1394,10 +1398,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbar_namespace_providers: [
-                (nodeList) =>
-                    nodeList.find((node) => node.tagName === "DIV") ? "aNamespace" : undefined,
-            ],
+            region_properties: { within: ".test_namespace", toolbar: "aNamespace" },
             user_commands: { id: "test_cmd", run: () => null },
             toolbar_groups: withSequence(24, { id: "test_group", namespaces: ["aNamespace"] }),
             toolbar_items: [
@@ -1411,11 +1412,11 @@ test("toolbar correctly show namespace button group and stop showing when namesp
             ],
         };
     }
-    const { el } = await setupEditor("<div>[<section><p>abc</p></section><div>d]ef</div></div>", {
+    const { el } = await setupEditor(`<div class="test_namespace"><p>[abc]</p></div>`, {
         config: { includePlugins: [TestPlugin] },
     });
     await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 1);
-    setContent(el, "<div><section><p>[abc]</p></section><div>def</div></div>");
+    setContent(el, "<p>[abc]</p>");
     await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 0);
 });
 
@@ -1881,23 +1882,16 @@ test("should not close image cropper while loading media", async () => {
 });
 
 test("toolbar shouldn't be visible if namespace === disabled", async () => {
-    const { el } = await setupEditor("<p>[test]<img></p>", {
+    const { el } = await setupEditor(`<p>[test]</p><div class="test_disabled"><p>x</p></div>`, {
         config: {
             resources: {
-                toolbar_namespace_providers: [
-                    withSequence(1, (targetedNodes) =>
-                        targetedNodes.find((node) => node.tagName === "IMG")
-                            ? "disabled"
-                            : undefined
-                    ),
-                ],
+                region_properties: { within: ".test_disabled", toolbar: DISABLED_NAMESPACE },
             },
         },
     });
 
     await expectElementCount(".o-we-toolbar", 1);
-    setContent(el, "<p>test[<img>]</p>");
-    await animationFrame();
+    setContent(el, `<p>test</p><div class="test_disabled"><p>[x]</p></div>`);
     await expectElementCount(".o-we-toolbar", 0);
 });
 

@@ -87,7 +87,15 @@ function getConnectedParents(nodes) {
 
 export class DomPlugin extends Plugin {
     static id = "dom";
-    static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "split",
+        "delete",
+        "lineBreak",
+        "region",
+    ];
     static shared = [
         "insert",
         "copyAttributes",
@@ -112,10 +120,9 @@ export class DomPlugin extends Plugin {
             return root;
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
-        is_functional_empty_node_predicates: (node) => {
-            if (isSelfClosingElement(node) || isEditorTab(node)) {
-                return true;
-            }
+        region_properties: {
+            is: (node) => isSelfClosingElement(node) || isEditorTab(node),
+            functionalEmpty: true,
         },
     };
 
@@ -193,7 +200,7 @@ export class DomPlugin extends Plugin {
                 shouldBreakLine = true;
             } else if (
                 !visibleNodes.has(node) &&
-                (this.checkPredicates("is_node_removable_predicates", node) ?? true)
+                (this.dependencies.region.getProperty(node, "removable") ?? true)
             ) {
                 removeNode(node, cursors);
             } else if (node.nodeName === "BR") {

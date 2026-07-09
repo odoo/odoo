@@ -96,19 +96,13 @@ export class MediaPlugin extends Plugin {
         clipboard_content_processors: this.clean.bind(this),
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
 
-        /** Predicates */
-        is_node_splittable_predicates: (node) => {
+        /** Regions */
+        region_properties: [
+            { is: this.isEditableMediaElement.bind(this), editable: true },
+            { is: isMediaElement, functionalEmpty: true },
             // avoid merge
-            if (isIconElement(node)) {
-                return false;
-            }
-        },
-        is_node_editable_predicates: this.isEditableMediaElement.bind(this),
-        is_functional_empty_node_predicates: (node) => {
-            if (isMediaElement(node)) {
-                return true;
-            }
-        },
+            { is: isIconElement, splittable: false },
+        ],
 
         selectors_for_feff_providers: () =>
             `:is(${paragraphRelatedElementsSelector}, ${FORMATTABLE_TAGS.join(

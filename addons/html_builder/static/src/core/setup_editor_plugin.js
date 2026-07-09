@@ -23,11 +23,7 @@ export class SetupEditorPlugin extends Plugin {
         clean_for_save_processors: this.cleanForSave.bind(this),
         closest_savable_providers: withSequence(10, (el) => el.closest(".o_savable")),
         savable_selectors: "[data-oe-model]",
-        is_node_removable_predicates: (node) => {
-            if (node.classList?.contains("o_savable")) {
-                return false;
-            }
-        },
+        region_properties: { is: ".o_savable", removable: false },
         on_removed_handlers: this.cleanupEmptyStructures.bind(this),
     };
 
