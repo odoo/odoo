@@ -60,7 +60,7 @@ test("basic text filter", async function () {
     await addGlobalFilter(model, globalFilter);
     await mountDashboardFilterList({ model });
     expect(".o-filter-values").toHaveCount(1);
-    expect(".fa-pencil").toHaveCount(0);
+    expect("[data-icon='edit']").toHaveCount(0);
 });
 
 test("filter list with no active filters", async function () {

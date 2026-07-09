@@ -6,6 +6,7 @@
         class="o-hb-btn btn"
         t-on-click="this.showSlidingPanel"
         t-att-class="this.props.extraClasses"
+        t-att-data-icon="this.props.icon"
     >
         <t t-call-slot="default"/>
     </button>
@@ -18,7 +19,7 @@
             <div class="hb-sliding-panel-header">
                 <div class="hb-sliding-panel-label d-flex align-items-center p-2">
                     <button class="btn p-1" t-on-click="this.hideSlidingPanel" aria-label="close" tabindex="0" >
-                        <i class="oi oi-chevron-left me-1" role="presentation"/>
+                        <i class="oi me-1" data-icon="chevron_backward" role="presentation"/>
                         <t t-out="this.state.optionContainerName + ' / ' + this.props.label"/>
                     </button>
                 </div>

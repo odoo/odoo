@@ -86,7 +86,7 @@
 
         &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item i {
             font-size: 0.7em !important;
-            &:is(.fa-phone, .fa-video-camera)::before {
+            &:is([data-icon="phone"], [data-icon="videocam"])::before {
                 transform: translateY(1px);
             }
         }
@@ -94,7 +94,7 @@
         .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL i {
             font-size: 0.9em !important;
 
-            &.fa-phone::before {
+            &[data-icon="phone"]::before {
                 transform: translateY(.5px);
             }
         }

@@ -19,11 +19,11 @@
             <div class="d-flex flex-column">
                 <span t-if="contact.name" t-out="contact.name" class="fw-bold"/>
                 <span t-if="contact.email">
-                    <i class="fa fa-fw fa-envelope me-2"/>
+                    <i class="oi oi-fw oi-filled me-2" data-icon="mail"/>
                     <t t-out="contact.email"/>
                 </span>
                 <span t-if="contact.phone">
-                    <i class="fa fa-fw fa-phone me-2"/>
+                    <i class="oi oi-fw oi-filled me-2" data-icon="phone"/>
                     <t t-out="contact.phone"/>
                 </span>
             </div>

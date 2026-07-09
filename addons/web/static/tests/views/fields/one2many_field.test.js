@@ -2571,7 +2571,7 @@ test("edition of one2many field with pager", async () => {
                         <templates>
                             <t t-name="card">
                                 <div>
-                                    <a type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <a type="delete" class="oi float-end delete_icon" data-icon="close"/>
                                     <field name="name"/>
                                 </div>
                             </t>
@@ -2721,7 +2721,7 @@ test("edition of one2many field with pager on desktop", async () => {
                         <templates>
                             <t t-name="card">
                                 <div>
-                                    <a type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <a type="delete" class="oi float-end delete_icon" data-icon="close"/>
                                     <field name="name"/>
                                 </div>
                             </t>
@@ -3558,7 +3558,7 @@ test("one2many kanban: edition", async () => {
                         <templates>
                             <t t-name="card">
                                 <div>
-                                    <a type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <a type="delete" class="oi float-end delete_icon" data-icon="close"/>
                                     <field name="name"/>
                                     <field name="color"/>
                                 </div>
@@ -3663,7 +3663,7 @@ test("one2many kanban: create action disabled", async () => {
                         <templates>
                             <t t-name="card">
                                 <div>
-                                    <a type="delete" class="fa fa-times float-end delete_icon"/>
+                                    <a type="delete" class="oi float-end delete_icon" data-icon="close"/>
                                     <field name="name"/>
                                 </div>
                             </t>
@@ -5968,7 +5968,7 @@ test("one2many list with action button", async () => {
                 <field name="p">
                     <list>
                         <field name="foo"/>
-                        <button name="method_name" type="object" icon="fa-plus"/>
+                        <button name="method_name" type="object" icon="add"/>
                     </list>
                 </field>
             </form>`,
@@ -6000,7 +6000,7 @@ test("one2many kanban with action button", async () => {
                         <templates>
                             <t t-name="card">
                                 <field name="foo"/>
-                                <button name="method_name" type="object" class="fa fa-plus"/>
+                                <button name="method_name" type="object" class="oi" data-icon="add"/>
                             </t>
                         </templates>
                     </kanban>
@@ -6840,8 +6840,8 @@ test("one2many field with virtual ids with kanban button", async () => {
                         <templates>
                             <t t-name="card">
                                 <field name="foo"/>
-                                <button type="object" class="btn btn-link fa fa-shopping-cart" name="button_warn" string="button_warn" warn="warn" />
-                                <button type="object" class="btn btn-link fa fa-shopping-cart" name="button_disabled" string="button_disabled" />
+                                <button type="object" class="btn btn-link oi" data-icon="shopping_cart" name="button_warn" string="button_warn" warn="warn" />
+                                <button type="object" class="btn btn-link oi" data-icon="shopping_cart" name="button_disabled" string="button_disabled" />
                             </t>
                         </templates>
                     </kanban>
@@ -9651,7 +9651,7 @@ test("one2many add a line should not crash if orderedResIDs is not set on mobile
             </form>`,
     });
 
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
     await contains('button[name="post"]').click();
     await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_data_row.o_selected_row").toHaveCount(1);
@@ -13181,7 +13181,7 @@ test("modifiers based on x2many", async () => {
     expect("[name='name'].o_readonly_modifier").toHaveCount(1);
     expect("[name='int_field'].o_required_modifier").toHaveCount(1);
 
-    await contains("button.fa-trash-o").click();
+    await contains("button[data-icon='delete']").click();
     expect("button.my_button").toHaveCount(0);
     expect("[name='name'].o_readonly_modifier").toHaveCount(0);
     expect("[name='int_field'].o_required_modifier").toHaveCount(0);

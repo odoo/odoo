@@ -1301,7 +1301,7 @@ test("PosResTicketScreenTour: delete order and table becomes empty", async () =>
         await contains('.ticket-screen .order-row:contains("001")').click();
         await animationFrame();
     }
-    await contains('.ticket-screen .order-row:contains("001") .fa-trash').click();
+    await contains('.ticket-screen .order-row:contains("001") [data-icon="delete"]').click();
     await animationFrame();
     await Utils.confirmDialog();
     await Utils.clickPlanButton();

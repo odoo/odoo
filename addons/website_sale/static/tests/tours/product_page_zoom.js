@@ -36,7 +36,7 @@ registry.category("web_tour.tours").add('website_sale.product_page_zoom', {
         },
         {
             content: "close the image viewer",
-            trigger: '.o_wsale_image_viewer_header span.fa-times',
+            trigger: '.o_wsale_image_viewer_header span[data-icon="close"]',
             run: "click",
         },
         {

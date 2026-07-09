@@ -10,12 +10,13 @@
     --o-wsale-wishlist-btn-display: inline-flex;
 
     .o_add_wishlist {
-        &:hover .fa-heart-o:before, &[disabled] .fa:before {
+        &:hover [data-icon="favorite"]:before, &[disabled] .oi:before {
             content: "favorite_f";
+
             color: var(--addWishlist-color-active);
         }
 
-        &[disabled] .fa {
+        &[disabled] .oi {
             animation: bounceIn 1s;
         }
     }

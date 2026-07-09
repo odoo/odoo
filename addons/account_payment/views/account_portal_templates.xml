@@ -86,7 +86,7 @@
                     class="btn btn-sm btn-primary"
                     role="button"
                 >
-                    <i class="fa fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
+                    <i class="oi oi-filled" data-icon="arrow_circle_right"/><span class='d-none d-md-inline'> Pay Now</span>
                 </a>
             </td>
         </xpath>
@@ -96,7 +96,7 @@
         <xpath expr="//span[@name='invoice_status_waiting_for_payment']" position="before">
             <span t-elif="invoice.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'authorized'"
                     class="badge rounded-pill text-bg-primary">
-                <i class="fa fa-fw fa-check"/>
+                <i class="oi oi-fw" data-icon="check"/>
                 <span class="d-none d-md-inline"> Authorized</span>
             </span>
             <span t-elif="invoice.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'pending' and tx_sudo.provider_code not in ('none', 'custom')"
@@ -104,7 +104,7 @@
                 <span class="d-none d-md-inline"> Pending</span>
             </span>
             <span t-elif="invoice.payment_state in ('paid', 'in_payment') and tx_sudo.state == 'done'" class="badge rounded-pill text-bg-success">
-                <i class="fa fa-fw fa-check"></i>
+                <i class="oi oi-fw" data-icon="check"></i>
                 <span class="d-none d-md-inline"> Paid</span>
             </span>
         </xpath>
@@ -253,13 +253,13 @@
         <xpath expr="//t[@t-set='title']//h2[1]" position="after">
             <t t-set="pending_txs" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized') and tx.provider_code not in ('none', 'custom'))"/>
             <div name="invoice_paid_badge" t-if="invoice.currency_id.is_zero(invoice.amount_residual)" class="rounded text-bg-success fw-normal badge">
-                <i class="fa fa-fw fa-check-circle"/> Paid
+                <i class="oi oi-fw" data-icon="check_circle"/> Paid
             </div>
             <div t-if="invoice.payment_state == 'in_payment' and not invoice.currency_id.is_zero(invoice.amount_residual)" class="rounded text-bg-info fw-normal badge">
-                <i class="fa fa-fw fa-check-circle"/> Processing Payment
+                <i class="oi oi-fw" data-icon="check_circle"/> Processing Payment
             </div>
             <div t-elif="pending_txs" class="rounded text-bg-info fw-normal badge">
-                <i class="fa fa-fw fa-check-circle"/> Pending
+                <i class="oi oi-fw" data-icon="check_circle"/> Pending
             </div>
         </xpath>
         <xpath expr="//t[@t-set='entries']//div[hasclass('o_download_pdf')]" position="before">
@@ -268,7 +268,7 @@
                 class="btn btn-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#pay_with">
-                <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
+                <i class="oi oi-fw oi-filled" data-icon="arrow_circle_right"/> Pay Now
             </a>
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">

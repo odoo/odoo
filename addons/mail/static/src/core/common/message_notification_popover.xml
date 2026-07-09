@@ -8,8 +8,8 @@
                 <span t-if="recipient.name" t-out="recipient.name" class="me-1"/>
                 <span t-if="!recipient.name" t-out="recipient.email" class="me-1"/>
                 <span t-if="recipient.name and recipient.email and !recipient.failure" class="text-muted me-1">(<t t-out="recipient.email"/>)</span>
-                <i t-if="recipient.notification" class="me-1 fa-fw" t-att-class="recipient.notification.statusIcon" t-att-title="recipient.notification.statusTitle" role="img"/>
-                <i t-else="" class="me-2 fa fa-fw fa-send-o"/>
+                <i t-if="recipient.notification" class="me-1 oi oi-fw" t-att-class="recipient.notification.statusClass" t-att-data-icon="recipient.notification.statusIcon" t-att-title="recipient.notification.statusTitle" role="img"/>
+                <i t-else="" class="oi oi-fw me-2" data-icon="send"/>
                 <span t-if="recipient.failure" class="text-muted">(<t t-out="recipient.failure"/>)</span>
             </div>
         </div>

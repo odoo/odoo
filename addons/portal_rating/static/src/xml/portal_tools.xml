@@ -9,13 +9,13 @@
              t-attf-aria-label="#{Math.round(val * 100) / 100} stars on 5"
              t-attf-title="#{Math.round(val * 100) / 100} stars on 5">
             <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
-                <i class="fa fa-star" role="img"></i>
+                <i class="oi oi-filled" data-icon="star" role="img"></i>
             </t>
             <t t-if="val_decimal">
-                <i class="fa fa-star-half-o" role="img"></i>
+                <i class="oi" data-icon="star_half" role="img"></i>
             </t>
             <t t-foreach="Array(empty_star)" t-as="num" t-key="num_index">
-                <i class="fa fa-star-o text-black-25" role="img"></i>
+                <i class="oi text-black-25" data-icon="star" role="img"></i>
             </t>
         </div>
     </t>
@@ -100,13 +100,13 @@
 
             <div class="o-mail-Composer-stars enabled cursor-pointer">
                 <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
-                    <i class="fa fa-star" role="img" aria-label="Full star"></i>
+                    <i class="oi oi-filled" data-icon="star" role="img" aria-label="Full star"></i>
                 </t>
                 <t t-if="val_decimal">
-                    <i class="fa fa-star-half-o" role="img" aria-label="Half a star"></i>
+                    <i class="oi" data-icon="star_half" role="img" aria-label="Half a star"></i>
                 </t>
                 <t t-foreach="Array(empty_star)" t-as="num" t-key="num_index">
-                    <i class="fa fa-star-o text-black-25" role="img" aria-label="Empty star"></i>
+                    <i class="oi text-black-25" data-icon="star" role="img" aria-label="Empty star"></i>
                 </t>
             </div>
             <input type="hidden" readonly="readonly" name="rating_value" t-att-value="default_rating || ''"/>

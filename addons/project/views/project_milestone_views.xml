@@ -10,7 +10,7 @@
                         <button name="%(project.action_view_task_from_milestone)d"
                                 type="action"
                                 class="oe_stat_button"
-                                icon="fa-check"
+                                icon="check"
                                 context="{'default_project_id': project_id}"
                                 groups="project.group_project_milestone"
                                 close="1"
@@ -80,7 +80,7 @@
                             </div>
                             <div class="d-flex flex-column">
                                 <div t-if="record.deadline.raw_value" class="d-flex gap-1" name="deadline" title="Deadline">
-                                    <i class="fa fa-calendar px-1 mt-1" role="img" aria-label="Deadline"/>
+                                    <i class="oi oi-filled px-1 mt-1" data-icon="calendar_today" role="img" aria-label="Deadline"/>
                                     <span t-attf-class="{{ record.can_be_marked_as_done.raw_value and 'text-success' or record.is_deadline_exceeded.raw_value and 'text-danger' or '' }}">
                                         <field name="deadline"/>
                                     </span>

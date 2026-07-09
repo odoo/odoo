@@ -151,7 +151,7 @@
             <div class="o_event_full_page_ticket_wrapper">
                 <div t-if="responsive_html" class="d-flex justify-content-center">
                     <a class="btn o_event_download_ticket_btn mb-2" title="Download Tickets" t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendee.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendee.ids) }}">
-                        Download Tickets <i class="ms-1 fa fa-download"/>
+                        Download Tickets <i class="oi ms-1" data-icon="download"/>
                     </a>
                 </div>
                 <div class="o_event_full_page_ticket_details">
@@ -178,7 +178,7 @@
                             <div t-attf-class="row gy-0 gx-2 #{'o_event_full_page_left_details_bottom_qr_only' if not event.use_barcode else ''}">
                                 <div t-if="event.address_id" class="col-md-6 col-12 mb-3 mb-md-0 o_event_full_page_ticket_column">
                                     <div class="d-flex">
-                                        <i class="fa fa-map-marker fa-2x fa-fw me-2 mt-1"/>
+                                        <i class="oi oi-2x oi-fw me-2 mt-1" data-icon="location_on"/>
                                         <div>
                                             <t t-call="event.event_report_template_formatted_event_address" multi_line_address="True"/>
                                         </div>
@@ -186,7 +186,7 @@
                                 </div>
                                 <div class="col-md-6 col-12 mb-3 o_event_full_page_ticket_column">
                                     <div class="d-flex">
-                                        <i class="fa fa-calendar fa-2x fa-fw me-2 mt-1"/>
+                                        <i class="oi oi-2x oi-fw oi-filled me-2 mt-1" data-icon="calendar_today"/>
                                         <div t-if="attendee">
                                             <span t-field="attendee.event_begin_date" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/><br/>
@@ -248,11 +248,11 @@
         <div class="o_event_full_page_ticket_powered_by bg-odoo text-white text-center p-2 w-100">
             <span t-if="event.organizer_id">
                 <span class="fw-bold" t-field="event.organizer_id.name">Marc Demo</span>
-                <span t-if="event.organizer_id.phone" class="ps-3 fa fa-phone"/>
+                <span t-if="event.organizer_id.phone" class="ps-3 oi oi-filled" data-icon="phone"/>
                 <span t-if="event.organizer_id.phone" t-field="event.organizer_id.phone">+123456789</span>
-                <span t-if="event.organizer_id.email_normalized" class="ps-3 fa fa-envelope"/>
+                <span t-if="event.organizer_id.email_normalized" class="ps-3 oi oi-filled" data-icon="mail"/>
                 <span t-if="event.organizer_id.email_normalized" t-field="event.organizer_id.email_normalized">organizer@email.com</span>
-                <span t-if="event.organizer_id.website" class="ps-3 fa fa-globe"/>
+                <span t-if="event.organizer_id.website" class="ps-3 oi" data-icon="public"/>
                 <span t-if="event.organizer_id.website" t-field="event.organizer_id.website">https://www.example.com</span>
             </span>
             <t t-else="">
@@ -313,7 +313,7 @@
                     <span itemprop="startDateTime" t-field="attendee.event_begin_date"
                         class="fw-bold"
                         t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
-                    <span class="fa fa-arrow-right o_event_badge_font_faded"/>
+                    <span class="oi o_event_badge_font_faded" data-icon="arrow_forward"/>
                     <span itemprop="endDate" t-field="attendee.event_end_date"
                         t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
                         class="fw-bold"/>
@@ -328,7 +328,7 @@
                     <span itemprop="startDateTime" t-field="event.date_begin"
                         class="fw-bold"
                         t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
-                    <span class="fa fa-arrow-right o_event_badge_font_faded"/>
+                    <span class="oi o_event_badge_font_faded" data-icon="arrow_forward"/>
                     <span t-if="not event.is_one_day"
                         itemprop="endDate" t-field="event.date_end"
                         t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
@@ -375,9 +375,9 @@
 
 <template id="event_report_template_formatted_event_address">
     <!-- Small utility template to display "Venue" as:
-    fa-map-marker PartnerName
+    location_on PartnerName
     RestOfAddress -->
-    <span t-if="use_map_marker" class="fa fa-map-marker"/>
+    <span t-if="use_map_marker" class="oi" data-icon="location_on"/>
     <t t-if="event.address_id.contact_address.strip()">
         <t t-set="address_bits" t-value="event.address_id.contact_address.split('\n')"/>
         <span t-if="address_bits" t-out="address_bits[0]">Rue de la Paix 123</span>

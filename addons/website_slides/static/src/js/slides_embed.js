@@ -91,8 +91,8 @@ export class SlidesEmbed extends Interaction {
         "#fullscreen": { "t-on-click": this.onFullScreenToggleClick },
         "#fullscreen > i": {
             "t-att-class": () => ({
-                "fa-arrows-alt": !this.isFullScreen,
-                "fa-compress": this.isFullScreen,
+                "fullscreen": !this.isFullScreen,
+                "fullscreen_exit": this.isFullScreen,
             }),
         },
         "#slide_suggest": {

@@ -28,7 +28,7 @@ function getWhatsappSnippet(dataWhatsappNumber = "") {
         </div>
         <div class="o_not_editable">
             <button class="s_whatsapp_fab btn position-relative d-inline-flex align-items-center justify-content-center rounded-circle p-0" aria-label="Open WhatsApp chat" contenteditable="false">
-                <i class="fa fa-whatsapp fs-4" aria-hidden="true"/>
+                <i class="oi fs-4" data-icon="oi_whatsapp" aria-hidden="true"/>
                 <span class="s_whatsapp_notification_badge bg-danger position-absolute rounded-circle w-25 h-25"/>
             </button>
         </div>

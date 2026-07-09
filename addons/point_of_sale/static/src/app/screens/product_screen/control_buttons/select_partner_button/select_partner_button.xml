@@ -7,7 +7,7 @@
                 {{this.ui.isSmall and this.props.partner ? 'btn-outline-secondary active text-action' : 'btn-secondary'}}
                 {{!this.ui.isSmall and 'text-truncate'}}
             ">
-            <t t-if="this.ui.isSmall"><i class="fa fa-user w-100"/></t>
+            <t t-if="this.ui.isSmall"><i class="oi oi-filled w-100" data-icon="person"/></t>
             <div t-elif="this.props.partner" t-out="this.props.partner.name" class="text-truncate text-action" />
             <t t-else="">Customer</t>
         </button>

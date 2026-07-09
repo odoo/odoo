@@ -24,14 +24,14 @@
                         <tr style="--table-bg: var(--table-striped-bg)">
                             <th colspan="2"><span t-out="module.display_name" /></th>
                             <th class="text-end"><span t-out="module.code_lines" /></th>
-                            <th class="text-end" ><i class="fa fa-check" t-if="module.code_lines" /></th>
+                            <th class="text-end" ><i class="oi" data-icon="check" t-if="module.code_lines" /></th>
                             <th/>
                         </tr>
                         <tr t-foreach="module.records" t-as="record" t-key="record_index">
                             <td class="ps-4"  t-out="record.display_name" />
                             <td t-out="record.model ?? ''" />
                             <td class="text-end" t-out="record.code_lines" />
-                            <td class="text-end" ><i class="fa fa-check" t-if="record.billable" /></td>
+                            <td class="text-end" ><i class="oi" data-icon="check" t-if="record.billable" /></td>
                             <td><button t-if="record.model" class="btn btn-link" t-custom-click="(ev, isMiddleClick) => this.viewRecord(record, isMiddleClick)">View</button></td>
                         </tr>
                     </t>

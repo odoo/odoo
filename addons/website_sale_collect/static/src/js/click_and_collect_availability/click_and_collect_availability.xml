@@ -9,7 +9,7 @@
                 t-att-class="this.state.inStoreStockData?.in_stock ? 'cursor-pointer' : ''"
             >
                 <div class="h6">
-                    <i class="fa fa-fw fa-map-marker text-muted"/>
+                    <i class="oi oi-fw text-muted" data-icon="location_on"/>
                     <t
                         t-if="this.state.selectedLocationData.id"
                         t-out="this.state.selectedLocationData.name"
@@ -22,16 +22,16 @@
                             t-if="this.state.inStoreStockData.show_quantity &amp;&amp; this.state.selectedLocationData.id"
                             class="text-muted"
                         >
-                            <i class="fa fa-fw fa-circle text-warning me-1"/>
+                            <i class="oi oi-fw oi-filled text-warning me-1" data-icon="circle"/>
                             <t t-out="this.state.inStoreStockData.quantity"/> <t t-out="this.state.deliveryStockData.uom_name"/>
                             in stock
                         </div>
                         <div t-else="" class="text-muted">
-                            <i class="fa fa-fw fa-circle text-success"/> Available
+                            <i class="oi oi-fw oi-filled text-success" data-icon="circle"/> Available
                         </div>
                     </t>
                     <div t-else="" class="text-muted">
-                        <i class="fa fa-fw fa-circle text-danger"/> Not available
+                        <i class="oi oi-fw oi-filled text-danger" data-icon="circle"/> Not available
                     </div>
                     <a t-if="this.props.showSelectStoreButton and this.state.inStoreStockData?.in_stock" role="button" href="#">
                         <t t-if="this.state.selectedLocationData.id">Change store</t>
@@ -46,10 +46,11 @@
             >
                 <hr/>
                 <div class="h6">
-                    <i class="fa fa-fw fa-truck text-muted"/>
+                    <i class="oi oi-fw text-muted" data-icon="local_shipping"/>
                     Delivery
                     <i
-                        class="fa fa-info-circle cursor-pointer ms-1"
+                        class="oi cursor-pointer ms-1"
+                        data-icon="info"
                         data-tooltip="Restrictions may apply"
                         data-tooltip-delay="0"
                     />
@@ -59,16 +60,16 @@
                         t-if="this.state.deliveryStockData.show_quantity"
                         class="text-muted"
                     >
-                        <i class="fa fa-fw fa-circle text-warning me-1"/>
+                        <i class="oi oi-fw oi-filled text-warning me-1" data-icon="circle"/>
                         <t t-out="this.state.deliveryStockData.quantity"/> <t t-out="this.state.deliveryStockData.uom_name"/>
                         in stock
                     </div>
                     <div t-else="" class="text-muted">
-                        <i class="fa fa-fw fa-circle text-success"/> Available
+                        <i class="oi oi-fw oi-filled text-success" data-icon="circle"/> Available
                     </div>
                 </div>
                 <div t-else="" class="text-muted">
-                    <i class="fa fa-fw fa-circle text-danger"/> Not available
+                    <i class="oi oi-fw oi-filled text-danger" data-icon="circle"/> Not available
                 </div>
             </div>
         </div>

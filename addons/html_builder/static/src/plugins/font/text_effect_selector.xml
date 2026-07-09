@@ -53,7 +53,7 @@
             <BuilderContext action="'updateTextEffect'">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <div class="d-flex align-items-center gap-1">
-                        <button type="button" class="o-hb-btn btn btn-secondary oi oi-chevron-left" t-on-click="this.onClickBack"
+                        <button type="button" class="oi o-hb-btn btn btn-secondary" data-icon="chevron_backward" t-on-click="this.onClickBack"
                                 title="Go back to effect selection" aria-label="Go back to effect selection"/>
                         <span>Text Shadow</span>
                     </div>
@@ -66,15 +66,15 @@
                                                     colorPickerClassName="''" colorPickerPopoverClassName="''"/>
                             </BuilderRow>
                             <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset">
-                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetX', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'oi oi-arrows-h'"/>
-                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetY', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'oi oi-arrows-v'"/>
+                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetX', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'arrow_range'"/>
+                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetY', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'height'"/>
                             </BuilderRow>
                             <BuilderRow label.translate="Blur">
                                 <BuilderNumberInput actionParam="{ mainParam: 'shadowBlur', shadowIndex: shadowIndex }" unit="'px'" min="0"/>
                             </BuilderRow>
                         </div>
                         <div>
-                            <button type="button" class="o-hb-text-effect-remove-shadow m-auto o-hb-btn btn fa fa-fw fa-trash text-danger h-100"
+                            <button type="button" class="oi oi-fw oi-filled o-hb-text-effect-remove-shadow m-auto o-hb-btn btn text-danger h-100" data-icon="delete"
                                     t-on-click="() => this.onClickRemoveShadow(shadowIndex)" title="Remove shadow" aria-label="Remove shadow"/>
                         </div>
                     </div>

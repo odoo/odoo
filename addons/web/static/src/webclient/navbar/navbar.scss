@@ -139,8 +139,15 @@
             }
 
             .o_menu_brand_icon {
-                width: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2} + #{map-get($spacers, 1)});
+                --MenuBrandIcon-width: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2} + #{map-get($spacers, 1)});
+
+                width: var(--MenuBrandIcon-width);
+                font-size: var(--MenuBrandIcon-width);
                 object-fit: cover;
+
+                &:before {
+                    transform: none;
+                }
             }
         }
     }
@@ -243,7 +250,7 @@
             font-size: $o-navbar-badge-size;
             color: var(--o-navbar-badge-color, $o-navbar-badge-color);
             text-shadow: var(--o-navbar-badge-text-shadow, #{$o-navbar-badge-text-shadow});
-            transform: translate(-0.6em, -30%);
+            transform: translate(-0.2em, -48%);
         }
     }
 }

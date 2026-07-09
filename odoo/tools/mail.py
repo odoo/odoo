@@ -81,6 +81,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-mimetype-before-conversion',
      'data-language-id',
      'data-bs-toggle',  # support nav-tabs
+     'data-icon',
      ])
 
 defs.link_attrs |= {'xlink:href'}

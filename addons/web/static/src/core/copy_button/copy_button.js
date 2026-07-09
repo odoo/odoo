@@ -9,6 +9,7 @@ export const copyButtonProps = {
     disabled: t.boolean().optional(),
     successText: t.string().optional(),
     icon: t.string().optional(),
+    icon_class: t.string().optional(),
     content: t.or([t.string(), t.object(), t.function()]).optional(),
 };
 

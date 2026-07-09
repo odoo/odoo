@@ -136,8 +136,8 @@ test("project.task (kanban): toggle sub-tasks", async () => {
         },
     });
     expect(".o_kanban_record").toHaveCount(1);
-    expect(".o_control_panel_navigation button i.fa-sliders").toHaveCount(1);
-    await click(".o_control_panel_navigation button i.fa-sliders");
+    expect(".o_control_panel_navigation button i[data-icon='tune']").toHaveCount(1);
+    await click(".o_control_panel_navigation button i[data-icon='tune']");
     await waitFor("span.o-dropdown-item");
     expect("span.o-dropdown-item").toHaveText("Show Sub-Tasks");
     await click("span.o-dropdown-item");

@@ -7,18 +7,18 @@
             <field name="arch" type="xml">
                 <list js_class="data_recycle_list" sample="1" create="0" export_xlsx="0">
                     <header>
-                        <button icon="fa-check" name="action_validate" type="object" string="Validate" class="btn-secondary"/>
-                        <button icon="fa-times" name="action_discard" type="object" string="Archive Suggestions" class="btn-secondary"/>
-                        <button icon="fa-undo" name="action_undiscard" type="object" string="Unarchive Suggestions" class="btn-secondary"/>
+                        <button icon="check" name="action_validate" type="object" string="Validate" class="btn-secondary"/>
+                        <button icon="close" name="action_discard" type="object" string="Archive Suggestions" class="btn-secondary"/>
+                        <button icon="undo" name="action_undiscard" type="object" string="Unarchive Suggestions" class="btn-secondary"/>
                     </header>
                     <field name="active" column_invisible="True" />
                     <field name="res_model_name" column_invisible="True" />
                     <field name="res_id" />
                     <field name="recycle_model_id" string="Recycle Rule" optional="hide" />
                     <field name="name" />
-                    <button icon="fa-check" string="Validate" type="object" name="action_validate" invisible="not active" />
-                    <button icon="fa-times" string="Archive Suggestion" type="object" name="action_discard" invisible="not active" />
-                    <button icon="fa-undo" string="Unarchive Suggestion" type="object" name="action_undiscard" invisible="active" />
+                    <button icon="check" string="Validate" type="object" name="action_validate" invisible="not active" />
+                    <button icon="close" string="Archive Suggestion" type="object" name="action_discard" invisible="not active" />
+                    <button icon="undo" string="Unarchive Suggestion" type="object" name="action_undiscard" invisible="active" />
                 </list>
             </field>
         </record>
@@ -30,7 +30,7 @@
                 <search string="Records">
                     <filter name="active" string="Archived" domain="[('active', '=', False)]" />
                     <searchpanel>
-                        <field name="recycle_model_id" icon="fa-bars" string="Recycle Rules" />
+                        <field name="recycle_model_id" icon="menu" string="Recycle Rules" />
                     </searchpanel>
                 </search>
             </field>

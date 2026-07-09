@@ -720,8 +720,8 @@ test("DateTimeField contains a calendar icon on touch devices", async () => {
             <field name="datetime"/>
         </form>`,
     });
-    expect(".fa-calendar").toHaveCount(1);
-    expect(".fa-calendar").toBeVisible();
+    expect("[data-icon='calendar_today']").toHaveCount(1);
+    expect("[data-icon='calendar_today']").toBeVisible();
 });
 
 test("DateTimeField: placeholder", async () => {

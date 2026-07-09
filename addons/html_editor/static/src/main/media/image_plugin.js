@@ -28,9 +28,9 @@ const IMAGE_SIZE = [
 ];
 
 const IMAGE_ALIGNMENT = [
-    { icon: "oi-text-inline", value: "", title: _t("Inline") },
-    { icon: "oi-text-wrap", value: "float-start", title: _t("Wrap text") },
-    { icon: "oi-text-break", value: "d-block", title: _t("Break text") },
+    { icon: "format_image_inline_left", value: "", title: _t("Inline") },
+    { icon: "text_wrap", value: "float-start", title: _t("Wrap text") },
+    { icon: "format_image_front", value: "d-block", title: _t("Break text") },
 ];
 
 /**
@@ -55,14 +55,15 @@ export class ImagePlugin extends Plugin {
             {
                 id: "deleteImage",
                 description: _t("Remove (DELETE) image"),
-                icon: "fa-trash text-danger",
+                icon: "delete",
+                icon_class: "oi-filled text-danger",
                 run: this.deleteImage.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
             {
                 id: "previewImage",
                 description: _t("Preview image"),
-                icon: "fa-search-plus",
+                icon: "zoom_in",
                 run: this.previewImage.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -134,7 +135,7 @@ export class ImagePlugin extends Plugin {
                     getDisplay: () => this.imageSize,
                     items: IMAGE_SIZE,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    icon: "fa-expand",
+                    icon: "expand_content",
                     onSelected: (item) => {
                         this.resizeImage({ size: item.value });
                         this.updateImageParams();
@@ -172,7 +173,7 @@ export class ImagePlugin extends Plugin {
                 this.setSelectionAroundImage(e.target);
             }
         });
-        this.imageAlignment = proxy({ displayIcon: "oi-text-inline" });
+        this.imageAlignment = proxy({ displayIcon: "format_image_inline_left" });
         this.addDomListener(this.editable, "click", (e) => {
             if (e.target.tagName === "IMG") {
                 this.setSelectionAroundImage(e.target);
@@ -205,7 +206,7 @@ export class ImagePlugin extends Plugin {
                 }
             }
         }
-        return "oi-text-inline";
+        return "format_image_inline_left";
     }
 
     setImageAlignment(alignment) {
@@ -306,7 +307,7 @@ export class ImagePlugin extends Plugin {
             return {
                 title: _t("Embed Image"),
                 description: _t("Embed the image in the document."),
-                icon: "fa-image",
+                icon: "image",
                 run: () => {
                     this.trigger(
                         "on_will_paste_handlers",

@@ -21,11 +21,11 @@ class IrUiView(models.Model):
 
     def _get_view_info(self):
         return {
-            'list': {'icon': 'oi oi-view-list'},
-            'form': {'icon': 'fa fa-address-card', 'multi_record': False},
-            'graph': {'icon': 'fa fa-area-chart'},
-            'pivot': {'icon': 'oi oi-view-pivot'},
-            'kanban': {'icon': 'oi oi-view-kanban'},
-            'calendar': {'icon': 'fa fa-calendar'},
-            'search': {'icon': 'oi oi-search'},
+            'list': {'icon': 'reorder'},
+            'form': {'icon': 'contact_mail', 'multi_record': False},
+            'graph': {'icon': 'area_chart'},
+            'pivot': {'icon': 'oi_view-pivot'},
+            'kanban': {'icon': 'oi_view-kanban'},
+            'calendar': {'icon': 'calendar_today'},
+            'search': {'icon': 'search'},
         }

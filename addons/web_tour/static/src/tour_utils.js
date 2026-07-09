@@ -94,7 +94,9 @@ export const stepUtils = {
                     const buttonOutSideDropdownMenu = queryFirst(
                         `.o_statusbar_buttons button:enabled:contains('${innerTextButton}')`
                     );
-                    const node = queryFirst(".o_statusbar_buttons button:has(.oi-ellipsis-v)");
+                    const node = queryFirst(
+                        ".o_statusbar_buttons button:has([data-icon='more_vert'])"
+                    );
                     if (!buttonOutSideDropdownMenu && node) {
                         await click(node);
                     }
@@ -113,7 +115,7 @@ export const stepUtils = {
         return [
             {
                 isActive: ["mobile"],
-                trigger: `.modal:not(.o_inactive_modal) .o_control_panel_navigation .btn .fa-search`,
+                trigger: `.modal:not(.o_inactive_modal) .o_control_panel_navigation .btn [data-icon='search']`,
                 run: "click",
             },
             {

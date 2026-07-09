@@ -87,7 +87,7 @@
                 <templates>
                     <t t-name="card">
                         <div class="fw-bold fs-5">
-                            <i t-if="record.icon.value" t-attf-class="fa #{record.icon.value} fa-fw"
+                            <i t-if="record.icon.value" class="oi oi-fw" t-att-data-icon="record.icon.value"
                                role="img" aria-label="Activity Type Name" title="Activity Type Name"/>
                             <field name="name"/>
                         </div>
@@ -131,7 +131,7 @@
                 <sheet string="Activity">
                     <div class="oe_button_box" name="button_box" invisible="1">
                         <button name="action_open_document"
-                                type="object" class="oe_link" icon="fa-file-text-o"
+                                type="object" class="oe_link" icon="article"
                                 invisible="not res_model or res_id == 0">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Open Document</span>
@@ -153,25 +153,25 @@
                     />
                     <div name="activity_details" class="o_activity_details"> <!-- Aligned with mail_activity_schedule_view_form -->
                         <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
-                            <i class="fa fa-tag" title="Summary"/>
+                            <i class="oi" data-icon="label" title="Summary"/>
                             <field name="summary" nolabel="1" class="w-100" placeholder="Summary"/>
                         </div>
                         <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
-                            <i class="fa fa-calendar" title="Due date"/>
+                            <i class="oi oi-filled" data-icon="calendar_today" title="Due date"/>
                             <field name="date_deadline" nolabel="1" class="w-100" placeholder="Due on"/>
                         </div>
                         <div class="o_outlined d-flex align-items-center mb-2 gap-2">
-                            <i class="fa fa-user mb-2" title="Assigned to"/>
+                            <i class="oi oi-filled mb-2" data-icon="person" title="Assigned to"/>
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" options="{'no_create': True}"
                                 nolabel="1" class="w-100" placeholder="Assigned to" required="not role_id and not res_model"/>
                         </div>
                         <div class="o_outlined d-flex align-items-center mb-2 gap-2">
-                            <i class="fa fa-users mb-2" role="img" title="Role" aria-label="Role"/>
+                            <i class="oi oi-filled mb-2" data-icon="group" role="img" title="Role" aria-label="Role"/>
                             <field name="role_id" options="{'no_quick_create': True}" domain="[('user_ids', '!=', False)]"
                                 nolabel="1" class="w-100" placeholder="Role" required="not user_id"/>
                         </div>
                         <div class="o_outlined d-flex align-items-start mb-2 gap-2">
-                            <i class="fa fa-sticky-note pt-1" title="Note"/>
+                            <i class="oi oi-filled pt-1" data-icon="sticky_note_2" title="Note"/>
                             <field name="note" class="oe-bordered-editor embedded-editor-height-4 w-100"
                                 placeholder="Log a note" options="{'no_move_node_plugin': 1, 'embedded_components': false}"/>
                         </div>
@@ -186,7 +186,7 @@
                             type="object" class="btn-secondary" data-hotkey="w"
                             context="{'mail_activity_quick_update': True}"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
-                        <button string="Delete" type="object" name="unlink" icon="fa-trash" class="btn-secondary ms-auto" invisible="not id"/>
+                        <button string="Delete" type="object" name="unlink" icon="delete" icon_class="oi-filled" class="btn-secondary ms-auto" invisible="not id"/>
                     </footer>
                 </sheet>
             </form>
@@ -296,10 +296,10 @@
                     decoration-muted="(not active)"
                     default_order="date_deadline" create="true">
                 <header>
-                    <button name="action_done" type="object" string="Done" icon="fa-check"/>
-                    <button name="action_reschedule_today" type="object" string="Today" icon="fa-arrow-down"/>
-                    <button name="action_reschedule_tomorrow" type="object" string="Tomorrow" icon="fa-calendar-plus-o"/>
-                    <button name="action_reschedule_nextweek" type="object" string="Next Week" icon="fa-calendar-o"/>
+                    <button name="action_done" type="object" string="Done" icon="check"/>
+                    <button name="action_reschedule_today" type="object" string="Today" icon="arrow_downward"/>
+                    <button name="action_reschedule_tomorrow" type="object" string="Tomorrow" icon="calendar_add_on"/>
+                    <button name="action_reschedule_nextweek" type="object" string="Next Week" icon="calendar_today"/>
                 </header>
                 <field name="summary" string="Summary"/>
                 <field name="res_name" string="Document"/>
@@ -313,7 +313,7 @@
                 <field name="feedback" optional="hide"/>
                 <field name="res_model_name" optional="hide"/>
                 <widget name="mail_activity_list_reschedule_dropdown" invisible="not active"/>
-                <button name="action_done" type="object" string="Done" icon="fa-check" invisible="active == False"/>
+                <button name="action_done" type="object" string="Done" icon="check" invisible="active == False"/>
             </list>
         </field>
     </record>
@@ -370,7 +370,7 @@
                                 </span>
                                 <field name="summary" class="text-truncate" invisible="res_name"/>
                                 <span class="badge rounded-pill text-bg-300">
-                                    <i t-if="record.icon" t-attf-class="fa {{record.icon.raw_value}} me-1"/>
+                                    <i t-if="record.icon" class="oi me-1" t-att-data-icon="record.icon.raw_value"/>
                                     <field name="activity_type_id"/>
                                 </span>
                             </div>
@@ -379,7 +379,7 @@
                                 <field name="user_id" widget="many2one_avatar_user" />
                                 <field name="date_deadline" widget="relative_date" class="ms-2"/>
                                 <button type="object" name="action_done" class="btn btn-link btn-sm ms-auto me-1" invisible="active == False">
-                                    <i class="fa fa-check" /> Done
+                                    <i class="oi" data-icon="check" /> Done
                                 </button>
                             </footer>
                         </main>

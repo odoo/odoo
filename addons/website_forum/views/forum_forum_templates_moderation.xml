@@ -77,13 +77,13 @@
                         <div class="me-2 text-muted">Filter by:</div>
                         <ul class="nav nav-tabs border-bottom-0" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active spam_menu" id="user-tab" data-bs-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true"><i class="fa fa-user"/> User</a>
+                                <a class="nav-link active spam_menu" id="user-tab" data-bs-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true"><i class="oi oi-filled" data-icon="person"/> User</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link spam_menu" id="country-tab" data-bs-toggle="tab" href="#spam_country" role="tab" aria-controls="spam_country" aria-selected="false"><i class="fa fa-flag"/> Country</a>
+                                <a class="nav-link spam_menu" id="country-tab" data-bs-toggle="tab" href="#spam_country" role="tab" aria-controls="spam_country" aria-selected="false"><i class="oi oi-filled" data-icon="flag"/> Country</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link spam_menu" id="character-tab" data-bs-toggle="tab" href="#spam_character" role="tab" aria-controls="spam_character" aria-selected="false"><i class="fa fa-font"/> Text</a>
+                                <a class="nav-link spam_menu" id="character-tab" data-bs-toggle="tab" href="#spam_character" role="tab" aria-controls="spam_character" aria-selected="false"><i class="oi" data-icon="text_fields"/> Text</a>
                             </li>
                         </ul>
                         <button type="button" class="btn-close align-self-start" data-bs-dismiss="modal"></button>
@@ -171,7 +171,7 @@
                                     show_name="True"
                                     compact="True"/>
                                 <small class="text-muted">
-                                    <i class="fa fa-calendar ms-4 me-1"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                                    <i class="oi oi-filled ms-4 me-1" data-icon="calendar_today"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
                                 </small>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
                                 show_name="True"
                                 compact="True"/>
                             <small class="text-muted">
-                                <i class="fa fa-calendar ms-4 me-1"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                                <i class="oi oi-filled ms-4 me-1" data-icon="calendar_today"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
                             </small>
                         </div>
                     </div>
@@ -197,14 +197,16 @@
                             <t t-if="queue_type == 'close'" t-call="website_forum.link_button"
                                 url.f="/forum/#{ slug(forum) }/question/#{ slug(question) }/reopen"
                                 label.translate="Reopen"
-                                icon.f="fa fa-folder-open"
+                                icon.f="folder_open"
+                                icon_class.f="oi-filled"
                                 karma="question.karma_close if not question.can_close else 0"
                                 form_classes.f="d-flex"
                                 classes.f="btn-outline-primary flex-grow-1"/>
                             <t t-if="queue_type == 'close'" t-call="website_forum.link_button"
                                 url.f="#{ post_url }/delete"
                                 label.translate="Delete"
-                                icon.f="fa fa-trash"
+                                icon.f="delete"
+                                icon_class.f="oi-filled"
                                 karma="question.karma_unlink if not question.can_unlink else 0"
                                 form_classes.f="d-flex"
                                 classes.f="btn-outline-danger flex-grow-1"/>
@@ -212,17 +214,17 @@
                             <form t-else="" method="POST" t-attf-action="#{ post_url }/validate" title="Validate" aria-label="Validate">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <button type="submit" class="btn btn-outline-success w-100 flex-grow-1">
-                                    <i class="fa fa-check"/><span class="ms-2">Accept</span>
+                                    <i class="oi" data-icon="check"/><span class="ms-2">Accept</span>
                                 </button>
                             </form>
                             <form t-if="queue_type == 'validation'" method="POST" t-attf-action="#{ post_url }/refuse" title="Refuse" aria-label="Refuse">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <button type="submit" class="btn btn-outline-danger w-100 flex-grow-1">
-                                    <i class="fa fa-times"/><span class="ms-2">Reject</span>
+                                    <i class="oi" data-icon="close"/><span class="ms-2">Reject</span>
                                 </button>
                             </form>
-                            <a t-if="queue_type == 'flagged'" t-attf-href="#{ post_url }/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Offensive</span></a>
-                            <a t-if="queue_type == 'offensive'" href="#" disabled="disabled" aria-label="Offensive" title="Offensive" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Offensive</span></a>
+                            <a t-if="queue_type == 'flagged'" t-attf-href="#{ post_url }/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive" class="btn btn-outline-danger flex-grow-1"><i class="oi" data-icon="close"/><span class="ms-2">Offensive</span></a>
+                            <a t-if="queue_type == 'offensive'" href="#" disabled="disabled" aria-label="Offensive" title="Offensive" class="btn btn-outline-danger flex-grow-1"><i class="oi" data-icon="close"/><span class="ms-2">Offensive</span></a>
                         </div>
                     </div>
                 </div>

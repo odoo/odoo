@@ -2,7 +2,7 @@
 <templates>
     <t t-inherit="mail.MessagingMenuItem" t-inherit-mode="extension">
         <xpath expr="//i[hasclass('o-mail-favorite')]" position="after">
-            <i t-if="this.channel?.livechat_status === 'need_help' and this.channel.matchesSelfExpertise" class="fa fa-star o-mail-favorite me-1" title="Relevant to your expertise" role="img"/>
+            <i t-if="this.channel?.livechat_status === 'need_help' and this.channel.matchesSelfExpertise" class="oi oi-filled o-mail-favorite me-1" data-icon="star" title="Relevant to your expertise" role="img"/>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-MessagingMenuItem-name')]" position="inside">
             <span t-if="this.channel?.livechat_lang_id" class="fw-normal small text-uppercase text-muted ms-1" t-out="this.channel.livechat_lang_id.baseCode" t-att-title="this.channel.livechat_lang_id.name"/>

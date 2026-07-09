@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: '.o_field_pol_product_many2one',
     run: "click",
 }, {
-    trigger: '[name=product_template_id] button.fa-pencil', // edit the matrix
+    trigger: '[name=product_template_id] button[data-icon="edit"]', // edit the matrix
     run: "click",
 }, {
     trigger: '.o_matrix_input_table',

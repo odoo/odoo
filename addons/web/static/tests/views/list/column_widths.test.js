@@ -576,7 +576,7 @@ test(`width computation: no record, nameless and stringless buttons`, async () =
             <list>
                 <field name="foo"/>
                 <button string="choucroute"/>
-                <button icon="fa-heart"/>
+                <button icon="favorite" icon_class="oi-filled"/>
             </list>
         `,
     });
@@ -828,10 +828,10 @@ test(`width computation: button with width in arch`, async () => {
             <list>
                 <field name="foo"/>
                 <button string="choucroute"/>
-                <button icon="fa-heart" width="25px"/>
-                <button icon="fa-cog" width="59px"/>
-                <button icon="fa-list"/>
-                <button icon="fa-play"/>
+                <button icon="favorite" icon_class="oi-filled" width="25px"/>
+                <button icon="settings" icon_class="oi-filled" width="59px"/>
+                <button icon="format_list_bulleted"/>
+                <button icon="play_arrow"/>
             </list>
         `,
     });
@@ -1673,7 +1673,7 @@ test(`resize: unnamed columns cannot be resized`, async () => {
                     <field name="o2m">
                         <list editable="top">
                             <field name="display_name"/>
-                            <button name="the_button" icon="fa-heart"/>
+                            <button name="the_button" icon="favorite" icon_class="oi-filled"/>
                         </list>
                     </field>
                 </sheet>

@@ -11,7 +11,7 @@
                 </header>
                 <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_view_mailings" type="object" icon="fa-envelope">
+                    <button name="action_view_mailings" type="object" icon="mail" icon_class="oi-filled">
                         <div class="o_stat_info">
                             <span class="o_stat_text">
                                 Mailings
@@ -21,7 +21,7 @@
                             </span>
                         </div>
                     </button>
-                    <button icon="fa-mouse-pointer">
+                    <button icon="mouse">
                         <div class="o_stat_info">
                             <span class="o_stat_text">
                                 Clicks
@@ -31,7 +31,7 @@
                             </span>
                         </div>
                     </button>
-                    <button name="action_view_cards" type="object" icon="fa-paper-plane">
+                    <button name="action_view_cards" type="object" icon="send" icon_class="oi-filled">
                         <div class="o_stat_info">
                             <span class="o_stat_text">
                                 Cards
@@ -41,7 +41,7 @@
                             </span>
                         </div>
                     </button>
-                    <button name="action_view_cards_clicked" type="object" icon="fa-eye">
+                    <button name="action_view_cards_clicked" type="object" icon="visibility">
                         <div class="o_stat_info">
                             <span class="o_stat_text">
                                 Opened
@@ -51,7 +51,7 @@
                             </span>
                         </div>
                     </button>
-                    <button name="action_view_cards_shared" type="object" icon="fa-share">
+                    <button name="action_view_cards_shared" type="object" icon="share">
                         <div class="o_stat_info">
                             <span class="o_stat_text">
                                 Shared
@@ -163,13 +163,13 @@
                             <div>
                                 <a type="object" name="action_view_cards_shared" href="#" class="me-1">
                                     <span class="badge rounded-pill">
-                                        <i class="fa fa-fw fa-share" aria-label="Shares" role="img" title="Shares"/>
+                                        <i class="oi oi-fw" data-icon="share" aria-label="Shares" role="img" title="Shares"/>
                                         <field name="card_share_count"/>
                                     </span>
                                 </a>
                                 <a type="object" name="action_view_cards_clicked" href="#" class="me-1">
                                     <span class="badge rounded-pill">
-                                        <i class="fa fa-fw fa-mouse-pointer" aria-label="Clicks" role="img" title="Clicks"/>
+                                        <i class="oi oi-fw" data-icon="mouse"  aria-label="Clicks" role="img" title="Clicks"/>
                                         <field name="target_url_click_count"/>
                                     </span>
                                 </a>

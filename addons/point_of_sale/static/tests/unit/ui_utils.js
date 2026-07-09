@@ -239,7 +239,7 @@ export async function clickDeleteOrderOnTicket(orderRef) {
         if (row) {
             await contains(row).click();
         } else {
-            await contains(`.ticket-screen .order-row.highlight .fa-trash`).click();
+            await contains(`.ticket-screen .order-row.highlight [data-icon='delete']`).click();
         }
     } else {
         if (orderRef) {

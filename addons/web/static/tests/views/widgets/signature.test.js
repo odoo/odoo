@@ -103,7 +103,7 @@ test("Signature widget renders a Sign button on mobile", async () => {
         </form>`,
     });
 
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
     expect("button.o_sign_button").toHaveClass("btn-secondary", {
         message: `The button must have the 'btn-secondary' class as "highlight=0"`,
     });
@@ -171,7 +171,7 @@ test("Signature widget: full_name option on mobile", async () => {
         </form>`,
     });
 
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
     // Clicks on the sign button to open the sign modal.
     await click("span.o_sign_label");
     await waitFor(".modal .modal-body");
@@ -217,7 +217,7 @@ test("Signature widget: highlight option on mobile", async () => {
         </form>`,
     });
 
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
     expect("button.o_sign_button").toHaveClass("btn-primary", {
         message: `The button must have the 'btn-primary' class as "highlight=1"`,
     });
@@ -260,7 +260,7 @@ test("Signature widget works inside of a dropdown", async () => {
     await contains(".o_field_widget[name=display_name] input").edit("test");
 
     // open the signature dialog
-    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v").click();
+    await contains(".o_statusbar_buttons button:has([data-icon='more_vert']").click();
     await contains(".o_widget_signature button.o_sign_button").click();
     await waitFor(".modal .modal-body");
 

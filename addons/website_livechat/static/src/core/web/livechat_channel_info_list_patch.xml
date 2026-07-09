@@ -6,7 +6,7 @@
             <div t-if="visitor?.pageVisitHistoryText" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent page views</h6>
                 <div t-if="visitor.website_id">
-                    <i class="me-1 fa fa-globe" aria-label="Website"/>
+                    <i class="me-1 oi" data-icon="public" aria-label="Website"/>
                     <span t-out="visitor.website_id.name"/>
                 </div>
                 <span t-out="visitor.pageVisitHistoryText"/>
@@ -27,7 +27,7 @@
                         }"
                     >
                         <div class="d-flex align-items-center">
-                            <i class="fa fa-external-link me-2 o-mt-0_5 opacity-75"/>
+                            <i class="oi me-2 o-mt-0_5 opacity-75" data-icon="open_in_new"/>
                             <span>
                                 <t t-if="channel.livechat_end_dt" t-out="this.CLOSED_ON_TEXT(channel)"/>
                                 <t t-else="">Conversation ongoing</t>

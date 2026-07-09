@@ -23,20 +23,20 @@
                     <textarea name="wa_message" class="s_whatsapp_user_message form-control align-content-center flex-grow-1" t-att-placeholder="this.messagePlaceholder" rows="1"/>
                     <div class="o_not_editable">
                         <button class="s_whatsapp_send btn border-0 p-md-0 rounded-pill" aria-label="Send message">
-                            <i class="fa fa-paper-plane" aria-hidden="true"/>
+                            <i class="oi oi-filled" data-icon="send" aria-hidden="true"/>
                         </button>
                     </div>
                 </div>
                 <!-- CTA mode -->
                 <div class="s_whatsapp_cta_box p-2 border-top">
                     <button class="s_whatsapp_cta_btn btn w-100 py-3 rounded-4 border-0" t-att-aria-label="this.ctaLabel">
-                        <i class="fa fa-whatsapp me-2" aria-hidden="true"/>
+                        <i class="oi me-2" data-icon="oi_whatsapp" aria-hidden="true"/>
                         <span t-out="this.ctaLabel"/>
                     </button>
                 </div>
             </div>
             <div class="s_whatsapp_warning alert alert-warning d-none m-2 fs-6">
-                <i class="fa fa-info-circle me-1" aria-hidden="true"/>
+                <i class="oi oi-filled me-1" data-icon="info" aria-hidden="true"/>
                 <span>
                     Messaging is not available. Please contact us by another way.
                 </span>

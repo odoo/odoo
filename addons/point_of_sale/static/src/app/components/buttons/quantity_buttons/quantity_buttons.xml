@@ -7,7 +7,7 @@
                 name="pos_quantity_button_minus"
                 aria-label="Remove one"
                 t-on-click.stop="() => this.changeQuantity(-1)">
-                <i class="fa fa-minus"/>
+                <i class="oi" data-icon="remove"/>
             </button>
             <input
                 class="form-control quantity text-center"
@@ -22,7 +22,7 @@
                 aria-label="Add one"
                 t-att-disabled="this.props.isPlusButtonDisabled"
                 t-on-click.stop="() => this.changeQuantity(1)">
-                <i class="fa fa-plus"/>
+                <i class="oi" data-icon="add"/>
             </button>
         </div>
     </t>

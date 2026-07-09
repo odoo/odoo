@@ -56,7 +56,7 @@
 
     .o-EmojiPicker-sectionIcon + small,
     .o-EmojiPicker-empty + span,
-    .o-EmojiPicker-search input:focus + .oi-search {
+    .o-EmojiPicker-search input:focus + [data-icon="search"] {
         color: var(--EmojiPicker-text-color, $text-muted);
     }
 
@@ -91,7 +91,7 @@
             color: var(--EmojiPicker-text-color, $input-placeholder-color);
         }
 
-        & + .oi-search {
+        & + [data-icon="search"] {
             color: var(--EmojiPicker-text-color, $body-color);
         }
     }

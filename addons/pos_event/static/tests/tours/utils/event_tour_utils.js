@@ -3,7 +3,7 @@ export function increaseQuantityOfTicket(ticket) {
     return [
         {
             content: `increase quantity`,
-            trigger: `.modal .o_event_configurator_popup div:contains('${ticket}') .fa.fa-plus`,
+            trigger: `.modal .o_event_configurator_popup div:contains('${ticket}') [data-icon="add"]`,
             run: "click",
         },
     ];

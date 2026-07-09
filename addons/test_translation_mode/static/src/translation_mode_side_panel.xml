@@ -13,7 +13,7 @@
             <header class="d-flex flex-column p-2 gap-2">
                 <div class="d-flex align-items-center gap-1">
                     <search class="o_searchview form-control d-flex align-items-center gap-2">
-                        <i class="oi oi-search text-muted" />
+                        <i class="oi text-muted" data-icon="search" />
                         <div class="o_searchview_input_container d-flex flex-grow-1">
                             <input
                                 name="filter-translations"
@@ -31,7 +31,7 @@
                         aria-label="Open settings"
                         t-on-click="this.openSettings"
                     >
-                        <i class="fa fa-cog" aria-hidden="true" />
+                        <i class="oi oi-filled" data-icon="settings" aria-hidden="true" />
                     </button>
                 </div>
             </header>
@@ -50,8 +50,8 @@
                         >
                             <h4 class="d-flex gap-2 align-items-center m-0">
                                 <i
-                                    class="fa fa-caret-right transition-base"
-                                    t-att-class="{ 'fa-rotate-90': isOpen }"
+                                    class="oi transition-base" data-icon="arrow_right"
+                                    t-att-class="{ 'oi-rotate-90': isOpen }"
                                 />
                                 <strong t-out="category.label" />
                             </h4>
@@ -72,7 +72,7 @@
                                                 <span t-out="this.formatTarget(translation.targets)" />
                                                 <t t-if="this.hiddenTranslations.has(translation)">
                                                     <i
-                                                        class="fa fa-eye-slash text-muted"
+                                                        class="oi text-muted" data-icon="visibility_off"
                                                         title="These elements are hidden in the current user interface"
                                                     />
                                                 </t>
@@ -90,7 +90,7 @@
                                                     title="Edit translation on Weblate"
                                                     aria-label="Edit translation on Weblate"
                                                 >
-                                                    <i class="fa fa-external-link" aria-hidden="true" />
+                                                    <i class="oi" data-icon="open_in_new" aria-hidden="true" />
                                                     Translate
                                                 </a>
                                             </t>

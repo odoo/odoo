@@ -8,7 +8,7 @@ body:not(.o_touch_device) .o_field_phone {
     word-break: keep-all !important;
 }
 .o_field_phone {
-    button.fa-ellipsis-v {
+    button[data-icon="more_vert"] {
         display: none;
         :first-child {
             margin-inline-start: auto;
@@ -19,7 +19,7 @@ body:not(.o_touch_device) .o_field_phone {
             .o_phone_form_link {
                 display: none;
             }
-            button.fa-ellipsis-v {
+            button[data-icon="more_vert"] {
                 display: unset;
             }
         }

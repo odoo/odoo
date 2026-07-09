@@ -1101,7 +1101,7 @@ class TestTemplating(ViewCase):
                 <div role="search">
                     <input type="search" name="search"/>
                     <button type="submit">
-                        <i class="oi-search"/>
+                        <i class="oi" data-icon="search"/>
                     </button>
                 </div>
             </root>
@@ -3446,25 +3446,25 @@ class TestViews(ViewCase):
 
     def test_valid_accessibility_icon_text(self):
         self.assertWarning(
-            '<form><span class="fa fa-warning"/></form>',
-            'A <span> with fa class (fa fa-warning) must have title in its tag, parents, descendants or have text'
+            '<form><span class="oi" data-icon="warning"/></form>',
+            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text',
         )
         self.assertWarning(
-            '<form><button icon="fa-warning"/></form>',
-            'A button with icon attribute (fa-warning) must have title in its tag, parents, descendants or have text'
+            '<form><button icon="warning"/></form>',
+            'A button with icon attribute (warning) must have title in its tag, parents, descendants or have text',
         )
         self.assertWarning(
-            '<form><span class="fa fa-warning"/><label for="key"/><field name="key"/></form>',
-            'A <span> with fa class (fa fa-warning) must have title in its tag, parents, descendants or have text'
+            '<form><span class="oi" data-icon="warning"/><label for="key"/><field name="key"/></form>',
+            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text',
         )
-        self.assertValid('<form><button icon="fa-warning"/>text</form>')
-        self.assertValid('<form><span class="fa fa-warning"/>text</form>')
-        self.assertValid('<form><span class="fa fa-warning"/><label for="key" string="Some Text"/><field name="key"/></form>')
-        self.assertValid('<form><span class="fa fa-warning"/><field name="key" string="Some Text"/></form>')
-        self.assertValid('<form>text<span class="fa fa-warning"/></form>')
-        self.assertValid('<form><span class="fa fa-warning">text</span></form>')
-        self.assertValid('<form><span title="text" class="fa fa-warning"/></form>')
-        self.assertValid('<form><span aria-label="text" class="fa fa-warning"/></form>')
+        self.assertValid('<form><button icon="warning"/>text</form>')
+        self.assertValid('<form><span class="oi" data-icon="warning"/>text</form>')
+        self.assertValid('<form><span class="oi" data-icon="warning"/><label for="key" string="Some Text"/><field name="key"/></form>')
+        self.assertValid('<form><span class="oi" data-icon="warning"/><field name="key" string="Some Text"/></form>')
+        self.assertValid('<form>text<span class="oi" data-icon="warning"/></form>')
+        self.assertValid('<form><span class="oi" data-icon="warning">text</span></form>')
+        self.assertValid('<form><span title="text" class="oi" data-icon="warning"/></form>')
+        self.assertValid('<form><span aria-label="text" class="oi" data-icon="warning"/></form>')
 
     def test_valid_simili_button(self):
         self.assertWarning('<form><a class="btn"/></form>')

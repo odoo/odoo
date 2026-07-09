@@ -144,7 +144,8 @@ registerWebsitePreviewTour(
         checkScrollbar(true),
         {
             content: "Open the Cookie Bar.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:has(.fa-eye-slash)",
+            trigger:
+                ".o_we_invisible_el_panel .o_we_invisible_entry:has([data-icon='visibility_off'])",
             run: "click",
         },
         goBackToBlocks(),

@@ -518,7 +518,7 @@ class EventTrack(models.Model):
             'search_fields': ['name', 'partner_name'],
             'fetch_fields': ['name', 'website_url', 'partner_name', 'description'],
             'mapping': mapping,
-            'icon': 'fa-microphone',
+            'icon': 'mic',
             'order': order,
             'group_name': self.env._("Talks"),
         }

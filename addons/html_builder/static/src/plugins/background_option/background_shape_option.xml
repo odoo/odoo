@@ -27,7 +27,7 @@
                 action="'setBackgroundShape'" 
                 actionValue="''" 
                 preview="false"
-                icon="'oi-close'"
+                icon="'close_small'"
                 className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'"
                 t-if="this.state.hasShape"/>
             </div>
@@ -35,9 +35,9 @@
                 title.translate="Show/Hide on Mobile"
                 action="'showOnMobile'"
                 preview="false"
-                className="'o-hb-btn-has-img-icon o_hb_device btn-danger-color-active'"
-                t-if="this.state.hasShape">
-                <Image src="'/html_builder/static/img/options/mobile_invisible.svg'" style="'width: 12px'" />
+                className="'o-hb-btn-has-icon o_hb_device btn-danger-color-active'"
+                t-if="this.state.hasShape"
+                icon="'mobile_off'">
             </BuilderButton>
     </BuilderRow>
 
@@ -57,12 +57,12 @@
         <BuilderRow label.translate="Transform" level="1" preview="false">
             <BuilderButton
                 title.translate="Horizontal flip"
-                icon="'oi-arrows-h'"
+                icon="'arrow_range'"
                 action="'flipShape'"
                 actionParam="'x'"/>
             <BuilderButton
                 title.translate="Vertical flip"
-                icon="'oi-arrows-v'"
+                icon="'height'"
                 action="'flipShape'"
                 actionParam="'y'"/>
         </BuilderRow>

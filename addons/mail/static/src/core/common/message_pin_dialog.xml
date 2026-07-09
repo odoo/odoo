@@ -10,11 +10,11 @@
         </blockquote>
         <t t-set-slot="footer">
             <button class="btn me-2" t-att-class="this.props.isUnpin ? 'btn-danger' : 'btn-primary'" t-on-click="this.onClickConfirm">
-                <i t-if="!this.props.isUnpin" class="fa fa-thumb-tack me-2 opacity-50"/>
+                <i t-if="!this.props.isUnpin" class="oi me-2 opacity-50" data-icon="push_pin"/>
                 <t t-out="this.confirmText"/>
             </button>
             <button class="btn btn-secondary me-2" t-on-click="this.props.close">
-                <i class="oi oi-close me-1 opacity-50"/>
+                <i class="oi me-1 opacity-50" data-icon="close"/>
                 Discard
             </button>
         </t>

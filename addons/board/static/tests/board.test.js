@@ -141,11 +141,11 @@ describe("board_desktop", () => {
 
         expect(".o-dashboard-action .o_list_view").toHaveCount(1);
 
-        await contains("h3 i.fa-window-minimize").click();
+        await contains("h3 i[data-icon='minimize']").click();
 
         expect(".o-dashboard-action .o_list_view").toHaveCount(0);
 
-        await contains("h3 i.fa-window-maximize").click();
+        await contains("h3 i[data-icon='fullscreen']").click();
 
         // content is visible again
         expect(".o-dashboard-action .o_list_view").toHaveCount(1);
@@ -711,7 +711,7 @@ describe("board_mobile", () => {
             message: "The display layout is force to 1",
         });
         expect(".o-dashboard-action .o_control_panel").not.toHaveCount();
-        expect(".o-dashboard-action-header .fa-close").toHaveCount(0, {
+        expect(".o-dashboard-action-header .oi[data-icon='close']").toHaveCount(0, {
             message: "Should not have a close action button",
         });
     });

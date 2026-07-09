@@ -8,7 +8,7 @@ registerComposerAction("voice-start", {
         owner.voiceRecorder &&
         !owner.voiceRecorder?.recording &&
         !composer.voiceAttachment,
-    icon: "fa fa-microphone",
+    icon: "mic",
     name: _t("Voice Message"),
     onSelected: ({ owner }) => owner.voiceRecorder.onClick(),
     sequence: 10,

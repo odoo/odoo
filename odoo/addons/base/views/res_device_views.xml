@@ -108,8 +108,8 @@
                     <field name="is_current"/>
                     <templates>
                         <t t-name="card" class="flex-row">
-                            <span t-if="record.device_type.raw_value === 'computer'" class="fa fa-laptop fs-1 col-1 mx-auto" title="Computer" role="img" aria-label="Computer"/>
-                            <span t-else="" class="fa fa-mobile fs-1 col-1 mx-auto" title="Mobile" role="img" aria-label="Mobile"/>
+                            <span t-if="record.device_type.raw_value === 'computer'" class="oi fs-1 col-1 mx-auto" data-icon="laptop" title="Computer" role="img" aria-label="Computer"/>
+                            <span t-else="" class="oi fs-1 col-1 mx-auto" data-icon="smartphone" title="Mobile" role="img" aria-label="Mobile"/>
                             <div class="d-flex col-11">
                                 <div class="d-flex flex-column ms-2">
                                     <div class="d-flex align-items-center">

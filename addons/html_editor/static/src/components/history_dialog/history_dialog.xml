@@ -17,7 +17,7 @@
                             role="tab"
                             aria-controls="revisions-panel"
                             t-att-aria-selected="this.state.mobileActiveTab === 'revisions' ? 'true' : 'false'">
-                            <i class="fa fa-list me-1" role="img" aria-hidden="true"/>Revisions
+                            <i class="oi me-1" data-icon="format_list_bulleted" role="img" aria-hidden="true"/>Revisions
                         </a>
                     </li>
                     <li class="nav-item flex-grow-1">
@@ -30,7 +30,7 @@
                             role="tab"
                             aria-controls="content-panel"
                             t-att-aria-selected="this.state.mobileActiveTab === 'content' ? 'true' : 'false'">
-                            <i class="fa fa-eye me-1" role="img" aria-hidden="true"/>Preview
+                            <i class="oi me-1" data-icon="visibility" role="img" aria-hidden="true"/>Preview
                         </a>
                     </li>
                 </ul>
@@ -103,7 +103,7 @@
                         <div class="history-info-bar flex-shrink-0">
                             <div class="alert alert-secondary py-2 mb-0 rounded-0 border-0" role="status" aria-live="polite">
                                 <small>
-                                    <i class="fa fa-info-circle me-1" role="img" aria-hidden="true"/>
+                                    <i class="oi me-1" data-icon="info" role="img" aria-hidden="true"/>
                                     <t t-if="this.state.currentView === 'content'">
                                         Showing <strong t-out="this.currentRevision.create_user_name" />'s description from <strong t-out="this.getRevisionFullDate(this.currentRevision)" />
                                     </t>

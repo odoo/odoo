@@ -268,7 +268,8 @@ export class MoveNodePlugin extends Plugin {
         }
 
         this.moveWidget = this.dependencies.localOverlay.createElement("div");
-        this.moveWidget.className = "oe-sidewidget-move oi oi-draggable";
+        this.moveWidget.className = "oe-sidewidget-move oi";
+        this.moveWidget.dataset.icon = "drag_indicator";
         const formSheet = this.widgetContainer.closest(".o_form_sheet");
         // Calculate moveWidget's left pos in advance to avoid layout trashing
         let moveWidgetLeftPos = anchorX - WIDGET_CONTAINER_WIDTH;

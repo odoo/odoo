@@ -14,7 +14,7 @@
                 t-on-pointerover="this.updateTitleTooltip"
                 t-on-click="this.props.toggleFold ?? (() => {})"
             >
-                <i t-if="this.props.toggleFold" class="fa fa-fw mx-1 flex-shrink-0" aria-hidden="true" t-att-class="this.props.folded ? 'fa-caret-right' : 'fa-caret-down'"/>
+                <i t-if="this.props.toggleFold" class="oi oi-fw mx-1 flex-shrink-0" aria-hidden="true" t-att-data-icon="this.props.folded ? 'arrow_right' : 'arrow_drop_down'"/>
                 <span class="text-truncate" t-att-class="{'ms-2': !this.props.toggleFold}" t-out="this.title" t-custom-ref="title"/>
                 <t t-if="this.props.optionTitleComponents" t-foreach="this.props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
                     <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
@@ -34,13 +34,14 @@
                 </div>
                 <t t-foreach="this.props.containerTopButtons" t-as="button" t-key="button_index">
                     <button class="o-hb-btn" t-att-class="button.class"
+                            t-att-data-icon="button.icon"
                             t-att-title="button.title" t-att-aria-label="button.title"
                             t-on-click="() => button.handler(this.props.editingElement)"/>
                 </t>
                 <t t-if="this.props.isClonable || this.props.cloneDisabledReason">
                     <!-- Disabled buttons do not display their title -->
                     <span t-att-title="this.props.cloneDisabledReason" t-att-aria-label="this.props.cloneDisabledReason">
-	                    <button class="fa fa-fw fa-clone oe_snippet_clone o-hb-btn btn btn-success-color-hover"
+	                    <button class="oi oi-fw oe_snippet_clone o-hb-btn btn btn-success-color-hover" data-icon="content_copy"
 	                            title="Duplicate this block"
 	                            aria-label="Duplicate this block"
                                 t-att-disabled="!!this.props.cloneDisabledReason"
@@ -50,7 +51,7 @@
                 <t t-if="this.props.isRemovable || this.props.removeDisabledReason">
                     <!-- Disabled buttons do not display their title -->
                     <span t-att-title="this.props.removeDisabledReason" t-att-aria-label="this.props.removeDisabledReason">
-	                    <button class="fa fa-fw fa-trash oe_snippet_remove o-hb-btn btn btn-danger-color-hover"
+	                    <button class="oi oi-fw oi-filled oe_snippet_remove o-hb-btn btn btn-danger-color-hover" data-icon="delete"
 	                            title="Remove this block"
 	                            aria-label="Remove this block"
 	                            t-att-disabled="!!this.props.removeDisabledReason"

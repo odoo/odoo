@@ -102,7 +102,7 @@
         <t t-set="has_city" t-value="this.address.city"/>
         <t t-set="has_state" t-value="this.state and this.country and this.country.state_required"/>
 
-        <span class="fa fa-map-marker"></span> <t t-if="has_city">
+        <span class="oi" data-icon="location_on"></span> <t t-if="has_city">
             <t t-out="this.address.city"/><t t-if="this.address.country_id">, </t>
         </t>
         <t t-if="has_state">

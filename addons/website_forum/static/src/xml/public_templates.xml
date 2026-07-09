@@ -14,14 +14,14 @@
                         <div t-if="state != 'pending'" class="share-icons text-center text-primary">
                             <div class="s_share o_no_link_popover">
                                 <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank" aria-label="Facebook">
-                                    <i class="fa fa-facebook rounded shadow-sm"/>
+                                    <i class="oi rounded shadow-sm" data-icon="oi_facebook"/>
                                 </a>
                                 <t t-set="_hashtags" t-value="target_type ? (' %23' + target_type) : ''"></t>
                                 <a t-attf-href="https://twitter.com/intent/tweet?text={title}#{_hashtags}&amp;url={url}" class="s_share_twitter" target="_blank" aria-label="Twitter">
-                                    <i class="fa fa-twitter rounded shadow-sm"/>
+                                    <i class="oi rounded shadow-sm" data-icon="oi_twitter"/>
                                 </a>
                                 <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" class="s_share_linkedin" target="_blank" aria-label="LinkedIn">
-                                    <i class="fa fa-linkedin rounded shadow-sm"/>
+                                    <i class="oi rounded shadow-sm" data-icon="oi_linkedin"/>
                                 </a>
                             </div>
                         </div>

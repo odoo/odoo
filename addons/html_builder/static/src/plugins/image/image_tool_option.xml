@@ -7,8 +7,8 @@
     </t>
     <BuilderRow label.translate="Transform" level="1" preview="false">
         <div class="btn-group o-hb-button-group">
-            <BuilderButton t-if="this.state.showCropTool" title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
-            <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.state.showCropTool and this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'" />
+            <BuilderButton t-if="this.state.showCropTool" title.translate="Crop image" action="'cropImage'" icon="'crop'" id="'cropImage'" />
+            <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.state.showCropTool and this.isActiveItem('cropImage')" icon="'close_small'" className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'" />
         </div>
         <ImageTransformOption t-if="!this.state.isImageAnimated and !this.state.isSocialMediaImg and !this.state.isImageBinaryField" />
     </BuilderRow>
@@ -44,10 +44,10 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Style">
-        <BuilderButton icon="'fa-square'" classAction="'rounded'" title.translate="Shape: Rounded"/>
-        <BuilderButton icon="'fa-circle-o'" classAction="'rounded-circle'" title.translate="Shape: Circle"/>
-        <BuilderButton icon="'fa-sun-o'" classAction="'shadow'" title.translate="Shadow"/>
-        <BuilderButton icon="'fa-picture-o'" classAction="'img-thumbnail'" title.translate="Shape: Thumbnail"/>
+        <BuilderButton icon="'square'" classAction="'rounded'" title.translate="Shape: Rounded"/>
+        <BuilderButton icon="'circle'" classAction="'rounded-circle'" title.translate="Shape: Circle"/>
+        <BuilderButton icon="'light_mode'" classAction="'shadow'" title.translate="Shadow"/>
+        <BuilderButton icon="'image'" classAction="'img-thumbnail'" title.translate="Shape: Thumbnail"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Padding">

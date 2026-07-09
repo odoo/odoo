@@ -167,7 +167,7 @@
                 .carousel-control-next {
                     // Directional icons replaced by oi but keeping fa here, it
                     // is still used by already dropped snippet
-                    .fa, .oi {
+                    .oi, .oi {
                         text-shadow: none;
                     }
                 }
@@ -176,24 +176,24 @@
         &.s_image_gallery_indicators_arrows_boxed {
             .carousel {
                 .carousel-control-prev {
-                    .fa:before {
+                    .oi:before {
                         content: "keyboard_arrow_left";
                     }
-                    .oi:before, .fa:before {
+                    .oi:before, .oi:before {
                         padding-right: 2px;
                     }
                 }
                 .carousel-control-next {
-                    .fa:before {
+                    .oi:before {
                         content: "keyboard_arrow_right";
                     }
-                    .oi:before, .fa:before {
+                    .oi:before, .oi:before {
                         padding-left: 2px;
                     }
                 }
                 .carousel-control-prev,
                 .carousel-control-next {
-                    .fa:before, .oi:before {
+                    .oi:before, .oi:before {
                             display: block;
                             width: 3rem;
                             height: 3rem;
@@ -202,7 +202,7 @@
                             background: white;
                             border: 1px solid $gray-500;
                     }
-                    .fa:before {
+                    .oi:before {
                         @include font-size(1.25rem);
                     }
                     .oi:before {
@@ -221,7 +221,7 @@
                 }
                 .carousel-control-prev,
                 .carousel-control-next {
-                    .fa:before, .oi:before {
+                    .oi:before, .oi:before {
                             color: black;
                             background: white;
                             @include font-size(1.25rem);
@@ -319,7 +319,7 @@
         }
         .carousel-control-next,
         .carousel-control-prev {
-             .fa, .oi {
+             .oi, .oi {
                 text-shadow: 0px 0px 3px $gray-800;
             }
         }

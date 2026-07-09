@@ -20,11 +20,11 @@
     button {
         background-color: mix($o-view-background-color, $o-action, 85%);
 
-        &:not(:hover) .oi-close {
+        &:not(:hover) .oi[data-icon="close_small"] {
             border-color: transparent !important;
         }
 
-        &:hover .oi-close {
+        &:hover .oi[data-icon="close_small"] {
             color: $danger;
             border-color: $danger !important;
         }

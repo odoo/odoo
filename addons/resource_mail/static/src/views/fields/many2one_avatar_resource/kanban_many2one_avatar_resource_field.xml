@@ -9,7 +9,7 @@
                 <t t-if="this.props.record.data.resource_type === 'material'">
                     <span class="o_avatar o_m2o_avatar">
                         <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="value.display_name">
-                            <i class="fa fa-wrench"/>
+                            <i class="oi" data-icon="build"/>
                         </span>
                     </span>
                 </t>
@@ -21,7 +21,7 @@
                 <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
                     <t t-if="autoCompleteItemScope.record.resource_type === 'material'">
                         <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="autoCompleteItemScope.record.id">
-                            <i class="fa fa-wrench"/>
+                            <i class="oi" data-icon="build"/>
                         </span>
                     </t>
                     <t t-elif="autoCompleteItemScope.record.resource_type === 'user'">

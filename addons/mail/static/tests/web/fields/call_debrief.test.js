@@ -104,15 +104,15 @@ test("CallDebrief: renders video with playback", async () => {
     // Start playback
     const video = queryOne("video");
     const playingPromise = new Promise((r) => video.addEventListener("playing", r, { once: true }));
-    await click(".fa-play");
+    await click("[data-icon='play_arrow']");
     await animationFrame();
-    expect(".fa-pause").toHaveCount(1);
+    expect("[data-icon='pause']").toHaveCount(1);
 
     // Wait for actual playback to start before pausing
     await playingPromise;
 
     // Stop playback to avoid AbortError when the test destroys the video element
-    await click(".fa-pause");
+    await click("[data-icon='pause']");
     await animationFrame();
 });
 
@@ -161,7 +161,9 @@ test("CallDebrief: timeline-media synchronization", async () => {
     audio.dispatchEvent(new Event("timeupdate"));
     await animationFrame();
 
-    const finalTimestampText = queryOne(".o-CallDebriefMediaControls-timeLabel .o_current_time").innerText;
+    const finalTimestampText = queryOne(
+        ".o-CallDebriefMediaControls-timeLabel .o_current_time"
+    ).innerText;
     const [finalM, finalS] = finalTimestampText.split(":").map(Number);
     const finalTotalSeconds = finalM * 60 + finalS;
     // Segment 2 starts at 60s, so 60 + 6 = 66s (01:06)

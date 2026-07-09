@@ -6,7 +6,7 @@
             <td class="border-end py-4 fs-3" t-att-rowspan="this.rowSpan() or false">
                 <div class="mb-2 w-100 text-center">
                     <t t-out="this.props.name"/>
-                    <button class="btn btn-link fa fa-area-chart"
+                    <button class="oi btn btn-link" data-icon="area_chart"
                             t-on-click="() => this.onClickForecast()"
                             name="forecasted_report_link"/>
                 </div>

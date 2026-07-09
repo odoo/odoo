@@ -17,7 +17,7 @@ export class ColorSelector extends Component {
         isDisabled: t.boolean(),
         mode: t.string(),
         type: t.string(),
-        customIconClass: t.string().optional(),
+        customIcon: t.string().optional(),
         getSelectedColors: t.function(),
         applyColor: t.function(),
         applyColorPreview: t.function(),

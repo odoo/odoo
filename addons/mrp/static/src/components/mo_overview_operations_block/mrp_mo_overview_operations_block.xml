@@ -7,7 +7,7 @@
                 <td class="text-start">
                     <span t-attf-style="margin-left: {{ this.level * 20 }}px"/>
                     <span class="btn btn-light ps-0 py-0" t-attf-aria-label="{{ this.state.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ this.state.isFolded ? 'Unfold' : 'Fold' }}">
-                        <i t-attf-class="fa fa-fw fa-caret-{{ this.state.isFolded ? 'right' : 'down' }}" role="img"/>
+                        <i class="oi oi-fw" t-attf-data-icon="{{ this.state.isFolded ? 'arrow_right' : 'arrow_drop_down' }}" role="img"/>
                         Operations
                     </span>
                 </td>

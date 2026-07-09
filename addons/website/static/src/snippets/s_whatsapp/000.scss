@@ -19,9 +19,9 @@
     bottom: map-get($spacers, 4);
     z-index: $zindex-dropdown;
 
-    *,
-    ::before,
-    ::after {
+    *:not(.oi),
+    :not(.oi)::before,
+    :not(.oi)::after {
         font-family: inherit;
     }    
 

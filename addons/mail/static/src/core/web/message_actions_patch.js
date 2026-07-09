@@ -29,7 +29,7 @@ export function messageActionOpenFullComposer(title, context, component) {
 
 registerMessageAction("reply-all", {
     condition: ({ message, owner }) => !owner.env.inMessagingMenu && message.canReplyAll,
-    icon: "fa fa-reply",
+    icon: "reply",
     name: _t("Reply All"),
     onSelected: async ({ message, owner, thread }) => {
         const recipients = await rpc("/mail/thread/recipients", {
@@ -71,7 +71,7 @@ registerMessageAction("reply-all", {
 });
 registerMessageAction("forward", {
     condition: ({ message, owner }) => !owner.env.inMessagingMenu && message.canForward,
-    icon: "fa fa-share",
+    icon: "share",
     name: _t("Forward"),
     onSelected: async ({ message, owner, store, thread }) => {
         // usually reply_to is what you want people to see as being "from"

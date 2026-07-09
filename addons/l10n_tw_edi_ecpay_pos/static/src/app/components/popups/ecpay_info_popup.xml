@@ -53,7 +53,7 @@
                                     <button type="button" id="validate_carrier_number" class="btn btn-outline-primary btn-sm" t-if="this.showValidateCarrierNumber" t-on-click="this._onClickValidateCarrierNumber" t-att-disabled="this.state.isLoading">
                                         Validate Carrier Number
                                     </button>
-                                    <i t-if="this.state.isLoading" class="fa fa-spin fa-spinner me-1"/>
+                                    <i t-if="this.state.isLoading" class="oi oi-spin me-1" data-icon="progress_activity"/>
                                     <button type="button" id="reenter_carrier_number" class="btn btn-outline-primary btn-sm" t-if="this.showReEnterCarrierNumber" t-on-click="() => this.state.validCarrierNumber = false">
                                         ReEnter Carrier Number
                                     </button>
@@ -95,7 +95,7 @@
                                 <button type="button" id="validate_love_code" class="btn btn-outline-primary btn-sm" t-if="this.showValidateLoveCode" t-on-click="this._onClickValidateLoveCode" t-att-disabled="this.state.isLoading">
                                     Validate Love Code
                                 </button>
-                                <i t-if="this.state.isLoading" class="fa fa-spin fa-spinner me-1"/>
+                                <i t-if="this.state.isLoading" class="oi oi-spin me-1" data-icon="progress_activity"/>
                                 <button type="button" id="reenter_love_code" class="btn btn-outline-primary btn-sm" t-if="this.showReEnterLoveCode" t-on-click="() => this.state.validLoveCode = false">
                                     ReEnter Love Code
                                 </button>

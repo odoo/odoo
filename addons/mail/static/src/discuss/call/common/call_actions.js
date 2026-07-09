@@ -12,8 +12,8 @@ import { Component, useEffect } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
-export const CALL_ICON_DEAFEN = "fa fa-deaf";
-export const CALL_ICON_MUTED = "fa fa-microphone-slash";
+export const CALL_ICON_DEAFEN = "hearing_disabled";
+export const CALL_ICON_MUTED = "mic_off";
 
 /** @typedef {import("models").DiscussChannel} DiscussChannel */
 /**
@@ -35,7 +35,7 @@ export function registerCallAction(id, definition) {
 export const muteAction = {
     badge: ({ store }) =>
         store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning,
-    badgeIcon: "fa fa-exclamation",
+    badgeIcon: "priority_high",
     condition: ({ owner, store, channel }) =>
         channel?.isSelfInCall && (owner.env.inCallMenu || !store.rtc.selfSession?.is_deaf),
     disabledCondition: ({ store }) => store.rtc.showMicrophoneSilentWarning,
@@ -46,7 +46,7 @@ export const muteAction = {
             ? store.rtc.selfSession?.is_deaf && !owner.env.inCallMenu
                 ? CALL_ICON_DEAFEN
                 : CALL_ICON_MUTED
-            : "fa fa-microphone",
+            : "mic",
     hotkey: "shift+m",
     onSelected: ({ action, store }) => store.rtc.toggleMicrophone({ rootRef: action.actionRef }),
     sequence: 10,
@@ -92,7 +92,7 @@ export const quickActionSettings = {
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
-    icon: "oi oi-chevron-up o-xsmaller",
+    icon: "keyboard_arrow_up",
     name: _t("Voice Settings"),
     sequence: 15,
     sequenceGroup: 100,
@@ -103,7 +103,7 @@ registerCallAction("deafen", {
         channel?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession?.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
-    icon: ({ action }) => (action.isActive ? CALL_ICON_DEAFEN : "fa fa-headphones"),
+    icon: ({ action }) => (action.isActive ? CALL_ICON_DEAFEN : "headphones"),
     hotkey: "shift+d",
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
     sequence: 10,
@@ -119,7 +119,7 @@ export const cameraOnAction = {
         !owner.env.inCallMenu &&
         channel?.default_display_mode === "video_full_screen" &&
         store.rtc.cameraPermission !== "granted",
-    badgeIcon: "fa fa-exclamation",
+    badgeIcon: "priority_high",
     condition: ({ channel }) => channel?.isSelfInCall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
@@ -129,7 +129,7 @@ export const cameraOnAction = {
             ? _t("Turn camera off")
             : _t("Turn camera on"),
     isActive: ({ store }) => store.rtc.selfSession?.is_camera_on,
-    icon: "fa fa-video-camera",
+    icon: "videocam",
     onSelected: ({ action, owner, store }) =>
         store.rtc.toggleVideo("camera", { env: owner.env, rootRef: action.actionRef }),
     sequence: 10,
@@ -159,7 +159,7 @@ export const quickVideoSettings = {
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
-    icon: "oi oi-chevron-up o-xsmaller",
+    icon: "keyboard_arrow_up",
     name: _t("Video Settings"),
     sequence: 15,
     sequenceGroup: 120,
@@ -171,7 +171,7 @@ export const switchCameraAction = {
         channel?.isSelfInCall && isMobileOS() && store.rtc.selfSession?.is_camera_on,
     name: _t("Switch Camera"),
     isActive: false,
-    icon: "fa fa-refresh",
+    icon: "refresh",
     onSelected: ({ store }) => store.rtc.toggleCameraFacingMode(),
     sequence: 40,
     sequenceGroup: 100,
@@ -181,7 +181,7 @@ registerCallAction("raise-hand", {
     condition: ({ channel }) => channel?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession?.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
     isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
-    icon: "fa fa-hand-paper-o",
+    icon: "back_hand",
     hotkey: "shift+h",
     onSelected: ({ store }) => store.rtc.raiseHand(!store.rtc.selfSession.raisingHand),
     sequence: 50,
@@ -201,7 +201,7 @@ registerCallAction("share-screen", {
             ? _t("Stop Sharing Screen")
             : _t("Share Screen"),
     isActive: ({ store }) => store.rtc.selfSession?.is_screen_sharing_on,
-    icon: "fa fa-desktop",
+    icon: "desktop_windows",
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("screen", { env: owner.env }),
     sequence: 40,
     sequenceGroup: 200,
@@ -215,7 +215,7 @@ registerCallAction("fullscreen", {
     condition: ({ channel, owner, store }) =>
         channel?.isSelfInCall && !owner.env.pipWindow && !store.rtc.isBrowserFullscreen,
     name: _t("Fullscreen"),
-    icon: "fa fa-expand",
+    icon: "expand_content",
     onSelected: ({ channel, store }) => {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         store.rtc.closePip();
@@ -230,7 +230,7 @@ registerCallAction("wide-view", {
         !owner.env.pipWindow &&
         (!store.rtc.isFullscreen || store.rtc.isBrowserFullscreen),
     name: _t("Wide View"),
-    icon: "fa fa-window-maximize",
+    icon: "fullscreen",
     onSelected: ({ channel, store }) => {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         store.rtc.closePip();
@@ -243,7 +243,7 @@ registerCallAction("minimize", {
     condition: ({ channel, owner, store }) =>
         channel?.isSelfInCall && store.rtc.isFullscreen && !owner.env.pipWindow,
     name: _t("Minimize"),
-    icon: "fa fa-window-minimize",
+    icon: "minimize",
     onSelected: ({ store }) => store.rtc.minimize(),
     sequence: 80,
     tags: ACTION_TAGS.CALL_LAYOUT,
@@ -255,7 +255,7 @@ registerCallAction("picture-in-picture", {
     name: ({ store }) =>
         store.rtc?.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
     isActive: ({ store }) => store.rtc?.isPipMode,
-    icon: "oi oi-launch",
+    icon: "open_in_browser",
     onSelected: ({ owner, channel, store }) => {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         const isPipMode = store.rtc?.isPipMode;
@@ -272,7 +272,7 @@ registerCallAction("change-layout", {
     condition: ({ channel, owner }) =>
         channel?.isSelfInCall && !owner.env.inCallMenu && !owner.env.pipWindow,
     name: _t("Change Layout"),
-    icon: "fa fa-fw fa-th-large",
+    icon: "view_module",
     onSelected: ({ channel, store }) =>
         store.env.services.dialog.add(ChangeLayoutDialog, { channel }),
     sequence: 60,
@@ -285,7 +285,7 @@ export const acceptWithCamera = {
         typeof channel?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Accept with camera"),
-    icon: "fa fa-video-camera",
+    icon: "videocam",
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
     sequence: 100,
     sequenceGroup: 300,
@@ -301,7 +301,7 @@ registerCallAction("join-back", {
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
-    icon: ({ channel }) => (channel.useCameraByDefault ? "fa fa-video-camera" : "fa fa-phone"),
+    icon: ({ channel }) => (channel.useCameraByDefault ? "videocam" : "phone"),
     inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
     name: ({ channel }) => (channel?.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
     onSelected: ({ channel, store }) =>
@@ -318,7 +318,7 @@ registerCallAction("join-with-camera", {
         typeof channel?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Video Call"),
-    icon: "fa fa-video-camera",
+    icon: "videocam",
     onSelected: async ({ channel, store }) => {
         await store.rtc.toggleCall(channel, { camera: true });
         if (store.rtc.selfSession) {
@@ -335,7 +335,7 @@ export const joinAction = {
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Call"),
-    icon: "fa fa-phone",
+    icon: "phone",
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     sequence: 130,
     sequenceGroup: 300,
@@ -351,7 +351,7 @@ export const rejectAction = {
         }),
     condition: ({ channel }) => channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
-    icon: "oi oi-close",
+    icon: "close_small",
     inlineName: ({ owner, channel }) =>
         !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean"
             ? _t("Reject")
@@ -373,7 +373,7 @@ registerCallAction("disconnect", {
         channel?.isSelfInCall && !channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Disconnect"),
-    icon: "fa fa-phone",
+    icon: "phone",
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     sequence: 150,
     sequenceGroup: 300,

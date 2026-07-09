@@ -180,9 +180,11 @@ export class SurveySessionLeaderboard extends Interaction {
                 const caretEl = item.querySelector(".o_survey_session_leaderboard_caret");
                 this.waitForTimeout(() => {
                     if (improved) {
-                        caretEl.classList.add("fa-caret-up", "text-success");
+                        caretEl.classList.add("text-success");
+                        caretEl.dataset.icon = "arrow_drop_up";
                     } else {
-                        caretEl.classList.add('fa-caret-down', 'text-danger');
+                        caretEl.classList.add('text-danger');
+                        caretEl.dataset.icon = "arrow_drop_down";
                     }
                 }, 25); // Sync with the label change below
                 this.animatePositionLabel(

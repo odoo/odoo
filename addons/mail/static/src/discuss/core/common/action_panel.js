@@ -15,6 +15,7 @@ export class ActionPanel extends Component {
             contentPadding: t.boolean().optional(true),
             contentRef: t.signal(t.instanceOf(HTMLDivElement)).optional(() => signal.ref()),
             icon: t.string().optional(),
+            icon_class: t.string().optional(),
             initialWidth: t.number().optional(),
             minWidth: t.number().optional(),
             resizable: t.boolean().optional(true),

@@ -169,8 +169,8 @@ describe("selected cell color in toolbar", () => {
         </table>`);
 
         await expandToolbar();
-        expect(".fa-paint-brush").toHaveCount(1);
-        expect(".fa-paint-brush").toHaveStyle({
+        expect("[data-icon='colors']").toHaveCount(1);
+        expect("[data-icon='colors']").toHaveStyle({
             "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
         });
     });
@@ -188,8 +188,8 @@ describe("selected cell color in toolbar", () => {
 
         await expandToolbar();
         await animationFrame();
-        expect(".fa-paint-brush").toHaveCount(1);
-        expect(".fa-paint-brush").toHaveStyle({
+        expect("[data-icon='colors']").toHaveCount(1);
+        expect("[data-icon='colors']").toHaveStyle({
             "border-bottom": "2px solid rgba(0, 0, 0, 0)",
         });
     });
@@ -207,8 +207,8 @@ describe("selected cell color in toolbar", () => {
         </table>`);
 
         await expandToolbar();
-        expect(".fa-paint-brush").toHaveCount(1);
-        expect(".fa-paint-brush").toHaveStyle({
+        expect("[data-icon='colors']").toHaveCount(1);
+        expect("[data-icon='colors']").toHaveStyle({
             "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
         });
         const nonStyledCellOne = queryFirst(".non_styled_1");
@@ -221,8 +221,8 @@ describe("selected cell color in toolbar", () => {
         });
         await waitForSelectionChange();
         await animationFrame();
-        expect(".fa-paint-brush").toHaveCount(1);
-        expect(".fa-paint-brush").toHaveStyle({
+        expect("[data-icon='colors']").toHaveCount(1);
+        expect("[data-icon='colors']").toHaveStyle({
             "border-bottom": "2px solid rgba(0, 0, 0, 0)",
         });
     });
@@ -266,8 +266,8 @@ describe("selected cell color in toolbar", () => {
         // set a timeout for the deplayed toolbar update
         await waitFor(".o-we-toolbar", { timeout: 1500 });
         await expandToolbar();
-        expect(".fa-paint-brush").toHaveCount(1);
-        expect(".fa-paint-brush").toHaveStyle({
+        expect("[data-icon='colors']").toHaveCount(1);
+        expect("[data-icon='colors']").toHaveStyle({
             "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
         });
     });
@@ -307,8 +307,8 @@ describe("selected cell color in toolbar", () => {
         // set a timeout for the deplayed toolbar update
         await waitFor(".o-we-toolbar", { timeout: 1500 });
         await expandToolbar();
-        expect(".fa-paint-brush").toHaveCount(1);
-        expect(".fa-paint-brush").toHaveStyle({
+        expect("[data-icon='colors']").toHaveCount(1);
+        expect("[data-icon='colors']").toHaveStyle({
             "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
         });
     });

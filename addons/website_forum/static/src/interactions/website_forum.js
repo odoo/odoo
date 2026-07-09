@@ -434,9 +434,8 @@ export class WebsiteForum extends Interaction {
             styleForIncorrect.call(toggler.classList, "opacity-50");
             const answerBorder = answer.querySelector("div .border-start");
             styleForCorrect.call(answerBorder.classList, "border-success");
-            const togglerIcon = toggler.querySelector(".fa");
-            styleForCorrect.call(togglerIcon.classList, "fa-check-circle", "text-success");
-            styleForIncorrect.call(togglerIcon.classList, "fa-check-circle-o");
+            const togglerIcon = toggler.querySelector(".oi");
+            styleForCorrect.call(togglerIcon.classList, "oi-filled", "text-success");
             const correctBadge = answer.querySelector(".o_wforum_answer_correct_badge");
             styleForCorrect.call(correctBadge.classList, "d-inline");
             styleForIncorrect.call(correctBadge.classList, "d-none");
@@ -451,10 +450,9 @@ export class WebsiteForum extends Interaction {
         const data = await this.waitFor(rpc(currentTarget.dataset.href));
         currentTarget.classList.toggle("opacity-50", !data);
         currentTarget.classList.toggle("opacity-100-hover", !data);
-        const currentTargetEl_icon = currentTarget.querySelector(".fa");
-        currentTargetEl_icon.classList.toggle("fa-star-o", !data);
+        const currentTargetEl_icon = currentTarget.querySelector(".oi");
         currentTargetEl_icon.classList.toggle("o_wforum_gold", data);
-        currentTargetEl_icon.classList.toggle("fa-star", data);
+        currentTargetEl_icon.classList.toggle("oi-filled", data);
     }
 
     /**

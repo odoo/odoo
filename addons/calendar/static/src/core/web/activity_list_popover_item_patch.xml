@@ -3,7 +3,7 @@
     <t t-inherit="mail.ActivityListPopoverItem" t-inherit-mode="extension">
         <xpath expr="//button[hasclass('o-mail-ActivityListPopoverItem-editbtn')]" position="after">
             <button t-if="this.hasRescheduleMeetingButton" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" t-on-click="this.onClickReschedule">
-                <i class="fa fa-calendar"/>
+                <i class="oi oi-filled" data-icon="calendar_today"/>
             </button>
         </xpath>
     </t>

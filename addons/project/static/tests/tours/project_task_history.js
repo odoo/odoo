@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         ...changeDescriptionContentAndSave("3"),
         {
             content: "Open History Dialog",
-            trigger: ".o_form_view .o_cp_action_menus i.fa-cog",
+            trigger: ".o_form_view .o_cp_action_menus i[data-icon='settings']",
             run: "click",
         },
         {
@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         },
         {
             content: "Open History Dialog",
-            trigger: ".o_popover .o_menu_item:has(i.fa-history):contains(Version history)",
+            trigger: ".o_popover .o_menu_item:has(i[data-icon='history']):contains(Version history)",
             run: "click",
         },
         {
@@ -189,7 +189,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         },
         {
             content: "Open History Dialog",
-            trigger: ".o_cp_action_menus i.fa-cog",
+            trigger: ".o_cp_action_menus i[data-icon='settings']",
             run: "click",
         },
         {
@@ -197,7 +197,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         },
         {
             content: "Open History Dialog",
-            trigger: ".o_menu_item i.fa-history",
+            trigger: ".o_menu_item i[data-icon='history']",
             run: "click",
         },
         {
@@ -237,13 +237,13 @@ registry.category("web_tour.tours").add("project_task_last_history_steps_tour", 
         ...stepUtils.saveForm(),
     {
         content: "Open History Dialog",
-        trigger: ".o_cp_action_menus i.fa-cog",
+        trigger: ".o_cp_action_menus i[data-icon='settings']",
         run: "click",
     }, {
         trigger: ".dropdown-menu",
     }, {
         content: "Open History Dialog",
-        trigger: ".o_menu_item i.fa-history",
+        trigger: ".o_menu_item i[data-icon='history']",
         run: "click",
     }, {
         trigger: ".modal .html-history-dialog.html-history-loaded",

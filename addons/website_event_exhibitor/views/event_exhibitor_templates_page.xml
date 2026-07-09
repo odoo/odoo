@@ -93,16 +93,16 @@
                         <span t-if="website_visitor_timezone != sponsor.event_id.date_tz">(<t t-out="event.date_tz"/>)</span>
                     </div>
                     <div t-if="sponsor.url" class="d-flex text-break align-items-baseline">
-                        <i class="fa fa-globe me-2"/><a t-att-href="sponsor.url"><span t-field="sponsor.url"/></a>
+                        <i class="oi me-2" data-icon="public"/><a t-att-href="sponsor.url"><span t-field="sponsor.url"/></a>
                     </div>
                     <div t-elif="sponsor.partner_id.website" class="d-flex text-break align-items-baseline">
-                        <i class="fa fa-globe me-2"/><a t-att-href="sponsor.partner_id.website"><span t-field="sponsor.partner_id.website"/></a>
+                        <i class="oi me-2" data-icon="public"/><a t-att-href="sponsor.partner_id.website"><span t-field="sponsor.partner_id.website"/></a>
                     </div>
                     <div t-if="sponsor.email" class="d-flex text-break align-items-baseline">
-                        <i class="fa fa-envelope me-2"/><a t-att-mailto="sponsor.email"><span t-field="sponsor.email"/></a>
+                        <i class="oi oi-filled me-2" data-icon="mail"/><a t-att-mailto="sponsor.email"><span t-field="sponsor.email"/></a>
                     </div>
                     <div t-if="sponsor.phone" class="d-flex text-break align-items-baseline">
-                        <i class="fa fa-phone me-2"/><span t-field="sponsor.phone"/>
+                        <i class="oi oi-filled me-2" data-icon="phone"/><span t-field="sponsor.phone"/>
                     </div>
                 </div>
                 <a t-if="sponsor.partner_id.country_id"
@@ -139,7 +139,7 @@
                 <span class="h5 m-3">Other exhibitors</span>
                 <a href="#collapse_exhibitor_aside" data-bs-toggle="collapse"
                    class="o_wevent_online_page_aside_collapse o_wevent_collapse_link stretched-link d-lg-none p-2 text-decoration-none text-reset collapsed">
-                    <i class="oi oi-chevron-down d-lg-none"/>
+                    <i class="oi d-lg-none" data-icon="keyboard_arrow_down"/>
                 </a>
             </div>
             <ul id="collapse_exhibitor_aside" class="list-group list-group-flush collapse d-lg-block">

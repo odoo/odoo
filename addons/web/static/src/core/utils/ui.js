@@ -221,8 +221,8 @@ export function getPreviousTabableElement(container = document.body) {
 }
 
 /**
- * Gives the button a loading effect by disabling it and adding a `fa` spinner
- * icon. The existing button `fa` icons will be hidden through css.
+ * Gives the button a loading effect by disabling it and adding a `oi` spinner
+ * icon. The existing button `oi` icons will be hidden through css.
  *
  * @param {HTMLElement} btnEl - the button to disable/load
  * @return {function} a callback function that will restore the button to its
@@ -234,7 +234,8 @@ export function addLoadingEffect(btnEl) {
     btnEl.classList.add("o_btn_loading", "disabled", "pe-none");
     btnEl.disabled = true;
     const loaderEl = document.createElement("span");
-    loaderEl.classList.add("fa", "fa-circle-o-notch", "fa-spin", "me-2");
+    loaderEl.classList.add("oi", "oi-spin", "me-2");
+    loaderEl.dataset.icon = "autorenew";
     btnEl.prepend(loaderEl);
     return () => {
         btnEl.classList.remove("o_btn_loading", "disabled", "pe-none");

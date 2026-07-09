@@ -107,15 +107,13 @@ test("rainbowman integrated to webClient", async () => {
 test.tags("desktop");
 test("on close with effect from server", async () => {
     patchWithCleanup(user, { showEffect: true });
-    onRpc("/web/dataset/call_button/*", () => {
-        return {
-            type: "ir.actions.act_window_close",
-            effect: {
-                type: "rainbow_man",
-                message: "button called",
-            },
-        };
-    });
+    onRpc("/web/dataset/call_button/*", () => ({
+        type: "ir.actions.act_window_close",
+        effect: {
+            type: "rainbow_man",
+            message: "button called",
+        },
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(6);
@@ -162,7 +160,7 @@ test("on close with effect in xml on mobile", async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(6);
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
     await contains("button[name=object]").click();
     expect(".o_reward").toHaveCount(1);
     expect(".o_reward .o_reward_msg_content").toHaveText("rainBowInXML");

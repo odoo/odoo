@@ -20,20 +20,20 @@
                                 <p class="mb-0">
                                     <field name="name" invisible="not name" class="fw-bold"/>
                                     <field name="type" invisible="name" class="fw-bold"/>
-                                    <i t-if="record.type.raw_value != 'contact'" t-att-data-tooltip="record.type.value" class="fa ms-2 text-muted" t-att-class="{'invoice': 'fa-file','delivery': 'fa-truck', 'other': 'fa-cube'}[record.type.raw_value]" role="img"/>
+                                    <i t-if="record.type.raw_value != 'contact'" t-att-data-tooltip="record.type.value" class="oi ms-2 text-muted" t-att-data-icon="{'invoice': 'description','delivery': 'local_shipping', 'other': 'deployed_code'}[record.type.raw_value]" role="img"/>
                                 </p>
                             </div>
                             <div>
                                 <div t-if="record.email.raw_value" class="text-truncate">
-                                    <i class="fa fa-fw me-1 fa-envelope text-muted" title="Email"/>
+                                    <i class="oi oi-fw oi-filled me-1 text-muted" data-icon="mail" title="Email"/>
                                     <field name="email"/>
                                 </div>
                                 <div t-if="record.phone.raw_value">
-                                    <i class="fa fa-fw me-1 fa-phone text-muted" title="Phone"/>
+                                    <i class="oi oi-fw oi-filled me-1 text-muted" data-icon="phone" title="Phone"/>
                                     <field name="phone"/>
                                 </div>
                                 <div t-if="record.city.raw_value or record.country_id.raw_value">
-                                    <i class="fa fa-fw me-1 fa-map-marker" title="Location"/>
+                                    <i class="oi oi-fw me-1" data-icon="location_on" title="Location"/>
                                     <field name="city"/>
                                     <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
                                     <field name="country_id"/>

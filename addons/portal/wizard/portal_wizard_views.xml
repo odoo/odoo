@@ -36,11 +36,11 @@
                             <field name="partner_id" force_save="1"/>
                             <field name="email" readonly="is_internal"/>
                             <field name="email_state" column_invisible="True"/>
-                            <button name="action_refresh_modal" type="object" icon="fa-check text-success"
+                            <button name="action_refresh_modal" type="object" icon="check" icon_class="text-success"
                                 invisible="email_state != 'ok'" title="Valid Email Address"/>
-                            <button name="action_refresh_modal" type="object" icon="fa-times text-danger"
+                            <button name="action_refresh_modal" type="object" icon="close" icon_class="text-danger"
                                 invisible="email_state != 'ko'" title="Invalid Email Address"/>
-                            <button name="action_refresh_modal" type="object" icon="fa-user-times text-danger"
+                            <button name="action_refresh_modal" type="object" icon="person_remove" icon_class="oi-filled text-danger"
                                 invisible="email_state != 'exist'" title="Email Address already taken by another user"/>
                             <field name="login_date"/>
                             <field name="is_portal" column_invisible="True"/>

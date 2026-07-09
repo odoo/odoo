@@ -59,7 +59,7 @@
 <t t-name="mail.WelcomePage.inviteHeader">
     <div class="d-flex flex-column align-items-center text-center pt-2 rounded-2">
         <div class="bg-primary text-white rounded-2 d-flex p-2">
-            <i class="oi oi-users fs-4"/>
+            <i class="oi fs-4" data-icon="group"/>
         </div>
         <div class="fs-3 o-fw-600 mb-1">
             <t t-if="this.showCallPreview">You've been invited to a meeting!</t>
@@ -91,7 +91,7 @@
     <button class="btn btn-primary btn-lg w-100 my-2" title="Join Channel" t-att-disabled="!this.canJoin" t-on-click="this.joinChannel">
         <t t-if="this.showCallPreview">Join Call</t>
         <t t-else="">Join Conversation</t>
-        <i class="oi oi-arrow-right ms-2"/>
+        <i class="oi ms-2" data-icon="east"/>
     </button>
 </t>
 
@@ -99,7 +99,7 @@
     <div t-if="this.channel.description or this.channel.member_count > 0" class="w-100 text-start">
         <div class="d-flex align-items-center gap-2">
             <div class="o-mail-WelcomePage-MeetingIcon d-flex justify-content-center">
-                <i class="fa fs-2" t-att-class="this.showCallPreview ? 'fa-calendar' : 'fa-comments'"/>
+                <i class="oi fs-2" t-att-data-icon="this.showCallPreview ? 'calendar_today' : 'forum'"/>
             </div>
             <span class="fw-medium fs-5 text-truncate min-w-0 flex-grow-1" t-att-title="this.channel.displayName" t-out="this.channel.displayName"/>
             <AvatarStack personas="this.channel.channel_member_ids.map(m => m.persona).filter(p => p?.name)" total="this.channel.member_count"/>

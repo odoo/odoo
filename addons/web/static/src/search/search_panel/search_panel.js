@@ -225,6 +225,7 @@ export class SearchPanel extends Component {
             selection.push({
                 values: orderedCategoryNames,
                 icon: category.icon,
+                icon_class: category.icon_class,
                 color: category.color,
             });
         }
@@ -239,7 +240,7 @@ export class SearchPanel extends Component {
     getFilterSelection() {
         const filters = this.env.searchModel.getSections(isFilter);
         const selection = [];
-        for (const { groups, values, icon, color } of filters) {
+        for (const { groups, values, icon, icon_class, color } of filters) {
             let filterValues;
             if (groups) {
                 filterValues = Object.keys(groups)
@@ -249,7 +250,7 @@ export class SearchPanel extends Component {
                 filterValues = nameOfCheckedValues(values);
             }
             if (filterValues.length) {
-                selection.push({ values: filterValues, icon, color });
+                selection.push({ values: filterValues, icon, icon_class, color });
             }
         }
         return selection;

@@ -13,7 +13,7 @@ VALID_XML = """
 <templates id="template" xml:space="preserve">
     <t t-name="stock_barcode.LineComponent">
         <div t-if="line.picking_id and line.picking_id.origin" name="origin">
-            <i class="fa fa-fw fa-file" />
+            <i class="oi oi-fw oi-filled" data-icon="description"/>
             <span t-out="line.picking_id.origin" />
         </div>
     </t>
@@ -24,7 +24,7 @@ VALID_XML_2 = """<?xml version="1.0" encoding="UTF-8"?>
     <template id="template_2">
         <t t-name="stock_barcode.LineComponent">
             <div t-if="line.picking_id and line.picking_id.origin" name="origin">
-                <i class="fa fa-fw fa-file" />
+                <i class="oi oi-fw oi-filled" data-icon="description"/>
                 <span t-out="line.picking_id.origin" />
             </div>
         </t>

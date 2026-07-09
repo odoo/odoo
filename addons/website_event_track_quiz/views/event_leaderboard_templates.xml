@@ -35,19 +35,19 @@
 <template id="pager_nobox" name="Pager (not box display)">
     <ul t-if="pager['page_count'] > 1" t-attf-class="o_wprofile_pager fw-bold pagination m-0">
         <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == 1 else ''}">
-            <a t-att-href=" pager['page_first']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="fa fa-step-backward"/></a>
+            <a t-att-href=" pager['page_first']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="oi" data-icon="skip_previous"/></a>
         </li>
         <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == 1 else ''}">
-            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="fa fa-caret-left"/></a>
+            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="oi" data-icon="arrow_left"/></a>
         </li>
         <t t-foreach="pager['pages']" t-as="page">
             <li t-attf-class="page-item #{'active disabled bg-primary rounded-circle' if page['num'] == pager['page']['num'] else ''}"> <a t-att-href="page['url']" class="page-link" t-out="page['num']"/></li>
         </t>
         <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
-            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-caret-right"/></a>
+            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="oi" data-icon="arrow_right"/></a>
         </li>
         <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
-            <a t-att-href=" pager['page_last']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-step-forward"/></a>
+            <a t-att-href=" pager['page_last']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="oi" data-icon="skip_next"/></a>
         </li>
     </ul>
 </template>
@@ -99,7 +99,7 @@
                 <form t-attf-action="#{'/event/%s/community/leaderboard/results' % (slug(event))}" role="search" method="get">
                     <div class="input-group ms-1 position-relative">
                         <button class="btn btn-link text-white rounded-0 pe-1" type="submit" aria-label="Search" title="Search">
-                            <i class="fa fa-search"></i>
+                            <i class="oi" data-icon="search"></i>
                         </button>
                         <input type="text" class="form-control rounded-0" name="search" placeholder="Search Attendees" t-att-value="searched_name or ''"/>
                     </div>
@@ -111,13 +111,13 @@
                 <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
 
                     <div class="btn-group ms-1 position-static me-2">
-                        <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                        <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="oi" data-icon="search"></i></a>
                         <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
                             <form class="px-3" t-attf-action="#{'/event/%s/community/leaderboard' % (slug(event))}" role="search" method="get">
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="search" placeholder="Search users"/>
                                     <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
-                                        <i class="fa fa-search"/>
+                                        <i class="oi" data-icon="search"/>
                                     </button>
                                 </div>
                             </form>

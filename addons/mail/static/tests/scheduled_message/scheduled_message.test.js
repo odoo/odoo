@@ -51,11 +51,11 @@ test("Scheduled messages basic layout", async () => {
     await contains(".o-mail-Message-body em:text('Subject: Greetings')");
     await contains(".o-mail-Message-body p:text('Hello There')");
     await contains(".o-mail-Message-bubble.bg-success-light");
-    await contains(".o-mail-Scheduled-Message-buttons .fa-pencil");
-    await contains(".o-mail-Scheduled-Message-buttons .fa-times");
+    await contains(".o-mail-Scheduled-Message-buttons [data-icon='edit']");
+    await contains(".o-mail-Scheduled-Message-buttons [data-icon='close']");
     await click(".o-mail-ScheduledMessagesList > .cursor-pointer");
     await contains(".o-mail-Scheduled-Message", { count: 0 });
-    await contains(".o-mail-ScheduledMessagesList .fa-caret-right + span:text('1')");
+    await contains(".o-mail-ScheduledMessagesList [data-icon='arrow_right'] + span:text('1')");
 });
 
 test("Scheduled messages are ordered by scheduled date", async () => {

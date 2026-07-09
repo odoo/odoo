@@ -125,10 +125,10 @@ class OfflineSystray extends Component {
             return "spinner-border";
         }
         if (this.inError()) {
-            return "fa fa-exclamation-circle";
+            return "error";
         }
         if (this.offlinePlugin.isOffline()) {
-            return "fa fa-chain-broken";
+            return "link_off";
         }
         return "spinner-border";
     }

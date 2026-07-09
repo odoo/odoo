@@ -76,8 +76,8 @@ test("PhoneField in form view on normal screens (edit)", async () => {
     });
     expect(`input[type="tel"]`).toHaveCount(1);
     expect(`input[type="tel"]`).toHaveValue("yop");
-    expect(".o_field_phone button i.fa-phone").toHaveCount(1);
-    await assertUrl(`.o_field_widget button i.fa-phone`, "tel:yop");
+    expect(".o_field_phone button i[data-icon='phone']").toHaveCount(1);
+    await assertUrl(`.o_field_widget button i[data-icon='phone']`, "tel:yop");
 
     // change value in edit mode
     await click(`input[type="tel"]`);
@@ -274,5 +274,5 @@ test("action buttons are form-only: a list cell shows the number with no buttons
     expect("tbody td:not(.o_list_record_selector) span:first-child:eq(0)").toHaveText("yop");
     // ...but no Call/SMS/WhatsApp button and no overflow dropdown (form-only).
     expect(".o_field_widget .o_phone_form_link").toHaveCount(0);
-    expect(".o_field_widget .fa-ellipsis-v").toHaveCount(0);
+    expect(".o_field_widget [data-icon='more_vert']").toHaveCount(0);
 });

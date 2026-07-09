@@ -29,7 +29,7 @@
                 <button t-if="this.store.self.is_user_publisher"
                     t-attf-class="btn px-2 my-2 mb-0 btn-sm border o_wrating_js_publisher_comment_btn {{ this.message.rating_id.publisher_comment !== '' ? 'd-none' : '' }}"
                     t-on-click="this.onClikEditComment">
-                    <i class="fa fa-comment-o text-muted me-1"/>Comment
+                    <i class="oi text-muted me-1" data-icon="chat_bubble"/>Comment
                 </button>
                 <div t-if="this.state.editRating" class="mt-2">
                     <Composer autofocus="true" composer="this.message.composer" onDiscardCallback.bind="this.exitEditCommentMode" onPostCallback.bind="this.exitEditCommentMode" mode="'compact'"/>
@@ -49,14 +49,14 @@
                                 <div t-if="this.store.self.is_user_publisher" class="d-flex rounded-0">
                                     <Dropdown>
                                         <button class="bg-transparent border-0">
-                                            <i class="btn px-1 py-0 oi oi-ellipsis-v"/>
+                                            <i class="btn px-1 py-0 oi" data-icon="more_vert"/>
                                         </button>
                                         <t t-set-slot="content">
                                             <DropdownItem class="'o_wrating_js_publisher_comment_edit'" onSelected="() => this.onClikEditComment()">
-                                                <i class="fa fa-fw fa-pencil me-1"/>Edit
+                                                <i class="oi oi-fw oi-filled me-1" data-icon="edit"/>Edit
                                             </DropdownItem>
                                             <DropdownItem class="'o_wrating_js_publisher_comment_delete'" onSelected="() => this.deleteComment()">
-                                                <i class="fa fa-fw fa-trash-o me-1"/>Delete
+                                                <i class="oi oi-fw me-1" data-icon="delete"/>Delete
                                             </DropdownItem>
                                         </t>
                                     </Dropdown>

@@ -8,7 +8,7 @@
                     t-on-click="() => this.clickPrintButton(item)"
                     t-att-disabled="item.status === 'loading' ? 'disabled' : ''"
                 >
-                    <i t-attf-class="fa fa-2x opacity-50 {{item.status === 'loading' ? 'fa-spin fa-circle-o-notch' : `${item.icon}`}}"/>
+                    <i class="oi oi-2x opacity-50" t-att-class="{'oi-fw oi-spin': item.status === 'loading'}" t-att-data-icon="item.status === 'loading' ? 'autorenew' : item.icon"/>
                     <span class="text-center">
                         <span t-out="item.label"/>
                     </span>

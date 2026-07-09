@@ -14,7 +14,7 @@
                             <field name="group_use_recurring_revenues"/>
                             <div invisible="not group_use_recurring_revenues">
                                 <button type="action" name="crm.crm_recurring_plan_action"
-                                        string="Manage Recurring Plans" icon="oi-arrow-right" class="oe_link"/>
+                                        string="Manage Recurring Plans" icon="east" class="oe_link"/>
                             </div>
                         </setting>
                         <setting id="crm_lead" title="Use leads if you need a qualification step before creating an opportunity or a customer. It can be a business card you received, a contact form filled in your website, or a file of unqualified prospects you import, etc. Once qualified, the lead can be converted into a business opportunity and/or a new customer in your address book." help="Add a qualification step before the creation of an opportunity">
@@ -27,7 +27,7 @@
                         </setting>
                         <setting string="Ringover VOIP Phone" id="ringover-voip" help="Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS messages, and get AI-powered transcripts of your conversations.">
                             <a class="oe_link fw-bold" href="https://chromewebstore.google.com/detail/ringover-voip-phone-for-o/bdeapcnahigpibeoehandgaiijljkdnl" target="_blank">
-                                <i class="oi oi-arrow-right"/>
+                                <i class="oi" data-icon="east"/>
                                 Install Extension
                             </a>
                         </setting>
@@ -68,7 +68,7 @@
                                 <field name="crm_auto_assignment_action"
                                     required="crm_use_auto_assignment"/>
                                 <button name="action_crm_assign_leads" type="object" class="btn-link w-auto">
-                                    <i title="Update now" role="img" aria-label="Update now" class="fa fa-fw fa-refresh"></i>
+                                    <i title="Update now" role="img" aria-label="Update now" class="oi oi-fw" data-icon="refresh"></i>
                                 </button>
                             </div>
                             <div class="row" invisible="not crm_use_auto_assignment or crm_auto_assignment_action == 'manual'">

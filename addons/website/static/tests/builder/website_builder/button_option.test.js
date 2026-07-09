@@ -16,25 +16,25 @@ test("Drag & drop a 'Button' snippet in a <div> should put it inside a <p>", asy
     const { getEditableContent } = await setupWebsiteBuilder(`<div><p>Text</p></div>`);
     const contentEl = getEditableContent();
     expect(contentEl).toHaveInnerHTML(`<div><p>Text</p></div>`);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     const { moveTo, drop } = await contains(
         ".o-website-builder_sidebar [name='Button'] .o_snippet_thumbnail"
     ).drag();
     expect(":iframe .oe_drop_zone:nth-child(1)").toHaveCount(1);
     expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     await moveTo(":iframe .oe_drop_zone");
     expect(":iframe .oe_drop_zone.invisible:nth-child(1)").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     await drop(getDragHelper());
     await waitForEndOfOperation();
     expect(contentEl).toHaveInnerHTML(
         `<div><p>\ufeff<a class="btn btn-primary o_translate_inline" href="/contactus">\ufeffButton\ufeff</a>\ufeff</p><p>Text</p></div>`
     );
-    expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").toBeEnabled();
 });
 
 test("Drag & drop a 'Button' snippet should align the button style with the button before it", async () => {
@@ -45,25 +45,25 @@ test("Drag & drop a 'Button' snippet should align the button style with the butt
     expect(contentEl).toHaveInnerHTML(
         `<div><a href="http://test.com" class="btn btn-fill-secondary" style="line-height: 50px;">ButtonStyled</a></div>`
     );
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     const { moveTo, drop } = await contains(
         ".o-website-builder_sidebar [name='Button'] .o_snippet_thumbnail"
     ).drag();
     expect(":iframe .oe_drop_zone:nth-child(1)").toHaveCount(1);
     expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     await moveTo(":iframe .oe_drop_zone:nth-child(3)");
     expect(":iframe .oe_drop_zone.invisible:nth-child(3)").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     await drop(getDragHelper());
     await waitForEndOfOperation();
     expect(contentEl).toHaveInnerHTML(
         `<div><a href="http://test.com" class="btn btn-fill-secondary mb-2" style="line-height: 50px;"> ButtonStyled </a> <a class="btn mb-2 btn-fill-secondary o_translate_inline" href="/contactus"> Button </a></div>`
     );
-    expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").toBeEnabled();
 });
 
 test("Drag & drop a 'Button' snippet over a dropzone should preview it correctly", async () => {
@@ -76,13 +76,13 @@ test("Drag & drop a 'Button' snippet over a dropzone should preview it correctly
         `<div><a href="http://test.com" class="btn btn-fill-secondary">ButtonStyled</a>
          <p style="padding-bottom: 50px;"><a href="http://test.com" class="btn btn-fill-secondary">ButtonStyled in a p</a></p></div>`
     );
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     const { moveTo, drop } = await contains(
         ".o-website-builder_sidebar [name='Button'] .o_snippet_thumbnail"
     ).drag();
     expect(":iframe .oe_drop_zone").toHaveCount(5);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     await moveTo(":iframe .oe_drop_zone");
     expect(":iframe .oe_drop_zone.invisible").toHaveCount(1);
@@ -93,7 +93,7 @@ test("Drag & drop a 'Button' snippet over a dropzone should preview it correctly
     expect(":iframe [data-snippet='s_button']").not.toHaveClass("mb-2 btn-fill-secondary");
     expect(":iframe [data-snippet='s_button']").toHaveClass("btn-primary");
 
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
 
     await drop(getDragHelper());
     await waitForEndOfOperation();
@@ -102,7 +102,7 @@ test("Drag & drop a 'Button' snippet over a dropzone should preview it correctly
          <p style="padding-bottom: 50px;"><a href="http://test.com" class="btn btn-fill-secondary"> ButtonStyled in a p </a></p>
          <p><a class="btn btn-primary o_translate_inline" href="/contactus"> Button </a></p></div>`
     );
-    expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").toBeEnabled();
 });
 
 test("Custom button is not wrapped in <p> when dropped near sibling button", async () => {

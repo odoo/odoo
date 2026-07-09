@@ -9,10 +9,10 @@
                     <field name="company_id" invisible="1"/>
                     <sheet>
                         <div class="oe_button_box" name="button_box" invisible="not id">
-                            <button class="oe_stat_button" name="action_employee_from_department" type="object" icon="fa-users">
+                            <button class="oe_stat_button" name="action_employee_from_department" type="object" icon="group" icon_class="oi-filled">
                                 <field string="Employees" name="total_employee" widget="statinfo"/>
                             </button>
-                            <button class="oe_stat_button" type="object" name="action_plan_from_department" icon="fa-list-ul">
+                            <button class="oe_stat_button" type="object" name="action_plan_from_department" icon="format_list_bulleted">
                                 <field string="Plans" name="plans_count" widget="statinfo"/>
                             </button>
                         </div>
@@ -115,7 +115,7 @@
                             <a type="open"><field name="name" class="fw-bold fs-4 d-bolck ms-2"/></a>
                             <field name="manager_id" widget="many2one_avatar_employee" options="{'display_avatar_name': True}" readonly="1" class="text-muted ms-2"/>
                             <div class="small mt-1 ms-2" groups="base.group_multi_company">
-                                <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"/> <field name="company_id"/>
+                                <i class="oi" data-icon="business" role="img" aria-label="Company" title="Company"/> <field name="company_id"/>
                             </div>
                             <div class="row g-0 mt-3 mb-2 ms-2" t-if="!selection_mode">
                                 <div class="col-6">

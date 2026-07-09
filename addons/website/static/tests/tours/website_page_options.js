@@ -171,7 +171,7 @@ registry.category("web_tour.tours").add("website_page_breadcrumb", {
         },
         {
             content: "Verify loading state is shown while checking dependencies",
-            trigger: ".modal-body .fa-spinner",
+            trigger: ".modal-body [data-icon='progress_activity']",
         },
         {
             content: "Verify and close delete confirmation dialog",

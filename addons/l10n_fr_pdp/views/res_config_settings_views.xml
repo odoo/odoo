@@ -35,7 +35,7 @@
                                     For information: French administration annuaire can be updated once a day so your validation should be done tomorrow.
                                 </p>
                                 <p invisible="account_peppol_proxy_state != 'receiver' or l10n_fr_pdp_registered" class="text-warning">
-                                    <i class="fa fa-exclamation-triangle"/>You can only send and receive <span class="o_form_label">unregulated</span> messages currently.
+                                    <i class="oi" data-icon="warning"/>You can only send and receive <span class="o_form_label">unregulated</span> messages currently.
                                 </p>
                             </div>
                             <div invisible="peppol_use_parent_company or account_peppol_proxy_state != 'rejected'">
@@ -132,7 +132,7 @@
                         </div>
                         <div class="content-group mt-3 alert alert-danger" role="alert">
                             <div class="d-flex align-items-start">
-                                <i class="fa fa-exclamation-triangle fa-lg me-3 mt-1" aria-hidden="true"></i>
+                                <i class="oi oi-lg me-3 mt-1" data-icon="warning" aria-hidden="true"></i>
                                 <div>
                                     <span><strong>Disconnected from the Approved Platform!</strong></span>
                                     <p>
@@ -146,12 +146,12 @@
                                     type="object"
                                     string="Reconnect this database"
                                     class="btn btn-primary"
-                                    icon="fa-refresh"/>
+                                    icon="refresh"/>
                                 <button name="button_disconnect_this_database"
                                     type="object"
                                     string="Disconnect this database"
                                     class="btn btn-danger"
-                                    icon="fa-unlink"/>
+                                    icon="link_off"/>
                             </div>
                         </div>
                     </div>

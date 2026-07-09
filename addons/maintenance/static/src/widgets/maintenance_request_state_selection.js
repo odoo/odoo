@@ -18,11 +18,18 @@ export class MaintenanceRequestStateSelection extends StateSelectionField {
         super.setup();
         this.uiService = useService("ui");
         this.icons = {
+            normal: "",
+            changes_requested: "error",
+            approved: "",
+            done: "check_circle",
+            cancelled: "cancel",
+        };
+        this.classIcons = {
             normal: "o_status",
-            changes_requested: "fa fa-lg fa-exclamation-circle",
+            changes_requested: "oi-lg",
             approved: "o_status o_status_green",
-            done: "fa fa-lg fa-check-circle",
-            cancelled: "fa fa-lg fa-times-circle",
+            done: "oi-lg oi-filled",
+            cancelled: "oi-lg oi-filled",
         };
         this.colorIcons = {
             normal: "",
@@ -42,6 +49,10 @@ export class MaintenanceRequestStateSelection extends StateSelectionField {
 
     stateIcon(value) {
         return this.icons[value] || "";
+    }
+
+    stateIconClass(value) {
+        return this.classIcons[value] || "";
     }
 
     statusColor(value) {

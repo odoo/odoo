@@ -98,7 +98,7 @@
                 </group>
                 <searchpanel>
                     <field name="state" string="Status"/>
-                    <field name="department_id" string="Department" icon="fa-users"/>
+                    <field name="department_id" string="Department" icon="group" icon_class="oi-filled"/>
                 </searchpanel>
             </search>
         </field>
@@ -213,7 +213,7 @@
                                             </div>
                                             <div class="col-1">
                                                 <button t-if="record.attachment_is_visible and record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link text-nowrap">
-                                                    <i class="fa fa-paperclip" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
+                                                    <i class="oi" data-icon="attach_file" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
                                                 </button>
                                             </div>
                                             <div class="o_hr_holidays_button col-2 d-flex justify-content-start gap-2">
@@ -290,7 +290,7 @@
                                 </span>
                             </main>
                             <button t-if="record.attachment_is_visible and record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link me-4 text-nowrap">
-                                <i class="fa fa-paperclip" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
+                                <i class="oi" data-icon="attach_file" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
                             </button>
                             <div class="o_hr_holidays_button d-grid align-self-start pt-1">
                                 <span
@@ -335,7 +335,7 @@
                             </div>
                             <div class="text-muted">
                                 <field name="work_entry_type_id" display="full"/>
-                                <field name="date_from"/> <i class="fa fa-long-arrow-right" title="to" /> <field name="date_to"/>
+                                <field name="date_from"/> <i class="oi" data-icon="east" title="to" /> <field name="date_to"/>
                             </div>
                         </div>
                     </div>
@@ -633,14 +633,14 @@
                     <button type="object"
                         name="action_approve"
                         string="Approve"
-                        icon="fa-thumbs-up"
+                        icon="thumb_up" icon_class="oi-filled"
                         class="btn btn-outline-success"
                         data-hotkey="q"
                     />
                     <button type="object"
                         name="action_refuse"
                         string="Refuse"
-                        icon="fa-times"
+                        icon="close"
                         class="btn btn-outline-danger"
                         data-hotkey="x"
                     />
@@ -657,13 +657,13 @@
                 <field name="user_id" column_invisible="True"/>
                 <field name="message_needaction" column_invisible="True"/>
                 <button string="Approve" name="action_approve" type="object"
-                    icon="fa-thumbs-up"
+                    icon="thumb_up" icon_class="oi-filled"
                     invisible="not can_approve"/>
                 <button string="Validate" name="action_approve" type="object"
-                    icon="fa-check"
+                    icon="check"
                     invisible="not can_validate or can_approve"/>
                 <button string="Refuse" name="action_refuse" type="object"
-                    icon="fa-times"
+                    icon="close"
                     invisible="not can_refuse"/>
                 <field name="company_id" optional="hidden" groups="base.group_multi_company"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>

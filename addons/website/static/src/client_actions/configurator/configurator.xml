@@ -130,7 +130,7 @@
                                     <i class="text-primary" t-if="this.state.selectedType">
                                         <t t-out="this.state.getSelectedType(this.state.selectedType).label"/>
                                     </i>
-                                    <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+                                    <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img"/>
                                 </span>
                             </button>
                             <div id="selectTypeMenu"
@@ -182,12 +182,12 @@
                                     aria-controls="selectPurposeMenu">
                                 <span class="d-flex align-items-center">
                                     <t t-if="this.state.selectedPositioning" t-out="this.state.selectedPositioning"/>
-                                    <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+                                    <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img"/>
                                 </span>
                             </button>
                             <div id="selectPurposeMenu" class="dropdown-menu border-0 shadow-lg show" role="menu" aria-labelledby="selectPurposeToggle">
                                 <t t-if="this.state.positioningsLoading">
-                                    <div class="dropdown-item text-muted"><i class="fa fa-spinner fa-spin me-2" role="img"/>Analyzing trends...</div>
+                                    <div class="dropdown-item text-muted"><i class="oi oi-spin me-2" data-icon="progress_activity" role="img"/>Analyzing trends...</div>
                                 </t>
                                 <t t-else="" t-foreach="this.state.positionings" t-as="positioning" t-key="positioning_index">
                                     <button t-on-click="() => this.selectPositioning(positioning)"
@@ -238,12 +238,12 @@
                                            title="Remove Logo"
                                            role="button"
                                            t-on-click.prevent="this.removeLogo">
-                                            <i class="oi oi-close" role="presentation"/>
+                                            <i class="oi" data-icon="close_small" role="presentation"/>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="d-flex px-2">
-                                    <i class="oi oi-arrow-right fs-3 text-muted align-self-center"/>
+                                    <i class="oi fs-3 text-muted align-self-center" data-icon="east"/>
                                 </div>
                                 <div t-if="this.state.recommendedPalette" class="w-50 d-flex gap-3 py-1">
                                     <t t-set="logoPalette" t-value="this.state.recommendedPalette"/>
@@ -252,7 +252,7 @@
                                             t-on-click="() => this.selectPalette('recommendedPalette')"
                                             t-on-mouseenter="() => this.onPaletteCardHover(logoPalette)"
                                             t-on-mouseleave="() => this.onPaletteCardHover()">
-                                        <i t-if="isAiRecommended" class="fa fa-check-circle text-info position-absolute top-0 end-0"/>
+                                        <i t-if="isAiRecommended" class="oi oi-filled text-info position-absolute top-0 end-0" data-icon="check_circle"/>
                                         <div class="d-flex flex-row w-100 h-100">
                                             <div class="px-4" t-attf-style="background-color: {{logoPalette.color1}}; border-radius: 4px 0 0 4px;"/>
                                             <div class="px-4" t-attf-style="background-color: {{logoPalette.color3}};"/>
@@ -264,7 +264,7 @@
                         </t>
                         <t t-else="">
                             <button class="btn o_btn_reset bg-100 rounded-3 border d-flex gap-2 justify-content-center py-3 px-4" t-on-click="this.uploadLogo">
-                                <i class="fa fa-cloud-upload fs-3"/>
+                                <i class="oi fs-3" data-icon="cloud_upload"/>
                                 <h5 class="text-start lh-sm mb-0">Use your <b>Logo</b> colors</h5>
                             </button>
                         </t>
@@ -284,7 +284,7 @@
                                         <div t-if="isAiRecommended"
                                              class="d-flex align-items-center justify-content-center ratio ratio-1x1 w-auto p-2 rounded-pill bg-view position-absolute top-0 end-0"
                                         >
-                                            <i class="d-flex align-items-center justify-content-center fa fa-check-circle text-info"
+                                            <i class="oi oi-filled d-flex align-items-center justify-content-center text-info" data-icon="check_circle"
                                                aria-hidden="true"
                                             />
                                         </div>
@@ -374,13 +374,13 @@
                                      role="button">
                                     <div class="h3 card-body py-3 px-4 mb-0">
                                         <t t-if="isInstalled">
-                                            <i t-attf-class="o_configurator_feature_status fa fa-check-circle text-success" title="Already installed"/>
+                                            <i t-attf-class="oi oi-filled o_configurator_feature_status text-success" data-icon="check_circle" title="Already installed"/>
                                         </t>
                                         <t t-else="">
-                                            <i t-attf-class="o_configurator_feature_status fa {{feature.selected ? 'fa-check-circle text-success' : 'fa-circle-o text-300'}}" />
+                                            <i t-attf-class="oi o_configurator_feature_status {{feature.selected ? 'text-success' : 'text-300'}}"  t-attf-data-icon="{{feature.selected ? 'check_circle' : 'circle'}}"/>
                                         </t>
                                         <div t-attf-class="h2 mb-0 card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
-                                            <i t-attf-class="me-2 fa {{feature.icon}} {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}}"/>
+                                            <i t-attf-class="me-2 oi {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}} {{feature.icon_class}}" t-attf-data-icon="{{feature.icon}}"/>
                                             <h3 class="m-1">
                                                 <t t-out="feature.name"/>
                                             </h3>

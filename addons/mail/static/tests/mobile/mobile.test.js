@@ -48,7 +48,7 @@ test("enter key should create a newline in composer", async () => {
     await insertText(".o-mail-Composer-input", "Test\n");
     await press("Enter");
     await insertText(".o-mail-Composer-input", "Other");
-    await click(".fa-paper-plane-o");
+    await click("[data-icon='send']");
     await contains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
 });
 

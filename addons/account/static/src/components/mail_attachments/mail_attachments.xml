@@ -8,10 +8,10 @@
                         <span t-out="attachment.name" class="flex-grow-1 text-truncate"/>
 
                         <button class="btn flex-shrink-0" t-on-click.stop="() => this.onFileRemove(attachment.id)">
-                            <i class="fa fa-fw fa-times"/>
+                            <i class="oi oi-fw" data-icon="close"/>
                         </button>
 
-                        <i class="fa fa-fw o_button_icon fa-warning" t-if="attachment.tooltip" t-att-data-tooltip="attachment.tooltip"></i>
+                        <i class="oi oi-fw o_button_icon" data-icon="warning" t-if="attachment.tooltip" t-att-data-tooltip="attachment.tooltip"></i>
                     </li>
                 </t>
             </t>

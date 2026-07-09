@@ -11,41 +11,41 @@
             />
         </div>
         <div class="btn-group" role="toolbar" aria-label="Change graph">
-            <button class="btn btn-secondary fa fa-bar-chart o_graph_button" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
+            <button class="btn btn-secondary oi o_graph_button" data-icon="bar_chart" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
                 t-on-click="() => this.onModeSelected('bar')"
                 t-att-class="{ active: this.model.metaData.mode === 'bar' }"
             />
-            <button class="btn btn-secondary fa fa-line-chart o_graph_button" data-tooltip="Line Chart" aria-label="Line Chart" data-mode="line"
+            <button class="btn btn-secondary oi o_graph_button" data-icon="show_chart" data-tooltip="Line Chart" aria-label="Line Chart" data-mode="line"
                 t-on-click="() => this.onModeSelected('line')"
                 t-att-class="{ active: this.model.metaData.mode === 'line' }"
             />
-            <button class="btn btn-secondary fa fa-pie-chart o_graph_button" data-tooltip="Pie Chart" aria-label="Pie Chart" data-mode="pie"
+            <button class="btn btn-secondary oi o_graph_button" data-icon="pie_chart" data-tooltip="Pie Chart" aria-label="Pie Chart" data-mode="pie"
                 t-on-click="() => this.onModeSelected('pie')"
                 t-att-class="{ active: this.model.metaData.mode === 'pie' }"
             />
         </div>
         <div t-if="this.model.metaData.mode === 'bar'" class="btn-group" role="toolbar" aria-label="Change graph">
-            <button class="btn btn-secondary fa fa-database o_graph_button" data-tooltip="Stacked" aria-label="Stacked"
+            <button class="oi btn btn-secondary o_graph_button" data-icon="database" data-tooltip="Stacked" aria-label="Stacked"
                 t-on-click="this.toggleStacked"
                 t-att-class="{ active: this.model.metaData.stacked }"
             />
         </div>
         <div t-if="this.model.metaData.mode === 'line'" class="btn-group" role="toolbar" aria-label="Change graph">
-            <button class="btn btn-secondary fa fa-database o_graph_button" data-tooltip="Stacked" aria-label="Stacked"
+            <button class="oi btn btn-secondary o_graph_button" data-icon="database" data-tooltip="Stacked" aria-label="Stacked"
                 t-on-click="this.toggleStacked"
                 t-att-class="{ active: this.model.metaData.stacked }"
             />
-            <button class="btn btn-secondary fa fa-signal o_graph_button" data-tooltip="Cumulative" aria-label="Cumulative"
+            <button class="oi btn btn-secondary o_graph_button" data-icon="signal_cellular_4_bar" data-tooltip="Cumulative" aria-label="Cumulative"
                 t-on-click="this.toggleCumulated"
                 t-att-class="{ active: this.model.metaData.cumulated }"
             />
         </div>
         <div t-if="this.model.metaData.mode !== 'pie'" class="btn-group" role="toolbar" aria-label="Sort graph" name="toggleOrderToolbar">
-            <button class="btn btn-secondary fa fa-sort-amount-desc o_graph_button" data-tooltip="Descending" aria-label="Descending"
+            <button class="oi btn btn-secondary o_graph_button o_sort_desc" data-icon="sort" data-tooltip="Descending" aria-label="Descending"
                 t-on-click="() => this.toggleOrder('DESC')"
                 t-att-class="{ active: this.model.metaData.order === 'DESC' }"
             />
-            <button class="btn btn-secondary fa fa-sort-amount-asc o_graph_button" data-tooltip="Ascending" aria-label="Ascending"
+            <button class="oi btn btn-secondary oi-flip-vertical o_graph_button o_sort_asc" data-icon="sort" data-tooltip="Ascending" aria-label="Ascending"
                 t-on-click="() => this.toggleOrder('ASC')"
                 t-att-class="{ active: this.model.metaData.order === 'ASC' }"
             />

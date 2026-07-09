@@ -1,13 +1,14 @@
 .o_field_widget {
     .o_favorite {
-        i.fa {
+        i.oi {
             font-size: var(--Favorite-font-size, 1rem);
         }
-        i.fa-star-o {
+        i[data-icon="star"] {
             @include o-hover-text-color($o-main-color-muted, $o-main-favorite-color);
-        }
-        i.fa-star {
-            color: $o-main-favorite-color;
+
+            &.oi-filled {
+                color: $o-main-favorite-color;
+            }
         }
     }
 }

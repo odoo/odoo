@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button class="oe_stat_button" type="object" name="action_open_project_purchase_orders" icon="fa-credit-card"
+                <button class="oe_stat_button" type="object" name="action_open_project_purchase_orders" icon="credit_card"
                     groups="purchase.group_purchase_user" invisible="purchase_orders_count == 0">
                     <field string="Purchase Orders" name="purchase_orders_count" widget="statinfo"/>
                 </button>

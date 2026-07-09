@@ -115,6 +115,6 @@ export function editLineMatching(productName, text) {
 export function editConfiguration(lineName) {
     return {
         trigger: `div[name="account_label_text_readonly"]:contains(${lineName})`,
-        run: "hover && click button.fa-pencil",
+        run: "hover && click button[data-icon='edit']",
     };
 }

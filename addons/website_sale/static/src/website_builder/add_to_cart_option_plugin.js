@@ -17,8 +17,8 @@ export class AddToCartOptionPlugin extends Plugin {
     };
     addToCartValues() {
         return {
-            addToCart: { action: "add_to_cart", icon: "fa-cart-plus", label: _t("Add to Cart"), label_website: this.dependencies.websiteBridge._t("Add to Cart") },
-            buyNow: { action: "buy_now", icon: "fa-credit-card", label: _t("Buy Now"), label_website: this.dependencies.websiteBridge._t("Buy Now") },
+            addToCart: { action: "add_to_cart", icon: "add_shopping_cart", label: _t("Add to Cart"), label_website: this.dependencies.websiteBridge._t("Add to Cart") },
+            buyNow: { action: "buy_now", icon: "credit_card", label: _t("Buy Now"), label_website: this.dependencies.websiteBridge._t("Buy Now") },
         };
     };
 

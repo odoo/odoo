@@ -46,7 +46,7 @@ export class PageListController extends listView.Controller {
         if (Object.prototype.hasOwnProperty.call(this.props.fields, "is_published")) {
             menuItems.publish = {
                 sequence: 15,
-                icon: "fa fa-globe",
+                icon: "public",
                 description: _t("Publish"),
                 callback: async () => {
                     this.dialogService.add(ConfirmationDialog, {
@@ -61,7 +61,7 @@ export class PageListController extends listView.Controller {
             };
             menuItems.unpublish = {
                 sequence: 16,
-                icon: "fa fa-chain-broken",
+                icon: "link_off",
                 description: _t("Unpublish"),
                 callback: async () => this.togglePublished(false),
             };

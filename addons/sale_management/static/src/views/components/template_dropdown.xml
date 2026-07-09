@@ -39,8 +39,8 @@
                     >
                         <span class="text-truncate" style="max-width: 400px;" t-out="template.name"/>
                         <div class="btn-group o_template_icon_group ms-auto d-flex ps-1" t-if="this.state.canManageTemplates">
-                            <i role="button" t-on-click.stop="() => this.onEditClick(template.id)" class="btn btn-link fa fa-pencil fs-3"/>
-                            <i role="button" t-on-click.stop="() => this.onDeleteClick(template.id)" class="btn text-danger fa fa-trash fs-3"/>
+                            <i role="button" t-on-click.stop="() => this.onEditClick(template.id)" class="oi oi-filled btn btn-link fs-3" data-icon="edit"/>
+                            <i role="button" t-on-click.stop="() => this.onDeleteClick(template.id)" class="oi oi-filled btn text-danger fs-3" data-icon="delete"/>
                         </div>
                     </DropdownItem>
                 </t>

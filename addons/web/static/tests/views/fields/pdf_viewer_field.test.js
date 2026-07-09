@@ -106,7 +106,7 @@ test("PdfViewerField: upload file and download it", async () => {
     await setInputFiles(file);
     await waitFor("iframe.o_pdfview_iframe");
     await clickSave();
-    await click(".fa-download");
+    await click("[data-icon='download']");
     expect.verifySteps(["ir.actions.act_url", "browser_open:_blank"]);
 });
 

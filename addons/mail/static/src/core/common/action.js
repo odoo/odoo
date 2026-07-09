@@ -56,6 +56,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(params: ActionParams_T) => string} [actionPanelOuterClass]
  * @property {boolean|(params: ActionParams_T) => boolean} [badge]
  * @property {string|(params: ActionParams_T) => string} [badgeIcon]
+ * @property {string|(params: ActionParams_T) => string} [badgeIconClass]
  * @property {string|(params: ActionParams_T) => string} [badgeText]
  * @property {Object|(params: ActionParams_T) => Object} [btnAttrs]
  * @property {string|(params: ActionParams_T) => string} [btnClass]
@@ -75,6 +76,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {boolean|(params: ActionParams_T) => boolean} [hasBtnBg]
  * @property {string|(params: ActionParams_T) => string} [hotkey]
  * @property {string|(params: ActionParams_T) => string} [icon]
+ * @property {string|(params: ActionParams_T) => string} [iconClass]
  * @property {boolean|(params: ActionParams_T) => boolean} [inlineName=false]
  * @property {boolean|(params: ActionParams_T) => boolean} [isActive]
  * @property {string|(params: ActionParams_T) => string} [name]
@@ -250,6 +252,18 @@ export class Action {
             (typeof this.definition.badgeIcon === "function"
                 ? this.definition.badgeIcon.call(this, this.params)
                 : this.definition.badgeIcon)
+        );
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _badgeIconClass(action) {}
+    /** When action shows badge @see badge this property tells the class of the icon inside badge */
+    get badgeIconClass() {
+        return (
+            this._badgeIconClass(this.params) ??
+            (typeof this.definition.badgeIconClass === "function"
+                ? this.definition.badgeIconClass.call(this, this.params)
+                : this.definition.badgeIconClass)
         );
     }
 
@@ -468,7 +482,7 @@ export class Action {
     _icon(action) {}
     /**
      * Icon for the button this action.
-     * - When a string, this is considered an icon as classname (.fa and .oi).
+     * - When a string, this is considered an icon with classname (.oi).
      * - When an object with property `template`, this is an icon rendered in template.
      *   Template params are provided in `params` and passed to template as a `t-set="templateParams"`
      */
@@ -479,6 +493,20 @@ export class Action {
                 ? this.definition.icon.call(this, this.params)
                 : this.definition.icon)
         );
+    }
+
+    /** @param {Action} action @returns {string|Object|undefined} */
+    _iconClass(action) {}
+    /**
+     * Icon classes for the button this action.
+     * - When a string, this is considered as classes for icon
+     * - When an object with property `template`, this is an icon class rendered in template.
+     *   Template params are provided in `params` and passed to template as a `t-set="templateParams"`
+     */
+    get iconClass() {
+        return typeof this.definition.iconClass === "function"
+            ? this.definition.iconClass.call(this, this.params)
+            : this.definition.iconClass;
     }
 
     /** @param {Action} action @returns {string|undefined} */
@@ -662,7 +690,7 @@ export class UseActions extends Reactive {
                     btnAttrs: { "data-available-offline": true },
                     dropdown: true,
                     dropdownState: new DropdownState(),
-                    icon: data?.icon ?? "oi oi-ellipsis-v",
+                    icon: data?.icon ?? "more_vert",
                     isActive: ({ action }) => action.dropdownState.isOpen,
                     isMoreAction: true,
                     sequence: data.sequence ?? 1000,

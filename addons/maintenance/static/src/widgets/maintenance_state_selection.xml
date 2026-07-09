@@ -2,7 +2,7 @@
     <t t-name="maintenance.MaintenanceRequestStateSelection" t-inherit="web.StateSelectionField" t-inherit-mode="primary">
         <xpath expr="//Dropdown/button/div" position="replace">
             <div t-if="this.isKanbanOrMobileView" class="d-flex align-items-center" t-att-title="this.label">
-                <i t-attf-class="{{ this.stateIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }}"/>
+                <i t-attf-class="oi {{ this.stateIconClass(this.currentValue) }} {{ this.statusColor(this.currentValue) }}" t-att-data-icon="this.stateIcon(this.currentValue)"/>
             </div>
             <div t-else="" class="d-flex align-items-center">
                 <span class="o_status_label" t-out="this.label"/>
@@ -19,7 +19,8 @@
         </xpath>
 
         <xpath expr="//CheckboxItem/span[1]" position="attributes">
-            <attribute name="t-attf-class" separator=" " add="{{ this.stateIcon(option[0]) }}" remove="o_status"/>
+            <attribute name="t-attf-class" separator=" " add="oi {{ this.stateIconClass(option[0]) }}" remove="o_status"/>
+            <attribute name="t-att-data-icon">this.stateIcon(option[0])</attribute>
         </xpath>
         <xpath expr="//CheckboxItem/span[2]" position="attributes">
             <attribute name="t-attf-class">{{ this.statusColor(option[0]) }}</attribute>

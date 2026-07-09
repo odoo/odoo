@@ -135,7 +135,7 @@ function getGroups() {
 }
 
 function getPropertyHandleElement(propertyName) {
-    return queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
+    return queryFirst(`*[property-name='${propertyName}'] [data-icon='drag_indicator']`);
 }
 
 class Partner extends models.Model {
@@ -505,13 +505,13 @@ test("properties: selection", async () => {
 
     // Check the default option, must be the third one"
     expect(
-        ".o_property_field_popover .o_field_property_selection_option:nth-child(1) .fa-star"
+        ".o_property_field_popover .o_field_property_selection_option:nth-child(1) [data-icon='star'].oi-filled"
     ).toHaveCount(0);
     expect(
-        ".o_property_field_popover .o_field_property_selection_option:nth-child(2) .fa-star"
+        ".o_property_field_popover .o_field_property_selection_option:nth-child(2) [data-icon='star'].oi-filled"
     ).toHaveCount(0);
     expect(
-        ".o_property_field_popover .o_field_property_selection_option:nth-child(3) .fa-star"
+        ".o_property_field_popover .o_field_property_selection_option:nth-child(3) [data-icon='star'].oi-filled"
     ).toHaveCount(1);
     expect(".o_property_field_popover .o_field_property_definition_type input").toHaveValue(
         "Selection"
@@ -523,7 +523,7 @@ test("properties: selection", async () => {
         queryAllValues(".o_property_field_popover .o_field_property_selection_option input");
 
     // Create a new selection option
-    await click(".o_field_property_selection .fa-plus");
+    await click(".o_field_property_selection [data-icon='add']");
     await animationFrame();
     expect(getOptions()).toHaveCount(4, { message: "Should have added the new option" });
     expect(queryFirst("input", { root: getOptions()[3] })).toBeFocused({
@@ -559,7 +559,7 @@ test("properties: selection", async () => {
     expect(queryFirst("input", { root: getOptions()[2] })).toBeFocused();
 
     // Remove the second option
-    await click(".o_field_property_selection_option:nth-child(2) .fa-trash-o");
+    await click(".o_field_property_selection_option:nth-child(2) [data-icon='delete']");
     await animationFrame();
     expect(getOptionsValues()).toEqual(["A", "C", "New option"], {
         message: "Should have removed the second option",
@@ -629,11 +629,11 @@ test("properties: selection option keys are generated from labels and handle dup
     const getOptionLabels = () =>
         queryAllValues(".o_property_field_popover .o_field_property_selection_option input");
 
-    await click(".o_field_property_selection .fa-plus");
+    await click(".o_field_property_selection [data-icon='add']");
     await animationFrame();
     await click(".o_property_field_popover .o_field_property_selection_option:last-of-type input");
     await edit("New option");
-    await click(".o_field_property_selection .fa-plus");
+    await click(".o_field_property_selection [data-icon='add']");
     await animationFrame();
     await click(".o_property_field_popover .o_field_property_selection_option:last-of-type input");
     await edit("New option");
@@ -2231,7 +2231,9 @@ test("properties: save separator folded state", async () => {
 
     // return true if the given separator is folded
     const foldState = (separatorName) =>
-        !queryFirst(`div[property-name='${separatorName}'] .o_field_property_label .fa-caret-down`);
+        !queryFirst(
+            `div[property-name='${separatorName}'] .o_field_property_label [data-icon='arrow_drop_down']`
+        );
 
     const assertFolded = (values) => {
         expect(values.length).toBe(4);
@@ -2283,7 +2285,7 @@ test("properties: separators drag and drop", async () => {
     ]);
 
     const getPropertyHandleElement = (propertyName) =>
-        queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
+        queryFirst(`*[property-name='${propertyName}'] [data-icon='drag_indicator']`);
 
     await toggleActionMenu();
     await toggleMenuItem("Edit Properties"); // Start the edition mode
@@ -3026,7 +3028,7 @@ test("properties definition: test display and edit", async () => {
     expect(".o_field_property_selection_option").toHaveCount(3, {
         message: "Only the 3 options from the demo data should be displayed.",
     });
-    await click(".o_field_property_selection .fa-plus");
+    await click(".o_field_property_selection [data-icon='add']");
     await animationFrame();
     await edit("New option");
     await addPropertyDefinition();

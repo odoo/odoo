@@ -44,7 +44,7 @@ export class Activity extends Record {
     /** @type {string} */
     feedback;
     /** @type {string} */
-    icon = "fa-tasks";
+    icon = "checklist";
     mail_template_ids = fields.Many("mail.template");
     note = fields.Html("");
     /** @type {string} */

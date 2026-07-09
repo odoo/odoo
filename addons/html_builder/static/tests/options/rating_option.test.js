@@ -72,11 +72,11 @@ test("Ensure order of operations when clicking very fast on two options", async 
     expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "local_bar");
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Custom");
     expect(":iframe .s_rating_icons").toHaveClass("oi-2x");
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Custom");
     expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "local_bar");
     expect(":iframe .s_rating_icons").not.toHaveClass("oi-2x");
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
     expect(":iframe .s_rating").not.toHaveAttribute("data-active-custom-icon");
     expect(":iframe .s_rating_icons").not.toHaveClass("oi-2x");

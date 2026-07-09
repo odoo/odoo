@@ -337,7 +337,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on remove attachment",
-            trigger: ".o_we_attachment_selected .fa-trash:not(:visible)",
+            trigger: ".o_we_attachment_selected [data-icon='delete'].oi-filled:not(:visible)",
             run: "click",
         },
         {

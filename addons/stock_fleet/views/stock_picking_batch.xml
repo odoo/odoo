@@ -117,7 +117,7 @@
                     <field name="vehicle_volume_capacity"/>
                 </xpath>
                 <xpath expr="//field[@name='scheduled_date']" position="after">
-                    <i class="fa fa-long-arrow-right mx-2" title="Arrow"/>
+                    <i class="oi mx-2" data-icon="east" title="Arrow"/>
                     <field name="end_date"/>
                 </xpath>
                 <xpath expr="//div[field[@name='scheduled_date']]" position="after">
@@ -125,7 +125,7 @@
                     <t t-set="total_vehicle_volume_capacity" t-value="record.vehicle_volume_capacity.raw_value"/>
                     <div t-if="record.vehicle_id.raw_value" class="d-flex">
                         <div>
-                            <i class="fa fa-truck text-primary me-2" title="Vehicle"/>
+                            <i class="oi text-primary me-2" data-icon="local_shipping" title="Vehicle"/>
                         </div>
                         <div>
                             <t t-out="record.vehicle_id.value"/>
@@ -141,7 +141,7 @@
                         </div>
                     </div>
                     <div t-if="record.dock_id.raw_value" class="text-truncate" invisible="not allowed_dock_ids" groups="stock.group_stock_multi_locations">
-                        <i class="fa fa-cubes text-primary me-2" title="Location"/>
+                        <i class="oi text-primary me-2" data-icon="inventory_2" title="Location"/>
                         <field name="dock_id"/>
                     </div>
                 </xpath>

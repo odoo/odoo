@@ -29,7 +29,7 @@ export class EmojiPlugin extends Plugin {
                 id: "addEmoji",
                 title: _t("Emoji"),
                 description: _t("Add an emoji"),
-                icon: "fa-smile-o",
+                icon: "sentiment_satisfied",
                 run: this.showEmojiPicker.bind(this),
             },
         ],

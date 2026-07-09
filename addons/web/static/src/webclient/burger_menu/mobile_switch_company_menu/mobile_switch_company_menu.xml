@@ -4,7 +4,7 @@
 <t t-name="web.MobileSwitchCompanyMenu">
     <div class="o_burger_menu_companies p-3 pb-0">
         <div class="w-100" t-on-click="() => this.toggleCollapsible()">
-            <i t-if="this.hasLotsOfCompanies" class="fa me-2" style="width: 10px" t-att-class="{ 'fa-caret-right': !this.state.isOpen, 'fa-caret-down': this.state.isOpen }"/>
+            <i t-if="this.hasLotsOfCompanies" class="oi me-2" style="width: 10px" t-attf-data-icon="{{ this.state.isOpen ? 'arrow_drop_down' : 'arrow_right' }}"/>
             <span class="fw-bolder">Companies</span>
         </div>
         <div t-if="this.show" class="mt-2">

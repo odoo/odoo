@@ -19,7 +19,7 @@
                     groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_leads_opportunities"
                     class="btn-outline-primary rounded-pill me-1 order-3">
                     <span class="badge">
-                        <i class="fa fa-fw fa-star" t-att-aria-label="crm_lead_count_label" role="img"/>
+                        <i class="oi oi-fw oi-filled" data-icon="star" t-att-aria-label="crm_lead_count_label" role="img"/>
                         <field name="crm_lead_count"/>
                     </span>
                 </a>
@@ -36,7 +36,7 @@
                 <button name="action_redirect_to_leads_opportunities"
                     type="object"
                     class="oe_stat_button order-3"
-                    icon="fa-star"
+                    icon="star" icon_class="oi-filled"
                     groups="sales_team.group_sale_salesman">
                     <div class="o_field_widget o_stat_info">
                         <field name="use_leads" invisible="1"/>

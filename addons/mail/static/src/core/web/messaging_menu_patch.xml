@@ -14,7 +14,7 @@
             <t t-set-slot="sideContent">
                 <div class="d-flex align-items-center justify-content-center o-gap-1_5">
                     <a class="btn btn-primary btn-sm px-1 py-0">Enable</a>
-                    <span t-if="!this.hasTouch()" t-on-click.stop="() => this.store.isNotificationPermissionDismissed = true" class="text-dark bg-transparent oi oi-close opacity-50 opacity-100-hover" title="Dismiss"></span>
+                    <span t-if="!this.hasTouch()" t-on-click.stop="() => this.store.isNotificationPermissionDismissed = true" class="oi text-dark bg-transparent opacity-50 opacity-100-hover" data-icon="close_small" title="Dismiss"></span>
                 </div>
             </t>
         </NotificationItem>
@@ -27,7 +27,7 @@
             persona="this.store.odoobot"
             hasMarkAsReadButton="!this.ui.isSmall"
             onClick="(isMarkAsRead, isMiddleClick) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure, {isMiddleClick})"
-            onSwipeRight="this.hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
+            onSwipeRight="this.hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'cancel', 'icon_class': 'oi-filled', bgColor: 'bg-warning' } : undefined"
         >
             <t t-set-slot="body" t-out="failure.body"/>
             <t t-set-slot="name"><t t-out="this.getFailureNotificationName(failure)"/></t>

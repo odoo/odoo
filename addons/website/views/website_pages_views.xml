@@ -45,7 +45,7 @@
                 <label for="is_in_menu" string="In Menu"/>
                 <div class="o_row">
                     <field name="is_in_menu" widget="boolean_toggle"/>
-                    <button type="action" name="%(website.open_custom_menu)d" context="{'xmlid': 'website.menu_edit_menu'}" string="Edit Menu" class="btn-link" icon="oi-arrow-right"/>
+                    <button type="action" name="%(website.open_custom_menu)d" context="{'xmlid': 'website.menu_edit_menu'}" string="Edit Menu" class="btn-link" icon="east"/>
                 </div>
                 <!-- is_homepage toggle auto-save is enabled to update the current homepage for assigning parent_id -->
                 <field name="is_homepage" string="Is Homepage" widget="boolean_toggle"/>
@@ -135,7 +135,7 @@
 
             <field name="website_id" groups="website.group_multi_website"/>
 
-            <button name="action_page_debug_view" type="object" title="Settings" icon="fa-bug fa-lg" groups="base.group_no_one"/>
+            <button name="action_page_debug_view" type="object" title="Settings" icon="bug_report" icon_class="oi-lg" groups="base.group_no_one"/>
         </list>
     </field>
 </record>
@@ -151,12 +151,12 @@
             <templates>
                 <t t-name="card">
                     <div class="text-truncate fw-bold fs-3">
-                        <i t-if="record.is_homepage.raw_value" class="fa fa-home pe-2"
+                        <i t-if="record.is_homepage.raw_value" class="oi pe-2" data-icon="home"
                             title="Home page of the current website"/>
                         <field name="name" />
                     </div>
                     <div t-if="record.website_id.value" class="text-truncate fw-bold text-muted" groups="website.group_multi_website">
-                        <i class="fa fa-globe me-1" title="Website"/>
+                        <i class="oi me-1" data-icon="public" title="Website"/>
                         <field name="website_id" groups="website.group_multi_website"/>
                     </div>
                     <field name="website_url" class="text-truncate fw-bold text-primary mb-auto"/>
@@ -173,7 +173,7 @@
                             groups="base.group_no_one"
                             title="Settings"
                             type="object"
-                            icon="fa-bug"
+                            icon="bug_report"
                         />
                     </div>
                 </t>
@@ -230,7 +230,7 @@
             <label for="key"/>
             <div class='o_row'>
                 <field name="key"/>
-                <button title="Show site map" invisible="type != 'qweb'" name="website.action_website_view_hierarchy" icon="fa-sitemap" type="action" class="btn btn-link"/>
+                <button title="Show site map" invisible="type != 'qweb'" name="website.action_website_view_hierarchy" icon="account_tree" type="action" class="btn btn-link"/>
             </div>
             <field name="first_page_id" invisible="not page_ids" />
             <label for="visibility"/>

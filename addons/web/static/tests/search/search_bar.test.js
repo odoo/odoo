@@ -298,7 +298,7 @@ test("search input is focused when being toggled", async () => {
         searchViewId: false,
     });
     expect(".o_searchview input").toHaveCount(0);
-    await contains(`button .fa-search`).click();
+    await contains(`button [data-icon="search"]`).click();
     expect(".o_searchview input").toHaveCount(1);
     expect(queryFirst`.o_searchview input`).toBeFocused();
 });
@@ -1356,29 +1356,29 @@ test("search a property", async () => {
     await animationFrame();
     await runAllTimers();
     expect(`.o-dropdown-item.focus`).toHaveText("Search Properties");
-    expect(".o-dropdown-item.focus:only .fa-caret-down").toHaveCount(1);
+    expect(".o-dropdown-item.focus:only [data-icon='arrow_drop_down']").toHaveCount(1);
     // move on the many2one property
     await keyDown("ArrowRight", { repeat: false });
     await animationFrame();
     await runAllTimers();
     expect(`.o-dropdown-item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(".o-dropdown-item.focus:only .fa-caret-right").toHaveCount(1);
+    expect(".o-dropdown-item.focus:only [data-icon='arrow_right']").toHaveCount(1);
     // move on the many2many property
     await keyDown("ArrowDown");
     await animationFrame();
     expect(`.o-dropdown-item.focus`).toHaveText("My Partners (Bar 1)");
-    expect(".o-dropdown-item.focus:only .fa-caret-right").toHaveCount(1);
+    expect(".o-dropdown-item.focus:only [data-icon='arrow_right']").toHaveCount(1);
     // move on the many2one property again
     await keyDown("ArrowUp");
     await animationFrame();
     expect(`.o-dropdown-item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(".o-dropdown-item.focus:only .fa-caret-right").toHaveCount(1);
+    expect(".o-dropdown-item.focus:only [data-icon='arrow_right']").toHaveCount(1);
     // unfold the many2one
     await keyDown("ArrowRight");
     await animationFrame();
     await runAllTimers();
     expect(`.o-dropdown-item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(".o-dropdown-item.focus:only .fa-caret-down").toHaveCount(1);
+    expect(".o-dropdown-item.focus:only [data-icon='arrow_drop_down']").toHaveCount(1);
     // select the first many2one
     await keyDown("ArrowRight", { repeat: false });
     await animationFrame();
@@ -1389,25 +1389,25 @@ test("search a property", async () => {
     await animationFrame();
     await runAllTimers();
     expect(`.o-dropdown-item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(".o-dropdown-item.focus:only .fa-caret-down").toHaveCount(1);
+    expect(".o-dropdown-item.focus:only [data-icon='arrow_drop_down']").toHaveCount(1);
     // fold the parent
     await keyDown("ArrowLeft");
     await animationFrame();
     await runAllTimers();
     expect(`.o-dropdown-item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(".o-dropdown-item.focus:only .fa-caret-right").toHaveCount(1);
+    expect(".o-dropdown-item.focus:only [data-icon='arrow_right']").toHaveCount(1);
     // go up on the properties field
     await keyDown("ArrowLeft");
     await animationFrame();
     await runAllTimers();
     expect(`.o-dropdown-item.focus`).toHaveText("Search Properties");
-    expect(".o-dropdown-item.focus:only .fa-caret-down").toHaveCount(1);
+    expect(".o-dropdown-item.focus:only [data-icon='arrow_drop_down']").toHaveCount(1);
     // fold the properties field
     await keyDown("ArrowLeft");
     await animationFrame();
     await runAllTimers();
     expect(`.o-dropdown-item.focus`).toHaveText("Search Properties");
-    expect(".o-dropdown-item.focus:only .fa-caret-right").toHaveCount(1);
+    expect(".o-dropdown-item.focus:only [data-icon='arrow_right']").toHaveCount(1);
 });
 
 test("search a property: definition record id in the context", async () => {

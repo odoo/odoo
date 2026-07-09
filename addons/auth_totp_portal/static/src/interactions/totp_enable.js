@@ -42,7 +42,8 @@ function fromField(f, record) {
 
             // Copy Button
             const copySpanIcon = document.createElement("span");
-            copySpanIcon.setAttribute("class", "fa fa-clipboard");
+            copySpanIcon.setAttribute("class", "oi");
+            copySpanIcon.setAttribute("data-icon", "assignment");
             const copySpanText = document.createElement("span");
             copySpanText.textContent = _t(" Copy");
 

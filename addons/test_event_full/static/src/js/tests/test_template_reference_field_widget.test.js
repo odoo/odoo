@@ -72,10 +72,10 @@ test("Reference field displays right icons", async () => {
     // each field cell will be the field of a different record (1 field/line)
     expect(".o_field_cell").toHaveCount(3);
     expect(".o_field_cell.o_EventMailTemplateReferenceField_cell").toHaveCount(3);
-    expect(".o_field_cell:eq(0) .fa-envelope").toHaveCount(1);
-    expect(".o_field_cell:eq(1) .fa-mobile").toHaveCount(1);
-    expect(".o_field_cell:eq(2) .fa-envelope").toHaveCount(0);
-    expect(".o_field_cell:eq(2) .fa-mobile").toHaveCount(0);
+    expect(".o_field_cell:eq(0) [data-icon='mail'].oi-filled").toHaveCount(1);
+    expect(".o_field_cell:eq(1) [data-icon='smartphone']").toHaveCount(1);
+    expect(".o_field_cell:eq(2) [data-icon='mail'].oi-filled").toHaveCount(0);
+    expect(".o_field_cell:eq(2) [data-icon='smartphone']").toHaveCount(0);
 
     // select a sms.template instead of mail.template
 
@@ -91,8 +91,8 @@ test("Reference field displays right icons", async () => {
     await click(".o_list_renderer");
     await animationFrame();
 
-    expect(".o_field_cell:eq(0) .fa-mobile").toHaveCount(1);
-    expect(".o_field_cell:eq(0) .fa-envelope").toHaveCount(0);
+    expect(".o_field_cell:eq(0) [data-icon='smartphone']").toHaveCount(1);
+    expect(".o_field_cell:eq(0) [data-icon='mail'].oi-filled").toHaveCount(0);
 
     // select a some other model to check it has no icon
 
@@ -107,8 +107,8 @@ test("Reference field displays right icons", async () => {
     await click(".o_list_renderer");
     await animationFrame();
 
-    expect(".o_field_cell:eq(0) .fa-mobile").toHaveCount(0);
-    expect(".o_field_cell:eq(0) .fa-envelope").toHaveCount(0);
+    expect(".o_field_cell:eq(0) [data-icon='smartphone']").toHaveCount(0);
+    expect(".o_field_cell:eq(0) [data-icon='mail'].oi-filled").toHaveCount(0);
 
     // select no record for the model
 
@@ -119,6 +119,6 @@ test("Reference field displays right icons", async () => {
     await click(".o_list_renderer");
     await animationFrame();
 
-    expect(".o_field_cell:eq(1) .fa-mobile").toHaveCount(0);
-    expect(".o_field_cell:eq(1) .fa-envelope").toHaveCount(0);
+    expect(".o_field_cell:eq(1) [data-icon='smartphone']").toHaveCount(0);
+    expect(".o_field_cell:eq(1) [data-icon='mail'].oi-filled").toHaveCount(0);
 });

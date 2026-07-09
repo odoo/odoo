@@ -27,7 +27,7 @@
                         <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="myinvois_state != 'in_progress'"/>
                         <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="myinvois_state != 'rejected'"/>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_linked_invoices" type="object" icon="fa-pencil-square-o" class="oe_stat_button" invisible="linked_invoice_count == 0">
+                            <button name="action_view_linked_invoices" type="object" icon="edit_square" class="oe_stat_button" invisible="linked_invoice_count == 0">
                                  <field name="linked_invoice_count" string="Source Documents" widget="statinfo"/>
                             </button>
                         </div>

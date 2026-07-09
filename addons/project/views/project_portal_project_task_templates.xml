@@ -2,15 +2,16 @@
 <odoo>
     <template id="portal_my_tasks_priority_widget_template" name="Priority Widget Template">
         <t t-set="priority_label" t-value="priority_labels[task.priority]"/>
-        <span t-attf-class="o_priority_star d-inline-block fa fa-star#{' text-warning' if task.priority != '0' else '-o opacity-75'} #{classes if classes else ''}" t-att-title="priority_label"/>
-        <span t-attf-class="o_priority_star d-inline-block fa fa-star#{' text-warning' if task.priority in ['2', '3'] else '-o opacity-75'} #{classes if classes else ''}" t-att-title="priority_label"/>
-        <span t-attf-class="o_priority_star d-inline-block fa fa-star#{' text-warning' if task.priority == '3' else '-o opacity-75'} #{classes if classes else ''}" t-att-title="priority_label"/>
+        <span t-attf-class="o_priority_star d-inline-block oi #{'oi-filled text-warning' if task.priority != '0' else 'opacity-75'} #{classes if classes else ''}" data-icon="star" t-att-title="priority_label"/>
+        <span t-attf-class="o_priority_star d-inline-block oi #{'oi-filled text-warning' if task.priority in ['2', '3'] else 'opacity-75'} #{classes if classes else ''}" data-icon="star" t-att-title="priority_label"/>
+        <span t-attf-class="o_priority_star d-inline-block oi #{'oi-filled text-warning' if task.priority == '3' else 'opacity-75'} #{classes if classes else ''}" data-icon="star" t-att-title="priority_label"/>
     </template>
 
     <template id="portal_my_tasks_state_widget_template" name="Status Widget Template">
         <span
             t-att-title="dict(task.fields_get(allfields=['state'])['state']['selection'])[task.state]"
-            t-attf-class="#{'fa' if task.state in ['1_done','1_canceled','04_waiting_normal'] else 'o_status rounded-circle' } #{'fa-check-circle text-success' if task.state == '1_done' else 'fa-times-circle text-danger' if task.state == '1_canceled' else 'bg-warning' if task.state == '02_changes_requested' else 'bg-success' if task.state == '03_approved' else 'fa-hourglass-o' if task.state == '04_waiting_normal' else ''}"
+            t-attf-class="#{'oi' if task.state in ['1_done','1_canceled','04_waiting_normal'] else 'o_status rounded-circle' } #{'oi-filled text-success' if task.state == '1_done' else 'oi-filled text-danger' if task.state == '1_canceled' else 'bg-warning' if task.state == '02_changes_requested' else 'bg-success' if task.state == '03_approved' else '' if task.state == '04_waiting_normal' else ''}"
+            t-attf-data-icon="#{'check_circle' if task.state == '1_done' else 'cancel' if task.state == '1_canceled' else '' if task.state == '03_approved' else 'hourglass_empty' if task.state == '04_waiting_normal' else ''}"
         />
     </template>
     <template id="portal_my_tasks_badge_widget_template" name="badge Widget Template">

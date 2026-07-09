@@ -10,7 +10,7 @@ const template = `
     <div class="input-group">
         <input type="password" id="password" class="form-control" required="required" name="visibility_password" />
         <button class="btn border border-start-0 o_show_password" type="button">
-            <i class="fa fa-eye"></i>
+            <i class="oi" data-icon="visibility"></i>
         </button>
     </div>
 `;

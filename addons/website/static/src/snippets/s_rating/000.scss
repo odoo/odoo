@@ -8,12 +8,12 @@
     $heart: "\f004";
     $heart-o: "\f08a";
     @mixin s_rating_generate_icons($off, $on) {
-        .fa:before {
+        .oi:before {
             content: $off;
         }
         @for $counter from 5 to 0 {
             &.s_rating_#{$counter} {
-                .fa:nth-of-type(-n+#{$counter}):before {
+                .oi:nth-of-type(-n+#{$counter}):before {
                     content: $on;
                 }
             }
@@ -23,7 +23,7 @@
     > .s_rating_squares { @include s_rating_generate_icons($circle-o, $circle); }
     > .s_rating_hearts  { @include s_rating_generate_icons($heart-o, $heart);   }
     > .s_rating_bar {
-        .fa {
+        .oi {
             display: none;
         }
         .s_rating_bar {
@@ -50,7 +50,7 @@
             }
         }
     }
-    > .s_rating_1x { .fa { @include font-size(1em); }; }
-    > .s_rating_2x { .fa { @include font-size(2em); }; }
-    > .s_rating_3x { .fa { @include font-size(3em); }; }
+    > .s_rating_1x { .oi { @include font-size(1em); }; }
+    > .s_rating_2x { .oi { @include font-size(2em); }; }
+    > .s_rating_3x { .oi { @include font-size(3em); }; }
 }

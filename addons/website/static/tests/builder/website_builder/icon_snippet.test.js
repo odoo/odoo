@@ -16,7 +16,7 @@ async function dragIcon() {
     expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);
     await moveTo(":iframe .oe_drop_zone");
     expect(":iframe .oe_drop_zone.invisible:nth-child(1)").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
     await drop(getDragHelper());
     expect(".o_select_media_dialog").toHaveCount(1);
 }
@@ -25,9 +25,9 @@ test("Drag & drop an 'Icon' snippet opens the dialog to select an icon", async (
     const { getEditableContent } = await setupWebsiteBuilder(`<div><p>Icon</p></div>`);
     const contentEl = getEditableContent();
     expect(contentEl).toHaveInnerHTML(`<div><p>Icon</p></div>`);
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
     await dragIcon();
-    expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").not.toBeEnabled();
     // Discard first attempt
     await contains(".o_select_media_dialog button:contains('Discard')").click();
     expect(":iframe p span[data-icon='favorite']").toHaveCount(0);
@@ -37,7 +37,7 @@ test("Drag & drop an 'Icon' snippet opens the dialog to select an icon", async (
     expect(".o_select_media_dialog").toHaveCount(0);
     expect(":iframe p").toHaveCount(2); // new `p` for the icon
     expect(":iframe p span[data-icon='favorite']").toHaveCount(1);
-    expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
+    expect(".o-website-builder_sidebar [data-icon='undo']").toBeEnabled();
 });
 
 test("Drag & drop an 'Icon' snippet in inline does not add <p>", async () => {

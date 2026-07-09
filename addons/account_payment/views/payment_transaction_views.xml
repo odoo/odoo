@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <button name="action_view_refunds" position="before">
                 <button name="action_view_invoices" type="object"
-                        class="oe_stat_button" icon="fa-money"
+                        class="oe_stat_button" icon="payments"
                         invisible="invoices_count == 0">
                     <field name="invoices_count" widget="statinfo" string="Invoice(s)"/>
                 </button>

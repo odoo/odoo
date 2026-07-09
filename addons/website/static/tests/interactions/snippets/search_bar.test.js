@@ -27,7 +27,7 @@ const searchTemplate = /* html */ `
                 <small class="o_search_found_results d-none">
                     <span class="o_search_count"></span>
                 </small>
-                <i class="oi oi-search"></i>
+                <i class="oi" data-icon="search"></i>
             </button>
         </div>
         <input name="order" type="hidden" class="o_search_order_by" value="test desc"/>
@@ -43,17 +43,17 @@ function supportAutocomplete() {
         expect(json.params.limit).toBe(3);
         const data = [
             {
-                _fa: "fa-file-o",
+                _fa: "description",
                 name: "Xyz 1",
                 website_url: "/website/test/xyz-1",
             },
             {
-                _fa: "fa-file-o",
+                _fa: "description",
                 name: "Xyz 2",
                 website_url: "/website/test/xyz-2",
             },
             {
-                _fa: "fa-file-o",
+                _fa: "description",
                 name: "Xyz 3",
                 website_url: "/website/test/xyz-3",
             },

@@ -419,7 +419,7 @@ export class Composer extends Component {
             actions: partitionedActions.other,
             disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
             dropdownPosition: "top-start",
-            icon: "fa fa-plus-circle",
+            icon: "add_circle",
             name: _t("More Actions"),
         });
     }

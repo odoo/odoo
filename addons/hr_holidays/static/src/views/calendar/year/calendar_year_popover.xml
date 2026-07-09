@@ -22,7 +22,7 @@
        t-inherit-mode="primary">
         <xpath expr="//a/span[last()]" position="replace">
             <span class="d-flex align-items-center gap-2 w-100">
-                <i area-hidden="true" t-if="record.titleIcon" t-attf-class="me-1 {{record.titleIcon}}"/>
+                <i area-hidden="true" t-if="record.titleIcon" t-attf-class="oi me-1" t-att-data-icon="record.titleIcon"/>
                 <span class="o_event_title text-truncate" style="max-width: 200px;" t-att-title="record.title">
                     <t t-out="record.title"/>
                 </span>

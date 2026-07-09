@@ -17,14 +17,14 @@
                     (this.model.syncStatus.google_calendar === 'sync_active' and this.model.state?.googlePendingSync and this.model.googleSyncTimedOut)
                     or (this.model.syncStatus.microsoft_calendar === 'sync_active' and this.model.state?.microsoftPendingSync and this.model.microsoftSyncTimedOut)"
                     class="text-center me-2">
-                    <i class="fa fa-spinner fa-spin"/>
+                    <i class="oi oi-spin" data-icon="progress_activity"/>
                     <span class="ms-1">Syncing</span>
                 </div>
                 <div t-elif="this.model.state?.googleSyncError">
                     <button class="btn btn-link text-nowrap py-0"
                         t-on-click="this.model.syncStatus.google_calendar === 'sync_active' ? this.onRetryGoogleSync : this.onRetryMicrosoftSync">
                         <div class="flex-col text-end">
-                            <i class="fa fa-warning o_text_orange mt-1"/>
+                            <i class="oi o_text_orange mt-1" data-icon="warning"/>
                             <span class="o-xsmaller o_text_orange"> Sync unsuccessful</span>
                             <div class="o-xsmaller">Try again</div>
                         </div>
@@ -41,13 +41,13 @@
                         <button class="btn text-nowrap py-0"
                         t-on-click="this.model.syncStatus.google_calendar === 'sync_active' ? this.onStopGoogleSynchronization : this.onStopMicrosoftSynchronization">
                             <div>
-                                <i id="check_symbol" class='fa fa-check px-1 o_text_green o_calendar_check'/>
+                                <i id="check_symbol" class='oi px-1 o_text_green o_calendar_check' data-icon='check'/>
                                 <span id="check_text" class='o_calendar_check'>
                                     <t t-if="this.model.syncStatus.google_calendar === 'sync_active'">Google</t>
                                     <t t-else="">Outlook</t>
                                 </span>
                                 <div class="o_calendar_stop o-xsmaller flex-col text-end">
-                                    <i id="stop_symbol" class="fa fa-square px-1 o_text_red"/>
+                                    <i id="stop_symbol" class="oi oi-filled px-1 o_text_red" data-icon="square"/>
                                     <span id="stop_text" class="o_text_red">Stop Sync</span>
                                     <div t-if="this.model.syncEmail" t-out="this.model.syncEmail"/>
                                 </div>
@@ -58,8 +58,8 @@
                 <t t-elif="this.model.syncStatus.google_calendar === 'sync_paused' or this.model.syncStatus.microsoft_calendar === 'sync_paused'">
                     <button class="btn text-nowrap" t-on-click="this.model.syncStatus.google_calendar === 'sync_paused' ? this.onUnpauseGoogleSynchronization : this.onUnpauseMicrosoftSynchronization">
                         <div>
-                            <i id="pause_symbol" class='fa fa-pause px-1 o_text_orange o_calendar_pause'/>
-                            <i id="stop_symbol" class='fa fa-square px-1 o_text_red o_calendar_stop'/>
+                            <i id="pause_symbol" class='oi px-1 o_text_orange o_calendar_pause' data-icon='pause'/>
+                            <i id="stop_symbol" class='oi oi-filled px-1 o_text_red o_calendar_stop' data-icon='square'/>
                             <span id="pause_text" class='o_text_orange o_calendar_pause'>Sync is paused</span>
                             <span id="stop_text" class="o_text_red o_calendar_stop">Stop Sync</span>
                         </div>

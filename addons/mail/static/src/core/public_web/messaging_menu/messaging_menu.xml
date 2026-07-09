@@ -7,7 +7,7 @@
         <div class="o-mail-MessagingMenu-searchContainer d-flex align-items-center gap-1 p-2">
             <button t-foreach="this.activeTab().actions" t-as="action" t-key="action.id" class="btn btn-sm btn-primary flex-shrink-0 d-flex" t-att-disabled="action.isDisabled?.()" t-on-click="() => this.onClickAction(action)"  t-att-title="action.title">
                 <span t-if="action.icon" class="d-flex align-items-center opacity-75" t-att-class="{'me-1': action.text}">
-                    <i t-if="typeof action.icon === 'string'" t-attf-class="{{action.icon}}"/>
+                    <i t-if="typeof action.icon === 'string'" class="oi" t-att-data-icon="action.icon"/>
                     <t t-else="" t-call="{{ action.icon.template }}"/>
                 </span>
                 <t t-out="action.text"/>
@@ -61,7 +61,7 @@
             t-att-data-id="tab.id"
             data-available-offline=""
         >
-            <i t-attf-class="o-mail-MessagingMenu-tabIcon {{ this.activeTab().eq(tab) and tab.activeIcon ? tab.activeIcon : tab.icon }} rounded-pill mx-auto p-2 fs-5"/>
+            <i t-attf-class="oi o-mail-MessagingMenu-tabIcon {{tab.icon_class}} rounded-pill mx-auto p-2 fs-5" t-att-data-icon="this.activeTab().eq(tab) and tab.activeIcon ? tab.activeIcon : tab.icon"/>
             <span class="o-xsmaller text-nowrap" t-out="tab.label"/>
             <span t-if="tab.counter" t-attf-class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block {{ tab.important ? '' : 'o-count' }}" t-out="tab.counter"/>
         </button>

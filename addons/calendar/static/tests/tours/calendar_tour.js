@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: "edit 02:00",
         },
         {
-            trigger: ".fa-cloud-upload",
+            trigger: "[data-icon='cloud_upload']",
             content: "Save the new event",
             run: "click",
         },

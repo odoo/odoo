@@ -14,7 +14,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the remove shape button",
-            trigger: "div[data-label='Shape'] i.oi-close",
+            trigger: "div[data-label='Shape'] i[data-icon='close_small']",
             run: "click",
         },
         {

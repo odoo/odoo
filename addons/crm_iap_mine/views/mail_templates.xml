@@ -5,12 +5,12 @@
         <xpath expr="//div[hasclass('o_partner_autocomplete_enrich_info')]" position="inside">
             <div id="iap_mine" class="col-sm-12 row m-0 p-0">
                 <div t-if="vat" class="d-flex my-1 p-0 col-sm-3">
-                    <i class="fa fa-fw me-2 fa-solid fa-id-card text-primary"/>
+                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="badge"/>
                     <b>Tax ID</b>
                 </div>
                 <div t-if="vat" class="my-1 col-sm-9" t-out="vat" />
                 <div t-if="country" class="d-flex my-1 p-0 col-sm-3">
-                    <i class="fa fa-fw me-2 fa-address-book text-primary"/>
+                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="contact_page"/>
                     <b>Address</b>
                 </div>
                 <div class="my-1 col-sm-9">
@@ -29,14 +29,14 @@
                     </div>
                 </div>
                 <div t-if="website" class="d-flex my-1 p-0 col-sm-3">
-                    <i class="fa fa-fw me-2 fa-globe text-primary"/>
+                    <i class="oi oi-fw me-2 text-primary" data-icon="public"/>
                     <b>Website</b>
                 </div>
                 <div t-if="website" class="col-sm-9">
                     <a target="_blank" t-attf-href="https://{{website}}" t-out="website" style="font-weight:normal; padding: 2px 0px; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
                 </div>
                 <div t-if="unspsc_codes" class="d-flex my-1 p-0 col-sm-3">
-                    <i class="fa fa-fw me-2 fa-cube text-primary"/>
+                    <i class="oi oi-fw me-2 text-primary" data-icon="deployed_code"/>
                     <b>Industries</b>
                 </div>
                  <div t-if="unspsc_codes" class="col-sm-9">

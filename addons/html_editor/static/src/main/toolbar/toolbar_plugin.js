@@ -45,6 +45,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {Object} [commandParams] Passed to the command's `run` function
  * @property {TranslatedString | TranslatedStringGetter} [description] * - becomes the button's title (and tooltip content)
  * @property {string} [icon] *
+ * @property {string} [icon_class] *
  * @property {string} [text] Can be used with (or instead of) `icon`
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
@@ -73,6 +74,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {TranslatedStringGetter} description
  * @property {Function} run
  * @property {string} [icon]
+ * @property {string} [icon_class]
  * @property {string} [text]
  * @property {(selection: EditorSelection) => boolean} isAvailable
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
@@ -126,7 +128,8 @@ export const DISABLED_NAMESPACE = "disabled";
  *                 id: myCommand,
  *                 run: myCommandFunction,
  *                 description: _t("My Command"),
- *                 icon: "fa-bug",
+ *                 icon: "bug_report",
+ *                 icon_class: "oi-filled",
  *             },
  *         ],
  *         // see ToolbarGroup
@@ -182,7 +185,7 @@ export class ToolbarPlugin extends Plugin {
             groupId: "expand_toolbar",
             commandId: "expandToolbar",
             description: _t("Expand toolbar"),
-            icon: "oi-ellipsis-v",
+            icon: "more_vert",
         },
         toolbar_namespace_providers: [
             withSequence(100, (targetedNodes, editableSelection) =>
@@ -526,7 +529,7 @@ export class ToolbarPlugin extends Plugin {
                         ...(button.Component
                             ? pick(button, "Component", "props")
                             : {
-                                  ...pick(button, "run", "icon", "text"),
+                                  ...pick(button, "run", "icon", "icon_class", "text"),
                                   isActive: !!button.isActive?.(selection, targetedNodes),
                               }),
                     })),

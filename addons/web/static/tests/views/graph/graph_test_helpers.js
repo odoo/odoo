@@ -85,7 +85,7 @@ export const checkTooltip = (view, { title, lines }, index, datasetIndex = null)
 /**
  * @param {"asc" | "desc"} direction
  */
-export const clickSort = (direction) => contains(`.fa-sort-amount-${direction}`).click();
+export const clickSort = (direction) => contains(`.o_sort_${direction}`).click();
 
 /**
  * @param {GraphView} view
