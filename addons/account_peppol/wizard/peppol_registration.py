@@ -230,7 +230,8 @@ class PeppolRegistration(models.TransientModel):
         for wizard in self:
             connect_vals = wizard._can_connect()
             wizard.peppol_can_connect_data = connect_vals
-            wizard.display_itsme_login = bool(connect_vals.get('available_auths', {}).get('itsme'))
+            available_auths = connect_vals.get('available_auths', {})
+            wizard.display_itsme_login = bool(available_auths.get('itsme') or available_auths.get('generic'))
             wizard.display_no_auth_buttons = not bool(connect_vals.get('auth_required'))
 
     # -------------------------------------------------------------------------
@@ -352,11 +353,14 @@ class PeppolRegistration(models.TransientModel):
         peppol_identifier = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
         connect_token = self._generate_connect_token(peppol_identifier, self.company_id)
         callback_url = urljoin(self.get_base_url(), '/peppol/authentication/callback')
+        webhook_url = urljoin(self.get_base_url(), '/peppol/authentication/webhook')
         return PeppolIAPConnector(self.company_id).can_connect(
             peppol_identifier=peppol_identifier,
             db_uuid=db_uuid,
             callback_url=callback_url,
             connect_token=connect_token,
+            contact_email=self.contact_email,
+            webhook_url=webhook_url,
         )
 
     @api.model
@@ -417,7 +421,10 @@ class PeppolRegistration(models.TransientModel):
 
     def button_register_with_itsme(self):
         self.ensure_one()
-        return self.button_register_peppol_participant(selected_auth='itsme')
+        # we keep itsme support while generic KYC is still being merged IAP-side
+        available_auths = self.peppol_can_connect_data.get('available_auths', {})
+        selected_auth = 'generic' if available_auths.get('generic') else 'itsme'
+        return self.button_register_peppol_participant(selected_auth=selected_auth)
 
     def button_register_peppol_participant(self, selected_auth=None):
         self.ensure_one()
@@ -450,7 +457,7 @@ class PeppolRegistration(models.TransientModel):
             return {
                 'type': 'ir.actions.act_url',
                 'url': self.peppol_can_connect_data['available_auths'][selected_auth]['authorization_url'],
-                'target': 'new',
+                'target': 'self',
             }
 
         # No auth required
