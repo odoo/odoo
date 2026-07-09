@@ -27,10 +27,6 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: 'Choose this theme.',
             run: 'click',
         }, {
-            content: "Open the mailing in full-screen mode",
-            trigger: ":iframe .o_mail_wrapper",
-            run: "click",
-        }, {
             trigger: '.o_codeview_btn',
             content: 'Click here to switch to code view',
             run: 'click'
@@ -50,7 +46,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: 'Verify that the dropable zone was not removed',
         }, {
             content: "Open the mailing in full-screen mode",
-            trigger: ":iframe .o_mail_wrapper",
+            trigger: ".o_mass_mailing_iframe_wrapper .o_mass_mailing_can_edit_overlay",
             run: "click",
         }, {
             trigger: ".o_builder_sidebar_open",
