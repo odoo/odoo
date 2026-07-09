@@ -2,7 +2,7 @@ from odoo.fields import Datetime, Date
 from odoo.tests import tagged
 
 from odoo.addons.hr.tests.common import TestHrCommon
-from odoo.tests import Form
+from odoo.tests import Form, freeze_time
 
 
 class TestContractCalendars(TestHrCommon):
@@ -93,6 +93,26 @@ class TestContractCalendars(TestHrCommon):
         self.employee.resource_calendar_id = calendar_38h
         self.assertEqual(self.employee.version_id.resource_calendar_id, calendar_38h)
         self.assertEqual(self.employee.version_ids[0].resource_calendar_id, self.calendar_richard)
+
+    def test_change_resource_calendar_on_version_change(self):
+        # When a new version/contract becomes active, ensure that `resource_id.calendar_id` is updated to the new working schedule
+        new_schedule = self.env['resource.calendar'].create({'name': 'New Schedule'})
+        with freeze_time('2016-01-01'):
+            self.employee.create_version({
+                'date_version': Date.to_date('2016-01-02'),
+                'date_start': Date.to_date('2016-01-02'),
+                'name': 'New Contract',
+                'resource_calendar_id': new_schedule.id,
+                'wage': 5000.0,
+            })
+        with freeze_time('2016-01-02'):
+            self.employee._cron_update_current_version_id()
+
+        self.assertEqual(
+            self.employee.resource_calendar_id,
+            self.employee.resource_id.calendar_id,
+            "The working schedule should match between the employee and resource records."
+        )
 
     def test_employee_resource_contract_without_and_with_date_from(self):
         """
