@@ -4,6 +4,7 @@ from cryptography.hazmat.primitives.asymmetric import ec, ed25519, rsa
 from cryptography.hazmat.primitives.serialization import pkcs12
 from datetime import datetime, timedelta, timezone
 
+from odoo.addons.certificate.tools import CertificateAdapter
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import BinaryBytes
@@ -155,6 +156,22 @@ class TestKeysCertificates(TransactionCase):
             'private_key_id': self.test_key_1.id,
         })
         self.assertEqual(certificate.content_format, 'der')
+
+    def test_adapter_load_cert_chain_uses_in_memory_record(self):
+        certificate = self.env['certificate.certificate'].create({
+            'name': 'Test adapter certificate',
+            'content': BinaryBytes(self.certificate_1.public_bytes(encoding=serialization.Encoding.PEM)),
+            'private_key_id': self.test_key_1.id,
+        })
+        context = CertificateAdapter().poolmanager.connection_pool_kw['ssl_context']
+
+        # The adapter overrides load_cert_chain to read the cert from a record
+        # instead of a file path, without it the stock method does
+        # os.fspath(record) and raises a TypeError
+        context.load_cert_chain(certificate)
+
+        # raises unless the record's certificate and key were actually loaded
+        context._ctx.check_privatekey()
 
     def test_pem_certificate(self):
         certificate = self.env['certificate.certificate'].create({
