@@ -217,7 +217,6 @@ export class ProductPricelistReport extends Component {
             type: 'ir.actions.report',
             report_type: 'qweb-pdf',
             report_name: 'product.report_pricelist',
-            report_file: 'product.report_pricelist',
             data: this.reportParams,
         });
     }

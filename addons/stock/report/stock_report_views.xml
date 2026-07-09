@@ -6,7 +6,6 @@
             <field name="model">stock.picking</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_picking</field>
-            <field name="report_file">stock.report_picking_operations</field>
             <field name="print_report_name">'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)</field>
             <field name="binding_model_id" ref="model_stock_picking"/>
             <field name="binding_type">report</field>
@@ -16,7 +15,6 @@
             <field name="model">stock.picking</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_deliveryslip</field>
-            <field name="report_file">stock.report_deliveryslip</field>
             <field name="print_report_name">'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)</field>
             <field name="binding_model_id" ref="model_stock_picking"/>
             <field name="binding_type">report</field>
@@ -26,7 +24,6 @@
             <field name="model">stock.picking</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_picking_packages</field>
-            <field name="report_file">stock.report_picking_packages</field>
             <field name="print_report_name">'Packages - %s' % (object.name)</field>
             <field name="binding_model_id" ref="model_stock_picking"/>
             <field name="binding_type">report</field>
@@ -37,7 +34,6 @@
             <field name="model">stock.quant</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_inventory</field>
-            <field name="report_file">stock.report_inventory</field>
             <field name="print_report_name">'Count Sheet'</field>
             <field name="binding_model_id" ref="model_stock_quant"/>
             <field name="binding_type">report</field>
@@ -47,7 +43,6 @@
             <field name="model">stock.package</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_package_barcode</field>
-            <field name="report_file">stock.report_package_barcode</field>
             <field name="binding_model_id" ref="model_stock_package"/>
             <field name="binding_type">report</field>
         </record>
@@ -56,7 +51,6 @@
             <field name="model">stock.package.history</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_package_history_barcode</field>
-            <field name="report_file">stock.report_package_barcode</field>
             <field name="binding_model_id" ref="model_stock_package_history"/>
             <field name="binding_type">report</field>
         </record>
@@ -65,7 +59,6 @@
             <field name="model">stock.package</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_package_barcode_small</field>
-            <field name="report_file">stock.report_package_barcode</field>
             <field name="binding_model_id" ref="model_stock_package"/>
             <field name="binding_type">report</field>
         </record>
@@ -74,7 +67,6 @@
             <field name="model">stock.package.history</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_package_history_barcode_small</field>
-            <field name="report_file">stock.report_package_barcode</field>
             <field name="binding_model_id" ref="model_stock_package_history"/>
             <field name="binding_type">report</field>
         </record>
@@ -83,7 +75,6 @@
             <field name="model">stock.location</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_location_barcode</field>
-            <field name="report_file">stock.report_location_barcode</field>
             <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
             <field name="print_report_name">'Location - %s' % object.name</field>
             <field name="binding_model_id" ref="model_stock_location"/>
@@ -94,7 +85,6 @@
             <field name="model">stock.location</field>
             <field name="report_type">qweb-text</field>
             <field name="report_name">stock.label_location_template_view</field>
-            <field name="report_file">stock.label_location_template_view</field>
             <field name="binding_model_id" ref="model_stock_location"/>
             <field name="binding_type">report</field>
         </record>
@@ -103,7 +93,6 @@
             <field name="model">stock.lot</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_lot_label</field>
-            <field name="report_file">stock.report_lot_label</field>
             <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
             <field name="print_report_name">'Lot-Serial - %s' % object.name</field>
             <field name="binding_model_id" ref="model_stock_lot"/>
@@ -114,7 +103,6 @@
             <field name="model">stock.picking.type</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_picking_type_label</field>
-            <field name="report_file">stock.report_picking_type_label</field>
             <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
             <field name="print_report_name">'Operation-type - %s' % object.name</field>
             <field name="binding_model_id" ref="model_stock_picking_type"/>
@@ -125,14 +113,12 @@
             <field name="model">product.template</field>
             <field name="report_type">qweb-html</field>
             <field name="report_name">stock.report_stock_rule</field>
-            <field name="report_file">stock.report_stock_rule</field>
         </record>
         <record id="label_lot_template" model="ir.actions.report">
             <field name="name">Lot/Serial Number (ZPL)</field>
             <field name="model">stock.lot</field>
             <field name="report_type">qweb-text</field>
             <field name="report_name">stock.label_lot_template_view</field>
-            <field name="report_file">stock.label_lot_template_view</field>
             <field name="binding_model_id" ref="model_stock_lot"/>
             <field name="binding_type">report</field>
         </record>
@@ -141,7 +127,6 @@
             <field name="model">stock.package</field>
             <field name="report_type">qweb-text</field>
             <field name="report_name">stock.label_package_template_view</field>
-            <field name="report_file">stock.label_package_template_view</field>
             <field name="binding_model_id" ref="model_stock_package"/>
             <field name="binding_type">report</field>
         </record>
@@ -150,7 +135,6 @@
             <field name="model">stock.package.history</field>
             <field name="report_type">qweb-text</field>
             <field name="report_name">stock.label_package_history_template_view</field>
-            <field name="report_file">stock.label_package_template_view</field>
             <field name="binding_model_id" ref="model_stock_package_history"/>
             <field name="binding_type">report</field>
         </record>
@@ -159,7 +143,6 @@
             <field name="model">product.uom</field>
             <field name="report_type">qweb-text</field>
             <field name="report_name">stock.label_packaging_barcode_view</field>
-            <field name="report_file">stock.label_packaging_barcode_view</field>
             <field name="binding_model_id" ref="product.model_product_uom"/>
             <field name="binding_type">report</field>
         </record>
@@ -168,7 +151,6 @@
             <field name="model">stock.picking.type</field>
             <field name="report_type">qweb-text</field>
             <field name="report_name">stock.label_picking_type_view</field>
-            <field name="report_file">stock.label_picking_type_view</field>
             <field name="binding_model_id" ref="model_stock_picking_type"/>
             <field name="binding_type">report</field>
         </record>
@@ -177,7 +159,6 @@
             <field name="model">stock.move</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_reception_report_label</field>
-            <field name="report_file">stock.report_reception_report_label</field>
             <field name="paperformat_id" ref="product.paperformat_label_sheet_dymo"/>
             <field name="binding_type">report</field>
         </record>

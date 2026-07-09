@@ -49,7 +49,6 @@ export class ReportAction extends Component {
             type: "ir.actions.report",
             report_type: "qweb-pdf",
             report_name: this.props.report_name,
-            report_file: this.props.report_file,
             data: this.props.data || {},
             context: this.props.context || {},
             display_name: this.title,

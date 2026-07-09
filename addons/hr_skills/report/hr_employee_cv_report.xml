@@ -5,7 +5,6 @@
         <field name="model">hr.employee</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_skills.report_employee_cv</field>
-        <field name="report_file">hr_skills.report_employee_cv</field>
         <field name="paperformat_id" ref="hr_skills.paperformat_resume"/>
         <field name="print_report_name">'CV - %s' % (object.name)</field>
         <field name="binding_model_id" eval="False"/> <!-- Don't display it under Print menu -->

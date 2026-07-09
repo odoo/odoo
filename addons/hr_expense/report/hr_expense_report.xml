@@ -114,7 +114,6 @@
         <field name="model">hr.expense</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_expense.report_expense</field>
-        <field name="report_file">hr_expense.report_expense</field>
         <field name="print_report_name">'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))</field>
         <field name="binding_model_id" ref="model_hr_expense"/>
         <field name="binding_type">report</field>
@@ -125,6 +124,5 @@
         <field name="model">hr.expense</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_expense.report_expense_img</field>
-        <field name="report_file">hr_expense.report_expense_img</field>
     </record>
 </odoo>

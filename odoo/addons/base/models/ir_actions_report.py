@@ -54,8 +54,6 @@ class IrActionsReport(models.Model):
         ' browser, PDF means the report will be generated and'
         ' downloaded by the user.')
     report_name = fields.Char(string='Template Name', required=True)
-    report_file = fields.Char(string='Report File', required=False, readonly=False, store=True,
-                              help="The path to the main report file (depending on Report Type) or empty if the content is in another field")
     group_ids = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
@@ -865,7 +863,6 @@ class IrActionsReport(models.Model):
             'type': 'ir.actions.report',
             'report_name': self.report_name,
             'report_type': self.report_type,
-            'report_file': self.report_file,
             'name': self.name,
         }
 

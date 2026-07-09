@@ -146,7 +146,6 @@ export class BomOverviewComponent extends Component {
             type: "ir.actions.report",
             report_type: "qweb-pdf",
             report_name: this.getReportName(printAll),
-            report_file: "mrp.report_bom_structure",
         });
     }
 

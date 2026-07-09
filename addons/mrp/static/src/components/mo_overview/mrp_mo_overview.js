@@ -88,7 +88,6 @@ export class MoOverview extends Component {
             type: "ir.actions.report",
             report_type: "qweb-pdf",
             report_name: this.reportName,
-            report_file: "mrp.report_mo_overview",
         });
     }
 

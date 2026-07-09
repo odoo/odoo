@@ -190,7 +190,6 @@
         <field name="model">account.analytic.line</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_timesheet</field>
-        <field name="report_file">report_timesheet</field>
         <field name="binding_model_id" ref="model_account_analytic_line"/>
         <field name="binding_type">report</field>
     </record>
@@ -206,7 +205,6 @@
         <field name="group_ids" eval="[(4,ref('hr_timesheet.group_hr_timesheet_user'))]"/>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_project_task_timesheet</field>
-        <field name="report_file">report_timesheet_task</field>
         <field name="binding_model_id" ref="model_project_task"/>
         <field name="binding_type">report</field>
     </record>
@@ -223,7 +221,6 @@
         <field name="group_ids" eval="[(4,ref('hr_timesheet.group_hr_timesheet_user'))]"/>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_timesheet_project</field>
-        <field name="report_file">report_timesheet_project</field>
         <field name="binding_model_id" ref="model_project_project"/>
     </record>
 
@@ -232,7 +229,6 @@
         <field name="model">account.analytic.line</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_timesheet_task</field>
-        <field name="report_file">report_timesheet</field>
         <field name="binding_type">report</field>
     </record>
 </odoo>

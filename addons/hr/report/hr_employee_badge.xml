@@ -5,7 +5,6 @@
         <field name="model">hr.employee</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr.print_employee_badge</field>
-        <field name="report_file">hr.print_employee_badge</field>
         <field name="paperformat_id" ref="hr.paperformat_hr_employee_badge"/>
         <field name="print_report_name">'Badge - %s' % (object.name).replace('/', '')</field>
         <field name="binding_model_id" ref="model_hr_employee"/>

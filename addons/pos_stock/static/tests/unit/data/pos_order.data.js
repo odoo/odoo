@@ -20,7 +20,6 @@ patch(PosOrder.prototype, {
                 type: "ir.actions.report",
                 report_name: "stock.report_return_document",
                 report_type: "qweb-pdf",
-                report_file: "return_slip",
                 name: "Return slip",
             },
         ];
