@@ -1,6 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Gif } from "@mail/core/common/gif";
-import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
+import { useOnBottomScrolled, useOnChange, useSequential } from "@mail/utils/common/hooks";
 
 import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 import { user } from "@web/core/user";
@@ -108,7 +107,8 @@ export class GifPicker extends Component {
                 this.loadFavorites();
             });
         }
-        useLayoutEffect(
+        useOnChange(
+            () => [this.searchTerm],
             () => {
                 this.clear();
                 this.search();
@@ -117,8 +117,7 @@ export class GifPicker extends Component {
                 } else {
                     this.openCategories();
                 }
-            },
-            () => [this.searchTerm]
+            }
         );
     }
 
