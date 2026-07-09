@@ -207,3 +207,29 @@ class TestThirdChecks(L10nLatamCheckTest):
             check_2.current_journal_id,
             "Check should not be on hand even if outbound was created before inbound"
         )
+
+    def test_same_check_number_allowed_for_new_third_party_checks(self):
+        """Ensure that the same check number can be used for New Third Party Checks payments."""
+        payment = self.create_third_party_check()
+
+        check = payment.l10n_latam_new_check_ids[0]
+
+        second_payment = self.env['account.payment'].create({
+            'partner_id': self.partner_a.id,
+            'payment_type': 'inbound',
+            'journal_id': self.third_party_check_journal.id,
+            'payment_method_line_id': self.third_party_check_journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
+            'amount': 1,
+            'l10n_latam_new_check_ids': [
+                Command.create({
+                    'name': check.name,
+                    'amount': 1,
+                    'payment_date': fields.Date.add(fields.Date.today(), months=1),
+                }),
+            ],
+        })
+        second_payment.action_post()
+        self.assertFalse(
+            second_payment.l10n_latam_new_check_ids.outstanding_line_id,
+            "Posting a second payment with the same check number for New Third Party Checks should be allowed.",
+        )
