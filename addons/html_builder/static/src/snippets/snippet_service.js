@@ -372,6 +372,8 @@ export class SnippetModel extends Reactive {
         // "CleanForSave" the snippet copy
         this.cleanSnippetForSave(snippetCopyEl, cleanForSaveProcessors);
 
+        snippetCopyEl.classList.remove("oe_unremovable", "oe_unmovable");
+
         const defaultSnippetName = isButton
             ? _t("Custom Button")
             : _t("Custom %s", snippetEl.dataset.name);
