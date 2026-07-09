@@ -914,7 +914,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         // Load template
         if (formInfo) {
             const formatInfo = this._getDefaultFormat();
-            await formInfo.formFields.forEach(async field => {
+            for (const field of formInfo.formFields) {
                 // Create a shallow copy of field to prevent unintended
                 // mutations to the original field stored in FormEditorRegistry
                 const _field = { ...field };
@@ -926,7 +926,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 if (targetEl) {
                     targetEl.parentNode.insertBefore(this._renderField(_field), targetEl);
                 }
-            });
+            }
         }
     },
     /**
