@@ -79,6 +79,11 @@ formatDate.extractOptions = ({ options }) => ({
 });
 
 export function formatDateTime(value, options = {}) {
+    const { numeric, showSeconds, showTime } = options;
+    if (numeric && showTime && !showSeconds) {
+        options = { ...options, format: l10n.dateTimeFormat.replace(/:ss/, "") };
+    }
+
     if (options.numeric) {
         if (options.showTime === false) {
             return _formatDate(value, options);

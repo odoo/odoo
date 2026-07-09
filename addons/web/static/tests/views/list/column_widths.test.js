@@ -531,7 +531,7 @@ test(`width computation: datetime in numeric, am/pm format`, async () => {
             <list>
                 <field name="foo"/>
                 <field name="date" options="{'numeric': true}"/>
-                <field name="datetime" options="{'numeric': true}"/>
+                <field name="datetime" options="{'numeric': true, 'show_seconds': true}"/>
             </list>`,
     });
 

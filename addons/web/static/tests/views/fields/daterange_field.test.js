@@ -1084,7 +1084,7 @@ test("list daterange: column widths (numeric format)", async () => {
         arch: /* xml */ `
             <list>
                 <field name="date" widget="daterange" options="{'end_date_field': 'date_end', 'numeric': true}" />
-                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'numeric': true}" />
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'numeric': true, 'show_seconds': true}" />
                 <field name="char_field" />
             </list>`,
     });
@@ -1162,7 +1162,7 @@ test("list daterange: start date input width matches its span counterpart", asyn
         resModel: "partner",
         arch: /* xml */ `
             <list multi_edit="1">
-                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'numeric': true}" />
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'numeric': true, 'show_seconds': true}" />
             </list>`,
     });
 
