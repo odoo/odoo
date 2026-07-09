@@ -332,7 +332,7 @@ class DeliveryCarrier(models.Model):
                 product_currency=company.currency_id
             )
             # apply margin on computed price
-            res['price'] = self._apply_margins(res['price'], order)
+            res['price'] = order.currency_id.round(self._apply_margins(res['price'], order))
             # save the real price in case a free_over rule overide it to 0
             res['carrier_price'] = res['price']
             # free when order is large enough
