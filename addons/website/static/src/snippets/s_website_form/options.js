@@ -906,11 +906,11 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         // Load template
         if (formInfo) {
             const formatInfo = this._getDefaultFormat();
-            await formInfo.formFields.forEach(async field => {
+            for (const field of formInfo.formFields) {
                 field.formatInfo = formatInfo;
                 await this._fetchFieldRecords(field);
                 this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(this._renderField(field));
-            });
+            }
         }
     },
     /**
