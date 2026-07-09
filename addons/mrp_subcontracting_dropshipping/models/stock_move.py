@@ -53,3 +53,10 @@ class StockMove(models.Model):
                     valuation_data['quantity'] = quantity
                     return valuation_data
         return super()._get_value_from_account_move(quantity)
+
+    def _get_partner_id(self):
+        if self.raw_material_production_id.subcontractor_id:
+            route = self.env.ref('stock_dropshipping.route_drop_shipping', raise_if_not_found=False)
+            if route and self.rule_id.route_id == route:
+                return self.raw_material_production_id.subcontractor_id.id
+        return super()._get_partner_id()
