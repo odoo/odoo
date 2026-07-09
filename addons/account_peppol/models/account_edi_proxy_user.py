@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import logging
 from datetime import datetime, timedelta
 from lxml import etree
@@ -16,6 +17,13 @@ from odoo.addons.account_peppol.tools.peppol_iap_connector import PEPPOL_PROXY_U
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
+
+REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE = re.compile(
+    rb'(<(?P<tag>(?:[A-Za-z_][A-Za-z0-9_.-]*:)?EmbeddedDocumentBinaryObject)\b[^<>]*>)'
+    rb'(?P<data>.*?)'
+    rb'(</(?P=tag)\s*>)',
+    re.DOTALL,
+)
 
 
 class Account_Edi_Proxy_ClientUser(models.Model):
@@ -309,6 +317,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         self.ensure_one()
 
         file_data = self.env['account.move']._to_files_data(attachment)[0]
+
+        # Fallback to avoid issues with large EmbeddedDocumentBinaryObject
+        if file_data['xml_tree'] is None:
+            file_data['raw'] = REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE.sub(b'', file_data['raw'])
+            file_data['xml_tree'] = self.env['account.move']._get_xml_tree(file_data)
 
         # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
         # In this case, the invoice needs to be created as an out_invoice in a sale journal.
