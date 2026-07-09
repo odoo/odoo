@@ -544,9 +544,8 @@ class CustomerPortal(Controller):
                 if partner_sudo.name != parent_name_value:
                     partner_sudo.name = parent_name_value
             else:  # Current partner is an individual with no parent
-                partner_sudo._create_parent_from_name(
-                    parent_name_value, additional_values={'is_company': True}
-                )
+                parent_company = partner_sudo._create_parent_from_name(parent_name_value)
+                parent_company.is_company = True
 
         self._handle_extra_form_data(extra_form_data, address_values)
 
