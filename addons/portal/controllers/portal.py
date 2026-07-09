@@ -373,13 +373,16 @@ class CustomerPortal(Controller):
             # Existing address, use the values defined on the address
             state_id = partner_sudo.state_id.id
             country_sudo = partner_sudo.country_id
-            can_edit_vat = partner_sudo.can_edit_vat()
+            can_edit_vat = (
+                not current_partner
+                or (partner_sudo == current_partner and current_partner.can_edit_vat())
+            )
         else:
             # New address, take default values from current partner
             country_sudo = current_partner.country_id or self._get_default_country(**kwargs)
             state_id = current_partner.state_id.id
-            can_edit_vat = not current_partner or (
-                partner_sudo == current_partner and current_partner.can_edit_vat()
+            can_edit_vat = (
+                not current_partner or current_partner.can_edit_vat()
             )
         address_fields = (country_sudo and country_sudo.get_address_fields()) or ['city', 'zip']
 
@@ -388,7 +391,8 @@ class CustomerPortal(Controller):
             'partner_id': partner_sudo.id,
             'current_partner': current_partner,
             'commercial_partner': current_partner.commercial_partner_id,
-            'is_commercial_address': not current_partner or partner_sudo == commercial_partner,
+            # TODO: Remove me in master (Kept here to avoid changing the portal templates)
+            'is_commercial_address': can_edit_vat,
             'is_main_address': not current_partner or (partner_sudo and partner_sudo == current_partner),
             'commercial_address_update_url': (
                 # Only redirect to account update if the logged in user is their own commercial
@@ -623,6 +627,7 @@ class CustomerPortal(Controller):
         invalid_fields = set()
         missing_fields = set()
         error_messages = []
+        current_partner = request.env['res.partner']._get_current_partner(**kwargs)
 
         if partner_sudo:
             name_change = (
@@ -674,7 +679,11 @@ class CustomerPortal(Controller):
 
             # Prevent changing commercial fields on sub-addresses, as they are expected to match
             # commercial partner values, and would be reset if modified on the commercial partner.
-            if not (is_commercial_address := partner_sudo == partner_sudo.commercial_partner_id):
+            can_edit_commercial_fields = (
+                not current_partner
+                or (partner_sudo == current_partner and current_partner.can_edit_vat())
+            )
+            if not can_edit_commercial_fields:
                 commercial_fields = partner_sudo._commercial_fields()
                 # The additional_identifiers field need to be handled separately, as it has multiple
                 # values handled differently on partener.
@@ -717,7 +726,7 @@ class CustomerPortal(Controller):
                 'vat' in address_values
                 and partner_sudo.vat
                 and address_values['vat'] != partner_sudo.vat
-                and not partner_sudo.can_edit_vat()
+                and not can_edit_commercial_fields
             ):
                 invalid_fields.add('vat')
                 error_messages.append(_(
@@ -726,7 +735,7 @@ class CustomerPortal(Controller):
                 ))
         else:
             # We're creating a new address, it'll only be the main address of public customers
-            is_commercial_address = not request.env['res.partner']._get_current_partner(**kwargs)
+            can_edit_commercial_fields = not current_partner
 
         # Validate the email.
         if address_values.get('email') and not single_email_re.match(address_values['email']):
@@ -765,7 +774,7 @@ class CustomerPortal(Controller):
             required_field_set |= self.env["res.partner"]._get_mandatory_billing_address_fields(
                 country, **kwargs
             )
-            if not is_commercial_address:
+            if not can_edit_commercial_fields:
                 commercial_fields = ResPartnerSudo._commercial_fields()
                 for fname in commercial_fields:
                     if fname in required_field_set and fname not in address_values:
