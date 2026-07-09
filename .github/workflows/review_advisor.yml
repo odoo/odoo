@@ -1,0 +1,148 @@
+# .github/workflows/review_advisor.yml (dans chaque repo cible)
+# Déclenché par le label review-advisor sur une PR.
+# L'agent lit la PR + l'issue liée et poste une review formelle.
+name: Review advisor
+
+on:
+  pull_request:
+    types: [labeled]
+
+concurrency:
+  group: review-advisor-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  review:
+    if: github.event.label.name == 'review-advisor'
+    runs-on: self-hosted
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: read
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout la PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Récupérer PR et issue liée
+        id: context
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          PR_TITLE="$(gh pr view "$PR_NUMBER" --json title --jq '.title')"
+          PR_BODY="$(gh pr view "$PR_NUMBER" --json body --jq '.body // ""')"
+          PR_DIFF="$(gh pr diff "$PR_NUMBER")"
+
+          # Extraire le numéro d'issue du "Closes #<N>" dans la description
+          ISSUE_NUMBER="$(echo "$PR_BODY" | grep -oP 'Closes\s+#\K\d+' | head -1 || echo '')"
+
+          if [ -n "$ISSUE_NUMBER" ]; then
+            ISSUE_TITLE="$(gh issue view "$ISSUE_NUMBER" --json title --jq '.title // "inaccessible"')"
+            ISSUE_BODY="$(gh issue view "$ISSUE_NUMBER" --json body --jq '.body // ""')"
+          else
+            ISSUE_TITLE="pas d'issue liée (Closes # manquant)"
+            ISSUE_BODY=""
+          fi
+
+          # Écrire les données volumineuses dans des fichiers plutôt que de tout faire passer
+          # par les outputs (évite les problèmes de taille / escaping).
+          cat > /tmp/pr_title.txt <<'PRTITLE'
+          $PR_TITLE
+          PRTITLE
+          sed -i "s/\$PR_TITLE/$PR_TITLE/" /tmp/pr_title.txt || true
+
+          printf '%s' "$PR_TITLE" > /tmp/pr_title.txt
+          printf '%s' "$PR_BODY" > /tmp/pr_body.txt
+          printf '%s' "$PR_DIFF" > /tmp/pr_diff.txt
+          printf '%s' "$ISSUE_NUMBER" > /tmp/issue_number.txt
+          printf '%s' "$ISSUE_TITLE" > /tmp/issue_title.txt
+          printf '%s' "$ISSUE_BODY" > /tmp/issue_body.txt
+
+          echo "PR: $PR_TITLE"
+          echo "Issue liée: #${ISSUE_NUMBER:-aucune}"
+
+      - name: Revue de la PR
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          ISSUE_NUMBER="$(cat /tmp/issue_number.txt)"
+          ISSUE_TITLE="$(cat /tmp/issue_title.txt)"
+
+          fcc-claude --yes "$(cat <<PROMPT
+          Tu es un réviseur de code senior. Une PR vient de t'être soumise pour
+          **revue uniquement**. Tu ne dois PAS modifier le code.
+
+          ═══════════════════════════════════════════════
+          PR #${PR_NUMBER}
+          ═══════════════════════════════════════════════
+
+          Contexte : tu as accès au diff complet de la PR, à sa description,
+          et à l'issue liée. Tout est dans /tmp/.
+
+          ═══════════════════════════════════════════════
+          CONSIGNES OBLIGATOIRES (NON NÉGOCIABLES)
+          ═══════════════════════════════════════════════
+
+          1. Lis les conventions du projet dans .claude/Skills/ (en priorité git.md).
+
+          2. Prends connaissance du contexte :
+             - lis /tmp/pr_title.txt, /tmp/pr_body.txt, /tmp/pr_diff.txt
+             - si /tmp/issue_number.txt n'est pas vide, lis /tmp/issue_title.txt et /tmp/issue_body.txt
+
+          3. Évalue la PR sur les axes suivants :
+
+             a) **Correspondance à l'issue**
+                - Est-ce que tous les points de l'issue sont traités ?
+                - Y a-t-il du travail hors-scope (pas mentionné dans l'issue) ?
+                - Si pas d'issue liée, signale-le comme un problème.
+
+             b) **Conventions**
+                - Nom de branche conforme à git.md ? (<type>/<issue>-<desc>)
+                - Commits en Conventional Commits ?
+                - Description de PR avec le template requis (Closes #, Pourquoi, Quoi, Tests) ?
+                - Pas de commit de merge ?
+
+             c) **Architecture et cohérence**
+                - Le code est-il au bon endroit dans l'arborescence ?
+                - Les patterns utilisés sont-ils cohérents avec le reste du codebase ?
+                - Pas de duplication, pas de logique métier au mauvais endroit ?
+                - Les dépendances / imports sont-ils justifiés ?
+
+             d) **Qualité**
+                - Gestion des cas d'erreur et edge cases
+                - Sécurité évidente (injection, fuite de secrets, auth bypass)
+                - Tests présents et pertinents
+                - Pas de code mort, pas de logs de debug
+
+          4. Produis une synthèse en français avec :
+             - **Verdict** : ✅ Approuvé / 💬 Commentaire / ❌ Changements demandés
+             - **Résumé** : 2-3 phrases sur la PR
+             - **Points forts** : ce qui est bien fait
+             - **Problèmes** : classés par sévérité (bloquant / important / mineur)
+             - **Suggestions** : améliorations non bloquantes
+
+          5. Poste ta review avec \`gh pr review\` :
+             - si tout est bon → \`gh pr review ${PR_NUMBER} --approve --body "..."\`
+             - si problèmes non bloquants → \`gh pr review ${PR_NUMBER} --comment --body "..."\`
+             - si problèmes bloquants → \`gh pr review ${PR_NUMBER} --request-changes --body "..."\`
+
+             Le body doit être en markdown propre, structuré comme la synthèse ci-dessus.
+             Chaque problème doit référencer le fichier et la ligne concernés.
+
+          6. Gestion des labels EN FIN DE REVUE uniquement :
+             - retire le label "review-advisor" : gh pr edit ${PR_NUMBER} --remove-label "review-advisor"
+             - SI verdict = ✅ Approuvé → ajoute "review:approved-ai" : gh pr edit ${PR_NUMBER} --add-label "review:approved-ai"
+             - SINON → n'ajoute PAS "review:approved-ai"
+
+          7. Ne modifie AUCUN fichier. Ne push rien. Ne merge rien.
+             Tu es là pour analyser et commenter, point.
+
+          PR number: ${PR_NUMBER}
+          PROMPT
+          )"
