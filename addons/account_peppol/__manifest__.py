@@ -31,7 +31,7 @@
         'data/peppol_clarification_data.xml',
         'data/res_partner_data.xml',
         'views/account_move_views.xml',
-        'views/account_peppol_response_views.xml',
+        'views/account_peppol_message_views.xml',
         'views/account_portal_templates.xml',
         'views/peppol_authentication_views.xml',
         'views/res_partner_views.xml',

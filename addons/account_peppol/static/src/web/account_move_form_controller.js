@@ -35,7 +35,7 @@ patch(AccountMoveFormController.prototype, {
         if (model === 'account.move') {
             const record = this.model.root.data;
 
-            if (record.peppol_message_uuid && record.state !== 'cancel') {
+            if (record.peppol_message_id && record.state !== 'cancel') {
                 if (record.state === 'draft') {
                     this._showPeppolConfirmation(
                         _t(

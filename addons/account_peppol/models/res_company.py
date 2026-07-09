@@ -232,6 +232,10 @@ class ResCompany(models.Model):
         for company in self:
             company.peppol_can_send = company.account_peppol_proxy_state in can_send_domain
 
+    def _peppol_allows_document_reception(self):
+        self.ensure_one()
+        return True
+
     # -------------------------------------------------------------------------
     # PEPPOL PARTICIPANT MANAGEMENT
     # -------------------------------------------------------------------------

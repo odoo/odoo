@@ -100,10 +100,10 @@ class ResConfigSettings(models.TransientModel):
                 params=params,
             )
 
-    @api.depends('account_peppol_proxy_state')
+    @api.depends('account_peppol_proxy_state', 'peppol_participation_role')
     def _compute_peppol_purchase_journal_required(self):
         for config in self:
-            config.peppol_purchase_journal_required = config.account_peppol_proxy_state in ('smp_registration', 'receiver')
+            config.peppol_purchase_journal_required = config.peppol_participation_role == 'sending_and_receiving'
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
