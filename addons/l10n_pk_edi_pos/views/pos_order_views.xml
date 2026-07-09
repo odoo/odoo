@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="name">pos.order.list.inherit.l10n.pk.edi.pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="l10n_pk_edi_pos_invoice_number" optional="hide"/>
+                <field name="l10n_pk_edi_pos_state" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.list.select.inherit.l10n.pk.edi.pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <filter name="status" position="after">
+                <filter string="FBR State" name="l10n_pk_edi_pos_state" domain="[]" context="{'group_by': 'l10n_pk_edi_pos_state'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.l10n.pk.edi.pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_l10n_pk_edi_pos_resend"
+                        type="object"
+                        string="Send to FBR"
+                        class="btn-primary"
+                        invisible="country_code != 'PK' or not l10n_pk_edi_pos_enabled or state in ('draft', 'cancel') or l10n_pk_edi_pos_state in ('successful', 'successful_demo')"/>
+            </xpath>
+            <button name="action_pos_order_invoice" position="attributes">
+                <attribute name="invisible" add="(country_code == 'PK' and l10n_pk_edi_pos_enabled and l10n_pk_edi_pos_state not in ('successful', 'successful_demo'))" separator=" or "/>
+            </button>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-danger" role="alert"
+                     invisible="not l10n_pk_edi_pos_error">
+                    <a name="download_l10n_pk_edi_pos_payload" type="object" groups="base.group_no_one" class="float-end">Download Payload</a>
+                    <field name="l10n_pk_edi_pos_error"/>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='extra']//group[@name='other_information']" position="after">
+                <group string="FBR" name="l10n_pk_edi_pos_fbr"
+                       invisible="country_code != 'PK' or not l10n_pk_edi_pos_enabled">
+                    <field name="l10n_pk_edi_pos_invoice_number" string="Invoice Number"/>
+                    <field name="l10n_pk_edi_pos_state" string="State"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
