@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_pk_edi_pos.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <!-- The FBR has no way to report a global discount, so the order would be
+             rejected at submission. -->
+        <xpath expr="//t[contains(@btnClasses, 'js_discount')]" position="attributes">
+            <attribute name="disabled">this.pos.config.l10n_pk_edi_pos_enabled</attribute>
+        </xpath>
+    </t>
+</templates>
