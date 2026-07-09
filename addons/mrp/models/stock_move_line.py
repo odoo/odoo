@@ -33,11 +33,13 @@ class StockMoveLine(models.Model):
                 if line.quantity:
                     line.move_id.manual_consumption = True
                 line.move_id.picked = True
-            # If the line is added in a done production, we need to map it
-            # manually to the produced move lines in order to see them in the
-            # traceability report
-            if line.move_id.raw_material_production_id and line.state == 'done':
-                mo = line.move_id.raw_material_production_id
+            if mo := line.move_id.raw_material_production_id:
+                line.production_id = mo
+                # If the line is added in a done production, we need to map it
+                # manually to the produced move lines in order to see them in the
+                # traceability report
+                if line.state != 'done':
+                    continue
                 finished_lots = mo.lot_producing_ids
                 finished_lots |= mo.move_finished_ids.filtered(lambda m: m.product_id != mo.product_id).move_line_ids.lot_id
                 if finished_lots:

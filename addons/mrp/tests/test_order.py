@@ -3674,12 +3674,14 @@ class TestMrpOrder(TestMrpCommon):
                 'picked': True,
                 'state': 'done',
                 'quantity': 1,
+                'raw_material_production_id': mo.id,
             } for move in mo.move_raw_ids])
 
             self.assertRecordValues(mo.move_raw_ids.move_line_ids, [{
                 'picked': True,
                 'state': 'done',
                 'quantity': 1,
+                'production_id': mo.id,
             } for move in mo.move_raw_ids])
 
     def test_compute_picking_type_id(self):
