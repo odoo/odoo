@@ -218,7 +218,7 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
             'itemList': [{
                 'productName': 'product_a',
                 'hsnCode': '111111',
-                'productDesc': '',
+                'productDesc': 'product_a',
                 'quantity': 5.0,
                 'qtyUnit': 'UNT',
                 'taxableAmount': 1271.19,

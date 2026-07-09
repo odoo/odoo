@@ -723,3 +723,26 @@ class TestSaleStockInvoices(TestSaleCommon):
         html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice02.ids)[0]
         text = html2plaintext(html)
         self.assertRegex(text, r'Product By USN\n1.00\s+Units\nUSN0001', "There should be a line that specifies 1 x USN0001")
+
+    def test_picking_description_no_attribute_product(self):
+        """
+        Verify that for a product without attributes, the pickings description contains atleast the product name.
+        """
+
+        simple_product = self.env['product.product'].create({
+            'name': 'product name'
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'name': simple_product.name,
+                'product_id': simple_product.id,
+                'product_uom_qty': 1,
+                }),
+            ],
+        })
+        so.action_confirm()
+        picking = so.picking_ids[0]
+        picking_description = picking.move_ids[0].description_picking
+        self.assertEqual(picking_description, 'product name')
