@@ -13,7 +13,13 @@ export class FooterSlideout extends Interaction {
     };
 
     setup() {
-        this.slideoutEffect = this.el.querySelector(":scope > main").offsetHeight >= window.innerHeight;
+        this.mainEl = this.el.querySelector(":scope > main");
+        this.updateSlideoutEffect();
+        const resizeObserver = new ResizeObserver(
+            this.throttled(this.updateSlideoutEffect)
+        );
+        resizeObserver.observe(this.mainEl);
+        this.registerCleanup(() => resizeObserver.disconnect());
     }
 
     start() {
@@ -32,6 +38,10 @@ export class FooterSlideout extends Interaction {
             pixelEl.style.backgroundImage = "url(/website/static/src/img/website_logo.svg)";
             this.insert(pixelEl);
         }
+    }
+
+    updateSlideoutEffect() {
+        this.slideoutEffect = this.mainEl.offsetHeight >= window.innerHeight;
     }
 }
 
