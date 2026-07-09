@@ -84,6 +84,9 @@ class PaymentMethod(models.Model):
         default="none",
         required=True,
     )
+    support_split_payments = fields.Boolean(
+        string="Partial Payments", help="Allow payment with multiple payment methods"
+    )
     support_refund = fields.Selection(
         string="Refund",
         help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",

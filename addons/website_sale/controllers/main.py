@@ -628,7 +628,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order="attribute_id",
                 aggregates=["id:recordset"],
             )
-            pavs_per_attribute.update({attribute: pavs.sorted() for attribute, pavs in grouped_pavs})
+            pavs_per_attribute.update({
+                attribute: pavs.sorted() for attribute, pavs in grouped_pavs
+            })
             # Return attributes as recordset of `product.attribute`
             attributes = ProductAttribute.union(pavs_per_attribute.keys())
         else:
@@ -1670,6 +1672,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if not (order_sudo := request.cart):
             return
+        order_sudo._check_not_awaiting_split_payment()
 
         ResPartner = self.env["res.partner"].sudo()
         partner_sudo = ResPartner.browse(partner_id).exists()
@@ -1823,6 +1826,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 return request.redirect(redirect)
 
             order_sudo._validate_order()
+
+        if order_sudo._is_awaiting_split_payment():
+            # The payment is incomplete, keep the cart and redirect to the payment page.
+            return request.redirect("/shop/payment")
 
         # clean context and session, then redirect to the confirmation page
         self.env.website.sale_reset()

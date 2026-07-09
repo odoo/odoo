@@ -12,13 +12,12 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortal(payment_portal.PaymentPortal):
-
     def _prepare_portal_counter_values(self, counter):
         partner = self.env.user.partner_id
-        if counter == 'quotation_count':
-            return 'sale.order', self._prepare_quotations_domain(partner), 'read'
-        if counter == 'order_count':
-            return 'sale.order', self._prepare_orders_domain(partner), 'read'
+        if counter == "quotation_count":
+            return "sale.order", self._prepare_quotations_domain(partner), "read"
+        if counter == "order_count":
+            return "sale.order", self._prepare_orders_domain(partner), "read"
         return super()._prepare_portal_counter_values(counter)
 
     def _prepare_quotations_domain(self, partner):
@@ -277,7 +276,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
         elif order_sudo.state == "sale":
             amount = payment_amount or order_sudo.amount_total
         else:
-            amount = order_sudo.amount_total
+            # The suggested amount assumes pending transactions will succeed.
+            amount = currency.round(
+                order_sudo.amount_total - order_sudo.amount_paid - order_sudo.amount_pending
+            )
+
+        # The max amount ignores pending transactions so the customer can still pay the uncertain.
+        amount_max = currency.round(max(0, order_sudo.amount_total - order_sudo.amount_paid))
 
         # Prepare the portal page values
         company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
@@ -301,6 +306,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         payment_context = {
             "amount": amount,
+            "amount_max": amount_max,
             "currency": currency,
             "partner_id": partner_sudo.id,
             "transaction_route": order_sudo.get_portal_url(suffix="/transaction"),
@@ -497,11 +503,16 @@ class PaymentPortal(payment_portal.PaymentPortal):
         logged_in = not self.env.user._is_public()
         partner_sudo = self.env.user.partner_id if logged_in else order_sudo.partner_invoice_id
         self._validate_transaction_kwargs(kwargs)
+        currency = order_sudo.currency_id
         kwargs.update({
             "partner_id": partner_sudo.id,
-            "currency_id": order_sudo.currency_id.id,
+            "currency_id": currency.id,
             "sale_order_id": order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
+        amount = self._cast_as_float(kwargs.get("amount", ""))
+        payment_amount = order_sudo._get_payment_amount(amount)
+
+        kwargs["amount"] = payment_amount
         tx_sudo = self._create_transaction(
             custom_create_values={"sale_order_ids": [Command.set([order_id])]}, **kwargs
         )

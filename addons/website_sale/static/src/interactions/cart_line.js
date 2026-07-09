@@ -59,7 +59,10 @@ export class CartLine extends Interaction {
             line_id: lineId,
             product_id: parseInt(input.dataset.productId),
             quantity: quantity,
-        }));
+        })).catch(error => {
+            this.services.cart.showWarning(error.data.message);
+        });
+        if (!data) {return;}
 
         data['website_sale.cart_lines'] = markup(data['website_sale.cart_lines']);
 

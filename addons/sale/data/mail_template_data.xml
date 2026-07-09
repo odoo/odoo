@@ -334,11 +334,19 @@
                                 <tr>
                                     <td style="width: 20%; padding-top: 4px; border-top: 1px solid #343a40; opacity: 0.9;" align="left"><strong>Total</strong></td>
                                     <td style="width: 80%; padding-top: 4px; border-top: 1px solid #343a40; font-weight: bold; " align="right">
-                                        <span style="display: inline-block; margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px;">
-                                            <span t-attf-style="color: #{color}; font-weight: bold;">
-                                                <t t-out="tx_sudo.provider_id.sudo().name or ''"></t>
+                                        <t t-set="providers_sudo" t-value="object._get_paid_transactions_providers()"/>
+                                        <t t-foreach="providers_sudo[:2]" t-as="provider_sudo">
+                                            <span style="display: inline-block; margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                                <span t-attf-style="color: #{color}; font-weight: bold;">
+                                                    <t t-out="provider_sudo.name"></t>
+                                                </span>
                                             </span>
-                                        </span>
+                                        </t>
+                                        <t t-if="len(providers_sudo) > 2">
+                                            <span style="display: inline-block; margin-right: 4px; padding: 4px 8px; opacity: 0.9;">
+                                                <t t-out="len(providers_sudo) - 2"> more</t>
+                                            </span>
+                                        </t>
                                         <span style="opacity: 0.9;"><t t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</t></span>
                                     </td>
                                 </tr>

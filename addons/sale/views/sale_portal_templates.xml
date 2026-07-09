@@ -95,6 +95,7 @@
             <div
                 class="row o_portal_sale_sidebar"
                 t-att-data-order-amount-total="sale_order.amount_total"
+                t-att-data-awaiting-split-payment="sale_order._is_awaiting_split_payment()"
             >
                 <t t-set="sidebar_invoices"
                     t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)"/>
@@ -127,13 +128,27 @@
                         class="alert alert-success mt-3"
                         role="alert"
                     >
-                        Amount paid:
+                        Paid:
                     <span
                             t-field="sale_order.amount_paid"
                             t-options="{
                                     'widget': 'monetary',
                                     'display_currency': sale_order.currency_id,
                                 }"
+                        />
+                    </div>
+                    <div
+                        t-if="sale_order.amount_pending &gt; 0 and sale_order._has_to_be_paid()"
+                        class="alert alert-info mt-3"
+                        role="alert"
+                    >
+                        Pending:
+                        <span
+                            t-field="sale_order.amount_pending"
+                            t-options="{
+                                'widget': 'monetary',
+                                'display_currency': sale_order.currency_id,
+                            }"
                         />
                     </div>
 
@@ -301,7 +316,7 @@
                         Your order is not in a state to be rejected.
                     </div>
 
-                    <t t-set="current_tx" t-value="sale_order.get_portal_last_transaction()"/>
+                    <t t-set="current_tx" t-value="sale_order._get_portal_display_transaction()"/>
                     <!-- hide state header when invoice is posted for current transaction. -->
                     <t t-if="current_tx and not (len(current_tx.invoice_ids) == 1 and current_tx.invoice_ids.state == 'posted')">
                         <t t-call="payment.state_header" tx="current_tx"/>
@@ -555,7 +570,12 @@
                 </div>
                 <div t-else="" id="payment_method" class="text-start mt-0" >
                     <!-- Inject the order ID to allow Stripe to check if tokenization is required. -->
-                    <t t-call="payment.form" sale_order_id="sale_order.id"/>
+                    <!-- Don't allow split payment on a payment link or when prepayment < 100%. -->
+                    <t
+                        t-call="payment.form"
+                        sale_order_id="sale_order.id"
+                        show_amount_input="not payment_amount and not prepayment_available"
+                    />
                 </div>
             </main>
         </div>
@@ -651,12 +671,11 @@
                 </div>
                 <div class="d-flex flex-column align-items-end flex-grow-1 flex-shrink-1 flex-basis-0 min-w-0"
                     id="transaction_info">
+                    <t t-set="display_tx" t-value="sale_order._get_portal_display_transaction()"/>
                     <div
-                        t-if="sale_order.get_portal_last_transaction() and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error"
+                        t-if="display_tx and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error"
                         t-att-data-order-id="sale_order.id">
-                        <t t-if="sale_order.transaction_ids">
-                            <t t-call="payment.state_header" tx="sale_order.get_portal_last_transaction()"/>
-                        </t>
+                        <t t-call="payment.state_header" tx="display_tx"/>
                     </div>
                 </div>
             </div>

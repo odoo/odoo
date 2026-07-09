@@ -475,6 +475,40 @@
                         />
                     </td>
                 </tr>
+                <!-- Paid -->
+                <tr
+                    t-if="website_sale_order.amount_paid and not website_sale_order._is_paid()"
+                    id="amount_paid"
+                    class="text-success"
+                >
+                    <td colspan="2" class="border-0 ps-0 pt-0 pb-2">
+                        Paid
+                    </td>
+                    <td class="text-end border-0 px-0 pt-0 pb-2">
+                        <span
+                            class="monetary_field"
+                            t-field="website_sale_order.amount_paid"
+                            t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'
+                        />
+                    </td>
+                </tr>
+                <!-- Pending -->
+                <tr
+                    t-if="website_sale_order.amount_pending and not website_sale_order._is_paid()"
+                    id="amount_pending"
+                    class="text-info"
+                >
+                    <td colspan="2" class="border-0 ps-0 pt-0 pb-2">
+                        Pending
+                    </td>
+                    <td class="text-end border-0 px-0 pt-0 pb-2">
+                        <span
+                            class="monetary_field"
+                            t-field="website_sale_order.amount_pending"
+                            t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'
+                        />
+                    </td>
+                </tr>
                 <!-- Tax included view -->
                 <t t-if="tax_included" t-call="website_sale.order_tax_lines" name="tax_included_order_tax_lines"/>
             </table>

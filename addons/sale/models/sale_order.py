@@ -401,6 +401,13 @@ class SaleOrder(models.Model):
         compute="_compute_authorized_transaction_ids",
         compute_sudo=True,
     )
+    amount_pending = fields.Float(
+        string="Payment Transactions Amount Pending",
+        help="Sum of transactions made in through the online payment form that are in the state"
+        " 'pending' and linked to this order, e.g. a wire transfer awaiting reconciliation.",
+        compute="_compute_amount_pending",
+        compute_sudo=True,
+    )
     amount_paid = fields.Float(
         string="Payment Transactions Amount",
         help="Sum of transactions made in through the online payment form that are in the state"
@@ -913,6 +920,14 @@ class SaleOrder(models.Model):
                 lambda t: t.state == "authorized"
             )
             trans.has_authorized_transaction_ids = bool(trans.authorized_transaction_ids)
+
+    @api.depends("transaction_ids")
+    def _compute_amount_pending(self):
+        """Sum of the amount pending through all transactions for this SO."""
+        for order in self:
+            order.amount_pending = sum(
+                tx.amount for tx in order.transaction_ids if tx.state == "pending"
+            )
 
     @api.depends("transaction_ids")
     def _compute_amount_paid(self):
@@ -2281,6 +2296,41 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.sudo().transaction_ids._get_last()
 
+    def _get_portal_display_transaction(self):
+        """Return the transaction whose state should be displayed on the customer portal.
+
+        With split payments, the status can no longer be inferred from the last transaction only;
+        it is derived from the most relevant transaction, considering the following order:
+        - authorized (amount_paid >= amount_total, at least 1 authorized transaction)
+        - done (amount_paid >= amount_total, no transaction authorized)
+        - pending (amount_paid + amount_pending >= amount_total, at least 1 pending transaction)
+
+        :return: The last transaction in the relevant state ('done', 'authorized' or 'pending'),
+                 or an empty recordset if no status should be displayed.
+        :rtype: recordset of `payment.transaction`
+        """
+        self.ensure_one()
+        txs_sudo = self.sudo().transaction_ids
+        if self.currency_id.compare_amounts(self.amount_paid, self.amount_total) >= 0:
+            authorized_tx = txs_sudo.filtered(lambda tx: tx.state == "authorized")._get_last()
+            return authorized_tx or txs_sudo.filtered(lambda tx: tx.state == "done")._get_last()
+        paid_or_pending_amount = self.amount_paid + self.amount_pending
+        if self.currency_id.compare_amounts(paid_or_pending_amount, self.amount_total) >= 0:
+            return txs_sudo.filtered(lambda tx: tx.state == "pending")._get_last()
+        return self.env["payment.transaction"]
+
+    def _get_pending_action_transactions(self):
+        """Return the pending transactions requiring the customer's payment instructions.
+
+        :return: The pending transactions requiring payment instructions, oldest first.
+        :rtype: recordset of `payment.transaction`
+        """
+        self.ensure_one()
+        txs_sudo = self.sudo().transaction_ids
+        return txs_sudo.filtered(
+            lambda tx: tx.state == "pending" and tx._requires_payment_instructions()
+        ).sorted("id")
+
     def _get_order_lines_to_report(self):
         down_payment_lines = self.order_line.filtered(
             lambda line: (
@@ -2307,7 +2357,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         prepayment_amount = self._get_prepayment_required_amount()
-        remaining_balance = self.amount_total - self.amount_paid
+        remaining_balance = self.currency_id.round(self.amount_total - self.amount_paid)
         if self.state in ("draft", "sent") and self.prepayment_percent > 0:
             suggested_amount = prepayment_amount  # Suggest the amount needed to confirm the quote.
         else:  # The order is confirmed or doesn't require payment.
@@ -2572,6 +2622,37 @@ class SaleOrder(models.Model):
             "extra_tax_data": extra_tax_data,
         }
 
+    def _get_payment_amount(self, amount):
+        """Compute and validate the amount to charge for the payment of this order.
+
+        :param float|None amount: The amount requested by the customer, if any; defaults to the
+            remaining amount due.
+        :return: The amount to charge.
+        :rtype: float
+        :raise ValidationError: If the amount to charge is not strictly positive.
+        """
+        self.ensure_one()
+        currency = self.currency_id
+        # The pending transaction will either convert to Done or is a promise.
+        # Its amount should not be requested again.
+        remaining_amount = currency.round(
+            max(0, self.amount_total - self.amount_paid - self.amount_pending)
+        )
+        payment_amount = amount or remaining_amount
+        if currency.compare_amounts(payment_amount, 0) <= 0:
+            raise ValidationError(self.env._("The amount to pay must be greater than 0."))
+        if currency.compare_amounts(payment_amount, remaining_amount) > 0:
+            # This may be caused either by the customer entering an amount that is too high, or by
+            # the cart having been updated (e.g. in another tab) since the page was rendered.
+            raise ValidationError(
+                self.env._(
+                    "The amount to pay does not match the remaining amount due"
+                    " (%(remaining_amount)s). Please refresh the page and try again.",
+                    remaining_amount=currency.format(remaining_amount),
+                )
+            )
+        return payment_amount
+
     def _get_prepayment_required_amount(self):
         """Return the minimum amount needed to automatically confirm the quotation.
 
@@ -2732,14 +2813,73 @@ class SaleOrder(models.Model):
     def _is_paid(self):
         """Return whether the sale order is paid or not based on the linked transactions.
 
-        A sale order is considered paid if the sum of all the linked transaction is equal to or
-        higher than `self.amount_total`.
+        A sale order is considered paid if the sum of all the (authorized, done) transactions is
+        equal to or higher than `self.amount_total`.
 
-        :return: Whether the sale order is paid or not.
+        :return: Whether the order has enough paid transactions.
         :rtype: bool
         """
         self.ensure_one()
         return self.currency_id.compare_amounts(self.amount_paid, self.amount_total) >= 0
+
+    def _is_paid_or_pending(self):
+        """Return whether the sale order is paid or pending based on the linked transactions.
+
+        A sale order is considered paid or pending if the sum of all the (authorized, done,
+        pending) transactions is equal to or higher than `self.amount_total`.
+
+        :return: Whether the order has enough paid and pending transactions.
+        :rtype: bool
+        """
+        self.ensure_one()
+        paid_or_pending_amount = self.amount_paid + self.amount_pending
+        return self.currency_id.compare_amounts(paid_or_pending_amount, self.amount_total) >= 0
+
+    def _is_awaiting_split_payment(self):
+        """Return whether the sale order is awaiting an additional split payment.
+
+        :return: Whether the order has an active split payment still in progress.
+        :rtype: bool
+        """
+        self.ensure_one()
+        # Prevent blocking the reset of the cart when a SO is canceled from the backend
+        if self.state == "cancel":
+            return False
+
+        valid_states = ["pending", "authorized", "done"]
+        if not self.transaction_ids.filtered(lambda tx: tx.state in valid_states):
+            return False
+
+        return not self._is_paid_or_pending()
+
+    def _check_not_awaiting_split_payment(self):
+        """Raise if the order is awaiting an additional payment.
+        Modifying the order while a split payment hasn't reached the required amount yet could
+        create a mismatch between what was charged and what's owed.
+
+        :raise UserError: If the order is awaiting an additional split payment.
+        """
+        if self._is_awaiting_split_payment():
+            raise UserError(
+                self.env._(
+                    "It seems that there is already a payment in progress for your order; you"
+                    " can't modify it anymore."
+                )
+            )
+
+    def _get_paid_transactions_providers(self):
+        """Return the providers used to pay this order.
+
+        Considers all transactions in case the order was paid through a split payment.
+
+        :return: The providers, in the order they were paid.
+        :rtype: recordset of `payment.provider`
+        """
+        self.ensure_one()
+        paid_transactions = self.sudo().transaction_ids.filtered(
+            lambda tx: tx.state in ("authorized", "done")
+        )
+        return paid_transactions.sorted("id").provider_id
 
     def _get_lang(self):
         self.ensure_one()

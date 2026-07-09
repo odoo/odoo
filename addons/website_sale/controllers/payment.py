@@ -21,11 +21,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return
 
     @route("/shop/payment/transaction/<int:order_id>", type="jsonrpc", auth="public", website=True)
-    def shop_payment_transaction(self, order_id, access_token, **kwargs):
+    def shop_payment_transaction(self, order_id, access_token, amount=None, **kwargs):
         """Create a draft transaction and return its processing values.
 
         :param int order_id: The sales order to pay, as a `sale.order` id
         :param str access_token: The access token used to authenticate the request
+        :param str amount: The amount to pay, if different from the order's remaining amount due
         :param dict kwargs: Locally unused data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
@@ -61,19 +62,18 @@ class PaymentPortal(payment_portal.PaymentPortal):
             }
 
         self._validate_transaction_kwargs(kwargs)
+        currency = order_sudo.currency_id
         kwargs.update({
             "partner_id": order_sudo.partner_invoice_id.id,
-            "currency_id": order_sudo.currency_id.id,
+            "currency_id": currency.id,
             "sale_order_id": order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
-        if not kwargs.get("amount"):
-            kwargs["amount"] = order_sudo.amount_total
 
-        compare_amounts = order_sudo.currency_id.compare_amounts
-        if compare_amounts(kwargs["amount"], order_sudo.amount_total):
-            raise ValidationError(self.env._("The cart has been updated. Please refresh the page."))
-        if compare_amounts(order_sudo.amount_paid, order_sudo.amount_total) == 0:
+        if order_sudo._is_paid_or_pending():
             raise UserError(self.env._("The cart has already been paid. Please refresh the page."))
+
+        amount = self._cast_as_float(amount)
+        kwargs["amount"] = order_sudo._get_payment_amount(amount)
 
         if delay_token_charge := kwargs.get("flow") == "token":
             request.update_context(delay_token_charge=True)  # wait until after tx validation

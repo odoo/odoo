@@ -5,6 +5,7 @@ import { rpc, RPCError } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { renderToMarkup } from '@web/core/utils/render';
 import { Interaction } from '@web/public/interaction';
+import { roundDecimals } from "@web/core/utils/numbers";
 
 export class PaymentForm extends Interaction {
     static selector = '#o_payment_form';
@@ -13,6 +14,7 @@ export class PaymentForm extends Interaction {
         '[name="o_payment_delete_token"]': { 't-on-click': this.fetchTokenData },
         '[name="o_payment_expand_button"]': { 't-on-click': this.hideExpandButton },
         '[name="o_payment_submit_button"]': { 't-on-click': this.submitForm },
+        '[name="o_payment_amount"] input': { 't-on-blur': this.ensureValidAmount },
     };
 
     // #=== INTERACTION LIFECYCLE ===#
@@ -104,6 +106,25 @@ export class PaymentForm extends Interaction {
     }
 
     /**
+     * Round the split payment amount to the currency's decimal precision and cap it to the
+     * input's max.
+     *
+     * @param {Event} ev
+     * @return {void}
+     */
+    ensureValidAmount(ev) {
+        const amountInput = ev.target;
+        const amount = amountInput.valueAsNumber;
+        if (!isNaN(amount)) {
+            const decimals = parseInt(amountInput.dataset.decimals) || 0;
+            const roundedAmount = roundDecimals(amount, decimals);
+            amountInput.value = roundedAmount < 0
+                ? amountInput.max
+                : Math.min(roundedAmount, amountInput.max);
+        }
+    }
+
+    /**
      * Update the payment context with the selected payment option and initiate its payment flow.
      *
      * @param {Event} ev
@@ -117,6 +138,10 @@ export class PaymentForm extends Interaction {
 
         // Block the entire UI to prevent fiddling with other interactions.
         this._disableButton(true);
+
+        // Use the amount entered by the customer for payment methods that support split payments.
+        const amountInput = this._getPaymentAmountContainer(checkedRadio)?.querySelector('input');
+        if (amountInput) { this.paymentContext.amount = amountInput.value; }
 
         // Initiate the payment flow of the selected payment option.
         const flow = this.paymentContext.flow = this._getPaymentFlow(checkedRadio);
@@ -219,6 +244,7 @@ export class PaymentForm extends Interaction {
      */
     async _expandInlineForm(radio) {
         this._collapseInlineForms(); // Collapse previously opened inline forms.
+        this._collapseAmountContainers(); // Collapse previously opened amount containers.
         this._setPaymentFlow(); // Reset the payment flow to let providers overwrite it.
 
         // Prepare the inline form of the selected payment option.
@@ -259,6 +285,9 @@ export class PaymentForm extends Interaction {
         if (inlineForm && isVisible(inlineForm)) {
             inlineForm.classList.remove('d-none');
         }
+        // Display the amount container.
+        const amountContainer = this._getPaymentAmountContainer(radio);
+        amountContainer?.classList.remove('d-none');
     }
 
     /**
@@ -270,6 +299,18 @@ export class PaymentForm extends Interaction {
     _collapseInlineForms() {
         this.el.querySelectorAll('[name="o_payment_inline_form"]').forEach(inlineForm => {
             inlineForm.classList.add('d-none');
+        });
+    }
+
+    /**
+     * Collapse all amount containers of the current interaction.
+     *
+     * @private
+     * @return {void}
+     */
+    _collapseAmountContainers() {
+        this.el.querySelectorAll('[name="o_payment_amount"]').forEach(amountContainer => {
+            amountContainer.classList.add('d-none');
         });
     }
 
@@ -577,6 +618,18 @@ export class PaymentForm extends Interaction {
     _getInlineForm(radio) {
         const inlineFormContainer = radio.closest('[name="o_payment_option"]');
         return inlineFormContainer?.querySelector('[name="o_payment_inline_form"]');
+    }
+
+    /**
+     * Determine and return the amount container of the selected payment option.
+     *
+     * @private
+     * @param {HTMLInputElement} radio - The radio button linked to the payment option.
+     * @return {Element | null} The amount container of the selected payment option, if any.
+     */
+    _getPaymentAmountContainer(radio) {
+        const optionContainer = radio.closest('[name="o_payment_option"]');
+        return optionContainer?.querySelector('[name="o_payment_amount"]');
     }
 
     /**

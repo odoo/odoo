@@ -8,6 +8,7 @@
                                      (through the `assign_token_route` parameter); default: `True`.
             - allow_token_deletion: Whether tokens can be deleted (archived); default: `False`.
             - default_token_id: The id of the token that should be pre-selected; default: `None`.
+            - show_amount_input: Whether the amount input is shown; default: `False`.
             - show_tokenize_input_mapping: For each provider, whether the tokenization checkbox is
                                            shown; used only in `payment` mode.
             - display_submit_button: Whether the submit button is displayed; default: `True`.
@@ -16,6 +17,7 @@
         <!-- Payment context:
             - reference_prefix: The custom prefix to compute the full transaction reference.
             - amount: The amount to pay.
+            - amount_max: The maximum amount allowed.
             - currency: The currency of the payment, as a `res.currency` record.
             - partner_id: The id of the partner on behalf of whom the payment should be made.
             - providers_sudo: The available providers, as a sudoed `payment.provider` recordset.
@@ -51,6 +53,7 @@
         <t t-set="submit_button_label"
            t-value="submit_button_label or (pay_label if mode == 'payment' else save_label)"
         />
+        <!-- Split payments allowed on sale orders only (cart or portal) -->
         <form t-if="payment_methods_sudo or tokens_sudo" id="o_payment_form"
               class="o_payment_form"
               t-att-data-mode="mode"
@@ -297,6 +300,24 @@
                         </t>
                     </div>
                 </div>
+            </div>
+            <!-- === Split payment amount === -->
+            <div t-if="show_amount_input and pm_sudo.support_split_payments"
+                 name="o_payment_amount"
+                 class="w-100 mb-0 d-none position-relative z-1"
+            >
+                <label t-attf-for="o_payment_amount_{{pm_sudo.id}}" class="mt-0">
+                    <small>Amount</small>
+                </label>
+                <input type="number"
+                       t-attf-name="o_payment_amount_{{pm_sudo.id}}"
+                       t-attf-id="o_payment_amount_{{pm_sudo.id}}"
+                       class="form-control"
+                       t-att-value="amount"
+                       t-att-max="amount_max or amount"
+                       t-att-data-decimals="currency.decimal_places"
+                       placeholder="0"
+                />
             </div>
             <!-- === Help message === -->
             <div t-if="not is_html_empty(provider_sudo.pre_msg)"
