@@ -1,16 +1,6 @@
 id,name,model_id,group_id/id,operation,domain
 hr_attendance_rule_attendance_admin,Attendance Administrator: Full access,hr.attendance,hr_attendance.group_hr_attendance_user,crud,
-hr_attendance_rule_attendance_manager_restrict,Attendance Officer: Restrict Attendances to managed employees,hr.attendance,hr_attendance.group_hr_attendance_officer,crud,"
-                [
-                '|',
-                '&',
-                 ('employee_id.attendance_manager_id', '=', user.id),
-                 ('employee_id.user_id', '=', user.id),
-                '&',
-                ('employee_id.user_id', '!=', user.id),
-                ('employee_id.attendance_manager_id', '=', user.id)
-                ]
-            "
+hr_attendance_rule_attendance_manager_restrict,Attendance Officer: Restrict Attendances to managed employees,hr.attendance,hr_attendance.group_hr_attendance_officer,crud,"[('employee_id.attendance_manager_id', '=', user.id)]"
 hr_attendance_rule_attendance_simple_user,Attendance base user: Read his own attendances in other apps,hr.attendance,hr_attendance.group_hr_attendance_own_reader,r,"[('employee_id.user_id', '=', user.id)]"
 hr_attendance_rule_attendance_own,Attendance own user: create/edit his own attendances,hr.attendance,hr_attendance.group_hr_attendance_own,cu,"[
                 ('employee_id.user_id', '=', user.id),
