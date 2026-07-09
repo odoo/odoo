@@ -1,7 +1,6 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Pager } from "@web/core/pager/pager";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -167,15 +166,6 @@ export class ControlPanel extends Component {
         );
         const nextIndex = (currentIndex + 1) % viewSwitcherEntries.length;
         this.switchView(viewSwitcherEntries[nextIndex].type);
-    }
-
-    onMainButtonsKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        if (hotkey === "arrowdown") {
-            this.env.searchModel.trigger("focus-view");
-            ev.preventDefault();
-            ev.stopPropagation();
-        }
     }
 
     dropdownifyButtons() {
