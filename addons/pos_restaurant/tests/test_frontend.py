@@ -629,7 +629,6 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.start_pos_tour('test_futur_orders_are_not_cancelled')
-        self.pos_config.current_session_id.close_session_from_ui()
         self.assertEqual(present_order.state, 'cancel')
         self.assertEqual(future_order.state, 'draft')
         self.assertEqual(future_order.session_id.id, False)

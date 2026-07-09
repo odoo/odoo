@@ -809,7 +809,9 @@ registry.category("web_tour.tours").add("test_futur_orders_are_not_cancelled", {
             Dialog.confirm("Open Register"),
             Chrome.clickMenuOption("Close Register"),
             Dialog.confirm("Close Register"),
-            Dialog.confirm("Cancel Orders", ".btn-secondary"),
+            Dialog.confirm("Cancel Orders", ".btn-secondary", true),
+            Chrome.waitRequest(),
+            Chrome.endTour(),
         ].flat(),
 });
 
