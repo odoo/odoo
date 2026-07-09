@@ -17,7 +17,7 @@ function buildTrigger({ title, body, header } = {}) {
     return selector;
 }
 
-export function confirm(confirmationText, button = ".btn-primary") {
+export function confirm(confirmationText, button = ".btn-primary", expectUnloadPage = false) {
     let trigger = `${buildTrigger()} .modal-footer ${button}`;
     if (confirmationText) {
         trigger += `:contains("${confirmationText}")`;
@@ -26,6 +26,7 @@ export function confirm(confirmationText, button = ".btn-primary") {
         content: "confirm dialog",
         trigger,
         run: "click",
+        expectUnloadPage,
     };
 }
 
