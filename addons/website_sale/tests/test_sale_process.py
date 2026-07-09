@@ -16,7 +16,14 @@ _logger = logging.getLogger(__name__)
 
 @tagged("post_install", "-at_install")
 class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsiteUser):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'website.group_website_designer',  # website config + website.rewrite
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -89,7 +96,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         self.start_tour("/shop", "website_sale.basic_shop_flow", login="admin")
 
     def test_03_demo_checkout(self):
-        self.partner_demo.write(self.dummy_partner_address_values)
+        self.partner_demo.sudo().write(self.dummy_partner_address_values)
         if self.env["ir.module.module"]._get("payment_custom").state != "installed":
             self.skipTest("Transfer provider is not installed")
 
@@ -99,9 +106,9 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         if self.env["ir.module.module"]._get("payment_custom").state != "installed":
             self.skipTest("Transfer provider is not installed")
 
-        self.env.company.country_id = self.country_us
-        tax_group = self.env["account.tax.group"].create({"name": "Tax 15%"})
-        tax = self.env["account.tax"].create({
+        self.env.company.sudo().country_id = self.country_us
+        tax_group = self.env["account.tax.group"].sudo().create({"name": "Tax 15%"})
+        tax = self.env["account.tax"].sudo().create({
             "name": "Tax 15%",
             "amount": 15,
             "type_tax_use": "sale",
@@ -116,7 +123,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             "invoice_policy": "delivery",
         })
         self.product_product_7.taxes_id = [tax.id]
-        self.env["res.config.settings"].create({
+        self.env["res.config.settings"].sudo().create({
             "auth_signup_uninvited": "b2c",
             "show_line_subtotals_tax_selection": "tax_excluded",
         }).execute()

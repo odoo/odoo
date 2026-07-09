@@ -11,7 +11,13 @@ from odoo.addons.website_sale.tests.common import MockRequest
 @tagged('post_install', '-at_install')
 class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -20,7 +26,7 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
         cls.WebsiteSaleController = WebsiteSale()
 
     def test_pricelist_different_currency(self):
-        self.pricelist.write({
+        self.pricelist.sudo().write({
             'currency_id': self.env.company.currency_id.id,
             'item_ids': [Command.clear()],
             'name': 'No discount',

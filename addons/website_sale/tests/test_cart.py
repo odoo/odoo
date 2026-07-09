@@ -21,7 +21,14 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'website.group_website_designer',  # website config (prevent_sale)
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -208,7 +215,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         self.assertEqual(len(cart.with_user(self.public_user).sudo()._cart_accessories()), 0)
 
     def test_cart_new_fpos_from_geoip(self):
-        fpos_be = self.env["account.fiscal.position"].create({
+        fpos_be = self.env["account.fiscal.position"].sudo().create({
             "name": "Fiscal Position BE",
             "country_id": self.country_be.id,
             "company_id": self.company.id,
@@ -233,9 +240,9 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         # into account when updating the cart
         pricelist = self._enable_pricelists()
         # Create fiscal position mapping taxes 10% -> 6%
-        fpos = self.env["account.fiscal.position"].create({"name": "test"})
+        fpos = self.env["account.fiscal.position"].sudo().create({"name": "test"})
         # Add 10% tax on product
-        tax10, tax6 = self.env["account.tax"].create([
+        tax10, tax6 = self.env["account.tax"].sudo().create([
             {
                 "name": "Test tax 10",
                 "amount": 10,
@@ -250,7 +257,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
                 "amount_type": "percent",
             },
         ])
-        tax6.original_tax_ids = tax10
+        tax6.sudo().original_tax_ids = tax10
 
         test_product = self.env["product.product"].create({
             "name": "Test Product",
@@ -290,8 +297,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken
         # into account when updating the cart for no_variant product
         # Add 10% tax on product
-        fpos = self.env["account.fiscal.position"].create({"name": "test"})
-        tax10, tax0 = self.env["account.tax"].create([
+        fpos = self.env["account.fiscal.position"].sudo().create({"name": "test"})
+        tax10, tax0 = self.env["account.tax"].sudo().create([
             {
                 "name": "Test tax 10",
                 "amount": 10,
@@ -306,7 +313,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
                 "amount_type": "percent",
             },
         ])
-        tax0.original_tax_ids = tax10
+        tax0.sudo().original_tax_ids = tax10
 
         # create an attribute with one variant
         product_attribute = self.env["product.attribute"].create({
@@ -394,7 +401,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         """
         self.pricelist = self._enable_pricelists()
         eu_group = self.env.ref("base.europe")
-        not_eu_group = self.env["res.country.group"].create({
+        not_eu_group = self.env["res.country.group"].sudo().create({
             "name": "Not EU",
             "country_ids": self
             .env["res.country"]
@@ -402,7 +409,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
             .ids,
         })
 
-        _pricelist_eu, pricelist_not_eu = self.env["product.pricelist"].create([
+        _pricelist_eu, pricelist_not_eu = self.env["product.pricelist"].sudo().create([
             {
                 "name": "EU",
                 "country_group_ids": eu_group.ids,
@@ -425,7 +432,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
             )
             cart = request.cart
             self.assertEqual(cart.pricelist_id, pricelist_not_eu)
-            cart.partner_id = self.partner.create({"name": "New Partner"})
+            cart.partner_id = self.partner.sudo().create({"name": "New Partner"})
             self.assertEqual(cart.pricelist_id, pricelist_not_eu)
 
     def test_remove_archived_product_line(self):
@@ -475,7 +482,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
 
     def test_checkout_no_delivery_method_available(self):
         portal_user = self.user_portal
-        portal_user.write(self.dummy_partner_address_values)
+        # sudo: configuring another (portal) user's address is fixture setup.
+        portal_user.sudo().write(self.dummy_partner_address_values)
         self.carrier.country_ids = [Command.set(self.env.ref("base.be").ids)]
         self.product.type = "consu"
         with (
@@ -495,11 +503,13 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         """Test that a product/website from a company branch
         can be added to the cart.
         """
-        branch_a = self.env["res.company"].create({
+        branch_a = self.env["res.company"].sudo().create({
             "name": "Branch A",
             "parent_id": self.env.company.id,
         })
-        website = self.env["website"].create({
+        # sudo: creating a website with a company recomputes res.company.website_id
+        # (writes res.company), which the restricted user cannot modify — setup.
+        website = self.env["website"].sudo().create({
             "name": "Branch A Website",
             "company_id": branch_a.id,
         })
@@ -518,7 +528,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
     def test_get_cart_after_company_change(self):
         """Finding the customer cart shouldn't crash even if their company changed."""
         internal_user = self._create_new_internal_user()
-        internal_user.partner_id.company_id = self.env.company
+        internal_user.partner_id.sudo().company_id = self.env.company
         with self.mock_request(user=internal_user):
             # Create a cart for the user
             self.WebsiteSaleCartController.add_to_cart(
@@ -528,9 +538,9 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
             )
 
         # Change the user's company (will also update the user's partner)
-        other_company = self.env["res.company"].create({"name": "Other Company"})
-        internal_user.company_ids = [Command.link(other_company.id)]
-        internal_user.company_id = other_company
+        other_company = self.env["res.company"].sudo().create({"name": "Other Company"})
+        internal_user.sudo().company_ids = [Command.link(other_company.id)]
+        internal_user.sudo().company_id = other_company
         self.assertEqual(internal_user.partner_id.company_id, other_company)
         with self.mock_request(user=internal_user) as request:
             # We shouldn't find any abandonned cart if the customer isn't allowed to

@@ -11,7 +11,13 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def setUp(self):
         super().setUp()
@@ -20,7 +26,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
 
     # test that changing the delivery method while there is a pending transaction raises an error
     def test_controller_change_carrier_when_transaction(self):
-        self.empty_cart.transaction_ids = self._create_transaction(flow="redirect", state="pending")
+        self.empty_cart.sudo().transaction_ids = self._create_transaction(flow="redirect", state="pending")
         with (
             self.mock_request(sale_order_id=self.empty_cart.id) as request,
             self.assertRaises(UserError),
@@ -30,7 +36,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
 
     # test that changing the delivery method while there is a draft transaction is successful
     def test_controller_change_carrier_when_draft_transaction(self):
-        self.empty_cart.transaction_ids = self._create_transaction(flow="redirect", state="draft")
+        self.empty_cart.sudo().transaction_ids = self._create_transaction(flow="redirect", state="draft")
         with self.mock_request(sale_order_id=self.empty_cart.id):
             self.Controller.shop_set_delivery_method(dm_id=self.free_delivery.id)
 

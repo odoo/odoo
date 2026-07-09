@@ -10,7 +10,18 @@ from odoo.addons.website_sale.tests.test_abandoned_cart import TestWebsiteSaleCa
 @tagged('post_install', '-at_install')
 class TestWebsiteEventSaleCart(TestWebsiteEventSaleCommon, TestWebsiteSaleCartAbandonedCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        # FIXME website_sale website_sale/models/sale_order.py:936 révélé par
+        # TestWebsiteEventSaleCart.test_sold_out_event_cart_reminder :
+        # _filter_can_send_abandoned_cart_mail lit sale.order.transaction_ids
+        # (groups="account.group_account_invoice") sans sudo.
+        'account.group_account_invoice',
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -34,7 +45,7 @@ class TestWebsiteEventSaleCart(TestWebsiteEventSaleCommon, TestWebsiteSaleCartAb
             'date_order': datetime.now() - timedelta(hours=2),
         } for partner in (self.partner_admin, self.partner_portal)])
 
-        self.ticket.write({
+        self.ticket.sudo().write({
             'seats_limited': True,
             'seats_max': 1,
         })
@@ -65,7 +76,7 @@ class TestWebsiteEventSaleCart(TestWebsiteEventSaleCommon, TestWebsiteSaleCartAb
 
         # Reset sent state, increase seat limit, and try again
         cart2.cart_recovery_email_sent = False
-        self.ticket.seats_max = 2
+        self.ticket.sudo().seats_max = 2
         self.assertTrue(
             self.send_mail_patched(cart2.id),
             "Abandoned cart email can be sent after increasing seat count",

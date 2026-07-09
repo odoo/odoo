@@ -273,7 +273,7 @@ class TestSalePrices(SaleCommon):
             ],
         })
 
-        self.pricelist.write({
+        self.pricelist.sudo().write({
             "item_ids": [
                 Command.create({
                     "compute_price": "percentage",
@@ -633,7 +633,7 @@ class TestSalePrices(SaleCommon):
 
         self.product.write({"lst_price": 115, "taxes_id": [Command.set(tax_a.ids)]})
 
-        self.pricelist.write({
+        self.pricelist.sudo().write({
             "item_ids": [
                 Command.create({
                     "applied_on": "3_global",

@@ -13,7 +13,13 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 class TestWebsiteSaleStockProductWarehouse(
     TestProductAttributeValueCommon, WebsiteSaleStockCommon, HttpCase
 ):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -33,7 +39,7 @@ class TestWebsiteSaleStockProductWarehouse(
         cls._add_product_qty_to_wh(cls.product_B.id, 10, cls.warehouse_2.lot_stock_id.id)
 
     def test_get_combination_info_free_qty_when_warehouse_is_set(self):
-        self.website.warehouse_id = self.warehouse_2
+        self.website.sudo().warehouse_id = self.warehouse_2
         combination_info = self.make_jsonrpc_request(
             "/website_sale/get_combination_info",
             {
@@ -56,7 +62,7 @@ class TestWebsiteSaleStockProductWarehouse(
         self.assertEqual(combination_info["free_qty"], 10)
 
     def test_get_combination_info_free_qty_when_no_warehouse_is_set(self):
-        self.website.warehouse_id = False
+        self.website.sudo().warehouse_id = False
         combination_info = self.make_jsonrpc_request(
             "/website_sale/get_combination_info",
             {

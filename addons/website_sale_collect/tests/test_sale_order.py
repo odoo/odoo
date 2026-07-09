@@ -11,7 +11,13 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 @tagged("post_install", "-at_install")
 class TestSaleOrder(ClickAndCollectCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -20,7 +26,7 @@ class TestSaleOrder(ClickAndCollectCommon):
 
     def test_warehouse_is_updated_when_changing_delivery_line(self):
         self.warehouse_2 = self._create_warehouse()
-        self.website.warehouse_id = self.warehouse
+        self.website.sudo().warehouse_id = self.warehouse
         so = self._create_in_store_delivery_order(warehouse_id=self.warehouse_2.id)
         so._set_delivery_method(self.free_delivery)
         self.assertEqual(so.warehouse_id, self.warehouse)
@@ -59,7 +65,7 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.assertEqual(so.warehouse_id, warehouse_2)
 
     def test_fiscal_position_id_is_computed_from_pickup_location_partner(self):
-        fp_be = self.env["account.fiscal.position"].create({
+        fp_be = self.env["account.fiscal.position"].sudo().create({
             "name": "Test BE fiscal position",
             "country_id": self.country_be.id,
             "auto_apply": True,
@@ -74,7 +80,7 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.assertEqual(so.fiscal_position_id, fp_be)
 
     def test_setting_pickup_location_assigns_correct_fiscal_position(self):
-        fp_be = self.env["account.fiscal.position"].create({
+        fp_be = self.env["account.fiscal.position"].sudo().create({
             "name": "Test BE fiscal position",
             "country_id": self.country_be.id,
             "auto_apply": True,
@@ -95,7 +101,7 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.assertEqual(so.fiscal_position_id, fp_be)
 
     def test_selecting_not_in_store_dm_resets_fiscal_position(self):
-        fp_us = self.env["account.fiscal.position"].create({
+        fp_us = self.env["account.fiscal.position"].sudo().create({
             "name": "Test US fiscal position",
             "country_id": self.country_us.id,
             "auto_apply": True,
@@ -214,11 +220,11 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.assertIn(cart.order_line, insufficient_stock_data)
 
     def test_fiscal_position_correctly_set_in_multi_company_setup(self):
-        company_2 = self.env["res.company"].create({"name": "Company 2"})
-        self.website.company_id = company_2
+        company_2 = self.env["res.company"].sudo().create({"name": "Company 2"})
+        self.website.sudo().company_id = company_2
         warehouse_2 = self._create_warehouse(company_id=company_2.id)
         self.in_store_dm.warehouse_ids = [Command.link(warehouse_2.id)]
-        _, fp_company_2 = self.env["account.fiscal.position"].create([
+        _, fp_company_2 = self.env["account.fiscal.position"].sudo().create([
             {
                 "name": "Company 1 fiscal position",
                 "country_id": warehouse_2.partner_id.country_id.id,
@@ -245,7 +251,7 @@ class TestSaleOrder(ClickAndCollectCommon):
 
     def test_partner_email_confirmation(self):
         """Partner receives email confirmation for in_store delivery."""
-        self.company.stock_move_email_validation = True
+        self.company.sudo().stock_move_email_validation = True
         wh_partner = self.warehouse.partner_id
         new_so = self._create_in_store_delivery_order()
         new_so.set_pickup_location(

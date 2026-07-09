@@ -7,7 +7,13 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestCheckoutAddress(GelatoCommon, WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def test_require_shortening_too_long_addresses(self):
         """Test that if the saved partner address is too long, they are redirected to edit form

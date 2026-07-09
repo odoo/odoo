@@ -15,7 +15,12 @@ class TestCustomize(
     TestProductConfiguratorCommon,
     HttpCaseWithWebsiteUser,
 ):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',  # product.attribute / product.template setup
+    )
+
+    _test_user_name = 'Test User'
 
     @classmethod
     def setUpClass(cls):
@@ -67,7 +72,7 @@ class TestCustomize(
         self.env.user.write({
             "group_ids": [Command.link(self.env.ref("product.group_product_pricelist").id)]
         })
-        self.env["product.pricelist"].create({
+        self.env["product.pricelist"].sudo().create({
             "name": "Custom pricelist (TEST)",
             "sequence": 4,
             "item_ids": [
@@ -93,7 +98,7 @@ class TestCustomize(
 
     def test_02_admin_shop_custom_attribute_value_tour(self):
         # Make sure pricelist rule exist
-        self.env["product.pricelist"].create({
+        self.env["product.pricelist"].sudo().create({
             "name": "Base Pricelist",
             "item_ids": [
                 Command.create({
@@ -231,7 +236,7 @@ class TestCustomize(
             product_template.website_url, "website_sale.no_variant_attribute", login="demo"
         )
 
-        sol = self.env["sale.order.line"].search([
+        sol = self.env["sale.order.line"].sudo().search([
             ("product_id", "=", product_template.product_variant_id.id)
         ])
         self.assertTrue(sol)
@@ -244,7 +249,7 @@ class TestCustomize(
         self.env.user.write({
             "group_ids": [Command.link(self.env.ref("product.group_product_pricelist").id)]
         })
-        self.env["product.pricelist"].create([
+        self.env["product.pricelist"].sudo().create([
             {"name": "Base Pricelist", "selectable": True},
             {"name": "Other Pricelist", "selectable": True},
         ])
@@ -298,7 +303,7 @@ class TestCustomize(
         )
         variant_to_archive = product_template._get_variant_for_combination(combination_to_archive)
         self.assertTrue(variant_to_archive)
-        variant_to_archive.action_archive()
+        variant_to_archive.sudo().action_archive()
         self.assertFalse(variant_to_archive.active)
 
         self.start_tour(

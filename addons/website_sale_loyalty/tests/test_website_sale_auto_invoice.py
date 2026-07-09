@@ -9,11 +9,17 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleAutoInvoice(WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def test_automatic_invoice_on_zero_amount(self):
         # Set automatic invoice
-        self.env.company.sale_automatic_invoice = True
+        self.env.company.sudo().sale_automatic_invoice = True
         Controller = WebsiteSale()
 
         # Create a discount code

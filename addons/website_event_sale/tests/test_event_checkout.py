@@ -9,7 +9,13 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale as CheckoutCon
 
 @tagged('post_install', '-at_install')
 class TestEventCheckout(TestWebsiteEventSaleCommon, HttpCase):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -17,7 +23,7 @@ class TestEventCheckout(TestWebsiteEventSaleCommon, HttpCase):
         cls.CheckoutController = CheckoutController()
 
     def test_checkout_impossible_if_tickets_are_expired(self):
-        self.ticket.write({'seats_max': 1, 'seats_limited': True})
+        self.ticket.sudo().write({'seats_max': 1, 'seats_limited': True})
         self.partner.write(self.dummy_partner_address_values.copy())
 
         so1 = self._create_so(

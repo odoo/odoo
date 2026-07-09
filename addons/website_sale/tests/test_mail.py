@@ -107,7 +107,14 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
 
 @tagged("post_install", "-at_install", "mail_thread")
 class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'website.group_website_designer',  # website config (salesperson_id, confirmation_email_template_id)
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def test_salesman_assignation(self):
         self.website.salesperson_id = self.user_admin
@@ -158,7 +165,7 @@ class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
 
     def test_website_specific_confirmation_template_is_used(self):
         """Ensure website-specific confirmation template is used."""
-        template = self.env["mail.template"].create({
+        template = self.env["mail.template"].sudo().create({
             "name": "Website Custom Confirmation Template",
             "model_id": self.env.ref("sale.model_sale_order").id,
             "subject": "Website Confirmation",

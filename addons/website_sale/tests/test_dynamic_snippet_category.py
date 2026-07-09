@@ -9,7 +9,13 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestDynamicSnippetCategory(WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def setUp(self):
         super().setUp()
@@ -37,7 +43,7 @@ class TestDynamicSnippetCategory(WebsiteSaleCommon):
         self.website = self.website.with_user(self.env.ref("base.user_admin"))
 
     def test_snippet_categories_sample(self):
-        sample = self.env.ref("website_sale.dynamic_filter_category_list")._prepare_sample(7)
+        sample = self.env.ref("website_sale.dynamic_filter_category_list").sudo()._prepare_sample(7)
         self.assertEqual(len(sample), 7)
         for category in sample:
             self.assertTrue(category["cover_image"].startswith("/website_sale/static/src/img/"))

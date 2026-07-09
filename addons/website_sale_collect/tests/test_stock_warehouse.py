@@ -9,7 +9,13 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 @tagged("post_install", "-at_install")
 class TestStockWarehouse(ClickAndCollectCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def test_geolocation_updates_unset_coordinates_of_valid_addresses(self):
         """Test that valid addresses with default coordinates are geolocated."""

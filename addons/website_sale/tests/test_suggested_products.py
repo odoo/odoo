@@ -14,7 +14,13 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -86,7 +92,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         """Activating the website settings automatically triggers the cron
         updating the optional and alternative products."""
         # Disable the suggested products feature
-        self.env["res.config.settings"].create({
+        self.env["res.config.settings"].sudo().create({
             "group_automate_suggested_products": False
         }).set_values()
         suggested_products_cron = self.env.ref("website_sale.update_suggested_products_cron")
@@ -94,7 +100,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
             "website_sale.update_suggested_products_cron"
         ) as captured_triggers:
             # Enable the suggested products feature
-            self.env["res.config.settings"].create({
+            self.env["res.config.settings"].sudo().create({
                 "group_automate_suggested_products": True
             }).set_values()
         self.assertTrue(suggested_products_cron.active)
