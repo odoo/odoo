@@ -18,6 +18,10 @@ registry.category("web_tour.tours").add("test_stock_route_diagram_report", {
         run: "click",
     },
     {
+        trigger: '.btn[name="print_report"]',
+        run: "click",
+    },
+    {
         trigger: ':iframe .o_report_stock_rule',
     },
     ],
