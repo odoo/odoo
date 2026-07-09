@@ -1125,6 +1125,7 @@ SERVICES_MAPPING = {
     "multi_tab": ['MultiTabPlugin', '@bus/multi_tab_plugin'],
     "overlay": ['OverlayPlugin', '@web/core/overlay/overlay_plugin'],
     "presence": ['PresencePlugin', '@bus/services/presence_plugin'],
+    "signInfo": ['SignInfoPlugin', '@sign/plugins/sign_info_plugin'],
     "sortable": ['SortablePlugin', '@web/core/util/sortable_plugin'],
     "simple_notification": ['SimpleNotificationPlugin', '@bus/simple_notification_plugin'],
     "ui": ['UIPlugin', '@web/core/ui/ui_plugin'],
