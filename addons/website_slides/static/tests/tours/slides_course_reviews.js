@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import slidesTourTools from "@website_slides/../tests/tours/slides_tour_tools";
 
 /**
  * This tour test that a log note isn't considered
@@ -22,7 +23,8 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             // If it fails here, it means the log note is considered as a review
-            trigger: "span:contains(Add Review)",
+            content: "Add your review",
+            trigger: ".o_rating_popup_composer_btn",
             run: "click",
         },
         {
@@ -48,9 +50,10 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             // If it fails here, it means the system is allowing you to add another review.
-            trigger: "span:contains(Edit Review)",
-            run: "click",
+            content: "The button to add your review is hidden.",
+            trigger: ".o_rating_popup_composer_btn:not(:visible)",
         },
+        ...slidesTourTools.openMessageAction("Great course!", "edit"),
         {
             trigger: "div.o_portal_chatter_composer_body textarea:value(Great course!)",
             run: "edit Mid course!",

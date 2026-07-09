@@ -159,6 +159,7 @@ Featuring
         ],
         "portal.assets_chatter_helpers": [
             "website_slides/static/src/core/common/**/*",
+            "website_slides/static/src/js/portal/**/*",
         ],
     },
     'author': 'Odoo S.A.',

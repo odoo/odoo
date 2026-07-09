@@ -390,6 +390,41 @@ var addNewCourseTag = function (courseTagName, backend) {
     ];
 };
 
+/**
+ * @param messageContent content of the message for which the action is to be open
+ * @param action action to open (edit, delete, ...)
+ * @param userHasReviewed whether the user has already reviewed the course
+ * @returns the steps to open the given action menu on a message with the given content.
+ */
+const openMessageAction = function (messageContent, action, userHasReviewed = true) {
+    const waitModalStep = userHasReviewed
+        ? [
+              {
+                  content: `Wait modal to be ready before opening action menu of the message: ${messageContent}`,
+                  trigger: ".o_rating_popup_composer[data-message-id]",
+              },
+          ]
+        : [];
+    const actionSteps = [
+        {
+            content: `Display button to open action menu of the message: ${messageContent}`,
+            trigger: `#chatterRoot:shadow .o-mail-Message:has(.o-mail-Message-content:contains('${messageContent}'))`,
+            run: "click",
+        },
+        {
+            content: `Display contextual menu of the rating message: ${messageContent}`,
+            trigger: `#chatterRoot:shadow .o-mail-Message-content:contains('${messageContent}') [title='Expand']`,
+            run: "click",
+        },
+        {
+            content: `Click on "${action}" of the rating message: ${messageContent}`,
+            trigger: `#chatterRoot:shadow .o-mail-ActionList button[name='${action}']`,
+            run: "click",
+        },
+    ];
+    return [...waitModalStep, ...actionSteps];
+};
+
 export default {
     addSection: addSection,
     addImageToSection: addImageToSection,
@@ -398,4 +433,5 @@ export default {
     addArticleToSection: addArticleToSection,
     addExistingCourseTag: addExistingCourseTag,
     addNewCourseTag: addNewCourseTag,
+    openMessageAction,
 };

@@ -1,5 +1,6 @@
 import { delay } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
+import slidesTourTools from "@website_slides/../tests/tours/slides_tour_tools";
 
 function checkSidebarListItemIsCompleted(contains) {
     return {
@@ -159,11 +160,12 @@ registry.category("web_tour.tours").add("course_member", {
             expectUnloadPage: true,
         },
         {
-            trigger: 'button[data-bs-target="#ratingpopupcomposer"]:contains("Add Review")',
+            trigger:
+                'button[data-bs-target="#ratingpopupcomposer"].btn-link:contains("Add your review")',
             run: "click",
         },
         {
-            trigger: ".modal.modal_shown .modal-body i.fa.fa-star:eq(2)",
+            trigger: ".modal.modal_shown .modal-body .o-mail-Composer-stars i.fa:eq(2)",
             run: "click",
         },
         {
@@ -178,13 +180,28 @@ registry.category("web_tour.tours").add("course_member", {
             content: "Wait the first review is closed before send the second",
             trigger: "body:not(:has(.modal:visible))",
         },
-        // eLearning: edit the review
         {
-            trigger: 'button[data-bs-target="#ratingpopupcomposer"]:contains("Edit Review")',
+            content: "Show the review tab",
+            trigger: "a[id=review-tab]",
             run: "click",
         },
         {
+            content: "Check the review in the chatter",
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:contains('This is a great course. Top!') .o_website_rating_static[title='3 stars on 5']",
+        },
+        ...slidesTourTools.openMessageAction("This is a great course. Top!", "edit"),
+        {
+            content: "Ensure there are at least 3 full stars",
+            trigger: ".modal.modal_shown .modal-body i.fa.fa-star:eq(2)",
+        },
+        {
+            content: "Ensure there are at least 2 empty stars",
             trigger: ".modal.modal_shown .modal-body i.fa.fa-star-o:eq(1)",
+        },
+        {
+            content: "Set to 4 stars",
+            trigger: ".modal.modal_shown .modal-body i.fa.fa-star-o:eq(0)",
             run: "click",
         },
         {
@@ -194,6 +211,11 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: ".modal.modal_shown button:contains(review)",
             run: "click",
+        },
+        {
+            content: "Check the review in the chatter",
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:contains('This is a great course. I highly recommend it!') .o_website_rating_static[title='4 stars on 5']",
         },
         {
             trigger: 'a[id="review-tab"]',
