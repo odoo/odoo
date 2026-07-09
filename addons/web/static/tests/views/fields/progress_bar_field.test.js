@@ -258,7 +258,7 @@ test("ProgressBarField: write float instead of int works, in locale", async () =
 
     await click(".o_field_widget input");
     await animationFrame();
-    await edit("1#037:9", { confirm: "enter" });
+    await edit("1#037.9", { confirm: "enter" });
     await animationFrame();
     await clickSave();
     await animationFrame();
@@ -286,7 +286,7 @@ test("ProgressBarField: write gibberish instead of int throws warning", async ()
 
     await click(".o_progressbar_value .o_input");
     await animationFrame();
-    await edit("trente sept virgule neuf", { confirm: "enter" });
+    await edit("-trente sept virgule neuf", { confirm: "enter" });
     await animationFrame();
     await click(".o_form_button_save");
     await animationFrame();

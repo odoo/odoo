@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { formatMonetary } from "../formatters";
-import { parseMonetary } from "../parsers";
+import { parseFloat } from "../parsers";
 import { useInputField } from "../input_field_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
@@ -44,7 +44,7 @@ export class MonetaryField extends Component {
         return {
             getValue: () => this.formattedValue,
             ref: this.numpadDecimalRef,
-            parse: (v) => parseMonetary(v, { allowOperation: true }),
+            parse: (v) => parseFloat(v, { allowOperation: true }),
         };
     }
 

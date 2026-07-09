@@ -2942,7 +2942,7 @@ test("number formatting", async () => {
         domain: `[("number", "=", 1989.45)]`,
     });
     expect(".o_tree_editor_editor input").toHaveValue("1~989$45");
-    await contains(".o_tree_editor_editor input").edit("1~989$46");
+    await contains(".o_tree_editor_editor input").edit("1989.46");
     expect(".o_tree_editor_editor input").toHaveValue("1~989$46");
     expect(expr).toEqual('[("number", "=", 1989.46)]');
 

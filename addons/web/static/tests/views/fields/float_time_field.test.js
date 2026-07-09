@@ -105,7 +105,7 @@ test("FloatTimeField with invalid value", async () => {
     expect(".o_duration_popover").toHaveCount(0);
     await press("enter");
     expect(".o_field_float_time.o_field_invalid").toHaveCount(1);
-    
+
     await contains(".o_field_float_time[name=qux] input").edit("6.5");
     expect(".o_duration_popover").toHaveText("6h 30m");
 });
@@ -124,13 +124,13 @@ test("FloatTimeField with formula", async () => {
     expect(".o_duration_popover").toHaveText("6h");
     await clickSave();
     expect(".o_field_float_time[name=qux] input").toHaveValue("6h");
-    
+
     await contains(".o_field_float_time[name=qux] input").edit("=2*");
     expect(".o_duration_popover").toHaveCount(0);
     await press("enter");
     expect(".o_field_float_time.o_field_invalid").toHaveCount(1);
-    
-    await contains(".o_field_float_time[name=qux] input").edit("=2l");
+
+    await contains(".o_field_float_time[name=qux] input").edit("=2-");
     expect(".o_duration_popover").toHaveCount(0);
     await press("enter");
     expect(".o_field_float_time.o_field_invalid").toHaveCount(1);

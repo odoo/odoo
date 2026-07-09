@@ -696,7 +696,7 @@ test("properties: float and integer", async () => {
     await editValue("2.11", "2.11");
     await editValue("2.1234567", "2.12", "Decimal precision is 2");
     await editValue("azerty", "0.00", "Wrong float value should be interpreted as 0.00");
-    await editValue("1,2,3,4,5,6.1,2,3,5", "123,456.12");
+    await editValue("1,2,3,4,5,6.1,2,3,5", "1,234,561,235.00");
 
     // change type to integer
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
@@ -706,10 +706,10 @@ test("properties: float and integer", async () => {
 
     await editValue("0", "0");
     await editValue("2", "2");
-    await editValue("2.11", "0");
+    await editValue("2.11", "211");
     await editValue("azerty", "0", "Wrong integer value should be interpreted as 0");
     await editValue("1,2,3,4,5,6", "123,456");
-    await editValue("1,2,3,4,5,6.1,2,3", "0");
+    await editValue("1,2,3,4,5,6.1,2,3", "123,456,123");
 });
 
 /**

@@ -23,7 +23,7 @@ import { nbsp } from "@web/core/utils/strings";
 import { imageUrl } from "@web/core/utils/urls";
 import { formatInteger, formatMany2one, formatMonetary } from "@web/views/fields/formatters";
 import { Many2One } from "@web/views/fields/many2one/many2one";
-import { parseFloat, parseInteger, parseMonetary } from "@web/views/fields/parsers";
+import { parseFloat, parseInteger } from "@web/views/fields/parsers";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { PropertyTags } from "./property_tags";
 import { PropertyText } from "./property_text";
@@ -350,7 +350,7 @@ export class PropertyValue extends Component {
             }
         } else if (this.props.type === "monetary") {
             try {
-                newValue = parseMonetary(newValue) || 0;
+                newValue = parseFloat(newValue) || 0;
             } catch {
                 newValue = 0;
             }
