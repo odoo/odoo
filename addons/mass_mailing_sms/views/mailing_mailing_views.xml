@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <!-- Buttons / Actions -->
             <xpath expr="//button[@name='action_launch']" position="attributes">
-                <attribute name="invisible">mailing_type != 'mail' or state in ('in_queue', 'sending', 'processing', 'done')</attribute>
+                <attribute name="invisible">is_template or mailing_type != 'mail' or state in ('in_queue', 'sending', 'processing', 'done')</attribute>
             </xpath>
             <xpath expr="//button[@name='action_schedule']" position="before">
                 <field name="sms_force_send" invisible="1"/>
@@ -99,9 +99,6 @@
             <xpath expr="//field[@name='subject']" position="after">
                 <field class="text-break" name="sms_subject" string="Title" placeholder="e.g. Black Friday SMS coupon" invisible="mailing_type != 'sms'" readonly="state in ('sending', 'done')" required="mailing_type == 'sms'"/>
             </xpath>
-            <xpath expr="//field[@name='favorite']" position="attributes">
-                <attribute name="invisible" separator=" or " add="mailing_type != 'mail'"/>
-            </xpath>
             <xpath expr="//field[@name='preview']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
                 <attribute name="readonly">state in ('sending', 'done')</attribute>
@@ -138,7 +135,7 @@
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
             </xpath>
             <xpath expr="//field[@name='reply_to']" position="attributes">
-                <attribute name="required">mailing_type == 'mail'</attribute>
+                <attribute name="required">not is_template and mailing_type == 'mail'</attribute>
             </xpath>
             <xpath expr="//div[@name='reply_to_details']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>

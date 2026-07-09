@@ -219,3 +219,15 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
         padding-right: 2rem !important;
     }
 }
+
+.o_field_input_buttons {
+    align-items: center !important;
+    
+    .btn-link, .btn {
+        color: if($o-webclient-color-scheme == dark, $o-gray-900, black);
+    }
+
+    .btn:hover, .btn-link:hover {
+        color: $o-success;
+    }
+}
