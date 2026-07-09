@@ -320,6 +320,7 @@ export class AutoComplete extends Component {
     onInputChange(ev) {
         if (this.ignoreBlur) {
             ev.stopImmediatePropagation();
+            return;
         }
         this.props.onChange({
             inputValue: this.inputRef.el.value,
