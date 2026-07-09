@@ -1,0 +1,118 @@
+# .github/workflows/review_correct.yml (dans chaque repo cible)
+# Phase 1/2 — Déclenché par le label review-correct sur une PR.
+# L'agent analyse la PR et poste un plan de corrections.
+# L'humain approuve le plan en posant review-correct:apply (phase 2).
+name: Review correct
+
+on:
+  pull_request:
+    types: [labeled]
+
+concurrency:
+  group: review-correct-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    if: github.event.label.name == 'review-correct'
+    runs-on: self-hosted
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: read
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout la PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Récupérer PR et issue liée
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          PR_TITLE="$(gh pr view "$PR_NUMBER" --json title --jq '.title')"
+          PR_BODY="$(gh pr view "$PR_NUMBER" --json body --jq '.body // ""')"
+          PR_DIFF="$(gh pr diff "$PR_NUMBER")"
+
+          ISSUE_NUMBER="$(echo "$PR_BODY" | grep -oP 'Closes\s+#\K\d+' | head -1 || echo '')"
+
+          if [ -n "$ISSUE_NUMBER" ]; then
+            ISSUE_TITLE="$(gh issue view "$ISSUE_NUMBER" --json title --jq '.title // "inaccessible"')"
+            ISSUE_BODY="$(gh issue view "$ISSUE_NUMBER" --json body --jq '.body // ""')"
+          else
+            ISSUE_TITLE="pas d'issue liée"
+            ISSUE_BODY=""
+          fi
+
+          printf '%s' "$PR_TITLE" > /tmp/pr_title.txt
+          printf '%s' "$PR_BODY" > /tmp/pr_body.txt
+          printf '%s' "$PR_DIFF" > /tmp/pr_diff.txt
+          printf '%s' "$ISSUE_NUMBER" > /tmp/issue_number.txt
+          printf '%s' "$ISSUE_TITLE" > /tmp/issue_title.txt
+          printf '%s' "$ISSUE_BODY" > /tmp/issue_body.txt
+
+          echo "PR: $PR_TITLE"
+          echo "Issue liée: #${ISSUE_NUMBER:-aucune}"
+
+      - name: Plan de corrections
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          fcc-claude --yes "$(cat <<PROMPT
+          Tu es un réviseur de code senior chargé de **préparer des corrections**.
+          Une PR t'est soumise pour que tu proposes un plan de corrections détaillé.
+
+          ═══════════════════════════════════════════════
+          PR #${PR_NUMBER}
+          ═══════════════════════════════════════════════
+
+          Contexte dans /tmp/ : titre, description, diff de la PR, et issue liée si présente.
+
+          ═══════════════════════════════════════════════
+          CONSIGNES OBLIGATOIRES (NON NÉGOCIABLES)
+          ═══════════════════════════════════════════════
+
+          1. Lis les conventions dans .claude/Skills/ (git.md en priorité).
+
+          2. Prends connaissance de la PR : /tmp/pr_title.txt, /tmp/pr_body.txt,
+             /tmp/pr_diff.txt, et si présente /tmp/issue_body.txt.
+
+          3. Analyse comme un reviewer, MAIS au lieu de juste pointer les problèmes,
+             tu vas produire un **plan de corrections actionnable** que toi-même
+             (ou un autre agent) pourra exécuter en phase 2.
+
+          4. Produis un plan structuré en français avec :
+
+             📋 **Résumé** — 2-3 phrases sur l'état de la PR
+
+             🔴 **Corrections bloquantes** (à faire impérativement) :
+             - chaque correction = fichier concerné + ce qu'il faut changer + pourquoi
+             - sois précis : un autre agent doit pouvoir exécuter sans ambiguïté
+
+             🟡 **Améliorations recommandées** (non bloquantes) :
+             - mêmes infos que ci-dessus
+
+             📝 **Vérifications finales** :
+             - checklist de ce qu'il faudra vérifier après corrections
+             - tests à lancer, edge cases à tester
+
+             📊 **Charge estimée** — simple (< 30 min) / moyenne (1-2 h) / lourde (> 2 h)
+
+          5. Poste ce plan EN UN SEUL COMMENTAIRE sur la PR #${PR_NUMBER} avec
+             \`gh pr comment\`. Le commentaire doit commencer par :
+             > 🤖 Plan de corrections — pour l'appliquer, pose le label \`review-correct:apply\`
+
+          6. Gestion des labels :
+             - retire "review-correct" : gh pr edit ${PR_NUMBER} --remove-label "review-correct"
+             - ajoute "review-correct:pending" : gh pr edit ${PR_NUMBER} --add-label "review-correct:pending"
+
+          7. Ne modifie AUCUN fichier. Ne push rien. Tu produis UNIQUEMENT un plan.
+
+          PR number: ${PR_NUMBER}
+          PROMPT
+          )"
