@@ -1,10 +1,32 @@
 # -*- coding: utf-8 -*-
 
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
 from itertools import groupby
+from time import perf_counter
 
-from odoo import api, models
+from odoo import SUPERUSER_ID, api, models, sql_db
+from odoo.modules.registry import Registry
 from odoo.tools import SQL, float_round
+
+
+_tax_details_snapshot_worker_initialized = set()
+
+
+def _process_tax_details_snapshot_worker(dbname, uid, context, domain, fallback):
+    if dbname not in _tax_details_snapshot_worker_initialized:
+        sql_db.close_db(dbname)
+        Registry.delete(dbname)
+        _tax_details_snapshot_worker_initialized.add(dbname)
+    with Registry(dbname).cursor() as cr:
+        env = api.Environment(cr, uid, context)
+        start = perf_counter()
+        rows = env['account.move.line']._get_python_tax_details_from_snapshot_domain(domain, fallback=fallback)
+        return {
+            'rows': rows,
+            'elapsed': perf_counter() - start,
+            'row_count': len(rows),
+        }
 
 
 class AccountMoveLine(models.Model):
@@ -50,6 +72,453 @@ class AccountMoveLine(models.Model):
             else:
                 tax_details += self._get_python_tax_details(move_lines, fallback=fallback)
         return tax_details
+
+    @api.model
+    def _get_python_tax_details_from_snapshot_domain(self, domain, fallback=True):
+        query = self.env['account.move.line']._search(domain)
+        return self._get_python_tax_details_from_snapshot_query(query.from_clause, query.where_clause, fallback=fallback)
+
+    @api.model
+    def _get_python_tax_details_from_snapshot_domain_parallel(self, domain, fallback=True, batch_size=100, max_workers=4):
+        move_ids = self.search(domain, order='move_id').move_id.ids
+        if not move_ids:
+            return [], []
+
+        batches = [
+            move_ids[index:index + batch_size]
+            for index in range(0, len(move_ids), batch_size)
+        ]
+        context = {
+            key: value
+            for key, value in self.env.context.items()
+            if key in ('allowed_company_ids', 'lang', 'tz')
+        }
+        uid = self.env.uid or SUPERUSER_ID
+        dbname = self.env.cr.dbname
+        worker_args = [
+            (dbname, uid, context, domain + [('move_id', 'in', batch)], fallback)
+            for batch in batches
+        ]
+
+        rows = []
+        timings = []
+        with ProcessPoolExecutor(max_workers=max_workers) as executor:
+            for result in executor.map(_process_tax_details_snapshot_worker, *zip(*worker_args)):
+                rows.extend(result['rows'])
+                timings.append({
+                    'elapsed': result['elapsed'],
+                    'row_count': result['row_count'],
+                })
+        return sorted(rows, key=lambda row: (row['tax_line_id'], row['base_line_id'], row['src_line_id'])), timings
+
+    @api.model
+    def _get_python_tax_details_snapshot(self, table_references, search_condition):
+        self.env.cr.execute(SQL(
+            '''
+            WITH selected_lines AS MATERIALIZED (
+                SELECT account_move_line.id, account_move_line.move_id
+                  FROM %(table_references)s
+                 WHERE %(search_condition)s
+            ),
+            selected_moves AS MATERIALIZED (
+                SELECT DISTINCT move_id
+                  FROM selected_lines
+            ),
+            selected_move_lines AS MATERIALIZED (
+                SELECT
+                    aml.id,
+                    aml.move_id,
+                    aml.display_type,
+                    aml.tax_repartition_line_id,
+                    aml.tax_line_id,
+                    aml.group_tax_id,
+                    aml.balance,
+                    aml.amount_currency,
+                    aml.quantity,
+                    aml.account_id,
+                    aml.partner_id,
+                    aml.currency_id,
+                    aml.company_currency_id,
+                    aml.analytic_distribution,
+                    move.move_type,
+                    move.tax_cash_basis_rec_id,
+                    move.always_tax_exigible,
+                    aml.id IN (SELECT id FROM selected_lines) AS selected,
+                    COALESCE(
+                        ARRAY_AGG(tax_rel.account_tax_id ORDER BY tax.sequence, tax_rel.account_tax_id)
+                        FILTER (WHERE tax_rel.account_tax_id IS NOT NULL),
+                        ARRAY[]::integer[]
+                    ) AS tax_ids
+                FROM account_move_line aml
+                JOIN selected_moves selected_move ON selected_move.move_id = aml.move_id
+                JOIN account_move move ON move.id = aml.move_id
+                LEFT JOIN account_move_line_account_tax_rel tax_rel ON tax_rel.account_move_line_id = aml.id
+                LEFT JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
+                GROUP BY aml.id, move.id
+            ),
+            referenced_taxes AS MATERIALIZED (
+                SELECT DISTINCT tax_id
+                  FROM (
+                    SELECT tax_line_id AS tax_id FROM selected_move_lines WHERE tax_line_id IS NOT NULL
+                    UNION ALL
+                    SELECT group_tax_id AS tax_id FROM selected_move_lines WHERE group_tax_id IS NOT NULL
+                    UNION ALL
+                    SELECT UNNEST(tax_ids) AS tax_id FROM selected_move_lines
+                  ) sub
+            ),
+            referenced_taxes_with_children AS MATERIALIZED (
+                SELECT tax_id FROM referenced_taxes
+                UNION
+                SELECT rel.child_tax
+                  FROM referenced_taxes
+                  JOIN account_tax_filiation_rel rel ON rel.parent_tax = referenced_taxes.tax_id
+            )
+            SELECT
+                'line' AS row_type,
+                to_jsonb(selected_move_lines.*) AS payload
+              FROM selected_move_lines
+            UNION ALL
+            SELECT
+                'tax' AS row_type,
+                jsonb_build_object(
+                    'id', tax.id,
+                    'sequence', tax.sequence,
+                    'amount', tax.amount,
+                    'amount_type', tax.amount_type,
+                    'is_base_affected', tax.is_base_affected,
+                    'include_base_amount', tax.include_base_amount,
+                    'tax_exigibility', tax.tax_exigibility,
+                    'cash_basis_transition_account_id', tax.cash_basis_transition_account_id,
+                    'analytic', tax.analytic,
+                    'children_tax_ids', COALESCE(children.children_tax_ids, ARRAY[]::integer[])
+                ) AS payload
+              FROM account_tax tax
+              JOIN referenced_taxes_with_children ref ON ref.tax_id = tax.id
+         LEFT JOIN LATERAL (
+                SELECT ARRAY_AGG(rel.child_tax ORDER BY child.sequence, rel.child_tax) AS children_tax_ids
+                  FROM account_tax_filiation_rel rel
+                  JOIN account_tax child ON child.id = rel.child_tax
+                 WHERE rel.parent_tax = tax.id
+              ) children ON TRUE
+            UNION ALL
+            SELECT
+                'tax_rep' AS row_type,
+                jsonb_build_object(
+                    'id', tax_rep.id,
+                    'tax_id', tax_rep.tax_id,
+                    'account_id', tax_rep.account_id,
+                    'factor_percent', tax_rep.factor_percent,
+                    'use_in_tax_closing', tax_rep.use_in_tax_closing
+                ) AS payload
+              FROM account_tax_repartition_line tax_rep
+              JOIN selected_move_lines line ON line.tax_repartition_line_id = tax_rep.id
+            UNION ALL
+            SELECT
+                'currency' AS row_type,
+                jsonb_build_object(
+                    'id', currency.id,
+                    'decimal_places', currency.decimal_places
+                ) AS payload
+              FROM res_currency currency
+             WHERE currency.id IN (
+                    SELECT currency_id FROM selected_move_lines
+                    UNION
+                    SELECT company_currency_id FROM selected_move_lines
+                )
+            ORDER BY row_type
+            ''',
+            table_references=table_references,
+            search_condition=search_condition,
+        ))
+
+        snapshot = {
+            'lines_by_move_id': defaultdict(list),
+            'taxes': {},
+            'tax_reps': {},
+            'currencies': {},
+        }
+        for row in self.env.cr.dictfetchall():
+            payload = row['payload']
+            if row['row_type'] == 'line':
+                snapshot['lines_by_move_id'][payload['move_id']].append(payload)
+            elif row['row_type'] == 'tax':
+                snapshot['taxes'][payload['id']] = payload
+            elif row['row_type'] == 'tax_rep':
+                snapshot['tax_reps'][payload['id']] = payload
+            elif row['row_type'] == 'currency':
+                snapshot['currencies'][payload['id']] = payload
+
+        for lines in snapshot['lines_by_move_id'].values():
+            lines.sort(key=lambda line: line['id'])
+        return snapshot
+
+    @api.model
+    def _get_python_tax_details_from_snapshot_query(self, table_references, search_condition, fallback=True):
+        snapshot = self._get_python_tax_details_snapshot(table_references, search_condition)
+        tax_details = []
+        for move_id in sorted(snapshot['lines_by_move_id']):
+            tax_details += self._get_python_tax_details_from_snapshot_move(snapshot, snapshot['lines_by_move_id'][move_id], fallback=fallback)
+        return tax_details
+
+    @api.model
+    def _get_python_tax_details_from_snapshot_move(self, snapshot, move_lines, fallback=True):
+        def sign(value):
+            return (value > 0) - (value < 0)
+
+        def is_null(value):
+            return value is None or value is False
+
+        def round_digits(value, precision_digits):
+            return float_round(value, precision_digits=precision_digits) if value else 0.0
+
+        def prorata_amount(cumulated_amount, total_amount, amount_to_dispatch, precision_digits):
+            if not total_amount:
+                return 0.0
+            return round_digits(
+                sign(cumulated_amount) * amount_to_dispatch * abs(cumulated_amount) / total_amount,
+                precision_digits,
+            )
+
+        def base_value(base_line, amount, tax):
+            if tax['amount_type'] == 'fixed':
+                return sign(amount) * abs(base_line['quantity'] or 1.0)
+            return amount
+
+        def flattened_base_affected_tax_ids(line):
+            tax_ids = []
+            for tax_id in line['tax_ids']:
+                tax = snapshot['taxes'][tax_id]
+                if not tax['is_base_affected']:
+                    continue
+                flattened_tax_ids = tax['children_tax_ids'] if tax['amount_type'] == 'group' else [tax_id]
+                tax_ids += [
+                    (snapshot['taxes'][flattened_tax_id]['sequence'], flattened_tax_id)
+                    for flattened_tax_id in flattened_tax_ids
+                ]
+            return [tax_id for _sequence, tax_id in sorted(tax_ids)]
+
+        def line_matches_mapping(base_line, tax_line):
+            tax = snapshot['taxes'][tax_line['tax_line_id']]
+            tax_rep = snapshot['tax_reps'][tax_line['tax_repartition_line_id']]
+            effective_tax_id = tax_line['group_tax_id'] or tax['id']
+            is_cash_basis_transition = tax['tax_exigibility'] == 'on_payment' and tax['cash_basis_transition_account_id']
+            return not (
+                base_line['tax_repartition_line_id']
+                or effective_tax_id not in base_line['tax_ids']
+                or base_line['move_id'] != tax_line['move_id']
+                or (
+                    base_line['move_type'] == 'entry'
+                    and not is_cash_basis_transition
+                    and sign(tax_line['balance']) != sign(base_line['balance'] * tax['amount'] * tax_rep['factor_percent'])
+                )
+                or base_line['partner_id'] != tax_line['partner_id']
+                or base_line['currency_id'] != tax_line['currency_id']
+                or (
+                    (tax_rep['account_id'] or base_line['account_id']) != tax_line['account_id']
+                    and not is_cash_basis_transition
+                )
+                or not (
+                    (not tax['analytic'] and tax_rep['use_in_tax_closing'])
+                    or (is_null(base_line['analytic_distribution']) and is_null(tax_line['analytic_distribution']))
+                    or base_line['analytic_distribution'] == tax_line['analytic_distribution']
+                )
+            )
+
+        def build_base_tax_line_mapping():
+            mapping_rows = []
+            for tax_line in [line for line in move_lines if line['selected'] and line['tax_repartition_line_id']]:
+                tax = snapshot['taxes'][tax_line['tax_line_id']]
+                tax_line_tax_ids = flattened_base_affected_tax_ids(tax_line)
+                for base_line in move_lines:
+                    if not line_matches_mapping(base_line, tax_line):
+                        continue
+                    if tax['include_base_amount']:
+                        expected_tax_ids = [tax['id']] + tax_line_tax_ids
+                        if flattened_base_affected_tax_ids(base_line)[-len(expected_tax_ids):] != expected_tax_ids:
+                            continue
+                    mapping_rows.append({
+                        'tax_line': tax_line,
+                        'base_line': base_line,
+                        'base_amount': base_line['balance'],
+                        'base_amount_currency': base_line['amount_currency'],
+                    })
+            return mapping_rows
+
+        def add_fallback_rows(mapping_rows):
+            if not fallback:
+                return mapping_rows
+
+            mapped_tax_line_ids = {row['tax_line']['id'] for row in mapping_rows}
+            fallback_rows = []
+            for tax_line in [line for line in move_lines if line['selected'] and line['tax_repartition_line_id']]:
+                if tax_line['id'] in mapped_tax_line_ids:
+                    continue
+                effective_tax_id = tax_line['group_tax_id'] or tax_line['tax_line_id']
+                for base_line in move_lines:
+                    if (
+                        base_line['tax_repartition_line_id']
+                        or base_line['move_id'] != tax_line['move_id']
+                        or base_line['currency_id'] != tax_line['currency_id']
+                        or effective_tax_id not in base_line['tax_ids']
+                    ):
+                        continue
+                    fallback_rows.append({
+                        'tax_line': tax_line,
+                        'base_line': base_line,
+                        'base_amount': base_line['balance'],
+                        'base_amount_currency': base_line['amount_currency'],
+                    })
+            return mapping_rows + fallback_rows
+
+        def dispatch_affecting_base_amounts(mapping_rows):
+            rows = []
+            rows_by_tax_line_id = defaultdict(list)
+            rows_by_base_line_id = defaultdict(list)
+            for row in mapping_rows:
+                rows_by_tax_line_id[row['tax_line']['id']].append(row)
+                rows_by_base_line_id[row['base_line']['id']].append(row)
+
+            grouped_dispatch_rows = defaultdict(list)
+            source_tax_lines = [
+                line
+                for line in move_lines
+                if line['selected']
+                and line['tax_repartition_line_id']
+                and snapshot['taxes'][line['tax_line_id']]['include_base_amount']
+            ]
+            for source_tax_line in source_tax_lines:
+                for source_row in rows_by_tax_line_id[source_tax_line['id']]:
+                    base_line = source_row['base_line']
+                    for affected_tax_id in source_tax_line['tax_ids']:
+                        for matching_row in rows_by_base_line_id[base_line['id']]:
+                            target_tax_line = matching_row['tax_line']
+                            if target_tax_line['tax_line_id'] != affected_tax_id:
+                                continue
+                            grouped_dispatch_rows[(target_tax_line['id'], source_tax_line['id'])].append({
+                                'tax_line': target_tax_line,
+                                'base_line': base_line,
+                                'src_line': source_tax_line,
+                                'tax': snapshot['taxes'][affected_tax_id],
+                                'base_amount': base_line['balance'],
+                                'base_amount_currency': base_line['amount_currency'],
+                                'total_tax_amount': source_tax_line['balance'],
+                                'total_tax_amount_currency': source_tax_line['amount_currency'],
+                            })
+
+            for dispatch_rows in grouped_dispatch_rows.values():
+                dispatch_rows.sort(key=lambda row: (row['tax']['id'], row['base_line']['id']))
+                total_base_amount = sum(
+                    base_value(row['base_line'], row['base_amount'], row['tax'])
+                    for row in dispatch_rows
+                )
+                total_base_amount_currency = sum(
+                    base_value(row['base_line'], row['base_amount_currency'], row['tax'])
+                    for row in dispatch_rows
+                )
+                cumulated_base_amount = cumulated_base_amount_currency = 0.0
+                previous_base_amount = previous_base_amount_currency = 0.0
+                for row in dispatch_rows:
+                    tax_line = row['tax_line']
+                    base_line = row['base_line']
+                    tax = row['tax']
+                    cumulated_base_amount += base_value(base_line, row['base_amount'], tax)
+                    cumulated_base_amount_currency += base_value(base_line, row['base_amount_currency'], tax)
+                    base_amount = prorata_amount(
+                        cumulated_base_amount,
+                        total_base_amount,
+                        row['total_tax_amount'],
+                        snapshot['currencies'][tax_line['company_currency_id']]['decimal_places'],
+                    )
+                    base_amount_currency = prorata_amount(
+                        cumulated_base_amount_currency,
+                        total_base_amount_currency,
+                        row['total_tax_amount_currency'],
+                        snapshot['currencies'][tax_line['currency_id']]['decimal_places'],
+                    )
+                    rows.append({
+                        'tax_line': tax_line,
+                        'base_line': base_line,
+                        'src_line': row['src_line'],
+                        'base_amount': base_amount - previous_base_amount,
+                        'base_amount_currency': base_amount_currency - previous_base_amount_currency,
+                    })
+                    previous_base_amount = base_amount
+                    previous_base_amount_currency = base_amount_currency
+            return rows
+
+        base_tax_line_mapping = build_base_tax_line_mapping()
+        base_tax_matching_base_amounts = [
+            {
+                **row,
+                'src_line': row['base_line'],
+            }
+            for row in add_fallback_rows(base_tax_line_mapping)
+        ]
+        base_tax_matching_base_amounts += dispatch_affecting_base_amounts(base_tax_line_mapping)
+
+        grouped_rows = defaultdict(list)
+        for row in base_tax_matching_base_amounts:
+            grouped_rows[row['tax_line']['id']].append(row)
+
+        results = []
+        for tax_line_id in sorted(grouped_rows):
+            rows = sorted(
+                grouped_rows[tax_line_id],
+                key=lambda row: (row['tax_line']['tax_line_id'], row['base_line']['id'], row['src_line']['id']),
+            )
+            tax_line = rows[0]['tax_line']
+            tax = snapshot['taxes'][tax_line['tax_line_id']]
+            total_base_amount = sum(base_value(row['base_line'], row['base_amount'], tax) for row in rows)
+            total_base_amount_currency = sum(
+                base_value(row['base_line'], row['base_amount_currency'], tax)
+                for row in rows
+            )
+            cumulated_base_amount = cumulated_base_amount_currency = 0.0
+            previous_tax_amount = previous_tax_amount_currency = 0.0
+            for row in rows:
+                base_line = row['base_line']
+                src_line = row['src_line']
+                cumulated_base_amount += base_value(base_line, row['base_amount'], tax)
+                cumulated_base_amount_currency += base_value(base_line, row['base_amount_currency'], tax)
+                tax_amount = prorata_amount(
+                    cumulated_base_amount,
+                    total_base_amount,
+                    tax_line['balance'],
+                    snapshot['currencies'][tax_line['company_currency_id']]['decimal_places'],
+                )
+                tax_amount_currency = prorata_amount(
+                    cumulated_base_amount_currency,
+                    total_base_amount_currency,
+                    tax_line['amount_currency'],
+                    snapshot['currencies'][tax_line['currency_id']]['decimal_places'],
+                )
+                results.append({
+                    'id': f"{tax_line['id']}-{base_line['id']}-{src_line['id']}",
+                    'base_line_id': base_line['id'],
+                    'tax_line_id': tax_line['id'],
+                    'display_type': tax_line['display_type'],
+                    'src_line_id': src_line['id'],
+                    'tax_id': tax['id'],
+                    'group_tax_id': tax_line['group_tax_id'] or None,
+                    'tax_exigible': (
+                        True
+                        if (
+                            tax['tax_exigibility'] != 'on_payment'
+                            or tax_line['tax_cash_basis_rec_id']
+                            or tax_line['always_tax_exigible']
+                        )
+                        else None
+                    ),
+                    'base_account_id': base_line['account_id'],
+                    'tax_repartition_line_id': tax_line['tax_repartition_line_id'],
+                    'base_amount': row['base_amount'],
+                    'tax_amount': tax_amount - previous_tax_amount,
+                    'base_amount_currency': row['base_amount_currency'],
+                    'tax_amount_currency': tax_amount_currency - previous_tax_amount_currency,
+                })
+                previous_tax_amount = tax_amount
+                previous_tax_amount_currency = tax_amount_currency
+        return results
 
     def _get_python_tax_details_simplified(self, filtered_lines):
         def sign(value):

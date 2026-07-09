@@ -64,6 +64,12 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             use_simplified_query=use_simplified_query,
         )
         self.assertPythonTaxDetailsMatchSql(tax_details_res, python_tax_details)
+        if not use_simplified_query:
+            snapshot_tax_details = self.env['account.move.line']._get_python_tax_details_from_snapshot_domain(
+                domain,
+                fallback=fallback,
+            )
+            self.assertPythonTaxDetailsMatchSql(tax_details_res, snapshot_tax_details)
         return self._sort_tax_details(tax_details_res)
 
     def assertTaxDetailsValues(self, tax_details, expected_values_list):
