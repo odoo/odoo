@@ -1,7 +1,7 @@
 import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewLine } from "../bom_overview_line/mrp_bom_overview_line";
 import { BomOverviewExtraBlock } from "../bom_overview_extra_block/mrp_bom_overview_extra_block";
-import { Component, onWillUnmount, onWillUpdateProps, useProps, proxy, t } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, t, useOnChange, useProps } from "@odoo/owl";
 
 export class BomOverviewComponentsBlock extends Component {
     static template = "mrp.BomOverviewComponentsBlock";
@@ -33,14 +33,17 @@ export class BomOverviewComponentsBlock extends Component {
             useBus(this.env.overviewBus, "toggle-fold-all", () => this._toggleFoldAll());
         }
 
-        onWillUpdateProps(newProps => {
-            if (this.data.product_id != newProps.data.product_id) {
-                this.childIds.forEach(id => delete this.state[id]);
-                const newChildIds = this.getHasComponents(newProps.data) ? newProps.data.components.map(c => this.getIdentifier(c)) : [];
-                newChildIds.forEach(id => this.state[id] = true);
+        useOnChange(
+            () => [this.data.product_id],
+            () => {
+                Object.keys(this.state)
+                    .filter(key => key !== "unfoldAll")
+                    .forEach(id => delete this.state[id]);
+                this.childIds.forEach(id => this.state[id] = true);
                 this.state.unfoldAll = false;
-            }
-        });
+            },
+            { initialRun: false }
+        );
 
         onWillUnmount(() => {
             if (this.hasComponents) {

@@ -1,7 +1,7 @@
 import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewLine } from "../bom_overview_line/mrp_bom_overview_line";
 import { BomOverviewSpecialLine } from "../bom_overview_special_line/mrp_bom_overview_special_line";
-import { Component, onWillUnmount, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, t, useOnChange, useProps } from "@odoo/owl";
 
 export class BomOverviewExtraBlock extends Component {
     static template = "mrp.BomOverviewExtraBlock";
@@ -9,17 +9,15 @@ export class BomOverviewExtraBlock extends Component {
         BomOverviewLine,
         BomOverviewSpecialLine,
     };
-    static props = {
-        unfoldAll: { type: Boolean, optional: true },
-        type: {
-            type: String,
-            validate: (t) => ["operations", "byproducts"].includes(t),
-        },
-        showOptions: Object,
-        data: Object,
-        precision: Number,
-        changeFolded: Function,
-    };
+
+    props = useProps({
+        unfoldAll: t.boolean().optional(),
+        type: t.selection(["operations", "byproducts"]),
+        showOptions: t.object(),
+        data: t.object(),
+        precision: t.number(),
+        changeFolded: t.function(),
+    });
 
     setup() {
         this.state = proxy({
@@ -31,11 +29,13 @@ export class BomOverviewExtraBlock extends Component {
 
         useBus(this.env.overviewBus, "toggle-fold-all", () => this._toggleFoldAll());
 
-        onWillUpdateProps(newProps => {
-            if (this.props.data.product_id != newProps.data.product_id) {
+        useOnChange(
+            () => [this.props.data.product_id],
+            () => {
                 this.state.isFolded = true;
-            }
-        });
+            },
+            { initialRun: false }
+        );
 
         onWillUnmount(() => {
             // Need to notify main component that the block was folded so it doesn't appear on the PDF.
