@@ -182,6 +182,7 @@ class AccountPayment(models.Model):
         return res + ('l10n_latam_new_check_ids', 'payment_method_line_id')
 
     def _prepare_move_liquidity_lines(self, default_vals):
+        is_own_check_payment = self.payment_method_code == 'own_checks' and self.payment_type == 'outbound'
         l10n_latam_checks = self.l10n_latam_new_check_ids | self.l10n_latam_move_check_ids
         if not l10n_latam_checks:
             return super()._prepare_move_liquidity_lines(default_vals)
@@ -211,7 +212,7 @@ class AccountPayment(models.Model):
                 'date_maturity': check.payment_date,
                 'amount_currency': liquidity_amount,
                 'balance': balance,
-                'l10n_latam_check_ids': [Command.set(check.ids)],
+                'l10n_latam_check_ids': [Command.set(check.ids)] if is_own_check_payment else [],
                 **line_common_vals,
             })
 
