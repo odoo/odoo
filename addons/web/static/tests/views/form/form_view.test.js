@@ -2481,7 +2481,7 @@ test(`two occurrences of invalid integer fields in form view`, async () => {
             </form>
         `,
     });
-    await contains(`.a input`).edit("abc");
+    await contains(`.a input`).edit("eee");
     expect(`.o_form_label.o_field_invalid`).toHaveCount(2);
     expect(`.o_field_integer.o_field_invalid`).toHaveCount(2);
 
@@ -5407,9 +5407,9 @@ test(`discard invalid value`, async () => {
         arch: `<form><field name="int_field"></field></form>`,
         resId: 1,
     });
-    await contains(`.o_field_widget[name=int_field] input`).edit("tralala");
+    await contains(`.o_field_widget[name=int_field] input`).edit("eee");
     expect(`.o_field_invalid`).toHaveCount(1);
-    expect(`.o_field_widget[name=int_field] input`).toHaveValue("tralala");
+    expect(`.o_field_widget[name=int_field] input`).toHaveValue("eee");
 
     await contains(`.o_form_button_cancel`).click();
     expect(`.o_field_invalid`).toHaveCount(0);
@@ -7003,7 +7003,7 @@ test(`onchanges are not sent for invalid values`, async () => {
 
     // enter an invalid value in a float, and check that no onchange has
     // been applied
-    await contains(`.o_field_widget[name="int_field"] input`).edit("123a");
+    await contains(`.o_field_widget[name="int_field"] input`).edit("123eee");
     expect(`.o_field_widget[name="foo"] input`).toHaveValue("123");
     expect.verifySteps(["onchange"]);
 

@@ -8175,7 +8175,7 @@ test("one2many with invalid value and click on another row", async () => {
     expect(".o_data_row:eq(0)").toHaveClass("o_selected_row");
     expect(".o_data_row:eq(1)").not.toHaveClass("o_selected_row");
 
-    await contains(".o_data_row [name='int_field'] input").edit("abc", { confirm: false });
+    await contains(".o_data_row [name='int_field'] input").edit("eee", { confirm: false });
     await contains(".o_data_row:eq(1) .o_data_cell").click();
     // Stays on the invalid row
     expect(".o_data_row.o_selected_row").toHaveCount(1);

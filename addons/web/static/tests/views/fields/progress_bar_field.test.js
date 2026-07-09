@@ -258,7 +258,7 @@ test("ProgressBarField: write float instead of int works, in locale", async () =
 
     await click(".o_field_widget input");
     await animationFrame();
-    await edit("1#037:9", { confirm: "enter" });
+    await edit("1#037.9", { confirm: "enter" });
     await animationFrame();
     await clickSave();
     await animationFrame();

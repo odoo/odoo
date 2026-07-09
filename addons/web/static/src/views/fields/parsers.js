@@ -19,11 +19,15 @@ import { durationUnitsRegex, normalizeTimeStr } from "@web/core/l10n/time";
 // Helpers
 // -----------------------------------------------------------------------------
 
+// A number can use any of these interchangeably as its decimal separator,
+// regardless of the locale's own configured one.
+const DECIMAL_SEPARATORS = ".,٫";
+const DECIMAL_SEPARATOR_REGEX = new RegExp(`.*([${DECIMAL_SEPARATORS}])[^${DECIMAL_SEPARATORS}]*`);
+const SINGLE_NUMBER_REGEX = new RegExp(`^[\\d${DECIMAL_SEPARATORS}'-]+$`);
+
 function evaluateMathematicalExpression(expr, context = {}) {
-    // remove extra space
-    var val = expr.replace(new RegExp(/( )/g), "");
-    var safeEvalString = "";
-    for (let v of val.split(new RegExp(/([-+*/()^])/g))) {
+    let safeEvalString = "";
+    for (let v of expr.replace(/\s+/g, "").split(/([-+*/()^])/)) {
         if (!["+", "-", "*", "/", "(", ")", "^"].includes(v) && v.length) {
             // check if this is a float and take into account user delimiter preference
             v = parseFloat(v);
@@ -41,30 +45,38 @@ function evaluateMathematicalExpression(expr, context = {}) {
  *
  * @param {string} value
  * @param {Object} options - additional options
- * @param {string|RegExp} options.thousandsSep - the thousands separator used in the value
- * @param {string|RegExp} options.decimalPoint - the decimal point used in the value
+ * @param {boolean} options.integer - if true, only integers are allowed
  * @returns {number}
  */
 function parseNumber(value, options = {}) {
+    value = value.trim();
+
+    if (value === "") {
+        return 0;
+    }
     if (value.startsWith("=")) {
         value = evaluateMathematicalExpression(value.substring(1));
         if (options.truncate) {
             value = Math.trunc(value);
         }
-    } else {
-        // A whitespace thousands separator is equivalent to any whitespace character.
-        // E.g. "1  000 000" should be parsed as 1000000 even if the
-        // thousands separator is nbsp.
-        const thousandsSepRegex = options.thousandsSep.match(/\s+/)
-            ? /\s+/g
-            : new RegExp(escapeRegExp(options.thousandsSep), "g") || ",";
-
-        // a number can have the thousand separator multiple times. ex: 1,000,000.00
-        value = value.replaceAll(thousandsSepRegex, "");
-        // a number only have one decimal separator
-        value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
+        return Number(value);
     }
 
+    if (!options.integer) {
+        const dp = value.match(DECIMAL_SEPARATOR_REGEX)?.[1];
+
+        if (dp) {
+            const count = value.split(dp).length - 1;
+            if (count === 1) {
+                const cleanupRegex = new RegExp(`[^\\deE\\-${dp}]`, "g");
+                value = value.replace(cleanupRegex, "");
+                value = value.replace(dp, ".");
+                return Number(value);
+            }
+        }
+    }
+
+    value = value.replace(/[^\deE-]/g, "");
     return Number(value);
 }
 
@@ -76,7 +88,7 @@ export class InvalidNumberError extends Error {}
 export class DurationParseError extends Error {}
 
 /**
- * Try to extract a float from a string. The localization is considered in the process.
+ * Try to extract a float from a string.
  *
  * @param {string} value
  * @returns {number} a float
@@ -86,26 +98,15 @@ export function parseFloat(value, { allowOperation = false } = {}) {
     if (operation) {
         return operation;
     }
-    const thousandsSepRegex = localization.thousandsSep || "";
-    const decimalPointRegex = localization.decimalPoint;
-    let parsed = parseNumber(value, {
-        thousandsSep: thousandsSepRegex,
-        decimalPoint: decimalPointRegex,
-    });
+    const parsed = parseNumber(value);
     if (isNaN(parsed)) {
-        parsed = parseNumber(value, {
-            thousandsSep: ",",
-            decimalPoint: ".",
-        });
-        if (isNaN(parsed)) {
-            throw new InvalidNumberError(`"${value}" is not a correct number`);
-        }
+        throw new InvalidNumberError(`"${value}" is not a correct number`);
     }
     return parsed;
 }
 
 /**
- * Try to extract a float time from a string. The localization is considered in the process.
+ * Try to extract a float time from a string.
  * The float time can have two formats: float or integer:integer.
  *
  * @param {string} value
@@ -113,6 +114,7 @@ export function parseFloat(value, { allowOperation = false } = {}) {
  * @returns {number} a float
  */
 export function parseFloatTime(value, unit = "hours") {
+    value = value.trim();
     let duration;
     if (value.startsWith("=")) {
         duration = { hours: 0, minutes: 0, seconds: 0 };
@@ -162,13 +164,12 @@ function parseDuration(value, unit = "hours") {
     }
 
     value = value.replaceAll(" ", "");
-    value = value
-        .replaceAll(localization.thousandsSep, "")
-        .replaceAll(localization.decimalPoint, ".");
 
-    // Single number
-    if (!isNaN(value)) {
-        duration[unit] = Number(value);
+    // Single number: only if the value contains no unit-label characters.
+    // parseNumber strips noise aggressively, so "2小时30分钟45秒" → 23045 without this guard.
+    const asNumber = SINGLE_NUMBER_REGEX.test(value) ? parseNumber(value) : NaN;
+    if (!isNaN(asNumber)) {
+        duration[unit] = asNumber;
     }
 
     // 12:30:45 format
@@ -199,7 +200,7 @@ function parseDuration(value, unit = "hours") {
             duration.hours = parseInt(temp[1], 10);
             value = value.replace(regexTimes.hours, "");
         }
-        if ((temp = value.match(regexTimes.minutes) || value.match(/^(\d+$)/))) {
+        if ((temp = value.match(regexTimes.minutes) || value.match(/^(\d+)$/))) {
             duration.minutes = parseInt(temp[1], 10);
             value = value.replace(/^\d+$/, "");
             value = value.replace(regexTimes.minutes, "");
@@ -220,7 +221,7 @@ function parseDuration(value, unit = "hours") {
 }
 
 /**
- * Try to extract an integer from a string. The localization is considered in the process.
+ * Try to extract an integer from a string.
  *
  * @param {string} value
  * @returns {number} an integer
@@ -230,22 +231,12 @@ export function parseInteger(value, { allowOperation = false } = {}) {
     if (operation) {
         return operation;
     }
-    const thousandsSepRegex = localization.thousandsSep || "";
-    const decimalPointRegex = localization.decimalPoint;
-    let parsed = parseNumber(value, {
-        thousandsSep: thousandsSepRegex,
-        decimalPoint: decimalPointRegex,
+    const parsed = parseNumber(value, {
         truncate: true,
+        integer: true,
     });
     if (!Number.isInteger(parsed)) {
-        parsed = parseNumber(value, {
-            thousandsSep: ",",
-            decimalPoint: ".",
-            truncate: true,
-        });
-        if (!Number.isInteger(parsed)) {
-            throw new InvalidNumberError(`"${value}" is not a correct number`);
-        }
+        throw new InvalidNumberError(`"${value}" is not a correct number`);
     }
     if (parsed < -2147483648 || parsed > 2147483647) {
         throw new InvalidNumberError(
@@ -257,16 +248,11 @@ export function parseInteger(value, { allowOperation = false } = {}) {
 
 /**
  * Try to extract a float from a string and unconvert it with a conversion factor of 100.
- * The localization is considered in the process.
- * The percentage can have two formats: float or float%.
  *
  * @param {string} value
  * @returns {number} float
  */
 export function parsePercentage(value) {
-    if (value[value.length - 1] === "%") {
-        value = value.slice(0, value.length - 1);
-    }
     return parseFloat(value) / 100;
 }
 
