@@ -162,7 +162,7 @@ class PosPreset(models.Model):
             self.delivery_from_latitude = result[0]
             self.delivery_from_longitude = result[1]
         else:
-            raise ValidationError(_("The delivery address could not be geolocated. Please enter a valid address."))
+            raise ValidationError(_("The delivery address could not be geolocated. Please check the address. If the address is valid, your geolocation service may be unavailable or unable to resolve it"))
 
     # will be overridden.
     @api.model
