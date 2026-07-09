@@ -1,4 +1,4 @@
-import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { onWillStart, asyncComputed } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 export class FormActionFieldsOption extends BaseOptionComponent {
@@ -11,25 +11,16 @@ export class FormActionFieldsOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.prepareFormModel = this.dependencies.websiteFormOption.prepareFormModel;
-        this.state = proxy({
-            formInfo: {
-                fields: [],
-            },
-        });
-        onWillStart(() => this.getFormInfo(this.props));
-        onWillUpdateProps((np) => this.getFormInfo(np));
-    }
-    async getFormInfo(props) {
-        const el = this.env.getEditingElement();
-        const formInfo = await this.prepareFormModel(el, props.activeForm);
-        Object.assign(
-            this.state.formInfo,
-            {
+        onWillStart(() => this.formInfo.currentPromise());
+        this.formInfo = asyncComputed(async () => {
+            const el = this.env.getEditingElement();
+            const formInfo = await this.prepareFormModel(el, this.props.activeForm);
+            return {
                 fields: [],
                 formFields: [],
                 successPage: undefined,
-            },
-            formInfo
-        );
+                ...formInfo,
+            };
+        });
     }
 }
