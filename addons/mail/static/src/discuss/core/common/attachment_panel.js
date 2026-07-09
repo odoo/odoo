@@ -18,6 +18,7 @@ export class AttachmentPanel extends Component {
             channel: t.instanceOf(this.store["discuss.channel"].Class),
             close: t.function([]).optional(),
         });
+        this.offlineService = useService("offline");
         this.ormService = useService("orm");
         this.attachmentUploadService = useService("mail.attachment_upload");
         useOnChange(

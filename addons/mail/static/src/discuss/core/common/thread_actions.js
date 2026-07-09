@@ -16,6 +16,7 @@ registerThreadAction("pinned-messages", {
     actionPanelComponent: PinnedMessagesPanel,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
+    btnAttrs: { "data-available-offline": true },
     condition: ({ channel, owner }) =>
         channel &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
@@ -142,6 +143,7 @@ registerThreadAction("notification-settings", {
 registerThreadAction("attachments", {
     actionPanelComponent: AttachmentPanel,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
+    btnAttrs: { "data-available-offline": true },
     condition: ({ owner, channel }) =>
         channel?.hasAttachmentPanel &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
@@ -224,6 +226,7 @@ registerThreadAction("member-list", {
         }
     },
     actionPanelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
+    btnAttrs: { "data-available-offline": true },
     condition: ({ owner, channel }) =>
         channel?.hasMemberList &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&

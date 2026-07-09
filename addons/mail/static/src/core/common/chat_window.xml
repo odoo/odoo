@@ -21,6 +21,7 @@
                             t-att-disabled="this.editingName() or this.props.chatWindow.actionsDisabled"
                             t-att-title="this.actionsMenuTitleText"
                             t-custom-ref="actionsMenuButton"
+                            data-available-offline=""
                         >
                             <t t-call="mail.ChatWindow.headerContent"/>
                             <i t-if="!this.editingName()" class="fa fa-fw fa-caret-down"/>
