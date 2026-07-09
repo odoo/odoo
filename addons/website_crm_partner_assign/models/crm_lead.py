@@ -43,7 +43,7 @@ class CrmLead(models.Model):
 
     def _get_partner_email_update(self):
         self.ensure_one()
-        if self.env.user._is_portal() and self.partner_id.user_id:
+        if self.env.user and self.env.user._is_portal() and self.partner_id.user_id:
             return False
         return super()._get_partner_email_update()
 
