@@ -2,6 +2,7 @@ import json
 from datetime import timedelta
 from freezegun import freeze_time
 from markupsafe import Markup
+from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.tests import new_test_user, users
@@ -39,6 +40,43 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
             body="I am here to help!",
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
+        )
+        self.assertEqual(chat.livechat_failure, "no_failure")
+
+    def test_agent_message_does_not_rewrite_unchanged_livechat_failure(self):
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
+        )
+        chat = self.env["discuss.channel"].browse(data["channel_id"])
+        agent_user = chat.livechat_agent_partner_ids.mapped("main_user_id")
+        self.assertEqual(chat.livechat_failure, "no_answer")
+        # First agent message moves the failure to "no_failure".
+        chat.with_user(agent_user).message_post(
+            body="I am here to help!",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.assertEqual(chat.livechat_failure, "no_failure")
+        # A second agent message must not write livechat_failure again.
+        DiscussChannel = self.env.registry["discuss.channel"]
+        original_write = DiscussChannel.write
+        failure_writes = []
+
+        def tracking_write(records, vals):
+            if "livechat_failure" in vals:
+                failure_writes.append(vals["livechat_failure"])
+            return original_write(records, vals)
+
+        with patch.object(DiscussChannel, "write", tracking_write):
+            chat.with_user(agent_user).message_post(
+                body="Anything else?",
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+            )
+        self.assertEqual(
+            failure_writes,
+            [],
+            "a redundant agent message should not re-write livechat_failure",
         )
         self.assertEqual(chat.livechat_failure, "no_failure")
 

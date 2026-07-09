@@ -229,7 +229,7 @@ class ThreadController(StoreController):
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
             thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
         # sudo: mail.thread - users can post on accessible threads
-        message = thread.sudo().with_context(mail_post_check_concurrency=True).message_post(
+        message = thread.sudo().message_post(
             **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
         )
         store.add(message, "_store_message_fields", fields_params={"chatter_fields": True})
