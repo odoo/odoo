@@ -122,14 +122,6 @@
                                     </div>
                                 </a>
                             </div>
-                            <div t-if="record.count_repair_under_repair.raw_value > 0" class="row">
-                                <a class="col-8 offset-4 text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_under_repair': 1}" type="object">
-                                    <div class="row">
-                                        <span class="col-6">Under Repair</span>
-                                        <field class="col-2 text-end" name="count_repair_under_repair"/>
-                                    </div>
-                                </a>
-                            </div>
                         </div>
                     </div>
                     <field t-if="!selection_mode" class="mt-auto" name="kanban_dashboard_graph" graph_type="bar" widget="picking_type_dashboard_graph"/>

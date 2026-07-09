@@ -42,14 +42,12 @@ class RepairOrder(models.Model):
     state = fields.Selection([
         ('draft', 'New'),
         ('confirmed', 'Confirmed'),
-        ('under_repair', 'Under Repair'),
-        ('done', 'Repaired'),
+        ('done', 'Done'),
         ('cancel', 'Cancelled')], string='Status',
         copy=False, default='draft', readonly=True, tracking=True, index=True,
         help="* The \'New\' status is used when a user is encoding a new and unconfirmed repair order.\n"
              "* The \'Confirmed\' status is used when a user confirms the repair order.\n"
-             "* The \'Under Repair\' status is used when the repair is ongoing.\n"
-             "* The \'Repaired\' status is set when repairing is completed.\n"
+             "* The \'Done\' status is set when repairing is completed.\n"
              "* The \'Cancelled\' status is used when user cancel repair order.")
     priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority")
     partner_id = fields.Many2one(
@@ -319,7 +317,7 @@ class RepairOrder(models.Model):
 
     @api.depends('state', 'schedule_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.forecast_expected_date')
     def _compute_parts_availability(self):
-        repairs = self.filtered(lambda ro: ro.state in ('confirmed', 'under_repair'))
+        repairs = self.filtered(lambda ro: ro.state == 'confirmed')
         repairs.parts_availability_state = 'available'
         repairs.parts_availability = _('Available')
 
@@ -368,11 +366,11 @@ class RepairOrder(models.Model):
     def _compute_unreserve_visible(self):
         for repair in self:
             repair.unreserve_visible = (
-                repair.state not in ('draft', 'done', 'cancel') and
+                repair.state == 'confirmed' and
                 any(repair.move_ids.move_line_ids.mapped('quantity_product_uom'))
             )
             repair.reserve_visible = (
-                repair.state in ('confirmed', 'under_repair') and
+                repair.state == 'confirmed' and
                 any(not move.picked and move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in repair.move_ids)
             )
 
@@ -529,7 +527,7 @@ class RepairOrder(models.Model):
     def action_repair_done(self):
         """ Creates stock move for final product of repair order.
         Writes move_id and move_ids state to 'done'.
-        Writes repair order state to 'Repaired'.
+        Writes repair order state to 'Done'.
         @return: True
         """
 
@@ -609,8 +607,8 @@ class RepairOrder(models.Model):
         """ Checks before action_repair_done.
         @return: True
         """
-        if self.filtered(lambda repair: repair.state != 'under_repair'):
-            raise UserError(_("Repair must be under repair in order to end reparation."))
+        if self.filtered(lambda repair: repair.state != 'confirmed'):
+            raise UserError(_("Repair must be confirmed in order to end reparation."))
         if moves := self.move_ids.filtered(lambda move: move.quantity != move.product_uom_qty):
             ctx = self.env.context.copy()
             lines = []
@@ -627,13 +625,6 @@ class RepairOrder(models.Model):
             action['context'] = ctx
             return action
         return self.action_repair_done()
-
-    def action_repair_start(self):
-        """ Writes repair order state to 'Under Repair'
-        """
-        if self.filtered(lambda repair: repair.state != 'confirmed'):
-            self._action_repair_confirm()
-        return self.write({'state': 'under_repair'})
 
     def action_unreserve(self):
         return self.move_ids.filtered(lambda m: m.state in ('assigned', 'partially_available'))._do_unreserve()

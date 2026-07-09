@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
+from collections import defaultdict
 
 from odoo import _, api, fields, models
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import clean_context
 
 
@@ -17,8 +16,6 @@ class StockPickingType(models.Model):
 
     count_repair_confirmed = fields.Integer(
         string="Number of Repair Orders Confirmed", compute='_compute_count_repair')
-    count_repair_under_repair = fields.Integer(
-        string="Number of Repair Orders Under Repair", compute='_compute_count_repair')
     count_repair_ready = fields.Integer(
         string="Number of Repair Orders to Process", compute='_compute_count_repair')
     count_repair_late = fields.Integer(
@@ -49,7 +46,6 @@ class StockPickingType(models.Model):
         # By default, set count_repair_xxx to False
         self.count_repair_ready = False
         self.count_repair_confirmed = False
-        self.count_repair_under_repair = False
         self.count_repair_late = False
 
         # shortcut
@@ -59,10 +55,10 @@ class StockPickingType(models.Model):
         picking_types = self.env['repair.order']._read_group(
             [
                 ('picking_type_id', 'in', repair_picking_types.ids),
-                ('state', 'in', ('confirmed', 'under_repair')),
+                ('state', '=', 'confirmed'),
             ],
-            groupby=['picking_type_id', 'is_parts_available', 'state'],
-            aggregates=['id:count']
+            groupby=['picking_type_id', 'is_parts_available'],
+            aggregates=['id:count'],
         )
 
         late_repairs = self.env['repair.order']._read_group(
@@ -74,26 +70,21 @@ class StockPickingType(models.Model):
                 ('is_parts_late', '=', True),
             ],
             groupby=['picking_type_id'],
-            aggregates=['__count']
+            aggregates=['__count'],
         )
         late_repairs = {pt.id: late_count for pt, late_count in late_repairs}
 
-        counts = {}
-        for pt in picking_types:
-            pt_count = counts.setdefault(pt[0].id, {})
-            # Only confirmed repairs (not "under repair" ones) are considered as ready
-            if pt[1] and pt[2] == 'confirmed':
-                pt_count.setdefault('ready', 0)
-                pt_count['ready'] += pt[3]
-            pt_count.setdefault(pt[2], 0)
-            pt_count[pt[2]] += pt[3]
+        counts = defaultdict(lambda: defaultdict(int))
+        for picking_type, is_parts_available, count in picking_types:
+            counts[picking_type.id]['confirmed'] += count
+            if is_parts_available:
+                counts[picking_type.id]['ready'] += count
 
         for pt in repair_picking_types:
             if pt.id not in counts:
                 continue
             pt.count_repair_ready = counts[pt.id].get('ready')
             pt.count_repair_confirmed = counts[pt.id].get('confirmed')
-            pt.count_repair_under_repair = counts[pt.id].get('under_repair')
             pt.count_repair_late = late_repairs.get(pt.id, 0)
 
     def _compute_default_location_src_id(self):

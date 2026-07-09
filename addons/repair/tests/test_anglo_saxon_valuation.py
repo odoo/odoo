@@ -67,7 +67,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             })],
         })
         ro.action_validate()
-        ro.action_repair_start()
         ro.action_repair_end()
 
         ro.sudo().action_create_sale_order()
@@ -126,7 +125,6 @@ class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
             })],
         })
         ro.action_validate()
-        ro.action_repair_start()
         ro.action_repair_end()
 
         ro.sudo().action_create_sale_order()

@@ -112,7 +112,7 @@ class StockMove(models.Model):
             move.picking_type_id = move.repair_id.picking_type_id.id
             repair_moves |= move
         no_repair_moves = moves - repair_moves
-        draft_repair_moves = repair_moves.filtered(lambda m: m.state == 'draft' and m.repair_id.state in ('confirmed', 'under_repair'))
+        draft_repair_moves = repair_moves.filtered(lambda m: m.state == 'draft' and m.repair_id.state == 'confirmed')
         other_repair_moves = repair_moves - draft_repair_moves
         draft_repair_moves._check_company()
         draft_repair_moves._adjust_procure_method(picking_type_code='repair_operation')

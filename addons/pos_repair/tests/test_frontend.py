@@ -29,7 +29,6 @@ class TestUi(TestPosStockHttpCommon):
             'partner_id': self.env['res.partner'].create({'name': 'Partner 1'}).id
         })
         self.repair1._action_repair_confirm()
-        self.repair1.action_repair_start()
         self.repair1.action_repair_end()
         self.repair1.sudo().action_create_sale_order()
         self.assertEqual(len(self.product_1.stock_move_ids.ids), 2, "There should be 2 stock moves for the product created by the repair order")
