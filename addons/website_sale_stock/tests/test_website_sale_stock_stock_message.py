@@ -8,10 +8,15 @@ from odoo.addons.product.tests.common import ProductCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_01_stock_message_update_after_close_with_optional_products(self):
-        self.env["delivery.carrier"].search([]).is_published = False
+        self.env["delivery.carrier"].sudo().search([]).is_published = False
         product_product_with_options = self.env["product.product"].create({
             "name": "Product With Optional (TEST)",
             "standard_price": 500.0,
@@ -24,7 +29,7 @@ class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
             "is_storable": True,
         })
         self.product.website_published = True
-        self.env["stock.quant"].create({
+        self.env["stock.quant"].sudo().create({
             "product_id": product_product_with_options.id,
             "location_id": self.quick_ref("stock.stock_location_stock").id,
             "quantity": 30.0,
@@ -35,7 +40,7 @@ class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
         )
 
     def test_02_stock_message_update_after_close_without_optional_products(self):
-        self.env["delivery.carrier"].search([]).is_published = False
+        self.env["delivery.carrier"].sudo().search([]).is_published = False
         product_product_without_options = self.env["product.product"].create({
             "name": "Product Without Optional (TEST)",
             "standard_price": 500.0,
@@ -46,7 +51,7 @@ class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
             "allow_out_of_stock_order": False,
             "is_storable": True,
         })
-        self.env["stock.quant"].create({
+        self.env["stock.quant"].sudo().create({
             "product_id": product_product_without_options.id,
             "location_id": self.quick_ref("stock.stock_location_stock").id,
             "quantity": 30.0,

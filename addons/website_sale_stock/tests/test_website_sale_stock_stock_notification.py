@@ -10,7 +10,13 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged("post_install", "-at_install")
 class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -28,18 +34,18 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
         self.assertTrue(self.macbook._has_stock_notification(partner, self.website))
 
         with self.setup_cron_env() as env:
-            env["product.product"]._send_availability_email()
+            env["product.product"].sudo()._send_availability_email()
 
-        emails = self.env["mail.mail"].search([("email_to", "=", partner.email_formatted)])
+        emails = self.env["mail.mail"].sudo().search([("email_to", "=", partner.email_formatted)])
         self.assertEqual(len(emails), 0)
 
         self._add_product_qty_to_wh(self.macbook.id, 10.0, self.warehouse.lot_stock_id.id)
 
         self.env.ref('base.default_website').company_id.partner_id.email = "test@test.com"
         with self.setup_cron_env() as env:
-            env["product.product"]._send_availability_email()
+            env["product.product"].sudo()._send_availability_email()
 
-        emails = self.env["mail.mail"].search([("email_to", "=", partner.email_formatted)])
+        emails = self.env["mail.mail"].sudo().search([("email_to", "=", partner.email_formatted)])
         self.assertEqual(emails[0].subject, "Macbook Pro is back in stock")
         self.assertFalse(self.macbook._has_stock_notification(partner, self.website))
 
@@ -60,7 +66,7 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
 
     def test_partner_email_confirmation(self):
         """Partner receives email confirmation for a delivery if the setting is enabled."""
-        self.company.stock_move_email_validation = True
+        self.company.sudo().stock_move_email_validation = True
         self.partner.email = 'test@example.com'
         new_so = self._create_so()
         new_so._validate_order()

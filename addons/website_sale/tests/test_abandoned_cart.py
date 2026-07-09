@@ -27,7 +27,7 @@ class TestWebsiteSaleCartAbandonedCommon(TransactionCaseWithUserPortal):
                 self.env.registry["ir.cron"], "_commit_progress", return_value=float("inf")
             ),
         ):
-            self.env["website"]._cron_send_abandoned_cart_email()
+            self.env["website"].sudo()._cron_send_abandoned_cart_email()
         return email_got_sent
 
 

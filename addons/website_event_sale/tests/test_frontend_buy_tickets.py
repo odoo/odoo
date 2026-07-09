@@ -15,7 +15,13 @@ from .common import TestWebsiteEventSaleCommon
 
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def setUp(self):
         super().setUp()
@@ -27,12 +33,12 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.ref('payment.payment_provider_transfer').write({
+        cls.env.ref('payment.payment_provider_transfer').sudo().write({
             'is_live': True,
             'is_published': True,
         })
 
-        cls.env['event.event.ticket'].create({
+        cls.env['event.event.ticket'].sudo().create({
             'name': 'VIP',
             'event_id': cls.event_2.id,
             'product_id': cls.env.ref('event_product.product_product_event').id,
@@ -50,7 +56,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'website_published': True,
         })
 
-        cls.env['event.event.ticket'].create([{
+        cls.env['event.event.ticket'].sudo().create([{
             'name': 'VIP',
             'event_id': cls.event_3.id,
             'product_id': cls.env.ref('event_product.product_product_event').id,
@@ -75,16 +81,16 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         cls.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
     def test_admin(self):
-        self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
+        self.env['product.pricelist'].sudo().with_context(active_test=False).search([]).unlink()
         # Seen that:
         # - this test relies on demo data that are entirely in USD (pricelists)
         # - that main demo company is gelocated in US
         # - that this test awaits for hardcoded USDs amount
         # we have to force company currency as USDs only for this test
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.ref('base.main_company').id])
-        self.env['product.pricelist'].create({'name': "Public Pricelist"})
+        self.env['product.pricelist'].sudo().create({'name': "Public Pricelist"})
 
-        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider = self.env.ref('payment.payment_provider_transfer').sudo()
         transfer_provider.write({
             'is_live': True,
             'is_published': True,
@@ -93,8 +99,8 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         self.start_tour("/event", 'event_buy_tickets', login="admin")
 
     def test_demo(self):
-        self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
-        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        self.env['product.pricelist'].sudo().with_context(active_test=False).search([]).unlink()
+        transfer_provider = self.env.ref('payment.payment_provider_transfer').sudo()
         transfer_provider.write({
             'is_live': True,
             'is_published': True,
@@ -106,7 +112,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         self.start_tour("/event", 'event_buy_tickets', login="demo")
 
     def test_buy_last_ticket(self):
-        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider = self.env.ref('payment.payment_provider_transfer').sudo()
         transfer_provider.write({
             'is_live': True,
             'is_published': True,
@@ -123,7 +129,13 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 @tagged('post_install', '-at_install')
 class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @mute_logger('odoo.http')
     def test_check_seats_avail_before_purchase(self):
@@ -134,13 +146,13 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         """
         self.authenticate(None, None)
 
-        self.ticket_2.write({
+        self.ticket_2.sudo().write({
             'name': "VIP",
             'event_id': self.event.id,
             'seats_max': 1,
             'seats_limited': True,
         })
-        self.event.write({
+        self.event.sudo().write({
             'seats_max': 3,
             'seats_limited': True,
         })
@@ -158,7 +170,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
                 })
             ]
         )
-        registration = self.env['event.registration'].create({
+        registration = self.env['event.registration'].sudo().create({
             'state': 'draft',
             'partner_id': sale_order.partner_id.id,
             'event_id': self.event.id,
@@ -169,7 +181,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         self.assertEqual(self.event.event_ticket_ids.mapped('seats_taken'), [0, 0])
 
         # Sneaky Mitchell beats us to the punch
-        self.event.registration_ids = [Command.create({
+        self.event.sudo().registration_ids = [Command.create({
             'partner_id': self.partner_admin.id,
             'event_ticket_id': self.ticket_2.id,
             'state': 'done',
@@ -198,7 +210,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         with self.assertRaises(ValidationError):
             self.event._verify_seats_availability([
                 (slot, ticket, 1)
-                for slot, ticket in self.env['event.registration']._read_group(
+                for slot, ticket in self.env['event.registration'].sudo()._read_group(
                     [('id', 'in', self.event.registration_ids.ids)],
                     ['event_slot_id', 'event_ticket_id']
                 )
@@ -215,7 +227,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         registration += registration.copy({'state': 'draft', 'sale_order_id': sale_order.id})
 
         # Sneaky Mitchell beats us to the punch again
-        self.event.registration_ids = [Command.create({
+        self.event.sudo().registration_ids = [Command.create({
             'partner_id': self.partner_admin.id,
             'event_ticket_id': self.ticket.id,
             'state': 'done',
@@ -232,7 +244,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         with self.assertRaises(ValidationError):
             self.event._verify_seats_availability([
                 (slot, ticket, 2)
-                for slot, ticket in self.env['event.registration']._read_group(
+                for slot, ticket in self.env['event.registration'].sudo()._read_group(
                     [('id', 'in', self.event.registration_ids.ids)],
                     ['event_slot_id', 'event_ticket_id']
                 )

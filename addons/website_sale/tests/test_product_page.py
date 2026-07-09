@@ -9,7 +9,14 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # product.public.category setup
+        'website.group_website_designer',  # website config + qweb view activation
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -35,7 +42,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         """Check that public users can not react to reviews."""
         password = "Pl1bhD@2!kXZ"
         manager = self.env.ref("base.user_admin")
-        manager.write({"password": password})
+        manager.sudo().write({"password": password})
 
         self.env["ir.ui.view"].with_context(active_test=False).search([
             ("key", "=", "website_sale.product_comment")

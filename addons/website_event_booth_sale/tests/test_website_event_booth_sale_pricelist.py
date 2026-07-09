@@ -12,7 +12,13 @@ from odoo.addons.website_sale.tests.common import MockRequest
 @tagged('post_install', '-at_install')
 class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -46,7 +52,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         self.assertEqual(so_line.price_reduce_taxexcl, 40)
 
         # set pricelist to 10% - without discount
-        pl2 = self.pricelist.copy({
+        pl2 = self.pricelist.sudo().copy({
             'currency_id': self.currency_test.id,
             'item_ids': [
                 Command.create({

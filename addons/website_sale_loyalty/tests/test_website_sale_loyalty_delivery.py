@@ -13,7 +13,13 @@ from odoo.addons.website_sale_loyalty.controllers.delivery import WebsiteSaleLoy
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -152,7 +158,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
     def test_shop_sale_gift_card_keep_delivery(self):
         # Get admin user and set his preferred delivery method to normal delivery
         # This test also tests that we can indeed pay delivery fees with gift cards/ewallet
-        self.partner_admin.property_delivery_carrier_id = self.normal_delivery
+        self.partner_admin.sudo().property_delivery_carrier_id = self.normal_delivery
         self.start_tour(
             self.product_plumbus.website_url,
             "website_sale_loyalty.delivery_with_gift_card",

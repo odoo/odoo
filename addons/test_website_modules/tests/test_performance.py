@@ -19,7 +19,14 @@ from odoo.addons.website_sale.tests.test_pricelist import TestWebsitePriceList
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceList, WebsiteSaleCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'website.group_website_designer',  # FIXME: use base.group_user
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -363,7 +370,13 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 @tagged('post_install', '-at_install')
 class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def test_perf_sql_queries_shop(self):
         # To increase the query count you must ask the permission to al

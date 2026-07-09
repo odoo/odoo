@@ -6,12 +6,18 @@ from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleComm
 
 class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def test_website_event_sale_free_tickets(self):
         """ Test saleorder is not created for tickets free tickets """
         self.authenticate(None, None)
-        free_ticket = self.env['event.event.ticket'].create({
+        free_ticket = self.env['event.event.ticket'].sudo().create({
             'event_id': self.event.id,
             'name': 'Free',
             'product_id': self.product_event.id,
@@ -36,7 +42,7 @@ class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
     def test_website_event_sale_free_paid_mix(self):
         """ Test saleorder is created if paid ticket selected """
         self.authenticate(None, None)
-        free_ticket = self.env['event.event.ticket'].create({
+        free_ticket = self.env['event.event.ticket'].sudo().create({
             'event_id': self.event.id,
             'name': 'Free',
             'product_id': self.product_event.id,
@@ -74,21 +80,21 @@ class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
         email_question = event_questions.filtered(lambda q: q.question_type == 'email')
         phone_question = event_questions.filtered(lambda q: q.question_type == 'phone')
 
-        paid_ticket_1 = self.env['event.event.ticket'].create({
+        paid_ticket_1 = self.env['event.event.ticket'].sudo().create({
             'event_id': self.event.id,
             'name': 'Paid_1',
             'product_id': self.product_event.id,
             'price': 50,
         })
 
-        paid_ticket_2 = self.env['event.event.ticket'].create({
+        paid_ticket_2 = self.env['event.event.ticket'].sudo().create({
             'event_id': self.event.id,
             'name': 'Paid_2',
             'product_id': self.product_event.id,
             'price': 200,
         })
 
-        self.pricelist.write({
+        self.pricelist.sudo().write({
                     'item_ids': [(5, 0, 0), (0, 0, {
                         'applied_on': '3_global',
                         'compute_price': 'percentage',

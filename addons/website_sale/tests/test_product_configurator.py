@@ -13,7 +13,14 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'website.group_website_designer',  # website create/config
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -138,7 +145,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
     def test_optional_products_not_visible_on_other_websites(self):
         """Optional products assigned to a different website should not be shown."""
-        second_website = self.env["website"].create({"name": "second website"})
+        second_website = self.env["website"].sudo().create({"name": "second website"})
         optional_product = self.env["product.template"].create({
             "name": "Optional product",
             "website_published": True,
@@ -337,8 +344,8 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
     def test_product_configurator_extra_price_taxes(self):
         """Test that the product configurator applies taxes to PTAV extra prices."""
         self.website.show_line_subtotals_tax_selection = "tax_included"
-        tax = self.env["account.tax"].create({"name": "Tax", "amount": 10})
-        attribute = self.env["product.attribute"].create({
+        tax = self.env["account.tax"].sudo().create({"name": "Tax", "amount": 10})
+        attribute = self.env["product.attribute"].sudo().create({
             "name": "Attribute",
             "value_ids": [Command.create({"name": "A", "default_extra_price": 1})],
         })
@@ -395,9 +402,9 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
     def test_product_configurator_strikethrough_price(self):
         """Test that the product configurator displays the strikethrough price correctly."""
         self.pricelist = self._enable_pricelists()
-        self.env["res.config.settings"].create({"group_product_price_comparison": True}).execute()
+        self.env["res.config.settings"].sudo().create({"group_product_price_comparison": True}).execute()
         self.website.show_line_subtotals_tax_selection = "tax_included"
-        tax = self.env["account.tax"].create({"name": "Tax", "amount": 10})
+        tax = self.env["account.tax"].sudo().create({"name": "Tax", "amount": 10})
         optional_product = self.env["product.template"].create({
             "name": "Optional product",
             "website_published": True,
@@ -426,7 +433,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
     def test_product_configurator_strikethrough_price_uom_change(self):
         """Test that the strikethrough price is updated when changing the packaging."""
-        self.env["res.config.settings"].create({
+        self.env["res.config.settings"].sudo().create({
             "group_product_price_comparison": True,
             "group_uom": True,
         }).execute()
@@ -495,7 +502,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         page breadcrumb should show the category accessible from the current website, not the one
         from another website.
         """
-        second_website = self.env["website"].create({"name": "Second Website"})
+        second_website = self.env["website"].sudo().create({"name": "Second Website"})
 
         categ_website_1 = self.env["product.public.category"].create({
             "name": "My Category",

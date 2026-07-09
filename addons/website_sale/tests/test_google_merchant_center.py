@@ -13,7 +13,13 @@ from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'website.group_website_designer',  # product.feed / product.image / website / product.public.category
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_gmc_xml_accessible_if_gmc_setting_enabled(self):
         response = self.url_open(self.gmc_feed.url)
@@ -21,7 +27,8 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual(200, response.status_code)
 
     def test_gmc_xml_not_found_if_gmc_setting_disabled(self):
-        self.env["res.config.settings"].create({"group_gmc_feed": False}).execute()
+        # SETUP master-data: config settings bypass the restricted test user.
+        self.env["res.config.settings"].sudo().create({"group_gmc_feed": False}).execute()
 
         response = self.url_open(self.gmc_feed.url)
 
@@ -38,7 +45,8 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         )
 
     def test_gmc_xml_localization(self):
-        fr_lang = self.env["res.lang"]._activate_lang("fr_FR")
+        # SETUP master-data: activating a language bypasses the restricted test user.
+        fr_lang = self.env["res.lang"].sudo()._activate_lang("fr_FR")
         self.website.language_ids += fr_lang
         self.gmc_feed.lang_id = fr_lang
         self.red_sofa.with_context(lang=fr_lang.code).name = "Canapé"
@@ -331,6 +339,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertNotIn("unit_pricing_measure", self.items[six_pack])
 
         # enable "Product Reference Price" setting
+        self.env = self.env(user=self.env.ref('base.user_root'))  # FIXME: remove this line
         self.env.user.group_ids |= self.env.ref("product.group_show_uom_price")
         self.update_items()
 

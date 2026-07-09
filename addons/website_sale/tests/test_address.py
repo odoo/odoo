@@ -82,17 +82,21 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         Have 1 website 1 which company is B.
         Have admin on company A.
         """
-        self.company_a, self.company_b, self.company_c = self.env["res.company"].create([
+        self.company_a, self.company_b, self.company_c = self.env["res.company"].sudo().create([
             {"name": "Company A"},
             {"name": "Company B"},
             {"name": "Company C"},
         ])
-        self.website.company_id = self.company_b
-        self.env.user.company_id = self.company_a
+        self.env.user.sudo().company_ids |= self.company_a | self.company_b
+        # sudo: assigning the website's company recomputes res.company.website_id
+        # (res_company._compute_website_id writes res.company), which the restricted
+        # test_user cannot modify — this is master-data setup.
+        self.website.sudo().company_id = self.company_b
+        self.env.user.sudo().company_id = self.company_a
 
         self.demo_user = self.user_internal
-        self.demo_user.company_ids += self.company_b
-        self.demo_user.company_id = self.company_b
+        self.demo_user.sudo().company_ids += self.company_b
+        self.demo_user.sudo().company_id = self.company_b
         self.demo_partner = self.demo_user.partner_id
 
         self.portal_user = self.user_portal
@@ -229,7 +233,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
     def test_04_pl_reset_on_login(self):
         """Check that after login, the SO pricelist is correctly recomputed."""
         self.pricelist = self._enable_pricelists()
-        test_user = self.env["res.users"].create({
+        test_user = self.env["res.users"].sudo().create({
             "name": "Toto",
             "login": "long_enough_password",
             "password": "long_enough_password",
@@ -373,7 +377,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         Check that the sale order is updated when you change fiscal position.
         Change fiscal position by modifying address during checkout process.
         """
-        self.env.company.country_id = self.country_us
+        self.env.company.sudo().country_id = self.country_us
         be_address_POST, nl_address_POST = [
             {
                 "name": "Test name",
@@ -401,7 +405,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             },
         ]
 
-        fpos_be, fpos_nl = self.env["account.fiscal.position"].create([
+        # sudo: fiscal positions are account master-data set up as fixtures here.
+        fpos_be, fpos_nl = self.env["account.fiscal.position"].sudo().create([
             {
                 "sequence": 1,
                 "name": "BE",
@@ -415,7 +420,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
                 "country_id": self.env.ref("base.nl").id,
             },
         ])
-        tax_10_incl, tax_20_excl, tax_15_incl = self.env["account.tax"].create([
+        # sudo: taxes are account master-data set up as fixtures here.
+        tax_10_incl, tax_20_excl, tax_15_incl = self.env["account.tax"].sudo().create([
             {"name": "Tax 10% incl", "amount": 10, "price_include_override": "tax_included"},
             {
                 "name": "Tax 20% excl",
@@ -519,13 +525,18 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
     def test_09_shop_update_address(self):
         self.env["ir.config_parameter"].sudo().set_int("auth_password_policy.minlength", 4)
-        user = self.env["res.users"].create({"name": "test", "login": "test", "password": "test"})
+        user = self.env["res.users"].sudo().create({"name": "test", "login": "test", "password": "test"})
         user_partner = user.partner_id
-        partner_company = self.env["res.partner"].create({
+        partner_company = self.env["res.partner"].sudo().create({
             "name": "My company",
-            "child_ids": [Command.link(user_partner.id)],
             "vat": "BE0477472701",
         })
+        # sudo: re-parenting user_partner triggers res.partner.write ->
+        # internal_users.check_access('write') (base/models/res_partner.py) because
+        # user_partner is linked to an internal user; this is fixture setup. Done as an
+        # explicit write since .sudo() on the create above does not propagate to the
+        # o2m child_ids link's inverse write.
+        user_partner.sudo().parent_id = partner_company
         colleague = self.env["res.partner"].create({
             "parent_id": partner_company.id,
             "name": "whatever",
@@ -669,7 +680,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.assertTrue(all(p._can_edit_country() for p in partner_company.child_ids))
 
         dumb_product = self.env["product.product"].create({"name": "test"})
-        invoice = self.env["account.move"].create({
+        # SETUP: a posted invoice is needed to lock partner VAT/country editability.
+        invoice = self.env["account.move"].sudo().create({
             "move_type": "out_invoice",
             "partner_id": partner_company.id,
             "invoice_line_ids": [Command.create({"product_id": dumb_product.id})],
@@ -680,7 +692,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.assertFalse(partner_company._can_edit_commercial_fields())
         self.assertFalse(partner_company._can_edit_country())
         self.assertTrue(all(p._can_edit_country() for p in partner_company.child_ids))
-        invoice = self.env["account.move"].create({
+        invoice = self.env["account.move"].sudo().create({
             "move_type": "out_invoice",
             "partner_id": partner_1.id,
             "invoice_line_ids": [Command.create({"product_id": dumb_product.id})],
@@ -716,13 +728,13 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             )
 
     def test_12_recompute_taxes_on_address_change(self):
-        self.env.company.country_id = self.env.ref("base.us")
-        fpos_be = self.env["account.fiscal.position"].create({
+        self.env.company.sudo().country_id = self.env.ref("base.us")
+        fpos_be = self.env["account.fiscal.position"].sudo().create({
             "name": "Fiscal Position BE",
             "auto_apply": True,
             "country_id": self.country_id,
         })
-        tax_15_incl, tax_0 = self.env["account.tax"].create([
+        tax_15_incl, tax_0 = self.env["account.tax"].sudo().create([
             {
                 "name": "15% excl",
                 "amount": 15,
@@ -731,7 +743,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             },
             {"name": "0%", "amount": 0, "fiscal_position_ids": fpos_be.ids},
         ])
-        tax_0.original_tax_ids = tax_15_incl
+        tax_0.sudo().original_tax_ids = tax_15_incl
         self.product.taxes_id = [Command.set(tax_15_incl.ids)]
         self.partner.country_id = self.country_id
 
@@ -785,7 +797,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
     def test_imported_user_with_trailing_name_can_checkout(self):
         """Ensure that an imported user with trailing spaces in their name can complete checkout
         without error."""
-        imported_user = self.env["res.users"].create({
+        imported_user = self.env["res.users"].sudo().create({
             "name": "Imported User ",  # trailing space
             "login": "imported_user",
             "email": "imported@example.com",

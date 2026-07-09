@@ -10,11 +10,18 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'website.group_website_designer',  # website config (currency_id, restricted_uom_ids, ...)
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def test_website_sale_get_configurator_display_price(self):
         self.website.show_line_subtotals_tax_selection = "tax_included"
-        tax = self.env["account.tax"].create({"name": "Test tax", "amount": 10})
+        tax = self.env["account.tax"].sudo().create({"name": "Test tax", "amount": 10})
         product = self._create_product(list_price=100, taxes_id=[Command.link(tax.id)])
 
         with self.mock_request() as request:
@@ -58,7 +65,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.assertEqual(markup_data["@type"], "Product")
 
     def test_markup_data_uses_taxes_excluded_price_when_configured_on_website(self):
-        self.env["res.config.settings"].create({
+        self.env["res.config.settings"].sudo().create({
             "show_line_subtotals_tax_selection": "tax_excluded"
         }).execute()
         with self.mock_request() as request:
@@ -69,7 +76,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             )
 
     def test_markup_data_uses_taxes_included_price_when_configured_on_website(self):
-        self.env["res.config.settings"].create({
+        self.env["res.config.settings"].sudo().create({
             "show_line_subtotals_tax_selection": "tax_included"
         }).execute()
         self.product.price_extra = 10

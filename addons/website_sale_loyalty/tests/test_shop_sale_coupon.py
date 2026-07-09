@@ -268,7 +268,13 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -339,7 +345,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         )
 
         # 4. Test order not older than ICP validity -> Should not be removed
-        ICP = self.env["ir.config_parameter"]
+        ICP = self.env["ir.config_parameter"].sudo()
         ICP.set_int("website_sale_coupon.abandonned_coupon_validity", 5)
         self.env.flush_all()
         query = """UPDATE %s SET write_date = %%s WHERE id = %%s""" % (order._table,)
@@ -507,7 +513,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
                 that no coupons remain applied.
         """
         # Create 2 Taxes
-        tax_a = self.env["account.tax"].create({
+        tax_a = self.env["account.tax"].sudo().create({
             "name": "Tax A",
             "type_tax_use": "sale",
             "amount_type": "percent",

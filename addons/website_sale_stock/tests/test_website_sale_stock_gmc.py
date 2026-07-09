@@ -7,7 +7,13 @@ from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleStockGMC(WebsiteSaleGMCCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'website.group_website_designer',  # product.feed read in common_gmc.update_items
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -20,7 +26,7 @@ class TestWebsiteSaleStockGMC(WebsiteSaleGMCCommon):
             "allow_out_of_stock_order": False,
         })
         cls.red_sofa.allow_out_of_stock_order = True
-        cls.env["stock.quant"].create({
+        cls.env["stock.quant"].sudo().create({
             "product_id": cls.blue_sofa.id,
             "quantity": 10.0,
             "location_id": cls.stock_loc.id,
@@ -36,8 +42,8 @@ class TestWebsiteSaleStockGMC(WebsiteSaleGMCCommon):
     def test_gmc_items_keep_website_stock_separate(self):
         self.blue_sofa.allow_out_of_stock_order = False
         # setup second website with seperate stock
-        warehouse2 = self.env["stock.warehouse"].create({"name": "Stock 2", "code": "WH2"})
-        self.gmc_feed.website_id = self.env["website"].create({
+        warehouse2 = self.env["stock.warehouse"].sudo().create({"name": "Stock 2", "code": "WH2"})
+        self.gmc_feed.website_id = self.env["website"].sudo().create({
             "name": "Website Test 2",
             "domain": "https://my-website.net",
             "warehouse_id": warehouse2.id,

@@ -8,7 +8,13 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 @tagged("post_install", "-at_install")
 class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -27,7 +33,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         Test the basic flow of buying with click and collect as a public user with more than
         one delivery method available.
         """
-        self.website.warehouse_id = self._create_warehouse()  # Only C&C has stock available
+        self.website.sudo().warehouse_id = self._create_warehouse()  # Only C&C has stock available
         self.start_tour("/shop", "website_sale_collect_widget")
 
     def test_default_location_is_set_for_pick_up_in_store(self):

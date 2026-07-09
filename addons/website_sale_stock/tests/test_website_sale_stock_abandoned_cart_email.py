@@ -14,13 +14,19 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 class TestWebsiteSaleStockAbandonedCartEmail(
     TestWebsiteSaleCartAbandonedCommon, WebsiteSaleStockCommon
 ):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     def test_website_sale_stock_abandoned_cart_email(self):
         """Make sure the send_abandoned_cart_email method sends the correct emails."""
         website = self.env.ref('base.default_website')
-        website.send_abandoned_cart_followup = True
-        website.write({
+        website.sudo().send_abandoned_cart_followup = True
+        website.sudo().write({
             "send_abandoned_cart_email_activation_time": (
                 datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)
             )

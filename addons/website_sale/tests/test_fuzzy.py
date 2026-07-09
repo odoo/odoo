@@ -8,7 +8,13 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 
 @tagged("-at_install", "post_install")
 class TestFuzzy(ProductVariantsCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'website.group_website_designer',  # read website to run _search_with_fuzzy
+    )
+
+    _test_user_name = 'Test Product Manager'
 
     def test_variant_default_code(self):
         website = self.env.ref("base.default_website")
@@ -48,24 +54,25 @@ class TestFuzzy(ProductVariantsCommon):
         self.assertIsNone(fuzzy_term, "Should have no suggestion")
 
     def test_search_products_accessibility_multi_company(self):
-        company_2 = self.env["res.company"].create({"name": "test"})
+        company_2 = self.env["res.company"].sudo().create({"name": "test"})
         website = self.env.ref("base.default_website")
-        self.product_template_sofa.company_id = company_2
-        self.env.user.company_ids = company_2
+        self.product_template_sofa.sudo().company_id = company_2  # FIXME: remove the sudo()
+        self.env.user.sudo().company_id = company_2
+
         options = {"display_currency": False, "allowFuzzy": True}
         _, results, _ = website._search_with_fuzzy(
             "product_template", "Sofa", 0, 5, "name asc", options
         )
         self.assertNotIn(self.product_template_sofa, results[0]["results"])
 
-        self.env.user.company_ids += website.company_id
-        self.product_template_sofa.company_id = website.company_id
+        self.env.user.sudo().company_ids += website.company_id
+        self.product_template_sofa.sudo().company_id = website.company_id  # FIXME: remove the sudo()
         _, results, _ = website._search_with_fuzzy(
             "product_template", "Sofa", 0, 5, "name asc", options
         )
         self.assertIn(self.product_template_sofa, results[0]["results"])
 
-        self.product_template_sofa.company_id = False
+        self.product_template_sofa.sudo().company_id = False  # FIXME: remove the sudo()
         _, results, _ = website._search_with_fuzzy(
             "product_template", "Sofa", 0, 5, "name asc", options
         )
@@ -92,7 +99,7 @@ class TestFuzzy(ProductVariantsCommon):
             request.pricelist = self.env['product.pricelist'].create({
                 'name': 'Some pricelist',
             })
-            request.fiscal_position = self.env['account.fiscal.position'].create({
+            request.fiscal_position = self.env['account.fiscal.position'].sudo().create({
                 'name': 'Some fiscal postion'
             })
             results = website._search_render_results(results, 5)

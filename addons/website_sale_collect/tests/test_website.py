@@ -8,7 +8,13 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 @tagged("post_install", "-at_install")
 class TestWebsite(ClickAndCollectCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = (
+        'base.group_user',
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+    )
+
+    _test_user_name = 'Test Sales & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -16,13 +22,13 @@ class TestWebsite(ClickAndCollectCommon):
         cls.warehouse_2 = cls._create_warehouse()
 
     def test_product_available_qty_if_in_store_dm_published(self):
-        self.website.warehouse_id = self.warehouse_2
+        self.website.sudo().warehouse_id = self.warehouse_2
         free_qty = self.website._get_product_available_qty(self.storable_product)
         self.assertEqual(free_qty, 10)
 
     def test_product_available_qty_if_in_store_dm_unpublished(self):
         self.in_store_dm.is_published = False
-        self.website.warehouse_id = self.warehouse_2
+        self.website.sudo().warehouse_id = self.warehouse_2
         free_qty = self.website._get_product_available_qty(self.storable_product)
         self.assertEqual(free_qty, 0)
 
@@ -31,7 +37,7 @@ class TestWebsite(ClickAndCollectCommon):
         Test that when a warehouse is set on the website, the available quantity is the
         maximum between the website warehouse and the max available in in-store warehouses.
         """
-        self.website.warehouse_id = self.warehouse_2
+        self.website.sudo().warehouse_id = self.warehouse_2
         free_qty = self.website._get_product_available_qty(self.storable_product)
         self.assertEqual(free_qty, 10)  # Should be max(0, 10) -> 10
 
