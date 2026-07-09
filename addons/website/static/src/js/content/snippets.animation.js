@@ -2075,7 +2075,7 @@ registry.TextHighlight = publicWidget.Widget.extend({
                 // entire `.o_text_highlight` element, so we need to observe
                 // the highlight units (`.o_text_highlight_item`) and do the
                 // adjustment only once for the whole container.
-                topTextEls.forEach(async topTextEl => {
+                topTextEls.forEach(topTextEl => {
                     // We don't need to track old items, they will be removed
                     // after the adaptation.
                     [...topTextEl.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
