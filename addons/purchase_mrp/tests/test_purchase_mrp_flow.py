@@ -625,7 +625,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         po.button_confirm()
 
-    @skip('Temporary to fast merge new valuation')
     def test_procurement_with_preferred_route_2(self):
         """
         Check that the route set in the product is taken into account
@@ -665,7 +664,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
             [('product_id', '=', product.id)])
-        self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")
+        self.assertEqual(orderpoint_product.effective_route_id, buy_route, "The buy route set on the product should be the effective route of the orderpoint")
         # Delete the orderpoint to generate a new one with the manufacture route
         orderpoint_product.unlink()
         # switch the product route to manufacture
@@ -673,7 +672,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
             [('product_id', '=', product.id)])
-        self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")
+        self.assertEqual(orderpoint_product.effective_route_id, manu_route, "The route manufacture should be set on the orderpoint")
 
     def test_compute_bom_days_00(self):
         """ Check Days to prepare Manufacturing Order are correctly computed when Days to Purchase is set. """
