@@ -13,6 +13,7 @@ export class SubChannelList extends Component {
 
     setup() {
         this.store = useService("mail.store");
+        this.offlineService = useService("offline");
         // bound once so `onClickSubChannel` is a stable (props.static) handler
         this.onClickSubChannel = this.onClickSubChannel.bind(this);
         this.props = props({

@@ -34,7 +34,7 @@
                 'o-nonCompact me-1 pe-0 ps-1 o-py-0_5': !this.store.discuss.isSidebarCompact,
                 'o-unread': this.channel().self_member_id?.message_unread_counter > 0 and !this.channel().self_member_id?.mute_until_dt,
                 'opacity-50': this.channel().self_member_id?.mute_until_dt,
-            }">
+            }" data-available-offline="">
                 <span class="o-mail-DiscussSidebar-itemName text-truncate" t-out="this.channel().displayName" t-att-class="{
                     'o-fw-600': this.channel().self_member_id?.message_unread_counter > 0 and !this.channel().self_member_id?.mute_until_dt,
                 }" t-att-style="this.store.discuss.isSidebarCompact ? 'text-overflow: clip;' : ''"/>

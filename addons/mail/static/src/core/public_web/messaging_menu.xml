@@ -81,7 +81,7 @@
             'active': this.store.discuss.activeTab === tab.id,
             'pb-4': this.isIosPwa,
             'pb-2': !this.isIosPwa,
-        }" t-on-click="() => this.onClickNavTab(tab.id)" t-att-aria-label="tab.label">
+        }" t-on-click="() => this.onClickNavTab(tab.id)" t-att-aria-label="tab.label" data-available-offline="">
             <i t-attf-class="o-mail-MessagingMenu-tabIcon {{ this.store.discuss.activeTab === tab.id and tab.activeIcon ? tab.activeIcon : tab.icon }} rounded-pill mx-auto p-2 fs-5" />
             <span class="o-xsmaller" t-out="tab.label" />
             <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-att-class="{ 'o-bookmark': tab.id === 'bookmark' }" t-out="tab.counter"/>

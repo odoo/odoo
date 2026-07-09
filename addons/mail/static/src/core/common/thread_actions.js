@@ -30,6 +30,7 @@ export function registerThreadAction(id, definition) {
 }
 
 registerThreadAction("fold-chat-window", {
+    btnAttrs: { "data-available-offline": true },
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "oi oi-fw oi-minus",
     name: ({ owner }) => (!owner.props.chatWindow?.isOpen ? _t("Open") : _t("Fold")),
@@ -48,6 +49,7 @@ registerThreadAction("rename-thread", {
     setup: ({ action }) => (action.editingName = maybePlugin(RenameThreadPlugin)?.editingName),
 });
 registerThreadAction("close", {
+    btnAttrs: { "data-available-offline": true },
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "oi fa-fw oi-close",
     name: _t("Close Chat Window (ESC)"),
@@ -86,6 +88,7 @@ registerThreadAction("meeting-chat", {
     badge: ({ thread }) => thread.isUnread,
     badgeIcon: ({ channel }) => !channel.importantCounter && "fa fa-circle o-text-white opacity-75",
     badgeText: ({ channel }) => channel.importantCounter || undefined,
+    btnAttrs: { "data-available-offline": true },
     condition: ({ owner }) => owner.env.inMeetingView,
     icon: "fa fa-fw fa-comments",
     name: _t("Chat"),

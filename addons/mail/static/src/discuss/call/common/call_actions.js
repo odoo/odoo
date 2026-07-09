@@ -211,6 +211,7 @@ registerCallAction("share-screen", {
     ],
 });
 registerCallAction("fullscreen", {
+    btnAttrs: { "data-available-offline": true },
     condition: ({ channel, owner }) => channel?.isSelfInCall && !owner.env.pipWindow,
     name: ({ store }) => (store.rtc.isBrowserFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
     isActive: ({ store }) => store.rtc.isBrowserFullscreen,
