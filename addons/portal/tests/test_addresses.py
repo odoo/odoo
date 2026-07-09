@@ -168,6 +168,25 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             [{**self.default_address_values, 'vat': 'BE0926372368'}],
         )
 
+    def test_vat_update_with_parent_name(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        csrf_token = self.csrf_token()
+        address_values = {
+            **self.default_address_values,
+            "parent_name": "parent company",
+            "csrf_token": csrf_token,
+            "partner_id": self.portal_user.partner_id.id,
+        }
+        # Create parent company of current partner
+        self._submit_address_values(address_values)
+        # Now try to update vat on partner which have parent company set
+        res = self._submit_address_values({**address_values, "vat": "BE0926372368"})
+        self.assertEqual(res, {'redirectUrl': '/my/addresses'})
+        self.assertRecordValues(
+            self.portal_user.partner_id,
+            [{**self.default_address_values, "vat": "BE0926372368"}],
+        )
+
     def test_addtional_identifiers_update(self):
         self.authenticate(self.account_a.login, self.account_a.login)
         csrf_token = self.csrf_token()

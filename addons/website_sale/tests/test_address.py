@@ -19,6 +19,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
     * address update (/shop/address)
     * address choice (/shop/checkout).
     """
+
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
@@ -321,17 +322,23 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         customer already selected, when those addresses still belong to the customer's company.
         """
         company = self.env["res.partner"].create({
-            "name": "B2B Company", "is_company": True, "type": "contact",
+            "name": "B2B Company",
+            "is_company": True,
+            "type": "contact",
         })
         delivery_1, delivery_2 = self.env["res.partner"].create([
             {"name": "Branch 1", "parent_id": company.id, "type": "delivery"},
             {"name": "Branch 2", "parent_id": company.id, "type": "delivery"},
         ])
         invoice = self.env["res.partner"].create({
-            "name": "Accounting", "parent_id": company.id, "type": "invoice",
+            "name": "Accounting",
+            "parent_id": company.id,
+            "type": "invoice",
         })
         user = self.env["res.users"].create({
-            "name": "B2B Company", "login": "b2b_company", "password": "b2b_company_pwd",
+            "name": "B2B Company",
+            "login": "b2b_company",
+            "password": "b2b_company_pwd",
             "partner_id": company.id,
             "group_ids": [Command.link(self.env.ref("base.group_portal").id)],
         })
@@ -656,9 +663,9 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             ],
         })
         partner_1, _partner_2, _partner_3 = partner_company.child_ids
-        self.assertTrue(partner_company.can_edit_vat())
+        self.assertTrue(partner_company._can_edit_commercial_fields())
         self.assertTrue(partner_company._can_edit_country())
-        self.assertTrue(all(not p.can_edit_vat() for p in partner_company.child_ids))
+        self.assertTrue(all(not p._can_edit_commercial_fields() for p in partner_company.child_ids))
         self.assertTrue(all(p._can_edit_country() for p in partner_company.child_ids))
 
         dumb_product = self.env["product.product"].create({"name": "test"})
@@ -670,7 +677,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         invoice.action_post()
 
         self.assertEqual(invoice.state, "posted")
-        self.assertFalse(partner_company.can_edit_vat())
+        self.assertFalse(partner_company._can_edit_commercial_fields())
         self.assertFalse(partner_company._can_edit_country())
         self.assertTrue(all(p._can_edit_country() for p in partner_company.child_ids))
         invoice = self.env["account.move"].create({

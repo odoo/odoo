@@ -22,12 +22,24 @@ class ResPartner(models.Model):
         self.ensure_one()
         return True
 
-    def can_edit_vat(self):
-        """ `vat` is a commercial field, synced between the parent (commercial
-        entity) and the children. Only the commercial entity should be able to
-        edit it (as in backend)."""
+    def _can_edit_commercial_fields(self):
+        """Return whether the commercial fields of the partner can be edited by the customer.
+
+        Commercial fields are synced between the parent (commercial entity) and the children. Only
+        the commercial entity should be able to edit it (as in backend).
+        """
         self.ensure_one()
-        return not self.parent_id
+        if not self.parent_id:
+            return True
+
+        contact_children = self.commercial_partner_id.child_ids.filtered(
+            lambda child: child.type == "contact"
+        )
+        return (
+            len(contact_children) == 1
+            and contact_children == self
+            and not self.commercial_partner_id.user_ids
+        )
 
     def _can_be_edited_by_current_customer(self, **kwargs):
         """Return whether partner can be edited by current user."""

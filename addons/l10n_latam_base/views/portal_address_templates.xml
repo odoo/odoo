@@ -8,7 +8,7 @@
                     Identification Type
                 </label>
                 <select
-                    t-if="is_commercial_address and can_edit_vat"
+                    t-if="can_edit_commercial_fields"
                     name="l10n_latam_identification_type_id"
                     class="form-select"
                 >
@@ -30,7 +30,7 @@
                         issued for your account. Please contact us directly for this operation."
                 />
                 <input
-                    t-if="not (is_commercial_address and can_edit_vat)"
+                    t-if="not can_edit_commercial_fields"
                     type="hidden"
                     readonly="1"
                     name="l10n_latam_identification_type_id"

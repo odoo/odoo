@@ -3,7 +3,7 @@
     <template id="address_form_fields" inherit_id="portal.address_form_fields">
         <div id="div_vat" position="after">
             <t t-set="current_ice" t-value="current_partner._get_additional_identifier('MA_ICE') if current_partner else ''"/>
-            <t t-set="ice_readonly" t-value="current_ice and not current_partner.can_edit_vat()"/>
+            <t t-set="ice_readonly" t-value="current_ice and not can_edit_commercial_fields"/>
             <div id="div_ma_ice" class="col-xl-6 mb-2"
                 t-att-style="(not country or country.code != 'MA') and 'display:none;'">
                 <label class="col-form-label label-optional" for="ma_ice">

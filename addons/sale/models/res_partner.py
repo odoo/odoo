@@ -84,9 +84,9 @@ class ResPartner(models.Model):
             ("partner_id", "=", self.id),
         ])
 
-    def can_edit_vat(self):
-        """Can't edit `vat` if there is (non draft) issued SO."""
-        return super().can_edit_vat() and not self._has_order([
+    def _can_edit_commercial_fields(self):
+        """Can't edit commercial fields if there is (non draft) issued SO."""
+        return super()._can_edit_commercial_fields() and not self._has_order([
             ("partner_id", "child_of", self.commercial_partner_id.id)
         ])
 

@@ -367,20 +367,45 @@ class CustomerPortal(Controller):
         current_partner = request.env['res.partner']._get_current_partner(**kwargs)
         commercial_partner = current_partner.commercial_partner_id  # handling commercial fields
 
-        # TODO in the future: rename can_edit_vat
-        # Means something like 'can edit commercial fields on current address'
         if partner_sudo:
             # Existing address, use the values defined on the address
             state_id = partner_sudo.state_id.id
             country_sudo = partner_sudo.country_id
-            can_edit_vat = partner_sudo.can_edit_vat()
+            is_main_address = partner_sudo == current_partner
+            can_edit_commercial_fields = (
+                is_main_address and current_partner._can_edit_commercial_fields()
+            )
         else:
             # New address, take default values from current partner
             country_sudo = current_partner.country_id or self._get_default_country(**kwargs)
             state_id = current_partner.state_id.id
-            can_edit_vat = not current_partner or (
-                partner_sudo == current_partner and current_partner.can_edit_vat()
-            )
+
+            # Commercial fields can only be updated on main customer address, so they can only be
+            # updated on new addresses if it's gonna be the customer main address
+            is_main_address = not current_partner
+            can_edit_commercial_fields = not current_partner
+
+        commercial_fields_warning = commercial_address_update_url = vat_warning = ""
+        if not can_edit_commercial_fields:
+            if not is_main_address:
+                commercial_fields_warning = self.env._(
+                    "The company name and VAT number can only be updated on your main account."
+                )
+                commercial_address_update_url = "/my/account?redirect=/my/addresses"
+            elif (
+                current_partner != commercial_partner
+                and commercial_partner.is_company
+                and commercial_partner.user_ids
+            ):
+                commercial_fields_warning = self.env._(
+                    "The company billing details can only be updated on the company account."
+                )
+            else:
+                vat_warning = self.env._(
+                    "Updating VAT number is not allowed once document(s) have been issued for your"
+                    " account. Please contact us directly for this operation."
+                )
+
         address_fields = (country_sudo and country_sudo.get_address_fields()) or ['city', 'zip']
 
         return {
@@ -388,15 +413,11 @@ class CustomerPortal(Controller):
             'partner_id': partner_sudo.id,
             'current_partner': current_partner,
             'commercial_partner': current_partner.commercial_partner_id,
-            'is_commercial_address': not current_partner or partner_sudo == commercial_partner,
-            'is_main_address': not current_partner or (partner_sudo and partner_sudo == current_partner),
-            'commercial_address_update_url': (
-                # Only redirect to account update if the logged in user is their own commercial
-                # partner.
-                current_partner == commercial_partner and "/my/account?redirect=/my/addresses"
-            ),
+            'is_main_address': is_main_address,
             'address_type': address_type,
-            'can_edit_vat': can_edit_vat,
+            'can_edit_commercial_fields': can_edit_commercial_fields,
+            'commercial_address_update_url': commercial_address_update_url,
+            'commercial_fields_warning': commercial_fields_warning,
             'can_edit_country': not partner_sudo.country_id or partner_sudo._can_edit_country(),
             'callback': callback,
             'country': country_sudo,
@@ -410,6 +431,7 @@ class CustomerPortal(Controller):
                 and address_fields.index('zip') < address_fields.index('city')
             ),
             'vat_label': request.env._("VAT"),
+            'vat_warning': vat_warning,
             'discard_url': callback or '/my/addresses',
         }
 
@@ -623,6 +645,7 @@ class CustomerPortal(Controller):
         invalid_fields = set()
         missing_fields = set()
         error_messages = []
+        current_partner = request.env['res.partner']._get_current_partner(**kwargs)
 
         if partner_sudo:
             name_change = (
@@ -674,7 +697,11 @@ class CustomerPortal(Controller):
 
             # Prevent changing commercial fields on sub-addresses, as they are expected to match
             # commercial partner values, and would be reset if modified on the commercial partner.
-            if not (is_commercial_address := partner_sudo == partner_sudo.commercial_partner_id):
+            can_edit_commercial_fields = (
+                not current_partner
+                or (partner_sudo == current_partner and current_partner._can_edit_commercial_fields())
+            )
+            if not can_edit_commercial_fields:
                 commercial_fields = partner_sudo._commercial_fields()
                 # The additional_identifiers field need to be handled separately, as it has multiple
                 # values handled differently on the partner.
@@ -717,7 +744,7 @@ class CustomerPortal(Controller):
                 'vat' in address_values
                 and partner_sudo.vat
                 and address_values['vat'] != partner_sudo.vat
-                and not partner_sudo.can_edit_vat()
+                and not can_edit_commercial_fields
             ):
                 invalid_fields.add('vat')
                 error_messages.append(_(
@@ -726,7 +753,7 @@ class CustomerPortal(Controller):
                 ))
         else:
             # We're creating a new address, it'll only be the main address of public customers
-            is_commercial_address = not request.env['res.partner']._get_current_partner(**kwargs)
+            can_edit_commercial_fields = not current_partner
 
         # Validate the email.
         if address_values.get('email') and not single_email_re.match(address_values['email']):
@@ -765,7 +792,7 @@ class CustomerPortal(Controller):
             required_field_set |= self.env["res.partner"]._get_mandatory_billing_address_fields(
                 country, **kwargs
             )
-            if not is_commercial_address:
+            if not can_edit_commercial_fields:
                 commercial_fields = ResPartnerSudo._commercial_fields()
                 for fname in commercial_fields:
                     if fname in required_field_set and fname not in address_values:

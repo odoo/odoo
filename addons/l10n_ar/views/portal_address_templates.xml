@@ -8,7 +8,7 @@
                     ARCA Responsibility
                 </label>
                 <select
-                    t-if="is_commercial_address and can_edit_vat"
+                    t-if="can_edit_commercial_fields"
                     name="l10n_ar_afip_responsibility_type_id"
                     class="form-select"
                 >
@@ -31,7 +31,7 @@
                         operation."
                 />
                 <input
-                    t-if="not (is_commercial_address and can_edit_vat)"
+                    t-if="not can_edit_commercial_fields"
                     type="hidden"
                     readonly="1"
                     name="l10n_ar_afip_responsibility_type_id"
