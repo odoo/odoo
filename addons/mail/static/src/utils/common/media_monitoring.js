@@ -176,6 +176,7 @@ async function _loadAudioWorkletProcessor(
     };
     return {
         disconnect: () => {
+            thresholdProcessor.port.onmessage = null;
             thresholdProcessor.disconnect();
         },
     };
