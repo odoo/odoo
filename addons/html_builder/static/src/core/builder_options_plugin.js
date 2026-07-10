@@ -4,6 +4,7 @@ import { isRemovable } from "./remove_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
+import { scrollTo } from "@html_builder/utils/scrolling";
 
 /** @typedef {import("@html_builder/core/utils").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -476,8 +477,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 this.updateContainers(targetEl, { forceUpdate: true });
                 // Scroll to the target if not visible.
                 if (!isElementInViewport(targetEl)) {
-                    // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
-                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                    scrollTo(targetEl);
                 }
             } else {
                 this.deactivateContainers();
