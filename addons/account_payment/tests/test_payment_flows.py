@@ -90,6 +90,35 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
             )
 
     @mute_logger('odoo.http')
+    def test_invoice_portal_page_forwards_access_token_with_invoice_id(self):
+        """Portal invoice page must forward access_token when invoice_id is in kwargs.
+
+        access_token is a named parameter of _invoice_get_page_view_values, so it is
+        absent from kwargs. If invoice_id is also present (query string or an extending
+        module), _get_extra_payment_form_values must still receive the portal token or
+        _document_check_access raises AccessError.
+        """
+        invoice = self.init_invoice(
+            "out_invoice", self.partner, amounts=[self.amount], currency=self.currency,
+        )
+        invoice.action_post()
+        access_token = invoice._portal_ensure_token()
+        self.authenticate(None, None)
+
+        response = self._make_http_get_request(
+            self._build_url(f'/my/invoices/{invoice.id}'),
+            params={
+                'access_token': access_token,
+                'invoice_id': invoice.id,
+            },
+        )
+        self.assertEqual(
+            response.status_code,
+            200,
+            msg="Public invoice portal page must not fail when invoice_id is in the query string.",
+        )
+
+    @mute_logger('odoo.http')
     def test_transaction_route_rejects_unexpected_kwarg(self):
         url = self._build_url(f'/invoice/transaction/{self.invoice.id}/')
         route_kwargs = {
