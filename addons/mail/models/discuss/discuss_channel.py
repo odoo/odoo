@@ -340,11 +340,11 @@ class DiscussChannel(models.Model):
             channel.self_member_id = member_by_channel.get(channel)
 
     def _search_self_member_id(self, operator, operand):
-        if operator == "in":
-            return [("channel_member_ids", "any", [("is_self", "=", True), ("id", "in", operand)])]
-        if operator in ('any', 'any!'):
-            return Domain('channel_member_ids', operator, Domain('is_self', '=', True) & operand)
-        return NotImplemented
+        if operator not in ('in', 'any', 'any!'):
+            return NotImplemented
+        if operator != 'any!':
+            operator = 'any'
+        return Domain("channel_member_ids", operator, [("is_self", "=", True), ("id", "in", operand)])
 
     @api.depends_context("uid", "guest")
     @api.depends("is_readonly", "self_member_id.channel_role")
