@@ -264,6 +264,15 @@ test("should remove font tag if font-color and background-color both are removed
     });
 });
 
+test("should preserve color tag when removing font color if it has other styles", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span style="font-size: 36px; color: rgb(255, 0, 0);">[abcabc]</span></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: '<p><span style="font-size: 36px;">[abcabc]</span></p>',
+    });
+});
+
 test("should apply a color to a slice of text containing a span", async () => {
     await testEditor({
         contentBefore: '<p>a[b<span class="a">c</span>d]e</p>',
@@ -514,7 +523,7 @@ test("should break a gradient and apply gradient background color to a slice of 
         ),
         contentAfter:
             '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><span class="a">ab</span></font>' +
-            '<font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);" class="text-gradient"><span class="a"><font style="background-color: rgb(255, 0, 0);">[ca]</font></span></font>' +
+            '<font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);"><span class="a"><font style="background-color: rgb(255, 0, 0);">[ca]</font></span></font>' +
             '<font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><span class="a">bc</span></font></p>',
     });
 });
