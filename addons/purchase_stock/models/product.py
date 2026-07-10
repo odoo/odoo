@@ -137,7 +137,11 @@ class SupplierInfo(models.Model):
         if not orderpoint:
             return
         if 'buy' not in orderpoint.route_id.rule_ids.mapped('action'):
-            orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1).route_id.id
+            # `_create_buy_rules()` assures always have a default `buy_pull_id` value on the warehouse
+            buy_route = orderpoint.warehouse_id.buy_pull_id.route_id
+            if not buy_route:
+                buy_route = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1).route_id
+            orderpoint.route_id = buy_route.id
         orderpoint.supplier_id = self
         supplier_min_qty = self.product_uom._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
         if orderpoint.qty_to_order < supplier_min_qty:

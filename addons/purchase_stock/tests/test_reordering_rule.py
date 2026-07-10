@@ -1640,3 +1640,17 @@ class TestReorderingRule(TransactionCase):
             'product_qty': 6.0,
             'price_unit': 100.0,
         }])
+
+    def test_set_supplier_in_orderpoint_uses_buy_route(self):
+        """ Set as Supplier on an orderpoint should assign the warehouse's Buy route """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+        self.assertFalse(orderpoint.route_id)
+        self.product_01.seller_ids.with_context(orderpoint_id=orderpoint.id).action_set_supplier()
+        self.assertEqual(orderpoint.route_id, warehouse.buy_pull_id.route_id, 'Buy route should be selected')
