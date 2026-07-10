@@ -13,3 +13,4 @@ List of contributors:
 Csaba Tóth csaba.toth@odootech.hu https://github.com/tsabi
 Csaba Geier geier.csaba@dotech.hu https://github.com/geiercsaba
 Dávid Ötvös otvos.david@dotech.hu https://github.com/davidotvos
+Tamás Ágoston agoston.tamas@dotech.hu https://github.com/odootechatamas
