@@ -1,4 +1,8 @@
-import { isCSSVariable, setBuilderCSSVariables, getBgImageURLFromEl } from "@html_builder/utils/utils_css";
+import {
+    isCSSVariable,
+    setBuilderCSSVariables,
+    getBgImageURLFromEl,
+} from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
@@ -32,6 +36,10 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @property { CustomizeWebsitePlugin['isPluginDestroyed'] } isPluginDestroyed
  * @property { CustomizeWebsitePlugin['reloadBundles'] } reloadBundles
  * @property { CustomizeWebsitePlugin['setViewsOnSave'] } setViewsOnSave
+ */
+
+/**
+ * @typedef {((color: string) => void)[]} on_website_color_updated_handlers
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
@@ -1010,6 +1018,7 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
             );
         }
         setBuilderCSSVariables(getHtmlStyle(this.document));
+        this.dispatchTo("on_website_color_updated_handlers", color);
     }
 }
 
