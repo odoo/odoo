@@ -217,7 +217,7 @@ class PosSession(models.Model):
         today = fields.Date.context_today(self)
         pricelist_item_domain = [
             '&',
-            ('pricelist_id', 'in', self.config_id._get_available_pricelists().ids),
+            ('pricelist_id', 'in', pos_config._get_available_pricelists().ids),
             *self.env['product.pricelist.item']._check_company_domain(self.company_id),
             '|',
             '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
