@@ -998,6 +998,19 @@ class ProductTemplate(models.Model):
         stored.is_storable = True
         (self - stored).is_storable = False
 
+    def _inverse_is_storable(self):
+        for template in self:
+            vals = {
+                'type': 'service',
+                'tracking': False,
+            }
+            if template.is_storable:
+                vals = {
+                    'type': 'consu',
+                    'tracking': template.tracking or 'none',
+                }
+            template.write(vals)
+
     @api.onchange('type')
     def _onchange_type(self):
         # Return a warning when trying to change the product type
@@ -1051,10 +1064,6 @@ class ProductTemplate(models.Model):
 
         clean_inventory = False
         templates_to_reset = self.env['product.template']
-
-        if 'type' in vals and vals['type'] != 'consu' and 'tracking' not in vals:
-            vals['tracking'] = False
-
         if 'is_storable' in vals and any(vals['is_storable'] != prod_tmpl.is_storable and not prod_tmpl.is_storable for prod_tmpl in self):
             clean_inventory = True
             if vals['is_storable']:

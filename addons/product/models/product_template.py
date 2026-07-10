@@ -115,7 +115,7 @@ class ProductTemplate(models.Model):
 
     is_storable = fields.Boolean(
         'Track Inventory', store=True, compute='_compute_is_storable', readonly=False,
-        precompute=True, tracking=True,
+        precompute=True, tracking=True, inverse='_inverse_is_storable',
         help='A storable product is a product for which you manage stock.')
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
@@ -380,6 +380,9 @@ class ProductTemplate(models.Model):
         stored = self.filtered(lambda t: t.type == 'consu')
         stored.is_storable = True
         (self - stored).is_storable = False
+
+    def _inverse_is_storable(self):
+        pass
 
     @api.depends('product_variant_count', 'is_storable')
     def _compute_show_qty_update_button(self):
