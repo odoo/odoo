@@ -1132,7 +1132,7 @@ class ResCompany(models.Model):
                     (company.country_id.code or company.account_fiscal_country_id.code).lower()
                 )
 
-            company.company_vat_placeholder = expected_vat
+            company.company_vat_placeholder = self.env._(expected_vat or '')  # pylint: disable=E8502
 
     def _set_category_defaults(self):
         for company in self:
