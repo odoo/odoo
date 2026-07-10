@@ -11,12 +11,36 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { EmphasizeAnimatedText } from "./emphasize_animated_text";
 import { handleImagesIfDataset } from "@html_builder/utils/image";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
+import {
+    applyDefaultAnimationClass,
+    DEFAULT_ANIMATION_CLASS,
+    getDefaultAnimationSelector,
+} from "@website/utils/animate_default";
+
+const ANIMATED_SELECTOR = `.o_animate, .${DEFAULT_ANIMATION_CLASS}`;
+
+/**
+ * The values the theme's animation applies, and the property each is read from.
+ * The delay comes from "--wanim-base-delay" and not from the computed
+ * "animation-delay", which also holds the position of the block in its row (see
+ * "--wanim-index" in website.scss) and stops being true when that row changes.
+ */
+const DEFAULT_ANIMATION_STYLES = [
+    ["animation-duration", "animation-duration"],
+    ["animation-delay", "--wanim-base-delay"],
+    ["--wanim-intensity", "--wanim-intensity"],
+];
 
 /**
  * @typedef { Object } AnimateOptionShared
  * @property { AnimateOptionPlugin['forceAnimation'] } forceAnimation
  * @property { AnimateOptionPlugin['getDirectionsItems'] } getDirectionsItems
  * @property { AnimateOptionPlugin['getEffectsItems'] } getEffectsItems
+ * @property { AnimateOptionPlugin['getEffectClass'] } getEffectClass
+ * @property { AnimateOptionPlugin['isDefaultAnimationEnabled'] } isDefaultAnimationEnabled
+ * @property { AnimateOptionPlugin['getDefaultAnimationClasses'] } getDefaultAnimationClasses
+ * @property { AnimateOptionPlugin['getDirectionClass'] } getDirectionClass
+ * @property { AnimateOptionPlugin['setDirectionClass'] } setDirectionClass
  */
 
 /**
@@ -37,7 +61,12 @@ export class AnimateOptionPlugin extends Plugin {
         "getDirectionsItems",
         "getEffectsItems",
         "hasAnimationEffect",
+        "getEffectClass",
         "canHaveHoverEffect",
+        "isDefaultAnimationEnabled",
+        "getDefaultAnimationClasses",
+        "getDirectionClass",
+        "setDirectionClass",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -64,12 +93,13 @@ export class AnimateOptionPlugin extends Plugin {
                     : undefined
             ),
         ],
-        system_classes: ["o_animating"],
+        system_classes: ["o_animating", DEFAULT_ANIMATION_CLASS],
         builder_actions: {
             SetAnimationModeAction,
             SetAnimateIntensityAction,
             ForceAnimationAction,
             SetAnimationEffectAction,
+            SetAnimationDirectionAction,
         },
         normalize_processors: this.normalize.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
@@ -97,6 +127,10 @@ export class AnimateOptionPlugin extends Plugin {
 
     setup() {
         this.scrollingElement = getScrollingElement(this.document);
+    }
+
+    isDefaultAnimationEnabled() {
+        return !!getDefaultAnimationSelector(this.document);
     }
 
     async canHaveHoverEffect(el) {
@@ -127,7 +161,8 @@ export class AnimateOptionPlugin extends Plugin {
     }
 
     getEffectsItems(isActiveItem) {
-        const isOnAppearance = () => isActiveItem("animation_on_appearance_opt");
+        const isOnAppearance = () =>
+            isActiveItem("animation_on_appearance_opt") || isActiveItem("animation_default_opt");
         return [
             { className: "o_anim_fade_in", label: "Fade" },
             { className: "o_anim_slide_in", label: "Slide", directionClass: "o_anim_from_right" },
@@ -145,8 +180,9 @@ export class AnimateOptionPlugin extends Plugin {
     }
     getDirectionsItems() {
         const isNotSlideIn = (editingElement) =>
-            !editingElement.classList.contains("o_anim_slide_in");
-        const isRotate = (editingElement) => editingElement.classList.contains("o_anim_rotate_in");
+            this.getEffectClass(editingElement) !== "o_anim_slide_in";
+        const isRotate = (editingElement) =>
+            this.getEffectClass(editingElement) === "o_anim_rotate_in";
         const isNotRotate = (editingElement) => !isRotate(editingElement);
 
         return [
@@ -177,7 +213,120 @@ export class AnimateOptionPlugin extends Plugin {
         );
     }
 
+    /**
+     * The effect class the element animates with or, on the theme's animation,
+     * the one it is equivalent to. Empty when it does not animate.
+     */
+    getEffectClass(editingElement) {
+        if (editingElement.classList.contains(DEFAULT_ANIMATION_CLASS)) {
+            return this.getDefaultAnimationClasses(editingElement).effectClass;
+        }
+        return (
+            this.getEffectsItems()
+                .map(({ className }) => className)
+                .find((className) => editingElement.classList.contains(className)) || ""
+        );
+    }
+
+    /**
+     * The effect and direction the theme's animation is equivalent to. The
+     * element carries neither class, so both are read back from the keyframes,
+     * named after their effect class and an optional direction suffix (e.g.
+     * "o_anim_fade_in_up").
+     *
+     * @returns {{effectClass: string, directionClass: string}} an empty
+     *      direction when the animation plays in place
+     */
+    getDefaultAnimationClasses(editingElement) {
+        const { animationName } = this.window.getComputedStyle(editingElement);
+        const effectClass =
+            this.getEffectsItems()
+                .map(({ className }) => className)
+                .find((className) => animationName.startsWith(className)) || "o_anim_fade_in";
+        return {
+            effectClass,
+            // No suffix: it plays in place, whatever direction the snippet asks.
+            directionClass:
+                animationName === effectClass
+                    ? ""
+                    : this.getAppliedDirectionClass(editingElement) || "o_anim_from_bottom",
+        };
+    }
+
+    getAppliedDirectionClass(editingElement) {
+        return (
+            this.getDirectionsItems()
+                .map(({ className }) => className)
+                .find((className) => className && editingElement.classList.contains(className)) ||
+            ""
+        );
+    }
+
+    /**
+     * The class the element carries or, on the theme's animation, the direction
+     * its keyframes imply. Empty when the animation plays in place.
+     */
+    getDirectionClass(editingElement) {
+        return editingElement.classList.contains(DEFAULT_ANIMATION_CLASS)
+            ? this.getDefaultAnimationClasses(editingElement).directionClass
+            : this.getAppliedDirectionClass(editingElement);
+    }
+
+    /**
+     * Sets the direction the element animates from, empty for in place.
+     */
+    setDirectionClass(editingElement, className) {
+        if (editingElement.classList.contains(DEFAULT_ANIMATION_CLASS)) {
+            this.convertDefaultAnimationToCustom(editingElement);
+        }
+        editingElement.classList.remove(
+            ...this.getDirectionsItems()
+                .map((item) => item.className)
+                .filter(Boolean)
+        );
+        if (className) {
+            editingElement.classList.add(className);
+        }
+        this.forceAnimation(editingElement);
+    }
+
+    /**
+     * Turns the theme's animation into an equivalent custom one: what the CSS
+     * was applying is made explicit, so that the block keeps looking the same
+     * once the theme option no longer drives it.
+     */
+    convertDefaultAnimationToCustom(editingElement) {
+        const style = this.window.getComputedStyle(editingElement);
+        // The theme's animation is faster and subtler than "o_animate". What
+        // the edit triggering this just set inline is the user's, not the
+        // theme's, and stays.
+        const valuesToKeep = DEFAULT_ANIMATION_STYLES.filter(
+            ([property]) => !editingElement.style.getPropertyValue(property)
+        ).map(([property, source]) => [property, style.getPropertyValue(source).trim()]);
+        const { effectClass, directionClass } = this.getDefaultAnimationClasses(editingElement);
+        const appliedClass = this.getAppliedDirectionClass(editingElement);
+        if (directionClass) {
+            // Only implicit in the CSS: make it explicit.
+            editingElement.classList.add(directionClass);
+        } else if (appliedClass) {
+            // Plays in place: the direction the snippet asks for is ignored.
+            editingElement.classList.remove(appliedClass);
+        }
+        editingElement.classList.add(effectClass);
+        editingElement.classList.replace(DEFAULT_ANIMATION_CLASS, "o_animate");
+        for (const [property, value] of valuesToKeep) {
+            if (value) {
+                editingElement.style.setProperty(property, value);
+            }
+        }
+    }
+
     async forceAnimation(editingElement) {
+        // Editing a setting makes the animation the user's: it has to become
+        // explicit, or it is lost or silently switches to another type.
+        if (editingElement.classList.contains(DEFAULT_ANIMATION_CLASS)) {
+            this.convertDefaultAnimationToCustom(editingElement);
+        }
         editingElement.style.animationName = "dummy";
         if (editingElement.classList.contains("o_animate_on_scroll")) {
             // Trigger a DOM reflow.
@@ -383,18 +532,20 @@ export class AnimateOptionPlugin extends Plugin {
     }
 
     normalize(root) {
+        applyDefaultAnimationClass(root);
+
         const previewEls = [...root.querySelectorAll(".o_animate_preview")];
         if (root.classList.contains("o_animate_preview")) {
             previewEls.push(root);
         }
         for (const el of previewEls) {
-            if (el.classList.contains("o_animate")) {
+            if (el.matches(ANIMATED_SELECTOR)) {
                 el.classList.remove("o_animate_preview");
             }
         }
 
-        const animateEls = [...root.querySelectorAll(".o_animate")];
-        if (root.classList.contains("o_animate")) {
+        const animateEls = [...root.querySelectorAll(ANIMATED_SELECTOR)];
+        if (root.matches(ANIMATED_SELECTOR)) {
             animateEls.push(root);
         }
         for (const el of animateEls) {
@@ -412,8 +563,9 @@ export class AnimateOptionPlugin extends Plugin {
         return root;
     }
     cleanForSave(root) {
-        for (const el of root.querySelectorAll(".o_animate_preview")) {
-            el.classList.remove("o_animate_preview");
+        const selector = `.o_animate_preview, .${DEFAULT_ANIMATION_CLASS}`;
+        for (const el of root.querySelectorAll(selector)) {
+            el.classList.remove("o_animate_preview", DEFAULT_ANIMATION_CLASS);
         }
         return root;
     }
@@ -480,8 +632,18 @@ export class SetAnimationModeAction extends BuilderAction {
         }
     }
 
-    async apply({ editingElement, value: effectName, params: { forceAnimation } }) {
+    async apply({ editingElement, value: effectName, params: { forceAnimation, isDefault } }) {
         const { hasAnimationEffect, getEffectsItems } = this.dependencies.animateOption;
+        if (isDefault) {
+            // Back to an animation applying no class of its own: whatever the
+            // custom one left behind would override it. The direction class
+            // stays, the theme animates from it (see "$o-no-direction").
+            editingElement.classList.remove(...getEffectsItems().map(({ className }) => className));
+            for (const [property] of DEFAULT_ANIMATION_STYLES) {
+                editingElement.style.removeProperty(property);
+            }
+            return;
+        }
         // Remove appearance-only effects when switching to "On Scroll" so the
         // default "Fade" effect can be applied.
         if (effectName === "onScroll") {
@@ -565,10 +727,26 @@ export class ForceAnimationAction extends BuilderAction {
         this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }
+export class SetAnimationDirectionAction extends BuilderAction {
+    static id = "setAnimationDirection";
+    static dependencies = ["animateOption"];
+    isApplied({ editingElement, value: className }) {
+        return className === this.dependencies.animateOption.getDirectionClass(editingElement);
+    }
+    apply({ editingElement, value: className }) {
+        this.dependencies.animateOption.setDirectionClass(editingElement, className);
+    }
+}
 export class SetAnimationEffectAction extends BuilderAction {
     static id = "setAnimationEffect";
     static dependencies = ["animateOption"];
     isApplied({ editingElement, value: className }) {
+        if (editingElement.classList.contains(DEFAULT_ANIMATION_CLASS)) {
+            // No effect class: show the one it is equivalent to.
+            const { effectClass } =
+                this.dependencies.animateOption.getDefaultAnimationClasses(editingElement);
+            return className === effectClass;
+        }
         return editingElement.classList.contains(className);
     }
     clean({ editingElement }) {

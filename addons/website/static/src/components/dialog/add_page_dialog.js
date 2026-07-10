@@ -231,6 +231,8 @@ class AddPageTemplatePreview extends Component {
             const mainEl = document.createElement("main");
             const wrapwrapEl = document.createElement("div");
             wrapwrapEl.id = "wrapwrap";
+            // Static preview: opt out of the theme's animation.
+            wrapwrapEl.classList.add("o_not-animable");
             wrapwrapEl.appendChild(mainEl);
             iframeEl.contentDocument.body.appendChild(wrapwrapEl);
             const templateDocument = new DOMParser().parseFromString(

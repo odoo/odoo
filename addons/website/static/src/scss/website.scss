@@ -2805,7 +2805,25 @@ input[value*="data-oe-translation-source-sha"] {
 // Website Animate
 //------------------------------------------------------------------------------
 
-.o_animate {
+// Sole definition of the blocks the "Animation" theme option animates, read
+// back by the JS from the variable printed below (see
+// "@website/utils/animate_default"). Zero specificity: anything else wins.
+$o-default-animation-type: o-website-value('default-animation-type');
+$-wanim-scope: ':where(#wrapwrap section[data-snippet])';
+$-wanim-unit: '#{$-wanim-scope} :where(.row > div, .o_animable, img)';
+$-wanim-not-animable: '.o_not-animable';
+$o-wanim-default-selector: $-wanim-unit
+    // The block itself.
+    + ':not(:where(#{$-wanim-not-animable}, .o_animate, .o_animate_none, .s_col_no_resize, .s_col_no_resize.row > div, [data-oe-xpath]))'
+    // Its content.
+    + ':not(:where(#{$-wanim-not-animable}, .dropdown, .dropdown-menu, .s_floating_blocks, .s_website_form) *)'
+    // Always in the viewport: never comes into view.
+    + ':not(:where(.o_footer_slideout) *)'
+    // Only the outermost block: a column, not its images.
+    + ':not(:where(#{$-wanim-unit}) *)';
+$-wanim-animated: if($o-default-animation-type == 'none', '.o_animate', '.o_animate, #{$o-wanim-default-selector}');
+
+#{$-wanim-animated} {
     // Elements with an animation must always be above the elements that are
     // around so that the animation is fully visible.
     z-index: 1;
@@ -2829,6 +2847,72 @@ input[value*="data-oe-translation-source-sha"] {
 .o_animate_preview {
     visibility: visible;
 }
+// Releases the animation paused below. A user one is revealed by its own JS.
+.o_animate_default:is(.o_animating, .o_animated) {
+    visibility: visible;
+    animation-play-state: running;
+}
+
+// ":where()" must NOT be used here: it has to beat the "animation-name" that
+// "@extend" takes from the effect class declared further down.
+$o-no-direction: ':not([class*="o_anim_from_"])';
+
+@if $o-default-animation-type != 'none' {
+    :root {
+        --o-wanim-default-selector: #{$o-wanim-default-selector};
+    }
+
+    #{$o-wanim-default-selector} {
+        --wanim-intensity: 4;
+        --wanim-index: 0;
+        // Written back by the builder, see "convertDefaultAnimationToCustom".
+        --wanim-base-delay: .15s;
+
+        animation-duration: .6s;
+        animation-delay: calc(var(--wanim-base-delay) + var(--wanim-index) * var(--wanim-step, 0s));
+        // Released on reveal, see "@website/interactions/animate_default".
+        animation-play-state: paused;
+
+        // "@extend" brings the per-direction rules along: a class overrides it.
+        @if $o-default-animation-type == 'zoom_in' {
+            @extend .o_anim_zoom_in;
+            --wanim-intensity: 25;
+        } @else if $o-default-animation-type == 'zoom_out' {
+            @extend .o_anim_zoom_out;
+            --wanim-intensity: 25;
+        } @else if $o-default-animation-type == 'slide' {
+            @extend .o_anim_slide_in;
+            // No in-place variant.
+            &#{$o-no-direction} {
+                animation-name: o_anim_slide_in_up;
+            }
+        } @else if $o-default-animation-type == 'fade_in' {
+            // In place: fading in from a direction is what 'fade' is for.
+            animation-name: o_anim_fade_in;
+        } @else {
+            // 'fade', the historical default.
+            @extend .o_anim_fade_in;
+            &#{$o-no-direction} {
+                animation-name: o_anim_fade_in_up;
+            }
+        }
+    }
+
+    // Stagger the columns of a row: smaller step as the row grows, index back
+    // to 0 every 12. Desktop only, most snippets being one column on mobile.
+    @include media-breakpoint-up(md) {
+        :where(#wrapwrap .row) { --wanim-step: .15s; }
+        :where(#wrapwrap .row:has(> div:nth-of-type(6))) { --wanim-step: .1s; }
+        :where(#wrapwrap .row:has(> div:nth-of-type(11))) { --wanim-step: .08s; }
+
+        @for $i from 2 through 12 {
+            :where(#wrapwrap .row) > div:nth-of-type(12n + #{$i}) {
+                --wanim-index: #{$i - 1};
+            }
+        }
+    }
+}
+
 .o_wanim_overflow_xy_hidden {
     // "overflow-x: clip" is added to the "#wrapwrap" and not to "html" because
     // if it's added to "html", when a popup opens, the page scrolls to the top.

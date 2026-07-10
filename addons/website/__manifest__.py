@@ -513,6 +513,7 @@
             ('include', 'html_builder.assets'),
             'website/static/src/scss/website_common.scss',
             'website/static/src/builder/**/*',
+            'website/static/src/utils/animate_default.js',
             'website/static/src/services/google_maps_service.js',
             'website/static/src/components/googleplaces_autocomplete/*',
             ('remove', 'website/static/src/builder/**/*.edit.*'),

@@ -17,7 +17,7 @@ export class AnimateOverflow extends Interaction {
         },
         _root: {
             "t-on-updatecontent.noUpdate": (ev) => {
-                if (ev.target.classList.contains("o_animate")) {
+                if (ev.target.matches(".o_animate, .o_animate_default")) {
                     this.updateContent();
                 }
             },
@@ -26,7 +26,7 @@ export class AnimateOverflow extends Interaction {
 
     setup() {
         this.scrollingElement = getScrollingElement(this.el.ownerDocument);
-        const animatedElements = this.el.querySelectorAll(".o_animate");
+        const animatedElements = this.el.querySelectorAll(".o_animate, .o_animate_default");
         // Fix for "transform: none" not overriding keyframe transforms on
         // some iPhone using Safari. Note that all animated elements are checked
         // (not only one) as the bug is not systematic and may depend on some
