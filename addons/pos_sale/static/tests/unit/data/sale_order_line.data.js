@@ -75,6 +75,9 @@ export class SaleOrderLine extends models.ServerModel {
             qty_invoiced: 0,
             qty_to_invoice: 0,
             tax_ids: [],
+            extra_tax_data: {
+                computation_key: "down_payment,5",
+            },
             write_date: "2025-07-03 17:04:14",
         },
     ];
