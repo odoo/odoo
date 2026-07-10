@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import time
+import logging
 
 from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
+from odoo.tools.version_tag_reset import assign_version_tag
 from odoo import Command
+
+
+_logger = logging.getLogger(__name__)
 
 
 class TestORM(TransactionCase):
@@ -349,3 +355,54 @@ class TestCompanyDependent(TransactionCase):
                              f'Please override the unlink method of {comodel_field.comodel_name} and do the ORM on '
                              f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}')
                         )
+
+
+@tagged('-at_install', 'post_install')
+class TestClassVersionTagExhaustion(TransactionCase):
+    def _benchmark(self, label, func, n=500_000):
+        func()
+        t0 = time.perf_counter()
+        for _ in range(n):
+            func()
+        elapsed = time.perf_counter() - t0
+        stats_logger = logging.getLogger('odoo.tests.stats')
+        stats_logger.info("Tested performance for label %s in %.3fs", label, elapsed)
+
+    def test_bench_access_model_attributes(self):
+        with self.profile():
+            user = self.env.user
+            self._benchmark('user.env', lambda: user.id)
+            self._benchmark('user.id', lambda: user.id)
+            self._benchmark('user.__class__', lambda: user.__class__)
+            self._benchmark('user.browse(user.id)', lambda: user.browse(user.id))
+
+    def test_check_version_tags(self):
+        """
+        Avoid performance regression in 3.13. see version_tag_reset.py for more info
+        """
+        exhausted_classes_count = 0
+        if assign_version_tag is None:
+            self.skipTest("Python version < 3.13, no tp_versions_used to reset")
+
+        def _check_tag(obj):
+            assert isinstance(obj, type)
+            return assign_version_tag(obj)
+
+        # Registry is not the initial cause of the problem but lets check it just in case
+        if not _check_tag(type(self.env.registry)):
+            _logger.error("Registry class has exhausted its version tag budget")
+            exhausted_classes_count += 1
+
+        for model in self.env.registry.values():
+            for c in model.__mro__:
+                if not _check_tag(c):
+                    _logger.error("Model %s (%s.%s) ...", model._name, c.__module__, c.__qualname__)
+                    exhausted_classes_count += 1
+            # Fields are not the initial cause of the problem but lets check them just in case
+            for field in model._fields.values():
+                for c in field.__class__.__mro__:
+                    if not _check_tag(c):
+                        _logger.error("Field %s.%s has exhausted its version tag budget", c.__module__, c.__qualname__)
+                        exhausted_classes_count += 1
+        if exhausted_classes_count:
+            raise AssertionError(f"{exhausted_classes_count} classes have exhausted their version tag budget")
