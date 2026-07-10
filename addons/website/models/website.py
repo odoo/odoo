@@ -1991,15 +1991,19 @@ class Website(models.CachedModel):
             html_fields.append((model_name, field_name))
         return html_fields
 
-    def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields):
+    def _is_snippet_used(self, snippet_modules, snippet_id, asset_version, asset_type, html_fields):
         snippet_occurences = []
-        # Check snippet template definition to avoid disabling its related assets.
-        # This special case is needed because snippet template definitions do not
-        # have a `data-snippet` attribute (which is added during drag&drop).
-        snippet_template_html = self.env['ir.qweb']._render(f'{snippet_module}.{snippet_id}', raise_if_not_found=False)
-        if snippet_template_html:
-            match = re.search('<([^>]*class="[^>]*)>', snippet_template_html)
-            snippet_occurences.append(match.group())
+        # Check snippet template definitions to avoid disabling their related
+        # assets. This special case is needed because snippet template
+        # definitions do not have a `data-snippet` attribute (which is added
+        # during drag&drop). All the modules holding assets for the snippet
+        # are considered: unrelated modules may define same-named snippets
+        # (e.g. mass_mailing email snippets vs website ones).
+        for snippet_module in snippet_modules:
+            snippet_template_html = self.env['ir.qweb']._render(f'{snippet_module}.{snippet_id}', raise_if_not_found=False)
+            if snippet_template_html:
+                match = re.search(r'<([^>]*class="[^>]*)>', snippet_template_html)
+                snippet_occurences.append(match.group())
 
         if self._check_snippet_used(snippet_occurences, asset_type, asset_version):
             return True
@@ -2044,7 +2048,11 @@ class Website(models.CachedModel):
         # regex will match /module/static/[.../]/snippets/snippet_id/XXX[_variable].asset_type
         # _variable is not kept since only module, snippet_id, asset_version (XXX), asset_type are relevant
         html_fields = self._get_html_fields()
-        snippet_used = {}
+        # group the modules holding assets of the same snippet version: they
+        # must all be considered when checking whether the snippet is used,
+        # independently of the module loading order
+        key_modules = {}
+        parsed_assets = []
         for snippet_asset in snippet_assets:
             match = snippet_re.match(snippet_asset.path)
             if not match:
@@ -2052,9 +2060,14 @@ class Website(models.CachedModel):
             (snippet_module, snippet_id, asset_version, asset_type) = match.groups()
             if asset_type == 'scss':
                 asset_type = 'css'
-            key = (snippet_id, asset_version, asset_type)  # module is not relevant, we want the first one in the asset id order to filter module extension
+            key = (snippet_id, asset_version, asset_type)
+            key_modules.setdefault(key, dict())[snippet_module] = True  # ordered set
+            parsed_assets.append((snippet_asset, key))
+        snippet_used = {}
+        for snippet_asset, key in parsed_assets:
+            (snippet_id, asset_version, asset_type) = key
             if key not in snippet_used:
-                snippet_used[key] = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields)
+                snippet_used[key] = self._is_snippet_used(key_modules[key], snippet_id, asset_version, asset_type, html_fields)
             is_snippet_used = snippet_used[key]
             if is_snippet_used != snippet_asset.active:
                 snippet_asset.active = is_snippet_used
