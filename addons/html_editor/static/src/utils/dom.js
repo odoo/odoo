@@ -175,6 +175,20 @@ export function removeClass(element, ...classNames) {
 }
 
 /**
+ * Removes the specified CSS properties from an element's inline styles.
+ * If no inline styles remain afterward, the `style` attribute is removed.
+ *
+ * @param {Element} element
+ * @param {...string} styleProperties
+ */
+export function removeStyle(element, ...styleProperties) {
+    styleProperties.forEach((prop) => element.style.removeProperty(prop));
+    if (element.getAttribute("style") === "") {
+        element.removeAttribute("style");
+    }
+}
+
+/**
  * Add a BR in the given node if its closest ancestor block has nothing to make
  * it visible, and/or add a zero-width space in the given node if it's an empty
  * inline so the cursor can stay in it.

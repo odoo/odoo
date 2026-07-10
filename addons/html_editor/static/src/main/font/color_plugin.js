@@ -2,14 +2,13 @@ import { Plugin } from "@html_editor/plugin";
 import {
     isColorGradient,
     rgbaToHex,
-    hasColor,
     hasAnyNodesColor,
     TEXT_CLASSES_REGEX,
     BG_CLASSES_REGEX,
     hasTextColorClass,
     computeBackgroundColorForElement,
 } from "@html_editor/utils/color";
-import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
+import { fillEmpty, removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
     isEmptyBlock,
     isEmptyTextNode,
@@ -461,12 +460,10 @@ export class ColorPlugin extends Plugin {
         const fontsSet = new Set(fonts);
         for (const font of fontsSet) {
             this.colorElement(font, color, mode);
-            if (
-                !hasColor(font, "color") &&
-                !hasColor(font, "backgroundColor") &&
-                ["FONT", "SPAN"].includes(font.nodeName) &&
-                (!font.hasAttribute("style") || !color)
-            ) {
+            const attributeNames = font
+                .getAttributeNames()
+                .filter((name) => name !== "data-oe-zws-empty-inline");
+            if (!attributeNames.length) {
                 cursors.update(callbacksForCursorUpdate.unwrap(font));
                 for (const child of [...font.childNodes]) {
                     font.parentNode.insertBefore(child, font);
@@ -498,29 +495,32 @@ export class ColorPlugin extends Plugin {
      * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
      */
     colorElement(element, color, mode) {
-        const newClassName = element.className
-            .replace(mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX, "")
-            .replace(/\btext-gradient\b/g, "") // cannot be combined with setting a background
-            .replace(/\s+/, " ");
-        element.className !== newClassName && (element.className = newClassName);
-        element.style["background-image"] = "";
+        const classNamesToRemove = [...element.classList].filter((className) =>
+            (mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX).test(className)
+        );
+        // cannot be combined with setting a background
+        classNamesToRemove.push("text-gradient");
+        removeClass(element, ...classNamesToRemove);
+        removeStyle(element, "background-image");
         if (mode === "backgroundColor") {
-            element.style["background"] = "";
+            removeStyle(element, "background");
         }
         if (color.startsWith("text") || color.startsWith("bg-")) {
-            element.style[mode] = "";
+            removeStyle(element, mode);
             element.classList.add(color);
         } else if (isColorGradient(color)) {
-            element.style[mode] = "";
+            removeStyle(element, mode);
             if (mode === "color") {
-                element.style["background"] = "";
+                removeStyle(element, "background");
                 element.style["background-image"] = color;
                 element.classList.add("text-gradient");
             } else {
                 element.style["background-image"] = color;
             }
-        } else {
+        } else if (color) {
             element.style[mode] = color;
+        } else {
+            removeStyle(element, mode);
         }
     }
 }
