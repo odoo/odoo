@@ -1148,7 +1148,7 @@ class ResPartner(models.Model):
             if partner.country_id:
                 expected_vat = _ref_vat.get(partner.country_id.code.lower())
 
-            partner.partner_vat_placeholder = expected_vat
+            partner.partner_vat_placeholder = self.env._(expected_vat or '')  # pylint: disable=E8502
 
     @api.depends('bank_ids.duplicate_bank_partner_ids')
     def _compute_duplicate_bank_partner_ids(self):
