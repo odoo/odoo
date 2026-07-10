@@ -11,7 +11,7 @@ class TestCharGenerator(TransactionCase):
         self.name_field = test_product_model._fields['name']
 
     def test_char_generator(self):
-        generator = Char(field=self.name_field, env=self.env, length=10)
+        generator = Char(target=self.name_field, env=self.env, length=10)
 
         values = [generator.next({}) for _ in range(10)]
 
@@ -21,7 +21,7 @@ class TestCharGenerator(TransactionCase):
         self.assertGreater(len(unique_values), 1)
 
     def test_char_generator_custom_charset(self):
-        generator = Char(field=self.name_field, env=self.env, char_set='ABC', length=5)
+        generator = Char(target=self.name_field, env=self.env, char_set='ABC', length=5)
 
         value = generator.next({})
 
@@ -37,7 +37,7 @@ class TestTextGenerator(TransactionCase):
         self.description_field = test_product_model._fields['description']
 
     def test_text_generator(self):
-        generator = Text(field=self.description_field, env=self.env, length=30)
+        generator = Text(target=self.description_field, env=self.env, length=30)
 
         values = [generator.next({}) for _ in range(5)]
 

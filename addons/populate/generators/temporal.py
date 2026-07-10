@@ -45,7 +45,7 @@ class Temporal(Generator, ABC):
 class Date(Temporal):
     """Generate random dates between ``start`` and ``end``."""
     name = 'temporal.date'
-    allowed_field_types = ('date', 'datetime', 'virtual')
+    allowed_on = ('date', 'datetime', 'value')
     time_unit = 'days'
     format = '%Y-%m-%d'
     default_start = 'today -5y'
@@ -59,7 +59,7 @@ class Date(Temporal):
 class Datetime(Temporal):
     """Generate random datetimes between ``start`` and ``end``."""
     name = 'temporal.datetime'
-    allowed_field_types = ('datetime', 'virtual')
+    allowed_on = ('datetime', 'value')
     time_unit = 'seconds'
     format = '%Y-%m-%d %H:%M:%S'
     default_start = 'now -5y'

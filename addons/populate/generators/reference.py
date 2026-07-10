@@ -11,17 +11,17 @@ if TYPE_CHECKING:
 class ReferenceOne(ComodelGenerator):
     """Pick a random record ID for a Many2oneReference field."""
     name = 'reference.one'
-    allowed_field_types = ('many2one_reference',)
+    allowed_on = ('many2one_reference',)
 
-    def __init__(self, field: Many2oneReference, **kwargs):
+    def __init__(self, target: Many2oneReference, **kwargs):
         """Initialize a generator tied to the field that stores the target model.
 
-        :param field: Many2oneReference field receiving generated record ids.
+        :param target: Many2oneReference field receiving generated record ids.
         """
         # Validate field's type before reading `model_field`
-        self._validate_field_type(field)
-        super().__init__(field=field, depends=[field.model_field], **kwargs)
-        self.field = cast('Many2oneReference', self.field)
+        self._validate_target_type(target)
+        super().__init__(target=target, depends=[target.model_field], **kwargs)
+        self.target = cast('Many2oneReference', self.target)
 
     def _next(self, known_vals):
         comodel_name = known_vals[self.field.model_field]
@@ -36,7 +36,7 @@ class ReferenceOne(ComodelGenerator):
 class ReferenceRaw(ComodelGenerator):
     """Generate ``'model_name,id'`` strings for Reference fields."""
     name = 'reference.raw'
-    allowed_field_types = ('reference',)
+    allowed_on = ('reference',)
 
     def __init__(
         self,
@@ -56,7 +56,7 @@ class ReferenceRaw(ComodelGenerator):
                 depends.append(res_id)
 
         super().__init__(depends=depends, **kwargs)
-        self.field = cast('Reference', self.field)
+        self.target = cast('Reference', self.target)
 
         self.res_model = res_model
         self.res_id = res_id

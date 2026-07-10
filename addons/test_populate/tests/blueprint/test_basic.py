@@ -8,8 +8,8 @@ from odoo.tools import mute_logger
 class TestBlueprintDefinition(TransactionCase):
 
     def test_xml_definition_priority(self):
-        json_def = [{'name': 'test_populate.product', 'count': 5, 'fields': {}}]
-        xml_def = '<data><model name="test_populate.customer" count="3"></model></data>'
+        json_def = [{'type': 'create', 'model': 'test_populate.product', 'count': 5, 'fields': {}}]
+        xml_def = '<data><create model="test_populate.customer" count="3"></create></data>'
 
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Priority Test',
@@ -19,9 +19,11 @@ class TestBlueprintDefinition(TransactionCase):
 
         parsed_xml_def = [
             {
-                'name': 'test_populate.customer',
+                'type': 'create',
+                'model': 'test_populate.customer',
                 'count': 3,
                 'fields': {},
+                'values': {},
             },
         ]
         self.assertEqual(blueprint.definition, parsed_xml_def)
@@ -29,7 +31,8 @@ class TestBlueprintDefinition(TransactionCase):
     def test_definition_compute_json_only(self):
         json_def = [
             {
-                'name': 'test_populate.product',
+                'type': 'create',
+                'model': 'test_populate.product',
                 'count': 10,
                 'fields': {
                     'name': {'generator': 'textual.char'},
@@ -56,7 +59,7 @@ class TestBlueprintDefinition(TransactionCase):
     def test_blueprint_name_required(self):
         with self.assertRaises(IntegrityError):
             self.env['populate.blueprint'].create({
-                'definition_json': [{'name': 'test_populate.product', 'count': 1, 'fields': {}}],
+                'definition_json': [{'type': 'create', 'model': 'test_populate.product', 'count': 1, 'fields': {}}],
             })
 
     def test_blueprint_instantiation_creates_jobs(self):
@@ -64,7 +67,8 @@ class TestBlueprintDefinition(TransactionCase):
             'name': 'Instantiation Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -72,7 +76,8 @@ class TestBlueprintDefinition(TransactionCase):
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -99,16 +104,16 @@ class TestBlueprintDefinition(TransactionCase):
         self.assertEqual(product_job.record_count, 5)
         self.assertEqual(customer_job.record_count, 3)
 
-        self.assertIn('name', product_job.instructions)
-        self.assertIn('price', product_job.instructions)
-        self.assertIn('name', customer_job.instructions)
-        self.assertIn('email', customer_job.instructions)
+        self.assertIn('name', product_job.instructions['fields'])
+        self.assertIn('price', product_job.instructions['fields'])
+        self.assertIn('name', customer_job.instructions['fields'])
+        self.assertIn('email', customer_job.instructions['fields'])
 
     def test_invalid_model_in_definition_raises(self):
         with self.assertRaises(ExceptionGroup) as ctx:
             self.env['populate.blueprint'].create({
                 'name': 'Invalid Model Test',
-                'definition_json': [{'name': 'populate.does_not_exist', 'count': 1, 'fields': {}}],
+                'definition_json': [{'type': 'create', 'model': 'populate.does_not_exist', 'count': 1, 'fields': {}}],
             })
 
         errors = ctx.exception.exceptions
@@ -120,8 +125,8 @@ class TestBlueprintDefinition(TransactionCase):
             self.env['populate.blueprint'].create({
                 'name': 'Multi Invalid Model Test',
                 'definition_json': [
-                    {'name': 'populate.ghost_one', 'count': 1, 'fields': {}},
-                    {'name': 'populate.ghost_two', 'count': 1, 'fields': {}},
+                    {'type': 'create', 'model': 'populate.ghost_one', 'count': 1, 'fields': {}},
+                    {'type': 'create', 'model': 'populate.ghost_two', 'count': 1, 'fields': {}},
                 ],
             })
 
@@ -133,7 +138,8 @@ class TestBlueprintDefinition(TransactionCase):
             self.env['populate.blueprint'].create({
                 'name': 'Invalid Field Test',
                 'definition_json': [{
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 1,
                     'fields': {
                         'nonexistent_field': {'generator': 'textual.char'},
@@ -145,26 +151,50 @@ class TestBlueprintDefinition(TransactionCase):
         self.assertTrue(all(isinstance(e, ValidationError) for e in errors))
         self.assertTrue(any("nonexistent_field" in str(e) for e in errors))
 
-    def test_virtual_field_skips_field_existence_check(self):
-        """Fields marked as virtual should not trigger a ValidationError."""
+    def test_value_skips_field_existence_check(self):
+        """Values are not ORM fields, so they do not trigger a ValidationError."""
         blueprint = self.env['populate.blueprint'].create({
-            'name': 'Virtual Field Test',
+            'name': 'Generated Value Test',
             'definition_json': [{
-                'name': 'test_populate.product',
+                'type': 'create',
+                'model': 'test_populate.product',
                 'count': 1,
+                'values': {
+                    'nonexistent_value': {'generator': 'textual.char'},
+                },
                 'fields': {
-                    'nonexistent_virtual_field': {'generator': 'textual.char', 'virtual': True},
+                    'name': {'generator': 'textual.char'},
                 },
             }],
         })
         self.assertTrue(blueprint)
 
-    def test_multiple_invalid_fields_all_reported(self):
+    def test_duplicate_field_value_name_raises(self):
+        with self.assertRaises(ExceptionGroup) as ctx:
+            self.env['populate.blueprint'].create({
+                'name': 'Duplicate Field Value Test',
+                'definition_json': [{
+                    'type': 'create',
+                    'model': 'test_populate.product',
+                    'count': 1,
+                    'values': {
+                        'name': {'generator': 'textual.char'},
+                    },
+                    'fields': {
+                        'name': {'generator': 'textual.char'},
+                    },
+                }],
+            })
+
+        self.assertIn('name', str(ctx.exception.exceptions[0]))
+
+    def test_multiple_invalid_orm_fields_all_reported(self):
         with self.assertRaises(ExceptionGroup) as ctx:
             self.env['populate.blueprint'].create({
                 'name': 'Multi Invalid Fields Test',
                 'definition_json': [{
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 1,
                     'fields': {
                         'ghost_field_a': {'generator': 'textual.char'},

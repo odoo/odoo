@@ -167,25 +167,32 @@ class Session(models.Model):
         scaling_factor = self.scaling_factor or 1
         vals_list = []
         write_target_counts = defaultdict(lambda: defaultdict(int))  # {ref | None: {model_name: count}}
-        for index, model in enumerate(self.blueprint_id.definition):
-            model_name = model['name']
-            ref, _, ref_relation = (part or None for part in model.get('ref', '').partition('.'))
+        for index, block in enumerate(self.blueprint_id.definition):
+            model_name = block['model']
+            block_type = block['type']
+            source_ref = block.get('id') if block_type == 'create' else block.get('ref')
+            ref, _, ref_relation = (part or None for part in (source_ref or '').partition('.'))
             vals = {
                 'model_name': model_name,
-                'instructions': model['fields'],
+                'type': block_type,
+                'instructions': {
+                    'fields': block.get('fields', {}),
+                    'values': block.get('values', {}),
+                },
                 'session_id': self.id,
                 'seed': derive_seed_from(self.seed, index),
             }
-            if 'count' in model:
-                factor = scaling_factor if model.get('scale', True) else 1
-                vals['record_count'] = math.floor(model['count'] * factor)
+            if source_ref:
+                vals['ref'] = source_ref
+            if 'count' in block:
+                factor = scaling_factor if block.get('scale', True) else 1
+                vals['record_count'] = math.floor(block['count'] * factor)
 
-            vals.update(**{k: v for k, v in model.items() if k in ('type', 'ref', 'parallel', 'context', 'domain')})
+            vals.update(**{k: v for k, v in block.items() if k in ('parallel', 'context', 'domain')})
 
             defaults = self.env['populate.job'].default_get(['type', 'record_count'])
-            is_create = vals.get('type', defaults['type']) == 'create'
 
-            if is_create:
+            if block_type == 'create':
                 write_target_counts[ref][model_name] += vals.get('record_count', defaults['record_count'])
             else:
                 # Compute write job record_count:

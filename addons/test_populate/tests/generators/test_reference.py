@@ -24,7 +24,7 @@ class TestReferenceOne(TransactionCase):
             {'name': 'Product C', 'price': 30.0},
         ])
 
-        generator = ReferenceOne(field=self.res_id_field, env=self.env)
+        generator = ReferenceOne(target=self.res_id_field, env=self.env)
 
         values = []
         for _ in range(10):
@@ -35,7 +35,7 @@ class TestReferenceOne(TransactionCase):
             self.assertIn(value, test_products.ids)
 
     def test_reference_one_generator_dependency(self):
-        generator = ReferenceOne(field=self.res_id_field, env=self.env)
+        generator = ReferenceOne(target=self.res_id_field, env=self.env)
 
         with self.assertRaises(UnmetDependencies):
             generator.next({})
@@ -47,7 +47,7 @@ class TestReferenceOne(TransactionCase):
             raise
 
     def test_reference_one_generator_empty_recordset(self):
-        generator = ReferenceOne(field=self.res_id_field, env=self.env)
+        generator = ReferenceOne(target=self.res_id_field, env=self.env)
 
         values = [generator.next({'res_model': 'test_populate.customer'}) for _ in range(20)]
 
@@ -64,7 +64,7 @@ class TestReferenceOne(TransactionCase):
             {'name': 'Supplier B', 'country_code': 'CA'},
         ])
 
-        generator = ReferenceOne(field=self.res_id_field, env=self.env)
+        generator = ReferenceOne(target=self.res_id_field, env=self.env)
 
         product_values = [generator.next({'res_model': 'test_populate.product'}) for _ in range(10)]
         for value in product_values:
@@ -76,12 +76,12 @@ class TestReferenceOne(TransactionCase):
 
     def test_reference_one_generator_field_type_validation(self):
         self.assertIsInstance(self.res_id_field, Many2oneReference)
-        generator = ReferenceOne(field=self.res_id_field, env=self.env)
+        generator = ReferenceOne(target=self.res_id_field, env=self.env)
         self.assertIsInstance(generator, ReferenceOne)
 
         name_field = self.env['test_populate.product']._fields['name']
         with self.assertRaises(TypeError):
-            ReferenceOne(field=name_field, env=self.env)
+            ReferenceOne(target=name_field, env=self.env)
 
 
 class TestReferenceRaw(TransactionCase):
@@ -102,7 +102,7 @@ class TestReferenceRaw(TransactionCase):
             {'name': 'Supplier B', 'country_code': 'CA'},
         ])
 
-        generator = ReferenceRaw(field=self.reference_field, env=self.env)
+        generator = ReferenceRaw(target=self.reference_field, env=self.env)
 
         values = [generator.next({}) for _ in range(20)]
 
@@ -122,11 +122,11 @@ class TestReferenceRaw(TransactionCase):
         ])
 
         generator = ReferenceRaw(
-            field=self.reference_field,
+            target=self.reference_field,
             env=self.env,
             res_model='res_model',
             res_id='res_id_value',
-            valid_fields=['reference', 'res_model', 'res_id_value'],
+            valid_targets=['reference', 'res_model', 'res_id_value'],
         )
 
         value = generator.next({
@@ -143,7 +143,7 @@ class TestReferenceRaw(TransactionCase):
         ])
 
         generator = ReferenceRaw(
-            field=self.reference_field,
+            target=self.reference_field,
             env=self.env,
             res_model='res_model',
         )
@@ -160,7 +160,7 @@ class TestReferenceRaw(TransactionCase):
             {'name': 'Product A', 'price': 10.0},
         ])
 
-        generator = ReferenceRaw(field=self.reference_field, env=self.env, null_ratio=0.9)
+        generator = ReferenceRaw(target=self.reference_field, env=self.env, null_ratio=0.9)
 
         values = [generator.next({}) for _ in range(100)]
         false_count = values.count(False)
@@ -169,7 +169,7 @@ class TestReferenceRaw(TransactionCase):
 
     def test_reference_raw_generator_invalid_model_in_depends(self):
         generator = ReferenceRaw(
-            field=self.reference_field,
+            target=self.reference_field,
             env=self.env,
             res_model='res_model',
         )
@@ -204,8 +204,9 @@ class TestReferenceRawSessionBinding(PopulateTestCase):
             'name': 'Product Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
-                    'ref': 'special_products',
+                    'type': 'create',
+                    'model': 'test_populate.product',
+                    'id': 'special_products',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
@@ -233,7 +234,7 @@ class TestReferenceRawSessionBinding(PopulateTestCase):
 
     def test_ref_without_session_picks_from_all(self):
         generator = ReferenceRaw(
-            field=self.reference_field,
+            target=self.reference_field,
             env=self.env,
             res_model='res_model',
             ref='special_products',
@@ -251,7 +252,7 @@ class TestReferenceRawSessionBinding(PopulateTestCase):
 
     def test_ref_with_session_scopes_to_that_session(self):
         generator = ReferenceRaw(
-            field=self.reference_field,
+            target=self.reference_field,
             env=self.env,
             session=self.session_a,
             res_model='res_model',
@@ -270,7 +271,7 @@ class TestReferenceRawSessionBinding(PopulateTestCase):
         # session_c has not been started, so no model data entries exist
 
         generator = ReferenceRaw(
-            field=self.reference_field,
+            target=self.reference_field,
             env=self.env,
             session=session_c,
             res_model='res_model',

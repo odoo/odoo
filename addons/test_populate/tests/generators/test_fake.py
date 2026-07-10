@@ -64,7 +64,7 @@ class TestFakeGenerators(TransactionCase):
 
     def test_fake_generator_with_locale(self):
         FakeName = Generator.by_name('fake.name')
-        generator = FakeName(field=self.name_field, env=self.env, locale='fr_FR')
+        generator = FakeName(target=self.name_field, env=self.env, locale='fr_FR')
 
         value = generator.next({})
         self.assertIsInstance(value, str)
@@ -74,7 +74,7 @@ class TestFakeGenerators(TransactionCase):
         test_field = self.notes_field
         assert not test_field.required, "Cannot test null_ratio on a required field (raises ValueError)"
         FakeName = Generator.by_name('fake.words')
-        generator = FakeName(field=test_field, env=self.env, null_ratio=0.9)
+        generator = FakeName(target=test_field, env=self.env, null_ratio=0.9)
 
         values = [generator.next({}) for _ in range(100)]
         false_count = values.count(False)
@@ -83,7 +83,7 @@ class TestFakeGenerators(TransactionCase):
 
     def test_fake_generator_no_null_with_zero_frac(self):
         FakeName = Generator.by_name('fake.name')
-        generator = FakeName(field=self.name_field, env=self.env, null_ratio=0)
+        generator = FakeName(target=self.name_field, env=self.env, null_ratio=0)
 
         values = [generator.next({}) for _ in range(50)]
 
@@ -91,7 +91,7 @@ class TestFakeGenerators(TransactionCase):
 
     def test_fake_generator_unique(self):
         FakeEmail = Generator.by_name('fake.email')
-        generator = FakeEmail(field=self.email_field, env=self.env, unique=True)
+        generator = FakeEmail(target=self.email_field, env=self.env, unique=True)
 
         values = [generator.next({}) for _ in range(50)]
 
@@ -171,7 +171,7 @@ class TestFakeGenerators(TransactionCase):
 
         with self.assertRaises(ValueError) as cm:
             FakeName(
-                field=self.name_field,
+                target=self.name_field,
                 env=self.env,
                 # `values` is a params for the generic generator,
                 # but isn't allowed for 'fake' generators
@@ -188,7 +188,7 @@ class TestFakeGenerators(TransactionCase):
             FakeNumerify = Generator.by_name(f'fake.{method_name}')
             if FakeNumerify:
                 generator = FakeNumerify(
-                    field=self.name_field,
+                    target=self.name_field,
                     env=self.env,
                     text='ID-###',
                 )

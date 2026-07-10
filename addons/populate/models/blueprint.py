@@ -49,55 +49,77 @@ class Blueprint(models.Model):
     )
 
     @api.constrains('definition_xml', 'definition_json', 'inherit_id')
-    def _check_definition(self):
+    def _check_definition(self):  # TODO: simplify by using JsonSchema validation
         """Validate resolved blueprint definitions against the loaded models.
 
-        Checks inheritance cycles, model names, and non-virtual field names before
+        Checks inheritance cycles, operation blocks, model names, and field names before
         a session can instantiate jobs from the blueprint.
         """
         if self._has_cycle():
             raise ValidationError(self.env._("You cannot create recursive inherited blueprints."))
 
         exceptions = []
+
+        def fail(blueprint, block, reason):
+            exceptions.append(ValidationError(self.env._(
+                "Blueprint '%(blueprint)s': %(reason)s\n"
+                "Definition that failed:\n%(definition)s",
+                blueprint=blueprint.name,
+                reason=reason,
+                definition=json.dumps(block, indent=2),
+            )))
+
         for blueprint in self:
-            for model in blueprint.definition:
-                model_name = model['name']
+            for block in blueprint.definition:
+                block_type = block.get('type')
+                if not block_type:
+                    fail(blueprint, block, self.env._("Missing 'type'."))
+                    continue  # The operation type decides which id/ref/domain rules apply.
+
+                if block_type not in ('create', 'write'):
+                    fail(blueprint, block, self.env._("Unknown block type '%(type)s'.", type=block_type))
+                    continue  # Unknown operations have no validation rules.
+
+                if block_type == 'create' and 'ref' in block:
+                    fail(blueprint, block, self.env._("Create blocks use 'id', not 'ref'."))
+
+                if block_type == 'write' and 'id' in block:
+                    fail(blueprint, block, self.env._("Write blocks use 'ref', not 'id'."))
+
+                if block_type == 'write' and not block.get('ref') and not block.get('domain'):
+                    fail(blueprint, block, self.env._("Write blocks require 'ref' or 'domain'."))
+
+                if 'model' not in block:
+                    fail(blueprint, block, self.env._("Missing 'model'."))
+                    continue  # Field validation needs a model to resolve ORM fields.
+
+                model_name = block['model']
                 if model_name not in self.env:
-                    pretty_definition = json.dumps(model, indent=2)
-                    exceptions.append(
-                        ValidationError(self.env._(
-                            "Blueprint '%(blueprint)s': Model '%(model)s' doesn't exist.\n"
-                            "Definition that failed:\n%(definition)s",
-                            blueprint=blueprint.name,
-                            model=model_name,
-                            definition=pretty_definition,
-                        )),
-                    )
-                    continue
+                    fail(blueprint, block, self.env._("Unknown model '%(model)s'.", model=model_name))
+                    continue  # The model registry lookup below is only safe for loaded models.
 
                 model_field_names = self.env[model_name]._fields.keys()
-                inexistent_fields = [
+                unknown_fields = [
                     field_name
-                    for field_name, attrs in model['fields'].items()
+                    for field_name in block.get('fields', {})
                     if field_name not in model_field_names
-                       and not attrs.get('virtual', False)
                 ]
-                if inexistent_fields:
-                    pretty_definition = json.dumps(model, indent=2)
-                    exceptions.append(
-                        ValidationError(self.env._(
-                            "Blueprint '%(blueprint)s': Model '%(model)s' "
-                            "doesn't have field(s): %(fields)s.\n"
-                            "Definition that failed:\n%(definition)s",
-                            blueprint=blueprint.name,
-                            model=model_name,
-                            fields=', '.join(repr(f) for f in inexistent_fields),
-                            definition=pretty_definition,
-                        )),
-                    )
+                if unknown_fields:
+                    fail(blueprint, block, self.env._(
+                        "Unknown field(s) on '%(model)s': %(fields)s.",
+                        model=model_name,
+                        fields=', '.join(repr(field) for field in unknown_fields),
+                    ))
+
+                duplicate_names: set[str] = block.get('fields', {}).keys() & block.get('values', {}).keys()
+                if duplicate_names:
+                    fail(blueprint, block, self.env._(
+                        "Names used as both field and value: %(names)s.",
+                        names=', '.join(repr(name) for name in sorted(duplicate_names)),
+                    ))
         if exceptions:
             # The module doesn't have a webclient interface, so it's ok to not raise an explicit ValidationError
-            raise ExceptionGroup(self.env._("Some blueprint's definition(s) have inexistent models/fields used."), exceptions)
+            raise ExceptionGroup(self.env._("Some blueprint definition(s) are invalid."), exceptions)
 
     @api.depends('definition_xml', 'definition_json')
     def _compute_definition(self):

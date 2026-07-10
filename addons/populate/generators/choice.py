@@ -11,13 +11,13 @@ from .generator import Generator
 class Sample(Generator):
     """Randomly pick from a required list of user-provided values."""
     name = 'choice.sample'
-    allowed_field_types = (
+    allowed_on = (
         'integer', 'float',
         'char', 'text', 'html',
         'date', 'datetime',
         'boolean',
         'selection',
-        'virtual',
+        'value',
     )
 
     def __init__(self, **kwargs):
@@ -33,11 +33,11 @@ class Sample(Generator):
 class Selection(Generator):
     """Randomly pick from the selection field's possible values."""
     name = 'choice.selection'
-    allowed_field_types = ('selection',)
+    allowed_on = ('selection',)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.field = cast('fields.Selection', self.field)
+        self.target = cast('fields.Selection', self.target)
 
         if self.unique:
             # It makes little sense to have a unique constraint on a selection field

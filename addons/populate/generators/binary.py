@@ -23,7 +23,7 @@ class Binary(Generator):
     :param int size: Number of random bytes to generate (default: ``1024``).
     """
     name = 'binary.binary'
-    allowed_field_types = ('binary', 'virtual')
+    allowed_on = ('binary', 'value')
 
     def __init__(self, size: int = 1024, **kwargs):
         super().__init__(**kwargs)
@@ -50,7 +50,7 @@ class Image(Generator):
     :param int height: Image height in pixels (default: ``64``).
     """
     name = 'binary.image'
-    allowed_field_types = ('binary', 'virtual')  # `image` fields have type='binary' in the ORM
+    allowed_on = ('binary', 'value')  # `image` fields have type='binary' in the ORM
 
     def __init__(self, width: int = 64, height: int = 64, **kwargs):
         super().__init__(**kwargs)

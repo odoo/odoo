@@ -14,7 +14,7 @@ def ensure_root(xml):
     try:
         root = etree.fromstring(xml)
 
-        # avoid having only 1 <model> as a root. See also: `_fix_multiple_roots`
+        # avoid having only 1 operation node as a root. See also: `_fix_multiple_roots`
         if root.tag != 'data':
             data_el = etree.Element('data')
             data_el.append(root)
@@ -39,85 +39,100 @@ def parse(xml):
     string containing a JSON payload.
 
     :param xml: Blueprint XML string with a ``<data>`` root.
-    :return: List of model instruction dictionaries.
+    :return: List of operation block dictionaries.
     """
 
-    def parse_model(model_elem):
-        # required attributes on <model>
-        model_name = model_elem.get('name')
+    def parse_block(block_elem):
+        block_type = etree.QName(block_elem).localname
+
+        if block_elem.get('type'):
+            raise ValueError(
+                f"<{block_type}> cannot define a 'type' attribute. "
+                f"The XML tag already defines the operation type.",
+            )
+
+        model_name = block_elem.get('model')
         if not model_name:
             msg = (
-                "Missing required 'name' attribute on <model> element. "
-                "Each <model> must specify the Odoo model name."
+                f"Missing required 'model' attribute on <{block_type}> element. "
+                f"Each <{block_type}> must specify the Odoo model name."
             )
             raise ValueError(msg)
 
-        model_data = {
-            'name': model_name,
+        if block_type == 'create' and block_elem.get('ref'):
+            raise ValueError("<create> cannot define a 'ref' attribute. Use 'id' for create references.")
+        if block_type == 'write' and block_elem.get('id'):
+            raise ValueError("<write> cannot define an 'id' attribute. Use 'ref' for write targets.")
+
+        block_data = {
+            'type': block_type,
+            'model': model_name,
             'fields': {},
+            'values': {},
         }
-        # optional attributes on <model>
-        if count := model_elem.get('count'):
-            model_data['count'] = int(count)
-        if scale := model_elem.get('scale'):
-            model_data['scale'] = str2bool(scale)
-        if type_ := model_elem.get('type'):
-            model_data['type'] = type_
-        if ref := (model_elem.get('id') or model_elem.get('ref')):
-            model_data['ref'] = ref
-        if domain := model_elem.get('domain'):
-            model_data['domain'] = domain
-        if parallel := model_elem.get('parallel'):
-            model_data['parallel'] = str2bool(parallel)
-        if context := model_elem.get('context'):
-            model_data['context'] = literal_eval(context)
+        if count := block_elem.get('count'):
+            block_data['count'] = int(count)
+        if scale := block_elem.get('scale'):
+            block_data['scale'] = str2bool(scale)
+        if block_type == 'create':
+            if ref := block_elem.get('id'):
+                block_data['id'] = ref
+        elif ref := block_elem.get('ref'):
+            block_data['ref'] = ref
+        if domain := block_elem.get('domain'):
+            block_data['domain'] = domain
+        if parallel := block_elem.get('parallel'):
+            block_data['parallel'] = str2bool(parallel)
+        if context := block_elem.get('context'):
+            block_data['context'] = literal_eval(context)
 
-        return model_data
+        return block_data
 
-    def parse_field(field_elem):
-        field_data = {}
+    def parse_target(target_elem):
+        target_data = {}
 
-        for attr_name, attr_value in field_elem.attrib.items():
-            # `name` is the key for each field
+        for attr_name, attr_value in target_elem.attrib.items():
+            # `name` is the key for each target
             if attr_name == 'name':
                 continue
             if attr_name in ('count', 'std') and attr_value.isdigit():
-                field_data[attr_name] = int(attr_value)
-            elif attr_name == 'virtual' and attr_value.lower() in ('true', 'false'):
-                field_data[attr_name] = str2bool(attr_value)
+                target_data[attr_name] = int(attr_value)
             else:
-                field_data[attr_name] = attr_value
+                target_data[attr_name] = attr_value
 
-        nested_fields = field_elem.findall('field')
-        if nested_fields:
-            field_data['fields'] = {}
-            for nested_field in nested_fields:
-                nested_name = nested_field.get('name')
-                if not nested_name:
-                    msg = "Missing required 'name' attribute on a nested <field> element."
-                    raise ValueError(msg)
-
-                field_data['fields'][nested_name] = parse_field(nested_field)
-
-        return field_data
+        return target_data
 
     root = etree.fromstring(xml)
     json = []
-    for model_elem in root.findall('model'):
-        model_data = parse_model(model_elem)
+    for block_elem in root:
+        if not isinstance(block_elem.tag, str):
+            continue
 
-        for field_elem in model_elem.findall('field'):
-            field_name = field_elem.get('name')
-            if not field_name:
+        block_type = etree.QName(block_elem).localname
+        if block_type not in ('create', 'write'):
+            raise ValueError(f"Unsupported populate operation <{block_type}>. Expected <create> or <write>.")
+
+        block_data = parse_block(block_elem)
+
+        for child_elem in block_elem:
+            if not isinstance(child_elem.tag, str):
+                continue
+
+            child_type = etree.QName(child_elem).localname
+            if child_type not in ('field', 'value'):
+                continue
+
+            target_name = child_elem.get('name')
+            if not target_name:
                 raise ValueError(
-                    f"Missing required 'name' attribute on <field> element "
-                    f"in model '{model_data['name']}'. Each <field> must have a 'name'.",
+                    f"Missing required 'name' attribute on <{child_type}> element "
+                    f"in block for model '{block_data['model']}'. Each <{child_type}> must have a 'name'.",
                 )
 
-            field_data = parse_field(field_elem)
-            model_data['fields'][field_name] = field_data
+            target = 'fields' if child_type == 'field' else 'values'
+            block_data[target][target_name] = parse_target(child_elem)
 
-        json.append(model_data)
+        json.append(block_data)
 
     return json
 

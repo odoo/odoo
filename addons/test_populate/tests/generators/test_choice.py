@@ -11,7 +11,7 @@ class TestSelectionGenerator(TransactionCase):
         self.category_field = test_product_model._fields['category']
 
     def test_selection_generator(self):
-        generator = Selection(field=self.category_field, env=self.env)
+        generator = Selection(target=self.category_field, env=self.env)
 
         values = [generator.next({}) for _ in range(50)]
 
@@ -23,7 +23,7 @@ class TestSelectionGenerator(TransactionCase):
     def test_selection_generator_custom_values(self):
         custom_values = ['electronics', 'books']
         generator = Selection(
-            field=self.category_field,
+            target=self.category_field,
             env=self.env,
             values=custom_values,
         )
@@ -34,7 +34,7 @@ class TestSelectionGenerator(TransactionCase):
 
     def test_selection_generator_unique_raises_error(self):
         with self.assertRaises(ValueError) as cm:
-            Selection(field=self.category_field, env=self.env, unique=True)
+            Selection(target=self.category_field, env=self.env, unique=True)
 
         self.assertIn("Unique cannot be used with the selection generator", str(cm.exception))
 
@@ -48,7 +48,7 @@ class TestSampleGenerator(TransactionCase):
 
     def test_sample_generator_basic(self):
         values = ['a', 'b', 'c']
-        generator = Sample(field=self.name_field, env=self.env, values=values)
+        generator = Sample(target=self.name_field, env=self.env, values=values)
 
         values_generated = [generator.next({}) for _ in range(20)]
 
@@ -57,7 +57,7 @@ class TestSampleGenerator(TransactionCase):
 
     def test_sample_generator_weights(self):
         values = {'common': 100, 'rare': 1}
-        generator = Sample(field=self.name_field, env=self.env, values=values)
+        generator = Sample(target=self.name_field, env=self.env, values=values)
 
         values_generated = [generator.next({}) for _ in range(50)]
 
@@ -67,4 +67,4 @@ class TestSampleGenerator(TransactionCase):
 
     def test_sample_generator_empty_values(self):
         with self.assertRaises(ValueError):
-            Sample(field=self.name_field, env=self.env, values=[])
+            Sample(target=self.name_field, env=self.env, values=[])

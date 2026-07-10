@@ -14,7 +14,7 @@ class TestDateGenerator(TransactionCase):
 
     def test_date_generator(self):
         generator = Date(
-            field=self.created_date_field,
+            target=self.created_date_field,
             env=self.env,
             start='today',
             end='today +1m',
@@ -35,7 +35,7 @@ class TestDatetimeGenerator(TransactionCase):
 
     def test_datetime_generator(self):
         generator = Datetime(
-            field=self.updated_at_field,
+            target=self.updated_at_field,
             env=self.env,
             start='now',
             end='now +1d',

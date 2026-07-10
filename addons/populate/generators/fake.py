@@ -119,7 +119,7 @@ def create(method_name: str):
         # Disable type-checking, as inferring the correct Odoo field type from
         # either the return type of the typed method or from calling it
         # can be error-prone and/or inaccurate, leading to false-positives.
-        allowed_field_types = None
+        allowed_on = None
 
         def __init__(self, locale='en_US', **kwargs):
             """Split populate kwargs from Faker method kwargs.
@@ -136,7 +136,10 @@ def create(method_name: str):
                 if k not in generator_params
             }
 
-            allowed_params = {'field', 'env', 'random', 'job', 'session', 'valid_fields', 'unique', 'null_ratio', 'locale'}
+            allowed_params = {
+                'target', 'env', 'random', 'job', 'session',
+                'valid_targets', 'unique', 'null_ratio', 'locale',
+            }
             invalid_params = set(kwargs.keys()) - set(faker_kwargs.keys()) - allowed_params
             if invalid_params:
                 env = kwargs['env']

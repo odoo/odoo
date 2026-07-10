@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 class RelationOne(ComodelGenerator):
     """Pick a random existing record ID from the comodel for Many2one fields."""
     name = 'relation.one'
-    allowed_field_types = ('many2one', 'virtual')
+    allowed_on = ('many2one', 'value')
 
     def __init__(
         self,
@@ -27,7 +27,7 @@ class RelationOne(ComodelGenerator):
         """Initialize a relation generator and infer dynamic-domain dependencies.
 
         :param domain: Static domain or dynamic domain evaluated per generated record.
-        :param comodel_name: Explicit comodel name, required for virtual fields.
+        :param comodel_name: Explicit comodel name, required for generated values.
         """
         depends: list[str] = kwargs.pop('depends', [])
         if isinstance(domain, DynamicDomain):
@@ -35,10 +35,10 @@ class RelationOne(ComodelGenerator):
 
         super().__init__(depends=depends, **kwargs)
 
-        if self.field.type == 'virtual' and not comodel_name:
-            raise ValueError(self.env._("'comodel_name' needs to be provided for virtual fields."))
+        if self.target.type == 'value' and not comodel_name:
+            raise ValueError(self.env._("'comodel_name' needs to be provided for generated values."))
 
-        comodel_name = self.field.comodel_name or comodel_name
+        comodel_name = self.target.comodel_name or comodel_name
 
         if comodel_name not in self.env:
             raise ValueError(self.env._(
@@ -85,7 +85,7 @@ class RelationMany(RelationOne):
     If ``groupby`` is provided, the sampling is done per group.
     """
     name = 'relation.many'
-    allowed_field_types = ('one2many', 'many2many', 'virtual')
+    allowed_on = ('one2many', 'many2many', 'value')
 
     def __init__(self, count: int, std: int = 0, groupby: str | None = None, **kwargs):
         """Initialize sampling for X2many command values.

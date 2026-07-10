@@ -14,7 +14,7 @@ from odoo.addons.populate.generators import (
     Sample,
     UniqueValueNotFound,
     UnmetDependencies,
-    get_fields_vals,
+    generate_values,
 )
 from odoo.addons.populate.generators.generator import round_robin_subset
 from odoo.addons.populate.utils.distributions import Distribution
@@ -29,7 +29,7 @@ class TestGeneratorUnique(TransactionCase):
         self.stock_field = test_product_model._fields['stock_quantity']
 
     def test_generator_unique(self):
-        generator = Char(field=self.name_field, env=self.env, length=10, unique=True)
+        generator = Char(target=self.name_field, env=self.env, length=10, unique=True)
 
         values = [generator.next({}) for _ in range(50)]
 
@@ -42,7 +42,7 @@ class TestGeneratorUnique(TransactionCase):
             {'name': name, 'price': 10.0} for name in existing_names
         ])
 
-        generator = Char(field=self.name_field, env=self.env, length=11, unique=True)
+        generator = Char(target=self.name_field, env=self.env, length=11, unique=True)
 
         values = [generator.next({}) for _ in range(20)]
 
@@ -52,7 +52,7 @@ class TestGeneratorUnique(TransactionCase):
         self.assertEqual(len(values), len(set(values)))
 
     def test_unique_generator_exhaustion(self):
-        generator = Integer(field=self.stock_field, env=self.env, start=1, end=3, unique=True)
+        generator = Integer(target=self.stock_field, env=self.env, start=1, end=3, unique=True)
 
         values = []
         for _ in range(3):
@@ -75,7 +75,7 @@ class TestGeneratorDepends(TransactionCase):
 
     def test_generator_depends_basic(self):
         generator = Integer(
-            field=self.stock_field,
+            target=self.stock_field,
             env=self.env,
             start=1,
             end=1000,
@@ -91,7 +91,7 @@ class TestGeneratorDepends(TransactionCase):
 
     def test_generator_depends_multiple_fields(self):
         generator = Char(
-            field=self.name_field,
+            target=self.name_field,
             env=self.env,
             length=10,
             depends=['price', 'category'],
@@ -110,18 +110,18 @@ class TestGeneratorDepends(TransactionCase):
     def test_generator_depends_invalid_field(self):
         with self.assertRaises(ValueError) as cm:
             Integer(
-                field=self.stock_field,
+                target=self.stock_field,
                 env=self.env,
                 start=1,
                 end=1000,
                 depends=['nonexistent_field'],
             )
 
-        self.assertIn("Invalid field dependencies", str(cm.exception))
+        self.assertIn("Invalid target dependencies", str(cm.exception))
 
-    def test_generator_depends_with_get_fields_vals(self):
+    def test_generator_depends_with_generate_values(self):
         stock_gen = Integer(
-            field=self.stock_field,
+            target=self.stock_field,
             env=self.env,
             start=1,
             end=1000,
@@ -129,7 +129,7 @@ class TestGeneratorDepends(TransactionCase):
         )
 
         price_gen = Float(
-            field=self.price_field,
+            target=self.price_field,
             env=self.env,
             start=10.0,
             end=100.0,
@@ -140,7 +140,7 @@ class TestGeneratorDepends(TransactionCase):
             'price': price_gen,
         }
 
-        vals = get_fields_vals(generators)
+        vals = generate_values(generators)
 
         self.assertIn('price', vals)
         self.assertIn('stock_quantity', vals)
@@ -149,7 +149,7 @@ class TestGeneratorDepends(TransactionCase):
 
     def test_generator_depends_circular_dependency_fails(self):
         stock_gen = Integer(
-            field=self.stock_field,
+            target=self.stock_field,
             env=self.env,
             start=1,
             end=1000,
@@ -157,7 +157,7 @@ class TestGeneratorDepends(TransactionCase):
         )
 
         price_gen = Float(
-            field=self.price_field,
+            target=self.price_field,
             env=self.env,
             start=10.0,
             end=100.0,
@@ -170,7 +170,7 @@ class TestGeneratorDepends(TransactionCase):
         }
 
         with self.assertRaises(PopulateGeneratorError) as cm:
-            get_fields_vals(generators)
+            generate_values(generators)
 
         self.assertIn("Circular dependency", str(cm.exception))
 
@@ -214,11 +214,11 @@ class TestGeneratorFieldValidation(TransactionCase):
         self.active_field = test_product_model._fields['active']
 
     def test_generator_field_type_validation(self):
-        boolean_gen = Boolean(field=self.active_field, env=self.env)
+        boolean_gen = Boolean(target=self.active_field, env=self.env)
         self.assertIsInstance(boolean_gen, Boolean)
 
         with self.assertRaises(TypeError):
-            Boolean(field=self.name_field, env=self.env)
+            Boolean(target=self.name_field, env=self.env)
 
 
 class TestGeneratorNullFracValidation(TransactionCase):
@@ -231,13 +231,13 @@ class TestGeneratorNullFracValidation(TransactionCase):
 
     def test_null_ratio_on_required_field_raises(self):
         with self.assertRaises(ValueError) as cm:
-            Char(field=self.name_field, env=self.env, length=10, null_ratio=0.5)
+            Char(target=self.name_field, env=self.env, length=10, null_ratio=0.5)
 
         self.assertIn("required", str(cm.exception))
 
     def test_null_ratio_with_weighted_values_raises(self):
         with self.assertRaises(ValueError) as cm:
-            Sample(field=self.price_field, env=self.env, values={'a': 3, 'b': 1}, null_ratio=0.2)
+            Sample(target=self.price_field, env=self.env, values={'a': 3, 'b': 1}, null_ratio=0.2)
 
         self.assertIn("incompatible with custom weights", str(cm.exception))
 
@@ -251,7 +251,7 @@ class TestGeneratorInstantiation(TransactionCase):
 
     def test_generator_instantiation(self):
         GeneratorChar = Generator.by_name('textual.char')
-        generator = GeneratorChar(field=self.name_field, env=self.env, length=8)
+        generator = GeneratorChar(target=self.name_field, env=self.env, length=8)
 
         self.assertIsInstance(generator, Char)
         self.assertEqual(generator.length, 8)
@@ -265,16 +265,16 @@ class TestGetFieldsVals(TransactionCase):
         self.name_field = test_product_model._fields['name']
         self.price_field = test_product_model._fields['price']
 
-    def test_get_fields_vals(self):
-        name_gen = Char(field=self.name_field, env=self.env, length=10)
-        price_gen = Float(field=self.price_field, env=self.env, start=1.0, end=100.0)
+    def test_generate_values(self):
+        name_gen = Char(target=self.name_field, env=self.env, length=10)
+        price_gen = Float(target=self.price_field, env=self.env, start=1.0, end=100.0)
 
         generators = {
             'name': name_gen,
             'price': price_gen,
         }
 
-        vals = get_fields_vals(generators)
+        vals = generate_values(generators)
 
         self.assertIn('name', vals)
         self.assertIn('price', vals)
@@ -339,7 +339,7 @@ class TestComodelGeneratorPartition(TransactionCase):
 
     def test_partition_false_does_not_partition(self):
         gen = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             partition=False,
         )
@@ -349,7 +349,7 @@ class TestComodelGeneratorPartition(TransactionCase):
     def test_partition_true_requires_job(self):
         with self.assertRaises(AssertionError):
             RelationOne(
-                field=self.supplier_field,
+                target=self.supplier_field,
                 env=self.env,
                 partition=True,
             )
@@ -361,7 +361,7 @@ class TestComodelGeneratorPartition(TransactionCase):
         mock_job.parent_id = None  # no parent -> no partitioning applied
 
         gen = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=None,
             job=mock_job,
             partition=True,
@@ -390,8 +390,8 @@ class TestComodelGeneratorPartition(TransactionCase):
         job_b.session_id = None
         job_b.parent_id = parent
 
-        gen_a = RelationOne(field=self.supplier_field, env=None, job=job_a, partition=True)
-        gen_b = RelationOne(field=self.supplier_field, env=None, job=job_b, partition=True)
+        gen_a = RelationOne(target=self.supplier_field, env=None, job=job_a, partition=True)
+        gen_b = RelationOne(target=self.supplier_field, env=None, job=job_b, partition=True)
 
         ids_a = set(gen_a.comodel_ids)
         ids_b = set(gen_b.comodel_ids)

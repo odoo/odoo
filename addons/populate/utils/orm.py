@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from ast import literal_eval
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from odoo.fields import Domain
@@ -19,44 +20,26 @@ if TYPE_CHECKING:
     from ..models.session import Session
 
 
-class VirtualField:
+@dataclass(frozen=True)
+class ValueTarget:
     """
-    Represents a field that exists only during data generation and is not persisted to the database.
+    Descriptor for a generated value target.
 
-    Virtual fields serve as intermediate computation steps in the data population pipeline.
-
-    Virtual fields are particularly useful when you need to compute intermediate values
-    that multiple real fields depend on, avoiding redundant calculations or complex
-    lambda expressions.
-
-    Example:
-       In a blueprint definition, you might use a virtual 'markup' field to compute
-       the actual 'cost' and 'price' fields:
-
-       ```json
-       {
-           'price': {'generator': 'scalar.float', 'start': 1, 'end': 10},
-           'markup': {'virtual': true, 'eval': '0.3'},
-           'cost': {'virtual': true, 'eval': 'price / (1 + markup)'},
-           'stock_quantity': {'eval': 'int(cost * 2)'}
-       }
-       ```
-
-       Here, 'markup' and 'cost' are computed but not saved; only 'stock_quantity' is persisted.
+    Populate values are produced by generators and can be used by later
+    fields or values in the same block, but they are not ORM fields.
     """
 
-    def __init__(self, model_name: str, field_name: str):
-        self.model_name = model_name
-        self.name = field_name
-        self.type = 'virtual'
-        self.required = False
-        self.comodel_name = None
+    model_name: str
+    name: str
+    type: str = 'value'
+    required: bool = False
+    comodel_name: str | None = None
 
     def __str__(self):
         return f"{self.model_name}.{self.name}"
 
     def __repr__(self):
-        return f"VirtualField({self.model_name!r}, {self.name!r})"
+        return f"ValueTarget({self.model_name!r}, {self.name!r})"
 
 
 class DynamicDomain:

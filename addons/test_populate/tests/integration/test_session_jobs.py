@@ -16,7 +16,8 @@ class TestSessionFieldGeneration(PopulateTestCase):
             'name': 'Eval Generator Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 3,
                     'fields': {
                         'name': {'eval': '"Test Product"'},
@@ -52,7 +53,8 @@ class TestSessionFieldGeneration(PopulateTestCase):
             'name': 'Eval Lambda Generator Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
                         'name': {'eval': '"Product"'},
@@ -104,7 +106,8 @@ class TestSessionFieldGeneration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Default Generator Test',
             'definition_json': [{
-                'name': 'test_populate.customer',
+                'type': 'create',
+                'model': 'test_populate.customer',
                 'count': 3,
                 'fields': {
                     'name': {},         # char
@@ -132,11 +135,14 @@ class TestSessionFieldGeneration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Unknown Type Test',
             'definition_json': [{
-                'name': 'test_populate.product',
+                'type': 'create',
+                'model': 'test_populate.product',
                 'count': 1,
+                'values': {
+                    'thing': {},  # generated values do not have a default generator
+                },
                 'fields': {
                     'name': {'generator': 'textual.char'},
-                    'v_thing': {'virtual': True},  # virtual fields don't have a default generator
                 },
             }],
         })
@@ -144,13 +150,14 @@ class TestSessionFieldGeneration(PopulateTestCase):
         with self.assertRaises(ValueError) as cm:
             start_populate(session)
 
-        self.assertIn('v_thing', str(cm.exception))
+        self.assertIn('thing', str(cm.exception))
 
     def test_explicit_eval_is_not_overridden_by_default(self):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Eval Priority Test',
             'definition_json': [{
-                'name': 'test_populate.product',
+                'type': 'create',
+                'model': 'test_populate.product',
                 'count': 3,
                 'fields': {
                     'name': {'eval': '"Fixed"'},
@@ -180,8 +187,9 @@ class TestWriteJobTargeting(PopulateTestCase):
             'name': 'Write Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
                     'type': 'write',
+                    'model': 'test_populate.product',
+                    'domain': "[]",
                     'count': 1,
                     'fields': {
                         'description': {'generator': 'textual.text', 'length': 50, 'null_ratio': 0},
@@ -205,8 +213,9 @@ class TestWriteJobTargeting(PopulateTestCase):
             'name': 'Create and Write Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
-                    'ref': 'test_suppliers',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
+                    'id': 'test_suppliers',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},
@@ -215,8 +224,8 @@ class TestWriteJobTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.supplier',
                     'type': 'write',
+                    'model': 'test_populate.supplier',
                     'ref': 'test_suppliers',
                     'fields': {
                         'rating': {'generator': 'scalar.float', 'start': 4.0, 'end': 5.0, 'null_ratio': 0},
@@ -263,8 +272,9 @@ class TestWriteJobTargeting(PopulateTestCase):
             'name': 'Write All Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
                     'type': 'write',
+                    'model': 'test_populate.supplier',
+                    'domain': "[]",
                     'fields': {
                         'notes': {'eval': '"Global update"', 'null_ratio': 0},
                     },
@@ -294,8 +304,8 @@ class TestWriteJobTargeting(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Write Domain Blueprint',
             'definition_json': [{
-                'name': 'test_populate.supplier',
                 'type': 'write',
+                'model': 'test_populate.supplier',
                 'domain': "[('country_code', '=', 'US')]",
                 'fields': {
                     'notes': {'eval': '"Domain update"'},
@@ -317,23 +327,25 @@ class TestWriteJobTargeting(PopulateTestCase):
             'name': 'Write Ref Domain Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
-                    'ref': 'mixed_suppliers',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
+                    'id': 'mixed_suppliers',
                     'count': 2,
-                    'fields': {
-                        'name': {'generator': 'textual.char', 'length': 20},
-                        'v_index': {
-                            'virtual': True,
+                    'values': {
+                        'counter': {
                             'generator': 'misc.counter',
                             'start': 0,
                             'end': 2,
                         },
-                        'country_code': {'eval': '"US" if v_index == 0 else "CA"'},
+                    },
+                    'fields': {
+                        'name': {'generator': 'textual.char', 'length': 20},
+                        'country_code': {'eval': '"US" if counter == 0 else "CA"'},
                     },
                 },
                 {
-                    'name': 'test_populate.supplier',
                     'type': 'write',
+                    'model': 'test_populate.supplier',
                     'ref': 'mixed_suppliers',
                     'domain': "[('country_code', '=', 'US')]",
                     'fields': {
@@ -377,17 +389,19 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Write Ref Count Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 50,
-                    'ref': 'my_customers',
+                    'id': 'my_customers',
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
                         'email': {'generator': 'textual.char', 'length': 15},
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
                     'type': 'write',
+                    'model': 'test_populate.customer',
+
                     'ref': 'my_customers',
                     'fields': {
                         'is_vip': {'eval': 'True'},
@@ -418,8 +432,9 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Write No Ref Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
                     'type': 'write',
+                    'model': 'test_populate.customer',
+                    'domain': "[]",
                     'fields': {
                         'is_vip': {'eval': 'True'},
                     },
@@ -447,7 +462,8 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Create Then Write Domain No Ref Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 5,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
@@ -455,8 +471,9 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
                     'type': 'write',
+                    'model': 'test_populate.customer',
+
                     'domain': "[('age', '>=', 20)]",
                     'fields': {
                         'is_vip': {'eval': 'True'},
@@ -485,7 +502,8 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Create Then Write No Ref Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 20,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
@@ -493,17 +511,19 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 10,
-                    'ref': 'referenced_customers',
+                    'id': 'referenced_customers',
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
                         'email': {'generator': 'textual.char', 'length': 15},
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
                     'type': 'write',
+                    'model': 'test_populate.customer',
+                    'domain': "[]",
                     'fields': {
                         'is_vip': {'eval': 'True'},
                     },
@@ -528,17 +548,19 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Scaled Write Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 100,
-                    'ref': 'scaled_customers',
+                    'id': 'scaled_customers',
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
                         'email': {'generator': 'textual.char', 'length': 15},
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
                     'type': 'write',
+                    'model': 'test_populate.customer',
+
                     'ref': 'scaled_customers',
                     'fields': {
                         'is_vip': {'eval': 'True'},
@@ -569,7 +591,8 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Multi Create Then Write Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 10,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
@@ -577,7 +600,8 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 15,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
@@ -585,8 +609,9 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
                     'type': 'write',
+                    'model': 'test_populate.customer',
+                    'domain': "[]",
                     'fields': {
                         'notes': {'eval': '"batch update"', 'null_ratio': 0},
                     },
@@ -621,7 +646,8 @@ class TestProfilerIntegration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Unprofiled Populate Test',
             'definition_json': [{
-                'name': 'test_populate.product',
+                'type': 'create',
+                'model': 'test_populate.product',
                 'count': 1,
                 'fields': {
                     'name': {'eval': '"Unprofiled"'},
@@ -639,16 +665,18 @@ class TestProfilerIntegration(PopulateTestCase):
             'name': 'Profiled Populate Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
-                    'ref': 'profiled_products',
+                    'type': 'create',
+                    'model': 'test_populate.product',
+                    'id': 'profiled_products',
                     'count': 2,
                     'fields': {
                         'name': {'eval': '"Profiled"'},
                     },
                 },
                 {
-                    'name': 'test_populate.product',
                     'type': 'write',
+                    'model': 'test_populate.product',
+
                     'ref': 'profiled_products',
                     'fields': {
                         'description': {'eval': '"Updated by profiled write"'},
@@ -679,7 +707,8 @@ class TestProfilerIntegration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Profiled Split Populate Test',
             'definition_json': [{
-                'name': 'test_populate.product',
+                'type': 'create',
+                'model': 'test_populate.product',
                 'count': MAX_RECORD_COMMIT_SIZE + 1,
                 'fields': {
                     'name': {'eval': '"Profiled Split"'},
@@ -715,7 +744,8 @@ class TestSubjobs(PopulateTestCase):
             'name': 'Large Count Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': create_count,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -739,17 +769,19 @@ class TestSubjobs(PopulateTestCase):
             'name': 'Large Write Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': create_count,
-                    'ref': 'big_customers',
+                    'id': 'big_customers',
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
                         'email': {'generator': 'textual.char', 'length': 15},
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
                     'type': 'write',
+                    'model': 'test_populate.customer',
+
                     'ref': 'big_customers',
                     'fields': {
                         'is_vip': {'eval': 'True'},
@@ -788,8 +820,9 @@ class TestSubjobs(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Split Write Domain Blueprint',
             'definition_json': [{
-                'name': 'test_populate.customer',
                 'type': 'write',
+                'model': 'test_populate.customer',
+
                 'domain': "[('age', '>=', 20)]",
                 'fields': {
                     'notes': {'eval': '"Domain split update"'},
@@ -824,8 +857,9 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Relational Ref Write Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
-                    'ref': 'test_suppliers',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
+                    'id': 'test_suppliers',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},
@@ -833,7 +867,8 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 4,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
@@ -847,8 +882,9 @@ class TestDottedRefTargeting(PopulateTestCase):
                 },
                 {
                     # Write on products reachable via supplier_ids.product_ids
-                    'name': 'test_populate.product',
                     'type': 'write',
+                    'model': 'test_populate.product',
+
                     'ref': 'test_suppliers.product_ids',
                     'fields': {
                         'description': {'eval': '"Updated via relational ref"', 'null_ratio': '0'},
@@ -892,15 +928,17 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Multilevel Relational Ref Write Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.warehouse',
-                    'ref': 'test_warehouses_ml',
+                    'type': 'create',
+                    'model': 'test_populate.warehouse',
+                    'id': 'test_warehouses_ml',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
                     },
                 },
                 {
-                    'name': 'test_populate.supplier',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},
@@ -912,7 +950,8 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 6,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
@@ -927,8 +966,9 @@ class TestDottedRefTargeting(PopulateTestCase):
                     # Two-level path: warehouse -> supplier_ids -> product_ids
                     # Only products whose supplier belongs to one of the ref'd warehouses
                     # should be updated.
-                    'name': 'test_populate.product',
                     'type': 'write',
+                    'model': 'test_populate.product',
+
                     'ref': 'test_warehouses_ml.supplier_ids.product_ids',
                     'fields': {
                         'description': {'eval': '"Updated via multi-level ref"', 'null_ratio': '0'},
@@ -981,8 +1021,9 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Relational Ref Zero Count Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
-                    'ref': 'ref_suppliers',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
+                    'id': 'ref_suppliers',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},
@@ -990,8 +1031,9 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.product',
                     'type': 'write',
+                    'model': 'test_populate.product',
+
                     'ref': 'ref_suppliers.product_ids',
                     'fields': {
                         'description': {'eval': '"rel ref write"', 'null_ratio': '0'},
@@ -1020,8 +1062,9 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Relational Ref No Split Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
-                    'ref': 'suppliers_nosplit',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
+                    'id': 'suppliers_nosplit',
                     'count': 30000,  # Large enough that a known count would trigger a split
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},
@@ -1029,8 +1072,9 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.product',
                     'type': 'write',
+                    'model': 'test_populate.product',
+
                     'ref': 'suppliers_nosplit.product_ids',
                     'fields': {
                         'description': {'eval': '"no split"', 'null_ratio': '0'},
@@ -1057,16 +1101,18 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Relational Ref Domain No Split Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
-                    'ref': 'suppliers_domain_nosplit',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
+                    'id': 'suppliers_domain_nosplit',
                     'count': 30000,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},
                     },
                 },
                 {
-                    'name': 'test_populate.product',
                     'type': 'write',
+                    'model': 'test_populate.product',
+
                     'ref': 'suppliers_domain_nosplit.product_ids',
                     'domain': "[('category', '=', 'books')]",
                     'fields': {

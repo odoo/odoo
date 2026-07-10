@@ -9,7 +9,8 @@ class TestModelDataCreation(PopulateTestCase):
             'name': 'Model Data Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
@@ -48,7 +49,8 @@ class TestModelDataCreation(PopulateTestCase):
             'name': 'Multi-Model Data Entries Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -56,7 +58,8 @@ class TestModelDataCreation(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -92,8 +95,9 @@ class TestModelDataRefs(PopulateTestCase):
             'name': 'Ref Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
-                    'ref': 'special_products',
+                    'type': 'create',
+                    'model': 'test_populate.product',
+                    'id': 'special_products',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char'},

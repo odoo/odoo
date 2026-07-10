@@ -10,36 +10,36 @@
     <record id="benchmark_deep_picking" model="populate.blueprint">
         <field name="name">Benchmark: Deep Picking</field>
         <field name="definition_xml" type="xml">
-            <model name="stock.warehouse" count="1" id="bench_warehouse" scale="False">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>  <!-- Just to make sure it's re-entrant -->
-                <field name="name" eval="f'Benchmark Deep Warehouse {v_counter}'" unique="True"/>
-                <field name="code" eval="f'BCH{v_counter:02}'" unique="True"/>
-            </model>
+            <create model="stock.warehouse" count="1" id="bench_warehouse" scale="False">
+                <value name="counter" generator="misc.counter" start="1"/>  <!-- Just to make sure it's re-entrant -->
+                <field name="name" eval="f'Benchmark Deep Warehouse {counter}'" unique="True"/>
+                <field name="code" eval="f'BCH{counter:02}'" unique="True"/>
+            </create>
 
-            <model name="product.product" count="100" id="bench_products" scale="False">
+            <create model="product.product" count="100" id="bench_products" scale="False">
                 <field name="name" length="20"/>
                 <field name="type" eval="'consu'"/>
                 <field name="is_storable" eval="True"/>
                 <field name="list_price" start="10.0" end="500.0"/>
                 <field name="standard_price" start="5.0" end="300.0"/>
-            </model>
+            </create>
 
-            <model name="stock.picking.type" count="1" id="bench_pick_type" scale="False">
+            <create model="stock.picking.type" count="1" id="bench_pick_type" scale="False">
                 <field name="name" eval="'Benchmark Picking Type'"/>
                 <field name="code" eval="'internal'"/>
                 <field name="sequence_code" eval="'BPICK'"/>
                 <field name="warehouse_id" ref="bench_warehouse"/>
-            </model>
+            </create>
 
-            <model name="stock.picking" count="1000" id="bench_pickings">
+            <create model="stock.picking" count="1000" id="bench_pickings">
                 <field name="picking_type_id" ref="bench_pick_type"/>
                 <field name="location_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_src_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_dest_id.id"/>
                 <field name="scheduled_date" start="today" end="today +30d"/>
                 <field name="priority" values="{'0': 8, '1': 2}"/>
-            </model>
+            </create>
 
-            <model name="stock.move" count="10000" id="bench_moves">
+            <create model="stock.move" count="10000" id="bench_moves">
                 <field name="picking_id" ref="bench_pickings"/>
                 <field name="product_id" ref="bench_products"/>
                 <field name="product_uom_qty" start="1.0" end="50.0" distribution="exponential(rate=0.05)"/>
@@ -48,7 +48,7 @@
                 <field name="location_dest_id" eval="env['stock.picking'].browse(picking_id).location_dest_id.id"/>
                 <field name="date" start="today" end="today +30d"/>
                 <field name="priority" values="{'0': 8, '1': 2}"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -62,28 +62,28 @@
     <record id="benchmark_wide_warehouses" model="populate.blueprint">
         <field name="name">Benchmark: Wide Warehouses</field>
         <field name="definition_xml" type="xml">
-            <model name="stock.warehouse" count="100" id="wide_warehouses">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Warehouse {v_counter}'" unique="True"/>
-                <field name="code" eval="f'WH{v_counter:03}'" unique="True"/>
-            </model>
+            <create model="stock.warehouse" count="100" id="wide_warehouses">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Warehouse {counter}'" unique="True"/>
+                <field name="code" eval="f'WH{counter:03}'" unique="True"/>
+            </create>
 
-            <model name="product.product" count="200" id="wide_products" scale="False">
+            <create model="product.product" count="200" id="wide_products" scale="False">
                 <field name="name" length="18"/>
                 <field name="type" eval="'consu'"/>
                 <field name="is_storable" eval="True"/>
                 <field name="list_price" start="10.0" end="500.0"/>
-            </model>
+            </create>
 
-            <model name="stock.picking" count="5000" id="wide_pickings">
-                <field name="v_warehouse_id" virtual="True" generator="relation.one" comodel_name="stock.warehouse" ref="wide_warehouses"/>
-                <field name="picking_type_id" eval="env['stock.warehouse'].browse(v_warehouse_id).out_type_id.id"/>
+            <create model="stock.picking" count="5000" id="wide_pickings">
+                <value name="warehouse_id" generator="relation.one" comodel_name="stock.warehouse" ref="wide_warehouses"/>
+                <field name="picking_type_id" eval="env['stock.warehouse'].browse(warehouse_id).out_type_id.id"/>
                 <field name="location_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_src_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_dest_id.id"/>
                 <field name="scheduled_date" start="today" end="today +15d"/>
-            </model>
+            </create>
 
-            <model name="stock.move" count="10000" id="wide_moves">
+            <create model="stock.move" count="10000" id="wide_moves">
                 <field name="picking_id" ref="wide_pickings"/>
                 <field name="product_id" ref="wide_products"/>
                 <field name="product_uom_qty" start="1.0" end="20.0"/>
@@ -91,7 +91,7 @@
                 <field name="location_id" eval="env['stock.picking'].browse(picking_id).location_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking'].browse(picking_id).location_dest_id.id"/>
                 <field name="date" start="today" end="today +15d"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -105,34 +105,34 @@
     <record id="benchmark_lots" model="populate.blueprint">
         <field name="name">Benchmark: Lots and Serial Numbers</field>
         <field name="definition_xml" type="xml">
-            <model name="stock.warehouse" count="1" id="lots_warehouse" scale="False">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Benchmark Lots Warehouse {v_counter}'" unique="True"/>
-                <field name="code" eval="f'LOTS {v_counter}'" unique="True"/>
-            </model>
+            <create model="stock.warehouse" count="1" id="lots_warehouse" scale="False">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Benchmark Lots Warehouse {counter}'" unique="True"/>
+                <field name="code" eval="f'LOTS {counter}'" unique="True"/>
+            </create>
 
-            <model name="product.product" count="50" id="lots_products" scale="False">
+            <create model="product.product" count="50" id="lots_products" scale="False">
                 <field name="name" length="18"/>
                 <field name="type" eval="'consu'"/>
                 <field name="is_storable" eval="True"/>
                 <field name="tracking" eval="'lot'"/>
-            </model>
+            </create>
 
-            <model name="stock.lot" count="5000" id="lots_lots">
+            <create model="stock.lot" count="5000" id="lots_lots">
                 <field name="name" length="12" unique="True"/>
                 <field name="product_id" ref="lots_products"/>
                 <field name="company_id" eval="env.company.id"/>
-            </model>
+            </create>
 
-            <model name="stock.picking" count="500" id="lots_pickings">
-                <field name="v_warehouse_id" virtual="True" generator="relation.one" comodel_name="stock.warehouse" ref="lots_warehouse"/>
-                <field name="picking_type_id" eval="env['stock.warehouse'].browse(v_warehouse_id).in_type_id.id"/>
+            <create model="stock.picking" count="500" id="lots_pickings">
+                <value name="warehouse_id" generator="relation.one" comodel_name="stock.warehouse" ref="lots_warehouse"/>
+                <field name="picking_type_id" eval="env['stock.warehouse'].browse(warehouse_id).in_type_id.id"/>
                 <field name="location_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_src_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_dest_id.id"/>
                 <field name="scheduled_date" start="today -30d" end="today"/>
-            </model>
+            </create>
 
-            <model name="stock.move" count="2000" id="lots_moves">
+            <create model="stock.move" count="2000" id="lots_moves">
                 <field name="picking_id" ref="lots_pickings"/>
                 <field name="product_id" ref="lots_products"/>
                 <field name="product_uom_qty" start="1.0" end="100.0"/>
@@ -140,7 +140,7 @@
                 <field name="location_id" eval="env['stock.picking'].browse(picking_id).location_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking'].browse(picking_id).location_dest_id.id"/>
                 <field name="date" start="today -30d" end="today"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -154,32 +154,32 @@
     <record id="benchmark_packages" model="populate.blueprint">
         <field name="name">Benchmark: Packages</field>
         <field name="definition_xml" type="xml">
-            <model name="stock.warehouse" count="1" id="pkg_warehouse" scale="False">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Benchmark Package Warehouse {v_counter}'" unique="True"/>
-                <field name="code" eval="f'PKG {v_counter}'" unique="True"/>
-            </model>
+            <create model="stock.warehouse" count="1" id="pkg_warehouse" scale="False">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Benchmark Package Warehouse {counter}'" unique="True"/>
+                <field name="code" eval="f'PKG {counter}'" unique="True"/>
+            </create>
 
-            <model name="stock.package.type" count="10" id="pkg_types" scale="False">
+            <create model="stock.package.type" count="10" id="pkg_types" scale="False">
                 <field name="sequence" generator="misc.counter" start="1"/>
                 <field name="name" eval="f'Package Type {sequence}'"/>
-            </model>
+            </create>
 
-            <model name="product.product" count="100" id="pkg_products" scale="False">
+            <create model="product.product" count="100" id="pkg_products" scale="False">
                 <field name="name" length="18"/>
                 <field name="type" eval="'consu'"/>
                 <field name="is_storable" eval="True"/>
-            </model>
+            </create>
 
-            <model name="stock.picking" count="1000" id="pkg_pickings">
-                <field name="v_warehouse_id" virtual="True" generator="relation.one" comodel_name="stock.warehouse" ref="pkg_warehouse"/>
-                <field name="picking_type_id" eval="env['stock.warehouse'].browse(v_warehouse_id).out_type_id.id"/>
+            <create model="stock.picking" count="1000" id="pkg_pickings">
+                <value name="warehouse_id" generator="relation.one" comodel_name="stock.warehouse" ref="pkg_warehouse"/>
+                <field name="picking_type_id" eval="env['stock.warehouse'].browse(warehouse_id).out_type_id.id"/>
                 <field name="location_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_src_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_dest_id.id"/>
                 <field name="scheduled_date" start="today" end="today +20d"/>
-            </model>
+            </create>
 
-            <model name="stock.move" count="5000" id="pkg_moves">
+            <create model="stock.move" count="5000" id="pkg_moves">
                 <field name="picking_id" ref="pkg_pickings"/>
                 <field name="product_id" ref="pkg_products"/>
                 <field name="product_uom_qty" start="1.0" end="50.0"/>
@@ -187,7 +187,7 @@
                 <field name="location_id" eval="env['stock.picking'].browse(picking_id).location_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking'].browse(picking_id).location_dest_id.id"/>
                 <field name="date" start="today" end="today +20d"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -201,33 +201,33 @@
     <record id="benchmark_bulk_creation" model="populate.blueprint">
         <field name="name">Benchmark: Bulk Creation</field>
         <field name="definition_xml" type="xml">
-            <model name="stock.location" count="1000" id="bulk_locations">
+            <create model="stock.location" count="1000" id="bulk_locations">
                 <field name="name" length="14"/>
                 <field name="usage" eval="'internal'"/>
-            </model>
+            </create>
 
-            <model name="product.product" count="1000" id="bulk_products">
+            <create model="product.product" count="1000" id="bulk_products">
                 <field name="name" length="16"/>
                 <field name="type" eval="'consu'"/>
                 <field name="is_storable" eval="True"/>
                 <field name="list_price" start="10.0" end="1000.0"/>
-            </model>
+            </create>
 
-            <model name="stock.warehouse" count="50" id="bulk_warehouses">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Bulk Warehouse {v_counter}'" unique="True"/>
-                <field name="code" eval="f'BLK{v_counter:02}'" unique="True"/>
-            </model>
+            <create model="stock.warehouse" count="50" id="bulk_warehouses">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Bulk Warehouse {counter}'" unique="True"/>
+                <field name="code" eval="f'BLK{counter:02}'" unique="True"/>
+            </create>
 
-            <model name="stock.picking" count="1000" id="bulk_pickings">
-                <field name="v_warehouse_id" virtual="True" generator="relation.one" comodel_name="stock.warehouse" ref="bulk_warehouses"/>
-                <field name="picking_type_id" eval="env['stock.warehouse'].browse(v_warehouse_id).int_type_id.id"/>
+            <create model="stock.picking" count="1000" id="bulk_pickings">
+                <value name="warehouse_id" generator="relation.one" comodel_name="stock.warehouse" ref="bulk_warehouses"/>
+                <field name="picking_type_id" eval="env['stock.warehouse'].browse(warehouse_id).int_type_id.id"/>
                 <field name="location_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_src_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_dest_id.id"/>
                 <field name="scheduled_date" start="today" end="today +60d"/>
-            </model>
+            </create>
 
-            <model name="stock.move" count="1000" id="bulk_moves">
+            <create model="stock.move" count="1000" id="bulk_moves">
                 <field name="picking_id" ref="bulk_pickings"/>
                 <field name="product_id" ref="bulk_products"/>
                 <field name="product_uom_qty" start="1.0" end="100.0"/>
@@ -235,7 +235,7 @@
                 <field name="location_id" eval="env['stock.picking'].browse(picking_id).location_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking'].browse(picking_id).location_dest_id.id"/>
                 <field name="date" start="today" end="today +60d"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -249,34 +249,34 @@
     <record id="benchmark_location_hierarchy" model="populate.blueprint">
         <field name="name">Benchmark: Location Hierarchy</field>
         <field name="definition_xml" type="xml">
-            <model name="stock.location" count="100" id="parent_locations">
+            <create model="stock.location" count="100" id="parent_locations">
                 <field name="name" length="16"/>
                 <field name="usage" eval="'view'"/>
-            </model>
+            </create>
 
-            <model name="stock.location" count="500" id="child_locations">
+            <create model="stock.location" count="500" id="child_locations">
                 <field name="name" length="14"/>
                 <field name="usage" eval="'internal'"/>
                 <field name="location_id" ref="parent_locations"/>
-            </model>
+            </create>
 
-            <model name="stock.location" count="2000" id="grandchild_locations">
+            <create model="stock.location" count="2000" id="grandchild_locations">
                 <field name="name" length="14"/>
                 <field name="usage" eval="'internal'"/>
                 <field name="location_id" ref="child_locations"/>
-            </model>
+            </create>
 
-            <model name="product.product" count="200" id="hier_products" scale="False">
+            <create model="product.product" count="200" id="hier_products" scale="False">
                 <field name="name" length="16"/>
                 <field name="type" eval="'consu'"/>
                 <field name="is_storable" eval="True"/>
-            </model>
+            </create>
 
-            <model name="stock.quant" count="5000" id="hier_quants" context="{'inventory_mode': True}">
+            <create model="stock.quant" count="5000" id="hier_quants" context="{'inventory_mode': True}">
                 <field name="product_id" ref="hier_products"/>
                 <field name="location_id" ref="grandchild_locations"/>
                 <field name="inventory_quantity" start="1.0" end="500.0"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -290,28 +290,28 @@
     <record id="benchmark_updates" model="populate.blueprint">
         <field name="name">Benchmark: Write Jobs (create 5k moves, then update all)</field>
         <field name="definition_xml" type="xml">
-            <model name="stock.warehouse" count="1" id="upd_warehouse" scale="False">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Benchmark Update Warehouse {v_counter}'"/>
-                <field name="code" eval="f'UPD{v_counter:02}'"/>
-            </model>
+            <create model="stock.warehouse" count="1" id="upd_warehouse" scale="False">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Benchmark Update Warehouse {counter}'"/>
+                <field name="code" eval="f'UPD{counter:02}'"/>
+            </create>
 
-            <model name="product.product" count="100" id="upd_products" scale="False">
+            <create model="product.product" count="100" id="upd_products" scale="False">
                 <field name="name" length="16"/>
                 <field name="type" eval="'consu'"/>
                 <field name="is_storable" eval="True"/>
-            </model>
+            </create>
 
-            <model name="stock.picking" count="500" id="upd_pickings">
-                <field name="v_warehouse_id" virtual="True" generator="relation.one" comodel_name="stock.warehouse" ref="upd_warehouse"/>
-                <field name="picking_type_id" eval="env['stock.warehouse'].browse(v_warehouse_id).int_type_id.id"/>
+            <create model="stock.picking" count="500" id="upd_pickings">
+                <value name="warehouse_id" generator="relation.one" comodel_name="stock.warehouse" ref="upd_warehouse"/>
+                <field name="picking_type_id" eval="env['stock.warehouse'].browse(warehouse_id).int_type_id.id"/>
                 <field name="location_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_src_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking.type'].browse(picking_type_id).default_location_dest_id.id"/>
                 <field name="scheduled_date" start="today" end="today +30d"/>
                 <field name="priority" eval="'0'"/>
-            </model>
+            </create>
 
-            <model name="stock.move" count="5000" id="upd_moves">
+            <create model="stock.move" count="5000" id="upd_moves">
                 <field name="picking_id" ref="upd_pickings"/>
                 <field name="product_id" ref="upd_products"/>
                 <field name="product_uom_qty" start="1.0" end="50.0"/>
@@ -319,18 +319,18 @@
                 <field name="location_id" eval="env['stock.picking'].browse(picking_id).location_id.id"/>
                 <field name="location_dest_id" eval="env['stock.picking'].browse(picking_id).location_dest_id.id"/>
                 <field name="date" start="today" end="today +30d"/>
-            </model>
+            </create>
 
             <!-- Write pass: update priority and product_uom_qty on all created moves -->
-            <model name="stock.move" type="write" ref="upd_moves" parallel="False">
+            <write model="stock.move" ref="upd_moves" parallel="False">
                 <field name="priority" values="{'0': 6, '1': 4}"/>
                 <field name="product_uom_qty" start="5.0" end="100.0"/>
-            </model>
+            </write>
 
             <!-- Second write pass: update scheduled dates on pickings -->
-            <model name="stock.picking" type="write" ref="upd_pickings" parallel="False">
+            <write model="stock.picking" ref="upd_pickings" parallel="False">
                 <field name="scheduled_date" start="today +1d" end="today +45d"/>
-            </model>
+            </write>
         </field>
     </record>
 </odoo>

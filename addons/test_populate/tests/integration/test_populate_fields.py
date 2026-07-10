@@ -14,7 +14,8 @@ class TestFieldGeneration(PopulateTestCase):
             'name': 'Many2One Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
@@ -66,7 +67,8 @@ class TestMany2OnePopulation(PopulateTestCase):
             'name': 'Domain Filter Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 10,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -107,7 +109,8 @@ class TestMany2OnePopulation(PopulateTestCase):
             'name': 'Required Many2One Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.order',
+                    'type': 'create',
+                    'model': 'test_populate.order',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -142,8 +145,9 @@ class TestMany2OnePopulation(PopulateTestCase):
             'name': 'Reference with Ref Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
-                    'ref': 'premium_suppliers',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
+                    'id': 'premium_suppliers',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},
@@ -152,7 +156,8 @@ class TestMany2OnePopulation(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
@@ -212,7 +217,8 @@ class TestOne2ManyPopulation(PopulateTestCase):
             'name': 'One2Many Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
@@ -267,7 +273,8 @@ class TestOne2ManyPopulation(PopulateTestCase):
             'name': 'Domain Filter One2Many Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -305,8 +312,9 @@ class TestOne2ManyPopulation(PopulateTestCase):
             'name': 'Reference Many with Ref Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
-                    'ref': 'special_products',
+                    'type': 'create',
+                    'model': 'test_populate.product',
+                    'id': 'special_products',
                     'count': 4,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
@@ -315,7 +323,8 @@ class TestOne2ManyPopulation(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.supplier',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},

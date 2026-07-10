@@ -10,7 +10,8 @@ class TestUniqueConstraints(PopulateTestCase):
             'name': 'Unique Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 10,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15, 'unique': 'True', 'null_ratio': '0'},
@@ -54,7 +55,8 @@ class TestUniqueConstraints(PopulateTestCase):
             'name': 'Unique Dependency Reroll Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 4,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15, 'null_ratio': '0'},
@@ -98,7 +100,8 @@ class TestUniqueConstraints(PopulateTestCase):
             'name': 'Unique Exhaustion Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     # Request more records than possible unique values in range [1, 2]
                     'count': 5,
                     'fields': {

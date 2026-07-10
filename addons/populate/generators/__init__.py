@@ -15,7 +15,7 @@ from .generator import (
     PopulateGeneratorError,
     UniqueValueNotFound,
     UnmetDependencies,
-    get_fields_vals,
+    generate_values,
 )
 from .misc import (
     Counter,
