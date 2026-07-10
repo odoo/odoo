@@ -3,6 +3,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isElementInViewport } from "@html_builder/utils/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { scrollTo } from "@html_builder/utils/scrolling";
 
 /**
  * @typedef { Object } CloneShared
@@ -87,8 +88,7 @@ export class ClonePlugin extends Plugin {
 
         // Scroll to the clone if required and if it is not visible.
         if (scrollToClone && !isElementInViewport(cloneEl)) {
-            // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
-            cloneEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            scrollTo(cloneEl);
         }
 
         await Promise.all(this.trigger("on_cloned_handlers", { cloneEl, originalEl: el }));
