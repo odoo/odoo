@@ -1,0 +1,34 @@
+<odoo>
+    <record id="view_move_form_l10n_cr_fe" model="ir.ui.view">
+        <field name="name">account.move.form.l10n.cr.fe</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_l10n_cr_fe_consultar_estado"
+                        string="Consultar estado FE"
+                        type="object" class="btn-secondary"
+                        invisible="l10n_cr_fe_state != 'enviado'"/>
+                <button name="action_l10n_cr_fe_reintentar"
+                        string="Reintentar envío FE"
+                        type="object" class="btn-primary"
+                        invisible="l10n_cr_fe_state != 'rechazado'"/>
+                <field name="l10n_cr_fe_state" widget="statusbar"
+                       invisible="move_type != 'out_invoice'"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Factura Electrónica CR"
+                      invisible="move_type != 'out_invoice'">
+                    <group>
+                        <field name="l10n_cr_fe_clave"/>
+                        <field name="l10n_cr_fe_consecutivo"/>
+                        <field name="l10n_cr_fe_motivo_rechazo" invisible="l10n_cr_fe_state != 'rechazado'"/>
+                    </group>
+                    <field name="l10n_cr_fe_xml"/>
+                    <field name="l10n_cr_fe_xml_firmado"/>
+                    <field name="l10n_cr_fe_respuesta_xml"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
