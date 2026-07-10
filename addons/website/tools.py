@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import colorsys
 import re
 
 import werkzeug.urls
@@ -92,6 +93,42 @@ def text_from_html(html_fragment, collapse_whitespace=False):
     if collapse_whitespace:
         content = re.sub(r'\s+', ' ', content).strip()
     return content
+
+
+def adapt_dark_palette_content(root):
+    """Keep text and carousel controls readable with dark palettes."""
+    for element in root.iter():
+        class_names = element.get('class', '').split()
+        if 'carousel-dark' in class_names:
+            class_names.remove('carousel-dark')
+            element.set('class', ' '.join(class_names))
+        if 'o_cc1' not in class_names and 'o_cc5' not in class_names:
+            continue
+        for child_el in element:
+            child_class_names = child_el.get('class', '').split()
+            if 'o_we_bg_filter' not in child_class_names:
+                continue
+            # Current custom filters use gradients with a visible dark stop.
+            has_dark_gradient = False
+            for red, green, blue, alpha in re.findall(
+                r'rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)',
+                child_el.get('style', ''),
+            ):
+                rgb = tuple(map(int, (red, green, blue)))
+                _, lightness, _ = colorsys.rgb_to_hls(*(channel / 255 for channel in rgb))
+                if (not alpha or float(alpha) > 0) and lightness < 0.5:
+                    has_dark_gradient = True
+                    break
+            if any(name.startswith('bg-black-') for name in child_class_names) or has_dark_gradient:
+                source_class, target_class = 'o_cc5', 'o_cc1'
+            elif any(name.startswith('bg-white-') for name in child_class_names):
+                source_class, target_class = 'o_cc1', 'o_cc5'
+            else:
+                continue
+            if source_class in class_names:
+                class_names[class_names.index(source_class)] = target_class
+                element.set('class', ' '.join(class_names))
+            break
 
 
 def images_from_html(html_fragment, base_url):

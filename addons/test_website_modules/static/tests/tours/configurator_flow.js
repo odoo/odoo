@@ -50,11 +50,6 @@ registry.category("web_tour.tours").add("configurator_flow", {
             run: "click",
         },
         {
-            content: "Go to the next configurator step",
-            trigger: "button.o_configurator_next:not(:disabled)",
-            run: "click",
-        },
-        {
             content: "Wait for theme selection or shop page style",
             trigger: `.o_configurator_screen:contains(online catalog) .button_area, ${themeSelectionCard}`,
             timeout: 60000,

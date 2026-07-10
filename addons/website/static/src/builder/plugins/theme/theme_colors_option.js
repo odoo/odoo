@@ -29,15 +29,17 @@ export class ThemeColorsOption extends BaseOptionComponent {
             .split(", ")
             .map((name) => name.replace(/'/g, ""));
         for (const paletteName of allPaletteNames) {
-            const palette = {
+            const colors = Array.from({ length: 5 }, (_, index) =>
+                getCSSVariableValue(`o-palette-${paletteName}-o-color-${index + 1}`, style)
+            );
+            const isDark =
+                getCSSVariableValue(`o-palette-${paletteName}-is-dark`, style) === "true";
+            palettes.push({
                 name: paletteName,
-                colors: [],
-            };
-            [1, 3, 2].forEach((c) => {
-                const color = getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
-                palette.colors.push(color);
+                swatchColors: colors.slice(0, 2),
+                backgroundColor: isDark ? colors[3] : colors[2],
+                textColor: colors[4],
             });
-            palettes.push(palette);
         }
         return palettes;
     }

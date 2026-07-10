@@ -42,44 +42,53 @@ export const WEBSITE_TYPES = {
     5: { id: 5, label: _t("an elearning platform"), name: "elearning" },
 };
 
-export const PALETTE_NAMES = [
-    "default-light-1",
-    "default-light-2",
-    "default-light-4",
-    "default-light-3",
-    "default-light-5",
-    "default-24",
-    "default-light-7",
-    "default-light-6",
-    "default-light-11",
-    "default-light-14",
-    "default-light-8",
-    "default-6",
-    "default-7",
-    "default-8",
-    "default-9",
-    "default-23",
-    "default-25",
-    "default-12",
-    "default-14",
-    "default-22",
-    "default-15",
-    "default-16",
-    "default-17",
-    "default-light-10",
-    "default-19",
-    "default-20",
-    "default-5",
-    "default-4",
-    "default-light-9",
-    "default-2",
-    "default-light-13",
-    "default-27",
-    "default-light-12",
-    "default-1",
-    "default-28",
-    "default-21",
-];
+const PALETTES = {
+    "default-light-1": { label: _t("Coast") },
+    "default-light-2": { label: _t("Candy") },
+    "default-light-4": { label: _t("Lilac") },
+    "default-light-3": { label: _t("Mint") },
+    "default-light-5": { label: _t("Luna") },
+    "default-24": { label: _t("Rose") },
+    "default-light-7": { label: _t("Coral") },
+    "default-light-6": { label: _t("Blush") },
+    "default-light-11": { label: _t("Clay") },
+    "default-light-14": { label: _t("Grove") },
+    "default-light-8": { label: _t("Sage") },
+    "default-6": { label: _t("Electric") },
+    "default-7": { label: _t("Iris") },
+    "default-8": { label: _t("Cyan") },
+    "default-9": { label: _t("Cobalt") },
+    "default-23": { label: _t("Steel") },
+    "default-25": { label: _t("Violet") },
+    "default-12": { label: _t("Amethyst") },
+    "default-14": { label: _t("Slate") },
+    "default-22": { label: _t("Merlot") },
+    "default-15": { label: _t("Burgundy") },
+    "default-16": { label: _t("Ember") },
+    "default-17": { label: _t("Plum") },
+    "default-light-10": { label: _t("Terra") },
+    "default-19": { label: _t("Saffron") },
+    "default-20": { label: _t("Bronze") },
+    "default-5": { label: _t("Seafoam") },
+    "default-4": { label: _t("Emerald") },
+    "default-light-9": { label: _t("Lagoon") },
+    "default-2": { label: _t("Forest") },
+    "default-27": { label: _t("Citron") },
+    "default-light-12": { label: _t("Stone") },
+    "default-1": { label: _t("Graphite") },
+    "default-28": { label: _t("Midnight") },
+    "default-21": { label: _t("Crimson") },
+    "default-dark-1": { label: _t("Aurora"), isDark: true },
+    "default-dark-2": { label: _t("Velvet"), isDark: true },
+    "default-dark-3": { label: _t("Amber"), isDark: true },
+    "default-dark-4": { label: _t("Pine"), isDark: true },
+    "default-dark-5": { label: _t("Ruby"), isDark: true },
+    "default-dark-6": { label: _t("Bloom"), isDark: true },
+    "default-dark-7": { label: _t("Mink"), isDark: true },
+    "default-dark-8": { label: _t("Neon"), isDark: true },
+    "default-dark-9": { label: _t("Tide"), isDark: true },
+    "default-dark-10": { label: _t("Orbit"), isDark: true },
+};
 
 export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
@@ -103,11 +112,13 @@ function getUserLanguageName() {
     return new Intl.DisplayNames([locale], { type: "language" }).of(language) || "English";
 }
 
-function getCSSPalettes(style, paletteNames = PALETTE_NAMES, bgColorAttrs = CUSTOM_BG_COLOR_ATTRS) {
+function getCSSPalettes(style) {
     const palettes = {};
-    for (const paletteName of paletteNames) {
+    for (const [paletteName, { label, isDark = false }] of Object.entries(PALETTES)) {
         const palette = {
             name: paletteName,
+            label,
+            isDark,
         };
         for (let j = 1; j <= 5; j++) {
             palette[`color${j}`] = getCSSVariableValue(
@@ -115,7 +126,7 @@ function getCSSPalettes(style, paletteNames = PALETTE_NAMES, bgColorAttrs = CUST
                 style
             );
         }
-        for (const attr of bgColorAttrs) {
+        for (const attr of CUSTOM_BG_COLOR_ATTRS) {
             palette[attr] = getCSSVariableValue(`o-palette-${paletteName}-${attr}-bg`, style);
         }
         palettes[paletteName] = palette;
@@ -608,7 +619,6 @@ export class PaletteSelectionScreen extends Component {
         this.state = useStore();
         this.notification = useService("notification");
         this.orm = useService("orm");
-        this.hoverState = proxy({ palette: null });
 
         if (this.state.logo) {
             this.updatePalettes();
@@ -633,7 +643,6 @@ export class PaletteSelectionScreen extends Component {
 
     async fetchStyleRecommendation() {
         if (this.state.aiRecommendedPalette) {
-            this.state.styleRecommendationLoading = false;
             return;
         }
         const { selectedIndustry, selectedType, selectedPositioning, formerSelectedPositioning } =
@@ -646,23 +655,25 @@ export class PaletteSelectionScreen extends Component {
         const catalog = {};
         palettes.forEach((palette, idx) => {
             catalog[idx] = {
-                palette: palette.name,
+                mode: palette.isDark ? "dark" : "light",
                 colors: {
-                    color1: palette.color1,
-                    color2: palette.color2,
-                    color3: palette.color3,
-                    color4: palette.color4,
-                    color5: palette.color5,
+                    primary: palette.color1,
+                    secondary: palette.color2,
+                    background: palette.isDark ? palette.color4 : palette.color3,
+                    text: palette.color5,
                 },
             };
         });
-        const prompt = `For a ${industry} ${type} business with a ${positioning} positioning, recommend a color palette from this catalog:
+        const prompt = `You are choosing the color palette for a new ${type} website in a website configurator.
+The website is for a business in the ${industry} industry with a ${positioning} positioning.
+Choose the palette that best supports its brand image and audience across the full website, including navigation, content, backgrounds, and calls to action:
 ${JSON.stringify(catalog, null, 2)}
+
+Consider both light and dark palettes, and select the one that feels most suitable for this specific website.
 
 Return ONLY a JSON object with:
 - "id": the numeric ID from the catalog
-- "reason": a short sentence in ${userLanguage} mentioning the business context, like: "For a family restaurant with a cozy positioning, I'd recommend warm colors to feel welcoming."`;
-        this.state.styleRecommendationLoading = true;
+- "reason": a short, user-friendly sentence in ${userLanguage} mentioning the business context without technical color terms or color codes, like: "For a family restaurant with a cozy positioning, I'd recommend warm colors to feel welcoming."`;
         this.state.styleRecommendation = undefined;
         let palette;
         let reason = " ";
@@ -680,8 +691,7 @@ Return ONLY a JSON object with:
         } catch {
             // Silently fail — the user can still pick manually
         }
-        this.state.styleRecommendation = reason;
-        this.state.styleRecommendationLoading = false;
+        this.typingAnimation(reason);
         if (palette) {
             this.state.aiRecommendedPalette = palette.name;
             if (!this.state.selectedPalette) {
@@ -690,23 +700,21 @@ Return ONLY a JSON object with:
         }
     }
 
-    get previewPalette() {
-        return (
-            this.hoverState.palette ||
-            this.state.selectedPalette ||
-            this.state.recommendedPalette ||
-            Object.values(this.state.palettes || {})[0] || {
-                color1: "#6EA8FE",
-                color2: "#474973",
-                color3: "#F0F2F5",
-                color4: "#FFFFFF",
-                color5: "#404264",
+    typingAnimation(text) {
+        // Mimic ChatGPT-style typing with random delays for a less linear, more
+        // natural-looking response.
+        const typingSpeed = 0.5;
+        this.state.styleRecommendation = "";
+        let delay = 0;
+        for (const type of Array.from(text)) {
+            delay += (10 + Math.random() * 70) * typingSpeed;
+            if (".,;:!?".includes(type)) {
+                delay += (100 + Math.random() * 180) * typingSpeed;
             }
-        );
-    }
-
-    onPaletteCardHover(palette = null) {
-        this.hoverState.palette = palette;
+            setTimeout(() => {
+                this.state.styleRecommendation += type;
+            }, delay);
+        }
     }
 
     uploadLogo() {
@@ -715,11 +723,8 @@ Return ONLY a JSON object with:
 
     /**
      * Removes the previously uploaded logo.
-     *
-     * @param {Event} ev
      */
-    async removeLogo(ev) {
-        ev.stopPropagation();
+    async removeLogo() {
         // Permit to trigger onChange even with the same file.
         if (this.logoInputRef()) {
             this.logoInputRef().value = "";
@@ -789,15 +794,11 @@ Return ONLY a JSON object with:
         this.state.setRecommendedPalette(color1, color2);
     }
 
-    selectPalette(paletteName) {
+    selectPalette(paletteName, goToNextStep = false) {
         this.state.selectPalette(paletteName);
-    }
-
-    goToThemeSelection() {
-        if (!this.state.selectedPalette) {
-            return;
+        if (goToNextStep && this.state.selectedPalette) {
+            this.props.navigate(ROUTES.themeSelectionScreen);
         }
-        this.props.navigate(ROUTES.themeSelectionScreen);
     }
 
     /**
@@ -938,6 +939,7 @@ export class ApplyConfiguratorScreen extends Component {
             industry_id: this.state.selectedIndustry.id,
             industry_name: this.state.selectedIndustry.label.toLowerCase(),
             selected_palette: selectedPalette,
+            is_dark_palette: this.state.selectedPalette.isDark,
             theme_name: themeName,
             website_purpose:
                 this.state.selectedPositioning || this.state.formerSelectedPositioning || "general",
@@ -1064,6 +1066,18 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     }
 
     scalePreviewIframes() {
+        // Keep generated themes at the responsive, scroll-free height calculated
+        // for the first six previews.
+        const themeSelectionContainerEl = document.querySelector(".o_theme_selection_container");
+        const themePreviewEl = themeSelectionContainerEl?.querySelector(
+            ".o_theme_selection_grid .theme_preview"
+        );
+        if (themePreviewEl) {
+            themeSelectionContainerEl.style.setProperty(
+                "--o-configurator-theme-preview-height",
+                `${themePreviewEl.clientHeight}px`
+            );
+        }
         for (const iframe of document.querySelectorAll(
             ".o_theme_selection_screen .o_configurator_theme_preview_iframe"
         )) {
@@ -1077,6 +1091,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         previewUrl.searchParams.set("preview_url", theme.preview_url);
         previewUrl.searchParams.set("theme_name", theme.name);
         previewUrl.searchParams.set("industry_id", this.state.selectedIndustry?.id || -1);
+        previewUrl.searchParams.set("is_dark", palette.isDark ? "1" : "0");
         for (const colorName of ["color1", "color2", "color3", "color4", "color5"]) {
             previewUrl.searchParams.set(colorName, palette[colorName] || "");
         }
@@ -1517,7 +1532,7 @@ export class Configurator extends Component {
         }));
 
         const style = window.getComputedStyle(document.documentElement);
-        const palettes = getCSSPalettes(style, PALETTE_NAMES, CUSTOM_BG_COLOR_ATTRS);
+        const palettes = getCSSPalettes(style);
 
         const localState = JSON.parse(sessionStorage.getItem(this.storageItemName));
         if (localState) {
@@ -1567,7 +1582,6 @@ export class Configurator extends Component {
             images: {},
             selectedPalette: undefined,
             recommendedPalette: undefined,
-            styleRecommendationLoading: false,
             styleRecommendation: undefined,
             aiRecommendedPalette: undefined,
             previewHeaders: [],

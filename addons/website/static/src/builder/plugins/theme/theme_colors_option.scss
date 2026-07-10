@@ -2,21 +2,21 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     width: $o-we-sidebar-width - 30px;
-    padding-block: 0.3rem;
+    padding: 0.5rem;
 
     .o-hb-select-dropdown-item {
-        padding-block: 0.5em;
+        padding: 0.25rem 0.5rem;
         border-bottom: none;
 
         &.focus {
             background-color: inherit !important; // override
         }
 
-        .o-color-palette-pill {
-            height: 30px;
+        .o-color-palette-card {
+            height: 40px;
         }
 
-        &:is(.focus, .active) .o-color-palette-pill {
+        &:is(.focus, .active) .o-color-palette-card {
             box-shadow:
                 0 0 0 #{$o-we-border-width} #{$o-we-bg-light},
                 0 0 0 #{$o-we-border-width * 2} var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});

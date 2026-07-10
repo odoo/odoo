@@ -20,7 +20,12 @@ from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
+from odoo.addons.website.tools import (
+    adapt_dark_palette_content,
+    get_base_domain,
+    similarity_score,
+    text_from_html,
+)
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
@@ -1060,6 +1065,7 @@ class Website(models.CachedModel):
 
         # Configure the homepage.
         page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
+        is_dark_palette = kwargs.get('is_dark_palette')
         rendered_snippets = []
         nb_snippets = len(snippet_list)
         for i, snippet in enumerate(snippet_list, start=1):
@@ -1077,6 +1083,9 @@ class Website(models.CachedModel):
 
                 # Configure non-website snippet with defaults and theme-level customizations.
                 website._preconfigure_snippet(snippet, el, customizations)
+
+                if is_dark_palette:
+                    adapt_dark_palette_content(el)
 
                 # Remove the previews needed for the snippets dialog
                 dialog_preview_els = el.find_class('s_dialog_preview')
