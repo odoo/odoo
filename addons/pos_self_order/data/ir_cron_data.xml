@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_cron_paring_request_cleanup" model="ir.cron">
+        <field name="name">POS Self: Cleanup expired kiosk device pairing requests</field>
+        <field name="model_id" ref="model_pos_self_order_kiosk_pairing_request"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_cleanup_expired()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+
+</odoo>

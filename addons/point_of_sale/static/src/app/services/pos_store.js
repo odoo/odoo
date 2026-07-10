@@ -39,7 +39,7 @@ import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_sl
 import { DebugWidget } from "../utils/debug/debug_widget";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
-import { initLNA } from "../utils/init_lna";
+import { initLNA } from "../utils/lna";
 import { SnoozeTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 import { ScaleScreen } from "@point_of_sale/app/screens/scale_screen/scale_screen";
 import { Domain } from "@web/core/domain";

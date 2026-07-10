@@ -43,6 +43,13 @@ class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon, AccountTestInvoicingCom
             'type': 'bank',
         })
 
+        cls.paired_device = cls.env["pos_self_order.kiosk.device"].create({
+            'config_id': cls.pos_config.id,
+            'approved_by': cls.pos_admin.id,
+            'ip_address': "127.0.0.1",
+            'user_agent': "demo",
+        })
+
     def test_kiosk_qfpay(self):
         res = self.pos_config.load_self_data()
         pm = res.get('pos.payment.method', {}).get('records', [])
@@ -58,3 +65,9 @@ class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon, AccountTestInvoicingCom
         self_route = self.pos_config._get_self_order_route()
         with patch('odoo.addons.pos_qfpay.controllers.main.consteq', lambda a, b: True):
             self.start_tour(self_route, "kiosk_qfpay_order")
+
+    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
+        if not kwargs.get('user'):
+            cookies = kwargs.setdefault("cookies", {})
+            cookies[self.paired_device._format_auth_cookie_name(self.pos_config.id)] = self.paired_device._format_auth_cookie()
+        super().start_tour(url_path, tour_name, step_delay=step_delay, **kwargs)

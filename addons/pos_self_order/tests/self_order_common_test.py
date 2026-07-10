@@ -242,12 +242,36 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         # This is important in the test because the added tax should not be used in the tour.
         self._add_tax_to_product_from_different_company()
 
+        self.paired_device = self.env["pos_self_order.kiosk.device"].create({
+            'config_id': self.pos_config.id,
+            'approved_by': self.pos_admin.id,
+            'ip_address': "127.0.0.1",
+            'user_agent': "demo",
+        })
+
+    def _get_pairing_cookie(self):
+        return {'name': self.paired_device._format_auth_cookie_name(self.pos_config.id),
+                'value': self.paired_device._format_auth_cookie()}
+
+    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
+        if not kwargs.get('user') and self.pos_config.self_ordering_mode == 'kiosk':
+            pairing_cookie = self._get_pairing_cookie()
+            cookies = kwargs.setdefault("cookies", {})
+            cookies[pairing_cookie['name']] = pairing_cookie['value']
+        super().start_tour(url_path, tour_name, step_delay=step_delay, **kwargs)
+
     def make_request_to_controller(self, url, params):
+        cookies = None
+        if self.pos_config.self_ordering_mode == 'kiosk':
+            pairing_cookie = self._get_pairing_cookie()
+            cookies = {pairing_cookie['name']: pairing_cookie['value']}
+
         response = self.url_open(
             url,
             json.dumps({'jsonrpc': '2.0', 'params': params}),
             method='POST',
             headers={'Content-Type': 'application/json'},
+            cookies=cookies
         )
         return response.json().get('result')
 
