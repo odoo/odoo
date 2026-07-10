@@ -37,18 +37,55 @@ class PublicPageController(http.Controller):
             create_token=create_token, channel_name=channel_name, default_display_mode="video_full_screen"
         )
 
+    def _check_invitation_token(self, channel_id, invitation_token):
+        channel = request.env["discuss.channel"].browse(channel_id).exists()
+        # sudo: discuss.channel - channel access is validated with invitation_token
+        if not channel or not channel._verify_uuid(invitation_token):
+            raise NotFound()
+        return channel
+
     @mail_route("/chat/<int:channel_id>/<string:invitation_token>", methods=["GET"], type="http", auth="public")
     def discuss_channel_invitation(self, channel_id, invitation_token, email_token=None, fullscreen=None):
         guest_email = email_token and verify_hash_signed(
             self.env(su=True), "mail.invite_email", email_token
         )
         guest_email = email_normalize(guest_email)
-        channel = request.env["discuss.channel"].browse(channel_id).exists()
-        # sudo: discuss.channel - channel access is validated with invitation_token
-        if not channel or not channel.sudo().uuid or not consteq(channel.sudo().uuid, invitation_token):
-            raise NotFound()
+        channel = self._check_invitation_token(channel_id, invitation_token)
         store = Store().add_global_values(isChannelTokenSecret=True)
         return self._response_discuss_channel_invitation(store, channel, guest_email)
+
+    def _check_channel_access(self, channel):
+        # group restriction takes precedence over token
+        # sudo - res.groups: can access group public id of parent channel to determine if we
+        # can access the channel.
+        group_public_id = channel.group_public_id or channel.parent_channel_id.sudo().group_public_id
+        if group_public_id and group_public_id not in request.env.user.all_group_ids:
+            raise request.not_found()
+
+    @mail_route(
+        "/chat/<int:channel_id>/<string:invitation_token>/join",
+        methods=["POST"],
+        type="jsonrpc",
+        auth="public",
+    )
+    def discuss_channel_invitation_join(self, channel_id, invitation_token, guest_name=None):
+        user, guest = self.env["res.users"]._get_current_persona()
+        if not guest and not user:
+            raise NotFound()
+        if guest and guest_name and guest.name != guest_name:
+            # sudo - mail.guest: writing name of self guest is allowed
+            guest.sudo()._update_name(guest_name)
+        channel = self._check_invitation_token(channel_id, invitation_token)
+        self._check_channel_access(channel)
+        store = Store()
+        *_, member = channel.sudo()._find_or_create_persona_for_channel(
+            guest_name=guest.name if guest else None,
+            country_code=request.geoip.country_code,
+            timezone=request.env["mail.guest"]._get_timezone_from_request(request),
+            joining=True,
+        )
+        store.add(member, "_store_member_fields")
+        return store
 
     @mail_route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
     def discuss_channel(self, channel_id, *, debug=None, highlight_message_id=None, fullscreen=None):
@@ -91,29 +128,28 @@ class PublicPageController(http.Controller):
         return self._response_discuss_channel_invitation(store, channel_sudo.sudo(False))
 
     def _response_discuss_channel_invitation(self, store, channel, guest_email=None):
-        # group restriction takes precedence over token
-        # sudo - res.groups: can access group public id of parent channel to determine if we
-        # can access the channel.
-        group_public_id = channel.group_public_id or channel.parent_channel_id.sudo().group_public_id
-        if group_public_id and group_public_id not in request.env.user.all_group_ids:
-            raise request.not_found()
-        guest_already_known = channel.env["mail.guest"]._get_guest_from_context()
+        self._check_channel_access(channel)
+        previous_member = channel.sudo().self_member_id
+        member = self.env["discuss.channel.member"]
         with replace_exceptions(UserError, by=NotFound()):
             # sudo: mail.guest - creating a guest and its member inside a channel of which they have the token
-            __, guest = channel.sudo()._find_or_create_persona_for_channel(
+            __, guest, member = channel.sudo()._find_or_create_persona_for_channel(
                 guest_name=guest_email or "",
                 country_code=request.geoip.country_code,
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
+                joining=False,
             )
         if guest_email and not guest.email:
             # sudo - mail.guest: writing email address of self guest is allowed
             guest.sudo().email = guest_email
-        if guest and not guest_already_known:
+        if request.env.user._is_public() and not previous_member:
             store.add_global_values(is_welcome_page_displayed=True)
             channel = channel.with_context(guest=guest)
         if self.env.user._is_internal():
-            return request.redirect(f"/odoo/action-mail.action_discuss?active_id={channel.id}")
-        return self._response_discuss_public_template(store, channel)
+            return request.redirect(f"/odoo/action-mail.action_discuss?active_id={channel.id}&invitation_token={channel.uuid}")
+        # sudo: discuss.channel - reading channel fields for the invitation page is allowed,
+        # as the guest/user has the invitation token
+        return self._response_discuss_public_template(store, channel if member else channel.sudo())
 
     def _response_discuss_public_template(self, store: Store, channel=None):
         store.add_global_values(

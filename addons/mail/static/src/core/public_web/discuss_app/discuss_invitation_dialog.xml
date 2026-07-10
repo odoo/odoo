@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.DiscussInvitationDialog">
+    <Dialog size="'md'" title="this.title" contentClass="'o-bg-body'">
+        <div class="bg-secondary-subtle rounded-2 p-2 d-flex flex-column gap-3">
+            <t t-call="mail.DiscussInvitationDialog.invitedBy"/>
+            <t t-call="mail.DiscussInvitationDialog.meetingDetails"/>
+        </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-danger me-2" t-on-click="this.onClickConfirm">
+                <i class="fa fa-sign-out me-1 opacity-50"/>
+                Join
+            </button>
+            <button class="btn btn-secondary me-2" t-on-click="this.props.close">
+                <i class="oi oi-close me-1 opacity-50"/>
+                Discard
+            </button>
+        </t>
+    </Dialog>
+</t>
+
+<t t-name="mail.DiscussInvitationDialog.invitedBy">
+    <div class="d-flex align-items-center gap-2 w-100 text-start">
+        <img class="rounded-3" t-att-src="this.channel.create_uid.avatarUrl" alt="User Avatar" width="32" height="32"/>
+        <div class="d-flex flex-column overflow-hidden">
+            <span class="o-fw-600 text-uppercase text-muted smaller opacity-75">Invited by</span>
+            <div class="d-flex gap-1">
+                <span class="o-fw-600 text-truncate" t-att-title="this.channel.create_uid.name" t-out="this.channel.create_uid.name"/>
+                <span t-if="this.store.companyName" class="text-truncate text-muted" t-att-title="this.store.companyName" t-out="this.store.companyName"/>
+            </div>
+        </div>
+    </div>
+    </t>
+<t t-name="mail.DiscussInvitationDialog.meetingDetails">
+    <div class="d-flex flex-column gap-1">
+        <span class="o-fw-600 text-uppercase text-muted smaller opacity-75">Meeting Details</span>
+        <div class="d-flex flex-column gap-1">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa fa-calendar opacity-50"/>
+                <span t-out="this.channel.name"/>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa fa-clock opacity-50"/>
+                <span t-out="this.channel.scheduled_date"/>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>
+

@@ -6,6 +6,7 @@ import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { rpc } from "@web/core/network/rpc";
 
 export class WelcomePage extends Component {
     static template = "mail.WelcomePage";
@@ -74,9 +75,16 @@ export class WelcomePage extends Component {
     }
 
     async joinChannel() {
-        if (!this.store.self_user) {
-            await this.store.self_guest?.updateGuestName(this.state.userName.trim());
-        }
+        const joinOptions = this.store.self_user
+            ? {}
+            : {
+                  guest_name: this.state.userName.trim(),
+              };
+        const storeData = await rpc(
+            `/chat/${this.channel.id}/${this.channel.uuid}/join`,
+            joinOptions
+        );
+        this.store.insert(storeData);
         browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.hasMicrophone);
         browser.localStorage.setItem(
             "discuss_call_preview_join_video",

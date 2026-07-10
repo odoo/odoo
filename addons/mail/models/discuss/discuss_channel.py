@@ -12,7 +12,7 @@ from odoo import Command, SUPERUSER_ID, _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.modules.registry import Registry
-from odoo.tools import BinaryBytes, email_normalize, format_list, html_escape
+from odoo.tools import BinaryBytes, consteq, email_normalize, format_list, html_escape
 from odoo.tools.misc import OrderedSet, hash_sign, limited_field_access_token
 from odoo.tools.sql import SQL
 
@@ -1356,6 +1356,7 @@ class DiscussChannel(models.Model):
         country_code,
         create_member_params=None,
         post_joined_message=True,
+        joining=False,
     ):
         """
         :param guest_name: name of the persona
@@ -1364,25 +1365,28 @@ class DiscussChannel(models.Model):
 
         :param dict create_member_params: optional parameters to pass to the
             channel member create function.
+        :param joining: whether the persona is joining the channel (as opposed to being invited)
 
-        :rtype: tuple[partner, guest]
+        :rtype: tuple[partner, guest, member]
         """
         self.ensure_one()
         guest = self.env["mail.guest"]
         if member := self.self_member_id:
-            return member.partner_id, member.guest_id
-        if not self.env.user._is_public():
-            self._add_members(users=self.env.user, post_joined_message=post_joined_message)
+            return member.partner_id, member.guest_id, member
+        member = self.env["discuss.channel.member"]
+        if not self.env.user._is_public() and joining:
+            member = self._add_members(users=self.env.user, post_joined_message=post_joined_message)
         else:
             guest = guest._get_or_create_guest(
                 guest_name=guest_name, country_code=country_code, timezone=timezone
             )
-            self.with_context(guest=guest)._add_members(
-                guests=guest,
-                create_member_params=create_member_params,
-                post_joined_message=post_joined_message,
-            )
-        return self.env.user.partner_id if not guest else self.env["res.partner"], guest
+            if joining:
+                member = self.with_context(guest=guest)._add_members(
+                    guests=guest,
+                    create_member_params=create_member_params,
+                    post_joined_message=post_joined_message,
+                )
+        return self.env.user.partner_id if not guest else self.env["res.partner"], guest, member
 
     def _store_target(self):
         return (self, None)
@@ -1766,6 +1770,15 @@ class DiscussChannel(models.Model):
     def _store_open_chat_window_fields(self, res: Store.FieldList):
         self._store_channel_fields(res)
         res.attr("open_chat_window", True)
+
+    def _verify_uuid(self, invitation_token):
+        """ Verify that the given uuid is valid for this channel.
+        :param invitation_token: the uuid to verify
+        :return: True if the uuid is valid for this channel, False otherwise
+        """
+        self.ensure_one()
+        # sudo: discuss.channel - channel access is validated by the uuid
+        return self.sudo().uuid and consteq(self.sudo().uuid, invitation_token)
 
     # ------------------------------------------------------------
     # COMMANDS
