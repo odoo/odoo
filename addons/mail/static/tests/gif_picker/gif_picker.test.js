@@ -149,7 +149,7 @@ test("Searching for a GIF", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
-    await insertText("input[placeholder='Search for a GIF']", "search");
+    await insertText("input[placeholder='Search Klipy']", "search");
     await contains("i[aria-label='back']");
     await contains(".o-discuss-Gif", { count: 2 });
 });
@@ -164,31 +164,29 @@ test("Open a GIF category trigger the search for the category", async () => {
     await click("button[title='Add GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", { count: 2 });
-    await contains("input[placeholder='Search for a GIF']", { value: "cry" });
+    await contains("input[placeholder='Search Klipy']", { value: "cry" });
 });
 
 test("Can have GIF categories with same name", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    onRpc("/discuss/gif/categories", () => {
-        return {
-            locale: "en",
-            tags: [
-                {
-                    searchterm: "duplicate",
-                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
-                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
-                    name: "#duplicate",
-                },
-                {
-                    searchterm: "duplicate",
-                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
-                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
-                    name: "#duplicate",
-                },
-            ],
-        };
-    });
+    onRpc("/discuss/gif/categories", () => ({
+        locale: "en",
+        tags: [
+            {
+                searchterm: "duplicate",
+                path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                name: "#duplicate",
+            },
+            {
+                searchterm: "duplicate",
+                path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                name: "#duplicate",
+            },
+        ],
+    }));
     onRpc("/discuss/gif/search", () => rpc.search);
     await start();
     await openDiscuss(channelId);
@@ -257,7 +255,7 @@ test("Searching for a GIF with a failling RPC should display an error", async ()
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
-    await insertText("input[placeholder='Search for a GIF']", "search");
+    await insertText("input[placeholder='Search Klipy']", "search");
     await contains(".o-discuss-GifPicker-error");
 });
 
