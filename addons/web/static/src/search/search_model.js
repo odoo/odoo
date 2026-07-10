@@ -1101,14 +1101,24 @@ export class SearchModel extends EventBus {
         this._notify();
     }
 
-    async spawnCustomFilterDialog() {
-        const domain = getDefaultDomain(this.searchViewFields);
+    /**
+     * Opens the filter domain editor in a Dialog
+     * @param {Object} [options={}]
+     * @param {string} [options.domain=false] domain to edit (false to use default domain).
+     * @param {number} [options.groupId=false] facet groupId to edit a facet group in place
+     * */
+    spawnCustomFilterDialog({ domain = false, groupId = false } = {}) {
+        const create = !groupId; // no facet group to replace: we are adding a new filter
         this.dialog.add(DomainSelectorDialog, {
             resModel: this.resModel,
-            defaultConnector: "|",
-            domain,
-            context: this.globalContext,
-            onConfirm: (domain) => this.splitAndAddDomain(domain),
+            defaultConnector: create ? "|" : "&",
+            domain: domain || getDefaultDomain(this.searchViewFields),
+            context: this.domainEvalContext,
+            onConfirm: (nextDomain) => {
+                if (nextDomain !== domain || create) {
+                    this.splitAndAddDomain(nextDomain, groupId);
+                }
+            },
             disableConfirmButton: (domain) => domain === `[]`,
             title: _t("Custom Filter"),
             confirmButtonText: _t("Search"),
