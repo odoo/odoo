@@ -26,6 +26,7 @@ export class SelectionPlaceholderPlugin extends Plugin {
         on_remote_history_commits_applied_handlers: this.updatePlaceholders.bind(this),
         normalize_processors: withSequence(100, this.updatePlaceholders.bind(this)),
         on_committed_to_history_handlers: this.updatePlaceholders.bind(this),
+        on_inserted_handlers: this.updatePlaceholders.bind(this),
         on_selectionchange_handlers: (selectionData) => this.onSelectionChange(selectionData),
         clean_for_save_processors: withSequence(0, (root) => {
             for (const placeholder of root.querySelectorAll(PLACEHOLDER_SELECTOR)) {
