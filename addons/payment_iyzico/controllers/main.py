@@ -2,6 +2,8 @@
 
 import pprint
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -78,11 +80,12 @@ class IyzicoController(http.Controller):
                 'POST',
                 'payment/iyzipos/checkoutform/auth/ecom/detail',
                 json={
-                    'conversationId': tx_sudo.reference,
                     'locale': request.env.lang == 'tr_TR' and 'tr' or 'en',
                     'token': token,
                 },
             )
+            if verified_payment_data.get('basketId') != tx_sudo.reference:
+                raise Forbidden()
             tx_sudo._process('iyzico', verified_payment_data)
         except ValidationError:
             _logger.error("Unable to process the payment data.")

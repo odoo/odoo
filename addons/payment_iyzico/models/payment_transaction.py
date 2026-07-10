@@ -89,7 +89,7 @@ class PaymentTransaction(models.Model):
                 'ip': '0',
             },
             'callbackUrl': return_url,
-            'conversationId': self.reference,
+            'basketId': self.reference,
             'currency': self.currency_id.name,
             'locale': 'tr' if self.env.lang == 'tr_TR' else 'en',
             'paidPrice': self.amount,
