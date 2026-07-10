@@ -208,148 +208,87 @@
 </t>
 
 <t t-name="website.Configurator.PaletteSelectionScreen">
-    <div class="o_configurator_screen o_palette_selection_screen min-vh-100 position-relative d-flex flex-row justify-content-between flex-nowrap">
-        <div class="o_palette_selection_main_panel d-flex flex-column flex-grow-1 justify-content-between bg-view flex-xl-shrink-0">
-            <div class="p-3 p-lg-5 pb-lg-0 o_palette_selection_intro d-flex flex-column flex-grow-1 mb-auto bg-view">
+    <div class="o_configurator_screen o_palette_selection_screen bg-view min-vh-100 d-flex">
+        <div class="o_configurator_screen_content container d-flex flex-column flex-grow-1 justify-content-between">
+            <div class="px-2 px-lg-5 pb-3 pb-lg-0 o_palette_selection_intro d-flex flex-column flex-grow-1 mb-auto">
                 <input type="file" class="logo_selection_input d-none" t-on-change="this.changeLogo" name="logo_selection" t-ref="this.logoInputRef" accept="image/*"/>
-                <div>
-                    <h1 class="o_configurator_typing_text">Choose your <b class="text-info">Color Palette</b></h1>
-                    <p class="lead">
-                        <t t-if="this.state.styleRecommendation" t-out="this.state.styleRecommendation"/>
-                        <div t-else="">
-                            <span class="pulsing-text">Thinking...</span>
-                            <br/><br/> <!-- Emulates two lines -->
+                <div class="row g-3 align-items-start pt-3">
+                    <div class="col-12 col-lg text-center text-lg-start">
+                        <h1 class="mb-2 mb-xxl-3 o_configurator_typing_text">Choose your <b class="text-info">Color Palette</b></h1>
+                        <div class="o_palette_selection_recommendation lead pe-2">
+                            <t t-if="this.state.styleRecommendation" t-out="this.state.styleRecommendation"/>
+                            <div t-else="">
+                                <span class="pulsing-text">Thinking...</span>
+                            </div>
                         </div>
-                    </p>
-                </div>
-                <div class="flex-grow-1 pt-4">
-                    <div class="d-flex justify-content-center text-center">
+                    </div>
+                    <div class="col-12 col-lg-auto o_palette_selection_logo_area o_configurator_show_fast d-flex justify-content-center justify-content-lg-end mt-lg-4">
                         <t t-if="this.state.logo">
-                            <div class="d-flex gap-3 w-100">
-                                <div class="w-50 d-flex justify-content-end align-items-center gap-3">
-                                    <div class="rounded border position-relative opacity-trigger-hover" t-on-click="this.uploadLogo">
+                            <div class="o_palette_selection_logo_row d-flex align-items-center gap-2 mt-3">
+                                <div class="h-100 position-relative opacity-trigger-hover">
+                                    <button type="button"
+                                            class="o_palette_selection_logo_preview o_btn_reset h-100 rounded border position-relative overflow-hidden cursor-pointer"
+                                            title="Replace Logo"
+                                            t-on-click="this.uploadLogo">
                                         <img t-att-src="this.state.logo" alt="Logo" class="o_palette_selection_logo px-2 py-1"/>
-                                        <div title="Replace Logo"
-                                             class="position-absolute opacity-0 opacity-100-hover cursor-pointer d-flex align-items-center justify-content-center top-0 start-0 w-100 h-100 bg-white-75">
+                                        <span class="position-absolute opacity-0 opacity-100-hover d-flex align-items-center justify-content-center top-0 start-0 w-100 h-100 bg-white-75">
                                             <small class="fw-bolder">Replace</small>
-                                        </div>
-                                        <a href="#"
-                                           class="small opacity-0 opacity-100-hover btn bg-white text-black border position-absolute top-0 rounded-circle px-2 py-1 translate-middle transition-base"
-                                           title="Remove Logo"
-                                           role="button"
-                                           t-on-click.prevent="this.removeLogo">
-                                            <i class="oi" data-icon="close_small" role="presentation"/>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="d-flex px-2">
-                                    <i class="oi fs-3 text-muted align-self-center" data-icon="east"/>
-                                </div>
-                                <div t-if="this.state.recommendedPalette" class="w-50 d-flex gap-3 py-1">
-                                    <t t-set="logoPalette" t-value="this.state.recommendedPalette"/>
-                                    <t t-set="isAiRecommended" t-value="this.state.aiRecommendedPalette === 'recommendedPalette'"/>
-                                    <button t-attf-class="palette_card o_btn_reset w-auto position-relative flex-shrink-0 rounded border {{this.state.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}} {{isAiRecommended ? 'ai_recommended' : ''}}"
-                                            t-on-click="() => this.selectPalette('recommendedPalette')"
-                                            t-on-mouseenter="() => this.onPaletteCardHover(logoPalette)"
-                                            t-on-mouseleave="() => this.onPaletteCardHover()">
-                                        <i t-if="isAiRecommended" class="oi oi-filled text-info position-absolute top-0 end-0" data-icon="check_circle"/>
-                                        <div class="d-flex flex-row w-100 h-100">
-                                            <div class="px-4" t-attf-style="background-color: {{logoPalette.color1}}; border-radius: 4px 0 0 4px;"/>
-                                            <div class="px-4" t-attf-style="background-color: {{logoPalette.color3}};"/>
-                                            <div class="px-4" t-attf-style="background-color: {{logoPalette.color2}}; border-radius: 0 4px 4px 0;"/>
-                                        </div>
+                                        </span>
+                                    </button>
+                                    <button type="button"
+                                            class="small opacity-0 opacity-100-hover btn bg-white text-black border position-absolute top-0 start-100 rounded-circle px-2 py-1 translate-middle transition-base"
+                                            title="Remove Logo"
+                                            t-on-click.stop="this.removeLogo">
+                                        <i class="oi" data-icon="close_small" role="presentation"/>
                                     </button>
                                 </div>
+                                <t t-if="this.state.recommendedPalette">
+                                    <i class="oi oi-arrow-right fs-4 text-muted me-1" aria-hidden="true"/>
+                                    <t t-set="logoPalette" t-value="this.state.recommendedPalette"/>
+                                    <button t-attf-class="palette_card o_palette_selection_logo_palette o_btn_reset cursor-pointer d-flex align-items-center gap-2 h-100 w-auto position-relative flex-shrink-0 px-3 py-2 rounded border {{this.state.getSelectedPaletteName() === 'recommendedPalette' ? 'selected' : ''}}"
+                                            t-attf-style="background-color: {{logoPalette.color3}}; color: {{logoPalette.color5}};"
+                                            title="Logo colors"
+                                            t-on-click="() => this.selectPalette('recommendedPalette', true)">
+                                        <span class="flex-grow-1 overflow-hidden text-start text-truncate fw-semibold">Logo</span>
+                                        <span class="d-flex gap-1 flex-shrink-0" aria-hidden="true">
+                                            <span class="o_palette_card_swatch rounded-1" t-attf-style="background-color: {{logoPalette.color1}};"/>
+                                            <span class="o_palette_card_swatch rounded-1" t-attf-style="background-color: {{logoPalette.color2}};"/>
+                                        </span>
+                                    </button>
+                                </t>
                             </div>
                         </t>
                         <t t-else="">
-                            <button class="btn o_btn_reset bg-100 rounded-3 border d-flex gap-2 justify-content-center py-3 px-4" t-on-click="this.uploadLogo">
-                                <i class="oi fs-3" data-icon="cloud_upload"/>
-                                <h5 class="text-start lh-sm mb-0">Use your <b>Logo</b> colors</h5>
+                            <button type="button" class="o_palette_selection_logo_upload btn btn-light border d-flex gap-2 align-items-center justify-content-center text-start mt-3 py-2 px-3" t-on-click="this.uploadLogo">
+                                <i class="oi fs-1 flex-shrink-0 me-1" data-icon="cloud_upload"/>
+                                <span class="lh-sm">Upload your <b>Logo</b></span>
                             </button>
                         </t>
                     </div>
-                    <h4 class="o_palette_selection_divider pt-4 my-2 my-xxl-3 w-100 text-center"><em class="o_palette_selection_divider_label px-2 text-500 font-italic">or</em></h4>
-                    <div class="pt-4">
-                        <h3 class="pb-3 text-center">Choose a preset palette</h3>
-                        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 gy-2 gx-3">
-                            <t t-foreach="Object.values(this.state.palettes)" t-as="palette" t-key="palette.name">
-                                <t t-set="isAiRecommended" t-value="this.state.aiRecommendedPalette == palette.name"/>
-                                <div>
-                                    <button t-attf-class="palette_card o_btn_reset position-relative w-100 rounded border {{this.state.getSelectedPaletteName() == palette.name ? 'selected' : ''}} {{isAiRecommended ? 'ai_recommended' : ''}}"
-                                            t-on-click="() => this.selectPalette(palette.name)"
-                                            t-on-mouseenter="() => this.onPaletteCardHover(palette)"
-                                            t-on-mouseleave="() => this.onPaletteCardHover()">
-
-                                        <div t-if="isAiRecommended"
-                                             class="d-flex align-items-center justify-content-center ratio ratio-1x1 w-auto p-2 rounded-pill bg-view position-absolute top-0 end-0"
-                                        >
-                                            <i class="oi oi-filled d-flex align-items-center justify-content-center text-info" data-icon="check_circle"
-                                               aria-hidden="true"
-                                            />
-                                        </div>
-
-                                        <div class="o_palette_card_swatches d-flex flex-row w-100">
-                                            <div t-attf-style="background-color: {{palette.color1}}; flex: 1; border-radius: 4px 0 0 4px;"/>
-                                            <div t-attf-style="background-color: {{palette.color3}}; flex: 1;"/>
-                                            <div t-attf-style="background-color: {{palette.color2}}; flex: 1; border-radius: 0 4px 4px 0;"/>
-                                        </div>
-                                    </button>
-                                </div>
-                            </t>
-                        </div>
+                </div>
+                <div class="flex-grow-1 pt-4">
+                    <div class="o_palette_selection_grid row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3">
+                        <t t-foreach="Object.values(this.state.palettes)" t-as="palette" t-key="palette.name">
+                            <t t-set="isAiRecommended" t-value="this.state.aiRecommendedPalette === palette.name"/>
+                            <div class="col">
+                                <button t-attf-class="palette_card o_btn_reset position-relative cursor-pointer d-flex align-items-center gap-2 h-100 w-100 px-3 py-2 rounded border {{this.state.getSelectedPaletteName() === palette.name ? 'selected' : ''}}"
+                                        t-attf-style="background-color: {{palette.isDark ? palette.color4 : palette.color3}}; color: {{palette.color5}};"
+                                        t-on-click="() => this.selectPalette(palette.name, true)">
+                                    <span class="flex-grow-1 overflow-hidden text-start text-truncate fw-semibold" t-out="palette.label"/>
+                                    <span t-if="isAiRecommended" class="o_palette_card_recommendation_icon bg-success text-white position-absolute top-0 start-100 translate-middle rounded-circle d-flex align-items-center justify-content-center" data-tooltip="AI recommended" data-tooltip-position="top" role="img" aria-label="AI recommended">
+                                        <i class="oi" data-icon="check"/>
+                                    </span>
+                                    <span class="d-flex gap-1 flex-shrink-0" aria-hidden="true">
+                                        <span class="o_palette_card_swatch rounded-1" t-attf-style="background-color: {{palette.color1}};"/>
+                                        <span class="o_palette_card_swatch rounded-1" t-attf-style="background-color: {{palette.color2}};"/>
+                                    </span>
+                                </button>
+                            </div>
+                        </t>
                     </div>
                 </div>
             </div>
-            <div class="o_configurator_nav d-flex justify-content-between align-items-center py-2 pb-md-3 px-2 px-lg-5 position-sticky bottom-0 bg-view bg-opacity-75">
-                <SkipButton skip="this.props.skip" className="'p-0 text-start w-auto d-xl-none'"/>
-                <button class="btn btn-primary btn-lg o_configurator_next ms-xl-auto"
-                        t-att-class="!this.state.selectedPalette ? 'opacity-0' : ''"
-                        t-att-disabled="!this.state.selectedPalette"
-                        t-on-click="this.goToThemeSelection">
-                    Next
-                </button>
-            </div>
-        </div>
-        <div class="o_palette_selection_preview_panel d-none d-xl-flex align-items-center justify-content-center p-5 flex-grow-0 flex-shrink-0 mx-auto position-relative" style="width: 40%">
-            <svg class="o_palette_live_preview w-100 h-auto d-block" width="644" height="613" viewBox="0 0 644 613" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g filter="url(#filter0_d_1021_13393)">
-                    <g clip-path="url(#clip0_1021_13393)">
-                        <rect x="4" y="2" width="636" height="605" t-att-fill="this.previewPalette.color3"/>
-                        <rect x="259.858" y="187.579" width="124.285" height="37.9097" rx="18.9548" t-att-fill="this.previewPalette.color1"/>
-                        <rect x="4" y="277.361" width="636" height="294.277" t-att-fill="this.previewPalette.color2"/>
-                        <rect x="186.917" y="84.8711" width="270.166" height="18.7021" rx="2" fill="#989898" fill-opacity="0.43"/>
-                        <rect x="60.1736" y="19.9458" width="62.0216" height="18.7021" rx="2" fill="#D5D5D5"/>
-                        <rect x="459.152" y="14.2969" width="28.5629" height="30" rx="14.2814" fill="#D9D9D9"/>
-                        <rect x="497.358" y="14.2969" width="77.9812" height="30" rx="15" fill="#D9D9D9"/>
-                        <rect x="221.685" y="117.005" width="200.629" height="18.7021" rx="2" fill="#989898" fill-opacity="0.43"/>
-                        <rect x="325.808" y="377" width="140.004" height="18.7021" rx="2" fill="white" fill-opacity="0.22"/>
-                        <rect x="325.808" y="409.135" width="200.629" height="12" rx="2" fill="white" fill-opacity="0.22"/>
-                        <rect x="325.808" y="434.567" width="239.268" height="12" rx="2" fill="white" fill-opacity="0.22"/>
-                        <rect x="325.808" y="459.999" width="170.028" height="12" rx="2" fill="white" fill-opacity="0.22"/>
-                        <rect x="60.1736" y="328.896" width="200.629" height="191.209" rx="6" t-att-fill="this.previewPalette.color5"/>
-                    </g>
-                    <rect x="4.5" y="2.5" width="635" height="604" rx="11.5" stroke="#D8DADD" shape-rendering="crispEdges"/>
-                </g>
-                <defs>
-                    <filter id="filter0_d_1021_13393" x="0" y="0" width="644" height="613" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                        <feOffset dy="2"/>
-                        <feGaussianBlur stdDeviation="2"/>
-                        <feComposite in2="hardAlpha" operator="out"/>
-                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.075 0"/>
-                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1021_13393"/>
-                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1021_13393" result="shape"/>
-                    </filter>
-                    <clipPath id="clip0_1021_13393">
-                        <rect x="4" y="2" width="636" height="605" rx="12" fill="white"/>
-                    </clipPath>
-                </defs>
-            </svg>
-        </div>
-        <div class="d-none d-xl-flex position-absolute top-0 bottom-0 end-0 pe-none">
-            <div class="position-sticky bottom-0 py-2 pb-md-3 px-5 mt-auto pe-auto">
+            <div class="o_configurator_nav d-flex justify-content-end align-items-center py-2 pb-md-3 px-2 px-lg-5 position-sticky bottom-0 bg-view bg-opacity-75">
                 <SkipButton skip="this.props.skip" className="'p-0 text-end w-auto'"/>
             </div>
         </div>
@@ -403,7 +342,7 @@
 <t t-name="website.Configurator.ThemePreviewCard">
     <div class="o_theme_selection_col g-col-12 g-col-sm-6 g-col-xl-4">
         <t t-if="previewTheme and previewTheme.name">
-            <div class="theme_preview border rounded-3 position-relative overflow-hidden w-100 o_configurator_show_fast">
+            <div class="theme_preview border rounded-3 position-relative overflow-hidden w-100 o_configurator_show_fast" t-att-data-theme-name="previewTheme.name">
                 <h6 class="theme_preview_tip position-absolute pe-none text-center text-muted border border-dark lh-1">Click to select</h6>
                 <div class="theme_svg_container rounded overflow-hidden" dir="ltr">
                     <div class="o_configurator_theme_preview_loader position-absolute top-0 start-0 end-0 bottom-0 d-flex align-items-center justify-content-center pe-none">
@@ -418,34 +357,32 @@
 </t>
 
 <t t-name="website.Configurator.ThemeSelectionScreen">
-    <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
+    <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen pb-0">
         <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
-            <div
-                class="o_theme_selection_container mw-100 flex-grow-1 px-2 px-lg-5"
-                t-att-class="this.showViewMoreThemesButton ? 'd-flex flex-column justify-content-between' : ''"
-            >
+            <div class="o_theme_selection_container mw-100 px-2 px-lg-5">
                 <t t-if="!this.state.themesLoading">
-                    <h1 class="mb-2 mb-xxl-3 pt-3 text-center o_configurator_typing_text">
-                        Choose your favorite <b class="text-info">Layout</b>
-                    </h1>
-                    <div
-                        class="gap-4 pb-4 grid"
-                        t-att-class="this.showViewMoreThemesButton ? 'my-auto' : ''"
-                    >
-                        <t t-foreach="this.state.themes" t-as="theme" t-key="theme_index">
-                            <t t-call="website.Configurator.ThemePreviewCard" previewTheme="theme"/>
-                        </t>
-                        <t t-if="!this.showViewMoreThemesButton and this.state.extraThemes.length">
+                    <div class="o_theme_selection_fit d-xl-flex flex-xl-column h-xl-100">
+                        <h1 class="mb-2 mb-xxl-3 pt-3 text-center o_configurator_typing_text">
+                            Choose your favorite <b class="text-info">Layout</b>
+                        </h1>
+                        <div class="o_theme_selection_grid gap-4 grid mt-2">
+                            <t t-foreach="this.state.themes" t-as="theme" t-key="theme_index">
+                                <t t-call="website.Configurator.ThemePreviewCard" previewTheme="theme"/>
+                            </t>
+                        </div>
+                    </div>
+                    <t t-if="!this.showViewMoreThemesButton and this.state.extraThemes.length">
+                        <div class="o_theme_selection_extra_grid grid gap-4 pt-4 pb-4">
                             <t t-foreach="this.state.extraThemes" t-as="extraTheme" t-key="extraTheme.name">
                                 <t t-call="website.Configurator.ThemePreviewCard" previewTheme="extraTheme"/>
                             </t>
-                        </t>
-                    </div>
+                        </div>
+                    </t>
                 </t>
             </div>
             <div
                 t-if="this.showViewMoreThemesButton"
-                class="mt-auto mx-auto w-auto d-flex justify-content-center align-items-center pt-3 pb-2 pb-md-3 px-2 px-lg-5 position-sticky bottom-0 z-3"
+                class="d-flex justify-content-center align-items-center w-100 mb-3 position-absolute bottom-0 z-3"
             >
                 <button
                     class="btn btn-secondary btn-lg px-4 py-2"

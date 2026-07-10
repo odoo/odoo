@@ -26,6 +26,10 @@ import {
     getObservedEls,
     removeTextHighlight,
 } from "@website/js/highlight_utils";
+import {
+    adaptDarkPaletteContent,
+    isDarkColorPalette,
+} from "@website/components/dialog/dark_palette_utils";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 const NO_OP = () => {};
@@ -122,13 +126,23 @@ class AddPageTemplatePreview extends Component {
             if (status(this) === "destroyed") {
                 return;
             }
+            const cssLoadPromises = [];
             for (const cssLinkEl of cssLinkEls) {
                 const preloadLinkEl = document.createElement("link");
                 preloadLinkEl.setAttribute("rel", "preload");
                 preloadLinkEl.setAttribute("href", cssLinkEl.getAttribute("href"));
                 preloadLinkEl.setAttribute("as", "style");
                 iframeEl.contentDocument.head.appendChild(preloadLinkEl);
-                iframeEl.contentDocument.head.appendChild(cssLinkEl.cloneNode(true));
+                const styleLinkEl = cssLinkEl.cloneNode(true);
+                // Dark palette detection reads CSS variables, so wait for the
+                // stylesheets.
+                cssLoadPromises.push(
+                    new Promise((resolve) => {
+                        styleLinkEl.addEventListener("load", resolve, { once: true });
+                        styleLinkEl.addEventListener("error", resolve, { once: true });
+                    })
+                );
+                iframeEl.contentDocument.head.appendChild(styleLinkEl);
             }
             // Adjust styles.
             const styleEl = document.createElement("style");
@@ -236,12 +250,16 @@ class AddPageTemplatePreview extends Component {
             for (const imgEl of lazyLoadedImgEls) {
                 imgEl.setAttribute("loading", "lazy");
             }
+            await Promise.all(cssLoadPromises);
             if (!this.previewRef()) {
                 // Stop the process when preview is removed
                 return;
             }
             // Wait for fonts.
             await iframeEl.contentDocument.fonts.ready;
+            if (!this.props.isCustom && isDarkColorPalette(iframeEl.contentDocument)) {
+                adaptDarkPaletteContent(wrapEl);
+            }
             holderEl.classList.remove("o_loading");
             const adjustHeight = () => {
                 if (!this.previewRef()) {

@@ -21,6 +21,9 @@
             @each $key, $value in $-palette {
                 @include print-variable('o-palette-#{$-selected-palette-name}-#{$key}', $value);
             }
+            @if index($o-dark-color-palette-names, $-selected-palette-name) {
+                @include print-variable('o-palette-#{$-selected-palette-name}-is-dark', true);
+            }
 
             @each $attr-name, $default-cc-idx in $-default-cc {
                 $-cc-idx: $default-cc-idx;
