@@ -373,3 +373,65 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
                 ],
             },
         })
+
+    def test_04_fpos_price_included_tax_to_zero_included(self):
+        """ A fiscal position mapping a price included tax to a 0% price included tax
+        must strip the included tax from the unit price (like in sale.order.line).
+
+        Product price: 2.95 tax included (21%) -> 2.44 excluded.
+        Without fiscal position: total 2.95 (2.44 + 0.51).
+        With the fiscal position: total 2.44 (2.44 + 0.0).
+        """
+        tax_21_incl = self.env['account.tax'].create({
+            'name': '21% incl',
+            'amount': 21,
+            'price_include_override': 'tax_included',
+        })
+        tax_21_incl.invoice_repartition_line_ids.write({'account_id': self.tax_received_account.id})
+        fpos_incl = self.env['account.fiscal.position'].create({'name': 'Intra-Community'})
+        self.env['account.tax'].create({
+            'name': '0% EU incl',
+            'amount': 0,
+            'price_include_override': 'tax_included',
+            'fiscal_position_ids': [Command.link(fpos_incl.id)],
+            'original_tax_ids': [Command.link(tax_21_incl.id)],
+        })
+        product = self.create_product(
+            'Product TTC',
+            self.categ_basic,
+            lst_price=2.95,
+            tax_ids=tax_21_incl.ids,
+        )
+        self.customer.write({'property_account_position_id': fpos_incl.id})
+
+        self._start_pos_session(self.cash_pm1, 0)
+        orders_map = self._create_orders([
+            {'pos_order_lines_ui_args': [(product, 1)], 'uuid': '00100-010-0001'},
+            {'pos_order_lines_ui_args': [(product, 1)], 'customer': self.customer, 'uuid': '00100-010-0002'},
+            {'pos_order_lines_ui_args': [(product, 1)], 'customer': self.customer, 'is_invoiced': True, 'uuid': '00100-010-0003'},
+        ])
+
+        order_no_fpos = orders_map['00100-010-0001']
+        self.assertAlmostEqual(order_no_fpos.amount_total, 2.95)
+        self.assertAlmostEqual(order_no_fpos.amount_tax, 0.51)
+
+        order_fpos = orders_map['00100-010-0002']
+        self.assertAlmostEqual(order_fpos.amount_total, 2.44)
+        self.assertAlmostEqual(order_fpos.amount_tax, 0.0)
+
+        invoice = orders_map['00100-010-0003'].account_move
+        self.assertAlmostEqual(invoice.amount_untaxed, 2.44)
+        self.assertAlmostEqual(invoice.amount_tax, 0.0)
+        self.assertAlmostEqual(invoice.amount_total, 2.44)
+
+        total_cash_payment = sum(self.pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.is_cash_count).mapped('amount'))
+        self.pos_session.post_closing_cash_details(total_cash_payment)
+        self.pos_session.close_session_from_ui()
+
+        session_move = self.pos_session.move_id
+        sales_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.sales_account)
+        # 2.44 for the order without fiscal position and 2.44 for the one with it.
+        self.assertAlmostEqual(sum(sales_lines.mapped('credit')), 4.88)
+        tax_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
+        # Only the order without fiscal position pays the 21% included tax.
+        self.assertAlmostEqual(sum(tax_lines.mapped('credit')), 0.51)

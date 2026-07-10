@@ -201,7 +201,22 @@ export class PosOrderlineAccounting extends Base {
         };
         if (order?.fiscal_position_id && product !== this.config.discount_product_id) {
             // Recompute taxes based on product and fiscal position.
-            values.tax_ids = order.fiscal_position_id.getTaxesAfterFiscalPosition(values.tax_ids);
+            const mappedTaxes = order.fiscal_position_id.getTaxesAfterFiscalPosition(
+                values.tax_ids
+            );
+            // A refund line copies the price unit of the refunded line, so it must be
+            // adapted exactly when the refunded line was.
+            const referenceLine = this.refunded_orderline_id || this;
+            if (referenceLine.price_type === "original") {
+                values.price_unit = accountTaxHelpers.adapt_price_unit_to_another_taxes(
+                    values.price_unit,
+                    product,
+                    values.tax_ids,
+                    mappedTaxes,
+                    { product_uom: values.product_uom_id }
+                );
+            }
+            values.tax_ids = mappedTaxes;
         }
         return values;
     }

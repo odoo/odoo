@@ -173,8 +173,10 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Product Test"),
             ProductScreen.totalAmountIs("100.00"),
+            // like in sale.order.line, the included 15% tax is stripped from the
+            // price unit when the fiscal position maps it to the 0% tax (100 / 1.15)
             ProductScreen.clickFiscalPosition("No Tax"),
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.totalAmountIs("86.96"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
@@ -188,7 +190,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             PaymentScreen.clickBack(),
             ProductScreen.isShown(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.totalAmountIs("86.96"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),

@@ -287,11 +287,13 @@ registry.category("web_tour.tours").add("FiscalPositionIncl", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product 1"),
             ProductScreen.totalAmountIs("100.00"),
+            // like in sale.order.line, the included 20% is stripped from the price
+            // unit before applying the mapped 10% tax (100 / 1.20 * 1.10)
             ProductScreen.clickFiscalPosition("Incl. to Incl."),
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.totalAmountIs("91.67"),
             // changed fiscal position to Incl. to Excl.
             ProductScreen.clickFiscalPosition("Incl. to Excl."),
-            ProductScreen.totalAmountIs("110.00"),
+            ProductScreen.totalAmountIs("91.66"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),

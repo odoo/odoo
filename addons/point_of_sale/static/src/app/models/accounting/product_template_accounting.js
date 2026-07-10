@@ -19,14 +19,22 @@ export class ProductTemplateAccounting extends Base {
             false,
             isVariant ? this : false
         );
-        const priceUnit = price || price === 0 ? price : baseP;
+        let priceUnit = price || price === 0 ? price : baseP;
         const currency = config.currency_id;
 
         let taxes = this.taxes_id;
 
         // Fiscal position.
         if (fiscalPosition) {
-            taxes = fiscalPosition.getTaxesAfterFiscalPosition(taxes);
+            const mappedTaxes = fiscalPosition.getTaxesAfterFiscalPosition(taxes);
+            priceUnit = accountTaxHelpers.adapt_price_unit_to_another_taxes(
+                priceUnit,
+                this,
+                taxes,
+                mappedTaxes,
+                { product_uom: productTemplate.uom_id }
+            );
+            taxes = mappedTaxes;
         }
 
         return {

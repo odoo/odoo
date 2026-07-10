@@ -1889,7 +1889,9 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_product_combo_change_fp(self):
         """
         Verify than when the fiscal position is changed,
-        the price of the combo doesn't change and taxes are well taken into account
+        the price of the combo is adapted to the mapped taxes
+        (the included 10% tax is stripped and the included 5% tax is re-applied)
+        and taxes are well taken into account
         """
         fiscal_position = self.env['account.fiscal.position'].create({
             'name': 'test fp',

@@ -732,15 +732,26 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         def create_order_line(product, quantity, **kwargs):
             price_unit = self.pricelist._get_product_price(product, quantity)
-            tax_ids = fiscal_position.map_tax(product.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)))
+            product_taxes = product.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company))
+            mapped_taxes = fiscal_position.map_tax(product_taxes)
+            adapted_price_unit = price_unit
+            if fiscal_position:
+                # Like the pos ui, the sent price_unit and tax_ids stay the product ones
+                # but the amounts are computed on a price unit adapted to the mapped taxes.
+                adapted_price_unit = product_taxes._adapt_price_unit_to_another_taxes(
+                    price_unit=price_unit,
+                    product=product,
+                    original_taxes=product_taxes,
+                    new_taxes=mapped_taxes,
+                )
             discount = kwargs.get('discount', 0.0)
-            price_unit_after_discount = price_unit * (1 - discount / 100.0)
+            price_unit_after_discount = adapted_price_unit * (1 - discount / 100.0)
             tax_values = (
-                tax_ids.compute_all(price_unit_after_discount, self.currency, quantity)
-                if tax_ids
+                mapped_taxes.compute_all(price_unit_after_discount, self.currency, quantity)
+                if mapped_taxes
                 else {
-                    'total_excluded': price_unit * quantity,
-                    'total_included': price_unit * quantity,
+                    'total_excluded': adapted_price_unit * quantity,
+                    'total_included': adapted_price_unit * quantity,
                 }
             )
             return (0, 0, {
@@ -751,7 +762,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 'price_subtotal': tax_values['total_excluded'],
                 'price_subtotal_incl': tax_values['total_included'],
                 'qty': quantity,
-                'tax_ids': [(6, 0, tax_ids.ids)],
+                'tax_ids': [(6, 0, product_taxes.ids)],
                 **kwargs
             })
 

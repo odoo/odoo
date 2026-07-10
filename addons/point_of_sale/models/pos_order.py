@@ -1733,7 +1733,16 @@ class PosOrderLine(models.Model):
         sign = -1 if self.order_id.is_refund else 1
         fpos = self.order_id.fiscal_position_id
         tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
-        price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
+        price_unit = self.price_unit
+        reference_line = self.refunded_orderline_id or self
+        if fpos and reference_line.price_type == 'original':
+            price_unit = self.tax_ids._adapt_price_unit_to_another_taxes(
+                price_unit=price_unit,
+                product=self.product_id,
+                original_taxes=self.tax_ids,
+                new_taxes=tax_ids_after_fiscal_position,
+            )
+        price = price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty * sign, product=self.product_id, partner=self.order_id.partner_id)
         return {
             'price_subtotal_incl': taxes['total_included'],
@@ -1922,6 +1931,19 @@ class PosOrderLine(models.Model):
 
         if line.product_id.description_sale:
             product_name += '\n' + line.product_id.with_context(lang=lang).description_sale
+
+        price_unit = line.price_unit
+        # A refund line copies the price unit of the refunded line, so it must be
+        # adapted exactly when the refunded line was.
+        reference_line = line.refunded_orderline_id or line
+        if fiscal_position and reference_line.price_type == 'original':
+            price_unit = line.tax_ids._adapt_price_unit_to_another_taxes(
+                price_unit=price_unit,
+                product=line.product_id,
+                original_taxes=line.tax_ids,
+                new_taxes=line.tax_ids_after_fiscal_position,
+            )
+
         return {
             **self.env['account.tax']._prepare_base_line_for_taxes_computation(
                 line,
@@ -1930,7 +1952,7 @@ class PosOrderLine(models.Model):
                 rate=self.order_id.currency_rate,
                 product_id=line.product_id,
                 tax_ids=line.tax_ids_after_fiscal_position,
-                price_unit=line.price_unit,
+                price_unit=price_unit,
                 quantity=line.qty * (-1 if is_refund_order else 1),
                 discount=line.discount,
                 account_id=account,

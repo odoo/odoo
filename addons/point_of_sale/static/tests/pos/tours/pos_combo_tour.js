@@ -152,11 +152,13 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             ProductScreen.totalAmountIs("50.00"),
             inLeftSide(Order.hasTax("4.55")),
 
-            // Test than changing the fp, doesn't change the price of the combo
+            // Changing the fp strips the included 10% tax from the combo price and
+            // re-applies the mapped included 5% tax, like in sale.order.line
+            // (50 / 1.10 * 1.05)
             ProductScreen.clickFiscalPosition("test fp"),
-            inLeftSide([...ProductScreen.orderLineHas("Office Combo", "1", "50.00")]),
-            ProductScreen.totalAmountIs("50.00"),
-            inLeftSide(Order.hasTax("2.38")),
+            inLeftSide([...ProductScreen.orderLineHas("Office Combo", "1", "47.73")]),
+            ProductScreen.totalAmountIs("47.73"),
+            inLeftSide(Order.hasTax("2.27")),
             ProductScreen.isShown(),
         ].flat(),
 });
