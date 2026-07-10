@@ -13,6 +13,11 @@ from odoo.tools.barcode import check_barcode_encoding
 from odoo.tools.float_utils import float_is_zero
 
 
+class PackageTypeNestingError(ValidationError):
+    """Exception raised when the user attempts to nest packages of the same type.
+       Displayed as a notification rather than an error popup."""
+
+
 class StockPackage(models.Model):
     """ Packages containing quants and/or other packages """
     _name = 'stock.package'
@@ -274,6 +279,42 @@ class StockPackage(models.Model):
 
         return [('id', 'in', all_package_ids)]
 
+    @api.constrains('package_type_id', 'parent_package_id', 'child_package_ids', 'package_dest_id', 'child_package_dest_ids')
+    def _check_duplicate_package_types(self):
+        """Check that a package never (directly or indirectly) contains another package of the same type as itself."""
+        for package in self:
+            own_type = package.package_type_id
+            parent_and_destination_types = package._get_parent_packages().package_type_id
+            child_and_source_types = package._get_child_packages().package_type_id
+            if (own_type & (parent_and_destination_types | child_and_source_types)
+                or parent_and_destination_types & child_and_source_types):
+                raise PackageTypeNestingError(self.env._("Packages of the same type cannot be nested."))
+
+    def _check_nesting_package_type(self, package_type):
+        """Idem, but intended for generic checks (eg called from wizards) instead of a constraint."""
+        if not package_type:
+            return
+        if package_type & (self | self._get_parent_packages() | self._get_child_packages()).package_type_id:
+            raise PackageTypeNestingError(self.env._("Packages of the same type cannot be nested."))
+
+    # Normally each child->parent and source->destination chain is guaranteed to be cycle-free
+    # (as directed acyclic graphs), but both helpers below traverse two chains at once
+    # breadth-first (child & source, parent & destination). Swapping the positions of a
+    # container with its contained package (ie child becomes source, and parent becomes
+    # destination) will cross these two chains, leading to cycles. For this reason, we need to
+    # keep track of the packages we've traversed so far to avoid getting stuck in a loop.
+    def _get_parent_packages(self, seen=None):
+        seen = seen or self
+        if parents := (self.parent_package_id | self.package_dest_id) - seen:
+            return parents | parents._get_parent_packages(seen | parents)
+        return parents
+
+    def _get_child_packages(self, seen=None):
+        seen = seen or self
+        if children := (self.child_package_ids | self.child_package_dest_ids) - seen:
+            return children | children._get_child_packages(seen | children)
+        return children
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -330,15 +371,28 @@ class StockPackage(models.Model):
             picking.action_add_entire_packs(self.ids)
 
     def _pre_put_in_pack_hook(self, package_id=False, package_type_id=False, package_name=False, from_package_wizard=False):
-        if self.move_line_ids._should_display_put_in_pack_wizard(package_id, package_type_id, package_name, from_package_wizard):
+        confirm_put_in_pack = self.move_line_ids._should_display_put_in_pack_wizard(
+            package_id, package_type_id, package_name, from_package_wizard)
+        confirm_pack_in_pack = self._should_confirm_pack_in_pack(
+            package_id, package_type_id, package_name, from_package_wizard)
+        if confirm_put_in_pack:
             action = self.env["ir.actions.actions"]._for_xml_id("stock.action_put_in_pack_wizard")
-            action['context'] = {
-                **literal_eval(action.get('context', '{}')),
-                'default_package_ids': self.ids,
-                'default_location_dest_id': self.location_dest_id[:1].id,
-            }
-            return action
-        return False
+        elif confirm_pack_in_pack:
+            action = self.env["ir.actions.actions"]._for_xml_id("stock.action_pack_in_pack_wizard")
+        else:
+            return False
+        action['context'] = {
+            **literal_eval(action.get('context', '{}')),
+            'default_package_ids': self.ids,
+            'default_location_dest_id': self.location_dest_id[:1].id,
+            'confirm_pack_in_pack': confirm_pack_in_pack,
+        }
+        return action
+
+    def _should_confirm_pack_in_pack(self, package_id, package_type_id, package_name, from_package_wizard):
+        if from_package_wizard or package_id or package_type_id or package_name:
+            return False
+        return self.env.context.get('confirm_pack_in_pack', False)
 
     def _post_put_in_pack_hook(self):
         self.ensure_one()
