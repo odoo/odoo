@@ -7,7 +7,7 @@ from lxml import etree
 from markupsafe import Markup
 
 from odoo import api, fields, models
-from odoo.exceptions import LockError, UserError
+from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.tools import float_repr
 from odoo.tools.xml_utils import find_xml_value
 
@@ -545,10 +545,14 @@ class L10nSaEdiDocument(models.Model):
         return ""
 
     def _l10n_sa_get_phase_2_qr(self, simplified=False):
+        unsigned_xml = self.resource._l10n_sa_generate_zatca_template()
+        if isinstance(unsigned_xml, dict):
+            raise ValidationError(unsigned_xml.get('error'))
+
         if simplified:
             return self._l10n_sa_build_simplified_phase_2_qr(
                 self.company_id,
-                self.resource._l10n_sa_generate_zatca_template(),
+                unsigned_xml,
                 self.journal_id.l10n_sa_production_csid_certificate_id,
                 self.resource.l10n_sa_invoice_signature,
             )

@@ -1,4 +1,5 @@
 from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.addons.l10n_sa_edi.tests.common import TestSaEdiCommon
 
@@ -30,3 +31,20 @@ class TestL10nSaInvoice(TestSaEdiCommon):
         invoice.action_post()
         html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
         self.assertTrue(html)
+
+    def test_print_invoice_without_tax_raises_error(self):
+        """ Test that printing an invoice without tax raises a ValidationError."""
+        invoice = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_sa_simplified.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'tax_ids': [],
+                    'price_unit': 100.0,
+                }),
+            ]
+        }])
+        invoice.action_post()
+        with self.assertRaises(ValidationError):
+            self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
