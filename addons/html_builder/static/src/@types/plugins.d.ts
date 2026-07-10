@@ -35,6 +35,7 @@ declare module "plugins" {
     import { on_bg_color_updated_handlers } from "@html_builder/core/color_style_plugin";
     import { reload_context_processors } from "@html_builder/core/utils";
     import { uncrossable_element_selector, ignore_ctrl_a_predicates } from "@html_builder/core/builder_selection_restriction_plugin";
+    import { read_media_size_width_processors, write_media_size_width_processors } from "@html_builder/plugins/image/media_size_option_plugin";
 
     interface SharedMethods {
         // Main
@@ -119,6 +120,8 @@ declare module "plugins" {
 
         // Processors
         reload_context_processors: reload_context_processors;
+        read_media_size_width_processors: read_media_size_width_processors;
+        write_media_size_width_processors: write_media_size_width_processors;
         snippet_preview_dialog_stylesheets_processors: snippet_preview_dialog_stylesheets_processors;
 
         // Providers
