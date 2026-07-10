@@ -66,7 +66,6 @@ class HrExpense(models.Model):
         comodel_name='hr.employee',
         string="Employee",
         compute='_compute_employee_id', precompute=True, store=True, readonly=False,
-        required=True,
         index=True,
         default=_default_employee_id,
         check_company=True,
@@ -343,6 +342,9 @@ class HrExpense(models.Model):
                 errors.append(self.env._("Enter a description to proceed."))
             elif not expense.product_id and expense.state != 'refused':
                 errors.append(self.env._("Select a product to proceed."))
+            # Check for required field 'employee_id'
+            if not expense.employee_id:
+                errors.append(self.env._("Select an employee to proceed."))
 
             # Check for non-zero amounts
             total_amount_is_zero = expense.company_currency_id.is_zero(expense.total_amount)
