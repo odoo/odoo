@@ -3,7 +3,7 @@ import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
-import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { useAvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { propComputed } from "@mail/utils/common/hooks";
 
 import { Component, computed, onMounted, onWillUnmount, props, t } from "@odoo/owl";
@@ -27,7 +27,7 @@ export class Activity extends Component {
         this.reloadParentView = props.static("reloadParentView", t.function([]));
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "bottom" });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
-        this.avatarCard = usePopover(AvatarCard);
+        this.avatarCard = useAvatarCard({ model: "res.users" });
         onMounted(() => {
             this.updateDelayAtNight();
         });
@@ -109,13 +109,7 @@ export class Activity extends Component {
         if (!this.activity().user_id) {
             return;
         }
-        const target = ev.currentTarget;
-        if (!this.avatarCard.isOpen) {
-            this.avatarCard.open(target, {
-                id: this.activity().user_id.id,
-                model: "res.users",
-            });
-        }
+        this.avatarCard.open(ev, this.activity().user_id);
     }
 
     async edit() {
