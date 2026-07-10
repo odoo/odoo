@@ -154,12 +154,25 @@ export class FontSizePlugin extends Plugin {
                         ...TEXT_STYLE_CLASSES,
                         ...DEFAULT_FONT_SIZE_CLASSES,
                     ].find((cls) => node.classList.contains(cls)),
+                getFormatProps: (node) => {
+                    if (node.style?.["font-size"]) {
+                        return { size: node.style["font-size"] };
+                    }
+                    const className = [
+                        ...FONT_SIZE_CLASSES,
+                        ...TEXT_STYLE_CLASSES,
+                        ...DEFAULT_FONT_SIZE_CLASSES,
+                    ].find((cls) => node.classList.contains(cls));
+                    if (className) {
+                        return { className };
+                    }
+                },
                 addStyle: (node, props) => {
                     node.style.removeProperty("font-size");
                     removeClass(node, ...FONT_SIZE_CLASSES, "o_rfs");
                     if (props.className) {
                         node.classList.add(props.className);
-                    } else {
+                    } else if (props.size) {
                         node.style["font-size"] = props.size;
                         node.classList.toggle(
                             "o_rfs",

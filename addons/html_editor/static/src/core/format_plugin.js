@@ -320,8 +320,9 @@ export class FormatPlugin extends Plugin {
             }
             const parent = element.parentElement;
             const restore = prepareUpdate(...leftPos(anchorNode), ...rightPos(anchorNode));
+            const formatProps = spec.getFormatProps?.(element);
             removeFormat(element, spec, cursor);
-            this.activeFormats[spec.id] = { applyStyle: true };
+            this.activeFormats[spec.id] = { applyStyle: true, formatProps };
             if (
                 element.isConnected &&
                 element.getAttributeNames().length === 1 &&
