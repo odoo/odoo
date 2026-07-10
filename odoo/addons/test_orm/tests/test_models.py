@@ -1,11 +1,16 @@
+import logging
+import time
 from pprint import pformat
 
 from odoo import Command, models
 from odoo.exceptions import AccessError, LockError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import SQL, lazy, mute_logger, unique
+from odoo.tools.version_tag_reset import assign_version_tag
 
 from .common import TestOrmPartnerCommon
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -806,3 +811,52 @@ class TestRecordset(TestOrmPartnerCommon, TransactionCase):
 
         with self.assertQueries([]):
             _ = partners_grouped['@host.com'].name
+
+
+@tagged('-at_install', 'post_install')
+class TestClassVersionTagExhaustion(TransactionCase):
+    def _benchmark(self, label, func, n=500_000):
+        func()
+        t0 = time.perf_counter()
+        for _ in range(n):
+            func()
+        elapsed = time.perf_counter() - t0
+        stats_logger = logging.getLogger('odoo.tests.stats')
+        stats_logger.info("Tested performance for label %s in %.3fs", label, elapsed)
+
+    def test_bench_access_model_attributes(self):
+        with self.profile():
+            user = self.env.user
+            self._benchmark('user.env', lambda: user.id)
+            self._benchmark('user.id', lambda: user.id)
+            self._benchmark('user.__class__', lambda: user.__class__)
+            self._benchmark('user.browse(user.id)', lambda: user.browse(user.id))
+
+    def test_check_version_tags(self):
+        """
+        Avoid performance regression in 3.13. see version_tag_reset.py for more info
+        """
+        exhausted_classes_count = 0
+
+        def _check_tag(obj):
+            assert isinstance(obj, type)
+            return assign_version_tag(obj)
+
+        # Registry is not the initial cause of the problem but lets check it just in case
+        if not _check_tag(type(self.env.registry)):
+            _logger.error("Registry class has exhausted its version tag budget")
+            exhausted_classes_count += 1
+
+        for model in self.env.registry.values():
+            for c in model.__mro__:
+                if not _check_tag(c):
+                    _logger.error("Model %s (%s.%s) ...", model._name, c.__module__, c.__qualname__)
+                    exhausted_classes_count += 1
+            # Fields are not the initial cause of the problem but lets check them just in case
+            for field in model._fields.values():
+                for c in field.__class__.__mro__:
+                    if not _check_tag(c):
+                        _logger.error("Field %s.%s has exhausted its version tag budget", c.__module__, c.__qualname__)
+                        exhausted_classes_count += 1
+        if exhausted_classes_count:
+            raise AssertionError(f"{exhausted_classes_count} classes have exhausted their version tag budget")
