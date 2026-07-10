@@ -6,12 +6,11 @@ import {
     manuallyDispatchProgrammaticEvent,
     test,
 } from "@odoo/hoot";
-import { Component, onWillStart, props, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     assignTestEnv,
     makeTestApp,
     mockService,
-    mountWithCleanup,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
@@ -192,47 +191,25 @@ test("will let handlers from the registry handle errors first", async () => {
 });
 
 test("originalError is the root cause of the error chain", async () => {
+    const rootError = new Error();
+    rootError.name = "boom";
+    const error = new Error();
+    error.name = "boom";
+    error.cause = rootError;
+
     errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
         expect(err).toBeInstanceOf(UncaughtPromiseError); // Wrapped by error service
-        // owl no longer wraps lifecycle errors in OwlError, so the cause is the original error directly
-        expect(err.cause).toBe(originalError);
+        expect(err.cause).toBe(error);
+        expect(originalError).toBe(rootError);
         expect.step("in handler");
         return true;
     });
 
-    class ErrHandler extends Component {
-        static template = xml`<t t-component="this.props.comp"/>`;
+    await makeTestApp();
 
-        props = props();
-    }
+    expect.errors(1);
+    Promise.reject(error);
 
-    const error1 = new Error();
-    error1.name = "boom";
-    class ThrowInSetup extends Component {
-        static template = xml``;
-        setup() {
-            throw error1;
-        }
-    }
-
-    expect.errors(2);
-    mountWithCleanup(ErrHandler, { props: { comp: ThrowInSetup } });
-    await expect.waitForSteps(["in handler"]);
-    expect.verifyErrors(["boom"]);
-
-    const error2 = new Error();
-    error2.name = "boom";
-    class ThrowInWillStart extends Component {
-        static template = xml``;
-        static props = ["*"];
-        setup() {
-            onWillStart(() => {
-                throw error2;
-            });
-        }
-    }
-
-    mountWithCleanup(ErrHandler, { props: { comp: ThrowInWillStart } });
     await expect.waitForSteps(["in handler"]);
     expect.verifyErrors(["boom"]);
 });

@@ -66,7 +66,7 @@ export const errorService = {
             while (originalError instanceof Error && "cause" in originalError) {
                 originalError = originalError.cause;
             }
-            scope.run(() => {
+            const runHandlers = () => {
                 for (const [name, handler] of registry.category("error_handlers").getEntries()) {
                     try {
                         if (handler(env, uncaughtError, originalError)) {
@@ -84,7 +84,14 @@ export const errorService = {
                         return;
                     }
                 }
-            });
+            };
+            try {
+                scope.run(runHandlers);
+            } catch {
+                // The error service scope may already be dead (e.g. an error is
+                // handled while the app is being torn down).
+                // it is not safe to run handlers in this case, so we just return
+            }
             if (shouldLogError()) {
                 // Log the full traceback instead of letting the browser log the incomplete one
                 uncaughtError.event.preventDefault();
@@ -139,6 +146,7 @@ export const errorService = {
 
             if (error && error.name === "AbortError") {
                 // abort errors are normal and expected, we don't want to do anything
+                ev.preventDefault();
                 return;
             }
             if (error && error.type === "error" && "eventPhase" in error) {

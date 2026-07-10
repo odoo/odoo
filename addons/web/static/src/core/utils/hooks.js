@@ -147,7 +147,7 @@ function protectMethod(scope, fn) {
             return useService.handleCallWhenDestroyed();
         }
         const promise = fn.call(this, ...args);
-        const protectedPromise = scope.until(promise).catch(handleAbortError);
+        const protectedPromise = scope.run(() => promise).catch(handleAbortError);
         return Object.assign(protectedPromise, promise);
     };
 }

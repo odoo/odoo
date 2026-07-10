@@ -65,12 +65,12 @@ export function usePartnerAutocomplete() {
 
     async function autocomplete(value, queryCountryId) {
         value = value.trim();
-        const isVAT = await scope.until(isVATNumber(value));
+        const isVAT = await scope.run(isVATNumber, value);
         if (isVAT) {
             value = sanitizeVAT(value);
         }
         const isGST = isGSTNumber(value);
-        return await scope.until(getSuggestions(value, isVAT || isGST, queryCountryId));
+        return await scope.run(getSuggestions, value, isVAT || isGST, queryCountryId);
     }
 
     /**
