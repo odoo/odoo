@@ -259,3 +259,58 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
         with patch.object(self.env.registry['pos.order'], 'get_order_frontend_receipt_data', get_order_frontend_receipt_data, create=True):
             self.start_pos_tour("test_change_receipt_data")
             self.compare_change_receipt_data(data['frontend_data'], data['backend_data'])
+
+    def _get_service_fee_receipt_info(self, service_fee_type):
+        preset = self.env['pos.preset'].create({
+            'name': 'Service fee preset',
+            'service_fee': True,
+            'service_fee_type': service_fee_type,
+            'service_fee_amount': 0.1 if service_fee_type == 'percent' else 2,
+            'service_fee_based_on': 'pre_discount',
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        product = self.example_simple_product.product_variant_id
+        fee_product = preset.service_fee_product_id
+        fee_amount = 0.58 if service_fee_type == 'percent' else 2
+        order = self.env['pos.order'].create({
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.env.company.id,
+            'preset_id': preset.id,
+            'amount_total': product.lst_price + fee_amount,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'lines': [
+                Command.create({
+                    'product_id': product.id,
+                    'qty': 1,
+                    'price_unit': product.lst_price,
+                    'price_subtotal': product.lst_price,
+                    'price_subtotal_incl': product.lst_price,
+                }),
+                Command.create({
+                    'product_id': fee_product.id,
+                    'qty': 1,
+                    'price_unit': fee_amount,
+                    'price_subtotal': fee_amount,
+                    'price_subtotal_incl': fee_amount,
+                }),
+            ],
+        })
+        fee_line = next(
+            line for line in order._order_receipt_generate_line_data()
+            if line['is_service_fee_line']
+        )
+        return fee_line['service_fee_display_info']
+
+    def test_service_fee_receipt_description_percent(self):
+        # A percentage fee is taken from an order total, so the receipt says which.
+        self.assertEqual(
+            self._get_service_fee_receipt_info('percent')['description'],
+            " (before discount)",
+        )
+
+    def test_service_fee_receipt_description_fixed(self):
+        # A fixed fee is a flat amount that no discount applies to: `based on` has
+        # nothing to qualify, so the receipt must not mention it.
+        self.assertEqual(self._get_service_fee_receipt_info('fixed')['description'], "")

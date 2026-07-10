@@ -198,7 +198,17 @@ export class PosStore extends WithLazyGetterTrap {
                 PosOrderlineAccounting.accountingFields.has(field)
             );
             const line = this.models["pos.order.line"].get(id);
-            if (fieldTargetted && line && !line.isServiceFeeLine()) {
+            if (!line) {
+                return;
+            }
+            // A fixed service fee is a per-unit amount: recompute when its quantity
+            // is (manually) changed so it scales exactly. Only react to `qty` here,
+            // never to the `price_unit` recompute itself writes back, to avoid loops.
+            const feeQtyChanged =
+                line.isServiceFeeLine() &&
+                line.order_id?.preset_id?.service_fee_type === "fixed" &&
+                fields?.includes("qty");
+            if ((fieldTargetted && !line.isServiceFeeLine()) || feeQtyChanged) {
                 const order = line?.order_id;
                 if (order) {
                     this.debouncedRecomputeServiceFees(order);

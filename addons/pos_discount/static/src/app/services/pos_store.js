@@ -133,6 +133,8 @@ patch(PosStore.prototype, {
             line.delete();
         });
 
+        order.recomputeServiceFees();
+
         if (lastDiscountLine && isGlobalDiscountBtnClicked) {
             order.selectOrderline(lastDiscountLine);
             this.numpadMode = "price";

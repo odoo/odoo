@@ -151,10 +151,17 @@ class PosOrderReceipt(models.AbstractModel):
             data['product_unit_price'] = self._order_receipt_format_currency(product_unit_price)
 
             if service_fee_product and line.product_id.id == service_fee_product.id:
+                is_percent = preset_id.service_fee_type == 'percent'
+                # service_fee_based_on qualifies which order total the percentage is
+                # taken from; a fixed fee is a flat amount no discount applies to, so
+                # the mention would be meaningless on its receipt.
+                description = ''
+                if is_percent:
+                    description = _(" (before discount)") if preset_id.service_fee_based_on == 'pre_discount' else _(" (after discount)")
                 data['is_service_fee_line'] = True
                 data['service_fee_display_info'] = {
-                    'amount': (preset_id.service_fee_type == 'percent' and f"{preset_id.service_fee_amount * 100}%") or self._order_receipt_format_currency(line.price_subtotal_incl),
-                    'description': (preset_id.service_fee_based_on == 'pre_discount' and _(" (before discount)")) or _(" (after discount)"),
+                    'amount': (is_percent and f"{preset_id.service_fee_amount * 100}%") or self._order_receipt_format_currency(line.price_subtotal_incl),
+                    'description': description,
                 }
             else:
                 data['is_service_fee_line'] = False

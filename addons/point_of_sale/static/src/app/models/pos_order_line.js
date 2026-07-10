@@ -454,11 +454,11 @@ export class PosOrderline extends PosOrderlineAccounting {
         if (!preset || !this.isServiceFeeLine()) {
             return {};
         }
+        if (preset.service_fee_type !== "percent") {
+            return { amount: this.currencyDisplayPrice, description: "" };
+        }
         return {
-            amount:
-                preset.service_fee_type === "percent"
-                    ? `${formatFloat(preset.service_fee_amount * 100, { trailingZeros: false })}%`
-                    : this.currencyDisplayPrice,
+            amount: `${formatFloat(preset.service_fee_amount * 100, { trailingZeros: false })}%`,
             description:
                 preset.service_fee_based_on === "pre_discount"
                     ? _t(" (before discount)")

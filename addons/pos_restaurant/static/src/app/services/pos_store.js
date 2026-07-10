@@ -778,8 +778,14 @@ patch(PosStore.prototype, {
         });
         let selectedCourse = course;
         if (order.course_ids.length === 1 && order.lines.length > 0) {
-            // Assign order lines to the first course
-            order.lines.forEach((line) => (line.course_id = course));
+            // Assign order lines to the first course. Service fees apply to the
+            // whole order, not a single course, so they are pinned to the last
+            // course below to keep them at the bottom of the order.
+            order.lines.forEach((line) => {
+                if (!line.isServiceFeeLine()) {
+                    line.course_id = course;
+                }
+            });
             // Create a second empty course
             if (!this.config.use_course_allocation) {
                 selectedCourse = this.data.models["restaurant.order.course"].create({
@@ -790,6 +796,9 @@ patch(PosStore.prototype, {
             }
         }
         order.selectCourse(selectedCourse);
+        // Keep the service fee in the last course so it always renders at the
+        // bottom of the order, even after new courses are added.
+        order.serviceFeeLines.forEach((line) => (line.course_id = order.getLastCourse()));
         return course;
     },
     async fireCourse(course) {

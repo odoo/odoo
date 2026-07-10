@@ -96,7 +96,7 @@ patch(PosOrderline.prototype, {
     },
     isServiceFeeApplicable() {
         const coupon = this.coupon_id;
-        if (coupon && !this.is_reward_line) {
+        if ((coupon && !this.is_reward_line) || this.isGiftCardOrEWalletReward()) {
             return false;
         }
         return super.isServiceFeeApplicable?.() ?? true;

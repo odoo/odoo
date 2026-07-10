@@ -27,3 +27,28 @@ class TestPosDiscountScreen(TestPointOfSaleHttpCommon):
             "pos_discount_numpad",
             login="pos_user",
         )
+
+    def test_service_fee_global_discount(self):
+        self.env["product.product"].create({
+            "name": "SF Product",
+            "available_in_pos": True,
+            "list_price": 17.83,
+            "taxes_id": [Command.set([])],
+        })
+        preset = self.env["pos.preset"].create({
+            "name": "Fixed 2",
+            "service_fee": True,
+            "service_fee_type": "fixed",
+            "service_fee_amount": 2,
+        })
+        self.main_pos_config.write({
+            "use_presets": True,
+            "default_preset_id": preset.id,
+            "available_preset_ids": [Command.set([])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/ui/%d" % self.main_pos_config.id,
+            "PosDiscountServiceFeeTour",
+            login="pos_user",
+        )

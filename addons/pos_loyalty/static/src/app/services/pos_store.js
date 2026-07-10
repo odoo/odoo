@@ -52,6 +52,17 @@ patch(PosStore.prototype, {
         await super.selectPricelist(pricelist);
         await this.updateRewards();
     },
+    async selectPreset() {
+        const res = await super.selectPreset(...arguments);
+        // A preset can change the pricelist / fiscal position / service fee, which impacts
+        // reward amounts (e.g. gift card / eWallet discount lines cover the order total
+        // service fee included), so recompute them. The service fee must be recomputed
+        // first and synchronously (its own recompute is debounced) so rewards are based
+        // on the up-to-date total.
+        this.getOrder()?.recomputeServiceFees();
+        await this.updateRewards();
+        return res;
+    },
     async resetPrograms() {
         const order = this.getOrder();
         order._resetPrograms();
