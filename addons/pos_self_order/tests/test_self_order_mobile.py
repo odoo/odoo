@@ -448,3 +448,15 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             'cash_control': False,
         })
         self.start_tour(f"/pos/ui/{other_pos.id}", 'test_self_order_mobile_not_visible_in_other_config', login="pos_admin")
+
+    def test_self_order_availability_toggle(self):
+        """Verify that toggling self_order_available is correctly reflected in the data loaded for the self-order interface."""
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+        })
+        desk_organizer = self.env['product.template'].search([('name', '=', 'Desk Organizer')], limit=1)
+        desk_organizer.write({'self_order_available': False})
+
+        result = self.env['product.template'].load_product_from_pos(self.pos_config.id, [('id', '=', desk_organizer.id)])
+        product_data = result['product.template'][0]
+        self.assertEqual(product_data['self_order_available'], desk_organizer.self_order_available)
