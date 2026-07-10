@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 
-import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { asyncComputed, proxy } from "@odoo/owl";
 
+import { useOnChange } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
@@ -16,32 +16,19 @@ export class LivechatSessionFormRenderer extends FormRenderer {
     setup() {
         super.setup();
         this.store = proxy(useService("mail.store"));
-        useLayoutEffect(
-            (channel) => {
-                if (channel) {
-                    channel.shadowedBySelf++;
-                    return () => channel.shadowedBySelf--;
-                }
-            },
-            () => [this.channel]
+        this.channel = asyncComputed(() =>
+            this.store["discuss.channel"].getOrFetch(this.props.record.resId)
         );
-        onWillStart(() => this.getChannel(this.props));
-        onWillUpdateProps(async (nextProps) => {
-            if (nextProps.record.resId === this.props.record.resId) {
-                return;
+        useOnChange(
+            () => [this.channel()],
+            (channel) => {
+                if (!channel) {
+                    return;
+                }
+                channel.shadowedBySelf++;
+                return () => channel.shadowedBySelf--;
             }
-            await this.getChannel(nextProps);
-        });
-    }
-
-    /**
-     * Restore the discuss channel according to record id in the props if
-     * necessary.
-     *
-     * @param {Props} props
-     */
-    async getChannel(props) {
-        this.channel = await this.store["discuss.channel"].getOrFetch(props.record.resId);
+        );
     }
 
     redirectToSessions() {
