@@ -5,7 +5,9 @@ import {
     addNewRule,
     clickOnButtonAddBranch,
     clickOnButtonAddRule,
+    getCurrentOperator,
     getCurrentPath,
+    getCurrentValue,
     label,
     openModelFieldSelectorPopover,
     selectOperator,
@@ -1288,6 +1290,35 @@ test("lazy many2one filter", async () => {
         "Tristan",
         "Paul",
     ]);
+});
+
+test("Date filters have 'Custom Date...' option, that opens prefilled domain editor", async () => {
+    await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date" date="date_field"/>
+            </search>
+        `,
+    });
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Date");
+
+    // "Custom Date..." appears at the bottom of the accordion
+    expect(".o_accordion_values .o_add_custom_filter").toHaveText("Custom Date...");
+    await contains(".o_accordion_values .o_add_custom_filter").click();
+
+    expect(".modal").toHaveCount(1);
+    expect(".modal header").toHaveText("Custom Filter");
+    expect(".modal .o_domain_selector").toHaveCount(1);
+
+    // Domain selector is pre-filled with the date field "is in" "Today"
+    expect(getCurrentPath()).toBe("Date");
+    expect(getCurrentOperator()).toBe("is in");
+    expect(getCurrentValue()).toBe("Today");
 });
 
 test("lazy many2one filter with multiple domains", async () => {
