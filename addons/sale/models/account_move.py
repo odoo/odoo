@@ -142,9 +142,19 @@ class AccountMove(models.Model):
     def button_cancel(self):
         res = super().button_cancel()
 
-        self.line_ids.filtered("is_downpayment").sale_line_ids.filtered(
-            lambda sol: not sol.display_type
-        )._compute_name()
+        # Update the description of DP lines
+        dp_lines = self.line_ids.sale_line_ids.filtered(
+            lambda sol: sol.is_downpayment and not sol.display_type
+        )
+        dp_lines._compute_name()
+
+        # Update down payment lines amounts
+        # Changes on invoices are not forwarded to locked SOs
+        downpayment_lines = dp_lines.filtered(lambda sol: not sol.order_id.locked)
+        other_so_lines = downpayment_lines.order_id.order_line - downpayment_lines
+        real_invoices = set(other_so_lines.invoice_lines.move_id)
+        for so_dpl in downpayment_lines:
+            so_dpl.price_unit = so_dpl._get_downpayment_line_price_unit(real_invoices)
 
         return res
 
