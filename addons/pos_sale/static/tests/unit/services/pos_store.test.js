@@ -204,4 +204,15 @@ describe("onClickSaleOrder", () => {
             650 - store.models["sale.order.line"].get(4).price_unit + original_price
         );
     });
+
+    test("down payment line count on sale order with down payment", async () => {
+        const store = await setupPosEnv();
+        const currentOrder = store.getEmptyOrder();
+        const saleOrder = await store._getSaleOrder(3);
+        await store.addDownPaymentProductOrderlineToOrder(saleOrder, 20, "percentage");
+        // This is required because we cannot await the for the order lines to be added in the pos order
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        expect(currentOrder.lines.length).toBe(1);
+        expect(currentOrder.lines[0].price_unit).toBe(110);
+    });
 });
