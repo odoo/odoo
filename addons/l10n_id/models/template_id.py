@@ -75,3 +75,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_account_id': 'l10n_id_11110001',
             },
         }
+
+    @template('id', 'account.cash.rounding')
+    def _get_id_account_cash_rounding(self):
+        return {
+            'cash_rounding_id_half_up': {
+                'name': 'Tax Amount Rounding (IDR)',
+                'name@id': 'Pembulatan Jumlah Pajak (IDR)',
+                'rounding': 1.0,
+                'company_id': self.env.company.id,
+                'profit_account_id': 'l10n_id_81100040',
+                'loss_account_id': 'l10n_id_69000000',
+            },
+        }
