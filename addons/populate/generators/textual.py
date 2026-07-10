@@ -6,7 +6,7 @@ from .generator import Generator
 class Char(Generator):
     """Generate random strings from a character set."""
     name = 'textual.char'
-    allowed_field_types = ('char', 'html', 'virtual')  # TODO: add dedicated html generator.
+    allowed_on = ('char', 'html', 'value')  # TODO: add dedicated html generator.
 
     def __init__(self, char_set: str = ascii_letters + digits, length: int = 12, **kwargs):
         super().__init__(**kwargs)
@@ -32,7 +32,7 @@ class Char(Generator):
 class Text(Char):
     """Generate random text strings."""
     name = 'textual.text'
-    allowed_field_types = ('text', 'html', 'virtual')
+    allowed_on = ('text', 'html', 'value')
 
     def __init__(self, char_set: str = ascii_letters + digits + ' \n', length: int = 50, **kwargs):
         super().__init__(char_set, length, **kwargs)

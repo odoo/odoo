@@ -2,19 +2,22 @@ from odoo.addons.populate import start_populate
 from odoo.addons.test_populate.tests.common import PopulateTestCase
 
 
-class TestVirtualFieldsJSON(PopulateTestCase):
+class TestValuesJSON(PopulateTestCase):
 
-    def test_virtual_fields_nodb_write_json_definition(self):
+    def test_values_nodb_write_json_definition(self):
         blueprint = self.env['populate.blueprint'].create({
-            'name': 'Virtual Fields Test',
+            'name': 'Generated Values Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 3,
+                    'values': {
+                        'cost': {'eval': 'price * 0.7'},
+                    },
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15, 'null_ratio': 0.0},
                         'price': {'generator': 'scalar.float', 'start': 10.0, 'end': 100.0, 'null_ratio': 0.0},
-                        'cost': {'virtual': True, 'eval': 'price * 0.7'},
                     },
                 },
             ],
@@ -44,18 +47,18 @@ class TestVirtualFieldsJSON(PopulateTestCase):
             self.assertEqual(product.cost, 0.0)
 
 
-class TestVirtualFieldsXML(PopulateTestCase):
+class TestValuesXML(PopulateTestCase):
 
-    def test_virtual_fields_nodb_write_xml_definition(self):
+    def test_values_nodb_write_xml_definition(self):
         blueprint = self.env['populate.blueprint'].create({
-            'name': 'Virtual Fields XML Test',
+            'name': 'Generated Values XML Test',
             'definition_xml': '''
                 <data>
-                    <model name="test_populate.product" count="5">
+                    <create model="test_populate.product" count="5">
                         <field name="name" generator="textual.char" length="15" null_ratio="0"/>
                         <field name="price" generator="scalar.float" start="50.0" end="150.0" null_ratio="0"/>
-                        <field name="cost" virtual="true" eval="price * 0.6"/>
-                    </model>
+                        <value name="cost" eval="price * 0.6"/>
+                    </create>
                 </data>
             ''',
         })
@@ -80,22 +83,24 @@ class TestVirtualFieldsXML(PopulateTestCase):
             self.assertEqual(product.cost, 0.0)
 
 
-class TestVirtualFieldDependencies(PopulateTestCase):
+class TestValueDependencies(PopulateTestCase):
 
-    def test_virtual_fields_for_computed_dependencies(self):
+    def test_values_for_computed_dependencies(self):
         blueprint = self.env['populate.blueprint'].create({
-            'name': 'Virtual Fields Dependency Test',
+            'name': 'Generated Values Dependency Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 4,
+                    'values': {
+                        'cost': {
+                            'eval': 'price * 0.65',
+                        },
+                    },
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
                         'price': {'generator': 'scalar.float', 'start': 100.0, 'end': 200.0},
-                        'cost': {
-                            'virtual': True,
-                            'eval': 'price * 0.65',
-                        },
                         'description': {
                             'eval': 'f"{name}: Price ${price:.2f}, Cost ${cost:.2f}"',
                         },
@@ -124,24 +129,25 @@ class TestVirtualFieldDependencies(PopulateTestCase):
             self.assertEqual(product.description, expected_description)
             self.assertEqual(product.cost, 0.0)
 
-    def test_virtual_fields_multiple_levels(self):
+    def test_values_multiple_levels(self):
         blueprint = self.env['populate.blueprint'].create({
-            'name': 'Multiple Virtual Fields Test',
+            'name': 'Multiple Generated Values Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 3,
-                    'fields': {
-                        'name': {'generator': 'textual.char', 'length': 10},
-                        'price': {'generator': 'scalar.float', 'start': 100.0, 'end': 200.0},
+                    'values': {
                         'markup': {
-                            'virtual': True,
                             'eval': '0.3',
                         },
                         'cost': {
-                            'virtual': True,
                             'eval': 'price / (1 + markup)',
                         },
+                    },
+                    'fields': {
+                        'name': {'generator': 'textual.char', 'length': 10},
+                        'price': {'generator': 'scalar.float', 'start': 100.0, 'end': 200.0},
                         'stock_quantity': {
                             'eval': 'int(cost * 2)',
                         },
@@ -171,20 +177,22 @@ class TestVirtualFieldDependencies(PopulateTestCase):
             self.assertEqual(product.stock_quantity, expected_stock)
             self.assertEqual(product.cost, 0.0)
 
-    def test_virtual_fields_not_in_model_noop(self):
+    def test_values_not_in_model_noop(self):
         blueprint = self.env['populate.blueprint'].create({
-            'name': 'Nonexistent Virtual Field Test',
+            'name': 'Nonexistent Generated Value Test',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 2,
+                    'values': {
+                        'fake_field': {
+                            'eval': '123',
+                        },
+                    },
                     'fields': {
                         'name': {'generator': 'textual.char'},
                         'price': {'generator': 'scalar.float'},
-                        'fake_field': {
-                            'virtual': True,
-                            'eval': '123',
-                        },
                     },
                 },
             ],

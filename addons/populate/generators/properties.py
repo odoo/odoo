@@ -19,11 +19,11 @@ class PropertyDefinition(Generator):
     """
     Generate a properties definition list for a ``properties_definition`` field.
 
-    Either assembles definitions from explicit virtual-field ``props``, or randomly
+    Either assembles definitions from explicit generated-value ``props``, or randomly
     generates ``count`` property entries with types drawn from ``allowed_types``.
     """
     name = 'properties.definition'
-    allowed_field_types = ('properties_definition',)
+    allowed_on = ('properties_definition',)
 
     def __init__(
         self,
@@ -35,7 +35,7 @@ class PropertyDefinition(Generator):
     ):
         """Initialize property-definition generation.
 
-        :param props: Virtual field names that provide explicit property definitions.
+        :param props: Generated value names that provide explicit property definitions.
         :param count: Number of random property definitions to create when
             ``props`` is not provided.
         :param allowed_types: Property types eligible for random definitions.
@@ -52,7 +52,7 @@ class PropertyDefinition(Generator):
 
         super().__init__(depends=depends, **kwargs)
 
-        # props is a list of virtual field names that define individual properties
+        # props is a list of generated value names that define individual properties
         self.props = props
         self.count = count
         self.allowed_types = allowed_types or fields.Properties.ALLOWED_TYPES
@@ -66,7 +66,7 @@ class PropertyDefinition(Generator):
     def _next(self, known_vals):
         definition = []
 
-        # User explicitly defined Virtual fields for the props
+        # User explicitly defined generated values for the props
         if self.props:
             for prop_fname in self.props:
                 prop_def = known_vals[prop_fname]
@@ -124,14 +124,14 @@ class PropertyProp(Generator):
     """
     Generate a single property definition entry for use with ``PropertyDefinition``.
 
-    Intended for virtual fields that feed into a ``properties.definition`` generator
+    Intended for generated values that feed into a ``properties.definition`` generator
     via its ``props`` parameter.
     """
     name = 'properties.prop'
-    allowed_field_types = ('virtual',)
+    allowed_on = ('value',)
 
     def __init__(self, prop_type: str, string: str, possible_values: Sequence[str] | None = None, **kwargs):
-        """Initialize a virtual property-definition entry.
+        """Initialize a generated property-definition entry.
 
         :param prop_type: Odoo property type for the generated definition.
         :param string: User-facing label stored on the property definition.
@@ -157,7 +157,7 @@ class PropertyProp(Generator):
                 "in generator %(generator_name)s of field %(field_name)s",
                 prop_type=self.prop_type,
                 generator_name=self.name,
-                field_name=self.field.name,
+                field_name=self.target.name,
             ))
 
         prop = {
@@ -239,21 +239,21 @@ class PropertyValue(Generator):
     Generate property values matching the definition on the parent container record.
 
     Depends on the container field; fills each defined property with a random
-    type-appropriate value unless overridden by a matching virtual field.
+    type-appropriate value unless overridden by a matching generated value.
     """
     name = 'properties.value'
-    allowed_field_types = ('properties',)
+    allowed_on = ('properties',)
 
-    def __init__(self, field: fields.Properties, **kwargs):
+    def __init__(self, target: fields.Properties, **kwargs):
         """Initialize property-value generation from the container's definitions.
 
-        :param field: Properties field receiving generated values.
+        :param target: Properties field receiving generated values.
         """
         # Validate early to be able to read on `definition_record`
-        self._validate_field_type(field)
+        self._validate_target_type(target)
         # Automatically add the container field (e.g. parent_id) to dependencies,
         # so it is generated before we try to read definitions from it.
-        super().__init__(field=field, depends=[field.definition_record], null_ratio=0, **kwargs)
+        super().__init__(target=target, depends=[target.definition_record], null_ratio=0, **kwargs)
         self.field = cast('fields.Properties', self.field)
 
     def _next(self, known_vals):
@@ -271,7 +271,7 @@ class PropertyValue(Generator):
 
         values = {}
         for prop in definitions:
-            # User defined a Virtual Field with a Label (e.g. "Age")
+            # User defined a value with a label (e.g. "Age")
             # Match on the `string` of the property, as it is human-readable,
             # instead of the `name`.
             if prop['string'] in known_vals:

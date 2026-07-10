@@ -16,7 +16,7 @@ class Counter(Generator):
     the boundary is reached. Without ``end``, the counter runs indefinitely.
     """
     name = 'misc.counter'
-    allowed_field_types = ('integer', 'float', 'virtual')
+    allowed_on = ('integer', 'float', 'value')
 
     def __init__(self, start: float = 0, step: float = 1, end: float | None = None, **kwargs):
         """Initialize the arithmetic sequence.
@@ -82,7 +82,7 @@ class Counter(Generator):
 class Cycle(Generator):
     """Deterministically cycle through a list of values in order."""
     name = 'misc.cycle'
-    allowed_field_types = ('integer', 'float', 'char', 'text', 'html', 'date', 'datetime', 'virtual')
+    allowed_on = ('integer', 'float', 'char', 'text', 'html', 'date', 'datetime', 'value')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -173,9 +173,9 @@ class Eval(Generator):
 
     def _get_eval_context(self, **kwargs):
         env = getattr(self, 'env', kwargs['env'])
-        field = getattr(self, 'field', kwargs['field'])
+        target = getattr(self, 'target', kwargs['target'])
         return {
             'env': env,
-            'model': env[field.model_name],
+            'model': env[target.model_name],
             'Command': Command,
         }

@@ -10,27 +10,27 @@
     <record id="benchmark_deep_journal" model="populate.blueprint">
         <field name="name">Benchmark: Deep Journal</field>
         <field name="definition_xml" type="xml">
-            <model name="res.partner" count="500" id="bench_partners">
+            <create model="res.partner" count="500" id="bench_partners">
                 <field name="name" length="20"/>
                 <field name="is_company" eval="True"/>
                 <field name="email" length="15" null_ratio="0.3"/>
                 <field name="phone" length="12" null_ratio="0.4"/>
-            </model>
+            </create>
 
-            <model name="account.journal" count="1" id="bench_journal" scale="False">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Benchmark Deep Journal {v_counter}'" unique="True"/>
-                <field name="code" eval="f'BEN{v_counter}'" unique="True"/>
+            <create model="account.journal" count="1" id="bench_journal" scale="False">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Benchmark Deep Journal {counter}'" unique="True"/>
+                <field name="code" eval="f'BEN{counter}'" unique="True"/>
                 <field name="type" eval="'sale'"/>
-            </model>
+            </create>
 
-            <model name="account.move" count="10000" id="bench_moves">
+            <create model="account.move" count="10000" id="bench_moves">
                 <field name="journal_id" ref="bench_journal" partition="True"/>
                 <field name="partner_id" ref="bench_partners"/>
                 <field name="date" start="today -1y" end="today"/>
                 <field name="invoice_date" start="today -1y" end="today"/>
                 <field name="move_type" eval="'out_invoice'"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -44,24 +44,24 @@
     <record id="benchmark_wide_journals" model="populate.blueprint">
         <field name="name">Benchmark: Wide Journals</field>
         <field name="definition_xml" type="xml">
-            <model name="res.partner" count="200" id="wide_partners">
+            <create model="res.partner" count="200" id="wide_partners">
                 <field name="name" length="18"/>
                 <field name="is_company" eval="True"/>
-            </model>
+            </create>
 
-            <model name="account.journal" count="1000" id="wide_journals">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Journal {v_counter}'" unique="True"/>
-                <field name="code" eval="f'J{v_counter:04}'" unique="True"/>
+            <create model="account.journal" count="1000" id="wide_journals">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Wide Journal {counter}'" unique="True"/>
+                <field name="code" eval="f'WJ{counter:04}'" unique="True"/>
                 <field name="type" values="{'sale': 4, 'purchase': 4, 'general': 2}"/>
-            </model>
+            </create>
 
-            <model name="account.move" count="5000" id="wide_moves">
+            <create model="account.move" count="5000" id="wide_moves">
                 <field name="journal_id" ref="wide_journals"/>
                 <field name="partner_id" ref="wide_partners" null_ratio="0.2"/>
                 <field name="date" start="today -6m" end="today"/>
                 <field name="move_type" eval="'entry'"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -75,27 +75,27 @@
     <record id="benchmark_invoices" model="populate.blueprint">
         <field name="name">Benchmark: Invoice Processing</field>
         <field name="definition_xml" type="xml">
-            <model name="res.partner" count="1000" id="inv_partners">
+            <create model="res.partner" count="1000" id="inv_partners">
                 <field name="name" length="22"/>
                 <field name="is_company" eval="True"/>
                 <field name="email" length="18" null_ratio="0.2"/>
-            </model>
+            </create>
 
-            <model name="account.journal" count="2" id="inv_journals" scale="False">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Sales Journal {v_counter}'" unique="True"/>
-                <field name="code" eval="f'SAL{v_counter}'" unique="True"/>
+            <create model="account.journal" count="2" id="inv_journals" scale="False">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Sales Journal {counter}'" unique="True"/>
+                <field name="code" eval="f'SAL{counter}'" unique="True"/>
                 <field name="type" eval="'sale'"/>
-            </model>
+            </create>
 
-            <model name="account.move" count="5000" id="inv_invoices">
+            <create model="account.move" count="5000" id="inv_invoices">
                 <field name="journal_id" ref="inv_journals"/>
                 <field name="partner_id" ref="inv_partners"/>
                 <field name="date" start="today -1y" end="today" distribution="normal(mean=180, std=60)"/>
                 <field name="invoice_date" start="today -1y" end="today" distribution="normal(mean=180, std=60)"/>
                 <field name="move_type" values="{'out_invoice': 8, 'out_refund': 2}"/>
                 <field name="payment_state" values="{'not_paid': 4, 'in_payment': 2, 'paid': 3, 'partial': 1}"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -109,32 +109,32 @@
     <record id="benchmark_bulk_creation" model="populate.blueprint">
         <field name="name">Benchmark: Bulk Creation</field>
         <field name="definition_xml" type="xml">
-            <model name="res.partner" count="5000" id="bulk_partners">
+            <create model="res.partner" count="5000" id="bulk_partners">
                 <field name="name" length="16"/>
                 <field name="is_company" values="{True: 3, False: 7}"/>
-            </model>
+            </create>
 
-            <model name="account.account" count="1000" id="bulk_accounts">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Account {v_counter}'" unique="True"/>
-                <field name="code" eval="f'{100000 + v_counter}'" unique="True"/>
+            <create model="account.account" count="1000" id="bulk_accounts">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Bulk Account {counter}'" unique="True"/>
+                <field name="code" eval="f'{100000 + counter}'" unique="True"/>
                 <field name="account_type" values="{'asset_current': 2, 'liability_current': 2, 'expense': 3, 'income': 3}"/>
-            </model>
+            </create>
 
-            <model name="account.journal" count="500" id="bulk_journals">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Journal {v_counter}'" unique="True"/>
-                <field name="code" eval="f'JB{v_counter:03}'" unique="True"/>
+            <create model="account.journal" count="500" id="bulk_journals">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Journal {counter}'" unique="True"/>
+                <field name="code" eval="f'JB{counter:03}'" unique="True"/>
                 <field name="type" values="{'sale': 2, 'purchase': 2, 'general': 2, 'bank': 2, 'cash': 2}"/>
-            </model>
+            </create>
 
-            <model name="account.move" count="2000" id="bulk_moves">
+            <create model="account.move" count="2000" id="bulk_moves">
                 <field name="journal_id" ref="bulk_journals"/>
                 <field name="partner_id" ref="bulk_partners" null_ratio="0.3"/>
                 <field name="date" start="today -2y" end="today"/>
                 <field name="move_type" eval="'entry'"/>
                 <field name="state" eval="'draft'"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -148,41 +148,41 @@
     <record id="benchmark_reconciliation" model="populate.blueprint">
         <field name="name">Benchmark: Reconciliation</field>
         <field name="definition_xml" type="xml">
-            <model name="res.partner" count="500" id="rec_partners">
+            <create model="res.partner" count="500" id="rec_partners">
                 <field name="name" length="20"/>
                 <field name="is_company" eval="True"/>
-            </model>
+            </create>
 
-            <model name="account.journal" count="1" id="rec_sale_journal" scale="False">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Sales Journal {v_counter}'" unique="True"/>
-                <field name="code" eval="f'SAL{v_counter}'" unique="True"/>
+            <create model="account.journal" count="1" id="rec_sale_journal" scale="False">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Sales Journal {counter}'" unique="True"/>
+                <field name="code" eval="f'SAL{counter}'" unique="True"/>
                 <field name="type" eval="'sale'"/>
-            </model>
+            </create>
 
-            <model name="account.journal" count="1" id="rec_bank_journal" scale="False">
-                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Bank Journal {v_counter}'" unique="True"/>
-                <field name="code" eval="f'BNK{v_counter}'" unique="True"/>
+            <create model="account.journal" count="1" id="rec_bank_journal" scale="False">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Bank Journal {counter}'" unique="True"/>
+                <field name="code" eval="f'BNK{counter}'" unique="True"/>
                 <field name="type" eval="'bank'"/>
-            </model>
+            </create>
 
-            <model name="account.move" count="5000" id="rec_invoices">
+            <create model="account.move" count="5000" id="rec_invoices">
                 <field name="journal_id" ref="rec_sale_journal"/>
                 <field name="partner_id" ref="rec_partners"/>
                 <field name="date" start="today -6m" end="today"/>
                 <field name="invoice_date" start="today -6m" end="today"/>
                 <field name="move_type" eval="'out_invoice'"/>
-            </model>
+            </create>
 
-            <model name="account.payment" count="5000" id="rec_payments">
+            <create model="account.payment" count="5000" id="rec_payments">
                 <field name="partner_id" ref="rec_partners" null_ratio="0.1"/>
                 <field name="journal_id" ref="rec_bank_journal" domain="[('type', 'in', ['bank', 'cash'])]" partition="True"/>
                 <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
                 <field name="amount" start="50.0" end="10000.0" distribution="normal(mean=500, std=200)"/>
                 <field name="currency_id" eval="(journal := env['account.journal'].browse(journal_id)) and (journal.currency_id.id or journal.company_id.currency_id.id)"/>
                 <field name="payment_type" values="{'inbound': 7, 'outbound': 3}"/>
-            </model>
+            </create>
         </field>
     </record>
 

@@ -12,7 +12,7 @@ from .generator import Generator
 class Boolean(Generator):
     """Generate random boolean values (``True``, ``False``, optionally ``None``)."""
     name = 'scalar.boolean'
-    allowed_field_types = ('boolean', 'virtual')
+    allowed_on = ('boolean', 'value')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -21,16 +21,16 @@ class Boolean(Generator):
             raise ValueError(self.env._("Unique cannot be used with the boolean generator."))
 
         possible_values = [True, False]
-        if not self.field.required:
+        if not self.target.required:
             possible_values.append(None)
 
         invalid_values = [v for v in self.values if v not in possible_values]
         if invalid_values:
             raise ValueError(self.env._(
-                "Invalid values %(invalid_values)s for %(field_type)s field. "
+                "Invalid values %(invalid_values)s for %(target_type)s target. "
                 "Allowed values are: %(possible_values)s.",
                 invalid_values=invalid_values,
-                field_type=self.field.type,
+                target_type=self.target.type,
                 possible_values=possible_values,
             ))
 
@@ -44,7 +44,7 @@ class Boolean(Generator):
 class Integer(Generator):
     """Generate random integers within a ``[start, end]`` range."""
     name = 'scalar.integer'
-    allowed_field_types = ('integer', 'float', 'virtual')
+    allowed_on = ('integer', 'float', 'value')
 
     def __init__(self, start: int = 1, end: int = 1000000, **kwargs):
         super().__init__(**kwargs)
@@ -67,7 +67,7 @@ class Integer(Generator):
 class Float(Generator):
     """Generate random floats within a ``[start, end]`` range."""
     name = 'scalar.float'
-    allowed_field_types = ('float', 'virtual')
+    allowed_on = ('float', 'value')
 
     def __init__(self, start: float = 1.0, end: float = 1000000.0, **kwargs):
         super().__init__(**kwargs)
@@ -90,20 +90,29 @@ class Float(Generator):
 class Monetary(Generator):
     """Generate random monetary values within a ``[start, end]`` range, rounded to the currency's precision."""
     name = 'scalar.monetary'
-    allowed_field_types = ('monetary', 'virtual')
+    allowed_on = ('monetary', 'value')
 
-    def __init__(self, field: fields.Monetary, env: Environment, start: float = 1.0, end: float = 1000000.0, **kwargs):
+    def __init__(
+        self,
+        target: fields.Monetary,
+        env: Environment,
+        start: float = 1.0,
+        end: float = 1000000.0,
+        **kwargs,
+    ):
         """Initialize monetary generation and depend on the field currency when available.
 
-        :param field: Monetary field receiving generated values.
+        :param target: Monetary field or generated value target.
         :param env: Environment used to resolve the currency field.
         :param start: Lower bound for sampled monetary values.
         :param end: Upper bound for sampled monetary values.
         """
-        self._validate_field_type(field)
-        currency_field_name = field.get_currency_field(env[field.model_name])
+        self._validate_target_type(target)
+        currency_field_name = None
+        if target.type != 'value':
+            currency_field_name = target.get_currency_field(env[target.model_name])
         depends = [currency_field_name] if currency_field_name else None
-        super().__init__(field=field, env=env, depends=depends, **kwargs)
+        super().__init__(target=target, env=env, depends=depends, **kwargs)
         self.start = start
         self.end = end
         self.currency_field_name = currency_field_name

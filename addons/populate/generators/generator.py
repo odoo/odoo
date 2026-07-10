@@ -8,7 +8,7 @@ from functools import partial
 from random import Random
 from typing import TYPE_CHECKING, ClassVar, final
 
-from odoo.fields import Domain
+from odoo.fields import Domain, Field
 from odoo.tools import find_circular_dependency, frozendict, str2bool, topological_sort
 from odoo.tools.lru import LRU
 
@@ -21,11 +21,10 @@ if TYPE_CHECKING:
     from typing import Any
 
     from odoo.api import DomainType, Environment, ValuesType
-    from odoo.fields import Field
 
     from ..models.job import Job
     from ..models.session import Session
-    from ..utils.orm import VirtualField
+    from ..utils.orm import ValueTarget
 
 type DistributionFactory = Callable[[Random], Distribution]
 
@@ -70,7 +69,7 @@ class UniqueValueNotFound(PopulateGeneratorError):
 
 class Generator(ABC):
     """
-    Defines the base class `Generator` used to manage and generate values based on field
+    Defines the base class `Generator` used to manage and generate values based on target
     attributes specified in a populate job.
 
     Concrete subclasses are registered in a global registry for retrieval.
@@ -82,11 +81,11 @@ class Generator(ABC):
 
     :ivar name: The unique name for the generator, used as its identifier in the registry
      and how it's referenced in blueprints.
-    :ivar allowed_field_types: A tuple of allowed field types for this generator,
+    :ivar allowed_on: A tuple of allowed generation target types for this generator,
      or `None` for no restriction.
     """
     name: ClassVar[str]
-    allowed_field_types: ClassVar[tuple[str] | None] = None
+    allowed_on: ClassVar[tuple[str] | None] = None
     _registry: ClassVar[dict[str, type[Generator]]] = {}
 
     def __init_subclass__(cls, *args, **kwargs):
@@ -100,26 +99,26 @@ class Generator(ABC):
 
             Generator._registry[cls.name] = cls
 
-    def _validate_field_type(self, field: Field | VirtualField):
-        """Ensure this generator is compatible with the target field type.
+    def _validate_target_type(self, target: Field | ValueTarget):
+        """Ensure this generator is compatible with the generation target type.
 
-        :param field: ORM field or virtual field targeted by the generator.
-        :raise TypeError: If ``field.type`` is not allowed by the generator.
+        :param target: ORM field or generated value target.
+        :raise TypeError: If ``target.type`` is not allowed by the generator.
         """
-        if self.allowed_field_types is not None and field.type not in self.allowed_field_types:
+        if self.allowed_on is not None and target.type not in self.allowed_on:
             raise TypeError(
-                f"Incompatible field type '{field.type}'. "
-                f"Expected field type(s): {self.allowed_field_types}.",
+                f"Incompatible generation target '{target.type}'. "
+                f"Expected target type(s): {self.allowed_on}.",
             )
 
     def __init__(
         self,
-        field: Field | VirtualField,
+        target: Field | ValueTarget,
         env: Environment,
         random: Random | None = None,
         job: Job | None = None,
         session: Session | None = None,
-        valid_fields: Collection[str] | None = None,
+        valid_targets: Collection[str] | None = None,
         # Passed attributes
         values: Sequence[Any] | Mapping[Any, float] | None = None,
         depends: list[str] | None = None,
@@ -130,21 +129,21 @@ class Generator(ABC):
     ):
         """Initialize the common generation context and sampling options.
 
-        :param field: ORM field or virtual field receiving generated values.
+        :param target: ORM field or value target receiving generated values.
         :param env: Environment used for validation and database lookups.
         :param random: Random source shared across generators in the same job.
         :param job: Job that owns this generator, when available.
         :param session: Session scope used when a generator is created outside a job.
-        :param valid_fields: Field names that dependency declarations may target.
+        :param valid_targets: Target names that dependency declarations may reference.
         :param values: Explicit values, or values mapped to sampling weights.
-        :param depends: Names of fields that must be generated before this one.
+        :param depends: Names of targets that must be generated before this one.
         :param null_ratio: Probability of returning ``False`` before sampling a value.
         :param distribution: Distribution instance or factory used for sampling.
-        :param unique: Whether generated values must be unique for this job.
+        :param unique: Whether generated output must be unique for this job.
         """
-        self._validate_field_type(field)
+        self._validate_target_type(target)
 
-        self.field = field
+        self.target = target
         self.env = job.env if job else env
 
         if random is None:
@@ -154,14 +153,14 @@ class Generator(ABC):
         self.session = job.session_id if job else session
         self.job = job
 
-        if valid_fields is None:
-            if self.field.type == 'virtual':
+        if valid_targets is None:
+            if self.target.type == 'value':
                 raise ValueError(self.env._(
-                    "Cannot infer valid fields for a virtual field. "
-                    "The 'valid_fields' parameter must be explicitly provided.",
+                    "Cannot infer valid targets for a generated value. "
+                    "The 'valid_targets' parameter must be explicitly provided.",
                 ))
 
-            valid_fields = self.env[self.field.model_name]._fields.keys()
+            valid_targets = self.env[self.target.model_name]._fields.keys()
 
         if values is not None:
             if isinstance(values, Sequence):
@@ -179,12 +178,12 @@ class Generator(ABC):
         if depends is None:
             depends = []
 
-        if not all(dep in valid_fields for dep in depends):
-            invalid_fields = [dep for dep in depends if dep not in valid_fields]
+        if not all(dep in valid_targets for dep in depends):
+            invalid_targets = [dep for dep in depends if dep not in valid_targets]
             raise ValueError(self.env._(
-                "Invalid field dependencies: %(invalid_fields)s. "
-                "These fields do not exist in the model's blueprint.",
-                invalid_fields=invalid_fields,
+                "Invalid target dependencies: %(invalid_targets)s. "
+                "These targets do not exist in the operation block.",
+                invalid_targets=invalid_targets,
             ))
 
         self.depends = depends
@@ -195,11 +194,11 @@ class Generator(ABC):
                 null_ratio=null_ratio,
             ))
 
-        if self.field.required and null_ratio:
+        if self.target.required and null_ratio:
             raise ValueError(self.env._(
                 "Cannot specify a null fraction for a required field. "
                 "Field '%(field_name)s' is required and cannot have null values.",
-                field_name=self.field.name,
+                field_name=self.target.name,
             ))
 
         if self.has_weights and null_ratio:
@@ -235,8 +234,8 @@ class Generator(ABC):
     def _init_seen(self):
         """Initialize the value set used to enforce ``unique=True``."""
         if self.unique:
-            if self.field.type == 'virtual':
-                # Virtual fields are computed and not stored in the database.
+            if self.target.type == 'value':
+                # Generated values are computed and not stored in the database.
                 # Since we can't query existing values from the database,
                 # we can only guarantee uniqueness within the current job run.
                 # Therefore, values may be duplicated across different jobs and/or populate sessions.
@@ -262,6 +261,16 @@ class Generator(ABC):
         self._init_seen()
 
     @property
+    def field(self):
+        assert self.target.type != 'value'
+        return self.target
+
+    @field.setter
+    def field(self, value: Field):
+        assert isinstance(value, Field)
+        self.target = value
+
+    @property
     def values(self) -> list[Any]:
         return list(self.weighted_values.keys())
 
@@ -279,11 +288,11 @@ class Generator(ABC):
 
     @final
     def next(self, known_vals: ValuesType) -> Any:
-        """Generate the next value for this field based on known dependent field values.
+        """Generate the next value for this target based on known dependent values.
 
         Subclasses should override ``_next`` for customization.
 
-        :param known_vals: Values already generated for fields this generator can depend on.
+        :param known_vals: Values already generated for targets this generator can depend on.
         :return: Generated value, or ``False`` when selected by ``null_ratio``.
         :raise UnmetDependenciesError: If a required dependency is missing.
         :raise NoUniqueValueFoundError: If ``unique=True`` cannot be satisfied.
@@ -313,8 +322,8 @@ class Generator(ABC):
                 return value
 
             raise UniqueValueNotFound(self.env._(
-                "Couldn't find a unique value for field %(field)s.",
-                field=self.field,
+                "Couldn't find a unique value for target %(target)s.",
+                target=self.target,
             ))
 
         return self._next(known_vals)
@@ -329,7 +338,7 @@ class Generator(ABC):
 
     @classmethod
     def convert_to_kwargs(cls, attrs: dict[str, str]) -> dict[str, Any]:
-        """Convert the fields' attributes of job instructions into kwargs consumable by generators."""
+        """Convert target attributes from job instructions into kwargs consumable by generators."""
         kwargs = {}
 
         if 'values' in attrs:
@@ -346,10 +355,6 @@ class Generator(ABC):
         if 'unique' in attrs:
             value = attrs['unique']
             kwargs['unique'] = str2bool(value)
-
-        if 'virtual' in attrs:
-            # The field is of the type 'virtual', there is no need for an arg.
-            attrs.pop('virtual')
 
         return kwargs
 
@@ -438,33 +443,33 @@ class ComodelGenerator(Generator):
         return kwargs
 
 
-def get_fields_vals(generators: Mapping[str, Generator]) -> ValuesType:
-    """Get the vals for a specific record that needs to be created/written.
+def generate_values(generators: Mapping[str, Generator]) -> ValuesType:
+    """Generate values for a specific record.
 
-    :param generators: Field generators keyed by field name.
-    :return: Generated values suitable for ``create`` or ``write``.
+    :param generators: Generators keyed by target name.
+    :return: Generated values, including local values that should not be persisted.
     :raise GeneratorError: If generator dependencies contain a cycle.
     """
     vals = {}
 
-    fields_depends = {
-        field_name: generator.depends
-        for field_name, generator in generators.items()
+    targets_depends = {
+        name: generator.depends
+        for name, generator in generators.items()
     }
-    if cycle := find_circular_dependency(fields_depends):
+    if cycle := find_circular_dependency(targets_depends):
         chain = ' -> '.join(str(n) for n in cycle)
         raise PopulateGeneratorError(
-            f"Circular dependency detected in fields' generator dependencies: {chain}.",
+            f"Circular dependency detected in generation dependencies: {chain}.",
         )
 
-    for field_name in topological_sort(fields_depends):
-        generator = generators[field_name]
+    for name in topological_sort(targets_depends):
+        generator = generators[name]
         try:
             try:
                 value = generator.next(vals)
 
             except UniqueValueNotFound:
-                # A unique field couldn't find a novel value with the current
+                # A unique target couldn't find a novel value with the current
                 # upstream values -> Re-roll the immediate dependencies if any.
                 for _ in range(MAX_RETRY if generator.depends else 0):
                     for dep in generator.depends:
@@ -482,17 +487,10 @@ def get_fields_vals(generators: Mapping[str, Generator]) -> ValuesType:
 
         except Exception as exc:
             exc.add_note(f"Generator: '{generator.name}'")
-            exc.add_note(f"Field: '{generator.field}'")
+            exc.add_note(f"Target: '{generator.target}'")
             raise
 
-        vals[field_name] = value
-
-    # Remove values from virtual fields.
-    # Virtual fields may have the same name as real fields,
-    # but we should not commit their values to the database.
-    for field_name, generator in generators.items():
-        if generator.field.type == 'virtual':
-            vals.pop(field_name)
+        vals[name] = value
 
     return vals
 

@@ -3,27 +3,27 @@ from odoo.tests import TransactionCase, case
 
 from odoo.addons.populate.utils.orm import (
     DynamicDomain,
-    VirtualField,
+    ValueTarget,
     drop_pending_update,
 )
 
 
-class TestVirtualField(case.TestCase):
+class TestValueTarget(case.TestCase):
 
-    def test_virtual_field_creation(self):
-        vf = VirtualField('test_populate.product', 'test_field')
-        self.assertEqual(vf.model_name, 'test_populate.product')
-        self.assertEqual(vf.name, 'test_field')
-        self.assertEqual(vf.type, 'virtual')
-        self.assertFalse(vf.required)
+    def test_generated_value_creation(self):
+        value = ValueTarget('test_populate.product', 'test_value')
+        self.assertEqual(value.model_name, 'test_populate.product')
+        self.assertEqual(value.name, 'test_value')
+        self.assertEqual(value.type, 'value')
+        self.assertFalse(value.required)
 
-    def test_virtual_field_str(self):
-        vf = VirtualField('test_populate.product', 'test_field')
-        self.assertEqual(str(vf), 'test_populate.product.test_field')
+    def test_generated_value_str(self):
+        value = ValueTarget('test_populate.product', 'test_value')
+        self.assertEqual(str(value), 'test_populate.product.test_value')
 
-    def test_virtual_field_repr(self):
-        vf = VirtualField('test_populate.product', 'test_field')
-        self.assertEqual(repr(vf), "VirtualField('test_populate.product', 'test_field')")
+    def test_generated_value_repr(self):
+        value = ValueTarget('test_populate.product', 'test_value')
+        self.assertEqual(repr(value), "ValueTarget('test_populate.product', 'test_value')")
 
 
 class TestDropPendingUpdate(TransactionCase):

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import logging
 import math
 import time
@@ -11,10 +12,9 @@ from typing import TYPE_CHECKING, Self
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools import str2bool
 
-from ..generators import DEFAULT_GENERATORS, Generator, get_fields_vals
-from ..utils.orm import VirtualField, drop_pending_update, get_ref_domain
+from ..generators import DEFAULT_GENERATORS, Generator, generate_values
+from ..utils.orm import ValueTarget, drop_pending_update, get_ref_domain
 from ..utils.profiling import profiled_execution_scope
 from ..utils.seed import derive_seed_from
 
@@ -216,7 +216,7 @@ class Job(models.Model):
     def _execute_create(self, generators: Mapping[str, Generator]):
         """Create records for this job and register their populate references.
 
-        :param generators: Field generators keyed by field name.
+        :param generators: Generators keyed by target name.
         """
         self.ensure_one()
         assert self.type == 'create'
@@ -225,8 +225,11 @@ class Job(models.Model):
         records_vals = []
 
         for _ in range(self.record_count):
-            vals = get_fields_vals(generators)
-            records_vals.append(vals)
+            generated = generate_values(generators)
+            records_vals.append({
+                name: generated[name]
+                for name in self.instructions['fields']
+            })
 
         if context := self.context:
             model = model.with_context(**context)
@@ -241,7 +244,7 @@ class Job(models.Model):
     def _execute_write(self, generators: Mapping[str, Generator]):
         """Write generated values on the records targeted by this job.
 
-        :param generators: Field generators keyed by field name.
+        :param generators: Generators keyed by target name.
         """
         self.ensure_one()
         assert self.type == 'write'
@@ -257,8 +260,11 @@ class Job(models.Model):
         records = self.env[self.model_name].with_context(active_test=False).search(domain, **slice_kwargs)
 
         for record in records:
-            vals = get_fields_vals(generators)
-            record.write(vals)
+            generated = generate_values(generators)
+            record.write({
+                name: generated[name]
+                for name in self.instructions['fields']
+            })
 
     def _get_target_domain(self) -> Domain:
         """Build the ORM domain matching records selected by this job's ``domain`` (+ optional ``ref``)."""
@@ -271,51 +277,58 @@ class Job(models.Model):
         return domain
 
     def __create_generators(self, seed: int) -> Mapping[str, Generator]:
-        """Instantiate field generators from the job instructions.
+        """Instantiate generators from the job instructions.
 
         :param seed: Seed shared by all generators in this job, so generated
-            fields remain deterministic relative to each other.
-        :return: Generator instances keyed by field name.
+            fields and values remain deterministic relative to each other.
+        :return: Generator instances keyed by target name.
         """
         self.ensure_one()
         generators = {}
         model = self.env[self.model_name]
-        valid_fields = self.instructions.keys()
+        field_instructions = self.instructions.get('fields', {})
+        value_instructions = self.instructions.get('values', {})
+        valid_targets = field_instructions.keys() | value_instructions.keys()
         random = Random(seed)
-        for field_name, attrs in self.instructions.items():
-            if str2bool(attrs.get('virtual', False)):
-                field = VirtualField(self.model_name, field_name)
-            else:
-                field = model._fields[field_name]
-
+        target_instructions = itertools.chain(
+            (
+                (model._fields[field_name], attrs)
+                for field_name, attrs in field_instructions.items()
+            ),
+            (
+                (ValueTarget(self.model_name, value_name), attrs)
+                for value_name, attrs in value_instructions.items()
+            ),
+        )
+        for target, attrs in target_instructions:
             if 'generator' in attrs:
                 generator_name = attrs['generator']
             elif 'eval' in attrs:
                 generator_name = 'misc.eval'
-            elif field.type in DEFAULT_GENERATORS:
-                generator_name = DEFAULT_GENERATORS[field.type]
+            elif target.type in DEFAULT_GENERATORS:
+                generator_name = DEFAULT_GENERATORS[target.type]
             else:
                 raise ValueError(self.env._(
-                    "No generator specified for field '%(field)s' of type '%(type)s', "
-                    "and no default generator is registered for that field type.",
-                    field=field_name,
-                    type=field.type,
+                    "No generator specified for target '%(target)s' of type '%(type)s', "
+                    "and no default generator is registered for that target type.",
+                    target=target.name,
+                    type=target.type,
                 ))
 
             generator = Generator.by_name(generator_name)
             kwargs = {
-                'field': field,
+                'target': target,
                 'env': self.env,
                 'random': random,
                 'job': self,
-                'valid_fields': valid_fields,
+                'valid_targets': valid_targets,
                 **generator.convert_to_kwargs(attrs),
             }
             try:
-                generators[field_name] = generator(**kwargs)
+                generators[target.name] = generator(**kwargs)
             except Exception as exc:
                 exc.add_note(self.env._("Generator: '%s'", generator_name))
-                exc.add_note(self.env._("Field: '%s'", field))
+                exc.add_note(self.env._("Target: '%s'", target))
                 if self.ref:
                     exc.add_note(self.env._("Ref: '%s'", self.ref))
                 raise

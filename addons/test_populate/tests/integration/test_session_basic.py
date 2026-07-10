@@ -14,7 +14,8 @@ class TestSessionCreation(TransactionCase):
             'name': 'Test Product Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},
@@ -37,7 +38,8 @@ class TestSessionCreation(TransactionCase):
             'name': 'Job Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -62,7 +64,8 @@ class TestSessionCreation(TransactionCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Create Domain Blueprint',
             'definition_json': [{
-                'name': 'test_populate.product',
+                'type': 'create',
+                'model': 'test_populate.product',
                 'count': 1,
                 'domain': "[('category', '=', 'books')]",
                 'fields': {
@@ -91,7 +94,8 @@ class TestSessionExecution(PopulateTestCase):
             'name': 'Customer Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 3,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
@@ -120,7 +124,8 @@ class TestSessionExecution(PopulateTestCase):
             'name': 'Multi-Model Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 20},
@@ -129,7 +134,8 @@ class TestSessionExecution(PopulateTestCase):
                     },
                 },
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 15},
@@ -160,7 +166,8 @@ class TestSessionExecution(PopulateTestCase):
             'name': 'State Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.customer',
+                    'type': 'create',
+                    'model': 'test_populate.customer',
                     'count': 1,
                     'fields': {
                         'name': {'generator': 'textual.char'},
@@ -183,7 +190,8 @@ class TestSessionExecution(PopulateTestCase):
             'name': 'Cascade Test Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
+                    'type': 'create',
+                    'model': 'test_populate.product',
                     'count': 2,
                     'fields': {
                         'name': {'generator': 'textual.char'},

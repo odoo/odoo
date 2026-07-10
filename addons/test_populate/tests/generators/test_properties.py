@@ -1,7 +1,7 @@
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.populate.generators import Generator, get_fields_vals
-from odoo.addons.populate.utils.orm import VirtualField
+from odoo.addons.populate.generators import Generator, generate_values
+from odoo.addons.populate.utils.orm import ValueTarget
 
 
 class TestPropertiesGenerators(TransactionCase):
@@ -22,9 +22,9 @@ class TestPropertiesGenerators(TransactionCase):
         PropertyDefinition = Generator.by_name('properties.definition')
 
         generator = PropertyDefinition(
-            field=self.attributes_definition_field,
+            target=self.attributes_definition_field,
             env=self.env,
-            valid_fields=['attributes_definition'],
+            valid_targets=['attributes_definition'],
             count=3,
             allowed_types=['char', 'integer', 'boolean'],
         )
@@ -45,9 +45,9 @@ class TestPropertiesGenerators(TransactionCase):
 
         possible_values = ['Red', 'Green', 'Blue']
         generator = PropertyDefinition(
-            field=self.attributes_definition_field,
+            target=self.attributes_definition_field,
             env=self.env,
-            valid_fields=['attributes_definition'],
+            valid_targets=['attributes_definition'],
             count=2,
             allowed_types=['selection'],
             possible_values=possible_values,
@@ -67,9 +67,9 @@ class TestPropertiesGenerators(TransactionCase):
 
         possible_values = ['urgent', 'important', 'review']
         generator = PropertyDefinition(
-            field=self.attributes_definition_field,
+            target=self.attributes_definition_field,
             env=self.env,
-            valid_fields=['attributes_definition'],
+            valid_targets=['attributes_definition'],
             count=1,
             allowed_types=['tags'],
             possible_values=possible_values,
@@ -84,33 +84,33 @@ class TestPropertiesGenerators(TransactionCase):
         tag_values = [tag[1] for tag in prop['tags']]
         self.assertEqual(set(tag_values), set(possible_values))
 
-    def test_property_definition_with_virtual_fields(self):
+    def test_property_definition_with_generated_values(self):
         PropertyDefinition = Generator.by_name('properties.definition')
         PropertyProp = Generator.by_name('properties.prop')
 
-        # Create virtual field generators for individual properties
+        # Create generated value generators for individual properties
         color_gen = PropertyProp(
-            field=VirtualField('test_populate.project', 'prop_color'),
+            target=ValueTarget('test_populate.project', 'prop_color'),
             env=self.env,
-            valid_fields=['prop_color', 'prop_priority', 'attributes_definition'],
+            valid_targets=['prop_color', 'prop_priority', 'attributes_definition'],
             prop_type='selection',
             string='Color',
             possible_values=['Red', 'Green', 'Blue'],
         )
 
         priority_gen = PropertyProp(
-            field=VirtualField('test_populate.project', 'prop_priority'),
+            target=ValueTarget('test_populate.project', 'prop_priority'),
             env=self.env,
-            valid_fields=['prop_color', 'prop_priority', 'attributes_definition'],
+            valid_targets=['prop_color', 'prop_priority', 'attributes_definition'],
             prop_type='integer',
             string='Priority',
         )
 
-        # Create a definition generator that depends on virtual fields
+        # Create a definition generator that depends on generated values
         definition_gen = PropertyDefinition(
-            field=self.attributes_definition_field,
+            target=self.attributes_definition_field,
             env=self.env,
-            valid_fields=['prop_color', 'prop_priority', 'attributes_definition'],
+            valid_targets=['prop_color', 'prop_priority', 'attributes_definition'],
             props=['prop_color', 'prop_priority'],
         )
 
@@ -139,7 +139,7 @@ class TestPropertiesGenerators(TransactionCase):
         # Should raise if props and count are both provided
         with self.assertRaises(ValueError) as cm:
             PropertyDefinition(
-                field=self.attributes_definition_field,
+                target=self.attributes_definition_field,
                 env=self.env,
                 props=['field1'],
                 count=3,
@@ -149,7 +149,7 @@ class TestPropertiesGenerators(TransactionCase):
         # Should raise if selection/tags without possible_values
         with self.assertRaises(ValueError) as cm:
             PropertyDefinition(
-                field=self.attributes_definition_field,
+                target=self.attributes_definition_field,
                 env=self.env,
                 count=2,
                 allowed_types=['selection'],
@@ -160,9 +160,9 @@ class TestPropertiesGenerators(TransactionCase):
         PropertyProp = Generator.by_name('properties.prop')
 
         generator = PropertyProp(
-            field=VirtualField('test_populate.project', 'color_prop'),
+            target=ValueTarget('test_populate.project', 'color_prop'),
             env=self.env,
-            valid_fields=['color_prop'],
+            valid_targets=['color_prop'],
             prop_type='char',
             string='Color Code',
         )
@@ -179,9 +179,9 @@ class TestPropertiesGenerators(TransactionCase):
 
         possible_values = ['Low', 'Medium', 'High']
         generator = PropertyProp(
-            field=VirtualField('test_populate.project', 'priority'),
+            target=ValueTarget('test_populate.project', 'priority'),
             env=self.env,
-            valid_fields=['priority'],
+            valid_targets=['priority'],
             prop_type='selection',
             string='Priority Level',
             possible_values=possible_values,
@@ -202,9 +202,9 @@ class TestPropertiesGenerators(TransactionCase):
 
         possible_values = ['bug', 'feature', 'enhancement']
         generator = PropertyProp(
-            field=VirtualField('test_populate.project', 'labels'),
+            target=ValueTarget('test_populate.project', 'labels'),
             env=self.env,
-            valid_fields=['labels'],
+            valid_targets=['labels'],
             prop_type='tags',
             string='Labels',
             possible_values=possible_values,
@@ -229,9 +229,9 @@ class TestPropertiesGenerators(TransactionCase):
 
         with self.assertRaises(ValueError) as cm:
             PropertyProp(
-                field=VirtualField('test_populate.project', 'test'),
+                target=ValueTarget('test_populate.project', 'test'),
                 env=self.env,
-                valid_fields=['test'],
+                valid_targets=['test'],
                 prop_type='invalid_type',
                 string='Test',
             )
@@ -242,9 +242,9 @@ class TestPropertiesGenerators(TransactionCase):
 
         with self.assertRaises(ValueError) as cm:
             PropertyProp(
-                field=VirtualField('test_populate.project', 'test'),
+                target=ValueTarget('test_populate.project', 'test'),
                 env=self.env,
-                valid_fields=['test'],
+                valid_targets=['test'],
                 prop_type='selection',
                 string='Test Selection',
             )
@@ -267,7 +267,7 @@ class TestPropertiesGenerators(TransactionCase):
         PropertyValue = Generator.by_name('properties.value')
 
         generator = PropertyValue(
-            field=self.attributes_field,
+            target=self.attributes_field,
             env=self.env,
         )
 
@@ -300,9 +300,9 @@ class TestPropertiesGenerators(TransactionCase):
         PropertyValue = Generator.by_name('properties.value')
 
         generator = PropertyValue(
-            field=self.attributes_field,
+            target=self.attributes_field,
             env=self.env,
-            valid_fields=['project_id', 'attributes'],
+            valid_targets=['project_id', 'attributes'],
         )
 
         known_vals = {'project_id': self.project.id}
@@ -322,9 +322,9 @@ class TestPropertiesGenerators(TransactionCase):
         PropertyValue = Generator.by_name('properties.value')
 
         generator = PropertyValue(
-            field=self.attributes_field,
+            target=self.attributes_field,
             env=self.env,
-            valid_fields=['project_id', 'attributes'],
+            valid_targets=['project_id', 'attributes'],
         )
 
         known_vals = {'project_id': self.project.id}
@@ -336,9 +336,9 @@ class TestPropertiesGenerators(TransactionCase):
         PropertyValue = Generator.by_name('properties.value')
 
         generator = PropertyValue(
-            field=self.attributes_field,
+            target=self.attributes_field,
             env=self.env,
-            valid_fields=['project_id', 'attributes'],
+            valid_targets=['project_id', 'attributes'],
         )
 
         self.assertIn('project_id', generator.depends)
@@ -347,30 +347,30 @@ class TestPropertiesGenerators(TransactionCase):
         PropertyDefinition = Generator.by_name('properties.definition')
         PropertyProp = Generator.by_name('properties.prop')
         PropertyValue = Generator.by_name('properties.value')
-        valid_fields = ['prop_color', 'prop_size', 'attributes_definition', 'attributes', 'project_id']
+        valid_targets = ['prop_color', 'prop_size', 'attributes_definition', 'attributes', 'project_id']
 
-        # Define property structure using virtual fields
+        # Define property structure using generated values
         color_prop_gen = PropertyProp(
-            field=VirtualField('test_populate.project', 'prop_color'),
+            target=ValueTarget('test_populate.project', 'prop_color'),
             env=self.env,
-            valid_fields=valid_fields,
+            valid_targets=valid_targets,
             prop_type='selection',
             string='Favorite Color',
             possible_values=['Red', 'Green', 'Blue'],
         )
 
         size_prop_gen = PropertyProp(
-            field=VirtualField('test_populate.project', 'prop_size'),
+            target=ValueTarget('test_populate.project', 'prop_size'),
             env=self.env,
-            valid_fields=valid_fields,
+            valid_targets=valid_targets,
             prop_type='integer',
             string='Size',
         )
 
         definition_gen = PropertyDefinition(
-            field=self.attributes_definition_field,
+            target=self.attributes_definition_field,
             env=self.env,
-            valid_fields=valid_fields,
+            valid_targets=valid_targets,
             props=['prop_color', 'prop_size'],
         )
 
@@ -379,8 +379,8 @@ class TestPropertiesGenerators(TransactionCase):
             'prop_size': size_prop_gen,
             'attributes_definition': definition_gen,
         }
-
-        project_vals = get_fields_vals(generators)
+        model_fields = self.env['test_populate.project']._fields.keys()
+        project_vals = {k: v for k, v in generate_values(generators).items() if k in model_fields}
         project = self.env['test_populate.project'].create({
             'name': 'Test Properties',
             **project_vals,
@@ -390,9 +390,9 @@ class TestPropertiesGenerators(TransactionCase):
         self.assertEqual(len(project.attributes_definition), 2)
 
         value_gen = PropertyValue(
-            field=self.attributes_field,
+            target=self.attributes_field,
             env=self.env,
-            valid_fields=['project_id', 'attributes'],
+            valid_targets=['project_id', 'attributes'],
         )
 
         prop_values = value_gen.next({'project_id': project.id})
@@ -441,9 +441,9 @@ class TestPropertiesGenerators(TransactionCase):
         PropertyValue = Generator.by_name('properties.value')
 
         generator = PropertyValue(
-            field=self.attributes_field,
+            target=self.attributes_field,
             env=self.env,
-            valid_fields=['project_id', 'attributes'],
+            valid_targets=['project_id', 'attributes'],
         )
 
         # With a Falsy project_id, should return an empty dict

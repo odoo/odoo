@@ -3,7 +3,7 @@ from odoo.tests import TransactionCase
 
 from odoo.addons.populate import start_populate
 from odoo.addons.populate.generators import RelationMany, RelationOne
-from odoo.addons.populate.utils.orm import DynamicDomain, VirtualField
+from odoo.addons.populate.utils.orm import DynamicDomain, ValueTarget
 from odoo.addons.test_populate.tests.common import PopulateTestCase
 
 
@@ -21,7 +21,7 @@ class TestRelationOne(TransactionCase):
             {'name': 'Test Supplier C', 'country_code': 'US', 'is_active': False},
         ])
 
-        generator = RelationOne(field=self.supplier_field, env=self.env)
+        generator = RelationOne(target=self.supplier_field, env=self.env)
 
         values = [generator.next({}) for _ in range(50)]
 
@@ -37,7 +37,7 @@ class TestRelationOne(TransactionCase):
         ])
 
         generator = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             domain=[('country_code', '=', 'US'), ('is_active', '=', True)],
         )
@@ -55,14 +55,14 @@ class TestRelationOne(TransactionCase):
             {'name': 'Test Supplier', 'country_code': 'US', 'is_active': True},
         ])
 
-        generator = RelationOne(field=self.supplier_field, env=self.env, null_ratio=0.9)
+        generator = RelationOne(target=self.supplier_field, env=self.env, null_ratio=0.9)
 
         values = [generator.next({}) for _ in range(100)]
         false_count = values.count(False)
 
         self.assertGreater(false_count, 70)
 
-        generator_low_null = RelationOne(field=self.supplier_field, env=self.env, null_ratio=0.1)
+        generator_low_null = RelationOne(target=self.supplier_field, env=self.env, null_ratio=0.1)
 
         values_low_null = [generator_low_null.next({}) for _ in range(100)]
         false_count_low = values_low_null.count(False)
@@ -71,7 +71,7 @@ class TestRelationOne(TransactionCase):
 
     def test_relation_generator_empty_recordset(self):
         generator = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             domain=[('country_code', '=', 'XYZ')],
         )
@@ -81,46 +81,46 @@ class TestRelationOne(TransactionCase):
         self.assertTrue(all(value is False for value in values))
 
     def test_relation_generator_field_type_validation(self):
-        generator = RelationOne(field=self.supplier_field, env=self.env)
+        generator = RelationOne(target=self.supplier_field, env=self.env)
         self.assertIsInstance(generator, RelationOne)
 
         name_field = self.env['test_populate.product']._fields['name']
         with self.assertRaises(TypeError):
-            RelationOne(field=name_field, env=self.env)
+            RelationOne(target=name_field, env=self.env)
 
-    def test_relation_one_virtual_requires_comodel_name(self):
-        virtual_field = VirtualField('test_populate.product', 'v_supplier_id')
+    def test_relation_one_generated_value_requires_comodel_name(self):
+        generated_value = ValueTarget('test_populate.product', 'supplier_id')
         with self.assertRaises(ValueError) as cm:
             RelationOne(
-                field=virtual_field,
+                target=generated_value,
                 env=self.env,
-                valid_fields=['v_supplier_id'],
+                valid_targets=['supplier_id'],
             )
         self.assertIn("comodel_name", str(cm.exception))
 
-    def test_relation_one_virtual_with_comodel_name(self):
+    def test_relation_one_generated_value_with_comodel_name(self):
         supliers = self.env['test_populate.supplier'].create([
             {'name': 'Supplier A'},
             {'name': 'Supplier B'},
         ])
-        virtual_field = VirtualField('test_populate.product', 'v_supplier_id')
+        generated_value = ValueTarget('test_populate.product', 'supplier_id')
         generator = RelationOne(
-            field=virtual_field,
+            target=generated_value,
             env=self.env,
             comodel_name='test_populate.supplier',
-            valid_fields=['v_supplier_id'],
+            valid_targets=['supplier_id'],
         )
         values = [generator.next({}) for _ in range(20)]
         self.assertTrue(all(isinstance(v, int) and v in supliers.ids for v in values))
 
-    def test_relation_one_virtual_invalid_comodel_name_raises(self):
-        virtual_field = VirtualField('test_populate.product', 'v_supplier_id')
+    def test_relation_one_generated_value_invalid_comodel_name_raises(self):
+        generated_value = ValueTarget('test_populate.product', 'supplier_id')
         with self.assertRaises(ValueError) as cm:
             RelationOne(
-                field=virtual_field,
+                target=generated_value,
                 env=self.env,
                 comodel_name='not.a.real.model',
-                valid_fields=['v_supplier_id'],
+                valid_targets=['supplier_id'],
             )
         self.assertIn("isn't a valid model name", str(cm.exception))
 
@@ -135,8 +135,9 @@ class TestRelationOneSessionBinding(PopulateTestCase):
             'name': 'Supplier Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.supplier',
-                    'ref': 'my_suppliers',
+                    'type': 'create',
+                    'model': 'test_populate.supplier',
+                    'id': 'my_suppliers',
                     'count': 3,
                     'fields': {'name': {'generator': 'textual.char', 'length': 10}},
                 },
@@ -151,7 +152,7 @@ class TestRelationOneSessionBinding(PopulateTestCase):
 
     def test_ref_without_session_picks_from_all_sessions(self):
         generator = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             ref='my_suppliers',
         )
@@ -177,7 +178,7 @@ class TestRelationOneSessionBinding(PopulateTestCase):
 
         # Scoped to session A
         gen_a = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             session=self.session_a,
             ref='my_suppliers',
@@ -187,7 +188,7 @@ class TestRelationOneSessionBinding(PopulateTestCase):
 
         # Scoped to session B
         gen_b = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             session=self.session_b,
             ref='my_suppliers',
@@ -210,16 +211,16 @@ class TestRelationOneDynamicDomain(TransactionCase):
         dynamic_domain = DynamicDomain("[('country_code', '=', country_code)]")
         self.assertIsInstance(dynamic_domain, DynamicDomain)
         generator = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             domain=dynamic_domain,
-            valid_fields=['country_code'],
+            valid_targets=['country_code'],
         )
         self.assertIsNone(generator.comodel_ids)
 
     def test_static_domain_comodel_ids_is_not_none(self):
         generator = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             domain=[('country_code', '=', 'US')],
         )
@@ -228,10 +229,10 @@ class TestRelationOneDynamicDomain(TransactionCase):
     def test_dynamic_domain_filters_per_call(self):
         dynamic_domain = DynamicDomain("[('country_code', '=', country_code)]")
         generator = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             domain=dynamic_domain,
-            valid_fields=['country_code'],
+            valid_targets=['country_code'],
         )
 
         us_suppliers = self.env['test_populate.supplier'].search([('country_code', '=', 'US')])
@@ -247,10 +248,10 @@ class TestRelationOneDynamicDomain(TransactionCase):
     def test_dynamic_domain_depends_extended(self):
         dynamic_domain = DynamicDomain("[('country_code', '=', country_code)]")
         generator = RelationOne(
-            field=self.supplier_field,
+            target=self.supplier_field,
             env=self.env,
             domain=dynamic_domain,
-            valid_fields=['country_code'],
+            valid_targets=['country_code'],
         )
         self.assertIn('country_code', generator.depends)
 
@@ -279,7 +280,7 @@ class TestRelationMany(TransactionCase):
             {'name': 'Product C', 'price': 30.0},
         ])
 
-        generator = RelationMany(field=self.product_ids_field, env=self.env, count=2)
+        generator = RelationMany(target=self.product_ids_field, env=self.env, count=2)
 
         values = [generator.next({}) for _ in range(10)]
 
@@ -299,7 +300,7 @@ class TestRelationMany(TransactionCase):
         ])
 
         generator = RelationMany(
-            field=self.product_ids_field,
+            target=self.product_ids_field,
             env=self.env,
             count=2,
             domain=[('category', '=', 'electronics')],
@@ -325,7 +326,7 @@ class TestRelationMany(TransactionCase):
             {'name': 'Product 3', 'price': 30.0},
         ])
 
-        generator = RelationMany(field=self.product_ids_field, env=self.env, count=2, null_ratio=0.9)
+        generator = RelationMany(target=self.product_ids_field, env=self.env, count=2, null_ratio=0.9)
 
         values = [generator.next({}) for _ in range(100)]
         false_count = values.count(False)
@@ -338,7 +339,7 @@ class TestRelationMany(TransactionCase):
             {'name': 'Product B', 'price': 20.0},
         ])
 
-        generator = RelationMany(field=self.product_ids_field, env=self.env, count=5)
+        generator = RelationMany(target=self.product_ids_field, env=self.env, count=5)
 
         value = generator.next({})
         if value:
@@ -347,16 +348,16 @@ class TestRelationMany(TransactionCase):
             self.assertEqual(set(selected_ids), set(test_products.ids))
 
     def test_relation_many_generator_field_type_validation(self):
-        generator = RelationMany(field=self.product_ids_field, env=self.env, count=1)
+        generator = RelationMany(target=self.product_ids_field, env=self.env, count=1)
         self.assertIsInstance(generator, RelationMany)
 
         name_field = self.env['test_populate.supplier']._fields['name']
         with self.assertRaises(TypeError):
-            RelationMany(field=name_field, env=self.env, count=1)
+            RelationMany(target=name_field, env=self.env, count=1)
 
     def test_relation_many_generator_unique_raises_error(self):
         with self.assertRaises(ValueError) as cm:
-            RelationMany(field=self.product_ids_field, env=self.env, count=2, unique=True)
+            RelationMany(target=self.product_ids_field, env=self.env, count=2, unique=True)
 
         self.assertIn("Unique cannot be used with the 'relation.many' generator", str(cm.exception))
 
@@ -367,7 +368,7 @@ class TestRelationMany(TransactionCase):
         ])
 
         generator = RelationMany(
-            field=self.product_ids_field,
+            target=self.product_ids_field,
             env=self.env,
             count=10,
             std=3,
@@ -394,7 +395,7 @@ class TestRelationMany(TransactionCase):
         ])
 
         generator = RelationMany(
-            field=self.product_ids_field,
+            target=self.product_ids_field,
             env=self.env,
             count=5,
             std=0,
@@ -415,7 +416,7 @@ class TestRelationMany(TransactionCase):
         ])
 
         generator = RelationMany(
-            field=self.product_ids_field,
+            target=self.product_ids_field,
             env=self.env,
             count=10,
             std=5,
@@ -434,7 +435,7 @@ class TestRelationMany(TransactionCase):
         ])
 
         generator = RelationMany(
-            field=self.product_ids_field,
+            target=self.product_ids_field,
             env=self.env,
             count=2,
             std=10,  # Very high std relative to count -> Gaussian could go negative
@@ -449,51 +450,51 @@ class TestRelationMany(TransactionCase):
     def test_relation_many_generator_negative_std_raises(self):
         with self.assertRaises(AssertionError):
             RelationMany(
-                field=self.product_ids_field,
+                target=self.product_ids_field,
                 env=self.env,
                 count=5,
                 std=-1,
             )
 
-    def test_relation_many_virtual_requires_comodel_name(self):
-        virtual_field = VirtualField('test_populate.product', 'v_tag_ids')
+    def test_relation_many_generated_value_requires_comodel_name(self):
+        generated_value = ValueTarget('test_populate.product', 'tag_ids')
         with self.assertRaises(ValueError) as cm:
             RelationMany(
-                field=virtual_field,
+                target=generated_value,
                 env=self.env,
                 count=2,
-                valid_fields=['v_tag_ids'],
+                valid_targets=['tag_ids'],
             )
         self.assertIn("comodel_name", str(cm.exception))
 
-    def test_relation_many_virtual_with_comodel_name(self):
+    def test_relation_many_generated_value_with_comodel_name(self):
         tags = self.env['test_populate.tag'].create([
             {'name': 'Tag A'},
             {'name': 'Tag B'},
             {'name': 'Tag C'},
         ])
-        virtual_field = VirtualField('test_populate.product', 'v_tag_ids')
+        generated_value = ValueTarget('test_populate.product', 'tag_ids')
         generator = RelationMany(
-            field=virtual_field,
+            target=generated_value,
             env=self.env,
             comodel_name='test_populate.tag',
             count=2,
-            valid_fields=['v_tag_ids'],
+            valid_targets=['tag_ids'],
         )
         value = generator.next({})
         self.assertIsInstance(value, list)
         self.assertEqual(len(value[0][2]), 2)
         self.assertTrue(all(v in tags.ids for v in value[0][2]))
 
-    def test_relation_many_virtual_invalid_comodel_name_raises(self):
-        virtual_field = VirtualField('test_populate.product', 'v_tag_ids')
+    def test_relation_many_generated_value_invalid_comodel_name_raises(self):
+        generated_value = ValueTarget('test_populate.product', 'tag_ids')
         with self.assertRaises(ValueError) as cm:
             RelationMany(
-                field=virtual_field,
+                target=generated_value,
                 env=self.env,
                 comodel_name='not.a.real.model',
                 count=2,
-                valid_fields=['v_tag_ids'],
+                valid_targets=['tag_ids'],
             )
         self.assertIn("isn't a valid model name", str(cm.exception))
 
@@ -507,8 +508,9 @@ class TestRelationManySessionBinding(PopulateTestCase):
             'name': 'Product Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
-                    'ref': 'tagged_products',
+                    'type': 'create',
+                    'model': 'test_populate.product',
+                    'id': 'tagged_products',
                     'count': 4,
                     'fields': {
                         'name': {'generator': 'textual.char', 'length': 10},
@@ -536,7 +538,7 @@ class TestRelationManySessionBinding(PopulateTestCase):
 
         # Scoped to session A
         gen_a = RelationMany(
-            field=product_ids_field,
+            target=product_ids_field,
             env=self.env,
             session=session_a,
             ref='tagged_products',
@@ -566,10 +568,10 @@ class TestRelationManyDynamicDomain(TransactionCase):
     def test_relation_many_dynamic_domain_filters_per_call(self):
         dynamic_domain = DynamicDomain("[('category', '=', category)]")
         generator = RelationMany(
-            field=self.product_ids_field,
+            target=self.product_ids_field,
             env=self.env,
             domain=dynamic_domain,
-            valid_fields=['category'],
+            valid_targets=['category'],
             count=1,
         )
 
@@ -601,7 +603,7 @@ class TestRelationManyGroupby(TransactionCase):
     def test_groupby_invalid_field_raises(self):
         with self.assertRaises(ValueError) as cm:
             RelationMany(
-                field=self.product_ids_field,
+                target=self.product_ids_field,
                 env=self.env,
                 count=1,
                 groupby='not_a_real_field',
@@ -613,7 +615,7 @@ class TestRelationManyGroupby(TransactionCase):
         books = self.env['test_populate.product'].search([('category', '=', 'books')])
 
         generator = RelationMany(
-            field=self.product_ids_field,
+            target=self.product_ids_field,
             env=self.env,
             count=1,
             groupby='category',

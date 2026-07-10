@@ -23,6 +23,7 @@ class TestAllBlueprint(PopulateTestCase):
                 session = self.env['populate.session'].create({
                     'blueprint_id': blueprint.id,
                     'seed': 42,
+                    'scaling_factor': 0.2,
                 })
                 _logger.info("Populating %s...", session.blueprint_id.name)
                 start_populate(session)

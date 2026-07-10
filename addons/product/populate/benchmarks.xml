@@ -10,11 +10,11 @@
     <record id="benchmark_deep_catalog" model="populate.blueprint">
         <field name="name">Benchmark: Deep Product Catalog</field>
         <field name="definition_xml" type="xml">
-            <model name="product.category" count="1" id="bench_category" scale="False">
+            <create model="product.category" count="1" id="bench_category" scale="False">
                 <field name="name" eval="'Benchmark Deep Category'"/>
-            </model>
+            </create>
 
-            <model name="product.template" count="10000" id="bench_products" context="{'tracking_disable': True}">
+            <create model="product.template" count="10000" id="bench_products" context="{'tracking_disable': True}">
                 <field name="name" length="30"/>
                 <field name="categ_id" ref="bench_category"/>
                 <field name="type" values="{'consu': 7, 'service': 3}"/>
@@ -23,7 +23,7 @@
                 <field name="sale_ok" eval="True"/>
                 <field name="purchase_ok" values="{True: 7, False: 3}"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -37,18 +37,18 @@
     <record id="benchmark_wide_categories" model="populate.blueprint">
         <field name="name">Benchmark: Wide Categories</field>
         <field name="definition_xml" type="xml">
-            <model name="product.category" count="1000" id="wide_categories">
+            <create model="product.category" count="1000" id="wide_categories">
                 <field name="name" length="25"/>
-            </model>
+            </create>
 
-            <model name="product.template" count="5000" id="wide_products" context="{'tracking_disable': True}">
+            <create model="product.template" count="5000" id="wide_products" context="{'tracking_disable': True}">
                 <field name="name" length="30"/>
                 <field name="categ_id" ref="wide_categories"/>
                 <field name="type" values="{'consu': 7, 'service': 3}"/>
                 <field name="list_price" start="10.0" end="500.0"/>
                 <field name="standard_price" start="5.0" end="400.0"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -62,57 +62,57 @@
     <record id="benchmark_variants" model="populate.blueprint">
         <field name="name">Benchmark: Product Variants</field>
         <field name="definition_xml" type="xml">
-            <model name="product.category" count="10" id="var_categories" scale="False">
-                <field name="v_sequence" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Category {v_sequence}'"/>
-            </model>
+            <create model="product.category" count="10" id="var_categories" scale="False">
+                <value name="sequence" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Category {sequence}'"/>
+            </create>
 
-            <model name="product.attribute" count="15" id="var_attributes" scale="False">
-                <field name="v_sequence" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Attribute {v_sequence}'"/>
+            <create model="product.attribute" count="15" id="var_attributes">
+                <value name="seq" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Attribute {seq}'"/>
                 <field name="create_variant" eval="'always'"/>
                 <field name="display_type" values="{'radio': 4, 'pills': 2, 'select': 2}"/>
                 <field name="sequence" start="1" end="100"/>
-            </model>
+            </create>
 
-            <model name="product.attribute.value" count="100" id="var_attribute_values">
+            <create model="product.attribute.value" count="100" id="var_attribute_values" scale="False">
                 <field name="attribute_id" ref="var_attributes"/>
                 <field name="name" length="10"/>
                 <field name="sequence" start="1" end="50"/>
-            </model>
+            </create>
 
-            <model name="product.template" count="1000" id="var_templates" context="{'tracking_disable': True, 'create_product_product': False}">
+            <create model="product.template" count="1000" id="var_templates" context="{'tracking_disable': True, 'create_product_product': False}">
                 <field name="name" length="28"/>
                 <field name="categ_id" ref="var_categories"/>
                 <field name="type" eval="'consu'"/>
                 <field name="list_price" start="20.0" end="800.0"/>
                 <field name="standard_price" start="10.0" end="600.0"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
 
-            <model name="product.template.attribute.line" count="3000" id="var_attribute_lines" context="{'create_product_product': False}">
-                <field name="v_product_tmpl_id" virtual="True" generator="relation.one" comodel_name="product.template" ref="var_templates" partition="True"/>
-                <field name="v_attribute_id" virtual="True" generator="relation.one" comodel_name="product.attribute" ref="var_attributes"/>
-                <field name="v_unique_attribute_per_template" virtual="True" eval="(v_product_tmpl_id, v_attribute_id)" unique="True"/>
-                <field name="product_tmpl_id" eval="v_unique_attribute_per_template[0]"/>
-                <field name="attribute_id" eval="v_unique_attribute_per_template[1]"/>
+            <create model="product.template.attribute.line" count="3000" id="var_attribute_lines" context="{'create_product_product': False}">
+                <value name="a_product_tmpl_id" generator="relation.one" comodel_name="product.template" ref="var_templates" partition="True"/>
+                <value name="a_attribute_id" generator="relation.one" comodel_name="product.attribute" ref="var_attributes"/>
+                <value name="template_attribute_pair" eval="(a_product_tmpl_id, a_attribute_id)" unique="True"/>
+                <field name="product_tmpl_id" eval="template_attribute_pair[0]"/>
+                <field name="attribute_id" eval="template_attribute_pair[1]"/>
                 <field name="value_ids" domain="[('attribute_id', '=', attribute_id)]" ref="var_attribute_values" count="3" std="1"/>
                 <field name="sequence" start="1" end="50"/>
-            </model>
+            </create>
 
             <!-- Trigger variant creation that all ptal are assigned -->
-            <model name="product.template" type="write" ref="var_templates">
+            <write model="product.template" ref="var_templates">
                 <field name="attribute_line_ids" eval="[]"/>
-            </model>
+            </write>
 
-            <model name="product.product" type="write" id="var_templates.product_variant_ids">
+            <write model="product.product" ref="var_templates.product_variant_ids">
                 <field name="default_code" generator="fake.ean13" unique="True"/>
                 <field name="barcode" eval="default_code"/>
                 <field name="active" values="{True: 95, False: 5}"/>
                 <field name="standard_price" start="10.0" end="600.0"/>
                 <field name="weight" start="0.1" end="50.0" distribution="exponential(rate=0.05)" null_ratio="0.3"/>
                 <field name="volume" start="0.01" end="20.0" distribution="exponential(rate=0.1)" null_ratio="0.4"/>
-            </model>
+            </write>
         </field>
     </record>
 
@@ -126,26 +126,26 @@
     <record id="benchmark_pricelists" model="populate.blueprint">
         <field name="name">Benchmark: Pricelists</field>
         <field name="definition_xml" type="xml">
-            <model name="product.category" count="20" id="price_categories" scale="False">
-                <field name="v_sequence" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Category {v_sequence}'"/>
-            </model>
+            <create model="product.category" count="20" id="price_categories" scale="False">
+                <value name="sequence" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Category {sequence}'"/>
+            </create>
 
-            <model name="product.template" count="1000" id="price_products" context="{'tracking_disable': True}">
+            <create model="product.template" count="1000" id="price_products" context="{'tracking_disable': True}">
                 <field name="name" length="28"/>
                 <field name="categ_id" ref="price_categories"/>
                 <field name="type" values="{'consu': 7, 'service': 3}"/>
                 <field name="list_price" start="10.0" end="1000.0"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
 
-            <model name="product.pricelist" count="100" id="price_pricelists">
+            <create model="product.pricelist" count="100" id="price_pricelists">
                 <field name="name" length="20"/>
                 <field name="active" eval="True"/>
                 <field name="sequence" start="1" end="100"/>
-            </model>
+            </create>
 
-            <model name="product.pricelist.item" count="10000" id="price_rules">
+            <create model="product.pricelist.item" count="10000" id="price_rules">
                 <field name="pricelist_id" ref="price_pricelists"/>
                 <field name="product_tmpl_id" ref="price_products" null_ratio="0.4"/>
                 <field name="product_id" domain="[('product_tmpl_id', '=?', product_tmpl_id)]" ref="price_products.product_variant_ids" null_ratio="0.5"/>
@@ -155,7 +155,7 @@
                 <field name="percent_price" start="-30.0" end="30.0"/>
                 <field name="price_discount" start="0.0" end="40.0"/>
                 <field name="min_quantity" generator="scalar.integer" start="1" end="50" distribution="exponential(rate=0.1)"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -169,22 +169,22 @@
     <record id="benchmark_supplier_info" model="populate.blueprint">
         <field name="name">Benchmark: Supplier Info</field>
         <field name="definition_xml" type="xml">
-            <model name="res.partner" count="200" id="bench_vendors" scale="False">
-                <field name="v_sequence" virtual="True" generator="misc.counter" start="1"/>
-                <field name="name" eval="f'Vendor {v_sequence}'"/>
+            <create model="res.partner" count="200" id="bench_vendors" scale="False">
+                <value name="sequence" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Vendor {sequence}'"/>
                 <field name="is_company" eval="True"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
 
-            <model name="product.template" count="1000" id="supplier_products" context="{'tracking_disable': True}">
+            <create model="product.template" count="1000" id="supplier_products" context="{'tracking_disable': True}">
                 <field name="name" length="28"/>
                 <field name="type" values="{'consu': 7, 'service': 3}"/>
                 <field name="list_price" start="20.0" end="1000.0"/>
                 <field name="purchase_ok" eval="True"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
 
-            <model name="product.supplierinfo" count="10000" id="supplier_info_items">
+            <create model="product.supplierinfo" count="10000" id="supplier_info_items">
                 <field name="partner_id" ref="bench_vendors"/>
                 <field name="product_id" ref="supplier_products.product_variant_ids"/>
                 <field name="price" start="5.0" end="800.0" distribution="exponential(rate=0.004)"/>
@@ -192,7 +192,7 @@
                 <field name="delay" start="1" end="60" distribution="normal(mean=14, std=8)"/>
                 <field name="sequence" start="1" end="100"/>
                 <field name="discount" start="0.0" end="25.0" distribution="beta(alpha=2, beta=5)" null_ratio="0.6"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -206,27 +206,27 @@
     <record id="benchmark_category_hierarchy" model="populate.blueprint">
         <field name="name">Benchmark: Category Hierarchy</field>
         <field name="definition_xml" type="xml">
-            <model name="product.category" count="200" id="parent_categories">
+            <create model="product.category" count="200" id="parent_categories">
                 <field name="name" length="20"/>
-            </model>
+            </create>
 
-            <model name="product.category" count="1000" id="child_categories">
+            <create model="product.category" count="1000" id="child_categories">
                 <field name="name" length="22"/>
                 <field name="parent_id" ref="parent_categories"/>
-            </model>
+            </create>
 
-            <model name="product.category" count="3000" id="grandchild_categories">
+            <create model="product.category" count="3000" id="grandchild_categories">
                 <field name="name" length="20"/>
                 <field name="parent_id" ref="child_categories"/>
-            </model>
+            </create>
 
-            <model name="product.template" count="5000" id="hierarchy_products" context="{'tracking_disable': True}">
+            <create model="product.template" count="5000" id="hierarchy_products" context="{'tracking_disable': True}">
                 <field name="name" length="28"/>
                 <field name="categ_id" ref="grandchild_categories"/>
                 <field name="type" values="{'consu': 7, 'service': 3}"/>
                 <field name="list_price" start="10.0" end="500.0"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -240,20 +240,20 @@
     <record id="benchmark_tags" model="populate.blueprint">
         <field name="name">Benchmark: Tags</field>
         <field name="definition_xml" type="xml">
-            <model name="product.tag" count="1000" id="bench_tags">
+            <create model="product.tag" count="1000" id="bench_tags">
                 <field name="name" length="16" unique="True"/>
                 <field name="color" eval="'#3C3C3C'"/>
                 <field name="sequence" start="1" end="100"/>
                 <field name="visible_to_customers" eval="True"/>
-            </model>
+            </create>
 
-            <model name="product.template" count="5000" id="tag_products" context="{'tracking_disable': True}">
+            <create model="product.template" count="5000" id="tag_products" context="{'tracking_disable': True}">
                 <field name="name" length="28"/>
                 <field name="type" values="{'consu': 7, 'service': 3}"/>
                 <field name="list_price" start="10.0" end="500.0"/>
                 <field name="product_tag_ids" ref="bench_tags" count="8" std="2"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
         </field>
     </record>
 
@@ -267,33 +267,33 @@
     <record id="benchmark_bulk_creation" model="populate.blueprint">
         <field name="name">Benchmark: Bulk Creation</field>
         <field name="definition_xml" type="xml">
-            <model name="product.category" count="1000" id="bulk_categories">
+            <create model="product.category" count="1000" id="bulk_categories">
                 <field name="name" length="20"/>
-            </model>
+            </create>
 
-            <model name="product.tag" count="1000" id="bulk_tags">
+            <create model="product.tag" count="1000" id="bulk_tags">
                 <field name="name" length="14" unique="True"/>
                 <field name="sequence" start="1" end="100"/>
-            </model>
+            </create>
 
-            <model name="product.template" count="1000" id="bulk_templates" context="{'tracking_disable': True, 'create_product_product': False}">
+            <create model="product.template" count="1000" id="bulk_templates" context="{'tracking_disable': True, 'create_product_product': False}">
                 <field name="name" length="28"/>
                 <field name="categ_id" ref="bulk_categories"/>
                 <field name="type" values="{'consu': 7, 'service': 3}"/>
                 <field name="list_price" start="10.0" end="1000.0"/>
                 <field name="standard_price" start="5.0" end="800.0"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
 
             <!-- Trigger variant creation -->
-            <model name="product.template" type="write" ref="bulk_templates">
+            <write model="product.template" ref="bulk_templates">
                 <field name="attribute_line_ids" eval="[]"/>
-            </model>
+            </write>
 
-            <model name="product.pricelist" count="100" id="bulk_pricelists">
+            <create model="product.pricelist" count="100" id="bulk_pricelists">
                 <field name="name" length="18"/>
                 <field name="active" eval="True"/>
-            </model>
+            </create>
         </field>
     </record>
 </odoo>
