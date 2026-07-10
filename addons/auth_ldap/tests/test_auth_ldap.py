@@ -87,7 +87,7 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
             return [
                 {
                     "id": 1,
-                    "company": (1, "YourCompany"),
+                    "company": (self.env.company.id, self.env.company.name),
                     "ldap_server": "127.0.0.1",
                     "ldap_server_port": 389,
                     "ldap_binddn": "cn=admin,dc=odoo,dc=com",
