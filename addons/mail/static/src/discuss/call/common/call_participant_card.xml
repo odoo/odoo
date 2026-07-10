@@ -54,7 +54,7 @@
                 </span>
                 <div t-if="!this.props.inset" class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-topControls position-absolute top-0 end-0 d-flex align-items-start w-50 flex-row-reverse" t-att-class="{ 'o-proportional-container': this.isSmall, 'mw-25': this.props.isSidebarItem or this.props.inset }">
                     <CallDropdown t-if="this.isContextMenuAvailable" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
-                        <button class="o-discuss-CallParticipantCard-contextButton btn btn-secondary btn-sm rounded-circle border-0 m-0 smaller d-flex align-items-center justify-content-center lh-1" t-att-class="{ invisible: !this.rootHover.isHover and !this.isMobileOS }" title="Participant options">
+                        <button class="o-discuss-CallParticipantCard-contextButton btn btn-secondary btn-sm rounded-circle border-0 m-0 smaller d-flex align-items-center justify-content-center lh-1 me-1" t-att-class="{ 'd-none': !this.rootHover.isHover and !this.isMobileOS }" title="Participant options">
                             <i class="fa fa-chevron-down fa-fw"/>
                         </button>
                         <t t-set-slot="content">
