@@ -16,7 +16,7 @@ class IyzicoCommon(PaymentCommon):
         cls.return_data = {"token": "dummy_token"}
         cls.signature = "abc_xyz"
         cls.payment_data = {
-            "conversationId": cls.reference,
+            "basketId": cls.reference,
             "paymentId": "24232079",
             "paidPrice": cls.amount,
             "paymentStatus": "SUCCESS",
