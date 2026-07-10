@@ -1231,9 +1231,7 @@ class Field[T]:
 
         if not column or (self.required and not has_notnull):
             # either we have a new column or it becomes required
-            model.env.cr.execute(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(model._table)))
-            if bool(model.env.cr.rowcount):
-                self._init_column_data(model)
+            self._init_column_data(model)
 
         if self.required and not has_notnull:
             # _init_column_data may delay computations in post-init phase
@@ -1282,6 +1280,13 @@ class Field[T]:
     def _init_column_data(self, model: BaseModel) -> None:
         """ Initialize null values in the column. """
         assert self.column_type and model._name == self.model_name
+        # skip the initialization when there is nothing to initialize: this
+        # method only fills in NULL values, and does nothing without
+        # init_storage, default or compute; skip empty tables as well
+        if not (self.init_storage or self.default or self.compute):
+            return
+        if not model.env.execute_query(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(model._table))):
+            return
         # Check if we have a custom init function
         if self.init_storage:
             _logger.debug("Table '%s': call %s for column %s", model._table, self.init_storage, self.name)
