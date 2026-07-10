@@ -1073,6 +1073,67 @@ class TestTrackingInternals(TestTrackingCommon):
         )
 
     @users('employee')
+    def test_mail_track_datetime_tz(self):
+        """Datetime trackings are displayed in the user timezone, with its offset."""
+        self.env.user.tz = 'Europe/Brussels'
+        self.env['res.lang'].sudo()._activate_lang('fr_BE')
+        self.env['res.lang'].sudo()._activate_lang('vi_VN')
+
+        properties_parent = self.tracking_parent_for_properties.with_env(self.env).sudo()
+        properties_parent.definition_properties = properties_parent.definition_properties + [
+            {'name': 'property_datetime', 'string': 'Property Datetime', 'type': 'datetime'},
+            {'name': 'property_date', 'string': 'Property Date', 'type': 'date'},
+        ]
+        self.test_tracking_records.with_env(self.env).properties = {
+            'property_datetime': fields.Datetime.to_string(self.dt_ref),
+            'property_date': fields.Date.to_string(self.dt_ref.date()),
+        }
+        self.flush_tracking()
+
+        # regex are used to account in differences in formatting between versions of babel
+        for lang, test_record, expected_start, expected_end, expected_date in (
+            ('en_US', self.test_tracking_records[0], r'Sep 30, 2025, 11:28\sAM \(GMT\+02:00\)', r'Sep 30, 2025, 12:28\sPM \(GMT\+02:00\)', r'Sep 30, 2025'),
+            ('fr_BE', self.test_tracking_records[1], r'30 sept\. 2025, 11:28 \(UTC\+02:00\)', r'30 sept\. 2025, 12:28 \(UTC\+02:00\)', r'30 sept\. 2025'),
+            ('vi_VN', self.test_tracking_records[2], r'11:28,? 30 thg 9, 2025 \(GMT\+02:00\)', r'12:28,? 30 thg 9, 2025 \(GMT\+02:00\)', r'30 thg 9, 2025'),
+        ):
+            with self.subTest(lang=lang):
+                test_record = test_record.with_env(self.env).with_context(lang=lang)
+                self.flush_tracking()
+                messages = test_record.message_ids
+                new_dt = self.dt_ref + timedelta(hours=1)
+                test_record.write({
+                    'date_field': self.dt_ref.date(),
+                    'datetime_field': new_dt,
+                    'properties_parent_id': self.properties_parent_1.id,
+                })
+                self.flush_tracking()
+                new_message = test_record.message_ids - messages
+                self.assertMessageFields(
+                    new_message, {
+                        'tracking_values': [
+                            ('datetime_field', 'datetime', self.dt_ref, new_dt, {}),
+                            # dates are stored as a datetime at midnight, properties included
+                            ('date_field', 'date', False, datetime(2025, 9, 30), {}),
+                            ('properties_parent_id', 'many2one', self.tracking_parent_for_properties, self.properties_parent_1, {}),
+                            ('properties', 'properties', self.dt_ref, False,
+                             {'prop_field_string': 'Properties: Property Datetime', 'prop_type': 'datetime'}),
+                            ('properties', 'properties', datetime(2025, 9, 30), False,
+                             {'prop_field_string': 'Properties: Property Date', 'prop_type': 'date'}),
+                        ],
+                    }
+                )
+                self.assertRegex(new_message.body, f'{expected_start}<b>{expected_end}</b><i>Datetime</i>')
+                self.assertRegex(new_message.body, f'None<b>{expected_date}</b><i>Date</i>')
+                self.assertRegex(
+                    new_message.body,
+                    f'{expected_start}<b>None</b><i>Properties: Property Datetime</i>',
+                )
+                self.assertRegex(
+                    new_message.body,
+                    f'{expected_date}<b>None</b><i>Properties: Property Date</i>',
+                )
+
+    @users('employee')
     def test_mail_track_properties(self):
         """Test that the old properties values are logged when the parent changes."""
         properties_record_2 = self.properties_record_2.with_env(self.env)
