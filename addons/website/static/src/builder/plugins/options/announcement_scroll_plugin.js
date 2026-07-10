@@ -4,13 +4,46 @@ import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
+const media_size_wrapper_prefix = "calc(";
+const media_size_wrapper_suffix =
+    " * var(--marquee-item-size,1%) / var(--marquee-item-size,1vw) * 1vw)";
+
+function unwrapMediaSizeWidth(width) {
+    return width.startsWith(media_size_wrapper_prefix) && width.endsWith(media_size_wrapper_suffix)
+        ? width.slice(media_size_wrapper_prefix.length, -media_size_wrapper_suffix.length) + "%"
+        : width;
+}
+
+function wrapMediaSizeWidth(width) {
+    return media_size_wrapper_prefix + width.slice(0, -"%".length) + media_size_wrapper_suffix;
+}
+
 export class AnnouncementScrollPlugin extends Plugin {
     static id = "announcementScrollPlugin";
-    static dependencies = ["dom"];
+    static dependencies = ["dom", "builderActions"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         content_not_editable_selectors: ".s_announcement_scroll_marquee_container",
         content_editable_selectors: ".s_announcement_scroll_marquee_item",
+        read_media_size_width_processors: unwrapMediaSizeWidth,
+        write_media_size_width_processors: (width, editingElement) =>
+            width.match(/^\d*%$/) && editingElement.closest(".s_announcement_scroll_marquee_item")
+                ? wrapMediaSizeWidth(width)
+                : width,
+        before_insert_processors: (container, block) => {
+            if (block.closest(".s_announcement_scroll_marquee_item")) {
+                for (const el of container.querySelectorAll("img")) {
+                    const width = el.style.width;
+                    if (width.match(/^\d*%$/)) {
+                        const value = wrapMediaSizeWidth(unwrapMediaSizeWidth(width));
+                        this.dependencies.builderActions
+                            .getAction("styleAction")
+                            .apply({ editingElement: el, params: { mainParam: "width" }, value });
+                    }
+                }
+            }
+            return container;
+        },
     };
     setup() {
         applyFunDependOnSelectorAndExclude(this.updateTemplate.bind(this), this.editable, {
