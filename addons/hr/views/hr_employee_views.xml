@@ -713,17 +713,17 @@
                     <field name="department_id" />
                     <templates>
                         <t t-name="hierarchy-box">
-                            <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center pb-4 o_hierarchy_node_color_{{ record.department_color.raw_value }}"
+                            <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center m-2 mb-0 rounded-3 pb-4 o_hierarchy_node_color_{{ record.department_color.raw_value }}"
                                 t-att-title="record.department_id.value"
                             >
                                 <field name="image_1024" preview_image="image_128" options="{'zoom': true, 'zoom_delay': 1000}" widget="background_image" />
                             </div>
-                            <div class="d-flex flex-column text-center">
-                                <div class="d-flex">
+                            <div class="d-flex flex-column gap-1 p-2 text-center">
+                                <div class="position-relative d-flex">
                                     <field class="fw-bold w-100" name="name" />
                                     <field name="hr_icon_display" class="flex-shrink-0" widget="hr_presence_status" />
                                 </div>
-                                <field name="job_title"/>
+                                <field name="job_title" class="text-muted"/>
                             </div>
                         </t>
                     </templates>
