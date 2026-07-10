@@ -532,3 +532,27 @@ class TestProductPostInstall(TestStockCommon):
             {'location_id': transit_location.id, 'quantity': 3.0},
             {'location_id': self.stock_location.id, 'quantity': 4.0},
         ])
+
+    def test_toggle_inventory_tracking_keeps_stock_on_hand(self):
+        """ Toggling 'is_storable' off/on must keep the stock on hand
+        consistent with its moves, without counter balancing existing quants.
+        This is required to avoid incorrect inventory valuation at date. """
+        product = self.product
+        product.is_storable = True
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 10.0,
+        })._apply_inventory()
+        self.assertEqual(product.qty_available, 10.0)
+        self.assertEqual(product.with_context(to_date='2020-01-01 00:00:00').qty_available, 0.0)
+
+        product.is_storable = False
+        product.is_storable = True
+
+        self.assertEqual(product.qty_available, 10.0)
+        self.assertEqual(product.with_context(to_date='2020-01-01 00:00:00').qty_available, 0.0)
+        self.assertFalse(self.env['stock.move'].search([
+            ('product_id', '=', product.id),
+            ('location_dest_usage', '=', 'inventory'),
+        ]))
