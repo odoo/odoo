@@ -167,6 +167,12 @@ patch(PosStore.prototype, {
     },
     async mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
+        // The merged order takes the destination's preset, so the source's fee lines
+        // are stale: drop them, the recompute below re-applies the fee on the merged
+        // base. A refund order keeps its own (see recomputeServiceFees).
+        if (!sourceOrder.isRefund && !destOrder.isRefund) {
+            sourceOrder.removeAllServiceFeeLines();
+        }
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
         const sourceLastPrint = sourceOrder.lastPrints.at(-1);
         // Sum the guest counts from both orders
@@ -257,6 +263,9 @@ patch(PosStore.prototype, {
         ) {
             destOrder.pushLastPrints(combinedPrint);
         }
+        // Re-apply the fee on the merged base before syncing. The courses are only
+        // settled above, so the fee can be pinned to the last one.
+        destOrder.recomputeServiceFees();
         if (typeof destOrder.id === "number") {
             await this.syncAllOrders({ orders: [destOrder] });
         }
@@ -778,8 +787,13 @@ patch(PosStore.prototype, {
         });
         let selectedCourse = course;
         if (order.course_ids.length === 1 && order.lines.length > 0) {
-            // Assign order lines to the first course
-            order.lines.forEach((line) => (line.course_id = course));
+            // Assign order lines to the first course, except the service fees:
+            // they are pinned to the last course below.
+            order.lines.forEach((line) => {
+                if (!line.isServiceFeeLine()) {
+                    line.course_id = course;
+                }
+            });
             // Create a second empty course
             if (!this.config.use_course_allocation) {
                 selectedCourse = this.data.models["restaurant.order.course"].create({
@@ -790,6 +804,8 @@ patch(PosStore.prototype, {
             }
         }
         order.selectCourse(selectedCourse);
+        // Keep the fee in the last course so it stays at the bottom of the order.
+        order.serviceFeeLines.forEach((line) => (line.course_id = order.getLastCourse()));
         return course;
     },
     async fireCourse(course) {

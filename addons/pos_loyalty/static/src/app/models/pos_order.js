@@ -1024,11 +1024,18 @@ patch(PosOrder.prototype, {
     _getDiscountableOnOrder(reward) {
         let discountable = 0;
         const discountablePerTax = {};
+        // A gift card or an eWallet settles the whole bill, service fee included.
+        // Every other discount on order discounts what was ordered, and the fee is
+        // a charge on top of it: it stays out of the base.
+        const isPaymentReward = ["ewallet", "gift_card"].includes(reward.program_id.program_type);
         for (const line of this.getOrderlines()) {
             if (!line.getQuantity()) {
                 continue;
             }
-            const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+            if (!isPaymentReward && line.isServiceFeeLine()) {
+                continue;
+            }
+            const taxKey = isPaymentReward
                 ? line.tax_ids.map((t) => t.id)
                 : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
             discountable += line.prices.total_included;
@@ -1515,8 +1522,13 @@ patch(PosOrder.prototype, {
                     line.coupon_id === lineToRemove.coupon_id &&
                     line.reward_identifier_code === lineToRemove.reward_identifier_code
             );
+            // Deleting a line emits no event the fee listens to.
+            const feeBaseChanged = linesToRemove.some((line) => line.isServiceFeeApplicable());
             for (const line of linesToRemove) {
                 line.delete();
+            }
+            if (feeBaseChanged) {
+                this.recomputeServiceFees();
             }
             return true;
         } else {
