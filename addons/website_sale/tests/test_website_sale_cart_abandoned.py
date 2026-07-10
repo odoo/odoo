@@ -281,3 +281,53 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             'order_line': order_line,
         })
         self.assertFalse(self.send_mail_patched(abandoned_sale_order.id))
+
+    def test_abandoned_cart_email_not_sent_twice_on_concurrent_cron(self):
+        """Ensure a second cron run during send_mail does not duplicate recovery emails.
+
+        Simulates overlapping cron workers: while the first run is inside send_mail,
+        a second run starts. Without an atomic claim, both send; with the claim, only
+        the first does. Re-enter at most once so an unfixed core does not recurse forever.
+        """
+        website = self.env['website'].get_current_website()
+        website.send_abandoned_cart_email = True
+        website.write({
+            'send_abandoned_cart_email_activation_time': (
+                datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)
+            ) - relativedelta(minutes=10),
+        })
+        # Ensure partner email is set (other tests in this class may clear it).
+        self.customer.email = 'a@example.com'
+
+        product = self.env['product.product'].create({'name': 'The Product'})
+        order_line = [[0, 0, {
+            'name': 'The Product',
+            'product_id': product.id,
+            'product_uom_qty': 1,
+        }]]
+        abandoned_sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'website_id': website.id,
+            'state': 'draft',
+            'date_order': (
+                datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)
+            ) - relativedelta(minutes=1),
+            'order_line': order_line,
+        })
+        self.assertTrue(abandoned_sale_order.is_abandoned_cart)
+
+        send_count = 0
+
+        def send_mail_and_rerun_cron(this, res_id, *args, email_values=None, **kwargs):
+            nonlocal send_count
+            if res_id != abandoned_sale_order.id:
+                return
+            send_count += 1
+            # Only one nested cron pass — enough to expose a duplicate send.
+            if send_count == 1:
+                self.env['website']._send_abandoned_cart_email()
+
+        with patch.object(MailTemplate, 'send_mail', send_mail_and_rerun_cron):
+            self.env['website']._send_abandoned_cart_email()
+
+        self.assertEqual(send_count, 1, 'Recovery email must be sent only once.')

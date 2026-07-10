@@ -935,13 +935,30 @@ class Website(models.Model):
             # Mark abandoned carts that failed the filter as sent to avoid rechecking them again and again.
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
+                # Claim the cart atomically before sending to avoid duplicate emails when
+                # several cron workers process the same cart in parallel.
+                # Use IS NOT TRUE so NULL (ORM False) and FALSE both match — plain
+                # `= FALSE` would miss NULL and skip the send entirely.
+                self.env.cr.execute(
+                    """
+                    UPDATE sale_order
+                    SET cart_recovery_email_sent = TRUE
+                    WHERE id = %s
+                      AND cart_recovery_email_sent IS NOT TRUE
+                    RETURNING id
+                    """,
+                    (sale_order.id,),
+                )
+                if not self.env.cr.fetchone():
+                    continue
+                sale_order.invalidate_recordset(['cart_recovery_email_sent'])
+
                 template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
                 # fallback email_vals in case partner_to,email_to were emptied or default recipients is false
                 email_vals = {} if template.email_to or template.partner_to or template.use_default_to else {
                     'email_to': sale_order.partner_id.email_formatted
                 }
                 template.send_mail(sale_order.id, email_values=email_vals)
-                sale_order.cart_recovery_email_sent = True
 
     @api.model_create_multi
     def create(self, vals_list):
