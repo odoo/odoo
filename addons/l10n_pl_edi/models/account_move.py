@@ -150,7 +150,7 @@ class AccountMove(models.Model):
             return vat_number
 
         def get_address(partner):
-            return re.sub(r'\n+', r' ', partner._display_address(True))
+            return re.sub(r'\n+', r' ', partner.with_context(without_country_name=True)._display_address(True))
 
         def get_tags(code):
             return self.env['account.account.tag']._get_tax_tags(code, self.env.ref('base.pl').id)
