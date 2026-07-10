@@ -126,6 +126,15 @@ export interface ReactiveValue<TRead, TWrite = TRead> {
 	 */
 	set(nextValue: TWrite): void;
 }
+/**
+ * The `equals` option accepted by `signal` and `computed`: a custom equality
+ * used to decide whether a new value should notify observers. Defaults to
+ * `Object.is`. Pass `false` to disable the check entirely (every write or
+ * recompute notifies, even with an identical value — useful for values that
+ * are mutated in place). The function receives (previous, next) and runs
+ * untracked: it can safely read reactive values without subscribing to them.
+ */
+export type Equals<T> = false | ((a: T, b: T) => boolean);
 declare enum ComputationState {
 	EXECUTED = 0,
 	STALE = 1,
@@ -324,6 +333,31 @@ export interface PluginConstructor {
 	new (...args: any[]): Plugin$1;
 	id: string;
 	sequence: number;
+	/**
+	 * Optional factory producing a specialized view of the plugin for a
+	 * consumer scope. When defined, `usePlugin` returns
+	 * `scoped(plugin, scope)` instead of the plugin itself, where `scope` is
+	 * the caller's scope (a component node or a plugin manager). Typical use:
+	 * wrap async methods with `scope.run` so their results are guarded by the
+	 * consumer's lifetime, and expose the raw instance as an escape hatch:
+	 *
+	 * ```ts
+	 * class ORM extends Plugin {
+	 *   static scoped(self: ORM, scope: Scope): ORM {
+	 *     return Object.assign(Object.create(self), {
+	 *       read: scope.run.bind(scope, self.read),
+	 *     });
+	 *   }
+	 *   unscoped = this;
+	 *   read = async (...) => { ... };
+	 * }
+	 * ```
+	 *
+	 * Called once per `usePlugin` call — the returned view is not cached.
+	 * It is a static (not an instance method) so the scoped view, usually
+	 * created with `Object.create(plugin)`, does not inherit it.
+	 */
+	scoped?(plugin: any, scope: Scope): object;
 }
 declare class Plugin$1 {
 	private static _shadowId;
@@ -365,10 +399,22 @@ export declare abstract class Scope {
 	private _destroyCbs;
 	constructor(app: any);
 	/**
-	 * Pushes this scope on the stack for the duration of `callback`. Any code
-	 * executed inside `callback` can reach this scope via `useScope()`.
+	 * Pushes this scope on the stack for the duration of `fn`, invoking it with
+	 * the given arguments. Any code executed synchronously inside `fn` can reach
+	 * this scope via `useScope()`.
+	 *
+	 * If the scope is already dead when `run` is called, it throws an
+	 * `OwlError` (a programming error — nothing should schedule work in a
+	 * destroyed scope). This is deliberately *not* an AbortError.
+	 *
+	 * If `fn` returns a promise, `run` guards the await with the scope's
+	 * lifetime: the returned promise rejects with an AbortError if the scope
+	 * dies during the await. AbortError is part of the normal async workflow,
+	 * unlike the up-front OwlError above. This does not allocate an
+	 * AbortController — status checks are sufficient for guarding between awaits.
 	 */
-	run<T>(callback: () => T): T;
+	run<Args extends any[], T>(fn: (...args: Args) => T, ...args: Args): T;
+	private _guard;
 	/**
 	 * An AbortSignal tied to this scope's lifetime. If the scope is already
 	 * dead, returns a pre-aborted signal. Lazily allocates an AbortController
@@ -376,12 +422,13 @@ export declare abstract class Scope {
 	 */
 	get abortSignal(): AbortSignal;
 	/**
-	 * Awaits `p`, throwing an AbortError if the scope is dead before or after
-	 * the await. Unlike `until(signal, p)`, this does not allocate an
-	 * AbortController — status checks are sufficient for guarding between
-	 * awaits.
+	 * Returns true once the scope has been fully destroyed, i.e. `finalize` has
+	 * run: the abort signal is aborted, onDestroy callbacks have executed and
+	 * computations are disposed. Note that a CANCELLED scope (abandoned before
+	 * mount, but not yet finalized) is dead but not destroyed — to ask "is this
+	 * scope dead?", check `status > STATUS.MOUNTED` instead.
 	 */
-	until<T>(p: Promise<T>): Promise<T>;
+	isDestroyed(): boolean;
 	/**
 	 * Registers a callback to run when the scope is destroyed. If the scope is
 	 * already destroyed, the callback is invoked immediately.
@@ -463,30 +510,45 @@ export interface Signal<T> extends ReactiveValue<T> {
 	 */
 	set(nextValue: T): void;
 }
-export interface SignalOptions<T> {
-	type?: T;
+export interface SignalOptions<TValue, TElem = TValue> {
+	type?: TElem;
+	/** Custom equality used by `set` to decide whether to notify (see Equals). */
+	equals?: Equals<TValue>;
 }
 declare function triggerSignal(signal: Signal<any>): void;
 declare function signalRef(): Signal<HTMLElement | null>;
 declare function signalRef<T extends Constructor<HTMLElement>>(type: T): Signal<InstanceType<T> | null>;
 declare function signalArray<T>(): Signal<T[]>;
-declare function signalArray<T>(initialValue: T[]): Signal<T[]>;
-declare function signalArray<T>(initialValue: NoInfer<T>[], options: SignalOptions<T>): Signal<T[]>;
+declare function signalArray<T>(initialValue: T[], options?: {
+	equals?: Equals<T[]>;
+}): Signal<T[]>;
+declare function signalArray<T>(initialValue: NoInfer<T>[], options: SignalOptions<T[], T>): Signal<T[]>;
 declare function signalObject<T extends Record<PropertyKey, any>>(): Signal<T>;
-declare function signalObject<T extends Record<PropertyKey, any>>(initialValue: T): Signal<T>;
+declare function signalObject<T extends Record<PropertyKey, any>>(initialValue: T, options?: {
+	equals?: Equals<T>;
+}): Signal<T>;
 declare function signalObject<T extends Record<PropertyKey, any>>(initialValue: NoInfer<T>, options: SignalOptions<T>): Signal<T>;
 export interface MapSignalOptions<K, V> {
 	name?: string;
 	keyType?: K;
 	valueType?: V;
+	/** Custom equality used by `set` to decide whether to notify (see Equals). */
+	equals?: Equals<Map<K, V>>;
 }
 declare function signalMap<K, V>(): Signal<Map<K, V>>;
-declare function signalMap<K, V>(initialValue: Map<K, V>): Signal<Map<K, V>>;
+declare function signalMap<K, V>(initialValue: Map<K, V>, options?: {
+	name?: string;
+	equals?: Equals<Map<K, V>>;
+}): Signal<Map<K, V>>;
 declare function signalMap<K, V>(initialValue: NoInfer<Map<K, V>>, options: MapSignalOptions<K, V>): Signal<Map<K, V>>;
 declare function signalSet<T>(): Signal<Set<T>>;
-declare function signalSet<T>(initialValue: Set<T>): Signal<Set<T>>;
-declare function signalSet<T>(initialValue: Set<NoInfer<T>>, options: SignalOptions<T>): Signal<Set<T>>;
-export declare function signal<T>(value: T): Signal<T>;
+declare function signalSet<T>(initialValue: Set<T>, options?: {
+	equals?: Equals<Set<T>>;
+}): Signal<Set<T>>;
+declare function signalSet<T>(initialValue: Set<NoInfer<T>>, options: SignalOptions<Set<T>, T>): Signal<Set<T>>;
+export declare function signal<T>(value: T, options?: {
+	equals?: Equals<T>;
+}): Signal<T>;
 export declare function signal<T>(value: NoInfer<T>, options: SignalOptions<T>): Signal<T>;
 export declare namespace signal {
 	var trigger: typeof triggerSignal;
@@ -496,16 +558,29 @@ export declare namespace signal {
 	var Object: typeof signalObject;
 	var Set: typeof signalSet;
 }
-export interface ComputedOptions<TWrite> {
+export interface ComputedOptions<TRead, TWrite = TRead> {
 	set?(value: TWrite): void;
+	/**
+	 * Custom equality used after a recompute to decide whether observers should
+	 * be notified (see Equals). Useful when the getter builds a fresh object
+	 * each time (e.g. a filtered array): with a structural equality such as
+	 * `shallowEqual`, an equal result stops the propagation.
+	 */
+	equals?: Equals<TRead>;
 }
-export declare function computed<TRead, TWrite = TRead>(getter: () => TRead, options?: ComputedOptions<TWrite>): ReactiveValue<TRead, TWrite>;
+export declare function computed<TRead, TWrite = TRead>(getter: () => TRead, options?: ComputedOptions<TRead, TWrite>): ReactiveValue<TRead, TWrite>;
 export declare function effect<T>(fn: () => T): () => void;
 export interface AsyncComputedContext {
 	readonly abortSignal: AbortSignal;
 }
 export interface AsyncComputedOptions<T> {
 	initial?: T;
+	/**
+	 * Custom equality for the resolved value (see Equals): a fetch resolving to
+	 * an equal value does not notify observers. Note that the previous value is
+	 * `undefined` before the first resolution when no `initial` is given.
+	 */
+	equals?: Equals<T | undefined>;
 }
 export interface AsyncComputed<T> {
 	(): T | undefined;
@@ -592,15 +667,29 @@ export declare function useEffect(fn: Parameters<typeof effect>[0]): void;
 export declare function useListener(target: EventTarget | Signal<EventTarget | null>, eventName: string, handler: EventListener, eventParams?: AddEventListenerOptions): void;
 export declare function onWillStart(fn: (scope: Scope) => Promise<void> | void | any): void;
 export declare function onWillDestroy(fn: (scope: Scope) => void | any): void;
-export type PluginInstance<T extends PluginConstructor> = Omit<InstanceType<T>, "setup">;
-export declare function plugin<T extends PluginConstructor>(pluginType: T): PluginInstance<T>;
-export declare function config<T = any>(key: string): T;
-export declare function config<T>(key: string, type: WithDefault<T>): T;
-export declare function config<T>(key: string, type: Optional<T>): T | undefined;
-export declare function config<T>(key: string, type: T): StripBrands<T>;
+export type PluginInstance<T extends PluginConstructor> = T extends {
+	scoped: (plugin: any, scope: Scope) => infer R;
+} ? R : Omit<InstanceType<T>, "setup">;
+export declare function usePlugin<T extends PluginConstructor>(pluginType: T): PluginInstance<T>;
+/** @deprecated alias for {@link usePlugin} */
+export declare const plugin: typeof usePlugin;
+export declare function useConfig<T = any>(key: string): T;
+export declare function useConfig<T>(key: string, type: WithDefault<T>): T;
+export declare function useConfig<T>(key: string, type: Optional<T>): T | undefined;
+export declare function useConfig<T>(key: string, type: T): StripBrands<T>;
+/** @deprecated alias for {@link useConfig} */
+export declare const config: typeof useConfig;
 export declare class EventBus extends EventTarget {
 	trigger(name: string, payload?: any): void;
 }
+/**
+ * Compares two values one level deep: arrays element by element, plain
+ * objects own key by own key (with `Object.is` on each value). Anything else
+ * (Map, Set, class instances, ...) only compares equal by identity. Meant to
+ * be used as the `equals` option of `signal` or `computed` when a fresh
+ * array/object is produced on each recompute.
+ */
+export declare function shallowEqual(a: unknown, b: unknown): boolean;
 declare class Markup extends String {
 }
 export declare function htmlEscape(str: any): Markup;
@@ -764,6 +853,8 @@ export interface PropsFunction {
 	<Shape extends {}>(shape: Shape): ResolveProps<Shape>;
 	static: typeof staticProp;
 }
+export declare const useProps: PropsFunction;
+/** @deprecated alias for {@link useProps} */
 export declare const props: PropsFunction;
 declare class Scheduler {
 	static requestAnimationFrame: (callback: FrameRequestCallback) => number;

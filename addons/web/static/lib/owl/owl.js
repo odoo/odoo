@@ -62,6 +62,7 @@ var owl = (() => {
     props: () => props,
     providePlugins: () => providePlugins,
     proxy: () => proxy,
+    shallowEqual: () => shallowEqual,
     signal: () => signal,
     status: () => status,
     t: () => types2,
@@ -69,8 +70,11 @@ var owl = (() => {
     types: () => types2,
     untrack: () => untrack,
     useApp: () => useApp2,
+    useConfig: () => useConfig,
     useEffect: () => useEffect,
     useListener: () => useListener,
+    usePlugin: () => usePlugin,
+    useProps: () => useProps,
     useScope: () => useScope,
     validateType: () => validateType,
     whenReady: () => whenReady,
@@ -102,6 +106,26 @@ var owl = (() => {
       }
     };
   }
+  function neverEqual() {
+    return false;
+  }
+  function toEqualsFn(equals) {
+    if (equals === false) {
+      return neverEqual;
+    }
+    if (!equals) {
+      return Object.is;
+    }
+    return (a, b) => {
+      const previousComputation = currentComputation;
+      currentComputation = void 0;
+      try {
+        return equals(a, b);
+      } finally {
+        currentComputation = previousComputation;
+      }
+    };
+  }
   var ComputationState = /* @__PURE__ */ ((ComputationState2) => {
     ComputationState2[ComputationState2["EXECUTED"] = 0] = "EXECUTED";
     ComputationState2[ComputationState2["STALE"] = 1] = "STALE";
@@ -112,6 +136,7 @@ var owl = (() => {
   var observers = [];
   var immediateObservers = [];
   var currentComputation;
+  var pendingDisposals = /* @__PURE__ */ new Set();
   function createComputation(compute, isDerived, state = 1, immediate = false) {
     return {
       state,
@@ -142,6 +167,9 @@ var owl = (() => {
         }
       }
       ctx.state = 1;
+      if (ctx.isDerived && ctx.observers.size === 0) {
+        pendingDisposals.add(ctx);
+      }
     }
     if (immediateObservers.length) {
       const toRun = immediateObservers;
@@ -158,6 +186,15 @@ var owl = (() => {
     observers = [];
     for (let i = 0; i < pending.length; i++) {
       updateComputation(pending[i]);
+    }
+    if (pendingDisposals.size !== 0) {
+      const candidates = pendingDisposals;
+      pendingDisposals = /* @__PURE__ */ new Set();
+      for (const computation of candidates) {
+        if (computation.observers.size === 0) {
+          disposeComputation(computation);
+        }
+      }
     }
   }
   function getCurrentComputation() {
@@ -221,12 +258,17 @@ var owl = (() => {
     let current;
     while (current = stack.pop()) {
       for (const observer of current.observers) {
+        if (observer.isDerived && observer.observers.size === 0) {
+          pendingDisposals.add(observer);
+        }
         if (observer.state) {
           continue;
         }
         observer.state = 2;
         if (observer.isDerived) {
           stack.push(observer);
+        } else if (observer.immediate) {
+          immediateObservers.push(observer);
         } else {
           observers.push(observer);
         }
@@ -265,16 +307,42 @@ var owl = (() => {
       this.pluginManager = app.pluginManager;
     }
     /**
-     * Pushes this scope on the stack for the duration of `callback`. Any code
-     * executed inside `callback` can reach this scope via `useScope()`.
+     * Pushes this scope on the stack for the duration of `fn`, invoking it with
+     * the given arguments. Any code executed synchronously inside `fn` can reach
+     * this scope via `useScope()`.
+     *
+     * If the scope is already dead when `run` is called, it throws an
+     * `OwlError` (a programming error — nothing should schedule work in a
+     * destroyed scope). This is deliberately *not* an AbortError.
+     *
+     * If `fn` returns a promise, `run` guards the await with the scope's
+     * lifetime: the returned promise rejects with an AbortError if the scope
+     * dies during the await. AbortError is part of the normal async workflow,
+     * unlike the up-front OwlError above. This does not allocate an
+     * AbortController — status checks are sufficient for guarding between awaits.
      */
-    run(callback) {
+    run(fn, ...args) {
+      if (this.status > STATUS.MOUNTED) {
+        throw new OwlError("Cannot run a callback in a destroyed scope");
+      }
       scopeStack.push(this);
+      let result;
       try {
-        return callback();
+        result = fn(...args);
       } finally {
         scopeStack.pop();
       }
+      if (result !== null && typeof result?.then === "function") {
+        return this._guard(result);
+      }
+      return result;
+    }
+    async _guard(p) {
+      const result = await p;
+      if (this.status > STATUS.MOUNTED) {
+        throw makeAbortError();
+      }
+      return result;
     }
     /**
      * An AbortSignal tied to this scope's lifetime. If the scope is already
@@ -292,20 +360,14 @@ var owl = (() => {
       return (this._controller ??= new AbortController()).signal;
     }
     /**
-     * Awaits `p`, throwing an AbortError if the scope is dead before or after
-     * the await. Unlike `until(signal, p)`, this does not allocate an
-     * AbortController — status checks are sufficient for guarding between
-     * awaits.
+     * Returns true once the scope has been fully destroyed, i.e. `finalize` has
+     * run: the abort signal is aborted, onDestroy callbacks have executed and
+     * computations are disposed. Note that a CANCELLED scope (abandoned before
+     * mount, but not yet finalized) is dead but not destroyed — to ask "is this
+     * scope dead?", check `status > STATUS.MOUNTED` instead.
      */
-    async until(p) {
-      if (this.status > STATUS.MOUNTED) {
-        throw makeAbortError();
-      }
-      const result = await p;
-      if (this.status > STATUS.MOUNTED) {
-        throw makeAbortError();
-      }
-      return result;
+    isDestroyed() {
+      return this.status >= STATUS.DESTROYED;
     }
     /**
      * Registers a callback to run when the scope is destroyed. If the scope is
@@ -640,12 +702,13 @@ var owl = (() => {
       }
     });
   }
-  function buildSignal(value, set) {
+  function buildSignal(value, set, equals) {
     const atom = {
       type: "signal",
       value,
       observers: /* @__PURE__ */ new Set()
     };
+    const equalsFn = toEqualsFn(equals);
     let readValue = set(atom);
     const readSignal = () => {
       onReadAtom(atom);
@@ -653,7 +716,7 @@ var owl = (() => {
     };
     readSignal[atomSymbol] = atom;
     readSignal.set = function writeSignal(newValue) {
-      if (Object.is(atom.value, newValue)) {
+      if (equalsFn(atom.value, newValue)) {
         return;
       }
       atom.value = newValue;
@@ -671,20 +734,28 @@ var owl = (() => {
   function signalRef() {
     return buildSignal(null, (atom) => atom.value);
   }
-  function signalArray(initialValue = []) {
-    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+  function signalArray(initialValue = [], options = {}) {
+    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom), options.equals);
   }
-  function signalObject(initialValue = {}) {
-    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+  function signalObject(initialValue = {}, options = {}) {
+    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom), options.equals);
   }
-  function signalMap(initialValue = /* @__PURE__ */ new Map()) {
-    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+  function signalMap(initialValue = /* @__PURE__ */ new Map(), options = {}) {
+    return buildSignal(
+      initialValue,
+      (atom) => proxifyTarget(atom.value, atom),
+      options.equals
+    );
   }
-  function signalSet(initialValue = /* @__PURE__ */ new Set()) {
-    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+  function signalSet(initialValue = /* @__PURE__ */ new Set(), options = {}) {
+    return buildSignal(
+      initialValue,
+      (atom) => proxifyTarget(atom.value, atom),
+      options.equals
+    );
   }
-  function signal(value) {
-    return buildSignal(value, (atom) => atom.value);
+  function signal(value, options = {}) {
+    return buildSignal(value, (atom) => atom.value, options.equals);
   }
   signal.trigger = triggerSignal;
   signal.ref = signalRef;
@@ -698,11 +769,17 @@ var owl = (() => {
     );
   }
   function computed(getter, options = {}) {
+    const equalsFn = toEqualsFn(options.equals);
+    let hasValue = false;
     const computation = createComputation(() => {
       const newValue = getter();
-      if (!Object.is(computation.value, newValue)) {
+      if (hasValue) {
+        if (equalsFn(computation.value, newValue)) {
+          return computation.value;
+        }
         onWriteAtom(computation);
       }
+      hasValue = true;
       return newValue;
     }, true);
     function readComputed() {
@@ -781,7 +858,7 @@ var owl = (() => {
     }
   }
   function asyncComputed(fetcher, options = {}) {
-    const value = signal(options.initial);
+    const value = signal(options.initial, { equals: options.equals });
     const loading = signal(false);
     const error = signal(null);
     const refreshTick = signal(0);
@@ -1557,7 +1634,7 @@ ${issueStrings}`);
   function useApp() {
     return useScope().app;
   }
-  function plugin(pluginType) {
+  function usePlugin(pluginType) {
     const scope = useScope();
     let plugin2 = scope.pluginManager.getPluginById(pluginType.id);
     if (!plugin2) {
@@ -1567,9 +1644,11 @@ ${issueStrings}`);
         throw new OwlError(`Unknown plugin "${pluginType.id}"`);
       }
     }
-    return plugin2;
+    const scoped = pluginType.scoped;
+    return scoped ? scoped(plugin2, scope) : plugin2;
   }
-  function config(key, type) {
+  var plugin = usePlugin;
+  function useConfig(key, type) {
     const scope = useScope();
     if (!(scope instanceof PluginManager)) {
       throw new OwlError("Expected to be in a plugin scope");
@@ -1580,11 +1659,47 @@ ${issueStrings}`);
     const configValue = scope.config[key];
     return configValue === void 0 ? getDefault(type)?.() : configValue;
   }
+  var config = useConfig;
   var EventBus = class extends EventTarget {
     trigger(name, payload) {
       this.dispatchEvent(new CustomEvent(name, { detail: payload }));
     }
   };
+  function shallowEqual(a, b) {
+    if (Object.is(a, b)) {
+      return true;
+    }
+    if (typeof a !== "object" || typeof b !== "object" || a === null || b === null) {
+      return false;
+    }
+    if (Array.isArray(a) || Array.isArray(b)) {
+      if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+        return false;
+      }
+      for (let i = 0; i < a.length; i++) {
+        if (!Object.is(a[i], b[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+    const protoA = Object.getPrototypeOf(a);
+    const protoB = Object.getPrototypeOf(b);
+    if (protoA !== Object.prototype && protoA !== null || protoB !== Object.prototype && protoB !== null) {
+      return false;
+    }
+    const keysA = Object.keys(a);
+    const keysB = Object.keys(b);
+    if (keysA.length !== keysB.length) {
+      return false;
+    }
+    for (const key of keysA) {
+      if (!Object.prototype.hasOwnProperty.call(b, key) || !Object.is(a[key], b[key])) {
+        return false;
+      }
+    }
+    return true;
+  }
   var Markup = class extends String {
   };
   function htmlEscape(str) {
@@ -1624,7 +1739,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.42";
+  var version = "3.0.0-alpha.43";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -3965,7 +4080,7 @@ ${issueStrings}`);
     const n = parseFloat(val);
     return isNaN(n) ? val : n;
   }
-  function shallowEqual(l1, l2) {
+  function shallowEqual2(l1, l2) {
     for (let i = 0, l = l1.length; i < l; i++) {
       if (l1[i] !== l2[i]) {
         return false;
@@ -4206,7 +4321,7 @@ ${issueStrings}`);
     callSlot,
     withKey,
     prepareList,
-    shallowEqual,
+    shallowEqual: shallowEqual2,
     toNumber,
     LazyValue,
     safeOutput,
@@ -4667,7 +4782,8 @@ ${issueStrings}`);
     }
     return result;
   }
-  var props = Object.assign(makeProps, { static: staticProp });
+  var useProps = Object.assign(makeProps, { static: staticProp });
+  var props = useProps;
   var ErrorBoundary = class extends Component {
     static template = xml`
     <t t-if="this.props.error()">
@@ -4808,8 +4924,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-07-07T08:37:30.925Z",
-    hash: "55111162",
+    date: "2026-07-10T07:14:31.599Z",
+    hash: "f309e06e",
     url: "https://github.com/odoo/owl"
   };
 
