@@ -32,6 +32,7 @@ from odoo.tools import (
 from odoo.tools.func import locked, reset_cached_properties
 from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
+from odoo.tools.version_tag_reset import reset_classes_tp_versions_used
 
 from .utils import SUPERUSER_ID
 from . import model_classes
@@ -207,6 +208,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
         registry._init = False
+        reset_classes_tp_versions_used(registry.values(), reset_above_ratio=0.3)  # cpython optimisation
         registry.ready = True
         registry.registry_invalidated = bool(update_module)
         registry.signal_changes()
@@ -501,6 +503,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for model in env.values():
                 model._register_hook()
             env.flush_all()
+
+        reset_classes_tp_versions_used(self.values())  # cpython optimisation
 
     @functools.cached_property
     def field_inverses(self) -> Collector[Field, Field]:
