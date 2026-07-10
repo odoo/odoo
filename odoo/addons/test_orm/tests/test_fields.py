@@ -3793,7 +3793,7 @@ class SudoCommands(TransactionCaseWithUserDemo):
             # 1.4 Command.LINK
             # Case: a normal user changing the `partner_id` of an admin,
             # to change the email address of the user and ask for a reset password.
-            # We get a read error since Command.link need to read the corecord first, see One2many.write_real
+            # We get a read error since Command.link need to read the corecord first, see One2many._write
             with self.assertRaisesRegex(AccessError, "doesn't have 'write' access to"):
                 my_partner.write({
                     'user_ids': [Command.link(admin_user.id)],
