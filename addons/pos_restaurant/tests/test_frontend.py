@@ -1138,3 +1138,111 @@ class TestFrontend(TestFrontendCommon):
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ServiceFeeTour', login="pos_admin")
+
+    def test_service_fee_mixed_tax_quantity(self):
+        """
+        Two tax groups split a fixed service fee into two lines. Editing its
+        quantity must still scale the whole fee: it used to reset to 1, so the
+        cashier could no longer edit it once the fee had split.
+        """
+        tax_a = self.env['account.tax'].create({
+            'name': 'Tax A 0%',
+            'amount': 0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        tax_b = self.env['account.tax'].create({
+            'name': 'Tax B 0%',
+            'amount': 0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 30.0,
+            'name': 'Dish A',
+            'pos_categ_ids': self.coca_cola_test.pos_categ_ids.ids,
+            'taxes_id': [Command.set(tax_a.ids)],
+        })
+        self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'name': 'Dish B',
+            'pos_categ_ids': self.coca_cola_test.pos_categ_ids.ids,
+            'taxes_id': [Command.set(tax_b.ids)],
+        })
+        preset_fixed_service_fee = self.env['pos.preset'].create({
+            'name': 'Fixed 2',
+            'service_fee': True,
+            'service_fee_type': 'fixed',
+            'service_fee_amount': 2,
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'iface_tax_included': 'total',
+            'default_preset_id': preset_fixed_service_fee.id,
+            'available_preset_ids': [(6, 0, [])],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('ServiceFeeMixedTaxQuantityTour', login="pos_admin")
+
+    def test_service_fee_course(self):
+        """
+        A service fee applies to the whole order, so it stays at the bottom of
+        it even as the cashier splits the order into courses.
+        """
+        preset_fixed_service_fee = self.env['pos.preset'].create({
+            'name': 'Fixed 10',
+            'service_fee': True,
+            'service_fee_type': 'fixed',
+            'service_fee_amount': 10,
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': preset_fixed_service_fee.id,
+            'available_preset_ids': [(6, 0, [])],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('ServiceFeeCourseTour', login="pos_admin")
+
+    def test_service_fee_table_merge(self):
+        """
+        The merged order carries one fee: the destination's, recomputed on the
+        whole bill. Fee lines never merge, so the source's used to linger.
+        """
+        preset_percentage_service_fee = self.env['pos.preset'].create({
+            'name': 'Percentage',
+            'service_fee': True,
+            'service_fee_type': 'percent',
+            'service_fee_amount': 0.1,
+            'service_fee_based_on': 'pre_discount',
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'use_order_printer': False,  # avoid the preparation printer dialog
+            'default_preset_id': preset_percentage_service_fee.id,
+            'available_preset_ids': [(6, 0, [])],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('ServiceFeeTableMergeTour', login="pos_admin")
+
+    def test_service_fee_refund(self):
+        """
+        The service fee is refundable like any other orderline, and a refund
+        order (which has no preset) must never recompute it.
+        """
+        preset_percentage_service_fee = self.env['pos.preset'].create({
+            'name': 'Percentage',
+            'service_fee': True,
+            'service_fee_type': 'percent',
+            'service_fee_amount': 0.1,
+            'service_fee_based_on': 'pre_discount',
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'use_order_printer': False,  # avoid the preparation printer dialog when paying
+            'default_preset_id': preset_percentage_service_fee.id,
+            'available_preset_ids': [(6, 0, [])],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('ServiceFeeRefundTour', login="pos_admin")
