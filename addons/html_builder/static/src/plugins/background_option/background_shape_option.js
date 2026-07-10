@@ -39,7 +39,7 @@ export class BackgroundShapeOption extends BaseOptionComponent {
  */
 export function getDefaultColors(editingElement) {
     const shapeContainerEl = editingElement.querySelector(":scope > .o_we_shape");
-    if (!shapeContainerEl) {
+    if (!shapeContainerEl || !editingElement.ownerDocument.defaultView) {
         return {};
     }
     const shapeContainerClonedEl = shapeContainerEl.cloneNode(true);
