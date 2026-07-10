@@ -6,11 +6,9 @@ from odoo.addons.uom.tests.common import UomCommon
 
 
 class ProductCommon(UomCommon):
-
-    _test_groups = (
+    _test_user_groups = (
         'product.group_product_manager',
     )
-
     _test_user_name = 'Test Product Manager'
 
     @classmethod
@@ -75,12 +73,6 @@ class ProductCommon(UomCommon):
 
 
 class ProductVariantsCommon(ProductCommon):
-
-    _test_groups = (
-        'product.group_product_manager',
-    )
-
-    _test_user_name = 'Test Product Manager'
 
     @classmethod
     def setUpClass(cls):

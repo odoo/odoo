@@ -6,12 +6,6 @@ from odoo.addons.product.tests.common import ProductCommon
 
 class PartnershipCommon(ProductCommon):
 
-    _test_groups = (
-        'product.group_product_manager',
-    )
-
-    _test_user_name = 'Test Product Manager'
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

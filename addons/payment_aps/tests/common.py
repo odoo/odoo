@@ -4,8 +4,6 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 class APSCommon(PaymentHttpCommon):
-    _test_user_groups = None
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

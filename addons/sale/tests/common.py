@@ -11,9 +11,10 @@ class SaleCommon(
     ProductCommon,  # BaseCommon, UomCommon
     SalesTeamCommon,
 ):
-    _test_user_groups = ('sales_team.group_sale_salesman',)
-
-    _test_user_name = 'Test Sales User'
+    # DO not use ProductCommon._test_user_groups as we do not want to provide product manager
+    # rights by default here.
+    _test_user_groups = SalesTeamCommon._test_user_groups
+    _test_user_name = SalesTeamCommon._test_user_name
 
     @classmethod
     def setUpClass(cls):
