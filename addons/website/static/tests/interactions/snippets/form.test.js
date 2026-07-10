@@ -3,6 +3,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 import { describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
+    check,
     clear,
     click,
     fill,
@@ -383,6 +384,58 @@ const formTemplateWithRadioAndSelect = /* html */ `
                 <div class="s_website_form_submit">
                     <span id="s_website_form_result"></span>
                     <a href="#" role="button" class="btn btn-primary s_website_form_send" contenteditable="true">Submit</a>
+                </div>
+            </form>
+        </section>
+    </div>
+`;
+
+const formWithSendCopyOptionalEmail = /* html */ `
+<div id="wrapwrap">
+        <section class="s_website_form">
+            <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-model_name="mail.mail">
+                <div data-name="Field" class="s_website_form_field s_website_form_copy_email">
+                    <label class="s_website_form_label">
+                        <span class="s_website_form_label_content">Your Email</span>
+                    </label>
+                    <input type="email" name="email_from" id="oub62hlfgjwf"/>
+                </div>
+                <div data-name="Field" class="s_website_form_field" data-type="binary">
+                    <label class="s_website_form_label" >
+                        <span class="s_website_form_label_content">File Upload</span>
+                    </label>
+                    <input type="file" name="File Upload" id="o3xe8o85w0ct" multiple
+                        data-max-files-number="2" data-max-file-size="64">
+                </div>
+                <div data-name="Field" class="s_website_form_field" data-type="one2many">
+                    <label class="s_website_form_label">
+                        <span class="s_website_form_label_content">Multiple Checkboxes</span>
+                    </label>
+                    <div class="s_website_form_multiple" data-name="Multiple Checkboxes" data-display="horizontal">
+                        <div class="checkbox">
+                            <input type="checkbox" id="og9xzme09az80" name="Multiple Checkboxes" value="Option 1">
+                            <label class="form-check-label s_website_form_check_label" for="og9xzme09az80">
+                                Option 1
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="og9xzme09az81" name="Multiple Checkboxes" value="Option 2">
+                            <label class="form-check-label s_website_form_check_label" for="og9xzme09az81">
+                                Option 2
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="og9xzme09az82" name="Multiple Checkboxes" value="Option 3">
+                            <label class="form-check-label s_website_form_check_label" for="og9xzme09az82">
+                                Option 3
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="s_website_form_submit s_website_form_no_submit_label" data-name="Submit Button">
+                    <div class="s_website_form_label"></div>
+                    <span id="s_website_form_result"></span>
+                    <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
                 </div>
             </form>
         </section>
@@ -919,4 +972,42 @@ test("validates file input against allowed filetypes", async () => {
     await runAllTimers();
     await click("a.s_website_form_send");
     checkField(fileEl, true, false);
+});
+
+test("include the send a copy payload correctly when the email field is provided.", async () => {
+    onRpc("/website/form/mail.mail", async (request) => {
+        const formData = await request.formData();
+        const formValues = JSON.parse(formData.get("_send_copy_fields"));
+        expect(formValues).toEqual([
+            { label: "Your Email", value: "test@example.com" },
+            {
+                label: "File Upload",
+                value: "test_file1.pdf (0.01 MB), test_file2.pdf (0.02 MB)",
+            },
+            { label: "Multiple Checkboxes", value: "Option 2, Option 3" },
+        ]);
+        expect(formData.get("_send_copy_mail_address")).toBe("test@example.com");
+    });
+    await startInteractions(formWithSendCopyOptionalEmail);
+
+    await click("input[name=email_from]");
+    await fill("test@example.com");
+    const file1 = new File([new Uint8Array(5000)], "test_file1.pdf", { type: "application/pdf" });
+    const file2 = new File([new Uint8Array(16000)], "test_file2.pdf", { type: "application/pdf" });
+    await click("input[type='file']");
+    await setInputFiles([file1, file2]);
+    await check("input[value='Option 2']");
+    await check("input[value='Option 3']");
+    await click("a.s_website_form_send");
+});
+
+test("should not include the send a copy payload when the email field is empty", async () => {
+    onRpc("/website/form/mail.mail", async (request) => {
+        const formData = await request.formData();
+        expect(formData.get("_send_copy_fields")).toBe(null);
+        expect(formData.get("_send_copy_mail_address")).toBe(null);
+    });
+    await startInteractions(formWithSendCopyOptionalEmail);
+
+    await click("a.s_website_form_send");
 });

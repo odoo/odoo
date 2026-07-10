@@ -5,12 +5,13 @@ import { FormActionFieldsOption } from "./form_action_fields_option";
 import { session } from "@web/session";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
+import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 
 export class FormOption extends BaseOptionComponent {
     static id = "form_option";
     static template = "website.s_website_form_form_option";
     static dependencies = ["websiteFormOption"];
-    static components = { FormActionFieldsOption };
+    static components = { FormActionFieldsOption, DocumentationLink };
     static async cleanForSave(el, { dependencies, services }) {
         for (const sigEl of el.querySelectorAll("input[name=website_form_signature]")) {
             sigEl.remove();

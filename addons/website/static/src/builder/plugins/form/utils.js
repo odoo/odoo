@@ -309,6 +309,10 @@ export function replaceFieldElement(oldFieldEl, fieldEl) {
     const hasConditionalVisibility = oldFieldEl.classList.contains(
         "s_website_form_field_hidden_if"
     );
+    const isSendCopyEnabled = oldFieldEl.classList.contains("s_website_form_copy_email");
+    const isAutoCreatedFormCopyEmail = oldFieldEl.classList.contains(
+        "s_send_copy_auto_created_email_field"
+    );
     const previousInputEl = oldFieldEl.querySelector(".s_website_form_input");
     const previousName = previousInputEl.name;
     const previousType = previousInputEl.type;
@@ -328,6 +332,12 @@ export function replaceFieldElement(oldFieldEl, fieldEl) {
     }
     if (hasConditionalVisibility) {
         oldFieldEl.classList.add("s_website_form_field_hidden_if", "d-none");
+    }
+    if (isSendCopyEnabled) {
+        oldFieldEl.classList.add("s_website_form_copy_email");
+    }
+    if (isAutoCreatedFormCopyEmail) {
+        oldFieldEl.classList.add("s_send_copy_auto_created_email_field");
     }
     const dependentFieldEls = oldFieldEl
         .closest("form")
