@@ -654,7 +654,9 @@ export class Form extends Interaction {
         // Highlight the first invalid field
         if (firstInvalidInput) {
             firstInvalidInput.focus();
-            firstInvalidInput.scrollIntoView({ behavior: "smooth", block: "center" });
+            const viewportHeight = document.defaultView.innerHeight;
+            const inputHeight = firstInvalidInput.getBoundingClientRect().height;
+            scrollTo(firstInvalidInput, { forcedOffset: viewportHeight / 2 - inputHeight / 2 });
         }
         return formValid;
     }
