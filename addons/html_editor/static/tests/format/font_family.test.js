@@ -2,7 +2,7 @@ import { test, expect } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { click, queryOne, waitFor } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
-import { setFontFamily, undo, redo } from "../_helpers/user_actions";
+import { setFontFamily, undo, redo, insertText } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { animationFrame } from "@odoo/hoot-mock";
 import { expandToolbar } from "../_helpers/toolbar";
@@ -153,4 +153,21 @@ test("font-family dropdown item should have corresponding font-family applied", 
             ][i]
         );
     }
+});
+
+test("font-family should be preserved when replacing HTML element text", async () => {
+    const { el, editor } = await setupEditor("<p>[test]</p>");
+    await expandToolbar();
+
+    await click(".btn[name='font_family']");
+    await expectElementCount(".o_font_family_selector_menu", 1);
+
+    await click(".o_font_family_selector_menu .o-dropdown-item:nth-child(2)");
+    await animationFrame();
+    expect(el).toBeFocused();
+    expect(getContent(el)).toBe(`<p><span style="font-family: Arial, sans-serif;">[test]</span></p>`);
+
+    await insertText(editor, "a");
+    await animationFrame();
+    expect(getContent(el)).toBe(`<p><span style="font-family: Arial, sans-serif;">a[]</span></p>`);
 });
