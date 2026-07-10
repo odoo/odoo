@@ -1362,6 +1362,23 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'analytic_distribution': False},
         ])
 
+    def test_out_invoice_cash_rounding_multi_company(self):
+        # cash rounding methods are not shared between companies
+        self.assertEqual(self.env.company, self.company_data['company'])
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'company_id': self.company_data_2['company'].id,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 100.42,
+                'tax_ids': [],
+            })],
+        })
+        with self.assertRaises(UserError):
+            move.invoice_cash_rounding_id = self.cash_rounding_a
+
     def test_out_invoice_line_onchange_cash_rounding_1(self):
         # Required for `invoice_cash_rounding_id` to be visible in the view
         self.env.user.group_ids += self.env.ref('account.group_cash_rounding')
