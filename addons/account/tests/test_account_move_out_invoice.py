@@ -1369,6 +1369,38 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'analytic_distribution': False},
         ])
 
+    def test_out_invoice_cash_rounding_multi_company(self):
+        # profit_account_id / loss_account_id are company-dependent: when the
+        # invoice belongs to another company than the active one, the rounding
+        # line must use the accounts of the invoice's company.
+        company_data_2 = self.company_data_2
+        self.cash_rounding_a.with_company(company_data_2['company']).write({
+            'profit_account_id': company_data_2['default_account_revenue'].id,
+            'loss_account_id': company_data_2['default_account_expense'].id,
+        })
+
+        self.assertEqual(self.env.company, self.company_data['company'])
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'company_id': company_data_2['company'].id,
+            'partner_id': self.partner_a.id,
+            'invoice_cash_rounding_id': self.cash_rounding_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 100.42,
+                'tax_ids': [],
+            })],
+        })
+
+        rounding_line = move.line_ids.filtered(lambda line: line.display_type == 'rounding')
+        self.assertTrue(rounding_line, "A cash rounding line should have been added.")
+        self.assertEqual(
+            rounding_line.account_id,
+            company_data_2['default_account_revenue'],
+            "The rounding line must use the profit / loss account depending on the move's company.",
+        )
+
     def test_out_invoice_line_onchange_cash_rounding_1(self):
         # Required for `invoice_cash_rounding_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
