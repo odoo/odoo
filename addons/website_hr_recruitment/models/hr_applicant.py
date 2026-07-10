@@ -9,6 +9,9 @@ class Applicant(models.Model):
 
     _inherit = 'hr.applicant'
 
+    def _get_form_signed_fields(self):
+        return super()._get_form_signed_fields() | {'job_id', 'department_id'}
+
     def website_form_input_filter(self, request, values):
         if 'partner_name' in values:
             applicant_job = self.env['hr.job'].sudo().search([('id', '=', values['job_id'])]).name if 'job_id' in values else False

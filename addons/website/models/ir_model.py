@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import ir_http
-from odoo import models
+from odoo import api, models
 
 
 class BaseModel(models.AbstractModel):
@@ -46,3 +46,8 @@ class BaseModel(models.AbstractModel):
         if website:
             return website.default_lang_id.code
         return super()._get_base_lang()
+
+    @api.model
+    def _get_form_signed_fields(self) -> set:
+        """ Returns the field names which must be signed in a website form """
+        return set()

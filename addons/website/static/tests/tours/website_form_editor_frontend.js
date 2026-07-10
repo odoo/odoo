@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         content:  "Try to send the form with some required fields not filled in",
         extra_trigger:  "form[data-model_name='mail.mail']" +
                         "[data-success-page='/contactus-thank-you']" +
+                        ":has(input[name='__sign__'])" +
                         ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='name'][required]))" +
                         ":has(.s_website_form_field:has(label:contains('Your Email')):has(input[type='email'][name='email_from'][required]))" +
                         ":has(.s_website_form_field:has(label:contains('Your Question')):has(textarea[name='description'][required]))" +
@@ -28,8 +29,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field.s_website_form_required:has(label:contains('State')):has(select[name='State'][required]:has(option[value='France'])))" +
                         ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Canada'])))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')))" +
-                        ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" +
-                        ":has(.s_website_form_field:has(input[name='website_form_signature']))",
+                        ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))",
         trigger:  ".s_website_form_send"
     },
     {
