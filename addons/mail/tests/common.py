@@ -32,7 +32,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, RecordCapturer, new_test_user
 from odoo.tools import LazyTranslate, mute_logger, mail as mail_lib
 from odoo.tools.mail import email_normalize, email_split_and_format_normalize, formataddr
-from odoo.tools.misc import formatLang, format_date, format_datetime, format_amount
+from odoo.tools.misc import formatLang, format_amount
 from odoo.tools.translate import code_translations
 
 _logger = logging.getLogger(__name__)
@@ -1172,6 +1172,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 tracking, prop_type or value_type,
                 old_value, new_value,
                 additional_info=additional_info,
+                message_context=message.env.context,
             )
 
             if not self.is_mail_track_installed:
@@ -1251,9 +1252,13 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 self.assertIn(key, tracking_field_info, f'Expected {key} not found in {tracking_field_info} of {tracking}')
                 self.assertEqual(tracking_field_info[key], val)
 
-    def assertTrackingValueInBody(self, tracking, value_type, old_value, new_value, additional_info=None):
+    def assertTrackingValueInBody(self, tracking, value_type, old_value, new_value, additional_info=None, message_context=None):
         input_old_value, input_new_value = tracking[1], tracking[2]
         msg_base = f'Tracking: {tracking[0]} ({value_type})'
+        TrackingMixin = self.env['mail.track.mixin']
+        # useful when message is sent in a different language
+        if message_context:
+            TrackingMixin = TrackingMixin.with_context(message_context)
         if value_type == 'many2one':
             old_value = (old_value and old_value.display_name) or 'None'
             new_value = (new_value and new_value.display_name) or 'None'
@@ -1267,21 +1272,21 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             old_value = old_value or 'None'
             new_value = new_value or 'None'
         elif value_type == 'date':
-            old_value = format_date(self.env, old_value) if old_value is not False else 'None'
-            new_value = format_date(self.env, new_value) if new_value is not False else 'None'
+            old_value = TrackingMixin._format_tracking_date(old_value) if old_value else 'None'
+            new_value = TrackingMixin._format_tracking_date(new_value) if new_value is not False else 'None'
         elif value_type == 'datetime':
-            old_value = format_datetime(self.env, old_value) if old_value is not False else 'None'
-            new_value = format_datetime(self.env, new_value) if new_value is not False else 'None'
+            old_value = TrackingMixin._format_tracking_datetime(old_value) if old_value else 'None'
+            new_value = TrackingMixin._format_tracking_datetime(new_value) if new_value is not False else 'None'
         elif value_type == 'float':
-            old_value = formatLang(self.env, old_value) if old_value is not False else '0.00'
-            new_value = formatLang(self.env, new_value) if new_value is not False else '0.00'
+            old_value = formatLang(TrackingMixin.env, old_value) if old_value is not False else '0.00'
+            new_value = formatLang(TrackingMixin.env, new_value) if new_value is not False else '0.00'
         elif value_type == 'integer':
-            old_value = formatLang(self.env, old_value, rounding_unit='units') if old_value is not False else '0'
-            new_value = formatLang(self.env, new_value, rounding_unit='units') if new_value is not False else '0'
+            old_value = formatLang(TrackingMixin.env, old_value, rounding_unit='units') if old_value is not False else '0'
+            new_value = formatLang(TrackingMixin.env, new_value, rounding_unit='units') if new_value is not False else '0'
         elif value_type == 'monetary':
             currency = (additional_info or {})['currency']
-            old_value = format_amount(self.env, float(old_value or 0.0), currency, trailing_zeroes=True)
-            new_value = format_amount(self.env, float(new_value or 0.0), currency, trailing_zeroes=True)
+            old_value = format_amount(TrackingMixin.env, float(old_value or 0.0), currency, trailing_zeroes=True)
+            new_value = format_amount(TrackingMixin.env, float(new_value or 0.0), currency, trailing_zeroes=True)
             # TDE to check: &nbsp; versus \xa0
             old_value = old_value.replace('\xa0', ' ')
             new_value = new_value.replace('\xa0', ' ')
