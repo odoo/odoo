@@ -235,7 +235,7 @@ test("should apply contrast to color classes with important style and remove it 
             '<p>abc<font class="text-o-color-3" data-original-color="" style="color: rgb(190, 182, 175) !important;">[def]</font></p>',
         stepFunction: setColor("rgb(190, 182, 175)", "color"),
         contentAfterEdit: unformat(`
-            <p>abc<font class="" style="color: rgb(190, 182, 175);">[def]</font></p>
+            <p>abc<font style="color: rgb(190, 182, 175);">[def]</font></p>
         `),
         contentAfter: unformat(`
             <p>abc<font style="color: rgb(190, 182, 175);">[def]</font></p>
