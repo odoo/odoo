@@ -44,7 +44,7 @@
         <field name="arch" type="xml">
             <list string="Move Lines" editable="top" decoration-muted="state == 'cancel'" default_order="location_id">
                 <header>
-                    <button class="btn-primary" name="action_put_in_pack" type="object" string="Put in Pack" groups="stock.group_tracking_lot"/>
+                    <button class="btn-primary" name="action_put_in_pack" type="object" context="{'confirm_pack_in_pack': 1}" string="Put in Pack" groups="stock.group_tracking_lot"/>
                 </header>
                 <field name="company_id" column_invisible="True"/> <!-- loaded regardless of base.group_multi_company for the force_save company_id column below -->
                 <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="id"/>
