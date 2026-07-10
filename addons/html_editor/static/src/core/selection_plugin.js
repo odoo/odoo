@@ -188,6 +188,7 @@ function scrollToSelection(selection) {
 
 /**
  * @typedef {((selectionData: SelectionData) => void)[]} on_selectionchange_handlers
+ * @typedef {((selectionData: EditorSelection | undefined) => void)[]} on_selection_set_handlers
  * @typedef {(() => void)[]} on_selection_leave_handlers
  *
  * @typedef {((ev: PointerEvent) => void | true)[]} double_click_overrides
@@ -818,6 +819,7 @@ export class SelectionPlugin extends Plugin {
         }
         restore();
 
+        this.trigger("on_selection_set_handlers", this.activeSelection);
         return this.activeSelection;
     }
 

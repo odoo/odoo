@@ -18,7 +18,7 @@ declare module "plugins" {
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
     import { ProtectedNodeShared } from "@html_editor/core/protected_node_plugin";
     import { SanitizeShared } from "@html_editor/core/sanitize_plugin";
-    import { double_click_overrides, fix_selection_on_editable_root_overrides, is_node_fully_selected_predicates, is_char_tangible_for_keyboard_navigation_predicates, is_node_editable_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionShared, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
+    import { double_click_overrides, fix_selection_on_editable_root_overrides, is_node_fully_selected_predicates, is_char_tangible_for_keyboard_navigation_predicates, is_node_editable_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionShared, targeted_nodes_processors, triple_click_overrides, on_selection_set_handlers } from "@html_editor/core/selection_plugin";
     import { shortcuts, shorthands } from "@html_editor/core/shortcut_plugin";
     import { on_element_split_handlers, on_will_split_block_handlers, split_element_block_overrides, SplitShared, is_node_splittable_predicates } from "@html_editor/core/split_plugin";
     import { StyleShared } from "@html_editor/core/style_plugin";
@@ -170,6 +170,7 @@ declare module "plugins" {
         on_revert_history_commit_handlers: on_revert_history_commit_handlers;
         on_savepoint_restored_handlers: on_savepoint_restored_handlers;
         on_selection_leave_handlers: on_selection_leave_handlers;
+        on_selection_set_handlers: on_selection_set_handlers;
         on_selectionchange_handlers: on_selectionchange_handlers;
         on_will_delete_handlers: on_will_delete_handlers;
         on_will_break_line_handlers: on_will_break_line_handlers;

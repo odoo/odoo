@@ -163,7 +163,7 @@ test("can navigate in and out of selection placeholders", async () => {
                 unformat(
                     `<p>a</p>
                     <table><tbody><tr><td>b</td></tr></tbody></table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
                     <table><tbody><tr><td>d</td></tr></tbody></table>
                     <p>e</p>`
                 ),
@@ -185,7 +185,7 @@ test("can navigate in and out of selection placeholders", async () => {
                 unformat(
                     `<p>a</p>
                     <table><tbody><tr><td>b</td></tr></tbody></table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
                     <table><tbody><tr><td>d</td></tr></tbody></table>
                     <p>e</p>`
                 ),
@@ -224,7 +224,7 @@ test("moving the caret into a selection placeholder shows a horizontal caret", a
     const focusedResult = unformat(
         `<p data-selection-placeholder=""><br></p>
         <table><tbody><tr><td>a</td></tr></tbody></table>
-        <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+        <p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
         <table><tbody><tr><td><textarea></textarea></td></tr></tbody></table>
         <p data-selection-placeholder=""><br></p>`
     );
@@ -252,7 +252,7 @@ test("moving the caret into a selection placeholder shows a horizontal caret", a
                 unformat(
                     `<p data-selection-placeholder=""><br></p>
                     <table><tbody><tr><td>a</td></tr></tbody></table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
+                    <p data-selection-placeholder="" class="o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
                     <table><tbody><tr><td><textarea></textarea></td></tr></tbody></table>
                     <p data-selection-placeholder=""><br></p>`
                 ),
@@ -263,9 +263,16 @@ test("moving the caret into a selection placeholder shows a horizontal caret", a
             // Focus the editable.
             editor.editable.focus();
             await animationFrame();
-            expect(getContent(editor.editable)).toBe(focusedResult, {
-                message: "The placeholder started blinking again when taking the focus back in.",
-            });
+            expect(getContent(editor.editable)).toBe(
+                focusedResult.replace(
+                    "o-horizontal-caret o-we-hint",
+                    "o-we-hint o-horizontal-caret"
+                ),
+                {
+                    message:
+                        "The placeholder started blinking again when taking the focus back in.",
+                }
+            );
             // Focus the textarea, blurring the editable.
             editor.editable.querySelector("textarea").focus();
             await animationFrame();
@@ -395,7 +402,7 @@ test("moving the caret into a trailing selection placeholder not in the root doe
             <div contenteditable="true">
                 <p data-selection-placeholder=""><br></p>
                 <table><tbody><tr><td>b</td></tr></tbody></table>
-                <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                <p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
             </div>
             <p>c</p>`
         ),
@@ -432,7 +439,7 @@ test("enter in a selection placeholder persists it", async () => {
                 unformat(
                     `<p>a</p>
                     <table><tbody><tr><td>b</td></tr></tbody></table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
                     <table><tbody><tr><td>c</td></tr></tbody></table>
                     <p>d</p>`
                 ),
@@ -537,7 +544,7 @@ test("a selection placeholder is restored after deletion from within", async () 
         stepFunction: async (editor) => {
             await pressArrowKey(editor, "ArrowUp");
             expect(getContent(editor.editable)).toBe(
-                `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+                `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>` +
                     `<table><tbody><tr><td>a</td></tr></tbody></table>` +
                     '<p data-selection-placeholder=""><br></p>',
                 { message: "The top placeholder was selected." }
