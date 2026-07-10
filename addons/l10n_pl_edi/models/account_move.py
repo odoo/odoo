@@ -149,7 +149,7 @@ class AccountMove(models.Model):
             return split_vat(vat)[1]
 
         def get_address(partner):
-            return re.sub(r'\n+', r' ', partner._display_address(True))
+            return partner.with_context(without_country_name=True)._display_address(without_name=True, separator=' ')
 
         def get_tags(code):
             return self.env['account.account.tag']._get_tax_tags(code, self.env.ref('base.pl').id)
