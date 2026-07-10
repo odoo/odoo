@@ -264,10 +264,10 @@ export class ColorPlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
-        let targetedNodes;
+        let targetedNodes, zws;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
-            const zws = this.dependencies.format.getOrCreateZws();
+            zws = this.dependencies.format.getOrCreateZws();
             this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,
@@ -444,16 +444,19 @@ export class ColorPlugin extends Plugin {
                 (!font.hasAttribute("style") || !color)
             ) {
                 const parent = font.parentNode;
-                if (
-                    font.childNodes.length === 1 &&
-                    isTextNode(font.firstChild) &&
-                    isZWS(font.firstChild)
-                ) {
-                    cursors.update(callbacksForCursorUpdate.remove(font));
-                    font.remove();
-                } else {
-                    cursors.update(callbacksForCursorUpdate.unwrap(font));
-                    unwrapContents(font);
+                cursors.update(callbacksForCursorUpdate.unwrap(font));
+                unwrapContents(font);
+                if (zws) {
+                    this.dependencies.selection.setSelection(
+                        {
+                            anchorNode: zws,
+                            anchorOffset: 0,
+                            focusNode: zws,
+                            focusOffset: 1,
+                        },
+                        { normalize: false }
+                    );
+                    return;
                 }
                 fillEmpty(parent);
                 fontsSet.delete(font);
