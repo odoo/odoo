@@ -156,6 +156,10 @@ def http_log(
     if extra['http_headers'] and _logger_headers.isEnabledFor(logging.DEBUG):
         extra['http_headers'] = pprint.pformat(list(extra['http_headers']))
 
+    # Round the timings before they are formatted
+    extra['query_time'] = round(extra['query_time'], 3)
+    extra['remaining_time'] = round(extra['remaining_time'], 3)
+
     colored_extra = extra.copy()
 
     # colors
@@ -163,9 +167,6 @@ def http_log(
         colored_extra['query_count'] = _colorize_query_count(colored_extra['query_count'])
         colored_extra['query_time'] = _colorize_query_time(colored_extra['query_time'])
         colored_extra['remaining_time'] = _colorize_remaining_time(colored_extra['remaining_time'])
-    else:
-        extra['query_time'] = round(extra['query_time'], 3)
-        extra['remaining_time'] = round(extra['remaining_time'], 3)
 
     if config.colors['http_request_line'] and extra['http_response_status'] != '-':
         colored_extra['http_request_line'] = _colorize_request_line(
