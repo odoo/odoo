@@ -211,7 +211,7 @@ class SaleOrderLine(models.Model):
         check_company=True,
         domain="[('type_tax_use', '=', 'sale'), ('country_id', '=', tax_country_id)]",
     )
-    document_tax_mode = fields.Selection(related='order_id.document_tax_mode')
+    document_tax_mode = fields.Selection(related="order_id.document_tax_mode")
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
@@ -744,7 +744,9 @@ class SaleOrderLine(models.Model):
         price = line._get_display_price()
         product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
         price_unit = line.product_id._get_tax_included_unit_price_from_price(
-            price, product_taxes=product_taxes, fiscal_position=line.order_id.fiscal_position_id,
+            price,
+            product_taxes=product_taxes,
+            fiscal_position=line.order_id.fiscal_position_id,
             document_tax_mode=line.document_tax_mode,
         )
         price_unit = line.product_id._adapt_price_unit_to_document_tax_mode(
@@ -1640,7 +1642,7 @@ class SaleOrderLine(models.Model):
                 )
                 line.product_id.with_context(
                     skip_qty_available_update=True
-                ).qty_available -= qty_delivered
+                ).sudo().qty_available -= qty_delivered
             if not line.display_type and line.state == "sale":
                 msg = self.env._("Extra line with %s", line.product_id.display_name or line.name)
                 line.order_id.message_post(body=msg)
