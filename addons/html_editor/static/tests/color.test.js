@@ -77,6 +77,44 @@ test("should get ready to type without color after removing format on a collapse
     );
 });
 
+test("should get ready to type without format after removing format on a collapsed selection", async () => {
+    const { el, editor } = await setupEditor(
+        '<p>ab<strong><font style="color: rgb(255, 0, 0);">cd[]ef</font></strong>gh</p>'
+    );
+    execCommand(editor, "removeFormat");
+    expect(getContent(el)).toBe(
+        '<p>ab<strong><font style="color: rgb(255, 0, 0);">cd[]ef</font></strong>gh</p>'
+    );
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(
+        '<p>ab<strong><font style="color: rgb(255, 0, 0);">cd</font></strong>x[]<strong><font style="color: rgb(255, 0, 0);">ef</font></strong>gh</p>'
+    );
+});
+
+test("should get ready to type without color after removing format when cursor is at the end of block", async () => {
+    const { el, editor } = await setupEditor(
+        '<p><font style="color: rgb(255, 0, 0);">abc[]</font></p>'
+    );
+    execCommand(editor, "removeFormat");
+    expect(getContent(el)).toBe('<p><font style="color: rgb(255, 0, 0);">abc[]</font></p>');
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe('<p><font style="color: rgb(255, 0, 0);">abc</font>x[]</p>');
+});
+
+test("should get ready to type without color and background color after removing format on a collapsed selection", async () => {
+    const { el, editor } = await setupEditor(
+        '<p>ab<font style="color: rgb(255, 0, 0); background-color: rgb(0, 255, 0);">cd[]ef</font>gh</p>'
+    );
+    execCommand(editor, "removeFormat");
+    expect(getContent(el)).toBe(
+        '<p>ab<font style="color: rgb(255, 0, 0); background-color: rgb(0, 255, 0);">cd[]ef</font>gh</p>'
+    );
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(
+        '<p>ab<font style="color: rgb(255, 0, 0); background-color: rgb(0, 255, 0);">cd</font>x[]<font style="color: rgb(255, 0, 0); background-color: rgb(0, 255, 0);">ef</font>gh</p>'
+    );
+});
+
 test("collapsed remove-format defers color removal when the color is on an ancestor", async () => {
     const { el, editor } = await setupEditor(
         '<p><font style="color: rgb(255, 0, 0);"><strong>ab[]cd</strong></font></p>'
