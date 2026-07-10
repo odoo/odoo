@@ -1016,7 +1016,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[\u200b</p></td><td class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
         );
     });
 
