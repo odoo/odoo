@@ -170,3 +170,6 @@ class TestSnippets(HttpCase):
         self.assertEqual(image_elem.attrib['width'], '100%')
         self.assertEqual(image_elem.attrib['height'], '100%')
         self.assertEqual(image_elem.attrib['preserveaspectratio'], 'xMidYMid slice')
+
+    def test_shape_color_sync_with_theme_color(self):
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'shape_color_sync_with_theme_color', login='admin')
