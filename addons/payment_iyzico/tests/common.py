@@ -19,7 +19,7 @@ class IyzicoCommon(PaymentCommon):
         }
         cls.signature = 'abc_xyz'
         cls.payment_data = {
-            'conversationId': cls.reference,
+            'basketId': cls.reference,
             'paymentId': '24232079',
             'paidPrice': cls.amount,
             'paymentStatus': 'SUCCESS',
