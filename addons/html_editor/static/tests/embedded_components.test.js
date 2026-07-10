@@ -394,6 +394,7 @@ describe("Mount and Destroy embedded components", () => {
         // Validate the commit, but the mounting process already started.
         editor.shared.history.commit();
         await animationFrame();
+        cleanHints(editor);
         expect.verifySteps(["mount 1", "mount 2", "mount 3"]);
         expect(getContent(el)).toBe(
             unformat(`
@@ -425,7 +426,7 @@ describe("Mount and Destroy embedded components", () => {
                                         </div>
                                     </div>
                                 </div>
-                                <p data-selection-placeholder=""><br></p>
+                                <p data-selection-placeholder="" class="o-horizontal-caret"><br></p>
                             </div>
                         </div>
                     </div>
