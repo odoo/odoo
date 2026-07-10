@@ -9,6 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
+import { PromoteMailPluginsDialog } from "@crm/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog";
 
 export const MODULE_STATUS = {
     NOT_INSTALLED: "NOT_INSTALLED",
@@ -81,7 +82,7 @@ export class LeadGenerationDropdown extends Component {
                     sequence: 50,
                     moduleName: "Mail Plugins",
                     moduleXmlId: "not_a_module",
-                    onClick: () => this.redirectToMailDocs(),
+                    onClick: () => this.openPromoteMailPluginsDialog(),
                     status: MODULE_STATUS.INSTALLED,
                     title: _t("Mail plugins"),
                 },
@@ -229,11 +230,10 @@ export class LeadGenerationDropdown extends Component {
     }
 
     /*** Button Actions ***/
-    redirectToMailDocs() {
-        this.action.doAction({
-            type: "ir.actions.act_url",
-            url: "https://www.odoo.com/documentation/19.0/applications/general/integrations/mail_plugins.html",
-            target: "new",
+
+    openPromoteMailPluginsDialog() {
+        this.dialogs.add(PromoteMailPluginsDialog, {
+            title: _t("Get our Mail Plugins!"),
         });
     }
 
