@@ -30,6 +30,7 @@ from odoo.tools import (
 )
 from odoo.tools.func import locked
 from odoo.tools.lru import LRU
+from odoo.tools.version_tag_reset import reset_classes_tp_versions_used
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger('odoo.schema')
@@ -108,6 +109,7 @@ class Registry(Mapping):
         registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
         registry._init = False
+        reset_classes_tp_versions_used(registry.values(), reset_above_ratio=0.3)  # cpython optimisation
         registry.ready = True
         registry.registry_invalidated = bool(update_module)
 
@@ -324,6 +326,8 @@ class Registry(Mapping):
             for model in env.values():
                 model._register_hook()
             env.flush_all()
+
+        reset_classes_tp_versions_used(self.values())  # cpython optimisation
 
     @lazy_property
     def field_computed(self):
