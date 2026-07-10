@@ -99,9 +99,26 @@ export class TicketScreen extends Component {
         });
     }
     onMounted() {
-        setTimeout(() => {
+        setTimeout(async () => {
             // Show updated list of synced orders when going back to the screen.
-            this.onFilterSelected(this.state.filter);
+            await this.onFilterSelected(this.state.filter);
+
+            const isActiveFilter = !this.state.filter || this.state.filter === "ACTIVE_ORDERS";
+            if (!isActiveFilter || this.getFilteredOrderList().length) {
+                return;
+            }
+
+            const hasSyncedOrders = this.pos.models["pos.order"].some(
+                (order) =>
+                    order.finalized && order.uiState.displayed && !this.isZeroTransaction(order)
+            );
+            if (!hasSyncedOrders) {
+                return;
+            }
+
+            // Avoid dead-end empty Active list: fallback to Paid when available.
+            this.state.filter = "SYNCED";
+            await this.onFilterSelected("SYNCED");
         });
     }
     async onClickPageNbr() {
@@ -428,12 +445,30 @@ export class TicketScreen extends Component {
         const oScreen = o.getScreenData();
         return (!o.finalized || screen.includes(oScreen.name)) && o.uiState.displayed;
     }
+    isZeroTransaction(order) {
+        return order.finalized && Math.abs(order.priceIncl || 0) < 0.000001;
+    }
+    isEmptyDraftPlaceholder(order) {
+        return (
+            !order.finalized &&
+            order.state === "draft" &&
+            order.getOrderlines().length === 0 &&
+            (order.payment_ids?.length || 0) === 0 &&
+            Math.abs(order.priceIncl || 0) < 0.000001
+        );
+    }
     getFilteredOrderList() {
         const orderModel = this.pos.models["pos.order"];
         let orders =
             this.state.filter === "SYNCED"
                 ? orderModel.filter((o) => o.finalized && o.uiState.displayed)
                 : orderModel.filter(this.activeOrderFilter);
+
+        // Guardrail: hide finalized zero-amount transactions from Orders list.
+        orders = orders.filter((order) => !this.isZeroTransaction(order));
+
+        // UI cleanup: hide transient empty draft placeholders (ghost 0.00 rows).
+        orders = orders.filter((order) => !this.isEmptyDraftPlaceholder(order));
 
         if (this.state.filter && !["ACTIVE_ORDERS", "SYNCED"].includes(this.state.filter)) {
             orders = orders.filter((order) => {

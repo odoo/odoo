@@ -131,8 +131,8 @@
                         </t>
                         <div t-else="" class="d-flex h-100 flex-column align-items-center justify-content-center">
                             <CenteredIcon
-                                icon="this.pos.data.network.loading ? 'fa-circle-o-notch fa-spin' : 'fa-shopping-cart fa-4x'"
-                                text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"
+                                icon="(this.pos.data.network.loading || this.pos.loadingOrderState) ? 'fa-circle-o-notch fa-spin' : 'fa-shopping-cart fa-4x'"
+                                text="(this.pos.data.network.loading || this.pos.loadingOrderState) ? 'Loading...' : (this.state.filter === 'ACTIVE_ORDERS' ? 'No active orders. Switch to Paid.' : 'No orders found')"
                                 class="'w-100'"/>
                             <button class="btn btn-secondary" t-on-click="onClickNewOrder">New Order</button>
                         </div>

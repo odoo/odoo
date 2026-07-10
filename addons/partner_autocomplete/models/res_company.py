@@ -20,30 +20,18 @@ class ResCompany(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        if modules.module.current_test:
-            # while running the test, mark enrichment as done
-            res.sudo().iap_enrich_auto_done = True
-        else:
-            res.iap_enrich_auto()
+        res.sudo().iap_enrich_auto_done = True
         return res
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
 
-        if view_type == 'form':
-            for i, node in enumerate(arch.xpath("//field[@name='name' or @name='vat' or @name='duns']")):
-                node.set('widget', 'field_partner_autocomplete')
-
         return arch, view
 
     def iap_enrich_auto(self):
-        """ Enrich company. This method should be called by automatic processes
-        and a protection is added to avoid doing enrich in a loop. """
-        if self.env.user._is_system() and self.env.registry.ready and not self.env.context.get('install_demo'):
-            for company in self.filtered(lambda company: not company.iap_enrich_auto_done):
-                company._enrich()
-            self.iap_enrich_auto_done = True
+        """Disabled: keep the hook for compatibility, but do not call IAP."""
+        self.iap_enrich_auto_done = True
         return True
 
     def _enrich(self):

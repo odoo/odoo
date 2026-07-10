@@ -218,10 +218,6 @@ class ResPartner(models.Model):
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
 
-        if view_type == 'form':
-            for node in arch.xpath("//field[@name='name' or @name='vat' or @name='duns']"):
-                node.set('widget', 'field_partner_autocomplete')
-
         return arch, view
 
     def enrich_company_message_post(self, data):

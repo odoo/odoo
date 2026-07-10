@@ -218,7 +218,7 @@ export const tooltipService = {
             }, CLOSE_DELAY);
 
             if (hasTouch()) {
-                document.body.addEventListener("touchstart", onTouchStart);
+                document.body.addEventListener("touchstart", onTouchStart, { passive: true });
 
                 document.body.addEventListener("touchend", (ev) => {
                     if (isHelpNode(ev.target)) {

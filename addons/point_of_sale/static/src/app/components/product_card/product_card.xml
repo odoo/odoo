@@ -10,17 +10,18 @@
             t-att-data-product-id="props.productId"
             t-attf-aria-labelledby="article_product_{{props.productId}}">
             <div t-if="props.imageUrl" class="product-img ratio ratio-4x3 rounded-top rounded-3">
-                <img class="w-100 object-fit-cover bg-200 pe-none" t-att-src="props.imageUrl" t-att-alt="props.name" draggable="false"/>
+                <img class="w-100 object-fit-cover bg-white pe-none" t-att-src="props.imageUrl" t-att-alt="props.name" draggable="false"/>
             </div>
-            <div class="product-content h-100 px-2 rounded-bottom-3 flex-shrink-1"
+            <div class="product-content px-2 rounded-bottom-3 flex-shrink-1"
                 t-att-class="{'d-flex' : !props.isComboPopup, 'my-1': !(props.isComboPopup and !props.imageUrl)}">
-                <div class="overflow-hidden lh-sm product-name"
-                    t-att-class="{
-                        'no-image d-flex justify-content-center align-items-center text-center': !props.imageUrl,
-                        'mt-1': props.isComboPopup and !props.imageUrl
-                    }"
-                    t-attf-id="article_product_{{props.productId}}"
-                    t-esc="props.name" />
+                <div class="product-meta d-flex flex-column justify-content-between w-100"
+                    t-att-class="{ 'mt-1': props.isComboPopup and !props.imageUrl }">
+                    <div class="overflow-hidden lh-sm product-name"
+                        t-att-class="{ 'no-image text-center': !props.imageUrl }"
+                        t-attf-id="article_product_{{props.productId}}"
+                        t-esc="props.name" />
+                    <div t-if="props.product?.displayPriceUnit" class="product-price mt-1 fw-bold" t-esc="props.product.displayPriceUnit"/>
+                </div>
                 <span t-if="props.productCartQty"
                     t-out="this.productQty"
                     class="product-cart-qty position-absolute bottom-0 end-0 m-1 px-2 rounded bg-black text-white fs-5 fw-bolder"

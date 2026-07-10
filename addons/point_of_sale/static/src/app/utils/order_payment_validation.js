@@ -341,6 +341,14 @@ export default class OrderPaymentValidation {
             return false;
         }
 
+        // Guardrail: do not validate/save zero-amount transactions.
+        if (this.pos.currency.isZero(this.order.priceIncl)) {
+            this.pos.notification.add(_t("Cannot validate an order with total 0."), {
+                type: "warning",
+            });
+            return false;
+        }
+
         if (
             !this.pos.currency.isZero(this.order.priceIncl) &&
             this.order.payment_ids.length === 0

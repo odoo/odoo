@@ -22,6 +22,7 @@
 .product-img img {
     border-top-right-radius: $border-radius-lg;
     border-top-left-radius: $border-radius-lg;
+    background: #fff;
 }
 
 .pos-receipt {
@@ -71,4 +72,139 @@
 }
 .favorite-product {
     border-color: transparent #f3cc00 transparent transparent;
+}
+
+.product-screen .leftpane {
+    .btn-primary {
+        border-color: #bf4353 !important;
+        background: #d34f61 !important;
+        color: #fff !important;
+        box-shadow: 0 4px 12px rgba(176, 68, 84, 0.2);
+
+        &:hover,
+        &:focus-visible {
+            border-color: #b53c4c !important;
+            background: #cb4758 !important;
+        }
+
+        &:active {
+            border-color: #a83847 !important;
+            background: #bd4252 !important;
+        }
+    }
+}
+
+// Slice 1 refinement: lighter premium cards + softer atmospheric product area
+.product-screen .rightpane {
+    background:
+        radial-gradient(120% 80% at 15% 0%, rgba(131, 111, 255, 0.18) 0%, rgba(131, 111, 255, 0) 60%),
+        radial-gradient(100% 70% at 100% 100%, rgba(69, 210, 255, 0.12) 0%, rgba(69, 210, 255, 0) 62%),
+        linear-gradient(180deg, #f5f8ff 0%, #edf2ff 100%) !important;
+
+    .category-list {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.58) 0%, rgba(242, 246, 255, 0.45) 100%);
+        border-bottom: 1px solid rgba(108, 124, 170, 0.24);
+    }
+
+    .category-button {
+        border-color: rgba(112, 126, 167, 0.34);
+        background: rgba(255, 255, 255, 0.88);
+        color: #253357;
+        box-shadow: 0 3px 10px rgba(45, 57, 89, 0.08);
+    }
+
+    .product-list .product {
+        --pos-card-bg: #b4232f;
+        --pos-card-bg-hover: #c93542;
+        --pos-card-border: #e06772;
+        --pos-card-text: #f6f8ff;
+        --pos-card-muted: #d6ddef;
+        --pos-card-primary-hover: #ffd3d8;
+        --pos-card-accent: #fff4f6;
+
+        border: 1px solid var(--pos-card-border) !important;
+        background:
+            linear-gradient(165deg, rgba(255, 172, 180, 0.18) 0%, rgba(255, 172, 180, 0) 50%),
+            var(--pos-card-bg) !important;
+        color: var(--pos-card-text);
+        height: clamp(11rem, 23vh, 15rem);
+        box-shadow:
+            0 8px 20px rgba(18, 26, 46, 0.18),
+            inset 0 1px 0 rgba(244, 247, 255, 0.08);
+        transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease,
+            transform 0.18s ease;
+
+        &:hover,
+        &:focus-visible {
+            border-color: rgba(255, 184, 192, 0.9);
+            background:
+                linear-gradient(165deg, rgba(255, 172, 180, 0.24) 0%, rgba(255, 219, 224, 0.12) 58%),
+                var(--pos-card-bg-hover);
+            box-shadow:
+                0 12px 24px rgba(18, 26, 46, 0.3),
+                0 0 0 1px rgba(255, 184, 192, 0.25);
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            border-color: rgba(255, 209, 214, 0.9);
+            box-shadow:
+                0 0 0 1px rgba(255, 209, 214, 0.28),
+                0 0 0 3px rgba(255, 209, 214, 0.12);
+            transform: translateY(0);
+        }
+
+        .product-img {
+            flex: 0 0 60%;
+            border-bottom: 1px solid rgba(224, 103, 114, 0.85);
+            background: #fff;
+            border-top-left-radius: $border-radius-lg;
+            border-top-right-radius: $border-radius-lg;
+            overflow: hidden;
+
+            img {
+                height: 100%;
+                object-position: top center;
+            }
+        }
+
+        .product-content {
+            flex: 0 0 40%;
+            min-height: 0;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 0.45rem;
+            padding-bottom: 0.45rem;
+        }
+
+        .product-name {
+            color: var(--pos-card-text);
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        .product-name.no-image {
+            min-height: 2.8rem;
+            align-self: center;
+            color: var(--pos-card-muted);
+        }
+
+        .product-price {
+            color: var(--pos-card-primary-hover);
+            font-size: 1.03rem;
+            line-height: 1.15;
+            text-shadow: 0 0 8px rgba(131, 111, 255, 0.16);
+        }
+
+        .product-cart-qty {
+            border: 1px solid rgba(80, 98, 145, 0.88);
+            background: rgba(26, 35, 58, 0.94) !important;
+            color: var(--pos-card-accent) !important;
+            box-shadow: 0 0 10px rgba(116, 220, 255, 0.16);
+        }
+    }
+
+    .product-list {
+        padding-top: 0.45rem !important;
+    }
 }

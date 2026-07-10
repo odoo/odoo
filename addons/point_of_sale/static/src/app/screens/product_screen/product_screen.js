@@ -351,7 +351,12 @@ export class ProductScreen extends Component {
     }
 
     getProductImage(product) {
-        return product.getImageUrl();
+        const templateId = product?.product_tmpl_id?.id || product?.id;
+        const unique = product?.product_tmpl_id?.write_date || product?.write_date || "";
+        if (!templateId) {
+            return false;
+        }
+        return `/web/image?model=product.template&field=image_128&id=${templateId}&unique=${unique}`;
     }
 
     get searchWord() {

@@ -26,7 +26,8 @@
                 </div>
             </div>
             <div t-if="!this.pos.getOrder()" class="pos-centerheader d-none d-xl-flex justify-content-center overflow-hidden">
-                <div class="pos-logo mw-100" />
+                <div class="pos-logo mw-100"
+                     t-att-style="'--navbar-logo: url(' + (this.pos.config.branch_id.logo ? ('/web/image?model=jos.branch&amp;id=' + this.pos.config.branch_id.id + '&amp;field=logo') : ('/web/image?model=res.company&amp;id=' + this.pos.company.id + '&amp;field=logo')) + ');'" />
             </div>
             <div class="pos-rightheader flex-grow-1">
                 <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
@@ -67,12 +68,6 @@
                                 <DropdownItem t-if="showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()">
                                     Cash In/Out
                                 </DropdownItem>
-                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()">
-                                    Reload Data
-                                </DropdownItem>
-                                <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
-                                    Create Product
-                                </DropdownItem>
                                 <DropdownItem t-if="isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and ui.isSmall and !pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
                                     <span t-if="this.pos.scanning">Stop Barcode Scanner</span>
                                     <span t-else="">Barcode Scanner</span>
@@ -81,7 +76,7 @@
                                     Print Report
                                 </DropdownItem>
                                 <DropdownItem onSelected="() => pos.closePos()">
-                                    Backend
+                                    Settings
                                 </DropdownItem>
                                 <DropdownItem onSelected="() => this.pos.closeSession()">
                                     Close Register
