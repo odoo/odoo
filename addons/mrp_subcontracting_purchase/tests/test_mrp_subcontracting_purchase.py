@@ -1130,3 +1130,58 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertEqual(scrap.state, 'done')
         resupply.move_ids.invalidate_recordset(['forecast_availability'])
         self.assertRecordValues(resupply.move_ids, [{'forecast_availability': -1.0}, {'forecast_availability': 0.0}])
+
+    def test_forecasted_values_normal_bom_and_subcontracting(self):
+        """
+        Test the forecasted values of a mrp production when having the following configuration
+        Product A BoM:
+            - Manufacturing
+            - Component: Product B (route MTO + a product supplierinfo linked to it)
+        Product B BoM:
+            - Subcontracting
+            - Component: Product C
+        """
+        product = self.env["product.product"].create({
+            "name": "Amazing product",
+            "is_storable": True,
+            "categ_id": self.product_category.id,
+        })
+
+        self.route_mto.active = True
+        self.finished.write({
+            'route_ids': [Command.set(self.route_mto.ids)]
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_qty': 1.0,
+            })]
+        })
+
+        mo = self.env["mrp.production"].create({
+            "product_id": product.id,
+            "product_qty": 1.0,
+        })
+        mo.action_confirm()
+
+        # Not Available
+        mo.move_raw_ids.invalidate_recordset(['forecast_availability', 'forecast_expected_date'])
+        self.assertEqual(mo.move_raw_ids.forecast_availability, -1.0)
+        self.assertFalse(mo.move_raw_ids.forecast_expected_date)
+
+        order = mo._get_purchase_orders()
+        order.button_confirm()
+
+        # Expected at order.planned_date
+        mo.move_raw_ids.invalidate_recordset(['forecast_availability', 'forecast_expected_date'])
+        self.assertEqual(mo.move_raw_ids.forecast_availability, 1.0)
+        self.assertEqual(mo.move_raw_ids.forecast_expected_date, order.date_planned)
+
+        order.picking_ids.button_validate()
+
+        # Available
+        mo.move_raw_ids.invalidate_recordset(['forecast_availability', 'forecast_expected_date'])
+        self.assertEqual(mo.move_raw_ids.forecast_availability, 1.0)
+        self.assertFalse(mo.move_raw_ids.forecast_expected_date)

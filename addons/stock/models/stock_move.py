@@ -2697,10 +2697,21 @@ Please change the quantity done or the rounding precision in your settings.""",
         wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
         forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, self.product_id.ids, wh_location_query, location_id or warehouse.lot_stock_id, read=False)
         result = defaultdict(lambda: (0.0, False))
-        for line in forecast_lines:
+        last_move_out_before_transit = self.env['stock.move']
+        transit_lines = {}
+        for i, line in enumerate(forecast_lines):
             move_out = line.get('move_out')
+            if not move_out:
+                if transit_lines.get(i - 1):
+                    move_out = last_move_out_before_transit
+                    del result[move_out]
+            else:
+                last_move_out_before_transit = move_out
             if not move_out or not line['quantity']:
+                if line.get('in_transit'):
+                    transit_lines[i] = line
                 continue
+
             move_in = line.get('move_in')
             qty_expected = line['quantity'] + result[move_out][0] if line['replenishment_filled'] else -line['quantity']
             date_expected = False
