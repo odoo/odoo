@@ -30,8 +30,15 @@ from odoo.tools import (
 )
 from odoo.tools.func import locked, reset_cached_properties
 from odoo.tools.lru import LRU
+<<<<<<< d52b494be86307da259fe3097996952a436d4a80
 from odoo.tools.misc import Collector
 from odoo.tools.version_tag_reset import reset_classes_tp_versions_used
+||||||| c7e116f2734980930f1940b2e2351814341746e2
+from odoo.tools.misc import Collector, format_frame
+=======
+from odoo.tools.misc import Collector, format_frame
+from odoo.tools.version_tag_reset import reset_classes_tp_versions_used
+>>>>>>> 39f7f8b9beecb094f346048fa3e8464122058ac0
 
 from .utils import SUPERUSER_ID
 from . import model_classes
@@ -244,7 +251,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Yeah, crazy.
         registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
+<<<<<<< d52b494be86307da259fe3097996952a436d4a80
         reset_classes_tp_versions_used(registry.values(), reset_above_ratio=0.3)  # cpython optimisation
+||||||| c7e116f2734980930f1940b2e2351814341746e2
+        registry._init = False
+=======
+        registry._init = False
+        reset_classes_tp_versions_used(registry.values(), reset_above_ratio=0.3)  # cpython optimisation
+>>>>>>> 39f7f8b9beecb094f346048fa3e8464122058ac0
         registry.ready = True
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
@@ -542,6 +556,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 model._register_hook()
             env.flush_all()
             self.check_null_constraints(env.cr)
+        reset_classes_tp_versions_used(self.values())  # cpython optimisation
+
         reset_classes_tp_versions_used(self.values())  # cpython optimisation
 
     @functools.cached_property
