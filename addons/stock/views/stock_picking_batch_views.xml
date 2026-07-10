@@ -66,7 +66,7 @@
                     <notebook>
                         <page string="Operations" name="page_operations" invisible="state == 'draft'">
                             <field name="move_ids" readonly="state == 'done'" context="{'list_view_ref': 'stock.stock_move_view_list_from_batch'}"/>
-                            <button class="oe_highlight float-end" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot"/>
+                            <button class="oe_highlight float-end" name="action_put_in_pack" type="object" context="{'confirm_pack_in_pack': 1}" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Transfers" name="page_transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
