@@ -17,10 +17,6 @@ class TestPaymentTransaction(PaymentCustomCommon):
             msg = "requires product"
             raise unittest.SkipTest(msg)
 
-        cls.provider = cls._prepare_provider(code="custom", custom_mode="wire_transfer")
-        cls.pay_on_invoice_provider = cls._prepare_provider(
-            code="custom", custom_mode="pay_on_invoice"
-        )
         cls.product = cls.env["product.product"].create({
             "name": "test product",
             "list_price": cls.amount,
