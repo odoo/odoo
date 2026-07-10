@@ -41,7 +41,7 @@
                             <span t-if="this.message.authorName and this.shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="this.getAuthorAttClass()">
                                 <strong class="me-1 o-fw-600" t-out="this.props.messageSearch?.highlight(this.message.authorName) ?? this.message.authorName"/>
                             </span>
-                            <t t-if="!this.isAlignedRight" t-call="mail.Message.notification"/>
+                            <t t-if="!this.isAlignedRight" t-call="mail.Message.notification" name="header-notification"/>
                             <t t-if="this.isAlignedRight and !this.message.bubbleColor and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
                             <small t-if="!this.message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="this.message.datetimeMedium">
                                 <t t-if="this.message.isPending" t-call="mail.Message.pendingStatus"/>
@@ -62,7 +62,7 @@
                                     <i class="fa fa-calendar-o"/>
                                 </span>
                             </div>
-                            <t t-if="this.isAlignedRight" t-call="mail.Message.notification"/>
+                            <t t-if="this.isAlignedRight" t-call="mail.Message.notification" name="header-notification"/>
                             <t t-if="!this.isAlignedRight and !this.message.bubbleColor and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
                         <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': this.isAlignedRight }">
