@@ -19,6 +19,12 @@
                 animation: none !important;
             }
         }
+
+        .img-fluid {
+            // Using a width relative to the parent (100%) prevents correct
+            // computation of the size of the item
+            max-width: 100vw;
+        }
     }
 
     // Item options
