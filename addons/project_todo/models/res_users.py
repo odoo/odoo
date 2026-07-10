@@ -4,6 +4,7 @@
 import json
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID
+from odoo.tools import SQL
 
 
 class ResUsers(models.Model):
@@ -23,7 +24,8 @@ class ResUsers(models.Model):
 
         # 2. Splitting tasks in 'regular-task' (is_task=TRUE) and 'to-do' (is_task=False)
         #    Counting max 1 activity per task
-        query = """
+        active_clause = SQL("AND act.active IS TRUE") if self.env.context.get('active_test', True) else SQL("")
+        query = SQL("""
             WITH task_states AS (
                 SELECT BOOL(t.project_id) AS is_task, act.res_id,
                     CASE
@@ -33,20 +35,15 @@ class ResUsers(models.Model):
                     END AS states
                 FROM mail_activity AS act
                 JOIN project_task AS t ON act.res_id = t.id
-                WHERE act.res_model = 'project.task' AND act.user_id = %(user_id)s AND act.active in (TRUE, %(active)s)
+                WHERE act.res_model = 'project.task' AND act.user_id = %(user_id)s %(active_clause)s
                 GROUP BY is_task, act.res_id
             )
             SELECT is_task, states, array_agg(res_id) AS res_ids, COUNT(res_id) AS count
             FROM task_states
             GROUP BY is_task, states
-        """
+        """, date=str(fields.Date.context_today(self)), user_id=self.env.uid, active_clause=active_clause)
 
-        self.env.cr.execute(query, {
-            'date': str(fields.Date.context_today(self)),
-            'user_id': self.env.uid,
-            'active': self.env.context.get('active_test', True),
-        })
-        activity_data = self.env.cr.dictfetchall()
+        activity_data = self.env.execute_query_dict(query)
         view_type = self.env['project.task']._systray_view
 
         user_activities = {}
