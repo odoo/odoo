@@ -52,7 +52,7 @@ class TestProcessingFlows(NuveiCommon):
         url = self._build_url(NuveiController._return_url)
         error_access_token = self._generate_test_access_token(tx.reference)
         payment_data = dict(
-            tx_ref=tx.reference, error_access_token=error_access_token, data=self.notification_data
+            tx_ref=tx.reference, error_access_token=error_access_token, **self.notification_data
         )
         with patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
