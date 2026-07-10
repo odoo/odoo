@@ -1027,6 +1027,8 @@ class PosOrder(models.Model):
                     if biggest_tax_aml_vals:
                         biggest_tax_aml_vals['amount_currency'] += amount_currency
                         biggest_tax_aml_vals['balance'] += balance
+                        total_amount_currency += amount_currency
+                        total_balance += balance
                 elif cash_rounding.strategy == 'add_invoice_line':
                     if -sign * amount_currency > 0.0 and cash_rounding.loss_account_id:
                         account_id = cash_rounding.loss_account_id.id
@@ -1041,6 +1043,8 @@ class PosOrder(models.Model):
                         'balance': balance,
                         'display_type': 'rounding',
                     })
+                    total_amount_currency += amount_currency
+                    total_balance += balance
         # Stock.
         if self.picking_ids.ids:
             stock_moves = self.env['stock.move'].sudo().search([
@@ -1082,8 +1086,8 @@ class PosOrder(models.Model):
                                     and not aml_entry['partner_id']]
 
             if aml_vals_entry_found and not is_split_transaction:
-                aml_vals_entry_found[0]['amount_currency'] += self.session_id._amount_converter(payment_id.amount, self.date_order, False)
-                aml_vals_entry_found[0]['balance'] += payment_id.amount
+                aml_vals_entry_found[0]['amount_currency'] += payment_id.amount
+                aml_vals_entry_found[0]['balance'] += self.session_id._amount_converter(payment_id.amount, self.date_order, True)
             else:
                 aml_vals_list_per_nature['payment_terms'].append({
                     'partner_id': commercial_partner.id if is_split_transaction else False,
@@ -1091,9 +1095,18 @@ class PosOrder(models.Model):
                     'account_id': reversed_move_receivable_account_id.id,
                     'currency_id': self.currency_id.id,
                     'amount_currency': payment_id.amount,
-                    'balance': self.session_id._amount_converter(payment_id.amount, self.date_order, False),
+                    'balance': self.session_id._amount_converter(payment_id.amount, self.date_order, True),
                     'display_type': 'payment_term',
                 })
+
+        # The other balances are converted and rounded per line, so the converted payment amounts
+        # can drift by a few cents in foreign currency. Put the residual on the last payment term
+        # line to keep the entry balanced.
+        payment_term_amls = aml_vals_list_per_nature['payment_terms']
+        if payment_term_amls and self.currency_id.is_zero(total_amount_currency + sum(aml['amount_currency'] for aml in payment_term_amls)):
+            residual_balance = company_currency.round(-total_balance - sum(aml['balance'] for aml in payment_term_amls))
+            if not company_currency.is_zero(residual_balance):
+                payment_term_amls[-1]['balance'] += residual_balance
 
         return aml_vals_list_per_nature
 
