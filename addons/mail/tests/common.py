@@ -1247,8 +1247,14 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             old_value = format_date(self.env, old_value) if old_value is not False else 'None'
             new_value = format_date(self.env, new_value) if new_value is not False else 'None'
         elif value_type == 'datetime':
-            old_value = format_datetime(self.env, old_value) if old_value is not False else 'None'
-            new_value = format_datetime(self.env, new_value) if new_value is not False else 'None'
+            old_value = '%s (%s)' % (
+                format_datetime(self.env, old_value),
+                format_datetime(self.env, old_value, dt_format='ZZZZ'),
+            ) if old_value is not False else 'None'
+            new_value = '%s (%s)' % (
+                format_datetime(self.env, new_value),
+                format_datetime(self.env, new_value, dt_format='ZZZZ'),
+            ) if new_value is not False else 'None'
         elif value_type == 'float':
             old_value = formatLang(self.env, old_value) if old_value is not False else '0.00'
             new_value = formatLang(self.env, new_value) if new_value is not False else '0.00'

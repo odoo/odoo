@@ -1055,6 +1055,28 @@ class TestTrackingInternals(TestTrackingCommon):
         )
 
     @users('employee')
+    def test_mail_track_datetime_tz(self):
+        """ Datetime trackings are displayed in the user timezone, with its offset. """
+        self.env.user.tz = 'Europe/Brussels'
+        test_record = self.test_tracking_records[0].with_env(self.env)
+        self.flush_tracking()
+        messages = test_record.message_ids
+        new_dt = self.dt_ref + timedelta(hours=1)
+        test_record.write({'datetime_field': new_dt})
+        self.flush_tracking()
+        new_message = test_record.message_ids - messages
+        self.assertMessageFields(
+            new_message, {
+                'tracking_values': [
+                    ('datetime_field', 'datetime', self.dt_ref, new_dt, {}),
+                ],
+            }
+        )
+        # 09:28:15 and 10:28:15 UTC, shown in Brussels summer time
+        self.assertIn('09/30/2025 11:28:15 AM (GMT+02:00)', new_message.body)
+        self.assertIn('09/30/2025 12:28:15 PM (GMT+02:00)', new_message.body)
+
+    @users('employee')
     def test_mail_track_properties(self):
         """Test that the old properties values are logged when the parent changes."""
         properties_record_2 = self.properties_record_2.with_env(self.env)

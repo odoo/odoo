@@ -507,8 +507,8 @@ class MailTrackMixin(models.AbstractModel):
             values.update({
                 'old_value_datetime': initial_value,
                 'new_value_datetime': new_value,
-                'old_value': format_datetime(self.env, initial_value, tz=self.env.tz) if initial_value else 'None',
-                'new_value': format_datetime(self.env, new_value, tz=self.env.tz) if new_value else 'None',
+                'old_value': self._format_tracking_datetime(initial_value) if initial_value else 'None',
+                'new_value': self._format_tracking_datetime(new_value) if new_value else 'None',
             })
         elif col_info['type'] == 'date':
             values.update({
@@ -598,6 +598,14 @@ class MailTrackMixin(models.AbstractModel):
             values['field_info'] = field_info
 
         return values
+
+    def _format_tracking_datetime(self, value: typing.Any) -> str:
+        """ Format a tracked datetime in the user timezone, with its offset. """
+        tz_name = str(self.env.tz)
+        return '%s (%s)' % (
+            format_datetime(self.env, value, tz=tz_name),
+            format_datetime(self.env, value, tz=tz_name, dt_format='ZZZZ'),
+        )
 
     def _create_mail_tracking_values_property(
         self, initial_value: typing.Any, col_name: str, col_info: ValuesType,
