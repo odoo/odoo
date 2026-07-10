@@ -1,4 +1,4 @@
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
@@ -71,7 +71,6 @@ export class Notebook extends Component {
 
     setup() {
         this.pages = this.computePages(this.props);
-        this.invalidPages = new Set();
         this.state = proxy({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
         this.keepLastPageTransition = new KeepLast();
@@ -82,9 +81,6 @@ export class Notebook extends Component {
             },
             () => [this.state.currentPage]
         );
-        onWillRender(() => {
-            this.computeInvalidPages();
-        });
         onWillUpdateProps((nextProps) => {
             const activateDefault =
                 this.props.defaultPage !== nextProps.defaultPage || !this.defaultVisible;
@@ -167,14 +163,15 @@ export class Notebook extends Component {
     }
 
     computeInvalidPages() {
-        this.invalidPages = new Set();
+        const invalidPages = new Set();
         for (const page of this.navItems) {
             const invalid = page[1].fieldNames?.some((fieldName) =>
                 this.env.model?.root.isFieldInvalid(fieldName)
             );
             if (invalid) {
-                this.invalidPages.add(page[0]);
+                invalidPages.add(page[0]);
             }
         }
+        return invalidPages;
     }
 }
