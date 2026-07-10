@@ -12,6 +12,7 @@
         'security/ir.model.access.csv',
         'views/fe_config_views.xml',
         'views/product_template_views.xml',
+        'views/res_partner_views.xml',
         'views/account_move_views.xml',
         'data/mail_template.xml',
     ],

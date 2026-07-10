@@ -93,19 +93,59 @@ class AccountMove(models.Model):
             'tipoCedula': config.identification_type == '02' and 'juridico' or 'fisico',
             'cedula': config.identification_number,
             'situacion': 'normal',
-            'consecutivo': config.branch_number + config.terminal_number + '01' + config._l10n_cr_fe_next_consecutivo(),
+            'consecutivo': config._l10n_cr_fe_next_consecutivo(),
             'codigoSeguridad': str(random.randint(0, 99999999)).zfill(8),
             'sucursal': config.branch_number,
             'terminal': config.terminal_number,
+        }
+
+    def _l10n_cr_fe_build_resumen_totals(self, detalles):
+        """Calcula los totales de ResumenFactura a partir del detalle de líneas.
+
+        Hacienda valida que TotalVenta/TotalGravado/TotalImpuesto/TotalComprobante
+        sean consistentes entre sí y con el detalle; se derivan todos del mismo
+        origen (detalles) para evitar descuadres por redondeo.
+        """
+        total_merc_gravada = sum(d['subTotal'] for d in detalles if d['impuestoNeto'])
+        total_merc_exenta = sum(d['subTotal'] for d in detalles if not d['impuestoNeto'])
+        total_impuestos = sum(d['impuestoNeto'] for d in detalles)
+        total_venta = total_merc_gravada + total_merc_exenta
+
+        desglose = {}
+        for d in detalles:
+            for imp in d.get('impuesto', []):
+                key = (imp['codigo'], imp['codigoTarifa'])
+                desglose[key] = desglose.get(key, 0) + imp['monto']
+        total_desglose_impuesto = [
+            {'Codigo': codigo, 'CodigoTarifaIVA': tarifa, 'TotalMontoImpuesto': monto}
+            for (codigo, tarifa), monto in desglose.items()
+        ]
+
+        return {
+            'total_merc_gravada': total_merc_gravada,
+            'total_merc_exenta': total_merc_exenta,
+            'total_gravados': total_merc_gravada,
+            'total_exento': total_merc_exenta,
+            'total_ventas': total_venta,
+            'total_ventas_neta': total_venta,
+            'totalDesgloseImpuesto': json.dumps(total_desglose_impuesto),
+            'total_impuestos': total_impuestos,
+            'total_comprobante': total_venta + total_impuestos,
         }
 
     def _l10n_cr_fe_build_genxml_params(self, clave, consecutivo, detalles):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
         fecha = fields.Datetime.context_timestamp(self, datetime.now())
-        total = self.amount_total
-        base = self.amount_untaxed
-        medios_pago = [{'tipoMedioPago': '01', 'totalMedioPago': total}]
+
+        if not self.partner_id.vat:
+            raise UserError(
+                _("El cliente '%s' no tiene cédula/identificación configurada. Hacienda "
+                  "rechaza los comprobantes si el receptor no tiene un número de "
+                  "identificación válido.") % self.partner_id.name)
+
+        resumen = self._l10n_cr_fe_build_resumen_totals(detalles)
+        medios_pago = [{'tipoMedioPago': '01', 'totalMedioPago': resumen['total_comprobante']}]
         return {
             'clave': clave,
             'proveedor_sistemas': config.identification_number,
@@ -121,16 +161,14 @@ class AccountMove(models.Model):
             'emisor_otras_senas': config.address_detail,
             'emisor_email': config.email,
             'receptor_nombre': self.partner_id.name or '',
-            'receptor_tipo_identif': '01',
-            'receptor_num_identif': (self.partner_id.vat or '').replace('-', '') or '000000000',
+            'receptor_tipo_identif': self.partner_id.l10n_cr_fe_identification_type or '01',
+            'receptor_num_identif': self.partner_id.vat.replace('-', '').strip(),
             'condicion_venta': '01',
             'medios_pago': json.dumps(medios_pago),
             'cod_moneda': self.currency_id.name or 'CRC',
             'tipo_cambio': '1',
-            'total_ventas': base,
-            'total_ventas_neta': base,
-            'total_comprobante': total,
             'detalles': json.dumps(detalles),
+            **resumen,
         }
 
     def _l10n_cr_fe_generate_and_send(self):

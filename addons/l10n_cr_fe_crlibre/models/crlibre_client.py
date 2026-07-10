@@ -32,12 +32,17 @@ class CrlibreFeClient(models.AbstractModel):
         return url.rstrip('/')
 
     def _call(self, w, r, params):
-        query = dict(params or {})
-        query['w'] = w
-        query['r'] = r
+        # POST con datos en el body: algunos parametros (XML firmado, certificado en
+        # base64) son demasiado grandes para una URL y provocan HTTP 414 si se envian
+        # como query string (ver clave/firmarXML/genXML/send). La API lee 'w' de
+        # $_POST o $_GET indistintamente (www/api.php), asi que POST funciona para
+        # todas las llamadas de este metodo.
+        data = dict(params or {})
+        data['w'] = w
+        data['r'] = r
         url = self._get_base_url() + '/api.php'
         try:
-            resp = requests.get(url, params=query, timeout=TIMEOUT)
+            resp = requests.post(url, data=data, timeout=TIMEOUT)
         except requests.RequestException as exc:
             raise CrlibreApiError("No se pudo conectar con la API: %s" % exc)
         if resp.status_code != 200:
@@ -151,9 +156,9 @@ class CrlibreFeClient(models.AbstractModel):
             'comprobanteXml': base64.b64encode(xml_firmado.encode('utf-8')).decode('ascii'),
             'client_id': self._CLIENT_ID_BY_ENVIRONMENT[environment],
         })
-        if not isinstance(resp, dict) or 'Status' not in resp:
+        if not isinstance(resp, dict) or 'httpStatus' not in resp:
             raise CrlibreApiError("Respuesta inesperada de 'send/json': %s" % resp)
-        http_status = resp['Status']
+        http_status = resp['httpStatus']
         if http_status not in (200, 202):
             raise CrlibreApiError("Hacienda rechazó el envío (HTTP %s): %s" % (http_status, resp.get('text')))
         return {'http_status': http_status, 'raw': resp.get('text') or []}

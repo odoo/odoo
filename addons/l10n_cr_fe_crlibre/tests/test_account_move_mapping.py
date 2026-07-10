@@ -47,7 +47,7 @@ class TestAccountMoveMapping(TransactionCase):
         self.assertEqual(params['cedula'], '702320717')
         self.assertEqual(len(params['codigoSeguridad']), 8)
         self.assertTrue(params['codigoSeguridad'].isdigit())
-        self.assertEqual(len(params['consecutivo']), 20)
+        self.assertEqual(len(params['consecutivo']), 10)
         self.assertTrue(params['consecutivo'].isdigit())
 
     def test_build_genxml_params_uses_company_config(self):
@@ -61,8 +61,31 @@ class TestAccountMoveMapping(TransactionCase):
         self.assertEqual(params['emisor_nombre'], 'Frutas Demo SA')
         self.assertEqual(params['emisor_num_identif'], '702320717')
         self.assertEqual(params['receptor_num_identif'], '102340567')
+        self.assertEqual(params['receptor_tipo_identif'], '01')
         self.assertIsInstance(params['detalles'], str)
         self.assertEqual(json.loads(params['detalles'])[0]['codigoCABYS'], '0111101000000')
+
+    def test_build_genxml_params_without_receptor_vat_raises(self):
+        from odoo.exceptions import UserError
+        self.partner.vat = False
+        with self.assertRaises(UserError):
+            self.invoice._l10n_cr_fe_build_genxml_params('5' * 50, '0' * 20, [])
+
+    def test_build_genxml_params_computes_resumen_totals(self):
+        import json
+        gravado = self._create_invoice_with_tax(13)
+        detalles = gravado._l10n_cr_fe_build_detalles()
+        params = gravado._l10n_cr_fe_build_genxml_params('5' * 50, '0' * 20, detalles)
+        self.assertEqual(params['total_merc_gravada'], 1000.0)
+        self.assertEqual(params['total_gravados'], 1000.0)
+        self.assertEqual(params['total_exento'], 0)
+        self.assertEqual(params['total_ventas'], 1000.0)
+        self.assertEqual(params['total_impuestos'], 130.0)
+        self.assertEqual(params['total_comprobante'], 1130.0)
+        desglose = json.loads(params['totalDesgloseImpuesto'])
+        self.assertEqual(len(desglose), 1)
+        self.assertEqual(desglose[0]['CodigoTarifaIVA'], '08')
+        self.assertEqual(desglose[0]['TotalMontoImpuesto'], 130.0)
 
     def test_build_detalles_uses_product_cabys(self):
         detalles = self.invoice._l10n_cr_fe_build_detalles()

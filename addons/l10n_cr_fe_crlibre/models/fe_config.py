@@ -1,8 +1,9 @@
 import base64
+import re
 import uuid
 
-from odoo import fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class L10nCrFeConfig(models.Model):
@@ -22,9 +23,20 @@ class L10nCrFeConfig(models.Model):
     trade_name = fields.Char(string="Nombre comercial")
     economic_activity_code = fields.Char(string="Código de actividad económica", required=True)
 
-    province = fields.Char(string="Provincia", required=True)
-    canton = fields.Char(string="Cantón", required=True)
-    district = fields.Char(string="Distrito", required=True)
+    province = fields.Selection(
+        selection=[
+            ('1', "San José"), ('2', "Alajuela"), ('3', "Cartago"),
+            ('4', "Heredia"), ('5', "Guanacaste"), ('6', "Puntarenas"), ('7', "Limón"),
+        ],
+        string="Provincia", required=True)
+    canton = fields.Char(
+        string="Cantón", required=True,
+        help="Código numérico de 2 dígitos del cantón según el catálogo de Hacienda "
+             "(no el nombre). Ej.: San Carlos en Alajuela es '10'.")
+    district = fields.Char(
+        string="Distrito", required=True,
+        help="Código numérico de 2 dígitos del distrito según el catálogo de Hacienda "
+             "(no el nombre). Ej.: Florencia en San Carlos es '02'.")
     neighborhood = fields.Char(string="Barrio", required=True)
     address_detail = fields.Char(string="Otras señas", required=True)
     phone = fields.Char(string="Teléfono")
@@ -51,6 +63,20 @@ class L10nCrFeConfig(models.Model):
         'UNIQUE (company_id)',
         "Ya existe una configuración de Factura Electrónica para esta empresa.",
     )
+
+    _CANTON_DISTRICT_RE = re.compile(r'^\d{2}$')
+
+    @api.constrains('canton', 'district')
+    def _check_l10n_cr_fe_canton_district(self):
+        for config in self:
+            if config.canton and not self._CANTON_DISTRICT_RE.match(config.canton):
+                raise ValidationError(
+                    _("El cantón debe ser el código numérico de 2 dígitos del catálogo "
+                      "de Hacienda (no el nombre)."))
+            if config.district and not self._CANTON_DISTRICT_RE.match(config.district):
+                raise ValidationError(
+                    _("El distrito debe ser el código numérico de 2 dígitos del catálogo "
+                      "de Hacienda (no el nombre)."))
 
     def _get_for_company(self, company):
         config = self.search([('company_id', '=', company.id)], limit=1)
