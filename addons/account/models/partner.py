@@ -1137,7 +1137,7 @@ class ResPartner(models.Model):
             if partner.country_id:
                 expected_vat = _ref_vat.get(partner.country_id.code.lower())
 
-            partner.partner_vat_placeholder = expected_vat
+            partner.partner_vat_placeholder = self.env._(expected_vat or '')  # pylint: disable=E8502
 
     @api.depends('country_id')
     def _compute_partner_company_registry_placeholder(self):
