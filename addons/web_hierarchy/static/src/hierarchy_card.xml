@@ -12,10 +12,7 @@
                     <i class="oi" data-icon="expand_less"/>
                 </button>
             </div>
-            <div class="o_hierarchy_node w-100 h-100 d-flex flex-column justify-content-between border"
-                t-att-class="{
-                    'border-bottom-0': this.props.node.nodes.length or this.props.node.canShowChildNodes,
-                }"
+            <div class="o_hierarchy_node w-100 h-100 d-flex flex-column justify-content-between border rounded-3 bg-view"
                 t-att-data-node-id="this.props.node.id"
                 t-custom-click.synthetic="this.onGlobalClick"
             >
@@ -32,11 +29,8 @@
                 </div>
                 <button t-if="this.props.node.nodes.length or this.props.node.canShowChildNodes"
                         name="hierarchy_search_subsidiaries"
-                        class="o_hierarchy_node_button btn rounded-0 d-grid"
-                        t-att-class="{
-                            'btn-primary': !this.props.node.nodes.length,
-                            'btn-secondary': this.props.node.nodes.length > 0,
-                        }"
+                        class="o_hierarchy_node_button btn btn-secondary d-grid m-2 mt-0"
+                        t-att-title="!this.props.node.nodes.length ? 'Unfold' : 'Fold'"
                         t-on-click.synthetic="this.onClickArrowDown"
                 >
                     <t t-if="!this.props.node.nodes.length">

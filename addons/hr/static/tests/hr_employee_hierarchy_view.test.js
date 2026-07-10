@@ -78,20 +78,20 @@ test("load hierarchy view", async () => {
     expect(".o_hierarchy_node_container").toHaveCount(3);
     expect(".o_hierarchy_node").toHaveCount(3);
     expect(".o_hierarchy_node_button").toHaveCount(2);
-    expect(".o_hierarchy_node_button.btn-primary").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-primary .o_hierarchy_icon").toHaveCount(0, {
+    expect(".o_hierarchy_node_button[title='Unfold']").toHaveCount(1);
+    expect(".o_hierarchy_node_button[title='Unfold'] .o_hierarchy_icon").toHaveCount(0, {
         message: "the icon has been replaced in that js_class",
     });
-    expect(".o_hierarchy_node_button.btn-primary [data-icon='arrow_right']").toHaveCount(1, {
+    expect(".o_hierarchy_node_button[title='Unfold'] [data-icon='arrow_right']").toHaveCount(1, {
         message: "the icon has been replaced in that js_class",
     });
-    expect(".o_hierarchy_node_button.btn-primary").toHaveText("1 people");
+    expect(".o_hierarchy_node_button[title='Unfold']").toHaveText("1 people");
     // check nodes in each row
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node").toHaveCount(1);
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node_content").toHaveText("Albert");
-    expect(".o_hierarchy_node_button.btn-secondary").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-secondary [data-icon='arrow_drop_down']").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-secondary").toHaveText("2 people");
+    expect(".o_hierarchy_node_button[title='Fold']").toHaveCount(1);
+    expect(".o_hierarchy_node_button[title='Fold'] [data-icon='arrow_drop_down']").toHaveCount(1);
+    expect(".o_hierarchy_node_button[title='Fold']").toHaveText("2 people");
 });
 
 test("display the avatar of the parent when there is more than one node in the same row of the parent", async () => {
@@ -101,8 +101,8 @@ test("display the avatar of the parent when there is more than one node in the s
     });
 
     expect(".o_hierarchy_row").toHaveCount(2);
-    expect(".o_hierarchy_node_button.btn-primary").toHaveCount(1);
-    await contains(".o_hierarchy_node_button.btn-primary").click();
+    expect(".o_hierarchy_node_button[title='Unfold']").toHaveCount(1);
+    await contains(".o_hierarchy_node_button[title='Unfold']").click();
     expect(".o_hierarchy_row").toHaveCount(3);
     expect(".o_hierarchy_node").toHaveCount(4);
     expect(".o_hierarchy_separator").toHaveCount(2);
@@ -121,9 +121,9 @@ test("hierarchy with a self manager employee", async () => {
     });
 
     expect(".o_hierarchy_row").toHaveCount(2);
-    expect(".o_hierarchy_node_button.btn-secondary").toHaveCount(1);
+    expect(".o_hierarchy_node_button[title='Fold']").toHaveCount(1);
     expect(".o_hierarchy_node").toHaveCount(2);
-    await contains(".o_hierarchy_node_button.btn-secondary").click();
+    await contains(".o_hierarchy_node_button[title='Fold']").click();
     expect(".o_hierarchy_row").toHaveCount(1);
     expect(".o_hierarchy_node").toHaveCount(1);
 });
@@ -149,10 +149,10 @@ test("hierarchy with a cycle", async () => {
     // check that the node in the cycle cannot be expanded
     expect(".o_hierarchy_row:nth-of-type(8) .o_hierarchy_node_button").toHaveCount(0);
     expect(".o_hierarchy_row:nth-of-type(1) .o_hierarchy_node_content").toHaveText("Albert\nLouis");
-    await contains(".o_hierarchy_row:nth-of-type(1) .btn-secondary").click();
-    await contains(".o_hierarchy_row:nth-of-type(1) .btn-primary").click();
-    await contains(".o_hierarchy_row:nth-of-type(3) .btn-primary").click();
-    await contains(".o_hierarchy_row:nth-of-type(6) .btn-primary").click();
+    await contains(".o_hierarchy_row:nth-of-type(1) button[title='Fold']").click();
+    await contains(".o_hierarchy_row:nth-of-type(1) button[title='Unfold']").click();
+    await contains(".o_hierarchy_row:nth-of-type(3) button[title='Unfold']").click();
+    await contains(".o_hierarchy_row:nth-of-type(6) button[title='Unfold']").click();
     // check the root of the tree is still Albert
     expect(".o_hierarchy_row:nth-of-type(1) .o_hierarchy_node_content").toHaveText("Albert\nLouis");
     expect(".o_hierarchy_row:nth-of-type(8) .o_hierarchy_node_content").toHaveText("Albert\nLouis");
