@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+import babel
 import typing
 
 from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import MissingError
-from odoo.tools import clean_context, format_datetime, format_date, format_amount, formatLang
+from odoo.tools import babel_locale_parse, clean_context, format_datetime, format_date, format_amount, formatLang
 
 if typing.TYPE_CHECKING:
     from odoo.api import ValuesType
@@ -507,15 +508,15 @@ class MailTrackMixin(models.AbstractModel):
             values.update({
                 'old_value_datetime': initial_value,
                 'new_value_datetime': new_value,
-                'old_value': format_datetime(self.env, initial_value, tz=self.env.tz) if initial_value else 'None',
-                'new_value': format_datetime(self.env, new_value, tz=self.env.tz) if new_value else 'None',
+                'old_value': self._format_tracking_datetime(initial_value) if initial_value else 'None',
+                'new_value': self._format_tracking_datetime(new_value) if new_value else 'None',
             })
         elif col_info['type'] == 'date':
             values.update({
                 'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
                 'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
-                'old_value': format_date(self.env, initial_value) if initial_value else 'None',
-                'new_value': format_date(self.env, new_value) if new_value else 'None',
+                'old_value': self._format_tracking_date(initial_value) if initial_value else 'None',
+                'new_value': self._format_tracking_date(new_value) if new_value else 'None',
             })
         elif col_info['type'] == 'boolean':
             values.update({
@@ -598,6 +599,23 @@ class MailTrackMixin(models.AbstractModel):
             values['field_info'] = field_info
 
         return values
+
+    def _format_tracking_date(self, value):
+        """Format a tracked date with locale formatting."""
+        date_format = babel.dates.get_date_format(locale=babel_locale_parse(self.env.lang))
+        # must be done manually as format_datetime forces lang format which is usually very different
+        return format_date(self.env, value, date_format=date_format)
+
+    def _format_tracking_datetime(self, value):
+        """Format a tracked datetime with locale formatting and timezone."""
+        tz_name = str(self.env.tz)
+        locale = babel_locale_parse(self.env.lang)
+        # must be done manually as format_datetime forces lang format which is usually very different
+        dt_format = babel.dates.get_datetime_format(locale=locale)
+        date_format = babel.dates.get_date_format(locale=locale)
+        time_format = babel.dates.get_time_format(format="short", locale=locale)
+        tracking_format = f"{dt_format.format(time_format, date_format)} (ZZZZ)"
+        return format_datetime(self.env, value, tz=tz_name, dt_format=tracking_format)
 
     def _create_mail_tracking_values_property(
         self, initial_value: typing.Any, col_name: str, col_info: ValuesType,
