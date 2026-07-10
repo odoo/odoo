@@ -1100,7 +1100,7 @@ export class DomObserverPlugin extends Plugin {
             console.warn("Mutation could not be applied, node to remove is unknown.", mutation);
             return;
         }
-        if (toRemove.parentElement !== parent) {
+        if (toRemove.isConnected && toRemove.parentElement !== parent) {
             console.warn("Mutation could not be applied, parent node does not match.", mutation);
             return;
         }
