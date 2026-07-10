@@ -1100,6 +1100,71 @@ test("search for default label when label has empty string", async () => {
     expect(".app_settings_block:not(.d-none) .settingSearchHeader").toHaveCount(0);
 });
 
+test("search in all the labels and fields of the setting", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="Other App" name="otherapp">
+                <block>
+                    <setting>
+                        <field name="tasks"/>
+                    </setting>
+                </block>
+            </app>
+            <app string="CRM" name="crm">
+                <block>
+                    <setting>
+                        <field name="bar"/>
+                        <div class="custom_setting">
+                            <div class="first_field">
+                                <label for="foo" string="Foo Label"/>
+                                <field name="foo"/>
+                            </div>
+                            <div class="second_field">
+                                <field name="baz"/>
+                                <label for="baz"/>
+                            </div>
+                            <div class="invisible_field" invisible="not bar">
+                                <field name="foo"/>
+                                <label for="foo" string="Foo Invisible"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction(1);
+
+    // Search in the current selected App
+    await editSearch("Tasks");
+    await runAllTimers();
+    expect(queryAllTexts(".highlighter")).toEqual(["Tasks"]);
+
+    // Search in the App that is not selected
+    await editSearch("Invisible");
+    await runAllTimers();
+    expect(queryAllTexts(".highlighter")).toEqual([]);
+
+    await editSearch("Foo Label");
+    await runAllTimers();
+    expect(queryAllTexts(".highlighter")).toEqual(["Foo Label"]);
+
+    await editSearch("Baz");
+    await runAllTimers();
+    expect(queryAllTexts(".highlighter")).toEqual(["Baz"]);
+});
+
 test("clicking on any button in setting should show discard warning if setting form is dirty", async () => {
     onRpc("has_group", () => true);
     defineActions([
@@ -1953,7 +2018,7 @@ test("standalone field labels with string inside a settings page", async () => {
     const expectedCompiled = /* xml */ `
             <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;${MOCK_IMAGE}&quot;}]" anchors="[{&quot;app&quot;:&quot;crm&quot;,&quot;settingId&quot;:&quot;setting_id&quot;,&quot;fieldNames&quot;:[&quot;display_name&quot;]}]">
                 <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`${MOCK_IMAGE}\`" selectedTab="settings.selectedTab">
-                    <SearchableSetting info="\`\`" title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" id="\`setting_id\`" string="\`\`" addLabel="true">
+                    <SearchableSetting info="\`\`" title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" id="\`setting_id\`" string="\`\`" addLabel="true"  fieldLabels="[{fieldId: 'display_name_0', string: \`My&quot; little '  Label\`}]">
                         <FormLabel id="'display_name_0'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                         <Field id="'display_name_0'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" readonly="__comp__.props.readonly"/>
                     </SearchableSetting>
