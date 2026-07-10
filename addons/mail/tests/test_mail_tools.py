@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime
 
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.exceptions import UserError
 from odoo.tests import tagged, users
 
 
 @tagged('mail_tools', 'res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTools(MailCommon):
 
     @classmethod
@@ -14,12 +15,44 @@ class TestMailTools(MailCommon):
         super(TestMailTools, cls).setUpClass()
 
         cls._test_email = 'alfredoastaire@test.example.com'
-        cls.test_partner = cls.env['res.partner'].create({
-            'country_id': cls.env.ref('base.be').id,
-            'email': cls._test_email,
-            'name': 'Alfred Astaire',
-            'phone': '0456334455',
-        })
+        with cls.mock_datetime_and_now(cls, datetime(2026, 8, 7, 9, 48)):
+            cls.test_partner = cls.env['res.partner'].create({
+                'country_id': cls.env.ref('base.be').id,
+                'email': cls._test_email,
+                'name': 'Alfred Astaire',
+                'phone': '0456334455',
+                'tz': 'Europe/Brussels',
+            })
+
+    @users('employee')
+    def test_find_field_from_field_path(self):
+        """ Test '_find_field_from_field_path' tooling method available on BaseModel """
+        field = self.env['res.partner']._find_field_from_field_path('country_id.name')
+        self.assertEqual(field, self.env['ir.model.fields']._get('res.country', 'name'))
+        with self.assertRaises(UserError):
+            self.env['res.partner']._find_field_from_field_path('not_existing_field')
+        with self.assertRaises(UserError):
+            self.env['res.partner']._find_field_from_field_path('country_id.not_existing_field')
+
+    @users('employee')
+    def test_find_value_from_field_path(self):
+        """ Test '_find_value_from_field_path' tooling method available on BaseModel """
+        test_partner = self.test_partner.with_env(self.env)
+        # check path is correctly followed
+        value = test_partner._find_value_from_field_path('country_id.name')
+        self.assertEqual(value, 'Belgium')
+        # specific test: selection: should receive label, not key
+        value = test_partner._find_value_from_field_path('tz')
+        self.assertEqual(value, 'Europe/Brussels')
+        # specific case: formatting on datetime value
+        value = test_partner._find_value_from_field_path('write_date')
+        self.assertEqual(value, '08/07/2026 11:48:00 AM Europe/Brussels')
+
+        # invalid paths should raise UserErrors
+        with self.assertRaises(UserError):
+            test_partner._find_value_from_field_path('not_existing_field')
+        with self.assertRaises(UserError):
+            test_partner._find_value_from_field_path('country_id.not_existing_field')
 
     @users('employee')
     def test_find_partner_from_emails(self):
@@ -225,7 +258,6 @@ class TestMailTools(MailCommon):
 
 
 @tagged('mail_tools', 'mail_init')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailUtils(MailCommon):
 
     def test_migrate_icp_to_domain(self):
