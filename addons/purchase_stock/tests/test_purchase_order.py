@@ -577,9 +577,9 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.po.button_confirm()
         self.po.picking_ids.move_ids.quantity = 1
         Form.from_action(self.env, self.po.picking_ids.button_validate()).save().process()
-        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [1.0, 1.0, 4.0, 4.0])
+        self.assertEqual(self.po.picking_ids.sorted('id').move_ids.mapped('product_uom_qty'), [1.0, 1.0, 4.0, 4.0])
         self.po.order_line[0].product_qty = 3
-        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [1.0, 1.0, 2.0, 4.0])
+        self.assertEqual(self.po.picking_ids.sorted('id').move_ids.mapped('product_uom_qty'), [1.0, 1.0, 2.0, 4.0])
 
     def test_receive_returned_product_without_po_update(self):
         """
