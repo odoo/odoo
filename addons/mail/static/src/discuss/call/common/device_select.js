@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, onWillStart, props, proxy, signal, t } from "@odoo/owl";
+import { Component, computed, onWillDestroy, onWillStart, props, signal, t } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -31,13 +31,13 @@ export class DeviceSelect extends Component {
         this.notification = useService("notification");
         /** @type {import("@odoo/owl").Signal<Element>} */
         this.rootRef = signal();
-        this.state = proxy({
-            userDevices: [],
-            selectedDevice: undefined,
-        });
+        this.userDevices = signal.Array([], { type: t.instanceOf(MediaDeviceInfo) });
+        this.selectedDevice = computed(() =>
+            this.userDevices().find((device) => this.isSelected(device.deviceId))
+        );
         this.abortController = new AbortController();
         this.isBrowserChrome = isBrowserChrome();
-        onWillStart(async () => {
+        onWillStart(() => {
             if (!browser.navigator.mediaDevices) {
                 // zxing-js: isMediaDevicesSuported or canEnumerateDevices is false.
                 this.notification.add(
@@ -47,10 +47,7 @@ export class DeviceSelect extends Component {
                 console.warn("Media devices unobtainable. SSL might not be set up properly.");
                 return;
             }
-            await this.updateDevicesList();
-            this.state.selectedDevice = this.state.userDevices.find((device) =>
-                this.isSelected(device.deviceId)
-            );
+            this.updateDevicesList();
             this.setupEventListeners();
         });
         onWillDestroy(() => {
@@ -59,11 +56,11 @@ export class DeviceSelect extends Component {
     }
 
     get selectLabel() {
-        return this.state.selectedDevice?.label;
+        return this.selectedDevice()?.label;
     }
 
     async updateDevicesList() {
-        this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
+        this.userDevices.set(await browser.navigator.mediaDevices.enumerateDevices());
     }
 
     async setupEventListeners() {
@@ -118,7 +115,6 @@ export class DeviceSelect extends Component {
     }
 
     onSelectAudioDevice(device) {
-        this.state.selectedDevice = device;
         const deviceId = device?.deviceId ?? "";
         switch (this.props.kind) {
             case "audioinput":
