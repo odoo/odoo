@@ -309,6 +309,15 @@ test("should remove font tag if font-color and background-color both are removed
     });
 });
 
+test("should preserve color tag when removing font color if it has other styles", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span style="font-size: 36px; color: rgb(255, 0, 0);">[abcabc]</span></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: '<p><span style="font-size: 36px;">[abcabc]</span></p>',
+    });
+});
+
 test("should apply a color to a slice of text containing a span", async () => {
     await testEditor({
         contentBefore: '<p>a[b<span class="a">c</span>d]e</p>',
