@@ -274,6 +274,58 @@ class StockPackage(models.Model):
 
         return [('id', 'in', all_package_ids)]
 
+    @api.constrains('package_type_id', 'parent_package_id', 'child_package_ids', 'package_dest_id', 'child_package_dest_ids')
+    def _check_duplicate_package_types(self):
+        """Check that a package never (directly or indirectly) contains another package of the same type as itself."""
+        # Normally each child->parent and source->destination chain is guaranteed to be cycle-free
+        # (as directed acyclic graphs), but each auxiliary method traverses two chains at once
+        # breadth-first (child & source, parent & destination). Swapping the positions of a
+        # container with its contained package (ie child becomes source, and parent becomes
+        # destination) will cross these two chains, leading to cycles. For this reason, we need to
+        # keep track of the packages we've traversed so far to avoid getting stuck in a loop.
+        def _fetch_all_parent_and_destination_packages(packages, seen):
+            containers = (packages.parent_package_id | packages.package_dest_id) - seen
+            if containers:
+                return containers | _fetch_all_parent_and_destination_packages(containers, seen | containers)
+            return containers
+
+        def _fetch_all_child_and_source_packages(packages, seen):
+            containeds = (packages.child_package_ids | packages.child_package_dest_ids) - seen
+            if containeds:
+                return containeds | _fetch_all_child_and_source_packages(containeds, seen | containeds)
+            return containeds
+
+        for package in self:
+            own_type = package.package_type_id
+            parent_and_destination_types = _fetch_all_parent_and_destination_packages(package, package).package_type_id
+            child_and_source_types = _fetch_all_child_and_source_packages(package, package).package_type_id
+            if (own_type & (parent_and_destination_types | child_and_source_types)
+                or parent_and_destination_types & child_and_source_types):
+                raise ValidationError(self.env._("Packages of the same type cannot be nested."))
+
+    # These two fields require separate onchanges to avoid false positives when unpacking.
+    @api.onchange('parent_package_id')
+    def _onchange_parent_package_id(self):
+        if self.parent_package_id:
+            return self._get_packinpack_warning()
+
+    @api.onchange('package_dest_id')
+    def _onchange_package_dest_id(self):
+        if self.package_dest_id:
+            return self._get_packinpack_warning()
+
+    def _get_packinpack_warning(self):
+        if self.display_name:
+            message = self.env._("Are you sure you want to put %(package)s into another package?", package=self.display_name)
+        else:
+            message = self.env._("Are you sure you want to put this package into another package?")
+        return {
+            'warning': {
+                'title': self.env._("Extra package?"),
+                'message': message,
+            }
+        }
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -356,12 +408,13 @@ class StockPackage(models.Model):
                 'package_type_id': package_type_id,
                 'name': package_name,
             })
+
         previous_dest_packages = self.env['stock.package'].browse(self._get_all_package_dest_ids())
-        self.package_dest_id = package
         if packs_to_clear := previous_dest_packages.filtered(lambda p: not p.move_line_ids):
             # If following the put in pack, we broke the existing chain somehow, we need to free all now irrelevant packages
             packs_to_clear.package_dest_id = False
 
+        self.outermost_package_id.package_dest_id = package
         # Since the uppermost package changed, there might be some new putaway to apply.
         package.move_line_ids._apply_putaway_strategy()
         return package._post_put_in_pack_hook()
