@@ -365,7 +365,7 @@ patch(PosStore.prototype, {
             raw_grouping_key: { product_id: downPaymentProduct.id },
         });
         const downPaymentBaseLines = accountTaxHelpers.prepare_down_payment_lines(
-            baseLines,
+            baseLines.filter((baseLine) => !baseLine.record.is_downpayment),
             this.company,
             "fixed",
             amount,
