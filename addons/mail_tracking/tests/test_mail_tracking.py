@@ -93,6 +93,7 @@ class TestMailTracking(MailCommon):
             },
         ])
         cls.user_admin.tz = 'Asia/Kolkata'
+        cls.user_employee.tz = 'Asia/Kolkata'
 
     @users('employee')
     def test_mail_tracking_values_creation(self):
