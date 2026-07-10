@@ -189,6 +189,18 @@ function execute(op, source, target) {
 const FAVORITE_PRIVATE_GROUP = 1;
 const FAVORITE_SHARED_GROUP = 2;
 
+// Maps a search item type to the facet type used for icon/color/separator.
+// Types absent from this map fall back to the search item type itself.
+const FACET_TYPES = {
+    field: "field",
+    field_property: "field",
+    groupBy: "groupBy",
+    dateGroupBy: "groupBy",
+    dateFilter: "filter",
+    parentFilter: "filter",
+    relativeFilter: "relative",
+};
+
 export class SearchModel extends EventBus {
     query = proxy([]);
     searchItems = proxy({});
@@ -1979,6 +1991,50 @@ export class SearchModel extends EventBus {
         return params.raw ? domain : domain.toList(this.domainEvalContext);
     }
 
+    /**
+     * Builds the human-readable facet value labels for a given active item.
+     *
+     * @param {Object} searchItem
+     * @param {Object} activeItem
+     * @returns {string[]}
+     */
+    _getFacetValues(searchItem, activeItem) {
+        const { description } = searchItem;
+        switch (searchItem.type) {
+            case "field_property":
+            case "field":
+                return activeItem.autocompleteValues.map((v) => v.label);
+            case "dateGroupBy":
+                return activeItem.intervalIds.map(
+                    (intervalId) =>
+                        `${description}: ${
+                            this._getIntervalOptionByIntervalId(intervalId).description
+                        }`
+                );
+            case "dateFilter":
+                return [
+                    `${description}: ${this._getParentFilterDomain(
+                        searchItem,
+                        activeItem.generatorIds,
+                        "description"
+                    )}`,
+                ];
+            case "relativeFilter": {
+                const option = searchItem.options.find((o) => o.id === activeItem.optionId);
+                return [`${description}: ${getRelativeDateLabel(option, activeItem.offset)}`];
+            }
+            case "parentFilter":
+                return this._getParentFilterDomain(
+                    searchItem,
+                    activeItem.generatorIds,
+                    "description"
+                );
+            default:
+                // groupBy and any other single-description facet.
+                return [description];
+        }
+    }
+
     _getFacets() {
         const facets = [];
         const groups = this._getGroups();
@@ -1995,60 +2051,11 @@ export class SearchModel extends EventBus {
                 }
                 const searchItem = this.searchItems[activeItem.searchItemId];
                 tooltip = searchItem.tooltip;
-                switch (searchItem.type) {
-                    case "field_property":
-                    case "field": {
-                        type = "field";
-                        title = searchItem.description;
-                        for (const autocompleteValue of activeItem.autocompleteValues) {
-                            values.push(autocompleteValue.label);
-                        }
-                        break;
-                    }
-                    case "groupBy": {
-                        type = "groupBy";
-                        values.push(searchItem.description);
-                        break;
-                    }
-                    case "dateGroupBy": {
-                        type = "groupBy";
-                        for (const intervalId of activeItem.intervalIds) {
-                            const { description } = this._getIntervalOptionByIntervalId(intervalId);
-                            values.push(`${searchItem.description}: ${description}`);
-                        }
-                        break;
-                    }
-                    case "dateFilter": {
-                        type = "filter";
-                        const innerFilterDescription = this._getParentFilterDomain(
-                            searchItem,
-                            activeItem.generatorIds,
-                            "description"
-                        );
-                        values.push(`${searchItem.description}: ${innerFilterDescription}`);
-                        break;
-                    }
-                    case "relativeFilter": {
-                        type = "relative";
-                        const option = searchItem.options.find((o) => o.id === activeItem.optionId);
-                        values.push(`${searchItem.description}: ${option.description}`);
-                        break;
-                    }
-                    case "parentFilter": {
-                        type = "filter";
-                        const innerFilterDescription = this._getParentFilterDomain(
-                            searchItem,
-                            activeItem.generatorIds,
-                            "description"
-                        );
-                        innerFilterDescription.forEach((filter) => values.push(filter));
-                        break;
-                    }
-                    default: {
-                        type = searchItem.type;
-                        values.push(searchItem.description);
-                    }
+                type = FACET_TYPES[searchItem.type] ?? searchItem.type;
+                if (type === "field") {
+                    title = searchItem.description;
                 }
+                values.push(...this._getFacetValues(searchItem, activeItem));
             }
             const facet = {
                 groupId: group.id,
