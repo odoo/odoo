@@ -5,7 +5,7 @@
             <attribute name="t-if">!this.store.is_welcome_page_displayed and this.store.discuss.hasRestoredThread </attribute>
         </xpath>
         <xpath expr="//Discuss" position="after">
-            <WelcomePage t-if="this.store.is_welcome_page_displayed" proceed.bind="this.requestCloseWelcomePage"/>
+            <WelcomePage t-if="this.store.is_welcome_page_displayed and this.store.discuss.thread" proceed.bind="this.requestCloseWelcomePage"/>
         </xpath>
     </t>
 </templates>

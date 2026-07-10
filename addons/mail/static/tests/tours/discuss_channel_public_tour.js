@@ -16,12 +16,27 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     steps: () => [
         {
             trigger: ".o-mail-Discuss",
+            run() {
+                // check if there is a pending invitation and click on the accept button if so
+                const invitation = document.querySelector(".o-mail-DiscussInvitation");
+                if (invitation) {
+                    invitation.querySelector(".o-mail-DiscussInvitationCard button").click();
+                }
+            },
         },
         {
             trigger: ".o-mail-Thread",
-            run() {
+            async run() {
+                // wait for the state to be pushed to the router
+                await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for the thread to be fully loaded
                 openedConversation = getConversationName();
-                if (!window.location.pathname.startsWith("/discuss/channel")) {
+                if (
+                    !(
+                        window.location.pathname.startsWith("/discuss/channel") ||
+                        window.location.pathname.startsWith("/odoo")
+                    ) ||
+                    window.location.search.includes("invitation_token")
+                ) {
                     console.error("Channel secret token is still present in URL.");
                 }
                 const errors = odoo.loader.findErrors();

@@ -1,24 +1,23 @@
-import { Component, proxy, signal, types, useProps } from "@odoo/owl";
+import { Component, proxy, types, useProps } from "@odoo/owl";
 
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
-import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
+import { DiscussInvitationCard } from "@mail/core/public_web/discuss_invitation_card";
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { rpc } from "@web/core/network/rpc";
 
 export class WelcomePage extends Component {
     static template = "mail.WelcomePage";
-    static components = { AvatarStack, CallPreview };
+    static components = { CallPreview, DiscussInvitationCard };
 
     cameraPermissionOnMountChecked = false;
 
     setup() {
         super.setup();
         this.props = useProps({ proceed: types.function([]).optional() });
-        this.description = signal();
         this.store = useService("mail.store");
-        this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
         useSubEnv({ inWelcomePage: true });
         this.state = proxy({
@@ -27,8 +26,6 @@ export class WelcomePage extends Component {
             activateMicrophone: 0,
             hasMicrophone: undefined,
             hasCamera: undefined,
-            isDescriptionLong: false,
-            isDescriptionUnfolded: false,
         });
         useLayoutEffect(
             (showCallPreview, cameraPermission, microphonePermission) => {
@@ -48,16 +45,6 @@ export class WelcomePage extends Component {
             },
             () => [this.showCallPreview, this.rtc.cameraPermission, this.rtc.microphonePermission]
         );
-        useLayoutEffect(
-            (isDescriptionUnfolded, description) => {
-                const descriptionEl = this.description();
-                this.state.isDescriptionLong =
-                    !isDescriptionUnfolded &&
-                    description &&
-                    descriptionEl?.scrollWidth > descriptionEl?.clientWidth;
-            },
-            () => [this.state.isDescriptionUnfolded, this.channel.description]
-        );
     }
 
     onKeydownInput(ev) {
@@ -66,17 +53,17 @@ export class WelcomePage extends Component {
         }
     }
 
-    unfoldDescription() {
-        if (this.state.isDescriptionUnfolded) {
-            return;
-        }
-        this.state.isDescriptionUnfolded = true;
-    }
-
     async joinChannel() {
-        if (!this.store.self_user) {
-            await this.store.self_guest?.updateGuestName(this.state.userName.trim());
-        }
+        const joinOptions = this.store.self_user
+            ? {}
+            : {
+                  guest_name: this.state.userName.trim(),
+              };
+        const storeData = await rpc(
+            `/chat/${this.channel.id}/${this.channel.uuid}/join`,
+            joinOptions
+        );
+        this.store.insert(storeData);
         browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.hasMicrophone);
         browser.localStorage.setItem(
             "discuss_call_preview_join_video",
@@ -86,7 +73,7 @@ export class WelcomePage extends Component {
     }
 
     get canJoin() {
-        return (
+        return Boolean(
             this.store.self_user || (this.state.userName.trim() && this.state.userName.length <= 60)
         );
     }
@@ -97,10 +84,6 @@ export class WelcomePage extends Component {
 
     get showCallPreview() {
         return this.channel.default_display_mode === "video_full_screen";
-    }
-
-    get shouldShowMoreDescription() {
-        return this.state.isDescriptionLong;
     }
 
     /** @param {{ microphone?: boolean, camera?: boolean }} settings */
