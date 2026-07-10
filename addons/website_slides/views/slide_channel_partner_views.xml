@@ -13,7 +13,7 @@
                     <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
                     <separator/>
                     <filter string="Invite Sent" name="filter_invited" domain="[('member_status', '=', 'invited')]"/>
-                    <filter string="Joined" name="filter_joined" domain="[('member_status', '=', 'joined')]"/>
+                    <filter string="Not Started" name="filter_joined" domain="[('member_status', '=', 'joined')]"/>
                     <filter string="Ongoing" name="filter_ongoing" domain="[('member_status', '=', 'ongoing')]"/>
                     <filter string="Completed" name="filter_completed" domain="[('member_status', '=', 'completed')]"/>
                     <group>
@@ -138,6 +138,16 @@
                     <strong>No Certified Attendees Yet!</strong>
                 </p>
             </field>
+        </record>
+
+        <record id="slide_channel_partner_action_send_mail" model="ir.actions.act_window">
+            <field name="name">Send Email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_composition_mode': 'mass_mail'}</field>
+            <field name="binding_model_id" ref="website_slides.model_slide_channel_partner"/>
+            <field name="binding_view_types">list</field>
         </record>
     </data>
 </odoo>
