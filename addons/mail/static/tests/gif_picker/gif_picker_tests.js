@@ -105,7 +105,7 @@ QUnit.test("Searching for a GIF", async () => {
     });
     openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
-    await insertText("input[placeholder='Search for a GIF']", "search");
+    await insertText("input[placeholder='Search Klipy']", "search");
     await contains("i[aria-label='back']");
     await contains(".o-discuss-Gif", { count: 2 });
 });
@@ -127,7 +127,7 @@ QUnit.test("Open a GIF category trigger the search for the category", async () =
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", { count: 2 });
-    await contains("input[placeholder='Search for a GIF']", { value: "cry" });
+    await contains("input[placeholder='Search Klipy']", { value: "cry" });
 });
 
 QUnit.test("Reopen GIF category list when going back", async () => {
@@ -213,7 +213,7 @@ QUnit.test("Searching for a GIF with a failling RPC should display an error", as
     });
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
-    await insertText("input[placeholder='Search for a GIF']", "search");
+    await insertText("input[placeholder='Search Klipy']", "search");
     await contains(".o-discuss-GifPicker-error");
 });
 
@@ -259,7 +259,7 @@ QUnit.test("Show help when no favorite GIF", async () => {
             if (route === "/discuss/gif/categories") {
                 return rpc.categories;
             }
-        }
+        },
     });
     openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
