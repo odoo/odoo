@@ -41,6 +41,11 @@ export class FontFamilyPlugin extends Plugin {
                 id: "fontFamily",
                 isFormatted: (node) => !!closestElement(node, (el) => el.style["font-family"]),
                 hasStyle: (node) => node.style && node.style["font-family"],
+                getFormatProps: (node) => {
+                    if (node.style?.["font-family"]) {
+                        return { fontFamily: node.style["font-family"] };
+                    }
+                },
                 addStyle: (node, props) => {
                     removeStyle(node, "font-family");
                     if (props.fontFamily) {

@@ -2443,3 +2443,47 @@ test("formats should be enabled when inline code selected", async () => {
 
     expect("strong").toHaveCount(0);
 });
+
+test("font size class should be preserved when replacing HTML element text", async () => {
+    const { el, editor } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    await click(".o-we-toolbar [name='font_size']");
+    await waitFor(".o_font_size_selector_menu .dropdown-item:contains('21')");
+
+    await click(".o_font_size_selector_menu .dropdown-item:contains('21')");
+    await animationFrame();
+    expect(el).toBeFocused();
+    expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
+
+    await insertText(editor, "a");
+    await animationFrame();
+    expect(getContent(el)).toBe(`<p><span class="h2-fs">a[]</span></p>`);
+});
+
+test("font-size should be preserved when replacing HTML element text", async () => {
+    const { el, editor } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    const fontSizeInputEl = await getIframeInput(
+        ".o-we-toolbar [name='font_size'] iframe.o_font_size_selector_iframe",
+        "input[name='font_size_input']"
+    );
+    await click(fontSizeInputEl);
+
+    fontSizeInputEl.value = 21;
+    await manuallyDispatchProgrammaticEvent(fontSizeInputEl, "input", {
+        inputType: "insertText",
+    });
+    // Trigger the 200ms debounce on the font size input
+    await advanceTime(200);
+    await press("Enter");
+    await animationFrame();
+
+    expect(el).toBeFocused();
+    expect(getContent(el)).toBe(`<p><span style="font-size: 21px;">[test]</span></p>`);
+
+    await insertText(editor, "a");
+    await animationFrame();
+    expect(getContent(el)).toBe(`<p><span style="font-size: 21px;">a[]</span></p>`);
+});
