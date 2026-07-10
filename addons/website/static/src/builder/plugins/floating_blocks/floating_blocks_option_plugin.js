@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { scrollTo } from "@html_builder/utils/scrolling";
 
 export class FloatingBlocksOptionPlugin extends Plugin {
     static id = "floatingBlocksOptionPlugin";
@@ -49,7 +50,9 @@ export class AddFloatingBlockCardAction extends BuilderAction {
         const newCardEl = renderToElement("website.s_floating_blocks.new_card");
         const wrapperEl = el.querySelector(".s_floating_blocks_wrapper");
         wrapperEl.appendChild(newCardEl);
-        newCardEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        const viewportHeight = this.document.defaultView.innerHeight;
+        const newCardHeight = newCardEl.getBoundingClientRect().height;
+        scrollTo(newCardEl, { forcedOffset: viewportHeight / 2 - newCardHeight / 2 });
         this.dependencies.builderOptions.setNextTarget(newCardEl);
     }
 }
