@@ -2577,7 +2577,7 @@ class IrModelData(models.Model):
             return True
 
         bad_imd_ids = []
-        self = self.with_context({'force_delete': True})  # noqa: PLW0642
+        self = self.with_context(force_delete=True)  # noqa: PLW0642
         loaded_xmlids = self.pool.loaded_xmlids
 
         query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data
