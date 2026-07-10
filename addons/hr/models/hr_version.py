@@ -98,7 +98,7 @@ class HrVersion(models.Model):
         groups="hr.group_hr_user", tracking=1)
     private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=1)
     private_country_id = fields.Many2one("res.country", string="Private Country", index='btree_not_null',
-                                         groups="hr.group_hr_user", tracking=1)
+                                         groups="hr.group_hr_user", tracking=1, default=lambda self: self.env.company.country_id)
 
     distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=1)
     km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_user",
