@@ -310,11 +310,10 @@ def column_exists(cr, tablename, columnname):
 def create_column(cr, tablename, columnname, columntype, comment=None):
     """ Create a column with the given type. """
     sql = SQL(
-        "ALTER TABLE %s ADD COLUMN %s %s %s",
+        "ALTER TABLE %s ADD COLUMN %s %s",
         SQL.identifier(tablename),
         SQL.identifier(columnname),
         SQL(columntype),
-        SQL("DEFAULT false" if columntype.upper() == 'BOOLEAN' else ""),
     )
     if comment:
         sql = SQL("%s; %s", sql, SQL(
