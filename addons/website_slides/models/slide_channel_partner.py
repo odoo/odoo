@@ -12,7 +12,7 @@ class SlideChannelPartner(models.Model):
     channel_id = fields.Many2one('slide.channel', string='Course', index=True, required=True, ondelete='cascade')
     member_status = fields.Selection([
         ('invited', 'Invite Sent'),
-        ('joined', 'Joined'),
+        ('joined', 'Not Started'),
         ('ongoing', 'Ongoing'),
         ('completed', 'Finished')],
         string='Attendee Status', readonly=True, required=True, default='joined')
