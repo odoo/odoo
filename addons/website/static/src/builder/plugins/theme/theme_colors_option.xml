@@ -71,10 +71,11 @@
                                                     </t>
                                                     <t t-foreach="this.palettes" t-as="palette" t-key="palette.name">
                                                         <BuilderSelectItem actionValue="`'${palette.name}'`">
-                                                            <div class="o-color-palette-pill d-flex flex-row border rounded-pill overflow-hidden">
-                                                                <t t-foreach="palette.colors" t-as="color" t-key="color">
-                                                                    <span class="w-100" t-attf-style="background-color: {{color}};"></span>
-                                                                </t>
+                                                            <div class="o-color-palette-card d-flex flex-row border rounded overflow-hidden p-2 align-items-center"
+                                                                t-attf-style="background-color: {{palette.backgroundColor}};">
+                                                                <span class="w-100 me-1" t-attf-style="color: {{palette.textColor}};">Text</span>
+                                                                <span class="w-100 h-100 rounded" t-attf-style="background-color: {{palette.swatchColors[0]}};"></span>
+                                                                <span class="w-100 h-100 ms-1 rounded" t-attf-style="background-color: {{palette.swatchColors[1]}};"></span>
                                                             </div>
                                                         </BuilderSelectItem>
                                                     </t>

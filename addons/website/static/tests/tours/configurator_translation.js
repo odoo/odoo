@@ -36,11 +36,6 @@ function runConfiguratorFlow(industrySearchText) {
             run: "click",
         },
         {
-            content: "Go to the next configurator step",
-            trigger: "button.o_configurator_next:not(:disabled)",
-            run: "click",
-        },
-        {
             content: "Wait for theme selection or loader",
             trigger: `.o_website_loader_container, .o_configurator_screen:contains(online catalog) .button_area, ${themeSelectionCard}`,
             timeout: 60000,

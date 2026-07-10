@@ -3,28 +3,26 @@
 
     <t t-name="website_sale.Configurator.ShopPageSelectionScreen">
         <div class="o_configurator_screen o_wsale_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
-            <div class="o_configurator_screen_content pb-5">
+            <div class="o_configurator_screen_content flex-grow-1 pb-2">
                 <div class="container-fluid px-3 px-xl-5">
-                    <div class="o_configurator_typing_text text-center pt-3 mb-4">
+                    <h1 class="mb-2 mb-xxl-3 pt-3 text-center o_configurator_typing_text">
                         Choose your <b class="text-info">Online Catalog Template</b>
-                    </div>
-                    <div class="row row-cols-1 row-cols-lg-3 row-cols-sm-2 g-2 g-sm-3 g-lg-4">
+                    </h1>
+                    <div class="grid gap-2 gap-sm-3 gap-lg-4 mt-2">
                         <t t-foreach="this.shopPageStyles" t-as="style" t-key="style_index">
-                            <div class="col">
-                                <div class="theme_preview o_configurator_show_fast rounded position-relative mt-3 mb-2 text-center">
-                                    <h6 t-out="style.title" class="badge border border-dark border-opacity-25 rounded-pill fs-6"/>
+                            <div class="g-col-12 g-col-sm-6 g-col-lg-4">
+                                <div class="theme_preview o_configurator_show_fast rounded position-relative mt-3 mt-lg-0 mb-2 mb-lg-0 text-center">
                                     <div class="ratio" style="--aspect-ratio: 66%;">
                                         <img
                                             t-attf-src="{{style.img_src}}"
                                             class="rounded"
                                             role="presentation"
-                                            t-att-title="style.title"
                                         />
                                     </div>
                                     <button
                                         class="o_btn_reset button_area"
                                         t-on-click="() => this.selectStyle(style.option)"
-                                        t-att-title="style.title"
+                                        t-att-aria-label="style.title"
                                     />
                                 </div>
                             </div>
