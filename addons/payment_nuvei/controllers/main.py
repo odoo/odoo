@@ -30,7 +30,7 @@ class NuveiController(http.Controller):
         :param dict data: The notification data.
         """
         _logger.info("Handling redirection from Nuvei with data:\n%s", pprint.pformat(data))
-        if tx_ref and error_access_token:
+        if error_access_token:
             _logger.warning("Nuvei errored on transaction with reference: %s", tx_ref)
             payment_data = {}
         else:
