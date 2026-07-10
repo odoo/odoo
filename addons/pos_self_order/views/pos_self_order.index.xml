@@ -18,8 +18,14 @@
                         pos_session_id: <t t-out="pos_session_id"/>,
                     };
                 </script>
-                <t t-call-assets="pos_self_order.assets" />
-                <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="pos_self_order.assets_tests" />
+                <t t-if="pairing_mode">
+                    <t t-call-assets="pos_self_pairing.assets" />
+                    <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="pos_self_pairing.assets_tests" />
+                </t>
+                <t t-else="">
+                    <t t-call-assets="pos_self_order.assets" />
+                    <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="pos_self_order.assets_tests" />
+                </t>
             </head>
             <body>
             </body>

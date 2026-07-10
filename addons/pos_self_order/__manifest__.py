@@ -15,12 +15,14 @@
         "views/pos_restaurant_views.xml",
         "views/product_views.xml",
         "views/pos_preset_view.xml",
+        "views/pos_self_kiosk_device_views.xml",
         "data/init_access.xml",
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
         'receipt/pos_order_receipt.xml',
         'receipt/pos_order_change_receipt.xml',
         'receipt/dynamic_qr_receipt.xml',
+        "data/ir_cron_data.xml",
         'security/ir.access.csv',
     ],
     "demo": [
@@ -55,6 +57,7 @@
         'web.assets_backend': [
             "pos_self_order/static/src/upgrade_selection_field.js",
             'pos_self_order/static/src/backend/qr_order_button/*',
+            'pos_self_order/static/src/backend/self_open_kiosk_button/*',
             'pos_self_order/static/src/backend/pos_open_ui_button/pos_open_ui_button.js',
         ],
         "pos_self_order.assets": [
@@ -137,7 +140,28 @@
 
             ('include', 'point_of_sale.payment_terminals'),
         ],
+        "pos_self_pairing.assets": [
+            "pos_self_order/static/src/app/primary_variables.scss",
+            "pos_self_order/static/src/app/bootstrap_overridden.scss",
+
+            ("include", "web._assets_helpers"),
+            ("include", "web._assets_frontend_helpers"),
+            ("include", "web._assets_primary_variables"),
+            "web/static/src/scss/pre_variables.scss",
+
+            "web/static/lib/bootstrap/scss/_functions.scss",
+            "web/static/lib/bootstrap/scss/_variables.scss",
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            ("include", "web._assets_bootstrap_frontend"),
+
+            ('include', 'web._assets_core'),
+            "pos_self_order/static/src/app_pairing/**/*",
+         ],
         # Assets tests
+        "pos_self_pairing.assets_tests": [
+            ("include", "point_of_sale.base_tests"),
+            "pos_self_order/static/tests/tours/pairing_tour.js",
+        ],
         "pos_self_order.assets_tests": [
             ("include", "point_of_sale.base_tests"),
             "pos_self_order/static/tests/tours/**/*",

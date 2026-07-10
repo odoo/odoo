@@ -46,24 +46,22 @@ export class TestEPos extends Component {
     }
 
     async getPrinterDataEPos(printer_id) {
+        const fields = this.getPrinterFields();
         if (printer_id) {
-            const response = await this.orm.read(
-                "pos.printer",
-                [printer_id],
-                ["printer_ip", "name", "printer_type", "use_lna", "paper_size"]
-            );
+            const response = await this.orm.read("pos.printer", [printer_id], fields);
             return response[0];
         } else {
             const data = this.props.record.data;
-            return {
-                id: this.props.record.resId || null,
-                name: data.name,
-                printer_ip: data.printer_ip,
-                printer_type: data.printer_type,
-                use_lna: data.use_lna,
-                paper_size: data.paper_size,
-            };
+            const result = { id: this.props.record.resId || null };
+            for (const field of fields) {
+                result[field] = data[field];
+            }
+            return result;
         }
+    }
+
+    getPrinterFields() {
+        return ["printer_ip", "name", "printer_type", "use_lna", "paper_size"];
     }
 
     async _testSinglePrinter() {
@@ -76,7 +74,6 @@ export class TestEPos extends Component {
                     type: "warning",
                 }
             );
-            return;
         }
     }
 
@@ -96,6 +93,9 @@ export class TestEPos extends Component {
 
     async _printTo(printer_id = null) {
         const printer = await this.getPrinterDataEPos(printer_id);
+        return await this._printToPrinter(printer);
+    }
+    async _printToPrinter(printer) {
         if (printer.printer_type === "epson_epos") {
             const protocol = printer.use_lna ? "http:" : window.location.protocol;
             const url = protocol + "//" + printer.printer_ip;
@@ -111,32 +111,11 @@ export class TestEPos extends Component {
             if (printer.paper_size !== "label") {
                 try {
                     const address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
-                    const result = await fetch(address, params);
+                    const result = await this.sendRequest(address, params);
                     const body = await result.text();
-                    const parser = new DOMParser();
-                    const parsedBody = parser.parseFromString(body, "application/xml");
-                    const response = parsedBody.querySelector("response");
-                    const success = response.getAttribute("success") === "true";
-                    const errorCode = response.getAttribute("code");
-
-                    if (!success || errorCode !== "") {
-                        const errorMessage =
-                            EPSON_ERRORS[errorCode] ||
-                            _t("Failed to print a test receipt. Check your printer.");
-                        this.notification.add(
-                            `${printer.name} (${printer.printer_ip}): ${errorMessage}`,
-                            {
-                                type: "warning",
-                            }
-                        );
-                    }
+                    this.processEPosResponse(printer, body);
                 } catch {
-                    this.notification.add(
-                        `${printer.name} (${printer.printer_ip}): ${_t(
-                            "Cannot reach the printer."
-                        )}`,
-                        { type: "danger" }
-                    );
+                    this.handlePrintError(printer);
                 }
             } else {
                 const zpl = "^XA^FO50,50^ADN,36,20^FDTest ZPL receipt!^FS^XZ";
@@ -148,17 +127,40 @@ export class TestEPos extends Component {
                 params.mode = "no-cors";
 
                 try {
-                    await fetch(`${url}/pstprnt`, params);
+                    await this.sendRequest(`${url}/pstprnt`, params);
                 } catch {
-                    this.notification.add(
-                        `${printer.name} (${printer.printer_ip}): ${_t(
-                            "Cannot reach the printer."
-                        )}`,
-                        { type: "danger" }
-                    );
+                    this.handlePrintError(printer);
                 }
             }
         }
+    }
+
+    sendRequest(url, params) {
+        return fetch(url, params);
+    }
+
+    processEPosResponse(printer, data) {
+        const parser = new DOMParser();
+        const parsedBody = parser.parseFromString(data, "application/xml");
+        const response = parsedBody.querySelector("response");
+        const success = response.getAttribute("success") === "true";
+        const errorCode = response.getAttribute("code");
+
+        if (!success || errorCode !== "") {
+            const errorMessage =
+                EPSON_ERRORS[errorCode] ||
+                _t("Failed to print a test receipt. Check your printer.");
+            this.notification.add(`${printer.name} (${printer.printer_ip}): ${errorMessage}`, {
+                type: "warning",
+            });
+        }
+    }
+
+    handlePrintError(printer) {
+        this.notification.add(
+            `${printer.name} (${printer.printer_ip}): ${_t("Cannot reach the printer.")}`,
+            { type: "danger" }
+        );
     }
 
     async onClick() {
