@@ -351,6 +351,12 @@ export class FormOptionPlugin extends Plugin {
         const formEl = el.closest("form");
         const formKey = activeForm?.website_form_key;
         const formInfo = this.getRegistryFormInfo(formKey);
+        if (!formInfo.formFields && activeForm) {
+            // The action has no registered form fields (e.g. models made
+            // available through "More Models"): add the fields that are
+            // mandatory on the model so the form can be submitted.
+            formInfo.formFields = await this.fetchModelRequiredFields(activeForm.model);
+        }
         if (formInfo.formFields) {
             const formatInfo = getDefaultFormat(el);
             await Promise.all(
@@ -364,6 +370,24 @@ export class FormOptionPlugin extends Plugin {
         }
         await this.fetchFormInfoFields(formInfo);
         return formInfo;
+    }
+    /**
+     * Returns the mandatory fields of the given model as form fields. They
+     * are marked as required by the model so that they cannot be removed
+     * from the form.
+     *
+     * @param {string} modelName
+     * @returns {Promise<Object[]>}
+     */
+    async fetchModelRequiredFields(modelName) {
+        const authorizedFields = await this.authorizedFieldsCache.read({
+            cacheKey: modelName,
+            model: modelName,
+            propertyOrigins: {},
+        });
+        return Object.entries(authorizedFields)
+            .filter(([, field]) => field.required)
+            .map(([name, field]) => ({ ...omit(field, "required"), name, modelRequired: true }));
     }
     /**
      * Add a hidden field to the form
