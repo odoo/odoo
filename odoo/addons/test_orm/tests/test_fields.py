@@ -356,9 +356,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # switch message from discussion, and check again
 
-        # See YTI FIXME
-        self.env.invalidate_all()
-
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
         message2.discussion = discussion2
@@ -1275,9 +1272,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         demo_message = message.with_user(demo)
         self.assertEqual(demo_message.env, demo_env)
         self.assertEqual(demo_message.discussion.env, demo_env)
-
-        # See YTI FIXME
-        self.env.invalidate_all()
 
         # assign record's parent to a record in demo_env
         message.discussion = message.discussion.copy({'name': 'Copy'})
@@ -2653,8 +2647,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_70_x2many_write(self):
         discussion = self.env.ref('test_orm.discussion_0')
-        # See YTI FIXME
-        self.env.invalidate_all()
 
         Message = self.env['test_orm.message']
         # There must be 3 messages, 0 important
@@ -2685,10 +2677,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # check that the demo user sees the same messages
         self.assertEqual(demo_discussion.messages, discussion.messages)
-
-        # See YTI FIXME
-        self.env.flush_all()
-        self.env.invalidate_all()
 
         # add a message as user demo
         messages = demo_discussion.messages
