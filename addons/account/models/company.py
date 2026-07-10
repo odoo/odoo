@@ -1120,7 +1120,7 @@ class ResCompany(models.Model):
                     (company.country_id.code or company.account_fiscal_country_id.code).lower()
                 )
 
-            company.company_vat_placeholder = expected_vat
+            company.company_vat_placeholder = self.env._(expected_vat or '')  # pylint: disable=E8502
 
     @api.depends('country_id', 'account_fiscal_country_id')
     def _compute_company_registry_placeholder(self):
