@@ -127,6 +127,12 @@ class DiscussChannelWebclientController(WebclientController):
                 fetch_params=fetch_params,
             )
             messages.set_message_done()
+        else:
+            store.resolve_data_request(
+                lambda res: (
+                    res.many("messages", [], value=[]),
+                ),
+            )
 
     @store_handler("/discuss/channel/pin", audience="everyone", readonly=False)
     def store_set_discuss_channel_pin(self, store: Store, channel_id, pinned):
@@ -168,8 +174,22 @@ class DiscussChannelWebclientController(WebclientController):
         emails=None,
         invite_to_rtc_call=False,
         post_joined_message=True,
+        invitation_token=None,
     ):
-        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
+        if invitation_token:
+            # sudo: discuss.channel - skipping ACL for users who have a valid invitation token
+            channel = (
+                request.env["discuss.channel"].browse(channel_id).exists().sudo()
+            )
+            if (
+                not self._is_channel_accessible_for_token(channel, invitation_token)
+                or request.env.user._is_public()
+                or (user_ids and request.env.user.ids != user_ids)
+                or (partner_ids and request.env.user.partner_id.ids != partner_ids)
+            ):
+                return
+        else:
+            channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             return
         users = request.env["res.users"].search_fetch(
@@ -217,6 +237,40 @@ class DiscussChannelWebclientController(WebclientController):
             store.resolve_data_request(
                 lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
             )
+
+    def _is_channel_accessible_for_token(self, channel, invitation_token):
+        """ Check if the channel is accessible for the given invitation token.
+        :param channel: The channel to check access for.
+        :param invitation_token: The invitation token to check access with.
+        :return: True if the channel is accessible, False otherwise.
+        """
+        # group restriction takes precedence over token
+        # sudo - res.groups: can access group public id of parent channel to determine if we
+        # can access the channel.
+        if not channel or not channel._verify_uuid(invitation_token):
+            return False
+        group_public_id = (
+            channel.sudo().group_public_id or channel.parent_channel_id.sudo().group_public_id
+        )
+        return not group_public_id or group_public_id in request.env.user.all_group_ids
+
+    @store_handler("/discuss/channel/invitation", audience="everyone")
+    def store_discuss_channel_invitation(self, store: Store, channel_id, invitation_token):
+        channel = request.env["discuss.channel"].browse(channel_id).exists()
+        if not self._is_channel_accessible_for_token(channel, invitation_token):
+            return
+        store.add_global_values(
+            lambda res: res.one(
+                "channel_invitation_pending",
+                ["create_uid", "uuid"],
+                # sudo: discuss.channel - skipping ACL for users who have a valid invitation token
+                value=channel.sudo(),
+            ),
+        )
+        store.resolve_data_request(
+            # sudo: discuss.channel - skipping ACL for users who have a valid invitation token
+            lambda res: res.one("channel", "_store_channel_fields", value=channel.sudo()),
+        )
 
 
 class ChannelController(http.Controller):

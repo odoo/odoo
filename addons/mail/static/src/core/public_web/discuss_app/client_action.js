@@ -25,6 +25,7 @@ export class DiscussClientAction extends Component {
                             active_id: t.or([t.string(), t.number()]).optional(),
                             default_active_id: t.or([t.string(), t.number()]).optional(),
                             highlight_message_id: t.number().optional(),
+                            invitation_token: t.string().optional(),
                         })
                         .optional(),
                 })
@@ -37,7 +38,12 @@ export class DiscussClientAction extends Component {
             () => [this.action()],
             (action) => this.restoreDiscussThread(action)
         );
-        onMounted(() => (this.store.discuss.isActive = true));
+        onMounted(() => {
+            this.store.discuss.isActive = true;
+            if (this.action()?.params?.invitation_token && !this.store.is_welcome_page_displayed) {
+                router.pushState(router.current);
+            }
+        });
         onWillUnmount(() => (this.store.discuss.isActive = false));
     }
 
@@ -90,7 +96,31 @@ export class DiscussClientAction extends Component {
             this.store.discuss.hasRestoredThread = true;
             return;
         }
-        const activeThread = await this.store["mail.thread"].getOrFetch({ model, id });
+        let activeThread;
+        if (
+            (action?.params?.invitation_token || this.store.channel_invitation_pending) &&
+            model === "discuss.channel" &&
+            this.store.self_user
+        ) {
+            await this.store.isReadyPromise;
+            await this.store.fetchStoreData(
+                "/discuss/channel/invitation",
+                {
+                    channel_id: id,
+                    invitation_token:
+                        action?.params?.invitation_token ??
+                        this.store.channel_invitation_pending.uuid,
+                },
+                {
+                    requestData: true,
+                }
+            );
+            if (this.store["discuss.channel"].get(id).self_member_id) {
+                activeThread = await this.store["mail.thread"].getOrFetch({ model, id });
+            }
+        } else {
+            activeThread = await this.store["mail.thread"].getOrFetch({ model, id });
+        }
         if (activeThread && !activeThread.discussAppAsThread) {
             const highlight_message_id =
                 action?.params?.highlight_message_id || router.current.highlight_message_id;

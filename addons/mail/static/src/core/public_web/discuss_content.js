@@ -7,6 +7,7 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Thread } from "@mail/core/common/thread";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { Composer } from "@mail/core/common/composer";
+import { DiscussInvitation } from "@mail/core/public_web/discuss_invitation";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -21,6 +22,7 @@ export class DiscussContent extends Component {
         ThreadIcon,
         Composer,
         FileUploader,
+        DiscussInvitation,
     };
     static template = "mail.DiscussContent";
 
@@ -45,6 +47,8 @@ export class DiscussContent extends Component {
         this.selfGuestName = computed(() => this.store.self_guest?.name);
         this.threadDisplayName = computed(() => this.thread?.displayName);
         this.threadDescription = computed(() => this.thread?.description);
+        this.onClickConfirmInvitation = this.onClickConfirmInvitation.bind(this);
+        this.onClickDismissInvitation = this.onClickDismissInvitation.bind(this);
         useOnChange(
             () => [this.thread],
             () => this.actionPanelAutoOpenFn()
@@ -126,5 +130,43 @@ export class DiscussContent extends Component {
         if (newDescription !== this.thread.channel.description) {
             await this.thread.channel.notifyDescriptionToServer(newDescription);
         }
+    }
+
+    get isInvitationPending() {
+        return (
+            !this.store.is_welcome_page_displayed &&
+            this.store.channel_invitation_pending &&
+            (!this.thread?.channel || this.store.channel_invitation_pending.eq(this.thread.channel))
+        );
+    }
+
+    async onClickConfirmInvitation() {
+        const channel = this.store.channel_invitation_pending;
+        if (!channel) {
+            return;
+        }
+        if (!channel.self_member_id) {
+            await this.store.fetchStoreData("/discuss/channel/add_members", {
+                channel_id: channel.id,
+                user_ids: [this.store.self_user.id],
+                invitation_token: channel.uuid,
+            });
+        }
+        this.store.channel_invitation_pending = undefined;
+        // refresh the channel to get the updated rtc_session_ids
+        await this.store.rtc.constructor.pingChannel(channel);
+        const thread = await this.store["mail.thread"].getOrFetch({
+            model: "discuss.channel",
+            id: channel.id,
+        });
+        if (thread) {
+            thread.setAsDiscussThread(false);
+        }
+        if (channel.hasRtcSessionActive) {
+            await this.store.rtc.toggleCall(channel);
+        }
+    }
+    onClickDismissInvitation() {
+        this.store.channel_invitation_pending = undefined;
     }
 }

@@ -3,7 +3,8 @@
 
 <t t-name="mail.DiscussContent">
     <t t-set="partitionedActions" t-value="this.threadActions.partition"/>
-    <div class="o-mail-DiscussContent d-flex flex-column h-100 flex-grow-1 overflow-auto o-scrollbar-thin" t-ref="this.rootRef">
+    <div class="o-mail-DiscussContent position-relative  d-flex flex-column h-100 flex-grow-1 overflow-auto o-scrollbar-thin" t-ref="this.rootRef">
+        <DiscussInvitation t-if="this.isInvitationPending" channel="this.store.channel_invitation_pending" onConfirm="this.onClickConfirmInvitation" close="this.onClickDismissInvitation"/>
         <div t-if="this.thread" class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-7_5 gap-1 z-1 flex-grow-0" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
             <div t-if="this.showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit" t-att-class="this.threadAvatarAttClass" t-ref="this.threadAvatarRef">
                 <DiscussAvatar record="this.thread" size="26"/>
