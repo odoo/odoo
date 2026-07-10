@@ -26,7 +26,9 @@ export class SelectionPlaceholderPlugin extends Plugin {
         on_remote_history_commits_applied_handlers: this.updatePlaceholders.bind(this),
         normalize_processors: withSequence(100, this.updatePlaceholders.bind(this)),
         on_committed_to_history_handlers: this.updatePlaceholders.bind(this),
+        on_inserted_handlers: this.updatePlaceholders.bind(this),
         on_selectionchange_handlers: (selectionData) => this.onSelectionChange(selectionData),
+        on_selection_set_handlers: (activeSelection) => this.onSelectionChange(activeSelection),
         clean_for_save_processors: withSequence(0, (root) => {
             for (const placeholder of root.querySelectorAll(PLACEHOLDER_SELECTOR)) {
                 placeholder.remove();
@@ -239,7 +241,8 @@ export class SelectionPlaceholderPlugin extends Plugin {
      * @param {import("@html_editor/core/selection_plugin").SelectionData} selectionData
      */
     onSelectionChange(selectionData) {
-        const selection = selectionData.editableSelection;
+        const selection =
+            selectionData.editableSelection || this.dependencies.selection.getEditableSelection();
         this.resetBlinkerClasses(selection);
         if (selection.isCollapsed) {
             const anchor = closestElement(selection.anchorNode);

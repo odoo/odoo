@@ -824,6 +824,7 @@ describe("Collaboration with embedded components", () => {
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
             `<p data-selection-placeholder=""><br></p><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div><p>[]<br></p>`
         );
+        // Waiting to fill the embedded component.
         await animationFrame();
         cleanHints(e1);
         cleanHints(e2);

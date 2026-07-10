@@ -16,7 +16,7 @@ import {
 } from "@html_editor/others/embedded_component_utils";
 import { parseHTML } from "@html_editor/utils/html";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
+import { click, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
     App,
@@ -600,11 +600,7 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.commit();
-        // Insertion triggers `selectionchange` and `commit` creates a selection
-        // placeholder. `fixSelectionInsideEditableRoot` moves the selection
-        // into it and triggers another `selectionchange` that removes the
-        // selection placeholder. So we must wait for the `.o-we-hint`.
-        await waitFor(".o-we-hint");
+        await animationFrame();
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`

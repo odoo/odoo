@@ -199,7 +199,6 @@ describe("collapsed selection", () => {
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
         const { editor } = await setupEditor(`<p class="oe_unbreakable">cont[]ent</p>`, {});
         insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
-        await tick();
         expect(getContent(editor.editable)).toBe(
             `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
@@ -266,7 +265,7 @@ describe("collapsed selection", () => {
             )
         );
         expect(getContent(editor.editable)).toBe(
-            `<p>cont</p><p class="oe_unbreakable">1</p><p class="oe_unbreakable">2[]</p><p>+</p>`
+            `<p>cont</p><p class="oe_unbreakable">1</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><p class="oe_unbreakable">2[]</p><p>+</p>`
         );
     });
 
@@ -344,21 +343,21 @@ describe("collapsed selection", () => {
 
     test("insert block in empty paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>[]<br></p>`);
-        insertHTML(`<div class="oe_unbreakable">a</div>`)(editor);
+        insertHTML(`<div class="o-paragraph oe_unbreakable">a</div>`)(editor);
         cleanHints(editor);
         expect(getContent(el)).toBe(
             '<p data-selection-placeholder=""><br></p>' +
-                '<div class="oe_unbreakable">a[]</div>' +
+                '<div class="o-paragraph oe_unbreakable">a[]</div>' +
                 '<p data-selection-placeholder=""><br></p>'
         );
     });
 
     test("insert block at the end of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>b[]</p>`);
-        insertHTML(`<div class="oe_unbreakable">a</div>`)(editor);
+        insertHTML(`<div class="o-paragraph oe_unbreakable">a</div>`)(editor);
         cleanHints(editor);
         expect(getContent(el)).toBe(
-            `<p>b</p><div class="oe_unbreakable">a[]</div><p data-selection-placeholder=""><br></p>`
+            `<p>b</p><div class="o-paragraph oe_unbreakable">a[]</div><p data-selection-placeholder=""><br></p>`
         );
     });
 
