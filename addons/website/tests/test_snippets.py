@@ -199,3 +199,6 @@ class TestSnippets(HttpCase):
 
     def test_floating_snippets(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_floating_snippets', login='admin')
+
+    def test_shape_color_sync_with_theme_color(self):
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'shape_color_sync_with_theme_color', login='admin')

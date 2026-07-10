@@ -1,6 +1,6 @@
 declare module "plugins" {
     import { CarouselOptionShared } from "@website/builder/plugins/carousel_option_plugin";
-    import { CustomizeWebsiteShared } from "@website/builder/plugins/customize_website_plugin";
+    import { CustomizeWebsiteShared, on_website_color_updated_handlers } from "@website/builder/plugins/customize_website_plugin";
     import { on_content_manually_updated_handlers, EditInteractionShared } from "@website/builder/plugins/edit_interaction_plugin";
     import { floating_snippet_scope_providers, floating_snippets_selectors } from "@website/builder/plugins/floating_snippets_plugin";
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
@@ -85,6 +85,7 @@ declare module "plugins" {
         on_hover_animation_mode_applied_handlers: on_hover_animation_mode_applied_handlers;
         on_nodes_marked_translatable_handlers: on_nodes_marked_translatable_handlers;
         on_visibility_toggled_handlers: on_visibility_toggled_handlers;
+        on_website_color_updated_handlers: on_website_color_updated_handlers;
 
         // Predicates
         can_have_hover_effect_predicates: can_have_hover_effect_predicates;
