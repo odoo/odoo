@@ -1,0 +1,64 @@
+<odoo>
+    <record id="view_l10n_cr_fe_config_form" model="ir.ui.view">
+        <field name="name">l10n_cr.fe.config.form</field>
+        <field name="model">l10n_cr.fe.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuración Factura Electrónica CR">
+                <sheet>
+                    <group>
+                        <group string="General">
+                            <field name="company_id"/>
+                            <field name="environment"/>
+                            <field name="identification_type"/>
+                            <field name="identification_number"/>
+                            <field name="legal_name"/>
+                            <field name="trade_name"/>
+                            <field name="economic_activity_code"/>
+                        </group>
+                        <group string="Ubicación">
+                            <field name="province"/>
+                            <field name="canton"/>
+                            <field name="district"/>
+                            <field name="neighborhood"/>
+                            <field name="address_detail"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="branch_number"/>
+                            <field name="terminal_number"/>
+                        </group>
+                    </group>
+                    <group string="Credenciales y certificado" groups="l10n_cr_fe_crlibre.group_fe_admin">
+                        <field name="hacienda_username"/>
+                        <field name="hacienda_password" password="True"/>
+                        <field name="certificate_file" filename="certificate_filename"/>
+                        <field name="certificate_filename" invisible="1"/>
+                        <field name="certificate_pin" password="True"/>
+                        <field name="certificate_download_code" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_l10n_cr_fe_config_list" model="ir.ui.view">
+        <field name="name">l10n_cr.fe.config.list</field>
+        <field name="model">l10n_cr.fe.config</field>
+        <field name="arch" type="xml">
+            <list string="Configuración Factura Electrónica CR">
+                <field name="company_id"/>
+                <field name="environment"/>
+                <field name="identification_number"/>
+                <field name="legal_name"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_l10n_cr_fe_config" model="ir.actions.act_window">
+        <field name="name">Factura Electrónica CR</field>
+        <field name="res_model">l10n_cr.fe.config</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_l10n_cr_fe_config"
+              name="Factura Electrónica CR"
+              parent="account.account_account_menu"
+              action="action_l10n_cr_fe_config"
+              groups="l10n_cr_fe_crlibre.group_fe_admin"/>
+</odoo>

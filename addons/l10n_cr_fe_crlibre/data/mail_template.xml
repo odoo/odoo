@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_l10n_cr_fe_aceptado" model="mail.template">
+        <field name="name">FE CR: Comprobante aceptado</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="subject">Su comprobante electrónico {{ object.l10n_cr_fe_clave }}</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="body_html" type="html">
+            <p>Estimado(a) {{ object.partner_id.name }},</p>
+            <p>Adjuntamos el comprobante electrónico y la respuesta de aceptación del Ministerio de Hacienda.</p>
+        </field>
+    </record>
+</odoo>

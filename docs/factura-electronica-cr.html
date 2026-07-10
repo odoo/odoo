@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Facturación Electrónica CR — Odoo Community</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 10pt; line-height: 1.55; color: #1e2a38; background: #f4f6f9; }
+.page { width: 210mm; margin: 0 auto; background: white; }
+
+/* Cover */
+.cover {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #0d2b4e 0%, #1a4a7a 60%, #2196F3 100%);
+  color: white; display: flex; flex-direction: column;
+  justify-content: center; padding: 50px 45px; page-break-after: always;
+}
+.cover .label { font-size: 8pt; letter-spacing: 3px; text-transform: uppercase; opacity: .7; margin-bottom: 12px; }
+.cover h1 { font-size: 26pt; font-weight: 800; line-height: 1.2; margin-bottom: 14px; }
+.cover h1 span { color: #64b5f6; }
+.cover .sub { font-size: 12pt; opacity: .85; margin-bottom: 36px; max-width: 440px; }
+.cover .meta { border-top: 1px solid rgba(255,255,255,.25); padding-top: 18px; display: flex; gap: 32px; font-size: 9pt; opacity: .75; }
+.cover .badge { display:inline-block; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); border-radius:20px; padding:5px 16px; font-size:8.5pt; margin-bottom:32px; }
+
+/* TOC */
+.toc { padding: 36px 45px; page-break-after: always; }
+.toc h2 { font-size: 16pt; color: #0d2b4e; margin-bottom: 20px; }
+.toc-item { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px dotted #cfd8dc; font-size:9.5pt; }
+.toc-item.h { font-weight:700; color:#0d2b4e; margin-top:8px; }
+.toc-item.sub { padding-left:16px; color:#546e7a; }
+.toc-num { color:#2196F3; font-weight:600; margin-right:8px; }
+
+/* Sections */
+.sec { padding: 36px 45px 28px; page-break-before: always; }
+.sec-hdr { border-left:4px solid #2196F3; padding-left:12px; margin-bottom:22px; }
+.sec-num { font-size:8pt; letter-spacing:2px; text-transform:uppercase; color:#2196F3; font-weight:700; }
+.sec-hdr h2 { font-size:16pt; color:#0d2b4e; font-weight:800; line-height:1.2; }
+h3 { font-size:11pt; color:#0d2b4e; margin:20px 0 8px; font-weight:700; }
+h4 { font-size:10pt; color:#1565c0; margin:14px 0 6px; font-weight:700; }
+p { margin-bottom:9px; }
+ul,ol { margin:7px 0 10px 20px; }
+li { margin-bottom:3px; }
+
+/* Callouts */
+.box { border-radius:6px; padding:10px 14px; margin:12px 0; font-size:9.5pt; }
+.info    { background:#e3f2fd; border-left:3px solid #2196F3; }
+.warn    { background:#fff8e1; border-left:3px solid #ffc107; }
+.danger  { background:#ffebee; border-left:3px solid #f44336; }
+.success { background:#e8f5e9; border-left:3px solid #4caf50; }
+.box strong { display:block; margin-bottom:3px; }
+
+/* Tables */
+table { width:100%; border-collapse:collapse; margin:12px 0; font-size:8.5pt; }
+th { background:#0d2b4e; color:white; padding:7px 10px; text-align:left; font-weight:600; }
+td { padding:6px 10px; border-bottom:1px solid #eceff1; vertical-align:top; }
+tr:nth-child(even) td { background:#f8fafc; }
+.c { text-align:center; }
+.g { background:#e8f5e9; color:#2e7d32; padding:1px 7px; border-radius:10px; font-size:8pt; font-weight:600; }
+.y { background:#fff8e1; color:#e65100; padding:1px 7px; border-radius:10px; font-size:8pt; font-weight:600; }
+.r { background:#ffebee; color:#c62828; padding:1px 7px; border-radius:10px; font-size:8pt; font-weight:600; }
+.b { background:#e3f2fd; color:#1565c0; padding:1px 7px; border-radius:10px; font-size:8pt; font-weight:600; }
+
+/* Grid 2-col */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:12px 0; }
+.card { border:1px solid #cfd8dc; border-radius:8px; padding:14px; font-size:9pt; }
+.card h4 { margin-top:4px; }
+.pros li::before { content:"✓ "; color:#4caf50; font-weight:700; }
+.cons li::before { content:"✗ "; color:#f44336; font-weight:700; }
+.pros li,.cons li { list-style:none; margin-left:0; }
+
+/* Checklist */
+.chk { list-style:none; margin:0; padding:0; }
+.chk li { display:flex; align-items:flex-start; gap:8px; padding:5px 0; border-bottom:1px solid #eceff1; font-size:9pt; }
+.chk li .bx { min-width:15px; height:15px; border:1.5px solid #90a4ae; border-radius:3px; margin-top:2px; flex-shrink:0; }
+.chk .area { font-weight:700; color:#0d2b4e; border:none; padding:10px 0 2px; font-size:10pt; }
+
+/* Code */
+.code { background:#1e2a38; color:#a5d6a7; border-radius:6px; padding:12px 16px; font-family:Consolas,monospace; font-size:8pt; line-height:1.5; margin:10px 0; white-space:pre; }
+.ct { color:#81d4fa; } .ca { color:#ffcc80; } .cc { color:#546e7a; }
+
+/* Diagram */
+.diag { margin:16px 0; text-align:center; }
+.diag svg { max-width:100%; }
+.diag figcaption { font-size:8pt; color:#78909c; margin-top:4px; font-style:italic; }
+
+/* Footer */
+.ftr { margin-top:28px; padding-top:8px; border-top:1px solid #eceff1; font-size:8pt; color:#90a4ae; display:flex; justify-content:space-between; }
+
+/* Glossary */
+.gl-term { font-weight:700; color:#1565c0; }
+.gl { margin-bottom:10px; font-size:9.5pt; }
+
+@media print {
+  body { background:white; }
+  .page { width:100%; margin:0; }
+  .sec { page-break-before: always; }
+  .cover { min-height:100vh; }
+  .no-break { page-break-inside:avoid; }
+  a { color:inherit; text-decoration:none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- PORTADA -->
+<div class="cover">
+  <div class="label">Documento técnico interno</div>
+  <div class="badge">🇨🇷 Costa Rica · Odoo Community 19.0</div>
+  <h1>Facturación Electrónica<br><span>en Costa Rica</span></h1>
+  <p class="sub">Guía de integración con Odoo — opciones, metodologías y consideraciones para la evaluación del equipo.</p>
+  <div class="meta">
+    <div><strong>Versión</strong><br>1.0 — Junio 2026</div>
+    <div><strong>Audiencia</strong><br>Equipo técnico y negocio</div>
+    <div><strong>Propósito</strong><br>Educación y evaluación</div>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h2>Tabla de Contenidos</h2>
+  <div class="toc-item h"><span><span class="toc-num">1.</span> Resumen Ejecutivo</span></div>
+  <div class="toc-item h"><span><span class="toc-num">2.</span> Marco Regulatorio y Arquitectura Técnica</span></div>
+  <div class="toc-item sub"><span>2.1 Hacienda, obligatoriedad y sanciones</span></div>
+  <div class="toc-item sub"><span>2.2 Flujo técnico y estructura del XML</span></div>
+  <div class="toc-item sub"><span>2.3 Firma digital XAdES y ambientes ATV</span></div>
+  <div class="toc-item h"><span><span class="toc-num">3.</span> Tipos de Comprobantes y Estado de Odoo</span></div>
+  <div class="toc-item h"><span><span class="toc-num">4.</span> Las 4 Opciones de Integración</span></div>
+  <div class="toc-item h"><span><span class="toc-num">5.</span> Tabla Comparativa y Proveedores de Middleware</span></div>
+  <div class="toc-item h"><span><span class="toc-num">6.</span> Consideraciones Técnicas, de Negocio y SaaS</span></div>
+  <div class="toc-item h"><span><span class="toc-num">7.</span> Checklist Pre-Implementación</span></div>
+  <div class="toc-item h"><span><span class="toc-num">8.</span> Glosario Técnico</span></div>
+</div>
+
+<!-- SECCIÓN 1 — RESUMEN -->
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="sec-num">Sección 01</div>
+    <h2>Resumen Ejecutivo</h2>
+  </div>
+  <p>La facturación electrónica en Costa Rica es un <strong>requisito legal obligatorio</strong> del Ministerio de Hacienda para prácticamente todos los contribuyentes desde 2018. Un ERP que opere en el país debe emitir, firmar digitalmente y transmitir comprobantes al sistema ATV de Hacienda en tiempo real.</p>
+  <p>El Odoo Community 19.0 actual incluye el módulo <code>l10n_cr</code> con plan de cuentas e impuestos, pero <strong>no tiene funcionalidad de factura electrónica</strong>. Los comprobantes generados hoy no tienen validez fiscal.</p>
+
+  <div class="box danger">
+    <strong>⛔ Punto crítico</strong>
+    Operar sin emitir comprobantes válidos ante Hacienda está penado con multas del 2% al 100% del impuesto no documentado. No es una funcionalidad opcional.
+  </div>
+
+  <p>Este documento analiza <strong>cuatro opciones de integración</strong> con todos sus aspectos técnicos, legales y de negocio, para que el equipo pueda evaluarlas y tomar una decisión informada.</p>
+
+  <ul>
+    <li>La integración requiere resolver tres problemas: generación del XML, firma digital y comunicación con el ATV.</li>
+    <li>Ninguna opción es trivial; todas implican desarrollo, integración o costos recurrentes.</li>
+    <li>En un modelo SaaS, la gestión de certificados por empresa es el mayor reto operativo.</li>
+    <li>El mantenimiento a largo plazo es tan crítico como la implementación inicial.</li>
+  </ul>
+  <div class="ftr"><span>Facturación Electrónica CR — Guía Odoo Community 19.0</span><span>1 / 8</span></div>
+</div>
+
+<!-- SECCIÓN 2 — REGULATORIO + TÉCNICO -->
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="sec-num">Sección 02</div>
+    <h2>Marco Regulatorio y Arquitectura Técnica</h2>
+  </div>
+
+  <h3>2.1 Hacienda, obligatoriedad y sanciones</h3>
+  <p>La <strong>Dirección General de Tributación (DGT)</strong> regula el sistema mediante la resolución <strong>MH-DGT-RES-0027-2023</strong> (vigente). El comprobante debe transmitirse al ATV dentro de las 48 horas siguientes a la emisión. El esquema XML vigente es la versión <strong>4.3</strong>; versiones anteriores son rechazadas.</p>
+
+  <div class="box warn">
+    <strong>⚠️ Sanciones</strong> Multas del 2%–100% del impuesto, y gastos sustentados en facturas no electrónicas pueden ser rechazados como deducibles.
+  </div>
+
+  <h3>2.2 Flujo técnico de un comprobante</h3>
+  <div class="diag">
+    <svg viewBox="0 0 660 180" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+      <defs><marker id="a" markerWidth="7" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#1565c0"/></marker>
+      <marker id="b" markerWidth="7" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#4caf50"/></marker></defs>
+      <!-- boxes -->
+      <rect x="10" y="65" width="110" height="50" rx="7" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+      <text x="65" y="86" text-anchor="middle" font-size="10" font-weight="bold" fill="#0d2b4e">① Odoo</text>
+      <text x="65" y="101" text-anchor="middle" font-size="8.5" fill="#546e7a">Confirma factura</text>
+      <text x="65" y="113" text-anchor="middle" font-size="8.5" fill="#546e7a">Genera datos</text>
+
+      <rect x="165" y="65" width="120" height="50" rx="7" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/>
+      <text x="225" y="86" text-anchor="middle" font-size="10" font-weight="bold" fill="#4a148c">② Módulo /</text>
+      <text x="225" y="100" text-anchor="middle" font-size="10" font-weight="bold" fill="#4a148c">Middleware</text>
+      <text x="225" y="113" text-anchor="middle" font-size="8.5" fill="#6a1b9a">Construye XML v4.3</text>
+
+      <rect x="335" y="50" width="120" height="80" rx="7" fill="#fce4ec" stroke="#c62828" stroke-width="1.5"/>
+      <text x="395" y="75" text-anchor="middle" font-size="10" font-weight="bold" fill="#b71c1c">③ Firma Digital</text>
+      <text x="395" y="91" text-anchor="middle" font-size="8.5" fill="#c62828">XAdES-BES</text>
+      <text x="395" y="105" text-anchor="middle" font-size="8.5" fill="#c62828">Cert. .p12 emisor</text>
+      <text x="395" y="119" text-anchor="middle" font-size="8.5" fill="#c62828">XML firmado</text>
+
+      <rect x="505" y="65" width="110" height="50" rx="7" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/>
+      <text x="560" y="86" text-anchor="middle" font-size="10" font-weight="bold" fill="#1b5e20">④ API ATV</text>
+      <text x="560" y="100" text-anchor="middle" font-size="8.5" fill="#2e7d32">Hacienda CR</text>
+      <text x="560" y="113" text-anchor="middle" font-size="8.5" fill="#2e7d32">Acepta / Rechaza</text>
+
+      <!-- arrows fwd -->
+      <line x1="120" y1="90" x2="163" y2="90" stroke="#1565c0" stroke-width="1.5" marker-end="url(#a)"/>
+      <line x1="285" y1="90" x2="333" y2="90" stroke="#1565c0" stroke-width="1.5" marker-end="url(#a)"/>
+      <line x1="455" y1="90" x2="503" y2="90" stroke="#1565c0" stroke-width="1.5" marker-end="url(#a)"/>
+      <!-- return -->
+      <path d="M560 115 Q560 160 340 160 Q120 160 65 115" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#b)"/>
+      <text x="310" y="175" text-anchor="middle" font-size="8" fill="#2e7d32">⑤ Respuesta: XML aceptado + clave → Odoo guarda y adjunta</text>
+    </svg>
+    <figcaption>Figura 1 — Flujo técnico de emisión de un comprobante electrónico en Costa Rica</figcaption>
+  </div>
+
+  <h3>2.3 Firma digital XAdES y ambientes del ATV</h3>
+  <p>El XML debe firmarse con <strong>XAdES-BES</strong> usando el certificado <code>.p12</code> del contribuyente (emitido por el BCCR). Sin este certificado no es posible emitir comprobantes válidos.</p>
+  <table>
+    <thead><tr><th>Ambiente</th><th>URL</th><th>Certificado</th><th>Costo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sandbox (pruebas)</strong></td><td>api.comprobanteselectronicos.go.cr/recepcion-sandbox</td><td>No requerido</td><td><span class="g">Gratuito</span></td></tr>
+      <tr><td><strong>Producción</strong></td><td>api.comprobanteselectronicos.go.cr/recepcion</td><td>Obligatorio (.p12)</td><td>Según operación</td></tr>
+    </tbody>
+  </table>
+  <div class="ftr"><span>Facturación Electrónica CR — Guía Odoo Community 19.0</span><span>2 / 8</span></div>
+</div>
+
+<!-- SECCIÓN 3 — COMPROBANTES + ESTADO ODOO -->
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="sec-num">Sección 03</div>
+    <h2>Tipos de Comprobantes y Estado de Odoo</h2>
+  </div>
+
+  <h3>Tipos de comprobantes electrónicos</h3>
+  <table>
+    <thead><tr><th>Código</th><th>Nombre</th><th>Cuándo se usa</th><th>Prioridad</th></tr></thead>
+    <tbody>
+      <tr><td><strong>01</strong></td><td>Factura Electrónica</td><td>Venta a empresa o persona con actividad económica</td><td><span class="r">Alta</span></td></tr>
+      <tr><td><strong>04</strong></td><td>Tiquete Electrónico</td><td>Venta a consumidor final sin actividad económica</td><td><span class="r">Alta</span></td></tr>
+      <tr><td><strong>03</strong></td><td>Nota de Crédito</td><td>Anular o ajustar factura emitida, devoluciones</td><td><span class="r">Alta</span></td></tr>
+      <tr><td><strong>02</strong></td><td>Nota de Débito</td><td>Cobro adicional sobre factura existente</td><td><span class="y">Media</span></td></tr>
+      <tr><td><strong>08</strong></td><td>Factura de Compra</td><td>Compra a proveedor no obligado a emitir factura</td><td><span class="y">Media</span></td></tr>
+      <tr><td><strong>09</strong></td><td>Factura de Exportación</td><td>Ventas al exterior</td><td><span class="b">Según negocio</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Estado actual de Odoo Community 19.0</h3>
+  <table>
+    <thead><tr><th>Funcionalidad</th><th>Estado</th><th>Detalle</th></tr></thead>
+    <tbody>
+      <tr><td>Plan de cuentas costarricense</td><td class="c"><span class="g">✓ Sí</span></td><td>Catálogo en <code>account.account-cr.csv</code></td></tr>
+      <tr><td>IVA 13% y grupos de impuestos</td><td class="c"><span class="g">✓ Sí</span></td><td>Plantillas en <code>account.tax-cr.csv</code></td></tr>
+      <tr><td>Generación XML v4.3 para Hacienda</td><td class="c"><span class="r">✗ No</span></td><td>No existe en el módulo actual</td></tr>
+      <tr><td>Firma digital XAdES-BES</td><td class="c"><span class="r">✗ No</span></td><td>Sin integración con certificados</td></tr>
+      <tr><td>Envío a API del ATV</td><td class="c"><span class="r">✗ No</span></td><td>Sin código de llamadas HTTP</td></tr>
+      <tr><td>Consulta de estado (aceptado/rechazado)</td><td class="c"><span class="r">✗ No</span></td><td>Sin polling de respuesta</td></tr>
+      <tr><td>Tiquete electrónico / notas electrónicas</td><td class="c"><span class="r">✗ No</span></td><td>Sin enlace a Hacienda</td></tr>
+      <tr><td>Reportes D-104, D-151</td><td class="c"><span class="r">✗ No</span></td><td>Sin reportes tributarios oficiales</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box danger">
+    <strong>⛔ Conclusión</strong> Las facturas generadas hoy en Odoo son válidas contablemente pero <strong>no tienen validez fiscal ante Hacienda</strong>. Es imprescindible implementar una de las siguientes opciones.
+  </div>
+  <div class="ftr"><span>Facturación Electrónica CR — Guía Odoo Community 19.0</span><span>3 / 8</span></div>
+</div>
+
+<!-- SECCIÓN 4 — LAS 4 OPCIONES -->
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="sec-num">Sección 04</div>
+    <h2>Las 4 Opciones de Integración</h2>
+  </div>
+
+  <h3>Opción A — Módulo OCA (l10n_cr_edi)</h3>
+  <p>Módulo de código abierto de la Odoo Community Association que maneja internamente la generación del XML, firma y envío al ATV, sin servicio externo.</p>
+  <div class="grid2">
+    <div class="card">
+      <h4>Ventajas</h4>
+      <ul class="pros">
+        <li>Integración nativa completa con Odoo</li>
+        <li>Sin costo de licencia ni dependencia externa</li>
+        <li>Código abierto y auditable</li>
+        <li>Comunidad actualiza ante cambios de Hacienda</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Desventajas</h4>
+      <ul class="cons">
+        <li>Licencia AGPL-3: modificaciones deben publicarse en SaaS</li>
+        <li>Actualización puede rezagarse ante cambios de Hacienda</li>
+        <li>Verificar compatibilidad con Odoo 19.0</li>
+        <li>Soporte dependiente de voluntarios</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Opción B — Desarrollo propio desde cero</h3>
+  <p>Módulo Odoo propietario que implementa toda la lógica: generación del XML v4.3, integración con librería de firma XAdES, y cliente HTTP para el ATV.</p>
+  <div class="grid2">
+    <div class="card">
+      <h4>Ventajas</h4>
+      <ul class="pros">
+        <li>Licencia propia — ventaja competitiva protegida</li>
+        <li>Control total y sin costos recurrentes</li>
+        <li>Puede convertirse en un activo vendible</li>
+        <li>Adaptación perfecta al flujo de negocio</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Desventajas</h4>
+      <ul class="cons">
+        <li>Alta inversión inicial (3–6 meses de desarrollo)</li>
+        <li>El equipo asume todo el mantenimiento</li>
+        <li>Requiere expertise en firma digital XAdES</li>
+        <li>Sin comunidad de respaldo ante errores</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Opción C — Middleware externo</h3>
+  <p>Módulo liviano en Odoo que, al confirmar una factura, envía los datos a un servicio externo vía REST. El middleware construye el XML, lo firma y lo envía al ATV, devolviendo el resultado.</p>
+  <div class="grid2">
+    <div class="card">
+      <h4>Ventajas</h4>
+      <ul class="pros">
+        <li>Implementación más rápida (4–8 semanas)</li>
+        <li>El proveedor actualiza ante cambios de Hacienda</li>
+        <li>Sin gestión propia de certificados en servidor</li>
+        <li>Soporte técnico del proveedor</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Desventajas</h4>
+      <ul class="cons">
+        <li>Costo recurrente por empresa o comprobante</li>
+        <li>Dependencia crítica de un tercero</li>
+        <li>Datos de facturación pasan por servidores externos</li>
+        <li>Riesgo si el proveedor cierra operaciones</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Opción D — Híbrido (módulo propio + middleware solo para firma)</h3>
+  <p>El módulo propio en Odoo genera y valida el XML. Solo delega la firma digital al middleware. Reduce la dependencia: si el proveedor cambia, solo se reemplaza el componente de firma.</p>
+  <div class="grid2">
+    <div class="card">
+      <h4>Ventajas</h4>
+      <ul class="pros">
+        <li>Código de negocio propio y protegido</li>
+        <li>Menor dependencia del middleware</li>
+        <li>Más fácil migrar de proveedor en el futuro</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Desventajas</h4>
+      <ul class="cons">
+        <li>Mayor complejidad de arquitectura</li>
+        <li>Aún tiene costo recurrente de middleware</li>
+        <li>Más puntos de falla potenciales</li>
+      </ul>
+    </div>
+  </div>
+  <div class="ftr"><span>Facturación Electrónica CR — Guía Odoo Community 19.0</span><span>4 / 8</span></div>
+</div>
+
+<!-- SECCIÓN 5 — COMPARATIVA + PROVEEDORES -->
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="sec-num">Sección 05</div>
+    <h2>Tabla Comparativa y Proveedores de Middleware</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Criterio</th><th>A — OCA</th><th>B — Desarrollo propio</th><th>C — Middleware</th><th>D — Híbrido</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Tiempo implementación</strong></td><td>2–4 semanas</td><td>3–6 meses</td><td>4–8 semanas</td><td>6–10 semanas</td></tr>
+      <tr><td><strong>Costo inicial</strong></td><td><span class="g">Bajo</span></td><td><span class="r">Alto</span></td><td><span class="g">Bajo</span></td><td><span class="y">Medio</span></td></tr>
+      <tr><td><strong>Costo recurrente</strong></td><td><span class="g">Ninguno</span></td><td><span class="g">Ninguno</span></td><td><span class="y">Por empresa/doc</span></td><td><span class="y">Parcial</span></td></tr>
+      <tr><td><strong>Control del código</strong></td><td><span class="y">Medio (AGPL-3)</span></td><td><span class="g">Total</span></td><td><span class="y">Parcial</span></td><td><span class="g">Alto</span></td></tr>
+      <tr><td><strong>Riesgo de actualización</strong></td><td><span class="y">Medio</span></td><td><span class="r">Alto</span></td><td><span class="g">Bajo</span></td><td><span class="y">Medio</span></td></tr>
+      <tr><td><strong>Privacidad de datos</strong></td><td><span class="g">Total</span></td><td><span class="g">Total</span></td><td><span class="y">Parcial</span></td><td><span class="y">Parcial</span></td></tr>
+      <tr><td><strong>Compat. Odoo 19</strong></td><td><span class="y">Verificar</span></td><td><span class="g">Total</span></td><td><span class="g">Total</span></td><td><span class="g">Total</span></td></tr>
+      <tr><td><strong>Apto para SaaS multi-tenant</strong></td><td><span class="y">Con trabajo extra</span></td><td><span class="g">Diseñable</span></td><td><span class="y">Depende proveedor</span></td><td><span class="g">Diseñable</span></td></tr>
+      <tr><td><strong>Puntuación global</strong></td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★★</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Proveedores de middleware en Costa Rica</h3>
+  <table>
+    <thead><tr><th>Proveedor</th><th>Origen</th><th>Modelo de precio</th><th>Multi-empresa</th><th>Soporte</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Comprobantes.cr</strong></td><td>Costa Rica</td><td>Por comprobante / planes mensuales</td><td><span class="y">Consultar</span></td><td>Español, local</td></tr>
+      <tr><td><strong>Gosocket</strong></td><td>LATAM</td><td>Mensualidad por empresa + volumen</td><td><span class="g">Sí</span></td><td>Español, regional</td></tr>
+      <tr><td><strong>FacturaCR / ARCA</strong></td><td>Costa Rica</td><td>Por comprobante o plan fijo</td><td><span class="y">Consultar</span></td><td>Español, local</td></tr>
+      <tr><td><strong>API Hacienda directo</strong></td><td>Gobierno CR</td><td><span class="g">Gratuito</span></td><td><span class="g">Sí (cuenta por empresa)</span></td><td>Sin soporte oficial</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Rangos de precio orientativos</h3>
+  <table>
+    <thead><tr><th>Modelo</th><th>Rango típico</th><th>Ideal para</th></tr></thead>
+    <tbody>
+      <tr><td>Por comprobante</td><td>₡5 – ₡25 por XML</td><td>Volumen bajo o irregular</td></tr>
+      <tr><td>Mensualidad por empresa</td><td>₡5.000 – ₡30.000/mes</td><td>Volumen predecible</td></tr>
+      <tr><td>Mayorista SaaS (varios clientes)</td><td>A negociar directamente</td><td>Plataformas multi-tenant</td></tr>
+      <tr><td>API Hacienda directo</td><td>₡0</td><td>Quien desarrolla toda la pila técnica</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box warn">
+    <strong>⚠️ Preguntas clave al evaluar un proveedor de middleware</strong>
+    ¿Soportan múltiples empresas bajo una sola cuenta API? · ¿Tienen SLA documentado? · ¿Cómo manejan los datos de mis clientes? · ¿Cuánto tiempo llevan en el mercado CR? · ¿Tienen ambiente sandbox?
+  </div>
+  <div class="ftr"><span>Facturación Electrónica CR — Guía Odoo Community 19.0</span><span>5 / 8</span></div>
+</div>
+
+<!-- SECCIÓN 6 — CONSIDERACIONES -->
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="sec-num">Sección 06</div>
+    <h2>Consideraciones Técnicas, de Negocio y SaaS</h2>
+  </div>
+
+  <h3>Consideraciones técnicas críticas</h3>
+  <table>
+    <thead><tr><th>Aspecto</th><th>Qué debe resolverse</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Certificados digitales</strong></td><td>Cada empresa necesita su propio .p12. Deben almacenarse cifrados. Vigencia de 4 años; gestionar renovaciones proactivamente.</td></tr>
+      <tr><td><strong>Consecutivos únicos</strong></td><td>El generador de consecutivos debe ser atómico y aislado por empresa para evitar duplicados o saltos que Hacienda puede interpretar como evasión.</td></tr>
+      <tr><td><strong>Manejo de errores</strong></td><td>Errores de validación XML (no reintentar igual), rechazos de Hacienda (notificar al usuario), timeouts (reintento con backoff), estado "procesando" (polling).</td></tr>
+      <tr><td><strong>Actualizaciones de Hacienda</strong></td><td>El esquema XML ha cambiado varias veces. Debe existir un responsable claro de actualizar el sistema antes de la fecha límite de cada cambio.</td></tr>
+      <tr><td><strong>Procesamiento asíncrono</strong></td><td>En picos de facturación, el envío al ATV debe ir a una cola asíncrona para no bloquear la interfaz de Odoo.</td></tr>
+      <tr><td><strong>Contingencia</strong></td><td>Cuando el ATV de Hacienda no está disponible, la regulación permite emitir en modo contingencia. El sistema debe soportar este flujo.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Consideraciones de negocio</h3>
+  <ul>
+    <li><strong>Costo total (TCO 3 años):</strong> Calcular desarrollo inicial + mantenimiento anual + costo recurrente de middleware si aplica + horas de actualización ante cambios de Hacienda.</li>
+    <li><strong>Riesgo regulatorio:</strong> Si el sistema falla, el cliente incumple con Hacienda. Esto afecta la reputación del SaaS.</li>
+    <li><strong>Riesgo de proveedor:</strong> Si se elige middleware y el proveedor cierra, hay que migrar bajo presión.</li>
+    <li><strong>Oportunidad:</strong> Una integración fluida dentro de Odoo es un diferenciador real. La mayoría de ERPs en el mercado CR tienen integraciones torpes para el usuario final.</li>
+  </ul>
+
+  <h3>Consideraciones específicas para SaaS multi-tenant</h3>
+  <div class="diag">
+    <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+      <rect x="190" y="60" width="260" height="44" rx="7" fill="#1a4a7a" opacity=".9"/>
+      <text x="320" y="87" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Tu Plataforma SaaS (Odoo)</text>
+      <!-- clients -->
+      <rect x="10"  y="8" width="120" height="38" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+      <text x="70"  y="24" text-anchor="middle" font-size="9" font-weight="bold" fill="#0d2b4e">Cliente A</text>
+      <text x="70"  y="38" text-anchor="middle" font-size="7.5" fill="#546e7a">3-101-xxx.p12</text>
+      <rect x="145" y="8" width="120" height="38" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+      <text x="205" y="24" text-anchor="middle" font-size="9" font-weight="bold" fill="#0d2b4e">Cliente B</text>
+      <text x="205" y="38" text-anchor="middle" font-size="7.5" fill="#546e7a">3-102-xxx.p12</text>
+      <rect x="280" y="8" width="120" height="38" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+      <text x="340" y="24" text-anchor="middle" font-size="9" font-weight="bold" fill="#0d2b4e">Cliente C</text>
+      <text x="340" y="38" text-anchor="middle" font-size="7.5" fill="#546e7a">1-xxx.p12</text>
+      <rect x="415" y="8" width="120" height="38" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+      <text x="475" y="24" text-anchor="middle" font-size="9" font-weight="bold" fill="#0d2b4e">Cliente D</text>
+      <text x="475" y="38" text-anchor="middle" font-size="7.5" fill="#546e7a">3-103-xxx.p12</text>
+      <!-- lines to platform -->
+      <line x1="70"  y1="46" x2="240" y2="62" stroke="#90a4ae" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="205" y1="46" x2="290" y2="62" stroke="#90a4ae" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="340" y1="46" x2="320" y2="60" stroke="#90a4ae" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="475" y1="46" x2="400" y2="62" stroke="#90a4ae" stroke-width="1" stroke-dasharray="3,2"/>
+      <!-- to ATV -->
+      <line x1="320" y1="104" x2="320" y2="126" stroke="#1565c0" stroke-width="1.5" marker-end="url(#a)"/>
+      <rect x="190" y="128" width="260" height="32" rx="7" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/>
+      <text x="320" y="149" text-anchor="middle" font-size="10" fill="#1b5e20" font-weight="bold">API ATV — Hacienda CR</text>
+    </svg>
+    <figcaption>Figura 2 — Cada cliente requiere su propio certificado digital para emitir ante Hacienda</figcaption>
+  </div>
+
+  <ul>
+    <li><strong>Certificados aislados por cliente:</strong> Almacenar cifrados en BD; nunca en texto plano.</li>
+    <li><strong>Consecutivos aislados:</strong> El contador de facturas es independiente por empresa.</li>
+    <li><strong>Credenciales ATV por empresa:</strong> La autenticación OAuth2 con Hacienda es por contribuyente, no por plataforma.</li>
+    <li><strong>Alertas de vencimiento:</strong> Notificar 30 y 60 días antes de que venza un certificado.</li>
+    <li><strong>Onboarding guiado:</strong> Cada cliente nuevo debe configurar su certificado, cédula jurídica y actividad económica antes de poder facturar.</li>
+  </ul>
+  <div class="ftr"><span>Facturación Electrónica CR — Guía Odoo Community 19.0</span><span>6 / 8</span></div>
+</div>
+
+<!-- SECCIÓN 7 — CHECKLIST -->
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="sec-num">Sección 07</div>
+    <h2>Checklist Pre-Implementación</h2>
+  </div>
+  <p style="margin-bottom:14px">Antes de iniciar cualquier opción, el equipo debe tener respuesta a cada punto. Un "no sé" representa un riesgo que debe resolverse primero.</p>
+
+  <ul class="chk">
+    <li class="area"><span>LEGAL Y REGULATORIO</span></li>
+    <li><span class="bx"></span><span>¿Verificamos la resolución vigente y la versión del esquema XML requerida (v4.3)?</span></li>
+    <li><span class="bx"></span><span>¿Tenemos acceso al ambiente sandbox del ATV para desarrollar sin consecuencias fiscales?</span></li>
+    <li><span class="bx"></span><span>¿Revisamos las implicaciones legales de la licencia de la solución elegida (LGPL / AGPL / propietaria)?</span></li>
+    <li><span class="bx"></span><span>¿Definimos qué tipos de comprobantes necesita cada perfil de cliente (01, 04, 03...)?</span></li>
+
+    <li class="area"><span>TÉCNICO</span></li>
+    <li><span class="bx"></span><span>¿Tenemos expertise interno o externo en firma digital XAdES-BES en Python?</span></li>
+    <li><span class="bx"></span><span>¿Definimos cómo almacenar y proteger los certificados .p12 de los clientes (cifrado en BD)?</span></li>
+    <li><span class="bx"></span><span>¿Tenemos estrategia para consecutivos de comprobantes (atómicos, sin duplicados, por empresa)?</span></li>
+    <li><span class="bx"></span><span>¿Existe plan de manejo de errores y reintentos cuando el ATV está caído?</span></li>
+    <li><span class="bx"></span><span>¿El sistema puede procesar comprobantes en forma asíncrona sin bloquear Odoo?</span></li>
+    <li><span class="bx"></span><span>¿Tenemos plan de contingencia para cuando Hacienda no está disponible?</span></li>
+    <li><span class="bx"></span><span>¿Probamos el flujo completo contra el sandbox antes de conectar a producción?</span></li>
+
+    <li class="area"><span>PROVEEDOR DE MIDDLEWARE (si aplica Opción C o D)</span></li>
+    <li><span class="bx"></span><span>¿Soportan múltiples empresas bajo una sola cuenta API?</span></li>
+    <li><span class="bx"></span><span>¿Tienen SLA documentado con penalizaciones por caídas?</span></li>
+    <li><span class="bx"></span><span>¿Cómo manejan los datos de facturación de nuestros clientes? ¿Política de privacidad?</span></li>
+    <li><span class="bx"></span><span>¿Tienen historial de actualizaciones ante cambios de Hacienda en el pasado?</span></li>
+    <li><span class="bx"></span><span>¿Cuánto tiempo llevan operando en el mercado costarricense?</span></li>
+
+    <li class="area"><span>NEGOCIO Y SAAS</span></li>
+    <li><span class="bx"></span><span>¿Calculamos el TCO a 3 años para cada opción?</span></li>
+    <li><span class="bx"></span><span>¿Definimos el proceso de onboarding de un nuevo cliente (subida de certificado, configuración)?</span></li>
+    <li><span class="bx"></span><span>¿Existe proceso de alerta automática para certificados próximos a vencer?</span></li>
+    <li><span class="bx"></span><span>¿Quién es responsable de actualizar el sistema cuando Hacienda cambie el esquema XML?</span></li>
+    <li><span class="bx"></span><span>¿La solución elegida escala con el número de clientes en la plataforma?</span></li>
+  </ul>
+  <div class="ftr"><span>Facturación Electrónica CR — Guía Odoo Community 19.0</span><span>7 / 8</span></div>
+</div>
+
+<!-- SECCIÓN 8 — GLOSARIO -->
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="sec-num">Sección 08</div>
+    <h2>Glosario Técnico</h2>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <div class="gl"><span class="gl-term">ATV</span> — Administración Tributaria Virtual. Plataforma de Hacienda donde se registran todos los comprobantes electrónicos.</div>
+      <div class="gl"><span class="gl-term">BCCR</span> — Banco Central de Costa Rica. Emite los certificados de firma digital en tokens físicos.</div>
+      <div class="gl"><span class="gl-term">Clave de 50 dígitos</span> — Identificador único de cada comprobante. Contiene país, fecha, cédula del emisor, tipo, consecutivo y código de seguridad.</div>
+      <div class="gl"><span class="gl-term">DGT</span> — Dirección General de Tributación. Regula el sistema de comprobantes y emite las resoluciones.</div>
+      <div class="gl"><span class="gl-term">Middleware</span> — Servicio externo intermediario entre Odoo y el ATV de Hacienda, encargado de construir, firmar y enviar el XML.</div>
+      <div class="gl"><span class="gl-term">Multi-tenant</span> — Arquitectura donde una sola instancia de la aplicación sirve a múltiples empresas con datos aislados.</div>
+      <div class="gl"><span class="gl-term">OAuth2</span> — Protocolo de autorización usado por el ATV de Hacienda para autenticar a los sistemas emisores.</div>
+    </div>
+    <div>
+      <div class="gl"><span class="gl-term">OCA</span> — Odoo Community Association. Organización que desarrolla módulos adicionales para Odoo Community bajo licencia AGPL-3.</div>
+      <div class="gl"><span class="gl-term">XAdES-BES</span> — Estándar de firma digital incorporada en XML. Es el formato requerido por Hacienda para todos los comprobantes.</div>
+      <div class="gl"><span class="gl-term">XSD</span> — XML Schema Definition. Archivo que define la estructura que debe cumplir el XML de cada comprobante. Hacienda publica los XSD oficiales.</div>
+      <div class="gl"><span class="gl-term">Certificado .p12</span> — Archivo con el certificado y llave privada del contribuyente, protegido con contraseña. Permite firmar comprobantes en forma automatizada.</div>
+      <div class="gl"><span class="gl-term">l10n_cr</span> — Módulo de localización CR en Odoo. Provee plan de cuentas e impuestos, pero no factura electrónica.</div>
+      <div class="gl"><span class="gl-term">AGPL-3</span> — Licencia que exige publicar modificaciones incluso en SaaS (acceso vía web). Aplica a módulos de la OCA.</div>
+      <div class="gl"><span class="gl-term">LGPLv3</span> — Licencia de Odoo Community. En SaaS no obliga a publicar modificaciones al código base.</div>
+    </div>
+  </div>
+
+  <hr style="margin:20px 0; border-color:#eceff1;">
+  <div style="text-align:center; color:#90a4ae; font-size:8.5pt; padding:12px 0;">
+    <strong>Facturación Electrónica CR — Guía de Integración con Odoo Community 19.0</strong><br>
+    Documento interno · Versión 1.0 · Junio 2026 · Verificar resoluciones actualizadas antes de implementar.
+  </div>
+  <div class="ftr"><span>Facturación Electrónica CR — Guía Odoo Community 19.0</span><span>8 / 8</span></div>
+</div>
+
+</div><!-- .page -->
+</body>
+</html>

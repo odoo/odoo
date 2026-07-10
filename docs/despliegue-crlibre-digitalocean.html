@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Despliegue de la API CRLibre en DigitalOcean — Arquitectura Multi-Cliente</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 10pt; line-height: 1.55; color: #1e2a38; background: #f4f6f9; }
+.page { width: 210mm; margin: 0 auto; background: white; }
+
+/* Cover */
+.cover {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #0d2b4e 0%, #1a4a7a 60%, #2196F3 100%);
+  color: white; display: flex; flex-direction: column;
+  justify-content: center; padding: 50px 45px; page-break-after: always;
+}
+.cover .label { font-size: 8pt; letter-spacing: 3px; text-transform: uppercase; opacity: .7; margin-bottom: 12px; }
+.cover h1 { font-size: 25pt; font-weight: 800; line-height: 1.2; margin-bottom: 14px; }
+.cover h1 span { color: #64b5f6; }
+.cover .sub { font-size: 12pt; opacity: .85; margin-bottom: 36px; max-width: 460px; }
+.cover .meta { border-top: 1px solid rgba(255,255,255,.25); padding-top: 18px; display: flex; gap: 32px; font-size: 9pt; opacity: .75; }
+.cover .badge { display:inline-block; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); border-radius:20px; padding:5px 16px; font-size:8.5pt; margin-bottom:32px; }
+
+/* TOC */
+.toc { padding: 36px 45px; page-break-after: always; }
+.toc h2 { font-size: 16pt; color: #0d2b4e; margin-bottom: 20px; }
+.toc-item { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px dotted #cfd8dc; font-size:9.5pt; }
+.toc-item.h { font-weight:700; color:#0d2b4e; margin-top:8px; }
+.toc-item.sub { padding-left:16px; color:#546e7a; }
+.toc-num { color:#2196F3; font-weight:600; margin-right:8px; }
+
+/* Sections */
+.sec { padding: 36px 45px 28px; page-break-before: always; }
+.sec-hdr { border-left:4px solid #2196F3; padding-left:12px; margin-bottom:22px; }
+.sec-num { font-size:8pt; letter-spacing:2px; text-transform:uppercase; color:#2196F3; font-weight:700; }
+.sec-hdr h2 { font-size:16pt; color:#0d2b4e; font-weight:800; line-height:1.2; }
+h3 { font-size:11pt; color:#0d2b4e; margin:20px 0 8px; font-weight:700; }
+h4 { font-size:10pt; color:#1565c0; margin:14px 0 6px; font-weight:700; }
+p { margin-bottom:9px; }
+ul,ol { margin:7px 0 10px 20px; }
+li { margin-bottom:3px; }
+
+/* Callouts */
+.box { border-radius:6px; padding:10px 14px; margin:12px 0; font-size:9.5pt; }
+.info    { background:#e3f2fd; border-left:3px solid #2196F3; }
+.warn    { background:#fff8e1; border-left:3px solid #ffc107; }
+.danger  { background:#ffebee; border-left:3px solid #f44336; }
+.success { background:#e8f5e9; border-left:3px solid #4caf50; }
+.box strong { display:block; margin-bottom:3px; }
+
+/* Tables */
+table { width:100%; border-collapse:collapse; margin:12px 0; font-size:8.5pt; }
+th { background:#0d2b4e; color:white; padding:7px 10px; text-align:left; font-weight:600; }
+td { padding:6px 10px; border-bottom:1px solid #eceff1; vertical-align:top; }
+tr:nth-child(even) td { background:#f8fafc; }
+.c { text-align:center; }
+.g { background:#e8f5e9; color:#2e7d32; padding:1px 7px; border-radius:10px; font-size:8pt; font-weight:600; }
+.y { background:#fff8e1; color:#e65100; padding:1px 7px; border-radius:10px; font-size:8pt; font-weight:600; }
+.r { background:#ffebee; color:#c62828; padding:1px 7px; border-radius:10px; font-size:8pt; font-weight:600; }
+.b { background:#e3f2fd; color:#1565c0; padding:1px 7px; border-radius:10px; font-size:8pt; font-weight:600; }
+
+/* Grid 2-col */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:12px 0; }
+.card { border:1px solid #cfd8dc; border-radius:8px; padding:14px; font-size:9pt; }
+.card h4 { margin-top:4px; }
+.pros li::before { content:"✓ "; color:#4caf50; font-weight:700; }
+.cons li::before { content:"✗ "; color:#f44336; font-weight:700; }
+.pros li,.cons li { list-style:none; margin-left:0; }
+
+/* Checklist */
+.chk { list-style:none; margin:0; padding:0; }
+.chk li { display:flex; align-items:flex-start; gap:8px; padding:5px 0; border-bottom:1px solid #eceff1; font-size:9pt; }
+.chk li .bx { min-width:15px; height:15px; border:1.5px solid #90a4ae; border-radius:3px; margin-top:2px; flex-shrink:0; }
+.chk .area { font-weight:700; color:#0d2b4e; border:none; padding:10px 0 2px; font-size:10pt; }
+
+/* Code */
+.code { background:#1e2a38; color:#a5d6a7; border-radius:6px; padding:12px 16px; font-family:Consolas,monospace; font-size:8pt; line-height:1.5; margin:10px 0; white-space:pre; }
+.ct { color:#81d4fa; } .ca { color:#ffcc80; } .cc { color:#546e7a; }
+
+/* Diagram */
+.diag { margin:16px 0; }
+.diag pre { background:#0d2b4e; color:#e3f2fd; border-radius:8px; padding:16px; font-family:Consolas,monospace; font-size:8pt; line-height:1.45; overflow-x:auto; }
+.diag figcaption { font-size:8pt; color:#78909c; margin-top:4px; font-style:italic; text-align:center; }
+
+/* Footer */
+.ftr { margin-top:28px; padding-top:8px; border-top:1px solid #eceff1; font-size:8pt; color:#90a4ae; display:flex; justify-content:space-between; }
+
+@media print {
+  body { background:white; }
+  .page { width:100%; margin:0; }
+  .sec { page-break-before: always; }
+  .cover { min-height:100vh; }
+  .no-break { page-break-inside:avoid; }
+  a { color:inherit; text-decoration:none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- PORTADA -->
+<div class="cover">
+  <div class="label">Documento técnico interno</div>
+  <div class="badge">🇨🇷 Costa Rica · Odoo Community 19.0 · API_Hacienda (CRLibre)</div>
+  <h1>Despliegue de la API CRLibre<br>en <span>DigitalOcean</span></h1>
+  <div class="sub">Arquitectura centralizada para hospedar el servicio de Facturación Electrónica y servir a múltiples clientes de Odoo personalizado.</div>
+  <div class="meta">
+    <div><strong>Versión</strong><br>1.0</div>
+    <div><strong>Fecha</strong><br>2026-07-01</div>
+    <div><strong>Alcance</strong><br>Arquitectura, despliegue, costos y riesgos</div>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h2>Tabla de Contenidos</h2>
+  <div class="toc-item h"><span><span class="toc-num">1.</span> Resumen Ejecutivo</span></div>
+  <div class="toc-item h"><span><span class="toc-num">2.</span> Contexto: por qué centralizar la API</span></div>
+  <div class="toc-item h"><span><span class="toc-num">3.</span> Justificación del Stack Tecnológico</span></div>
+  <div class="toc-item h"><span><span class="toc-num">4.</span> Arquitectura General</span></div>
+  <div class="toc-item h"><span><span class="toc-num">5.</span> Multi-Tenencia: Cómo Sirve a Varios Clientes</span></div>
+  <div class="toc-item h"><span><span class="toc-num">6.</span> Stack de DigitalOcean Recomendado</span></div>
+  <div class="toc-item h"><span><span class="toc-num">7.</span> Guía de Despliegue</span></div>
+  <div class="toc-item h"><span><span class="toc-num">8.</span> Seguridad y Certificados .p12</span></div>
+  <div class="toc-item h"><span><span class="toc-num">9.</span> Precios Estimados</span></div>
+  <div class="toc-item h"><span><span class="toc-num">10.</span> Riesgos y Aspectos a Considerar</span></div>
+  <div class="toc-item h"><span><span class="toc-num">11.</span> Ruta de Escalamiento Futuro</span></div>
+  <div class="toc-item h"><span><span class="toc-num">12.</span> Conclusión y Próximos Pasos</span></div>
+</div>
+
+<!-- 1. RESUMEN EJECUTIVO -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 1</div><h2>Resumen Ejecutivo</h2></div>
+
+  <p>Este documento define la arquitectura recomendada para hospedar la <strong>API_Hacienda de CRLibre</strong> —el
+  componente que genera y firma comprobantes de Factura Electrónica para Costa Rica— como un <strong>servicio
+  centralizado propio</strong>, en vez de instalarla localmente en la máquina de cada cliente. Cada instalación de
+  Odoo (una por cliente, local en su negocio) se conectará a esta API centralizada por internet.</p>
+
+  <div class="box success">
+    <strong>Recomendación</strong>
+    Nube: <strong>DigitalOcean</strong> · Cómputo: <strong>un Droplet + Docker Compose</strong> ·
+    Proxy/TLS: <strong>Caddy</strong> · Base de datos: <strong>MariaDB en contenedor</strong> ·
+    Costo inicial estimado: <strong>USD 20–35/mes</strong>.
+  </div>
+
+  <p>Esta elección prioriza simplicidad operativa y menor curva de aprendizaje para un equipo pequeño, reutilizando
+  la misma configuración de Docker Compose que ya fue construida y validada en el entorno local durante la prueba
+  de concepto (PoC) de integración Odoo ↔ CRLibre.</p>
+
+  <div class="box warn">
+    <strong>Punto crítico a resolver antes de producción</strong>
+    En la PoC local, los endpoints de la API (<code>clave</code>, <code>gen_xml_fe</code>) se usaron en modo
+    <em>users_openAccess</em> (sin autenticación) porque todo corría dentro de la misma máquina. Al exponer la API
+    a internet para múltiples clientes, <strong>esto debe cambiar</strong>: se requiere autenticación por cliente
+    antes de aceptar tráfico público. Ver Sección 5.
+  </div>
+</div>
+
+<!-- 2. CONTEXTO -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 2</div><h2>Contexto: por qué centralizar la API</h2></div>
+
+  <p>Se evaluaron dos modelos de despliegue para la API de CRLibre en un escenario donde el producto (Odoo
+  personalizado) se vende a múltiples clientes:</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Opción A — API local en cada cliente</h4>
+      <ul class="cons">
+        <li>Cada cliente requiere un stack extra (PHP + Apache + MariaDB + Docker) que hay que soportar remotamente.</li>
+        <li>Actualizar la lógica de negocio implica actualizar N máquinas.</li>
+        <li>Mayor probabilidad de fallas de infraestructura por instalación (ya se observaron 4 problemas distintos
+        solo para levantar el stack una vez).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Opción B — API centralizada (elegida)</h4>
+      <ul class="pros">
+        <li>Un solo lugar para actualizar, parchar y monitorear.</li>
+        <li>El cliente solo necesita Odoo local + internet.</li>
+        <li>Menor superficie de soporte técnico por cliente nuevo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>Un dato clave que valida esta decisión: <strong>el envío final del comprobante a Hacienda siempre requiere
+  internet</strong>, sin importar dónde corra la API, porque el endpoint de recepción
+  (<code>api.comprobanteselectronicos.go.cr</code>) es de Hacienda, en la nube. La ventaja de "todo local y
+  offline" de la Opción A no aplica al paso más crítico del proceso de todos modos, lo que inclina la balanza
+  hacia centralizar.</p>
+</div>
+
+<!-- 3. JUSTIFICACIÓN DEL STACK -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 3</div><h2>Justificación del Stack Tecnológico</h2></div>
+
+  <h3>3.1 Por qué DigitalOcean (y no AWS, GCP o Azure)</h3>
+  <p>Para el volumen esperado (una API PHP liviana, con llamadas JSON simples, sirviendo a un número moderado de
+  clientes), <strong>no se justifica</strong> la complejidad operativa de un proveedor hyperscale. DigitalOcean
+  ofrece precio fijo y predecible, la mejor documentación para Docker Compose entre las opciones simples, y una
+  curva de aprendizaje baja para un equipo pequeño.</p>
+
+  <table>
+    <tr><th>Proveedor</th><th>Veredicto</th><th>Motivo</th></tr>
+    <tr><td><strong>DigitalOcean</strong></td><td class="c"><span class="g">Elegido</span></td><td>Simplicidad, precio fijo, Docker nativo, curva de aprendizaje baja.</td></tr>
+    <tr><td>AWS Lightsail</td><td class="c"><span class="y">Alternativa válida</span></td><td>Similar en simplicidad; tiene sentido solo si ya se usa el ecosistema AWS.</td></tr>
+    <tr><td>Google Cloud / Firebase</td><td class="c"><span class="r">Descartado</span></td><td>Firebase no soporta PHP ni MySQL (es NoSQL); GCP "puro" es viable pero más complejo sin necesidad.</td></tr>
+    <tr><td>Azure</td><td class="c"><span class="r">Descartado</span></td><td>Sobre-ingeniería para un contenedor PHP + un contenedor MariaDB.</td></tr>
+    <tr><td>Kubernetes gestionado</td><td class="c"><span class="r">Descartado</span></td><td>Complejidad de orquestación innecesaria a esta escala.</td></tr>
+  </table>
+
+  <h3>3.2 Por qué Docker Compose (y no Kubernetes)</h3>
+  <p>Un solo servidor ejecutando 2-3 contenedores es más simple de operar, depurar y razonar para un equipo pequeño
+  que un clúster orquestado. Además, <strong>reutiliza exactamente</strong> la configuración ya construida y
+  probada durante la PoC local, lo que reduce el riesgo de migración: se conocen de antemano los problemas de
+  infraestructura de este stack específico (ver Sección 8 de la nota técnica de la PoC) y ya están resueltos.</p>
+
+  <h3>3.3 Por qué Caddy (y no Nginx + Certbot manual)</h3>
+  <p>Caddy renueva automáticamente los certificados TLS de Let's Encrypt sin configuración adicional. Esto elimina
+  una clase entera de incidentes ("el certificado expiró y la facturación de todos los clientes se cayó") que sí
+  es un riesgo real con una configuración manual de Nginx + Certbot mal mantenida.</p>
+
+  <h3>3.4 Por qué MariaDB auto-hospedada en contenedor (y no una base de datos gestionada, al inicio)</h3>
+  <p>El código de CRLibre usa <code>mysqli</code> de forma directa —es una dependencia dura hacia MySQL/MariaDB, no
+  hay alternativa—. Se recomienda iniciar con MariaDB en contenedor (igual que en la PoC) por costo y simplicidad;
+  <strong>DigitalOcean Managed Database</strong> queda como ruta de mejora cuando el volumen de clientes lo
+  justifique (ver Sección 11).</p>
+
+  <div class="box warn">
+    <strong>Consideración legal — Licencia AGPL v3</strong>
+    El código de CRLibre está bajo licencia <strong>AGPL v3</strong>. Esta licencia incluye una cláusula de
+    "uso en red" (Sección 13): si se ejecuta una <em>versión modificada</em> del software y los usuarios interactúan
+    con ella por red, existe la obligación de ofrecerles el código fuente correspondiente a esa versión modificada.
+    Durante la PoC se modificaron archivos de infraestructura del propio repositorio de CRLibre (<code>Dockerfile</code>,
+    <code>docker-entrypoint.sh</code>) para poder levantarlo. Al convertir esto en un <strong>servicio de red
+    comercial</strong>, esta cláusula deja de ser hipotética. <strong>Se recomienda consultar con un abogado
+    especializado en licencias de software libre</strong> antes del lanzamiento; una mitigación común es publicar
+    el código modificado (los parches de infraestructura) en un repositorio accesible para quien lo solicite.
+  </div>
+</div>
+
+<!-- 4. ARQUITECTURA GENERAL -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 4</div><h2>Arquitectura General</h2></div>
+
+  <div class="diag">
+<pre>
+  MAQUINA DEL CLIENTE (local)                     DIGITALOCEAN (tu servidor)
+  ┌─────────────────────────┐                    ┌──────────────────────────────┐
+  │  Odoo (l10n_cr_fe_crlibre)│    HTTPS (443)     │  Droplet Ubuntu               │
+  │  PostgreSQL                │ ─────────────────▶│   ┌─────────┐                 │
+  │  Operación diaria del      │                    │   │  Caddy  │  TLS auto       │
+  │  negocio del cliente       │                    │   └────┬────┘                 │
+  └─────────────────────────┘                    │        │                        │
+                                                     │   ┌────▼────────┐             │
+  (repite por cada cliente                          │   │ crlibre-app │  PHP+Apache │
+   que compre el producto)                          │   └────┬────────┘             │
+                                                     │        │                        │
+                                                     │   ┌────▼────────┐             │
+                                                     │   │  MariaDB    │  volumen     │
+                                                     │   └─────────────┘  cifrado     │
+                                                     └──────────────┬───────────────┘
+                                                                    │ HTTPS
+                                                                    ▼
+                                                     ┌──────────────────────────────┐
+                                                     │  Servidores de Hacienda (CR)  │
+                                                     └──────────────────────────────┘
+</pre>
+    <figcaption>Figura 1 — Arquitectura centralizada: N clientes de Odoo local, un solo servidor CRLibre en DigitalOcean.</figcaption>
+  </div>
+
+  <p>El único cambio necesario del lado de Odoo respecto a la PoC local es el valor del parámetro de configuración
+  <code>l10n_cr_fe.api_url</code>: pasa de <code>http://host.docker.internal:8080</code> a la URL pública del
+  servidor, por ejemplo <code>https://fe-api.tuempresa.com</code>. El resto del addon no requiere cambios porque
+  ya fue diseñado para leer la URL desde configuración.</p>
+</div>
+
+<!-- 5. MULTI-TENENCIA -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 5</div><h2>Multi-Tenencia: Cómo Sirve a Varios Clientes</h2></div>
+
+  <p>El propio código de CRLibre ya incluye un modelo de aislamiento de datos por cliente, observado directamente
+  en <code>facturadorCRLibre.php</code>: usa un patrón de <strong>"tabla por inquilino"</strong>. Cada empresa
+  registrada (<code>idUser</code> / <code>idMasterUser</code>) obtiene su propio juego de tablas, por ejemplo:</p>
+
+  <div class="code"><span class="cc">-- Ejemplo de tablas generadas para el cliente con idUser = 5</span>
+<span class="ct">5</span>_master_vouchers
+<span class="ct">5</span>_master_config_companny
+<span class="ct">5</span>_master_receiver
+<span class="ct">5</span>_master_consecutive
+<span class="ct">5</span>_master_inventary_sucursal_001</div>
+
+  <p>Esto significa que <strong>una sola instalación de la API, en un solo servidor, puede servir a todos los
+  clientes</strong> sin necesidad de instalaciones separadas por cliente — cada empresa nueva simplemente agrega su
+  propio conjunto de tablas dentro de la misma base de datos MariaDB.</p>
+
+  <div class="box danger">
+    <strong>Gap de seguridad a cerrar antes de producción</strong>
+    En la PoC, los endpoints usados (<code>w=clave&r=clave</code>, <code>w=genXML&r=gen_xml_fe</code>) están
+    marcados en el código como <code>users_openAccess</code>: cualquiera que conozca la URL puede llamarlos, sin
+    login. Esto fue intencional y correcto para una prueba de concepto aislada en <code>localhost</code>, pero es
+    <strong>inaceptable en un servicio multi-cliente expuesto a internet</strong>: sin autenticación, un cliente
+    podría (intencional o accidentalmente) generar comprobantes usando los datos de otro, o un tercero podría
+    saturar el servicio.
+  </div>
+
+  <p>Antes de aceptar tráfico público de múltiples clientes, es necesario:</p>
+  <ul>
+    <li>Migrar a los endpoints <code>users_loggedIn</code> / <code>companny_users_loggedIn</code> que ya existen en
+    el código de CRLibre (usan <code>sessionKey</code> por usuario), o</li>
+    <li>Agregar una capa de autenticación por API key a nivel del proxy (Caddy), asignando una key única por cliente
+    de Odoo, o</li>
+    <li>Ambas medidas combinadas, para defensa en profundidad.</li>
+  </ul>
+</div>
+
+<!-- 6. STACK DIGITALOCEAN -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 6</div><h2>Stack de DigitalOcean Recomendado</h2></div>
+
+  <table>
+    <tr><th>Capa</th><th>Servicio de DigitalOcean</th><th>Propósito</th></tr>
+    <tr><td>Cómputo</td><td><strong>Droplet</strong> (2–4 GB RAM / 1–2 vCPU)</td><td>Corre el mismo <code>docker-compose.yml</code> ya validado en la PoC.</td></tr>
+    <tr><td>Proxy + TLS</td><td><strong>Caddy</strong> (contenedor adicional)</td><td>HTTPS automático vía Let's Encrypt, sin gestión manual de certificados.</td></tr>
+    <tr><td>Base de datos</td><td><strong>MariaDB</strong> en contenedor</td><td>Persistencia de claves, XML, consecutivos y datos por cliente.</td></tr>
+    <tr><td>Red / DNS</td><td><strong>DigitalOcean DNS</strong> (gratis)</td><td>Apunta el dominio/subdominio a la IP del Droplet.</td></tr>
+    <tr><td>Firewall</td><td><strong>Cloud Firewall</strong> (gratis)</td><td>Solo puerto 443 público; SSH restringido por IP; MariaDB nunca expuesta.</td></tr>
+    <tr><td>Backups del servidor</td><td><strong>Droplet Backups</strong> (snapshots semanales automáticos)</td><td>Recuperación ante fallas del servidor completo.</td></tr>
+    <tr><td>Backups de datos</td><td><strong>DigitalOcean Spaces</strong> (S3-compatible)</td><td>Export diario de <code>mysqldump</code>, fuera del Droplet.</td></tr>
+    <tr><td>Monitoreo</td><td><strong>DO Monitoring + Alertas</strong> (gratis)</td><td>Alertas de CPU/RAM/disco/uptime, crítico al ser punto único de falla.</td></tr>
+  </table>
+</div>
+
+<!-- 7. GUÍA DE DESPLIEGUE -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 7</div><h2>Guía de Despliegue</h2></div>
+
+  <p>Pasos de alto nivel para el aprovisionamiento inicial. Es una guía de referencia (runbook), no un script
+  automatizado — antes de ejecutarla en un entorno real se recomienda convertirla en un plan de implementación
+  detallado.</p>
+
+  <ol>
+    <li><strong>Crear el Droplet</strong>: Ubuntu 24.04 LTS, plan de 2–4 GB RAM, con Docker preinstalado (imagen
+    "Docker on Ubuntu" del marketplace de DigitalOcean) o instalando Docker + Docker Compose manualmente.</li>
+    <li><strong>Configurar DNS</strong>: crear un registro <code>A</code> apuntando <code>fe-api.tuempresa.com</code>
+    (o el subdominio elegido) a la IP pública del Droplet.</li>
+    <li><strong>Copiar el proyecto al servidor</strong>: transferir el repositorio de <code>API_Hacienda</code>
+    con los 4 parches de infraestructura ya validados en la PoC local (Dockerfile con repos de Debian archivados,
+    entrypoint sin CRLF, <code>settings.php</code> configurado, carpetas <code>logs/errors/files</code> creadas).</li>
+    <li><strong>Agregar Caddy al <code>docker-compose.yml</code></strong> como servicio adicional, con un
+    <code>Caddyfile</code> que enruta el dominio hacia el contenedor <code>php-apache</code> y gestiona TLS
+    automáticamente.</li>
+    <li><strong>Configurar el Cloud Firewall</strong>: permitir entrante solo 443 (HTTPS) y 22 (SSH, restringido a
+    IPs de administración conocidas); bloquear el puerto de MariaDB (3306) de forma pública.</li>
+    <li><strong>Resolver la autenticación multi-cliente</strong> (ver Sección 5) antes de aceptar el primer cliente
+    real — este paso es bloqueante, no opcional.</li>
+    <li><strong>Configurar backups automatizados</strong>: activar Droplet Backups y programar un cron con
+    <code>mysqldump</code> diario subiendo a DigitalOcean Spaces.</li>
+    <li><strong>Configurar monitoreo y alertas</strong> de uptime, CPU, RAM y disco en el panel de DigitalOcean.</li>
+    <li><strong>Apuntar cada instalación de Odoo cliente</strong>: actualizar <code>l10n_cr_fe.api_url</code> a la
+    URL pública, y provisionar sus credenciales/API key correspondientes.</li>
+  </ol>
+</div>
+
+<!-- 8. SEGURIDAD -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 8</div><h2>Seguridad y Certificados .p12</h2></div>
+
+  <p>Cada cliente eventualmente cargará su certificado criptográfico <code>.p12</code> (emitido por Hacienda vía
+  ATV) y su PIN para poder firmar comprobantes. Al centralizar la API, estos archivos sensibles de <strong>todos
+  los clientes</strong> residirán en un único servidor bajo tu responsabilidad.</p>
+
+  <table>
+    <tr><th>Medida</th><th>Detalle</th></tr>
+    <tr><td>Cifrado en reposo</td><td>Volumen de Docker donde viven los <code>.p12</code> cifrado a nivel de sistema de archivos (no solo el cifrado de infraestructura que DigitalOcean aplica por defecto).</td></tr>
+    <tr><td>Permisos restringidos</td><td>Solo el proceso de la API puede leer esos archivos; acceso SSH de administración no debe implicar acceso trivial a los certificados en texto plano.</td></tr>
+    <tr><td>HTTPS obligatorio</td><td>No es opcional: certificados y cédulas de clientes viajan por la red pública.</td></tr>
+    <tr><td>Base de datos aislada</td><td>MariaDB nunca expuesta a internet; solo accesible desde el contenedor de la API dentro de la red interna de Docker.</td></tr>
+    <tr><td>Rotación de PIN/credenciales</td><td>Procedimiento documentado para que un cliente pueda rotar su certificado sin intervención manual compleja.</td></tr>
+  </table>
+
+  <div class="box info">
+    <strong>Nota de escala</strong>
+    A este tamaño no es necesario un gestor de secretos dedicado (ej. HashiCorp Vault). Si el número de clientes
+    crece significativamente, esa es una inversión razonable a reconsiderar (ver Sección 11).
+  </div>
+</div>
+
+<!-- 9. PRECIOS -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 9</div><h2>Precios Estimados</h2></div>
+
+  <div class="box warn">
+    <strong>Los precios de la nube cambian con frecuencia.</strong>
+    Las cifras de esta sección son estimaciones de referencia (USD/mes) para dimensionar el proyecto. Deben
+    confirmarse en <code>digitalocean.com/pricing</code> al momento de contratar.
+  </div>
+
+  <table>
+    <tr><th>Ítem</th><th>Especificación</th><th>Costo estimado</th></tr>
+    <tr><td>Droplet (inicio)</td><td>2 GB RAM / 1 vCPU / 50 GB SSD</td><td>~$12/mes</td></tr>
+    <tr><td>Droplet (con margen)</td><td>4 GB RAM / 2 vCPU / 80 GB SSD</td><td>~$24/mes</td></tr>
+    <tr><td>Backups automáticos del Droplet</td><td>+20% del costo del Droplet</td><td>~$2.40–$4.80/mes</td></tr>
+    <tr><td>DigitalOcean Spaces</td><td>250 GB + 1 TB transferencia (backups de BD)</td><td>~$5/mes</td></tr>
+    <tr><td>Cloud Firewall</td><td>Incluido</td><td>Gratis</td></tr>
+    <tr><td>DNS</td><td>Incluido</td><td>Gratis</td></tr>
+    <tr><td>Monitoreo + alertas básicas</td><td>Incluido</td><td>Gratis</td></tr>
+    <tr><td>Dominio propio</td><td>Registrador externo (anual)</td><td>~$10–15/año (~$1/mes)</td></tr>
+    <tr><td><strong>Total estimado (inicio)</strong></td><td>Droplet 2GB + backups + Spaces + dominio</td><td><strong>~$20/mes</strong></td></tr>
+    <tr><td><strong>Total estimado (con margen)</strong></td><td>Droplet 4GB + backups + Spaces + dominio</td><td><strong>~$32/mes</strong></td></tr>
+  </table>
+
+  <p>Este costo es <strong>independiente del número de clientes</strong> dentro de un rango razonable inicial
+  (gracias al modelo de tabla-por-inquilino de la Sección 5) — no se paga más por cada cliente nuevo hasta que el
+  volumen de tráfico o almacenamiento requiera escalar el Droplet o pasar a un modelo distribuido (Sección 11).</p>
+</div>
+
+<!-- 10. RIESGOS -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 10</div><h2>Riesgos y Aspectos a Considerar</h2></div>
+
+  <table>
+    <tr><th>Riesgo</th><th>Impacto</th><th>Mitigación</th></tr>
+    <tr><td>Punto único de falla</td><td class="c"><span class="r">Alto</span></td><td>Si el servidor cae, <strong>todos</strong> los clientes pierden la capacidad de facturar simultáneamente. Requiere monitoreo de uptime activo y un plan de recuperación documentado.</td></tr>
+    <tr><td>Endpoints sin autenticación (heredado de la PoC)</td><td class="c"><span class="r">Alto</span></td><td>Bloqueante antes de producción — ver Sección 5.</td></tr>
+    <tr><td>Responsabilidad sobre datos sensibles de terceros</td><td class="c"><span class="y">Medio-Alto</span></td><td>Certificados y cédulas de todos los clientes centralizados implican responsabilidad legal/reputacional directa ante una brecha.</td></tr>
+    <tr><td>Obligaciones de la licencia AGPL v3</td><td class="c"><span class="y">Medio</span></td><td>Consultar asesoría legal antes del lanzamiento comercial (ver Sección 3.4).</td></tr>
+    <tr><td>Escalamiento de almacenamiento (BD)</td><td class="c"><span class="b">Bajo (a corto plazo)</span></td><td>El patrón tabla-por-inquilino crece linealmente en número de tablas; monitorear cuando el catálogo de clientes sea grande.</td></tr>
+    <tr><td>Dependencia de un solo mantenedor</td><td class="c"><span class="y">Medio</span></td><td>Documentar el runbook de despliegue y recuperación para que no dependa de una sola persona.</td></tr>
+  </table>
+</div>
+
+<!-- 11. ESCALAMIENTO FUTURO -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 11</div><h2>Ruta de Escalamiento Futuro</h2></div>
+
+  <p>La arquitectura propuesta está pensada para arrancar simple. Cuando el número de clientes o el volumen de
+  comprobantes lo justifiquen, existe una ruta de crecimiento clara sin rediseñar desde cero:</p>
+
+  <h3>Paso 1 — Escalamiento vertical (primer recurso)</h3>
+  <p>Redimensionar el Droplet a más RAM/CPU. Es la opción más simple y la primera a considerar; DigitalOcean permite
+  hacerlo con poco tiempo de inactividad.</p>
+
+  <h3>Paso 2 — Separar la base de datos</h3>
+  <p>Migrar de MariaDB en contenedor a <strong>DigitalOcean Managed Database</strong> (MySQL gestionado), lo que
+  reduce la carga operativa (parches, backups, alta disponibilidad) a cambio de un costo mensual adicional
+  (desde ~$15/mes en el plan más pequeño).</p>
+
+  <h3>Paso 3 — Escalamiento horizontal</h3>
+  <p>Agregar un <strong>DigitalOcean Load Balancer</strong> (~$12/mes) frente a múltiples Droplets ejecutando el
+  contenedor de la API, todos apuntando a la base de datos gestionada centralizada. Necesario solo si el tráfico
+  supera lo que un solo servidor puede manejar cómodamente.</p>
+
+  <h3>Paso 4 — Gestión de secretos dedicada</h3>
+  <p>Si el catálogo de certificados <code>.p12</code> crece mucho, evaluar un gestor de secretos dedicado en vez de
+  archivos cifrados en disco.</p>
+</div>
+
+<!-- 12. CONCLUSIÓN -->
+<div class="sec">
+  <div class="sec-hdr"><div class="sec-num">Sección 12</div><h2>Conclusión y Próximos Pasos</h2></div>
+
+  <p>El stack <strong>DigitalOcean + Docker Compose + Caddy + MariaDB</strong> ofrece el mejor balance entre
+  simplicidad operativa, costo predecible y reutilización del trabajo ya validado en la prueba de concepto local,
+  para hospedar la API de CRLibre como servicio centralizado que atienda a múltiples clientes de Odoo.</p>
+
+  <p>Antes de considerar esta arquitectura lista para producción, quedan dos bloqueantes concretos identificados
+  en este documento:</p>
+
+  <ul class="chk">
+    <li><span class="bx"></span> Resolver la autenticación por cliente (eliminar los endpoints
+    <code>users_openAccess</code> del tráfico público) — Sección 5.</li>
+    <li><span class="bx"></span> Obtener orientación legal sobre las obligaciones de la licencia AGPL v3 al operar
+    esto como servicio de red comercial — Sección 3.4.</li>
+  </ul>
+
+  <p>Una vez resueltos estos dos puntos, el siguiente paso natural es convertir la Sección 7 (Guía de Despliegue)
+  en un plan de implementación detallado, task por task, siguiendo el mismo proceso usado para construir la PoC.</p>
+
+  <div class="ftr">
+    <span>Despliegue de la API CRLibre en DigitalOcean — Documento técnico interno</span>
+    <span>v1.0 · 2026-07-01</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
