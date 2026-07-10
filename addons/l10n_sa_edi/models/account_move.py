@@ -210,8 +210,6 @@ class AccountMove(models.Model):
         self.l10n_sa_uuid = uuid.uuid4()
         # We generate the XML content
         xml_content = self._l10n_sa_generate_zatca_template()
-        if isinstance(xml_content, dict):
-            raise ValidationError(xml_content.get('error'))
         # Once the required values are generated, we hash the invoice, then use it to generate a Signature
         invoice_hash_hex = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content).decode()
         self.l10n_sa_invoice_signature = self.env['l10n_sa_edi.document']._l10n_sa_get_digital_signature(self.journal_id.company_id,
@@ -300,10 +298,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         xml_content, errors = self.env['account.edi.xml.ubl_21.zatca']._export_invoice(self)
         if errors:
-            return {
-                'error': self.env._("Could not generate Invoice UBL content: %s", ", \n".join(errors)),
-                'blocking_level': 'error',
-            }
+            raise ValidationError(self.env._("Could not generate Invoice UBL content: %s", ", \n".join(errors)))
 
         return self.env['l10n_sa_edi.document']._l10n_sa_postprocess_zatca_template(xml_content)
 
