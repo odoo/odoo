@@ -13,7 +13,13 @@ export class OrderCourse extends Component {
     }
 
     get comboSortedLines() {
-        return this.course.lines.reduce((acc, line) => {
+        // Keep the service fees below the products, as PosOrder.getOrderlines does.
+        const regularLines = [];
+        const serviceFeeLines = [];
+        for (const line of this.course.lines) {
+            (line.isServiceFeeLine() ? serviceFeeLines : regularLines).push(line);
+        }
+        return [...regularLines, ...serviceFeeLines].reduce((acc, line) => {
             if (line.combo_line_ids?.length > 0) {
                 acc.push(line, ...line.combo_line_ids);
             } else if (!line.combo_parent_id) {

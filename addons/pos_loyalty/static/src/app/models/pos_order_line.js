@@ -96,8 +96,18 @@ patch(PosOrderline.prototype, {
     },
     isServiceFeeApplicable() {
         const coupon = this.coupon_id;
-        if (coupon && !this.is_reward_line) {
+        if ((coupon && !this.is_reward_line) || this.isGiftCardOrEWalletReward()) {
             return false;
+        }
+        // A discount reward joins the base the fee is carved from only for a
+        // percentage of the total after discount, as the global discount line does
+        // in pos_discount.
+        if (this.is_reward_line && this.reward_id?.reward_type === "discount") {
+            const preset = this.order_id?.preset_id;
+            return (
+                preset?.service_fee_type === "percent" &&
+                preset?.service_fee_based_on === "post_discount"
+            );
         }
         return super.isServiceFeeApplicable?.() ?? true;
     },

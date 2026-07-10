@@ -198,7 +198,17 @@ export class PosStore extends WithLazyGetterTrap {
                 PosOrderlineAccounting.accountingFields.has(field)
             );
             const line = this.models["pos.order.line"].get(id);
-            if (fieldTargetted && line && !line.isServiceFeeLine()) {
+            if (!line) {
+                return;
+            }
+            // A fixed fee is the cashier's to scale and price. A price only counts as
+            // an edit while the line is "manual", never the recompute's write-back.
+            const feeEdited =
+                line.isServiceFeeLine() &&
+                line.order_id?.preset_id?.service_fee_type === "fixed" &&
+                (fields?.includes("qty") ||
+                    (fields?.includes("price_unit") && line.price_type === "manual"));
+            if ((fieldTargetted && !line.isServiceFeeLine()) || feeEdited) {
                 const order = line?.order_id;
                 if (order) {
                     this.debouncedRecomputeServiceFees(order);
