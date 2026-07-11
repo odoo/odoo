@@ -12,14 +12,15 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Jiří Podhorecký, 2022
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
+# Martin Šiša <martin.sisa@origamis.cz>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-02-25 14:45+0000\n"
+"PO-Revision-Date: 2026-07-06 08:25+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/portal/cs/>"
 "\n"
@@ -27,9 +28,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
-"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.14.3\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -62,17 +63,21 @@ msgid ""
 "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> My "
 "Account"
 msgstr ""
+"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> Můj "
+"účet"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid ""
 "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary-emphasis\"/> Logout"
 msgstr ""
+"<i class=\"fa fa-fw fa-sign-out me-1 small text-primary-emphasis\"/> "
+"Odhlásit se"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Apps"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Aplikace"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -110,7 +115,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"oi oi-plus me-2\"/>Přidat adresu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -140,6 +145,12 @@ msgid ""
 "                            operation.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            Změna DIČ není povolena, jakmile byly pro váš "
+"účet\n"
+"                            vystaveny dokumenty. Ohledně této\n"
+"                            operace nás prosím kontaktujte přímo.\n"
+"                       </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -149,6 +160,10 @@ msgid ""
 "company account.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            DIČ lze aktualizovat pouze na firemním účtu v "
+"Účetnictví.\n"
+"                       </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -160,6 +175,11 @@ msgid ""
 "                    operation.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Změna země není povolena, jakmile byly pro váš účet\n"
+"                    vystaveny dokumenty. Ohledně této\n"
+"                    operace nás prosím kontaktujte přímo.\n"
+"               </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -167,6 +187,8 @@ msgid ""
 "<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Předchozí\" "
+"title=\"Předchozí\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -174,6 +196,8 @@ msgid ""
 "<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Další\" "
+"title=\"Další\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -237,7 +261,7 @@ msgstr "Přidat poznámku"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Add an address"
-msgstr ""
+msgstr "Přidat adresu"
 
 #. module: portal
 #. odoo-javascript
@@ -268,7 +292,7 @@ msgstr "Přidáno na"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 msgid "Address Management"
-msgstr ""
+msgstr "Správa adres"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -336,6 +360,8 @@ msgid ""
 "Changing your country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Změna země není povolena, jakmile byly pro váš účet vystaveny dokumenty. Pro "
+"tuto operaci nás prosím kontaktujte přímo."
 
 #. module: portal
 #. odoo-javascript
@@ -419,7 +445,7 @@ msgstr "Kontakty"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
 msgid "Could not save file %s"
-msgstr ""
+msgstr "Nelze uložit soubor %s"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -663,7 +689,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Pokud chcete provést úpravy, aktualizujte"
 
 #. module: portal
 #. odoo-javascript
@@ -767,7 +793,7 @@ msgstr "Odhlásit ze všech zařízení"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Main Address"
-msgstr ""
+msgstr "Hlavní adresa"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -781,8 +807,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have %"
 "(field_name)s field."
 msgstr ""
-"Modelka %(model_name)s nepodporuje podpis tokenu, protože nemá %"
-"(field_name)s pole."
+"Modelka %(model_name)s nepodporuje podpis tokenu, protože nemá %(field_name)"
+"s pole."
 
 #. module: portal
 #. odoo-python
@@ -798,7 +824,7 @@ msgstr "Můj účet"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
-msgstr ""
+msgstr "Moje adresy"
 
 #. module: portal
 #. odoo-javascript
@@ -956,7 +982,7 @@ msgstr "Související model dokumentu"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Remove this address"
-msgstr ""
+msgstr "Odebrat tuto adresu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -976,7 +1002,7 @@ msgstr "Stejná jako doručovací adresa"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "Save Address"
-msgstr ""
+msgstr "Uložit adresu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1092,13 +1118,13 @@ msgstr "Děkujeme"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your company account."
-msgstr ""
+msgstr "Pole %(field_name)s spravujete ve svém firemním účtu."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your main account address."
-msgstr ""
+msgstr "%(field_name)s spravujete na adrese vašeho hlavního účtu."
 
 #. module: portal
 #. odoo-python
@@ -1125,7 +1151,7 @@ msgstr "Příloha neexistuje nebo nemáte přístupová práva."
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid ""
 "The company name and VAT number can only be updated on your main account."
-msgstr ""
+msgstr "Název společnosti a DIČ lze upravit pouze na vašem hlavním účtu."
 
 #. module: portal
 #. odoo-python
@@ -1162,8 +1188,7 @@ msgstr "Nové heslo a jeho potvrzení musí být stejné."
 #: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
-msgstr ""
-"Staré heslo, které jste zadali, je neplatné. Vaše heslo nebylo změněno."
+msgstr "Staré heslo, které jste zadali, je neplatné. Vaše heslo nebylo změněno."
 
 #. module: portal
 #. odoo-python
@@ -1231,7 +1256,7 @@ msgstr "Uživatel"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "User Dashboard"
-msgstr ""
+msgstr "Uživatelský dashboard"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -1378,7 +1403,7 @@ msgstr "Chybné heslo."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot archive your main address"
-msgstr ""
+msgstr "Nemůžete archivovat svou hlavní adresu"
 
 #. module: portal
 #. odoo-python
@@ -1470,7 +1495,7 @@ msgstr "do vašeho uživatelského účtu, je velmi důležité jej bezpečně u
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
-msgstr ""
+msgstr "údaje o vašem účtu"
 
 #~ msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
 #~ msgstr "<i class=\"fa fa-pencil mx-1\"/>Upravit nastavení zabezpečení"

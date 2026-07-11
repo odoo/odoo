@@ -8,16 +8,16 @@
 # Noma Yuki, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025, 2026.
 # Andy Yiu, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-06-08 11:11+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
+"PO-Revision-Date: 2026-06-30 23:04+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/survey/"
 "ja/>\n"
 "Language: ja\n"
@@ -216,8 +216,8 @@ msgstr ""
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- アンケート調査を作成した会社のロゴを使用します(マルチカ"
-"ンパニーのケースに対応するため)  -->\n"
+"                <!-- アンケート調査を作成した会社のロゴを使用します"
+"(マルチカンパニーのケースに対応するため)  -->\n"
 "                <a href=\"/\"><img t-if=\"not "
 "object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
 "logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
@@ -240,8 +240,8 @@ msgstr ""
 "''\">家具製作</strong>\n"
 "                    認定書をお送りいたします。\n"
 "                </p>\n"
-"                <p>テストに合格されました。おめでとうございます。 スコア:"
-"<strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
+"                <p>テストに合格されました。おめでとうございます。 "
+"スコア:<strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -292,8 +292,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-out=\"object.partner_id.name or 'participant'\">ご参加者</t>様"
-"<br/><br/>\n"
+"        <t t-out=\"object.partner_id.name or 'participant'\">ご参加者</t>"
+"様<br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            新しい認定のご案内です。\n"
 "        </t>\n"
@@ -303,8 +303,8 @@ msgstr ""
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    認定を受ける\n"
@@ -464,8 +464,8 @@ msgid ""
 "                </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                    <span id=\"enter-tooltip\">またはCTRL+Enterを入力</"
-"span>\n"
+"                    <span id=\"enter-tooltip\">またはCTRL+Enterを入力</span>"
+"\n"
 "                </span>"
 
 #. module: survey
@@ -528,8 +528,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"o_survey_results_topbar_clear_filters text-primary\">\n"
-"                                <i class=\"fa fa-trash me-1\"/>すべてのフィル"
-"タを削除\n"
+"                                <i class=\"fa fa-trash me-1\"/>すべての"
+"フィルタを削除\n"
 "                            </span>"
 
 #. module: survey
@@ -732,8 +732,7 @@ msgstr "かなり割高"
 msgid ""
 "A positive default time limit is required when the session rewards quick "
 "answers."
-msgstr ""
-"セッションで迅速な回答が報われる場合、正のデフォルトの制限時間が必要です。"
+msgstr "セッションで迅速な回答が報われる場合、正のデフォルトの制限時間が必要です。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_answer__answer_score
@@ -1049,8 +1048,8 @@ msgid ""
 "Attendee nickname, mainly used to identify them in the survey session "
 "leaderboard."
 msgstr ""
-"主にアンケートセッションのリーダーボードで参加者を識別するために使用されま"
-"す。"
+"主にアンケートセッションのリーダーボードで参加者を識別するために使用されます"
+"。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -1580,15 +1579,13 @@ msgstr "テストトークンの作成は許可されていません。"
 msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
-msgstr ""
-"社内調査では、従業員以外のためにトークンを作成することは許可されていません。"
+msgstr "社内調査では、従業員以外のためにトークンを作成することは許可されていません。"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 msgid "Creating token for closed/archived surveys is not allowed."
-msgstr ""
-"クローズ/アーカイブされたアンケート用のトークン作成は許可されていません。"
+msgstr "クローズ/アーカイブされたアンケート用のトークン作成は許可されていません。"
 
 #. module: survey
 #. odoo-python
@@ -3407,8 +3404,7 @@ msgstr "プレースホルダ"
 msgid ""
 "Please complete this very short survey to let us know how satisfied your are "
 "with our products."
-msgstr ""
-"当社プロダクトの満足度をお知らせ頂くために、簡単なアンケートにご協力下さい。"
+msgstr "当社プロダクトの満足度をお知らせ頂くために、簡単なアンケートにご協力下さい。"
 
 #. module: survey
 #. odoo-python
@@ -3427,9 +3423,9 @@ msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
 msgstr ""
-"アンケートにおいて少なくとも一つの設問があることを確認してください。、'セク"
-"ションごとに1ページ'のレイアウトを選択した場合は、少なくとも1つのセクションを"
-"必要とします。<br/>"
+"アンケートにおいて少なくとも一つの設問があることを確認してください。"
+"、'セクションごとに1ページ'のレイアウトを選択した場合は、少なくとも1つの"
+"セクションを必要とします。<br/>"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3
@@ -4181,8 +4177,7 @@ msgstr "推奨された答え"
 msgid ""
 "Suggested answer value must not be empty (a text and/or an image must be "
 "provided)."
-msgstr ""
-"回答候補の値が空であってはなりません (テキストおよび/または画像が必要です)。"
+msgstr "回答候補の値が空であってはなりません (テキストおよび/または画像が必要です)。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__value
@@ -4434,8 +4429,8 @@ msgid ""
 "The attempts limit needs to be a positive number if the survey has a limited "
 "number of attempts."
 msgstr ""
-"試行限界がアンケートが試みの数が限られている場合、正の数である必要がありま"
-"す。"
+"試行限界がアンケートが試みの数が限られている場合、正の数である必要があります"
+"。"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
@@ -4680,14 +4675,13 @@ msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
 msgstr ""
-"このアンケートでは、外部の人々が参加することはできません。それに応じて、ユー"
-"ザーアカウントまたは更新サーベイアクセスモードを作成する必要があります。"
+"このアンケートでは、外部の人々が参加することはできません。それに応じて、"
+"ユーザーアカウントまたは更新サーベイアクセスモードを作成する必要があります。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest!"
-msgstr ""
-"このアンケートは終了しました。ご関心をお寄せいただきありがとうございます！"
+msgstr "このアンケートは終了しました。ご関心をお寄せいただきありがとうございます！"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -4801,8 +4795,8 @@ msgid ""
 "positioned after this question:\n"
 "\"%s\"."
 msgstr ""
-"以下の質問に基づくトリガは、この質問の後に配置されているため、機能しませ"
-"ん。\n"
+"以下の質問に基づくトリガは、この質問の後に配置されているため、機能しません"
+"。\n"
 "\"%s\""
 
 #. module: survey
@@ -5107,8 +5101,7 @@ msgstr "どこに住んでいますか？"
 #: model:ir.model.fields,help:survey.field_survey_survey__session_show_leaderboard
 msgid ""
 "Whether or not we want to show the attendees leaderboard for this survey."
-msgstr ""
-"今回のアンケートのためのリーダーボードの出席者を表示したくてもしたくなくても"
+msgstr "今回のアンケートのためのリーダーボードの出席者を表示したくてもしたくなくても"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q1
@@ -5155,8 +5148,8 @@ msgstr ""
 msgid ""
 "Why should you consider making your presentation more fun with a small quiz?"
 msgstr ""
-"なぜ、ちょっとしたクイズでプレゼンテーションをより楽しくする必要があるので"
-"しょう？"
+"なぜ、ちょっとしたクイズでプレゼンテーションをより楽しくする必要があるのでし"
+"ょう？"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_3
@@ -5217,8 +5210,7 @@ msgstr "はい、それのみが、人間の目が見ることができるもの
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_certification_check
 msgid ""
 "You can only create certifications for surveys that have a scoring mechanism."
-msgstr ""
-"スコアリングメカニズムを持っているアンケートのためのみ証明書を作成できます。"
+msgstr "スコアリングメカニズムを持っているアンケートのためのみ証明書を作成できます。"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
@@ -5256,8 +5248,8 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey only contains empty sections."
 msgstr ""
-"アンケートに空のセクションしかない場合、 \"セクションごとに1ページ\"アンケー"
-"ト用の招待状を送ることはできません。"
+"アンケートに空のセクションしかない場合、 \"セクションごとに1"
+"ページ\"アンケート用の招待状を送ることはできません。"
 
 #. module: survey
 #. odoo-python
@@ -5340,8 +5332,7 @@ msgstr "閉じる"
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid ""
 "e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
-msgstr ""
-"例:  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
+msgstr "例:  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5452,8 +5443,8 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr ""
-"⚠️この質問は、いくつかの、あるいはすべてのトリガの前に置かれ、スキップすること"
-"もできます。"
+"⚠️この質問は、いくつかの、あるいはすべてのトリガの前に置かれ、スキップするこ"
+"ともできます。"
 
 #~ msgid "$100"
 #~ msgstr "$100"

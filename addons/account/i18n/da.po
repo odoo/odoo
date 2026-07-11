@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:27+0000\n"
-"PO-Revision-Date: 2026-06-24 07:37+0000\n"
+"POT-Creation-Date: 2026-07-10 17:35+0000\n"
+"PO-Revision-Date: 2026-07-09 16:06+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/account/"
 "da/>\n"
@@ -312,18 +312,6 @@ msgstr "%s skatter"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "%s, or / if not applicable"
-msgstr "%s, eller/hvis ikke relevant"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "%s, or not applicable"
-msgstr "%s, eller ikke relevant"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
 msgstr "'%(filename)s' (uddraget fra '%(root_filename)s', type=%(type)s)"
@@ -436,12 +424,6 @@ msgstr "... (%(nb_of_values)s anden)"
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
 msgstr "... (Vis alle)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "/ if not applicable"
-msgstr "/ hvis ikke relevant"
 
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
@@ -749,8 +731,9 @@ msgstr ""
 "            (med nummeret: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "        </t>\n"
-"        på <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">143.750,00 $</span>\n"
+"        på <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or "
+"''\">143.750,00 $</span>\n"
 "        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Denne selvfaktureringsfaktura er allerede betalt.\n"
@@ -759,8 +742,8 @@ msgstr ""
 "object.timesheet_count\">\n"
 "            <br/><br/>\n"
 "            P.S.: Du kan gennemgå dine tidsregistreringer <a t-att-href=\"'/"
-"my/timesheets?search_in=invoice&amp;search=%s' % object.name\">fra "
-"portalen.</a>\n"
+"my/timesheets?search_in=invoice&amp;search=%s' % object.name\">fra portalen."
+"</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
@@ -768,8 +751,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -841,8 +824,9 @@ msgstr ""
 "            (med nummeret: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "        </t>\n"
-"        på <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">143.750,00 $</span>\n"
+"        på <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or "
+"''\">143.750,00 $</span>\n"
 "        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "        <br/><br/>\n"
 "        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
@@ -850,8 +834,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -887,14 +871,14 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Kære <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
-"<br/><br/>\n"
+"        Kære <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
+"><br/>\n"
 "        Tak for din betaling.\n"
 "        Her er din betalingskvittering <span style=\"font-weight:bold;\" t-"
 "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span>\n"
-"        på <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">10,00 $</span> fra <t t-"
-"out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
+"        på <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 $</"
+"span> fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "        <br/><br/>\n"
 "        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
 "        <br/><br/>\n"
@@ -903,8 +887,8 @@ msgstr ""
 "container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -962,8 +946,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
 "title=\"Behandler betaling\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\">"
-"Betaling behandles</span>"
+"                                    <span class=\"d-none d-md-"
+"inline\">Betaling behandles</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1106,8 +1090,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1502,13 +1486,14 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>Denne postering blev oprettet i Faktureringsappen, før Bogføringsappen "
+"<span>Denne postering blev oprettet i Faktureringsappen, før Regnskabsappen "
 "blev installeret. Dens saldo er blevet importeret separat.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr "<span>Dette er en forhåndsvisning af dine vilkår og betingelser.</span>"
+msgstr ""
+"<span>Dette er en forhåndsvisning af dine vilkår og betingelser.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -2316,7 +2301,7 @@ msgstr "Kontovaluta"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
 msgid "Account Dashboard Onboarding"
-msgstr "Opsætning af regnskabskontrolpanel"
+msgstr "Opsætning af regnskabsdashboard"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
@@ -2651,7 +2636,8 @@ msgstr "Konto brugt til at flytte omkostningsperiode"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
-msgstr "Konto brugt til at registrere den private del af blandede omkostninger."
+msgstr ""
+"Konto brugt til at registrere den private del af blandede omkostninger."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -2691,7 +2677,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Accounting"
-msgstr "Bogføring"
+msgstr "Regnskab"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__accounting_date
@@ -2814,8 +2800,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"Afgrænsningsbogføring oprettet den %(date)s: %(accrual_entry)"
-"s,                samt dens modbogføring: 3%(reverse_entry)s."
+"Afgrænsningsbogføring oprettet den %(date)s: %"
+"(accrual_entry)s,                samt dens modbogføring: 3%(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3116,7 +3102,8 @@ msgstr "Antal oprindelige posteringer for korrektionsposteringen"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr "Korrektionspostering {link} {percent}%% på {amount} genkendt fra {date}"
+msgstr ""
+"Korrektionspostering {link} {percent}%% på {amount} genkendt fra {date}"
 
 #. module: account
 #. odoo-python
@@ -3522,8 +3509,8 @@ msgstr ""
 "En konto er en del af finansregnskabet og gør det muligt for din virksomhed\n"
 "                at registrere alle typer debet- og kredittransaktioner.\n"
 "                Virksomheder præsenterer deres årsregnskab i to hoveddele:\n"
-"                statusopgørelse og resultatopgørelse (tab- og vindingskonto)"
-".\n"
+"                statusopgørelse og resultatopgørelse (tab- og "
+"vindingskonto).\n"
 "                Det er lovpligtigt for et selskab\n"
 "                at videregive visse oplysninger."
 
@@ -5762,6 +5749,16 @@ msgid "Could not upload files"
 msgstr "Filerne kunne ikke uploades"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Items"
 msgstr "Modposteringer"
@@ -6931,7 +6928,7 @@ msgstr ""
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
 msgid "Define your fiscal years & tax returns periodicity."
-msgstr "Angiv dine regnskabsår og periodicitet for selvangivelser."
+msgstr "Angiv dine regnskabsår og hyppighed for selvangivelser."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -8199,6 +8196,7 @@ msgid "Exchange Gain or Loss Journal"
 msgstr "Journal for valutakursgevinst eller -tab"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
 msgstr "Postering for valutadifferencer"
@@ -8502,6 +8500,16 @@ msgstr "Første linjeindeks"
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
 msgstr "Første nye sekvens"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -9673,8 +9681,8 @@ msgid ""
 msgstr ""
 "Hvis dette felt er markeret, vil alle bevægelser i sekvensen fra posteringen "
 "tilbage til den senest hashede postering blive retroaktivt hashet, når "
-"posteringen bogføres. Hashen kan også udføres efter behov via ‘Sikr postering"
-"’-assistenten."
+"posteringen bogføres. Hashen kan også udføres efter behov via ‘Sikr "
+"postering’-assistenten."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9707,8 +9715,8 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
-"Hvis du sælger varer og tjenesteydelser til kunder i et"
-"                                 EU-land, skal momsen beregnes ud fra "
+"Hvis du sælger varer og tjenesteydelser til kunder i "
+"et                                 EU-land, skal momsen beregnes ud fra "
 "leveringsadressen.                                 Denne regel gælder "
 "uanset, hvor du er bosat."
 
@@ -9880,8 +9888,8 @@ msgstr ""
 "I rapporten '%(report_name)s', i linje '%(line_name)s' med betegnelsen '%"
 "(label)s',\n"
 "er udtrykket i tværrapporten ugyldigt.\n"
-"Forventet format: cross_report(<report_id>|<xml_id>)Eksempel: cross_report"
-"(my_module.my_report) eller cross_report(123)"
+"Forventet format: cross_report(<report_id>|<xml_id>)Eksempel: "
+"cross_report(my_module.my_report) eller cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9965,8 +9973,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s; "
 "Day: %(day)s"
 msgstr ""
-"Ukorrekt regnskabsårsdato: dagen er udenfor månedens grænse. Måned: %(month)"
-"s. Dag: %(day)s"
+"Ukorrekt regnskabsårsdato: dagen er udenfor månedens grænse. Måned: %"
+"(month)s. Dag: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -10446,7 +10454,8 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr "Distribution af faktura og kreditnota skal have det samme antal linjer."
+msgstr ""
+"Distribution af faktura og kreditnota skal have det samme antal linjer."
 
 #. module: account
 #. odoo-python
@@ -11577,6 +11586,7 @@ msgid "Looks great!"
 msgstr "Ser godt ud!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Tab"
@@ -12042,7 +12052,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_partial_reconcile.py:0
 msgid "Missing foreign currencies on partials having ids: %s"
-msgstr "Manglende angivelse af udenlandsk valuta på delbetalinger med ID’er: %s"
+msgstr ""
+"Manglende angivelse af udenlandsk valuta på delbetalinger med ID’er: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
@@ -13298,6 +13309,7 @@ msgid "Owner's Current Account"
 msgstr "Ejers løbende konto"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "Resultatopgørelse"
@@ -14333,6 +14345,11 @@ msgid "Profit or Loss Appropriation"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
 msgstr "Proforma-kreditnota"
@@ -15029,6 +15046,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:account.group,name:account.2_us_group_4
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Omsætning"
@@ -15133,7 +15151,7 @@ msgstr "Tilbageført den"
 #: model:ir.ui.menu,name:account.account_audit_menu
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Review"
-msgstr "Gennemse"
+msgstr "Revision"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
@@ -15928,7 +15946,8 @@ msgstr "Indstil perioder"
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "Set a date. The moves will be secured up to including this date."
-msgstr "Fastlæg en dato. Flytningen vil være sikret frem til og med denne dato."
+msgstr ""
+"Fastlæg en dato. Flytningen vil være sikret frem til og med denne dato."
 
 #. module: account
 #. odoo-javascript
@@ -17150,8 +17169,8 @@ msgstr ""
 "indfangningsgrupper: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
 "Prefix*-grupperne er separatorerne mellem året, måneden og den aktuelle "
 "forøgelse af sekvensnummeret (seq).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
-"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_technology
@@ -17369,16 +17388,6 @@ msgstr ""
 "procenten skal være 100 %."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Skatteregistreringsnummer. Værdierne valideres ud fra landets format. Du kan "
-"bruge '/' for at angive, at partneren ikke er skattepligtig."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is archived."
@@ -17421,7 +17430,8 @@ msgstr "Regnskabsjournalen hører til denne bankkonto."
 msgid ""
 "The accounting journal where automatic exchange differences will be "
 "registered"
-msgstr "Regnskabsjournalen, hvor automatiske kursdifferencer bliver registreret"
+msgstr ""
+"Regnskabsjournalen, hvor automatiske kursdifferencer bliver registreret"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_currency
@@ -17505,8 +17515,8 @@ msgid ""
 "Please verify if this date is accurate."
 msgstr ""
 "Faktureringshyppigheden for %(partner_name)s er usædvanlig. Baseret på dine "
-"historiske data, er den forventede faktureringsdato ikke før %(expected_date)"
-"s (hver %(mean)s (± %(wiggle)s) dage).\n"
+"historiske data, er den forventede faktureringsdato ikke før %"
+"(expected_date)s (hver %(mean)s (± %(wiggle)s) dage).\n"
 "Kontrollér venligst, om datoen er korrekt."
 
 #. module: account
@@ -17737,7 +17747,8 @@ msgstr "Posteringen er ikke balanceret."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
-msgstr "Posteringen er sikker med en hash, der ikke kan redigeres eller ændres."
+msgstr ""
+"Posteringen er sikker med en hash, der ikke kan redigeres eller ændres."
 
 #. module: account
 #. odoo-python
@@ -17889,7 +17900,8 @@ msgstr ""
 msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
-msgstr "Postering, hvorfra denne kasseregnskabspostering for moms er genereret."
+msgstr ""
+"Postering, hvorfra denne kasseregnskabspostering for moms er genereret."
 
 #. module: account
 #. odoo-python
@@ -17963,7 +17975,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr "Partneren kan ikke slettes, fordi vedkommende bruges i Bogføringsappen"
+msgstr "Partneren kan ikke slettes, fordi vedkommende bruges i Regnskabsappen"
 
 #. module: account
 #. odoo-python
@@ -18011,7 +18023,8 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied to the selected customers/"
 "vendors."
-msgstr "Afstemningsmodellen vil kun blive anvendt på valgte kunder/forhandlere."
+msgstr ""
+"Afstemningsmodellen vil kun blive anvendt på valgte kunder/forhandlere."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -18232,8 +18245,8 @@ msgid ""
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 "Sekvensen vil blive nulstillet til 1 ved starten af hver måned.\n"
-"Det registrerede år er '%(year)s', og den registrerede måned er '%(month)"
-"s'.\n"
+"Det registrerede år er '%(year)s', og den registrerede måned er '%"
+"(month)s'.\n"
 "Det fortløbende nummer er i dette tilfælde '%(formatted_seq)s'."
 
 #. module: account
@@ -19272,6 +19285,11 @@ msgstr ""
 "Du bør muligvis omorganisere transaktionerne, inden du fortsætter."
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Undefined Yet"
@@ -19739,7 +19757,8 @@ msgstr "Validér bankkonto"
 msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
-msgstr "Validér kontoudtogslinjen automatisk (afstemning baseret på din regel)."
+msgstr ""
+"Validér kontoudtogslinjen automatisk (afstemning baseret på din regel)."
 
 #. module: account
 #. odoo-javascript
@@ -20270,6 +20289,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
@@ -20579,7 +20603,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "You cannot deprecate an account that is used in a tax distribution."
-msgstr "Det er ikke muligt at udfase en konto, der bruges i en skattefordeling."
+msgstr ""
+"Det er ikke muligt at udfase en konto, der bruges i en skattefordeling."
 
 #. module: account
 #. odoo-python
@@ -20726,8 +20751,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
 msgstr ""
-"Det er ikke muligt at bogføre en postering i en arkiveret journal (%(journal)"
-"s)"
+"Det er ikke muligt at bogføre en postering i en arkiveret journal (%"
+"(journal)s)"
 
 #. module: account
 #. odoo-python
@@ -20744,6 +20769,13 @@ msgid ""
 msgstr ""
 "Det er ikke muligt at reducere antallet af decimaler for en valuta, som "
 "allerede er blevet brugt til at foretage bogføringer."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21418,12 +21450,6 @@ msgstr ""
 "udførelsen af tjenesteydelserne."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "not applicable"
-msgstr "ikke relevant"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "af moms"
@@ -21671,6 +21697,26 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selvfakturerende faktura (Ref {{ object.name or "
 "'n/a' }})"
+
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s, eller/hvis ikke relevant"
+
+#~ msgid "%s, or not applicable"
+#~ msgstr "%s, eller ikke relevant"
+
+#~ msgid "/ if not applicable"
+#~ msgstr "/ hvis ikke relevant"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Skatteregistreringsnummer. Værdierne valideres ud fra landets format. Du "
+#~ "kan bruge '/' for at angive, at partneren ikke er skattepligtig."
+
+#~ msgid "not applicable"
+#~ msgstr "ikke relevant"
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Hurtig søgning: %s"

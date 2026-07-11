@@ -12,17 +12,17 @@
 # Francisco Santos, 2023
 # Carlos Gómez, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2026-06-18 08:08+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"PO-Revision-Date: 2026-07-01 06:35+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/stock/"
 "es/>\n"
 "Language: es\n"
@@ -640,8 +640,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -662,8 +662,8 @@ msgstr ""
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1091,16 +1091,14 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
-msgstr ""
-"Ya existe una regla de reposición para este producto en esta ubicación."
+msgstr "Ya existe una regla de reposición para este producto en esta ubicación."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__is_storable
 #: model:ir.model.fields,help:stock.field_product_template__is_storable
 #: model:ir.model.fields,help:stock.field_stock_move__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
-"Un producto almacenable es aquel para el que se controla el inventario."
+msgstr "Un producto almacenable es aquel para el que se controla el inventario."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1220,8 +1218,8 @@ msgid ""
 "bins, racks)."
 msgstr ""
 "Añada y personalice las operaciones de ruta para procesar movimientos de "
-"productos en su(s) almacén(es): por ejemplo, descargar > control de calidad "
-"> stock para productos entrantes, elegir > empaquetar > enviar para "
+"productos en su(s) almacén(es): por ejemplo, descargar > control de "
+"calidad > stock para productos entrantes, elegir > empaquetar > enviar para "
 "productos salientes.\n"
 " También puede establecer estrategias de almacenamiento en ubicaciones de "
 "almacenamiento para enviar productos entrantes a ubicaciones hijas "
@@ -1237,8 +1235,8 @@ msgid ""
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
 "Añada y personalice las operaciones de ruta para procesar movimientos de "
-"productos en su(s) almacén(es): por ejemplo, descargar > control de calidad "
-"> stock para productos entrantes, elegir > empaquetar > enviar para "
+"productos en su(s) almacén(es): por ejemplo, descargar > control de "
+"calidad > stock para productos entrantes, elegir > empaquetar > enviar para "
 "productos salientes. También puede establecer estrategias de almacenamiento "
 "en ubicaciones de almacenamiento para enviar productos entrantes a "
 "ubicaciones hijas específicas de inmediato (por ejemplo, contenedores "
@@ -2878,8 +2876,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
 msgid "Date for next planned inventory based on cyclic schedule."
-msgstr ""
-"Fecha para el próximo inventario planificado según un programa cíclico."
+msgstr "Fecha para el próximo inventario planificado según un programa cíclico."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
@@ -3723,8 +3720,7 @@ msgstr "Plantilla de correo electrónico para la confirmación del albarán"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
 msgid "Email sent to the customer once the order is done."
-msgstr ""
-"Correo electrónico enviado al cliente una vez que se realiza el pedido."
+msgstr "Correo electrónico enviado al cliente una vez que se realiza el pedido."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -5053,8 +5049,7 @@ msgstr "Retrasado"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr ""
-"Llega tarde o llegará tarde según la fecha límite y la fecha programada"
+msgstr "Llega tarde o llegará tarde según la fecha límite y la fecha programada"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -8746,8 +8741,7 @@ msgstr "Fecha programada o de procesamiento"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Scheduled time for the first part of the shipment to be processed."
-msgstr ""
-"Tiempo programado para la primera parte del envío que se debe procesar."
+msgstr "Tiempo programado para la primera parte del envío que se debe procesar."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -8983,9 +8977,8 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"El número de serie (%(serial_number)s) no se encuentra en %"
-"(source_location)s, pero se encuentra en las ubicacione(s): %"
-"(other_locations)s.\n"
+"El número de serie (%(serial_number)s) no se encuentra en %(source_location)"
+"s, pero se encuentra en las ubicacione(s): %(other_locations)s.\n"
 "\n"
 "Corrija esto para prevenir datos inconsistentes."
 
@@ -8998,9 +8991,8 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
-"El número de serie (%(serial_number)s) no se encuentra en %"
-"(source_location)s, pero se encuentra en las ubicacione(s) %"
-"(other_locations)s.\n"
+"El número de serie (%(serial_number)s) no se encuentra en %(source_location)"
+"s, pero se encuentra en las ubicacione(s) %(other_locations)s.\n"
 "\n"
 "Se cambiará la ubicación de origen para este movimiento a %"
 "(recommended_location)s"
@@ -9236,8 +9228,7 @@ msgstr "Mostrar traslados"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
-"Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
+msgstr "Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -11634,8 +11625,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "You can only process 1.0 %s of products with unique serial number."
-msgstr ""
-"Solo puede procesar 1,0 %s para productos con un número de serie único."
+msgstr "Solo puede procesar 1,0 %s para productos con un número de serie único."
 
 #. module: stock
 #. odoo-python
@@ -11681,9 +11671,8 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
-"No puede cancelar un movimiento de acciones que se haya configurado como "
-"‘Hecho’. Cree una devolución para revertir los movimientos que tuvieron "
-"lugar."
+"No puede cancelar un movimiento de acciones que se haya configurado como ‘"
+"Hecho’. Cree una devolución para revertir los movimientos que tuvieron lugar."
 
 #. module: stock
 #. odoo-python
@@ -11697,8 +11686,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "You cannot change the Scheduled Date on a cancelled transfer."
-msgstr ""
-"No se puede cambiar la fecha programada de una transferencia cancelada."
+msgstr "No se puede cambiar la fecha programada de una transferencia cancelada."
 
 #. module: stock
 #. odoo-python
@@ -11912,8 +11900,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
-"Todavía tiene operaciones en curso para los tipos de operación %"
-"(operations)s en el almacén %(warehouse)s"
+"Todavía tiene operaciones en curso para los tipos de operación %(operations)"
+"s en el almacén %(warehouse)s"
 
 #. module: stock
 #. odoo-javascript

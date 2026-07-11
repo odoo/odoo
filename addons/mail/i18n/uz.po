@@ -14,15 +14,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:35+0000\n"
-"PO-Revision-Date: 2025-10-08 18:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-06-30 02:31+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-19/mail/uz/>\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -1361,27 +1362,28 @@ msgid "Add Star"
 msgstr "Yulduzcha qo‘shish"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #, fuzzy
 msgid "Add a Reaction"
 msgstr "Munosabat bildirish"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-#, fuzzy
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "GIF qo‘llab-quvvatlashni yoqish uchun Tenor GIF API kalitini kiriting"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
-#, fuzzy
-msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
-msgstr ""
-"GIF qo‘llab-quvvatlashni yoqish uchun Tenor GIF API kalitini kiriting. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -6457,6 +6459,14 @@ msgstr ""
 "foydalanmoqchi bo‘lsangiz"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__image_128
 #: model:ir.model.fields,field_description:mail.field_mail_guest__image_1920
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_image
@@ -7232,6 +7242,16 @@ msgstr "Kalit"
 #, fuzzy
 msgid "Kind Regards"
 msgstr "Hurmat bilan"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12841,18 +12861,6 @@ msgid "Templates"
 msgstr "Shablonlar"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-#, fuzzy
-msgid "Tenor API key"
-msgstr "Tenor API kaliti"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-#, fuzzy
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF API kaliti"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 #, fuzzy
@@ -12920,18 +12928,6 @@ msgid ""
 "Push-to-Talk functionality outside of this tab, we recommend downloading our "
 "%(anchor_start)sextension%(anchor_end)s."
 msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_partner__vat
-#: model:ir.model.fields,help:mail.field_res_users__vat
-#, fuzzy
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Faoliyatni quyidagi qo‘shimcha ta'sirlar bilan ishga tushirish mumkin: Bu "
-"yerdagi qadriyatlar mamlakat formati asosida validatsiyalanadi."
 
 #. module: mail
 #. odoo-python
@@ -15284,6 +15280,12 @@ msgid "You can still turn off your %s anytime."
 msgstr "%s qurilmangizni istalgan vaqtda o‘chirishingiz mumkin."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_res_partner__vat
+#: model:ir.model.fields,help:mail.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
@@ -16281,6 +16283,36 @@ msgstr "\"%(channel_name)s\" kanalidagi \"%(member_name)s\""
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Faoliyatni quyidagi qo‘shimcha ta'sirlar bilan ishga tushirish mumkin: Bu "
+#~ "yerdagi qadriyatlar mamlakat formati asosida validatsiyalanadi."
+
+#, fuzzy
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr ""
+#~ "GIF qo‘llab-quvvatlashni yoqish uchun Tenor GIF API kalitini kiriting"
+
+#, fuzzy
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "GIF qo‘llab-quvvatlashni yoqish uchun Tenor GIF API kalitini kiriting. "
+#~ "https://developers.google.com/tenor/guides/quickstart#setup"
+
+#, fuzzy
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API kaliti"
+
+#, fuzzy
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF API kaliti"
 
 #, fuzzy
 #~ msgid ""

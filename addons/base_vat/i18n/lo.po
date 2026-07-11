@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
-"PO-Revision-Date: 2026-06-06 13:34+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-01 23:23+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/base_vat/lo/>"
-"\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/base_vat/lo/"
+">\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,8 +29,7 @@ msgstr "1-01-85004-3 ຫຼື 101850043"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
-msgstr ""
-"10XXXXXXXXY ຫຼື 20XXXXXXXXY ຫຼື 15XXXXXXXXY ຫຼື 16XXXXXXXXY ຫຼື 17XXXXXXXXY"
+msgstr "10XXXXXXXXY ຫຼື 20XXXXXXXXY ຫຼື 15XXXXXXXXY ຫຼື 16XXXXXXXXY ຫຼື 17XXXXXXXXY"
 
 #. module: base_vat
 #. odoo-python
@@ -127,8 +126,7 @@ msgstr "ເລກປະຈຳຕົວຜູ້ເສຍພາສີຂອງເ
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
-msgstr ""
-"ຕົວຢ່າງ: '219999830019' (ຮູບແບບ: 12 ຫຼັກ, ເປັນຕົວເລກທັງໝົດ, ຕົວເລກກວດສອບຖືກຕ້ອງ)"
+msgstr "ຕົວຢ່າງ: '219999830019' (ຮູບແບບ: 12 ຫຼັກ, ເປັນຕົວເລກທັງໝົດ, ຕົວເລກກວດສອບຖືກຕ້ອງ)"
 
 #. module: base_vat
 #. odoo-python
@@ -214,8 +212,7 @@ msgstr "ເລກປະຈຳຕົວຜູ້ເສຍພາສີ"
 msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
 "(expected_note)s"
-msgstr ""
-"ເລກ %(vat_label)s [%(wrong_vat)s] ເບິ່ງຄືວ່າມັນບໍ່ຖືກຕ້ອງ. %(expected_note)s"
+msgstr "ເລກ %(vat_label)s [%(wrong_vat)s] ເບິ່ງຄືວ່າມັນບໍ່ຖືກຕ້ອງ. %(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -232,17 +229,6 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The Intra-Community validity has been updated to: %s."
 msgstr "ການກວດສອບຄວາມຖືກຕ້ອງພາຍໃນປະຊາຄົມໄດ້ຖືກອັບເດດເປັນ: %s."
-
-#. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"ເລກປະຈຳຕົວຜູ້ເສຍພາສີ. ຄ່າຢູ່ບ່ອນນີ້ຈະຖືກກວດສອບໂດຍອີງຕາມຮູບແບບຂອງແຕ່ລະປະເທດ. ທ່ານສາມາດໃຊ້ '/' "
-"ເພື່ອລະບຸວ່າຄູ່ຄ້າບໍ່ມີພັນທະເສຍພາສີ."
 
 #. module: base_vat
 #. odoo-python
@@ -292,6 +278,12 @@ msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr "XXXXXXXXX [9 ຫຼັກ] ແລະ ມັນຄວນຈະເປັນໄປຕາມການກວດສອບຂອງ Luhn algorithm"
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 characters for CNPJ"
@@ -302,3 +294,11 @@ msgstr "ບໍ່ວ່າຈະເປັນ 11 ຫຼັກ ສຳລັບ CPF
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "ຄູ່ຄ້າ [%s]"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "ເລກປະຈຳຕົວຜູ້ເສຍພາສີ. ຄ່າຢູ່ບ່ອນນີ້ຈະຖືກກວດສອບໂດຍອີງຕາມຮູບແບບຂອງແຕ່ລະປະເທດ. ທ່ານສາມາດໃຊ້ "
+#~ "'/' ເພື່ອລະບຸວ່າຄູ່ຄ້າບໍ່ມີພັນທະເສຍພາສີ."

@@ -7,15 +7,15 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Wynand Tastenhoye <wta@odoo.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2026-06-06 13:56+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"PO-Revision-Date: 2026-06-29 10:18+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/auth_ldap/"
 "nl/>\n"
 "Language: nl\n"
@@ -42,9 +42,9 @@ msgid ""
 "    "
 msgstr ""
 "    Filter dat wordt gebruikt om gebruikersaccounts op te zoeken in de LDAP-"
-"database. Het is een willekeurig LDAP-filter in tekenreeksweergave. Elke `%s`"
-" tijdelijke aanduiding wordt vervangen door de login (identifier) die door "
-"de gebruiker is opgegeven, het filter moet ten minste één dergelijke "
+"database. Het is een willekeurig LDAP-filter in tekenreeksweergave. Elke "
+"`%s` tijdelijke aanduiding wordt vervangen door de login (identifier) die "
+"door de gebruiker is opgegeven, het filter moet ten minste één dergelijke "
 "tijdelijke aanduiding bevatten.\n"
 "\n"
 "    Het filter moet precies één (1) resultaat opleveren, anders wordt de "
@@ -63,7 +63,9 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid "Automatically create local user accounts for new users authenticating via LDAP"
-msgstr "Maak automatisch locale gebruiker accounts voor nieuwe gebruikers welke inloggen via LDAP"
+msgstr ""
+"Maak automatisch locale gebruiker accounts voor nieuwe gebruikers welke "
+"inloggen via LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -187,7 +189,9 @@ msgstr "Login informatie"
 #. module: auth_ldap
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr "Geen lokale gebruiker gevonden voor LDAP login and niet geconfigureerd om één aan te maken"
+msgstr ""
+"Geen lokale gebruiker gevonden voor LDAP login and niet geconfigureerd om "
+"één aan te maken"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -197,7 +201,10 @@ msgstr "Verwerk parameter"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "Vraag beveiligde TLS / SSL-codering bij het verbinden met de LDAP-server. Deze optie vereist een server met ingeschakeld STARTTLS, anders zullen alle authenticatie pogingen mislukken."
+msgstr ""
+"Vraag beveiligde TLS / SSL-codering bij het verbinden met de LDAP-server. "
+"Deze optie vereist een server met ingeschakeld STARTTLS, anders zullen alle "
+"authenticatie pogingen mislukken."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -222,12 +229,16 @@ msgstr "Sjabloon gebruiker"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid "The password of the user account on the LDAP server that is used to query the directory."
-msgstr "Het wachtwoord van de gebruikersaccount op de LDAP-server die wordt gebruikt om de map te verkennen."
+msgstr ""
+"Het wachtwoord van de gebruikersaccount op de LDAP-server die wordt gebruikt "
+"om de map te verkennen."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "De gebruikersaccount op de LDAP-server die wordt gebruikt om de map te verkennen. Laat leeg om verbinding anoniem."
+msgstr ""
+"De gebruikersaccount op de LDAP-server die wordt gebruikt om de map te "
+"verkennen. Laat leeg om verbinding anoniem."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls

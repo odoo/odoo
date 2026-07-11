@@ -6,24 +6,24 @@
 # Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-05-30 09:32+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/sms/ja/"
-">\n"
+"PO-Revision-Date: 2026-06-30 04:37+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/sms/ja/>"
+"\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -61,8 +61,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
 msgstr ""
-"<i class=\"fa fa-warning\"/>アカウントでエラーが発生しました。詳細について"
-"は、サポートまでご連絡下さい。"
+"<i class=\"fa fa-warning\"/>アカウントでエラーが発生しました。詳細については"
+"、サポートまでご連絡下さい。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -70,8 +70,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
 msgstr ""
-"<i class=\"fa fa-warning\"/> アカウントが登録されるまではSMSを送信できませ"
-"ん。"
+"<i class=\"fa fa-warning\"/> アカウントが登録されるまではSMSを送信できません"
+"。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -99,8 +99,8 @@ msgid ""
 "span>"
 msgstr ""
 "<span class=\"o_stat_text\">追加</span>\n"
-"                                <span class=\"o_stat_text\">コンテクストアク"
-"ション</span>"
+"                                <span class=\"o_stat_text\">"
+"コンテクストアクション</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -115,15 +115,14 @@ msgid ""
 "span>"
 msgstr ""
 "<span class=\"o_stat_text\">削除</span>\n"
-"                                <span class=\"o_stat_text\">コンテクストアク"
-"ション</span>"
+"                                <span class=\"o_stat_text\">"
+"コンテクストアクション</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
-msgstr ""
-"<span class=\"text-warning\" invisible=\"not no_record\">レコードなし</span>"
+msgstr "<span class=\"text-warning\" invisible=\"not no_record\">レコードなし</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
@@ -158,8 +157,8 @@ msgstr ""
 "                                    メッセージング履歴の社内ユーザが閲覧でき"
 "ます。\n"
 "                                </span>\n"
-"                                <span invisible=\"sms_method != "
-"'comment'\">\n"
+"                                <span invisible=\"sms_method != 'comment'\">"
+"\n"
 "                                    SMSはテンプレートの宛先にSMSとして送信さ"
 "れ、\n"
 "                                    また内部メモとしてメッセージ履歴に\n"
@@ -775,8 +774,7 @@ msgstr "番号フィールド"
 msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without "
 "applying the Active Domain value"
-msgstr ""
-"有効ドメインの値を適用せずに、一括モードで送信した場合にSMSを受信する宛先数"
+msgstr "有効ドメインの値を適用せずに、一括モードで送信した場合にSMSを受信する宛先数"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
@@ -1105,8 +1103,7 @@ msgstr "SMS内容"
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "SMS template model of %(action_name)s does not match action model."
-msgstr ""
-"%(action_name)sのSMSテンプレートモデルはアクションモデルと一致しません。"
+msgstr "%(action_name)sのSMSテンプレートモデルはアクションモデルと一致しません。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
@@ -1223,8 +1220,7 @@ msgstr "送信者名"
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Sending SMS can only be done on a not transient mail.thread model"
-msgstr ""
-"SMSの送信は、一時的でない(transientでない)mail.threadモデルでのみ可能です。"
+msgstr "SMSの送信は、一時的でない(transientでない)mail.threadモデルでのみ可能です。"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending
@@ -1389,8 +1385,8 @@ msgstr "SMSの送信者として表示される名前です。"
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"この電話番号はSMSマーケティングのブラックリストに登録されています。ブラックリ"
-"ストを解除するにはクリックして下さい。"
+"この電話番号はSMSマーケティングのブラックリストに登録されています。"
+"ブラックリストを解除するにはクリックして下さい。"
 
 #. module: sms
 #. odoo-python
@@ -1432,8 +1428,9 @@ msgstr ""
 "- レコードの更新: レコードの値を更新します。\n"
 "- 活動の作成: 活動を作成します(ディスカス)\n"
 "- メール送信: メッセージやメモを投稿したり、メールを送信したりします。\n"
-"- 'SMSの送信': SMSを送信し、ドキュメント(SMS)にそれらを記録します - 'フォロ"
-"ワーの追加/削除': レコードにフォロワーを追加または削除します(ディスカス)\n"
+"- 'SMSの送信': SMSを送信し、ドキュメント(SMS)にそれらを記録します - "
+"'フォロワーの追加/削除': レコードにフォロワーを追加または削除します"
+"(ディスカス)\n"
 "- レコードの作成': 新しい値で新しいレコードを作成します\n"
 "- コードの実行': 実行されるPythonコードのブロックします\n"
 "- 'Webhook通知の送信': Webhookとしても知られるPOSTリクエストを外部システムに"
@@ -1493,8 +1490,8 @@ msgstr ""
 "す\n"
 "email_outgoing': メーリングによって生成されたもの\n"
 "notification」: トラッキングメッセージなど、システムによって生成されます。\n"
-"auto_comment': 自動通知メカニズム（acknowledgementなど）によって生成されま"
-"す。\n"
+"auto_comment': 自動通知メカニズム（acknowledgementなど）によって生成されます"
+"。\n"
 "user_notification': 特定の受信者のために生成されます。"
 
 #. module: sms

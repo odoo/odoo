@@ -32,11 +32,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:27+0000\n"
-"PO-Revision-Date: 2026-06-11 09:23+0000\n"
+"POT-Creation-Date: 2026-07-10 17:35+0000\n"
+"PO-Revision-Date: 2026-07-06 13:37+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/account/"
-"cs/>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/account/cs/"
+">\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -324,18 +324,6 @@ msgstr "%s daně"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "%s, or / if not applicable"
-msgstr "%s, nebo / pokud není relevantní"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "%s, or not applicable"
-msgstr "%s, nebo se nevztahuje"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
 msgstr "'%(filename)s' (extrahováno z '%(root_filename)s', typ=%(type)s)"
@@ -447,12 +435,6 @@ msgstr "... (%(nb_of_values)s další)"
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
 msgstr "... (Zobrazit vše)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "/ if not applicable"
-msgstr "/ pokud není relevantní"
 
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
@@ -740,8 +722,9 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\"> \n"
 "            (s referenci: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>) </t>\n"
-"na částku <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\"> 143 750,00 $</span>\n"
+"na částku <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 143 "
+"750,00 $</span>\n"
 "od <t t-out=\"object.company_id.name or ''\">YourCompany</t>. <t t-"
 "if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "Tato faktura je již zaplacena. </t>\n"
@@ -771,8 +754,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/> <br/>\n"
 "            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "       </t>\n"
 "    </p> \n"
 "</div>\n"
@@ -865,24 +848,25 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\"> \n"
 "            (s referenci: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>) </t>\n"
-"na částku <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\"> 143 750,00 $</span>\n"
+"na částku <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 143 "
+"750,00 $</span>\n"
 "od <t t-out=\"object.company_id.name or ''\">YourCompany</t>. <t t-"
 "if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "Tato faktura na samoodečet již byla uhrazena. </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and "
 "object.timesheet_count\"> <br/><br/> \n"
-"PS: své časové výkazy <a t-att-href=\"'/my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">si můžete "
-"zkontrolovat na portálu.</a>\n"
+"PS: své časové výkazy <a t-att-href=\"'/my/timesheets?"
+"search_in=invoice&amp;search=%s' % object.name\">si můžete zkontrolovat na "
+"portálu.</a>\n"
 "        </t> <br/><br/> \n"
 "V případě jakýchkoli dotazů nás neváhejte kontaktovat.\n"
 "       <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
 "o-mail-quote-container=\"1\">\n"
 "            <br/> <br/>\n"
 "            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "       </t>\n"
 "    </p> \n"
 "</div>\n"
@@ -1898,8 +1882,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-"
-"collapse:separate;\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
 "       <tr>\n"
 "            <td align=\"center\"> \n"
 "               <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1914,14 +1898,14 @@ msgstr ""
 "                                   <td align=\"left\" style=\"padding-left: "
 "16px;\"> \n"
 "                                        Obdrželi jste <t t-"
-"if=\"invoice_count &gt; 1\">nové elektronické faktury!</t><t t-else=\"\">"
-"novou elektronickou fakturu!</t>\n"
+"if=\"invoice_count &gt; 1\">nové elektronické faktury!</t><t t-"
+"else=\"\">novou elektronickou fakturu!</t>\n"
 "                                    </td>\n"
 "                                   <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
-"contain;\" class=\"align-baseline w-auto\"/> \n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\"/> \n"
 "                                   </td>\n"
 "                                </tr> \n"
 "                           </table>\n"
@@ -1944,10 +1928,10 @@ msgstr ""
 "                                           </t>\n"
 "                                            <t t-else=\"\"> \n"
 "                                                Dobrý den, </t>\n"
-"                                        </h3> <p style=\"margin-top: "
-"12px;\"> \n"
-"Obdrželi jste <t t-if=\"invoice_count &gt; 1\">nové elektronické faktury</t>"
-"<t t-else=\"\">novou elektronickou fakturu</t>! </p>\n"
+"                                        </h3> <p style=\"margin-top: 12px;"
+"\"> \n"
+"Obdrželi jste <t t-if=\"invoice_count &gt; 1\">nové elektronické faktury</"
+"t><t t-else=\"\">novou elektronickou fakturu</t>! </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/> <t t-foreach=\"invoices[:MAX_INVOICES_TO_DISPLAY]\" t-"
 "as=\"inv\">\n"
@@ -1966,8 +1950,8 @@ msgstr ""
 "                                                </t> <t t-"
 "if=\"inv.amount_total\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\"> Částka:</span> <t t-out=\"inv.amount_total\" t-options=\""
-"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\"> Částka:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t> <t t-"
 "if=\"inv.invoice_date_due\">\n"
@@ -1981,11 +1965,11 @@ msgstr ""
 "padding-top: 24px;\"> \n"
 "                                           <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?active_ids={{ "
-"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
-"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
-"none !important; background-color: #008384; border-radius:3px; display: "
-"inline-block;\"> \n"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\"> \n"
 "                                               Prohlédnout faktury\n"
 "                                           </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -2002,8 +1986,8 @@ msgstr ""
 "                                        <p style=\"text-align: center; "
 "margin-top: 16px;\"> \n"
 "                                            Pokud si přejete odhlásit odběr "
-"e-mailů s příchozími fakturami, klikněte zde <a t-attf-href=\"/my/journal/{{ "
-"object.id }}/unsubscribe\"></a> .\n"
+"e-mailů s příchozími fakturami, klikněte zde <a t-attf-href=\"/my/journal/"
+"{{ object.id }}/unsubscribe\"></a> .\n"
 "                                       </p>\n"
 "                                    </td> \n"
 "                               </tr>\n"
@@ -2251,8 +2235,8 @@ msgid ""
 "            "
 msgstr ""
 "<t t-set=\"portal_url\" t-value=\"object.get_portal_url()\"/>\n"
-"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/>"
-"\n"
+"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
+">\n"
 "\n"
 "<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
 "    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
@@ -2264,16 +2248,16 @@ msgstr ""
 "border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, "
 "0.12);\">\n"
 "                    <tr> \n"
-"                       <td colspan=\"2\" style=\"background:linear-gradient"
-"(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;\">"
-"\n"
+"                       <td colspan=\"2\" style=\"background:linear-"
+"gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; "
+"padding:38px;\">\n"
 "                            <table cellpadding=\"0\" cellspacing=\"0\" "
 "border=\"0\" style=\"width:100%;\"> \n"
 "                               <tr>\n"
 "                                    <td style=\"font-size:13px; letter-"
 "spacing:0.3px; text-transform:uppercase; opacity:0.78;\"> \n"
-"                                       <t t-if=\"object.is_sale_document"
-"(include_receipts=True)\"> Odchozí faktura</t>\n"
+"                                       <t t-"
+"if=\"object.is_sale_document(include_receipts=True)\"> Odchozí faktura</t>\n"
 "                                        <t t-else=\"\">Příchozí účtenka</t>\n"
 "                                    </td>\n"
 "                                   <td align=\"right\">\n"
@@ -2284,8 +2268,8 @@ msgstr ""
 "                                </tr> \n"
 "                               <tr>\n"
 "                                    <td colspan=\"2\" style=\"padding-"
-"top:22px; font-size:26px; line-height:1.45; font-weight:600; "
-"color:#ffffff;\"> \n"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;"
+"\"> \n"
 "                                        Nová faktura v <t t-"
 "out=\"object.journal_id.display_name\"/>\n"
 "                                    </td>\n"
@@ -2307,17 +2291,17 @@ msgstr ""
 "border=\"0\" style=\"width:100%; border-collapse:separate; border-spacing:0 "
 "16px;\"> \n"
 "                               <tr>\n"
-"                                    <td colspan=\"2\" style=\"padding:0;\"> "
-"\n"
+"                                    <td colspan=\"2\" "
+"style=\"padding:0;\"> \n"
 "                                       <table cellpadding=\"0\" "
 "cellspacing=\"0\" border=\"0\" style=\"width:100%; background:#fbf7fc; "
 "border-radius:16px;\">\n"
 "                                            <tr> \n"
-"                                               <td style=\"padding:24px "
-"26px;\">\n"
+"                                               <td style=\"padding:24px 26px;"
+"\">\n"
 "                                                    <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-"
-"spacing:0.45px;\"> Dokument</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\"> Dokument</div>\n"
 "                                                    <div style=\"margin-"
 "top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-"
 "word;\">\n"
@@ -2334,8 +2318,8 @@ msgstr ""
 "                                                    <td style=\"padding:24px "
 "26px; border-left:1px solid #efe6f3;\" align=\"right\"> \n"
 "                                                       <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-"
-"spacing:0.45px;\"> Celkem</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\"> Celkem</div>\n"
 "                                                        <div style=\"margin-"
 "top:8px; font-size:22px; font-weight:600; color:#2c2431;\">\n"
 "                                                           <t t-"
@@ -2348,15 +2332,15 @@ msgstr ""
 "                                   </td>\n"
 "                                </tr> \n"
 "                               <tr>\n"
-"                                    <td colspan=\"2\" style=\"padding:0;\"> "
-"\n"
+"                                    <td colspan=\"2\" "
+"style=\"padding:0;\"> \n"
 "                                       <table cellpadding=\"0\" "
 "cellspacing=\"0\" border=\"0\" style=\"width:100%; margin-top:18px;\">\n"
 "                                            <tr> \n"
 "                                               <td style=\"padding:0;\">\n"
 "                                                    <div "
-"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-"
-"start;\"> \n"
+"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;"
+"\"> \n"
 "                                                       <t t-"
 "if=\"object.partner_id\">\n"
 "                                                            <div "
@@ -2446,13 +2430,14 @@ msgstr ""
 "soubory:</strong> pro vaše pohodlí jsou přiloženy originální dokumenty.\n"
 "                           </div>\n"
 "\n"
-"                            <div style=\"margin-top:32px; text-"
-"align:center;\" t-if=\"object.move_type != 'in_invoice'\"> \n"
-"                               <a t-if=\"portal_url\" t-attf-href=\"{{ "
-"portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
-"padding:13px 30px; min-width:210px; background:linear-gradient"
-"(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; "
-"border-radius:12px; font-weight:600; font-size:14px;\" target=\"_blank\"> \n"
+"                            <div style=\"margin-top:32px; text-align:center;"
+"\" t-if=\"object.move_type != 'in_invoice'\"> \n"
+"                               <a t-if=\"portal_url\" t-attf-"
+"href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-"
+"gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-"
+"decoration:none; border-radius:12px; font-weight:600; font-size:14px;\" "
+"target=\"_blank\"> \n"
 "                                    Zobrazit na portálu\n"
 "                               </a>\n"
 "                            </div> \n"
@@ -6225,6 +6210,16 @@ msgid "Could not upload files"
 msgstr "Nelze nahrát soubory"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Items"
 msgstr "Odpovídající položky"
@@ -8667,6 +8662,7 @@ msgid "Exchange Gain or Loss Journal"
 msgstr "Deník kurzovních výnosů a ztrát"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
 msgstr "Záznam kurzovního rozdílu"
@@ -8970,6 +8966,16 @@ msgstr "Index první položky"
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
 msgstr "První číslo v nové sekvenci"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -10336,8 +10342,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
-"Ve zprávě „%(report_name)s “, v řádku „%(line_name)s “, s popiskem „%(label)"
-"s “,\n"
+"Ve zprávě „%(report_name)s “, v řádku „%(line_name)s “, s popiskem „%"
+"(label)s “,\n"
 "Se nepodařilo analyzovat křížové ID zprávy nebo xml_id.\n"
 
 #. module: account
@@ -10350,11 +10356,11 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
-"Ve zprávě „%(report_name)s “, v řádku „%(line_name)s “, s popiskem „%(label)"
-"s “,\n"
+"Ve zprávě „%(report_name)s “, v řádku „%(line_name)s “, s popiskem „%"
+"(label)s “,\n"
 "Formát výrazu křížového výkazu je neplatný. \n"
-"Očekávané: cross_report(<report_id>|<xml_id>)Příklad:  cross_report"
-"(my_module.my_report) nebo cross_report(123)"
+"Očekávané: cross_report(<report_id>|<xml_id>)Příklad:  "
+"cross_report(my_module.my_report) nebo cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10705,7 +10711,8 @@ msgstr "Neplatný poslední den fiskálního roku"
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s"
-msgstr "Neplatný vzorec pro výraz „%(label)s “ v řádku „%(line)s “: %(formula)s"
+msgstr ""
+"Neplatný vzorec pro výraz „%(label)s “ v řádku „%(line)s “: %(formula)s"
 
 #. module: account
 #. odoo-python
@@ -10901,7 +10908,8 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
-msgstr "Distribuce faktur a dobropisů by mělo mít celkový faktor (+) rovný 100."
+msgstr ""
+"Distribuce faktur a dobropisů by mělo mít celkový faktor (+) rovný 100."
 
 #. module: account
 #. odoo-python
@@ -10909,7 +10917,8 @@ msgstr "Distribuce faktur a dobropisů by mělo mít celkový faktor (+) rovný 
 msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
-msgstr "Distribuce faktur a dobropisů by mělo mít celkový faktor (-) rovný 100."
+msgstr ""
+"Distribuce faktur a dobropisů by mělo mít celkový faktor (-) rovný 100."
 
 #. module: account
 #. odoo-python
@@ -12050,6 +12059,7 @@ msgid "Looks great!"
 msgstr "To vypadá skvěle!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Ztráta"
@@ -13781,6 +13791,7 @@ msgid "Owner's Current Account"
 msgstr "Běžný účet majitele"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "Účty zisků a ztrát"
@@ -14691,7 +14702,7 @@ msgstr "Tisk a reprodukce"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_id
 msgid "Private Share Account"
-msgstr "Soukromý akciový účet"
+msgstr "Soukromý sdílený účet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
@@ -14820,6 +14831,11 @@ msgstr "Účet zisků"
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
 msgstr "Rozdělení zisku nebo ztráty"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -15523,6 +15539,7 @@ msgstr "Náklady na penzijní plány (shoda s 401K)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:account.group,name:account.2_us_group_4
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Výnos"
@@ -16312,7 +16329,8 @@ msgstr "Odesláno k zákazníkovi společně s fakturami v příloze"
 #. module: account
 #: model:mail.template,description:account.email_template_edi_self_billing_invoice
 msgid "Sent to customers with their self-billing invoices in attachment"
-msgstr "Zasíláno zákazníkům s jejich fakturami k vlastnímu vyúčtování v příloze"
+msgstr ""
+"Zasíláno zákazníkům s jejich fakturami k vlastnímu vyúčtování v příloze"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_discount_expense_allocation_id
@@ -17864,16 +17882,6 @@ msgstr ""
 "procent musí být 100%."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Daňové identifikační číslo. Hodnoty zde budou ověřeny na základě formátu "
-"země. Pomocí '/' můžete označit, že partner nepodléhá dani."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is archived."
@@ -18037,7 +18045,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "The code must be set for every company to which this account belongs."
-msgstr "Kód musí být nastaven pro každou společnost, ke které tento účet patří."
+msgstr ""
+"Kód musí být nastaven pro každou společnost, ke které tento účet patří."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
@@ -19203,7 +19212,8 @@ msgstr "Tento záznam je nastaven pro automatické zaúčtování %(date)s"
 msgid ""
 "This move is configured to be posted automatically at the accounting date: "
 "%s."
-msgstr "Tento záznam je nastaven pro automatické zaúčtování v účetní datum: %s."
+msgstr ""
+"Tento záznam je nastaven pro automatické zaúčtování v účetní datum: %s."
 
 #. module: account
 #. odoo-python
@@ -19337,8 +19347,8 @@ msgstr "Ke schválení"
 msgid ""
 "To add information to a previously sent invoice, reply to your \"sent\" email"
 msgstr ""
-"Chcete-li přidat informace k již odeslané faktuře, odpovězte na svůj „"
-"odeslaný“ e-mail"
+"Chcete-li přidat informace k již odeslané faktuře, odpovězte na svůj "
+"„odeslaný“ e-mail"
 
 #. module: account
 #. odoo-python
@@ -19752,6 +19762,11 @@ msgid ""
 msgstr ""
 "Nelze vytvořit výpis kvůli chybějícím transakcím. Než budete pokračovat, "
 "možná budete chtít změnit pořadí transakcí."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20779,6 +20794,11 @@ msgstr ""
 "faktury."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
@@ -21221,6 +21241,13 @@ msgid ""
 msgstr ""
 "Nemůžete snížit počet desetinných míst u měny, která již byla použita v "
 "účetních záznamech."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21890,12 +21917,6 @@ msgstr ""
 "sídla společnosti do 8 dnů od doručení zboží nebo poskytnutí služby."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "not applicable"
-msgstr "neplatí"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "z daně"
@@ -22145,6 +22166,26 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Samofakturační faktura (Ref. {{ object.name or "
 "'n/a' }})"
+
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s, nebo / pokud není relevantní"
+
+#~ msgid "%s, or not applicable"
+#~ msgstr "%s, nebo se nevztahuje"
+
+#~ msgid "/ if not applicable"
+#~ msgstr "/ pokud není relevantní"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Daňové identifikační číslo. Hodnoty zde budou ověřeny na základě formátu "
+#~ "země. Pomocí '/' můžete označit, že partner nepodléhá dani."
+
+#~ msgid "not applicable"
+#~ msgstr "neplatí"
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Rychlé hledání: %s"

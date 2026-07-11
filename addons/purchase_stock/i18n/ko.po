@@ -6,16 +6,16 @@
 # Martin Trigaux, 2022
 # Sarah Park, 2023
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-05-16 09:32+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"PO-Revision-Date: 2026-06-29 22:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/ko/>\n"
 "Language: ko\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -704,8 +704,9 @@ msgid ""
 "number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"지난 x일 동안 정시에 수령한 품목 수를 주문한 품목 수로 나눈 값입니다. x는시스"
-"템 파라미터 purchase_stock.on_time_delivery_days 또는 기본값 365입니다."
+"지난 x일 동안 정시에 수령한 품목 수를 주문한 품목 수로 나눈 값입니다. "
+"x는시스템 파라미터 purchase_stock.on_time_delivery_days 또는 기본값 "
+"365입니다."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -802,8 +803,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
-"공급 업체에서 고객에게 직접 전달하려는 경우 주소를 입력하십시오. 그렇지 않으"
-"면 자신의 회사에 전달하기 위해 비워 두십시오."
+"공급 업체에서 고객에게 직접 전달하려는 경우 주소를 입력하십시오. 그렇지 "
+"않으면 자신의 회사에 전달하기 위해 비워 두십시오."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -1045,8 +1046,7 @@ msgstr ""
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
-msgstr ""
-"구매발주서 상의 수량이 청구서 수량보다 적습니다. 환불 요청을 해야 합니다."
+msgstr "구매발주서 상의 수량이 청구서 수량보다 적습니다. 환불 요청을 해야 합니다."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1057,8 +1057,8 @@ msgid ""
 "%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
 "창고 작업 유형(%(operation_type)s)이 지정된 위치(%(location)s)와 재주문 규칙"
-"(%(reordering_rule)s)을 가지고 있는 품목%(product)s과 일치하지 않습니다. 작"
-"업 유형을 조정하거나 견적 요청을 취소해 주세요."
+"(%(reordering_rule)s)을 가지고 있는 품목%(product)s과 일치하지 않습니다. "
+"작업 유형을 조정하거나 견적 요청을 취소해 주세요."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1068,8 +1068,8 @@ msgid ""
 "%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
 "Go on the product form and complete the list of vendors."
 msgstr ""
-"%s 품목에 맞는 업체 가격이 없어서 구매발주서를 생성할 수 없습니다 (지정된 공"
-"급업체가 없거나 최소 수량 미충족, 날짜 오류).\n"
+"%s 품목에 맞는 업체 가격이 없어서 구매발주서를 생성할 수 없습니다 (지정된 "
+"공급업체가 없거나 최소 수량 미충족, 날짜 오류).\n"
 "품목 양식 화면으로 이동하여 공급업체 목록에 입력하세요."
 
 #. module: purchase_stock
@@ -1081,10 +1081,10 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
-"이렇게 하면 제품에 적용할 주문 보충(MTO) 경로가 추가되어 수요에 따른 재고 보"
-"충(온디맨드) 보충을 생성하며 확정 즉시 판매주문서(예를 들면)와 같이 직전 연결"
-"된 경우 보충이 생성됩니다. 구매발주서, 제조지시서 등은 제품에 설정된 보충 방"
-"식(구매 또는 제조 경로)에 따라 자동 실행됩니다."
+"이렇게 하면 제품에 적용할 주문 보충(MTO) 경로가 추가되어 수요에 따른 재고 "
+"보충(온디맨드) 보충을 생성하며 확정 즉시 판매주문서(예를 들면)와 같이 직전 "
+"연결된 경우 보충이 생성됩니다. 구매발주서, 제조지시서 등은 제품에 설정된 "
+"보충 방식(구매 또는 제조 경로)에 따라 자동 실행됩니다."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1096,8 +1096,9 @@ msgid ""
 "address and not your warehouse."
 msgstr ""
 "거래처가 고객에게 배송을 요청하기 위해 제품에 적용할 운송 방법을 추가합니다. "
-"직배송할 상품은 판매 주문이 확인되면 견적 요청 구매를 생성합니다. 이러한 방식"
-"은 주문형 플로우로, 요청된 배송 주소는 창고가 아닌 고객 배송 주소가 됩니다."
+"직배송할 상품은 판매 주문이 확인되면 견적 요청 구매를 생성합니다. 이러한 "
+"방식은 주문형 플로우로, 요청된 배송 주소는 창고가 아닌 고객 배송 주소가 "
+"됩니다."
 
 #. module: purchase_stock
 #. odoo-python

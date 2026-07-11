@@ -6,14 +6,14 @@
 # Martin Trigaux, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Aidos Kakimzhanov <aidos.kakimzhan@gmail.com>, 2019
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2025-09-16 02:32+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-07-01 22:40+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "auth_ldap/ru/>\n"
 "Language: ru\n"
@@ -21,9 +21,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -61,7 +61,9 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid "Automatically create local user accounts for new users authenticating via LDAP"
-msgstr "Автоматически создавать локальную учётную запись для новых пользователей прошедших проверку подлинности LDAP"
+msgstr ""
+"Автоматически создавать локальную учётную запись для новых пользователей "
+"прошедших проверку подлинности LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -185,7 +187,9 @@ msgstr "Регистрационная инфо"
 #. module: auth_ldap
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr "Не найден локальный пользователь для входа в LDAP и не настроен для его создания"
+msgstr ""
+"Не найден локальный пользователь для входа в LDAP и не настроен для его "
+"создания"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -195,7 +199,10 @@ msgstr "Параметры подключения"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "Запросить поддержку TLS/SSL шифрования при подключении к LDAP серверу. Для подключения требуется LDAP сервер с поддержкой параметра STARTTLS, в противном случае все попытки проверки подлинности потерпят неудачу."
+msgstr ""
+"Запросить поддержку TLS/SSL шифрования при подключении к LDAP серверу. Для "
+"подключения требуется LDAP сервер с поддержкой параметра STARTTLS, в "
+"противном случае все попытки проверки подлинности потерпят неудачу."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -220,12 +227,16 @@ msgstr "Шаблон пользователя"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid "The password of the user account on the LDAP server that is used to query the directory."
-msgstr "Пароль пользователя LDAP, который будет использован при запросах в LDAP каталог."
+msgstr ""
+"Пароль пользователя LDAP, который будет использован при запросах в LDAP "
+"каталог."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "Учетная запись пользователя LDAP, которая будет использована при запросах в LDAP каталог. Оставьте пустым для анонимного подключения."
+msgstr ""
+"Учетная запись пользователя LDAP, которая будет использована при запросах в "
+"LDAP каталог. Оставьте пустым для анонимного подключения."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls

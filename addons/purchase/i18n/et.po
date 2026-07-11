@@ -19,15 +19,15 @@
 # JanaAvalah, 2023
 # Leaanika Randmets, 2023
 # Eneli Õigus <enelioigus@gmail.com>, 2023
-# Tairi Tiimann <tairi@avalah.ee>, 2025.
-# Kristina Pešehodko <kristina@avalah.ee>, 2025.
+# Tairi Tiimann <tairi@avalah.ee>, 2025, 2026.
+# Kristina Pešehodko <kristina@avalah.ee>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 07:51+0000\n"
-"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
+"PO-Revision-Date: 2026-07-01 06:48+0000\n"
+"Last-Translator: Tairi Tiimann <tairi@avalah.ee>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/"
 "purchase/et/>\n"
 "Language: et\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -167,8 +167,8 @@ msgstr ""
 "        </t>\n"
 "        eeldatav tarne kuupäeval \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date"
+"(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">on ebamäärane</span>.\n"
@@ -248,9 +248,8 @@ msgstr ""
 "        <t t-if=\"object.partner_ref\">\n"
 "            viitega: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        ning summaga <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"        ning summaga <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
 "          <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br/><br/>\n"
 "        <t t-if=\"object.date_planned\">\n"
@@ -420,8 +419,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Hinnapäring </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
+"Hinnapäring </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Ostutellimus </span>"
 
@@ -916,14 +915,12 @@ msgstr "Automaatne täitmine eelmise ostutellimuse alusel."
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Auto-complete from a previous bill, refund, or purchase order."
-msgstr ""
-"Automaatne täitmine eelmise arve, tagasimakse või ostutellimuse alusel."
+msgstr "Automaatne täitmine eelmise arve, tagasimakse või ostutellimuse alusel."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
-msgstr ""
-"Lukustage automaatselt kinnitatud tellimused, et nende muutmist vältida"
+msgstr "Lukustage automaatselt kinnitatud tellimused, et nende muutmist vältida"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1530,8 +1527,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Kaupade all mõistetakse käegakatsutavaid materjale ja kaupu, mida te "
-"pakute. \n"
+"Kaupade all mõistetakse käegakatsutavaid materjale ja kaupu, mida te pakute. "
+"\n"
 "Teenus on mittefüüsiline toode, mida te pakute."
 
 #. module: purchase

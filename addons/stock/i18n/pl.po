@@ -37,7 +37,7 @@
 # przemekjaroc, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025.
+# Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 # Harkot <kharkot@trilab.pl>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
@@ -46,8 +46,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2026-05-30 09:45+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"PO-Revision-Date: 2026-07-01 12:44+0000\n"
+"Last-Translator: Dawid Gacek <dawid.gacek@adapt-it.pl>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/stock/pl/>"
 "\n"
 "Language: pl\n"
@@ -57,7 +57,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -666,8 +666,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -683,14 +683,14 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Więcej szczegółów znajdziesz w załączonym zamówieniu dostawy.<br/"
-"><br/>\n"
+"        Więcej szczegółów znajdziesz w załączonym zamówieniu dostawy.<br/>"
+"<br/>\n"
 "        Dziękujemy,\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1243,9 +1243,9 @@ msgid ""
 "bins, racks)."
 msgstr ""
 "Dodaj i konfiguruj operacje tras w celu przetwarzania operacji ruchów "
-"magazynowych w Twoim magazynie/magazynach: np. rozładunek > kontrola jakości "
-"> zapasy produktów przychodzących, wybierz > spakuj > wysyłka produktów "
-"wychodzących. \n"
+"magazynowych w Twoim magazynie/magazynach: np. rozładunek > kontrola "
+"jakości > zapasy produktów przychodzących, wybierz > spakuj > wysyłka "
+"produktów wychodzących. \n"
 "Możesz także ustawić strategie odkładania dla lokacji magazynowych w celu "
 "natychmiastowego wysłania produktów przechodzących do określonych "
 "lokalizacji, będących niżej w hierarchii."
@@ -1260,11 +1260,11 @@ msgid ""
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
 "Dodaj i konfiguruj operacje tras w celu przetwarzania operacji ruchów "
-"magazynowych w Twoim magazynie/magazynach: np. rozładunek > kontrola jakości "
-"> zapasy produktów przychodzących, wybierz > spakuj > wysyłka produktów "
-"wychodzących. Możesz także ustawić strategie odkładania dla lokalizacji "
-"magazynowych w celu natychmiastowego wysłania produktów przechodzących do "
-"określonych lokalizacji, będących niżej w hierarchii."
+"magazynowych w Twoim magazynie/magazynach: np. rozładunek > kontrola "
+"jakości > zapasy produktów przychodzących, wybierz > spakuj > wysyłka "
+"produktów wychodzących. Możesz także ustawić strategie odkładania dla "
+"lokalizacji magazynowych w celu natychmiastowego wysłania produktów "
+"przechodzących do określonych lokalizacji, będących niżej w hierarchii."
 
 #. module: stock
 #. odoo-javascript
@@ -1561,8 +1561,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Ponieważ dla tego produktu zostały już użyte inne jednostki miary niż %"
-"(uom)s (np. %(problem_uom)s), zmiana jednostki miary nie jest możliwa. Jeśli "
+"Ponieważ dla tego produktu zostały już użyte inne jednostki miary niż %(uom)"
+"s (np. %(problem_uom)s), zmiana jednostki miary nie jest możliwa. Jeśli "
 "chcesz ją zmienić, zarchiwizuj produkt i utwórz nowy."
 
 #. module: stock
@@ -3080,11 +3080,10 @@ msgid ""
 "(the availability of this method depends on the \"Expiration Dates\" "
 "setting)."
 msgstr ""
-"Określa domyślną metodę używaną do sugerowania dokładnej lokalizacji "
-"(półki), z której należy pobrać produkty, która partia itp. dla tej "
-"lokalizacji. Metoda ta może być wymuszana na poziomie kategorii produktu, a "
-"w przypadku jej braku w nadrzędnych lokalizacjach zostanie zastosowana "
-"metoda awaryjna.\n"
+"Określa domyślną metodę używaną do sugerowania dokładnej lokalizacji (półki)"
+", z której należy pobrać produkty, która partia itp. dla tej lokalizacji. "
+"Metoda ta może być wymuszana na poziomie kategorii produktu, a w przypadku "
+"jej braku w nadrzędnych lokalizacjach zostanie zastosowana metoda awaryjna.\n"
 "\n"
 "FIFO: produkty/partie, które zostały zmagazynowane jako pierwsze, zostaną "
 "użyte jako pierwsze.\n"
@@ -3968,8 +3967,8 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Prognozowana ilość (liczona jako ilość na stanie - wychodzące + przychodzące "
-"- ilość do usunięcia)\n"
+"Prognozowana ilość (liczona jako ilość na stanie - wychodzące + "
+"przychodzące - ilość do usunięcia)\n"
 "W kontekście pojedynczej lokalizacji magazynowej obejmuje to towary "
 "przechowywane w tej lokalizacji lub w dowolnym z jej elementów podrzędnych.\n"
 "W kontekście jednego magazynu obejmuje to towary przechowywane w lokalizacji "
@@ -4205,8 +4204,7 @@ msgstr "Potwierdzenie otrzymania towarów"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
-msgstr ""
-"Raporty HTML nie mogą być drukowane automatycznie, pomijając raport: %s"
+msgstr "Raporty HTML nie mogą być drukowane automatycznie, pomijając raport: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -5067,8 +5065,7 @@ msgstr "Ma opóźnienie"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr ""
-"Spóźnia się lub spóźni się w zależności od terminu i zaplanowanej daty."
+msgstr "Spóźnia się lub spóźni się w zależności od terminu i zaplanowanej daty."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -6268,8 +6265,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
-"Nie znaleziono żadnej reguły uzupełniającej \"%(product)s\" w \"%"
-"(location)s\".\n"
+"Nie znaleziono żadnej reguły uzupełniającej \"%(product)s\" w \"%(location)"
+"s\".\n"
 "Sprawdź konfigurację tras w produkcie."
 
 #. module: stock
@@ -9075,8 +9072,7 @@ msgstr "Skonfiguruj właściciela dla przechowywanych produktów"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
-msgstr ""
-"Ustaw atrybuty produktów (np. kolor, rozmiar), aby zarządzać wariantami"
+msgstr "Ustaw atrybuty produktów (np. kolor, rozmiar), aby zarządzać wariantami"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_to_zero_quants_tree
@@ -11384,8 +11380,8 @@ msgid ""
 "(suffix)s"
 msgstr ""
 "Kiedy potrzeba produktów w <b>%(destination)s</b>, <br> <b>%(operation)s</b> "
-"jest tworzona z <b>%(source_location)s</b>, aby zaspokoić potrzebę. %"
-"(suffix)s "
+"jest tworzona z <b>%(source_location)s</b>, aby zaspokoić potrzebę. %(suffix)"
+"s "
 
 #. module: stock
 #. odoo-python
@@ -11628,8 +11624,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "You can only process 1.0 %s of products with unique serial number."
-msgstr ""
-"Możesz przetworzyć tylko 1.0 %s produktów z unikalnym numerem seryjnym."
+msgstr "Możesz przetworzyć tylko 1.0 %s produktów z unikalnym numerem seryjnym."
 
 #. module: stock
 #. odoo-python

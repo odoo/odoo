@@ -36,15 +36,15 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2026-06-25 09:22+0000\n"
+"PO-Revision-Date: 2026-07-07 12:11+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/stock/"
 "fi/>\n"
@@ -642,8 +642,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "        Meillä on ilo ilmoittaa, että tilauksesi on lähetetty.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -653,8 +653,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -675,8 +675,8 @@ msgstr ""
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -2039,8 +2039,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Changing the operation type of this record is forbidden at this point."
-msgstr ""
-"Tämän tietueen toimintatyypin muuttaminen on tässä vaiheessa kielletty."
+msgstr "Tämän tietueen toimintatyypin muuttaminen on tässä vaiheessa kielletty."
 
 #. module: stock
 #. odoo-python
@@ -4180,8 +4179,7 @@ msgstr "Tavaran vastaanottoilmoitus"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
-msgstr ""
-"HTML-raportteja ei voi tulostaa automaattisesti. Raportti ohitetaan: %s"
+msgstr "HTML-raportteja ei voi tulostaa automaattisesti. Raportti ohitetaan: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4426,8 +4424,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr ""
-"Jos aktiivinen kenttä on False, voit piilottaa reitin poistamatta sitä."
+msgstr "Jos aktiivinen kenttä on False, voit piilottaa reitin poistamatta sitä."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
@@ -4712,8 +4709,7 @@ msgstr "Vastaanotot"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 msgid "Incorrect type of action submitted as a report, skipping action"
-msgstr ""
-"Vääränlainen toimintatyyppi on lähetetty raporttina, ohitetaan toiminta"
+msgstr "Vääränlainen toimintatyyppi on lähetetty raporttina, ohitetaan toiminta"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
@@ -9007,8 +9003,8 @@ msgstr ""
 "Lähin sijainti: kohdepaikkaa lähimpänä olevat tuotteet/erät siirretään ulos "
 "ensin.\n"
 "FEFO: tuotteet/erät, joiden poistopäivämäärä on lähimpänä, siirretään ulos "
-"ensin (tämän menetelmän saatavuus riippuu \"Expiration Dates\" "
-"-asetuksesta).\n"
+"ensin (tämän menetelmän saatavuus riippuu \"Expiration Dates\" -asetuksesta)"
+".\n"
 "Vähiten paketteja: FIFO, mutta mahdollisimman vähillä paketeilla, kun samaa "
 "tuotetta sisältäviä paketteja on useita."
 
@@ -10014,9 +10010,9 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
-"Tuotteelle \"%(product)s\" tehty määrä ei noudata mittayksikölle \"%"
-"(unit)s\" määriteltyä pyöristystarkkuutta. Muuta tehtyä määrää tai "
-"mittayksikkösi pyöristystarkkuutta."
+"Tuotteelle \"%(product)s\" tehty määrä ei noudata mittayksikölle \"%(unit)"
+"s\" määriteltyä pyöristystarkkuutta. Muuta tehtyä määrää tai mittayksikkösi "
+"pyöristystarkkuutta."
 
 #. module: stock
 #. odoo-python
@@ -11833,8 +11829,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
-"Varastossa %(warehouse)s on edelleen käynnissä toimintatyyppien %"
-"(operations)s toimintoja"
+"Varastossa %(warehouse)s on edelleen käynnissä toimintatyyppien %(operations)"
+"s toimintoja"
 
 #. module: stock
 #. odoo-javascript

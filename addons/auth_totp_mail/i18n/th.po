@@ -2,15 +2,15 @@
 # This file contains the translation of the following modules:
 # * auth_totp_mail
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 15:21+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-30 02:01+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
 "auth_totp_mail/th/>\n"
 "Language: th\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -58,20 +58,20 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        เรียน <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> "
-"ขอให้คุณเปิดใช้งานการตรวจสอบสิทธิ์แบบสองขั้นตอนเพื่อปกป้องบัญชีของคุณ<br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> ขอให้คุณเปิดใช้งานการตรวจสอบสิทธิ์แบบสองขั้นตอ"
+"นเพื่อปกป้องบัญชีของคุณ<br/><br/>\n"
 "        การยืนยันตัวตนแบบสองขั้นตอน (\"2FA\") คือระบบการยืนยันตัวตนแบบสองชั้น\n"
-"        ขั้นตอนแรกคือการใช้รหัสผ่านของคุณ "
-"และขั้นตอนที่สองคือการใช้รหัสที่คุณได้รับจากแอปมือถือเฉพาะ\n"
+"        ขั้นตอนแรกคือการใช้รหัสผ่านของคุณ และขั้นตอนที่สองคือการใช้รหัสที่คุณได้รับจากแอปมือถือเฉพ"
+"าะ\n"
 "        ที่ได้รับความนิยมได้แก่ Authy, Google Authenticator หรือ Microsoft "
 "Authenticator\n"
 "\n"
 "        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
 "style=\"background-color:{{object.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
-"\">\n"
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">"
+"\n"
 "                เปิดใช้งานการยืนยันตัวตนแบบสองขั้นตอนของฉัน\n"
 "            </a>\n"
 "        </p>\n"
@@ -152,7 +152,8 @@ msgstr ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px;\">\n"
-"    เราขอแนะนำอย่างยิ่งให้เปิดใช้การตรวจสอบสิทธิ์แบบสองปัจจัยโดยใช้แอปพลิเคชันการตรวจสอบสิทธิ์เพื่อช่วยรักษาความปลอดภัยของบัญชีของคุณ\n"
+"    เราขอแนะนำอย่างยิ่งให้เปิดใช้การตรวจสอบสิทธิ์แบบสองปัจจัยโดยใช้แอปพลิเคชันการตรวจสอบสิทธิ์"
+"เพื่อช่วยรักษาความปลอดภัยของบัญชีของคุณ\n"
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
@@ -251,8 +252,8 @@ msgid ""
 "users (including portal users) if they didn't enable any other two-factor "
 "authentication method."
 msgstr ""
-"บังคับใช้การตรวจสอบสิทธิ์แบบ two-factor ทางอีเมลสำหรับพนักงานหรือผู้ใช้ทั้งหมด "
-"(รวมถึงผู้ใช้พอร์ทัล) หากไม่ได้เปิดใช้งานวิธีการตรวจสอบสิทธิ์แบบ two-factor อื่นๆ"
+"บังคับใช้การตรวจสอบสิทธิ์แบบ two-factor ทางอีเมลสำหรับพนักงานหรือผู้ใช้ทั้งหมด (รวมถึงผู้ใช้พอร์ทั"
+"ล) หากไม่ได้เปิดใช้งานวิธีการตรวจสอบสิทธิ์แบบ two-factor อื่นๆ"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
@@ -269,7 +270,8 @@ msgstr "ไอดี"
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
-msgstr "คำเชิญให้เปิดใช้งานการรับรองความถูกต้องแบบ two-factor ในบัญชี Odoo ของคุณ"
+msgstr ""
+"คำเชิญให้เปิดใช้งานการรับรองความถูกต้องแบบ two-factor ในบัญชี Odoo ของคุณ"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -277,7 +279,8 @@ msgstr "คำเชิญให้เปิดใช้งานการรั
 msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
-msgstr "คำเชิญให้ใช้การรับรองความถูกต้องแบบ two-factor ที่ส่งถึงผู้ใช้ต่อไปนี้:%s"
+msgstr ""
+"คำเชิญให้ใช้การรับรองความถูกต้องแบบ two-factor ที่ส่งถึงผู้ใช้ต่อไปนี้:%s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
@@ -384,8 +387,8 @@ msgid ""
 "authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
-"เราขอแนะนำอย่างยิ่งให้เปิดใช้งานการรับรองแบบ two-factor "
-"โดยใช้แอปรับรองความถูกต้องเพื่อช่วยรักษาความปลอดภัยให้กับบัญชีของคุณ\n"
+"เราขอแนะนำอย่างยิ่งให้เปิดใช้งานการรับรองแบบ two-factor โดยใช้แอปรับรองความถูกต้องเพื่อช่วย"
+"รักษาความปลอดภัยให้กับบัญชีของคุณ\n"
 "                <br/>"
 
 #. module: auth_totp_mail

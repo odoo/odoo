@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
-"PO-Revision-Date: 2026-06-18 08:14+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-01 00:02+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/base_vat/"
 "pl/>\n"
@@ -248,18 +248,6 @@ msgid "The Intra-Community validity has been updated to: %s."
 msgstr "Zaktualizowano ważność wewnątrzwspólnotową na: %s."
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Numer identyfikacji podatkowej. Wartości tutaj będą weryfikowane w oparciu o "
-"format kraju. Możesz wpisać '/', aby wskazać, że partner nie podlega "
-"opodatkowaniu."
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check failed. Please check the Tax ID manually."
@@ -310,6 +298,12 @@ msgstr ""
 "XXXXXXXXX [9 cyfr] i powinno być zgodne z algorytmem sum kontrolnych Luhna."
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 characters for CNPJ"
@@ -320,6 +314,15 @@ msgstr "albo 11 cyfr dla CPF, albo 14 znaków dla CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partner [%s]"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Numer identyfikacji podatkowej. Wartości tutaj będą weryfikowane w "
+#~ "oparciu o format kraju. Możesz wpisać '/', aby wskazać, że partner nie "
+#~ "podlega opodatkowaniu."
 
 #~ msgid "The Intra-Community validity has been updated."
 #~ msgstr "Zaktualizowano ważność wewnątrzwspólnotową."

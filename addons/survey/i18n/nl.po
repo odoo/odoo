@@ -6,16 +6,16 @@
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-06-06 22:08+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"PO-Revision-Date: 2026-06-29 22:43+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/survey/nl/>"
 "\n"
 "Language: nl\n"
@@ -163,8 +163,8 @@ msgid ""
 "span>"
 msgstr ""
 "<br/>\n"
-"                                    <span class=\"text-"
-"muted\">Geregistreerd</span>"
+"                                    <span class=\"text-muted\">"
+"Geregistreerd</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -292,8 +292,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Beste <t t-out=\"object.partner_id.name or "
-"'participant'\">deelnemer</t><br/><br/>\n"
+"        Beste <t t-out=\"object.partner_id.name or 'participant'\">"
+"deelnemer</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Je bent uitgenodigd om een nieuwe certificering te behalen.\n"
 "        </t>\n"
@@ -303,8 +303,8 @@ msgstr ""
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    Start certificering\n"
@@ -315,8 +315,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Beantwoord de enquête voor <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Beantwoord de enquête voor <t t-out=\"format_date"
+"(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wensen je veel succes!\n"
@@ -490,8 +490,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
-"2\">Certificeringen</span> <span class=\"o_stat_text\" "
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"Certificeringen</span> <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certificering</span>"
 
 #. module: survey
@@ -2395,8 +2395,7 @@ msgstr "Is geen certificering"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__is_session_answer
 msgid "Is that user input part of a survey session or not."
-msgstr ""
-"Is die invoer van de gebruiker onderdeel van een enquêtesessie of niet."
+msgstr "Is die invoer van de gebruiker onderdeel van een enquêtesessie of niet."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
@@ -4694,8 +4693,8 @@ msgid ""
 "products.\n"
 "    Filling it helps us improving your experience."
 msgstr ""
-"Met deze enquête kan je feedback geven over je ervaring met onze "
-"producten. \n"
+"Met deze enquête kan je feedback geven over je ervaring met onze producten. "
+"\n"
 "Door het in te vullen kunnen we je ervaring verbeteren."
 
 #. module: survey

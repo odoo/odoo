@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2026-03-25 08:38+0000\n"
+"PO-Revision-Date: 2026-06-30 21:59+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "auth_ldap/uk/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -63,7 +63,9 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid "Automatically create local user accounts for new users authenticating via LDAP"
-msgstr "Автоматично створювати локальних користувачів для нових користувачів аутентифікованих за допомогою LDAP"
+msgstr ""
+"Автоматично створювати локальних користувачів для нових користувачів "
+"аутентифікованих за допомогою LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -187,7 +189,9 @@ msgstr "Інформація входу"
 #. module: auth_ldap
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr "Не знайдено локального користувача для входу LDAP і немає налаштувань для його створення"
+msgstr ""
+"Не знайдено локального користувача для входу LDAP і немає налаштувань для "
+"його створення"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -197,7 +201,10 @@ msgstr "Параметр процесу"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "Запит безпечного шифрування TLS/SSL під час підключення до сервера LDAP. Ця опція вимагає наявності сервера, увімкненого STARTTLS, інакше всі спроби автентифікації вийдуть з ладу."
+msgstr ""
+"Запит безпечного шифрування TLS/SSL під час підключення до сервера LDAP. Ця "
+"опція вимагає наявності сервера, увімкненого STARTTLS, інакше всі спроби "
+"автентифікації вийдуть з ладу."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -222,12 +229,16 @@ msgstr "Шаблон користувача"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid "The password of the user account on the LDAP server that is used to query the directory."
-msgstr "Пароль облікового запису користувача на сервері LDAP, який використовується для запиту каталогу."
+msgstr ""
+"Пароль облікового запису користувача на сервері LDAP, який використовується "
+"для запиту каталогу."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "Обліковий запис користувача на сервері LDAP, який використовується для запиту каталогу. Залиште порожнім, щоби з'єднатися анонімно."
+msgstr ""
+"Обліковий запис користувача на сервері LDAP, який використовується для "
+"запиту каталогу. Залиште порожнім, щоби з'єднатися анонімно."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls

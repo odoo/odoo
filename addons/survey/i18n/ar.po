@@ -6,24 +6,24 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 17:53+0000\n"
+"PO-Revision-Date: 2026-07-01 03:58+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/survey/ar/"
-">\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/survey/"
+"ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -215,8 +215,8 @@ msgstr ""
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- نستخدم شعار الشركة التي قامت بإنشاء الاستطلاع (للتعامل "
-"مع الحالات متعددة الشركات) -->\n"
+"                <!-- نستخدم شعار الشركة التي قامت بإنشاء الاستطلاع (للتعامل مع "
+"الحالات متعددة الشركات) -->\n"
 "                <a href=\"/\"><img t-if=\"not "
 "object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
 "logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
@@ -302,8 +302,8 @@ msgstr ""
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    بدء اختبار الشهادة\n"
@@ -314,8 +314,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            يرجى الإجابة على الاستمارة بتاريخ <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            يرجى الإجابة على الاستمارة بتاريخ <t t-out=\"format_date"
+"(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            حظاً موفقاً!\n"
@@ -463,8 +463,8 @@ msgid ""
 "                </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                    <span id=\"enter-tooltip\">أو اضغط على CTRL+Enter</"
-"span>\n"
+"                    <span id=\"enter-tooltip\">أو اضغط على CTRL+Enter</span>"
+"\n"
 "                </span>"
 
 #. module: survey
@@ -493,8 +493,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
-"2\">الشهادات</span>\n"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"الشهادات</span>\n"
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">الشهادة</span>"
 
@@ -952,8 +952,8 @@ msgid ""
 "Answer label as either the value itself if not empty or a letter "
 "representing the index of the answer otherwise."
 msgstr ""
-"تسمية الإجابة إما بالقيمة نفسها إذا لم تكن فارغة، أما خلاف ذلك، فالتسمية "
-"بحرف يمثل فهرس الإجابة."
+"تسمية الإجابة إما بالقيمة نفسها إذا لم تكن فارغة، أما خلاف ذلك، فالتسمية بحرف "
+"يمثل فهرس الإجابة."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
@@ -2442,8 +2442,8 @@ msgid ""
 "I’ve never really wanted to go to Japan. Simply because I don’t like eating "
 "fish. And I know that’s very popular out there in Africa."
 msgstr ""
-"لم أرغب أبداً في الذهاب إلى اليابان، والسبب بكل بساطة هو أنني لا أحب أكل "
-"السمك، وأعرف أنه محبوب جداً هناك في أفريقيا."
+"لم أرغب أبداً في الذهاب إلى اليابان، والسبب بكل بساطة هو أنني لا أحب أكل السمك"
+"، وأعرف أنه محبوب جداً هناك في أفريقيا."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -3175,8 +3175,8 @@ msgid ""
 "correct link and are allowed to\n"
 "                        participate or get in touch with its organizer."
 msgstr ""
-"عذراً! لم نتمكن من السماح لك بفتح هذا الاستطلاع. تأكد من استخدامك للرابط "
-"الصحيح وأنه يُسمح لك\n"
+"عذراً! لم نتمكن من السماح لك بفتح هذا الاستطلاع. تأكد من استخدامك للرابط الصحيح "
+"وأنه يُسمح لك\n"
 "                        المشاركة أو التواصل مع المنظم."
 
 #. module: survey
@@ -4394,8 +4394,8 @@ msgid ""
 "responsible still has access to it: \n"
 "%(survey_names)s\n"
 msgstr ""
-"الوصول مقيد إلى الاستطلاعات التالية. تأكد من أن الأفراد المسؤولين منها "
-"يملكون صلاحية الوصول إليها: \n"
+"الوصول مقيد إلى الاستطلاعات التالية. تأكد من أن الأفراد المسؤولين منها يملكون "
+"صلاحية الوصول إليها: \n"
 "%(survey_names)s\n"
 
 #. module: survey
@@ -4658,8 +4658,8 @@ msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
 msgstr ""
-"لا يسمح هذا الاستطلاع للأفراد الخارجيين بالمشاركة. عليك إنشاء حسابات "
-"مستخدمين أو تحديث وضع الوصول إلى الاستطلاع وفقاً لذلك."
+"لا يسمح هذا الاستطلاع للأفراد الخارجيين بالمشاركة. عليك إنشاء حسابات مستخدمين أو "
+"تحديث وضع الوصول إلى الاستطلاع وفقاً لذلك."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
@@ -5116,8 +5116,8 @@ msgid ""
 "Who received a Nobel prize in Physics for the discovery of neutrino "
 "oscillations, which shows that neutrinos have mass?"
 msgstr ""
-"الحاصل على جائزة نوبل في الفيزياء لاكتشافه  تذبذبات النيوترينو، والتي تُظهِر "
-"أن النيوترينات لديها كتلة؟"
+"الحاصل على جائزة نوبل في الفيزياء لاكتشافه  تذبذبات النيوترينو، والتي تُظهِر أن "
+"النيوترينات لديها كتلة؟"
 
 #. module: survey
 #. odoo-python
@@ -5203,8 +5203,8 @@ msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
 msgstr ""
-"لا يمكنك حذف الأسئلة من الاستطلاعات \"%(survey_names)s\" بينما الجلسات "
-"المباشرة مستمرة."
+"لا يمكنك حذف الأسئلة من الاستطلاعات \"%(survey_names)s\" بينما الجلسات المباشرة "
+"مستمرة."
 
 #. module: survey
 #. odoo-python
@@ -5213,8 +5213,7 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey has no sections."
 msgstr ""
-"لا يمكنك إرسال دعوة لاستطلاع \"صفحة واحدة لكل قسم\" إذا لم يكن للاستطلاع أي "
-"أقسام."
+"لا يمكنك إرسال دعوة لاستطلاع \"صفحة واحدة لكل قسم\" إذا لم يكن للاستطلاع أي أقسام."
 
 #. module: survey
 #. odoo-python
@@ -5223,8 +5222,8 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey only contains empty sections."
 msgstr ""
-"لا يمكنك إرسال دعوة لاستطلاع \"صفحة واحدة لكل قسم\" إذا كان للاستطلاع أقسام "
-"فارغة فقط."
+"لا يمكنك إرسال دعوة لاستطلاع \"صفحة واحدة لكل قسم\" إذا كان للاستطلاع أقسام فارغة "
+"فقط."
 
 #. module: survey
 #. odoo-python

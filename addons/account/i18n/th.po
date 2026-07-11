@@ -13,7 +13,7 @@
 # Amin Cheloh <amincheloh@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Wichanon Jamwutthipreecha, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 # Nusara Boonma <nuboo@odoo.com>, 2026.
@@ -21,11 +21,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:27+0000\n"
-"PO-Revision-Date: 2026-06-26 04:44+0000\n"
+"POT-Creation-Date: 2026-07-10 17:35+0000\n"
+"PO-Revision-Date: 2026-07-10 09:18+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/account/th/>"
-"\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/account/th/"
+">\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -309,18 +309,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "%s, or / if not applicable"
-msgstr "%s หรือ/หากไม่เกี่ยวข้อง"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "%s, or not applicable"
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
 msgstr ""
@@ -431,12 +419,6 @@ msgstr "... (%(nb_of_values)s อื่นๆ)"
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
 msgstr "... (ดูทั้งหมด)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "/ if not applicable"
-msgstr "/ ถ้าไม่สามารถใช้ได้"
 
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
@@ -1704,8 +1686,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-"
-"collapse:separate;\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
 "        <tr>\n"
 "            <td align=\"center\">\n"
 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1720,14 +1702,14 @@ msgstr ""
 "                                    <td align=\"left\" style=\"padding-left: "
 "16px;\">\n"
 "                                        คุณได้รับ <t t-if=\"invoice_count &gt; "
-"1\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว!</t><t t-else=\"\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้"
-"ว!</t>\n"
+"1\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว!</t><t t-else=\"\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว!"
+"</t>\n"
 "                                    </td>\n"
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
-"contain;\" class=\"align-baseline w-auto\"/>\n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\"/>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -1754,8 +1736,8 @@ msgstr ""
 "                                        </h3>\n"
 "                                        <p style=\"margin-top: 12px;\">\n"
 "                                            คุณได้รับ <t t-if=\"invoice_count "
-"&gt; 1\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว</t><t t-else=\"\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่"
-"แล้ว</t>!\n"
+"&gt; 1\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว</t><t t-"
+"else=\"\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว</t>!\n"
 "                                        </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/>\n"
@@ -1770,19 +1752,19 @@ msgstr ""
 "                                                <t t-if=\"inv.name or "
 "inv.ref\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">หมายเลขอ้างอิงใบแจ้งหนี้:</span> <t t-out=\"inv.name or inv.ref\"/>"
-"<br/>\n"
+"weight:bold;\">หมายเลขอ้างอิงใบแจ้งหนี้:</span> <t t-out=\"inv.name or inv.ref\"/"
+"><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
 "if=\"inv.partner_id.name\">\n"
 "                                                    <span style=\"font-"
 "weight:bold;\">ผู้ขาย:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-if=\"inv.amount_total\">"
-"\n"
+"                                                <t t-"
+"if=\"inv.amount_total\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">จำนวน:</span> <t t-out=\"inv.amount_total\" t-options=\""
-"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">จำนวน:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
@@ -1797,11 +1779,11 @@ msgstr ""
 "padding-top: 24px;\">\n"
 "                                            <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?active_ids={{ "
-"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
-"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
-"none !important; background-color: #008384; border-radius:3px; display: "
-"inline-block;\">\n"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\">\n"
 "                                               ดูรายละเอียดใบแจ้งหนี้\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -1817,9 +1799,8 @@ msgstr ""
 "                                        <br/>\n"
 "                                        <p style=\"text-align: center; "
 "margin-top: 16px;\">\n"
-"                                            หากคุณต้องการยกเลิกการรับอีเมลแจ้งเตือนใ"
-"บแจ้งหนี้ขาเข้า กรุณาคลิก <a t-attf-href=\"/my/journal/{{ object.id }}/"
-"unsubscribe\">ที่นี่</a>.\n"
+"                                            หากคุณต้องการยกเลิกการรับอีเมลแจ้งเตือนใบแจ้งหนี้ขาเข้า "
+"กรุณาคลิก <a t-attf-href=\"/my/journal/{{ object.id }}/unsubscribe\">ที่นี่</a>.\n"
 "                                        </p>\n"
 "                                    </td>\n"
 "                                </tr>\n"
@@ -2070,8 +2051,8 @@ msgstr ""
 "<td colspan=\"2\" style=\"background:linear-gradient(140deg,#714B67 "
 "0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;\"><t t-"
 "set=\"portal_url\" t-value=\"object.get_portal_url()\"/>\n"
-"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/>"
-"\n"
+"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
+">\n"
 "\n"
 "<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
 "    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
@@ -2083,18 +2064,18 @@ msgstr ""
 "border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, "
 "0.12);\">\n"
 "                    <tr>\n"
-"                        <td colspan=\"2\" style=\"background:linear-gradient"
-"(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;\">"
-"\n"
+"                        <td colspan=\"2\" style=\"background:linear-"
+"gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; "
+"padding:38px;\">\n"
 "                            <table cellpadding=\"0\" cellspacing=\"0\" "
 "border=\"0\" style=\"width:100%;\">\n"
 "                                <tr>\n"
 "                                    <td style=\"font-size:13px; letter-"
 "spacing:0.3px; text-transform:uppercase; opacity:0.78;\">\n"
-"                                        <t t-if=\"object.is_sale_document"
-"(include_receipts=True)\">ใบแจ้งหนี้ขาออก</t>\n"
-"                                        <t t-else=\"\">ใบเรียกเก็บเงินขาเข้า</t>"
-"\n"
+"                                        <t t-"
+"if=\"object.is_sale_document(include_receipts=True)\">ใบแจ้งหนี้ขาออก</t>\n"
+"                                        <t t-else=\"\">ใบเรียกเก็บเงินขาเข้า</"
+"t>\n"
 "                                    </td>\n"
 "                                    <td align=\"right\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
@@ -2104,8 +2085,8 @@ msgstr ""
 "                                </tr>\n"
 "                                <tr>\n"
 "                                    <td colspan=\"2\" style=\"padding-"
-"top:22px; font-size:26px; line-height:1.45; font-weight:600; "
-"color:#ffffff;\">\n"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;"
+"\">\n"
 "                                        ใบแจ้งหนี้ใหม่ใน <t t-"
 "out=\"object.journal_id.display_name\"/>\n"
 "                                    </td>\n"
@@ -2135,8 +2116,8 @@ msgstr ""
 "                                                <td style=\"padding:24px "
 "26px;\">\n"
 "                                                    <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;\">"
-"เอกสาร</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\">เอกสาร</div>\n"
 "                                                    <div style=\"margin-"
 "top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-"
 "word;\">\n"
@@ -2153,8 +2134,8 @@ msgstr ""
 "                                                    <td style=\"padding:24px "
 "26px; border-left:1px solid #efe6f3;\" align=\"right\">\n"
 "                                                        <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;\">"
-"รวม</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\">รวม</div>\n"
 "                                                        <div style=\"margin-"
 "top:8px; font-size:22px; font-weight:600; color:#2c2431;\">\n"
 "                                                            <t t-"
@@ -2173,8 +2154,8 @@ msgstr ""
 "                                            <tr>\n"
 "                                                <td style=\"padding:0;\">\n"
 "                                                    <div "
-"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-"
-"start;\">\n"
+"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;"
+"\">\n"
 "                                                        <t t-"
 "if=\"object.partner_id\">\n"
 "                                                            <div "
@@ -2229,8 +2210,7 @@ msgstr ""
 "                                                                <div "
 "style=\"margin-top:6px; font-size:15px; color:#2c2431; text-"
 "transform:capitalize;\">\n"
-"                                                                    ใบแจ้งหนี้นี้ไ"
-"ด้รับการชำระเงินแล้ว\n"
+"                                                                    ใบแจ้งหนี้นี้ได้รับการชำระเงินแล้ว\n"
 "                                                                </div>\n"
 "                                                            </div>\n"
 "                                                        </t>\n"
@@ -2264,13 +2244,14 @@ msgstr ""
 "strong> เอกสารต้นฉบับได้แนบมาเพื่อคุณ\n"
 "                            </div>\n"
 "\n"
-"                            <div style=\"margin-top:32px; text-"
-"align:center;\" t-if=\"object.move_type != 'in_invoice'\">\n"
-"                                <a t-if=\"portal_url\" t-attf-href=\"{{ "
-"portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
-"padding:13px 30px; min-width:210px; background:linear-gradient"
-"(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; "
-"border-radius:12px; font-weight:600; font-size:14px;\" target=\"_blank\">\n"
+"                            <div style=\"margin-top:32px; text-align:center;"
+"\" t-if=\"object.move_type != 'in_invoice'\">\n"
+"                                <a t-if=\"portal_url\" t-attf-"
+"href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-"
+"gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-"
+"decoration:none; border-radius:12px; font-weight:600; font-size:14px;\" "
+"target=\"_blank\">\n"
 "                                    ดูบนพอร์ทัล\n"
 "                                </a>\n"
 "                            </div>\n"
@@ -5951,6 +5932,16 @@ msgid "Could not upload files"
 msgstr "ไม่สามารถอัปโหลดไฟล์ได้"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Items"
 msgstr "รายการที่ตรงกัน"
@@ -8362,6 +8353,7 @@ msgid "Exchange Gain or Loss Journal"
 msgstr "บัญชีการขาดทุนจากอัตราแลกเปลี่ยน"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
 msgstr "ย้าย"
@@ -8659,6 +8651,16 @@ msgstr "ดัชนีบรรทัดแรก"
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
 msgstr "ลำดับใหม่ครั้งแรก"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -9180,7 +9182,7 @@ msgstr ""
 #. module: account
 #: model:account.report,name:account.generic_tax_report
 msgid "Generic Tax report"
-msgstr "รายงานภาษีทั่วไป"
+msgstr "รายงานภาษีมูลค่าเพิ่ม"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -11658,6 +11660,7 @@ msgid "Looks great!"
 msgstr "ดูดีมาก!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "กำไร-ขาดทุนเบื้องต้น"
@@ -13360,6 +13363,7 @@ msgid "Owner's Current Account"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "บัญชีกำไรขาดทุน"
@@ -14386,6 +14390,11 @@ msgid "Profit or Loss Appropriation"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
 msgstr ""
@@ -15078,6 +15087,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:account.group,name:account.2_us_group_4
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "รายได้"
@@ -15715,7 +15725,7 @@ msgstr "ขายและซื้อสินค้าในหน่วยว
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 #: model_terms:ir.ui.view,arch_db:account.view_out_invoice_tree
 msgid "Send"
-msgstr "ส่ง"
+msgstr "จ่าย"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__incoming_einvoice_notification_email
@@ -17302,8 +17312,7 @@ msgstr "ความพร้อมใช้งานถูกตั้งค่
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
 msgid "The Bill/Refund date is required to validate this document."
-msgstr ""
-"ต้องระบุวันที่ การเรียกเก็บเงิน/คืนเงิน เพื่อตรวจสอบความถูกต้องของเอกสารนี้"
+msgstr "ต้องระบุวันที่ การเรียกเก็บเงิน/คืนเงิน เพื่อตรวจสอบความถูกต้องของเอกสารนี้"
 
 #. module: account
 #. odoo-python
@@ -17369,16 +17378,6 @@ msgid ""
 "percent must be 100%."
 msgstr ""
 "เงื่อนไขการชำระเงินต้องมีบรรทัดอย่างน้อยหนึ่งเปอร์เซ็นต์และผลรวมของเปอร์เซ็นต์ต้องเป็น 100%"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"หมายเลขประจำตัวผู้เสียภาษี ค่าที่นี่จะได้รับการตรวจสอบตามรูปแบบประเทศ คุณสามารถใช้ '/' "
-"เพื่อระบุว่าพาร์ทเนอร์ไม่ต้องเสียภาษี"
 
 #. module: account
 #. odoo-python
@@ -19179,6 +19178,11 @@ msgstr ""
 "คุณอาจต้องการเรียงลำดับธุรกรรมใหม่ก่อนดำเนินการต่อ"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Undefined Yet"
@@ -20149,6 +20153,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
@@ -20570,6 +20579,13 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr "คุณไม่สามารถลดจำนวนตำแหน่งทศนิยมของสกุลเงินที่ใช้ในการสร้างรายการทางบัญชีได้"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21211,12 +21227,6 @@ msgstr ""
 "นับจากวันที่ส่งมอบสินค้าหรือการให้บริการ"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "not applicable"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "ของยอดภาษี"
@@ -21452,6 +21462,20 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s หรือ/หากไม่เกี่ยวข้อง"
+
+#~ msgid "/ if not applicable"
+#~ msgstr "/ ถ้าไม่สามารถใช้ได้"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "หมายเลขประจำตัวผู้เสียภาษี ค่าที่นี่จะได้รับการตรวจสอบตามรูปแบบประเทศ คุณสามารถใช้ '/' "
+#~ "เพื่อระบุว่าพาร์ทเนอร์ไม่ต้องเสียภาษี"
 
 #~ msgid "Quick search: %s"
 #~ msgstr "ค้นหาด่วน: %s"

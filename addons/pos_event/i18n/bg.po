@@ -2,14 +2,16 @@
 # This file contains the translation of the following modules:
 # * pos_event
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Toma Tomov <toma.tomov@gmail.com>, 2026.
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 18:03+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-03 17:36+0000\n"
+"PO-Revision-Date: 2026-07-06 06:17+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "pos_event/bg/>\n"
 "Language: bg\n"
@@ -17,36 +19,46 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid " for this slot"
-msgstr ""
+msgstr " за този слот"
 
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "--- Select ---"
-msgstr ""
+msgstr "--- Избери ---"
 
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.pos_order_form_view_inherit
 msgid ""
 "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Badges"
 msgstr ""
+"<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/> Отпечатай баджове "
+"за събитието"
 
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.pos_order_form_view_inherit
 msgid ""
 "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Tickets"
 msgstr ""
+"<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Отпечатай билети за "
+"събитието"
 
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.event_registration_ticket_view_form
 msgid "<span class=\"o_stat_text\">PoS Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">PoS поръчка</span>"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/screens/product_screen/product_screen.js:0
+msgid "All slots are booked out for this event."
+msgstr "Всички времеви слотове за това събитие вече са резервирани."
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_pos_order__attendee_count
@@ -92,6 +104,8 @@ msgstr "Име за Показване"
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.js:0
 msgid "Error"
 msgstr "Грешка"
 
@@ -118,7 +132,7 @@ msgstr "Регистрация на събитие"
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Отговор за регистрация за събитие"
 
 #. module: pos_event
 #. odoo-javascript
@@ -130,7 +144,7 @@ msgstr "Регистрация на събития"
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "Слот за събитие"
 
 #. module: pos_event
 #: model:ir.model,name:pos_event.model_event_event_ticket
@@ -142,7 +156,7 @@ msgstr "Билет за събитие"
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
 msgid "Event name"
-msgstr ""
+msgstr "Име на събитие"
 
 #. module: pos_event
 #: model:pos.category,name:pos_event.pos_category_event
@@ -153,7 +167,7 @@ msgstr "Събития"
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Global questions"
-msgstr ""
+msgstr "Глобални въпроси"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__id
@@ -174,12 +188,30 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
 msgid "No Slot Selected"
-msgstr ""
+msgstr "Няма избран слот"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/screens/product_screen/product_screen.js:0
+msgid "No more seats available for this event"
+msgstr "Няма свободни места за това събитие"
 
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "No slots"
+msgstr "Няма слотове"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.js:0
+msgid "Please fill in all required fields"
+msgstr ""
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.js:0
+msgid "Please select a slot."
 msgstr ""
 
 #. module: pos_event

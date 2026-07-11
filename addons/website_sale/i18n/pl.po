@@ -35,8 +35,8 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # danielkowalczyk007, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Grace Conlon <grco@odoo.com>, 2026.
@@ -44,9 +44,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:40+0000\n"
-"PO-Revision-Date: 2026-06-06 13:32+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-06-30 21:42+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/pl/>\n"
 "Language: pl\n"
@@ -275,8 +275,8 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
-"\n"
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
+">\n"
 "                    <span class=\"o_label small ms-1\">Dodaj do koszyka</"
 "span>"
 
@@ -403,8 +403,8 @@ msgid ""
 "        </small>"
 msgstr ""
 "<small class=\"text-muted mb-0\">\n"
-"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>"
-"Warunki korzystania z usługi</u></a><br/>\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-"
+"muted\"><u>Warunki korzystania z usługi</u></a><br/>\n"
 "            30-dniowa gwarancja zwrotu kosztów<br/>\n"
 "            Wysyłka: 2-3 dni robocze\n"
 "        </small>"
@@ -519,8 +519,8 @@ msgid ""
 "animable\"/> Fast Shipping\n"
 "                                </span>"
 msgstr ""
-"<span class=\"s_badge badge text-bg-primary o_animable\" data-name=\"Badge\">"
-"\n"
+"<span class=\"s_badge badge text-bg-primary o_animable\" data-"
+"name=\"Badge\">\n"
 "                                    <i class=\"fa fa-dollar fa-fw o_not-"
 "animable\"/> Niskie ceny\n"
 "                                </span>\n"
@@ -589,8 +589,8 @@ msgid ""
 "<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
 "muted\">Price</span>"
 msgstr ""
-"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-muted\">"
-"Cena</span>"
+"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
+"muted\">Cena</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -612,8 +612,8 @@ msgstr "<span placeholder=\"All products\">Wszystkie produkty</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Dobra robota!</b> Przeszedłeś przez wszystkie kroki tego "
-"samouczka.</span>"
+"<span><b>Dobra robota!</b> Przeszedłeś przez wszystkie kroki tego samouczka."
+"</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -828,8 +828,8 @@ msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
 "'/' to discover more features."
 msgstr ""
-"Szczegółowy, sformatowany opis promujący Twój produkt na tej stronie. Użyj '/"
-"', aby odkryć więcej funkcji."
+"Szczegółowy, sformatowany opis promujący Twój produkt na tej stronie. Użyj "
+"'/', aby odkryć więcej funkcji."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -838,9 +838,9 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
-"Szczegółowy, sformatowany opis do promowania Twojego produktu na"
-"                                 tej stronie. Użyj \"/\", aby odkryć więcej "
-"funkcji."
+"Szczegółowy, sformatowany opis do promowania Twojego produktu "
+"na                                 tej stronie. Użyj \"/\", aby odkryć "
+"więcej funkcji."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1375,6 +1375,12 @@ msgstr "Ramka podstawowa"
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Bordered"
 msgstr "Obramowany"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+msgid "Bottom"
+msgstr "Dół"
 
 #. module: website_sale
 #. odoo-python
@@ -3402,6 +3408,7 @@ msgstr "Układ"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__left
 msgid "Left"
@@ -3640,7 +3647,8 @@ msgstr "Należy włączyć \"Recenzje\" na stronie produktu"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Needs at least two images to be defined in the Product Page"
-msgstr "Potrzebuje co najmniej dwóch obrazów zdefiniowanych na stronie produktu"
+msgstr ""
+"Potrzebuje co najmniej dwóch obrazów zdefiniowanych na stronie produktu"
 
 #. module: website_sale
 #. odoo-python
@@ -3882,7 +3890,8 @@ msgstr "Na kółkach"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr "Kiedy klikniesz na <b>Zapisz</b>, Twój produkt zostanie zaktualizowany."
+msgstr ""
+"Kiedy klikniesz na <b>Zapisz</b>, Twój produkt zostanie zaktualizowany."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -5618,8 +5627,8 @@ msgid ""
 "is different than the one you want to use (%(company)s)"
 msgstr ""
 "Firma strony internetowej, z której próbujesz dokonać sprzedaży (%"
-"(website_company)s) jest inna niż ta, z której chcesz skorzystać (%(company)"
-"s)."
+"(website_company)s) jest inna niż ta, z której chcesz skorzystać (%"
+"(company)s)."
 
 #. module: website_sale
 #. odoo-python
@@ -5667,7 +5676,8 @@ msgstr ""
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr "Podana kombinacja nie istnieje, dlatego nie można jej dodać do koszyka."
+msgstr ""
+"Podana kombinacja nie istnieje, dlatego nie można jej dodać do koszyka."
 
 #. module: website_sale
 #. odoo-python
@@ -6569,7 +6579,8 @@ msgstr "Koszyk eCommerce"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
-msgstr "eCommerce: wysyłanie wiadomości e-mail do klientów o porzuconym koszyku"
+msgstr ""
+"eCommerce: wysyłanie wiadomości e-mail do klientów o porzuconym koszyku"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -6962,9 +6973,6 @@ msgstr "{{0}} obraz"
 
 #~ msgid "Both"
 #~ msgstr "Oba"
-
-#~ msgid "Bottom"
-#~ msgstr "Dół"
 
 #~ msgid "Brand"
 #~ msgstr "Marka"

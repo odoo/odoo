@@ -16,21 +16,21 @@
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2023
 # Anton Vassilev, 2023
 # Ivan Ivanov, 2023
-# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023, 2026.
 # aleksandar ivanov, 2023
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Ивайло Малинов <iv.malinov@gmail.com>, 2023
 # Martin Trigaux, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Toma Tomov <toma.tomov@gmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-06-18 12:48+0000\n"
-"Last-Translator: Toma Tomov <toma.tomov@gmail.com>\n"
+"PO-Revision-Date: 2026-07-11 09:32+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/mrp/"
 "bg/>\n"
 "Language: bg\n"
@@ -91,7 +91,7 @@ msgstr "# Разделяния"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# To Do Work Orders"
-msgstr ""
+msgstr "# Работни поръчки за извършване"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
@@ -144,7 +144,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(product_name)s (new) %(number_of_boms)s"
-msgstr ""
+msgstr "%(product_name)s (нов) %(number_of_boms)s"
 
 #. module: mrp
 #. odoo-python
@@ -168,7 +168,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 msgid "%i work orders"
-msgstr ""
+msgstr "%i работни поръчки"
 
 #. module: mrp
 #. odoo-python
@@ -205,7 +205,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_workorder
 msgid "'Work Order - %s' % object.name"
-msgstr ""
+msgstr "'Работна Поръчка - %s' % object.name"
 
 #. module: mrp
 #. odoo-javascript
@@ -347,7 +347,7 @@ msgstr "<span class=\"o_stat_text\">Допълващи поръчки</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">BoM Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">BoM Преглед</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -494,7 +494,7 @@ msgstr "<span>Действия</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span>Generate BOM</span>"
-msgstr ""
+msgstr "<span>Генерирай BOM</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -744,7 +744,7 @@ msgstr "Добавете проверка качество към работни
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_tag
 msgid "Add tag for the workcenter"
-msgstr ""
+msgstr "Добавяне на етикет за работния център"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -770,7 +770,7 @@ msgstr "Всички Движения"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
 msgid "All Move Raw"
-msgstr ""
+msgstr "Всички движения на суровини"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -783,6 +783,8 @@ msgid ""
 "All automatically generated manufacturing orders for this product will be of "
 "this size."
 msgstr ""
+"Всички автоматично генерирани производствени поръчки за този продукт ще "
+"бъдат с този размер."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
@@ -801,23 +803,23 @@ msgstr "Разпределяне"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
-msgstr ""
+msgstr "Отчет за разпределение"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report Labels"
-msgstr ""
+msgstr "Етикети на отчета за разпределение"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_reception_report
 msgid "Allocation Report for Manufacturing Orders"
-msgstr ""
+msgstr "Отчет за разпределение за работни поръчки"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allow_workorder_dependencies
 msgid "Allow Work Order Dependencies"
-msgstr ""
+msgstr "Разреши Зависимости между работни поръчки"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -825,12 +827,15 @@ msgid ""
 "Allow manufacturing users to modify quantities to consume, without the need "
 "for prior approval"
 msgstr ""
+"Позволяване на потребителите в производството да променят изразходваните "
+"количества без необходимост от предварително одобрение"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Allow to create new lot/serial numbers for the components"
 msgstr ""
+"Разрешаване на създаването на нови партидни/серийни номера за компонентите"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__flexible
@@ -842,24 +847,24 @@ msgstr "Позволен"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr "Разрешени МЕ"
+msgstr "Разрешена мерна единица"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr ""
+msgstr "Разрешено резервиране на производство"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr ""
+msgstr "Разрешено освобождаване на резервация на производство"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__warning
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_consumption_warning__consumption__warning
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__warning
 msgid "Allowed with warning"
-msgstr ""
+msgstr "Разрешено с предупреждение"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -1047,6 +1052,11 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at "
 "which components should be sent to the subcontractor."
 msgstr ""
+"Средно време за производство на този продукт в дни. В случай на "
+"многостепенна спецификация (BOM), времената за производство на компонентите "
+"се сумират. Ако производството на продукта е възложено на подизпълнител, "
+"тази информация може да се използва за определяне на датата, на която "
+"компонентите трябва да бъдат изпратени на подизпълнителя."
 
 #. module: mrp
 #. odoo-javascript
@@ -1072,7 +1082,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "Отчет и преглед на BOM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -1365,7 +1375,7 @@ msgstr "Вторичен продукт"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "By-product %s should not be the same as BoM product."
-msgstr ""
+msgstr "Вторичният продукт %s не трябва да бъде същият като продукта от BoM\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
@@ -1398,13 +1408,13 @@ msgstr "Вторичен продукт"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "Byproducts"
-msgstr ""
+msgstr "Вторични продукти"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Can't find any production location."
-msgstr ""
+msgstr "Не може да се намери местоположение за производство."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6633,8 +6643,8 @@ msgid ""
 msgstr ""
 "Работните поръчки са операции за извършване като част от производствена "
 "поръчка. \n"
-"            Операциите са дефинирани в спецификацията на материалите или са "
-"добавени директно към производствената поръчка."
+"            Операциите са дефинирани в BoM или са добавени директно към "
+"производствената поръчка."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -6754,6 +6764,8 @@ msgid ""
 "You can only merge manufacturing orders with no additional components or by-"
 "products."
 msgstr ""
+"Можете да обединявате производствени поръчки само ако те не съдържат "
+"допълнителни компоненти или странични продукти."
 
 #. module: mrp
 #. odoo-python
@@ -7007,7 +7019,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "it is added as a component in a manufacturing order"
-msgstr ""
+msgstr "се добавя като компонент в производствена поръчка"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view

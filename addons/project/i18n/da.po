@@ -11,16 +11,16 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Lærke Hedegaard Mathiasen <lhm@flytconsulting.dk>, 2026.
 # "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-06-23 16:54+0000\n"
-"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-01 00:27+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/project/"
 "da/>\n"
 "Language: da\n"
@@ -313,15 +313,15 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    Hej <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>"
-"<br/>\n"
+"    Hej <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
+"t><br/>\n"
 "    Det er mig en fornøjelse at kunne meddele, at vi har gennemført "
 "projektet \"<strong t-out=\"object.name or ''\">Renoveringer</strong>\".\n"
 "   <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/> \n"
 "       <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "   </t>\n"
 "</div> \n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
@@ -354,8 +354,8 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"    Hej <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>"
-"<br/><br/>\n"
+"    Hej <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
+"t><br/><br/>\n"
 "    Tak for din henvendelse. Vi sætter pris på din interesse for vores "
 "produkter/tjenester.<br/>\n"
 "    Vores team gennemgår i øjeblikket din forespørgsel og vil besvare din e-"
@@ -367,8 +367,8 @@ msgstr ""
 "   <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/> \n"
 "       <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "   </t>\n"
 "</div> \n"
 "        "
@@ -773,8 +773,10 @@ msgstr "Administrator"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
-msgstr "Administratoren kan administrere medarbejdernes vagtplaner"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -5357,7 +5359,8 @@ msgstr "Samlet omsætning"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Track major progress points that must be reached to achieve success"
-msgstr "Hold øje med de vigtigste punkter, der skal opfyldes for at opnå succes"
+msgstr ""
+"Hold øje med de vigtigste punkter, der skal opfyldes for at opnå succes"
 
 #. module: project
 #. odoo-javascript
@@ -5580,8 +5583,8 @@ msgstr "Bruger indstillinger"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
-msgstr "Brugeren kan anvende dine medarbejderes vagtplan"
+msgid "User: Can manage tasks in projects shared with them."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5758,9 +5761,9 @@ msgid ""
 "of projects linked to %(company_name)s."
 msgstr ""
 "Du kan ikke ændre virksomheden i denne fase til %(company_name)s, da den i "
-"øjeblikket indeholder projekter, der er knyttet til %(project_company_name)"
-"s. Sørg for, at fasen udelukkende indeholder projekter, der er knyttet til %"
-"(company_name)s."
+"øjeblikket indeholder projekter, der er knyttet til %"
+"(project_company_name)s. Sørg for, at fasen udelukkende indeholder "
+"projekter, der er knyttet til %(company_name)s."
 
 #. module: project
 #. odoo-javascript
@@ -6125,6 +6128,12 @@ msgstr "👤 Ikke tildelt"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "Administrator can manage the employees' schedule"
+#~ msgstr "Administratoren kan administrere medarbejdernes vagtplaner"
+
+#~ msgid "User can user the your employees' schedule"
+#~ msgstr "Brugeren kan anvende dine medarbejderes vagtplan"
 
 #~ msgid "Invalid fields: "
 #~ msgstr "Ugyldige felter: "

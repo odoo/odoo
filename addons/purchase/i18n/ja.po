@@ -6,20 +6,20 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Andy Yiu, 2023
 # 江口和志 <sandwhale1010@gmail.com>, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025, 2026.
 # Martin Trigaux, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# MAHAMADASIF ANSARI <maan@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Yoshi Tashiro <tashiro@quartile.co>, 2025.
+# MAHAMADASIF ANSARI <maan@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-05-06 07:04+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-07-01 00:45+0000\n"
+"Last-Translator: MAHAMADASIF ANSARI <maan@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "purchase/ja/>\n"
 "Language: ja\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -80,8 +80,7 @@ msgstr "'見積依頼 - %s' % (object.name)"
 msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
-msgstr ""
-"100％無料です！きれいな見積書を作成し、販売を追跡する時間を節約できます。"
+msgstr "100％無料です！きれいな見積書を作成し、販売を追跡する時間を節約できます。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
@@ -158,8 +157,8 @@ msgstr ""
 "        </t>\n"
 "        入荷希望日: \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date"
+"(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">未定</span>です。\n"
@@ -239,9 +238,8 @@ msgstr ""
 "        <t t-if=\"object.partner_ref\">\n"
 "            参照番号: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        金額: <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"        金額: <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
 "        発注元: <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br/><br/>\n"
 "        <t t-if=\"object.date_planned\">\n"
@@ -862,8 +860,8 @@ msgid ""
 "you want to change it, please archive the product and create a new one."
 msgstr ""
 "このプロダクトでは、すでに例:%(problem_uom)sなど、他の測定単位(%(uom)sではな"
-"く) が使用されているため、測定単位の変更はできません。変更する場合は、プロダ"
-"クトをアーカイブし、新しいプロダクトを作成して下さい。"
+"く) が使用されているため、測定単位の変更はできません。変更する場合は、"
+"プロダクトをアーカイブし、新しいプロダクトを作成して下さい。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -1581,8 +1579,8 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
-"有効にすると、仕入先請求書の3者間照合が有効になります。請求書を支払うには、ア"
-"イテムを受け取る必要があります。"
+"有効にすると、仕入先請求書の3者間照合が有効になります。請求書を支払うには、"
+"アイテムを受け取る必要があります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1761,8 +1759,7 @@ msgstr "最初の見積依頼を作成しましょう。"
 msgid ""
 "Let's try the Purchase app to manage the flow from purchase to reception and "
 "invoice control."
-msgstr ""
-"購入アプリを試して、購入から受付、請求書管理までの流れを管理してみましょう。"
+msgstr "購入アプリを試して、購入から受付、請求書管理までの流れを管理してみましょう。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
@@ -2130,16 +2127,14 @@ msgstr "入荷数量に基づく"
 msgid ""
 "Once you get the price from the vendor, you can complete the purchase order "
 "with the right price."
-msgstr ""
-"ベンダーから価格を入手したら、適切な価格で注文書を完成させることができます。"
+msgstr "ベンダーから価格を入手したら、適切な価格で注文書を完成させることができます。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
-msgstr ""
-"仕入先にプロダクトをオーダして見積依頼を確定すると、購買オーダになります。"
+msgstr "仕入先にプロダクトをオーダして見積依頼を確定すると、購買オーダになります。"
 
 #. module: purchase
 #. odoo-python
@@ -2851,8 +2846,8 @@ msgid ""
 "will be confirmed and turned into purchase orders."
 msgstr ""
 "見積依頼は、購入を検討しているさまざまなプロダクトの価格見積を依頼するために"
-"仕入先に送られるドキュメントです。仕入先と合意が取れると、見積依頼は確定さ"
-"れ、発注書に変換されます。"
+"仕入先に送られるドキュメントです。仕入先と合意が取れると、見積依頼は確定され"
+"、発注書に変換されます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -3014,8 +3009,7 @@ msgstr "次回活動日が過去のすべてのレコードを表示"
 msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
-msgstr ""
-"一部のオーダ明細にプロダクトが欠落しています。先に進む前に修正してください。"
+msgstr "一部のオーダ明細にプロダクトが欠落しています。先に進む前に修正してください。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -3171,8 +3165,8 @@ msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
 msgstr ""
-"会計上の国及び会計ポジションによって使用可能な税を絞り込む用の技術フィール"
-"ド。"
+"会計上の国及び会計ポジションによって使用可能な税を絞り込む用の技術フィールド"
+"。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__selected_seller_id
@@ -3211,8 +3205,8 @@ msgid ""
 "control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
-"見積依頼は、購買フローの最初のステップです。購買オーダに変換されると、プロダ"
-"クトの入荷と仕入先の請求書を管理できるようになります。"
+"見積依頼は、購買フローの最初のステップです。購買オーダに変換されると、"
+"プロダクトの入荷と仕入先の請求書を管理できるようになります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -3382,15 +3376,14 @@ msgid ""
 "Unable to cancel purchase order(s): %s. You must first cancel their related "
 "vendor bills."
 msgstr ""
-"この購買オーダをキャンセルできません: %s。最初に、関連する仕入先請求をキャン"
-"セルする必要があります。"
+"この購買オーダをキャンセルできません: %s。最初に、関連する仕入先請求を"
+"キャンセルする必要があります。"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
-msgstr ""
-"購買オーダ: %s をキャンセルできません。先にロックを解除する必要があります。"
+msgstr "購買オーダ: %s をキャンセルできません。先にロックを解除する必要があります。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
@@ -3470,8 +3463,7 @@ msgstr "緊急"
 msgid ""
 "Use the above REST URL to get structured data of the purchase order in UBL "
 "format."
-msgstr ""
-"上記のREST URLを使用して、購買オーダの構造データをUBL形式で取得します。"
+msgstr "上記のREST URLを使用して、購買オーダの構造データをUBL形式で取得します。"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -3653,8 +3645,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr ""
-"ベンダーは、名前、TIN、電子メール、または内部参照で見つけることができます。"
+msgstr "ベンダーは、名前、TIN、電子メール、または内部参照で見つけることができます。"
 
 #. module: purchase
 #. odoo-javascript

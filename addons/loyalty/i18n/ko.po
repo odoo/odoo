@@ -2,14 +2,14 @@
 # This file contains the translation of the following modules:
 # * loyalty
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-12-31 08:14+0000\n"
+"PO-Revision-Date: 2026-06-30 12:47+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/loyalty/"
 "ko/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__trigger
@@ -203,20 +203,20 @@ msgstr ""
 "margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
 "                    <h3 style=\"margin:0px; line-height:17px; font-"
 "family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
-"style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">카드 유"
-"효기간<t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></"
-"h3>\n"
+"style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">카드 "
+"유효기간<t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t>"
+"</h3>\n"
 "                </div>\n"
-"                <div style=\"padding:20px; margin:0px; text-align:center;"
-"\">\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">"
+"\n"
 "                    <span style=\"background-color:#999999; display:inline-"
 "block; width:auto; border-radius:5px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
 "target=\"_blank\" t-attf-style=\"text-decoration:none; font-family:arial, "
-"'helvetica neue', helvetica, sans-serif; font-size:22px; color: "
-"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
-"border-width:20px 30px; display:inline-block; background-color: "
-"{{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
+"'helvetica neue', helvetica, sans-serif; font-size:22px; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
+"border-width:20px 30px; display:inline-block; background-color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
 "font-weight:bold; font-style:normal; line-height:26px; width:auto; text-"
 "align:center\">지금 바로 사용하실 수 있습니다!</a>\n"
 "                    </span>\n"
@@ -239,8 +239,7 @@ msgstr "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/>"
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid ""
 "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/><span>All Products</span>"
-msgstr ""
-"<i class=\"fa fa-cube fa-fw\" title=\"Products\"/><span>전체 품목</span>"
+msgstr "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/><span>전체 품목</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -306,8 +305,8 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount "
 "of coupon points defined as the coupon value</span>"
 msgstr ""
-"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">지정된 쿠폰 가격"
-"만큼 쿠폰 포인트 금액을 부여합니다.</span>"
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">지정된 쿠폰 "
+"가격만큼 쿠폰 포인트 금액을 부여합니다.</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -434,8 +433,8 @@ msgstr ""
 "<tr>\n"
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        <t t-if=\"object._mail_get_customer().name\">\n"
-"            축하합니다 <t t-out=\"object._mail_get_customer().name or "
-"''\">Brandon Freeman</t>님,<br/>\n"
+"            축하합니다 <t t-out=\"object._mail_get_customer().name or ''\">"
+"Brandon Freeman</t>님,<br/>\n"
 "        </t>\n"
 "\n"
 "        <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t> "
@@ -443,8 +442,8 @@ msgstr ""
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
-"                <span t-attf-style=\"font-size: 50px; color: "
-"{{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
+"                <span t-attf-style=\"font-size: 50px; color: {"
+"{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
 "weight: bold;\" t-esc=\"reward.description\">리워드 상세 보기</span>\n"
 "                <br/>\n"
 "            </t>\n"
@@ -455,13 +454,13 @@ msgstr ""
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        다음 구매 시 프로모션 코드를 사용하세요.\n"
 "        <t t-if=\"object.expiration_date\">\n"
-"             만료일: <t t-out=\"format_date(object.expiration_date) or "
-"''\">2021-06-16</t>\n"
+"             만료일: <t t-out=\"format_date(object.expiration_date) or ''\">"
+"2021-06-16</t>\n"
 "        </t>\n"
 "        <p style=\"margin-top: 16px;\">\n"
 "            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; "
-"background-color: #F1F1F1;\" t-out=\"object.code or "
-"''\">15637502648479132902</strong>\n"
+"background-color: #F1F1F1;\" t-out=\"object.code or ''\">"
+"15637502648479132902</strong>\n"
 "        </p>\n"
 "        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
 "            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
@@ -943,8 +942,7 @@ msgstr "날짜"
 msgid ""
 "Define Discount codes on conditional rules then share it with your customers "
 "for rewards."
-msgstr ""
-"조건부 규칙에 할인 코드를 설정한 후 고객에게 리워드 지급 시 공유해주십시오."
+msgstr "조건부 규칙에 할인 코드를 설정한 후 고객에게 리워드 지급 시 공유해주십시오."
 
 #. module: loyalty
 #. odoo-python
@@ -1083,8 +1081,7 @@ msgstr ""
 msgid ""
 "Each rule can grant points to the customer he will be able to exchange "
 "against rewards"
-msgstr ""
-"각 규칙에서 고객에게 포인트를 부여하여 리워드로 교환할 수 있도록 합니다."
+msgstr "각 규칙에서 고객에게 포인트를 부여하여 리워드로 교환할 수 있도록 합니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -1205,9 +1202,9 @@ msgid ""
 "Point of Sale or regular orders to claim the Reward. You can define "
 "constraints on its usage through conditional rule."
 msgstr ""
-"수기로 쿠폰 코드를 생성하여 공유해보세요. 온라인 몰이나 POS 또는 일반 주문에"
-"서도 리워드 요청에 사용할 수 있습니다. 조건부 규칙으로 사용에 대한 제한 설정"
-"을 할 수 있습니다."
+"수기로 쿠폰 코드를 생성하여 공유해보세요. 온라인 몰이나 POS 또는 일반 "
+"주문에서도 리워드 요청에 사용할 수 있습니다. 조건부 규칙으로 사용에 대한 "
+"제한 설정을 할 수 있습니다."
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_generate_wizard
@@ -1287,8 +1284,8 @@ msgstr ""
 "기프트 카드를 수기로 생성하거나 고객이 기프트 카드 품목을 주문하면 이메일로 "
 "자동 발송합니다.\n"
 "                                    <br/>\n"
-"                                    그러면 기프트 카드를 사용하여 주문 결제"
-"를 할 수 있습니다."
+"                                    그러면 기프트 카드를 사용하여 주문 "
+"결제를 할 수 있습니다."
 
 #. module: loyalty
 #. odoo-python
@@ -1320,8 +1317,8 @@ msgid ""
 "Grant 1 credit for each item bought then reward the customer with Y items in "
 "exchange of X credits."
 msgstr ""
-"구매 항목마다 1 크레딧을 부여한 후 고객에게 X 크레딧을 Y 항목으로 교환하여 리"
-"워드를 받을 수 있도록 합니다."
+"구매 항목마다 1 크레딧을 부여한 후 고객에게 X 크레딧을 Y 항목으로 교환하여 "
+"리워드를 받을 수 있도록 합니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__has_message
@@ -2045,8 +2042,8 @@ msgstr "이 규칙에서 신청할 수 있는 상품입니다."
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
 msgstr ""
-"이 리워드 항목에서 할인받을 수 있는 최대 금액이며 제한하지 않으려면 0으로 두"
-"십시오."
+"이 리워드 항목에서 할인받을 수 있는 최대 금액이며 제한하지 않으려면 0으로 "
+"두십시오."
 
 #. module: loyalty
 #. odoo-python
@@ -2174,16 +2171,15 @@ msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
 msgstr ""
-"고객이 주문할 때 현재 주문이나 다음 주문에 대한 리워드로 교환할 수 있는 포인"
-"트가 적립됩니다."
+"고객이 주문할 때 현재 주문이나 다음 주문에 대한 리워드로 교환할 수 있는 "
+"포인트가 적립됩니다."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid ""
 "When generating coupon, you can define a specific points value that can be "
 "exchanged for rewards."
-msgstr ""
-"쿠폰을 생성할 때 리워드로 교환할 수 있는 특정 포인트 값을 설정할 수 있습니다."
+msgstr "쿠폰을 생성할 때 리워드로 교환할 수 있는 특정 포인트 값을 설정할 수 있습니다."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -2227,8 +2223,8 @@ msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
 msgstr ""
-"'쿠폰 및 적립'에서 사용 중이므로 %(name)s 항목을 삭제할 수 없습니다. 대신 보"
-"관 처리하십시오."
+"'쿠폰 및 적립'에서 사용 중이므로 %(name)s 항목을 삭제할 수 없습니다. 대신 "
+"보관 처리하십시오."
 
 #. module: loyalty
 #. odoo-python
@@ -2237,8 +2233,8 @@ msgid ""
 "You're about to generate %(program_type)s with a value of %(value)s for %"
 "(customer_number)i customers"
 msgstr ""
-"%(program_type)s을 %(value)s의 값으로 %(customer_number)i 고객에 대해 생성하"
-"려고 합니다."
+"%(program_type)s을 %(value)s의 값으로 %(customer_number)i 고객에 대해 "
+"생성하려고 합니다."
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
@@ -2298,11 +2294,11 @@ msgid ""
 "                                    Then, eWallets are proposed during the "
 "checkout, to pay orders."
 msgstr ""
-"고객이 전자 지급 품목을 주문할 경우 수동이나 자동으로 전자 지갑이 생성됩니"
-"다.\n"
+"고객이 전자 지급 품목을 주문할 경우 수동이나 자동으로 전자 지갑이 "
+"생성됩니다.\n"
 "                                     <br/>\n"
-"                                     그 후 결제 단계에서 주문 결제용으로 전"
-"자 지갑 사용이 제안됩니다."
+"                                     그 후 결제 단계에서 주문 결제용으로 "
+"전자 지갑 사용이 제안됩니다."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
