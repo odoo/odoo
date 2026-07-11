@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Defining CRM Dashboard Action -->
+    <record id="action_crm_lead_all_dashboard" model="ir.actions.client">
+        <field name="name">CRM</field>
+        <field name="tag">crm_dashboard</field>
+    </record>
+    <!-- Adding CRM Dashboard to the CRM Menu -->
+    <menuitem name="Dashboard" id="crm_dashboard_menu"
+              parent="crm.crm_menu_root"
+              sequence="0" action="action_crm_lead_all_dashboard"/>
+</odoo>

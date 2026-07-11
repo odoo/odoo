@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <t t-name="CrmDashboard">
+        <div class="container-fluid" style="overflow: auto; max-height: 100%;">
+            <section class="dashboard_main_section" id="main_section_login">
+                <div class="row">
+                    <div class="col-sm-12 mb-4">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-8">
+                                <h2 class="section-header">CRM Dashboard
+                                </h2>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <form class="form-group">
+                                    <select id="period_selection"
+                                            t-model="state.period"
+                                            t-on-change="OnChangePeriods"
+                                            class="form-control">
+                                        <option id="this_year"
+                                                value="year">This Year
+                                        </option>
+                                        <option id="this_quarter"
+                                                value="quarter">This
+                                            Quarter
+                                        </option>
+                                        <option id="this_month"
+                                                value="month"
+                                                selected="">This Month
+                                        </option>
+                                        <option id="this_week"
+                                                value="week">This Week
+                                        </option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <hr/>
+                    </div>
+                </div>
+            </section>
+            <section class="dashboard_card_section"
+                     id="main_section_cards">
+                <div class="crm_dash_cards row">
+                    <div class="col-sm-12 col-md-3">
+                        <div class="dashboard-card card-shadow my_lead"
+                             t-on-click="onClickLeads">
+                            <div class="dashboard-card__icon-container bg-mauve-light d-flex justify-content-center align-items-center">
+                                <i class="fa fa-line-chart text-mauve"/>
+                            </div>
+                            <div class="dashboard-card__details">
+                                <h3>
+                                    <span>
+                                        <t t-esc="this.state.leads"/>
+                                    </span>
+                                </h3>
+                                <h4>My Leads</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="dashboard-card card-shadow opportunity"
+                             t-on-click="onClickOpportunities">
+                            <div class="dashboard-card__icon-container bg-mauve-light d-flex justify-content-center align-items-center">
+                                <i class="fa fa-trophy text-mauve"/>
+                            </div>
+                            <div class="dashboard-card__details">
+                                <h3>
+                                    <span>
+                                        <t t-esc="this.state.opportunities"/>
+                                    </span>
+                                </h3>
+                                <h4>My Opportunities</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="dashboard-card card-shadow exp_revenue"
+                             t-on-click="onClickExpRevenue">
+                            <div class="dashboard-card__icon-container bg-mauve-light d-flex justify-content-center align-items-center">
+                                <i class="fa fa-usd text-mauve"/>
+                            </div>
+                            <div class="dashboard-card__details">
+                                <h3>
+                                    <span>
+                                        <t t-esc="this.state.exp_revenue"/>
+                                    </span>
+                                </h3>
+                                <h4>Expected Revenue</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="dashboard-card card-shadow revenue_card"
+                             t-on-click="onClickRevenue">
+                            <div
+                                    class="dashboard-card__icon-container bg-mauve-light d-flex justify-content-center align-items-center">
+                                <i class="fa fa-usd text-mauve"/>
+                            </div>
+                            <div class="dashboard-card__details">
+                                <h3>
+                                    <span>
+                                        <t t-esc="this.state.revenue"/>
+                                    </span>
+                                </h3>
+                                <h4>Revenue</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="dashboard-card card-shadow win_ratio">
+                            <div
+                                    class="dashboard-card__icon-container bg-mauve-light d-flex justify-content-center align-items-center">
+                                <i class="fa fa-percent text-mauve"/>
+                            </div>
+                            <div class="dashboard-card__details">
+                                <h3>
+                                    <span>
+                                        <t t-esc="this.state.win_ratio"/>
+                                    </span>
+                                </h3>
+                                <h4>Win Ratio</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="dashboard-card card-shadow avg_close_time">
+                            <div
+                                    class="dashboard-card__icon-container bg-mauve-light d-flex justify-content-center align-items-center">
+                                <i class="fa fa-clock-o text-mauve"/>
+                            </div>
+                            <div class="dashboard-card__details">
+                                <h3>
+                                    <span>
+                                        <t t-esc="this.state.avg_close_time"/>
+                                        Seconds
+                                    </span>
+                                </h3>
+                                <h4>Average Closing Time</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="dashboard-card card-shadow opportunity_ratio">
+                            <div
+                                    class="dashboard-card__icon-container bg-mauve-light d-flex justify-content-center align-items-center">
+                                <i class="fa fa-percent text-mauve"/>
+                            </div>
+                            <div class="dashboard-card__details">
+                                <h3>
+                                    <span>
+                                        <t t-esc="this.state.opportunity_ratio"/>
+                                    </span>
+                                </h3>
+                                <h4>Opportunity Win Loss Ratio</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="dashboard-card card-shadow unassigned_leads"
+                             t-on-click="onClickUnAssignedLeads">
+                            <div
+                                    class="dashboard-card__icon-container bg-mauve-light d-flex justify-content-center align-items-center">
+                                <i class="fa fa-user-times text-mauve"/>
+                            </div>
+                            <div class="dashboard-card__details">
+                                <h3>
+                                    <span>
+                                        <t t-esc="this.state.unassigned_leads"/>
+                                    </span>
+                                </h3>
+                                <h4>Unassigned Leads Count</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-md-12">
+                    <div class="col-md-4">
+                        <div class="row" style="display:flex; padding: 20px;">
+                            <div class="card-body" id="in_ex_body_hide">
+                                <div class="leads_stages chart-container card-shadow">
+                                    <h2>Leads Stage</h2>
+                                    <hr/>
+                                    <div class="graph_canvas">
+                                        <canvas t-ref="leads_stage" width="200"
+                                                height="120"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row" style="display:flex; padding: 20px;">
+                            <div class="card-body" id="in_ex_body_hide">
+                                <div class="leads_stages chart-container card-shadow">
+                                    <h2>Leads By Months</h2>
+                                    <hr/>
+                                    <div class="graph_canvas">
+                                        <canvas t-ref="leads_by_month"
+                                                width="200"
+                                                height="120"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row" style="display:flex; padding: 20px;">
+                            <div class="card-body" id="in_ex_body_hide">
+                                <div class="leads_stages chart-container card-shadow">
+                                    <h2>CRM Activities</h2>
+                                    <hr/>
+                                    <div class="graph_canvas">
+                                        <canvas t-ref="crm_activities"
+                                                width="200"
+                                                height="120"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row" style="display:flex; padding: 20px;">
+                            <div class="card-body" id="in_ex_body_hide">
+                                <div class="leads_campaign chart-container card-shadow">
+                                    <h2>Leads Group By Campaign</h2>
+                                    <hr/>
+                                    <div class="graph_canvas">
+                                        <canvas t-ref="leads_campaign"
+                                                width="200"
+                                                height="120"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row" style="display:flex; padding: 20px;">
+                            <div class="card-body" id="in_ex_body_hide">
+                                <div class="leads_medium chart-container card-shadow">
+                                    <h2>Leads Group By Medium</h2>
+                                    <hr/>
+                                    <div class="graph_canvas">
+                                        <canvas t-ref="leads_medium"
+                                                width="200"
+                                                height="120"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row" style="display:flex; padding: 20px;">
+                            <div class="card-body" id="in_ex_body_hide">
+                                <div class="leads_source chart-container card-shadow">
+                                    <h2>Leads Group By Source</h2>
+                                    <hr/>
+                                    <div class="graph_canvas">
+                                        <canvas t-ref="leads_source"
+                                                width="200"
+                                                height="120"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row" style="display:flex; padding: 20px;">
+                            <div class="card-body" id="in_ex_body_hide">
+                                <div class="leads_lost chart-container card-shadow">
+                                    <h2>Lost Opportunity/Lead</h2>
+                                    <hr/>
+                                    <div class="graph_canvas">
+                                        <canvas t-ref="leads_lost"
+                                                width="200"
+                                                height="120"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row" style="display:flex; padding: 20px;">
+                            <div class="card-body" id="in_ex_body_hide">
+                                <div class="total_revenue chart-container card-shadow">
+                                    <h2>Total Revenue by Salesperson</h2>
+                                    <hr/>
+                                    <div class="graph_canvas">
+                                        <canvas t-ref="total_revenue"
+                                                width="200"
+                                                height="120"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="upcoming_activities_div col-12 col-sm-12 col-md-4">
+                        <div class="chart-container card-shadow">
+                            <h3 class="h5">Upcoming Activities</h3>
+                            <hr/>
+                            <div class="crm_scroll_table"
+                                 style="max-height:530px;">
+                                <div class="items-table">
+                                    <div class="item-container">
+                                        <t t-if="state.upcoming_events">
+                                            <t t-foreach="state.upcoming_events"
+                                               t-as="activity"
+                                               t-key="activity">
+                                                <div class="item-header">
+                                                    <div class="count-container">
+                                                        <t t-esc="activity[1]"/>
+                                                    </div>
+                                                    <div class="item-title pl-3">
+                                                        <div class="item-content">
+                                                            <ul>
+                                                                <li>
+                                                                    <t t-set="lang_cu"
+                                                                       t-value="state.current_lang"/>
+                                                                    <t t-if="lang_cu in activity[4]">
+                                                                        Activity:
+                                                                        <span style="font-size: 16px;color: #4c4c4c;">
+                                                                            <t t-esc="activity[4][lang_cu]"/>
+                                                                        </span>
+                                                                    </t>
+                                                                </li>
+                                                                <li>
+                                                                    Name:
+                                                                    <span style="font-size: 15px;color: #4c4c4c;">
+                                                                        <t t-esc="activity[3]"/>
+                                                                    </span>
+                                                                </li>
+                                                                <li t-if="activity[2]">
+                                                                    Summary:
+                                                                    <span style="font-size: 13px;color: #4c4c4c;">
+                                                                        <t t-esc="activity[2]"/>
+                                                                    </span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="recent_activity_div col-12 col-sm-12 col-md-4">
+                        <div class="chart-container card-shadow">
+                            <h3 class="h5">Recent Activities</h3>
+                            <hr/>
+                            <div class="crm_scroll_table">
+                                <div class="items-table">
+                                    <div class="item-container">
+                                        <t t-if="state.recent_activities">
+                                            <t t-foreach="state.recent_activities"
+                                               t-as="activity" t-key="activity">
+                                                <div class="item-header">
+                                                    <div class="count-container">
+                                                        <t t-esc="activity[1]"/>
+                                                    </div>
+                                                    <div class="item-title pl-3">
+                                                        <div class="item-content">
+                                                            <ul>
+                                                                <li>
+                                                                    <t t-set="lang_cu"
+                                                                       t-value="state.current_lang"/>
+                                                                    <t t-if="lang_cu in activity[4]">
+                                                                        Activity:
+                                                                        <span style="font-size: 15px;color: #4c4c4c;">
+                                                                            <t t-esc="activity[4][lang_cu]"/>
+                                                                        </span>
+                                                                    </t>
+                                                                </li>
+                                                                <li>Name:
+                                                                    <span style="font-size: 13px;color: #4c4c4c;">
+                                                                        <t t-esc="activity[3]"/>
+                                                                    </span>
+                                                                </li>
+                                                                <li t-if="activity[2]">
+                                                                    Summary:
+                                                                    <span style="font-size: 13px;color: #4c4c4c;">
+                                                                        <t t-esc="activity[2]"/>
+                                                                    </span>
+                                                                </li>
+                                                                <li>
+                                                                    Sales Rep:
+                                                                    <t
+                                                                            t-esc="activity[5]"/>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="top_sp_revenue_div col-12 col-sm-12 col-md-4">
+                            <div class="chart-container card-shadow">
+                                <h3 class="h5">Top Salesperson Revenue</h3>
+                                <hr/>
+                                <table class="table table-hover"
+                                       id="salesperson_revenue_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Opportunity</th>
+                                            <th>Revenue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="state.top_sp_revenue">
+                                            <t t-foreach="state.top_sp_revenue"
+                                               t-as="activity" t-key="activity">
+                                                <tr>
+                                                    <td>
+                                                        <t t-esc="activity[3]"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="activity[5]"/>
+                                                        <t t-esc="activity[2]"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="top_country_revenue_div col-12 col-sm-12 col-md-4">
+                            <div class="chart-container card-shadow">
+                                <h3 class="h5">Top Country Wise Revenue</h3>
+                                <hr/>
+                                <table class="table table-hover"
+                                       id="country_revenue_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>Revenue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="state.country_revenue">
+                                            <t t-foreach="state.country_revenue"
+                                               t-as="activity" t-key="activity">
+                                                <tr>
+                                                    <td>
+                                                        <t t-esc="activity[0]"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="activity[2]"/>
+                                                        <t t-esc="activity[1]"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="top_country_count_div col-12 col-sm-12 col-md-4">
+                            <div class="chart-container card-shadow">
+                                <h3 class="h5">Top Country Wise Count</h3>
+                                <hr/>
+                                <table class="table table-hover"
+                                       id="country_count_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="state.country_count">
+                                            <t t-foreach="state.country_count"
+                                               t-as="activity" t-key="activity">
+                                                <tr>
+                                                    <td>
+                                                        <t t-esc="activity[0]"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="activity[1]"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </t>
+</template>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Customizing UTM Campaign Form View -->
+    <record id="utm_campaign_view_form" model="ir.ui.view">
+        <field name="name">utm.campaign.view.form.inherit.crm.dashboard</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object"
+                        name="get_ratio" icon="fa-percent">
+                    <field string="Ratio" name="total_ratio"
+                           widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

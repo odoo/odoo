@@ -1,0 +1,295 @@
+/* Dashboard Main Section Styles */
+.dashboard_main_section {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    background-color: #f8f9fa;
+}
+
+.section-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #343a40;
+}
+
+/* Period Selection Styles */
+#period_selection {
+    margin-top: 1rem;
+    width: 100%;
+    height: 38px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #fff;
+    color: #495057;
+    font-size: 1rem;
+    line-height: 1.5;
+    padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+}
+
+#period_selection:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Responsive Styles */
+@media (max-width: 767px) {
+    .section-header {
+        font-size: 1.25rem;
+    }
+
+    #period_selection {
+        margin-top: 0.5rem;
+        height: 32px;
+        font-size: 0.875rem;
+        padding: 0.25rem 1.5rem 0.25rem 0.5rem;
+    }
+}
+
+/* Dashboard Card Section Styles */
+.dashboard_card_section {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+/* Dashboard Card Styles */
+.dashboard-card {
+    position: relative;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-card__icon-container {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    color: #797979;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+}
+
+.dashboard-card__details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    padding-left: 1rem;
+}
+
+.dashboard-card__details h3,
+.dashboard-card__details h4 {
+    margin-bottom: 0;
+    color: #333;
+}
+
+.dashboard-card__details h3 {
+    font-size: 1.25rem;
+}
+
+.dashboard-card__details h4 {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Specific Card Styles */
+.card-shadow {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bg-mauve-light {
+    background-color: #f9f7ff;
+}
+
+.text-mauve {
+    color: #7c4dff;
+}
+
+/* Responsive Styles */
+@media (max-width: 767px) {
+    .dashboard-card {
+        padding: 0.75rem;
+    }
+
+    .dashboard-card__icon-container {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.25rem;
+    }
+
+    .dashboard-card__details h3 {
+        font-size: 1rem;
+    }
+
+    .dashboard-card__details h4 {
+        font-size: 0.875rem;
+    }
+}
+/* Modern Minimalistic Kanban Card Style */
+/* Card Layout: Date as the Main Element */
+.upcoming_activities_div .chart-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.upcoming_activities_div h3 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    color: #444;
+}
+
+.recent_activity_div h3 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    color: #444;
+}
+.recent_activity_div .chart-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.top_sp_revenue_div .chart-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.top_sp_revenue_div h3 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    color: #444;
+}
+.top_country_revenue_div .chart-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.top_country_revenue_div h3 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    color: #444;
+}
+.top_country_count_div .chart-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.top_country_count_div h3 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    color: #444;
+}
+.crm_scroll_table {
+    overflow-y: auto;
+    max-height: 530px;
+}
+
+.items-table {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-header {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+.item-header:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.date-container {
+    flex-shrink: 0;
+    background-color: #4c8bf5;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    margin-right: 20px;
+    min-width: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.date-container .day {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.date-container .month {
+    font-size: 14px;
+}
+
+.item-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-content .item-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.item-content .item-summary {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.item-content .item-extra {
+    font-size: 13px;
+    color: #888;
+}
+h2 {
+    padding: 8px;
+}
+canvas{
+    padding-bottom: 9px;
+}
+#in_ex_body_hide{
+    background: white;
+}
