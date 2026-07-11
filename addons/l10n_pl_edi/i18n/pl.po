@@ -1,53 +1,57 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_pl_edi
+# * l10n_pl_edi
 #
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:09+0000\n"
-"PO-Revision-Date: 2026-02-06 19:05+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"POT-Creation-Date: 2026-07-10 18:19+0000\n"
+"PO-Revision-Date: 2026-07-07 09:10+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19-l10n/"
+"l10n_pl_edi/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "A polish VAT number must be set on your company."
-msgstr ""
+msgstr "W danych firmy należy podać polski numer NIP."
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__accepted
 msgid "Accepted"
-msgstr ""
+msgstr "Zaakceptowano"
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Wysyłanie zapisu księgowego"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__l10n_pl_edi_register
 msgid "Allow KSeF integration"
-msgstr ""
+msgstr "Zezwól na integrację z KSeF"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "Authentication with KSeF failed."
-msgstr ""
+msgstr "Uwierzytelnianie za pomocą KSeF zakończone niepowodzeniem."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "Bill Fetched Successfully from KSeF"
-msgstr ""
+msgstr "Pomyślnie pobrano rachunek z KSeF"
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.res_config_settings_view_form_l10n_pl_edi
@@ -55,32 +59,34 @@ msgid ""
 "By checking this box, I authorize Odoo to send and receive my invoices "
 "through the KSeF in the FA(3) format."
 msgstr ""
+"Zaznaczając to pole, upoważniam Odoo do wysyłania i odbierania moich faktur "
+"za pośrednictwem KSeF w formacie FA(3)."
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.view_move_form_l10n_pl_edi
 msgid "Check Sending"
-msgstr ""
+msgstr "Sprawdź wysyłkę"
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Firmy"
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfiguracja ustawień"
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "Could not fetch KSeF public keys: %s"
-msgstr ""
+msgstr "Nie udało się pobrać kluczy publicznych KSeF: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -89,16 +95,24 @@ msgid ""
 "Could not find all required KSeF public keys ('SymmetricKeyEncryption' and "
 "'KsefTokenEncryption')."
 msgstr ""
+"Nie udało się znaleźć wszystkich wymaganych kluczy publicznych KSeF "
+"(„SymmetricKeyEncryption” i „KsefTokenEncryption”)."
 
 #. module: l10n_pl_edi
 #: model:ir.model,website_form_label:l10n_pl_edi.model_res_partner
 msgid "Create a Customer"
+msgstr "Utwórz klienta"
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "Currency '%s' from the KSeF bill was not found."
 msgstr ""
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
 msgid "Data wystawienia faktury"
-msgstr ""
+msgstr "Data wystawienia faktury"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__display_name
@@ -107,82 +121,82 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_partner__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nazwa wyświetlana"
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
 msgid "Dni"
-msgstr ""
+msgstr "Dni"
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.view_move_form_l10n_pl_edi
 msgid "Download UPO"
-msgstr ""
+msgstr "Pobierz UPO"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move_send.py:0
 msgid "Error when sending invoices to the KSeF"
-msgstr ""
+msgstr "Podczas wysyłania faktur do KSeF wystąpił błąd"
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
 msgid "FA"
-msgstr ""
+msgstr "FA"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "Failed to authenticate with XAdES: %s"
-msgstr ""
+msgstr "Uwierzytelnianie z XAdES zakończone niepowodzeniem: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "Failed to check KSeF auth status: %s"
-msgstr ""
+msgstr "Nie udało się sprawdzić statusu autoryzacji KSeF: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "Failed to check KSeF session: %s"
-msgstr ""
+msgstr "Nie udało się sprawdzić sesji KSeF: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "Failed to check KSeF status: %s"
-msgstr ""
+msgstr "Nie udało się sprawdzić statusu KSeF: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "Failed to download UPO: %s"
-msgstr ""
+msgstr "Nie udało się pobrać UPO: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "Failed to get challenge code: %s"
-msgstr ""
+msgstr "Nie udało się uzyskać kodu weryfikacyjnego: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "Failed to initiate KSeF authentication."
-msgstr ""
+msgstr "Nie udało się zainicjować uwierzytelniania KSeF."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "Failed to open KSeF session: %s"
-msgstr ""
+msgstr "Nie udało się otworzyć sesji KSeF: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "Failed to redeem token: %s"
-msgstr ""
+msgstr "Nie udało się zrealizować tokenu: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -191,45 +205,47 @@ msgid ""
 "Failed to refresh KSeF access token. You may need to re-authenticate "
 "manually. Error: %s"
 msgstr ""
+"Nie udało się odświeżyć tokenu dostępu KSeF. Konieczne może być ponowne "
+"ręczne uwierzytelnienie. Błąd: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "Failed to retrieve a new access token from KSeF response."
-msgstr ""
+msgstr "Nie udało się pobrać nowego tokenu dostępu z odpowiedzi KSeF."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "Failed to retrieve access or refresh tokens."
-msgstr ""
+msgstr "Nie udało się odzyskać dostępu ani odświeżyć tokenów."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "Failed to start token authentication: %s"
-msgstr ""
+msgstr "Nie udało się rozpocząć uwierzytelniania tokenu: %s"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__fetch_failed
 msgid "Fetch Failed"
-msgstr ""
+msgstr "Pobieranie nie powiodło się"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__fetch_ready
 msgid "Fetch Ready"
-msgstr ""
+msgstr "Pobieranie gotowe"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__fetched
 msgid "Fetched"
-msgstr ""
+msgstr "Pobrano"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "Fetching Bill from KSeF ..."
-msgstr ""
+msgstr "Pobieranie rachunku z KSeF..."
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__id
@@ -238,29 +254,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_partner__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Zapis dziennika"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "KSeF API Error: %s"
-msgstr ""
+msgstr "Błąd API KSeF: %s"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__l10n_pl_edi_access_token
 msgid "KSeF Access Token"
-msgstr ""
+msgstr "Token dostępu KSeF"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_attachment_id
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_attachment_id
 msgid "KSeF Attachment"
-msgstr ""
+msgstr "Załącznik KSeF"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -269,97 +285,100 @@ msgid ""
 "KSeF Authentication failed with status %(status_code)s: %"
 "(status_description)s"
 msgstr ""
+"Uwierzytelnianie KSeF nie powiodło się z kodem błędu %(status_code)s: %"
+"(status_description)s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "KSeF Authentication timed out. Please try again in a moment."
 msgstr ""
+"Przekroczono limit czasu uwierzytelniania KSeF. Spróbuj ponownie później."
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__l10n_pl_edi_certificate
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__l10n_pl_edi_certificate
 msgid "KSeF Certificate"
-msgstr ""
+msgstr "Certyfikat KSeF"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Fetched Invoice XML"
-msgstr ""
+msgstr "Pobrane pliki XML faktur KSeF"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_register
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_register
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__l10n_pl_edi_register
 msgid "KSeF Integration Enabled"
-msgstr ""
+msgstr "Włączona integracja z KSeF"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_number
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_number
 msgid "KSeF Number"
-msgstr ""
+msgstr "Numer KSeF"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Official Confirmation of Receipt (UPO)"
-msgstr ""
+msgstr "Oficjalne potwierdzenie odbioru KSeF (UPO)"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_ref
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_ref
 msgid "KSeF Reference Number"
-msgstr ""
+msgstr "Numer referencyjny KSeF"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move_send.py:0
 msgid "KSeF Sent Invoice XML"
-msgstr ""
+msgstr "KSeF – wysłana faktura XML"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_session_id
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_session_id
 msgid "KSeF Session Number used for sending"
-msgstr ""
+msgstr "Numer sesji KSeF użyty do wysłania"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_status
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_status
 msgid "KSeF Status"
-msgstr ""
+msgstr "Status KSeF"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Error (Code: 500). Unknown error."
-msgstr ""
+msgstr "Status KSeF: Błąd (kod: 500). Nieznany błąd."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Invoice accepted for further processing (Code: 100)."
-msgstr ""
+msgstr "Status KSeF: Faktura przyjęta do dalszego przetwarzania (kod: 100)."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Processing in progress (Code: 150)."
-msgstr ""
+msgstr "Status KSeF: Przetwarzanie w toku (kod: 150)."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Rejected (Code: 405). Processing canceled."
-msgstr ""
+msgstr "Status KSeF: Odrzucono (Kod: 405). Przetwarzanie anulowane."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Rejected (Code: 410). Incorrect scope of permissions."
-msgstr ""
+msgstr "Status KSeF: Odrzucono (Kod:410). Nieprawidłowy zakres uprawnień."
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -368,24 +387,25 @@ msgid ""
 "KSeF Status: Rejected (Code: 415). It is not possible to send an invoice "
 "with an attachment."
 msgstr ""
+"Status KSeF: Odrzucono (kod: 415). Nie można wysłać faktury z załącznikiem."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Rejected (Code: 430). Invoice file verification error."
-msgstr ""
+msgstr "Status KSeF: Odrzucono (kod: 430). Błąd weryfikacji pliku faktury."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Rejected (Code: 435). File decryption error."
-msgstr ""
+msgstr "Status KSeF: Odrzucono (Kod: 435). Błąd odszyfrowywania pliku."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Rejected (Code: 440). Duplicate invoice."
-msgstr ""
+msgstr "Status KSeF: Odrzucono (Kod: 440). Powielona faktura."
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -394,128 +414,131 @@ msgid ""
 "KSeF Status: Rejected (Code: 450). Invoice document semantics verification "
 "error."
 msgstr ""
+"Status KSeF: Odrzucono (kod: 450). Błąd weryfikacji semantyki dokumentu "
+"faktury."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Success (Code: 200). Invoice accepted."
-msgstr ""
+msgstr "Status KSeF: Powodzenie (Kod: 200). Faktura zaakceptowana."
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__l10n_pl_edi_access_token
 msgid "KSeF Token"
-msgstr ""
+msgstr "Token KSeF"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__l10n_pl_edi_refresh_token
 msgid "KSeF Token Expiration"
-msgstr ""
+msgstr "Wygaśnięcie tokena KSeF"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF XML failed. Reason: %s"
-msgstr ""
+msgstr "Błąd XML KSeF. Przyczyna: %s"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF XML failed. Something went wrong"
-msgstr ""
+msgstr "Błąd XML KSeF. Coś poszło nie tak"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "KSeF certificate and private key are not set."
-msgstr ""
+msgstr "Certyfikat KSeF i prywatny klucz nie zostały skonfigurowane."
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
 msgid "Koniec miesiąca"
-msgstr ""
+msgstr "Koniec miesiąca"
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
 msgid "Koniec następnego miesiąca"
-msgstr ""
+msgstr "Koniec następnego miesiąca"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_attachment_file
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_attachment_file
 msgid "L10N Pl Edi Attachment File"
-msgstr ""
+msgstr "Plik załącznika L10N Pl Edi"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_header
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_header
 msgid "L10N Pl Edi Header"
-msgstr ""
+msgstr "Nagłówek L10N Pl Edi"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_upo_file
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_upo_file
 msgid "L10N Pl Edi Upo File"
-msgstr ""
+msgstr "Plik UPO L10N Pl Edi"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "No active KSeF session found. Please open a session first."
-msgstr ""
+msgstr "Nie znaleziono aktywnej sesji KSeF. Najpierw otwórz sesję."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "No description provided."
-msgstr ""
+msgstr "Nie podano żadnego opisu."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid "No refresh token found to renew the session."
-msgstr ""
+msgstr "Nie znaleziono tokenu odświeżającego umożliwiającego odnowienie sesji."
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
 msgid "PL"
-msgstr ""
+msgstr "PL"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "Please complete the address of your company\n"
-msgstr ""
+msgstr "Podaj adres swojej firmy\n"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "Please set up a valid KSeF Certificate, with its Private Key set"
 msgstr ""
+"Proszę skonfigurować ważny certyfikat KSeF, ustawiając jego klucz prywatny"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields.selection,name:l10n_pl_edi.selection__res_partner__invoice_edi_format__fa3_pl
 msgid "Polish FA3"
-msgstr ""
+msgstr "Polskie FA3"
 
 #. module: l10n_pl_edi
 #: model:ir.actions.server,name:l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills_ir_actions_server
 msgid "Polish eInvoice: Download vendor bills from KSeF"
-msgstr ""
+msgstr "Polska e-faktura: Pobieraj faktury od dostawców z KSeF"
 
 #. module: l10n_pl_edi
 #: model:ir.actions.server,name:l10n_pl_edi.cron_l10n_pl_edi_refresh_tokens_ir_actions_server
 msgid "Polish eInvoice: Refresh KSeF tokens"
-msgstr ""
+msgstr "Polska e-faktura: Odśwież tokeny KSeF"
 
 #. module: l10n_pl_edi
 #: model:ir.actions.server,name:l10n_pl_edi.cron_auto_checks_the_polish_invoice_status_ir_actions_server
 msgid "Polish eInvoice: automatically check the status of the invoice in ksef"
-msgstr ""
+msgstr "Polska e-faktura: automatycznie sprawdzaj status faktur w KSeF"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -524,16 +547,18 @@ msgid ""
 "Purchase tax corresponding to '%s' required for the KSeF import was not "
 "found in the system."
 msgstr ""
+"W systemie nie znaleziono podatku od zakupu odpowiadającego „%s ”, "
+"wymaganego do importu do KSeF."
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__l10n_pl_edi_session_id
 msgid "Reference number"
-msgstr ""
+msgstr "Numer referencyjny"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__rejected
 msgid "Rejected"
-msgstr ""
+msgstr "Odrzucono"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -541,28 +566,29 @@ msgstr ""
 msgid ""
 "Send the electronic invoice to the Polish National e-Invoicing System (KSeF)."
 msgstr ""
+"Wyślij fakturę elektroniczną do polskiego Krajowego Systemu e-Faktur (KSeF)."
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__sent
 msgid "Sent (In Progress)"
-msgstr ""
+msgstr "Wysłano (W toku)"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__l10n_pl_edi_session_iv
 msgid "Session iv"
-msgstr ""
+msgstr "Sesja IV"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__l10n_pl_edi_session_key
 msgid "Session key"
-msgstr ""
+msgstr "Klucz sesji"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid ""
 "Tax corresponding to '%s' required to derive the net unit price from gross "
-"price during KSeF import was not found in the mapping."
+"price during KSeF import could not be interpreted."
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -572,23 +598,27 @@ msgid ""
 "The KSeF Official Confirmation of Receipt (UPO) has been downloaded and "
 "attached."
 msgstr ""
+"Oficjalne urzędowe poświadczenie odbioru (UPO) z KSeF zostało pobrane i "
+"załączone."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move_send.py:0
 msgid "The KSeF XML has been attached."
-msgstr ""
+msgstr "Plik XML KSeF został załączony."
 
 #. module: l10n_pl_edi
 #: model:ir.model.constraint,message:l10n_pl_edi.constraint_account_move_l10n_pl_edi_number_company_id_move_type_uniq
 msgid "The KSeF number must be unique per company per move_type"
 msgstr ""
+"Numer KSeF musi być unikalny dla każdej firmy i każdego typu operacji "
+"(move_type)"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "The KSeF service returned empty UPO content."
-msgstr ""
+msgstr "Usługa KSeF zwróciła pustą treść UPO."
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -597,18 +627,21 @@ msgid ""
 "The invoice was successfully sent to KSeF but the status check failed and "
 "will be retried later, 'Check Sending' to retry immediately."
 msgstr ""
+"Faktura została pomyślnie wysłana do KSeF, ale sprawdzenie statusu nie "
+"powiodło się i zostanie powtórzone później. Kliknij „Sprawdź wysyłkę”, aby "
+"spróbować ponownie natychmiast."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move_send.py:0
 msgid "The move was skipped because it is future-dated"
-msgstr ""
+msgstr "Ten zapis został pominięty ponieważ ma przyszłą datę"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "The selected certificate record (%(name)s) is missing a private key."
-msgstr ""
+msgstr "W wybranym rekordzie certyfikatu (%(name)s) brakuje klucza prywatnego."
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -617,18 +650,20 @@ msgid ""
 "This invoice does not have a KSeF Invoice Reference Number. It may not have "
 "been sent yet."
 msgstr ""
+"Ta faktura nie posiada numeru referencyjnego KSeF. Być może nie została "
+"jeszcze wysłana."
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_upo_id
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_account_move__l10n_pl_edi_upo_id
 msgid "UPO Attachment"
-msgstr ""
+msgstr "Załącznik UPO"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "Unknown status received from KSeF (Code: %(code)s): %(description)s"
-msgstr ""
+msgstr "Otrzymano nieznany status od KSeF (kod: %(code)s): %(description)s"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,help:l10n_pl_edi.field_account_bank_statement_line__l10n_pl_edi_header
@@ -636,12 +671,14 @@ msgstr ""
 msgid ""
 "User description of the current state, with hints to make the flow progress"
 msgstr ""
+"Opis aktualnego stanu przez użytkownika wraz z wskazówkami dotyczącymi "
+"dalszego przebiegu procesu"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move_send.py:0
 msgid "Warning: KSeF status check failed"
-msgstr ""
+msgstr "Ostrzeżenie: Sprawdzanie statusu KSeF zakończyło się niepowodzeniem"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -650,44 +687,54 @@ msgid ""
 "You can only download a UPO for an 'Accepted' invoice. Please update the "
 "status first."
 msgstr ""
+"UPO można pobrać wyłącznie dla faktury o statusie „Zaakceptowana”. Proszę "
+"najpierw zaktualizować status."
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "You must have a VAT number to be able to issue e-invoices\n"
-msgstr ""
+msgstr "Aby móc wystawiać e-faktury, musisz posiadać NIP\n"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "accepted"
-msgstr ""
+msgstr "zaakceptowano"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move_send.py:0
 msgid "by KSeF (e-Faktura)"
-msgstr ""
+msgstr "przez KSeF (e-Faktura)"
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.res_config_settings_view_form_l10n_pl_edi
 msgid "certificate.pem"
-msgstr ""
+msgstr "certificate.pem"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_users__invoice_edi_format
 msgid "eInvoice format"
-msgstr ""
+msgstr "format e-faktury"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "rejected"
-msgstr ""
+msgstr "odrzucono"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "sent"
-msgstr ""
+msgstr "wysłano"
+
+#~ msgid ""
+#~ "Tax corresponding to '%s' required to derive the net unit price from "
+#~ "gross price during KSeF import was not found in the mapping."
+#~ msgstr ""
+#~ "Podczas mapowania nie znaleziono podatku odpowiadającego „%s ”, "
+#~ "wymaganego do obliczenia ceny jednostkowej netto na podstawie ceny brutto "
+#~ "podczas importu z KSeF."
