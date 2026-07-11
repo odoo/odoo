@@ -349,6 +349,17 @@ function makeDebouncedPush(mode) {
         // Calculates new route based on aggregated search and options
         const nextState = computeNextState(pushArgs.state, pushArgs.replace);
         const url = browser.location.origin + router.stateToUrl(nextState);
+        const safeHistoryCall = (method, stateObj, urlStr) => {
+            try {
+                browser.history[method](stateObj, "", urlStr);
+            } catch (error) {
+                if (error.name === "NS_ERROR_ILLEGAL_VALUE") {
+                    browser.history[method](null, "", urlStr);
+                } else {
+                    throw error;
+                }
+            }
+        }
         if (!compareUrls(url + browser.location.hash, browser.location.href)) {
             // If the route changed: pushes or replaces browser state
             if (mode === "push") {
@@ -358,14 +369,14 @@ function makeDebouncedPush(mode) {
                 // then restore the title to what it's supposed to be
                 const originalTitle = document.title;
                 document.title = pushArgs.title;
-                browser.history.pushState({ nextState }, "", url);
+                safeHistoryCall("pushState", { nextState }, url);
                 document.title = originalTitle;
             } else {
-                browser.history.replaceState({ nextState }, "", url);
+                safeHistoryCall("replaceState", { nextState }, url);
             }
         } else {
             // URL didn't change but state might have, update it in place
-            browser.history.replaceState({ nextState }, "", browser.location.href);
+            safeHistoryCall("replaceState", { nextState }, browser.location.href);
         }
         state = nextState;
         if (pushArgs.reload) {
