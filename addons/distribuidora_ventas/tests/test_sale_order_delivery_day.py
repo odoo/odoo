@@ -45,3 +45,21 @@ class TestSaleOrderDeliveryDay(TransactionCase):
                 'partner_id': self.partner.id,
                 'commitment_date': datetime(2026, 7, 19, 8, 0, 0),  # domingo
             })
+
+    def test_monday_evening_local_is_accepted_despite_utc_rollover(self):
+        # 2026-07-14 02:00 UTC == 2026-07-13 20:00 America/Costa_Rica (lunes noche).
+        # The old UTC-naive check saw "martes" here and wrongly rejected it.
+        order = self.env['sale.order'].with_context(tz='America/Costa_Rica').create({
+            'partner_id': self.partner.id,
+            'commitment_date': datetime(2026, 7, 14, 2, 0, 0),
+        })
+        self.assertTrue(order)
+
+    def test_sunday_evening_local_is_rejected_despite_utc_showing_monday(self):
+        # 2026-07-13 02:00 UTC == 2026-07-12 20:00 America/Costa_Rica (domingo noche).
+        # The old UTC-naive check saw "lunes" here and wrongly accepted it.
+        with self.assertRaises(ValidationError):
+            self.env['sale.order'].with_context(tz='America/Costa_Rica').create({
+                'partner_id': self.partner.id,
+                'commitment_date': datetime(2026, 7, 13, 2, 0, 0),
+            })
