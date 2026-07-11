@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
-"PO-Revision-Date: 2026-06-23 09:29+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-06 12:54+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/de/>\n"
@@ -63,12 +63,19 @@ msgid "% Disc"
 msgstr "% Rab."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
+msgid "% discount off on"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid ""
 "%(amount)s is more than 25% of the order's total amount. Are you sure of "
 "this tip amount?"
 msgstr ""
+"%(amount)s beträgt mehr als 25 % des Gesamtbetrags der Bestellung. Ist "
+"dieser Trinkgeldbetrag korrekt?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -102,7 +109,7 @@ msgstr "%(old_pm)s wurde auf %(new_pm)s für %(old_amount)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "%(original)s + %(tip)s tip = %(overall)s"
-msgstr ""
+msgstr "%(original)s + %(tip)s Trinkgeld = %(overall)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1340,7 +1347,7 @@ msgstr "Sind Sie sich sicher, dass der Kunde zahlen möchte?"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "Are you sure?"
-msgstr ""
+msgstr "Sind Sie sicher?"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_sourdough_loaf_product_template
@@ -6076,7 +6083,7 @@ msgstr "Nicht verfügbar"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Not implemented"
-msgstr ""
+msgstr "Nicht implementiert"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -8442,7 +8449,7 @@ msgstr "Verbleibend"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_removal
 msgid "Removal Strategy"
-msgstr ""
+msgstr "Entnahmestrategie"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9056,7 +9063,7 @@ msgstr "Sitzungsstatistiken"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Session already closed"
-msgstr ""
+msgstr "Sitzung bereits geschlossen"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -12164,7 +12171,7 @@ msgstr "offene Aufträge für die nächsten Tage."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "open orders planned for later."
-msgstr ""
+msgstr "offene Aufträge, die für später geplant sind."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form

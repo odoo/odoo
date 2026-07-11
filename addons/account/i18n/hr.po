@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:32+0000\n"
+"POT-Creation-Date: 2026-07-10 17:35+0000\n"
 "PO-Revision-Date: 2026-06-13 13:53+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -179,8 +179,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (odvojeno od %(user)s na %(date)s)%(attachment_extension)"
-"s"
+"%(attachment_name)s (odvojeno od %(user)s na %(date)s)%"
+"(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -344,20 +344,6 @@ msgstr "%s poreza"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-#, fuzzy
-msgid "%s, or / if not applicable"
-msgstr "%s ili / ako nije primjenjivo"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, fuzzy
-msgid "%s, or not applicable"
-msgstr "%s ili nije primjenjivo"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 #, fuzzy
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
@@ -485,12 +471,6 @@ msgstr "... (%s ostalo)"
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
 msgstr "...(Vidi sve)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "/ if not applicable"
-msgstr "/ ako nije primjenjivo"
 
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
@@ -939,11 +919,11 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-trash text-danger\"/>\n"
 "\n"
-"<span class=\"text-danger\" invisible=\"duplicated_ref_ids.length == 1\">"
-"Izbriši sve duplikate</span>\n"
+"<span class=\"text-danger\" invisible=\"duplicated_ref_ids.length == "
+"1\">Izbriši sve duplikate</span>\n"
 "\n"
-"<span class=\"text-danger\" invisible=\"duplicated_ref_ids.length &gt; 1\">"
-"Izbriši duplikat</span>"
+"<span class=\"text-danger\" invisible=\"duplicated_ref_ids.length &gt; "
+"1\">Izbriši duplikat</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1714,8 +1694,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-"
-"collapse:separate;\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
 "        <tr>\n"
 "            <td align=\"center\">\n"
 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1735,8 +1715,8 @@ msgstr ""
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
-"contain;\" class=\"align-baseline w-auto\"/>\n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\"/>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -1763,8 +1743,8 @@ msgstr ""
 "                                        </h3>\n"
 "                                        <p style=\"margin-top: 12px;\">\n"
 "                                            Primili ste <t t-"
-"if=\"invoice_count &gt; 1\">nove e-račune</t><t t-else=\"\">novi e-račun</t>"
-"!\n"
+"if=\"invoice_count &gt; 1\">nove e-račune</t><t t-else=\"\">novi e-račun</"
+"t>!\n"
 "                                        </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/>\n"
@@ -1786,11 +1766,11 @@ msgstr ""
 "                                                    <span style=\"font-"
 "weight:bold;\">Dobavljač:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-if=\"inv.amount_total\">"
-"\n"
+"                                                <t t-"
+"if=\"inv.amount_total\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Iznos:</span> <t t-out=\"inv.amount_total\" t-options=\""
-"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">Iznos:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
@@ -1805,11 +1785,11 @@ msgstr ""
 "padding-top: 24px;\">\n"
 "                                            <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?active_ids={{ "
-"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
-"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
-"none !important; background-color: #008384; border-radius:3px; display: "
-"inline-block;\">\n"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\">\n"
 "                                               Pregledaj račune\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -2122,8 +2102,9 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"Bankovni račun s brojem računa %(number)s već postoji za partnera %(partner)"
-"s, ali je arhiviran. Umjesto toga, molimo vas da ga poništite iz arhive."
+"Bankovni račun s brojem računa %(number)s već postoji za partnera %"
+"(partner)s, ali je arhiviran. Umjesto toga, molimo vas da ga poništite iz "
+"arhive."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2198,7 +2179,8 @@ msgstr "Redak ne može imati i podretke i groupby vrijednost (redak '%s')."
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
 msgid "A line of this move is using a archived account, you cannot post it."
-msgstr "Redak ovog kretanja koristi arhivirani konto, ne možete ga proknjižiti."
+msgstr ""
+"Redak ovog kretanja koristi arhivirani konto, ne možete ga proknjižiti."
 
 #. module: account
 #. odoo-python
@@ -3266,7 +3248,8 @@ msgstr "Broj kretanja izvora korektivnog knjiženja"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, fuzzy
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr "Prilagođavanje unosa {link} {postotak}%% od {amount} priznato od {date}"
+msgstr ""
+"Prilagođavanje unosa {link} {postotak}%% od {amount} priznato od {date}"
 
 #. module: account
 #. odoo-python
@@ -6156,6 +6139,16 @@ msgid "Could not upload files"
 msgstr "Upload datoteke nije moguć"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #, fuzzy
 msgid "Counterpart Items"
@@ -8789,6 +8782,7 @@ msgid "Exchange Loss"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 #, fuzzy
 msgid "Exchange Move"
@@ -9131,6 +9125,16 @@ msgstr "Indeks prvog retka"
 #, fuzzy
 msgid "First New Sequence"
 msgstr "Prva nova sekvenca"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -12459,6 +12463,7 @@ msgid "Looks great!"
 msgstr "Izgleda odlično!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Gubitak"
@@ -14049,8 +14054,8 @@ msgid ""
 msgstr ""
 "Opcionalni jezik prijevoda (ISO kod) koji se odabire pri slanju e-pošte. Ako "
 "nije postavljeno, koristit će se glavni jezik partnera. Ovo obično treba "
-"biti izraz rezerviranog mjesta koji daje odgovarajući jezik, npr. {{ "
-"object.partner_id.lang }}."
+"biti izraz rezerviranog mjesta koji daje odgovarajući jezik, npr. "
+"{{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -14288,6 +14293,7 @@ msgid "Owner's Current Account"
 msgstr "Tekući račun vlasnika"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "RDG konta"
@@ -14527,7 +14533,8 @@ msgstr "Partneri bez bankovnog računa"
 #: code:addons/account/models/partner.py:0
 #, fuzzy
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr "Partneri koji se koriste u hashiranim knjiženjima ne mogu biti spojeni."
+msgstr ""
+"Partneri koji se koriste u hashiranim knjiženjima ne mogu biti spojeni."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -15461,6 +15468,11 @@ msgid "Profit or Loss Appropriation"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, fuzzy
 msgid "Proforma Credit Note"
@@ -16224,6 +16236,7 @@ msgstr "Troškovi mirovinskih planova (401K uparivanje)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:account.group,name:account.2_us_group_4
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Prihod"
@@ -18762,17 +18775,6 @@ msgstr ""
 "postotaka mora biti 100%."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Porezni identifikacijski broj. Unesene vrijednosti provjeravaju se prema "
-"formatu propisanom za pojedinu državu. Upišite '/' ako partner nije obveznik "
-"poreza."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, fuzzy
@@ -20707,6 +20709,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Undefined Yet"
@@ -21202,7 +21209,8 @@ msgstr "Validiraj bankovni račun"
 msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
-msgstr "Automatski potvrdi stavku izvoda (uparivanje na temelju vašeg pravila)."
+msgstr ""
+"Automatski potvrdi stavku izvoda (uparivanje na temelju vašeg pravila)."
 
 #. module: account
 #. odoo-javascript
@@ -21537,7 +21545,8 @@ msgstr "Treba li ovaj dnevnik prikazati na nadzornoj ploči ili ne."
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 #, fuzzy
 msgid "Will be used to name the Journal related to this bank account"
-msgstr "Koristit će se za nazivanje dnevnika povezanog s ovim bankovnim računom"
+msgstr ""
+"Koristit će se za nazivanje dnevnika povezanog s ovim bankovnim računom"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -21733,6 +21742,11 @@ msgid ""
 msgstr ""
 "Ovdje se možete odjaviti od e-mailova primljenih pri slanju i primanju "
 "računa."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21982,7 +21996,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, fuzzy
 msgid "You cannot delete a tax line as it would impact the tax report"
-msgstr "Ne možete obrisati porezni redak jer bi to utjecalo na porezno izvješće"
+msgstr ""
+"Ne možete obrisati porezni redak jer bi to utjecalo na porezno izvješće"
 
 #. module: account
 #. odoo-python
@@ -22198,6 +22213,13 @@ msgid ""
 msgstr ""
 "Ne možete smanjiti broj decimalnih mjesta valute koja je već korištena za "
 "knjigovodstvene unose."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22903,13 +22925,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, fuzzy
-msgid "not applicable"
-msgstr "nije primjenjivo"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "od poreza"
@@ -23145,8 +23160,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} knjižno odobrenje samofakturiranja (Ref {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} knjižno odobrenje samofakturiranja (Ref "
+"{{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_invoice
@@ -23157,6 +23172,30 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} samofakturirani račun (Ref {{ object.name or 'n/"
 "a' }})"
+
+#, fuzzy
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s ili / ako nije primjenjivo"
+
+#, fuzzy
+#~ msgid "%s, or not applicable"
+#~ msgstr "%s ili nije primjenjivo"
+
+#~ msgid "/ if not applicable"
+#~ msgstr "/ ako nije primjenjivo"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Porezni identifikacijski broj. Unesene vrijednosti provjeravaju se prema "
+#~ "formatu propisanom za pojedinu državu. Upišite '/' ako partner nije "
+#~ "obveznik poreza."
+
+#, fuzzy
+#~ msgid "not applicable"
+#~ msgstr "nije primjenjivo"
 
 #~ msgid "Apply only if partner has a VAT number."
 #~ msgstr "Primjeni samo ako partner ima porezni broj"

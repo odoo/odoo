@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
-"PO-Revision-Date: 2026-06-23 16:07+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-06 19:15+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/da/>\n"
@@ -59,6 +59,11 @@ msgstr " – Fra \"%(uom_from)s\" til \"%(uom_to)s\""
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "% Disc"
 msgstr "% Rabat"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
+msgid "% discount off on"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -732,7 +737,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Accounting"
-msgstr "Bogføring"
+msgstr "Regnskab"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__invoice_journal_id
@@ -1011,9 +1016,8 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
-"Hvis du bruger Bogføringsappen, skal alle tilgængelige prislister være i "
-"samme valuta som virksomheden eller den salgsjournal, der er knyttet til "
-"kassen."
+"Hvis du bruger Regnskabappen, skal alle tilgængelige prislister være i samme "
+"valuta som virksomheden eller den salgsjournal, der er knyttet til kassen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4573,7 +4577,7 @@ msgid ""
 "                methods automatically."
 msgstr ""
 "Når kontoplanen installeres via Generelle Indstillinger i \n"
-"                Fakturering/Bogføringsappen oprettes kontantbetalinger eller "
+"                Fakturering/Regnskabappen oprettes kontantbetalinger eller "
 "betalinger via\n"
 "                bankoverførsler automatisk."
 
@@ -10066,7 +10070,7 @@ msgid ""
 msgstr ""
 "Sessionen er allerede blevet lukket af en anden bruger. Alle salg, der er "
 "gennemført i mellemtiden, er gemt i en gendannelsessession, som altid kan "
-"gennemgås og bogføres i Bogføringsappen via POS-dashboardet."
+"gennemgås og bogføres i Regnskabappen via POS-dashboardet."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
