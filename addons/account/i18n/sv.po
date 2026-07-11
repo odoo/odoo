@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:49+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
 "PO-Revision-Date: 2026-06-20 13:40+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -341,18 +341,6 @@ msgstr "%s skatter"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "%s, or / if not applicable"
-msgstr "%s, eller / om ej tillämplig"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "%s, or not applicable"
-msgstr "%s, eller ej tillämplig"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
 msgstr "\"%(filename)s\" (hämtat från \"%(root_filename)s\", typ=%(type)s)"
@@ -461,12 +449,6 @@ msgstr "... (%(nb_of_values)s övriga)"
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
 msgstr "... (Visa alla)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "/ if not applicable"
-msgstr "/ om ej tillämpligt"
 
 #. module: account
 #: model:account.tax,name:account.21_sale_export_tax_template
@@ -2707,11 +2689,6 @@ msgid "Account Receivable Active"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
-msgid "Account Reconcile"
-msgstr "Avstämning av konton"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
 msgid "Account Root"
 msgstr "Ursprungskonto"
@@ -4438,12 +4415,6 @@ msgid "Bad Debts"
 msgstr ""
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_document_tax_mode_selector/account_document_tax_mode_selector.js:0
-msgid "Badges"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance
 msgid "Balance"
 msgstr "Saldo"
@@ -6130,6 +6101,16 @@ msgstr "Det gick inte att ladda upp filerna"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Couldn't reload data."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
 msgstr ""
 
 #. module: account
@@ -8686,6 +8667,7 @@ msgid "Exchange Loss"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
 msgstr "Växlingsrörelse"
@@ -8993,6 +8975,16 @@ msgstr "Första radens index"
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
 msgstr "Första nya sekvensen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -12134,6 +12126,7 @@ msgid "Looks great!"
 msgstr "Ser toppen ut!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Förlust"
@@ -13918,6 +13911,7 @@ msgid "Owner's Current Account"
 msgstr "Ägarens nuvarande konto"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "Resultaträkningskonton"
@@ -14321,6 +14315,7 @@ msgstr "Betalningskvitto Rubrik"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
+#: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Payment Reconciliation"
 msgstr ""
 
@@ -15070,6 +15065,11 @@ msgid "Profit or Loss Appropriation"
 msgstr "Användning av vinst eller förlust"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
 msgstr "Proforma kreditfaktura"
@@ -15814,6 +15814,7 @@ msgstr "Kostnader för pensionssparande (t.ex. matchning av 401K)"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Intäkter"
@@ -18326,16 +18327,6 @@ msgstr ""
 "procentsatserna måste vara 100 %."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Skatteregistreringsnummer. Värden här bekräftas baserat på landets format. "
-"Du kan använda '/' för att ange att partnern inte är skattepliktig."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is archived."
@@ -18663,8 +18654,7 @@ msgid ""
 msgstr "Leveransadressen kommer att användas för att avgöra skatteområde."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: model:ir.model.constraint,message:account.constraint_account_move_check_document_tax_mode_set
 msgid "The document tax mode must be set."
 msgstr ""
 
@@ -19637,6 +19627,12 @@ msgstr "Verifikatet har kopierats från %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+msgid "This entry has been reversed from %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
@@ -20303,6 +20299,11 @@ msgid ""
 msgstr ""
 "Det är inte möjligt att skapa ett kontoutdrag eftersom vissa transaktioner "
 "saknas. Försök att ordna om transaktionerna innan du fortsätter."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21304,6 +21305,11 @@ msgstr ""
 "eller tar emot fakturor."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
@@ -21763,6 +21769,13 @@ msgid ""
 msgstr ""
 "Det är inte möjligt att minska antalet decimaler för en valuta som redan har "
 "använts i verifikat."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22425,12 +22438,6 @@ msgstr ""
 "eller tillhandahållandet av tjänsterna."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "not applicable"
-msgstr "ej tillämpligt"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "av skatt"
@@ -22674,3 +22681,27 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Egenutfärdad faktura (Referensnummer "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s, eller / om ej tillämplig"
+
+#~ msgid "%s, or not applicable"
+#~ msgstr "%s, eller ej tillämplig"
+
+#~ msgid "/ if not applicable"
+#~ msgstr "/ om ej tillämpligt"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Skatteregistreringsnummer. Värden här bekräftas baserat på landets "
+#~ "format. Du kan använda '/' för att ange att partnern inte är "
+#~ "skattepliktig."
+
+#~ msgid "not applicable"
+#~ msgstr "ej tillämpligt"
+
+#~ msgid "Account Reconcile"
+#~ msgstr "Avstämning av konton"

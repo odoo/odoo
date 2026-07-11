@@ -16,10 +16,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-06-20 13:42+0000\n"
+"POT-Creation-Date: 2026-07-03 17:36+0000\n"
+"PO-Revision-Date: 2026-07-08 11:43+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/stock/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/stock/"
 "it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -671,6 +671,9 @@ msgid ""
 "                                All products could not be reserved. Click on "
 "the \"Reserve\" button to try to reserve products."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                Non è stato possibile prenotare tutti i "
+"prodotti. Clicca sul pulsante \"Prenota\" per provare a prenotarli."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -828,7 +831,7 @@ msgstr "<span class=\"text-muted small\"> Giacenza fisica</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "<span class=\"text-muted\">On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Giacenza fisica</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1189,7 +1192,7 @@ msgstr "Aggiungi prodotto"
 #. odoo-javascript
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Add a description"
-msgstr ""
+msgstr "Aggiungi una descrizione"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -1338,7 +1341,7 @@ msgstr "Tutti i pacchi secondari"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
 msgid "All Delivery Providers"
-msgstr ""
+msgstr "Tutti i fornitori di servizi di consegna"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1376,7 +1379,7 @@ msgstr "Tutti i movimenti di reso"
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: model:ir.actions.client,name:stock.allocation_report_action
 msgid "Allocation Report"
-msgstr ""
+msgstr "Resoconto allocazione"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1401,6 +1404,8 @@ msgstr "Permetti prodotti misti"
 #: model:ir.model.fields,help:stock.field_stock_picking_type__allocated_location_id
 msgid "Allow to define the location where allocated products should be sent."
 msgstr ""
+"Consente di definire l'ubicazione in cui devono essere spediti i prodotti "
+"assegnati."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -1875,7 +1880,7 @@ msgstr "Peso lordo"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
 msgid "Buy Odoo Enterprise now to get more providers."
-msgstr ""
+msgstr "Acquista subito Odoo Enterprise per ottenere più fornitori."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
@@ -2215,7 +2220,7 @@ msgstr "Configurazione"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Configure Methods"
-msgstr ""
+msgstr "Configura metodi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2645,6 +2650,12 @@ msgstr ""
 "in una delle secondarie.\n"
 "Diversamente, include le merci stoccate in qualsiasi ubicazione di giacenza "
 "di tipo \"interno\"."
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
+msgid "Current stock"
+msgstr "Giacenza attuale"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
@@ -3095,7 +3106,7 @@ msgstr "Richiesto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
-msgstr ""
+msgstr "Richiesta nell'UdM prodotto"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -3686,7 +3697,7 @@ msgstr "Ubicazione filtrata"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Find a Delivery Provider"
-msgstr ""
+msgstr "Trova un fornitore di servizi di consegna"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3714,7 +3725,7 @@ msgstr "Primo numero di serie"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 msgid "Fold"
-msgstr ""
+msgstr "Minimizza"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -3738,7 +3749,7 @@ msgstr "Icona Font Awesome es. fa-tasks"
 #. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 msgid "For"
-msgstr ""
+msgstr "Per"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -3820,7 +3831,7 @@ msgstr "Previsioni di inventario"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
 msgid "Forecasted Location"
-msgstr ""
+msgstr "Ubicazione prevista"
 
 #. module: stock
 #. odoo-python
@@ -3963,7 +3974,7 @@ msgstr "Genera numeri lotto"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Lots"
-msgstr ""
+msgstr "Genera lotti"
 
 #. module: stock
 #. odoo-javascript
@@ -3975,7 +3986,7 @@ msgstr "Genera numeri di serie"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Serials"
-msgstr ""
+msgstr "Genera seriali"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -4360,6 +4371,9 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the allocation "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
+"Se la casella è selezionata, Odoo mostrerà automaticamente il resoconto di "
+"assegnazione (se ci sono altri movimenti da assegnare) al momento della "
+"convalida."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -4795,9 +4809,9 @@ msgid "Inventory Valuation"
 msgstr "Valutazione del magazzino"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_inventory_at_date
+#. odoo-javascript
+#: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__inventory_datetime
-#: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Inventory at Date"
 msgstr "Inventario alla data"
 
@@ -5334,12 +5348,12 @@ msgstr "Tipo di ubicazione"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__allocated_location_id
 msgid "Location for allocation"
-msgstr ""
+msgstr "Ubicazione per assegnazione"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
 msgid "Location used in the computation of the forecast."
-msgstr ""
+msgstr "Ubicazione utilizzata per calcolare le quantità previste."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -6006,6 +6020,8 @@ msgstr "Nessun bisogno di assegnazione trovato."
 #: code:addons/stock/models/stock_picking.py:0
 msgid "No backorder has been planned for undelivered demanded quantities: %s"
 msgstr ""
+"Non è stato pianificato nessun ordine in sospeso per quantità richieste non "
+"consegnate: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -6257,6 +6273,8 @@ msgid ""
 "Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
 "expected %(nbr_demanded)s %(uom)s"
 msgstr ""
+"Sono stati consegnati solo %(nbr_done)s %(uom)s di %(product)s rispetto a "
+"quanto previsto %(nbr_demanded)s %(uom)s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6303,7 +6321,7 @@ msgstr "Tipi di operazione"
 #. odoo-python
 #: code:addons/stock/report/stock_allocation_report.py:0
 msgid "Operation not found"
-msgstr ""
+msgstr "Operazione non trovata"
 
 #. module: stock
 #. odoo-python
@@ -6430,6 +6448,8 @@ msgid ""
 "Organize deliveries by dock, assign drivers and vehicles, and print "
 "consignment notes."
 msgstr ""
+"Organizza le consegne per baia, assegna autisti e veicoli e stampa i "
+"documenti di accompagnamento."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -7033,7 +7053,7 @@ msgstr "Crea un magazzino per l'azienda %s."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "Please put this document inside your return parcel.<br/>"
-msgstr ""
+msgstr "Inserisci questo documento nel tuo collo di reso.<br/>"
 
 #. module: stock
 #. odoo-javascript
@@ -8167,7 +8187,7 @@ msgstr "Prenota imballaggi parziali"
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: code:addons/stock/static/src/allocation_report/out_line/out_line.js:0
 msgid "Reserved"
-msgstr ""
+msgstr "Prenotato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
@@ -8614,6 +8634,12 @@ msgstr "Seleziona percorso"
 #: model_terms:ir.ui.view,arch_db:stock.stock_put_in_pack_form
 msgid "Select a Package Type"
 msgstr "Seleziona un tipo di collo"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
+msgid "Select a date..."
+msgstr "Seleziona una data..."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -9197,7 +9223,7 @@ msgstr "Giacenza"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_allocation_report
 msgid "Stock Allocation Report"
-msgstr ""
+msgstr "Resoconto assegnazione scorte"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode_barcodelookup
@@ -9562,6 +9588,8 @@ msgid ""
 "Technical field used to compute whether the button \"Reserve\" should be "
 "displayed."
 msgstr ""
+"Campo tecnico utilizzato per determinare se il pulsante “Prenota” debba "
+"essere visualizzato."
 
 #. module: stock
 #. odoo-python
@@ -9913,7 +9941,7 @@ msgstr "Non ci sono rettifiche di inventario da annullare."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "There is nothing to reserve."
-msgstr ""
+msgstr "Non c’è nulla da prenotare."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10156,6 +10184,7 @@ msgid ""
 "This report cannot be used for done and not done %(doc_type)s at the same "
 "time"
 msgstr ""
+"Questo resoconto non può essere utilizzato per %(doc_type)s completati e non"
 
 #. module: stock
 #. odoo-python
@@ -10479,7 +10508,7 @@ msgstr "Trasferimento"
 #. module: stock
 #: model:mail.message.subtype,name:stock.mt_picking_state
 msgid "Transfer Status"
-msgstr ""
+msgstr "Stato trasferimento"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
@@ -10551,7 +10580,7 @@ msgstr "Ubicazioni di transito"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_fleet
 msgid "Transport Management"
-msgstr ""
+msgstr "Gestione trasporto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
@@ -10594,7 +10623,7 @@ msgstr "Tipologia"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "Tipo di operazione"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
@@ -10828,7 +10857,7 @@ msgstr "Vedi diagramma"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 msgid "View Forecast"
-msgstr ""
+msgstr "Vedi previsioni"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -10839,7 +10868,7 @@ msgstr "Ubicazione vista"
 #. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/product_line/product_line.xml:0
 msgid "View more"
-msgstr ""
+msgstr "Mostra di più"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
@@ -11674,7 +11703,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "Your parcel must be sent to this address:"
-msgstr ""
+msgstr "Il collo deve essere spedito a questo indirizzo:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -11940,7 +11969,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/report/stock_allocation_report.py:0
 msgid "transfers"
-msgstr ""
+msgstr "trasferimenti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document

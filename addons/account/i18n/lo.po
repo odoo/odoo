@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:49+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
 "PO-Revision-Date: 2026-06-12 05:39+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-3/account/"
@@ -342,20 +342,6 @@ msgstr "%s ພາສີ"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-#, fuzzy
-msgid "%s, or / if not applicable"
-msgstr "%s, ຫຼື / ຖ້າບໍ່ມີ"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, fuzzy
-msgid "%s, or not applicable"
-msgstr "%s, ຫຼື ບໍ່ມີ"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 #, fuzzy
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
@@ -478,13 +464,6 @@ msgstr "... (%(nb_of_values)s ອື່ນໆ)"
 #, fuzzy
 msgid "... (View all)"
 msgstr "... (ເບິ່ງທັງໝົດ)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-#, fuzzy
-msgid "/ if not applicable"
-msgstr "/ ຖ້າບໍ່ມີ"
 
 #. module: account
 #: model:account.tax,name:account.21_sale_export_tax_template
@@ -2862,12 +2841,6 @@ msgid "Account Receivable Active"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
-#, fuzzy
-msgid "Account Reconcile"
-msgstr "ການກວດສອບຍອດບັນຊີ"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
 #, fuzzy
 msgid "Account Root"
@@ -4802,12 +4775,6 @@ msgid "Bad Debts"
 msgstr ""
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_document_tax_mode_selector/account_document_tax_mode_selector.js:0
-msgid "Badges"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance
 #, fuzzy
 msgid "Balance"
@@ -6690,6 +6657,16 @@ msgstr "ບໍ່ສາມາດອັບໂຫຼດໄຟລ໌ໄດ້"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Couldn't reload data."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
 msgstr ""
 
 #. module: account
@@ -9572,6 +9549,7 @@ msgid "Exchange Loss"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 #, fuzzy
 msgid "Exchange Move"
@@ -9925,6 +9903,16 @@ msgstr "ດັດຊະນີລາຍການທຳອິດ"
 #, fuzzy
 msgid "First New Sequence"
 msgstr "ເລກລໍາດັບໃໝ່ທຳອິດ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -13407,6 +13395,7 @@ msgid "Looks great!"
 msgstr "ເບິ່ງດີຫຼາຍ!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Loss"
@@ -15410,6 +15399,7 @@ msgid "Owner's Current Account"
 msgstr "ບັນຊີກະແສລາຍວັນຂອງເຈົ້າຂອງ"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, fuzzy
 msgid "P&L Accounts"
@@ -15873,6 +15863,7 @@ msgstr "ຫົວຂໍ້ໃບຮັບເງິນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
+#: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Payment Reconciliation"
 msgstr ""
 
@@ -16704,6 +16695,11 @@ msgstr ""
 #, fuzzy
 msgid "Profit or Loss Appropriation"
 msgstr "ການຈັດສັນກຳໄລ ຫຼື ຂາດທຶນ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -17556,6 +17552,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍແຜນການລ້ຽງຊີບຍ
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 #, fuzzy
 msgid "Revenue"
@@ -20360,17 +20357,6 @@ msgstr ""
 "ເງື່ອນໄຂການຊຳລະເງິນຕ້ອງມີຢ່າງໜ້ອຍໜຶ່ງແຖວເປີເຊັນ ແລະ ຜົນລວມຂອງເປີເຊັນທັງໝົດຕ້ອງເທົ່າກັບ 100%."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-#, fuzzy
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"ເລກປະຈຳຕົວຜູ້ເສຍພາສີ. ຄ່າຢູ່ບ່ອນນີ້ຈະຖືກຢັ້ງຢືນຕາມຮູບແບບຂອງປະເທດ. ທ່ານສາມາດໃຊ້ '/' "
-"ເພື່ອລະບຸວ່າຄູ່ຄ້າບໍ່ໄດ້ຢູ່ໃນຂ່າຍເສຍພາສີ."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, fuzzy
@@ -20722,8 +20708,7 @@ msgid ""
 msgstr "ທີ່ຢູ່ນຳສົ່ງຈະຖືກນຳໃຊ້ໃນການຄິດໄລ່ສະຖານະທາງການເງິນ."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: model:ir.model.constraint,message:account.constraint_account_move_check_document_tax_mode_set
 msgid "The document tax mode must be set."
 msgstr ""
 
@@ -21732,6 +21717,12 @@ msgstr "ລາຍການນີ້ຖືກສຳເນົາມາຈາກ %s
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+msgid "This entry has been reversed from %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
@@ -22469,6 +22460,11 @@ msgid ""
 "reorder the transactions before proceeding."
 msgstr ""
 "ບໍ່ສາມາດສ້າງໃບລາຍງານບັນຊີໄດ້ເນື່ອງຈາກບໍ່ມີທຸລະກຳ. ທ່ານອາດຈະຕ້ອງການຈັດລຽງທຸລະກຳໃໝ່ກ່ອນດຳເນີນການຕໍ່."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -23577,6 +23573,11 @@ msgid ""
 msgstr "ເຈົ້າສາມາດຍົກເລີກການຮັບອີເມວເມື່ອມີການສົ່ງ ແລະ ຮັບໃບແແຈ້ງໜີ້ໄດ້ຢູ່ບ່ອນນີ້."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
@@ -24017,6 +24018,13 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr "ທ່ານບໍ່ສາມາດຫຼຸດຈຳນວນຕຳແໜ່ງທົດສະນິຍົມຂອງສະກຸນເງິນທີ່ໄດ້ຖືກນຳໃຊ້ເຂົ້າໃນການບັນທຶກບັນຊີແລ້ວໄດ້."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -24739,13 +24747,6 @@ msgstr ""
 "ນັບຈາກມື້ສົ່ງມອບສິນຄ້າ ຫຼື ການສະໜອງບໍລິການ."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, fuzzy
-msgid "not applicable"
-msgstr "ບໍ່ສາມາດນຳໃຊ້ໄດ້"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #, fuzzy
 msgid "of tax"
@@ -25018,3 +25019,32 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} ໃບແແຈ້ງໜີ້ທີ່ອອກໃຫ້ຕົນເອງ (Ref {{ object.name or 'n/"
 "a' }})"
+
+#, fuzzy
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s, ຫຼື / ຖ້າບໍ່ມີ"
+
+#, fuzzy
+#~ msgid "%s, or not applicable"
+#~ msgstr "%s, ຫຼື ບໍ່ມີ"
+
+#, fuzzy
+#~ msgid "/ if not applicable"
+#~ msgstr "/ ຖ້າບໍ່ມີ"
+
+#, fuzzy
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "ເລກປະຈຳຕົວຜູ້ເສຍພາສີ. ຄ່າຢູ່ບ່ອນນີ້ຈະຖືກຢັ້ງຢືນຕາມຮູບແບບຂອງປະເທດ. ທ່ານສາມາດໃຊ້ '/' "
+#~ "ເພື່ອລະບຸວ່າຄູ່ຄ້າບໍ່ໄດ້ຢູ່ໃນຂ່າຍເສຍພາສີ."
+
+#, fuzzy
+#~ msgid "not applicable"
+#~ msgstr "ບໍ່ສາມາດນຳໃຊ້ໄດ້"
+
+#, fuzzy
+#~ msgid "Account Reconcile"
+#~ msgstr "ການກວດສອບຍອດບັນຊີ"

@@ -1,49 +1,55 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* populate
+# * populate
 #
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-06-30 00:51+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-07-08 11:42+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
+"populate/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "%(count)s parallel job(s) failed"
-msgstr ""
+msgstr "%(count)s parallele Aufträge fehlgeschlagen"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(comodel_name)s' isn't a valid model name."
-msgstr ""
+msgstr "„%(comodel_name)s“ ist kein gültiger Modellname."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(groupby)s' isn't a valid field for model '%(comodel_name)s'."
-msgstr ""
+msgstr "„%(groupby)s“ ist kein gültiges Feld für das Modell „%(comodel_name)s“."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'comodel_name' needs to be provided for virtual fields."
-msgstr ""
+msgstr "Für virtuelle Felder muss „comodel_name“ angegeben werden."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "A created session should have jobs associated from a blueprint."
 msgstr ""
+"Eine erstellte Sitzung sollte mit Aufträgen aus einem Blueprint verknüpft "
+"sein."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_unique_ref_per_session
@@ -51,6 +57,9 @@ msgid ""
 "A job with this reference already exists in this session. References must be"
 " unique for create-type jobs within a session."
 msgstr ""
+"Ein Auftrag mit dieser Referenz existiert bereits in dieser Sitzung. "
+"Referenzen müssen für Aufträge vom Typ „Erstellen“ innerhalb einer Sitzung "
+"eindeutig sein."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_record_count_invariant
@@ -59,12 +68,17 @@ msgid ""
 "jobs are allowed to have no record_count, whose cardinality is unknown at "
 "creation time."
 msgstr ""
+"Der Wert „record_count“ eines Auftrags muss eine positive ganze Zahl "
+"ungleich Null sein. Nur Schreibaufträge dürfen keinen „record_count“-Wert "
+"haben, da deren Kardinalität zum Zeitpunkt der Erstellung unbekannt ist."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Adapt the generator parameter to generate values within the constraint"
 msgstr ""
+"Passen Sie den Generatorparameter an, um Werte innerhalb der Vorgabe zu "
+"generieren"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__blueprint_id

@@ -9,10 +9,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-06-06 15:32+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-07-08 11:42+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
 "pos_self_order/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -197,7 +197,7 @@ msgid ""
 "when no session is open."
 msgstr ""
 "De toegangsrechten van deze gebruiker worden gebruikt bij het bezoeken van "
-"de zelfbestellingswebsite wanneer er geen sessie geopend is."
+"de zelfbedieningswebsite wanneer er geen sessie geopend is."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -292,7 +292,7 @@ msgstr "Beschikbaar in zelfbediening"
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
-msgstr "Beschikbaar in zelfbestelling"
+msgstr "Beschikbaar in Zelfbediening"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
@@ -382,7 +382,7 @@ msgstr "Kies de kioskmodus"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_mode
 msgid "Choose the self ordering mode"
-msgstr "Kies de zelfbestellingsmodus"
+msgstr "Kies de zelfbedieningsmodus"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_pay_after
@@ -504,7 +504,7 @@ msgid ""
 "Custom links that the restaurant can configure to be displayed on the self "
 "order screen"
 msgstr ""
-"Aangepaste links dat het restaurant kan configureren om weer te geven op het "
+"Aangepaste links die het restaurant kan configureren om weer te geven op het "
 "zelfbedieningsscherm"
 
 #. module: pos_self_order
@@ -806,7 +806,7 @@ msgid ""
 "Please add them before using the Self Order"
 msgstr ""
 "Hé, het lijkt erop dat je bent vergeten producten aan te maken of toe te "
-"voegen aan pos_config. Voeg ze toe voordat je de Zelfbestelling gebruikt"
+"voegen aan pos_config. Voeg ze toe voordat je de Zelfbediening gebruikt"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -860,7 +860,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
 msgid "If this product is available in the Self Order screens"
-msgstr "Als dit product beschikbaar is in de zelfbestellingsschermen"
+msgstr "Als dit product beschikbaar is in de zelfbedieningsschermen"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1423,7 +1423,7 @@ msgstr "Product niet gevonden"
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_preset__delivery_product_id
 msgid "Product used for delivery fees in self order."
-msgstr "Product gebruikt voor leveringskosten bij een zelfbestelling."
+msgstr "Product gebruikt voor leveringskosten bij zelfbediening."
 
 #. module: pos_self_order
 #: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
@@ -1613,18 +1613,18 @@ msgstr "Zelfbediening"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_mode
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_mode
 msgid "Self Ordering Mode"
-msgstr "Zelfbestellingsmodus"
+msgstr "Zelfbedieningsmodus"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
 msgid "Self Ordering Service Mode"
-msgstr "Dienstmodus Zelfbestelling"
+msgstr "Dienstmodus Zelfbediening"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
-msgstr "Zelfbestellende URL"
+msgstr "Zelfbediening-URL"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__kiosk
@@ -1973,14 +1973,6 @@ msgid "You are not authorized to remove this order"
 msgstr "Je bent niet bevoegd om deze bestelling te verwijderen"
 
 #. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_config.py:0
-#: code:addons/pos_self_order/models/res_config_settings.py:0
-msgid "You cannot add cash payment methods in kiosk mode."
-msgstr ""
-"Je kunt geen betaalmethoden met contant geld toevoegen in de kioskmodus."
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "You're not authorized to perform this action"
@@ -2037,6 +2029,12 @@ msgstr "niet langer beschikbaar zijn"
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "at the counter"
 msgstr "aan de toog"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "by cash"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2117,3 +2115,7 @@ msgstr "per extra eenheid"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "You cannot add cash payment methods in kiosk mode."
+#~ msgstr ""
+#~ "Je kunt geen betaalmethoden met contant geld toevoegen in de kioskmodus."
