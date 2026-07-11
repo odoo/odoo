@@ -1,6 +1,6 @@
-import { Component, props, proxy } from "@odoo/owl";
-import { kanbanRendererProps } from "@web/views/kanban/kanban_renderer";
+import { Component, t, useProps, useScope } from "@odoo/owl";
 import { MailingTemplateKanbanRenderer } from "./mailing_template_kanban_renderer";
+import { useViewButtons } from "@web/views/view_button/view_button_hook";
 
 /**
  * A wrapper for the KanbanRender used to make smooth reload
@@ -11,17 +11,17 @@ import { MailingTemplateKanbanRenderer } from "./mailing_template_kanban_rendere
 export class MailingTemplateKanbanWrapper extends Component {
     static template = "mass_mailing.MailingTemplateKanbanWrapper";
     static components = { MailingTemplateKanbanRenderer };
-    props = props(kanbanRendererProps);
+    props = useProps({ kanbanRendererProps: t.signal(t.object()), iframeRef: t.signal(t.ref()) });
 
     setup() {
-        this.state = proxy({ rendererKey: 0 });
-    }
-
-    /**
-     * Increment the t-key of the renderer component
-     * in order for OWL to reload a fresh component.
-     */
-    async reloadRenderer() {
-        this.state.rendererKey++;
+        this.scope = useScope();
+        useViewButtons(this.props.iframeRef, {
+            afterExecuteAction: () => {
+                if (this.scope.isDestroyed()) {
+                    return;
+                }
+                return this.props.kanbanRendererProps().list.model.root.load();
+            },
+        });
     }
 }

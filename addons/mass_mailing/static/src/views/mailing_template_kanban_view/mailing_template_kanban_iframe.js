@@ -6,11 +6,11 @@ import {
     onWillUpdateProps,
     signal,
     useApp,
+    useProps,
     useScope,
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { renderToFragment } from "@web/core/utils/render";
-import { useRef } from "@web/owl2/utils";
 import { kanbanRendererProps } from "@web/views/kanban/kanban_renderer";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { MailingTemplateKanbanWrapper } from "./mailing_template_kanban_wrapper";
@@ -23,7 +23,7 @@ import { cookie } from "@web/core/browser/cookie";
  */
 export class MailingTemplateKanbanIframe extends Component {
     static template = "mass_mailing.MailingTemplateKanbanIframe";
-    props = props(kanbanRendererProps);
+    props = useProps(kanbanRendererProps);
 
     app = useApp();
     iframeRef = signal.ref();
@@ -31,7 +31,11 @@ export class MailingTemplateKanbanIframe extends Component {
 
     setup() {
         this.scope = useScope();
-        this.rendererWrapperRootProps = Object.assign(proxy({}), this.props);
+        this.kanbanRendererProps = signal.Object(this.props);
+        this.rendererWrapperRootProps = {
+            kanbanRendererProps: this.kanbanRendererProps,
+            iframeRef: this.iframeRef,
+        };
         onMounted(() => {
             this.setupIframe();
         });
@@ -41,10 +45,7 @@ export class MailingTemplateKanbanIframe extends Component {
             }
         });
         onWillUpdateProps(async (nextProps) => {
-            Object.assign(this.rendererWrapperRootProps, nextProps);
-            // TODO: look for a better way of updating the props of the RendererWrapper.
-            this.templateKanbanRoot.node.component.props = this.rendererWrapperRootProps;
-            await this.rendererWrapper.reloadRenderer();
+            this.kanbanRendererProps.set(nextProps);
         });
     }
 
@@ -86,7 +87,7 @@ export class MailingTemplateKanbanIframe extends Component {
         } catch (error) {
             loadingError = error;
         }
-        if (!status(this.scope.component) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         } else if (loadingError) {
             throw loadingError;
