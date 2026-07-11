@@ -32,6 +32,15 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove npm \
     && rm -rf /var/lib/apt/lists/*
 
+# wkhtmltopdf — the patched-Qt build Odoo needs to render PDF reports (headers/
+# footers). Without it Odoo falls back to HTML. Debian bookworm package; swap the
+# asset for the arm64 one if you build on Apple Silicon.
+RUN curl -sSL -o /tmp/wkhtmltox.deb \
+        https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends /tmp/wkhtmltox.deb \
+    && rm -rf /var/lib/apt/lists/* /tmp/wkhtmltox.deb
+
 RUN useradd --create-home --home-dir /var/lib/odoo --shell /bin/bash odoo \
     && mkdir -p /etc/odoo /mnt/extra-addons /var/log/odoo \
     && chown -R odoo:odoo /etc/odoo /mnt/extra-addons /var/lib/odoo /var/log/odoo
