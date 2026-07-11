@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:37+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
 "PO-Revision-Date: 2026-06-13 13:42+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -242,18 +242,6 @@ msgid "The Intra-Community validity has been updated to: %s."
 msgstr "La validez intracomunitaria se ha actualizado a %s."
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"El número de identificación fiscal. Los valores aquí establecidos serán "
-"validados según el formato del país. Puedes utilizar \"/\" para indicar que "
-"el contacto no está sujeto a impuestos."
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check failed. Please check the Tax ID manually."
@@ -306,6 +294,12 @@ msgstr ""
 "algoritmo de Luhn."
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 characters for CNPJ"
@@ -316,6 +310,15 @@ msgstr "ya sea 11 dígitos para CPF o 14 caracteres para CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "contacto [%s]"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "El número de identificación fiscal. Los valores aquí establecidos serán "
+#~ "validados según el formato del país. Puedes utilizar \"/\" para indicar "
+#~ "que el contacto no está sujeto a impuestos."
 
 #~ msgid "The Intra-Community validity has been updated."
 #~ msgstr "La validez intracomunitaria se actualizó."

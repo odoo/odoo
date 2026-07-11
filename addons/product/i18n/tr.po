@@ -35,13 +35,14 @@
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
+# Burkay Yıldızhan <seyil@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:38+0000\n"
-"PO-Revision-Date: 2026-04-13 19:30+0000\n"
-"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"PO-Revision-Date: 2026-07-09 08:10+0000\n"
+"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-2/"
 "product/tr/>\n"
 "Language: tr\n"
@@ -49,7 +50,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: product
 #. odoo-python
@@ -308,7 +309,7 @@ msgstr "<span class=\"o_stat_text\">Ürünler</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<span> - </span>"
-msgstr ""
+msgstr "<span> - </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -431,7 +432,7 @@ msgstr "Satılabilir bir kombo ürün yalnızca satılabilir ürünleri içerebi
 #: model:ir.model.fields,help:product.field_product_product__is_storable
 #: model:ir.model.fields,help:product.field_product_template__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Depolanabilir bir ürün, stoklarını yönettiğiniz bir ürün türüdür."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -500,7 +501,7 @@ msgstr "Etkinlik İstisna Dekorasyonu"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_plans_ids
 #: model:ir.model.fields,field_description:product.field_product_template__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivite Planları"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
@@ -767,7 +768,7 @@ msgstr "Nitelik Değerleri"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attribute name (e.g. Color, Size, ... )"
-msgstr ""
+msgstr "Özellik adı (örn. Renk, Boyut, ... )"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -806,7 +807,7 @@ msgstr "Barkod"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_product_barcodelookup
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Barcode Database"
-msgstr ""
+msgstr "Barkod Veritabanı"
 
 #. module: product
 #. odoo-python
@@ -932,7 +933,7 @@ msgstr "Kategori"
 #. module: product
 #: model:product.combo,name:product.chairs_combo
 msgid "Chairs Combo"
-msgstr ""
+msgstr "Sandalye Kombinasyonu"
 
 #. module: product
 #. odoo-python
@@ -1173,7 +1174,7 @@ msgstr "Yeni bir ürün oluştur"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_category_action_form
 msgid "Create a new product category"
-msgstr ""
+msgstr "Yeni bir ürün kategorisi oluşturma"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -1197,7 +1198,7 @@ msgstr "Sipariş Üzerine Oluştur"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Create products by scanning using"
-msgstr ""
+msgstr "Kullanarak tarayarak ürünler oluşturun"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1284,6 +1285,15 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Mevcut ürün miktarı.\n"
+"Tek bir Stok Lokasyonu bağlamında, bu lokasyonda veya ona bağlı alt "
+"lokasyonlarda depolanan ürünleri kapsar.\n"
+"Tek bir Depo bağlamında, bu deponun Stok Lokasyonu veya onun alt "
+"lokasyonlarında depolanan ürünleri kapsar.\n"
+"Bu Mağazanın Deposunun Stok Lokasyonunda veya ona bağlı alt lokasyonlarda "
+"depolanan ürünleri kapsar.\n"
+"Aksi takdirde, 'dahili' türdeki herhangi bir Stok Lokasyonunda depolanan "
+"ürünleri içerir."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_custom
@@ -1326,13 +1336,13 @@ msgstr "Veritabanı Verisi"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Decrease quantity"
-msgstr ""
+msgstr "Miktarı azaltın"
 
 #. module: product
 #. odoo-python
@@ -1398,7 +1408,7 @@ msgstr "Akıllı ofisleri kolaylıkla tasarlayın ve planlayın"
 #. module: product
 #: model:product.combo,name:product.desk_accessories_combo
 msgid "Desk Accessories Combo"
-msgstr ""
+msgstr "Masaüstü Aksesuarları Seti"
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -1428,7 +1438,7 @@ msgstr "Masa kombinasyonu, siyah-kahverengi: sandalye + masa + çekmece"
 #. module: product
 #: model:product.combo,name:product.desks_combo
 msgid "Desks Combo"
-msgstr ""
+msgstr "Masa Kombinasyonu"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
@@ -1561,7 +1571,7 @@ msgstr "Çekmeceler"
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "Duplicate values in attribute values are not allowed: %s"
-msgstr ""
+msgstr "Özellik değerlerinde yinelenen değerlere izin verilmez: %s"
 
 #. module: product
 #: model:product.attribute,name:product.pa_duration
@@ -1633,12 +1643,12 @@ msgstr "Dosya dışa aktarılırken hata oluştu. Lütfen tekrar deneyin."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__excluded_value_ids
 msgid "Exclude For"
-msgstr ""
+msgstr "Şunları hariç tut"
 
 #. module: product
 #: model:product.category,name:product.product_category_expenses
 msgid "Expenses"
-msgstr ""
+msgstr "Masraflar"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
@@ -1723,7 +1733,7 @@ msgstr "Sabit Fiyat"
 #: model:ir.model.fields,field_description:product.field_product_product__fixed_pricelist_rule_ids
 #: model:ir.model.fields,field_description:product.field_product_template__fixed_pricelist_rule_ids
 msgid "Fixed Pricelist Rule"
-msgstr ""
+msgstr "Sabit Fiyat Listesi Kuralı"
 
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
@@ -1775,19 +1785,27 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Tahmin miktarı (Eldeki Miktar - Giden + Gelen - Çıkarılacak Miktar olarak "
+"hesaplanır)\n"
+"Tek bir Stok Konumu olan bir bağlamda, bu konumda veya alt konumlarından "
+"herhangi birinde depolanan mallar buna dahildir.\n"
+"Tek bir Deponun bulunduğu bir bağlamda, bu Deponun Stok Konumunda veya "
+"herhangi bir alt konumunda depolanan malları içerir.\n"
+"Aksi takdirde, 'dahili' tipe sahip herhangi bir Stok Konumunda depolanan "
+"malları içerir."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Forecasted"
-msgstr ""
+msgstr "Öngörülen"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__virtual_available
 #: model:ir.model.fields,field_description:product.field_product_template__virtual_available
 msgid "Forecasted Quantity"
-msgstr ""
+msgstr "Öngörülen Miktar"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
@@ -1813,7 +1831,7 @@ msgstr "Serbest metin"
 #. module: product
 #: model:product.category,name:product.product_category_furniture
 msgid "Furniture"
-msgstr ""
+msgstr "Mobilya"
 
 #. module: product
 #: model:product.template,name:product.product_product_furniture_product_template
@@ -1940,7 +1958,7 @@ msgstr "Geçmiş"
 #. module: product
 #: model:product.category,name:product.product_category_construction
 msgid "Home Construction"
-msgstr ""
+msgstr "Ev İnşaatı"
 
 #. module: product
 #: model:product.template,name:product.expense_hotel_product_template
@@ -2121,13 +2139,13 @@ msgstr "Pasif"
 #: model:ir.model.fields,field_description:product.field_product_product__incoming_qty
 #: model:ir.model.fields,field_description:product.field_product_template__incoming_qty
 msgid "Incoming"
-msgstr ""
+msgstr "Gelen"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Increase quantity"
-msgstr ""
+msgstr "Miktarı artırın"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__index_content
@@ -2224,7 +2242,7 @@ msgstr "Bu genel belgemi"
 #: code:addons/product/models/product_product.py:0
 msgid ""
 "It is not possible to import different values for the same attribute: %s"
-msgstr ""
+msgstr "Aynı öznitelik için farklı değerler içe aktarılması mümkün değildir: %s"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
@@ -2234,7 +2252,7 @@ msgstr "Kilogram (kg)"
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_l
 msgid "L"
-msgstr ""
+msgstr "L"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_loreal
@@ -2381,7 +2399,7 @@ msgstr "Ürünler ve UoM'leri arasındaki bağlantı"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "List of possible values (e.g. Blue, Green, White, ... )"
-msgstr ""
+msgstr "Olası değerlerin listesi (örn. Mavi, Yeşil, Beyaz, ... )"
 
 #. module: product
 #: model:product.template,name:product.product_product_local_delivery_product_template
@@ -2411,13 +2429,13 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_m
 msgid "M"
-msgstr ""
+msgstr "M"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__excluded_value_ids
 msgid ""
 "Make this attribute value not compatible with other values of the product."
-msgstr ""
+msgstr "Bu öznitelik değerini, ürünün diğer değerleriyle uyumsuz hale getirin."
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -2723,7 +2741,7 @@ msgstr "Teslimat hatası olan mesaj adedi"
 #. module: product
 #: model:product.category,name:product.product_category_office
 msgid "Office"
-msgstr ""
+msgstr "Ofis"
 
 #. module: product
 #: model:product.template,name:product.product_delivery_01_product_template
@@ -2765,12 +2783,12 @@ msgstr "Zeytin"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "On Hand"
-msgstr ""
+msgstr "Stokta"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "On hand:"
-msgstr ""
+msgstr "Stokta:"
 
 #. module: product
 #. odoo-python
@@ -2834,7 +2852,7 @@ msgstr "Diğer Fiyat Listesi"
 #. module: product
 #: model:product.category,name:product.product_category_outdoor_furniture
 msgid "Outdoor"
-msgstr ""
+msgstr "Dış mekan"
 
 #. module: product
 #: model:product.template,name:product.product_template_dining_table
@@ -2845,7 +2863,7 @@ msgstr "Dış mekan yemek masası"
 #: model:ir.model.fields,field_description:product.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:product.field_product_template__outgoing_qty
 msgid "Outgoing"
-msgstr ""
+msgstr "Giden"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_overhead_shelves
@@ -3345,7 +3363,7 @@ msgstr "Ürün Ölçü Birimi"
 #: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
 #: model:ir.model.fields,field_description:product.field_product_template__import_attribute_values
 msgid "Product Values"
-msgstr ""
+msgstr "Ürün Değerleri"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -3476,7 +3494,7 @@ msgstr "Miktar (%s UoM)"
 #: model:ir.model.fields,field_description:product.field_product_product__qty_available
 #: model:ir.model.fields,field_description:product.field_product_template__qty_available
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Stok Miktarı"
 
 #. module: product
 #. odoo-javascript
@@ -3495,6 +3513,11 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
+"Gelmesi gereken ürünlerin miktarı\n"
+"Tek Stok Konumu içeriğinde, bu konuma gelen malları ve alt malları içerir.\n"
+"Tek Depolu içeriğinde, bu Depo Konumuna gelen malları ve alt malları "
+"içerir.\n"
+"Yoksa 'iç Tipli' mallar herhangi bir Stok Konumuna gelebilir."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__outgoing_qty
@@ -3507,6 +3530,12 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Gitmesii gereken ürünlerin miktarı\n"
+"Tek Stok Konumu içeriğinde, bu konumdan giden malları ve alt malları "
+"içerir.\n"
+"Tek Depolu içeriğinde, bu Depo Konumundan giden malları ve alt malları "
+"içerir.\n"
+"Yoksa 'iç Tipli' mallar herhangi bir Stok Konumuna gelebilir."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -3636,12 +3665,12 @@ msgstr "Kural İpucu"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Rules"
-msgstr ""
+msgstr "Kurallar"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_s
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -3738,12 +3767,12 @@ msgstr "Ayakkabı numarası"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Short Description"
-msgstr ""
+msgstr "Kısa Açıklama"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__show_price_extra
 msgid "Show Extra Price"
-msgstr ""
+msgstr "Ekstra Fiyatı Göster"
 
 #. module: product
 #. odoo-javascript
@@ -3755,13 +3784,13 @@ msgstr "İsmi Göster"
 #: model:ir.model.fields,field_description:product.field_product_product__show_qty_update_button
 #: model:ir.model.fields,field_description:product.field_product_template__show_qty_update_button
 msgid "Show Qty Update Button"
-msgstr ""
+msgstr "Miktar Güncelleme Düğmesini Göster"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__show_sales_price_page
 #: model:ir.model.fields,field_description:product.field_product_template__show_sales_price_page
 msgid "Show Sales Price Page"
-msgstr ""
+msgstr "Satış Fiyatı Sayfasını Göster"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3771,7 +3800,7 @@ msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__show_price_extra
 msgid "Show separately the extra price for this attribute value."
-msgstr ""
+msgstr "Bu öznitelik değeri için ek fiyatı ayrı olarak gösterin."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_silver
@@ -4001,6 +4030,9 @@ msgid ""
 "is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
 "(id)s\""
 msgstr ""
+"Mevcut ürünün farklı öznitelik değeri vardır. \"%(imported_values)s\" "
+"ifadesi, \"%(external_id)s\" ve \"%(id)s\" için \"%(existing_values)s\" "
+"ifadesiyle eşdeğer değildir."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -4086,6 +4118,9 @@ msgid ""
 "The sale price can be set manually or computed from the product template. "
 "Click on the 'Configure Variants' button to set the extra attribute prices."
 msgstr ""
+"Satış fiyatı manuel olarak belirlenebilir veya ürün şablonundan "
+"hesaplanabilir. Ek özellik fiyatlarını ayarlamak için 'Varyantları "
+"Yapılandır' düğmesine tıklayın."
 
 #. module: product
 #. odoo-python
@@ -4189,20 +4224,20 @@ msgstr "Bugünkü Aktiviteler"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total Forecasted"
-msgstr ""
+msgstr "Toplam Öngörülen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total On Hand"
-msgstr ""
+msgstr "Eldeki Toplam"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_storable
 #: model:ir.model.fields,field_description:product.field_product_template__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Envanter Takibi"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
@@ -4246,6 +4281,8 @@ msgid ""
 "Unable to import products with attribute value without attribute name "
 "(defined as: attribute:value): %s"
 msgstr ""
+"Özellik adı olmayan (şu şekilde tanımlanan: özellik:değer) özellik değerine "
+"sahip ürünler içe aktarılamıyor: %s"
 
 #. module: product
 #. odoo-python
@@ -4254,6 +4291,8 @@ msgid ""
 "Unable to import products with attribute values but without name of product "
 "set"
 msgstr ""
+"Özellik değerleri olan ancak ürün adı belirlenmemiş ürünlerin içe "
+"aktarılması mümkün değil"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_underarmour
@@ -4316,12 +4355,12 @@ msgstr "Ölçü Birimleri ve Ambalajlar"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Update Quantities"
-msgstr ""
+msgstr "Miktarları Güncelle"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_variant_edit_qty_action
 msgid "Update Variant Quantities"
-msgstr ""
+msgstr "Varyant Miktarlarını Güncelle"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -4405,7 +4444,7 @@ msgstr "Kullanıcı Adı"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "VINT_1000"
-msgstr ""
+msgstr "VINT_1000"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
@@ -4781,6 +4820,8 @@ msgid ""
 "You cannot archive a product that is part of a combo. Please remove it from "
 "the following combos first: %s"
 msgstr ""
+"Bir kombinasyonun parçası olan bir ürünü arşivleyemezsiniz. Lütfen önce "
+"aşağıdaki kombinasyonlardan kaldırın: %s"
 
 #. module: product
 #. odoo-python
@@ -4968,7 +5009,7 @@ msgstr "attribute_id"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "barcodelookup.com"
-msgstr ""
+msgstr "barcodelookup.com"
 
 #. module: product
 #. odoo-javascript

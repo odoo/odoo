@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
-"PO-Revision-Date: 2026-06-24 16:19+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-06 12:59+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/mail/nl/"
 ">\n"
@@ -1409,6 +1409,10 @@ msgid ""
 "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
 "please replace it here with a Klipy GIF API key"
 msgstr ""
+"Voeg een Klipy GIF API-sleutel toe om ondersteuning voor GIF’s in te "
+"schakelen. https://docs.klipy.com/getting-started\n"
+"Als je een Tenor GIF API-sleutel gebruikte (dienst stopgezet op 30 juni "
+"2026), vervang deze dan hier door een Klipy GIF API-sleutel"
 
 #. module: mail
 #. odoo-javascript
@@ -5641,6 +5645,24 @@ msgstr "Terug naar stemmen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
+msgid "Go online to load attachments."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/pinned_messages_panel.js:0
+msgid "Go online to load pinned messages."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
+msgid "Go online to load threads."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Go to conversation"
 msgstr "Ga naar conversatie"
@@ -6285,7 +6307,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_tenor_api
 msgid "If you want to use Klipy API to share GIFs in conversations."
-msgstr ""
+msgstr "Als je de Klipy API wilt gebruiken om GIF’s te delen in gesprekken."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -6305,6 +6327,8 @@ msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
 msgstr ""
+"Als je een Tenor-API-sleutel gebruikte, vervang deze dan door een Klipy-API-"
+"sleutel in de Algemene instellingen."
 
 #. module: mail
 #. odoo-javascript
@@ -6992,7 +7016,7 @@ msgstr "Met vriendelijke groet"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "Klipy API-sleutel"
 
 #. module: mail
 #. odoo-javascript
@@ -11618,6 +11642,9 @@ msgid ""
 "Tenor GIF API key (service shutdown on June 30, 2026), please replace it "
 "here with a Klipy GIF API key"
 msgstr ""
+"Deel GIF’s in je gesprekken met behulp van de Klipy API. Als je een Tenor "
+"GIF API-sleutel gebruikte (dienst stopgezet op 30 juni 2026), vervang deze "
+"dan hier door een Klipy GIF API-sleutel"
 
 #. module: mail
 #. odoo-javascript
@@ -12330,18 +12357,6 @@ msgstr ""
 "Het activiteitstyape 'To-Do' wordt gebruikt om herinneringen te maken vanuit "
 "het bovenste balkmenu en het opdrachtenpalet. Bijgevolg kan het niet worden "
 "gearchiveerd of verwijderd."
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_partner__vat
-#: model:ir.model.fields,help:mail.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Het btw-nummer. Waarden hier worden gevalideerd op basis van het "
-"landformaat. Je kunt '/' gebruiken om aan te geven dat de partner niet "
-"belastingplichtig is."
 
 #. module: mail
 #. odoo-python
@@ -13683,7 +13698,7 @@ msgstr "Google Translate API gebruiken"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
 msgid "Use Klipy API"
-msgstr ""
+msgstr "Gebruik Klipy API"
 
 #. module: mail
 #. odoo-javascript
@@ -14595,6 +14610,12 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "You can still turn off your %s anytime."
 msgstr "Je kan je %s altijd nog uitschakelen."
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_res_partner__vat
+#: model:ir.model.fields,help:mail.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -15535,6 +15556,15 @@ msgstr "“%s”"
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privé"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Het btw-nummer. Waarden hier worden gevalideerd op basis van het "
+#~ "landformaat. Je kunt '/' gebruiken om aan te geven dat de partner niet "
+#~ "belastingplichtig is."
 
 #~ msgid ""
 #~ "Add a Tenor GIF API key to enable GIFs support. https://"

@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
-"PO-Revision-Date: 2026-06-23 09:29+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-08 10:31+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-2/"
 "mail/id/>\n"
@@ -5160,7 +5160,7 @@ msgstr "Masukan"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Feedback:"
-msgstr "Feedback:"
+msgstr "Masukan:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -5596,6 +5596,24 @@ msgstr "Dibuat Dari"
 #: code:addons/mail/static/src/core/common/poll.xml:0
 msgid "Go back to vote"
 msgstr "Kembali ke vote"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
+msgid "Go online to load attachments."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/pinned_messages_panel.js:0
+msgid "Go online to load pinned messages."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
+msgid "Go online to load threads."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12262,18 +12280,6 @@ msgstr ""
 "diarsip atau dihapus."
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_res_partner__vat
-#: model:ir.model.fields,help:mail.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Nomor Identifikasi Pajak. Nomor di sini akan divalidasi berdasarkan format "
-"negara. Anda dapat menggunakan '/' untuk mengindikasikan bahwa mitra tidak "
-"dikenakan pajak."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "The activity can be launched, with these additional effects:"
@@ -14498,6 +14504,12 @@ msgid "You can still turn off your %s anytime."
 msgstr "Anda masih dapat menonaktifkan %s Anda kapan pun."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_res_partner__vat
+#: model:ir.model.fields,help:mail.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
@@ -15436,6 +15448,15 @@ msgstr ""
 #, fuzzy
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Nomor Identifikasi Pajak. Nomor di sini akan divalidasi berdasarkan "
+#~ "format negara. Anda dapat menggunakan '/' untuk mengindikasikan bahwa "
+#~ "mitra tidak dikenakan pajak."
 
 #~ msgid ""
 #~ "Add a Tenor GIF API key to enable GIFs support. https://"
