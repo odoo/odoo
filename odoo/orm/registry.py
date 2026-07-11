@@ -477,7 +477,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     model_cls._setup_done__ = False
                 if model_cls._setup_done__:
                     models_field_depends_done.add(model_cls)
-                elif not model_cls._abstract:
+                else:
                     todo.extend(model_cls._fields.values())
 
             done = set()
@@ -521,8 +521,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # determine field_depends and field_depends_context
         for model_cls in self.models.values():
-            if model_cls._abstract:
-                continue
             if model_cls in models_field_depends_done:
                 continue
             model = model_cls(env, (), ())
@@ -690,8 +688,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         triggers: defaultdict[Field, defaultdict[tuple[str, ...], OrderedSet[Field]]] = defaultdict(lambda: defaultdict(OrderedSet))
 
         for Model in self.models.values():
-            if Model._abstract:
-                continue
             for field in Model._fields.values():
                 try:
                     dependencies = list(field.resolve_depends(self))

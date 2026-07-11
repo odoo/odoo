@@ -179,7 +179,7 @@ class SequenceMixin(models.AbstractModel):
                     sequence=sequence,
                 ))
 
-    @api.depends(lambda self: [self._sequence_field])
+    @api.depends(lambda self: [self._sequence_field] if self._sequence_field in self._fields else [])
     def _compute_split_sequence(self):
         for record in self:
             sequence = record[record._sequence_field] or ''

@@ -15,7 +15,7 @@ class StockReplenishMixin(models.AbstractModel):
     allowed_route_ids = fields.Many2many('stock.route', compute='_compute_allowed_route_ids')
 
     # INHERITS in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management'
-    @api.depends('product_id', 'product_tmpl_id')
+    @api.depends(lambda self: [f for f in ('product_id', 'product_tmpl_id') if f in self._fields])
     def _compute_allowed_route_ids(self):
         domain = self._get_allowed_route_domain()
         route_ids = self.env['stock.route'].search(domain)

@@ -37,23 +37,23 @@ class AvatarMixin(models.AbstractModel):
                     avatar = record._avatar_get_placeholder()
             record[avatar_field] = avatar
 
-    @api.depends(lambda self: [self._avatar_name_field, 'image_1920'])
+    @api.depends(lambda self: [f for f in (self._avatar_name_field, 'image_1920') if f in self._fields])
     def _compute_avatar_1920(self):
         self._compute_avatar('avatar_1920', 'image_1920')
 
-    @api.depends(lambda self: [self._avatar_name_field, 'image_1024'])
+    @api.depends(lambda self: [f for f in (self._avatar_name_field, 'image_1024') if f in self._fields])
     def _compute_avatar_1024(self):
         self._compute_avatar('avatar_1024', 'image_1024')
 
-    @api.depends(lambda self: [self._avatar_name_field, 'image_512'])
+    @api.depends(lambda self: [f for f in (self._avatar_name_field, 'image_512') if f in self._fields])
     def _compute_avatar_512(self):
         self._compute_avatar('avatar_512', 'image_512')
 
-    @api.depends(lambda self: [self._avatar_name_field, 'image_256'])
+    @api.depends(lambda self: [f for f in (self._avatar_name_field, 'image_256') if f in self._fields])
     def _compute_avatar_256(self):
         self._compute_avatar('avatar_256', 'image_256')
 
-    @api.depends(lambda self: [self._avatar_name_field, 'image_128'])
+    @api.depends(lambda self: [f for f in (self._avatar_name_field, 'image_128') if f in self._fields])
     def _compute_avatar_128(self):
         self._compute_avatar('avatar_128', 'image_128')
 

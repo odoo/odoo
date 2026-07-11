@@ -934,6 +934,12 @@ class Field[T]:
                     # recomputations of fields on transient models
                     break
 
+                if Model0._abstract and not Model._abstract:
+                    # records of abstract models are never stored, so one
+                    # cannot search for the abstract records to recompute when
+                    # modifying fields on regular models
+                    break
+
                 try:
                     field = Model._fields[fname]
                 except KeyError:

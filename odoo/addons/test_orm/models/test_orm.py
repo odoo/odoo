@@ -858,6 +858,61 @@ class TestOrmComputeOnchangeLine(models.Model):
             line.bar = (line.foo or "") + "r"
 
 
+class TestOrmComputeOnchangeAbstract(models.AbstractModel):
+    _name = 'test_orm.compute.onchange.abstract'
+    _description = "Compute method as an onchange on abstract model"
+
+    active = fields.Boolean()
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', store=True)
+    baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+    quux = fields.Char(compute='_compute_quux')
+    count = fields.Integer(default=0)
+    line_ids = fields.One2many(
+        'test_orm.compute.onchange.line.abstract', 'record_id',
+        compute='_compute_line_ids', store=True, readonly=False,
+    )
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = (record.foo or "") + "r"
+
+    @api.depends('active', 'foo')
+    def _compute_baz(self):
+        for record in self:
+            if record.active:
+                record.baz = (record.foo or "") + "z"
+
+    # special case: this field has no dependency
+    def _compute_quux(self):
+        self.quux = "quux"
+
+    @api.depends('foo')
+    def _compute_line_ids(self):
+        for record in self:
+            if not record.foo:
+                continue
+            if any(line.foo == record.foo for line in record.line_ids):
+                continue
+            # add a line with the same value as 'foo'
+            record.line_ids = [Command.create({'foo': record.foo})]
+
+
+class TestOrmComputeOnchangeLineAbstract(models.AbstractModel):
+    _name = 'test_orm.compute.onchange.line.abstract'
+    _description = "Line-like model for test_orm.compute.onchange.abstract"
+
+    record_id = fields.Many2one('test_orm.compute.onchange.abstract', ondelete='cascade')
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for line in self:
+            line.bar = (line.foo or "") + "r"
+
+
 class TestOrmComputeDynamicDepends(models.Model):
     _name = 'test_orm.compute.dynamic.depends'
     _description = "Computed field with dynamic dependencies"

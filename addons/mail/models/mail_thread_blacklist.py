@@ -43,7 +43,7 @@ class MailThreadBlacklist(models.AbstractModel):
     # messaging
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
 
-    @api.depends(lambda self: [self._primary_email])
+    @api.depends(lambda self: [self._primary_email] if self._primary_email in self._fields else [])
     def _compute_email_normalized(self):
         self._assert_primary_email()
         for record in self:

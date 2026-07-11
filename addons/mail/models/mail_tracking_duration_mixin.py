@@ -23,7 +23,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
         compute='_compute_rotting')
     is_rotting = fields.Boolean('Rotting', compute='_compute_rotting', search='_search_is_rotting')
 
-    @api.depends(lambda self: [self._track_duration_field])
+    @api.depends(lambda self: [self._track_duration_field] if hasattr(self, '_track_duration_field') else [])
     def _compute_duration_tracking(self):
         """
         Track how long a record stays in different stages.
