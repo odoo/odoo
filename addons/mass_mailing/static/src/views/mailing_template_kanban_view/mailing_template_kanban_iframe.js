@@ -5,8 +5,7 @@ import {
     onWillUnmount,
     signal,
     useApp,
-    onWillUpdateProps,
-    proxy,
+    useEffect,
     useProps,
     useScope,
 } from "@odoo/owl";
@@ -32,7 +31,11 @@ export class MailingTemplateKanbanIframe extends Component {
 
     setup() {
         this.scope = useScope();
-        this.rendererWrapperRootProps = Object.assign(proxy({}), this.props);
+        this.kanbanRendererProps = signal.Object(this.props);
+        this.rendererWrapperRootProps = {
+            kanbanRendererProps: this.kanbanRendererProps,
+            iframeRef: this.iframeRef,
+        };
         onMounted(() => {
             this.setupIframe();
         });
@@ -41,11 +44,8 @@ export class MailingTemplateKanbanIframe extends Component {
                 this.templateKanbanRoot.destroy();
             }
         });
-        onWillUpdateProps(async (nextProps) => {
-            Object.assign(this.rendererWrapperRootProps, nextProps);
-            // TODO: look for a better way of updating the props of the RendererWrapper.
-            this.templateKanbanRoot.node.component.props = this.rendererWrapperRootProps;
-            await this.rendererWrapper.reloadRenderer();
+        useEffect(() => {
+            this.kanbanRendererProps = this.props;
         });
     }
 
@@ -87,7 +87,7 @@ export class MailingTemplateKanbanIframe extends Component {
         } catch (error) {
             loadingError = error;
         }
-        if (!status(this.scope.component) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         } else if (loadingError) {
             throw loadingError;
