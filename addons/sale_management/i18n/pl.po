@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-02-24 14:04+0000\n"
+"PO-Revision-Date: 2026-07-08 14:48+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "sale_management/pl/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -52,7 +52,7 @@ msgstr "Dodaj notatkę"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a product"
-msgstr "Dodaj Produkt"
+msgstr "Dodaj produkt"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -113,7 +113,7 @@ msgstr "Konfiguracja ustawień"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr "e-mail potwierdzający"
+msgstr "E-mail potwierdzający"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
@@ -168,6 +168,7 @@ msgid ""
 "Default values will be overwritten by values provided by the quotation "
 "template."
 msgstr ""
+"Wartości domyślne zostaną zastąpione wartościami podanymi w szablonie oferty."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
@@ -224,7 +225,7 @@ msgstr "Dodatkowe chipsy"
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
-"Zabroniony produkt, ilość i UoM w nieobliczalnej linii wyceny sprzedaży"
+"Zabroniony produkt, ilość i JM w nieobliczalnej pozycji oferty sprzedaży"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -312,7 +313,7 @@ msgstr "Pozycje"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr "Brak wymaganego produktu i JM w pozycji oferty sprzedaży"
+msgstr "Brak wymaganego produktu i JM w pozycji oferty sprzedaży."
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -368,13 +369,12 @@ msgstr "Procentowa wartość zaliczki"
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
-"Wartość procentowa przedpłaty musi być prawidłową wartością procentową."
+msgstr "Wartość procentowa przedpłaty musi być prawidłową wartością procentową."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
 msgid "Present on Quotation"
-msgstr "Obecne na ofercie."
+msgstr "Obecne na ofercie"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
@@ -399,7 +399,7 @@ msgstr "Ilość:"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
 msgid "Quotation Duration"
-msgstr "Ważność oferty"
+msgstr "Czas trwania oferty"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
@@ -504,7 +504,7 @@ msgstr "Pozycje w szablonie oferty sprzedażowej"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Search Quotation Template"
-msgstr "Szukaj szablon oferty"
+msgstr "Szukaj szablonu oferty"
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_section
@@ -581,8 +581,8 @@ msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
 msgstr ""
-"Pole to zostanie zaznaczone, jeśli produkt z linii opcji jest już obecny w "
-"notowaniu."
+"Pole to zostanie zaznaczone, jeśli produkt z pozycji opcji jest już obecny w "
+"ofercie."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
@@ -628,11 +628,10 @@ msgid ""
 "online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Użyj szablonów, aby stworzyć polerowane, profesjonalne oferty w ciągu kilku "
+"Użyj szablonów, aby stworzyć dopracowane, profesjonalne oferty w ciągu kilku "
 "minut.\n"
-"Wyślij te oferty pocztą elektroniczną i pozwól swoim klientom podpisać się "
-"online.\n"
-"Użyj sprzedaży krzyżowej i rabatów, aby popchnąć i zwiększyć sprzedaż."
+"Wyślij te oferty e-mailem i pozwól swoim klientom podpisać się online.\n"
+"Skorzystaj z opcji sprzedaży krzyżowej i rabatów, aby zwiększyć sprzedaż."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -644,7 +643,7 @@ msgstr "Ustawione tu wartości są specyficzne dla danej firmy."
 #: code:addons/sale_management/models/sale_order_option.py:0
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr "Nie możesz dodawać opcji do potwierdzonego zamówienia"
+msgstr "Nie możesz dodawać opcji do potwierdzonego zamówienia."
 
 #. module: sale_management
 #. odoo-python
@@ -654,8 +653,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Nie można zmienić typu linii wyceny sprzedaży. Zamiast tego należy usunąć "
-"bieżącą linię i utworzyć nową linię o odpowiednim typie."
+"Nie można zmienić typu pozycji oferty sprzedaży. Zamiast tego należy usunąć "
+"bieżącą pozycję i utworzyć nową pozycję o odpowiednim typie."
 
 #. module: sale_management
 #. odoo-python
@@ -667,10 +666,9 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"Twoja oferta zawiera produkty firmy%(product_company)s, natomiast Twoja "
+"Twoja oferta zawiera produkty firmy %(product_company)s, natomiast Twoja "
 "oferta należy do firmy %(quote_company)s. \n"
-"Proszę zmienić firmę oferty lub usunąć produkty z innych firm "
-"(%(bad_products)s)."
+"Zmień firmę oferty lub usuń produkty z innych firm (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
@@ -691,7 +689,7 @@ msgid ""
 msgstr ""
 "Twój szablon zawiera produkty z firmy %(product_company)s, podczas gdy twój "
 "szablon należy do firmy %(template_company)s. \n"
-"Proszę zmienić firmę swojego szablonu lub usunąć produkty z innych firm."
+"Zmień firmę swojego szablonu lub usuń produkty z innych firm."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
