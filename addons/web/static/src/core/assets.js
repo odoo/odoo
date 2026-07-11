@@ -32,6 +32,37 @@ function getDocumentAssetCache(targetDoc) {
 }
 
 /**
+ * @param {string} url the url of the stylesheet or a script tag
+ * @param {Document} targetDoc
+ * @returns {Promise<LoadTarget> | undefined} resolved when the stylesheet/script has been loaded
+ */
+function getDocumentCachedLoadTargetPromise(url, targetDoc) {
+    const cacheMap = getDocumentAssetCache(targetDoc);
+    if (assets.globalCache.has(url) && !cacheMap.has(url)) {
+        const { promise, resolve, reject } = Promise.withResolvers();
+        cacheMap.set(url, promise);
+        assets.globalCache.get(url).then(
+            (loadTarget) => {
+                const clone = targetDoc.importNode(loadTarget, true);
+                targetDoc.head.appendChild(clone);
+                onLoadAndError(clone, resolve, (error) => {
+                    cacheMap.delete(url);
+                    clone.remove();
+                    reject(error);
+                });
+            },
+            (error) => {
+                cacheMap.delete(url);
+                reject(error);
+            }
+        );
+    }
+    if (cacheMap.has(url)) {
+        return cacheMap.get(url);
+    }
+}
+
+/**
  * @param {LoadTarget} el
  * @param {(target: LoadTarget) => void} onLoad
  * @param {(error: Error) => any} onError
@@ -187,14 +218,12 @@ export const assets = {
      * @returns {Promise<LoadTarget>} resolved when the stylesheet has been loaded
      */
     loadCSS(url, options) {
-        if (assets.globalCache.has(url)) {
-            return assets.globalCache.get(url);
-        }
         const targetDoc = options?.targetDoc || document;
-        const cacheMap = getDocumentAssetCache(targetDoc);
-        if (cacheMap.has(url)) {
-            return cacheMap.get(url);
+        const cachedPromise = getDocumentCachedLoadTargetPromise(url, targetDoc);
+        if (cachedPromise) {
+            return cachedPromise;
         }
+        const cacheMap = getDocumentAssetCache(targetDoc);
         const retryCount = options?.retryCount || 0;
         const linkEl = targetDoc.createElement("link");
         linkEl.setAttribute("href", url);
@@ -236,14 +265,12 @@ export const assets = {
      * @returns {Promise<LoadTarget>} resolved when the script has been loaded
      */
     loadJS(url, options) {
-        if (assets.globalCache.has(url)) {
-            return assets.globalCache.get(url);
-        }
         const targetDoc = options?.targetDoc || document;
-        const cacheMap = getDocumentAssetCache(targetDoc);
-        if (cacheMap.has(url)) {
-            return cacheMap.get(url);
+        const cachedPromise = getDocumentCachedLoadTargetPromise(url, targetDoc);
+        if (cachedPromise) {
+            return cachedPromise;
         }
+        const cacheMap = getDocumentAssetCache(targetDoc);
         const scriptEl = targetDoc.createElement("script");
         scriptEl.setAttribute("src", url);
         scriptEl.type = options?.type || "text/javascript";

@@ -188,3 +188,27 @@ test("loadBundle: load same bundles in 2 iframes", async () => {
         [secondDoc, "SCRIPT", "text/javascript", "file2.js"],
     ]);
 });
+
+test("assets are correctly cloned into sub-documents", async () => {
+    const iframeDoc = mountIframe();
+
+    stepOnAssetAppended(document); // Nothing should be added in this test
+    stepOnAssetAppended(iframeDoc);
+
+    // Set script in the global cache to simulate that it was there already.
+    const globalScript = document.createElement("script");
+    globalScript.setAttribute("src", "file1.js");
+    globalScript.setAttribute("type", "text/javascript");
+    assets.globalCache.set("file1.js", Promise.resolve(globalScript));
+
+    loadJS("file1.js", { targetDoc: iframeDoc });
+    await animationFrame();
+
+    expect.verifySteps([[iframeDoc, "SCRIPT", "text/javascript", "file1.js"]]);
+
+    // Reload same file in the same iframe
+    loadJS("file1.js", { targetDoc: iframeDoc });
+    await animationFrame();
+
+    expect.verifySteps([]);
+});
