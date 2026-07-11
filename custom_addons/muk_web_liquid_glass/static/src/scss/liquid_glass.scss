@@ -1,0 +1,78 @@
+// =============================================================================
+//  Liquid Glass — glassmorphism layer for the MuK backend theme
+//  Tweak the knobs below to taste, then update the module to recompile SCSS.
+// =============================================================================
+
+$mk-glass-blur:        18px;                          // frost intensity
+$mk-glass-saturate:    160%;                           // color pop behind the glass
+$mk-glass-bg:          rgba(255, 255, 255, 0.55);      // panel tint (light)
+$mk-glass-bg-strong:   rgba(255, 255, 255, 0.70);      // more opaque panels
+$mk-glass-border:      rgba(255, 255, 255, 0.35);      // hairline edge
+$mk-glass-radius:      14px;
+
+// Reusable frosted-panel recipe -----------------------------------------------
+@mixin mk-glass($bg: $mk-glass-bg) {
+    background-color: $bg !important;
+    backdrop-filter: blur($mk-glass-blur) saturate($mk-glass-saturate);
+    -webkit-backdrop-filter: blur($mk-glass-blur) saturate($mk-glass-saturate);
+    border: 1px solid $mk-glass-border;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+}
+
+// 1. The backdrop the glass sits on -------------------------------------------
+//    Glassmorphism only reads if there is something colorful behind the panels.
+.o_web_client {
+    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 40%, #e0c3fc 100%)
+        fixed;
+}
+
+// 2. Top navbar ---------------------------------------------------------------
+.o_main_navbar {
+    @include mk-glass(rgba(255, 255, 255, 0.35));
+    border-width: 0 0 1px 0;
+}
+
+// 3. MuK apps sidebar ---------------------------------------------------------
+.mk_apps_sidebar_panel {
+    @include mk-glass(rgba(255, 255, 255, 0.30));
+    border-width: 0 1px 0 0;
+}
+
+// 4. Control panel (breadcrumbs + action buttons) -----------------------------
+.o_control_panel {
+    @include mk-glass(rgba(255, 255, 255, 0.45));
+    border-width: 0 0 1px 0;
+}
+
+// 5. Keep the scrollable content transparent so the gradient shows through ----
+.o_action_manager,
+.o_content {
+    background-color: transparent !important;
+}
+
+// 6. Form sheets --------------------------------------------------------------
+.o_form_view .o_form_sheet_bg {
+    background-color: transparent !important;
+}
+.o_form_view .o_form_sheet {
+    @include mk-glass($mk-glass-bg-strong);
+    border-radius: $mk-glass-radius;
+}
+
+// 7. Dialogs / modals ---------------------------------------------------------
+.modal .modal-content {
+    @include mk-glass($mk-glass-bg-strong);
+    border-radius: $mk-glass-radius;
+}
+
+// 8. Dropdown menus -----------------------------------------------------------
+.o-dropdown--menu.dropdown-menu {
+    @include mk-glass($mk-glass-bg-strong);
+    border-radius: $mk-glass-radius;
+}
+
+// 9. Kanban / list cards get a subtle lift so dense data stays readable -------
+.o_kanban_record {
+    @include mk-glass(rgba(255, 255, 255, 0.60));
+    border-radius: $mk-glass-radius;
+}

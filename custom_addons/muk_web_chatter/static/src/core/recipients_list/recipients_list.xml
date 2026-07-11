@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<templates xml:space="preserve">
+
+    <t t-name="muk_web_chatter.BaseRecipientsList">
+        <div class="d-flex py-1 ps-3">
+            <span class="flex-shrink-0 text-end text-muted fw-bold px-2" style="width:46px">
+                <i class="fa fa-user" aria-hidden="true"/>
+            </span>
+            <span 
+                class="d-flex flex-wrap flex-grow-1 align-items-center gap-1 mx-1 text-truncate small" 
+                style="line-height: 1.6;"
+            >
+                <span class="text-truncate text-muted" t-out="getRecipientsSummary()"/>
+                <button
+                    t-if="hasMore"
+                    class="btn btn-link badge rounded-pill text-muted border-0 p-1"
+                    title="Show all recipients"
+                    type="button"
+                    t-on-click="onClickMore"
+                >
+                    <i class="fa fa-caret-down"/>
+                </button>
+            </span>
+        </div>
+    </t>
+
+</templates>
