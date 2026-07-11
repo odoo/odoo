@@ -13,11 +13,12 @@ import { session } from "@web/session";
  */
 
 function computeAssetCaches() {
+    const cacheMap = getDocumentAssetCache(document);
     for (const script of document.head.querySelectorAll("script[src]")) {
-        assets.globalCache.set(script.getAttribute("src"), Promise.resolve(script));
+        cacheMap.set(script.getAttribute("src"), Promise.resolve(script));
     }
     for (const link of document.head.querySelectorAll("link[rel=stylesheet][href]")) {
-        assets.globalCache.set(link.getAttribute("href"), Promise.resolve(link));
+        cacheMap.set(link.getAttribute("href"), Promise.resolve(link));
     }
 }
 
@@ -187,9 +188,6 @@ export const assets = {
      * @returns {Promise<LoadTarget>} resolved when the stylesheet has been loaded
      */
     loadCSS(url, options) {
-        if (assets.globalCache.has(url)) {
-            return assets.globalCache.get(url);
-        }
         const targetDoc = options?.targetDoc || document;
         const cacheMap = getDocumentAssetCache(targetDoc);
         if (cacheMap.has(url)) {
@@ -236,9 +234,6 @@ export const assets = {
      * @returns {Promise<LoadTarget>} resolved when the script has been loaded
      */
     loadJS(url, options) {
-        if (assets.globalCache.has(url)) {
-            return assets.globalCache.get(url);
-        }
         const targetDoc = options?.targetDoc || document;
         const cacheMap = getDocumentAssetCache(targetDoc);
         if (cacheMap.has(url)) {
