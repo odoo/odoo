@@ -114,7 +114,7 @@ export class ThemeSelectorIframe extends Component {
         } catch (error) {
             loadingError = error;
         }
-        if (!status(this) === "destroyed") {
+        if (status(this) === "destroyed") {
             return;
         } else if (loadingError) {
             throw loadingError;
