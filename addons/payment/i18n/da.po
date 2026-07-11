@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
 "PO-Revision-Date: 2026-06-12 21:21+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -46,9 +46,9 @@ msgid ""
 "Number: %(account_number)s</li><li>Account Holder: %(account_holder)s</li></"
 "ul>"
 msgstr ""
-"<h3>Overfør venligst betalingen til: </h3><ul><li>Bank: %(bank)s</li><li>"
-"Kontonummer: %(account_number)s</li><li>Kontohaver: %(account_holder)s</li></"
-"ul>"
+"<h3>Overfør venligst betalingen til: </h3><ul><li>Bank: %(bank)s</"
+"li><li>Kontonummer: %(account_number)s</li><li>Kontohaver: %"
+"(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -84,10 +84,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
-"!= 'full_only'\" title=\"Nogle af de transaktioner, du ønsker at registrere, "
-"kan kun registreres i deres helhed. Behandl transaktionerne enkeltvis, hvis "
-"du vil registrere et delbeløb.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Nogle af de "
+"transaktioner, du ønsker at registrere, kan kun registreres i deres helhed. "
+"Behandl transaktionerne enkeltvis, hvis du vil registrere et delbeløb.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -101,7 +101,8 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr "<i class=\"oi oi-arrow-right me-1\"></i> Konfigurér en betalingsudbyder"
+msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"></i> Konfigurér en betalingsudbyder"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -255,8 +256,8 @@ msgstr ""
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
 msgstr ""
-"En transaktion med referencen %(ref)s er blevet initieret (%(provider_name)s)"
-"."
+"En transaktion med referencen %(ref)s er blevet initieret (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1126,11 +1127,6 @@ msgid "EPS"
 msgstr "EPS"
 
 #. module: payment
-#: model:payment.method,name:payment.payment_method_easypaisa
-msgid "EasyPaisa"
-msgstr "EasyPaisa"
-
-#. module: payment
 #: model:payment.method,name:payment.payment_method_elo
 msgid "Elo"
 msgstr "Elo"
@@ -1433,11 +1429,6 @@ msgstr "Det er i øjeblikket linket til følgende dokumenter:"
 #: model:payment.method,name:payment.payment_method_jcb
 msgid "JCB"
 msgstr "JCB"
-
-#. module: payment
-#: model:payment.method,name:payment.payment_method_jazzcash
-msgid "JazzCash"
-msgstr "JazzCash"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jeniuspay
@@ -2871,7 +2862,8 @@ msgstr "Meddelelsen, der vises, hvis ordren afbrydes under betalingsprocessen"
 msgid ""
 "The message displayed if the order is successfully done after the payment "
 "process"
-msgstr "Meddelelsen, der vises, når bestillingen er gennemført efter betalingen"
+msgstr ""
+"Meddelelsen, der vises, når bestillingen er gennemført efter betalingen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
@@ -3703,3 +3695,9 @@ msgstr "tokenisering understøttes ikke"
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr "tokenisering uden betaling understøttes ikke"
+
+#~ msgid "EasyPaisa"
+#~ msgstr "EasyPaisa"
+
+#~ msgid "JazzCash"
+#~ msgstr "JazzCash"

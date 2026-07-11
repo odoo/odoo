@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
 "PO-Revision-Date: 2026-06-11 23:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -8952,8 +8952,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
-"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', có nhãn '%(label)"
-"s',\n"
+"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', có nhãn '%"
+"(label)s',\n"
 "Không thể phân tích ID báo cáo chéo hoặc xml_id.\n"
 
 #. module: account
@@ -8967,11 +8967,11 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
-"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', với nhãn '%(label)"
-"s',\n"
+"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', với nhãn '%"
+"(label)s',\n"
 "Định dạng của biểu thức báo cáo chéo không hợp lệ.\n"
-"Dự kiến: cross_report(<report_id>|<xml_id>) Ví dụ: cross_report"
-"(my_module.my_report) hoặc cross_report(123)"
+"Dự kiến: cross_report(<report_id>|<xml_id>) Ví dụ: "
+"cross_report(my_module.my_report) hoặc cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10556,6 +10556,7 @@ msgid "Looks great!"
 msgstr "Thật tuyệt!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Lỗ"
@@ -12132,6 +12133,7 @@ msgid "Owner's Current Account"
 msgstr "Tài khoản vãng lai của chủ sở hữu"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "Tài khoản lãi lỗ"
@@ -13081,6 +13083,11 @@ msgid "Profit Account"
 msgstr "Tài khoản lãi"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
 msgstr "Giấy báo có chiếu lệ"
@@ -13728,6 +13735,7 @@ msgstr "Dấu vết kiểm toán hạn chế"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Doanh thu"
@@ -17620,6 +17628,11 @@ msgid ""
 msgstr ""
 "Không thể tạo báo cáo do thiếu giao dịch. Bạn có thể cần sắp xếp lại các "
 "giao dịch trước khi tiếp tục."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python

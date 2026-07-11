@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
-"PO-Revision-Date: 2026-06-12 21:22+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-06 16:01+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s18-4/account/"
 "cs/>\n"
@@ -1635,8 +1635,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-"
-"collapse:separate;\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
 "       <tr>\n"
 "            <td align=\"center\"> \n"
 "               <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1651,8 +1651,8 @@ msgstr ""
 "                                   <td align=\"left\" style=\"padding-left: "
 "16px;\"> \n"
 "                                        Obdrželi jste <t t-"
-"if=\"invoice_count &gt; 1\">nové elektronické faktury!</t><t t-else=\"\">"
-"novou elektronickou fakturu!</t>\n"
+"if=\"invoice_count &gt; 1\">nové elektronické faktury!</t><t t-"
+"else=\"\">novou elektronickou fakturu!</t>\n"
 "                                    </td>\n"
 "                                   <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
@@ -1681,10 +1681,10 @@ msgstr ""
 "                                           </t>\n"
 "                                            <t t-else=\"\"> \n"
 "                                                Dobrý den, </t>\n"
-"                                        </h3> <p style=\"margin-top: "
-"12px;\"> \n"
-"Obdrželi jste <t t-if=\"invoice_count &gt; 1\">nové elektronické faktury</t>"
-"<t t-else=\"\">novou elektronickou fakturu</t>! </p>\n"
+"                                        </h3> <p style=\"margin-top: 12px;"
+"\"> \n"
+"Obdrželi jste <t t-if=\"invoice_count &gt; 1\">nové elektronické faktury</"
+"t><t t-else=\"\">novou elektronickou fakturu</t>! </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/> <t t-foreach=\"invoices[:MAX_INVOICES_TO_DISPLAY]\" t-"
 "as=\"inv\">\n"
@@ -1703,8 +1703,8 @@ msgstr ""
 "                                                </t> <t t-"
 "if=\"inv.amount_total\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\"> Částka:</span> <t t-out=\"inv.amount_total\" t-options=\""
-"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\"> Částka:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t> <t t-"
 "if=\"inv.invoice_date_due\">\n"
@@ -1718,11 +1718,11 @@ msgstr ""
 "padding-top: 24px;\"> \n"
 "                                           <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?active_ids={{ "
-"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
-"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
-"none !important; background-color: #008384; border-radius:3px; display: "
-"inline-block;\"> \n"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\"> \n"
 "                                               Prohlédnout faktury\n"
 "                                           </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -9019,8 +9019,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
-"Ve zprávě „%(report_name)s “, v řádku „%(line_name)s “, s popiskem „%(label)"
-"s “,\n"
+"Ve zprávě „%(report_name)s “, v řádku „%(line_name)s “, s popiskem „%"
+"(label)s “,\n"
 "Se nepodařilo analyzovat křížové ID zprávy nebo xml_id.\n"
 
 #. module: account
@@ -9033,11 +9033,11 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
-"Ve zprávě „%(report_name)s “, v řádku „%(line_name)s “, s popiskem „%(label)"
-"s “,\n"
+"Ve zprávě „%(report_name)s “, v řádku „%(line_name)s “, s popiskem „%"
+"(label)s “,\n"
 "Formát výrazu křížového výkazu je neplatný. \n"
-"Očekávané: cross_report(<report_id>|<xml_id>)Příklad:  cross_report"
-"(my_module.my_report) nebo cross_report(123)"
+"Očekávané: cross_report(<report_id>|<xml_id>)Příklad:  "
+"cross_report(my_module.my_report) nebo cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9546,7 +9546,8 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
-msgstr "Distribuce faktur a dobropisů by mělo mít celkový faktor (+) rovný 100."
+msgstr ""
+"Distribuce faktur a dobropisů by mělo mít celkový faktor (+) rovný 100."
 
 #. module: account
 #. odoo-python
@@ -9554,7 +9555,8 @@ msgstr "Distribuce faktur a dobropisů by mělo mít celkový faktor (+) rovný 
 msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
-msgstr "Distribuce faktur a dobropisů by mělo mít celkový faktor (-) rovný 100."
+msgstr ""
+"Distribuce faktur a dobropisů by mělo mít celkový faktor (-) rovný 100."
 
 #. module: account
 #. odoo-python
@@ -10630,6 +10632,7 @@ msgid "Looks great!"
 msgstr "To vypadá skvěle!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Ztráta"
@@ -12204,6 +12207,7 @@ msgid "Owner's Current Account"
 msgstr "Běžný účet majitele"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "Účty zisků a ztrát"
@@ -13053,7 +13057,7 @@ msgstr "Vytisknout šeky k zaplacení dodavatelům"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_id
 msgid "Private Share Account"
-msgstr "Soukromý akciový účet"
+msgstr "Soukromý sdílený účet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
@@ -13143,6 +13147,11 @@ msgstr "Náklady a výnosy"
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_id
 msgid "Profit Account"
 msgstr "Účet zisků"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -13790,6 +13799,7 @@ msgstr "Omezující auditní stopa"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Výnos"
@@ -15942,7 +15952,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "The code must be set for every company to which this account belongs."
-msgstr "Kód musí být nastaven pro každou společnost, ke které tento účet patří."
+msgstr ""
+"Kód musí být nastaven pro každou společnost, ke které tento účet patří."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
@@ -17270,8 +17281,8 @@ msgstr "Ke schválení"
 msgid ""
 "To add information to a previously sent invoice, reply to your \"sent\" email"
 msgstr ""
-"Chcete-li přidat informace k již odeslané faktuře, odpovězte na svůj „"
-"odeslaný“ e-mail"
+"Chcete-li přidat informace k již odeslané faktuře, odpovězte na svůj "
+"„odeslaný“ e-mail"
 
 #. module: account
 #. odoo-python
@@ -17661,6 +17672,11 @@ msgid ""
 msgstr ""
 "Nelze vytvořit výpis kvůli chybějícím transakcím. Než budete pokračovat, "
 "možná budete chtít změnit pořadí transakcí."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python

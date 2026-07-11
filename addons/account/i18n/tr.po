@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
 "PO-Revision-Date: 2026-06-11 23:36+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -573,16 +573,16 @@ msgstr ""
 "        <t t-out=\"object.company_id.name or ''\">YourCompany</t> "
 "firmasından adınıza düzenlenen\n"
 "        <t t-if=\"object.name\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
-"RINV/2021/05/0001</span> numaralı\n"
+"            <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">RINV/2021/05/0001</span> numaralı\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (<t t-out=\"object.invoice_origin or ''\">SUB003</t> referanslı)"
-"\n"
+"            (<t t-out=\"object.invoice_origin or ''\">SUB003</t> "
+"referanslı)\n"
 "        </t>\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span> "
-"tutarındaki\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span> tutarındaki\n"
 "        iade faturanız (credit note) aşağıdadır.\n"
 "        <br/><br/>\n"
 "        Herhangi bir sorunuz olursa bizimle iletişime geçmekten çekinmeyin.\n"
@@ -590,8 +590,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -695,17 +695,18 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Sayın <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
-"<br/><br/>\n"
+"        Sayın <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br/><br/>\n"
 "        Ödemeniz için teşekkür ederiz.\n"
 "        <br/><br/>\n"
 "        <t t-out=\"object.company_id.name or ''\">YourCompany</t> "
 "firmasından\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10.00</span> tutarındaki\n"
-"        <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace"
-"('/','-') or ''\">BNK1-2021-05-0002</span> numaralı ödeme makbuzunuz "
-"aşağıdadır.\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> tutarındaki\n"
+"        <span style=\"font-weight:bold;\" t-out=\"(object.name or "
+"'').replace('/','-') or ''\">BNK1-2021-05-0002</span> numaralı ödeme "
+"makbuzunuz aşağıdadır.\n"
 "        <br/><br/>\n"
 "        Herhangi bir sorunuz olursa bizimle iletişime geçmekten çekinmeyin.\n"
 "        <br/><br/>\n"
@@ -714,8 +715,8 @@ msgstr ""
 "container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -2373,8 +2374,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"%(date)s tarihinde oluşturulan tahakkuk kaydı: %(accrual_entry)"
-"s.                Ve ters kaydı: %(reverse_entry)s."
+"%(date)s tarihinde oluşturulan tahakkuk kaydı: %"
+"(accrual_entry)s.                Ve ters kaydı: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -8951,8 +8952,8 @@ msgstr ""
 "'%(report_name)s' raporunda, '%(line_name)s' satırında, '%(label)s' "
 "etiketiyle,\n"
 "Çapraz rapor ifadesinin biçimi geçersiz. \n"
-"Beklenen: cross_report(<report_id>|<xml_id>)Örnek: cross_report"
-"(my_module.my_report) veya cross_report(123)"
+"Beklenen: cross_report(<report_id>|<xml_id>)Örnek: "
+"cross_report(my_module.my_report) veya cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10555,6 +10556,7 @@ msgid "Looks great!"
 msgstr "Harika görünüyor!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Zarar"
@@ -11823,7 +11825,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, fuzzy
 msgid "Only vendor bills allow for deductibility of product/services."
-msgstr "Sadece satıcı faturaları ürün/hizmetlerin düşülebilirliğine izin verir."
+msgstr ""
+"Sadece satıcı faturaları ürün/hizmetlerin düşülebilirliğine izin verir."
 
 #. module: account
 #. odoo-python
@@ -12149,6 +12152,7 @@ msgid "Owner's Current Account"
 msgstr "Sahibinin Cari Hesabı"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "P&L Hesapları"
@@ -13093,6 +13097,11 @@ msgid "Profit Account"
 msgstr "Kar Hesabı"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, fuzzy
 msgid "Proforma Credit Note"
@@ -13749,6 +13758,7 @@ msgstr "Kısıtlayıcı Denetim İzi"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Gelir"
@@ -17659,6 +17669,11 @@ msgstr ""
 "işlemleri yeniden sıralamak isteyebilirsiniz."
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Undefined Yet"
@@ -18142,7 +18157,8 @@ msgstr "Doğrulanmış"
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
 msgid "Validated entries can only be changed by your accountant."
-msgstr "Onaylanmış girişler yalnızca muhasebeciniz tarafından değiştirilebilir."
+msgstr ""
+"Onaylanmış girişler yalnızca muhasebeciniz tarafından değiştirilebilir."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view

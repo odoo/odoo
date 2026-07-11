@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-06-27 23:30+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-07-09 13:09+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/sale/"
 "fi/>\n"
@@ -909,29 +909,29 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'tarjous' if object.state in "
+"('draft', 'sent') else 'tilaus'\"/>\n"
 "        Hei,\n"
 "        <br/><br/>\n"
 "        <t t-out=\"doc_name or ''\">Tarjouksesi</t>, <span style=\"font-"
 "weight: bold;\" t-out=\"object.name or ''\"/>\n"
 "        <t t-if=\"object.origin\">\n"
-"            (jonka viite: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            (viite: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
-"        jonka summa on <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span>, oin valmiina katseltavaksi.\n"
+"        hintaan <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00€</"
+"span> on valmis tarkastettavaksi.\n"
 "        <br/>\n"
 "        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
 ">\n"
 "        <t t-if=\"documents\">\n"
 "            <br/> \n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
-"                Tässä joitakin täydentäviä asiakirjoja, jotka mahdollisesti "
-"kiinnostavat sinua:\n"
+"                Tässä ylimäräisiä asiakirjoja, jotka saattavat kiinnostaa "
+"sinua:\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Tässä on täydentävä asiakirja, joka mahdollisesti kiinnostaa "
+"                Tässä ylimääräinen asiakirja, joka saattaa kiinnostaa "
 "sinua:\n"
 "            </t>\n"
 "            <ul style=\"margin-bottom: 0;\">\n"
@@ -945,7 +945,7 @@ msgstr ""
 "            </ul>\n"
 "        </t>\n"
 "        <br/>\n"
-"        Olethan meihin yhteydessä, jos sinulla on kysymyksiä.\n"
+"        Ethän epäröi ottaa meihin yhteyttä, mikäli sinulla on kysyttävää.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
@@ -988,21 +988,20 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'tarjous' if object.state in "
+"('draft', 'sent') else 'tilaus'\"/>\n"
 "        Hei,\n"
 "        <br/><br/>\n"
-"        Pro forma -laskusi <t t-out=\"doc_name or ''\">tarjouksesta</t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
-"span>,\n"
+"        Proforma -laskusi <t t-out=\"doc_name or ''\">tarjoukselle</t> <span "
+"style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>,\n"
 "        <t t-if=\"object.origin\">\n"
-"            (jonka viite on: <t t-out=\"object.origin or ''\"/> )\n"
+"            (viite: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        jonka summa on <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span>, on saatavilla.\n"
+"        hintaan <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00€</"
+"span> on saatavilla.\n"
 "        <br/><br/>\n"
-"        Olethan meihin yhteydessä, jos sinulla on kysymyksiä.\n"
+"        Otathan meihin yhteyttä, mikäli sinulla on kysyttävää.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
@@ -2039,11 +2038,6 @@ msgstr "Vahvistusviesti"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
 msgstr "Yhdistä ohjelmiston kanssa!"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Yhdistä ohjelmisto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5184,7 +5178,7 @@ msgstr "Veromaa"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax Excl."
-msgstr "Veroton."
+msgstr "Veroton"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5194,7 +5188,7 @@ msgstr "Verotunnus"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax Incl."
-msgstr "Vero sis."
+msgstr "sis. verot"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -6204,11 +6198,6 @@ msgid "sale order"
 msgstr "myyntitilaus"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "luodaksesi tarjouksia automaattisesti."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "oppiaksesi kaikki tavat yhdistää ohjelmistosi ja"
@@ -6217,11 +6206,6 @@ msgstr "oppiaksesi kaikki tavat yhdistää ohjelmistosi ja"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "yksiköt"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "kanssa"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6257,6 +6241,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "Connect your software"
+#~ msgstr "Yhdistä ohjelmisto"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "luodaksesi tarjouksia automaattisesti."
+
+#~ msgid "with"
+#~ msgstr "kanssa"
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"
