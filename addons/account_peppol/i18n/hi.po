@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-06-28 01:29+0000\n"
-"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"PO-Revision-Date: 2026-07-10 07:30+0000\n"
+"Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
 "account_peppol/hi/>\n"
 "Language: hi\n"
@@ -39,8 +39,9 @@ msgstr " (डेमो)"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+#, fuzzy
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " ( %(eas)s गायब है)"
 
 #. module: account_peppol
 #. odoo-python
@@ -64,7 +65,7 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully"
-msgstr ""
+msgstr "%(proxy_type)s दस्तावेज़ (UUID: %(uuid)s) सफलतापूर्वक मिल गया है"
 
 #. module: account_peppol
 #. odoo-python
@@ -90,6 +91,9 @@ msgid ""
 "                            But you are receiving your e-invoices via this "
 "Access Point:"
 msgstr ""
+"<br/>\n"
+"                            लेकिन आप इस ऐक्सेस पॉइंट के माध्यम से अपने ई-इनवॉइस "
+"प्राप्त कर रहे हैं:"
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -293,8 +297,9 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "'%s' से पहले से ही एक कनेक्शन मौजूद है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -679,8 +684,9 @@ msgstr "कंपनी"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_name
+#, fuzzy
 msgid "Company Name"
-msgstr ""
+msgstr "कंपनी का नाम"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -760,7 +766,7 @@ msgstr "डेमो"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Disable the reception."
-msgstr ""
+msgstr "रिसेप्शन को बंद करें।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -769,14 +775,15 @@ msgstr "खारिज करें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "Disconnect"
-msgstr ""
+msgstr "डिस्कनेक्ट करें"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Disconnected this branch company peppol configuration from %s."
-msgstr ""
+msgstr "इस ब्रांच कंपनी के peppol कॉन्फ़िगरेशन को %s से अलग कर दिया गया।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
@@ -835,7 +842,7 @@ msgstr "ईडीआई यूज़र"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "EDI यूज़र का टाइप नीचे दी गई लिस्ट में से ही कोई एक होना चाहिए: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -851,7 +858,7 @@ msgstr "ईमेल"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Enable reception"
-msgstr ""
+msgstr "रिसेप्शन चालू करें"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -874,7 +881,7 @@ msgstr "ईडीआई दस्तावेज़ बनाते समय �
 #: code:addons/account_peppol/models/account_move_send.py:0
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "फ़्रांस - ई-इनवॉइसिंग (मंज़ूर किया गया प्लेटफ़ॉर्म)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -925,8 +932,10 @@ msgstr "इनकमिंग इनवॉइस जर्नल"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+#, fuzzy
 msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
+"इनवॉइस %s, Peppol के माध्यम से भेजे जाने के लिए 64 MB की आकार सीमा से अधिक है।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1041,7 +1050,7 @@ msgstr "Odoo"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_eas__odemo
 msgid "Odoo Demo ID"
-msgstr ""
+msgstr "Odoo डेमो आईडी"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1116,12 +1125,12 @@ msgstr "PEPPOL: वेबहुक को ऐक्टिव रखें"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
 msgid "Parent Company"
-msgstr ""
+msgstr "पैरेंट कंपनी"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
-msgstr ""
+msgstr "पार्टनर फ़ॉर्मैट प्राप्त नहीं कर सकता"
 
 #. module: account_peppol
 #. odoo-python
@@ -1132,12 +1141,12 @@ msgstr "आपके पार्टनर की Peppol सेटिंग स�
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
 msgid "Partner is not on Peppol"
-msgstr ""
+msgstr "पार्टनर Peppol पर नहीं है"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "पार्टनर Peppol पर है"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -1194,23 +1203,23 @@ msgstr "Peppol आईडी"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Peppol ID should be different from main company."
-msgstr ""
+msgstr "Peppol आईडी मुख्य कंपनी से अलग होना चाहिए।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
 msgid "Peppol Is Sent"
-msgstr ""
+msgstr "Peppol भेजा गया"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_parent_company_id
 msgid "Peppol Parent Company"
-msgstr ""
+msgstr "Peppol की मूल कंपनी"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_parent_company_name
 msgid "Peppol Parent Company Name"
-msgstr ""
+msgstr "Peppol की मूल कंपनी का नाम"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
@@ -1236,7 +1245,7 @@ msgstr "Peppol सर्विस"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
 msgid "Peppol Use Parent Company"
-msgstr ""
+msgstr "Peppol पैरेंट कंपनी का उपयोग करें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details
@@ -1287,6 +1296,8 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"कृपया मोबाइल नंबर सही अंतर्राष्ट्रीय फ़ॉर्मैट में दर्ज करें.\n"
+"उदाहरण के लिए: +32123456789, जहां +32 देश कोड है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1326,6 +1337,9 @@ msgid ""
 "In particular, this email is used by Odoo to reconnect your Peppol account "
 "in case of database change."
 msgstr ""
+"Peppol कनेक्शन से संबंधित कम्यूनिकेशन और सूचनाओं के लिए प्राथमिक संपर्क ईमेल.\n"
+"खास तौर पर, डेटाबेस परिवर्तन की स्थिति में आपके Peppol खाते को फिर से जोड़ने के लिए Odoo "
+"द्वारा इस ईमेल का उपयोग किया जाता है।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1364,12 +1378,12 @@ msgstr "रिसीवर के तौर पर रजिस्टर कर�
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_self
 msgid "Register using the current company"
-msgstr ""
+msgstr "मौजूदा कंपनी का उपयोग करके रजिस्टर करें"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
 msgid "Register using the parent company by setting the same EAS/Endpoint"
-msgstr ""
+msgstr "इसी EAS/एंडपॉइंट को सेट करके मूल कंपनी का उपयोग करके रजिस्टर करें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1417,8 +1431,9 @@ msgstr "सेव करें"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
+#, fuzzy
 msgid "Selected Company"
-msgstr ""
+msgstr "चुनी गई कंपनी"
 
 #. module: account_peppol
 #. odoo-python
@@ -1429,7 +1444,7 @@ msgstr "भेजें"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Send electronic invoices, and receive bills automatically via Peppol."
-msgstr ""
+msgstr "Peppol के माध्यम से इलेक्ट्रॉनिक इनवॉइस भेजें और ऑटोमैटिकली बिल पाएं।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__service_ids
@@ -1454,8 +1469,9 @@ msgstr "स्किप किया गया"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+#, fuzzy
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "कुछ अटैचमेंट XML के साथ भेजे नहीं जा सके:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1717,6 +1733,7 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"इनवॉइस Peppol ऐक्सेस पॉइंट को भेज दिया गया है. XML के साथ नीचे दिए गए अटैचमेंट भेजे गए थे:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1815,7 +1832,7 @@ msgstr "Peppol में आपके पार्टनर के साथ क
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "This branch company will use the active Peppol connection found on"
-msgstr ""
+msgstr "यह शाखा कंपनी पर पाए जाने वाले सक्रिय Peppol कनेक्शन का उपयोग करेगी"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1827,7 +1844,7 @@ msgstr "इस इनवॉइस "
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "This number is used for identification purposes only."
-msgstr ""
+msgstr "यह नंबर सिर्फ़ पहचान के लिए उपयोग किया जाता है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1862,17 +1879,21 @@ msgstr "इलेक्ट्रॉनिक बिल पूरी तरह �
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "To use the Approved Platform for French E-Invoicing install the module"
 msgstr ""
+"फ़्रेंच ई-इनवॉइसिंग के लिए स्वीकृत प्लेटफ़ॉर्म का उपयोग करने के लिए मॉड्यूल इंस्टॉल करें"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+#, fuzzy
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"फ़्रेंच ई-इनवॉइसिंग के लिए स्वीकृत प्लेटफ़ॉर्म का उपयोग करने के लिए मॉड्यूल इंस्टॉल करें"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_bis3
+#, fuzzy
 msgid "UBL BIS Billing 3.0.12"
-msgstr ""
+msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_peppol
 #. odoo-python
@@ -1883,7 +1904,7 @@ msgstr "डाइजेस्ट वैल्यू सही नहीं प�
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
 msgid "Unchecked"
-msgstr ""
+msgstr "चेक नहीं किया गया"
 
 #. module: account_peppol
 #. odoo-python
@@ -1911,12 +1932,12 @@ msgstr "Peppol में अज्ञात गड़बड़ी: %s"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
 msgid "Use Parent Connection"
-msgstr ""
+msgstr "पैरेंट कनेक्शन का इस्तेमाल करें"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection_selection
 msgid "Use Parent Connection Selection"
-msgstr ""
+msgstr "पैरेंट कनेक्शन वाले सलेक्शन का इस्तेमाल करें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1962,8 +1983,9 @@ msgstr "Peppol क्या है और यह इतना अच्छा �
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+#, fuzzy
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "मुझे फ्रेंच ई-इनवॉइसिंग का उपयोग क्यों करना चाहिए?"
 
 #. module: account_peppol
 #. odoo-python
@@ -1990,6 +2012,8 @@ msgid ""
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
+"आप अपने वैट नंबर से रजिस्ट्रेशन करने वाले हैं. नए नियम का पालन करने के लिए सुनिश्चित करें कि "
+"आप पहले अपनी कंपनी रजिस्ट्री (BCE/KBO) में रजिस्ट्रेशन कर लें।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2001,7 +2025,7 @@ msgstr "आप Odoo और अपनी Peppol आईडी से ई-इनव
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending from"
-msgstr ""
+msgstr "आप भेज रहे हैं"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2048,6 +2072,10 @@ msgid ""
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
 msgstr ""
+"आप Peppol इनवॉइस प्राप्त करने के लिए उपयोग किए जाने वाले जर्नल के प्रकार को 'परचेज़' के "
+"अलावा किसी अन्य प्रकार में नहीं बदल सकते. \n"
+"कृपया इस जर्नल का प्रकार बदलने से पहले Peppol रिसेप्शन के लिए उपयोग किए जाने वाले जर्नल "
+"को बदलें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2140,6 +2168,7 @@ msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R010] ग्राहक '%s' पर एक इलेक्ट्रॉनिक पता (EAS) दिया जाना चाहिए।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2148,11 +2177,12 @@ msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R020] कंपनी के '%s' पर एक इलेक्ट्रॉनिक पता (EAS) दिया जाना चाहिए।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "and send invoices via Peppol on their behalf."
-msgstr ""
+msgstr "और उनकी ओर से Peppol के माध्यम से इनवॉइस भेजें।"
 
 #. module: account_peppol
 #. odoo-python

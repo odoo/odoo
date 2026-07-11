@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:37+0000\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
 "PO-Revision-Date: 2026-06-28 01:02+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -561,11 +561,12 @@ msgstr ""
 "            giấy báo có\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (với mã tham chiếu: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (với mã tham chiếu: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        có số tiền là <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        có số tiền là <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        từ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Nếu bạn có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi.\n"
@@ -573,8 +574,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -666,11 +667,12 @@ msgstr ""
 "            hoá đơn của bạn\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (với mã tham chiếu: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (với mã tham chiếu: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        có số tiền là <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143.750,00</span>\n"
+"        có số tiền là <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143.750,00</span>\n"
 "        từ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Hoá đơn này đã được thanh toán.\n"
@@ -702,8 +704,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -739,15 +741,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Thân mến<t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
-"<br/><br/>\n"
+"        Thân mến<t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br/><br/>\n"
 "        Cảm ơn bạn đã thanh toán.\n"
 "        Đây là biên lai thanh toán của bạn<span style=\"font-weight:bold;\" "
 "t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
 "span> số tiền\n"
-"        là <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10.00</span> từ <t t-"
-"out=\"object.company_id.name or ''\">BizApps</t>.\n"
+"        là <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> từ <t t-out=\"object.company_id.name or ''\">BizApps</t>.\n"
 "        <br/><br/>\n"
 "        Đừng ngần ngại liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào.\n"
 "        <br/><br/>\n"
@@ -756,8 +758,8 @@ msgstr ""
 "container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -7177,8 +7179,8 @@ msgstr "Chiết khấu thanh toán sớm của"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Chiết khấu thanh toán sớm: <b>%(amount)s</b> nếu thanh toán trước <b>%(date)"
-"s</b>"
+"Chiết khấu thanh toán sớm: <b>%(amount)s</b> nếu thanh toán trước <b>%"
+"(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8940,8 +8942,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
-"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', có nhãn '%(label)"
-"s',\n"
+"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', có nhãn '%"
+"(label)s',\n"
 "Không thể phân tích ID báo cáo chéo hoặc xml_id.\n"
 
 #. module: account
@@ -8954,11 +8956,11 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
-"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', với nhãn '%(label)"
-"s',\n"
+"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', với nhãn '%"
+"(label)s',\n"
 "Định dạng của biểu thức báo cáo chéo không hợp lệ.\n"
-"Dự kiến: cross_report(<report_id>|<xml_id>) Ví dụ: cross_report"
-"(my_module.my_report) hoặc cross_report(123)"
+"Dự kiến: cross_report(<report_id>|<xml_id>) Ví dụ: "
+"cross_report(my_module.my_report) hoặc cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9197,7 +9199,8 @@ msgstr "Trường nội bộ để rút ngắn việc tạo expression_ids cho c
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
 msgid "Internal field to shorten expression_ids creation for the domain engine"
-msgstr "Trường nội bộ để rút ngắn quá trình tạo expression_ids cho công cụ miền"
+msgstr ""
+"Trường nội bộ để rút ngắn quá trình tạo expression_ids cho công cụ miền"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__external_formula
@@ -10530,6 +10533,7 @@ msgid "Looks great!"
 msgstr "Thật tuyệt!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Lỗ"
@@ -12091,6 +12095,7 @@ msgid "Owner's Current Account"
 msgstr "Tài khoản vãng lai của chủ sở hữu"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "Tài khoản lãi lỗ"
@@ -13035,6 +13040,11 @@ msgid "Profit Account"
 msgstr "Tài khoản lãi"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
 msgstr "Giấy báo có chiếu lệ"
@@ -13690,6 +13700,7 @@ msgstr "Dấu vết kiểm toán hạn chế"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Doanh thu"
@@ -17531,6 +17542,11 @@ msgid ""
 msgstr ""
 "Không thể tạo báo cáo do thiếu giao dịch. Bạn có thể cần sắp xếp lại các "
 "giao dịch trước khi tiếp tục."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python

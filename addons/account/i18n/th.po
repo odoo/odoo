@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:37+0000\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
 "PO-Revision-Date: 2026-07-04 22:09+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-3/account/"
@@ -559,11 +559,12 @@ msgstr ""
 "            ใบลดหนี้\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (เลขที่อ้างอิง: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
-"\n"
+"            (เลขที่อ้างอิง: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+"t>)\n"
 "        </t>\n"
-"        เป็นเงินจำนวน <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        เป็นเงินจำนวน <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        จาก <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        โปรดติดต่อเราหากคุณมีคำถาม\n"
@@ -571,8 +572,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -664,11 +665,12 @@ msgstr ""
 "            ใบแจ้งหนี้\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (เลขที่อ้างอิง: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
-"\n"
+"            (เลขที่อ้างอิง: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+"t>)\n"
 "        </t>\n"
-"        เป็นเงินจำนวน <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        เป็นเงินจำนวน <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        จาก <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            ใบแจ้งหนี้นี้ได้รับการชำระเงินแล้ว\n"
@@ -698,8 +700,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -735,15 +737,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        เรียน <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
-"<br/><br/>\n"
+"        เรียน <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
+"><br/>\n"
 "        ขอขอบคุณสำหรับการชำระเงินของคุณ\n"
-"        นี่คือใบเสร็จรับเงินของคุณ <span style=\"font-weight:bold;\" t-out=\""
-"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> เป็นจำนว"
-"น\n"
-"         <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10.00</span> จาก <t t-"
-"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        นี่คือใบเสร็จรับเงินของคุณ <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"เป็นจำนวน\n"
+"         <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> จาก <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        โปรดติดต่อเราหากคุณมีคำถาม\n"
 "        <br/><br/>\n"
@@ -752,8 +754,8 @@ msgstr ""
 "container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -785,8 +787,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
 "role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> ชำระเ"
-"งินแล้ว</span>"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ชำระเงินแล้ว</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -871,8 +873,8 @@ msgid ""
 "                    </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                        คุณสามารถเลือกวิธีการที่เราจะส่งใบแจ้งหนี้ให้คุณได้ และเลือกได้ว่าจะใ"
-"ช้รูปแบบอิเล็กทรอนิกส์แบบใด\n"
+"                        คุณสามารถเลือกวิธีการที่เราจะส่งใบแจ้งหนี้ให้คุณได้ "
+"และเลือกได้ว่าจะใช้รูปแบบอิเล็กทรอนิกส์แบบใด\n"
 "                   </small>"
 
 #. module: account
@@ -1270,8 +1272,7 @@ msgstr "<span>ใหม่</span>"
 msgid ""
 "<span>One or more Bank Accounts set on this partner are also used by others:"
 "</span>"
-msgstr ""
-"<span>บัญชีธนาคารตั้งแต่หนึ่งบัญชีขึ้นไปที่พาร์ทเนอร์รายนี้ใช้โดยบุคคลอื่น</span>"
+msgstr "<span>บัญชีธนาคารตั้งแต่หนึ่งบัญชีขึ้นไปที่พาร์ทเนอร์รายนี้ใช้โดยบุคคลอื่น</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1605,8 +1606,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-"
-"collapse:separate;\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
 "        <tr>\n"
 "            <td align=\"center\">\n"
 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1621,8 +1622,8 @@ msgstr ""
 "                                    <td align=\"left\" style=\"padding-left: "
 "16px;\">\n"
 "                                        คุณได้รับ <t t-if=\"invoice_count &gt; "
-"1\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว!</t><t t-else=\"\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้"
-"ว!</t>\n"
+"1\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว!</t><t t-else=\"\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว!"
+"</t>\n"
 "                                    </td>\n"
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
@@ -1655,8 +1656,8 @@ msgstr ""
 "                                        </h3>\n"
 "                                        <p style=\"margin-top: 12px;\">\n"
 "                                            คุณได้รับ <t t-if=\"invoice_count "
-"&gt; 1\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว</t><t t-else=\"\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่"
-"แล้ว</t>!\n"
+"&gt; 1\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว</t><t t-"
+"else=\"\">ใบแจ้งหนี้อิเล็กทรอนิกส์ฉบับใหม่แล้ว</t>!\n"
 "                                        </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/>\n"
@@ -1671,19 +1672,19 @@ msgstr ""
 "                                                <t t-if=\"inv.name or "
 "inv.ref\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">หมายเลขอ้างอิงใบแจ้งหนี้:</span> <t t-out=\"inv.name or inv.ref\"/>"
-"<br/>\n"
+"weight:bold;\">หมายเลขอ้างอิงใบแจ้งหนี้:</span> <t t-out=\"inv.name or inv.ref\"/"
+"><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
 "if=\"inv.partner_id.name\">\n"
 "                                                    <span style=\"font-"
 "weight:bold;\">ผู้ขาย:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-if=\"inv.amount_total\">"
-"\n"
+"                                                <t t-"
+"if=\"inv.amount_total\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">จำนวน:</span> <t t-out=\"inv.amount_total\" t-options=\""
-"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">จำนวน:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
@@ -1698,11 +1699,11 @@ msgstr ""
 "padding-top: 24px;\">\n"
 "                                            <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?active_ids={{ "
-"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
-"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
-"none !important; background-color: #008384; border-radius:3px; display: "
-"inline-block;\">\n"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\">\n"
 "                                               ดูรายละเอียดใบแจ้งหนี้\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -1718,9 +1719,8 @@ msgstr ""
 "                                        <br/>\n"
 "                                        <p style=\"text-align: center; "
 "margin-top: 16px;\">\n"
-"                                            หากคุณต้องการยกเลิกการรับอีเมลแจ้งเตือนใ"
-"บแจ้งหนี้ขาเข้า กรุณาคลิก <a t-attf-href=\"/my/journal/{{ object.id }}/"
-"unsubscribe\">ที่นี่</a>.\n"
+"                                            หากคุณต้องการยกเลิกการรับอีเมลแจ้งเตือนใบแจ้งหนี้ขาเข้า "
+"กรุณาคลิก <a t-attf-href=\"/my/journal/{{ object.id }}/unsubscribe\">ที่นี่</a>.\n"
 "                                        </p>\n"
 "                                    </td>\n"
 "                                </tr>\n"
@@ -1778,8 +1778,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"บัญชีธนาคารที่มีหมายเลขบัญชี%(number)s มีอยู่แล้วสำหรับพันธมิตร%(partner)s แต่ถูกเก็บเข้าคลังแล้"
-"ว กรุณาเรียกคืนบัญชีดังกล่าวแทน"
+"บัญชีธนาคารที่มีหมายเลขบัญชี%(number)s มีอยู่แล้วสำหรับพันธมิตร%(partner)s "
+"แต่ถูกเก็บเข้าคลังแล้ว กรุณาเรียกคืนบัญชีดังกล่าวแทน"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2019,8 +2019,7 @@ msgstr "เทมเพลตแผนภูมิบัญชี"
 msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
-msgstr ""
-"ไม่สามารถเข้าถึงการจับคู่รหัสบัญชีได้โดยตรง เนื่องจากออกแบบมาให้ใช้งานผ่านผังบัญชีเท่านั้น"
+msgstr "ไม่สามารถเข้าถึงการจับคู่รหัสบัญชีได้โดยตรง เนื่องจากออกแบบมาให้ใช้งานผ่านผังบัญชีเท่านั้น"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -2499,8 +2498,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"รายการคงค้างที่สร้างขึ้นเมื่อ %(date)s: %(accrual_entry)s.                และรายการย้อ"
-"นกลับ: %(reverse_entry)s."
+"รายการคงค้างที่สร้างขึ้นเมื่อ %(date)s: %(accrual_entry)s.                "
+"และรายการย้อนกลับ: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -2823,8 +2822,9 @@ msgid ""
 "suggest automatically validating future bills. You can toggle this feature "
 "at any time in the vendor's profile."
 msgstr ""
-"หลังจากนำเข้าใบแจ้งหนี้สามใบสำหรับผู้ขายโดยไม่ทำการเปลี่ยนแปลง Odoo จะแนะนำให้ตรวจสอบใบแจ้"
-"งหนี้ในอนาคตโดยอัตโนมัติ คุณสามารถสลับฟีเจอร์นี้ได้ตลอดเวลาในโปรไฟล์ของผู้ขาย"
+"หลังจากนำเข้าใบแจ้งหนี้สามใบสำหรับผู้ขายโดยไม่ทำการเปลี่ยนแปลง Odoo "
+"จะแนะนำให้ตรวจสอบใบแจ้งหนี้ในอนาคตโดยอัตโนมัติ "
+"คุณสามารถสลับฟีเจอร์นี้ได้ตลอดเวลาในโปรไฟล์ของผู้ขาย"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
@@ -3405,8 +3405,8 @@ msgid ""
 "journal entry or journal item are logged. You can then not delete those "
 "records anymore"
 msgstr ""
-"เมื่อมีรายการในสมุดรายวันเข้ามาเกี่ยวข้อง การเปลี่ยนแปลงใดๆ ต่อบัญชี คู่ค้า รายการบันทึกบัญชี หรือร"
-"ายการในสมุดรายวันจะถูกบันทึกไว้ จากนั้นคุณจะไม่สามารถลบบันทึกเหล่านั้นได้อีกต่อไป"
+"เมื่อมีรายการในสมุดรายวันเข้ามาเกี่ยวข้อง การเปลี่ยนแปลงใดๆ ต่อบัญชี คู่ค้า รายการบันทึกบัญชี "
+"หรือรายการในสมุดรายวันจะถูกบันทึกไว้ จากนั้นคุณจะไม่สามารถลบบันทึกเหล่านั้นได้อีกต่อไป"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3549,8 +3549,7 @@ msgstr "ลงรายการอัตโนมัติจนถึง"
 msgid ""
 "Auto-post was disabled on this invoice because a potential duplicate was "
 "detected."
-msgstr ""
-"การโพสต์แบบอัตโนมัติถูกปิดใช้งานในใบแจ้งหนี้ฉบับนี้เนื่องจากตรวจพบความเป็นไปได้ที่จะเกิดการซ้ำกัน"
+msgstr "การโพสต์แบบอัตโนมัติถูกปิดใช้งานในใบแจ้งหนี้ฉบับนี้เนื่องจากตรวจพบความเป็นไปได้ที่จะเกิดการซ้ำกัน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
@@ -3789,8 +3788,8 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
-"หมายเลขบัญชีธนาคารที่จะชำระเงินตามใบแจ้งหนี้ บัญชีธนาคารของบริษัท หากเป็นใบแจ้งหนี้ของลูกค้าหรือ"
-"ใบลดหนี้ของผู้จำหน่าย หรือหมายเลขบัญชีธนาคารของพาร์ทเนอร์"
+"หมายเลขบัญชีธนาคารที่จะชำระเงินตามใบแจ้งหนี้ บัญชีธนาคารของบริษัท "
+"หากเป็นใบแจ้งหนี้ของลูกค้าหรือใบลดหนี้ของผู้จำหน่าย หรือหมายเลขบัญชีธนาคารของพาร์ทเนอร์"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
@@ -4194,15 +4193,13 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr ""
-"เมื่อยกเลิกการเลือกช่องที่ใช้งานอยู่ คุณอาจซ่อนสถานะทางการเงินโดยไม่ต้องลบออกได้"
+msgstr "เมื่อยกเลิกการเลือกช่องที่ใช้งานอยู่ คุณอาจซ่อนสถานะทางการเงินโดยไม่ต้องลบออกได้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
-msgstr ""
-"เมื่อยกเลิกการเลือกช่องที่ใช้งานอยู่ คุณอาจซ่อนสถานะทางการเงินโดยไม่ต้องลบออกได้"
+msgstr "เมื่อยกเลิกการเลือกช่องที่ใช้งานอยู่ คุณอาจซ่อนสถานะทางการเงินโดยไม่ต้องลบออกได้"
 
 #. module: account
 #. odoo-python
@@ -4591,8 +4588,9 @@ msgid ""
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
 msgstr ""
-"บางประเทศใช้การหักภาษี ณ ที่จ่ายจากต้นทางกับจำนวนเงินในใบแจ้งหนี้ ตามกฎหมายภายในของประเทศ"
-"นั้นๆ การหัก ณ ที่จ่ายใดก็ตามที่ต้นทางลูกค้าจะจ่ายให้กับหน่วยงานด้านภาษี ไม่ว่าในกรณีใดก็สามารถทำได้"
+"บางประเทศใช้การหักภาษี ณ ที่จ่ายจากต้นทางกับจำนวนเงินในใบแจ้งหนี้ "
+"ตามกฎหมายภายในของประเทศนั้นๆ การหัก ณ "
+"ที่จ่ายใดก็ตามที่ต้นทางลูกค้าจะจ่ายให้กับหน่วยงานด้านภาษี ไม่ว่าในกรณีใดก็สามารถทำได้"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__chains_to_hash_with_gaps
@@ -6310,8 +6308,8 @@ msgid ""
 "Define which company can select the multi-ledger in report filters. If none "
 "is provided, available for all companies"
 msgstr ""
-"กำหนดบริษัทที่สามารถเลือกบัญชีแยกประเภทหลายบัญชีในตัวกรองรายงาน หากไม่มีการระบุไว้ ตัวกรองจะ"
-"ใช้ได้กับบริษัททั้งหมด"
+"กำหนดบริษัทที่สามารถเลือกบัญชีแยกประเภทหลายบัญชีในตัวกรองรายงาน หากไม่มีการระบุไว้ "
+"ตัวกรองจะใช้ได้กับบริษัททั้งหมด"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
@@ -8433,8 +8431,8 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
-"วันที่สูงสุดเพื่อให้รายการในสมุดรายวันทั้งหมดที่ลงรายการไว้ก่อนหน้า (รวมถึง) วันที่นั้นได้รับการรักษาคว"
-"ามปลอดภัย พิจารณาเฉพาะรายการในสมุดรายวันหลังวันที่ฮาร์ดล็อกเท่านั้น"
+"วันที่สูงสุดเพื่อให้รายการในสมุดรายวันทั้งหมดที่ลงรายการไว้ก่อนหน้า (รวมถึง) "
+"วันที่นั้นได้รับการรักษาความปลอดภัย พิจารณาเฉพาะรายการในสมุดรายวันหลังวันที่ฮาร์ดล็อกเท่านั้น"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -8660,16 +8658,14 @@ msgstr "ถ้าว่างให้ใช้สมุดรายวันข
 msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
 "provided they accept it."
-msgstr ""
-"หากตั้งค่าไว้ ภาษีที่มีลำดับสูงกว่านี้จะได้รับผลกระทบ หากพวกเขายอมรับได้"
+msgstr "หากตั้งค่าไว้ ภาษีที่มีลำดับสูงกว่านี้จะได้รับผลกระทบ หากพวกเขายอมรับได้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__is_base_affected
 msgid ""
 "If set, taxes with a lower sequence might affect this one, provided they try "
 "to do it."
-msgstr ""
-"หากตั้งค่าไว้ ภาษีที่มีลำดับที่ต่ำกว่าอาจส่งผลต่อภาษีนี้ หากพวกเขาได้พยายามดำเนินการดังกล่าว"
+msgstr "หากตั้งค่าไว้ ภาษีที่มีลำดับที่ต่ำกว่าอาจส่งผลต่อภาษีนี้ หากพวกเขาได้พยายามดำเนินการดังกล่าว"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -8712,8 +8708,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"หากช่องที่ใช้งานอยู่ถูกตั้งค่าเป็น False จะทำให้คุณสามารถซ่อนเงื่อนไขการชำระเงินได้โดยไม่ต้องลบออ"
-"ก"
+"หากช่องที่ใช้งานอยู่ถูกตั้งค่าเป็น False "
+"จะทำให้คุณสามารถซ่อนเงื่อนไขการชำระเงินได้โดยไม่ต้องลบออก"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__checked
@@ -8893,8 +8889,8 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
-"ในรายงาน '%(report_name)s' บนบรรทัด '%(line_name)s' ที่มีป้ายกำกับ '%(label)s'<br/>"
-"\n"
+"ในรายงาน '%(report_name)s' บนบรรทัด '%(line_name)s' ที่มีป้ายกำกับ '%(label)s'<br/"
+">\n"
 "รูปแบบของนิพจน์ cross report ไม่ถูกต้อง<br/>\n"
 "รูปแบบที่ถูกต้องควรเป็น: cross_report(<report_id>|<xml_id>)<br/>\n"
 "ตัวอย่าง: cross_report(my_module.my_report) หรือ cross_report(123)"
@@ -9005,16 +9001,16 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
 "art transportation practices."
 msgstr ""
-"Incoterms คือชุดเงื่อนไขการขาย ใช้เพื่อแบ่งต้นทุนและความรับผิดชอบในการทำธุรกรรมระหว่างผู้ซื้อแล"
-"ะผู้จำหน่าย และสะท้อนถึงวิธีปฏิบัติด้านการขนส่งที่ทันสมัย"
+"Incoterms คือชุดเงื่อนไขการขาย "
+"ใช้เพื่อแบ่งต้นทุนและความรับผิดชอบในการทำธุรกรรมระหว่างผู้ซื้อและผู้จำหน่าย "
+"และสะท้อนถึงวิธีปฏิบัติด้านการขนส่งที่ทันสมัย"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
 msgid ""
 "Incoterms are used to divide transaction costs and responsibilities between "
 "buyer and seller."
-msgstr ""
-"Incoterms ใช้เพื่อแบ่งต้นทุนการทำธุรกรรมและความรับผิดชอบระหว่างผู้ซื้อและผู้จำหน่าย"
+msgstr "Incoterms ใช้เพื่อแบ่งต้นทุนการทำธุรกรรมและความรับผิดชอบระหว่างผู้ซื้อและผู้จำหน่าย"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
@@ -9118,8 +9114,7 @@ msgstr "ประเภทภายใน"
 msgid ""
 "Internal field to shorten expression_ids creation for the account_codes "
 "engine"
-msgstr ""
-"ช่องทางภายในเพื่อลดการสร้าง expression_ids สำหรับเครื่องมือ account_codes"
+msgstr "ช่องทางภายในเพื่อลดการสร้าง expression_ids สำหรับเครื่องมือ account_codes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__aggregation_formula
@@ -9190,8 +9185,7 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
-msgstr ""
-"โดเมนไม่ถูกต้องสำหรับนิพจน์ '%(label)s' ของบรรทัด '%(line)s': %(formula)s"
+msgstr "โดเมนไม่ถูกต้องสำหรับนิพจน์ '%(label)s' ของบรรทัด '%(line)s': %(formula)s"
 
 #. module: account
 #. odoo-python
@@ -9953,8 +9947,7 @@ msgstr "รายการสมุดรายวันที่หมายเ
 msgid ""
 "Journal items where the account allows reconciliation no matter the residual "
 "amount"
-msgstr ""
-"รายการสมุดรายวันซึ่งบัญชีอนุญาตให้ตรวจสอบยอดได้ไม่ว่าจำนวนเงินคงเหลือจะเป็นเท่าใดก็ตาม"
+msgstr "รายการสมุดรายวันซึ่งบัญชีอนุญาตให้ตรวจสอบยอดได้ไม่ว่าจำนวนเงินคงเหลือจะเป็นเท่าใดก็ตาม"
 
 #. module: account
 #. odoo-python
@@ -10232,8 +10225,7 @@ msgstr "ปีที่แล้ว"
 msgid ""
 "Last date at which the discounted amount must be paid in order for the Early "
 "Payment Discount to be granted"
-msgstr ""
-"วันสุดท้ายที่ต้องชำระจำนวนเงินที่มีส่วนลดเพื่อให้ได้รับส่วนลดการชำระเงินก่อนกำหนด"
+msgstr "วันสุดท้ายที่ต้องชำระจำนวนเงินที่มีส่วนลดเพื่อให้ได้รับส่วนลดการชำระเงินก่อนกำหนด"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10444,6 +10436,7 @@ msgid "Looks great!"
 msgstr "ดูดีมาก!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "กำไร-ขาดทุนเบื้องต้น"
@@ -10556,15 +10549,16 @@ msgid ""
 "partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "จ่ายด้วยตนเอง: ชำระเงินหรือรับเงินด้วยวิธีการนอก Odoo\n"
-"ผู้รับการชำระเงิน: ผู้รับการชำระเงินแต่ละรายมีวิธีการชำระเงินของตนเอง ร้องขอการทำธุรกรรมบน/ไ"
-"ปยังบัตรด้วยโทเคนการชำระเงินที่บันทึกโดยพาร์ทเนอร์เมื่อซื้อหรือสมัครสมาชิกออนไลน์\n"
+"ผู้รับการชำระเงิน: ผู้รับการชำระเงินแต่ละรายมีวิธีการชำระเงินของตนเอง ร้องขอการทำธุรกรรมบน/"
+"ไปยังบัตรด้วยโทเคนการชำระเงินที่บันทึกโดยพาร์ทเนอร์เมื่อซื้อหรือสมัครสมาชิกออนไลน์\n"
 "เช็ค: ชำระค่าใช้จ่ายด้วยเช็คและพิมพ์จาก Odoo\n"
-"การฝากแบบกลุ่ม: รวบรวมเช็คของลูกค้าหลายรายการพร้อมกันเพื่อสร้างและส่งการฝากแบบกลุ่มไปยังธนา"
-"คารของคุณ จำเป็นต้องมีโมดูล account_batch_payment\n"
+"การฝากแบบกลุ่ม: "
+"รวบรวมเช็คของลูกค้าหลายรายการพร้อมกันเพื่อสร้างและส่งการฝากแบบกลุ่มไปยังธนาคารของคุณ "
+"จำเป็นต้องมีโมดูล account_batch_payment\n"
 "การโอนเครดิต SEPA: ชำระเงินในโซน SEPA โดยส่งไฟล์การโอนเครดิต SEPA ไปยังธนาคารของคุณ "
 "จำเป็นต้องมีโมดูล account_sepa\n"
-"การหักบัญชีอัตโนมัติ SEPA: รับเงินในโซน SEPA ด้วยข้อบังคับที่พาร์ทเนอร์ของคุณจะมอบให้กับคุณ จำเป็น"
-"ต้องมีโมดูล account_sepa\n"
+"การหักบัญชีอัตโนมัติ SEPA: รับเงินในโซน SEPA ด้วยข้อบังคับที่พาร์ทเนอร์ของคุณจะมอบให้กับคุณ "
+"จำเป็นต้องมีโมดูล account_sepa\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -10597,15 +10591,16 @@ msgid ""
 "partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "จ่ายด้วยตนเอง: ชำระเงินหรือรับเงินด้วยวิธีใดก็ได้ที่นอกเหนือจาก Odoo\n"
-"ผู้รับการชำระเงิน: ผู้รับการชำระเงินแต่ละรายมีวิธีการชำระเงินของตนเอง ร้องขอการทำธุรกรรมบน/ไ"
-"ปยังบัตรด้วยโทเค็นการชำระเงินที่บันทึกโดยพาร์ทเนอร์เมื่อซื้อหรือสมัครสมาชิกออนไลน์\n"
+"ผู้รับการชำระเงิน: ผู้รับการชำระเงินแต่ละรายมีวิธีการชำระเงินของตนเอง ร้องขอการทำธุรกรรมบน/"
+"ไปยังบัตรด้วยโทเค็นการชำระเงินที่บันทึกโดยพาร์ทเนอร์เมื่อซื้อหรือสมัครสมาชิกออนไลน์\n"
 "เช็ค: ชำระค่าใช้จ่ายด้วยเช็คและพิมพ์จาก Odoo\n"
-"การฝากแบบกลุ่ม: รวบรวมเช็คของลูกค้าหลายรายการพร้อมกันเพื่อสร้างและส่งการฝากแบบกลุ่มไปยังธนา"
-"คารของคุณ จำเป็นต้องมีโมดูล account_batch_payment\n"
+"การฝากแบบกลุ่ม: "
+"รวบรวมเช็คของลูกค้าหลายรายการพร้อมกันเพื่อสร้างและส่งการฝากแบบกลุ่มไปยังธนาคารของคุณ "
+"จำเป็นต้องมีโมดูล account_batch_payment\n"
 "การโอนเครดิต SEPA: ชำระเงินในโซน SEPA โดยส่งไฟล์การโอนเครดิต SEPA ไปยังธนาคารของคุณ "
 "จำเป็นต้องมีโมดูล account_sepa\n"
-"การหักบัญชีอัตโนมัติ SEPA: รับเงินในโซน SEPA ด้วยข้อบังคับที่พาร์ทเนอร์ของคุณจะมอบให้กับคุณ จำเป็น"
-"ต้องมีโมดูล account_sepa \n"
+"การหักบัญชีอัตโนมัติ SEPA: รับเงินในโซน SEPA ด้วยข้อบังคับที่พาร์ทเนอร์ของคุณจะมอบให้กับคุณ "
+"จำเป็นต้องมีโมดูล account_sepa \n"
 
 #. module: account
 #. odoo-python
@@ -11786,8 +11781,9 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "{{ object.partner_id.lang }}."
 msgstr ""
-"ตัวเลือกภาษาการแปล (โค้ด ISO) เพื่อเลือกเมื่อส่งอีเมล หากไม่ได้ตั้งค่าไว้ ระบบจะใช้เวอร์ชันภาษาอั"
-"งกฤษ โดยปกติควรเป็นตัวอย่างนิพจน์ที่ให้ภาษาที่เหมาะสม เช่น {{ object.partner_id.lang }}"
+"ตัวเลือกภาษาการแปล (โค้ด ISO) เพื่อเลือกเมื่อส่งอีเมล หากไม่ได้ตั้งค่าไว้ "
+"ระบบจะใช้เวอร์ชันภาษาอังกฤษ โดยปกติควรเป็นตัวอย่างนิพจน์ที่ให้ภาษาที่เหมาะสม เช่น "
+"{{ object.partner_id.lang }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -11980,8 +11976,7 @@ msgstr "เกินกำหนดการชำระเงิน เลย�
 msgid ""
 "Overrides the Company's default on whether the price you use on the product "
 "and invoices includes this tax."
-msgstr ""
-"แทนที่ค่าเริ่มต้นของบริษัทว่าราคาที่คุณใช้กับผลิตภัณฑ์และใบแจ้งหนี้รวมภาษีนี้แล้วหรือไม่"
+msgstr "แทนที่ค่าเริ่มต้นของบริษัทว่าราคาที่คุณใช้กับผลิตภัณฑ์และใบแจ้งหนี้รวมภาษีนี้แล้วหรือไม่"
 
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
@@ -11990,6 +11985,7 @@ msgid "Owner's Current Account"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "บัญชีกำไรขาดทุน"
@@ -12518,8 +12514,8 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
-"การชำระเงินใช้เพื่อลงทะเบียนการเคลื่อนไหวสภาพคล่อง คุณสามารถประมวลผลการชำระเงินเหล่านั้นด้ว"
-"ยวิธีการของคุณเองหรือโดยใช้สิ่งอำนวยความสะดวกที่ติดตั้งไว้"
+"การชำระเงินใช้เพื่อลงทะเบียนการเคลื่อนไหวสภาพคล่อง "
+"คุณสามารถประมวลผลการชำระเงินเหล่านั้นด้วยวิธีการของคุณเองหรือโดยใช้สิ่งอำนวยความสะดวกที่ติดตั้งไว้"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -12917,6 +12913,11 @@ msgstr "กำไร & ขาดทุน"
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_id
 msgid "Profit Account"
 msgstr "บัญชีกําไร"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -13570,6 +13571,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "รายได้"
@@ -15492,8 +15494,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
-"หมายเลขประจำตัวผู้เสียภาษี ค่าที่นี่จะได้รับการตรวจสอบตามรูปแบบประเทศ คุณสามารถใช้ '/' เพื่อระ"
-"บุว่าพาร์ทเนอร์ไม่ต้องเสียภาษี"
+"หมายเลขประจำตัวผู้เสียภาษี ค่าที่นี่จะได้รับการตรวจสอบตามรูปแบบประเทศ คุณสามารถใช้ '/' "
+"เพื่อระบุว่าพาร์ทเนอร์ไม่ต้องเสียภาษี"
 
 #. module: account
 #. odoo-python
@@ -15640,9 +15642,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
-"ลูกค้าได้สละสิทธิ์ในข้อกำหนดและเงื่อนไขมาตรฐานของตนเองอย่างชัดเจน แม้ว่าข้อกำหนดเหล่านี้จะถูกร่า"
-"งขึ้นหลังจากข้อกำหนดและเงื่อนไขมาตรฐานในการขายเหล่านี้ก็ตาม เพื่อให้มีผลบังคับใช้ การเสื่อมเสียแล"
-"ะความเสียหายใดก็ตามจะต้องได้รับการยินยอมอย่างชัดแจ้งล่วงหน้าเป็นลายลักษณ์อักษร"
+"ลูกค้าได้สละสิทธิ์ในข้อกำหนดและเงื่อนไขมาตรฐานของตนเองอย่างชัดเจน "
+"แม้ว่าข้อกำหนดเหล่านี้จะถูกร่างขึ้นหลังจากข้อกำหนดและเงื่อนไขมาตรฐานในการขายเหล่านี้ก็ตาม "
+"เพื่อให้มีผลบังคับใช้ "
+"การเสื่อมเสียและความเสียหายใดก็ตามจะต้องได้รับการยินยอมอย่างชัดแจ้งล่วงหน้าเป็นลายลักษณ์อักษร"
 
 #. module: account
 #. odoo-python
@@ -15850,9 +15853,10 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"ค่าใช้จ่ายจะถูกบันทึกเมื่อมีการตรวจสอบความถูกต้องของใบเรียกเก็บเงินของผู้จำหน่าย ยกเว้นในการบัญชี"
-"แบบ anglo-saxon ที่มีการประเมินมูลค่าสินค้าคงคลังแบบไม่สิ้นสุด ซึ่งในกรณีนี้ ค่าใช้จ่าย (บัญชีต้นทุนขอ"
-"งสินค้าที่ขาย) จะมีการยอมรับในการตรวจสอบความถูกต้องของใบแจ้งหนี้ของลูกค้า"
+"ค่าใช้จ่ายจะถูกบันทึกเมื่อมีการตรวจสอบความถูกต้องของใบเรียกเก็บเงินของผู้จำหน่าย "
+"ยกเว้นในการบัญชีแบบ anglo-saxon ที่มีการประเมินมูลค่าสินค้าคงคลังแบบไม่สิ้นสุด ซึ่งในกรณีนี้ "
+"ค่าใช้จ่าย (บัญชีต้นทุนของสินค้าที่ขาย) "
+"จะมีการยอมรับในการตรวจสอบความถูกต้องของใบแจ้งหนี้ของลูกค้า"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_line_label_uniq
@@ -15865,8 +15869,7 @@ msgstr "ป้ายตัวสั่งงานจะต้องไม่ซ
 msgid ""
 "The field 'Customer' is required, please complete it to validate the "
 "Customer Invoice."
-msgstr ""
-"ต้องระบุข้อมูลในช่อง 'ลูกค้า' โปรดกรอกข้อมูลเพื่อตรวจสอบใบแจ้งหนี้ลูกค้า"
+msgstr "ต้องระบุข้อมูลในช่อง 'ลูกค้า' โปรดกรอกข้อมูลเพื่อตรวจสอบใบแจ้งหนี้ลูกค้า"
 
 #. module: account
 #. odoo-python
@@ -15983,8 +15986,8 @@ msgid ""
 "item involving the bank/cash account."
 msgstr ""
 "รายการสมุดรายวัน %s มีสถานะไม่ถูกต้องเกี่ยวกับบบรรทัดรายการเดินบัญชีที่เกี่ยวข้อง\n"
-"เพื่อให้สอดคล้องกัน รายการสมุดรายวันต้องมีหนึ่งรายการสมุดรายวันที่เกี่ยวข้องกับบัญชีธนาคาร/เงินสดเส"
-"มอ"
+"เพื่อให้สอดคล้องกัน รายการสมุดรายวันต้องมีหนึ่งรายการสมุดรายวันที่เกี่ยวข้องกับบัญชีธนาคาร/"
+"เงินสดเสมอ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -16188,8 +16191,7 @@ msgstr "หน้าที่ส่งคำขอไม่ถูกต้อง
 msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
-msgstr ""
-"จำนวนเงินคงเหลือในรายการบันทึกรายวันที่แสดงเป็นสกุลเงิน (อาจไม่ใช่สกุลเงินของบริษัท)"
+msgstr "จำนวนเงินคงเหลือในรายการบันทึกรายวันที่แสดงเป็นสกุลเงิน (อาจไม่ใช่สกุลเงินของบริษัท)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
@@ -16374,8 +16376,7 @@ msgstr "บรรทัดรายการเดินบัญชีที่
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
-msgstr ""
-"หมายเลขประจำตัวผู้เสียภาษีของบริษัทของคุณในพื้นที่ที่แม็ปตามสถานะทางการเงินนี้"
+msgstr "หมายเลขประจำตัวผู้เสียภาษีของบริษัทของคุณในพื้นที่ที่แม็ปตามสถานะทางการเงินนี้"
 
 #. module: account
 #. odoo-python
@@ -16830,8 +16831,8 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries "
 "are validated, you can not update them anymore."
 msgstr ""
-"โปรแกรมนี้จะตรวจสอบรายการสมุดรายวันทั้งหมดที่เลือก เมื่อตรวจสอบรายการสมุดรายวันแล้ว คุณจะไม่ส"
-"ามารถอัปเดตได้อีกต่อไป"
+"โปรแกรมนี้จะตรวจสอบรายการสมุดรายวันทั้งหมดที่เลือก เมื่อตรวจสอบรายการสมุดรายวันแล้ว "
+"คุณจะไม่สามารถอัปเดตได้อีกต่อไป"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -16929,8 +16930,9 @@ msgid ""
 "manually validated. You should go on the partner bank account of %(partner)s "
 "in order to validate it."
 msgstr ""
-"หากต้องการบันทึกการชำระเงินด้วย %(method_name)s บัญชีธนาคารของผู้รับจะต้องได้รับการตรวจสอบ"
-"ด้วยตนเอง คุณควรไปที่บัญชีธนาคารพาร์ทเนอร์จำนวน %(partner)s เพื่อตรวจสอบความถูกต้อง"
+"หากต้องการบันทึกการชำระเงินด้วย %(method_name)s "
+"บัญชีธนาคารของผู้รับจะต้องได้รับการตรวจสอบด้วยตนเอง คุณควรไปที่บัญชีธนาคารพาร์ทเนอร์จำนวน %"
+"(partner)s เพื่อตรวจสอบความถูกต้อง"
 
 #. module: account
 #. odoo-python
@@ -16940,8 +16942,9 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to "
 "validate it."
 msgstr ""
-"หากต้องการบันทึกการชำระเงินด้วย %(Payment_method)s บัญชีธนาคารของผู้รับจะต้องได้รับการตรวจ"
-"สอบด้วยตนเอง คุณควรไปที่บัญชีธนาคารของพาร์ทเนอร์เพื่อตรวจสอบความถูกต้อง"
+"หากต้องการบันทึกการชำระเงินด้วย %(Payment_method)s "
+"บัญชีธนาคารของผู้รับจะต้องได้รับการตรวจสอบด้วยตนเอง "
+"คุณควรไปที่บัญชีธนาคารของพาร์ทเนอร์เพื่อตรวจสอบความถูกต้อง"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -17263,6 +17266,11 @@ msgid ""
 msgstr ""
 "ไม่สามารถสร้างรายการเดินบัญชีได้ เนื่องจากธุรกรรมขาดหายไป "
 "คุณอาจต้องการเรียงลำดับธุรกรรมใหม่ก่อนดำเนินการต่อ"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17598,8 +17606,9 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"ใช้ในรายงานเพื่อทราบว่าเราควรพิจารณารายการสมุดรายวันตั้งแต่เริ่มต้น แทนที่จะเป็นปีบัญชีเท่านั้น ประ"
-"เภทบัญชีที่ควรรีเซ็ตเป็นศูนย์ในแต่ละปีบัญชีใหม่ (เช่น ค่าใช้จ่าย รายได้...) ไม่ควรมีการตั้งค่าตัวเลือกนี้"
+"ใช้ในรายงานเพื่อทราบว่าเราควรพิจารณารายการสมุดรายวันตั้งแต่เริ่มต้น แทนที่จะเป็นปีบัญชีเท่านั้น "
+"ประเภทบัญชีที่ควรรีเซ็ตเป็นศูนย์ในแต่ละปีบัญชีใหม่ (เช่น ค่าใช้จ่าย รายได้...) "
+"ไม่ควรมีการตั้งค่าตัวเลือกนี้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
@@ -17706,8 +17715,7 @@ msgstr "ตรวจสอบบัญชีธนาคาร"
 msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
-msgstr ""
-"ตรวจสอบความถูกต้องของบรรทัดรายการเดินบัญชีโดยอัตโนมัติ (การกระทบยอดตามกฎของคุณ)"
+msgstr "ตรวจสอบความถูกต้องของบรรทัดรายการเดินบัญชีโดยอัตโนมัติ (การกระทบยอดตามกฎของคุณ)"
 
 #. module: account
 #. odoo-javascript
@@ -17901,8 +17909,7 @@ msgstr "มองเห็นได้ทุกคน"
 msgid ""
 "Want to make your life even easier and automate bill validation from this "
 "vendor ?"
-msgstr ""
-"ต้องการทำให้ชีวิตของคุณง่ายยิ่งขึ้นและตรวจสอบใบแจ้งหนี้จากผู้ขายรายนี้โดยอัตโนมัติหรือไม่"
+msgstr "ต้องการทำให้ชีวิตของคุณง่ายยิ่งขึ้นและตรวจสอบใบแจ้งหนี้จากผู้ขายรายนี้โดยอัตโนมัติหรือไม่"
 
 #. module: account
 #. odoo-javascript
@@ -18214,8 +18221,8 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"คุณสามารถตั้งค่าการสื่อสารเริ่มต้นที่จะแสดงในใบแจ้งหนี้ของลูกค้าได้ที่นี่ เมื่อได้รับการตรวจสอบแล้ว เพื่อ"
-"ช่วยให้ลูกค้าอ้างอิงถึงใบแจ้งหนี้นั้นเมื่อทำการชำระเงิน"
+"คุณสามารถตั้งค่าการสื่อสารเริ่มต้นที่จะแสดงในใบแจ้งหนี้ของลูกค้าได้ที่นี่ เมื่อได้รับการตรวจสอบแล้ว "
+"เพื่อช่วยให้ลูกค้าอ้างอิงถึงใบแจ้งหนี้นั้นเมื่อทำการชำระเงิน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
@@ -18338,8 +18345,7 @@ msgstr ""
 msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign "
 "currency."
-msgstr ""
-"คุณไม่สามารถระบุจำนวนเงินเป็นสกุลเงินต่างประเทศ โดยไม่ระบุสกุลเงินต่างประเทศ"
+msgstr "คุณไม่สามารถระบุจำนวนเงินเป็นสกุลเงินต่างประเทศ โดยไม่ระบุสกุลเงินต่างประเทศ"
 
 #. module: account
 #. odoo-python
@@ -18526,8 +18532,8 @@ msgid ""
 "change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
-"คุณไม่สามารถทำการแก้ไขนี้กับรายการสมุดรายวันที่กระทบยอดได้ คุณสามารถเปลี่ยนฟิลด์ที่ไม่เกี่ยวข้องกับก"
-"ฎหมายบางฟิลด์ได้ หรือต้องยกเลิกการกระทบยอดก่อน\n"
+"คุณไม่สามารถทำการแก้ไขนี้กับรายการสมุดรายวันที่กระทบยอดได้ "
+"คุณสามารถเปลี่ยนฟิลด์ที่ไม่เกี่ยวข้องกับกฎหมายบางฟิลด์ได้ หรือต้องยกเลิกการกระทบยอดก่อน\n"
 "รายการสมุดรายวัน (id):%(entry)s (%(id)s)"
 
 #. module: account
@@ -18806,8 +18812,8 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"คุณไม่สามารถตรวจสอบใบแจ้งหนี้ที่มียอดรวมติดลบได้ คุณควรสร้างใบลดหนี้แทน ใช้เมนูการดำเนินการเพื่อ"
-"แปลงเป็นใบลดหนี้หรือการคืนเงิน"
+"คุณไม่สามารถตรวจสอบใบแจ้งหนี้ที่มียอดรวมติดลบได้ คุณควรสร้างใบลดหนี้แทน "
+"ใช้เมนูการดำเนินการเพื่อแปลงเป็นใบลดหนี้หรือการคืนเงิน"
 
 #. module: account
 #. odoo-python
@@ -19416,8 +19422,8 @@ msgid ""
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
 msgstr ""
-"รับรองว่าจะพยายามอย่างดีที่สุดเพื่อให้บริการที่มีประสิทธิภาพภายในเวลาที่กำหนดตามกรอบเวลาที่ได้ตกลง"
-"กันไว้ อย่างไรก็ตาม ไม่มีภาระผูกพันใดที่สามารถพิจารณาว่าเป็นภาระผูกพันในการบรรลุผลได้"
+"รับรองว่าจะพยายามอย่างดีที่สุดเพื่อให้บริการที่มีประสิทธิภาพภายในเวลาที่กำหนดตามกรอบเวลาที่ได้ตกลงกันไว้ "
+"อย่างไรก็ตาม ไม่มีภาระผูกพันใดที่สามารถพิจารณาว่าเป็นภาระผูกพันในการบรรลุผลได้"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
