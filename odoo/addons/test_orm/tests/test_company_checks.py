@@ -105,7 +105,7 @@ class TestCompanyCheck(common.TransactionCase):
             'parent_id': self.parent_a.id,
         })
 
-    def test_company_write(self):
+    def test_company_write_on_child(self):
         """ Check the company consistency is respected at write. """
         child = self.env['test_orm.model_child'].create({
             'name': 'M1',
@@ -128,6 +128,17 @@ class TestCompanyCheck(common.TransactionCase):
             'parent_ids': [Command.unlink(self.parent_a.id), Command.link(self.parent_b.id)],
             'company_id': self.company_b.id,
         })
+
+    def test_company_write_on_parent(self):
+        """ Check the company consistency is respected at write. """
+        child = self.env['test_orm.model_child'].create({
+            'name': 'M1',
+            'company_id': self.company_a.id,
+            'parent_id': self.parent_a.id,
+        })
+
+        with self.assertRaises(UserError):
+            child.parent_id.company_id = self.company_b
 
     def test_check_company_write_performance(self):
         child = self.env['test_orm.model_child'].create({
