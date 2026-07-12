@@ -24,6 +24,10 @@ export class NodePositionManager extends Array {
         }
     }
 
+    /**
+     * @param {Object} context { renderPositionedNodes }
+     * @returns {Object} context { nodeIds }
+     */
     renderContext(context = {}) {
         let nodes = [];
         const { renderPositionedNodes } = context;
@@ -82,6 +86,8 @@ export function assignDefaultElementOptions(options = {}, defaultOptions = {}) {
  */
 export class LayoutModel {
     static template = xml``;
+    prefixLayouts = [];
+    suffixLayouts = [];
     refToAttributes = new ObjectMap();
     refToClassNames = new SetMap();
     refToStyleInfo = new StyleInfoMap();
@@ -126,6 +132,7 @@ export class LayoutModel {
     // need to remove a specific attribute on a specific ref
     // need to remove a specific style property on a specific ref
     // need to remove a specific className on a specific ref
+    // possible with getRef
 
     replaceStyleInfo(styleInfo, ref = "root") {
         this.refToStyleInfo.set(ref, styleInfo);
@@ -146,20 +153,41 @@ export class LayoutModel {
         return {
             attributes: this.refToAttributes.get(ref),
             classNames: this.refToClassNames.get(ref),
-            styleInfo,
-            style: styleInfo,
+            styleInfo, // mutable source
+            style: StyleInfo.from(styleInfo), // copy
         };
+    }
+
+    getRefs() {
+        const refs = {};
+        for (const refName of this.getRefNames()) {
+            refs[refName] = this.getRef(refName);
+        }
+        return refs;
     }
 
     renderAttributes(ref = "root") {
         return renderAttributes(this.getRef(ref));
     }
 
+    /**
+     * @param {Object} context { renderPositionedNodes }
+     * @returns {Object} context { renderPositionedNodes, model }
+     */
     renderContext(context = {}) {
         return { ...context, model: this };
     }
 
+    /**
+     * @param {Object} context { renderPositionedNodes }
+     */
     renderToFragment(context = {}) {
+        const mainFragment = document.createDocumentFragment();
+        if (this.prefixLayouts.length > 0) {
+            // TODO EGGMAIL: allow a prefix/suffix per REF instead of
+            // per layout? Need to include their positions in all templates => more complex
+            mainFragment.append(...this.prefixLayouts.map((prefix) => prefix.renderToFragment()));
+        }
         const nodePositionManager = new NodePositionManager();
         const fragment = renderToFragment(
             this.template,
@@ -168,7 +196,13 @@ export class LayoutModel {
             )
         );
         nodePositionManager.setNodePositions(fragment);
-        return fragment;
+        mainFragment.appendChild(fragment);
+        if (this.suffixLayouts.length > 0) {
+            mainFragment.append(
+                ...this.suffixLayouts.reverse().map((suffix) => suffix.renderToFragment())
+            );
+        }
+        return mainFragment;
     }
 
     isNeutral() {
@@ -199,6 +233,28 @@ export class ElementLayout extends LayoutModel {
                 (ref) => Object.entries(this.renderAttributes(ref)).length === 0
             )
         );
+    }
+}
+
+export class DesktopOnlyLayout extends ElementLayout {
+    constructor(options = {}) {
+        super(options);
+        this.setAttributes({
+            classNames: "o-ci-desktop-only",
+        });
+    }
+}
+
+export class MobileOnlyLayout extends ElementLayout {
+    constructor(options = {}) {
+        super(options);
+        this.setAttributes({
+            classNames: "o-ci-mobile-only",
+            style: {
+                "mso-hide": "all",
+                display: "none",
+            },
+        });
     }
 }
 
@@ -248,14 +304,15 @@ export class CommentNodeLayout {
 export class Analysis {
     constructor(options = {}) {
         options.parsingFacts ??= {
-            canMerge: false,
-            canParentMerge: false,
+            // both canMerge and canParentMerge must be true for a merge ATTEMPT to be authorized (not guaranteed)
+            canMerge: false, // authorization to attempt merging the layout and analysis of a descendant onto oneself
+            canParentMerge: false, // authorization for a parent to attempt merging the layout and analysis of oneself onto them
         };
         this.facts = { ...(options.facts ?? {}) };
         this.parsingFacts = { ...(options.parsingFacts ?? {}) };
         // constraints are functions: (emailNode) => ({ shouldPropagate: bool, facts: {}, constraint: (emailNode) => (...) })
-        this.constraintsForAncestors = [...(options.constraintsForAncestors ?? [])];
-        this.constraintsForDescendants = [...(options.constraintsForDescendants ?? [])];
+        this.bottomUpConstraints = [...(options.bottomUpConstraints ?? [])];
+        this.topDownConstraints = [...(options.topDownConstraints ?? [])];
     }
 }
 
@@ -269,7 +326,7 @@ export class EmailNode {
             parent.appendChild(this);
         }
         if (referenceNode) {
-            this.pushReferenceNode(referenceNode);
+            this.pushReferenceNodes(referenceNode);
         }
         this.analysis = new Analysis(analysis);
         this.marginNode = undefined;
@@ -337,8 +394,13 @@ export class EmailNode {
         return removedChildren;
     }
 
-    pushReferenceNode(referenceNode) {
-        return this.referenceNodes.push(referenceNode);
+    pushReferenceNodes(...referenceNodes) {
+        return this.referenceNodes.push(...referenceNodes);
+    }
+
+    setParent(parentEmailNode) {
+        parentEmailNode.appendChild(this);
+        return true;
     }
 
     appendChild(emailNode) {
@@ -359,41 +421,35 @@ export class EmailNode {
     }
 
     render(context = {}) {
-        // Small optimization: if "this" would be rendered as a div with no
-        // style instruction, it does not need to be rendered and we can
-        // keep only the padding and/or the margin, if there is one.
         const isNeutral = this.layout.isNeutral();
-        const render = (layoutContainer, renderContext = {}, extraPositionContext = {}) => {
-            let renderChildren;
-            if (layoutContainer === this.marginNode) {
-                if (!isNeutral) {
-                    renderChildren = [this];
-                }
-            } else if (layoutContainer === this && this.paddingNode) {
-                renderChildren = [this.paddingNode];
+        const stack = [
+            { nodes: [this.marginNode], shouldRender: () => this.marginNode },
+            {
+                nodes: [this],
+                // Small optimization: if "this" would be rendered as a div with no
+                // style instruction, it does not need to be rendered and we can
+                // keep only the padding and/or the margin, if there is one.
+                // TODO EGGMAIL: missing optimization: spacing wrapper can absorb
+                // a non-neutral div ?
+                shouldRender: () => !isNeutral || (!this.marginNode && !this.paddingNode),
+            },
+            { nodes: [this.paddingNode], shouldRender: () => this.paddingNode },
+        ];
+        const render = (index, renderContext) => {
+            if (index === stack.length) {
+                return this.children.flatMap((child) => child.render(renderContext));
             }
-            let renderPositionedNodes = (positionContext = {}) =>
-                renderChildren.map((child) =>
-                    render(child, renderChildren, {
-                        ...extraPositionContext,
-                        ...positionContext,
-                    })
-                );
-            if (!renderChildren) {
-                renderPositionedNodes = (positionContext = {}) =>
-                    this.children.map((child) => child.render(positionContext));
+            const { nodes, shouldRender } = stack.at(index);
+            if (!shouldRender()) {
+                return render(index + 1, renderContext);
             }
-            return layoutContainer.layout.renderToFragment({
-                ...renderContext,
-                renderPositionedNodes,
-            });
+            return nodes.map((node) =>
+                node.layout.renderToFragment({
+                    ...renderContext,
+                    renderPositionedNodes: (nodesContext) => render(index + 1, nodesContext),
+                })
+            );
         };
-        if (this.marginNode) {
-            return render(this.marginNode, {}, context);
-        } else if (this.paddingNode) {
-            return render(isNeutral ? this.paddingNode : this, context);
-        } else {
-            return render(this, context);
-        }
+        return render(0, context);
     }
 }

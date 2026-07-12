@@ -1,26 +1,16 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
-import { DIRECTION_VARIANTS } from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
-import { DIMENSIONS } from "../hooks";
+import { isTableCell } from "@html_editor/utils/dom_info";
+import {
+    ALLOWED_CSS_DISPLAY_VALUES,
+    BLOCKED_CSS_POSITION_VALUES,
+    BLOCKED_PSEUDO_CLASSES,
+    DIMENSIONS,
+    INDIRECT_CSS_PROPERTY_VALUES,
+} from "../core/utils";
+import { StyleInfo } from "../core/style_models";
 
-const BLOCKED_PSEUDO_CLASSES = new Set([
-    "active",
-    "focus",
-    "focus-within",
-    "hover",
-    "link",
-    "target",
-    "visited",
-]);
-const INDIRECT_CSS_PROPERTY_VALUES = new Set([
-    "inherit",
-    "initial",
-    "unset",
-    "revert",
-    "revert-layer",
-]);
-const ALLOWED_CSS_DISPLAY_VALUES = new Set(["block", "inline", "inline-block", "none"]);
 // TODO EGGMAIL: investigate if some more node should bypass the invisible rule
 const ALLOWED_IF_INVISIBLE_ELEMENT = new Set(["BR", "T"]);
 const { DESKTOP, MOBILE } = DIMENSIONS;
@@ -28,6 +18,7 @@ const { DESKTOP, MOBILE } = DIMENSIONS;
 export class FilterContentPlugin extends Plugin {
     static id = "filterContent";
     static dependencies = [
+        "border",
         "math",
         "measurementSnapshot",
         "responsiveBlock",
@@ -41,14 +32,20 @@ export class FilterContentPlugin extends Plugin {
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), FilterContentPlugin.id],
         ],
-        element_layout_analysis_processors: withSequence(1, this.analyzeElementLayout.bind(this)),
+        element_layout_analysis_processors: [
+            withSequence(1, this.analyzeParentMergeability.bind(this)),
+        ],
         style_rules_processors: [[this.provideStyleRules.bind(this), FilterContentPlugin.id]],
         is_blocked_rule_selector_predicates: this.blockUserContextSelectors.bind(this),
-        should_discard_reference_node_predicates: this.isInvisible.bind(this),
+        should_discard_reference_node_predicates: [
+            this.isInvisible.bind(this),
+            this.isPositionAbsolute.bind(this),
+        ],
         reference_node_tag_name_processors: this.defineEffectiveTagName.bind(this),
+        fix_raw_style_values_handlers: this.fixTextDecorationLine.bind(this),
     };
 
-    analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
+    analyzeParentMergeability(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         const { analysis } = defaultEmailNodeArguments;
         const node = referenceNode;
         let parentNode;
@@ -118,6 +115,7 @@ export class FilterContentPlugin extends Plugin {
             when: ({ attributeName, referenceNode }) =>
                 referenceNode.nodeName === "T" && !attributeName.startsWith("t-"),
         });
+        rules.block("srcset");
     }
 
     provideStyleRules(rules) {
@@ -137,36 +135,48 @@ export class FilterContentPlugin extends Plugin {
                 referenceNode.nodeName === "T" || referenceNode.nodeName === "BR",
         });
         rules.block(/.*/, {
+            // TODO EGGMAIL: controversial rule, but cases where removing an
+            // indirect css property value cause a style issue should be
+            // enforced with a "fix" rule which will compute a resolved style
+            // value. This can not be done in a generic way as some computed
+            // values are not what is actually required in the email (eg width:
+            // 100% being computed as width 737.21px).
             when: ({ propertyValue }) => INDIRECT_CSS_PROPERTY_VALUES.has(propertyValue),
         });
         rules.allow("overflow");
         rules.allow("opacity");
         rules.allow("direction");
-
-        // TODO EGGMAIL: borders can not be bigger than 8px -> fix all incorrect borders?
-        rules.allow(/^border(-.*)?$/, {
-            when: ({ propertyName }) =>
-                propertyName !== "border-spacing" && propertyName !== "border-collapse",
-        });
     }
 
     genericTextAndFontStyleRules(rules) {
+        const isLink = ({ referenceNode }) => referenceNode.nodeName === "A";
         // TODO EGGMAIL: replace regexes by exhaustive string lists? (rules optimization)
         // Avoid text-shadow (poor support)
-        // text-decoration is safe but limited (underline mostly)
         rules.allow(/^font(-.*)?$/);
+        // TODO EGGMAIL: text-decoration is safe but limited (underline mostly) -> to sanitize
         // TODO EGGMAIL: text-align values should be fixed to not include "start" or "end" (converted with rtl to left or right)
         rules.allow(/^text-(align|decoration|transform|indent)$/);
+        rules.require("text-decoration", {
+            // TODO EGGMAIL: attempt to limit mail client styles forcing an underline
+            // evaluate through testing if more drastic measures have to be put in place.
+            when: isLink,
+            how: () => ({ propertyValue: "none", propertyPriority: "important" }),
+        });
         rules.allow("line-height");
         rules.allow("letter-spacing");
         rules.allow("word-spacing");
         rules.allow("white-space");
         rules.allow("color");
+        rules.fix("font-family", {
+            when: isLink,
+            how: () => ({ propertyPriority: "important" }),
+        });
     }
 
     genericBackgroundStyleRules(rules) {
         // TODO EGGMAIL: maybe not restrictive enough
-        rules.allow(/^background(-.*)?$/);
+        rules.allow("background");
+        rules.allow("background-color");
     }
 
     genericLayoutStyleRules(rules) {
@@ -174,27 +184,55 @@ export class FilterContentPlugin extends Plugin {
             when: ({ propertyValue }) => ALLOWED_CSS_DISPLAY_VALUES.has(propertyValue),
         });
         rules.allow("vertical-align");
+        rules.fix("vertical-align", {
+            when: ({ propertyValue }) => INDIRECT_CSS_PROPERTY_VALUES.has(propertyValue),
+            how: ({ referenceNode }) => ({
+                propertyValue: this.getStylePropertyValue(referenceNode, "vertical-align"),
+            }),
+        });
     }
 
     genericTableStyleRules(rules) {
         const isTable = ({ referenceNode }) => referenceNode.nodeName === "TABLE";
         rules.allow("table-layout", { when: isTable });
-        rules.allow("border-collapse", { when: isTable });
-        rules.allow("border-spacing", { when: isTable });
         rules.allow("empty-cells", { when: isTable });
+        rules.allow("width", { when: isTable });
+        rules.require("max-width", {
+            when: [isTable, ({ propertyValue }) => propertyValue !== "100%"],
+            how: () => ({ propertyValue: "100%" }),
+        });
+        rules.allow("height", { when: ({ referenceNode }) => referenceNode.nodeName === "TR" });
+        rules.allow("width", {
+            when: ({ referenceNode }) => isTableCell(referenceNode.nodeName),
+        });
+        rules.allow("background-color", {
+            when: ({ referenceNode }) => referenceNode.nodeName === "TH",
+        });
+        rules.require("line-height", {
+            when: ({ referenceNode }) => isTableCell(referenceNode),
+            how: () => ({ propertyValue: "1.2" }), // typical "normal" value
+        });
     }
 
     genericListStyleRules(rules) {
         rules.allow(/^list-style(-.*)?$/);
     }
 
-    hasVisibleBorder(element, layoutDimensions) {
-        const computedStyle = this.getComputedStyle(element, null, layoutDimensions);
-        return DIRECTION_VARIANTS.some((side) => {
-            const width = parseFloat(computedStyle.getPropertyValue(`border-${side}-width`));
-            const borderStyle = computedStyle.getPropertyValue(`border-${side}-style`);
-            return width > 0 && borderStyle !== "none" && borderStyle !== "hidden";
-        });
+    fixTextDecorationLine({ element, propertyName, propertyInfo, styleInfo }) {
+        if (propertyName !== "text-decoration-line") {
+            return false;
+        }
+        if (propertyInfo.value !== "underline") {
+            return false;
+        }
+        // text-decoration-line has very low support => fallback to text-decoration
+        const indexByPropertyName = styleInfo.getIndexByPropertyName();
+        const index = indexByPropertyName.get(propertyName);
+        styleInfo.delete(propertyName);
+        const fixedStyleInfo = new StyleInfo();
+        fixedStyleInfo.set("text-decoration", propertyInfo);
+        styleInfo.merge(fixedStyleInfo, { index });
+        return true;
     }
 
     isInvisible(referenceNode) {
@@ -208,9 +246,23 @@ export class FilterContentPlugin extends Plugin {
         const isBlock = this.isBlock(referenceNode);
         if (
             !ALLOWED_IF_INVISIBLE_ELEMENT.has(referenceNode.nodeName) &&
+            !referenceNode.matches?.(
+                `:scope:has(${[...ALLOWED_IF_INVISIBLE_ELEMENT].join(",")})`
+            ) &&
             rect &&
             rect[isBlock ? "height" : "width"] === 0 &&
             (referenceNode.nodeType !== Node.ELEMENT_NODE || !this.hasVisibleBorder(referenceNode))
+        ) {
+            return true;
+        }
+    }
+
+    isPositionAbsolute(referenceNode) {
+        if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+        if (
+            BLOCKED_CSS_POSITION_VALUES.has(this.getStylePropertyValue(referenceNode, "position"))
         ) {
             return true;
         }

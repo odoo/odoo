@@ -5,20 +5,9 @@ import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { EmailHtmlConverter } from "@mail/convert_inline/email_html_converter";
 import { loadIframeBundles, loadIframe } from "@mail/convert_inline/iframe_utils";
 import { useService } from "@web/core/utils/hooks";
-
-export const DIMENSIONS = {
-    DESKTOP: Object.freeze({
-        width: 1320,
-        height: 1000,
-    }),
-    MOBILE: Object.freeze({
-        width: 360,
-        height: 1000,
-    }),
-    DESKTOP_MOBILE_BREAKPOINT: Object.freeze({
-        width: 768,
-    }),
-};
+import { Mutex } from "@web/core/utils/concurrency";
+import { DIMENSIONS } from "./core/utils";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * Hook to handle email HTML conversion in a mail HtmlField.
@@ -27,10 +16,11 @@ export const DIMENSIONS = {
  * @param {Array<string>} [options.bundles] bundles to load for the conversion
  * @returns {Object}
  */
-export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, isVisible }) {
+export function useEmailHtmlConverter({ Plugins, bundles, targetRef, isVisible }) {
     let converter, reference, referenceDocument; // Element and Document in which the conversion takes place.
     let currentConfig = {};
     let isReady = false;
+    const mutex = new Mutex();
     const scope = useScope();
     const convertInlineIframeService = useService("convert_inline_iframe");
     const referenceIframe = renderToElement("mail.EmailHtmlConverterReferenceIframe", {
@@ -44,8 +34,11 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
     } = Promise.withResolvers();
 
     const setupIframe = async () => {
+        if (scope.isDestroyed()) {
+            return false;
+        }
         try {
-            await scope.until(convertInlineIframeService.readyPromise);
+            await scope.run(() => convertInlineIframeService.readyPromise);
             convertInlineIframeService.add(referenceIframe, targetRef);
             const assetsPromise = loadIframeBundles(referenceIframe, bundles);
             const contentPromise = loadIframe(referenceIframe, () => {
@@ -55,10 +48,14 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
                 referenceDocument.body.setAttribute(
                     "style",
                     `margin: 0 !important;
-                    padding: 0 !important;`
+                    padding: 0 !important;
+                    background-color: transparent !important;`
                 );
             });
-            await scope.until(Promise.all([contentPromise, assetsPromise]));
+            if (scope.isDestroyed()) {
+                return false;
+            }
+            await scope.run(() => Promise.all([contentPromise, assetsPromise]));
             return true;
         } catch (e) {
             if (e?.name === "AbortError") {
@@ -75,7 +72,7 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
             converter.onLayoutDimensionsUpdated(dimensions);
         }
     };
-    const cleanupEmailHtmlConversion = () => {
+    const cleanupConverter = () => {
         if (reference?.isConnected) {
             reference.remove();
             reference = undefined;
@@ -87,14 +84,14 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
     };
     const unmountConverter = () => {
         isReady = false;
-        cleanupEmailHtmlConversion();
+        cleanupConverter();
     };
-    const prepareEmailHtmlConversion = async (fragment) => {
+    const resetConverter = async (fragment) => {
         if (!(await iframeSetup)) {
             return false;
         }
-        cleanupEmailHtmlConversion();
-        converter = new EmailHtmlConverter(undefined, services);
+        cleanupConverter();
+        converter = new EmailHtmlConverter(scope);
         reference = renderToElement("mail.EmailHtmlConverterReference");
         reference.append(fragment);
         referenceDocument.body.append(reference);
@@ -115,12 +112,18 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
             updateLayoutDimensions,
         };
     };
-    const convertToEmailHtml = async (fragment, config) => {
-        if (!isReady || !(await prepareEmailHtmlConversion(fragment))) {
-            return null;
+    const prepareConverter = async (fragment) => {
+        if (!isReady || !(await resetConverter(fragment))) {
+            return false;
         }
         if (!referenceIframe.isConnected) {
             unmountConverter();
+            return false;
+        }
+        return true;
+    };
+    const convertToEmailHtml = async (fragment, config) => {
+        if (!(await prepareConverter(fragment))) {
             return null;
         }
         const htmlConverted = Promise.resolve(
@@ -128,10 +131,19 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
         );
         if (!isVisible) {
             return htmlConverted.finally(() => {
-                cleanupEmailHtmlConversion();
+                cleanupConverter();
             });
         }
         return htmlConverted;
+    };
+    const measureReference = async (fragment, config) => {
+        if (!(await prepareConverter(fragment))) {
+            return null;
+        }
+        await converter.measureReference(getCurrentConfig(config));
+        return {
+            ...converter.shared.measurementSnapshot,
+        };
     };
 
     if (targetRef) {
@@ -164,12 +176,67 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
          * @param {Object} [config]
          * @returns {Promise<string|null>} email compliant HTML.
          */
-        convertToEmailHtml,
+        convertToEmailHtml: (...args) => mutex.exec(() => convertToEmailHtml(...args)),
+        /**
+         * @param {DocumentFragment} fragment reference content to measure
+         * @param {Object} [config]
+         * @returns {Promise<Object|null>} shared functions of measurementSnapshot plugin,
+         *          after measurement setup is done.
+         */
+        measureReference: (...args) => mutex.exec(() => measureReference(...args)),
         /**
          * @param {Object} dimensions
          * @param {Number} dimensions.width
          * @param {Number} dimensions.height
          */
         updateLayoutDimensions,
+    };
+}
+
+/**
+ * Return a function that ensures that every SVG and WEBP images are converted
+ * to PNG, and create an attachment for every b64 encoded image, to ensure every
+ * image src is not a data url.
+ * Prevent the user from making additional changes during the operation.
+ * Depends on @see EmailImageFormatPlugin
+ */
+export function useSavePendingImage({ getLastChangeId, setLastChangeId }) {
+    const ui = useService("ui");
+    return async ({ content, editor }) => {
+        const operation = editor.shared.operation ?? {
+            next: async (fn) => {
+                try {
+                    ui.block({ message: _t("Saving email optimized images...") });
+                    await fn();
+                } finally {
+                    ui.unblock();
+                }
+            },
+        };
+        await operation.next(
+            async () => {
+                try {
+                    await editor.shared.emailImageFormat.sanitizeImages(content);
+                } finally {
+                    const lastChangeIdSnapshot = getLastChangeId();
+                    if (
+                        editor.shared.history.commit() &&
+                        getLastChangeId() === lastChangeIdSnapshot + 1
+                    ) {
+                        // All pending image changes were done in both the
+                        // content clone and the editable, so if an editor
+                        // commit was made during this operation, it is
+                        // reasonable to assume that the changes it contains
+                        // were also done in content, which will be sent to the
+                        // server. Therefore this commit onChange should not
+                        // have increased lastChangeId and the snapshotted value
+                        // is restored, allowing the field to not be dirty after
+                        // updateValue.
+                        setLastChangeId(lastChangeIdSnapshot);
+                    }
+                }
+            },
+            { canTimeout: false, shouldInterceptClick: true }
+        );
     };
 }

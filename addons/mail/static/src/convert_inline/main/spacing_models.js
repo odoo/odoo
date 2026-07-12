@@ -1,16 +1,9 @@
-import { assignDefaultElementOptions, LayoutModel } from "../core/render_models";
+import { LayoutModel } from "../core/render_models";
 
 export class SpacingLayout extends LayoutModel {
     static template = "mail.SpacingLayout";
 
     constructor(options = {}) {
-        const refs = options.refs ?? {};
-        options.refs = refs;
-        refs.root = assignDefaultElementOptions(refs.root, {
-            style: {
-                width: "100%",
-            },
-        });
         super(options);
         this.setAttributes({
             classNames: "o-ci-spacing-wrapper",
