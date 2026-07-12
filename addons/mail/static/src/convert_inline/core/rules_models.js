@@ -96,13 +96,13 @@ export class Rule {
 
 export class Rules {
     // Rules (by name, string)
-    allowedNameRules = new ArrayMap();
-    blockedNameRules = new ArrayMap();
+    allowingNameRules = new ArrayMap();
+    blockingNameRules = new ArrayMap();
     fixingNameRules = new ArrayMap();
-    requiredNameRules = new ArrayMap();
+    requiringNameRules = new ArrayMap();
     // Rules (by matcherKey, function and RegExp)
-    allowedMatcherKeyRules = new ArrayMap();
-    blockedMatcherKeyRules = new ArrayMap();
+    allowingMatcherKeyRules = new ArrayMap();
+    blockingMatcherKeyRules = new ArrayMap();
     fixingMatcherKeyRules = new ArrayMap();
     // Matcher cache
     matcherCache = new MatcherCache();
@@ -136,9 +136,9 @@ export class Rules {
             pluginId,
         });
         if (isName) {
-            this.allowedNameRules.concat([rule], key);
+            this.allowingNameRules.concat([rule], key);
         } else {
-            this.allowedMatcherKeyRules.concat([rule], matcherKey);
+            this.allowingMatcherKeyRules.concat([rule], matcherKey);
         }
         if (when) {
             this.addOtherwise(rule, otherwise, options);
@@ -155,9 +155,9 @@ export class Rules {
             pluginId,
         });
         if (isName) {
-            this.blockedNameRules.concat([rule], key);
+            this.blockingNameRules.concat([rule], key);
         } else {
-            this.blockedMatcherKeyRules.concat([rule], matcherKey);
+            this.blockingMatcherKeyRules.concat([rule], matcherKey);
         }
         if (when) {
             this.addOtherwise(rule, otherwise, options);
@@ -192,7 +192,7 @@ export class Rules {
             matcherCache: this.matcherCache,
             pluginId,
         });
-        this.requiredNameRules.concat([rule], name);
+        this.requiringNameRules.concat([rule], name);
         if (when) {
             this.addOtherwise(rule, otherwise, options);
         }
@@ -207,7 +207,7 @@ export class Rules {
         } = {}
     ) {
         const missing = new Map(
-            [...this.requiredNameRules.keys()].map((name) => [name, undefined])
+            [...this.requiringNameRules.keys()].map((name) => [name, undefined])
         );
         const _onFail = (name, value) => {
             if (missing.has(name)) {
@@ -216,7 +216,7 @@ export class Rules {
             onFail(name, value);
         };
         const _onPass = (name, value, fix) => {
-            if (this.requiredNameRules.has(name)) {
+            if (this.requiringNameRules.has(name)) {
                 missing.delete(name);
             }
             onPass(name, value, fix);
@@ -224,11 +224,7 @@ export class Rules {
         for (const [name, value] of dataMap) {
             let fixingRule;
             try {
-                const fixingRules = this.getRules(
-                    name,
-                    this.fixingNameRules,
-                    this.fixingMatcherKeyRules
-                );
+                const fixingRules = this.getFixingRules(name);
                 if (
                     fixingRules.length > 0 &&
                     (fixingRule = this.findFixingRule(fixingRules, ...getRuleArgs(name, value)))
@@ -236,26 +232,18 @@ export class Rules {
                     _onPass(name, value, fixingRule.howResult);
                     continue;
                 }
-                const blockedRules = this.getRules(
-                    name,
-                    this.blockedNameRules,
-                    this.blockedMatcherKeyRules
-                );
+                const blockingRules = this.getBlockingRules(name);
                 if (
-                    blockedRules.length > 0 &&
-                    this.checkRules(blockedRules, ...getRuleArgs(name, value))
+                    blockingRules.length > 0 &&
+                    this.checkRules(blockingRules, ...getRuleArgs(name, value))
                 ) {
                     _onFail(name, value);
                     continue;
                 }
-                const allowedRules = this.getRules(
-                    name,
-                    this.allowedNameRules,
-                    this.allowedMatcherKeyRules
-                );
+                const allowingRules = this.getAllowingRules(name);
                 if (
-                    allowedRules.length > 0 &&
-                    this.checkRules(allowedRules, ...getRuleArgs(name, value))
+                    allowingRules.length > 0 &&
+                    this.checkRules(allowingRules, ...getRuleArgs(name, value))
                 ) {
                     _onPass(name, value);
                     continue;
@@ -272,10 +260,10 @@ export class Rules {
             }
         }
         for (const [name, value] of missing) {
-            const requiredRules = this.getRules(name, this.requiredNameRules);
+            const requiringRules = this.getRequiringRules(name);
             if (
-                requiredRules.length > 0 &&
-                this.checkRules(requiredRules, ...getRuleArgs(name, value))
+                requiringRules.length > 0 &&
+                this.checkRules(requiringRules, ...getRuleArgs(name, value))
             ) {
                 onMiss(name, value);
             }
@@ -328,6 +316,18 @@ export class Rules {
                 fixingRule.checkConditions(...args) && fixingRule.how(...args) !== undefined
         );
     }
+    getAllowingRules(name) {
+        return this.getRules(name, this.allowingNameRules, this.allowingMatcherKeyRules);
+    }
+    getBlockingRules(name) {
+        return this.getRules(name, this.blockingNameRules, this.blockingMatcherKeyRules);
+    }
+    getFixingRules(name) {
+        return this.getRules(name, this.fixingNameRules, this.fixingMatcherKeyRules);
+    }
+    getRequiringRules(name) {
+        return this.getRules(name, this.requiringNameRules);
+    }
     getRules(name, nameRules, matcherKeyRules) {
         const matchingRules = [];
         if (nameRules.has(name)) {
@@ -345,9 +345,17 @@ export class Rules {
         return matchingRules;
     }
     /**
-     * Useful for debugging, map rule instances to their result
+     * Useful for debugging, map rule instances to their check result
+     * (verification that a specific rule would apply or not) for a specific
+     * processing case.
      */
-    getRulesResults(rules, ...args) {
-        return rules.map((rule) => [rule, rule.checkConditions(...args)]);
+    getRulesResults(name, value, getRuleArgs) {
+        const mapToResult = (rule) => [rule, rule.checkConditions(...getRuleArgs(name, value))];
+        return {
+            allow: this.getAllowingRules(name).map(mapToResult),
+            block: this.getBlockingRules(name).map(mapToResult),
+            fix: this.getFixingRules(name).map(mapToResult),
+            require: this.getRequiringRules(name).map(mapToResult),
+        };
     }
 }
