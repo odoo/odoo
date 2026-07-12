@@ -78,15 +78,15 @@
     ],
     'application': True,
     'assets': {
+        # Lazy builder assets NOT applied in iframe
         'mass_mailing.assets_builder': [
-            # lazy builder assets NOT applied in iframe
             ('include', 'html_builder.assets'),
             ('remove', 'web/static/fonts/fonts.scss'),
             'mass_mailing/static/src/builder/**/*',
             ('remove', 'mass_mailing/static/src/builder/**/*.inside.scss'),
         ],
+        # Minimal assets for mass_mailing isolated iframes from web.
         'mass_mailing.assets_iframe_helpers': [
-            # minimal assets for mass_mailing isolated iframes from web.
             ('include', 'web._assets_helpers'),
             'web/static/src/scss/bootstrap_overridden.scss',
             ('include', 'web._assets_frontend_helpers'),
@@ -100,18 +100,14 @@
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
         ],
+        # Minimal assets for theme selector iframe
         'mass_mailing.assets_iframe_theme_selector': [
-            # minimal assets for theme selector iframe
             ('include', 'mass_mailing.assets_iframe_helpers'),
             'mass_mailing/static/src/themes/iframe_assets/**/*',
         ],
-        # Base style for mail iframes.
+        # Common style for mass_mailing mail iframes.
         'mass_mailing.assets_iframe_style_base': [
-            ('include', 'mass_mailing.assets_iframe_helpers'),
-
             # useful scss from /html_editor web.assets_frontend
-            # TODO EGGMAIL: could improve load time by splitting scss from JS files
-            'html_editor/static/src/public/**/*',
             'html_editor/static/src/scss/html_editor.common.scss',
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
@@ -124,25 +120,26 @@
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
         ],
-        # Full style assets required to view the mail content.
+        # Complete style assets required to view the mail content.
         # convert_inline ONLY uses this and inline styles.
-        # (editor iframes use assets_iframe_style_base + html_editor.assets_editor instead)
         'mass_mailing.assets_iframe_style': [
-            ('include', 'mass_mailing.assets_iframe_style_base'),
-            ('include', 'html_editor.assets_media_dialog'),
+            ('include', 'mass_mailing.assets_iframe_helpers'),
             ('include', 'html_editor.assets_readonly'),
+            ('include', 'mass_mailing.assets_iframe_style_base'),
         ],
         # style assets used to view the mail content with a basic editor
         'mass_mailing.assets_inside_basic_editor_iframe': [
-            ('include', 'mass_mailing.assets_iframe_style_base'),
+            ('include', 'mass_mailing.assets_iframe_helpers'),
             ('include', 'html_editor.assets_editor'),
+            ('include', 'mass_mailing.assets_iframe_style_base'),
         ],
         # style assets used to view the mail content in Odoo, but not used
         # during html conversion, specific to the builder
         'mass_mailing.assets_inside_builder_iframe': [
-            ('include', 'mass_mailing.assets_iframe_style_base'),
+            ('include', 'mass_mailing.assets_iframe_helpers'),
             ('include', 'html_editor.assets_editor'),
             ('include', 'html_builder.assets_inside_builder_iframe'),
+            ('include', 'mass_mailing.assets_iframe_style_base'),
             'mass_mailing/static/src/builder/**/*.inside.scss'
         ],
         'mass_mailing.iframe_add_dialog': [
