@@ -39,6 +39,15 @@ export class Message extends Record {
     attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
     author_id = fields.One("res.partner");
     author_guest_id = fields.One("mail.guest");
+    authorRoleColor = fields.Attr("", {
+        compute() {
+            const role = this.author_id?.roleIds.find((role) => Boolean(role.color));
+            if (!role) {
+                return "";
+            }
+            return role.color;
+        },
+    });
     get author() {
         return this.author_id || this.author_guest_id;
     }

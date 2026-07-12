@@ -22,8 +22,10 @@
             <field name="model">res.role</field>
             <field name="arch" type="xml">
                 <list string="Role" editable="bottom" sample="1">
+                    <field name="sequence" widget="handle"/>
                     <field name="name" string="Role"/>
                     <field name="user_ids" widget="many2many_avatar_user" required="1"/>
+                    <field name="color" widget="mail_role_color_badge"/>
                 </list>
             </field>
         </record>
@@ -39,6 +41,7 @@
                             <field name="name" string="Role"/>
                             <field name="user_ids" widget="many2many_avatar_user" options="{'no_create': True}"
                                 required="1"/>
+                            <field name="color" widget="mail_role_color_badge"/>
                         </group>
                     </sheet>
                 </form>

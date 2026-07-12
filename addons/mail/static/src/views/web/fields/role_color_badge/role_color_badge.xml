@@ -1,0 +1,13 @@
+<templates>
+<t t-name="mail.RoleColorBadge">
+    <button 
+        t-att-disabled="!this.props.canBeWrittenTo"
+        title="Open Color Picker"
+        class="btn p-2 border rounded-circle"
+        t-att-class="{ 'opacity-100': !this.props.canBeWrittenTo }"
+        t-att-style="this.style"
+        t-att-data-color="this.hexCode"
+        t-custom-ref="colorPickerTrigger"
+    />
+</t>
+</templates>
