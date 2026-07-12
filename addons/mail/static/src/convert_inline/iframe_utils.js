@@ -45,7 +45,11 @@ export function loadIframe(iframe, callback = () => {}) {
  */
 export function loadIframeBundles(iframe, bundles, options) {
     const bundleOptions = { js: false, targetDoc: iframe.contentDocument, ...options };
-    return loadIframe(iframe, () =>
-        Promise.all(bundles.map((bundle) => loadBundle(bundle, bundleOptions)))
-    );
+    return loadIframe(iframe, async () => {
+        const result = [];
+        for (const bundle of bundles) {
+            result.push(await loadBundle(bundle, bundleOptions));
+        }
+        return result;
+    });
 }
