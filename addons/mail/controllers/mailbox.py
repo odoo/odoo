@@ -23,7 +23,7 @@ class MailboxController(WebclientController):
     def _send_bookmark_update(cls, store, messages):
         if not messages:
             return
-        bus_store = Store(bus_channel=request.env.user)
+        bus_store = Store.to(request.env.user)
         for cur_store in [store, bus_store]:
             cur_store.add(messages, ["is_bookmarked"])
             cur_store.add_global_values(request.env.user._store_bookmark_box_global_fields)

@@ -98,7 +98,7 @@ class MailLinkPreview(models.Model):
             ]
         )
         (message.sudo().message_link_preview_ids - message_link_previews_ok)._unlink_and_notify()
-        Store(bus_channel=message).add(message, "_store_message_link_previews_fields")
+        Store.to(message).add(message, "_store_message_link_previews_fields")
 
     @api.model
     def _is_link_preview_enabled(self):

@@ -52,10 +52,9 @@ class DiscussChannelMember(models.Model):
                 member.sudo().livechat_member_type = "visitor"
                 continue
             member.sudo().livechat_member_type = "agent"
-        stores = Store.Stores()
         for history in members.livechat_member_history_ids:
             # sudo - visitor can access the channel member history of an accessible channel
-            stores[history.channel_id].add(
+            Store.to(history.channel_id).add(
                 history.channel_id,
                 lambda res, history=history: res.many(
                     "livechat_channel_member_history_ids",

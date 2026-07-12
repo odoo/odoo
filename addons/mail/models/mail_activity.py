@@ -316,7 +316,7 @@ class MailActivity(models.Model):
         todo_activities = activities.filtered(lambda act: act.active and act.date_deadline <= today and act.user_id)
         if todo_activities:
             for user, user_activities in todo_activities.grouped('user_id').items():
-                user._bus_send("mail.activity/updated", {"activity_created": True, "count_diff": len(user_activities)})
+                Store.to(user, notification_type="mail.activity/updated", payload={"activity_created": True, "count_diff": len(user_activities)})
         return activities
 
     def write(self, vals):
@@ -359,9 +359,9 @@ class MailActivity(models.Model):
             for user in sorted(users, key=lambda user: user.id):
                 count_diff = new_user_todo_activity_count.get(user, 0) - original_user_todo_activity_count.get(user, 0)
                 if count_diff > 0:
-                    user._bus_send("mail.activity/updated", {"activity_created": True, "count_diff": count_diff})
+                    Store.to(user, notification_type="mail.activity/updated", payload={"activity_created": True, "count_diff": count_diff})
                 elif count_diff < 0:
-                    user._bus_send("mail.activity/updated", {"activity_deleted": True, "count_diff": count_diff})
+                    Store.to(user, notification_type="mail.activity/updated", payload={"activity_deleted": True, "count_diff": count_diff})
 
         return res
 
@@ -369,7 +369,7 @@ class MailActivity(models.Model):
         todo_activities = self.filtered(lambda act: act.active and act.date_deadline <= fields.Date.today() and act.user_id)
         if todo_activities:
             for user, user_activities in todo_activities.grouped('user_id').items():
-                user._bus_send("mail.activity/updated", {"activity_deleted": True, "count_diff": -len(user_activities)})
+                Store.to(user, notification_type="mail.activity/updated", payload={"activity_deleted": True, "count_diff": -len(user_activities)})
         return super().unlink()
 
     @api.model

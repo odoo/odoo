@@ -98,14 +98,13 @@ class MailPresence(models.Model):
 
         :param im_status: 'online', 'away' or 'offline'
         """
-        stores = Store.Stores()
         for presence in self:
             persona = presence.guest_id or presence.user_id
-            stores[persona, "presence"].add(
+            Store.to(persona, "presence").add(
                 persona,
                 {"im_status": im_status or persona.im_status},
             )
-            stores[persona].add(
+            Store.to(persona).add(
                 persona,
                 {"presence_status": im_status or presence.status},
             )

@@ -78,17 +78,16 @@ class MailCannedResponse(models.Model):
         return vals_list
 
     def _broadcast(self, /, *, delete=False):
-        stores = Store.Stores()
         for canned_response in self:
             targets = list(canned_response.group_ids)
             for user in self.env.user | canned_response.create_uid:
                 if not user.all_group_ids & canned_response.group_ids:
                     targets.append(user)
-            current_stores = Store.Stores({target: stores[target] for target in targets})
-            if delete:
-                current_stores.delete(canned_response)
-            else:
-                current_stores.add(canned_response, "_store_canned_response_fields")
+            for target in targets:
+                if delete:
+                    Store.to(target).delete(canned_response)
+                else:
+                    Store.to(target).add(canned_response, "_store_canned_response_fields")
 
     def _store_canned_response_fields(self, res: Store.FieldList):
         res.extend(["source", "substitution"])
