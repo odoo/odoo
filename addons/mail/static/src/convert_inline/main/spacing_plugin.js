@@ -150,10 +150,16 @@ export class SpacingPlugin extends Plugin {
             contextNode = currentNode.lastReferenceNode;
             currentNode = currentNode.parent;
         } while (currentNode && !contextNode);
+        const renderNode = this.config.referenceDocument.createElement(
+            emailNode.layout.descendantTag
+        );
         if (!contextNode) {
             contextNode = this.config.referenceDocument.body;
         }
-        if (!this.isBlock(contextNode) || isPhrasingContent(contextNode)) {
+        if (
+            !this.isBlock(contextNode, { evaluateDisconnected: true }) ||
+            isPhrasingContent(renderNode)
+        ) {
             return layout;
         }
         const context = { style: this.getTableContextStyleInfo(contextNode) };
@@ -280,7 +286,8 @@ export class SpacingPlugin extends Plugin {
         rules.allow(/^margin(-(top|right|bottom|left))?$/, {
             when: [
                 ({ referenceNode }) =>
-                    !this.isBlock(referenceNode) || isPhrasingContent(referenceNode),
+                    !this.isBlock(referenceNode, { evaluateDisconnected: true }) ||
+                    isPhrasingContent(referenceNode),
                 this.validateSpacingValue.bind(this),
             ],
         });

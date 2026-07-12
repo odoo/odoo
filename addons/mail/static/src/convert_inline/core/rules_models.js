@@ -345,17 +345,25 @@ export class Rules {
         return matchingRules;
     }
     /**
-     * Useful for debugging, map rule instances to their check result
+     * Useful for debugging, map rule instances to their condition check
      * (verification that a specific rule would apply or not) for a specific
      * processing case.
+     * WARNINGS:
+     * - fixing rules "how" is not applied
+     * - requiring rules are evaluated even if not applicable in practice
      */
-    getRulesResults(name, value, getRuleArgs) {
-        const mapToResult = (rule) => [rule, rule.checkConditions(...getRuleArgs(name, value))];
+    getRulesChecks(name, value, getRuleArgs) {
+        const args = getRuleArgs(name, value);
+        const mapToCheck = (rule) => [rule, rule.checkConditions(...args)];
+        const allowingRules = this.getAllowingRules(name);
+        const blockingRules = this.getBlockingRules(name);
+        const fixingRules = this.getFixingRules(name);
+        const requiringRules = this.getRequiringRules(name);
         return {
-            allow: this.getAllowingRules(name).map(mapToResult),
-            block: this.getBlockingRules(name).map(mapToResult),
-            fix: this.getFixingRules(name).map(mapToResult),
-            require: this.getRequiringRules(name).map(mapToResult),
+            allow: allowingRules.map(mapToCheck),
+            block: blockingRules.map(mapToCheck),
+            fix: fixingRules.map(mapToCheck),
+            require: requiringRules.map(mapToCheck),
         };
     }
 }

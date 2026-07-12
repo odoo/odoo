@@ -132,7 +132,9 @@ export class RulesPlugin extends Plugin {
         if (!rules) {
             return filteredStyleInfo.merge(styleInfo);
         }
-        if (rules === this.styleRules) {
+        const shouldCache =
+            this.config.reference.contains(referenceNode) && rules === this.styleRules;
+        if (shouldCache) {
             const styleInfoToFiltered = this.getStyleInfoToFiltered(referenceNode);
             if (styleInfoToFiltered.has(styleInfo)) {
                 return filteredStyleInfo.merge(styleInfoToFiltered.get(styleInfo));
@@ -166,7 +168,7 @@ export class RulesPlugin extends Plugin {
                 );
             },
         });
-        if (rules === this.styleRules) {
+        if (shouldCache) {
             const styleInfoToFiltered = this.getStyleInfoToFiltered(referenceNode);
             styleInfoToFiltered.set(styleInfo, new StyleInfo().merge(filteredStyleInfo));
         }

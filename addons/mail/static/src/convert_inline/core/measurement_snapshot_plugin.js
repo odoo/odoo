@@ -353,17 +353,24 @@ export class MeasurementSnapshotPlugin extends Plugin {
      * Determine if a node is to be considered as a Block for the purpose
      * of email layout.
      */
-    isBlock(node) {
-        if (!node || node.nodeType !== Node.ELEMENT_NODE || !node.isConnected) {
+    isBlock(node, { evaluateDisconnected } = {}) {
+        const isConnected = node.isConnected;
+        if (
+            !node ||
+            node.nodeType !== Node.ELEMENT_NODE ||
+            (!isConnected && !evaluateDisconnected)
+        ) {
             return false;
         }
         if (node.nodeName === "BR") {
             // see html_editor isBlock for explanation (browser compatibility)
             return false;
         }
-        const display = this.getStylePropertyValue(node, "display");
-        if (display && display !== "none") {
-            return !display.includes("inline") && display !== "contents";
+        if (isConnected) {
+            const display = this.getStylePropertyValue(node, "display");
+            if (display && display !== "none") {
+                return !display.includes("inline") && display !== "contents";
+            }
         }
         return blockTagNames.includes(node.nodeName);
     }

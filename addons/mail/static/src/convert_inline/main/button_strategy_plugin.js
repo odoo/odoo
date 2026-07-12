@@ -5,7 +5,7 @@ import { ElementLayout } from "../core/render_models";
 
 export class ButtonStrategyPlugin extends Plugin {
     static id = "buttonStrategy";
-    static dependencies = ["rules", "spacing", "style"];
+    static dependencies = ["measurementSnapshot", "rules", "spacing", "style"];
     resources = {
         // TODO EGGMAIL rework sequence conflicts: default to sequence 11 to be after image_strategy_plugin
         // element_layout_analysis_processors: withSequence(11, this.analyzeButtonLayout.bind(this)),
@@ -18,7 +18,7 @@ export class ButtonStrategyPlugin extends Plugin {
 
     provideStyleRules(rules) {
         // TODO EGGMAIL: maybe fine tune and only accept some values
-        
+
         // some button may have width: 100%:
         // need to be alone in a paragraph
         // replace the paragraph + the link with width 100% by the link as a display block
@@ -44,28 +44,31 @@ export class ButtonStrategyPlugin extends Plugin {
             return defaultEmailNodeArguments;
         }
         analysis.constraintsForAncestors.push((emailNode) => {
-            const ancestorNode =
+            const node =
                 emailNode.lastReferenceNode ??
                 this.config.referenceDocument.createElement(emailNode.layout.descendantTag);
-            if (!this.isBlock(ancestorNode)) {
+            if (!this.isBlock(node)) {
                 return;
             }
-            if (
-                isParagraphRelatedElement(ancestorNode) &&
-                emailNode.layout instanceof ElementLayout
-            ) {
+            if (isParagraphRelatedElement(node) && emailNode.layout instanceof ElementLayout) {
                 emailNode.layout.tag = "DIV";
-                // TODO EGGMAIL: WORKING HERE NOW ensure that the margin is removed by the new filter
-                // maybe full filter is not a good idea? don't know
-                emailNode.replaceStyleInfo(
-                    this.filterStyleInfo(emailNode.layout.getRef().styleInfo, ancestorNode)
+                // Purpose is to neutralize the margin of a paragraph related element, and apply
+                // it through a spacing wrapper (as for all div).
+                // TODO EGGMAIL: evaluate if we should only handle the margin here, or if all
+                // propertyInfo need to be filtered again. (latter seems more appropriate, riskier)
+                emailNode.layout.replaceStyleInfo(
+                    this.filterStyleInfo(
+                        emailNode.layout.getRef().styleInfo,
+                        emailNode.layout.descendantTag
+                    )
                 );
-            } else {
-                return;
             }
-            // TODO EGGMAIL: ensure that the margin for the marginNode is setup so that the div is wrapped in
-            // a wrapper
+            // Apply display: block on the button layout if the parent is compatible
+            layout.setAttributes({
+                style: { display: { value: "block", priority: "important" } },
+            });
         });
+        return defaultEmailNodeArguments;
     }
 
     isBtn({ referenceNode }) {

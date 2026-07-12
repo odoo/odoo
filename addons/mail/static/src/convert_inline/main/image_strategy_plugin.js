@@ -217,7 +217,11 @@ export class ImageStrategyPlugin extends Plugin {
     }
 
     getBorderStyleInfo(imageNode) {
-        return this.filterStyleInfo(this.getRawStyleInfo(imageNode), this.imageBorderStyleRules);
+        return this.filterStyleInfo(
+            this.getRawStyleInfo(imageNode),
+            imageNode,
+            this.imageBorderStyleRules
+        );
     }
 
     buildImageLayout(options) {
