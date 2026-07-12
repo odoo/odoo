@@ -164,7 +164,8 @@
                             </div>
                         </div>
 
-                        <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
+                        <t t-set="lines_to_report" t-value="o._get_move_lines_to_report()"/>
+                        <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
                         <t t-set="display_taxes" t-value="any(l.tax_ids for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
                         <t t-set="has_long_desc" t-value="any(line.name and line.name.count('\n') > 30 for line in o.invoice_line_ids if line.name)"/>
@@ -185,7 +186,6 @@
                                     </tr>
                                 </thead>
                                 <tbody class="invoice_tbody">
-                                    <t t-set="lines_to_report" t-value="o._get_move_lines_to_report()"/>
                                     <t t-set="current_section" t-value="None"/>
                                     <t t-set="current_subsection" t-value="None"/>
 
