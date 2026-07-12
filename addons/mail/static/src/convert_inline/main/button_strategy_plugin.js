@@ -1,0 +1,78 @@
+import { registry } from "@web/core/registry";
+import { Plugin } from "../plugin";
+import { isParagraphRelatedElement } from "@html_editor/utils/dom_info";
+import { ElementLayout } from "../core/render_models";
+
+export class ButtonStrategyPlugin extends Plugin {
+    static id = "buttonStrategy";
+    static dependencies = ["rules", "spacing", "style"];
+    resources = {
+        // TODO EGGMAIL rework sequence conflicts: default to sequence 11 to be after image_strategy_plugin
+        // element_layout_analysis_processors: withSequence(11, this.analyzeButtonLayout.bind(this)),
+        style_rules_processors: [[this.provideStyleRules.bind(this), ButtonStrategyPlugin.id]],
+        element_layout_analysis_processors: this.addBottomUpConstraintsForButtons.bind(this),
+    };
+
+    // define style rules specifically for a elements
+    // handle conflict with image_strategy_plugin => can not be an imageLink?
+
+    provideStyleRules(rules) {
+        // TODO EGGMAIL: maybe fine tune and only accept some values
+        
+        // some button may have width: 100%:
+        // need to be alone in a paragraph
+        // replace the paragraph + the link with width 100% by the link as a display block
+        // inside a spacing table => sets the padding and the border, then put the link
+        // inside? ...
+        // rules.allow("width", { when: this.isBtn.bind(this) });
+        // rules.allow("max-width", { when: this.isBtn.bind(this) });
+        rules.allow(/^padding(-(top|right|bottom|left))?$/, {
+            when: [this.isBtn.bind(this), this.validateSpacingValue.bind(this)],
+        });
+    }
+
+    addBottomUpConstraintsForButtons(
+        defaultEmailNodeArguments,
+        { referenceNode, parentEmailNode }
+    ) {
+        const { layout, analysis } = defaultEmailNodeArguments;
+        if (!this.isBtn({ referenceNode })) {
+            return defaultEmailNodeArguments;
+        }
+        const rawStyleInfo = this.getRawStyleInfo(referenceNode);
+        if (rawStyleInfo.getPropertyValue("width") !== "100%") {
+            return defaultEmailNodeArguments;
+        }
+        analysis.constraintsForAncestors.push((emailNode) => {
+            const ancestorNode =
+                emailNode.lastReferenceNode ??
+                this.config.referenceDocument.createElement(emailNode.layout.descendantTag);
+            if (!this.isBlock(ancestorNode)) {
+                return;
+            }
+            if (
+                isParagraphRelatedElement(ancestorNode) &&
+                emailNode.layout instanceof ElementLayout
+            ) {
+                emailNode.layout.tag = "DIV";
+                // TODO EGGMAIL: WORKING HERE NOW ensure that the margin is removed by the new filter
+                // maybe full filter is not a good idea? don't know
+                emailNode.replaceStyleInfo(
+                    this.filterStyleInfo(emailNode.layout.getRef().styleInfo, ancestorNode)
+                );
+            } else {
+                return;
+            }
+            // TODO EGGMAIL: ensure that the margin for the marginNode is setup so that the div is wrapped in
+            // a wrapper
+        });
+    }
+
+    isBtn({ referenceNode }) {
+        return referenceNode.nodeName === "A" && referenceNode.matches(".btn");
+    }
+}
+
+registry
+    .category("mail-html-conversion-main-plugins")
+    .add(ButtonStrategyPlugin.id, ButtonStrategyPlugin);
