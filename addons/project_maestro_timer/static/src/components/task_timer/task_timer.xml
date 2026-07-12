@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+  <!-- ── Diálogo de salvar / descartar ───────────────────────────── -->
+  <t t-name="project_maestro_timer.TimerSaveDialog">
+    <Dialog title="'Registrar tempo'" size="'md'">
+      <div class="o_timer_stop_dialog">
+        <div class="mb-3 text-center">
+          <span class="o_timer_elapsed_badge badge bg-danger fs-4 font-monospace px-3 py-2">
+            ⏱ <t t-esc="props.elapsed"/>
+          </span>
+          <div class="text-muted small mt-1">Tempo total desta sessão de trabalho</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">O que foi feito? (opcional)</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Ex: Desenvolvimento da tela X, Reunião de alinhamento…"
+            t-model="state.description"
+            t-on-keydown.enter="onSave"
+            autofocus="autofocus"
+          />
+        </div>
+      </div>
+      <t t-set-slot="footer">
+        <button class="btn btn-primary" t-on-click="onSave">
+          <i class="fa fa-check me-1"/>Registrar tempo
+        </button>
+        <button class="btn btn-outline-danger ms-2" t-on-click="onDiscard">
+          <i class="fa fa-trash me-1"/>Descartar
+        </button>
+      </t>
+    </Dialog>
+  </t>
+
+  <!-- ── Widget do cronômetro ────────────────────────────────────── -->
+  <t t-name="project_maestro_timer.TaskTimerWidget">
+    <div class="o_task_timer d-flex align-items-center gap-2 py-1 flex-wrap">
+
+      <!-- ESTADO: ATIVO (running) ─────────────────────────────── -->
+      <t t-if="isRunning">
+        <!-- Display do tempo -->
+        <span class="o_timer_display badge bg-danger px-3 py-2 fs-6 font-monospace d-flex align-items-center gap-1">
+          <span class="o_timer_dot"/>
+          <t t-esc="elapsedFormatted"/>
+        </span>
+        <!-- Pausar -->
+        <button class="btn btn-sm btn-warning d-flex align-items-center gap-1"
+                t-on-click="onPause" title="Pausar cronômetro">
+          <i class="fa fa-pause"/>
+          <span class="d-none d-sm-inline">Pausar</span>
+        </button>
+        <!-- Concluir / Salvar -->
+        <button class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1"
+                t-on-click="onStop" title="Parar e registrar o tempo">
+          <i class="fa fa-stop"/>
+          <span class="d-none d-sm-inline">Concluir</span>
+        </button>
+      </t>
+
+      <!-- ESTADO: PAUSADO ─────────────────────────────────────── -->
+      <t t-if="isPaused">
+        <!-- Tempo acumulado com indicador de pausa -->
+        <span class="o_timer_display badge bg-warning text-dark px-3 py-2 fs-6 font-monospace d-flex align-items-center gap-1">
+          <i class="fa fa-pause fa-xs"/>
+          <t t-esc="elapsedFormatted"/>
+        </span>
+        <!-- Retomar -->
+        <button class="btn btn-sm btn-success d-flex align-items-center gap-1"
+                t-on-click="onStart" title="Retomar cronômetro">
+          <i class="fa fa-play"/>
+          <span class="d-none d-sm-inline">Retomar</span>
+        </button>
+        <!-- Concluir -->
+        <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1"
+                t-on-click="onStop" title="Salvar tempo acumulado e encerrar">
+          <i class="fa fa-check"/>
+          <span class="d-none d-sm-inline">Concluir</span>
+        </button>
+      </t>
+
+      <!-- ESTADO: IDLE ────────────────────────────────────────── -->
+      <t t-if="isIdle">
+        <button class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"
+                t-on-click="onStart" title="Iniciar cronômetro nesta tarefa">
+          <i class="fa fa-play"/>
+          <span>Iniciar Cronômetro</span>
+        </button>
+      </t>
+
+    </div>
+  </t>
+
+</templates>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend task form: cronômetro logo abaixo da button_box -->
+    <record id="view_project_task_form_timer" model="ir.ui.view">
+        <field name="name">project.task.form.timer</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="after">
+                <div class="o_task_timer_bar d-flex align-items-center px-3 py-1 border-bottom"
+                     groups="hr_timesheet.group_hr_timesheet_user">
+                    <!-- campos computados usados pelo widget -->
+                    <field name="user_timer_status"  invisible="1"/>
+                    <field name="user_timer_accumulated" invisible="1"/>
+                    <!-- widget do cronômetro -->
+                    <field name="user_timer_status"
+                           widget="task_timer"
+                           nolabel="1"
+                           readonly="0"/>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Pivot view ──────────────────────────────────────────────── -->
+    <record id="view_project_timer_report_pivot" model="ir.ui.view">
+        <field name="name">project.timer.report.pivot</field>
+        <field name="model">project.timer.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Eficácia por Período" disable_linking="True">
+                <field name="employee_id" type="row"/>
+                <field name="month"       type="col"/>
+                <field name="unit_amount" type="measure" string="Horas"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ── Graph (bar) view ────────────────────────────────────────── -->
+    <record id="view_project_timer_report_graph" model="ir.ui.view">
+        <field name="name">project.timer.report.graph</field>
+        <field name="model">project.timer.report</field>
+        <field name="arch" type="xml">
+            <graph string="Eficácia por Período" type="bar" stacked="True">
+                <field name="employee_id" type="row"/>
+                <field name="unit_amount" type="measure" string="Horas"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ── List (detail) view ──────────────────────────────────────── -->
+    <record id="view_project_timer_report_list" model="ir.ui.view">
+        <field name="name">project.timer.report.list</field>
+        <field name="model">project.timer.report</field>
+        <field name="arch" type="xml">
+            <list string="Registro de Horas" create="false" edit="false" delete="false">
+                <field name="date"/>
+                <field name="week"        string="Semana"/>
+                <field name="month"       string="Mês"/>
+                <field name="year"        string="Ano"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="unit_amount" string="Horas" widget="float_time"
+                       sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ── Search view ─────────────────────────────────────────────── -->
+    <record id="view_project_timer_report_search" model="ir.ui.view">
+        <field name="name">project.timer.report.search</field>
+        <field name="model">project.timer.report</field>
+        <field name="arch" type="xml">
+            <search string="Relatório de Eficácia">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+
+                <!-- Atalhos de período -->
+                <filter string="Esta semana"  name="this_week"
+                        domain="[('date', '&gt;=', (context_today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Este mês"     name="this_month"
+                        domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                <filter string="Este ano"     name="this_year"
+                        domain="[('date', '&gt;=', context_today().strftime('%Y-01-01'))]"/>
+
+                <separator/>
+
+                <!-- Agrupar por -->
+                <group expand="0" string="Agrupar por">
+                    <filter string="Funcionário"  name="group_employee"   context="{'group_by': 'employee_id'}"/>
+                    <filter string="Departamento" name="group_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Projeto"      name="group_project"    context="{'group_by': 'project_id'}"/>
+                    <filter string="Semana"       name="group_week"       context="{'group_by': 'week'}"/>
+                    <filter string="Mês"          name="group_month"      context="{'group_by': 'month'}"/>
+                    <filter string="Ano"          name="group_year"       context="{'group_by': 'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ── Action ──────────────────────────────────────────────────── -->
+    <record id="action_project_timer_report" model="ir.actions.act_window">
+        <field name="name">Eficácia de Atividades</field>
+        <field name="res_model">project.timer.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{
+            'search_default_this_month': 1,
+            'search_default_group_employee': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nenhuma hora registrada ainda.
+            </p>
+            <p>
+                Inicie o cronômetro em uma tarefa e o tempo registrado
+                aparecerá aqui, segmentado por semana, mês e ano.
+            </p>
+        </field>
+    </record>
+
+    <!-- ── Menu items ──────────────────────────────────────────────── -->
+    <menuitem id="menu_project_timer_report"
+              name="Eficácia de Atividades"
+              parent="project.menu_project_report"
+              action="action_project_timer_report"
+              groups="hr_timesheet.group_hr_timesheet_user"
+              sequence="25"/>
+
+</odoo>
