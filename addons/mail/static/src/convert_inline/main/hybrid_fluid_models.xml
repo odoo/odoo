@@ -1,0 +1,10 @@
+<templates>
+    <t t-name="mail.HybridFluidCell">
+        <div t-att="this.model.renderAttributes()">
+            <div t-att="this.model.renderAttributes('styleContext')">
+                <t t-call="mail.NodePositionManager"
+                    t-call-context="this.nodePositionManager.renderContext({ renderPositionedNodes: this.renderPositionedNodes })"/>
+            </div>
+        </div>
+    </t>
+</templates>
