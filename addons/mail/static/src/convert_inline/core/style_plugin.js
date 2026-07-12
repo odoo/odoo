@@ -1,8 +1,9 @@
 import { Plugin } from "../plugin";
 // import { withSequence } from "@html_editor/utils/resource";
-import { parseCssText, parseCssValue, parseSelector } from "@mail/convert_inline/css_parsers";
+import { parseCssText, parseSelector } from "@mail/convert_inline/css_parsers";
 import { registry } from "@web/core/registry";
 import { StyleInfo } from "./style_models";
+import { DYNAMIC_CSS_EVAL_EXPRESSIONS } from "./utils";
 
 export class StylePlugin extends Plugin {
     static id = "style";
@@ -62,21 +63,17 @@ export class StylePlugin extends Plugin {
 
     processCSSValues(element, styleInfo) {
         this.computeDynamicValues(element, styleInfo);
-        this.fixRemUnitSimpleValues(element, styleInfo);
+        this.fixRawStyleValues(element, styleInfo);
     }
 
-    fixRemUnitSimpleValues(element, styleInfo) {
-        for (const [propertyName, propertyInfo] of styleInfo) {
-            if (!propertyInfo.value.includes("rem")) {
-                continue;
-            }
-            // TODO EGGMAIL: this does not handle shorthand properties where
-            // part of the value is in rem. To fix when issues arise.
-            const value = parseCssValue(propertyInfo.value);
-            if (value.unit !== "rem") {
-                continue;
-            }
-            propertyInfo.value = this.getStylePropertyValue(element, propertyName);
+    fixRawStyleValues(element, styleInfo) {
+        for (const [propertyName, propertyInfo] of [...styleInfo]) {
+            this.trigger("fix_raw_style_values_handlers", {
+                element,
+                propertyName,
+                propertyInfo,
+                styleInfo,
+            });
         }
     }
 
@@ -92,7 +89,7 @@ export class StylePlugin extends Plugin {
             // interpret computed values as declared values. In case of bug
             // use MSO-specific style values to force it to use computed
             // values (e.g. mso-line-height-rule:exactly; for line-height).
-            if (!this.isDynamicCSSValue(propertyInfo.value)) {
+            if (this.isDynamicCSSValue(propertyInfo.value)) {
                 const simpleVarsValue = this.getSimpleVarsValue(
                     propertyInfo.value,
                     element,
@@ -114,7 +111,15 @@ export class StylePlugin extends Plugin {
     }
 
     isDynamicCSSValue(value) {
-        return !value.includes("calc(") && !value.includes("var(");
+        for (const expr of DYNAMIC_CSS_EVAL_EXPRESSIONS) {
+            if (value.includes(`${expr}(`)) {
+                return true;
+            }
+        }
+        if (value.includes("var(")) {
+            return true;
+        }
+        return false;
     }
 
     splitSimpleVars(value) {
@@ -152,7 +157,7 @@ export class StylePlugin extends Plugin {
             }
             computedStyle ??= this.getComputedStyle(element);
             const partValue = computedStyle.getPropertyValue(part.simpleVar);
-            if (!this.isDynamicCSSValue(partValue)) {
+            if (this.isDynamicCSSValue(partValue)) {
                 const recursionValue = this.getSimpleVarsValue(partValue, element, computedStyle);
                 if (recursionValue === undefined) {
                     return;
@@ -164,7 +169,7 @@ export class StylePlugin extends Plugin {
             }
         }
         const recombination = valueParts.map((part) => part.value).join("");
-        if (this.isDynamicCSSValue(recombination)) {
+        if (!this.isDynamicCSSValue(recombination)) {
             // TODO EGGMAIL: Fix approximation: calc( or var( may be
             // part of a legit value, and other css functions may be
             // invalid for a given mail client.
@@ -195,10 +200,10 @@ export class StylePlugin extends Plugin {
         // Start sequence at 1 because 0 is reserved for default values
         let sequence = 1;
         for (const ruleInfo of ruleInfos) {
-            styleInfo.merge(ruleInfo.styleInfo, sequence);
+            styleInfo.merge(ruleInfo.styleInfo, { sequence });
             sequence++;
         }
-        styleInfo.merge(this.convertToStyleInfo(element.style), sequence);
+        styleInfo.merge(this.convertToStyleInfo(element.style), { sequence });
         this.processCSSValues(element, styleInfo);
         nodeToStyleInfo.set(element, styleInfo);
         return styleInfo;
@@ -225,7 +230,9 @@ export class StylePlugin extends Plugin {
         } else {
             styleInfo = this.computeStyleInfo(element);
         }
-        return styleInfo;
+        // Return a copy of the rawStyleInfo, so that the caller can write
+        // on it
+        return StyleInfo.from(styleInfo);
     }
 
     /**

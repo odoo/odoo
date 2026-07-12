@@ -1,3 +1,4 @@
+import { Operation } from "@html_builder/core/operation";
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { htmlField, HtmlField, htmlFieldProps } from "@html_editor/fields/html_field";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
@@ -20,7 +21,6 @@ import {
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -55,7 +55,6 @@ export class MassMailingHtmlField extends HtmlField {
                 ...registry.category("mass-mailing-html-conversion-plugins").getAll(),
             ],
             bundles: ["mass_mailing.assets_iframe_style"],
-            services: this.env.services,
         });
         this.themeService = useService("mass_mailing.themes");
         this.ui = useService("ui");
@@ -245,7 +244,7 @@ export class MassMailingHtmlField extends HtmlField {
         } else if (this.withBuilder) {
             return this.getBuilderConfig();
         } else {
-            return this.getSimpleEditorConfig();
+            return this.getBasicEditorConfig();
         }
     }
 
@@ -272,10 +271,11 @@ export class MassMailingHtmlField extends HtmlField {
             record: this.props.record,
             mobileBreakpoint: "md",
             onEditorReady: () => this.commitChanges(),
+            measureReference: this.converter.measureReference,
         };
     }
 
-    getSimpleEditorConfig() {
+    getBasicEditorConfig() {
         const config = super.getConfig();
         const codeViewCommand = [config.resources?.user_commands]
             .filter(Boolean)
@@ -287,13 +287,14 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             onEditorReady: () => this.commitChanges(),
+            measureReference: this.converter.measureReference,
             Plugins: [
                 ...MAIN_EDITOR_PLUGINS,
                 ...DYNAMIC_FIELD_PLUGINS,
                 ...registry.category("mail-core-plugins").getAll(),
             ]
                 .filter((P) => !["banner", "prompt", "link"].includes(P.id))
-                .concat(registry.category("basic-editor-plugins").getAll()),
+                .concat(registry.category("mass_mailing-basic-editor-plugins").getAll()),
         };
     }
 
@@ -374,7 +375,7 @@ export class MassMailingHtmlField extends HtmlField {
         if (isTargetOutsideActiveElement && !shouldIgnoreTarget) {
             this.activeElement = undefined;
             this.onBlur();
-        } else if (this.iframeWrapperRef().contains(ev.target)) {
+        } else if (this.iframeWrapperRef()?.contains(ev.target)) {
             this.activeElement = this.iframeWrapperRef();
         }
     }
@@ -405,10 +406,39 @@ export class MassMailingHtmlField extends HtmlField {
      * Ensure that every SVG and WEBP images are converted to PNG, and create
      * an attachment for every b64 encoded image, to ensure every image src
      * is not a data url.
+     * Prevent the user from making additional changes during the operation.
      * @override
      */
-    savePendingImages(content) {
-        return this.editor.shared["imageEmailFormat"].sanitizeImages(content);
+    async savePendingImages(content) {
+        const operation = this.editor.shared.operation
+            ? this.editor.shared.operation
+            : new Operation(this.editor.document);
+        let result;
+        await operation.next(
+            async () => {
+                try {
+                    result = await this.editor.shared.emailImageFormat.sanitizeImages(content);
+                } finally {
+                    const lastChangeIdSnapshot = this.lastChangeId;
+                    if (
+                        this.editor.shared.history.commit() &&
+                        this.lastChangeId === lastChangeIdSnapshot + 1
+                    ) {
+                        // All pending image changes were done in both the content
+                        // clone and the editable, so if an editor commit was made
+                        // during this operation, it is reasonable to assume that
+                        // the changes it contains were also done in content, which
+                        // will be sent to the server. Therefore this commit
+                        // onChange should not have increased lastChangeId and the
+                        // snapshotted value is restored, allowing the field to
+                        // not be dirty after updateValue.
+                        this.lastChangeId = lastChangeIdSnapshot;
+                    }
+                }
+            },
+            { canTimeout: false, shouldInterceptClick: true }
+        );
+        return result;
     }
 
     /**
@@ -486,23 +516,6 @@ export class MassMailingHtmlField extends HtmlField {
             () => {}
         );
         record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
-    }
-
-    /**
-     * TODO EGGMAIL: remove in dev branch
-     * @deprecated
-     */
-    preprocessFilterDomains(htmlEl) {
-        htmlEl.querySelectorAll("[data-filter-domain]").forEach((el) => {
-            let domain;
-            try {
-                domain = new Domain(JSON.parse(el.dataset.filterDomain));
-            } catch {
-                el.setAttribute("t-if", "false");
-                return;
-            }
-            el.setAttribute("t-if", `object.filtered_domain(${domain.toString()})`);
-        });
     }
 }
 

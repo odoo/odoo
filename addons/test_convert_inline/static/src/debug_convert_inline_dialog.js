@@ -1,4 +1,5 @@
-import { DIMENSIONS, useEmailHtmlConverter } from "@mail/convert_inline/hooks";
+import { DIMENSIONS } from "@mail/convert_inline/core/utils";
+import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
 import { Component, onMounted, proxy, signal, types } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -34,7 +35,6 @@ export class DebugConvertInlineDialog extends Component {
                 ...registry.category("mass-mailing-html-conversion-plugins").getAll(),
             ],
             bundles: ["mass_mailing.assets_iframe_style"],
-            services: this.env.services,
             targetRef: this.referenceIframeRef,
             isVisible: true,
         });

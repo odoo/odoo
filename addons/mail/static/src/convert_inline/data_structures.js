@@ -17,6 +17,10 @@ export class UniqueArray {
         return this.array.at(index);
     }
 
+    filter(callbackFn, thisArg) {
+        return this.array.filter(callbackFn, thisArg);
+    }
+
     push(...items) {
         const newItemSet = new Set();
         const newItemArray = [];
@@ -97,6 +101,10 @@ export class UniqueArray {
 
     map(callbackFn, thisArg) {
         return this.array.map(callbackFn, thisArg);
+    }
+
+    flatMap(callbackFn, thisArg) {
+        return this.array.flatMap(callbackFn, thisArg);
     }
 
     [Symbol.iterator]() {

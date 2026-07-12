@@ -2,9 +2,9 @@ import { Component, proxy, signal } from "@odoo/owl";
 import { CustomColorPicker as ColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import {
     isColorGradient,
-    standardizeGradient,
     rgbaToHex,
     convertCSSColorToRgba,
+    extractGradientData,
 } from "@web/core/utils/colors";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -70,40 +70,27 @@ export class GradientPicker extends Component {
     }
 
     setGradientFromString(gradient) {
-        if (!gradient || !isColorGradient(gradient)) {
+        const data = extractGradientData(gradient);
+        if (!data) {
             return;
         }
-        gradient = standardizeGradient(gradient);
-        const colors = [
-            ...gradient.matchAll(
-                /(#[0-9a-f]{6}|rgba?\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+\s*[,\s*[0-9.]*]?\s*\)|[a-z]+)\s*([[0-9]+%]?)/g
-            ),
-        ].filter((color) => rgbaToHex(color[1]) !== "#");
+        this.colors.splice(0, this.colors.length, ...data.colors);
+        this.state.type = data.type;
+        this.state.repeating = data.repeating;
 
-        this.colors.splice(0, this.colors.length);
-        for (const color of colors) {
-            this.colors.push({ hex: rgbaToHex(color[1]), percentage: color[2].replace("%", "") });
-        }
-
-        const isLinear = gradient.includes("linear-gradient(");
-        const isRadial = gradient.includes("radial-gradient(");
-        const isConic = gradient.includes("conic-gradient(");
-
-        this.state.type = isLinear ? "linear" : isRadial ? "radial" : "conic";
-        this.state.repeating = gradient.startsWith("repeating-");
+        const isLinear = data.type === "linear";
+        const isRadial = data.type === "radial";
+        const isConic = data.type === "conic";
 
         if (isRadial) {
-            const size = gradient.match(/(closest|farthest)-(side|corner)/);
-            this.state.size = size ? size[0] : "farthest-corner";
+            this.state.size = data.size;
         }
         if (isLinear || isConic) {
-            const angle = gradient.match(/(-?[0-9]+)deg/);
-            this.state.angle = angle ? parseInt(angle[1]) : 0;
+            this.state.angle = data.angle;
         }
         if (isRadial || isConic) {
-            const position = gradient.match(/ at (-?[0-9]+)% (-?[0-9]+)%/) || ["", "50", "50"];
-            this.positions.x = position[1];
-            this.positions.y = position[2];
+            this.positions.x = data.position.x;
+            this.positions.y = data.position.y;
         }
 
         this.updateCssGradients();

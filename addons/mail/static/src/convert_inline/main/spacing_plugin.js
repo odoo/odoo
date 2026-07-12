@@ -1,5 +1,9 @@
-import { isPhrasingContent, paragraphRelatedElements } from "@html_editor/utils/dom_info";
-import { DIMENSIONS } from "../hooks";
+import {
+    isListElement,
+    isListItemElement,
+    isPhrasingContent,
+    paragraphRelatedElements,
+} from "@html_editor/utils/dom_info";
 import { Plugin } from "../plugin";
 import { StyleInfo } from "../core/style_models";
 import { Rules } from "../core/rules_models";
@@ -7,11 +11,16 @@ import { registry } from "@web/core/registry";
 import { parseCssValue } from "../css_parsers";
 import { SpacingNode } from "./spacing_models";
 import { withSequence } from "@html_editor/utils/resource";
-import { DIRECTION_VARIANTS } from "../core/utils";
+import { ALLOWED_SPACING_UNITS, DIMENSIONS, DIRECTION_VARIANTS } from "../core/utils";
 
 const { DESKTOP } = DIMENSIONS;
 
 export const DEFAULT_SPACING_SEQUENCE = 20;
+// TODO EGGMAIL: RTL + language check (vertical)
+const SPACING_INLINE = {
+    start: "left",
+    end: "right",
+};
 
 /**
  * TODO EGGMAIL: handle vertical alignment? (should be done at a higher level),
@@ -41,6 +50,9 @@ export class SpacingPlugin extends Plugin {
         "getMarginStyleInfo",
         "buildMarginNode",
         "buildPaddingNode",
+        "hasMarginAuto",
+        "hasMarginSpacing",
+        "hasPaddingSpacing",
         "validateSpacingValue",
     ];
     resources = {
@@ -50,7 +62,10 @@ export class SpacingPlugin extends Plugin {
             DEFAULT_SPACING_SEQUENCE,
             this.applyDefaultSpacing.bind(this)
         ),
+        attribute_rules_processors: [[this.provideAttributeRules.bind(this), SpacingPlugin.id]],
         style_rules_processors: [[this.provideStyleRules.bind(this), SpacingPlugin.id]],
+        fix_raw_style_values_handlers: this.fixSpacingInline.bind(this),
+        fix_rem_units_overrides: this.fixSpacingRemUnits.bind(this),
         merge_fact_overrides: this.mergeSpacingInfo.bind(this),
     };
 
@@ -58,6 +73,85 @@ export class SpacingPlugin extends Plugin {
         this.marginStyleRules = new Rules();
         this.paddingStyleRules = new Rules();
         this.provideSpacingStyleRules();
+    }
+
+    fixSpacingInline({ element, propertyName, propertyInfo, styleInfo }) {
+        // TODO EGGMAIL: handle RTL
+        if (!propertyName.match(/^(margin|padding)-inline(-(start|end))?$/)) {
+            return false;
+        }
+        const values = this.decomposeSpacingShorthandValue(propertyInfo.value);
+        if (values.length === 0 || values.length > 2) {
+            return false;
+        }
+        const spacing = propertyName.startsWith("margin") ? "margin" : "padding";
+        const ending = propertyName.split("-").at(-1);
+        const sequence = propertyInfo.sequence;
+        const priority = propertyInfo.priority;
+        const indexByPropertyName = styleInfo.getIndexByPropertyName();
+        const index = indexByPropertyName.get(propertyName);
+        styleInfo.delete(propertyName);
+        const fixedStyleInfo = new StyleInfo();
+        if (values.length === 1) {
+            if (ending === "inline") {
+                for (const side in SPACING_INLINE) {
+                    fixedStyleInfo.setProperty(
+                        `${spacing}-${side}`,
+                        values.at(0),
+                        priority,
+                        sequence
+                    );
+                }
+            } else {
+                fixedStyleInfo.setProperty(
+                    `${spacing}-${ending}`,
+                    values.at(0),
+                    priority,
+                    sequence
+                );
+            }
+        } else if (values.length === 2) {
+            let index = 0;
+            for (const side in SPACING_INLINE) {
+                fixedStyleInfo.setProperty(
+                    `${spacing}-${side}`,
+                    values.at(index),
+                    priority,
+                    sequence
+                );
+                index++;
+            }
+        }
+        styleInfo.merge(fixedStyleInfo, { index });
+        return true;
+    }
+
+    fixSpacingRemUnits({ element, propertyName, propertyInfo, styleInfo }) {
+        let getStyleInfo;
+        if (propertyName.startsWith("margin")) {
+            getStyleInfo = this.getMarginStyleInfo.bind(this);
+        } else if (propertyName.startsWith("padding")) {
+            getStyleInfo = this.getPaddingStyleInfo.bind(this);
+        } else {
+            return;
+        }
+        const partialStyleInfo = new StyleInfo();
+        partialStyleInfo.set(propertyName, propertyInfo);
+        const decomposedStyleInfo = getStyleInfo(partialStyleInfo, element);
+        if (decomposedStyleInfo.size === 0) {
+            return;
+        }
+        const indexByPropertyName = styleInfo.getIndexByPropertyName();
+        const index = indexByPropertyName.get(propertyName);
+        styleInfo.delete(propertyName);
+        const convertedStyleInfo = new StyleInfo();
+        for (const [propertyName, propertyInfo] of decomposedStyleInfo) {
+            if (this.convertRemPropertyInfoToPx({ element, propertyName, propertyInfo })) {
+                convertedStyleInfo.set(propertyName, propertyInfo);
+            }
+        }
+        styleInfo.merge(convertedStyleInfo, { index });
+        return true;
     }
 
     addSpacingFacts(facts, { referenceNode }) {
@@ -68,12 +162,29 @@ export class SpacingPlugin extends Plugin {
     }
 
     mergeSpacingInfo({ fact, isConstraint }) {
-        if (fact === "desktopMarginStyleInfo" && !isConstraint) {
+        if (isConstraint) {
+            return;
+        }
+        // TODO EGGMAIL: maybe combine padding of ancestor with margin and padding of descendant?
+        // currently margin of ancestor is preserved, and padding of descendant is preserved
+        // which is ok as long as they have the same dimensions
+        if (fact === "desktopMarginStyleInfo") {
             // Prevent override of desktopMarginStyleInfo:
             // use case is top -> down traversal, margin info of the ancestor is
             // kept.
             return true;
         }
+    }
+
+    ensureResponsiveElementWidth(styleInfo, referenceNode) {
+        const widthInfo = styleInfo.get("width");
+        if (widthInfo) {
+            return;
+        }
+        // Enforce a responsive width based on its desktop width.
+        const width = this.getStylePropertyValue(referenceNode, "width");
+        styleInfo.setProperty("width", "100%");
+        styleInfo.setProperty("max-width", width);
     }
 
     // TODO EGGMAIL NOW: generalize the content of this function, there are
@@ -82,12 +193,26 @@ export class SpacingPlugin extends Plugin {
     // - horizontal centering (vertical centering does not happen on a spacing table, it should
     // happen more globally (and requires handling (TODO)))
     //
-    buildMarginNode(facts) {
+    buildMarginNode(emailNode, spacingNodeArgs = {}) {
+        if (emailNode.layout.ancestorTag === "TABLE") {
+            // TODO EGGMAIL: maybe move in a separate plugin handling table issues?
+            const rootRef = emailNode.layout.getRef();
+            const { number, unit } = parseCssValue(rootRef.styleInfo.getPropertyValue("width"));
+            if (unit === "px" && number > 0) {
+                spacingNodeArgs.refs ??= {};
+                spacingNodeArgs.refs.root ??= {};
+                spacingNodeArgs.refs.root.style ??= {};
+                spacingNodeArgs.refs.root.style = StyleInfo.from(
+                    spacingNodeArgs.refs.root.style
+                ).merge(StyleInfo.from({ "table-layout": "fixed" }));
+            }
+        }
+        const facts = emailNode.analysis.facts;
         // TODO EGGMAIL: discard negative paddings
         // for % values, use computed value in px (desktop mode) instead
-        const marginNode = new SpacingNode();
+        const marginNode = new SpacingNode(spacingNodeArgs);
         const marginLayout = marginNode.layout;
-        const styleInfo = facts.desktopMarginStyleInfo;
+        const styleInfo = facts.desktopMarginStyleInfo || new StyleInfo();
         let isRelevant = false;
         const setAttributes = (options, ref) => {
             marginLayout.setAttributes(options, ref);
@@ -108,24 +233,36 @@ export class SpacingPlugin extends Plugin {
             setAttributes({ attributes: { align: "left" } });
             setAttributes({ attributes: { align: "left" } }, "cell");
         }
+        const referenceNode = emailNode.firstReferenceNode;
+        if (
+            referenceNode &&
+            this.isBlock(referenceNode) &&
+            (styleInfo.getPropertyValue("margin-left") === "auto" ||
+                styleInfo.getPropertyValue("margin-right") === "auto")
+        ) {
+            const styleInfo = emailNode.layout.getRef().styleInfo;
+            // TODO EGGMAIL: need MSO fallback?s
+            styleInfo.setProperty("display", "inline-block");
+            this.ensureResponsiveElementWidth(styleInfo, referenceNode);
+        }
         for (const side of DIRECTION_VARIANTS) {
             const value = styleInfo.getPropertyValue(`margin-${side}`);
             const { number, unit } = parseCssValue(value);
-            if (number > 0 && unit === "px") {
+            if (number > 0 && (unit === "px" || unit === "em")) {
                 // The margin spacing node is meant as a wrapper and replaces
                 // static margin by padding on the main wrapper cell.
                 setAttributes({ style: { [`padding-${side}`]: value } }, "cell");
             }
         }
-        if (isRelevant) {
-            return marginNode;
-        }
+        marginNode.layout.setAttributes(this.getSpacingLayoutContext(emailNode), "cell");
+        return { marginNode, isRelevant };
     }
 
-    buildPaddingNode(facts) {
-        const paddingNode = new SpacingNode();
+    buildPaddingNode(emailNode, spacingNodeArgs = {}) {
+        const facts = emailNode.analysis.facts;
+        const paddingNode = new SpacingNode(spacingNodeArgs);
         const paddingLayout = paddingNode.layout;
-        const styleInfo = facts.desktopPaddingStyleInfo;
+        const styleInfo = facts.desktopPaddingStyleInfo || new StyleInfo();
         let isRelevant = false;
         const setAttributes = (options, ref) => {
             paddingLayout.setAttributes(options, ref);
@@ -134,58 +271,100 @@ export class SpacingPlugin extends Plugin {
         for (const side of DIRECTION_VARIANTS) {
             const value = styleInfo.getPropertyValue(`padding-${side}`);
             const { number, unit } = parseCssValue(value);
-            if (number > 0 && unit === "px") {
+            if (number > 0 && (unit === "px" || unit === "em")) {
                 setAttributes({ style: { [`padding-${side}`]: value } }, "cell");
             }
         }
-        if (isRelevant) {
-            return paddingNode;
+        paddingNode.layout.setAttributes(this.getSpacingLayoutContext(emailNode), "cell");
+        return { paddingNode, isRelevant };
+    }
+
+    getSpacingLayoutContext(emailNode) {
+        const contextNode = this.getContextNode(emailNode);
+        let spacingStyleInfo = this.getTableContextStyleInfo(contextNode);
+        if (emailNode.analysis.facts.spacingContextStyleInfo) {
+            spacingStyleInfo = spacingStyleInfo.merge(
+                emailNode.analysis.facts.spacingContextStyleInfo
+            );
         }
+        return { style: spacingStyleInfo };
+    }
+
+    hasPaddingSpacing(analysis) {
+        return (
+            analysis.facts.desktopPaddingStyleInfo &&
+            analysis.facts.desktopPaddingStyleInfo.size !== 0
+        );
+    }
+
+    hasMarginSpacing(analysis) {
+        return (
+            analysis.facts.desktopMarginStyleInfo &&
+            analysis.facts.desktopMarginStyleInfo.size !== 0
+        );
+    }
+
+    hasMarginAuto(referenceNode) {
+        const rawStyleInfo = this.getRawStyleInfo(referenceNode);
+        const marginStyleInfo = this.getMarginStyleInfo(rawStyleInfo, referenceNode);
+        return (
+            marginStyleInfo.getPropertyValue("margin-left") === "auto" ||
+            marginStyleInfo.getPropertyValue("margin-right") === "auto"
+        );
     }
 
     applyDefaultSpacing(layout, { emailNode }) {
-        let contextNode;
-        let currentNode = emailNode;
-        do {
-            contextNode = currentNode.lastReferenceNode;
-            currentNode = currentNode.parent;
-        } while (currentNode && !contextNode);
-        if (!contextNode) {
-            contextNode = this.config.referenceDocument.body;
-        }
-        if (!this.isBlock(contextNode) || isPhrasingContent(contextNode)) {
+        const contextNode = this.getContextNode(emailNode);
+        const renderNode = this.config.referenceDocument.createElement(
+            emailNode.layout.descendantTag
+        );
+        if (
+            !this.isBlock(contextNode, { evaluateDisconnected: true }) ||
+            isPhrasingContent(renderNode) ||
+            // TODO EGGMAIL: are there cases where LI and UL elements have
+            // necessary custom spacing? (list-group is already handled in list_strategy)
+            isListElement(renderNode) ||
+            isListItemElement(renderNode)
+        ) {
             return layout;
         }
-        const context = { style: this.getTableContextStyleInfo(contextNode) };
         if (
-            emailNode.analysis.facts.desktopMarginStyleInfo &&
+            this.hasMarginSpacing(emailNode.analysis) &&
             !paragraphRelatedElements.includes(layout.ancestorTag)
         ) {
-            const marginNode = this.buildMarginNode(emailNode.analysis.facts);
-            if (marginNode) {
-                marginNode.layout.setAttributes(context, "cell");
+            const { marginNode, isRelevant } = this.buildMarginNode(emailNode, {
+                refs: { root: { style: { width: "100%" } } },
+            });
+            if (isRelevant) {
                 emailNode.marginNode = marginNode;
             }
         }
-        if (
-            emailNode.analysis.facts.desktopPaddingStyleInfo &&
-            !paragraphRelatedElements.includes(layout.descendantTag)
-        ) {
-            const paddingNode = this.buildPaddingNode(emailNode.analysis.facts);
-            if (paddingNode) {
-                paddingNode.layout.setAttributes(context, "cell");
-                emailNode.paddingNode = paddingNode;
+        if (this.hasPaddingSpacing(emailNode.analysis)) {
+            const { paddingNode, isRelevant } = this.buildPaddingNode(emailNode, {
+                refs: { root: { style: { width: "100%" } } },
+            });
+            if (isRelevant) {
+                if (paragraphRelatedElements.includes(layout.descendantTag)) {
+                    // inline style margin is allowed on paragraph related elements
+                    // but not padding. To support padding, wrap the element in
+                    // a spacing table (the reverse can not be done because a
+                    // table inside a paragraph is illegal html).
+                    emailNode.marginNode = paddingNode;
+                } else {
+                    emailNode.paddingNode = paddingNode;
+                }
             }
         }
         return layout;
     }
 
     cacheSpacingStyleInfo() {
-        const treeWalker = this.createReferenceTreeWalker((node) =>
-            node.nodeType === Node.ELEMENT_NODE
-                ? NodeFilter.FILTER_ACCEPT
-                : NodeFilter.FILTER_REJECT
-        );
+        const treeWalker = this.createReferenceTreeWalker({
+            filter: (node) =>
+                node.nodeType === Node.ELEMENT_NODE
+                    ? NodeFilter.FILTER_ACCEPT
+                    : NodeFilter.FILTER_REJECT,
+        });
         let element = treeWalker.root;
         do {
             this.getRawStyleInfo(element);
@@ -260,14 +439,27 @@ export class SpacingPlugin extends Plugin {
             const values = this.decomposeSpacingShorthandValue(propertyValue);
             return values.every((value) => {
                 const { number, unit } = parseCssValue(value);
-                return number !== undefined && (number === 0 || (number > 0 && unit === "px"));
+                return (
+                    number !== undefined &&
+                    (number === 0 || (number > 0 && ALLOWED_SPACING_UNITS.has(unit)))
+                );
             });
         } else {
             const { number, unit } = parseCssValue(propertyValue);
-            return number === 0 || (number > 0 && unit === "px");
+            return number === 0 || (number > 0 && ALLOWED_SPACING_UNITS.has(unit));
         }
     }
 
+    provideAttributeRules(rules) {
+        rules.require("cellpadding", {
+            when: ({ referenceNode }) => referenceNode.nodeName === "TABLE",
+            how: () => ({ attributeValue: "0" }),
+        });
+    }
+
+    /**
+     * Style rules for nodes that do not allow the default spacing.
+     */
     provideStyleRules(rules) {
         // Allow paragraph-related elements to keep their top/bottom margins
         rules.allow(/^margin(-(top|bottom))?$/, {
@@ -280,9 +472,54 @@ export class SpacingPlugin extends Plugin {
         rules.allow(/^margin(-(top|right|bottom|left))?$/, {
             when: [
                 ({ referenceNode }) =>
-                    !this.isBlock(referenceNode) || isPhrasingContent(referenceNode),
+                    !this.isBlock(referenceNode, { evaluateDisconnected: true }) ||
+                    isPhrasingContent(referenceNode),
                 this.validateSpacingValue.bind(this),
             ],
+        });
+        // allow inline phrasing content to have a positive padding if width is not 100%
+        // of its container
+        rules.allow(/^padding(-(top|right|bottom|left))?$/, {
+            when: [
+                ({ referenceNode }) =>
+                    !this.isBlock(referenceNode, { evaluateDisconnected: true }) ||
+                    isPhrasingContent(referenceNode),
+                this.validateSpacingValue.bind(this),
+                ({ referenceNode }) => {
+                    const rawStyleInfo = this.getRawStyleInfo(referenceNode);
+                    // TODO EGGMAIL: could be improved by computing the available space and ensuring
+                    // the element + spacing is smaller than that (box-sizing: content-box issue)
+                    // but this is still not perfect as the width can be changed by a window
+                    // resize and the inline element can become too big with padding.
+                    return rawStyleInfo.getPropertyValue("width") !== "100%";
+                },
+            ],
+        });
+        // HR can have a userAgent style which needs to be countered
+        const isHR = ({ referenceNode }) => referenceNode.nodeName === "HR";
+        // block HR margin no matter what, to make it "fail".
+        rules.block(/^margin(-(top|right|bottom|left))?$/, { when: isHR });
+        // HR margin is handled separately from the inline style by the spacing
+        // plugin, but its inline style margin must be forced to 0.
+        rules.require("margin", {
+            when: isHR,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
+
+        // blockquote (remove margin against useragent)
+        const isBlockquote = ({ referenceNode }) => referenceNode.nodeName === "BLOCKQUOTE";
+        rules.block(/^margin-(left|top|right)$/, { when: isBlockquote });
+        rules.require("margin-left", {
+            when: isBlockquote,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
+        rules.require("margin-right", {
+            when: isBlockquote,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
+        rules.require("margin-top", {
+            when: isBlockquote,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
         });
     }
 }

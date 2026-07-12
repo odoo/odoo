@@ -17,7 +17,7 @@ export class RulesPlugin extends Plugin {
     ];
     resources = {
         on_layout_dimensions_updated_handlers: this.onLayoutDimensionsUpdated.bind(this),
-        on_will_load_reference_content_handlers: this.specifyRules.bind(this),
+        on_will_start_conversion_handlers: this.specifyRules.bind(this),
     };
 
     setup() {
@@ -64,6 +64,8 @@ export class RulesPlugin extends Plugin {
         return targetElement;
     }
 
+    // TODO EGGMAIL: allow providing callbacks to do extra processing during
+    // processData
     filterAttributes(attributes, referenceNode, rules = this.attributeRules) {
         if (typeof referenceNode === "string") {
             referenceNode = this.config.referenceDocument.createElement(referenceNode);
@@ -87,10 +89,11 @@ export class RulesPlugin extends Plugin {
                 },
             ],
             onPass: (attributeName, attributeValue, fixedArgs = {}) => {
-                filteredAttributes[attributeName] = fixedArgs.attributeValue ?? attributeValue;
-            },
-            onFail: (attributeName) => {
-                delete filteredAttributes[attributeName];
+                const name = fixedArgs.attributeName ?? attributeName;
+                const value = fixedArgs.attributeValue ?? attributeValue;
+                if (value !== undefined) {
+                    filteredAttributes[name] = value;
+                }
             },
             onMiss: (attributeName) => {
                 console.warn(
@@ -124,6 +127,11 @@ export class RulesPlugin extends Plugin {
     /**
      * Return a new styleInfo instance filtered with rules
      */
+    // TODO EGGMAIL: allow providing callbacks to do extra processing during
+    // processData -> this would be necessary for eg image_strategy_plugin neutralization
+    // => then, we could use border_plugin neutralizeBorders with callbacks
+    // => then, no need to manually remove keys from a styleInfo to copy
+    // them on another styleInfo, we can directly filter the styleInfo + extra processing
     filterStyleInfo(styleInfo, referenceNode, rules = this.styleRules) {
         if (typeof referenceNode === "string") {
             referenceNode = this.config.referenceDocument.createElement(referenceNode);
@@ -132,7 +140,9 @@ export class RulesPlugin extends Plugin {
         if (!rules) {
             return filteredStyleInfo.merge(styleInfo);
         }
-        if (rules === this.styleRules) {
+        const shouldCache =
+            this.config.reference.contains(referenceNode) && rules === this.styleRules;
+        if (shouldCache) {
             const styleInfoToFiltered = this.getStyleInfoToFiltered(referenceNode);
             if (styleInfoToFiltered.has(styleInfo)) {
                 return filteredStyleInfo.merge(styleInfoToFiltered.get(styleInfo));
@@ -142,18 +152,19 @@ export class RulesPlugin extends Plugin {
             getRuleArgs: (propertyName, propertyInfo) => [
                 {
                     propertyName,
-                    propertyValue: propertyInfo.value,
-                    propertyPriority: propertyInfo.priority,
+                    propertyValue: propertyInfo?.value,
+                    propertyPriority: propertyInfo?.priority ?? "",
                     referenceNode,
                 },
             ],
             onPass: (propertyName, propertyInfo, fixedArgs = {}) => {
-                filteredStyleInfo.setProperty(
-                    propertyName,
-                    fixedArgs.propertyValue ?? propertyInfo.value,
-                    fixedArgs.propertyPriority ?? propertyInfo.priority,
-                    propertyInfo.sequence
-                );
+                const name = fixedArgs.propertyName ?? propertyName;
+                const value = fixedArgs.propertyValue ?? propertyInfo?.value;
+                const priority = fixedArgs.propertyPriority ?? propertyInfo?.priority ?? "";
+                const sequence = fixedArgs.propertySequence ?? propertyInfo?.sequence ?? 0;
+                if (value !== undefined) {
+                    filteredStyleInfo.setProperty(name, value, priority, sequence);
+                }
             },
             onMiss: (propertyName) => {
                 // TODO EGGMAIL: special values like unset, inherit, ... must
@@ -166,7 +177,7 @@ export class RulesPlugin extends Plugin {
                 );
             },
         });
-        if (rules === this.styleRules) {
+        if (shouldCache) {
             const styleInfoToFiltered = this.getStyleInfoToFiltered(referenceNode);
             styleInfoToFiltered.set(styleInfo, new StyleInfo().merge(filteredStyleInfo));
         }

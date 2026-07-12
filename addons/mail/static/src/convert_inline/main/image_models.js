@@ -1,9 +1,14 @@
-import { ElementLayout, LayoutModel } from "../core/render_models";
+import { assignDefaultElementOptions, ElementLayout, LayoutModel } from "../core/render_models";
 
 export class ImageLinkLayout extends LayoutModel {
     static template = "mail.ImageLink";
 
     constructor(options = {}) {
+        const refs = options.refs ?? {};
+        options.refs = refs;
+        refs.root = assignDefaultElementOptions(refs.root, {
+            style: { "text-decoration": { value: "none", priority: "important" } },
+        });
         super(options);
         this.setAttributes({
             classNames: "o-ci-image-link",

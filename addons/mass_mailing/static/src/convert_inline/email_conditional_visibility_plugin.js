@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 export class ConditionalVisibilityPlugin extends Plugin {
     static id = "conditionalVisibility";
     resources = {
-        on_will_load_reference_content_handlers: this.preprocessFilterDomains.bind(this),
+        on_will_start_conversion_handlers: this.preprocessFilterDomains.bind(this),
     };
 
     /**
