@@ -8,9 +8,32 @@ import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
 
 export class AutoCompleteBuilderUrlPicker extends AutoComplete {
+<<<<<<< e66104c5bff5b7ffcf5cd11db997b1b0313914ec
     builderProps = props({
         inputClass: t.string().optional(),
     });
+||||||| 4dbcc72ecf4ddfdc481714c6471b962c9612b4c5
+    static props = {
+        ...AutoComplete.props,
+        ...basicContainerBuilderComponentProps,
+        ...textInputBasePassthroughProps,
+        default: { type: String, optional: true },
+        inputClass: { type: String, optional: true },
+    };
+=======
+    static props = {
+        ...AutoComplete.props,
+        ...basicContainerBuilderComponentProps,
+        ...textInputBasePassthroughProps,
+        default: { type: String, optional: true },
+        inputClass: { type: String, optional: true },
+        previewButton: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        ...AutoComplete.defaultProps,
+        previewButton: true,
+    };
+>>>>>>> e0729fdbcbbeaa0a2488dff2ee6a5a9897b39677
     static template = "website.AutoCompleteBuilderUrlPicker";
 
     setup() {
@@ -56,7 +79,8 @@ patch(BuilderUrlPicker.prototype, {
         if (isOptionSelected) {
             return;
         }
-        this.commit(inputValue);
+        const normalizedDisplayValue = this.commit(inputValue);
+        this.urlRef.el.value = normalizedDisplayValue;
     },
 
     openPreviewUrl() {
