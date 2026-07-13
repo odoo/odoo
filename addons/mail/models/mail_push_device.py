@@ -57,7 +57,7 @@ class MailPushDevice(models.Model):
         search_endpoint = kw.get('previousEndpoint', endpoint)
         mail_push_device = self.sudo().search([('endpoint', '=', search_endpoint)])
         if mail_push_device:
-            if mail_push_device.partner_id is not self.env.user.partner_id:
+            if mail_push_device.partner_id != self.env.user.partner_id:
                 mail_push_device.write({
                     'endpoint': endpoint,
                     'expiration_time': kw.get('expirationTime'),
