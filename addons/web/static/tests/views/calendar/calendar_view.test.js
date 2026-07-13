@@ -1086,7 +1086,7 @@ test(`create and change events on desktop`, async () => {
     expect(`.o_cw_popover`).toHaveCount(1);
     expect(`.o_cw_popover .o_cw_popover_edit`).toHaveCount(1);
     expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(1);
-    expect(`.o_cw_popover .o_cw_popover_close`).toHaveCount(1);
+    expect(`.o_cw_popover .o_card_popover_close`).toHaveCount(1);
 
     await contains(`.o_cw_popover .o_cw_popover_edit`).click();
     expect(`.modal-body`).toHaveCount(1);
@@ -1197,7 +1197,7 @@ test(`create and change events on mobile`, async () => {
     expect(".o_cw_popover").toHaveCount(1);
     expect(`.o_cw_popover .o_cw_popover_edit`).toHaveCount(1);
     expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(1);
-    expect(`.o_cw_popover .o_cw_popover_close`).toHaveCount(1);
+    expect(`.o_cw_popover .o_card_popover_close`).toHaveCount(1);
 
     await contains(`.o_cw_popover .o_cw_popover_edit`).click();
     expect(`.modal-body`).toHaveCount(1);
@@ -1518,7 +1518,7 @@ test(`render popover`, async () => {
     expect(`.o_cw_popover .o_popover_header`).toHaveText("event 2");
     expect(`.o_cw_popover .o_cw_popover_edit`).toHaveCount(1);
     expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(1);
-    expect(`.o_cw_popover .o_cw_popover_close`).toHaveCount(1);
+    expect(`.o_cw_popover .o_card_popover_close`).toHaveCount(1);
     expect(`.o_cw_popover .o_card_record > div:eq(0)`).toHaveText("December 12, 2016");
     expect(`.o_cw_popover .o_card_record > div:eq(1)`).toHaveText("11:55 - 15:55\n(4 hours)");
     expect(`.o_cw_popover .o_card_record > div:eq(2) .o_field_char`).toHaveCount(1);
@@ -1550,7 +1550,7 @@ test(`render popover`, async () => {
         )
     ).toBeLessThan(35);
 
-    await contains(`.o_cw_popover .o_cw_popover_close`).click();
+    await contains(`.o_cw_popover .o_card_popover_close`).click();
     expect(`.o_cw_popover`).toHaveCount(0);
 
     // Drag and drop with opened popover should work and close popover
@@ -1589,7 +1589,7 @@ test(`render popover with modifiers`, async () => {
     expect(`.o_cw_popover li.o_invisible_modifier`).toHaveCount(0);
     expect(`.o_cw_popover .o_field_datetime`).toHaveCount(1);
 
-    await contains(`.o_cw_popover .o_cw_popover_close`).click();
+    await contains(`.o_cw_popover .o_card_popover_close`).click();
     expect(`.o_cw_popover`).toHaveCount(0);
 });
 
@@ -4479,7 +4479,7 @@ test(`edit record and attempt to create a record with "create" attribute set to 
     expect(".o_cw_popover").toHaveCount(1);
     expect(`.o_cw_popover .o_cw_popover_edit`).toHaveCount(1);
     expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(1);
-    expect(`.o_cw_popover .o_cw_popover_close`).toHaveCount(1);
+    expect(`.o_cw_popover .o_card_popover_close`).toHaveCount(1);
 
     await contains(`.o_cw_popover .o_cw_popover_edit`).click();
     expect(`.modal-body`).toHaveCount(1);

@@ -246,7 +246,7 @@ test(`multicalendar`, async () => {
     expect(`.o_popover div[name="employee_name"]`).toHaveText("Brian");
     expect(`.o_popover .o_cw_popover_edit`).toHaveCount(0);
     expect(`.o_popover .o_cw_popover_delete`).toHaveCount(0);
-    await contains(`.o_cw_popover_close`).click();
+    await contains(`.o_card_popover_close`).click();
 });
 
 test(`test exceptions are correctly rendered`, async () => {

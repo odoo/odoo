@@ -56,27 +56,13 @@ export class CalendarArchParser {
         const showDatePicker = exprToBoolean(xmlDoc.getAttribute("show_date_picker"), true);
         const showUnusualDays = exprToBoolean(xmlDoc.getAttribute("show_unusual_days"));
 
+        let popoverNode;
         const popoverFieldNodes = {};
-        const popoverTemplates = {};
-        const popoverFieldNames = [];
-        let popoverCardId = false;
         const filtersInfo = {};
         visitXML(xmlDoc, (node) => {
             switch (node.tagName) {
                 case "popover": {
-                    popoverCardId = parseInt(node.getAttribute("card_id"), 10) || false;
-                    for (const childNode of node.children) {
-                        if (childNode.tagName === "field") {
-                            popoverFieldNames.push(childNode.getAttribute("name"));
-                        } else if (childNode.tagName === "templates") {
-                            for (const templateNode of childNode.children) {
-                                const name = templateNode.getAttribute("t-name");
-                                if (name) {
-                                    popoverTemplates[name] = templateNode;
-                                }
-                            }
-                        }
-                    }
+                    popoverNode = node;
                     return false;
                 }
                 case "field": {
@@ -155,12 +141,8 @@ export class CalendarArchParser {
             isDateHidden,
             isTimeHidden,
             monthOverflow,
-            popover: {
-                cardId: popoverCardId,
-                fields: popoverFieldNames,
-                fieldNodes: popoverFieldNodes, // temporarily kept for backward compatibility
-                templates: popoverTemplates,
-            },
+            popoverNode,
+            popoverFieldNodes, // temporarily kept for backward compatibility
             scale,
             scales,
             showUnusualDays,

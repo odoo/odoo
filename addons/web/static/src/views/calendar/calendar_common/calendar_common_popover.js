@@ -1,84 +1,30 @@
 import { _t } from "@web/core/l10n/translation";
 import { is24HourFormat } from "@web/core/l10n/time";
-import { useService } from "@web/core/utils/hooks";
-import { exprToBoolean } from "@web/core/utils/strings";
-import { createElement, parseXML } from "@web/core/utils/xml";
-import { Card, cardProps } from "@web/views/card/card";
-import { CARD_ATTRIBUTE } from "@web/views/card/card_arch_parser";
-import { CardRenderer } from "@web/views/card/card_renderer";
+import { parseXML } from "@web/core/utils/xml";
 import { getColor, getFormattedDateSpan } from "@web/views/calendar/utils";
-import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { CARD_ATTRIBUTE } from "@web/views/card/card_arch_parser";
+import { CardPopover } from "@web/views/card/card_popover/card_popover";
 
-import { Component, onWillStart, t, useListener, useProps } from "@odoo/owl";
-
-export const BODY_ATTRIBUTE = "popover-body";
-export const FOOTER_ATTRIBUTE = "popover-footer";
-export const HEADER_ATTRIBUTE = "popover-header";
-
-class CalendarCardRenderer extends CardRenderer {
-    static template = "web.CalendarCardRenderer";
-    static BODY_ATTRIBUTE = BODY_ATTRIBUTE;
-    static FOOTER_ATTRIBUTE = FOOTER_ATTRIBUTE;
-    static HEADER_ATTRIBUTE = HEADER_ATTRIBUTE;
-
-    setup() {
-        super.setup();
-        this.showMenu = false;
-    }
-}
-
-class CalendarCard extends Card {
-    static components = { ...Card.components, CardRenderer: CalendarCardRenderer };
-    props = useProps({
-        ...cardProps,
-        afterButtonClicked: t.any(),
-        // read in `rendererProps`; owl3 only exposes declared props
-        slots: t.any().optional(),
-    });
-
-    setup() {
-        super.setup();
-        useViewButtons(this.rootRef, {
-            reload: () => this.props.afterButtonClicked(),
-        });
-    }
-
-    get rendererProps() {
-        return {
-            ...super.rendererProps,
-            slots: this.props.slots,
-        };
-    }
-}
+import { Component, t, useListener, useProps } from "@odoo/owl";
 
 export class CalendarCommonPopover extends Component {
     static template = "web.CalendarCommonPopover";
+    static components = { CardPopover };
     static defaultFooterButtonsTemplate = "web.CalendarCommonPopover.DefaultFooterButtons";
-    static components = { CalendarCard };
+
     props = useProps({
-        close: t.any(),
-        model: t.any(),
-        record: t.any(),
-        context: t.any().optional(() => ({})),
-        reloadOnClose: t.any().optional(() => () => {}),
-        openRecord: t.any().optional(() => () => {}),
-        deleteRecord: t.any().optional(() => () => {}),
+        close: t.function(),
+        model: t.object(),
+        record: t.object(),
+        openRecord: t.function().optional(() => () => {}),
+        deleteRecord: t.function().optional(() => () => {}),
     });
 
     setup() {
-        this.viewService = useService("view");
-
         this.time = null;
         this.timeDuration = null;
         this.date = null;
         this.dateDuration = null;
-        this.uiService = useService("ui");
-
-        onWillStart(async () => {
-            const { xmlDoc, fields } = await this.buildCard();
-            this.cardXmlDoc = xmlDoc;
-            this.cardFields = fields;
-        });
 
         useListener(
             window,
@@ -92,11 +38,32 @@ export class CalendarCommonPopover extends Component {
         );
 
         this.computeDateTimeAndDuration();
+    }
 
-        const footer = this.props.model.meta.popover.templates[FOOTER_ATTRIBUTE];
-        this.displayDefaultFooter =
-            !footer ||
-            (footer.hasAttribute("replace") && !exprToBoolean(footer.getAttribute("replace")));
+    get resId() {
+        return this.props.record.id;
+    }
+
+    get readonly() {
+        return !this.props.model.canEdit;
+    }
+
+    get cardPopoverProps() {
+        const { meta } = this.props.model;
+        const color = getColor(this.props.record.colorIndex);
+        return {
+            close: this.props.close,
+            fields: meta.fields,
+            resModel: this.props.model.resModel,
+            resId: this.resId,
+            popoverNode: meta.popoverNode,
+            readonly: this.readonly,
+            rootClass: `o_cw_popover o_calendar_color_${typeof color === "number" ? color : 0}`,
+            context: meta.context,
+            reloadOnClose: () => this.props.model.load(),
+            openRecord: this.props.openRecord,
+            getDefaultPopoverBody: () => this.getDefaultPopoverBody(),
+        };
     }
 
     get title() {
@@ -104,7 +71,7 @@ export class CalendarCommonPopover extends Component {
     }
 
     get isEventEditable() {
-        return this.props.model.canEdit;
+        return !this.readonly;
     }
 
     get isEventDeletable() {
@@ -113,11 +80,6 @@ export class CalendarCommonPopover extends Component {
 
     get isEventViewable() {
         return true;
-    }
-
-    get rootClass() {
-        const color = getColor(this.props.record.colorIndex);
-        return `o_calendar_color_${typeof color === "number" ? color : 0}`;
     }
 
     computeDateTimeAndDuration() {
@@ -169,60 +131,6 @@ export class CalendarCommonPopover extends Component {
             .toFormat(`d '${_t("days")}'`);
     }
 
-    async buildCard() {
-        const templates = { ...this.props.model.meta.popover.templates };
-        let fields = this.props.model.meta.fields;
-        const fieldNames = new Set(this.props.model.meta.popover.fields);
-
-        const cardId = this.props.model.meta.popover.cardId;
-        if (cardId && !(BODY_ATTRIBUTE in templates)) {
-            const { fields: cardFields, views } = await this.viewService.loadViews({
-                resModel: this.props.model.resModel,
-                views: [[cardId, "card"]],
-                context: this.props.context,
-            });
-            fields = { ...fields, ...cardFields };
-            const fetchedDoc = parseXML(views.card.arch);
-            for (const child of fetchedDoc.children) {
-                if (child.tagName === "templates") {
-                    for (const templateChild of child.children) {
-                        const tName = templateChild.getAttribute("t-name");
-                        if (tName && !(tName in templates)) {
-                            templates[tName] = templateChild;
-                        }
-                    }
-                } else if (child.tagName === "field") {
-                    fieldNames.add(child.getAttribute("name"));
-                }
-            }
-        }
-
-        if (BODY_ATTRIBUTE in templates) {
-            const bodyTemplate = templates[BODY_ATTRIBUTE];
-            bodyTemplate.setAttribute("t-name", CARD_ATTRIBUTE);
-            templates[CARD_ATTRIBUTE] = bodyTemplate;
-            delete templates[BODY_ATTRIBUTE];
-        }
-
-        if (!templates[CARD_ATTRIBUTE]) {
-            templates[CARD_ATTRIBUTE] = this.getDefaultPopoverBody();
-            if (!templates[HEADER_ATTRIBUTE]) {
-                templates[HEADER_ATTRIBUTE] = this.getDefaultPopoverHeader();
-            }
-        }
-
-        const cardXmlDoc = createElement("card");
-        const templatesNode = createElement("templates");
-        for (const fieldName of fieldNames) {
-            templatesNode.appendChild(createElement("field", { name: fieldName }));
-        }
-        for (const template in templates) {
-            templatesNode.appendChild(templates[template]);
-        }
-        cardXmlDoc.appendChild(templatesNode);
-        return { xmlDoc: cardXmlDoc, fields };
-    }
-
     getDefaultPopoverBody() {
         const items = [];
         if (this.date) {
@@ -248,7 +156,7 @@ export class CalendarCommonPopover extends Component {
             `);
         }
         // Retro-compatibility layer: generate a card template from the fields in the arch
-        for (const fieldNode of Object.values(this.props.model.meta.popover.fieldNodes)) {
+        for (const fieldNode of Object.values(this.props.model.meta.popoverFieldNodes)) {
             if (["1", "True"].includes(fieldNode.invisible)) {
                 items.push(`<field name="${fieldNode.name}" invisible="1"/>`);
                 continue;
@@ -269,30 +177,6 @@ export class CalendarCommonPopover extends Component {
             );
         }
         return parseXML(`<t t-name="${CARD_ATTRIBUTE}" class="gap-3">${items.join("")}</t>`);
-    }
-
-    getDefaultPopoverHeader() {
-        return parseXML(`<t t-name="${HEADER_ATTRIBUTE}"><field name="display_name"/></t>`);
-    }
-
-    get cardProps() {
-        const { resModel } = this.props.model.meta;
-        return {
-            card: this.cardXmlDoc,
-            context: this.props.context,
-            fields: this.cardFields,
-            resModel,
-            resId: this.props.record.id,
-            readonly: !this.isEventEditable,
-            className: "d-flex flex-column",
-            afterButtonClicked: () => {
-                this.props.reloadOnClose();
-                this.props.close();
-            },
-            hooks: {
-                onRecordSaved: this.props.reloadOnClose,
-            },
-        };
     }
 
     onEditEvent() {
