@@ -198,14 +198,16 @@ class TestThirdChecks(L10nLatamCheckTest):
             inbound_payment_2 = self.create_third_party_check()
             check_2 = inbound_payment_2.l10n_latam_new_check_ids[0]
 
-        # Link check to outbound afterwards
+        # Link check to outbound
         outbound_payment_2.write({'l10n_latam_move_check_ids': [Command.set([check_2.id])]})
         outbound_payment_2.action_post()
+
+        inbound_payment_2.action_post()
 
         # Check should also not be on hand in this order
         self.assertFalse(
             check_2.current_journal_id,
-            "Check should not be on hand even if outbound was created before inbound"
+            "Check should not be on hand even if outbound was created before inbound",
         )
 
     def test_same_check_number_allowed_for_new_third_party_checks(self):
