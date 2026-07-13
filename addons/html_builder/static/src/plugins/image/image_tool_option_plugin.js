@@ -250,18 +250,12 @@ export class SetUrlAction extends BuilderAction {
     }
     apply({ editingElement, value }) {
         const linkEl = searchSupportedParentLinkEl(editingElement);
-        let url = value;
-        if (!url) {
+        if (!value) {
             // As long as there is no URL, the image is not considered a link.
             linkEl.removeAttribute("href");
             return;
         }
-        if (!url.startsWith("/") && !url.startsWith("#") && !/^([a-zA-Z]*.):.+$/gm.test(url)) {
-            // We permit every protocol (http:, https:, ftp:, mailto:,...).
-            // If none is explicitly specified, we assume it is a http.
-            url = "http://" + url;
-        }
-        linkEl.setAttribute("href", url);
+        linkEl.setAttribute("href", value);
     }
     getValue({ editingElement }) {
         const linkEl = searchSupportedParentLinkEl(editingElement);

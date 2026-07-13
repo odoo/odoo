@@ -160,7 +160,9 @@ test("reorder social medias", async () => {
 
     await contains("td:has([data-action-param='facebook']) + td input[type=checkbox]").click();
     await contains("button[data-action-id='addSocialMediaLink']").click();
-    await contains("div[data-action-id='editSocialMediaLink'] input").fill("/first");
+    await contains("div[data-action-id='editSocialMediaLink'] input").edit(
+        "https://www.example.com/first"
+    );
     await contains("button[data-action-id='addSocialMediaLink']").click();
 
     // we don't know the order for the ones received from the server
