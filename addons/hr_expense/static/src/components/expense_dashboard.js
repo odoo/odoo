@@ -1,8 +1,7 @@
-import { useService } from '@web/core/utils/hooks';
+import { useBus, useService } from '@web/core/utils/hooks';
 import { formatMonetary } from "@web/views/fields/formatters";
-import { Component, onWillStart, proxy, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
-
 export class ExpenseDashboard extends Component {
     static template = "hr_expense.ExpenseDashboard";
     static props = {};
@@ -11,15 +10,14 @@ export class ExpenseDashboard extends Component {
         super.setup();
         this.orm = useService('orm');
         this.actionService = useService("action");
-
         this.state = proxy({ expenses: {} });
+        useBus(this.env.searchModel, "update", async () => { await this.fetchExpenseDashboardData(); });
 
-        onWillStart(async () => { await this.fetchExpenseDashboardData(); });
-        onWillUpdateProps(async () => { await this.fetchExpenseDashboardData(); });
+        onWillStart(this.fetchExpenseDashboardData);
     }
 
     renderMonetaryField(value, currency_id) {
-        return formatMonetary(value, { currencyId: currency_id});;
+        return formatMonetary(value, { currencyId: currency_id});
     }
 
     async fetchExpenseDashboardData() {
