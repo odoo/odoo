@@ -8,3 +8,4 @@ class ResCompany(models.Model):
 
     l10n_nl_rounding_difference_loss_account_id = fields.Many2one('account.account', check_company=True)
     l10n_nl_rounding_difference_profit_account_id = fields.Many2one('account.account', check_company=True)
+    l10n_nl_sbr_ob_nummer = fields.Char(related='partner_id.l10n_nl_sbr_ob_nummer', readonly=False)
