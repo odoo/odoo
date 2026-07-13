@@ -417,7 +417,7 @@ class ResCompany(models.Model):
         for company in self:
             if not company.batch_payment_sequence_id:
                 sequence = self.env['ir.sequence'].sudo().create(
-                    self._get_batch_payment_sequence_values()
+                    company._get_batch_payment_sequence_values()
                 )
                 company.batch_payment_sequence_id = sequence
 
