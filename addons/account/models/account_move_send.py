@@ -92,7 +92,7 @@ class AccountMoveSend(models.AbstractModel):
                 'reply_to': get_setting('reply_to') or self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'reply_to'),
             })
         # Add mail attachments if sending methods support them
-        if self._display_attachments_widget(vals['invoice_edi_format'], vals['sending_methods']):
+        if self._display_attachments_widget(vals['invoice_edi_format'], vals['sending_methods'] + vals['extra_edis']):
             mail_attachments_widget = self._get_default_mail_attachments_widget(
                 move,
                 mail_template,

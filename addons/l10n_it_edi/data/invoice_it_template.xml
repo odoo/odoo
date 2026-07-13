@@ -165,6 +165,7 @@
                     </DatiCassaPrevidenziale>
                 </t>
                 <ImportoTotaleDocumento t-out="format_monetary(importo_totale_documento, currency)"/>
+                <Causale t-if="invoice_cause" t-foreach="invoice_cause" t-as="cause_line" t-out="cause_line"/>
             </DatiGeneraliDocumento>
             <DatiOrdineAcquisto t-if="origin_document_type == 'purchase_order'">
                 <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
@@ -229,6 +230,10 @@
             <NomeAttachment t-out="format_alphanumeric(pdf_name, 60)"/>
             <FormatoAttachment t-translation="off">PDF</FormatoAttachment>
             <Attachment t-out="pdf"/>
+        </Allegati>
+        <Allegati t-foreach="extra_attachments" t-as="attachment">
+            <NomeAttachment t-out="format_alphanumeric(attachment['name'], 60)"/>
+            <Attachment t-out="attachment['content']"/>
         </Allegati>
     </FatturaElettronicaBody>
 </p:FatturaElettronica>
