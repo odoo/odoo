@@ -1,3 +1,10 @@
+---
+layout: default
+title: Reporte de Verificacion Tecnica
+---
+
+[Volver al portal](../index.html)
+
 # Reporte de verificación técnica — Sprint 0
 
 ## 1. Introducción

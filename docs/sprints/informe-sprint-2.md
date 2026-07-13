@@ -1,3 +1,10 @@
+---
+layout: default
+title: Sprint 2 - Implementacion inicial y CI/CD
+---
+
+[Volver al portal](../../index.html)
+
 # Informe del Sprint 2 — Implementación inicial e integración CI/CD en Odoo
 
 **Universidad Nacional de San Agustín de Arequipa**  

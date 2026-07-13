@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}Odoo IPS</title>
+    <link rel="stylesheet" href="{{ '/assets/css/odoo-portal.css' | relative_url }}">
+  </head>
+  <body>
+    <header class="portal-topbar">
+      <a class="portal-brand" href="{{ '/index.html' | relative_url }}" aria-label="Volver al portal del proyecto">
+        <strong>Odoo IPS</strong>
+        <span>Scrum + DevOps</span>
+      </a>
+      <nav class="portal-nav" aria-label="Navegacion principal">
+        <a href="{{ '/sprints.html' | relative_url }}">Sprints</a>
+        <a href="{{ '/evidencias.html' | relative_url }}">Evidencias</a>
+        <a href="{{ '/burndown.html' | relative_url }}">Burndown</a>
+        <a href="{{ '/defensa.html' | relative_url }}">Defensa</a>
+      </nav>
+    </header>
+    <main class="portal-shell">
+      {{ content }}
+    </main>
+  </body>
+</html>

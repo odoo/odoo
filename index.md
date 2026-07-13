@@ -1,108 +1,86 @@
 ---
 layout: default
-title: Plan de Proyecto
+title: Portal del Proyecto
 ---
 
-<style>
-    
-table th {
-    background-color: #020d1a !important;
-    color: white !important;
-}
-</style>
+# Scrum y DevOps aplicado a Odoo ERP
 
-# Plan de Proyecto: SCRUM y DevOps – Odoo (Módulo Ventas)
+<div class="hero">
+  <p><strong>Proyecto:</strong> mejora y validacion del modulo de Ventas en Odoo, con analisis complementario de Compras.</p>
+  <p>El equipo aplico Scrum y practicas DevOps sobre Odoo ERP para implementar una mejora funcional de control de descuentos: validacion de porcentaje maximo, estado de revision, aprobacion por supervisor y limite configurable.</p>
+  <p class="meta-line"><strong>Curso:</strong> Ingenieria y Procesos de Software 2026-A · <strong>Sprint final:</strong> Sprint 4 · <strong>Repositorio:</strong> <a href="https://github.com/odooIPS-team/odooIPS">odooIPS-team/odooIPS</a></p>
+</div>
 
-## 1. Objetivo del Proyecto
-Implementar un proceso de desarrollo de software que integre la metodología ágil **Scrum** con prácticas **DevOps** automatizadas sobre el proyecto de código abierto **Odoo ([Módulo de Ventas](docs/arquitectura-modulo-ventas.md))**. El propósito es que el equipo comprenda, analice y ejecute las fases del ciclo de vida del software mediante la refactorización o mejora de este producto.
+## Resumen ejecutivo
 
-## 2. Información del Software Seleccionado
-* **Nombre del Producto:** Odoo ERP (Open Source).
-* **Repositorio:** [https://github.com/roydanpe/odooIPS](https://github.com/roydanpe/odooIPS)
-* **Dominio:** Sistema empresarial (ERP/CRM) aplicado al rubro comercial.
-* **Complejidad:** Mediana. Se trabajará con el [**Módulo de Ventas**](docs/arquitectura-modulo-ventas.md), el cual cuenta con más de 10,000 líneas de código (> 10 KLOC).
-* **Viabilidad Técnica y Legal:** [GNU Lesser General Public License, version 3 (LGPL-3)](docs/reporte-verificacion-sprint-0.md) (verificada para uso académico) e infraestructura DevOps adaptable, permitiendo la implementación de un entorno containerizado basado en [Docker Compose](docs/reporte-verificacion-sprint-0.md), facilitando la implementación del pipeline de automatización solicitado.
+Este portal presenta el proyecto completo: objetivos, avance por sprint, evidencias, burndown, defensa, arquitectura, verificacion tecnica y documentacion academica. La portada funciona como punto de entrada; los detalles estan separados en paginas especificas para evitar duplicar informacion.
 
-## 3. Equipo y Metodología de Trabajo
-El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equipo** será rotativo por cada Sprint para desarrollar habilidades de liderazgo y responsabilidad.
+<div class="kpi-grid">
+  <div class="kpi-card"><strong>5</strong><span>Sprints documentados</span></div>
+  <div class="kpi-card"><strong>43</strong><span>Issues y tareas trazadas</span></div>
+  <div class="kpi-card"><strong>100%</strong><span>Avance presentado</span></div>
+  <div class="kpi-card"><strong>0</strong><span>Pendientes para defensa</span></div>
+</div>
 
-### Integrantes
-* **Apaza Anahua Roydan**.
-* **Quiñonez Delgado Aarón Fernando**.
-* **Sencia Ale Bryan Daniel**.
-* **Yauli Merma Diego Raul**.
-* **Sivincha Machaca Saul Andre**.
+## Que se construyo
 
-### Sprint 0 
-### Roles y Responsabilidades:
+<div class="feature-list">
+  <div class="feature-item"><strong>Control de descuentos en Ventas</strong> Validacion de descuentos maximos en lineas de pedido de venta.</div>
+  <div class="feature-item"><strong>Revision comercial</strong> Estado `requires_review` para pedidos que superan el limite permitido.</div>
+  <div class="feature-item"><strong>Aprobacion por supervisor</strong> Grupo autorizado y boton de aprobacion para continuar el flujo.</div>
+  <div class="feature-item"><strong>Configuracion flexible</strong> Limite de descuento parametrizable para adaptar la regla comercial.</div>
+</div>
 
-| Integrante | Rol | Responsabilidades |
-| --- | --- | --- |
-| **Apaza Anahua Roydan** | Líder | Coordinación general, integración del documento final y configuración de herramientas GitHub. |
-| **Quiñonez Delgado Aarón Fernando** | Verificación Técnica | Validación de `docker-compose.yml` y cumplimiento de los criterios de licencia MIT. |
-| **Sencia Ale Bryan Daniel** | Arquitectura de Código | Delimitación del módulo de Ventas y verificación técnica de la complejidad (>10 KLOC). |
-| **Yauli Merma Diego Raul** | Gestión de Documentación | Desarrollo del reporte del Hito 1, consolidación de evidencias y documentación del avance del proyecto Scrum y DevOps. |
-| **Sivincha Machaca Saul Andre** | Cronograma Maestro | Planificación de los Sprints de 15 días alineados a los hitos del curso. |
+## Explorar el proyecto
 
-### Sprint 1 
-### Roles y Responsabilidades ([ver informe](docs/sprints/informe-sprint-1.md)):
+<div class="card-grid">
+  <div class="nav-card">
+    <h3>Sprints</h3>
+    <p>Objetivos, lideres, tiempos, asignaciones y aportes desde Sprint 0 hasta Sprint 4.</p>
+    <a href="sprints.html">Ver sprints</a>
+  </div>
+  <div class="nav-card">
+    <h3>Evidencias</h3>
+    <p>Dashboard visual por sprint con issues, asignaciones, roles y enlaces de verificacion.</p>
+    <a href="evidencias.html">Ver evidencias</a>
+  </div>
+  <div class="nav-card">
+    <h3>Burndown</h3>
+    <p>Avance Scrum del proyecto completo y reduccion del trabajo pendiente por sprint.</p>
+    <a href="burndown.html">Ver burndown</a>
+  </div>
+  <div class="nav-card">
+    <h3>Defensa</h3>
+    <p>Guion ejecutivo para explicar problema, solucion, Scrum, DevOps y QA.</p>
+    <a href="defensa.html">Ver defensa</a>
+  </div>
+  <div class="nav-card">
+    <h3>Cronograma</h3>
+    <p>Fechas, hitos, actividades Scrum, actividades DevOps y entregables esperados.</p>
+    <a href="docs/cronograma-sprints.html">Ver cronograma</a>
+  </div>
+  <div class="nav-card">
+    <h3>Documentacion</h3>
+    <p>Indice academico con arquitectura, verificacion tecnica e informes de sprint.</p>
+    <a href="docs/README.html">Ver documentos</a>
+  </div>
+  <div class="nav-card">
+    <h3>Arquitectura</h3>
+    <p>Analisis tecnico del modulo de Ventas y estructura funcional revisada.</p>
+    <a href="docs/arquitectura-modulo-ventas.html">Ver arquitectura</a>
+  </div>
+  <div class="nav-card">
+    <h3>Verificacion</h3>
+    <p>Reporte tecnico, pruebas y evidencias de validacion del comportamiento implementado.</p>
+    <a href="docs/reporte-verificacion-sprint-0.html">Ver verificacion</a>
+  </div>
+</div>
 
-| Integrante | Rol | Responsabilidades |
-|------------|-----|-------------------|
-| **Yauli Merma Diego Raul** | Líder Scrum y Coordinación | Organizar reuniones, supervisar el Sprint, revisar avances, coordinar la integración de tareas y administrar GitHub Projects. |
-| **Apaza Anahua Roydan** | Configuración del Entorno | Configurar Odoo, PostgreSQL y Docker Compose; verificar la ejecución local del sistema y resolver problemas de despliegue inicial. |
-| **Quiñonez Delgado Aarón Fernando** | Análisis de Arquitectura | Analizar la estructura del módulo *sale*, revisar modelos, vistas XML, dependencias y el flujo funcional del sistema. |
-| **Sivincha Machaca Saul Andre** | Gestión de Backlog e Issues | Refinar historias de usuario, crear GitHub Issues, priorizar tareas y organizar el Product Backlog del Sprint. |
-| **Sencia Ale Bryan Daniel** | Integración DevOps y Evidencias | Configurar ramas de trabajo, apoyar en GitHub Actions, registrar commits, recopilar evidencias y colaborar en la documentación técnica del Sprint. |
+## Equipo
 
-### Sprint 2 
-### Roles y Responsabilidades ([ver informe](docs/sprints/informe-sprint-2.md)):
-
-| Integrante | Rol Sprint 2 | Responsabilidades |
-|------------|-------------|-------------------|
-| **Apaza Anahua Roydan** | Desarrollador Backend (Python) | Extender modelos del módulo *sale*, implementar la funcionalidad seleccionada y realizar pruebas básicas de integración. |
-| **Sencia Ale Bryan Daniel** | Ingeniero DevOps (CI/CD) | Configurar GitHub Actions, automatizar el despliegue y validar el entorno Docker Compose. |
-| **Yauli Merma Diego Raul** | Desarrollador Frontend (XML/UI) | Modificar vistas XML del módulo de ventas e integrar la funcionalidad desarrollada en la interfaz. |
-| **Sivincha Machaca Saul Andre** | Especialista QA y Documentación | Ejecutar pruebas funcionales, validar resultados, actualizar documentación y consolidar evidencias del Sprint. |
-| **Quiñonez Delgado Aarón Fernando** | Líder de Sprint (Scrum Master) | Coordinar el Sprint, gestionar GitHub Projects, supervisar Issues y consolidar el informe de avance. |
-
-### Sprint 3
-### Roles y Responsabilidades ([ver informe](docs/sprints/informe-sprint-3.md)):
-
-| Integrante | Rol | Responsabilidades |
-| --- | --- | --- |
-| **Apaza Anahua Roydan** | No consignado en el PDF | El informe fuente del Sprint 3 no especifica un frente asignado. |
-| **Quiñonez Delgado Aarón Fernando** | Product Owner / Backend | Gestionar la lógica de aprobación y la parametrización del límite por compañía. |
-| **Sencia Ale Bryan Daniel** | Scrum Master / DevOps | Coordinar el sprint e implementar el pipeline de integración continua. |
-| **Yauli Merma Diego Raul** | Frontend XML / GitHub Pages | Implementar las vistas heredadas y publicar la documentación técnica. |
-| **Sivincha Machaca Saul Andre** | Aseguramiento de la Calidad | Adaptar y ejecutar las pruebas automatizadas del comportamiento final. |
-
-### Sprint 4 
-### Roles y Responsabilidades :
-
-| Integrante | Rol | Responsabilidades |
-| --- | --- | --- |
-| **Apaza Anahua Roydan** |  |  |
-| **Quiñonez Delgado Aarón Fernando** |  |  |
-| **Sencia Ale Bryan Daniel** |  |  |
-| **Yauli Merma Diego Raul** |  |  |
-| **Sivincha Machaca Saul Andre** |  |  |
-
-## 4. Herramientas Tecnológicas
-
-| Herramienta | Uso en el Proyecto |
-| --- | --- |
-| [**GitHub Projects**](https://github.com/users/roydanpe/projects/1) | Gestionar el Product Backlog, armar Sprints y ver el progreso en tiempo real. |
-| **GitHub Issues** | Registrar historias de usuario, reportar bugs y documentar decisiones técnicas. |
-| **GitHub Actions** | Automatización CI/CD: compilar código, correr pruebas y desplegar a staging. |
-| **GitHub Pages** | Publicar el entorno de staging, la documentación técnica y el burndown chart. |
-| **Google Meet** | Reuniones virtuales y coordinación del equipo de trabajo. |
-
-## 5. [Cronograma de Sprints e Hitos](docs/cronograma-sprints.md)
-
-El cronograma maestro consolida el Sprint 0, los cuatro Sprints de desarrollo, los hitos de evaluación y los entregables esperados para el avance del proyecto.
-
-[Ver cronograma maestro](docs/cronograma-sprints.md)
-
-[Consultar el índice completo de documentación](docs/README.md)
-
+<div class="team-grid">
+  <div class="team-card"><strong>Sivincha Machaca Saul Andre</strong><span>Scrum Master Sprint 4, portal publico, evidencias e integracion final.</span></div>
+  <div class="team-card"><strong>Quinonez Delgado Aaron Fernando</strong><span>Validacion funcional, Ventas/Compras y QA final.</span></div>
+  <div class="team-card"><strong>Sencia Ale Bryan Daniel</strong><span>DevOps, Docker Compose, GitHub Actions, artifacts y Jenkinsfile.</span></div>
+  <div class="team-card"><strong>Yauli Merma Diego Raul</strong><span>Documentacion Scrum, entregables, roadmap, guia y presentacion.</span></div>
+</div>

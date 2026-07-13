@@ -1,3 +1,10 @@
+---
+layout: default
+title: Sprint 3 - Mejoras y estabilizacion
+---
+
+[Volver al portal](../../index.html)
+
 # Informe del Sprint 3 — Mejoras, refactorización y estabilización
 
 > Versión Markdown organizada a partir del documento fuente [Sprint 3 (PDF)](../../Sprint%203%20.pdf).
@@ -215,4 +222,4 @@ Apaza Nahua, R. (2026). *odooIPS* [Código fuente]. GitHub: <https://github.com/
 
 ---
 
-[Volver al índice de documentación](../README.md) · [Volver al plan del proyecto](../../index.md)
+[Volver al índice de documentación](../README.html) · [Volver al plan del proyecto](../../index.html)

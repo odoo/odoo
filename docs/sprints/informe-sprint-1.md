@@ -1,3 +1,10 @@
+---
+layout: default
+title: Sprint 1 - Analisis y configuracion
+---
+
+[Volver al portal](../../index.html)
+
 # UNIVERSIDAD NACIONAL DE SAN AGUSTÍN DE AREQUIPA
 
 **Facultad de Ingeniería de Producción y Servicios**
