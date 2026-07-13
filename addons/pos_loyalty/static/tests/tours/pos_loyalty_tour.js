@@ -490,6 +490,13 @@ registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsInactiv
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
+            // Order 1: give points on AAAA's card. The program only applies on future orders,
+            // so the reward can't be claimed until the next order.
+            ProductScreen.clickDisplayedProduct("Test Product A"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            PosLoyalty.finalizeOrder("Cash", "100"),
+
             ProductScreen.clickDisplayedProduct("Test Product A"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),

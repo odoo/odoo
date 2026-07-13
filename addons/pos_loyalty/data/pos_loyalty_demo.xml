@@ -16,7 +16,7 @@
             <field name="minimum_amount">100</field>
             <field name="program_id" ref="pos_loyalty.15_pc_on_next_order"/>
         </record>
-        
+
         <record id="15_pc_on_next_order_reward" model="loyalty.reward">
             <field name="discount_mode">percent</field>
             <field name="discount">15</field>
@@ -71,7 +71,7 @@
     <record id="loyalty_program" model="loyalty.program">
         <field name="name">Loyalty Program</field>
         <field name="program_type">loyalty</field>
-        <field name="applies_on">both</field>
+        <field name="applies_on">future</field>
         <field name="trigger">auto</field>
         <field name="portal_visible">True</field>
         <field name="portal_point_name">Loyalty Points</field>

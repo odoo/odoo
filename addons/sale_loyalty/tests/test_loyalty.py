@@ -51,8 +51,8 @@ class TestLoyalty(TestSaleCouponCommon):
         cls.ewallet = cls.env["loyalty.card"].create({
             "program_id": cls.ewallet_program.id,
             "partner_id": cls.partner.id,
-            "points": 10,
         })
+        cls.ewallet._adjust_points(10, "Initial balance")
         cls.ewallet_program.coupon_ids = [Command.set(cls.ewallet.ids)]
 
         cls.user_salemanager = new_test_user(
@@ -108,9 +108,9 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 10,
         })
-        self.ewallet.points = 0
+        loyalty_card._adjust_points(10, "Initial balance")
+        self.ewallet._adjust_points(-self.ewallet.points, description="test reset")
 
         order.write({
             "order_line": [Command.create({"product_id": self.product_a.id, "product_uom_qty": 1})]
@@ -129,7 +129,7 @@ class TestLoyalty(TestSaleCouponCommon):
             "Can only use a whole number of required points",
         )
         self.assertEqual(vals[0]["points_cost"], 9, "Use maximum available points for the reward")
-        self.ewallet.points = 50
+        self.ewallet._adjust_points(50 - self.ewallet.points, description="test top up")
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
         self.assertEqual(
@@ -211,8 +211,8 @@ class TestLoyalty(TestSaleCouponCommon):
         card = self.env["loyalty.card"].create({
             "program_id": program.id,
             "partner_id": self.partner.id,
-            "points": 100,
         })
+        card._adjust_points(100, "Initial balance")
         # Two draft quotations and claim the reward on each quotation
         order_1, order_2 = self.env["sale.order"].create([
             {
@@ -326,15 +326,12 @@ class TestLoyalty(TestSaleCouponCommon):
             },
         ])
 
-        coupon_partner, _ = self.env["loyalty.card"].create([
-            {
-                "program_id": coupon_program.id,
-                "partner_id": self.partner.id,
-                "points": 1,
-                "code": "5555",
-            },
-            {"program_id": ewallet_program.id, "partner_id": self.partner.id, "points": 115},
+        coupon_partner, ewallet_card = self.env["loyalty.card"].create([
+            {"program_id": coupon_program.id, "partner_id": self.partner.id, "code": "5555"},
+            {"program_id": ewallet_program.id, "partner_id": self.partner.id},
         ])
+        coupon_partner._adjust_points(1, "Initial balance")
+        ewallet_card._adjust_points(115, "Initial balance")
 
         # Create the order
         order = (
@@ -450,7 +447,6 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 0,
         })
 
         order = (
@@ -557,7 +553,6 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 0,
         })
 
         order = (
@@ -584,7 +579,6 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 0,
         })
 
         order = (
@@ -628,7 +622,6 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 0,
         })
 
         order = (
@@ -669,7 +662,6 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 0,
         })
 
         self.promotion_code_10pc.rule_ids.product_category_id = product_category_food.id
@@ -707,7 +699,6 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 0,
         })
         order = (
             self
@@ -733,7 +724,6 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 0,
         })
 
         program_gift_card = self.env["loyalty.program"].create({
@@ -1095,11 +1085,11 @@ class TestLoyalty(TestSaleCouponCommon):
                 ],
             }
         ])
-        self.env["loyalty.card"].create({
+        card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 2,
         })
+        card._adjust_points(2, "Initial balance")
         order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
             "order_line": [
@@ -1144,11 +1134,11 @@ class TestLoyalty(TestSaleCouponCommon):
                 ],
             }
         ])
-        self.env["loyalty.card"].create({
+        card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 2,
         })
+        card._adjust_points(2, "Initial balance")
         order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
             "order_line": [Command.create({"product_id": self.product_D.id, "product_uom_qty": 1})],
@@ -1161,7 +1151,7 @@ class TestLoyalty(TestSaleCouponCommon):
 
     def test_ewallet_program_without_trigger_product(self):
         self.ewallet_program.trigger_product_ids = [Command.clear()]
-        self.ewallet.points = 1000
+        self.ewallet._adjust_points(1000 - self.ewallet.points, description="test top up")
 
         order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
@@ -1180,20 +1170,21 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(self.ewallet.points, 900)
 
     def test_ewallet_applied_ewallet_topup_in_order(self):
-        self.ewallet.points = 10
+        self.ewallet._adjust_points(10 - self.ewallet.points, description="test setup")
         ewallet_top_up = Command.create({
-            'product_id': self.env.ref('loyalty.ewallet_product_50').id,
-            'product_uom_qty': 1,
-            'price_unit': 50,
+            "product_id": self.env.ref("loyalty.ewallet_product_50").id,
+            "product_uom_qty": 1,
         })
-        order = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [Command.create({
-                'product_id': self.product_a.id,
-                'points_cost': 100,
-                'product_uom_qty': 1,
-            }),
-                ewallet_top_up
+
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.product_a.id,
+                    "points_cost": 100,
+                    "product_uom_qty": 1,
+                }),
+                ewallet_top_up,
             ],
         })
         order._update_programs_and_rewards()
@@ -1202,10 +1193,11 @@ class TestLoyalty(TestSaleCouponCommon):
 
         self.assertEqual(self.ewallet.points, 50)
 
-        # Case 2: eWallet top-up should be excluded from the discountable amount when paying with an eWallet
-        order = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [ewallet_top_up],
+        # Case 2: eWallet top-up should be excluded from the discountable amount
+        #         when paying with an eWallet
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [ewallet_top_up],
         })
         order._update_programs_and_rewards()
         with self.assertRaisesRegex(UserError, "There is nothing to discount"):
@@ -1236,11 +1228,8 @@ class TestLoyalty(TestSaleCouponCommon):
             ],
         })
 
-        coupon = self.env["loyalty.card"].create({
-            "program_id": program.id,
-            "points": 20,
-            "code": "GIFT_CARD",
-        })
+        coupon = self.env["loyalty.card"].create({"program_id": program.id, "code": "GIFT_CARD"})
+        coupon._adjust_points(20, "Initial balance")
 
         order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
@@ -1261,10 +1250,14 @@ class TestLoyalty(TestSaleCouponCommon):
         at least one reward is  active.
         """
         LoyaltyProgram = self.env["loyalty.program"]
-        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()["loyalty"])
-        loyalty_program_tag = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
-        )
+        loyalty_program = LoyaltyProgram.create({
+            **LoyaltyProgram._get_template_values()["loyalty"],
+            "applies_on": "both",
+        })
+        loyalty_program_tag = LoyaltyProgram.create({
+            **LoyaltyProgram._get_template_values()["loyalty"],
+            "applies_on": "both",
+        })
 
         free_product_tag = self.env["product.tag"].create({"name": "Free Product"})
         self.product_b.write({"product_tag_ids": [(4, free_product_tag.id)]})
@@ -1398,7 +1391,6 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": self.partner.id,
-            "points": 0,
         })
         sale_order = self._create_so(order_line=[Command.create({"product_id": self.product_a.id})])
         sale_order._update_programs_and_rewards()

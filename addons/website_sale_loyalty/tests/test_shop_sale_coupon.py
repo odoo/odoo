@@ -134,12 +134,12 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             ],
         })
 
-        self.env["loyalty.card"].create({
+        vip_card = self.env["loyalty.card"].create({
             "partner_id": self.env.ref("base.partner_admin").id,
             "program_id": vip_program.id,
             "point_name": "Points",
-            "points": 371.03,
         })
+        vip_card._adjust_points(371.03, "Initial balance")
 
         self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour(large_cabinet.website_url, "website_sale_loyalty.promotions", login="admin")
@@ -207,11 +207,11 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             ],
         })
         # Create a gift card to be used
-        self.env["loyalty.card"].create({
+        gift_card = self.env["loyalty.card"].create({
             "program_id": gift_card_program.id,
-            "points": 50,
             "code": "GIFT_CARD",
         })
+        gift_card._adjust_points(50, "Initial balance")
 
         self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour("/shop", "website_sale_loyalty.gift_card", login="admin")
@@ -256,26 +256,24 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             }
             for ecommerce_ok in (True, False)
         ])
-        self.env["loyalty.card"].create([
-            {
-                "partner_id": self.env.ref("base.partner_admin").id,
-                "program_id": program_id,
-                "points": 1000,
-            }
+        cards = self.env["loyalty.card"].create([
+            {"partner_id": self.env.ref("base.partner_admin").id, "program_id": program_id}
             for program_id in ewallet_programs.ids
         ])
+        for card in cards:
+            card._adjust_points(1000, "Initial balance")
         self.start_tour("/shop", "website_sale_loyalty.ewallet", login="admin")
 
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -514,12 +512,17 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
                 that no coupons remain applied.
         """
         # Create 2 Taxes
-        tax_a = self.env["account.tax"].sudo().create({
-            "name": "Tax A",
-            "type_tax_use": "sale",
-            "amount_type": "percent",
-            "amount": 15,
-        })
+        tax_a = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create({
+                "name": "Tax A",
+                "type_tax_use": "sale",
+                "amount_type": "percent",
+                "amount": 15,
+            })
+        )
         tax_b = tax_a.copy({"name": "Tax B"})
 
         # Create 4 products subject to different tax
@@ -602,7 +605,6 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": test_partner.id,
-            "points": 0,
         })
         public_user = self.env.ref("base.public_user")
         order.action_quotation_send()

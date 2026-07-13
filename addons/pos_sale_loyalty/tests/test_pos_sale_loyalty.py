@@ -140,7 +140,6 @@ class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
         loyalty_card = self.env['loyalty.card'].create({
             'program_id': loyalty_program.id,
             'partner_id': self.partner_a.id,
-            'points': 0,
             'code': 'LOYALTY123',
         })
         sale_order = self.env['sale.order'].create({

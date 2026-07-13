@@ -60,6 +60,7 @@
                         <th>Description</th>
                         <th>Order</th>
                         <th>Date</th>
+                        <th t-if="card.program_type == 'loyalty'">Expiration</th>
                         <th>Issued</th>
                         <th>Used</th>
                     </tr>
@@ -78,7 +79,10 @@
                             </t>
                         </td>
                         <td t-else=""/>
-                        <td><t t-out="line.create_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
+                        <td><t t-out="line.points_changed_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
+                        <td t-if="card.program_type == 'loyalty'">
+                            <t t-out="line.expiration_date" t-options='{"widget": "date"}'/>
+                        </td>
                         <td><span t-out="line.card_id._format_points(line.issued)"/></td>
                         <td><span t-out="line.card_id._format_points(line.used)"/></td>
                     </tr>

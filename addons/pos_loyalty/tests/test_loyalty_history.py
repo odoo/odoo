@@ -173,17 +173,23 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
         loyalty_card = self.env['loyalty.card'].create({
             'program_id': loyalty_program.id,
             'partner_id': partner_aaa.id,
-            'points': 5,
         })
+        loyalty_card._adjust_points(5, description="Initial balance")
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("test_loyalty_history_earn_and_spend")
 
         loyalty_card.invalidate_recordset()
-        history = loyalty_card.history_ids
-        self.assertEqual(len(history), 1, "One history entry should be created for the order")
+        order_history = loyalty_card.history_ids.filtered(lambda h: h.order_id)
+        self.assertEqual(
+            len(order_history), 2, "One issuing and one consuming entry should be created"
+        )
         # $10 product → 10 pts earned; 10% discount reward → 5 pts spent
-        self.assertEqual(history.issued, 10.0, "Issued should be 10 (gross earned), not the net")
-        self.assertEqual(history.used, 5.0, "Used should be 5 (gross spent), not the net")
+        self.assertEqual(
+            sum(order_history.mapped("issued")), 10.0, "Issued should be 10 (gross earned)"
+        )
+        self.assertEqual(
+            sum(order_history.mapped("used")), 5.0, "Used should be 5 (gross spent), not the net"
+        )
 
     def test_gift_card_partner(self):
         """ Test that the gift card's partner is correctly set as the customer who bought it."""

@@ -143,6 +143,14 @@
                                 string="Points Unit"
                                 groups="base.group_no_one"
                             />
+                            <label
+                                for="expire_after"
+                                string="Points Validity"
+                                invisible="program_type != 'loyalty'"
+                            />
+                            <div invisible="program_type != 'loyalty'">
+                                <field name="expire_after" class="oe_inline"/> days
+                            </div>
                             <field
                                 name="portal_visible"
                                 groups="base.group_no_one"

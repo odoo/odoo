@@ -8,7 +8,6 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortalLoyalty(CustomerPortal):
-
     @route()
     def counters(self, counters, **kw):
         values = super().counters(counters, **kw)
@@ -35,7 +34,7 @@ class CustomerPortalLoyalty(CustomerPortal):
 
     def _get_loyalty_searchbar_sortings(self):
         return {
-            "date": {"label": self.env._("Date"), "order": "create_date desc"},
+            "date": {"label": self.env._("Date"), "order": "points_changed_date desc"},
             "used": {"label": self.env._("Used"), "order": "used desc"},
             "description": {"label": self.env._("Description"), "order": "description desc"},
             "issued": {"label": self.env._("Issued"), "order": "issued desc"},
@@ -86,6 +85,7 @@ class CustomerPortalLoyalty(CustomerPortal):
             "page_name": "loyalty_history",
             "sortby": sortby,
             "history_lines": history_lines,
+            "card": card_sudo,
         }
 
         return request.render("loyalty.loyalty_card_history_template", values)
