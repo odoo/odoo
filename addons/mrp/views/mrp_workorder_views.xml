@@ -377,7 +377,7 @@
                     <group>
                         <field name="product_id" readonly="1"/>
                         <field name="production_id" force_save="1"/>
-                        <field name="production_lot_producing_id" widget="many2many_tags" readonly="production_state in ('draft', 'cancel') or state in ('cancel', 'done')" invisible="product_tracking in ('none', False)"/>
+                        <field name="production_lot_producing_id" widget="many2many_tags" readonly="1" invisible="product_tracking in ('none', False)"/>
                         <label for="qty_produced"  class="d-touch-none"/>
                         <div class="o_row g-0 d-flex" name="qty">
                             <div class="o_row flex-grow-1">
