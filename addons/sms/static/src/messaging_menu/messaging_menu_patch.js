@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 const messagingMenuPatch = {
     openFailureView(failure, options) {
         if (failure.type === "email") {
-            return super.openFailureView(failure, options);
+            return super.openFailureView(...arguments);
         }
         this.env.services.action.doAction(
             {
