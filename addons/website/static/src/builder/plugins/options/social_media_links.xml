@@ -13,18 +13,20 @@
                         </button>
                     </td>
                     <td width="100%">
-                        <BuilderTextInput
+                        <BuilderUrlPicker
                             t-if="item.media"
                             action="'editRecordedSocialMediaLink'"
                             actionParam="item.media"
                             placeholder="`https://${item.media}.com/your-page`"
+                            previewButton="false"
                         />
-                        <BuilderTextInput
+                        <BuilderUrlPicker
                             t-else=""
                             action="'editSocialMediaLink'"
                             attributeAction="'href'"
                             applyTo="`a:nth-of-type(${item.domPosition})`"
                             placeholder="'https://example.com/your-page'"
+                            previewButton="false"
                         />
                     </td>
                     <td style="'min-width: 2.5em'">
