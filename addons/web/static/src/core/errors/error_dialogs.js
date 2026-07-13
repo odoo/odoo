@@ -4,7 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
 import { capitalize } from "../utils/strings";
 
 import { Component, useRef, useState, markup } from "@odoo/owl";
@@ -181,7 +180,7 @@ export class RedirectWarningDialog extends Component {
     static props = { ...standardErrorDialogProps };
 
     setup() {
-        this.actionService = useService("action");
+        this.actionService = this.env.services;
         const { data, subType } = this.props;
         const [message, actionId, buttonText, additionalContext] = data.arguments;
         this.title = capitalize(subType) || _t("Odoo Warning");
@@ -191,6 +190,11 @@ export class RedirectWarningDialog extends Component {
         this.additionalContext = additionalContext;
     }
     async onClick() {
+        if (!this.actionService) {
+            window.open("/odoo/settings#ai_app", "_blank");
+            this.props.close();
+            return;
+        }
         const options = { forceLeave: true };
         if (this.additionalContext) {
             options.additionalContext = this.additionalContext;
