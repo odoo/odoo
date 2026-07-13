@@ -16,7 +16,7 @@ import { uniqueId } from "@web/core/utils/functions";
  */
 export class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
-    static dependencies = ["translateWebpageOption", "translation", "history", "domObserver"];
+    static dependencies = ["translateWebpageOption", "translation", "valueHistory"];
 
     setup() {
         this.canTimeout = false;
@@ -139,8 +139,11 @@ export class TranslateToAction extends BuilderAction {
                 enqueueTranslation(el, uniqueId("ta_"), text, "textContent");
             }
             if (el.classList.contains("o_translatable_attribute")) {
+                const translatableAttrNames = new Set(
+                    this.dependencies.translation.getTranslatableAttributes(el)
+                );
                 for (const attr of ["alt", "title", "placeholder", "value"]) {
-                    if (el.hasAttribute(attr)) {
+                    if (translatableAttrNames.has(attr)) {
                         const attrValue = el.getAttribute(attr);
                         enqueueTranslation(el, uniqueId("ta_"), attrValue, attr);
                     }
@@ -233,7 +236,6 @@ export class TranslateToAction extends BuilderAction {
      */
     applyTranslationsToDOM(translationMap, responses) {
         let numOfFailedTranslationNodes = translationMap.size;
-        const allMutations = [];
 
         for (const response of responses) {
             let translations;
@@ -251,53 +253,22 @@ export class TranslateToAction extends BuilderAction {
                 numOfFailedTranslationNodes--;
                 if (id.startsWith("t_")) {
                     node.textContent = text;
-                    const parentEl = node.parentElement?.closest("[data-oe-translation-state]");
-                    if (parentEl) {
-                        parentEl.dataset.oeTranslationState = "translated";
-                    }
                 } else if (id.startsWith("ta_")) {
                     const { el, attribute } = node;
-                    const attributeInfo =
-                        this.dependencies.translation.getTranslationInfo(el)?.[attribute];
-                    if (attributeInfo) {
-                        const oldValue = attributeInfo.translation;
-                        const oldTranslationState = el.dataset.oeTranslationState;
-                        const applyAttributeChange = (attr, value) => {
-                            attr.translation = value;
-                            el.dataset.oeTranslationState =
-                                value === oldValue ? oldTranslationState : "translated";
-                            if (attribute === "textContent" || attribute === "value") {
-                                el.value = value;
-                            } else {
-                                el.setAttribute(attribute, value);
-                            }
-                        };
-
-                        allMutations.push({
-                            apply: () => applyAttributeChange(attributeInfo, text),
-                            revert: () => applyAttributeChange(attributeInfo, oldValue),
-                        });
+                    const isTextContent = attribute === "textContent";
+                    const isSetWithValueProperty = isTextContent || attribute === "value";
+                    const oldValue = isSetWithValueProperty ? el.value : el.getAttribute(attribute);
+                    if (text !== oldValue) {
+                        if (isSetWithValueProperty) {
+                            this.dependencies.valueHistory.setValue(el, text);
+                        }
+                        if (!isTextContent) {
+                            // TODO: we had a bug: translate a form with text input, then the option shows the old value because it reads the attribute, which was not set
+                            el.setAttribute(attribute, text);
+                        }
                     }
                 }
             }
-        }
-
-        if (allMutations.length > 0) {
-            this.dependencies.domObserver.applyCustomMutation({
-                apply: () => {
-                    for (const mutation of allMutations) {
-                        mutation.apply();
-                    }
-                },
-                revert: () => {
-                    for (let i = allMutations.length - 1; i >= 0; i--) {
-                        allMutations[i].revert();
-                    }
-                },
-            });
-            // Single commit for all translations, so that undo/redo is easier
-            // to manage for the user.
-            this.dependencies.history.commit();
         }
 
         return numOfFailedTranslationNodes;
