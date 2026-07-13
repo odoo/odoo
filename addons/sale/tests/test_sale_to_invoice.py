@@ -2118,6 +2118,26 @@ class TestSaleToInvoice(TestSaleCommon):
             msg="Refound overages only, the product is still invoiced on ordered.",
         )
 
+    def test_no_invoice_if_invoice_overage_disabled(self):
+        """Case where delivered qty > invoiced qty > product_uom_qty, and
+        the user tries to invoice again without including overages."""
+        self.sale_order.action_confirm()
+        self.sol_serv_order.qty_delivered = 5  # Out of 3
+        self.InvoiceWizard.create({"invoice_overages": True}).create_invoices()
+
+        # Rectify invoiced quantity, such that qty_delivered > invoiced_qty > product_uom_qty
+        invoice_line = self.sol_serv_order.invoice_lines[-1]
+        invoice_line.quantity = 4  # Out of 5
+        invoice_line.move_id.action_post()
+
+        with self.assertRaisesRegex(UserError, "No items are available to invoice."):
+            self.InvoiceWizard.create({"invoice_overages": False}).create_invoices()
+
+        self.InvoiceWizard.create({"invoice_overages": True}).create_invoices()
+
+        self.assertEqual(self.sol_serv_order.qty_invoiced, 5)
+        self.assertEqual(self.sol_serv_order.invoice_lines[-1].quantity, 1, msg="Overages only")
+
     def test_productless_sol_invoicing(self):
         tax = self.env["account.tax"].create({
             "name": "Test Tax",

@@ -82,7 +82,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def _compute_invoice_overages(self):
         for wizard in self:
-            wizard.invoice_overages = wizard.allow_invoice_overages
+            if isinstance(wizard.id, api.NewId):
+                wizard.invoice_overages = wizard.allow_invoice_overages
+            else:
+                wizard.invoice_overages = any(so.invoice_overages for so in wizard.sale_order_ids)
 
     def _inverse_invoice_overages(self):
         for wizard in self:
@@ -140,6 +143,15 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 raise UserError(
                     wizard.env._("The value of the down payment amount must be positive.")
                 )
+            if (
+                wizard.advance_payment_method == "delivered"
+                and not wizard.invoice_overages
+                and any(
+                    so.has_overages and so.amount_to_invoice <= 0.00 for so in wizard.sale_order_ids
+                )
+            ):
+                if self.env.context.get("raise_if_nothing_to_invoice", True):
+                    raise UserError(wizard.sale_order_ids._nothing_to_invoice_error_message())
 
     # === ACTION METHODS ===#
 
