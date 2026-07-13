@@ -221,6 +221,10 @@ class MicrosoftSync(models.AbstractModel):
                         recurrent_event, {'need_sync_m': False}
                     )
                 else:
+                    # Keep the Microsoft ids on the exception. If a different user than
+                    # the original organizer syncs it, the id may no longer be usable to
+                    # sync back out to Outlook, but this is acceptable as we do not sync
+                    # recurrences back up to Outlook anyway.
                     value = self.env['calendar.event']._microsoft_to_odoo_values(
                         recurrent_event, default_values, with_ids=True
                     )

@@ -280,38 +280,39 @@ class TestCreateEvents(TestCommon):
         Ensure an exception imported from a new Outlook recurrence keeps its
         Microsoft identifiers and remains detached from the recurrence.
         """
-        master = dict(
-            self.recurrent_event_from_outlook_organizer[0],
-            id='NEW_REC_MASTER',
-            iCalUId='NEW_REC_UID',
-        )
+        master = {
+            **self.recurrent_event_from_outlook_organizer[0],
+            'id': 'NEW_REC_MASTER',
+            'iCalUId': 'NEW_REC_UID',
+        }
         exception_start = self.start_date + timedelta(days=self.recurrent_event_interval, minutes=67)
         exception_stop = self.end_date + timedelta(days=self.recurrent_event_interval, minutes=67)
         events = [
             master,
-            dict(
-                self.recurrent_event_from_outlook_organizer[2],
-                id='NEW_REC_EXCEPTION_2',
-                iCalUId='NEW_REC_EXCEPTION_UID_2',
-                seriesMasterId='NEW_REC_MASTER',
-                type='exception',
-                start={
+            {
+                **self.recurrent_event_from_outlook_organizer[2],
+                'id': 'NEW_REC_EXCEPTION_2',
+                'iCalUId': 'NEW_REC_EXCEPTION_UID_2',
+                'seriesMasterId': 'NEW_REC_MASTER',
+                'type': 'exception',
+                'start': {
                     'dateTime': exception_start.strftime("%Y-%m-%dT%H:%M:%S.0000000"),
                     'timeZone': 'UTC',
                 },
-                end={
+                'end': {
                     'dateTime': exception_stop.strftime("%Y-%m-%dT%H:%M:%S.0000000"),
                     'timeZone': 'UTC',
                 },
-            ),
+            },
         ]
-        for index in (0, 2, 3):
-            events.append(dict(
-                self.recurrent_event_from_outlook_organizer[index + 1],
-                id=f'NEW_REC_OCC_{index + 1}',
-                iCalUId=f'NEW_REC_OCC_UID_{index + 1}',
-                seriesMasterId='NEW_REC_MASTER',
-            ))
+        # occurrence [2] is skipped: it is already inserted above as the exception
+        for index in (1, 3, 4):
+            events.append({
+                **self.recurrent_event_from_outlook_organizer[index],
+                'id': f'NEW_REC_OCC_{index}',
+                'iCalUId': f'NEW_REC_OCC_UID_{index}',
+                'seriesMasterId': 'NEW_REC_MASTER',
+            })
         mock_get_events.return_value = (MicrosoftEvent(events), None)
 
         self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
