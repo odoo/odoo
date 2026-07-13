@@ -1,8 +1,9 @@
-import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useChildSubEnv } from "@web/owl2/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
 
-import { Component, computed, proxy, signal } from "@odoo/owl";
+import { Component, computed, proxy, signal, useEffect } from "@odoo/owl";
 import { normalize } from "@web/core/l10n/utils";
+import { useDomSignal } from "@web/core/utils/hooks";
 
 export class SettingsBlock extends Component {
     static template = "web.SettingsBlock";
@@ -18,31 +19,23 @@ export class SettingsBlock extends Component {
     settingsContainerRef = signal(null);
     settingsContainerTitleRef = signal(null);
     settingsContainerTipRef = signal(null);
+    searchState = proxy(this.env.searchState);
     setup() {
-        this.state = proxy({
-            search: this.env.searchState,
-        });
         useChildSubEnv({
             showAllContainer: this.showAllContainer,
         });
-        useLayoutEffect(
-            () => {
-                const containerEl = this.settingsContainerRef();
-                if (!containerEl) {
-                    return;
-                }
-                const force =
-                    this.state.search.value &&
-                    !this.showAllContainer() &&
-                    !containerEl.querySelector(".o_setting_box.o_searchable_setting");
-                this.toggleContainer(force);
-            },
-            () => [this.state.search.value, this.settingsContainerRef()]
+        const isSearchable = useDomSignal(
+            () =>
+                !!this.settingsContainerRef()?.querySelector(".o_setting_box.o_searchable_setting")
         );
+        useEffect(() => {
+            const force = this.searchState.value && !this.showAllContainer() && !isSearchable();
+            this.toggleContainer(force);
+        });
     }
 
     showAllContainer = computed(() =>
-        normalize([this.props.title, this.props.tip].join()).includes(this.state.search.value)
+        normalize([this.props.title, this.props.tip].join()).includes(this.searchState.value)
     );
 
     toggleContainer(force) {
