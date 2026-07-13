@@ -13,11 +13,12 @@ import { session } from "@web/session";
  */
 
 function computeAssetCaches() {
+    const cacheMap = getDocumentAssetCache(document);
     for (const script of document.head.querySelectorAll("script[src]")) {
-        assets.globalCache.set(script.getAttribute("src"), Promise.resolve(script));
+        cacheMap.set(script.getAttribute("src"), Promise.resolve(script));
     }
     for (const link of document.head.querySelectorAll("link[rel=stylesheet][href]")) {
-        assets.globalCache.set(link.getAttribute("href"), Promise.resolve(link));
+        cacheMap.set(link.getAttribute("href"), Promise.resolve(link));
     }
 }
 
@@ -29,37 +30,6 @@ function getDocumentAssetCache(targetDoc) {
         assets.documentCaches.set(targetDoc, new Map());
     }
     return assets.documentCaches.get(targetDoc);
-}
-
-/**
- * @param {string} url the url of the stylesheet or a script tag
- * @param {Document} targetDoc
- * @returns {Promise<LoadTarget> | undefined} resolved when the stylesheet/script has been loaded
- */
-function getDocumentCachedLoadTargetPromise(url, targetDoc) {
-    const cacheMap = getDocumentAssetCache(targetDoc);
-    if (assets.globalCache.has(url) && !cacheMap.has(url)) {
-        const { promise, resolve, reject } = Promise.withResolvers();
-        cacheMap.set(url, promise);
-        assets.globalCache.get(url).then(
-            (loadTarget) => {
-                const clone = targetDoc.importNode(loadTarget, true);
-                targetDoc.head.appendChild(clone);
-                onLoadAndError(clone, resolve, (error) => {
-                    cacheMap.delete(url);
-                    clone.remove();
-                    reject(error);
-                });
-            },
-            (error) => {
-                cacheMap.delete(url);
-                reject(error);
-            }
-        );
-    }
-    if (cacheMap.has(url)) {
-        return cacheMap.get(url);
-    }
 }
 
 /**
@@ -219,11 +189,10 @@ export const assets = {
      */
     loadCSS(url, options) {
         const targetDoc = options?.targetDoc || document;
-        const cachedPromise = getDocumentCachedLoadTargetPromise(url, targetDoc);
-        if (cachedPromise) {
-            return cachedPromise;
-        }
         const cacheMap = getDocumentAssetCache(targetDoc);
+        if (cacheMap.has(url)) {
+            return cacheMap.get(url);
+        }
         const retryCount = options?.retryCount || 0;
         const linkEl = targetDoc.createElement("link");
         linkEl.setAttribute("href", url);
@@ -266,11 +235,10 @@ export const assets = {
      */
     loadJS(url, options) {
         const targetDoc = options?.targetDoc || document;
-        const cachedPromise = getDocumentCachedLoadTargetPromise(url, targetDoc);
-        if (cachedPromise) {
-            return cachedPromise;
-        }
         const cacheMap = getDocumentAssetCache(targetDoc);
+        if (cacheMap.has(url)) {
+            return cacheMap.get(url);
+        }
         const scriptEl = targetDoc.createElement("script");
         scriptEl.setAttribute("src", url);
         scriptEl.type = options?.type || "text/javascript";
