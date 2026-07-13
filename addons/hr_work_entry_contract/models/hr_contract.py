@@ -515,7 +515,7 @@ class HrContract(models.Model):
         # It is more interesting for batching to process statically generated work entries first
         # since we get benefits from having multiple contracts on the same calendar
         contracts_todo = contracts_todo.sorted(key=lambda c: 1 if c.has_static_work_entries() else 100)
-        contracts_todo = contracts_todo[:BATCH_SIZE].generate_work_entries(
+        contracts_todo = contracts_todo[:BATCH_SIZE].with_context(lang=self.env.user.lang).generate_work_entries(
             start.date(), stop.date(), False)
         # if necessary, retrigger the cron to generate more work entries
         if countract_todo_count > BATCH_SIZE:
