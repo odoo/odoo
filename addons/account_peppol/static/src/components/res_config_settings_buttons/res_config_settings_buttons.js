@@ -36,6 +36,22 @@ class PeppolSettingsButtons extends Component {
         return this.props.record.data.account_peppol_proxy_state;
     }
 
+    get ediIdentification() {
+        return this.props.record.data.account_peppol_edi_identification || "";
+    }
+
+    get countryCode() {
+        return this.props.record.data.country_code || "";
+    }
+
+    get isPdpEdiIdentification() {
+        return this.ediIdentification.startsWith('0225:')
+    }
+
+    get showReregisterButton() {
+        return ['pending', 'active'].includes(this.proxyState) && this.countryCode == 'FR' && !this.isPdpEdiIdentification;
+    }
+
     get migrationPrepared() {
         return this.props.record.data.account_peppol_proxy_state === "active" && Boolean(this.props.record.data.account_peppol_migration_key);
     }
@@ -64,7 +80,8 @@ class PeppolSettingsButtons extends Component {
         const modes = {
             demo: _t("Switch to Live"),
         }
-        return this.modeConstraint !== "demo" && modes[this.ediMode] || _t("Deregister from Peppol");
+        const deregister_label = this.isPdpEdiIdentification ? _t("Remove from Approved Platform") : _t("Deregister from Peppol")
+        return this.modeConstraint !== "demo" && modes[this.ediMode] || deregister_label;
     }
 
     async _callConfigMethod(methodName, save = false) {
@@ -88,9 +105,13 @@ class PeppolSettingsButtons extends Component {
 
     showConfirmation(warning, methodName) {
         const message = _t(warning);
-        const confirmMessage = this.proxyState === 'sender'
-            ? _t("You will not be able to send Peppol documents in Odoo anymore. Are you sure you want to proceed?")
-            : _t("You will not be able to send or receive Peppol documents in Odoo anymore. Are you sure you want to proceed?");
+        const confirmMessage = this.isPdpEdiIdentification
+            ? (this.proxyState === 'sender'
+                 ? _t("You will not be able to send documents via the Odoo Approved Platform anymore. Are you sure you want to proceed?")
+                 : _t("You will not be able to send or receive documents via the Odoo Approved Platform anymore. Are you sure you want to proceed?"))
+            : (this.proxyState === 'sender'
+                 ? _t("You will not be able to send Peppol documents in Odoo anymore. Are you sure you want to proceed?")
+                 : _t("You will not be able to send or receive Peppol documents in Odoo anymore. Are you sure you want to proceed?"));
         this.dialogService.add(ConfirmationDialog, {
             body: markup(
                 `<div class="text-danger">${escape(message)}</div>
@@ -108,7 +129,7 @@ class PeppolSettingsButtons extends Component {
             this._callConfigMethod("button_deregister_peppol_participant");
         } else {
             this.showConfirmation(
-                "This will delete your Peppol registration.",
+                this.isPdpEdiIdentification ? _t("This will delete your Approved Platform registration.") : _t("This will delete your Peppol registration."),
                 "button_deregister_peppol_participant"
             )
         }
@@ -183,6 +204,10 @@ class PeppolSettingsButtons extends Component {
                 cancel: () => { },
             });
         }
+    }
+
+    async reregister() {
+        await this._callConfigMethod("button_peppol_reregister");
     }
 }
 

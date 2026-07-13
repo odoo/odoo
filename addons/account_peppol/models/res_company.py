@@ -84,6 +84,10 @@ class ResCompany(models.Model):
         compute='_compute_peppol_purchase_journal_id', store=True, readonly=False,
         inverse='_inverse_peppol_purchase_journal_id',
     )
+    account_peppol_edi_user = fields.Many2one(
+        comodel_name='account_edi_proxy_client.user',
+        compute='_compute_account_peppol_edi_user',
+    )
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -198,6 +202,13 @@ class ResCompany(models.Model):
                 except ValidationError:
                     continue
 
+    @api.depends('account_edi_proxy_client_ids')
+    def _compute_account_peppol_edi_user(self):
+        for company in self:
+            company.account_peppol_edi_user = company.account_edi_proxy_client_ids.filtered(
+                lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()
+            )
+
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
@@ -240,3 +251,40 @@ class ResCompany(models.Model):
         # by design, we can only have zero or one proxy user per company with type Peppol
         peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
         return peppol_user.edi_mode or config_param or 'prod'
+
+    def _peppol_modules_document_types(self):
+        """Override this function to add supported document types as modules are installed.
+
+        :returns: dictionary of the form: {module_name: [(document identifier, document_name)]}
+        """
+        return {
+            'default': {
+                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1":
+                    "Peppol BIS Billing UBL Invoice V3",
+                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1":
+                    "Peppol BIS Billing UBL CreditNote V3",
+                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1":
+                    "SI-UBL 2.0 Invoice",
+                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1":
+                    "SI-UBL 2.0 CreditNote",
+                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0::2.1":
+                    "Peppol BIS Self-Billing UBL Invoice V3",
+                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0::2.1":
+                    "Peppol BIS Self-Billing UBL CreditNote V3",
+            }
+        }
+
+    def _peppol_supported_document_types(self):
+        """Returns a flattened dictionary of all supported document types."""
+        return {
+            identifier: document_name
+            for module, identifiers in self._peppol_modules_document_types().items()
+            for identifier, document_name in identifiers.items()
+        }
+
+    def _get_peppol_proxy_type(self):
+        self.ensure_one()
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(
+            lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()
+        )
+        return peppol_user.proxy_type or 'peppol'

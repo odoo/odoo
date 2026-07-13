@@ -31,12 +31,13 @@ import types
 import unicodedata
 import warnings
 from collections import OrderedDict
-from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
+from collections.abc import Iterable, Mapping, MutableMapping, MutableSet, Sequence
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import reduce, wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
+from typing import Literal
 
 import babel
 import babel.dates
@@ -44,6 +45,7 @@ import markupsafe
 import passlib.utils
 import pytz
 import werkzeug.utils
+from babel import lists
 from lxml import etree, objectify
 
 import odoo
@@ -1394,6 +1396,56 @@ def babel_locale_parse(lang_code):
             return babel.Locale.default()
         except:
             return babel.Locale.parse("en_US")
+
+
+def format_list(
+    env,
+    lst: Sequence[str],
+    style: Literal["standard", "standard-short", "or", "or-short", "unit", "unit-short", "unit-narrow"] = "standard",
+    lang_code: str | None = None,
+) -> str:
+    """
+    Format the items in `lst` as a list in a locale-dependent manner with the chosen style.
+
+    The available styles are defined by babel according to the Unicode TR35-49 spec:
+    * standard:
+      A typical 'and' list for arbitrary placeholders.
+      e.g. "January, February, and March"
+    * standard-short:
+      A short version of an 'and' list, suitable for use with short or abbreviated placeholder values.
+      e.g. "Jan., Feb., and Mar."
+    * or:
+      A typical 'or' list for arbitrary placeholders.
+      e.g. "January, February, or March"
+    * or-short:
+      A short version of an 'or' list.
+      e.g. "Jan., Feb., or Mar."
+    * unit:
+      A list suitable for wide units.
+      e.g. "3 feet, 7 inches"
+    * unit-short:
+      A list suitable for short units
+      e.g. "3 ft, 7 in"
+    * unit-narrow:
+      A list suitable for narrow units, where space on the screen is very limited.
+      e.g. "3′ 7″"
+
+    See https://www.unicode.org/reports/tr35/tr35-49/tr35-general.html#ListPatterns for more details.
+
+    :param env: the current environment.
+    :param lst: the sequence of items to format into a list.
+    :param style: the style to format the list with.
+    :param lang_code: the locale (i.e. en_US).
+    :return: the formatted list.
+    """  # noqa: RUF002
+    locale = babel_locale_parse(lang_code or get_lang(env).code)
+    # Some styles could be unavailable for the chosen locale
+    if style not in locale.list_patterns:
+        style = "standard"
+    try:
+        return lists.format_list(lst, style, locale)
+    except KeyError:
+        return lists.format_list(lst, 'standard', locale)
 
 def formatLang(env, value, digits=2, grouping=True, monetary=False, dp=None, currency_obj=None, rounding_method='HALF-EVEN', rounding_unit='decimals'):
     """

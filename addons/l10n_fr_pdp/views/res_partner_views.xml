@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_form_l10n_fr_pdp" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.fr.pdp</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account_peppol_response.res_partner_form_account_peppol_response"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//label[@for='account_peppol_verification_label']" position="attributes">
+                    <attribute name="for">pdp_verification_display_state</attribute>
+                </xpath>
+                <xpath expr="//div[@invisible='not peppol_response_support']/field[@name='account_peppol_verification_label' and @readonly='1']" position="attributes">
+                    <attribute name="name">pdp_verification_display_state</attribute>
+                </xpath>
+                <xpath expr="//div[@invisible='peppol_response_support']/field[@name='account_peppol_verification_label' and @readonly='1']" position="attributes">
+                    <attribute name="name">pdp_verification_display_state</attribute>
+                </xpath>
+
+                <!-- Rename the Peppol EAS / Endpoint fields to not say "Peppol" -->
+                <xpath expr="//field[@name='peppol_eas']" position="attributes">
+                    <attribute name="invisible" add="'FR' in fiscal_country_codes" separator=" or "/>
+                </xpath>
+                <xpath expr="//field[@name='peppol_endpoint']" position="attributes">
+                    <attribute name="invisible" add="'FR' in fiscal_country_codes" separator=" or "/>
+                </xpath>
+                <xpath expr="//field[@name='peppol_eas']" position="after">
+                    <field name="peppol_eas" widget="selection"
+                           string="E-Invoicing Scheme"
+                           invisible="hide_peppol_fields or 'FR' not in fiscal_country_codes"/>
+                </xpath>
+                <xpath expr="//field[@name='peppol_endpoint']" position="after">
+                    <field name="peppol_endpoint"
+                           string="E-Invoicing Identifier"
+                           invisible="hide_peppol_fields or 'FR' not in fiscal_country_codes"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>
