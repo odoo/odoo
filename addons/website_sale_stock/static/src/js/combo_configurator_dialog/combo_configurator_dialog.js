@@ -15,8 +15,10 @@ patch(ComboConfiguratorDialog.prototype, {
         if (!this.isComboQuantityAllowed(quantity)) {
             quantity = Math.min(
                 ...this._selectedComboItems
-                    .map(comboItem => comboItem.product.free_qty)
-                    .filter(freeQty => freeQty !== undefined)
+                    .map(comboItem => comboItem.product.free_qty !== undefined
+                        ? Math.floor(comboItem.product.free_qty / comboItem.quantity)
+                        : undefined)
+                    .filter(maxQty => maxQty !== undefined)
             );
         }
         return super.setQuantity(quantity);
@@ -30,7 +32,7 @@ patch(ComboConfiguratorDialog.prototype, {
      */
     isComboQuantityAllowed(quantity) {
         return this._selectedComboItems.every(
-            comboItem => comboItem.product.isQuantityAllowed(quantity)
+            comboItem => comboItem.product.isQuantityAllowed(quantity * comboItem.quantity)
         );
     },
 });

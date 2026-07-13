@@ -38,6 +38,7 @@ export class ProductCombo {
      * @return {Boolean} Whether this combo is configurable.
      */
     get isConfigurable() {
-        return !this.combo_items.some(item => item.is_preselected);
+        const hasPreselected = this.combo_items.some(item => item.is_preselected);
+        return !hasPreselected || this.qty_free > 1;
     }
 }

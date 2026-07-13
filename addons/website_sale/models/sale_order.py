@@ -801,7 +801,7 @@ class SaleOrder(models.Model):
                 # of the combo item with the least available quantity.
                 combo_quantity = quantity
                 for item_line in combo_item_lines:
-                    target_child_qty = quantity * item_line.combo_item_ratio
+                    target_child_qty = quantity * item_line.selected_combo_item_qty
                     if target_child_qty != item_line.product_uom_qty:
                         combo_item_quantity, _warning = self._verify_updated_quantity(
                             item_line,
@@ -810,10 +810,12 @@ class SaleOrder(models.Model):
                             uom_id=item_line.product_uom_id.id,
                             **kwargs,
                         )
-                        max_possible_combos = int(combo_item_quantity // item_line.combo_item_ratio)
+                        max_possible_combos = int(
+                            combo_item_quantity // item_line.selected_combo_item_qty
+                        )
                         combo_quantity = min(combo_quantity, max_possible_combos)
                 for item_line in combo_item_lines:
-                    final_child_qty = combo_quantity * item_line.combo_item_ratio
+                    final_child_qty = combo_quantity * item_line.selected_combo_item_qty
                     if final_child_qty != item_line.product_uom_qty:
                         self.with_context(skip_cart_verification=True)._cart_update_line_quantity(
                             line_id=item_line.id, quantity=final_child_qty
@@ -860,7 +862,7 @@ class SaleOrder(models.Model):
         no_variant_attribute_value_ids=None,
         product_custom_attribute_values=None,
         combo_item_id=None,
-        combo_item_ratio=1.0,
+        selected_combo_item_qty=1.0,
         donation_amount=None,
         **_kwargs,
     ):
@@ -894,12 +896,12 @@ class SaleOrder(models.Model):
 
         values = {
             "product_id": product.id,
-            "product_uom_qty": quantity * combo_item_ratio,
+            "product_uom_qty": quantity * selected_combo_item_qty,
             "product_uom_id": uom_id or product.uom_id.id,
             "order_id": self.id,
             "linked_line_id": linked_line_id,
             "combo_item_id": combo_item_id,
-            "combo_item_ratio": combo_item_ratio,
+            "selected_combo_item_qty": selected_combo_item_qty,
         }
         # Set price_unit with the user-selected donation amount
         if product._is_donation() and donation_amount is not None:

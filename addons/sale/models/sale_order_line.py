@@ -408,7 +408,7 @@ class SaleOrderLine(models.Model):
     collapse_composition = fields.Boolean(
         string="Collapse Composition", copy=True, default=False
     )  # Whether this section's lines will be hidden in reports and in the portal.
-    combo_item_ratio = fields.Float(
+    selected_combo_item_qty = fields.Integer(
         string="Combo Ratio", help="Remembers the initial quantity configured for this combo item."
     )
 
@@ -909,7 +909,7 @@ class SaleOrderLine(models.Model):
                 company=self.company_id,
                 date=self.order_id.date_order,
             )
-            * self.product_uom_qty
+            * combo_id.qty_free
             for combo_id in combo_line.product_template_id.sudo().combo_ids
         }
         total_combo_base_price = sum(combo_base_prices.values())
@@ -945,7 +945,7 @@ class SaleOrderLine(models.Model):
             date=self.order_id.date_order,
         )
         return (
-            combo_prices[self.combo_item_id.combo_id] / self.combo_item_id.combo_id.qty_free
+            combo_prices[self.combo_item_id.combo_id] / (self.combo_item_id.combo_id.qty_free or 1)
         ) + extra_price
 
     @api.depends("product_id", "product_uom_id", "product_uom_qty")

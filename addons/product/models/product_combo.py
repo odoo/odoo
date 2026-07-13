@@ -35,10 +35,6 @@ class ProductCombo(models.Model):
         help="Number of free items included in the combo."
     )
 
-    @api.model
-    def _load_pos_data_fields(self, config):
-        return ['qty_free']
-
     @api.depends('combo_item_ids')
     def _compute_combo_item_count(self):
         # Initialize combo_item_count to 0 as _read_group won't return any results for new combos.
@@ -94,6 +90,5 @@ class ProductCombo(models.Model):
 
     @api.constrains('qty_free')
     def _check_qty_free(self):
-        for combo in self:
-            if combo.qty_free < 1:
-                raise ValidationError(_("Free quantity must be >= 1."))
+        if any(combo.qty_free < 1 for combo in self):
+            raise ValidationError(_("The free quantity of a combo must be greater or equal to 1."))

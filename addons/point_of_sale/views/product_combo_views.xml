@@ -12,19 +12,19 @@
             <xpath expr="//group[field[@name='company_id']]" position="replace">
                 <group>
                     <group>
-                        <field name="qty_max" string="Maximum items" invisible="not is_from_pos"/>
+                        <field name="qty_max" string="Maximum items" invisible="not context.get('is_from_pos')"/>
                         <field
                             name="qty_free"
                             string="Included"
                             invisible="is_upsell"
                             class="oe_inline"
                         />
-                        <field name="is_upsell" widget="boolean_toggle" invisible="not is_from_pos"/>
+                        <field name="is_upsell" widget="boolean_toggle" invisible="not context.get('is_from_pos')"/>
                         <field
                             name="upsell_warning"
                             readonly="1"
                             nolabel="1"
-                            invisible="not is_upsell or is_from_pos"
+                            invisible="not is_upsell or context.get('is_from_pos')"
                             class="oe_edit_only"
                         />
                         <field
@@ -40,7 +40,7 @@
                             name="base_price"
                             widget="monetary"
                             options="{'field_digits': True}"
-                            invisible="not is_from_pos"
+                            invisible="not context.get('is_from_pos')"
                         />
                     </group>
                 </group>

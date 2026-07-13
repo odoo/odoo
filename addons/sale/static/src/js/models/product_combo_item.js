@@ -16,7 +16,7 @@ export class ProductComboItem {
         this.is_selected = is_selected;
         this.is_configurable = is_configurable;
         this.product = new ProductProduct(product);
-        this.saved_quantity = quantity;
+        this.selected_qty = quantity;
     }
 
     /**

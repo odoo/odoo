@@ -170,7 +170,7 @@ class Cart(PaymentPortal):
                 product_values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
                     product_id=product_data["product_id"],
                     quantity=product_data["quantity"],
-                    combo_item_ratio=product_data.get("combo_item_ratio", 1),
+                    selected_combo_item_qty=product_data.get("selected_combo_item_qty", 1),
                     uom_id=product_data.get("uom_id"),
                     product_custom_attribute_values=product_data["product_custom_attribute_values"],
                     no_variant_attribute_value_ids=[
@@ -208,7 +208,7 @@ class Cart(PaymentPortal):
             # If quantities were modified through `_check_combo_quantities`, the added qty per line
             # must be adapted accordingly, and the final returned warning should be the reason.
             added_qty_per_line = {
-                line.id: updated_line.product_uom_qty
+                line.id: updated_line.product_uom_qty * updated_line.selected_combo_item_qty
                 for line in (updated_line + updated_line.linked_line_ids)
             }
             warning = changed_reason
@@ -493,7 +493,7 @@ class Cart(PaymentPortal):
                 {
                     "id": line.id,
                     "image_url": order.website_id.image_url(line.product_id, "image_128"),
-                    "quantity": added_qty_per_line[line.id] * line["combo_item_ratio"],
+                    "quantity": added_qty_per_line[line.id],
                     "name": line._get_line_header(),
                     "combination_name": line._get_combination_name(),
                     "description": line._get_sale_order_line_multiline_description_variants(),
