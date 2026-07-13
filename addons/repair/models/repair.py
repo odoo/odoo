@@ -261,18 +261,17 @@ class RepairOrder(models.Model):
                 repair.partner_id
                 and not repair.invoice_ids
                 and not repair.sale_order_id
-                and repair.state != "cancel"
             )
             repair.can_create_extra_invoice = (
-                    repair.partner_id
-                    and all(invoice.state == "posted" for invoice in repair.invoice_ids)
-                    and not repair.sale_order_id
-                    and (
-                        any(not move.invoice_line_ids for move in repair.move_ids)
-                        or any(not repair_service_line.invoice_line_ids for repair_service_line in repair.repair_service_line_ids
-                        )
+                repair.partner_id
+                and all(invoice.state == "posted" for invoice in repair.invoice_ids)
+                and not repair.sale_order_id
+                and (
+                    any(not move.invoice_line_ids for move in repair.move_ids)
+                    or any(not repair_service_line.invoice_line_ids for repair_service_line in repair.repair_service_line_ids
                     )
                 )
+            )
 
     @api.depends('product_id', 'product_id.uom_id')
     def _compute_uom_id(self):
