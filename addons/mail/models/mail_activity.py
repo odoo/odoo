@@ -668,12 +668,14 @@ class MailActivity(models.Model):
             records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])
             existing = records_sudo.exists()  # in case record was cascade-deleted in DB, skipping unlink override
             for record_sudo, activity in zip(records_sudo, activity_data['activities']):
+                message_attachments = activity_attachments.get(activity.id) or self.env['ir.attachment']
+                activity_attachment_ids = (attachment_ids or []) + message_attachments.ids
 
                 # post message on activity, before deleting it
                 if record_sudo in existing:
                     activity_message = record_sudo.message_post_with_source(
                         'mail.message_activity_done',
-                        attachment_ids=attachment_ids,
+                        attachment_ids=activity_attachment_ids,
                         author_id=self.env.user.partner_id.id,
                         render_values={
                             'activity': activity,
@@ -688,21 +690,13 @@ class MailActivity(models.Model):
                     activity_message = self.env['mail.message']
                     activities_to_remove += activity
 
-                message_attachments = activity_attachments.get(activity.id) or self.env['ir.attachment']
-                attachment_ids = (attachment_ids or []) + message_attachments.ids
-                if attachment_ids:
-                    activity.attachment_ids = attachment_ids
-
-                # Moving the attachments in the message
-                # TODO: Fix void res_id on attachment when you create an activity with an image
-                # directly, see route /web_editor/attachment/add
-                message_attachments = activity_attachments.get(activity.id)
+                if activity_attachment_ids:
+                    activity.attachment_ids = activity_attachment_ids
                 if message_attachments and activity_message:
                     message_attachments.write({
                         'res_id': activity_message.id,
                         'res_model': activity_message._name,
                     })
-                    activity_message.attachment_ids = message_attachments.ids
                 # removing attachments linked to activity if record is missing
                 elif message_attachments:
                     attachments_to_remove += message_attachments
