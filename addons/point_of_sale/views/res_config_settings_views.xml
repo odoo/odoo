@@ -232,6 +232,14 @@
                                         <field name="pos_fallback_nomenclature_id"/>
                                     </div>
                                 </setting>
+                                <setting id="variant_options" help="Sell variants of a product using attributes (size, color, etc.)" documentation="/applications/sales/sales/products_prices/products/variants.html">
+                                    <field name="group_product_variant"/>
+                                    <div class="content-group" invisible="not group_product_variant">
+                                        <div class="mt8">
+                                            <button name="%(product.attribute_action)d" icon="east" type="action" string="Attributes" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </setting>
                             </block>
                             <block title="Accounting" id="pos_accounting_section">
                                 <setting id="pos_accounting" title="Accounting" help="Accounting settings for PoS">
