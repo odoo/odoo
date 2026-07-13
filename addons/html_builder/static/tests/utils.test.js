@@ -8,6 +8,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { SavePlugin } from "@html_builder/core/save_plugin";
+import { setHrefUrl } from "@html_builder/plugins/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, delay, queryOne, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
@@ -409,4 +410,23 @@ test("UI is unblocked when getting an error on a reloadable operation", async ()
     await waitSidebarUpdated();
     expect(".o_blockUI").toHaveCount(0);
     expect.verifyErrors(["Apply failed!"]);
+});
+
+test("setHrefUrl sets href urls", () => {
+    const targetEl = document.createElement("a");
+    const testCases = [
+        ["odoo.com", "http://odoo.com"],
+        ["https://odoo.com", "https://odoo.com"],
+        ["mailto:test@test.com", "mailto:test@test.com"],
+        ["/hello", "/hello"],
+        ["#top", "#top"],
+    ];
+
+    for (const [url, expectedUrl] of testCases) {
+        setHrefUrl(targetEl, url);
+        expect(targetEl.getAttribute("href")).toBe(expectedUrl);
+    }
+
+    setHrefUrl(targetEl, "");
+    expect(targetEl).not.toHaveAttribute("href");
 });

@@ -1,6 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { setHrefUrl } from "@html_builder/plugins/utils";
 
 export class CarouselSlidesOptionPlugin extends Plugin {
     static id = "carouselSlidesOption";
@@ -65,22 +66,14 @@ export class SetSlideAnchorUrlAction extends BuilderAction {
         this.preview = false;
     }
     apply({ editingElement, value }) {
-        const url = value;
-        const linkEl = editingElement.querySelector("a.slide-link");
-
-        if (!url) {
-            linkEl.remove();
-            return;
+        let linkEl = editingElement.querySelector("a.slide-link");
+        if (!linkEl) {
+            linkEl = document.createElement("a");
+            linkEl.className = "slide-link position-absolute top-0 start-0 w-100 h-100 d-none";
+            linkEl.style.zIndex = 100;
+            editingElement.prepend(linkEl);
         }
-        if (linkEl) {
-            linkEl.setAttribute("href", url);
-            return;
-        }
-        const anchorEl = document.createElement("a");
-        anchorEl.className = "slide-link position-absolute top-0 start-0 w-100 h-100 d-none";
-        anchorEl.setAttribute("href", url);
-        anchorEl.style.zIndex = 100;
-        editingElement.prepend(anchorEl);
+        setHrefUrl(linkEl, value);
     }
     getValue({ editingElement }) {
         const linkEl = editingElement.querySelector("a.slide-link");
