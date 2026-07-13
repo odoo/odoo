@@ -1521,3 +1521,108 @@ test("change action of form to a model without registered fields adds the model'
     expect(":iframe input[name='name']").toHaveAttribute("required");
     expect(":iframe input[name='email']").toHaveCount(0);
 });
+
+test("single-choice field is displayed as a dropdown when it has more than five options", async () => {
+    const makeSelection = (count) =>
+        Array.from({ length: count }, (_, i) => [`value_${i}`, `Value ${i}`]);
+    onRpc("get_authorized_fields", () => ({
+        author_id: {
+            name: "author_id",
+            relation: "res.partner",
+            string: "Author",
+            type: "many2one",
+        },
+        short_selection: {
+            name: "short_selection",
+            string: "Short Selection",
+            type: "selection",
+            selection: makeSelection(5),
+        },
+        long_selection: {
+            name: "long_selection",
+            string: "Long Selection",
+            type: "selection",
+            selection: makeSelection(6),
+        },
+    }));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+            <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
+                <div class="s_website_form_rows">
+                    <div data-name="Field" class="s_website_form_field" data-type="many2one">
+                        <div class="row">
+                            <label class="s_website_form_label" for="oyeqnysxh10b">
+                                <span class="s_website_form_label_content">Author</span>
+                            </label>
+                        <select class="form-select s_website_form_input" id="oyeqnysxh10b" name="author_id" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </section>`
+    );
+
+    await contains(":iframe .s_website_form_field").click();
+
+    // Five options or less: the selection keeps its radio buttons.
+    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_popover [data-action-value='short_selection']").click();
+    expect(":iframe .s_website_form_field").toHaveAttribute("data-type", "selection");
+    expect(":iframe input[type='radio'][name='short_selection']").toHaveCount(5);
+    expect(":iframe select").toHaveCount(0);
+
+    // More than five options: the selection is turned into a dropdown.
+    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_popover [data-action-value='long_selection']").click();
+    expect(":iframe .s_website_form_field").toHaveAttribute("data-type", "many2one");
+    expect(":iframe input[type='radio']").toHaveCount(0);
+    expect(":iframe select[name='long_selection'] option").toHaveCount(6);
+});
+
+test("field added by the form action is displayed as a dropdown when it has more than five options", async () => {
+    const makeSelection = (count) =>
+        Array.from({ length: count }, (_, i) => [`value_${i}`, `Value ${i}`]);
+    onRpc("get_authorized_fields", () => ({}));
+    function withIframeRegistry(registry) {
+        registry.category("website.form_editor_actions").add("apply_job", {
+            formFields: [
+                {
+                    type: "selection",
+                    name: "short_selection",
+                    string: "Short Selection",
+                    selection: makeSelection(5),
+                },
+                {
+                    type: "selection",
+                    name: "long_selection",
+                    string: "Long Selection",
+                    selection: makeSelection(6),
+                },
+            ],
+        });
+    }
+    await setupWebsiteBuilder(
+        `<section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div class="s_website_form_submit">
+                    <div class="s_website_form_label"/>
+                    <a>Submit</a>
+                </div>
+            </form>
+        </section>`,
+        { withIframeRegistry }
+    );
+
+    await contains(":iframe section").click();
+    await contains(".hb-row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
+
+    // Five options or less: the selection keeps its radio buttons.
+    expect(":iframe .s_website_form_field[data-type='selection']").toHaveCount(1);
+    expect(":iframe input[type='radio'][name='short_selection']").toHaveCount(5);
+    // More than five options: the selection is turned into a dropdown.
+    expect(":iframe .s_website_form_field[data-type='many2one']").toHaveCount(1);
+    expect(":iframe select[name='long_selection'] option").toHaveCount(6);
+});
