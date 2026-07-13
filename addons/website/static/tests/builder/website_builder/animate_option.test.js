@@ -184,7 +184,7 @@ test("visibility of animation animation=onScroll", async () => {
 
     expect(".options-container [data-label='Scroll Zone']").toBeVisible();
 });
-test("animation=onScroll should not be visible when the animation is limited", async () => {
+test("reset to 'Fade' effect on animation=onScroll if current effect is appearance-only", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `
                 <div class="test-options-target">
@@ -205,7 +205,13 @@ test("animation=onScroll should not be visible when the animation is limited", a
     expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Flash");
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
-    expect(".o-dropdown--menu [data-action-value='onScroll']").not.toHaveCount();
+    await contains(".o-dropdown--menu [data-action-value='onScroll']").click();
+    await waitSidebarUpdated();
+    expect(".options-container [data-label='Animation'] .o-dropdown").toHaveText("On Scroll");
+
+    expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Fade");
+    expect(":iframe .test-options-target img").not.toHaveClass("o_anim_flash");
+    expect(":iframe .test-options-target img").toHaveClass("o_anim_fade_in");
 });
 test("visibility of animation animation=onHover", async () => {
     function expectOnHoverOptions(options) {

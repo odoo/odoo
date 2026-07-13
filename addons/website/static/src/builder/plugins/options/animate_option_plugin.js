@@ -481,14 +481,20 @@ export class SetAnimationModeAction extends BuilderAction {
     }
 
     async apply({ editingElement, value: effectName, params: { forceAnimation } }) {
-        const { hasAnimationEffect } = this.dependencies.animateOption;
+        const { hasAnimationEffect, getEffectsItems } = this.dependencies.animateOption;
+        // Remove appearance-only effects when switching to "On Scroll" so the
+        // default "Fade" effect can be applied.
+        if (effectName === "onScroll") {
+            const invalidEffect = getEffectsItems().find(
+                (effect) => effect.check && editingElement.classList.contains(effect.className)
+            );
+            invalidEffect && editingElement.classList.remove(invalidEffect.className);
+            editingElement.dataset.scrollZoneStart = 0;
+            editingElement.dataset.scrollZoneEnd = 100;
+        }
         // Prevent adding fade-in when another animation class is already present.
         if (this.animationWithFadein.includes(effectName) && !hasAnimationEffect(editingElement)) {
             editingElement.classList.add("o_anim_fade_in");
-        }
-        if (effectName === "onScroll") {
-            editingElement.dataset.scrollZoneStart = 0;
-            editingElement.dataset.scrollZoneEnd = 100;
         }
         if (effectName === "onHover") {
             // Use getResource instead of this.dependencies as imageHover is not
