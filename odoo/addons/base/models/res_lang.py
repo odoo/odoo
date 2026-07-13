@@ -291,14 +291,10 @@ class ResLang(models.CachedModel):
         # config['load_language'] is a comma-separated list or None
         lang_code = (tools.config.get('load_language') or 'en_US').split(',')[0]
         lang = self._activate_lang(lang_code) or self._create_lang(lang_code)
-        IrDefault = self.env['ir.default']
-        default_value = IrDefault._get('res.partner', 'lang')
-        if default_value is None:
-            IrDefault.set('res.partner', 'lang', lang_code)
-            # set language of main company, created directly by db bootstrap SQL
-            partner = self.env.company.partner_id
-            if not partner.lang:
-                partner.write({'lang': lang_code})
+        # set language of main company, created directly by db bootstrap SQL
+        partner = self.env.company.partner_id
+        if not partner.lang:
+            partner.write({'lang': lang_code})
         return True
 
     # ------------------------------------------------------------
