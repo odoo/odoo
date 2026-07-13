@@ -8,7 +8,7 @@
             <t t-else="">
                 <t t-call="web.SettingsPage.SidePanel.Regular"/>
             </t>
-            <div class="settings" t-ref="this.settingsRef">
+            <div class="settings border border-bottom-0 rounded-4 rounded-bottom-0 mx-3" t-ref="this.settingsRef">
                 <t t-call-slot="NoContentHelper" t-if="this.props.slots['NoContentHelper'].isVisible"/>
                 <t t-call-slot="default" selectedTab="this.state.selectedTab"/>
             </div>
@@ -53,9 +53,9 @@
 
     <t t-name="web.SettingsPage.SidePanel.Regular">
         <div class="position-sticky top-0 flex-grow-0 z-1">
-            <div class="settings_tab h-100 border-end">
+            <div class="settings_tab h-100">
                 <t t-foreach="this.props.modules" t-as="module" t-key="module.key">
-                    <a class="tab" t-if="!module.isVisible"
+                    <a class="tab rounded-end-3" t-if="!module.isVisible"
                             t-att-class="{
                             'o_page_invalid': this.invalidApps.includes(module.key), 'selected': this.selectedModule().key === module.key and this.state.search.value.length === 0
                             }" t-att-data-key="module.key" role="tab" t-attf-href="#${ctx.module.key}" t-on-click="() => this.onSettingTabClick(module.key)">
