@@ -137,7 +137,7 @@ export function renderField(field, resetId = false) {
     }
     template.content
         .querySelectorAll("input.datetimepicker-input")
-        .forEach((el) => (el.value = field.propertyValue));
+        .forEach((el) => (el.value = field.propertyValue || ""));
     template.content.querySelectorAll("[name]").forEach((el) => {
         el.name = getQuotesEncodedName(el.name);
     });
