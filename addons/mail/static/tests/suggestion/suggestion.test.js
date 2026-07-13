@@ -187,7 +187,7 @@ test("[text composer] post a first message then display partner mention suggesti
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await insertText(".o-mail-Composer-input", "first message");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
@@ -224,7 +224,7 @@ test("post a first message then display partner mention suggestions on typing '@
     };
     await focus(".o-mail-Composer-html.odoo-editor-editable");
     await htmlInsertText(editor, "first message");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message");
     await htmlInsertText(editor, "@");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
@@ -702,7 +702,7 @@ test("[text composer] Mention with @everyone", async () => {
     await insertText(".o-mail-Composer-input", "@ever");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@everyone " });
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message-bubble.o-orange");
     await contains(".o-mail-Message a:contains('@everyone')");
 });
@@ -730,7 +730,7 @@ test("Mention with @everyone", async () => {
     await htmlInsertText(editor, "@ever");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-html.odoo-editor-editable:text('@everyone')");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message-bubble.o-orange");
     await contains(".o-mail-Message a:contains('@everyone')");
 });
@@ -816,7 +816,7 @@ test("[text composer] Mention with @-role", async () => {
     await insertText(".o-mail-Composer-input", "@discuss");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@rd-Discuss " });
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message a.o-discuss-mention:text('@rd-Discuss')");
 });
 
@@ -869,7 +869,7 @@ test("Mention with @-role", async () => {
     await htmlInsertText(editor, "@discuss");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-html.odoo-editor-editable:text('@rd-Discuss')");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message a.o-discuss-mention:text('@rd-Discuss')");
 });
 
@@ -911,7 +911,7 @@ test("[text composer] Mention with @-role send correct role id", async () => {
     await insertText(".o-mail-Composer-input", "@discuss");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@rd-Discuss " });
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message a.o-discuss-mention:text('@rd-Discuss')");
     await expect.waitForSteps(["message_post"]);
 });
@@ -963,7 +963,7 @@ test("Mention with @-role send correct role id", async () => {
     await htmlInsertText(editor, "@discuss");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-html.odoo-editor-editable:text('@rd-Discuss')");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message a.o-discuss-mention:text('@rd-Discuss')");
     await expect.waitForSteps(["message_post"]);
 });

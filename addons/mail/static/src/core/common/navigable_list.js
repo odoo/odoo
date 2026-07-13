@@ -1,7 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { optionType } from "@mail/core/common/suggestion_hook";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { onExternalClick, useOnChange } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
 import { Component, props, proxy, signal, t, useListener } from "@odoo/owl";
@@ -52,22 +51,24 @@ export class NavigableList extends Component {
             position: this.props.position,
             rememberPosition: this.props.rememberPosition,
         });
-        useLayoutEffect(
-            () => {
-                this.open();
-            },
-            () => [this.props?.options]
+        useOnChange(
+            () => [this.props.options],
+            () => this.open()
         );
-        useLayoutEffect(
-            () => {
-                if (!this.props.isLoading) {
-                    clearTimeout(this.loadingTimeoutId);
-                    this.state.showLoading = false;
-                } else if (!this.loadingTimeoutId) {
-                    this.loadingTimeoutId = setTimeout(() => (this.state.showLoading = true), 2000);
+        useOnChange(
+            () => [this.props.isLoading],
+            (isLoading) => {
+                if (isLoading) {
+                    const loadingTimeoutId = setTimeout(
+                        () => (this.state.showLoading = true),
+                        2000
+                    );
+                    return () => {
+                        clearTimeout(loadingTimeoutId);
+                        this.state.showLoading = false;
+                    };
                 }
-            },
-            () => [this.props.isLoading]
+            }
         );
     }
 
