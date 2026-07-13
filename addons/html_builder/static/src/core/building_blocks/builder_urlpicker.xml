@@ -10,7 +10,7 @@
                 preview="this.preview"
                 value="this.state.value"
         >
-            <button class="btn" title="Preview this URL in a new tab" t-on-click="this.openPreviewUrl">
+            <button class="btn" title="Preview this URL in a new tab" t-if="this.props.previewButton" t-on-click="this.openPreviewUrl">
                 <i class="oi oi-fw" data-icon="open_in_new" role="img" aria-hidden="true"/>
                 <span class="visually-hidden">Preview this URL in a new tab</span>
             </button>
