@@ -2850,6 +2850,93 @@ input[value*="data-oe-translation-source-sha"] {
     --wanim-opacity-adjustment: 1;
 }
 
+.o_block_hover {
+    --anim-color: rgba(0, 0, 0, .15);
+    --anim-shift: 10px;
+    --anim-intensity: 10;
+
+    // OVERLAY
+    &:not(.o_block_hover_translate, .o_block_hover_zoom_in, .o_block_hover_zoom_out) {
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border-radius: inherit;
+            background-color: var(--anim-color);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease-out;
+        }
+
+        &:hover::before {
+            opacity: 1;
+        }
+    }
+
+    &.o_block_hover_translate,
+    &.o_block_hover_zoom_in,
+    &.o_block_hover_zoom_out {
+        transition: transform .2s ease-out;
+        transform-origin: center;
+    }
+
+    // TRANSLATE
+    &.o_block_hover_translate {
+        --anim-shift-x: 0;
+        --anim-shift-y: calc(-1 * var(--anim-shift));
+
+        &.o_block_hover_translate_left {
+            --anim-shift-x: calc(-1 * var(--anim-shift));
+            --anim-shift-y: 0;
+
+            .o_rtl & {
+                --anim-shift-x: var(--anim-shift);
+            }
+        }
+
+        &.o_block_hover_translate_right {
+            --anim-shift-x: var(--anim-shift);
+            --anim-shift-y: 0;
+
+            .o_rtl & {
+                --anim-shift-x: calc(-1 * var(--anim-shift));
+            }
+        }
+
+        &.o_block_hover_translate_bottom {
+            --anim-shift-y: var(--anim-shift);
+        }
+
+        &:hover {
+            transform: translate(var(--anim-shift-x), var(--anim-shift-y));
+        }
+    }
+
+    // ZOOM IN
+    &.o_block_hover_zoom_in:hover {
+        transform: scale(calc(1 + (var(--anim-intensity, 10) / 400)));
+    }
+
+    // ZOOM OUT
+    &.o_block_hover_zoom_out:hover {
+        transform: scale(calc(1 - (var(--anim-intensity, 10) / 400)));
+    }
+}
+
+// Disable block hover effects when the block contains form fields. Moving or
+// overlaying a block on hover can make fields hard to focus and can interfere
+// with text selection or typing.
+.o_block_hover:has(input, textarea, select) {
+    transform: none !important;
+
+    &:hover::before {
+        display: none !important;
+    }
+}
+
 // Slide //////////////////////////////////////////////////////////////////////
 
 @keyframes o_anim_slide_in_down {

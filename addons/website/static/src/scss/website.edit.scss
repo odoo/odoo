@@ -21,3 +21,12 @@ header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
         bottom: $o-we-dropzone-size/2;
     }
 }
+
+// Disable css hover animations that would be hidden behind a .stretched-link
+// because the hover would not be detected (.stretched-link are disabled in
+// edit mode)
+*:has(> .stretched-link, > .slide-link) {
+    .o_block_hover:hover {
+        transform: none !important;
+    }
+}
