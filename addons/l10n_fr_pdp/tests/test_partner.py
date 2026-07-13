@@ -223,3 +223,22 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
                 'Partner is not in the annuaire',
             )],
         })
+
+    def test_track_peppol_verification_state_for_non_pdp_company(self):
+        company = self.env['res.company'].create({'name': 'Belgian Company'})
+        partner = self.partner_a.with_company(company)
+        messages_before = partner.message_ids
+
+        partner._log_verification_state_update('not_verified', 'not_valid')
+        self.env.cr.precommit.run()
+
+        message = partner.message_ids - messages_before
+        self.assertEqual(len(message), 1)
+        self.assertMessageFields(message, {
+            'tracking_values': [(
+                'peppol_verification_state',
+                'selection',
+                'Unchecked',
+                'Partner is not on Peppol',
+            )],
+        })
