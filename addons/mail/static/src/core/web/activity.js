@@ -1,4 +1,3 @@
-import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
@@ -34,7 +33,7 @@ export class Activity extends Component {
                 id: this.activity().res_id,
             })
         );
-        this.attachmentUploader = useAttachmentUploader(this.thread);
+        this.pendingUploads = [];
     }
 
     get displayName() {
@@ -151,13 +150,16 @@ export class Activity extends Component {
         });
     }
 
-    async onFileUploaded(data) {
-        const activity = this.activity();
+    onFileUploaded(data) {
+        this.pendingUploads.push(data);
+    }
+
+    async onFilesUploadComplete() {
+        if (!this.pendingUploads.length) {
+            return;
+        }
         const thread = this.thread();
-        const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
-            activity,
-        });
-        await activity.markAsDone([attachmentId]);
+        await this.activity().uploadAndMarkAsDone(this.pendingUploads.splice(0));
         this.onActivityChanged(thread);
         await thread.fetchNewMessages();
     }

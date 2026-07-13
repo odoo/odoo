@@ -18,7 +18,7 @@
                     <i class="oi" data-icon="mail" role="img" aria-label="Compose Email"/>
                 </button>
                 <t t-if="this.activity().can_write">
-                    <FileUploader t-if="this.hasFileUploader" onUploaded.bind="this.onFileUploaded">
+                    <FileUploader t-if="this.hasFileUploader" onUploaded.bind="this.onFileUploaded" onUploadComplete.bind="this.onFilesUploadComplete" multiUpload="true">
                         <t t-set-slot="toggler">
                             <button class="btn btn-sm btn-success btn-link" title="Upload file" aria-label="Upload File">
                                 <i class="oi" data-icon="upload"/>
