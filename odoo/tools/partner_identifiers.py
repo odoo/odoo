@@ -773,6 +773,14 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'validation_function': nl_kvk_validate,
         'countries': ['NL'],
     },
+    'NL_OB': {
+        'sequence': 30,
+        'help': _lt('OB-number cannot be computed from the VAT for sole proprietorships.'),
+        'label': _lt('OB'),
+        'placeholder': '123456782B90',
+        'category': 'VAT',
+        'countries': ['NL'],
+    },
     'NL_OIN': {
         'sequence': 20,
         'scheme': '0190',
