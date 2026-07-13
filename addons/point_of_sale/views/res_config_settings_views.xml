@@ -232,6 +232,21 @@
                                         <field name="pos_fallback_nomenclature_id"/>
                                     </div>
                                 </setting>
+                                <setting
+                                    id="variants"
+                                    help="Sell variants of a product using attributes (size, color, etc.)."
+                                    documentation="/applications/sales/sales/products_prices/products/variants.html"
+                                >
+                                    <field name="group_product_variant"/>
+                                    <button
+                                        name="product.attribute_action"
+                                        type="action"
+                                        string="Attributes"
+                                        icon="oi-arrow-right"
+                                        class="btn-link"
+                                        invisible="not group_product_variant"
+                                    />
+                                </setting>
                             </block>
                             <block title="Accounting" id="pos_accounting_section">
                                 <setting id="default_sales_tax_setting" title="This tax is applied to any new product created in the catalog." documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
