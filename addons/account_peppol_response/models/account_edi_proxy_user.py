@@ -5,8 +5,8 @@ from markupsafe import Markup
 
 from odoo import api, models
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account_peppol.tools import format_list
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import format_list
 
 _logger = logging.getLogger(__name__)
 

@@ -10,11 +10,11 @@ class ResPartner(models.Model):
     peppol_supported_documents = fields.Json('Supported Peppol Documents')
     peppol_response_support = fields.Boolean('Peppol Response Service', compute='_compute_response_support')
 
-    @api.depends('peppol_supported_documents', 'peppol_verification_state')
+    @api.depends('peppol_supported_documents', 'account_peppol_verification_label')
     def _compute_response_support(self):
         for partner in self:
             partner.peppol_response_support = (
-                partner.peppol_verification_state == 'valid'
+                partner.account_peppol_verification_label == 'valid'
                 and partner.peppol_supported_documents
                 and INVOICE_RESPONSE_CUSTOMISATION_ID in partner.peppol_supported_documents
             )
