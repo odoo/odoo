@@ -3376,3 +3376,53 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_pos_tour("test_reward_line_tax_grouping_key", pos_config=self.main_pos_config)
         self.main_pos_config.current_session_id.action_pos_session_closing_control()
+
+    def test_specific_discount_price_unit_rounding(self):
+        """The reward line's price unit must be rounded to the 'Product Price'
+        precision: the UI computes taxes on the rounded value while the backend
+        re-taxes the raw stored one, drifting by one cent on a rounding
+        boundary (-17.385 -> 78.00 vs -17.38488 -> 78.01).
+        """
+        self.env.ref('product.decimal_price').digits = 3
+        self.env['loyalty.program'].search([]).write({'active': False})
+        tax_15 = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+        products = self.env['product.product'].create([{
+            'name': name,
+            'list_price': 42.609,
+            'available_in_pos': True,
+            'taxes_id': [Command.set(tax_15.ids)],
+        } for name in ('Product A', 'Product B')])
+        self.env['loyalty.program'].create({
+            'name': 'Discount on specific products',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 20.4,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_ids': [Command.set(products.ids)],
+            })],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosLoyaltySpecificDiscountPriceUnitRounding')
+
+        order = self.main_pos_config.current_session_id.order_ids
+        self.assertEqual(len(order), 1)
+        # 2 * 49.00 - 20.00 (20.4% discount, tax included)
+        self.assertAlmostEqual(order.amount_total, 78.00, places=2)
+        self.assertAlmostEqual(order.amount_paid, 78.00, places=2)
