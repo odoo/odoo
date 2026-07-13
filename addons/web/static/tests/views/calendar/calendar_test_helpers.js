@@ -466,7 +466,7 @@ export async function selectAllDayRange(startDate, endDate) {
     await animationFrame();
 }
 export async function closeCwPopOver() {
-    await contains(`.o_cw_popover_close`).click();
+    await contains(`.o_card_popover_close`).click();
 }
 /**
  * @param {number} eventId

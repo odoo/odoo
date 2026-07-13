@@ -4,7 +4,7 @@
         <t t-if="this.isWorkLocationEvent()">
             <Record resModel="'hr.employee.location'" fieldNames="this.fieldNames" fields="this.fields" activeFields="this.fields" values="this.values" mode="'readonly'" t-slot-scope="slot">
                 <div class="o_cw_popover position-relative" t-att-class="'o_calendar_color_'+ this.props.record.colorIndex">
-                    <div class="o_cw_popover_close p-1 cursor-pointer d-flex justify-content-center position-absolute top-0 end-0"
+                    <div class="o_card_popover_close p-1 cursor-pointer d-flex justify-content-center position-absolute top-0 end-0"
                         t-on-click.stop="this.props.close">
                         <i class="oi" data-icon="close_small"></i>
                     </div>

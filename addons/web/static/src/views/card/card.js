@@ -7,21 +7,6 @@ import { CARD_ATTRIBUTE, CardArchParser } from "./card_arch_parser";
 
 import { Component, signal, t, useProps, xml } from "@odoo/owl";
 
-export const cardProps = {
-    card: t.any(),
-    resModel: t.any(),
-    resId: t.any().optional(),
-    fields: t.any(),
-    className: t.any().optional(),
-    Compiler: t.any().optional(),
-    context: t.any().optional(),
-    hooks: t.any().optional(),
-    readonly: t.any().optional(),
-    archiveRecord: t.any().optional(),
-    deleteRecord: t.any().optional(),
-    openRecord: t.any().optional(),
-};
-
 export class Card extends Component {
     static template = xml`
         <div class="o_card" t-att-class="this.props.className" t-ref="this.rootRef">
@@ -33,7 +18,20 @@ export class Card extends Component {
         Record,
         CardRenderer,
     };
-    props = useProps(cardProps);
+    props = useProps({
+        card: t.any(),
+        resModel: t.any(),
+        resId: t.any().optional(),
+        fields: t.any(),
+        className: t.any().optional(),
+        Compiler: t.any().optional(),
+        context: t.any().optional(),
+        hooks: t.any().optional(),
+        readonly: t.any().optional(),
+        archiveRecord: t.any().optional(),
+        deleteRecord: t.any().optional(),
+        openRecord: t.any().optional(),
+    });
     static CARD_ATTRIBUTE = CARD_ATTRIBUTE;
 
     rootRef = signal.ref();
