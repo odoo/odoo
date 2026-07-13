@@ -3,6 +3,7 @@
 
 from odoo import _, api, models
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
 class StockMove(models.Model):
@@ -22,8 +23,14 @@ class StockMove(models.Model):
             if not self.product_id.uom_id.is_zero(uom_quantity):
                 unit_kit_purchase = 1
                 if self.purchase_line_id:
+                    # A same component may be exploded by several bom lines: only the moves
+                    # sharing this move's bom line and cost share carry the same demand.
                     active_moves = self.purchase_line_id.move_ids.filtered(lambda m:
-                        m.state != 'cancel' and m.product_id == self.product_id and m.picking_id != self.picking_id,
+                        m.state != 'cancel'
+                        and m.product_id == self.product_id
+                        and m.picking_id != self.picking_id
+                        and m.bom_line_id == self.bom_line_id
+                        and float_compare(m.cost_share, self.cost_share, precision_digits=6) == 0,
                     )
                     active_quantity = quantity + sum(
                         move.product_uom._compute_quantity(move.quantity, self.product_id.uom_id)
@@ -55,6 +62,12 @@ class StockMove(models.Model):
         if self.purchase_line_id:
             vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
+
+    def _merge_moves_fields(self):
+        res = super()._merge_moves_fields()
+        if not self.env.context.get('merge_extra'):
+            res['cost_share'] = sum(self.mapped('cost_share'))
+        return res
 
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total, valuation_total_qty = super()._get_valuation_price_and_qty(related_aml, to_curr)
