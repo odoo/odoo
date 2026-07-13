@@ -668,10 +668,19 @@ class TestItEdiExport(TestItEdi):
             ],
         })
         invoice_a.action_post()
+        extra_attachment = self.env['ir.attachment'].create({
+            'name': 'goodbye.pdf',
+            'raw': b'i\'ve come to talk with you again',
+        })
+
         self._assert_export_invoice(invoice_a, 'invoice_with_attachment.xml', pdf_values={
             'name': 'hello.pdf',
             'raw': b'hello darkness my old friend',
-        })
+        }, extra_attachments=[{
+            'id': extra_attachment.id,
+            'manual': True,
+            'name': extra_attachment.name,
+        }])
 
     def test_export_XML_oss_tax(self):
         be_partner = self.env['res.partner'].create({

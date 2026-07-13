@@ -6,8 +6,9 @@ import uuid
 import unicodedata
 from datetime import datetime
 from lxml import etree
+from textwrap import wrap
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
-from odoo.exceptions import LockError, UserError
+from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes, cleanup_xml_node, float_compare, float_is_zero, float_repr, float_round, html2plaintext
 
@@ -109,6 +110,8 @@ class AccountMove(models.Model):
         help='Only partners that have a 6-chars long l10n_it_pa_index actually belong to the Public Administration'
     )
 
+    l10n_it_invoice_cause = fields.Text("Payment Reason and Notes")
+
     l10n_it_payment_method = fields.Selection(
         selection=L10N_IT_PAYMENT_METHOD_SELECTION,
         compute='_compute_l10n_it_payment_method',
@@ -131,6 +134,12 @@ class AccountMove(models.Model):
         size=100,
         help=" Used to connect an individual invoice to a broader framework agreement, a specific project, or a long-term convention."
     )
+
+    @api.constrains('l10n_it_invoice_cause')
+    def _check_l10n_it_invoice_cause(self):
+        for move in self:
+            if move.l10n_it_invoice_cause and len(move.l10n_it_invoice_cause) > 600:
+                raise ValidationError(self.env._("The Document Reason can contain up to 600 characters (currently %s)", len(move.l10n_it_invoice_cause)))
 
     # -------------------------------------------------------------------------
     # Computes
@@ -693,7 +702,7 @@ class AccountMove(models.Model):
 
         return [base_line, vat_line]
 
-    def _l10n_it_edi_get_values(self, pdf_values=None):
+    def _l10n_it_edi_get_values(self, pdf_values=None, extra_attachments=None):
         def grouping_function_withholding(base_line, tax_data):
             if not tax_data:
                 return None
@@ -923,6 +932,18 @@ class AccountMove(models.Model):
                         'riferimento_data': None,
                     })
 
+        # Invoice cause
+        invoice_cause = wrap(self.l10n_it_invoice_cause or '', width=200)
+
+        # Attachments to embed
+        attachments = self.env['ir.attachment'].browse(attachment['id'] for attachment in extra_attachments or [])
+        attachments_data = []
+        for attachment in attachments:
+            attachments_data.append({
+                'name': attachment.name,
+                'content': base64.b64encode(attachment.raw.content).decode(),
+            })
+
         return {
             'record': self,
             'base_lines': base_lines,
@@ -958,6 +979,8 @@ class AccountMove(models.Model):
             'abs': abs,
             'pdf_name': pdf_values['name'] if pdf_values else False,
             'pdf': base64.b64encode(pdf_values['raw']).decode() if pdf_values else False,
+            'invoice_cause': invoice_cause or False,
+            'extra_attachments': attachments_data or False,
             'withholding_values': withholding_values,
             'pension_fund_values': pension_fund_values,
         }
@@ -2173,7 +2196,7 @@ class AccountMove(models.Model):
             'format_uom': format_uom,
         }
 
-    def _l10n_it_edi_render_xml(self, pdf_values=None):
+    def _l10n_it_edi_render_xml(self, pdf_values=None, extra_attachments=None):
         ''' Create the xml file content.
             :return:    The XML content as bytestring.
         '''
@@ -2181,12 +2204,12 @@ class AccountMove(models.Model):
             'l10n_it_edi.account_invoice_it_FatturaPA_export' if not self._l10n_it_edi_is_simplified()
             else 'l10n_it_edi.account_invoice_it_simplified_FatturaPA_export')
         xml_content = self.env['ir.qweb']._render(qweb_template_name, {
-            **self._l10n_it_edi_get_values(pdf_values),
+            **self._l10n_it_edi_get_values(pdf_values, extra_attachments),
             **self._l10n_it_edi_get_formatters()})
         xml_node = cleanup_xml_node(xml_content, remove_blank_nodes=False)
         return etree.tostring(xml_node, xml_declaration=True, encoding='UTF-8')
 
-    def _l10n_it_edi_get_attachment_values(self, pdf_values=None):
+    def _l10n_it_edi_get_attachment_values(self, pdf_values=None, extra_attachments=None):
         self.ensure_one()
         return {
             'name': self._l10n_it_edi_generate_filename(),
@@ -2197,7 +2220,7 @@ class AccountMove(models.Model):
             'res_id': self.id,
             'res_model': self._name,
             'res_field': 'l10n_it_edi_attachment_file',
-            'raw': self._l10n_it_edi_render_xml(pdf_values=pdf_values),
+            'raw': self._l10n_it_edi_render_xml(pdf_values=pdf_values, extra_attachments=extra_attachments),
         }
 
     def _l10n_it_edi_generate_filename(self):
@@ -2244,6 +2267,7 @@ class AccountMove(models.Model):
             content = base64.b64encode(attachment['raw']).decode()
 
             try:
+                self._l10n_it_check_xml_size(content)
                 response = move._l10n_it_edi_upload([{
                     'filename': filename,
                     'xml': content,
@@ -2282,6 +2306,15 @@ class AccountMove(models.Model):
                 results[filename] = {'error_message': error_message}
 
         return results
+
+    @api.model
+    def _l10n_it_check_xml_size(self, content):
+        # 5 mb recommendation https://fex-app.com/FatturaElettronica/FatturaElettronicaBody/Allegati
+        if len(base64.b64decode(content)) > 5000000:
+            raise AccountEdiProxyError(
+                'it_attachments_size',
+                self.env._("Attachments exceed the 5mb limit. Please resize or remove some attachments."),
+            )
 
     def _l10n_it_edi_upload_error_message(self, error_code, error_description):
         """ Translate server errors with the client user's language. """

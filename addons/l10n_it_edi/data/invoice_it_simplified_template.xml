@@ -102,6 +102,10 @@
                         <FormatoAttachment t-translation="off">PDF</FormatoAttachment>
                         <Attachment t-out="pdf"/>
                     </Allegati>
+                    <Allegati t-foreach="extra_attachments" t-as="attachment">
+                        <NomeAttachment t-out="format_alphanumeric(attachment['name'], 60)"/>
+                        <Attachment t-out="attachment['content']"/>
+                    </Allegati>
                 </FatturaElettronicaBody>
             </p:FatturaElettronicaSemplificata>
         </template>

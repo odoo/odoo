@@ -151,12 +151,12 @@ class AccountMoveSendWizard(models.TransientModel):
                 if self._is_applicable_to_company(method_key, wizard.company_id)
             }
 
-    @api.depends('invoice_edi_format')
+    @api.depends('invoice_edi_format', 'extra_edis')
     def _compute_display_attachments_widget(self):
         for wizard in self:
             wizard.display_attachments_widget = wizard._display_attachments_widget(
                 edi_format=wizard.invoice_edi_format,
-                sending_methods=wizard.sending_methods or [],
+                sending_methods=(wizard.sending_methods or []) + (wizard.extra_edis or []),
             )
 
     @api.depends('extra_edi_checkboxes')

@@ -18,8 +18,12 @@ class AccountMoveSend(models.AbstractModel):
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
-        res.update({'it_edi_send': {'label': _("Send to Tax Agency"), 'is_applicable': self._is_it_edi_applicable, 'help': _("Send the e-invoice XML to the Italian Tax Agency.")}})
+        res.update({'it_edi_send': {'label': _("Send to SDI"), 'is_applicable': self._is_it_edi_applicable, 'help': _("Send the e-invoice XML to the Italian Tax Agency.")}})
         return res
+
+    @api.model
+    def _display_attachments_widget(self, edi_format, sending_methods):
+        return edi_format == 'it_edi_xml' and 'it_edi_send' in sending_methods or super()._display_attachments_widget(edi_format, sending_methods)
 
     # -------------------------------------------------------------------------
     # ALERTS
@@ -83,8 +87,11 @@ class AccountMoveSend(models.AbstractModel):
                 or (invoice_data['invoice_edi_format'] == 'it_edi_xml' and invoice._l10n_it_edi_ready_for_xml_export())
             )
         ):
+            pdf_values = invoice_data['pdf_attachment_values']
             invoice_data['l10n_it_edi_values'] = invoice._l10n_it_edi_get_attachment_values(
-                pdf_values=invoice_data['pdf_attachment_values'])
+                pdf_values=pdf_values,
+                extra_attachments=[attachment for attachment in invoice_data['mail_attachments_widget'] if attachment.get('manual')],
+            )
 
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'

@@ -104,7 +104,7 @@ class AccountMove(models.Model):
             'domain': [('id', 'in', self.l10n_it_ddt_ids.ids)],
         }
 
-    def _l10n_it_edi_get_values(self, pdf_values=None):
-        template_values = super()._l10n_it_edi_get_values(pdf_values)
+    def _l10n_it_edi_get_values(self, pdf_values=None, extra_attachments=None):
+        template_values = super()._l10n_it_edi_get_values(pdf_values, extra_attachments)
         template_values['ddt_dict'] = self._get_ddt_values()
         return template_values
