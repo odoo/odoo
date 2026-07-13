@@ -2,7 +2,7 @@ import { MessagingMenuUIState } from "@mail/core/public_web/messaging_menu/messa
 
 import { patch } from "@web/core/utils/patch";
 
-patch(MessagingMenuUIState.prototype, {
+const messagingMenuUIStateModelPatch = {
     selectTab(tab) {
         super.selectTab(tab);
         if (this.id === "discuss.sidebar") {
@@ -19,4 +19,5 @@ patch(MessagingMenuUIState.prototype, {
         }
         return super._isReadyForInitialLoad();
     },
-});
+};
+patch(MessagingMenuUIState.prototype, messagingMenuUIStateModelPatch);

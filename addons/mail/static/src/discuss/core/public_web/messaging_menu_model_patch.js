@@ -14,7 +14,8 @@ MENU_TABS.CHAT = "chat";
 MENU_TABS.CHANNEL = "channel";
 MENU_TABS.MEETING = "meeting";
 
-patch(MessagingMenu.prototype, {
+/** @type {import("models").MessagingMenu} */
+const messagingMenuPatch = {
     setup() {
         super.setup(...arguments);
         this.chatTab = fields.One("MessagingMenuTab", {
@@ -152,4 +153,5 @@ patch(MessagingMenu.prototype, {
             super.notificationMatchesExtra(message) && message.thread?.model !== "discuss.channel"
         );
     },
-});
+};
+patch(MessagingMenu.prototype, messagingMenuPatch);

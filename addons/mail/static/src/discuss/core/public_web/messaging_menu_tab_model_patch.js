@@ -4,7 +4,8 @@ import { fields } from "@mail/model/export";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(MessagingMenuTab.prototype, {
+/** @type {import("models").MessagingMenuTab} */
+const messagingMenuTabPatch = {
     setup() {
         super.setup(...arguments);
         this.channels = fields.Many("discuss.channel", {
@@ -16,10 +17,7 @@ patch(MessagingMenuTab.prototype, {
                         return result;
                     }
                 }
-                if (c1.localId === c2.localId) {
-                    return 0;
-                }
-                return c2.localId > c1.localId ? 1 : -1;
+                return c2.id - c1.id;
             },
         });
         this.channelsWithCounter = fields.Many("discuss.channel", {
@@ -53,4 +51,5 @@ patch(MessagingMenuTab.prototype, {
             ? this.channels.map((c) => c.id)
             : super._computeLoadMoreExcludeIds();
     },
-});
+};
+patch(MessagingMenuTab.prototype, messagingMenuTabPatch);

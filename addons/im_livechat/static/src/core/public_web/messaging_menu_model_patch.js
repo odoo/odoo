@@ -10,7 +10,7 @@ import { patch } from "@web/core/utils/patch";
 MENU_TABS.LIVECHAT = "livechat";
 
 /** @type {MessagingMenu} */
-const messagingMenuPatch = {
+const messagingMenuModelPatch = {
     setup() {
         super.setup(...arguments);
         this.livechatTab = fields.One("MessagingMenuTab", {
@@ -55,4 +55,4 @@ const messagingMenuPatch = {
         });
     },
 };
-patch(MessagingMenu.prototype, messagingMenuPatch);
+patch(MessagingMenu.prototype, messagingMenuModelPatch);

@@ -7,7 +7,8 @@ import { patch } from "@web/core/utils/patch";
 
 Object.assign(MessagingMenu.components, { NotificationItem });
 
-patch(MessagingMenu.prototype, {
+/** @type {MessagingMenu} */
+const messagingMenuPatch = {
     setup() {
         super.setup(...arguments);
         this.action = useService("action");
@@ -103,4 +104,5 @@ patch(MessagingMenu.prototype, {
         }
         return _t("Failure: %(modelName)s", { modelName: failure.modelName });
     },
-});
+};
+patch(MessagingMenu.prototype, messagingMenuPatch);

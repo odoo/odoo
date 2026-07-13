@@ -12,7 +12,8 @@ import { patch } from "@web/core/utils/patch";
 
 Object.assign(MessagingMenuItem.components, { CountryFlag });
 
-patch(MessagingMenuItem.prototype, {
+/** @type {MessagingMenuItem} */
+const messagingMenuItemPatch = {
     setup() {
         super.setup(...arguments);
         this.channelDropdownState = useDropdownState();
@@ -116,4 +117,5 @@ patch(MessagingMenuItem.prototype, {
         }
         return super.swipeLeft;
     },
-});
+};
+patch(MessagingMenuItem.prototype, messagingMenuItemPatch);

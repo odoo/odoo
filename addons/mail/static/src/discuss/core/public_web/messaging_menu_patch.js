@@ -6,7 +6,8 @@ import { computed, useEffect } from "@odoo/owl";
 import { normalize } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 
-patch(MessagingMenu.prototype, {
+/** @type {MessagingMenu} */
+const messagingMenuPatch = {
     setup() {
         super.setup(...arguments);
         this.filteredChannels = computed(() => {
@@ -50,4 +51,5 @@ patch(MessagingMenu.prototype, {
         channel.open({ focus: true, fromMessagingMenu: true, bypassCompact: true });
         this.close?.();
     },
-});
+};
+patch(MessagingMenu.prototype, messagingMenuPatch);

@@ -2,7 +2,8 @@ import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_me
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-patch(MessagingMenu.prototype, {
+/** @type {MessagingMenu} */
+const messagingMenuPatch = {
     openFailureView(failure, options) {
         if (failure.type === "email") {
             return super.openFailureView(failure, options);
@@ -32,4 +33,5 @@ patch(MessagingMenu.prototype, {
         }
         return super.getFailureNotificationName(...arguments);
     },
-});
+};
+patch(MessagingMenu.prototype, messagingMenuPatch);

@@ -5,8 +5,10 @@ import { patch } from "@web/core/utils/patch";
 
 MessagingMenuItem.components = { ...MessagingMenuItem.components, MessagingMenuCallParticipants };
 
-patch(MessagingMenuItem.prototype, {
+/** @type {MessagingMenuItem} */
+const messagingMenuItemPatch = {
     get attClass() {
         return { ...super.attClass, "o-my-0_5": this.channel?.hasRtcSessionActive };
     },
-});
+};
+patch(MessagingMenuItem.prototype, messagingMenuItemPatch);

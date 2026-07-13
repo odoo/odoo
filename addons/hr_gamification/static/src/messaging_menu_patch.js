@@ -3,7 +3,8 @@ import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
 
-patch(MessagingMenu.prototype, {
+/** @type {MessagingMenu} */
+const messagingMenuPatch = {
     setup() {
         super.setup();
         this.action = useService("action");
@@ -53,4 +54,5 @@ patch(MessagingMenu.prototype, {
             this.close?.();
         }
     },
-});
+};
+patch(MessagingMenu.prototype, messagingMenuPatch);
