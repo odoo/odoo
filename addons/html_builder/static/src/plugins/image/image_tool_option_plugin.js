@@ -14,7 +14,6 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { isCSSColor } from "@web/core/utils/colors";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
-import { setHrefUrl } from "../utils";
 
 const IMAGE_LINK_ALIGN_CLASSES = ["mx-auto", "ms-auto", "me-auto"];
 
@@ -225,7 +224,12 @@ export class SetUrlAction extends BuilderAction {
     }
     apply({ editingElement, value }) {
         const linkEl = searchSupportedParentLinkEl(editingElement);
-        setHrefUrl(linkEl, value);
+        if (!value) {
+            // As long as there is no URL, the image is not considered a link.
+            linkEl.removeAttribute("href");
+            return;
+        }
+        linkEl.setAttribute("href", value);
     }
     getValue({ editingElement }) {
         const linkEl = searchSupportedParentLinkEl(editingElement);
