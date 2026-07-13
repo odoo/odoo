@@ -1,39 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="l10n_fr_pdp_view_out_invoice_tree" model="ir.ui.view">
-        <field name="name">account.move.tree.l10n.fr.pdp.status</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account_peppol.account_peppol_view_out_invoice_tree_inherit"/>
-        <field name="arch" type="xml">
-            <field name="peppol_move_state" position="after">
-                <field name="pdp_ppf_move_state"
-                       widget="badge"
-                       optional="hide"
-                       decoration-danger="pdp_ppf_move_state == 'error'"
-                       decoration-success="pdp_ppf_move_state == 'done'"
-                       decoration-info="pdp_ppf_move_state in ('in_progress', 'sent')"
-                       invisible="not pdp_ppf_move_state"/>
-            </field>
-        </field>
-    </record>
-    <record id="l10n_fr_pdp_view_out_credit_note_tree" model="ir.ui.view">
-        <field name="name">account.move.refund.tree.l10n.fr.pdp.status</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account_peppol.account_peppol_view_out_credit_note_tree_inherit"/>
-        <field name="arch" type="xml">
-            <field name="peppol_move_state" position="after">
-                <field name="pdp_ppf_move_state"
-                       widget="badge"
-                       optional="hide"
-                       decoration-danger="pdp_ppf_move_state == 'error'"
-                       decoration-success="pdp_ppf_move_state == 'done'"
-                       decoration-info="pdp_ppf_move_state in ('in_progress', 'sent')"
-                       invisible="not pdp_ppf_move_state"/>
-            </field>
-        </field>
-    </record>
-
     <record id="l10n_fr_pdp_view_in_invoice_refund_tree_inherit" model="ir.ui.view">
         <field name="name">account.move.list.inherit</field>
         <field name="model">account.move</field>
@@ -72,6 +39,7 @@
             <label for="peppol_move_state" position="attributes">
                 <attribute name="string">E-Invoicing Status</attribute>
             </label>
+            <!-- TODO: backport https://github.com/odoo/odoo/pull/269465/changes -->
             <xpath expr="//div[@name='peppol_div']" position="after">
                 <field name="pdp_ppf_move_state" invisible="not pdp_ppf_move_state"/>
             </xpath>
@@ -224,16 +192,4 @@
         </field>
     </record>
 
-    <record id="l10n_fr_pdp_action_open_response_wizard" model="ir.actions.server">
-        <field name="name">Send Response</field>
-        <field name="model_id" ref="account.model_account_move"/>
-        <field name="binding_model_id" ref="account.model_account_move"/>
-        <field name="binding_view_types">list,form</field>
-        <field name="state">code</field>
-        <field name="sequence">8</field>
-        <field name="code">
-            if records:
-                action = records.action_pdp_open_response_wizard()
-        </field>
-    </record>
 </odoo>
