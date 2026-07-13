@@ -2,7 +2,6 @@
 
 import logging
 import pprint
-from functools import partial, wraps
 
 from markupsafe import Markup
 
@@ -12,18 +11,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.addons.sale_gelato import utils
 
 _logger = logging.getLogger(__name__)
-
-
-def post_commit(func):
-    """Wrap method to run in postcommit/postrollback hook with a separate cursor."""
-
-    @wraps(func)
-    def _post_commit_wrapper(self, *args, **kwargs):
-        with self.env.registry.cursor() as cr:
-            self = self.with_env(self.env(cr=cr))
-            return func(self, *args, **kwargs)
-
-    return _post_commit_wrapper
 
 
 class SaleOrder(models.Model):
@@ -135,8 +122,17 @@ class SaleOrder(models.Model):
 
             # Add hooks to confirm/delete the order on Gelato only after the transaction is
             # committed/rolled back. This prevents creating duplicate confirmed orders on Gelato.
-            self.env.cr.postcommit.add(partial(self._confirm_order_on_gelato, data["id"]))
-            self.env.cr.postrollback.add(partial(self._delete_order_on_gelato, data["id"]))
+            @self.env.cr.postcommit.add
+            def confirm_gelato():
+                with self.env.registry.cursor() as cr:
+                    order = self.with_env(self.env(cr=cr))
+                    order._confirm_order_on_gelato(data["id"])
+
+            @self.env.cr.postrollback.add
+            def delete_gelato():
+                with self.env.registry.cursor() as cr:
+                    order = self.with_env(self.env(cr=cr))
+                    order._delete_order_on_gelato(data["id"])
         except UserError as exc:
             raise UserError(
                 self.env._(
@@ -182,7 +178,6 @@ class SaleOrder(models.Model):
             items_payload.append(item_data)
         return items_payload
 
-    @post_commit
     def _confirm_order_on_gelato(self, gelato_order_id):
         """Send the order confirmation request to Gelato.
 
@@ -218,7 +213,6 @@ class SaleOrder(models.Model):
                 pprint.pformat(data),
             )
 
-    @post_commit
     def _delete_order_on_gelato(self, gelato_order_id):
         """Send the order deletion request to Gelato.
 
