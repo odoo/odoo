@@ -282,3 +282,25 @@ test("double-click on image in Media Dialog executes onClickAttachment only once
     await dblclick(".o_existing_attachment_cell");
     expect(executionCount).toBe(1);
 });
+
+test("documents tab domain excludes uploaded fonts and their css", async () => {
+    onRpc("ir.attachment", "search_read", ({ kwargs }) => {
+        const domain = JSON.stringify(kwargs.domain);
+        if (
+            domain.includes('"!",["mimetype","=like","font/%"]') &&
+            domain.includes('["description","not like","CSS font face for"]') &&
+            domain.includes('["name","!=","googleFontMetadata"]')
+        ) {
+            expect.step("fonts excluded from attachments domain");
+        }
+        return [];
+    });
+    const env = await makeMockEnv();
+    await setupEditor(`<p><img class="img-fluid" src="/web/static/img/logo.png"></p>`, { env });
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click("button[name='replace_image']");
+    await animationFrame();
+    await click(".nav-link:contains('Documents')");
+    expect.verifySteps(["fonts excluded from attachments domain"]);
+});
