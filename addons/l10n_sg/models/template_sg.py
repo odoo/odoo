@@ -23,7 +23,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_fiscal_country_id': 'base.sg',
                 'bank_account_code_prefix': '10141',
                 'cash_account_code_prefix': '10140',
-                'transfer_account_code_prefix': '101100',
+                'transfer_account_code_prefix': '10110',
                 'account_default_pos_receivable_account_id': 'account_account_737',
                 'income_currency_exchange_account_id': 'account_account_853',
                 'expense_currency_exchange_account_id': 'account_account_853',

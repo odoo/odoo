@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 
 TEST_GST_NUMBER = "36AABCT1332L011"
+TEST_GST_NUMBER_BVM = "29AAGCB1286Q000"
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -28,10 +29,34 @@ class ResPartner(models.Model):
     )
 
     display_pan_warning = fields.Boolean(string="Display pan warning", compute="_compute_display_pan_warning")
+    l10n_in_gst_state_warning = fields.Char(compute="_compute_l10n_in_gst_state_warning")
+
+    @api.depends('vat', 'state_id', 'country_id', 'fiscal_country_codes')
+    def _compute_l10n_in_gst_state_warning(self):
+        for partner in self:
+            if (
+                "IN" in partner.fiscal_country_codes
+                and partner.check_vat_in(partner.vat)
+            ):
+                if partner.vat[:2] == "99":
+                    partner.l10n_in_gst_state_warning = _(
+                        "As per GSTN the country should be other than India, so it's recommended to"
+                    )
+                else:
+                    state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', partner.vat[:2])], limit=1)
+                    if state_id and state_id != partner.state_id:
+                        partner.l10n_in_gst_state_warning = _(
+                            "As per GSTN the state should be %s, so it's recommended to", state_id.name
+                        )
+                    else:
+                        partner.l10n_in_gst_state_warning = False
+            else:
+                partner.l10n_in_gst_state_warning = False
 
     @api.depends('l10n_in_pan')
     def _compute_display_pan_warning(self):
-        self.display_pan_warning = self.vat and self.l10n_in_pan and self.l10n_in_pan != self.vat[2:12]
+        for partner in self:
+            partner.display_pan_warning = partner.vat and partner.l10n_in_pan and partner.l10n_in_pan != partner.vat[2:12]
 
     @api.onchange('company_type')
     def onchange_company_type(self):
@@ -69,6 +94,14 @@ class ResPartner(models.Model):
             but this is not a valid number as per the regular expression
             so TEST_GST_NUMBER is considered always valid
         """
-        if vat == TEST_GST_NUMBER:
+        if vat in (TEST_GST_NUMBER, TEST_GST_NUMBER_BVM):
             return True
         return super().check_vat_in(vat)
+
+    def action_update_state_as_per_gstin(self):
+        self.ensure_one()
+        if self.check_vat_in(self.vat):
+            state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', self.vat[:2])], limit=1)
+            self.state_id = state_id
+        if self.ref_company_ids:
+            self.ref_company_ids._update_l10n_in_fiscal_position()

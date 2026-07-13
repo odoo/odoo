@@ -55,7 +55,7 @@ class ResCompany(models.Model):
         compute='_compute_account_peppol_contact_email', store=True, readonly=False,
         help='Primary contact email for Peppol-related communication',
     )
-    account_peppol_migration_key = fields.Char(string="Migration Key")
+    account_peppol_migration_key = fields.Char(string="Migration Key", groups="base.group_system")
     account_peppol_phone_number = fields.Char(
         string='Mobile number (for validation)',
         compute='_compute_account_peppol_phone_number', store=True, readonly=False,
@@ -68,6 +68,7 @@ class ResCompany(models.Model):
             ('sent_verification', 'Verification code sent'),
             ('pending', 'Pending'),
             ('active', 'Active'),
+            ('sender', 'Can send but not receive'),
             ('rejected', 'Rejected'),
             ('canceled', 'Canceled'),
         ],
@@ -93,8 +94,7 @@ class ResCompany(models.Model):
 
         error_message = _(
             "Please enter the mobile number in the correct international format.\n"
-            "For example: +32123456789, where +32 is the country code.\n"
-            "Currently, only European countries are supported.")
+            "For example: +32123456789, where +32 is the country code.")
 
         if not phonenumbers:
             raise ValidationError(_("Please install the phonenumbers library."))
@@ -111,9 +111,18 @@ class ResCompany(models.Model):
         except phonenumbers.phonenumberutil.NumberParseException:
             raise ValidationError(error_message)
 
-        country_code = phonenumbers.phonenumberutil.region_code_for_number(phone_nbr)
-        if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(phone_nbr):
+        if not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
+
+    def _reset_peppol_configuration(self):
+        """Reset all peppol configuration fields to their default value, as if not registered"""
+        self.account_peppol_proxy_state = 'not_registered'
+        self.partner_id._compute_peppol_eas()
+        self.partner_id._compute_peppol_endpoint()
+
+        # on 16.0 the constraints on account_edi_proxy_client.user prevent having multiple users of
+        # type 'peppol' for the same company even if they are archived, so we need to unlink them
+        self.account_edi_proxy_client_ids.unlink()
 
     def _check_peppol_endpoint_number(self, warning=False):
         self.ensure_one()
@@ -152,7 +161,7 @@ class ResCompany(models.Model):
     @api.depends('account_peppol_proxy_state')
     def _compute_peppol_purchase_journal_id(self):
         for company in self:
-            if not company.peppol_purchase_journal_id and company.account_peppol_proxy_state not in ('not_registered', 'rejected'):
+            if not company.peppol_purchase_journal_id and company.account_peppol_proxy_state not in ('not_registered', 'rejected', 'sender'):
                 company.peppol_purchase_journal_id = self.env['account.journal'].search([
                     *self.env['account.journal']._check_company_domain(company),
                     ('type', '=', 'purchase'),
@@ -195,6 +204,7 @@ class ResCompany(models.Model):
 
     @api.model
     def _sanitize_peppol_endpoint(self, vals, eas=False, endpoint=False):
+        # TODO: remove in master
         if not (peppol_eas := vals.get('peppol_eas', eas)) or not (peppol_endpoint := vals.get('peppol_endpoint', endpoint)):
             return vals
 
@@ -203,13 +213,30 @@ class ResCompany(models.Model):
 
         return vals
 
+    @api.model
+    def _sanitize_peppol_endpoint_in_values(self, values):
+        eas = values.get('peppol_eas')
+        endpoint = values.get('peppol_endpoint')
+        if not eas or not endpoint:
+            return
+        if sanitizer := PEPPOL_ENDPOINT_SANITIZERS.get(eas):
+            new_endpoint = sanitizer(endpoint)
+            if new_endpoint:
+                values['peppol_endpoint'] = new_endpoint
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals = self._sanitize_peppol_endpoint(vals)
+            self._sanitize_peppol_endpoint_in_values(vals)
         return super().create(vals_list)
 
     def write(self, vals):
-        for company in self:
-            vals = self._sanitize_peppol_endpoint(vals, company.peppol_eas, company.peppol_endpoint)
+        self._sanitize_peppol_endpoint_in_values(vals)
         return super().write(vals)
+
+    def _get_peppol_edi_mode(self):
+        self.ensure_one()
+        config_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
+        # by design, we can only have zero or one proxy user per company with type Peppol
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+        return peppol_user.edi_mode or config_param or 'prod'

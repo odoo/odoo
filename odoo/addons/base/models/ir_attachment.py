@@ -83,6 +83,11 @@ class IrAttachment(models.Model):
     def _migrate(self):
         record_count = len(self)
         storage = self._storage().upper()
+        # When migrating to filestore verifying if the directory has write permission
+        if storage == 'FILE':
+            filestore = self._filestore()
+            if not os.access(filestore, os.W_OK):
+                raise PermissionError("Write permission denied for filestore directory.")
         for index, attach in enumerate(self):
             _logger.debug("Migrate attachment %s/%s to %s", index + 1, record_count, storage)
             # pass mimetype, to avoid recomputation
@@ -132,10 +137,10 @@ class IrAttachment(models.Model):
         fname, full_path = self._get_path(bin_value, checksum)
         if not os.path.exists(full_path):
             try:
-                with open(full_path, 'wb') as fp:
-                    fp.write(bin_value)
                 # add fname to checklist, in case the transaction aborts
                 self._mark_for_gc(fname)
+                with open(full_path, 'wb') as fp:
+                    fp.write(bin_value)
             except IOError:
                 _logger.info("_file_write writing %s", full_path, exc_info=True)
         return fname
@@ -349,7 +354,10 @@ class IrAttachment(models.Model):
                     nw, nh = map(int, max_resolution.split('x'))
                     if w > nw or h > nh:
                         img = img.resize(nw, nh)
-                        quality = int(ICP('base.image_autoresize_quality', 80))
+                        if _subtype == 'jpeg':  # Do not affect PNGs color palette
+                            quality = int(ICP('base.image_autoresize_quality', 80))
+                        else:
+                            quality = 0
                         image_data = img.image_quality(quality=quality)
                         if is_raw:
                             values['raw'] = image_data
@@ -558,6 +566,12 @@ class IrAttachment(models.Model):
             if public:
                 allowed_ids.add(id_)
                 continue
+
+            if res_field and not self.env.is_system():
+                field = self.env[res_model]._fields[res_field]
+                if field.groups and not self.env.user.user_has_groups(field.groups):
+                    continue
+
             if not res_id and (self.env.is_system() or create_uid == self.env.uid):
                 allowed_ids.add(id_)
                 continue
@@ -661,7 +675,8 @@ class IrAttachment(models.Model):
             Attachments.check('create', values={'res_model':res_model, 'res_id':res_id})
         return super().create(vals_list)
 
-    def _post_add_create(self):
+    def _post_add_create(self, **kwargs):
+        # TODO master: rename to _post_upload, better indicating its usage
         pass
 
     def generate_access_token(self):

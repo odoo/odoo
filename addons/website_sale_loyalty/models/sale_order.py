@@ -38,6 +38,9 @@ class SaleOrder(models.Model):
                 return expression.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
         return res
 
+    def _get_program_timezone(self):
+        return self.website_id.salesperson_id.tz or super()._get_program_timezone()
+
     def _try_pending_coupon(self):
         if not request:
             return False
@@ -167,7 +170,9 @@ class SaleOrder(models.Model):
         if set_qty == 0 and line.coupon_id and reward_id and reward_id.reward_type == 'discount':
             # Force the deletion of the line even if it's a temporary record created by new()
             line_id = line.id
-        res = super()._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
+        res = super()._cart_update(
+            product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty, **kwargs
+        )
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
         return res
@@ -211,7 +216,7 @@ class SaleOrder(models.Model):
         global_discount_reward = self._get_applied_global_discount()
         for coupon in loyality_cards:
             points = self._get_real_points_for_coupon(coupon)
-            for reward in coupon.program_id.reward_ids:
+            for reward in coupon.program_id.reward_ids - self.order_line.reward_id:
                 if reward.is_global_discount and global_discount_reward and global_discount_reward.discount >= reward.discount:
                     continue
                 if reward.reward_type == 'discount' and total_is_zero:

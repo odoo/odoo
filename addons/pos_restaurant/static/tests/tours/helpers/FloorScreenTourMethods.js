@@ -174,3 +174,12 @@ export function tableIsNotSelected(name) {
         },
     ];
 }
+
+export function clickAddFloor() {
+    return [
+        {
+            content: `click add floor`,
+            trigger: `.floor-selector .button-add`,
+        },
+    ];
+}

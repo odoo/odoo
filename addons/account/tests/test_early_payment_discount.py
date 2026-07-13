@@ -788,6 +788,59 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ]
         })
 
+    def test_bulk_rewrite_cleans_stale_epd_lines(self):
+        """Changing to a non-EPD term during bulk rewrite must remove EPD lines."""
+        self.early_pay_10_percents_10_days.write({'early_pay_discount_computation': 'mixed'})
+        tax_0 = self.env['account.tax'].create({
+            'name': 'Purchase 0%',
+            'amount': 0,
+            'type_tax_use': 'purchase',
+        })
+        tax_21 = self.env['account.tax'].create({
+            'name': 'Purchase 21%',
+            'amount': 21,
+            'type_tax_use': 'purchase',
+        })
+
+        inv = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line_0',
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_0.ids)],
+                }),
+            ],
+        })
+        self.assertTrue(inv.line_ids.filtered(lambda line: line.display_type == 'epd'))
+
+        with inv._get_edi_creation() as invoice:
+            invoice.write({
+                'invoice_payment_term_id': self.pay_terms_a.id,
+                'invoice_line_ids': [
+                    Command.clear(),
+                    Command.create({
+                        'name': 'line_21',
+                        'price_unit': 100.0,
+                        'tax_ids': [Command.set(tax_21.ids)],
+                    }),
+                ],
+            })
+
+        self.assertFalse(
+            inv.line_ids.filtered(lambda line: line.display_type == 'epd'),
+            'No stale EPD line should remain after bulk rewrite on a non-EPD term.',
+        )
+        self.assertEqual(inv.invoice_payment_term_id, self.pay_terms_a)
+        self.assertEqual(
+            inv.invoice_line_ids.filtered(lambda line: line.display_type == 'product').tax_ids,
+            tax_21,
+        )
+
     def test_register_payment_batch_with_discount_and_without_discount(self):
         """
         Test that a batch payment, that is
@@ -1048,3 +1101,84 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
 
         for line in payments.line_ids.filtered(lambda line: line.tax_repartition_line_id or line.tax_ids):
             self.assertTrue(line.tax_tag_invert)
+
+    def test_epd_multiple_repartition_lines(self):
+        """
+        In the case of multi repartition lines tax definition with an early payment discount
+        We want to make sure that the EPD lines are correct.
+        We want the rounding difference to be added to the "biggest" base line.
+        """
+        # Taxes.
+        common_values = {
+            'amount': 17.0,
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        }
+
+        tax1, tax2 = self.env['account.tax'].create([
+            {'name': "tax1", **common_values},
+            {'name': "tax2", **common_values},
+        ])
+
+        # Early payment.
+        payment_term = self.env['account.payment.term'].create({
+            'name': "10% discount if paid within 10 days",
+            'early_discount': True,
+            'early_pay_discount_computation': 'included',
+            'discount_percentage': 2,
+            'discount_days': 10,
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })]
+        })
+
+        # Invoice.
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': payment_term.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Line One",
+                    'price_unit': 739.95,
+                    'tax_ids': [Command.set(tax1.ids)],
+                }),
+                Command.create({
+                    'name': "Line Two",
+                    'price_unit': 37.80,
+                    'tax_ids': [Command.set(tax2.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        # Payment.
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2017-01-01'})\
+            ._create_payments()
+
+        self.assertRecordValues(payment.move_id.line_ids.sorted('amount_currency'), [
+            # Invoice's total:
+            {'amount_currency': -777.75},
+            # Base / tax lines:
+            {'amount_currency': -2.51},
+            {'amount_currency': -0.13},
+            {'amount_currency': 0.13},
+            {'amount_currency': 0.76},
+            {'amount_currency': 2.51},
+            {'amount_currency': 14.79},
+            # Discounted amount:
+            {'amount_currency': 762.2},
+        ])

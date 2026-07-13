@@ -13,17 +13,6 @@ class PosOrderLine(models.Model):
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines')
     combo_id = fields.Many2one('pos.combo', string='Combo line reference')
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if (vals.get('combo_parent_uuid')):
-                vals.update([
-                    ('combo_parent_id', self.search([('uuid', '=', vals.get('combo_parent_uuid'))]).id)
-                ])
-            if 'combo_parent_uuid' in vals:
-                del vals['combo_parent_uuid']
-        return super().create(vals_list)
-
     def write(self, vals):
         if (vals.get('combo_parent_uuid')):
             vals.update([
@@ -165,3 +154,9 @@ class PosOrder(models.Model):
         orders = super().export_for_ui_table_draft(table_ids)
         self_orders = self.get_standalone_self_order().export_for_ui()
         return orders + self_orders
+
+    def _export_for_ui(self, order):
+        order_for_ui = super()._export_for_ui(order)
+        if order_for_ui and order.table_stand_number:
+            order_for_ui['table_stand_number'] = order.table_stand_number
+        return order_for_ui

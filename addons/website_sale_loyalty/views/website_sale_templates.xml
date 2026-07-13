@@ -170,7 +170,12 @@
     </template>
 
     <template id="cart_summary" name="Payment" inherit_id="website_sale.checkout_layout">
+        <!-- `tax_excluded` line price -->
         <xpath expr="//td[@name='website_sale_cart_summary_line_price']/child::*" position="attributes">
+            <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
+        </xpath>
+        <!-- `tax_included` line price -->
+        <xpath expr="//td[@name='website_sale_cart_summary_line_price']/*[2]" position="attributes">
             <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
         </xpath>
     </template>

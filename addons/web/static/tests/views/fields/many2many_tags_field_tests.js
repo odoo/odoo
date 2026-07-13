@@ -1997,4 +1997,40 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector("[name='turtles'] input"));
         assert.verifySteps(["name_search"]);
     });
+
+    QUnit.test(
+        "Many2ManyTagsField: quickly remove several tags with backspace",
+        async function (assert) {
+            serverData.models.partner.records[0].timmy = [12, 14];
+            serverData.models.partner.onchanges.timmy = () => {};
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="timmy" widget="many2many_tags"/>
+                    </form>`,
+                mockRPC(route, args) {
+                    if (args.method === "onchange") {
+                        assert.step(`onchange ${JSON.stringify(args.args[1].timmy)}`);
+                        return def;
+                    }
+                },
+                resId: 1,
+            });
+
+            assert.containsN(target, ".o_field_many2many_tags .badge", 2);
+
+            target.querySelectorAll(".o_field_many2many_tags .badge")[1].focus();
+            triggerHotkey("BackSpace");
+            triggerHotkey("BackSpace");
+            def.resolve();
+            await nextTick();
+            assert.containsN(target, ".o_field_many2many_tags .badge", 1);
+            assert.verifySteps(["onchange [[3,14]]"]);
+        }
+    );
 });

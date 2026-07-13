@@ -87,6 +87,17 @@ class AccountMove(models.Model):
                 timesheets = self.env['account.analytic.line'].sudo().search(domain)
                 timesheets.write({'timesheet_invoice_id': line.move_id.id})
 
+    def action_post(self):
+        result = super().action_post()
+        credit_notes = self.filtered(lambda move: move.move_type == 'out_refund' and move.reversed_entry_id)
+        timesheets_sudo = self.env['account.analytic.line'].sudo().search([
+            ('timesheet_invoice_id', 'in', credit_notes.reversed_entry_id.ids),
+            ('so_line', 'in', credit_notes.invoice_line_ids.sale_line_ids.ids),
+            ('project_id', '!=', False),
+        ])
+        timesheets_sudo.write({'timesheet_invoice_id': False})
+        return result
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
@@ -102,7 +113,9 @@ class AccountMoveLine(models.Model):
             ('project_id', '!=', False),
             '|', '|',
                 ('timesheet_invoice_id', '=', False),
-                ('timesheet_invoice_id.state', '=', 'cancel'),
+                '&',
+                    ('timesheet_invoice_id.state', '=', 'cancel'),
+                    ('timesheet_invoice_id.payment_state', '!=', 'invoicing_legacy'),
                 ('timesheet_invoice_id.payment_state', '=', 'reversed')
         ]
 

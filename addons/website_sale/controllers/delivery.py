@@ -26,7 +26,9 @@ class WebsiteSaleDelivery(WebsiteSale):
 
     @http.route(['/shop/carrier_rate_shipment'], type='json', auth='public', methods=['POST'], website=True)
     def cart_carrier_rate_shipment(self, carrier_id, **kw):
-        order = request.website.sale_get_order(force_create=True)
+        order = request.website.sale_get_order()
+        if not order:
+            raise UserError(_("Your cart is empty."))
 
         if not int(carrier_id) in order._get_delivery_methods().ids:
             raise UserError(_('It seems that a delivery method is not compatible with your address. Please refresh the page and try again.'))
@@ -77,7 +79,7 @@ class WebsiteSaleDelivery(WebsiteSale):
             # the price with another pricelist at this state since the customer has already accepted
             # the amount and validated the payment.
             order_sudo.env.remove_to_compute(order_sudo._fields['pricelist_id'], order_sudo)
-        elif order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+        elif order_sudo.name in order_sudo.partner_shipping_id.name:
             self._create_or_edit_partner(
                 partial_shipping_address,
                 edit=True,

@@ -48,6 +48,9 @@ export class MailCoreWeb {
                 }
                 inbox.messages.add(message);
                 const thread = message.originThread;
+                if (!thread) {
+                    return;
+                }
                 if (message.notIn(thread.needactionMessages)) {
                     thread.message_needaction_counter++;
                 }

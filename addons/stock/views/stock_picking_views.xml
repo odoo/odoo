@@ -274,6 +274,7 @@
                                 add-label="Add a Product">
                                 <tree decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="1">
                                     <field name="company_id" column_invisible="True"/>
+                                    <field name="picking_id" column_invisible="True"/>
                                     <field name="name" column_invisible="True"/>
                                     <field name="state" readonly="0" column_invisible="True"/>
                                     <field name="picking_type_id" column_invisible="True"/>
@@ -319,7 +320,7 @@
                                     <field name="lot_ids" widget="many2many_tags"
                                         column_invisible="parent.state == 'draft'"
                                         groups="stock.group_production_lot"
-                                        invisible="not show_details_visible or has_tracking != 'serial'"
+                                        invisible="not show_details_visible or has_tracking == 'none'"
                                         optional="hide"
                                         options="{'create': [('parent.use_create_lots', '=', True)]}"
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"

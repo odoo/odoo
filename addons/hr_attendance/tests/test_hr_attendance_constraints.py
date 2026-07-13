@@ -62,3 +62,18 @@ class TestHrAttendance(TransactionCase):
             self.open_attendance.write({
                 'check_out': time.strftime('%Y-%m-10 11:30'),
             })
+
+    def test_time_format_attendance(self):
+        self.env.user.tz = 'UTC'
+        self.env['res.lang']._activate_lang('en_US')
+        lang = self.env['res.lang']._lang_get(self.env.user.lang)
+        lang.time_format = "%I:%M %p"  # here "%I:%M %p" represents AM:PM format
+        attendance_id = self.attendance.create({
+            'employee_id': self.test_employee.id,
+            'check_in': time.strftime('%Y-%m-28 08:00'),
+            'check_out': time.strftime('%Y-%m-28 09:00'),
+        })
+        self.assertEqual(attendance_id.display_name, "01:00 : (08:00 AM-09:00 AM)")
+        lang.time_format = "%H:%M:%S"
+        attendance_id._compute_display_name()
+        self.assertEqual(attendance_id.display_name, "01:00 : (08:00:00-09:00:00)")

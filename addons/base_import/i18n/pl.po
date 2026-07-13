@@ -1,39 +1,46 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_import
-# 
+# * base_import
+#
 # Translators:
 # Wil Odoo, 2023
 # Damian Ratus, 2024
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2024
-# 
+# Piotr Strebski <strebski@gmail.com>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Gerasimuk, Andrzej" <a.gerasimuk@archimedes.pl>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2024\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2026-01-10 08:03+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
+"base_import/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "%s at multiple rows"
-msgstr ""
+msgstr "%s w wielu rzędach"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "%s records successfully imported"
-msgstr ""
+msgstr "Pomyślnie zaimportowanych rekordów: %s"
 
 #. module: base_import
 #. odoo-javascript
@@ -43,6 +50,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
 msgstr ""
+"Znaleziono pojedynczą kolumnę w pliku, to często znaczy, że separator pliku "
+"jest nieprawidłowy."
 
 #. module: base_import
 #. odoo-javascript
@@ -71,12 +80,12 @@ msgstr "Pozwalaj połączyć z subpolami"
 #, python-format
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
-"Podczas importu wystąpił nieznany problem (prawdopodobnie utrata połączenia,"
-" przekroczenie limitu danych lub pamięci). Spróbuj ponownie, jeśli problem "
+"Podczas importu wystąpił nieznany problem (prawdopodobnie utrata połączenia, "
+"przekroczenie limitu danych lub pamięci). Spróbuj ponownie, jeśli problem "
 "jest przejściowy. Jeśli problem nadal występuje, spróbuj podzielić plik "
 "zamiast importować go w całości."
 
@@ -100,7 +109,7 @@ msgstr "Mapowanie bazowego importu"
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Batch"
-msgstr "Lista płac"
+msgstr "Partia"
 
 #. module: base_import
 #. odoo-javascript
@@ -128,7 +137,7 @@ msgstr "Anuluj"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
-msgstr ""
+msgstr "Kliknij \"Wznów\", aby kontynuować import, wznawiając w wierszu %s."
 
 #. module: base_import
 #. odoo-python
@@ -152,8 +161,6 @@ msgstr "Nazwa kolumny"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
 msgstr "Przecinek"
@@ -170,8 +177,7 @@ msgstr "Komentarz"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
 "Nie można uzyskać URL: %(url)s [%(field_name)s:L%(line_number)d]:%(error)s"
 
@@ -197,7 +203,6 @@ msgstr "Data utworzenia"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
 msgstr "ID bazy danych"
@@ -221,7 +226,7 @@ msgstr "Format Datetime:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Decimals Separator:"
-msgstr ""
+msgstr "Separator liczb dziesiętnych:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -232,7 +237,6 @@ msgstr "Nazwa wyświetlana"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
 msgstr "Kropka"
@@ -240,8 +244,6 @@ msgstr "Kropka"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -266,7 +268,7 @@ msgstr "Błąd podczas analizowania daty [%s:L%d]: %s"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Error at row %s: \"%s\""
-msgstr ""
+msgstr "Błąd w wierszu %s: \"%s\""
 
 #. module: base_import
 #. odoo-python
@@ -275,6 +277,8 @@ msgstr ""
 msgid ""
 "Error while importing records: Text Delimiter should be a single character."
 msgstr ""
+"Błąd podczas importu rekordów: Separator tekstu powinien być pojedynczym "
+"znakiem."
 
 #. module: base_import
 #. odoo-python
@@ -285,6 +289,9 @@ msgid ""
 "title row has %d entries while the first row has %d. You may need to change "
 "the separator character."
 msgstr ""
+"Błąd podczas importowania rekordów: wszystkie rzędy powinny być tej samej "
+"wielkości, ale rząd tytułowy ma %d wpisów, a pierwszy rząd ma %d. Być może "
+"musisz zmienić znak separatora."
 
 #. module: base_import
 #. odoo-javascript
@@ -310,7 +317,6 @@ msgstr ""
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
@@ -345,7 +351,6 @@ msgstr "Typ pliku"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
@@ -382,8 +387,8 @@ msgstr "Formatowanie"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
 "Znaleziono nieprawidłowe dane obrazu, obrazy powinny być importowane jako "
 "adresy URL lub dane zakodowane w base64."
@@ -438,9 +443,8 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Jeśli model używa openchatter, śledzenie historii skonfiguruje subskrypcje i"
-" wyśle powiadomienia podczas importu, ale doprowadzi do wolniejszego "
-"importu."
+"Jeśli model używa openchatter, śledzenie historii skonfiguruje subskrypcje i "
+"wyśle powiadomienia podczas importu, ale doprowadzi do wolniejszego importu."
 
 #. module: base_import
 #. odoo-python
@@ -485,7 +489,7 @@ msgstr "Plik importowy nie ma zawartości lub jest uszkodzony"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "Podgląd importu nie powiódł się z powodu: \""
 
 #. module: base_import
 #. odoo-javascript
@@ -511,6 +515,17 @@ msgstr "Importowanie"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
+msgstr ""
+"Nieprawidłowy format komórki w rzędzie %(row)s, kolumna %(col)s: "
+"%(cell_value)s, z formatem: %(cell_format)s, ponieważ format "
+"(%(format_type)s) nie jest obsługiwany."
+
+#. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -582,7 +597,7 @@ msgstr "Brak separatora"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Nie znaleziono pasujących rekordów dla następującej nazwy"
 
 #. module: base_import
 #. odoo-javascript
@@ -617,7 +632,7 @@ msgstr "Pasek postępu"
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Reimport"
-msgstr ""
+msgstr "Zaimportuj znowu"
 
 #. module: base_import
 #. odoo-javascript
@@ -678,7 +693,7 @@ msgstr "Separator:"
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: %s"
-msgstr ""
+msgstr "Ustaw na: %s"
 
 #. module: base_import
 #. odoo-javascript
@@ -711,7 +726,6 @@ msgstr "Arkusz:"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
-#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Skip record"
 msgstr "Pomiń rekord"
@@ -739,7 +753,6 @@ msgstr "Zacznij w linii"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Stop Import"
@@ -813,7 +826,7 @@ msgstr "Separator tysięcy:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "Aby zaimportować wiele wartości, oddziel je przecinkiem."
 
 #. module: base_import
 #. odoo-javascript
@@ -833,10 +846,11 @@ msgstr "Śledź historię podczas importu"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
-"Nie można załadować pliku \"{extension}\": wymaga modułu Pythona "
-"\"{modname}\""
+"Nie można załadować pliku \"{extension}\": wymaga modułu Pythona \"{modname}"
+"\""
 
 #. module: base_import
 #. odoo-python
@@ -875,20 +889,27 @@ msgstr "Załaduj plik Excela lub CSV do zaimportowania"
 #, python-format
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Użyj HH do oznaczania godzin w 24-godzinnym systemie, użyj II w połączeniu z "
+"\"p\" dla 12-godzinnego systemu. Oprócz podanych sugestii możesz użyć "
+"własnego formatu. Zostaw to pole puste, aby pozwolić Odoo odgadnąć format "
+"(zalecane)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
+"Użyj YYYY do oznaczania roku, MM do miesięcy i DD do dni. Załącz separatory, "
+"takie jak kropka, ukośnik lub myślnik. Możesz użyć własnego formatu oprócz "
+"podanych sugestii. Zostaw puste, aby pozwolić Odoo zgadnąć format (zalecane)"
 
 #. module: base_import
 #. odoo-javascript

@@ -44,7 +44,7 @@ class DisplayDriver(Driver):
         self.rendered_html = ''
         if self.device_identifier != 'distant_display':
             # helpers.get_version returns a string formatted as: <L|W><version> (L: Linux, W: Windows)
-            self.browser = 'chromium-browser' if float(helpers.get_version()[1:]) >= 24.08 else 'firefox'
+            self.browser = 'chromium' if float(helpers.get_version()[1:8]) >= 24.10 else 'firefox'
             self._x_screen = device.get('x_screen', '0')
             self.load_url()
 
@@ -83,11 +83,15 @@ class DisplayDriver(Driver):
         # Kill browser instance (can't `instance.pkill()` as we can't keep the instance after Odoo service restarts)
         # We need to terminate it because Odoo will create a new instance each time it is restarted.
         subprocess.run(['pkill', self.browser.split('-')[0]], check=False)
-        # --log-level=3 to avoid useless log messages, --bwsi to use chromium without signing in
-        browser_args = ['--start-fullscreen', '--log-level=3', '--bwsi']
+        browser_args = [
+            '--start-fullscreen',
+            '--log-level=3',        # avoid useless log messages
+            '--bwsi',               # use chromium without signing in
+            '--disable-extensions'  # disable extensions as they fill up /tmp
+        ]
         subprocess.Popen([self.browser, self.url, *browser_args], env=browser_env)
 
-        # To remove when everyone is on version >= 24.08: chromium has '--start-fullscreen' option
+        # To remove when everyone is on version >= 24.10: chromium has '--start-fullscreen' option
         if self.browser == 'firefox':
             self.call_xdotools('F11')
 

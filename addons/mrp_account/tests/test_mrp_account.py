@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
 from odoo.tests import Form, tagged
@@ -197,6 +198,103 @@ class TestMrpAccount(TestMrpCommon):
         bom_form = Form(self.env['mrp.bom'].with_user(mrp_manager))
         bom_form.product_id = self.dining_table
 
+    def test_two_productions_unbuild_one_sell_other_fifo(self):
+        """ Valuation of unbuild orders for products valuated via FIFO should adhere to FIFO
+        """
+        final_product = self.env['product.product'].create({
+            'type': 'product',
+            'name': 'final product',
+            'categ_id': self.categ_real.id,
+        })
+        component = self.env['product.product'].create({
+            'type': 'product',
+            'name': 'component',
+            'standard_price': 1.0,
+            'categ_id': self.categ_standard.id,
+        })
+        final_bom = self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1,
+            })],
+        })
+        in_move = self.env['stock.move'].create({
+            'name': 'in 2 component',
+            'product_id': component.id,
+            'product_uom_qty': 2.0,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.source_location_id,
+            'price_unit': 1,
+        })
+        in_move._action_confirm()
+        in_move._action_assign()
+        in_move.picked = True
+        in_move._action_done()
+        mo_1 = self.env['mrp.production'].create({'product_id': final_product.id})
+        mo_1.action_confirm()
+        mo_1.action_assign()
+        mo_1.button_mark_done()
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', (final_product.id))]),
+            # MO_1
+            [{'remaining_qty': 1.0, 'value': 1.0}]
+        )
+
+        with Form(component) as comp_form:
+            comp_form.standard_price = 2
+        mo_2 = self.env['mrp.production'].create({'product_id': final_product.id})
+        mo_2.action_confirm()
+        mo_2.action_assign()
+        mo_2.button_mark_done()
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', (final_product.id))]),
+            [
+                {'remaining_qty': 1.0, 'value': 1.0},
+                # MO_2 (new value to reflect change of component's `standard_price`)
+                {'remaining_qty': 1.0, 'value': 2.0},
+            ]
+        )
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.product_id = final_product
+        unbuild_form.bom_id = final_bom
+        unbuild_form.product_qty = 1
+        unbuild_form.mo_id = mo_2
+        unbuild_order = unbuild_form.save()
+        unbuild_order.action_unbuild()
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', (final_product.id))]),
+            [
+                {'remaining_qty': 0.0, 'value': 1.0},
+                {'remaining_qty': 1.0, 'value': 2.0},
+                # Unbuild SVL value is derived from MO_1 according to FIFO
+                {'remaining_qty': 0.0, 'value': -1.0, 'quantity': 1.0},
+            ]
+        )
+        out_move = self.env['stock.move'].create({
+            'name': 'out 1 final',
+            'product_id': final_product.id,
+            'product_uom_qty': 1.0,
+            'location_id': self.source_location_id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+        out_move.quantity = 1
+        out_move.picked = True
+        out_move._action_done()
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', (final_product.id))]),
+            [
+                {'remaining_qty': 0.0, 'value': 1.0},
+                {'remaining_qty': 0.0, 'value': 2.0},
+                {'remaining_qty': 0.0, 'value': -1.0},
+                # Out move SVL value is derived from MO_2
+                {'remaining_qty': 0.0, 'value': -2.0, 'quantity': 1.0},
+            ]
+        )
 
 @tagged("post_install", "-at_install")
 class TestMrpAccountMove(TestAccountMoveStockCommon):

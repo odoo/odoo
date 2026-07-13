@@ -76,6 +76,7 @@ class MailComposeMessage(models.TransientModel):
                 # if mail_to is void, keep falsy values to allow searching / debugging traces
                 'email': recipients_info[res_id]['mail_to'][0] if recipients_info[res_id]['mail_to'] else '',
                 'mass_mailing_id': self.mass_mailing_id.id,
+                'message_id': mail_values['message_id'],
                 'model': self.model,
                 'res_id': res_id,
             }

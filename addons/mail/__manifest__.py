@@ -181,6 +181,10 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/tests/**/*',
             ('remove', 'mail/static/tests/tours/**/*'),
             ('remove', 'mail/static/tests/helpers/**/*'),
+            ('remove', 'mail/static/tests/mobile/**/*'),
+        ],
+        'web.qunit_mobile_suite_tests': [
+            'mail/static/tests/mobile/**/*',
         ],
         'mail.assets_odoo_sfu': [
             'mail/static/lib/odoo_sfu/odoo_sfu.js',

@@ -41,7 +41,7 @@ patch(FormController.prototype, {
                 if (changes.partner_ids[0] && changes.partner_ids[0][0] === x2ManyCommands.SET) {
                     partnerIds.push(...changes.partner_ids[0][2]);
                 }
-                changes.partner_ids = [x2ManyCommands.set(partnerIds)];
+                changes.partner_ids.push(...partnerIds.map((pid) => x2ManyCommands.link(pid)));
             }
         }
     },

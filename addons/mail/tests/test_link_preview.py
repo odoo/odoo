@@ -154,3 +154,30 @@ class TestLinkPreview(MailCommon):
             url = self.source_url
             session = requests.Session()
             link_preview.get_link_preview_from_url(url, session)
+
+    def test_link_preview_ignore_internal_link(self):
+        """Test internal links are properly ignored from link preview."""
+        with patch.object(requests.Session, "get", self._patch_with_og_properties), patch.object(
+            requests.Session, "head", self._patch_head_html
+        ):
+            urls = [
+                ("http://localhost:8069/", "http://localhost:8069/chat/5/bFtIfYHRco", 0),
+                ("http://localhost:8069/", "http://localhost:8069/web/test", 0),
+                ("https://www.odoo.com/", "https://www.odoo.com/chat/", 0),
+                ("https://www.odoo.com/", "https://www.odoo.com/chat/5/bFtIfYHRco", 0),
+                ("https://www.odoo.com/", "https://www.odoo.com/web/", 0),
+                ("http://www.odoo.com/", "https://www.odoo.com/chat/5/bFtIfYHRco", 1),
+                ("https://clients.odoo.com/", "https://www.odoo.com/chat/5/bFtIfYHRco", 1),
+            ]
+            for request_url, url, counter in urls:
+                with self.subTest(request_url=request_url, url=url, counter=counter):
+                    message = self.test_partner.message_post(
+                        body=Markup(f'<a href="{url}">Nothing link</a>'),
+                    )
+                    self.env["mail.link.preview"]._create_from_message_and_notify(
+                        message, request_url
+                    )
+                    link_preview_count = self.env["mail.link.preview"].search_count(
+                        [("message_id", "=", message.id)]
+                    )
+                    self.assertEqual(link_preview_count, counter)

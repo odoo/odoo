@@ -59,17 +59,21 @@ class EWayBillApi:
 
     def _ewaybill_jsonrpc_to_server(self, url_path, params):
         user_token = self.env["iap.account"].get("l10n_in_edi")
+        IrConfigParam = self.env["ir.config_parameter"].sudo()
         params.update({
             "account_token": user_token.account_token,
-            "dbuuid": self.env["ir.config_parameter"].sudo().get_param("database.uuid"),
+            "dbuuid": IrConfigParam.get_param("database.uuid"),
             "username": self.company.sudo().l10n_in_edi_ewaybill_username,
             "gstin": self.company.vat,
         })
+        gsp_provider = IrConfigParam.get_param("l10n_in.gsp_provider")
+        if gsp_provider:
+            params["gsp_provider"] = gsp_provider
         if self.company.sudo().l10n_in_edi_production_env:
             default_endpoint = DEFAULT_IAP_ENDPOINT
         else:
             default_endpoint = DEFAULT_IAP_TEST_ENDPOINT
-        endpoint = self.env["ir.config_parameter"].sudo().get_param("l10n_in_edi_ewaybill.endpoint", default_endpoint)
+        endpoint = IrConfigParam.get_param("l10n_in_edi_ewaybill.endpoint", default_endpoint)
         url = f"{endpoint}{url_path}"
         try:
             response = jsonrpc(url, params=params, timeout=10)
@@ -142,15 +146,17 @@ class EWayBillApi:
             if operation_type == "cancel" and "312" in e.error_codes:
                 # E-waybill is already canceled
                 # this happens when timeout from the Government portal but IRN is generated
-                e.error_json['odoo_warning'].append({
-                    'message': Markup("%s<br/>%s:<br/>%s") % (
-                        self.DEFAULT_HELP_MESSAGE % 'cancelled',
-                        _("Error"),
-                        e.get_all_error_message()
-                    ),
-                    'message_post': True
-                })
-                raise
+                # Avoid raising error in this case, since it is already cancelled
+                return {
+                    'odoo_warning': [{
+                        'message': Markup("%s<br/>%s:<br/>%s") % (
+                            self.DEFAULT_HELP_MESSAGE % 'cancelled',
+                            _("Error"),
+                            e.get_all_error_message()
+                        ),
+                        'message_post': True
+                    }]
+                }
 
             if operation_type == "generate" and "604" in e.error_codes:
                 # Get E-waybill by details in case of E-waybill is already generated

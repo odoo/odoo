@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product
-# 
+#
 # Translators:
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2023
 # gezgin biri <gezginbiri@hotmail.com>, 2023
@@ -30,22 +30,22 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # abc Def <hdogan1974@gmail.com>, 2023
 # Martin Trigaux, 2023
-# sinem cil, 2024
-# Ediz Duman <neps1192@gmail.com>, 2024
+# Sinem Cil, 2024
 # Cengiz Cokay Global Nonwoven, 2024
-# 
+# Ediz Duman <neps1192@gmail.com>, 2024
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Cengiz Cokay Global Nonwoven, 2024\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: product
@@ -73,25 +73,17 @@ msgid "# Products"
 msgstr "# Ürünler"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$14.00"
-msgstr "$14.00"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$15.00"
-msgstr "$15.00"
-
-#. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 msgstr ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
-"Örnek: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"Örnek: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -109,6 +101,7 @@ msgstr "%s %% indirim"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -153,15 +146,21 @@ msgstr "- Barkod \"%s\" halihazırda ürün(ler)e atanmış: %s"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid ""
-"- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.\n"
-"        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.\n"
+"- Instantly: All possible variants are created as soon as the attribute and "
+"its values are added to a product.\n"
+"        - Dynamically: Each variant is created only when its corresponding "
+"attributes and values are added to a sales order.\n"
 "        - Never: Variants are never created for the attribute.\n"
-"        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
+"        Note: the variants creation mode cannot be changed once the "
+"attribute is used on at least one product."
 msgstr ""
-"- Anında: Tüm olası değişkenler, özellik ve değerleri bir ürüne eklenir eklenmez oluşturulur.\n"
-"- Dinamik olarak: Her değişken yalnızca bir müşteri siparişine karşılık gelen özellikler ve değerler eklendiğinde oluşturulur.\n"
+"- Anında: Tüm olası değişkenler, özellik ve değerleri bir ürüne eklenir "
+"eklenmez oluşturulur.\n"
+"- Dinamik olarak: Her değişken yalnızca bir müşteri siparişine karşılık "
+"gelen özellikler ve değerler eklendiğinde oluşturulur.\n"
 "- Asla: Özellik için asla varyantlar oluşturulmaz.\n"
-"Not: özellik en az bir üründe kullanıldıktan sonra varyant oluşturma modu değiştirilemez."
+"Not: özellik en az bir üründe kullanıldıktan sonra varyant oluşturma modu "
+"değiştirilemez."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -169,19 +168,9 @@ msgid "1 year"
 msgstr "1 yıl"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "10"
-msgstr "10"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
 msgstr "10 Adet"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "123456789012"
-msgstr "123456789012"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -224,8 +213,12 @@ msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
-msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -233,14 +226,16 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                        Extra Prices\n"
 "                                    </span>\n"
-"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                        Ekstra Fiyatlar\n"
 "                                    </span>\n"
-"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                       Ekstra Fiyat\n"
 "                                    </span>"
 
@@ -301,8 +296,10 @@ msgid ""
 "                        to the loss of their possible customizations."
 msgstr ""
 "<strong>Dikkat !</strong>: Nitelik eklemek veya silmek\n"
-"                        mecvut varyantların silinmesine ve yeniden oluşturulmasına neden olur,\n"
-"                        muhtemel özelleştirmelerinizi kaybetmemek için dikkatli olun."
+"                        mecvut varyantların silinmesine ve yeniden "
+"oluşturulmasına neden olur,\n"
+"                        muhtemel özelleştirmelerinizi kaybetmemek için "
+"dikkatli olun."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
@@ -313,8 +310,8 @@ msgstr "Barkod yalnızca bir pakete atanabilir."
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
 "Müşterilerinizle iletişim kurarken göstermek isteyeceğiniz bir ürün "
@@ -331,11 +328,17 @@ msgstr "Paket zaten barkodu kullanıyor."
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
-"A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
-"            This is the perfect tool to handle several pricings, seasonal discounts, etc."
+"A price is a set of sales prices or rules to compute the price of sales "
+"order lines based on products, product categories, dates and ordered "
+"quantities.\n"
+"            This is the perfect tool to handle several pricings, seasonal "
+"discounts, etc."
 msgstr ""
-"Fiyat, ürünlere, ürün kategorilerine, tarihlere ve sipariş edilen miktarlara dayalı olarak satış siparişi satırlarının fiyatını hesaplamak için bir dizi satış fiyatı veya kuralıdır.\n"
-"Bu, çeşitli fiyatlandırmaları, sezonluk indirimleri vb. işlemek için mükemmel bir araçtır."
+"Fiyat, ürünlere, ürün kategorilerine, tarihlere ve sipariş edilen miktarlara "
+"dayalı olarak satış siparişi satırlarının fiyatını hesaplamak için bir dizi "
+"satış fiyatı veya kuralıdır.\n"
+"Bu, çeşitli fiyatlandırmaları, sezonluk indirimleri vb. işlemek için "
+"mükemmel bir araçtır."
 
 #. module: product
 #. odoo-python
@@ -348,11 +351,13 @@ msgstr "Ürün zaten barkodu kullanıyor"
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
 #: model:ir.model.fields,help:product.field_product_template__detailed_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory "
+"app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Depolanabilir ürün, stokunu yönettiğiniz bir üründür. Envanter uygulaması yüklenmiş olmalıdır.\n"
+"Depolanabilir ürün, stokunu yönettiğiniz bir üründür. Envanter uygulaması "
+"yüklenmiş olmalıdır.\n"
 "Sarf malzemesi, stoku yönetilmeyen bir üründür.\n"
 "Hizmet, sağladığınız maddi olmayan bir üründür."
 
@@ -497,7 +502,8 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
-"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+"                Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
 msgstr ""
 "Müşteri kategorilerine göre değişik fiyat kuralları uygulanmasını sağlar.\n"
 "Örnek: Perakendeciler için %10, bu ürün için 5 TL indirim gibi."
@@ -1344,8 +1350,8 @@ msgstr "Fazladan Ücret"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
 msgid ""
-"Extra price for the variant with this attribute value on sale price. eg. 200"
-" price extra, 1000 + 200 = 1200."
+"Extra price for the variant with this attribute value on sale price. eg. 200 "
+"price extra, 1000 + 200 = 1200."
 msgstr ""
 "Satış fiyatı üzerinden bu niteliklere sahip varyant için ekstra fiyat. "
 "Örneğin. 200 ekstra fiyat, 1000 + 200 = 1200."
@@ -1413,7 +1419,8 @@ msgstr "Font awesome ikonları örn. fa-tasks"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
 "Kuralın uygulanması için, satın alınan/satılan miktar, bu alanda belirlenen "
@@ -1581,8 +1588,7 @@ msgstr "Ayarlanmazsa, satıcı fiyatı bu ürünün tüm varyantlarına uygulan�
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr ""
-"İşareti kaldırırsanız, fiyat listesini kaldırmadan gizlemenizi "
-"sağlayacaktır."
+"İşareti kaldırırsanız, fiyat listesini kaldırmadan gizlemenizi sağlayacaktır."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__active
@@ -1848,8 +1854,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
 msgid ""
-"Make this attribute value not compatible with other values of the product or"
-" some attribute values of optional and accessory products."
+"Make this attribute value not compatible with other values of the product or "
+"some attribute values of optional and accessory products."
 msgstr ""
 "Bu nitelik değerini ürünün diğer değerleriyle veya isteğe bağlı ve aksesuar "
 "ürünlerin bazı özellik değerleriyle uyumlu değil yapın."
@@ -1938,7 +1944,8 @@ msgid ""
 "Advanced rules: enables advanced price rules for pricelists."
 msgstr ""
 "Birden çok fiyat: Ürüne göre sabit fiyat kurallarına sahip fiyat listeleri\n"
-"Gelişmiş kurallar: fiyat listeleri için gelişmiş fiyat kurallarını etkinleştirir."
+"Gelişmiş kurallar: fiyat listeleri için gelişmiş fiyat kurallarını "
+"etkinleştirir."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
@@ -2091,8 +2098,8 @@ msgstr "Ofis Lambası"
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
 msgid ""
-"On the product %(product)s you cannot associate the value %(value)s with the"
-" attribute %(attribute)s because they do not match."
+"On the product %(product)s you cannot associate the value %(value)s with the "
+"attribute %(attribute)s because they do not match."
 msgstr ""
 "%(product)s  ürününde %(value)s değerini %(attribute)s özelliğiyle "
 "ilişkilendiremezsiniz çünkü bunlar eşleşmemektedir."
@@ -2343,7 +2350,6 @@ msgstr "Fiyatlandırma"
 
 #. module: product
 #. odoo-javascript
-#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Print"
@@ -2759,11 +2765,11 @@ msgstr "Referans"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid ""
-"Register the prices requested by your vendors for each product, based on the"
-" quantity and the period."
+"Register the prices requested by your vendors for each product, based on the "
+"quantity and the period."
 msgstr ""
-"Her ürün için satıcılarınızın talep ettiği fiyatları miktar ve dönem bazında"
-" kaydedin."
+"Her ürün için satıcılarınızın talep ettiği fiyatları miktar ve dönem bazında "
+"kaydedin."
 
 #. module: product
 #. odoo-python
@@ -2914,7 +2920,8 @@ msgid ""
 msgstr ""
 "Fiyatı bu değerin katı olarak ayarlar.\n"
 "Yuvarlama indirimden sonra ek ücretten önce yapılır.\n"
-"9.99 şeklinde bir fiyat elde etmek için yuvarlamayı 10, ek ücreti -0.01 olarak ayarlayın."
+"9.99 şeklinde bir fiyat elde etmek için yuvarlamayı 10, ek ücreti -0.01 "
+"olarak ayarlayın."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -2941,8 +2948,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
-"Bu kural yalnızca bir ürüne uygulanıyorsa bir ürün belirleyin. Aksi takdirde"
-" boş bırakın."
+"Bu kural yalnızca bir ürüne uygulanıyorsa bir ürün belirleyin. Aksi takdirde "
+"boş bırakın."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
@@ -3090,8 +3097,7 @@ msgid ""
 "The default Unit of Measure and the purchase Unit of Measure must be in the "
 "same category."
 msgstr ""
-"Varsayılan Ölçü Birimi ve satın alınan Ölçü Birimi aynı kategoride "
-"olmalıdır."
+"Varsayılan Ölçü Birimi ve satın alınan Ölçü Birimi aynı kategoride olmalıdır."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
@@ -3133,8 +3139,8 @@ msgstr "Bu kategori altındaki ürün sayısı (Çocuk kategorisini içermez)"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
-"The number of variants to generate is above allowed limit. You should either"
-" not generate variants for each combination or generate them on demand from "
+"The number of variants to generate is above allowed limit. You should either "
+"not generate variants for each combination or generate them on demand from "
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
@@ -3176,11 +3182,11 @@ msgstr "Yuvarlama yöntemi kesinlikle pozitif olmalıdır."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
-"The sale price is managed from the product template. Click on the 'Configure"
-" Variants' button to set the extra attribute prices."
+"The sale price is managed from the product template. Click on the 'Configure "
+"Variants' button to set the extra attribute prices."
 msgstr ""
-"Satış fiyat ürün şablonundan yönetilir. Ekstra nitelik fiyatlarını ayarlamak"
-" için 'Varyantları Yapılandır' düğmesine tıklayın."
+"Satış fiyat ürün şablonundan yönetilir. Ekstra nitelik fiyatlarını ayarlamak "
+"için 'Varyantları Yapılandır' düğmesine tıklayın."
 
 #. module: product
 #. odoo-python
@@ -3223,7 +3229,8 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
-"Ürün niteliklerinin, değerlerinin ve hariç tutulanların bu yapılandırması, olası bir varyasyona yol açmaz.\n"
+"Ürün niteliklerinin, değerlerinin ve hariç tutulanların bu yapılandırması, "
+"olası bir varyasyona yol açmaz.\n"
 "Lütfen istenirse ürününüzü doğrudan arşivleyin veya silin."
 
 #. module: product
@@ -3358,7 +3365,7 @@ msgstr "Birim Fiyat:"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Units"
-msgstr "Birim"
+msgstr "Adet"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -3446,11 +3453,13 @@ msgstr "Ekstra Fiyat Değeri"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "Ürünün değeri (AVCO'da otomatik olarak hesaplanır).\n"
-"Satın alma maliyeti bilinmediğinde (örneğin stok düzeltmesi) ürünü değerlemek için kullanılır.\n"
+"Satın alma maliyeti bilinmediğinde (örneğin stok düzeltmesi) ürünü "
+"değerlemek için kullanılır.\n"
 "Satış siparişlerindeki marjları hesaplamak için kullanılır."
 
 #. module: product
@@ -3628,8 +3637,8 @@ msgstr "Uyarılar"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
+"We pay special attention to detail, which is why our desks are of a superior "
+"quality."
 msgstr ""
 "Detaylara özel itina gösteririz, bu yüzden masalarımız üstün kalitelidir."
 
@@ -3680,12 +3689,14 @@ msgid ""
 "You are setting a Decimal Accuracy less precise than the UOMs:\n"
 "%s\n"
 "This may cause inconsistencies in computations.\n"
-"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+"Please increase the rounding of those units of measure, or the digits of "
+"this Decimal Accuracy."
 msgstr ""
 "Ölçü biriminden daha az hassas bir Ondalık Doğruluk ayarlıyorsunuz:\n"
 "%s\n"
 "Bu, hesaplamalarda tutarsızlıklara neden olabilir.\n"
-"Lütfen bu ölçü birimlerinin yuvarlamasını veya bu Ondalık Doğruluğun basamaklarını artırın."
+"Lütfen bu ölçü birimlerinin yuvarlamasını veya bu Ondalık Doğruluğun "
+"basamaklarını artırın."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
@@ -3742,10 +3753,12 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot change the Variants Creation Mode of the attribute %(attribute)s "
+"because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"Aşağıdaki ürünlerde kullanıldığından %(attribute)s özelliğinin Varyant Oluşturma Modunu değiştiremezsiniz:\n"
+"Aşağıdaki ürünlerde kullanıldığından %(attribute)s özelliğinin Varyant "
+"Oluşturma Modunu değiştiremezsiniz:\n"
 "%(products)s"
 
 #. module: product
@@ -3753,11 +3766,11 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid ""
-"You cannot change the attribute of the value %(value)s because it is used on"
-" the following products: %(products)s"
+"You cannot change the attribute of the value %(value)s because it is used on "
+"the following products: %(products)s"
 msgstr ""
-"%(value)s değerinin özelliğini değiştiremezsiniz çünkü bu değer şu ürünlerde"
-" kullanılıyor:  %(products)s"
+"%(value)s değerinin özelliğini değiştiremezsiniz çünkü bu değer şu ürünlerde "
+"kullanılıyor:  %(products)s"
 
 #. module: product
 #. odoo-python
@@ -3790,8 +3803,7 @@ msgstr "Özyinelemeli kategoriler oluşturamazsınız"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
-msgid ""
-"You cannot create two values with the same name for the same attribute."
+msgid "You cannot create two values with the same name for the same attribute."
 msgstr "Aynı nitelik için aynı ada sahip iki değer oluşturamazsınız."
 
 #. module: product
@@ -3817,7 +3829,8 @@ msgstr "%s ürün kategorisini silemezsiniz."
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot delete the attribute %(attribute)s because it is used on the "
+"following products:\n"
 "%(products)s"
 msgstr ""
 "Aşağıdaki ürünlerde kullanıldığından %(attribute)s özelliğini silemezsiniz:\n"
@@ -3828,9 +3841,11 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid ""
-"You cannot delete the value %(value)s because it is used on the following products:\n"
+"You cannot delete the value %(value)s because it is used on the following "
+"products:\n"
 "%(products)s\n"
-" If the value has been associated to a product in the past, you will not be able to delete it."
+" If the value has been associated to a product in the past, you will not be "
+"able to delete it."
 msgstr ""
 "Aşağıdaki ürünlerde kullanıldığı için %(value)s değerini silemezsiniz:\n"
 "%(products)s\n"
@@ -3872,15 +3887,14 @@ msgstr "Değeri silemezsiniz %s Çünkü bazı ürünlerde kullanılıyordu."
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
 msgid ""
-"You cannot move the attribute %(attribute)s from the product %(product_src)s"
-" to the product %(product_dest)s."
+"You cannot move the attribute %(attribute)s from the product %(product_src)s "
+"to the product %(product_dest)s."
 msgstr ""
 " %(attribute)s özelliğini%(product_src)sürününden %(product_dest)sürününe "
 "taşıyamazsınız."
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_template_attribute_value.py:0
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
 msgid ""
@@ -3896,10 +3910,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
-"                            whether it's a storable product, a consumable or a service."
+"                            whether it's a storable product, a consumable or "
+"a service."
 msgstr ""
 "Sattığınız veya satın aldığınız her şey için bir ürün tanımlamanız gerekir,\n"
-"                           depolanabilir bir ürün, bir sarf malzemesi veya bir hizmet olup olmadığı."
+"                           depolanabilir bir ürün, bir sarf malzemesi veya "
+"bir hizmet olup olmadığı."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -3909,15 +3925,18 @@ msgid ""
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
 "Sattığınız veya satın aldığınız her şey için bir ürün tanımlamanız gerekir,\n"
-"               ister depolanabilir bir ürün, ister sarf malzemesi veya hizmet olsun."
+"               ister depolanabilir bir ürün, ister sarf malzemesi veya "
+"hizmet olsun."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "İster depolanabilir bir ürün, ister sarf malzemesi veya hizmet olsun, \n"
 "sattığınız veya satın aldığınız her şey için bir ürün tanımlamanız gerekir.\n"
@@ -3927,12 +3946,16 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
-"You must define a product for everything you sell, whether it's a physical product,\n"
+"You must define a product for everything you sell, whether it's a physical "
+"product,\n"
 "                a consumable or a service you offer to customers.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
-"Bir sarf malzemesi, müşterilere sunduğunuz bir hizmet veya fiziksel bir ürün olsun, \n"
+"Bir sarf malzemesi, müşterilere sunduğunuz bir hizmet veya fiziksel bir ürün "
+"olsun, \n"
 "sattığınız her şey için bir ürün tanımlamanız gerekir.\n"
 "Ürün formu, satış sürecini basitleştiren bilgiler içerir:\n"
 "Fiyat, fiyat teklifi, muhasebe verileri, tedarik yöntemleri vb."
@@ -4009,3 +4032,15 @@ msgstr "ürün şablonu"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
 msgstr "den"
+
+#~ msgid "$14.00"
+#~ msgstr "$14.00"
+
+#~ msgid "$15.00"
+#~ msgstr "$15.00"
+
+#~ msgid "10"
+#~ msgstr "10"
+
+#~ msgid "123456789012"
+#~ msgstr "123456789012"

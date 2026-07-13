@@ -106,6 +106,11 @@ class TestDigest(TestDigestCommon):
         self.assertEqual(self.digest_3.kpi_res_users_connected_value, 2,
             msg='This KPI has no company, should take the current one')
 
+        self.user_employee.company_ids |= self.company_2
+
+        self.assertEqual(self.digest_2.kpi_res_users_connected_value, 1,
+            msg='The employee user should be counted in the other company if in allowed companies')
+
     @users('admin')
     def test_digest_numbers(self):
         digest = self.env['digest.digest'].browse(self.digest_1.ids)

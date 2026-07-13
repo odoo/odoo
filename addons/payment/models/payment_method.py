@@ -188,6 +188,12 @@ class PaymentMethod(models.Model):
 
         return super().write(values)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_not_default_payment_method(self):
+        payment_method_unknown = self.env.ref('payment.payment_method_unknown')
+        if payment_method_unknown in self:
+            raise UserError(_("You cannot delete the default payment method."))
+
     # === BUSINESS METHODS === #
 
     def _get_compatible_payment_methods(

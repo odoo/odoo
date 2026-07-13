@@ -1,11 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import textwrap
+import uuid
 from lxml import etree
-from odoo import Command
+from unittest import SkipTest
+from unittest.mock import patch
+
+from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tools import file_open
+from odoo.tools.safe_eval import datetime
+
+try:
+    from odoo.addons.test_mimetypes.tests.test_guess_mimetypes import contents
+except ImportError:
+    contents = None
 
 
 @tagged('post_install', '-at_install')
@@ -30,13 +42,84 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'standard_price': 80.0,
         })
 
+        cls.namespaces = {
+            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100",
+            'qdt': "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+            'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        }
+
+        cls.ubl_namespaces = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+
     def import_attachment(self, attachment, journal=None):
         journal = journal or self.company_data["default_journal_purchase"]
         return self.env['account.journal'] \
             .with_context(default_journal_id=journal.id) \
             ._create_document_from_attachment(attachment.id)
 
-    def test_import_product(self):
+    def _get_raw_mail_message_str(self, attachments, email_to, message_id=None):
+        """
+        :param attachments: Odoo recordset of ir.attachment.
+        :param email_to: string that will fill email_to field in the email, probably you'll want to use some journal alias here.
+        :param message_id: Optional. Custom message ID for the email. If not provided, a UUID will be generated.
+
+        Returns:
+            Formatted email string.
+        """
+        if not message_id:
+            message_id = str(uuid.uuid4())
+
+        attachment_parts = []
+        for attachment in attachments:
+            encoded_attachment = base64.b64encode(attachment['raw']).decode()
+            attachment_part = textwrap.dedent(f"""\
+                --000000000000a47519057e029630
+                Content-Type: {attachment['mimetype']}
+                Content-Transfer-Encoding: base64
+                Content-Disposition: attachment; filename="{attachment['name']}"
+
+                {encoded_attachment}
+            """)
+            attachment_parts.append(attachment_part)
+
+        email_raw = textwrap.dedent(f"""\
+            MIME-Version: 1.0
+            Date: Fri, 26 Nov 2021 16:27:45 +0100
+            Message-ID: {message_id}
+            Subject: Incoming bill
+            From: Someone <someone@some.company.com>
+            To: {email_to}
+            Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
+
+            --000000000000a47519057e029630
+            Content-Type: text/plain; charset="UTF-8"
+
+            Here is your requested document(s).
+        """)
+        email_raw += "\n".join(attachment_parts)
+        email_raw += "\n--000000000000a47519057e029630--"
+        return email_raw
+
+    def test_export_import_product(self):
+        products = self.env['product.product'].create([{
+            'name': 'XYZ',
+            'default_code': '1234',
+        }, {
+            'name': 'XYZ',
+            'default_code': '5678',
+        }, {
+            'name': 'XXX',
+            'default_code': '1111',
+            'barcode': '00001',
+        }, {
+            'name': 'YYY',
+            'default_code': '1111',
+            'barcode': '00002',
+        }])
         line_vals = [
             {
                 'product_id': self.place_prdct.id,
@@ -54,7 +137,23 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
                 'product_id': self.displace_prdct.id,
                 'product_uom_id': self.uom_dozens.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
-            }
+            }, {
+                'product_id': products[0].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            }, {
+                'product_id': products[1].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            }, {
+                'product_id': products[2].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            }, {
+                'product_id': products[3].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            },
         ]
         company = self.company_data_2['company']
         company.country_id = self.env['res.country'].search([('code', '=', 'FR')])
@@ -62,45 +161,60 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         company.email = 'company@site.ext'
         company.phone = '+33499999999'
         company.zip = '78440'
-
-        company.partner_id.ubl_cii_format = 'facturx'
         company.partner_id.bank_ids = [Command.create({
             'acc_number': '999999',
             'partner_id': company.partner_id.id,
-            'acc_holder_name': 'The Chosen One'
+            'acc_holder_name': 'The Chosen One',
+            'allow_out_payment': True,
         })]
 
-        invoice = self.env['account.move'].create({
-            'company_id': company.id,
-            'partner_id': company.partner_id.id,
-            'move_type': 'out_invoice',
-            'journal_id': self.company_data_2['default_journal_sale'].id,
-            'invoice_line_ids': [Command.create(vals) for vals in line_vals],
-        })
-        invoice.action_post()
+        for ubl_cii_format in ['facturx', 'ubl_bis3']:
+            with self.subTest(sub_test_name=f"format: {ubl_cii_format}"):
+                company.partner_id.ubl_cii_format = ubl_cii_format
 
-        template = self.env.ref('account.email_template_edi_invoice', raise_if_not_found=False)
-        print_wiz = self.env['account.move.send'].create({
-            'move_ids': invoice.ids,
-            'mail_template_id': template.id
-        })
-        print_wiz.checkbox_download = False
-        print_wiz.checkbox_send_mail = False
-        print_wiz.checkbox_send_by_post = False
-        print_wiz.checkbox_ubl_cii_xml = True
-        print_wiz.action_send_and_print()
+                invoice = self.env['account.move'].create({
+                    'company_id': company.id,
+                    'partner_id': company.partner_id.id,
+                    'move_type': 'out_invoice',
+                    'journal_id': self.company_data_2['default_journal_sale'].id,
+                    'invoice_line_ids': [Command.create(vals) for vals in line_vals],
+                })
+                invoice.action_post()
 
-        facturx_attachment = invoice.ubl_cii_xml_id
-        xml_tree = etree.fromstring(facturx_attachment.raw)
+                template = self.env.ref('account.email_template_edi_invoice', raise_if_not_found=False)
+                print_wiz = self.env['account.move.send'].create({
+                    'move_ids': invoice.ids,
+                    'mail_template_id': template.id
+                   })
+                print_wiz.checkbox_download = False
+                print_wiz.checkbox_send_mail = False
+                print_wiz.checkbox_send_by_post = False
+                print_wiz.checkbox_ubl_cii_xml = True
+                print_wiz.action_send_and_print()
 
-        # Testing the case where a product on the invoice has a UoM with a different category than the one in the DB
-        wrong_uom_line = xml_tree.findall('./{*}SupplyChainTradeTransaction/{*}IncludedSupplyChainTradeLineItem')[1]
-        wrong_uom_line.find('./{*}SpecifiedLineTradeDelivery/{*}BilledQuantity').attrib['unitCode'] = 'HUR'
+                attachment = invoice.ubl_cii_xml_id
+                xml_tree = etree.fromstring(attachment.raw)
 
-        facturx_attachment.raw = etree.tostring(xml_tree)
-        new_invoice = invoice.journal_id._create_document_from_attachment(facturx_attachment.ids)
+                if ubl_cii_format == 'facturx':
+                    # Testing the case where a product on the invoice has a UoM with a different category than the one in the DB
+                    wrong_uom_line = xml_tree.findall('./{*}SupplyChainTradeTransaction/{*}IncludedSupplyChainTradeLineItem')[1]
+                    wrong_uom_line.find('./{*}SpecifiedLineTradeDelivery/{*}BilledQuantity').attrib['unitCode'] = 'HUR'
+                    last_line_product = xml_tree.find('./{*}SupplyChainTradeTransaction/{*}IncludedSupplyChainTradeLineItem[8]/{*}SpecifiedTradeProduct')
+                    self.assertEqual(last_line_product.find('./{*}GlobalID').text, '00002')
+                    self.assertEqual(last_line_product.find('./{*}SellerAssignedID').text, '1111')
+                    self.assertEqual(last_line_product.find('./{*}Name').text, '[1111] YYY')
+                elif ubl_cii_format == 'ubl_bis3':
+                    last_line_product = xml_tree.find('./{*}InvoiceLine[8]/{*}Item')
+                    barcode_node = last_line_product.find('./{*}StandardItemIdentification/{*}ID')
+                    self.assertEqual(barcode_node.text, '00002')
+                    self.assertEqual(barcode_node.attrib['schemeID'], '0160')
+                    self.assertEqual(last_line_product.find('./{*}SellersItemIdentification/{*}ID').text, '1111')
+                    self.assertEqual(last_line_product.find('./{*}Name').text, 'YYY')
 
-        self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
+                attachment.raw = etree.tostring(xml_tree)
+                new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
+
+                self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
     def test_import_tax_prediction(self):
         """ We are going to create 2 tax and import the e-invoice twice.
@@ -151,6 +265,53 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         # Import the bill again and ensure the prediction did his work
         bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
         self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_2)
+
+    def test_import_multiple_embedded_pdf(self):
+        """
+        Importing an xml with multiple embedded file should correctly import all
+        attachments in the newly created bill
+        """
+        journal = self.company_data['default_journal_purchase']
+        file_path = "bis3_bill_example.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+
+        created_moves = []
+        move_create = self.env.registry['account.move'].create
+
+        # patch used to retrieve all created documents
+        def patched_create(self, vals_list):
+            records = move_create(self, vals_list)
+            created_moves.extend(records.ids)
+            return records
+        self.patch(self.env.registry['account.move'], 'create', patched_create)
+
+        # Import the document manually
+        journal.create_document_from_attachment(xml_attachment.id)
+
+        self.assertEqual(len(created_moves), 1, "A single bill should be created")
+        bill = self.env['account.move'].browse(created_moves)
+        self.assertTrue(bill.message_main_attachment_id, "The Bill should have a main attachment")
+        self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The Bill should have a main attachment")
+        self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")
+
+        init_vals = {'move_type': 'in_invoice', 'journal_id': journal.id}
+        email_raw = self._get_raw_mail_message_str(attachments=xml_attachment, email_to=journal.alias_id.display_name)
+        # Import the document via mail alias
+        created_moves = []
+        move_id = self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
+        bill = self.env['account.move'].browse(move_id)
+
+        self.assertEqual(len(created_moves), 1, "A single bill should be created")
+        self.assertTrue(bill.message_main_attachment_id, "The Bill should have a main attachment")
+        self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The Bill should have a main attachment")
+        self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")
 
     def test_peppol_eas_endpoint_compute(self):
         partner = self.partner_a
@@ -219,3 +380,1084 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         # The partner should be retrieved based on the peppol fields
         imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])
         self.assertEqual(imported_invoice.partner_id, partner)
+
+    def test_export_pdf_contains_facturx(self):
+        """ Check that we generate a Factur-x xml when we render the invoice action report. """
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
+        })
+        invoice.action_post()
+
+        with patch(
+            'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_cii_facturx.AccountEdiXmlCII._export_invoice',
+            side_effect=lambda m: (b'<xml>Tmp</xml>', {}),
+        ) as patched:
+            self.env['ir.actions.report']\
+                .with_context(force_report_rendering=True)\
+                ._render('account.account_invoices', invoice.ids)
+            patched.assert_called_once()
+
+    def test_actual_delivery_date_in_cii_xml(self):
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            'delivery_date': "2024-12-31",
+        })
+        invoice.action_post()
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        xml_tree = etree.fromstring(xml_attachment.raw)
+        actual_delivery_date = xml_tree.find('.//ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(actual_delivery_date.text, '20241231')
+
+    def test_billing_date_in_cii_xml(self):
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_date': "2024-12-01",
+            'invoice_date_due': "2024-12-31",
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice.action_post()
+        invoice.invoice_date_due = fields.Date.from_string('2024-12-31')
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        xml_tree = etree.fromstring(xml_attachment.raw)
+        start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
+        end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(start_date.text, '20241201')
+        self.assertEqual(end_date.text, '20241231')
+
+    def test_export_import_billing_dates(self):
+        if self.env.ref('base.module_account_accountant').state != 'installed':
+            self.skipTest("payment_custom module is not installed")
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_date': "2024-12-01",
+            'invoice_date_due': "2024-12-31",
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'deferred_start_date': "2024-11-19",
+                    'deferred_end_date': "2024-12-11",
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'deferred_end_date': "2024-12-26",
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'deferred_start_date': "2024-11-29",
+                    'deferred_end_date': "2024-12-15",
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        xml_tree = etree.fromstring(xml_attachment.raw)
+
+        line_start_dates = xml_tree.findall('.//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual([date.text for date in line_start_dates], ['20241119', '20241201', '20241129'])
+
+        line_end_dates = xml_tree.findall('.//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual([value.text for value in line_end_dates], ['20241211', '20241226', '20241215'])
+
+        global_start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(global_start_date.text, '20241119')
+
+        global_end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(global_end_date.text, '20241226')
+
+        line_vals = [
+            {
+                'product_id': self.product_a.id,
+                'deferred_start_date': datetime.date(2024, 11, 19),
+                'deferred_end_date': datetime.date(2024, 12, 11),
+            },
+            {
+                'product_id': self.product_a.id,
+                'deferred_start_date': datetime.date(2024, 12, 1),
+                'deferred_end_date': datetime.date(2024, 12, 26),
+            },
+            {
+                'product_id': self.product_a.id,
+                'deferred_start_date': False,
+                'deferred_end_date': False,
+            },
+            {
+                'product_id': self.product_a.id,
+                'deferred_start_date': datetime.date(2024, 11, 29),
+                'deferred_end_date': datetime.date(2024, 12, 15),
+            },
+        ]
+        new_invoice = invoice.journal_id._create_document_from_attachment(xml_attachment.ids)
+        self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
+
+    def test_import_partner_fields(self):
+        """ We are going to import the e-invoice and check partner is correctly imported."""
+        self.env.ref('base.EUR').active = True  # EUR might not be active and is used in the xml testing file
+        file_path = "bis3_bill_example.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+
+        bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+
+        self.assertRecordValues(bill.partner_id, [{
+            'name': "ALD Automotive LU",
+            'phone': False,
+            'email': 'adl@test.com',
+            'vat': 'LU12977109',
+            'street': '270 rte d\'Arlon',
+            'street2': False,
+            'city': 'Strassen',
+            'zip': '8010',
+        }])
+
+    def test_import_bill(self):
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'Test account',
+            'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
+        })
+        partner = self.env['res.partner'].create({
+            'name': "My Belgian Partner",
+            'vat': "BE0477472701",
+            'email': "mypartner@email.com",
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': partner.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
+        })
+        invoice.action_post()
+        my_invoice_raw = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        my_invoice_root = etree.fromstring(my_invoice_raw)
+        modifying_xpath = """<xpath expr="(//*[local-name()='LegalMonetaryTotal']/*[local-name()='TaxExclusiveAmount'])" position="replace">
+        <TaxExclusiveAmount currencyID="EUR"><!--Some valid XML
+comment-->1000.0</TaxExclusiveAmount></xpath>"""
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': etree.tostring(self.with_applied_xpath(my_invoice_root, modifying_xpath)),
+            'name': 'test_invoice.xml',
+        })
+        imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+        self.assertRecordValues(imported_invoice.invoice_line_ids, [{
+            'amount_currency': 1000.00,
+            'quantity': 1.0}])
+
+    def test_importing_bill_shouldnt_set_current_company_bank_account(self):
+        partner = self.env['res.partner'].create({
+            'name': "My Belgian Partner",
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': partner.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
+        })
+        invoice.action_post()
+        my_invoice_raw = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        my_invoice_root = etree.fromstring(my_invoice_raw)
+        modifying_xpath = """
+            <xpath expr="(//*[local-name()='PaymentMeans']/*[local-name()='PaymentID'])" position="after">
+                <PayeeFinancialAccount><ID>Test account</ID></PayeeFinancialAccount>
+            </xpath>"""
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': etree.tostring(self.with_applied_xpath(my_invoice_root, modifying_xpath)),
+            'name': 'test_invoice.xml',
+        })
+        move = self.env['account.journal']\
+            .with_context(default_journal_id=self.company_data['default_journal_sale'].id)\
+            ._create_document_from_attachment(xml_attachment.id)
+        self.assertTrue(any('add your own bank account manually' in message.body for message in move.message_ids))
+
+    def test_import_bill_without_tax(self):
+        """ Test that no tax is set (even the default one) when importing a bill without tax."""
+        self.env.ref('base.EUR').active = True  # EUR might not be active and is used in the xml testing file
+        file_path = "bis3_bill_without_tax.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+        purchase_tax = self.env['account.tax'].create({
+            'type_tax_use': 'purchase',
+            'name': 'purchase_tax_10',
+            'amount': 10,
+        })
+        self.company_data['default_account_expense'].tax_ids = purchase_tax.ids
+
+        bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+
+        self.assertRecordValues(bill.invoice_line_ids, [{
+            'amount_currency': 100.00,
+            'quantity': 1.0,
+            'tax_ids': self.env['account.tax'],
+        }])
+
+    def test_import_discount(self):
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'price_unit': 11.34,
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1.65,
+                    'price_unit': 29.9,
+                }),
+            ],
+        })
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])
+        for line in imported_invoice.invoice_line_ids:
+            self.assertFalse(line.discount, "A discount on the imported lines signals a rounding error in the discount computation")
+
+    def test_payment_means_code_in_facturx_xml(self):
+        bank_ing = self.env['res.bank'].create({'name': 'ING', 'bic': 'BBRUBEBB'})
+        partner_bank = self.env['res.partner.bank'].create({
+                'acc_number': 'BE15001559627230',
+                'partner_id': self.partner_a.id,
+                'bank_id': bank_ing.id,
+                'company_id': self.env.company.id,
+                'allow_out_payment': True,
+            })
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            'delivery_date': "2024-12-31",
+            'partner_bank_id': partner_bank.id,
+        })
+        invoice.action_post()
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        xml_tree = etree.fromstring(xml_attachment.raw)
+        code = xml_tree.find('.//ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode', {
+            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100",
+            'qdt': "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+        })
+        self.assertEqual(code.text, '42')
+
+        if self.env['ir.module.module']._get('account_sepa_direct_debit').state == 'installed':
+            company = self.env.company
+            company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
+            company_bank_journal = self.company_data['default_journal_bank']
+            company_bank_journal.bank_acc_number = 'CH9300762011623852957'
+            company_bank_journal.bank_account_id.write({
+                'bank_id': bank_ing.id,
+                'allow_out_payment': True,
+            })
+
+            mandate = self.env['sdd.mandate'].create({
+                'name': 'mandate ' + (self.partner_a.name or ''),
+                'partner_bank_id': partner_bank.id,
+                'one_off': True,
+                'start_date': fields.Date.today(),
+                'partner_id': self.partner_a.id,
+                'company_id': company.id,
+                'payment_journal_id': company_bank_journal.id
+            })
+            mandate.action_validate_mandate()
+            invoice = self.env['account.move'].create({
+                'partner_id': self.partner_a.id,
+                'move_type': 'out_invoice',
+                'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+                'delivery_date': "2024-12-31",
+            })
+            invoice.action_post()
+            sdd_method_line = mandate.payment_journal_id.inbound_payment_method_line_ids.filtered(lambda l: l.code == 'sdd')
+            self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+                'payment_date': invoice.invoice_date_due or invoice.invoice_date,
+                'journal_id': mandate.payment_journal_id.id,
+                'payment_method_line_id': sdd_method_line.id,
+            })._create_payments()
+
+            xml_attachment = self.env['ir.attachment'].create({
+                'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+                'name': 'test_invoice.xml',
+            })
+            xml_tree = etree.fromstring(xml_attachment.raw)
+            code = xml_tree.find('.//ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode', {
+                'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+                'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+                'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100",
+                'qdt': "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+            })
+            self.assertEqual(code.text, '59')
+
+    def test_oin_code(self):
+        partner = self.partner_a
+        partner.peppol_endpoint = '00000000001020304050'
+        partner.country_id = self.env.ref('base.nl').id
+        partner.bank_ids = [Command.create({'acc_number': "0123456789", 'allow_out_payment': True})]
+        invoice = self.env['account.move'].create({
+            'partner_id': partner.id,
+            'move_type': 'out_invoice',
+            'invoice_date': "2024-12-01",
+            'invoice_date_due': "2024-12-31",
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+
+        invoice.partner_id.commercial_partner_id.ubl_cii_format = 'nlcius'
+        invoice.action_post()
+        invoice.invoice_date_due = fields.Date.from_string('2024-12-31')
+        builder = invoice.partner_id.commercial_partner_id._get_edi_builder()
+        xml_content = builder._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+        scheme_ID = xml_tree.find('.//cac:PartyLegalEntity/cbc:CompanyID[@schemeID]', {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"})
+        self.assertEqual(scheme_ID.attrib.get("schemeID"), "0190")
+
+    def test_send_and_print_extra_attachments(self):
+        if self.env['ir.module.module']._get('test_mimetypes').state != 'installed':
+            raise SkipTest("Module required for the test is not installed (test_mimetypes)")
+        self.partner_a.country_id = self.env.ref('base.be')
+        self.partner_a.commercial_partner_id.ubl_cii_format = 'ubl_bis3'
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
+        })
+        invoice.action_post()
+
+        # Supported
+        xlsx_attachment = self.env['ir.attachment'].create({
+            'name': 'xlsx attachment',
+            'raw': contents('xlsx'),
+            'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        # Not supported
+        docx_attachment = self.env['ir.attachment'].create({
+            'name': 'docx attachment',
+            'raw': contents('docx'),
+            'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        xml_attachment = self.env['ir.attachment'].create({
+            'name': 'xml attachment',
+            'raw': "<?xml version='1.0' encoding='UTF-8'?><test/>",
+            'mimetype': 'application/xml',
+        })
+        txt_attachment = self.env['ir.attachment'].create({
+            'name': 'txt attachment',
+            'raw': b'txt attachment'
+        })
+
+        template = self.env.ref('account.email_template_edi_invoice', raise_if_not_found=False)
+        wizard = self.env['account.move.send'].create({
+            'move_ids': invoice.ids,
+            'mail_template_id': template.id,
+        })
+        wizard.checkbox_download = False
+        wizard.checkbox_send_mail = False
+        wizard.checkbox_send_by_post = False
+        wizard.checkbox_ubl_cii_xml = True
+        wizard.mail_attachments_widget = wizard.mail_attachments_widget + [{
+            'id': attachment.id,
+            'name': attachment.name,
+            'mimetype': attachment.mimetype,
+            'placeholder': False,
+            'manual': True,
+        } for attachment in [xlsx_attachment, docx_attachment, xml_attachment, txt_attachment]]
+
+        wizard.action_send_and_print()
+
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        tree = etree.fromstring(invoice.ubl_cii_xml_id.raw)
+
+        attachments_elements = tree.findall('./{*}AdditionalDocumentReference')
+
+        self.assertEqual(len(attachments_elements), 2)
+        self.assertEqual(attachments_elements[0].find('{*}ID').text, invoice.invoice_pdf_report_id.name)
+        self.assertEqual(attachments_elements[1].find('{*}ID').text, xlsx_attachment.name)
+
+    def test_facturx_use_correct_vat(self):
+        """Test that Factur-X uses the foreign VAT when available, else the company VAT."""
+        germany = self.env.ref("base.de")
+
+        company = self.env.company
+        company.vat = '931736581'
+        self.partner_a.country_id = germany.id
+        self.partner_a.ubl_cii_format = 'facturx'
+        self.partner_b.country_id = company.country_id.id
+        self.partner_b.ubl_cii_format = 'facturx'
+
+        tax_group = self.env['account.tax.group'].create({
+            'name': 'German Taxes',
+            'company_id': company.id,
+            'country_id': germany.id,
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'DE VAT 19%',
+            'amount': 19,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'country_id': germany.id,
+            'tax_group_id': tax_group.id,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'German FP',
+            'vat_required': True,
+            'foreign_vat': 'DE123456788',
+            'country_id': germany.id,
+        })
+
+        invoice_with_fp = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'fiscal_position_id': fiscal_position.id,
+            'invoice_date': fields.Date.from_string('2025-12-22'),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        local_invoice = self.env['account.move'].create({
+            'partner_id': self.partner_b.id,
+            'move_type': 'out_invoice',
+            'invoice_date': fields.Date.from_string('2025-12-22'),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+            })],
+        })
+        invoice_with_fp.action_post()
+        local_invoice.action_post()
+
+        # Check XML for foreign VAT
+        xml_bytes = self.env["account.edi.xml.cii"]._export_invoice(invoice_with_fp)[0]
+        xml_tree = etree.fromstring(xml_bytes)
+        node = xml_tree.xpath("//ram:ID[@schemeID='VA']", namespaces={
+            "ram": "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+        })
+        self.assertEqual(node[0].text, fiscal_position.foreign_vat, "Foreign Fiscal Position VAT")
+
+        # Check XML for company VAT fallback
+        xml_bytes = self.env["account.edi.xml.cii"]._export_invoice(local_invoice)[0]
+        xml_tree = etree.fromstring(xml_bytes)
+        node = xml_tree.xpath("//ram:ID[@schemeID='VA']", namespaces={
+            "ram": "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+        })
+        self.assertEqual(node[0].text, company.vat, "Company VAT fallback")
+
+    def test_import_and_group_lines_by_tax(self):
+        """
+        Test the group/ungroup lines action on account.move
+        """
+
+        def create_bill(file_path):
+            file_path = f"{self.test_module}/tests/test_files/{file_path}"
+            with file_open(file_path, 'rb') as file:
+                xml_attachment = self.env['ir.attachment'].create({
+                    'mimetype': 'application/xml',
+                    'name': 'bis3_bill_group_by_tax.xml',
+                    'raw': file.read(),
+                })
+            return self.import_attachment(xml_attachment)
+
+        # Datas
+        self.env.ref('base.EUR').active = True
+        tax_6 = self.percent_tax(6.0, type_tax_use='purchase')
+        tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
+
+        # Import bill
+        file_path = "bis3_bill_group_by_tax.xml"
+        invoice = create_bill(file_path)
+
+        expected_not_grouped_lines = [
+            {
+                'quantity': 1.0,
+                'price_unit': 600.0,
+                'tax_ids': tax_6.ids,
+            },
+            {
+                'quantity': 1.0,
+                'price_unit': 300.0,
+                'tax_ids': tax_21.ids,
+            },
+            {
+                'quantity': 2.0,
+                'price_unit': 500.0,
+                'tax_ids': tax_21.ids,
+            },
+        ]
+        self.assertRecordValues(invoice.invoice_line_ids, expected_not_grouped_lines)
+
+        # Group lines by tax and post
+        invoice.action_group_ungroup_lines_by_tax()
+
+        expected_grouped_lines = [
+            {
+                'quantity': 1.0,
+                'price_unit': 600.0,
+                'tax_ids': tax_6.ids,
+            },
+            {
+                'quantity': 1.0,
+                'price_unit': 1300.0,
+                'tax_ids': tax_21.ids,
+            },
+        ]
+        self.assertRecordValues(invoice.invoice_line_ids, expected_grouped_lines)
+        invoice.action_post()
+
+        # Import the bill a second time, should be grouped as last posted bill from this supplier is grouped
+        invoice_2 = create_bill(file_path)
+        self.assertRecordValues(invoice_2.invoice_line_ids, expected_grouped_lines)
+
+        # Should ungroup lines from xml
+        invoice_2.action_group_ungroup_lines_by_tax()
+        self.assertRecordValues(invoice_2.invoice_line_ids, expected_not_grouped_lines)
+
+    def test_group_lines_correct_amount(self):
+        tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
+        # The following invoice is a known case where amount_tax = 9.06 before grouping, and 9.07 after
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-11-12',
+            'date': '2019-11-12',
+            'invoice_line_ids': [
+                Command.create({
+                    'price_unit': 28.10,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+                Command.create({
+                    'price_unit': 14.88,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+                Command.create({
+                    'price_unit': 0.19,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+
+        old_tax_amount = move.amount_tax
+        move.action_group_ungroup_lines_by_tax()
+        self.assertEqual(move.amount_tax, old_tax_amount)
+
+    def test_ubl_split_fixed_taxes_into_allowance_charges_or_extra_invoice_lines(self):
+        """Test that fixed taxes are split correctly:
+        - fixed taxes that affect the base are exported as AllowanceCharge.
+        - fixed taxes that not affect the base are exported as extra invoice lines."""
+
+        self.partner_a.country_id = self.env.ref('base.be')
+        standard_vat_21 = self.company_data['default_tax_sale']
+
+        # fixed AND include_base_amount => this should be treated as allowance charge
+        ecotax = self.env['account.tax'].create({
+            'name': 'Eco Tax',
+            'amount_type': 'fixed',
+            'amount': 3.0,
+            'include_base_amount': True,
+            'type_tax_use': 'sale',
+        })
+
+        # fixed AND not include_base_amount => this should be treated as extra invoice line
+        vidange = self.env['account.tax'].create({
+            'name': 'Tax Vidange',
+            'amount_type': 'fixed',
+            'amount': 5.0,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.place_prdct.id,
+                'product_uom_id': self.uom_units.id,
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': [Command.set((standard_vat_21 | ecotax | vidange).ids)],
+            })],
+        })
+        invoice.action_post()
+
+        xml_bytes = self.env["account.edi.xml.ubl_bis3"]._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_bytes)
+
+        ns = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+
+        vidange_lines = xml_tree.xpath(
+            "./cac:InvoiceLine[cac:Item/cbc:Name='Tax Vidange']",
+            namespaces=ns,
+        )
+        self.assertTrue(vidange_lines)
+
+        ecotax_allowance_charge = xml_tree.xpath(
+            "./cac:InvoiceLine/cac:AllowanceCharge[cbc:AllowanceChargeReason='Eco Tax']",
+            namespaces=ns,
+        )
+        self.assertTrue(ecotax_allowance_charge)
+
+        # there should be a TaxSubtotal with VAT category 'E' for emptying taxes
+        subtotals = xml_tree.xpath(
+            "./cac:TaxTotal/cac:TaxSubtotal[cac:TaxCategory/cbc:ID='E']",
+            namespaces=ns,
+        )
+        self.assertTrue(subtotals)
+
+        # check TaxTotal ?= sum(TaxSubtotal)
+        tax_total_amount = float(xml_tree.xpath("string(./cac:TaxTotal/cbc:TaxAmount)", namespaces=ns) or 0.0)
+        subtotal_amounts = [
+            float(x) for x in xml_tree.xpath("./cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount/text()", namespaces=ns)
+        ]
+        self.assertAlmostEqual(
+            tax_total_amount,
+            sum(subtotal_amounts),
+            places=2,
+            msg="TaxTotal != sum(TaxSubtotal)",
+        )
+
+    def test_bank_details_import(self):
+        acc_number = '1234567890'
+        partner_bank = self.env['res.partner.bank'].create({
+            'active': False,
+            'acc_number': acc_number,
+            'partner_id': self.partner_a.id
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'in_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        # will not raise sql constraint because the sql is not commited yet
+        self.env['account.edi.common']._import_retrieve_and_fill_partner_bank_details(invoice, [acc_number])
+        self.assertFalse(invoice.partner_bank_id)
+
+        partner_bank.active = True
+        self.env['account.edi.common']._import_retrieve_and_fill_partner_bank_details(invoice, [acc_number])
+        self.assertEqual(invoice.partner_bank_id, partner_bank)
+
+    def test_import_bill_vat_in_party_identification(self):
+        """ Some Peppol emitters add the supplier VAT only in
+        cac:PartyIdentification/cbc:ID, not in PartyTaxScheme/cbc:CompanyID.
+        """
+        file_path = f"{self.test_module}/tests/test_files/bis3_bill_vat_in_party_identification.xml"
+        with file_open(file_path, 'rb') as file:
+            attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+        bill = self.import_attachment(attachment, self.company_data["default_journal_purchase"])
+        self.assertEqual(bill.partner_id.vat, 'BE0239843188')
+        self.assertEqual(bill.partner_bank_id.partner_id, bill.partner_id)
+
+    def test_payment_terms_immediate_in_cii_xml(self):
+        self.partner_a.ubl_cii_format = 'facturx'
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            partner_id=self.partner_a,
+            invoice_date="2025-12-01",
+            post=True,
+        )
+
+        xml_tree = etree.fromstring(self.env['account.edi.xml.cii']._export_invoice(invoice)[0])
+        description = xml_tree.find('.//ram:SpecifiedTradePaymentTerms/ram:Description', self.namespaces)
+        due_date = xml_tree.find('.//ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString',
+                                 self.namespaces)
+        self.assertEqual(description.text, 'Immediate Payment')
+        self.assertEqual(due_date.text, '20251201')
+
+    def test_payment_terms_early_payment_discount_in_cii_xml(self):
+        pay_terms = self.env['account.payment.term'].create({
+            'name': '3% Before 15 Days',
+            'note': 'Payment terms: 3% Before 15 Days',
+            'early_discount': True,
+            'discount_days': 15,
+            'discount_percentage': 3.0,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'value_amount': 100.0,
+                'nb_days': 30,
+            })],
+        })
+        partner = self.partner_a
+        partner.ubl_cii_format = 'facturx'
+        partner.property_payment_term_id = pay_terms.id
+        partner.property_supplier_payment_term_id = pay_terms.id
+
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            partner_id=self.partner_a,
+            invoice_date="2025-12-01",
+            post=True,
+        )
+
+        xml_tree = etree.fromstring(self.env['account.edi.xml.cii']._export_invoice(invoice)[0])
+        description = xml_tree.find('.//ram:SpecifiedTradePaymentTerms/ram:Description', self.namespaces)
+        due_date = xml_tree.find('.//ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString',
+                                 self.namespaces)
+        days = xml_tree.find(
+            './/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:BasisPeriodMeasure',
+            self.namespaces)
+        percent = xml_tree.find(
+            './/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:CalculationPercent',
+            self.namespaces)
+
+        self.assertEqual(description.text, '3% Before 15 Days')
+        self.assertEqual(due_date.text, '20251231')
+        self.assertEqual(days.text, '15')
+        self.assertEqual(percent.text, '3.0')
+
+    def test_invoice_optional_fields(self):
+        """Test that optional invoice and invoice lines custom fields added by the user are exported correctly"""
+        IrModelFields = self.env["ir.model.fields"].with_context(studio=True)
+        model = self.env["ir.model"].search([("model", "=", "account.move")])
+
+        IrModelFields.create([
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_tax_point_date",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_contract_document_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_despatch_document_reference_id",
+            },
+            {
+                "ttype": "monetary",
+                "model_id": model.id,
+                "name": "x_studio_peppol_accounting_cost",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_project_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_order_reference_id",
+            },
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_invoice_period_start_date",
+            },
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_invoice_period_end_date",
+            },
+        ])
+
+        model = self.env["ir.model"].search([("model", "=", "account.move.line")])
+
+        IrModelFields.create([
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_order_line_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_buyers_item_id",
+            },
+        ])
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'x_studio_peppol_order_line_reference_id': "order_line1-1234",
+                'x_studio_peppol_buyers_item_id': "item1-1234",
+            }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'x_studio_peppol_order_line_reference_id': "order_line2-1234",
+                    'x_studio_peppol_buyers_item_id': "item2-1234",
+                })
+            ],
+            'x_studio_peppol_tax_point_date': "2028-01-01",
+            'x_studio_peppol_contract_document_reference_id': "contract-1234",
+            'x_studio_peppol_despatch_document_reference_id': "despatch-1234",
+            'x_studio_peppol_accounting_cost': "88.5",
+            'x_studio_peppol_project_reference_id': "project-1234",
+            'x_studio_peppol_order_reference_id': "order-1234",
+            'x_studio_peppol_invoice_period_start_date': "2028-01-01",
+            'x_studio_peppol_invoice_period_end_date': "2028-02-01",
+        })
+
+        invoice.action_post()
+
+        xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+
+        tax_point_date = xml_tree.find('.//cbc:TaxPointDate', self.ubl_namespaces)
+        self.assertEqual(tax_point_date.text, '2028-01-01')
+
+        contract_document_reference_id = xml_tree.find('.//cac:ContractDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(contract_document_reference_id.text, 'contract-1234')
+
+        despatch_document_reference_id = xml_tree.find('.//cac:DespatchDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(despatch_document_reference_id.text, 'despatch-1234')
+
+        accounting_cost = xml_tree.find('.//cbc:AccountingCost', self.ubl_namespaces)
+        self.assertEqual(accounting_cost.text, '88.5')
+
+        project_reference_id = xml_tree.find('.//cac:ProjectReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(project_reference_id.text, 'project-1234')
+
+        order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(order_reference_id.text, 'order-1234')
+
+        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_start_date.text, '2028-01-01')
+
+        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_end_date.text, '2028-02-01')
+
+        order_line_reference_id = xml_tree.findall('.//cac:InvoiceLine/cac:OrderLineReference/cbc:LineID', self.ubl_namespaces)
+        self.assertEqual(order_line_reference_id[0].text, 'order_line1-1234')
+        self.assertEqual(order_line_reference_id[1].text, 'order_line2-1234')
+
+        buyers_item_id = xml_tree.findall('.//cac:InvoiceLine/cac:Item/cac:BuyersItemIdentification/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(buyers_item_id[0].text, 'item1-1234')
+        self.assertEqual(buyers_item_id[1].text, 'item2-1234')
+
+    def test_credit_note_optional_fields(self):
+        """Test that optional credit note and credit note lines custom fields added by the user are exported correctly"""
+        IrModelFields = self.env["ir.model.fields"].with_context(studio=True)
+        model = self.env["ir.model"].search([("model", "=", "account.move")])
+
+        IrModelFields.create([
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_tax_point_date",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_contract_document_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_despatch_document_reference_id",
+            },
+            {
+                "ttype": "monetary",
+                "model_id": model.id,
+                "name": "x_studio_peppol_accounting_cost",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_order_reference_id",
+            },
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_invoice_period_start_date",
+            },
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_invoice_period_end_date",
+            },
+        ])
+
+        model = self.env["ir.model"].search([("model", "=", "account.move.line")])
+
+        IrModelFields.create([
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_order_line_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_buyers_item_id",
+            },
+        ])
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_refund',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'x_studio_peppol_order_line_reference_id': "order_line1-1234",
+                'x_studio_peppol_buyers_item_id': "item1-1234",
+            }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'x_studio_peppol_order_line_reference_id': "order_line2-1234",
+                    'x_studio_peppol_buyers_item_id': "item2-1234",
+                })
+            ],
+            'x_studio_peppol_tax_point_date': "2028-01-01",
+            'x_studio_peppol_contract_document_reference_id': "contract-1234",
+            'x_studio_peppol_despatch_document_reference_id': "despatch-1234",
+            'x_studio_peppol_accounting_cost': "88.5",
+            'x_studio_peppol_order_reference_id': "order-1234",
+            'x_studio_peppol_invoice_period_start_date': "2028-01-01",
+            'x_studio_peppol_invoice_period_end_date': "2028-02-01",
+        })
+
+        invoice.action_post()
+
+        xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+
+        tax_point_date = xml_tree.find('.//cbc:TaxPointDate', self.ubl_namespaces)
+        self.assertEqual(tax_point_date.text, '2028-01-01')
+
+        contract_document_reference_id = xml_tree.find('.//cac:ContractDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(contract_document_reference_id.text, 'contract-1234')
+
+        despatch_document_reference_id = xml_tree.find('.//cac:DespatchDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(despatch_document_reference_id.text, 'despatch-1234')
+
+        accounting_cost = xml_tree.find('.//cbc:AccountingCost', self.ubl_namespaces)
+        self.assertEqual(accounting_cost.text, '88.5')
+
+        order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(order_reference_id.text, 'order-1234')
+
+        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_start_date.text, '2028-01-01')
+
+        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_end_date.text, '2028-02-01')
+
+        order_line_reference_id = xml_tree.findall('.//cac:CreditNoteLine/cac:OrderLineReference/cbc:LineID', self.ubl_namespaces)
+        self.assertEqual(order_line_reference_id[0].text, 'order_line1-1234')
+        self.assertEqual(order_line_reference_id[1].text, 'order_line2-1234')
+
+        buyers_item_id = xml_tree.findall('.//cac:CreditNoteLine/cac:Item/cac:BuyersItemIdentification/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(buyers_item_id[0].text, 'item1-1234')
+        self.assertEqual(buyers_item_id[1].text, 'item2-1234')
+
+    def test_ubl_line_extension_global_rounding_distribution(self):
+        """ Test that rounding errors in line extensions are distributed
+            to ensure the sum of lines equals the total.
+        """
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
+        decimal_precision.digits = 4
+        tax_21 = self.env['account.tax'].create({
+            'name': 'tax 21',
+            'amount': 21.0,
+        })
+        fixed_tax_1 = self.env['account.tax'].create({
+            'name': "fixed tax 1",
+            'amount_type': 'fixed',
+            'amount': 0.1488,
+            'include_base_amount': True,
+            'is_base_affected': False,
+        })
+        fixed_tax_2 = self.env['account.tax'].create({
+            'name': "fixed tax 2",
+            'amount_type': 'fixed',
+            'amount': 0.0800,
+            'include_base_amount': True,
+            'is_base_affected': False,
+        })
+
+        invoice_line_vals = [
+            (2.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (2.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (3.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (3.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (3.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (3.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (2.00, 3.6270, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (6.00, 7.2500, tax_21),
+            (6.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+        ]
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': f'line {idx}',
+                    'quantity': quantity,
+                    'price_unit': price_unit,
+                    'tax_ids': [Command.set(taxes.ids)],
+                })
+                for idx, (quantity, price_unit, taxes) in enumerate(invoice_line_vals)
+            ]
+        })
+        invoice.action_post()
+        xml = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+
+        root = etree.fromstring(xml)
+        line_extension_amounts = [elem.text for elem in root.findall('./{*}InvoiceLine/{*}LineExtensionAmount')]
+        # Ensure the delta amount of 0.02 was distributed
+        # Expected total is 651.39
+        self.assertEqual(
+            line_extension_amounts,
+            ['15.20', '15.20', '22.82', '22.82', '22.82', '22.82', '7.71',
+             '43.50', '43.50', '87.00', '87.00', '87.00', '87.00', '87.00']
+        )
+        self.assertEqual(root.findtext('./{*}LegalMonetaryTotal/{*}LineExtensionAmount'), '651.39')

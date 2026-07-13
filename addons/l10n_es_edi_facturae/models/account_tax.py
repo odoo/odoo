@@ -4,7 +4,7 @@ from odoo import fields, models
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
-    l10n_es_edi_facturae_tax_type = fields.Selection((
+    l10n_es_edi_facturae_tax_type = fields.Selection([
         ('01', 'Value-Added Tax'),
         ('02', 'Taxes on production, services and imports in Ceuta and Melilla'),
         ('03', 'IGIC: Canaries General Indirect Tax'),
@@ -34,4 +34,4 @@ class AccountTax(models.Model):
         ('27', 'IGFEI: Tax on Fluorinated Greenhouse Gases'),
         ('28', 'IRNR: Non-resident Income Tax'),
         ('29', 'Corporation Tax'),
-    ), string='Spanish Facturae EDI Tax Type', default='01')
+    ], string='Spanish Facturae EDI Tax Type', default='01')

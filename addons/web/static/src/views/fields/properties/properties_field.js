@@ -13,7 +13,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { reposition } from "@web/core/position_hook";
 import { archParseBoolean } from "@web/views/utils";
-import { pick } from "@web/core/utils/objects";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
@@ -30,7 +29,11 @@ export class PropertiesField extends Component {
     static props = {
         ...standardFieldProps,
         context: { type: Object, optional: true },
-        columns: { type: Number, optional: true },
+        columns: {
+            type: Number,
+            optional: true,
+            validate: (columns) => [1, 2].includes(columns),
+        },
         showAddButton: { type: Boolean, optional: true },
     };
 
@@ -137,7 +140,12 @@ export class PropertiesField extends Component {
                     const group = this.groupedPropertiesList.find(
                         (group) => group.name === groupName
                     );
-                    to = group.elements.length ? group.elements.at(-1).name : groupName;
+                    if (!group) {
+                        to = null;
+                        moveBefore = false;
+                    } else {
+                        to = group.elements.length ? group.elements.at(-1).name : groupName;
+                    }
                 }
                 await this.onPropertyMoveTo(from, to, moveBefore);
             },
@@ -207,8 +215,9 @@ export class PropertiesField extends Component {
      * @returns {array}
      */
     get propertiesList() {
-        const propertiesValues = this.props.record.data[this.props.name] || [];
-        return propertiesValues.filter((definition) => !definition.definition_deleted);
+        return (this.props.record.data[this.props.name] || [])
+            .filter((definition) => !definition.definition_deleted)
+            .map((definition) => ({ ...definition }));
     }
 
     /**
@@ -405,7 +414,9 @@ export class PropertiesField extends Component {
             const newSeparators = [];
             for (let col = 0; col < this.renderedColumnsCount; ++col) {
                 const separatorIndex = columnSize * col + newSeparators.length;
-                if (propertiesValues[separatorIndex].type === "separator") {
+
+                if (propertiesValues[separatorIndex]?.type === "separator") {
+                    newSeparators.push(propertiesValues[separatorIndex].name);
                     continue;
                 }
                 const newSeparator = {
@@ -417,7 +428,7 @@ export class PropertiesField extends Component {
                 propertiesValues.splice(separatorIndex, 0, newSeparator);
             }
             this._unfoldSeparators(newSeparators, true);
-            toPropertyName = toPropertyName || propertiesValues[0].name;
+            toPropertyName = toPropertyName || propertiesValues.at(-1).name;
 
             // indexes might have changed
             fromIndex = propertiesValues.findIndex((property) => property.name === propertyName);
@@ -521,14 +532,14 @@ export class PropertiesField extends Component {
     async onPropertyDefinitionChange(propertyDefinition) {
         propertyDefinition["definition_changed"] = true;
         if (propertyDefinition.type === "separator") {
-            // remove all other keys
-            propertyDefinition = pick(
-                propertyDefinition,
-                "name",
-                "string",
-                "definition_changed",
-                "type"
-            );
+            const separatorKeys = new Set(["name", "string", "definition_changed", "type"]);
+            // remove all other keys in place, since propertyDefinition instance
+            // will be used as a PropertyDefinition component state value.
+            for (const key in propertyDefinition) {
+                if (!separatorKeys.has(key)) {
+                    delete propertyDefinition[key];
+                }
+            }
         }
         const propertiesValues = this.propertiesList;
         const propertyIndex = this._getPropertyIndex(propertyDefinition.name);

@@ -1,28 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_paypal
-# 
+#
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Fenyedi Levente, 2024
 # Lyall Kindmurr, 2024
-# 
+# Dorin Hongu <dhongu@gmail.com>, 2025
+# Larisa_nexterp, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lyall Kindmurr, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
@@ -44,7 +46,7 @@ msgstr "Cum vă configurați contul de paypal?"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
+msgstr "Valoare lipsă pentru txn_id (%(txn_id)s) sau txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #. odoo-python
@@ -61,7 +63,7 @@ msgstr "Token de identitate PDT"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "Tip tranzacție PayPal"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
@@ -83,7 +85,7 @@ msgstr "Paypal"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Date primite cu status de plată invalid: %s"
 
 #. module: payment_paypal
 #. odoo-python
@@ -97,6 +99,8 @@ msgstr "Clientul a ieșit de pe pagina de plată."
 msgid ""
 "The public business email solely used to identify the account with PayPal"
 msgstr ""
+"Adresa de e-mail publică de business folosită doar pentru identificarea "
+"contului la PayPal"
 
 #. module: payment_paypal
 #. odoo-python
@@ -107,6 +111,8 @@ msgid ""
 "because the 'Payment data transfer' option is not enabled on the PayPal "
 "dashboard."
 msgstr ""
+"Starea tranzacției cu referința %(ref)s nu a fost sincronizată deoarece "
+"opțiunea „Transfer date de plată” nu este activată pe tabloul de bord PayPal."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code

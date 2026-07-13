@@ -108,3 +108,133 @@ class TestReportSession(TestPoSCommon):
             session_name = self.env['pos.session'].browse(payment['session']).name
             payment_method_name = self.env['pos.payment.method'].browse(payment['id']).name
             self.assertEqual(payment['name'], payment_method_name + " " + session_name)
+
+    def test_report_session_3(self):
+        self.product1 = self.create_product('Product A', self.categ_basic, 100)
+        self.config.open_ui()
+        session_id = self.config.current_session_id.id
+        order_info = {'company_id': self.env.company.id,
+                'session_id': session_id,
+                'partner_id': self.partner_a.id,
+                'lines': [(0, 0, {
+                    'name': "OL/0001",
+                    'product_id': self.product1.id,
+                    'price_unit': 100,
+                    'discount': 0,
+                    'qty': 14.9,
+                    'tax_ids': [],
+                    'price_subtotal': 100,
+                    'price_subtotal_incl': 100,
+                })],
+                'pricelist_id': self.config.pricelist_id.id,
+                'amount_paid': 100.0,
+                'amount_total': 100.0,
+                'amount_tax': 0.0,
+                'amount_return': 0.0,
+                'to_invoice': False,
+                }
+        order = self.env['pos.order'].create(order_info)
+        self.make_payment(order, self.bank_pm1, 100)
+        order_info['lines'][0][2]['qty'] =  59.7
+        order = self.env['pos.order'].create(order_info)
+        self.make_payment(order, self.bank_pm1, 100)
+        self.config.current_session_id.action_pos_session_closing_control()
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
+        self.assertEqual(report['products'][0]['products'][0]['quantity'], 74.6, "Quantity of product should be 74.6, as we want the sum of the quantity of the two orders")
+
+    def test_report_session_4(self):
+        self.tax1 = self.env['account.tax'].create({
+            'name': 'Tax 1',
+            'amount': 10,
+            'price_include': True,
+        })
+
+        self.tax2 = self.env['account.tax'].create({
+            'name': 'Tax 2',
+            'amount': 15,
+            'price_include': True,
+        })
+        self.product1 = self.create_product('Product A', self.categ_basic, 125, self.tax1.id)
+
+        self.config.open_ui()
+        session_id = self.config.current_session_id.id
+        order_info = {
+            'company_id': self.env.company.id,
+            'session_id': session_id,
+            'partner_id': self.partner_a.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product1.id,
+                'price_unit': 125,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, [self.tax1.id, self.tax2.id]]],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 125,
+            })],
+            'pricelist_id': self.config.pricelist_id.id,
+            'amount_paid': 125.0,
+            'amount_total': 125.0,
+            'amount_tax': 25.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        }
+        order = self.env['pos.order'].create(order_info)
+        self.make_payment(order, self.bank_pm1, 125)
+        self.config.current_session_id.action_pos_session_closing_control()
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
+        self.assertEqual(report["taxes_info"]["base_amount"], 100, "Base amount should be equal to 100")
+
+    def test_report_sale_details_total_with_cash_rounding(self):
+        """Test that the sale details report shows the cash rounding amount."""
+        rounding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding 0.05',
+            'rounding': 0.05,
+            'profit_account_id': self.company_data['default_account_revenue'].id,
+            'loss_account_id': self.company_data['default_account_expense'].id,
+        })
+        self.config.write({
+            'cash_rounding': True,
+            'rounding_method': rounding_method.id,
+            'only_round_cash_method': False,
+        })
+
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 1',
+            'amount': 10,
+        })
+        # 10.42 + 10% tax = 11.462 → rounded to 11.45
+        product = self.create_product('Product Rounding', self.categ_basic, 10.42, tax.id)
+
+        self.config.open_ui()
+        session = self.config.current_session_id
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 10.42,
+                'qty': 1,
+                'tax_ids': [[6, False, [tax.id]]],
+                'price_subtotal': 10.42,
+                'price_subtotal_incl': 11.46,
+            })],
+            'pricelist_id': self.config.pricelist_id.id,
+            'amount_paid': 11.45,
+            'amount_total': 11.46,
+            'amount_tax': 1.04,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        })
+        self.make_payment(order, self.cash_pm1, 11.45)
+        session.action_pos_session_closing_control()
+
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session.id])
+        self.assertAlmostEqual(
+            report['cash_rounding_total'], 11.45 - 11.46, places=2,
+            msg="Cash rounding total should equal sum of (amount_paid - amount_total) across orders"
+        )

@@ -4,6 +4,8 @@
 from datetime import datetime, timedelta
 from odoo.tools import html2plaintext
 
+from odoo import Command
+from odoo.exceptions import AccessError
 from odoo.tests.common import Form, tagged
 from odoo.addons.stock.tests.test_report import TestReportsCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
@@ -84,6 +86,102 @@ class TestSaleStockReports(TestReportsCommon):
                     self.assertTrue(line['is_matched'], "The corresponding SO line should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the SO shoud not be matched.")
+
+    def test_report_forecast_3_unreserve_2_step_delivery(self):
+        """
+        Check that the forecast correctly reconciles the outgoing moves
+        that are part of a chain with stock availability when unreserved.
+        """
+        warehouse = self.env.ref("stock.warehouse0")
+        warehouse.delivery_steps = 'pick_ship'
+        product = self.product
+        # Put 5 units in stock
+        self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 5)
+        # Create and confirm an SO for 3 units
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 3,
+                }),
+            ],
+        })
+        so.action_confirm()
+        _, _, lines = self.get_report_forecast(product_template_ids=product.product_tmpl_id.ids)
+        outgoing_line = next(filter(lambda line: line.get('document_out'), lines))
+        self.assertEqual(
+            (outgoing_line['document_out']['id'], outgoing_line['quantity'], outgoing_line['replenishment_filled'], outgoing_line['reservation']['id']),
+            (so.id, 3.0, True, so.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pick_type_id).id)
+        )
+        stock_line = next(filter(lambda line: not line.get('document_out'), lines))
+        self.assertEqual(
+            (stock_line['quantity'], stock_line['replenishment_filled'], stock_line['reservation']),
+            (2.0, True, False)
+        )
+        # unrerseve the PICK delivery
+        pick_delivery = so.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pick_type_id)
+        pick_delivery.do_unreserve()
+        _, _, lines = self.get_report_forecast(product_template_ids=product.product_tmpl_id.ids)
+        outgoing_line = next(filter(lambda line: line.get('document_out'), lines))
+        self.assertEqual(
+            (outgoing_line['document_out']['id'], outgoing_line['quantity'], outgoing_line['replenishment_filled'], outgoing_line['reservation']),
+            (so.id, 3.0, True, False)
+        )
+        stock_line = next(filter(lambda line: not line.get('document_out'), lines))
+        self.assertEqual(
+            (stock_line['quantity'], stock_line['replenishment_filled'], stock_line['reservation']),
+            (2.0, True, False)
+        )
+
+    def test_report_forecast_4_so_from_another_salesman(self):
+        """ Try accessing the forecast with a user that has only access to his SO while another user has created:
+            - A draft Sale Order
+            - A confirmed Sale Order
+            The report shoud be usable by that user, and while he cannot open those SO, he should still see them to have the correct
+            informations in the report.
+        """
+        # Create the SO & confirm it with first user
+        with Form(self.env['sale.order']) as so_form:
+            so_form.partner_id = self.partner
+            with so_form.order_line.new() as line:
+                line.product_id = self.product
+                line.product_uom_qty = 3
+            sale_order = so_form.save()
+        sale_order.action_confirm()
+
+        # Create a draft SO with the same user for the same product
+        with Form(self.env['sale.order']) as so_form:
+            so_form.partner_id = self.partner
+            with so_form.order_line.new() as line:
+                line.product_id = self.product
+                line.product_uom_qty = 2
+            draft = so_form.save()
+
+        # Create second user which only has access to its own documents
+        other = self.env['res.users'].create({
+            'name': 'Other Salesman',
+            'login': 'other',
+            'groups_id': [
+                Command.link(self.env.ref('sales_team.group_sale_salesman').id),
+                Command.link(self.env.ref('stock.group_stock_user').id),
+            ],
+        })
+
+        # Need to reset the cache otherwise it wouldn't trigger an Access Error anyway as the Sale Order is already there.
+        sale_order.env.invalidate_all()
+        report_values = self.env['stock.forecasted_product_product'].with_user(other).get_report_values(docids=self.product.ids)
+        self.assertEqual(len(report_values['docs']['lines']), 1)
+        self.assertEqual(report_values['docs']['lines'][0]['document_out']['name'], sale_order.name)
+        self.assertEqual(len(report_values['docs']['draft_sale_orders']), 1)
+        self.assertEqual(report_values['docs']['draft_sale_orders'][0]['name'], draft.name)
+
+        # While 'other' can see these SO on the report, they shouldn't be able to access them.
+        with self.assertRaises(AccessError):
+            sale_order.with_user(other).check_access_rule('read')
+        with self.assertRaises(AccessError):
+            draft.with_user(other).check_access_rule('read')
 
 
 @tagged('post_install', '-at_install')

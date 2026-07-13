@@ -1,11 +1,11 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_calendar
-# 
+#
 # Translators:
 # Albert Parera, 2023
 # Arnau Ros, 2023
-# Quim - eccit <quim@eccit.com>, 2023
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2023
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
 # RGB Consulting <odoo@rgbconsulting.com>, 2023
 # Josep Anton Belchi, 2023
@@ -13,22 +13,23 @@
 # Bàrbara Partegàs <barbararof@gmail.com>, 2023
 # Óscar Fonseca <tecnico@pyming.com>, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
-# AncesLatino2004, 2023
+# 7b9408628f00af852f513eb4f12c005b_f9c6891, 2023
 # Martin Trigaux, 2023
 # marcescu, 2023
-# 
+# Wil Odoo, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: marcescu, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: microsoft_calendar
@@ -89,8 +90,8 @@ msgstr ""
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
 msgid ""
-"An error occurred while generating the token. Your authorization code may be"
-" invalid or has already expired [%s]. You should check your Client ID and "
+"An error occurred while generating the token. Your authorization code may be "
+"invalid or has already expired [%s]. You should check your Client ID and "
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
@@ -131,8 +132,6 @@ msgstr "Paràmetres de configuració"
 
 #. module: microsoft_calendar
 #. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
@@ -204,8 +203,10 @@ msgstr ""
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid ""
-"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
-"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in "
+"Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
 
 #. module: microsoft_calendar
@@ -218,6 +219,11 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Gestor d'alarmes d'esdeveniment"
+
+#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
 msgstr "Regla de recurrència d'esdeveniments"
@@ -227,12 +233,19 @@ msgstr "Regla de recurrència d'esdeveniments"
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid ""
-"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"For a correct synchronization between Odoo and Outlook Calendar, all "
+"attendees must have an email address. However, some events do not respect "
+"this condition. As long as the events are incorrect, the calendars will not "
+"be synchronized.\n"
 "Either update the events/attendees or archive these events %s:\n"
 "%s"
 msgstr ""
-"Per a una correcta sincronització entre Odoo i el Calendari de Outlook, tots els assistents han de tenir una adreça de correu electrònic. No obstant això, alguns esdeveniments no respecten aquesta condició. Mentre els esdeveniments siguin incorrectes, els calendaris no se sincronitzaran.\n"
-"Actualitzar els esdeveniments/assistents o arxivar aquests esdeveniments %s:\n"
+"Per a una correcta sincronització entre Odoo i el Calendari de Outlook, tots "
+"els assistents han de tenir una adreça de correu electrònic. No obstant "
+"això, alguns esdeveniments no respecten aquesta condició. Mentre els "
+"esdeveniments siguin incorrectes, els calendaris no se sincronitzaran.\n"
+"Actualitzar els esdeveniments/assistents o arxivar aquests esdeveniments "
+"%s:\n"
 "%s"
 
 #. module: microsoft_calendar
@@ -398,8 +411,6 @@ msgstr "Identificador de l'esdeveniment de l'organitzador"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
 #, python-format
 msgid "Outlook"
 msgstr "Outlook"
@@ -487,11 +498,11 @@ msgstr "Sincronitza només els esdeveniments nous"
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
-"The Outlook Synchronization needs to be configured before you can use it, do"
-" you want to do it now?"
+"The Outlook Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
 msgstr ""
-"La Sincronització de Outlook necessita ser configurada abans de poder fer-la"
-" servir, ¿vols fer-ho ara?"
+"La Sincronització de Outlook necessita ser configurada abans de poder fer-la "
+"servir, ¿vols fer-ho ara?"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -553,8 +564,8 @@ msgstr "Esdeveniments existents de l'usuari"
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
-"You are about to stop the synchronization of your calendar with Outlook. Are"
-" you sure you want to continue?"
+"You are about to stop the synchronization of your calendar with Outlook. Are "
+"you sure you want to continue?"
 msgstr ""
 "Esteu a punt d'aturar la sincronització del vostre calendari amb Outlook. "
 "¿Segur que voleu continuar?"

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
+from odoo import Command
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
@@ -2465,3 +2468,163 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.bom_kit_1.write({'type': 'normal'})
         self.bom_kit_1.write({'type': 'phantom'})
         self.bom_kit_1.unlink()
+
+    def test_merge_move_kit_on_adding_new_sol(self):
+        """
+        Create and confirm an SO for 2 similar kit products.
+        Add a new sale order line for an other unrelated prodcut.
+
+        Check that the delivery kit moves were not merged by the confirmation of the new move.
+        """
+        # grp_uom = self.env.ref('uom.group_uom')
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
+        kit = self.kit_3
+        # create a similar kit
+        bom_copy = kit.bom_ids[0].copy()
+        kit_copy = kit.copy()
+        bom_copy.product_tmpl_id = kit_copy.product_tmpl_id
+        # put component in stock: 10 kit = 10 x comp_f + 20 x comp_g
+        self.env['stock.quant']._update_available_quantity(self.component_f, warehouse.lot_stock_id, 10)
+        self.env['stock.quant']._update_available_quantity(self.component_g, warehouse.lot_stock_id, 20)
+        self.env['stock.quant']._update_available_quantity(self.component_a, warehouse.lot_stock_id, 5)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = kit
+            line.product_uom_qty = 2
+        with so_form.order_line.new() as line:
+            line.product_id = kit_copy
+            line.product_uom_qty = 3
+        so = so_form.save()
+        so.action_confirm()
+
+        pick = so.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pick_type_id)
+        expected_pick_moves = [
+            { 'quantity': 2.0, 'product_id': self.component_f.id, 'bom_line_id': kit.bom_ids[0].bom_line_ids.filtered(lambda bl: bl.product_id == self.component_f).id},
+            { 'quantity': 3.0, 'product_id': self.component_f.id, 'bom_line_id': bom_copy.bom_line_ids.filtered(lambda bl: bl.product_id == self.component_f).id},
+            { 'quantity': 4.0, 'product_id': self.component_g.id, 'bom_line_id': kit.bom_ids[0].bom_line_ids.filtered(lambda bl: bl.product_id == self.component_g).id},
+            { 'quantity': 6.0, 'product_id': self.component_g.id, 'bom_line_id': bom_copy.bom_line_ids.filtered(lambda bl: bl.product_id == self.component_g).id},
+        ]
+        self.assertRecordValues(pick.move_ids.sorted(lambda m: m.quantity), expected_pick_moves)
+        with Form(so) as so_form:
+            with so_form.order_line.new() as line:
+                line.product_id = self.component_a
+                line.product_uom_qty = 1
+        expected_pick_moves = [
+            { 'quantity': 1.0, 'product_id': self.component_a.id, 'bom_line_id': False},
+        ] + expected_pick_moves
+        self.assertRecordValues(pick.move_ids.sorted(lambda m: m.quantity), expected_pick_moves)
+
+    def test_return_kit_in_quarantine_location(self):
+        """
+        Return a kit to WH/Return Location
+        Push Rule: WH/Return -> WH/Stock
+        Ensure the delivered qty is correctly updated
+        """
+        wh = self.company_data['default_warehouse']
+        stock_location = wh.lot_stock_id
+
+        return_location = self.env['stock.location'].create({
+            'location_id': stock_location.location_id.id,
+            'name': 'Return Location',
+            'usage': 'internal',
+            'return_location': True
+        })
+
+        self.env['stock.route'].create({
+            'name': 'Return Route',
+            'warehouse_selectable': True,
+            'warehouse_ids': [(4, wh.id)],
+            'rule_ids': [(0, 0, {
+                'name': 'Return to Stock',
+                'location_src_id': return_location.id,
+                'location_dest_id': stock_location.id,
+                'company_id': self.company_data['company'].id,
+                'action': 'push',
+                'auto': 'manual',
+                'picking_type_id': wh.int_type_id.id,
+            })],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {'product_id': self.kit_1.id}),
+            ],
+        })
+        order.action_confirm()
+
+        delivery = order.picking_ids
+        for move in delivery.move_ids:
+            move.quantity = move.product_qty
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
+
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking').create({})
+        return_wizard.location_id = return_location
+        res = return_wizard.create_returns()
+
+        return_picking = self.env['stock.picking'].browse(res["res_id"])
+        self.assertEqual(return_picking.move_ids.location_dest_id, return_location)
+        self.assertEqual(return_picking.move_ids.move_dest_ids.location_dest_id, stock_location)
+
+        for move in return_picking.move_ids:
+            move.quantity = move.product_qty
+        return_picking.button_validate()
+        self.assertEqual(return_picking.state, 'done')
+        self.assertEqual(order.order_line.qty_delivered, 0)
+
+        internal_picking = return_picking.move_ids.move_dest_ids.picking_id
+        for move in internal_picking.move_ids:
+            move.quantity = move.product_qty
+        internal_picking.button_validate()
+        self.assertEqual(internal_picking.state, 'done')
+        self.assertEqual(order.order_line.qty_delivered, 0)
+
+    def test_date_deadline_propagation_to_byproducts(self):
+        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id
+        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id
+        fns = self._create_product('Finished', self.uom_unit, routes=[route_manufacture, route_mto])
+        cmp = self._create_product('Component', self.uom_unit)
+        bp = self._create_product('ByProduct', self.uom_unit)
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': fns.product_tmpl_id.id,
+            'product_id': fns.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [Command.create({'product_id': cmp.id, 'product_qty': 1})],
+            'byproduct_ids': [Command.create({'product_id': bp.id, 'product_qty': 1})],
+        })
+
+        with freeze_time('2025-01-01'):
+            order = self.env['sale.order'].create({
+                'partner_id': partner.id,
+                'order_line': [Command.create({'product_id': fns.id, 'product_uom_qty': 1})],
+            })
+            order.action_confirm()
+            mo = self.env["mrp.production"].search([('product_id', '=', fns.id)])
+            fns_move = mo.move_finished_ids.filtered(lambda m: m.product_id.id == fns.id)
+
+            self.assertEqual(len(mo.move_finished_ids), 2)  # 1 for FNS, 1 for BP
+            self.assertEqual(len(fns_move), 1)
+
+            for move in mo.move_finished_ids:
+                self.assertEqual(move.date_deadline.strftime('%Y-%m-%d'), '2025-01-01')
+            order.commitment_date = '2025-01-02'
+            for move in mo.move_finished_ids:
+                self.assertEqual(move.date_deadline.strftime('%Y-%m-%d'), '2025-01-02')
+
+            # Set Quantity producing to 2
+            wiz = self.env['change.production.qty'].create({'mo_id': mo.id, 'product_qty': 2.0})
+            wiz.change_prod_qty()
+
+            fns_move = mo.move_finished_ids.filtered(lambda m: m.product_id.id == fns.id)
+            self.assertEqual(len(mo.move_finished_ids), 2)  # 1 for FNS, 1 for BP
+            self.assertEqual(len(fns_move), 1)
+
+            mo.button_mark_done()
+            self.assertEqual(mo.state, 'done')

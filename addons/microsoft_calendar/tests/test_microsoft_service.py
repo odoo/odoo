@@ -5,7 +5,7 @@ from unittest.mock import patch, call, MagicMock
 from odoo import fields
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
-from odoo.addons.microsoft_account.models.microsoft_service import MicrosoftService
+from odoo.addons.microsoft_account.models.microsoft_service import MicrosoftService, DEFAULT_MICROSOFT_TOKEN_ENDPOINT
 from odoo.tests import TransactionCase
 
 
@@ -38,8 +38,8 @@ class TestMicrosoftService(TransactionCase):
         self.call_without_sync_token = call(
             "/v1.0/me/calendarView/delta",
             {
-                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=1).strftime("%Y-%m-%dT00:00:00Z"),
-                'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
+                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), days=365).strftime("%Y-%m-%dT00:00:00Z"),
+                'endDateTime': fields.Datetime.add(fields.Datetime.now(), days=365 * 2).strftime("%Y-%m-%dT00:00:00Z"),
             },
             {**self.header, 'Prefer': self.header_prefer},
             method="GET", timeout=DEFAULT_TIMEOUT,
@@ -226,8 +226,8 @@ class TestMicrosoftService(TransactionCase):
         mock_do_request.assert_called_with(
             "/v1.0/me/events/123/instances",
             {
-                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=1).strftime("%Y-%m-%dT00:00:00Z"),
-                'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
+                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), days=365).strftime("%Y-%m-%dT00:00:00Z"),
+                'endDateTime': fields.Datetime.add(fields.Datetime.now(), days=365 * 2).strftime("%Y-%m-%dT00:00:00Z"),
             },
             {**self.header, 'Prefer': self.header_prefer},
             method='GET', timeout=DEFAULT_TIMEOUT,
@@ -461,3 +461,60 @@ class TestMicrosoftService(TransactionCase):
             self.call_with_sync_token,
             self.call_without_sync_token
         ])
+
+    @patch.object(MicrosoftService, "_do_request")
+    def test_refresh_microsoft_calendar_token_uses_correct_endpoint(self, mock_do_request):
+        # Ensure we use the correct endpoint (useful for single/multi-tenant deployments).
+        mock_do_request.return_value = self._do_request_result(
+            {
+                "access_token": "dummy_access_token",
+                "token_type": "Bearer",
+                "expires_in": 3599,
+                "scope": "Mail.Read User.Read",
+                "refresh_token": "dummy_refresh_token",
+            }
+        )
+        IrParameter = self.env["ir.config_parameter"].sudo()
+        IrParameter.set_param("microsoft_calendar_client_id", "dummy_client_id")
+        IrParameter.set_param("microsoft_calendar_client_secret", "dummy_client_secret")
+
+        self.env.user._refresh_microsoft_calendar_token()
+
+        custom_token_endpoint = "https://login.microsoftonline.com/dummy_tenant_id/oauth2/v2.0/token"
+        IrParameter.set_param("microsoft_account.token_endpoint", custom_token_endpoint)
+        self.env.user._refresh_microsoft_calendar_token()
+
+        def make_token_call(url, refresh_token):
+            return call(url, params={
+                "refresh_token": refresh_token,
+                "client_id": "dummy_client_id",
+                "client_secret": "dummy_client_secret",
+                "grant_type": "refresh_token",
+            }, headers={"content-type": "application/x-www-form-urlencoded"}, method="POST", preuri="")
+
+        mock_do_request.assert_has_calls([
+            make_token_call(DEFAULT_MICROSOFT_TOKEN_ENDPOINT, False),
+            make_token_call(custom_token_endpoint, "dummy_refresh_token"),
+        ])
+
+    @patch.object(MicrosoftService, "_do_request")
+    def test_refresh_microsoft_calendar_token_persists_new_refresh_token(self, mock_do_request):
+        """
+        Microsoft issues a new refresh token on every token refresh (rolling 90-day window).
+        Failing to persist it causes forced re-authentication after 90 days.
+        """
+        mock_do_request.return_value = self._do_request_result({
+            "access_token": "new_access_token",
+            "token_type": "Bearer",
+            "expires_in": 3599,
+            "refresh_token": "new_refresh_token",
+        })
+        IrParameter = self.env["ir.config_parameter"].sudo()
+        IrParameter.set_param("microsoft_calendar_client_id", "dummy_client_id")
+        IrParameter.set_param("microsoft_calendar_client_secret", "dummy_client_secret")
+        self.env.user.sudo().microsoft_calendar_rtoken = "old_refresh_token"
+
+        self.env.user._refresh_microsoft_calendar_token()
+
+        self.assertEqual(self.env.user.sudo().microsoft_calendar_rtoken, "new_refresh_token")
+        self.assertEqual(self.env.user.sudo().microsoft_calendar_token, "new_access_token")

@@ -810,7 +810,8 @@ export class SearchModel extends EventBus {
         }
 
         const tree = treeFromDomain(domain, { distributeNot: !this.isDebugMode });
-        const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
+        const containsChildren = !tree.negate && tree.type === "connector" && tree.value == "&";
+        const trees = containsChildren ? tree.children : [tree];
         const promises = trees.map(async (tree) => {
             const description = await this.getDomainTreeDescription(this.resModel, tree);
             const preFilter = {
@@ -1206,7 +1207,7 @@ export class SearchModel extends EventBus {
      */
     _createCategoryTree(sectionId, result) {
         const category = this.sections.get(sectionId);
-
+        delete category.errorMsg;
         let { error_msg, parent_field: parentField, values } = result;
         if (error_msg) {
             category.errorMsg = error_msg;
@@ -1249,7 +1250,7 @@ export class SearchModel extends EventBus {
      */
     _createFilterTree(sectionId, result) {
         const filter = this.sections.get(sectionId);
-
+        delete filter.errorMsg;
         let { error_msg, values } = result;
         if (error_msg) {
             filter.errorMsg = error_msg;

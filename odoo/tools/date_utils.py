@@ -2,8 +2,11 @@
 import math
 import calendar
 from datetime import date, datetime, time
+from typing import Tuple
+
+import babel
 import pytz
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta, weekdays
 
 from .func import lazy
 from odoo.loglevels import ustr
@@ -259,3 +262,43 @@ def date_range(start, end, step=relativedelta(months=1)):
     while dt <= end_dt:
         yield post_process(dt)
         dt = dt + step
+
+
+def weeknumber(locale: babel.Locale, date: date) -> Tuple[int, int]:
+    """Computes the year and weeknumber of `date`. The week number is 1-indexed
+    (so the first week is week number 1).
+
+    For ISO locales (first day of week = monday, min week days = 4) the concept
+    is clear and the Python stdlib implements it directly.
+
+    For other locales, it's basically nonsensical as there is no actual
+    definition. For now we will implement non-split first-day-of-year, that is
+    the first week of the year is the one which contains the first day of the
+    year (taking first day of week in account), and the days of the previous
+    year which are part of that week are considered to be in the next year for
+    calendaring purposes.
+
+    That is December 27, 2015 is in the first week of 2016.
+
+    An alternative is to split the week in two, so the week from December 27,
+    2015 to January 2, 2016 would be *both* W53/2015 and W01/2016.
+    """
+    if locale.first_week_day == 0 and locale.min_week_days == 4:
+        # woohoo nothing to do
+        return date.isocalendar()[:2]
+
+    # first find the first day of the first week of the next year, if the
+    # reference date is after that then it must be in the first week of the next
+    # year, remove this if we decide to implement split weeks instead
+    fdny = date.replace(year=date.year + 1, month=1, day=1) \
+       - relativedelta(weekday=weekdays[locale.first_week_day](-1))
+    if date >= fdny:
+        return date.year + 1, 1
+
+    # otherwise get the number of periods of 7 days between the first day of the
+    # first week and the reference
+    fdow = date.replace(month=1, day=1) \
+       - relativedelta(weekday=weekdays[locale.first_week_day](-1))
+    doy = (date - fdow).days
+
+    return date.year, (doy // 7 + 1)

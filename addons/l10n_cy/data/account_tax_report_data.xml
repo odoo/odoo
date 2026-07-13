@@ -59,13 +59,13 @@
                 </field>
             </record>
             <record id="tax_report_line_5" model="account.report.line">
-                <field name="name">5. VAT payable or refundable (difference between box 4 and 3)</field>
+                <field name="name">5. VAT payable or refundable (difference between box 3 and 4)</field>
                 <field name="code">cy_5</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_5_amount" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">cy_4.balance - cy_3.balance</field>
+                        <field name="formula">cy_3.balance - cy_4.balance</field>
                         <field name="green_on_positive">False</field>
                     </record>
                 </field>

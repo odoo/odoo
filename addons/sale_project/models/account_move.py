@@ -14,5 +14,5 @@ class AccountMoveLine(models.Model):
         project_id = self.env.context.get('project_id')
         if project_id:
             analytic_account = self.env['project.project'].browse(project_id).analytic_account_id
-            for line in self:
+            for line in project_amls:
                 line.analytic_distribution = line.analytic_distribution or {analytic_account.id: 100}

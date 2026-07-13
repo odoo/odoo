@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitForChannels } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -426,6 +427,34 @@ QUnit.test(
         await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
     }
 );
+
+QUnit.test("can join public channel from channel mention link", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "Demo" });
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo",
+        user_ids: [userId],
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Channel",
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
+        channel_type: "channel",
+        group_public_id: false,
+    });
+    pyEnv["mail.message"].create({
+        model: "res.partner",
+        message_type: "comment",
+        body: `<p><a class="o_channel_redirect" href="#" data-oe-model="discuss.channel" data-oe-id="${channelId}">#Channel</a></p>`, // simulated channel mention in message
+        author_id: partnerId,
+        res_id: partnerId,
+    });
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    const channelSub = waitForChannels([`discuss.channel_${channelId}`]);
+    await click(".o-mail-Message-body a", { text: "#Channel" });
+    await contains(".o-mail-ChatWindow-header", { text: "Channel" });
+    await channelSub;
+});
 
 QUnit.test("show empty placeholder when thread contains no message", async () => {
     const pyEnv = await startServer();

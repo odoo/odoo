@@ -290,3 +290,43 @@ class TestPacking(TestPackingCommon):
         company_a_user.groups_id = [Command.unlink(self.env.ref('stock.group_stock_multi_warehouses').id)]
         res = delivery_company_a.with_user(company_a_user).read()
         self.assertTrue(res)
+
+    def test_delivery_shipping_weight_with_package_before_validation(self):
+        """Check that package and picking shipping weights are correctly computed
+        on delivery pickings when products are put into a package.
+
+        The test performs the same operations twice on two pickings to ensure
+        package weights are recomputed per picking and are not cached from the
+        context of the first picking, which would affect the shipping weight of
+        the following pickings.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 1)
+        picking_ships = self.env['stock.picking'].create([{
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': self.product_aw.name,
+                'product_id': self.product_aw.id,
+                'quantity': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        } for _ in range(2)])
+        picking_ships.action_confirm()
+        self.assertListEqual(picking_ships.mapped('shipping_weight'), [self.product_aw.weight, self.product_aw.weight])
+        for picking in picking_ships:
+            picking.action_put_in_pack()
+        packages = picking_ships.package_ids
+        self.assertListEqual(picking_ships.mapped('shipping_weight'), [self.product_aw.weight, self.product_aw.weight])
+        self.assertListEqual(
+            [picking.package_ids.with_context(picking_id=picking.id).weight for picking in picking_ships],
+            [self.product_aw.weight, self.product_aw.weight],
+            "The package weight is correctly computed using the picking context and cached during the picking shipping weight computation."
+        )
+        self.assertFalse(packages.quant_ids, "No quant should be linked to the package yet.")
+        picking_ships.button_validate()
+        self.assertListEqual(picking_ships.mapped('state'), ['done', 'done'])
+        self.assertTrue(packages.quant_ids)
+        self.assertListEqual(packages.mapped('weight'), [self.product_aw.weight, self.product_aw.weight], "As the package contains quants, its weight is correctly computed from them.")
+        self.assertListEqual(picking_ships.mapped('shipping_weight'), [self.product_aw.weight, self.product_aw.weight])

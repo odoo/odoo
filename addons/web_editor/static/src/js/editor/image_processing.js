@@ -20,6 +20,24 @@ const modifierFields = [
 ];
 export const isGif = (mimetype) => mimetype === 'image/gif';
 
+let _isWebGLEnabled;
+/**
+ * Cacheable check telling whether the current browser can allocate a WebGL context.
+ */
+export function isWebGLEnabled() {
+    if (_isWebGLEnabled !== undefined) {
+        return _isWebGLEnabled;
+    }
+    try {
+        const canvas = document.createElement("canvas");
+        _isWebGLEnabled = !!(window.WebGLRenderingContext
+            && (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")));
+    } catch {
+        _isWebGLEnabled = false;
+    }
+    return _isWebGLEnabled;
+}
+
 // webgl color filters
 const _applyAll = (result, filter, filters) => {
     filters.forEach(f => {
@@ -322,7 +340,8 @@ export async function applyModifications(img, dataOptions = {}) {
     }
 
     // GL filter
-    if (glFilter) {
+    const canUseWebGL = glFilter && isWebGLEnabled() && window.WebGLImageFilter;
+    if (canUseWebGL) {
         const glf = new window.WebGLImageFilter();
         const cv = document.createElement('canvas');
         cv.width = result.width;
@@ -550,31 +569,6 @@ export function isImageSupportedForStyle(img) {
     const isEditableRootElement = ('oeXpath' in img.dataset);
 
     return !isTFieldImg && !isEditableRootElement;
-}
-/**
- * @param {HTMLImageElement} img
- * @returns {Promise<Boolean>}
- */
-export async function isImageCorsProtected(img) {
-    const src = img.getAttribute('src');
-    if (!src) {
-        return false;
-    }
-    let isCorsProtected = false;
-    if (!src.startsWith("/") || /\/web\/image\/\d+-redirect\//.test(src)) {
-        // The `fetch()` used later in the code might fail if the image is
-        // CORS protected. We check upfront if it's the case.
-        // Two possible cases:
-        // 1. the `src` is an absolute URL from another domain.
-        //    For instance, abc.odoo.com vs abc.com which are actually the
-        //    same database behind.
-        // 2. A "attachment-url" which is just a redirect to the real image
-        //    which could be hosted on another website.
-        isCorsProtected = await fetch(src, {method: 'HEAD'})
-            .then(() => false)
-            .catch(() => true);
-    }
-    return isCorsProtected;
 }
 
 /**

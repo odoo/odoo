@@ -1,26 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_viva_wallet
-# 
+# * pos_viva_wallet
+#
 # Translators:
 # Irina Fedulova <istartlin@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # ILMIR <karamov@it-projects.info>, 2024
-# 
+# Ilya Rozhkov, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2024-02-07 08:49+0000\n"
-"Last-Translator: ILMIR <karamov@it-projects.info>, 2024\n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-20 17:37+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-17/"
+"pos_viva_wallet/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
@@ -78,16 +83,10 @@ msgstr "Сообщение от Viva Wallet: %s"
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
-msgid "Not receive Bearer Token"
-msgstr "Не получен токен на предъявителя"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
-msgstr "Только 'group_pos_user' имеют право получать токен из Viva Wallet"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
+msgstr ""
+"Отменить платеж через Viva Wallet могут только пользователи из группы "
+"group_pos_user"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -96,6 +95,25 @@ msgstr "Только 'group_pos_user' имеют право получать т�
 msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
 "Только 'group_pos_user' имеют право получать последний статус транзакции"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr ""
+"Получить статус платежа из Viva Wallet могут только пользователи из группы "
+"group_pos_user"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid "Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr ""
+"Отправлять запросы на оплату через Viva Wallet могут только пользователи из "
+"группы group_pos_user"
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -125,7 +143,6 @@ msgstr "Тестовый режим"
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
 msgid "There are some issues between us and Viva Wallet, try again later. %s"
 msgstr ""
@@ -142,27 +159,36 @@ msgstr ""
 "позже.%s)"
 
 #. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
+"ID and Client Secret are correct"
+msgstr ""
+"Не удалось получить токен Viva Wallet Bearer. Пожалуйста, убедитесь, что ID "
+"и секрет клиента указаны верно"
+
+#. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_merchant_id
 msgid ""
-"Used when connecting to Viva Wallet: "
-"https://developer.vivawallet.com/getting-started/find-your-account-"
-"credentials/merchant-id-and-api-key/"
+"Used when connecting to Viva Wallet: https://developer.vivawallet.com/"
+"getting-started/find-your-account-credentials/merchant-id-and-api-key/"
 msgstr ""
-"Используется при подключении к Viva Wallet: "
-"https://developer.vivawallet.com/getting-started/find-your-account-"
-"credentials/merchant-id-and-api-key/"
+"Используется при подключении к Viva Wallet: https://developer.vivawallet.com/"
+"getting-started/find-your-account-credentials/merchant-id-and-api-key/"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_client_id
 msgid ""
-"Used when connecting to Viva Wallet: "
-"https://developer.vivawallet.com/getting-started/find-your-account-"
-"credentials/pos-apis-credentials/#find-your-pos-apis-credentials"
+"Used when connecting to Viva Wallet: https://developer.vivawallet.com/"
+"getting-started/find-your-account-credentials/pos-apis-credentials/#find-"
+"your-pos-apis-credentials"
 msgstr ""
-"Используется при подключении к Viva Wallet: "
-"https://developer.vivawallet.com/getting-started/find-your-account-"
-"credentials/pos-apis-credentials/#find-your-pos-apis-credentials"
+"Используется при подключении к Viva Wallet: https://developer.vivawallet.com/"
+"getting-started/find-your-account-credentials/pos-apis-credentials/#find-"
+"your-pos-apis-credentials"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_bearer_token
@@ -197,6 +223,7 @@ msgstr "Верификационный ключ Viva Wallet Webhook"
 #, python-format
 msgid "Your transaction with Viva Wallet failed. Please try again later."
 msgstr ""
+"Ваша транзакция с Viva Wallet не удалась. Пожалуйста, попробуйте позже."
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id

@@ -1,28 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-# 
+#
 # Translators:
 # alenafairy, 2023
 # Martin Trigaux, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Wil Odoo, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
-# nadia martynova, 2024
-# 
+# Nadia Martynova, 2024
+# Ilya Rozhkov, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: nadia martynova, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -31,8 +34,6 @@ msgstr "% своевременной доставки"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_rule.py:0
-#: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -55,7 +56,8 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgid ""
+"<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
 "<span invisible=\"on_time_rate &gt;= 0\">Нет данных о своевременной "
 "доставке</span>"
@@ -85,11 +87,13 @@ msgstr "<strong>Адрес поставки:</strong>"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"В соответствии с конфигурацией продукта, полученное количество может быть автоматически рассчитано механизмом:\n"
+"В соответствии с конфигурацией продукта, полученное количество может быть "
+"автоматически рассчитано механизмом:\n"
 "  - Вручную: количество устанавливается вручную на линии\n"
 "  - Движение запасов: количество поступает из подтвержденной выборки\n"
 
@@ -157,7 +161,6 @@ msgstr "Создание позиций заказов на поставку"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_move.py:0
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid "Currency exchange rate difference"
@@ -257,8 +260,8 @@ msgstr "Исключения:"
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 #, python-format
 msgid ""
-"For the product %s, the warehouse of the operation type (%s) is inconsistent"
-" with the location (%s) of the reordering rule (%s). Change the operation "
+"For the product %s, the warehouse of the operation type (%s) is inconsistent "
+"with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
 "Для продукта %s склад типа операции (%s) не соответствует местоположению "
@@ -358,12 +361,12 @@ msgstr "Могут потребоваться ручные действия."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Поле погрешности для времени выполнения поставщиком. Когда система "
-"генерирует заказы на перезаказ закупки продуктов, они будут запланированы на"
-" несколько дней раньше, чтобы справиться с непредвиденными задержками "
+"генерирует заказы на перезаказ закупки продуктов, они будут запланированы на "
+"несколько дней раньше, чтобы справиться с непредвиденными задержками "
 "поставщиков."
 
 #. module: purchase_stock
@@ -396,8 +399,8 @@ msgstr "Не получено"
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
 "Odoo не может генерировать англо-саксонские записи. Общая оценка %s равна "
 "нулю."
@@ -441,8 +444,8 @@ msgstr "Точка заказа"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "За последние x дней; количество продуктов, полученных вовремя, деленное на "
@@ -592,7 +595,7 @@ msgstr "Получите заказанные товары."
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr "Метод получения количества"
+msgstr "Метод получения"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
@@ -725,17 +728,17 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
-"В заказе на покупку указано меньшее количество товара, чем было выставлено в"
-" счете. Вам следует запросить возврат денег."
+"В заказе на покупку указано меньшее количество товара, чем было выставлено в "
+"счете. Вам следует запросить возврат денег."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
 "Для формирования заказа на поставку продукта %s нет подходящей цены "
 "поставщика (поставщик не определен, минимальное количество не достигнуто, "
@@ -750,8 +753,8 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
-"Этот счет используется при автоматической оценке запасов для учета разницы в"
-" ценах между заказом на закупку и связанным с ним счетом поставщика при "
+"Этот счет используется при автоматической оценке запасов для учета разницы в "
+"ценах между заказом на закупку и связанным с ним счетом поставщика при "
 "проверке этого счета поставщика."
 
 #. module: purchase_stock
@@ -760,17 +763,17 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
-"Этот счет используется для оценки разницы между ценой приобретения и учетной"
-" стоимостью."
+"Этот счет используется для оценки разницы между ценой приобретения и учетной "
+"стоимостью."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 "Это добавляет маршрут прямой поставки (dropshipping), применяемый к товарам "
 "для доставки поставщиками напрямую к вашим клиентам. Заказ на прямую "
@@ -817,8 +820,7 @@ msgstr "Перевод"
 #: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
+"Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 "Невозможно отменить заказ на поставку %s, так как некоторые приемы уже "
 "выполнены."
@@ -882,11 +884,11 @@ msgstr "Когда товары куплены, они могут быть до�
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
-"Если продукция требуется в <b>%s</b>, <br/> создается запрос на коммерческое"
-" предложение для удовлетворения потребности.<br/>Примечание: Это правило "
+"Если продукция требуется в <b>%s</b>, <br/> создается запрос на коммерческое "
+"предложение для удовлетворения потребности.<br/>Примечание: Это правило "
 "будет использоваться в сочетании с правилами<br/>маршрута(ов) приема"
 
 #. module: purchase_stock

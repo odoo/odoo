@@ -46,7 +46,7 @@ class Session(http.Controller):
                 http.root.session_store.rotate(request.session, env)
                 request.future_response.set_cookie(
                     'session_id', request.session.sid,
-                    max_age=http.SESSION_LIFETIME, httponly=True
+                    max_age=http.get_session_max_inactivity(env), httponly=True
                 )
             return env['ir.http'].session_info()
 
@@ -60,7 +60,7 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return list(request.env.registry._init_modules.union([module.current_test] if module.current_test else []))
+        return list(request.env.registry._init_modules)
 
     @http.route('/web/session/check', type='json', auth="user")
     def check(self):

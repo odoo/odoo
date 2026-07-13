@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-# 
+#
 # Translators:
 # krnkris, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # Martin Trigaux, 2023
 # 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # gezza <geza.nagy@oregional.hu>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_stock
@@ -62,8 +62,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
-"Alapértelmezett elérhetőségi mód az új, készletezett termékekhez. Ezt termék"
-" szinten lehet állítani."
+"Alapértelmezett elérhetőségi mód az új, készletezett termékekhez. Ezt termék "
+"szinten lehet állítani."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -81,8 +81,8 @@ msgstr "Készlet értesítés kérés"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
 msgstr ""
-"Hogyan kerüljenek megjelenítésre az alacsony készletű (készleten - foglalva)"
-" termékek"
+"Hogyan kerüljenek megjelenítésre az alacsony készletű (készleten - foglalva) "
+"termékek"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -93,7 +93,7 @@ msgstr "Érvénytelen email"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/js/website_sale.js:0
 #, python-format
 msgid "Invalid email"
 msgstr "Érvénytelen email"
@@ -133,6 +133,13 @@ msgstr "Készlethiány"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
 msgstr "Készlethiány üzenet"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid "Please sign in to proceed."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -192,8 +199,8 @@ msgstr "Elérhető mennyiség megjelenítése"
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry"
-" for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry "
+"for the inconvenience."
 msgstr ""
 "Néhány termék elérhetősége megszűnt, emiatt a kosár frissítésre került. "
 "Elnézést kérünk az esetleges kellemetlenségekért."
@@ -216,6 +223,13 @@ msgstr "A tétel nem került a kosárba, mivel nem elérhető."
 #, python-format
 msgid "The product '%(product_name)s' is now available"
 msgstr "'%(product_name)s' termék elérhetővé vált"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid "This product is not eligible for stock notifications."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -300,7 +314,6 @@ msgstr "%(desired_qty)s terméket szeretne, de csak %(new_qty)sérhető el"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You ask for %s Units but only %s are available."

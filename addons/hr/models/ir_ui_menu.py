@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api, tools
+from odoo import models
 
 
 class IrUiMenu(models.Model):
@@ -9,6 +8,7 @@ class IrUiMenu(models.Model):
 
     def _load_menus_blacklist(self):
         res = super()._load_menus_blacklist()
-        if self.env.user.has_group('hr.group_hr_user'):
-            res.append(self.env.ref('hr.menu_hr_employee').id)
+        emp_menu = self.env.ref('hr.menu_hr_employee', raise_if_not_found=False)
+        if emp_menu and self.env.user.has_group('hr.group_hr_user'):
+            res.append(emp_menu.id)
         return res

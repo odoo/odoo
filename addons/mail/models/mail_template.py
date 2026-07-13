@@ -41,7 +41,7 @@ class MailTemplate(models.Model):
          ('hidden_template', 'Hidden Template'),
          ('custom_template', 'Custom Template')],
          compute="_compute_template_category", search="_search_template_category")
-    model_id = fields.Many2one('ir.model', 'Applies to')
+    model_id = fields.Many2one('ir.model', 'Applies to', ondelete='cascade')
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
     email_from = fields.Char('From',
@@ -201,9 +201,25 @@ class MailTemplate(models.Model):
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        default = dict(default or {},
-                       name=_("%s (copy)", self.name))
-        return super(MailTemplate, self).copy(default=default)
+        default = default or {}
+        if 'name' not in default:
+            default['name'] = _("%s (copy)", self.name)
+        copy_attachments = 'attachment_ids' not in default and self.attachment_ids
+        if copy_attachments:
+            default['attachment_ids'] = False
+        copy = super().copy(default=default)
+
+        # copy attachments, to avoid ownership / ACLs issue
+        # anyway filestore should keep a single reference to content
+        if copy_attachments:
+            copy.write({
+                'attachment_ids': [
+                    (4, att_copy.id) for att_copy in (
+                        attachment.copy(default={'res_id': copy.id, 'res_model': self._name}) for attachment in self.attachment_ids
+                    )
+                ]
+            })
+        return copy
 
     def unlink_action(self):
         for template in self:

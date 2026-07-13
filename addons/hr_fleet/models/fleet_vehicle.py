@@ -1,4 +1,3 @@
-# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
@@ -24,25 +23,31 @@ class FleetVehicle(models.Model):
 
     @api.depends('driver_id')
     def _compute_driver_employee_id(self):
+        employees_by_partner_id_and_company_id = self.env['hr.employee']._read_group(
+            domain=[('work_contact_id', 'in', self.driver_id.ids)],
+            groupby=['work_contact_id', 'company_id'],
+            aggregates=['id:recordset']
+        )
+        employees_by_partner_id_and_company_id = {
+            (partner, company): employee for partner, company, employee in employees_by_partner_id_and_company_id
+        }
         for vehicle in self:
-            if vehicle.driver_id:
-                vehicle.driver_employee_id = self.env['hr.employee'].search([
-                    *self.env['hr.employee']._check_company_domain(self.env.companies),
-                    ('work_contact_id', '=', vehicle.driver_id.id),
-                ], limit=1)
-            else:
-                vehicle.driver_employee_id = False
+            employees = employees_by_partner_id_and_company_id.get((vehicle.driver_id, vehicle.company_id))
+            vehicle.driver_employee_id = employees[0] if employees else False
 
     @api.depends('future_driver_id')
     def _compute_future_driver_employee_id(self):
+        employees_by_partner_id_and_company_id = self.env['hr.employee']._read_group(
+            domain=[('work_contact_id', 'in', self.future_driver_id.ids)],
+            groupby=['work_contact_id', 'company_id'],
+            aggregates=['id:recordset']
+        )
+        employees_by_partner_id_and_company_id = {
+            (partner, company): employee for partner, company, employee in employees_by_partner_id_and_company_id
+        }
         for vehicle in self:
-            if vehicle.future_driver_id:
-                vehicle.future_driver_employee_id = self.env['hr.employee'].search([
-                    *self.env['hr.employee']._check_company_domain(self.env.companies),
-                    ('work_contact_id', '=', vehicle.future_driver_id.id),
-                ], limit=1)
-            else:
-                vehicle.future_driver_employee_id = False
+            employees = employees_by_partner_id_and_company_id.get((vehicle.future_driver_id, vehicle.company_id))
+            vehicle.future_driver_employee_id = employees[0] if employees else False
 
     @api.depends('driver_id')
     def _compute_mobility_card(self):

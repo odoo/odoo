@@ -4,7 +4,7 @@
     <t t-name="web.PhoneField">
         <div class="o_phone_content d-inline-flex w-100">
             <t t-if="props.readonly">
-                <a t-if="props.record.data[props.name]" class="o_form_uri" t-att-href="phoneHref" t-esc="props.record.data[props.name]"/>
+                <a t-if="props.record.data[props.name]" class="o_form_uri" target="_blank" t-att-href="phoneHref" t-esc="props.record.data[props.name]"/>
             </t>
             <t t-else="">
                 <input
@@ -24,6 +24,7 @@
             <a
                 t-if="props.record.data[props.name]"
                 t-att-href="phoneHref"
+                target="_blank"
                 class="o_phone_form_link ms-3 d-inline-flex align-items-center"
             >
                 <i class="fa fa-phone"></i><small class="fw-bold ms-1">Call</small>

@@ -270,11 +270,15 @@ class View(models.Model):
         # get_related_views can be called through website=False routes
         # (e.g. /web_editor/get_assets_editor_resources), so website
         # dispatch_parameters may not be added. Manually set
-        # website_id. (It will then always fallback on a website, this
-        # method should never be called in a generic context, even for
-        # tests)
-        self = self.with_context(website_id=self.env['website'].get_current_website().id)
-        return super(View, self).get_related_views(key, bundles=bundles)
+        # website_id. (In the website environment, this method should
+        # never be called in a generic context, even for tests)
+        is_customization_code = self._context.get('is_customization_code', True)
+        current_website = self.env['website'].get_current_website(fallback=is_customization_code)
+        return super(View, self.with_context(
+            website_id=current_website.id
+        )).get_related_views(key, bundles=bundles).with_context(
+            lang=current_website.default_lang_id.code,
+        )
 
     def filter_duplicate(self):
         """ Filter current recordset only keeping the most suitable view per distinct key.
@@ -489,10 +493,13 @@ class View(models.Model):
     @api.model
     def _get_allowed_root_attrs(self):
         # Related to these options:
-        # background-video, background-shapes, parallax
+        # background-video, background-shapes, parallax, visibility
         return super()._get_allowed_root_attrs() + [
             'data-bg-video-src', 'data-shape', 'data-scroll-background-ratio',
-        ]
+            'data-visibility', 'data-visibility-id', 'data-visibility-selectors',
+        ] + ['data-visibility-value-' + suffix for suffix in (
+            'country', 'lang', 'logged', 'utm-campaign', 'utm-medium', 'utm-source',
+        )]
 
     def _get_combined_arch(self):
         root = super()._get_combined_arch()

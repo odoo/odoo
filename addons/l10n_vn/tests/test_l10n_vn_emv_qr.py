@@ -46,6 +46,20 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
             'company_id': cls.company_data['company'].id,
             'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 100})],
         })
+        cls.partner_with_bank_account_no_proxy = cls.env['res.partner'].create({
+            'name': 'Mr. Triboulet',
+            'company_id': cls.company_data['company'].id,
+            'country_id': cls.env.ref('base.vn').id,
+            'city': 'Vietnam',
+            'bank_ids': [
+                Command.create({
+                    'acc_number': '123456789012345670',
+                    'bank_id': cls.bank_vn.id,
+                    'currency_id': cls.env.ref('base.VND').id,
+                    'allow_out_payment': True
+                })
+            ]
+        })
 
     def test_emv_qr_code_generation(self):
         self.emv_qr_invoice.qr_code_method = 'emv_qr'
@@ -56,11 +70,15 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
         with self.assertRaises(UserError, msg="The chosen QR-code type is not eligible for this invoice."):
             self.emv_qr_invoice._generate_qr_code()
 
-        # Without company partner city should fail
+        # Without company partner city or state should fail
         self.emv_qr_invoice.currency_id = self.env.ref('base.VND')
         self.company_data['company'].partner_id.city = False
         with self.assertRaises(UserError, msg="Missing Merchant City."):
             self.emv_qr_invoice._generate_qr_code()
+
+        # With state and no city should ok
+        self.company_data['company'].partner_id.state_id = self.env.ref('base.state_vn_VN-HP')
+        self.emv_qr_invoice._generate_qr_code()
 
         # Without paynow infomation should fail
         self.company_data['company'].partner_id.city = 'Vietnam'
@@ -81,7 +99,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
         )
 
         # Check the whole qr code string
-        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914company_1_data6007Vietnam62170813INV/TEST/00016304600B')
+        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914company_1_data6007Vietnam62150811INVTEST000163042656')
 
     def test_remove_vietnamese_accents(self):
         accent_string = "áàảãạăắằẳẵặâấầẩẫậÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬéèẻẽẹêếềểễệÉÈẺẼẸÊẾỀỂỄỆóòỏõọôốồổỗộơớờởỡợÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢíìỉĩịÍÌỈĨỊúùủũụưứừửữựÚÙỦŨỤƯỨỪỬỮỰýỳỷỹỵÝỲỶỸỴđĐ"
@@ -102,4 +120,13 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
         )
 
         # Check the whole qr code string
-        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914aAeEoOiIuUyYdD6007Vietnam62170813INV/TEST/000263041AA5')
+        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914aAeEoOiIuUyYdD6007Vietnam62150811INVTEST00026304E1C2')
+
+    def test_create_payment_with_no_proxy_in_client(self):
+        new_payment = self.env['account.payment'].create({
+            'partner_id': self.partner_with_bank_account_no_proxy.id,
+            'payment_type': 'outbound'
+        })
+        # The payment must be created but the qr_code will raise a silent error (False value)
+        self.assertTrue(new_payment.exists())
+        self.assertFalse(new_payment.qr_code)

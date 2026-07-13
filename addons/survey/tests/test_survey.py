@@ -85,6 +85,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         self.assertEqual(fourth_attempt['attempts_count'], 4)
 
     @freeze_time("2020-02-15 18:00")
+    @users('survey_manager')
     def test_answer_display_name(self):
         """ The "display_name" field in a survey.user_input.line is a computed field that will
         display the answer label for any type of question.
@@ -108,7 +109,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
                 self.assertEqual(question_answer.display_name, '2020-02-15')
             elif question.question_type == 'datetime':
                 question_answer = self._add_answer_line(question, user_input, fields.Datetime.now())
-                self.assertEqual(question_answer.display_name, '2020-02-15 18:00:00')
+                self.assertEqual(question_answer.display_name, '2020-02-15 19:00:00')
             elif question.question_type == 'simple_choice':
                 question_answer = self._add_answer_line(question, user_input, question.suggested_answer_ids[0].id)
                 self.assertEqual(question_answer.display_name, 'SChoice0')
@@ -219,6 +220,86 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         self.assertEqual(
             question.validate_question('valid'),
             {}
+        )
+
+    @users('survey_manager')
+    def test_simple_choice_validation_multiple_answers(self):
+        """
+        Check that a 'simple_choice' question fails validation if more than one
+        valid answer is provided.
+        """
+        question = self._add_question(
+            self.page_0, 'Simple Choice Constraint Test', 'simple_choice',
+            constr_mandatory=True,
+            comments_allowed=True,
+            comment_count_as_answer=True,
+            labels=[{'value': 'Choice X'}, {'value': 'Choice Y'}]
+        )
+        answer_choice_x_id = question.suggested_answer_ids[0].id
+        answer_choice_y_id = question.suggested_answer_ids[1].id
+
+        scenarios = [
+            (
+                'Two selected choices should not be allowed',
+                [answer_choice_x_id, answer_choice_y_id],
+                None,
+                True,
+            ),
+            (
+                'One choice and one comment that counts as an answer',
+                answer_choice_x_id,
+                'This is my comment, which is also an answer.',
+                True,
+            ),
+            (
+                'A single valid answer should pass validation',
+                answer_choice_x_id,
+                None,
+                False,
+            ),
+            (
+                'A single valid comment should pass validation',
+                '',
+                'This is my comment, which is also an answer.',
+                False,
+            ),
+        ]
+
+        for case_description, answers, comment, is_multiple_answers in scenarios:
+            with self.subTest(answers=answers, comment=comment):
+                self.assertEqual(
+                    question.validate_question(answers, comment),
+                    {question.id: 'For this question, you can only select one answer.'} if is_multiple_answers else {},
+                    case_description,
+                )
+
+    @users('survey_manager')
+    def test_answer_validation_comment(self):
+        """ Check that a comment validates a mandatory question based on 'comment_count_as_answer'. """
+        # Scenario 1: A comment counts as a valid answer.
+        question_ok = self._add_question(
+            self.page_0, 'Q_OK', 'multiple_choice',
+            constr_mandatory=True, validation_error_msg='ValidationError',
+            comments_allowed=True,
+            comment_count_as_answer=True,
+            labels=[{'value': 'Choice A'}, {'value': 'Choice B'}])
+
+        self.assertEqual(
+            question_ok.validate_question(answer='', comment='This comment is a valid answer.'),
+            {}
+        )
+
+        # Scenario 2: A comment does NOT count as a valid answer.
+        question_fail = self._add_question(
+            self.page_0, 'Q_FAIL', 'multiple_choice',
+            constr_mandatory=True, validation_error_msg='ValidationError',
+            comments_allowed=True,
+            comment_count_as_answer=False,
+            labels=[{'value': 'Choice A'}, {'value': 'Choice B'}])
+
+        self.assertEqual(
+            question_fail.validate_question(answer='', comment='This comment is not enough.'),
+            {question_fail.id: 'TestError'}
         )
 
     def test_partial_scores_simple_choice(self):
@@ -334,6 +415,30 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         for question in questions:
             self._assert_skipped_question(question, survey_user)
+
+    @users('survey_manager')
+    def test_multiple_choice_comment_not_skipped(self):
+        """ Test that a multiple choice question with only a comment is not marked as skipped. """
+        survey_user = self.survey._create_answer(user=self.survey_user)
+        question = self._add_question(
+            self.page_0, 'MCQ with Comment', 'multiple_choice',
+            comments_allowed=True,
+            comment_count_as_answer=True,
+            labels=[{'value': 'Choice A'}, {'value': 'Choice B'}]
+        )
+
+        # Save an answer with no selected choice but with a comment.
+        survey_user._save_lines(question, answer=[], comment='This is only a comment')
+
+        answer_line = self.env['survey.user_input.line'].search([
+            ('user_input_id', '=', survey_user.id),
+            ('question_id', '=', question.id)
+        ])
+
+        self.assertEqual(len(answer_line), 1)
+        self.assertFalse(answer_line.skipped)
+        self.assertEqual(answer_line.answer_type, 'char_box')
+        self.assertEqual(answer_line.value_char_box, 'This is only a comment')
 
     @users('survey_manager')
     def test_copy_conditional_question_settings(self):
@@ -668,6 +773,41 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         returned_questions_and_pages = my_survey._get_pages_and_questions_to_show()
 
         self.assertEqual(question_and_page_ids - invalid_records, returned_questions_and_pages)
+
+    def test_survey_session_leaderboard(self):
+        """Check leaderboard rendering with small (max) scores values."""
+        start_time = fields.datetime(2023, 7, 7, 12, 0, 0)
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Test This Survey',
+            'scoring_type': 'scoring_with_answers',
+            'session_question_start_time': start_time,
+            'session_start_time': start_time,
+            'session_state': 'in_progress',
+            'question_and_page_ids': [
+                Command.create({
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'In Asia', 'answer_score': 0.125, 'is_correct': True}),
+                        Command.create({'value': 'In Europe', 'answer_score': 0., 'is_correct': False}),
+                    ],
+                    'title': 'Where is india?',
+                }),
+            ]
+        })
+        question_1 = test_survey.question_and_page_ids[0]
+        answer_correct = question_1.suggested_answer_ids[0]
+        user_input = self.env['survey.user_input'].create({'survey_id': test_survey.id, 'is_session_answer': True})
+        user_input_line = self.env['survey.user_input.line'].create({
+            'user_input_id': user_input.id,
+            'question_id': question_1.id,
+            'answer_type': 'suggestion',
+            'suggested_answer_id': answer_correct.id,
+        })
+        self.assertEqual(user_input_line.answer_score, 0.125)
+        self.env['ir.qweb']._render('survey.user_input_session_leaderboard', {
+            'animate': True,
+            'leaderboard': test_survey._prepare_leaderboard_values()
+        })
 
     def test_notify_subscribers(self):
         """Check that messages are posted only if there are participation followers"""

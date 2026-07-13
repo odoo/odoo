@@ -61,7 +61,13 @@
                                                 <span t-if="not job.website_published" class="badge bg-danger mb8 p-2">unpublished</span>
                                             </div>
                                             <h5 t-if="job.no_of_recruitment >= 3" class="text-reset">
-                                                <span t-field="job.no_of_recruitment"/> open positions
+                                                <span t-field="job.no_of_recruitment"/>
+                                                <t t-if="job.no_of_recruitment == 1">
+                                                    open position
+                                                </t>
+                                                <t t-else="">
+                                                    open positions
+                                                </t>
                                             </h5>
                                             <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
                                             <div class="oe_empty text-muted mb16"
@@ -126,9 +132,15 @@
                     <meta itemprop="name" t-att-content="job.company_id.name"/>
                     <meta itemprop="logo" t-attf-content="/logo.png?company=#{job.company_id.id}"/>
                 </span>
-                <span itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
+                <span t-if="job.address_id.sudo().contact_address" itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
                     <meta itemprop="address" t-att-content="job.address_id.sudo().contact_address"/>
                 </span>
+                <t t-else="">
+                    <meta itemprop="jobLocationType" content="TELECOMMUTE"/>
+                    <span itemprop="applicantLocationRequirements" itemscope="itemscope" itemtype="https://schema.org/Country">
+                        <meta itemprop="name" t-att-content="job.company_id.country_id.name"/>
+                    </span>
+                </t>
                 <!-- Job name -->
                 <section class="pb32">
                     <div class="container">

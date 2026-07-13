@@ -31,14 +31,13 @@
                             <record id="mod_111_casilla_01" model="account.report.line">
                                 <field name="name">[01] Nº of recipients</field>
                                 <field name="code">aeat_mod_111_01</field>
-                                <field name="groupby">partner_id</field>
-                                <field name="foldable" eval="True"/>
+                                <field name="groupby" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="mod_111_casilla_01_balance" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">domain</field>
-                                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+mod111[02]'), ('tax_tag_ids', '=', '+mod111[03]'), ('tax_tag_ids', '=', '-mod111[02]'), ('tax_tag_ids', '=', '-mod111[03]')]"/>
-                                        <field name="subformula">count_rows</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
                                         <field name="figure_type">integer</field>
                                     </record>
                                 </field>
@@ -78,14 +77,13 @@
                             <record id="mod_111_casilla_04" model="account.report.line">
                                 <field name="name">[04] Nº of recipients</field>
                                 <field name="code">aeat_mod_111_04</field>
-                                <field name="groupby">partner_id</field>
-                                <field name="foldable" eval="True"/>
+                                <field name="groupby" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="mod_111_casilla_04_balance" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">domain</field>
-                                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+mod111[05]'), ('tax_tag_ids', '=', '+mod111[06]'), ('tax_tag_ids', '=', '-mod111[05]'), ('tax_tag_ids', '=', '-mod111[06]')]"/>
-                                        <field name="subformula">count_rows</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
                                         <field name="figure_type">integer</field>
                                     </record>
                                 </field>
@@ -132,14 +130,13 @@
                             <record id="mod_111_casilla_07" model="account.report.line">
                                 <field name="name">[07] Nº of recipients</field>
                                 <field name="code">aeat_mod_111_07</field>
-                                <field name="groupby">partner_id</field>
-                                <field name="foldable" eval="True"/>
+                                <field name="groupby" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="mod_111_casilla_07_balance" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">domain</field>
-                                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+mod111[08]'), ('tax_tag_ids', '=', '+mod111[09]'), ('tax_tag_ids', '=', '-mod111[08]'), ('tax_tag_ids', '=', '-mod111[09]')]"/>
-                                        <field name="subformula">count_rows</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
                                         <field name="figure_type">integer</field>
                                     </record>
                                 </field>
@@ -179,14 +176,13 @@
                             <record id="mod_111_casilla_10" model="account.report.line">
                                 <field name="name">[10] Nº of recipients</field>
                                 <field name="code">aeat_mod_111_10</field>
-                                <field name="groupby">partner_id</field>
-                                <field name="foldable" eval="True"/>
+                                <field name="groupby" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="mod_111_casilla_10_balance" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">domain</field>
-                                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+mod111[11]'), ('tax_tag_ids', '=', '+mod111[12]'), ('tax_tag_ids', '=', '-mod111[11]'), ('tax_tag_ids', '=', '-mod111[12]')]"/>
-                                        <field name="subformula">count_rows</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
                                         <field name="figure_type">integer</field>
                                     </record>
                                 </field>
@@ -429,6 +425,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
+                                <field name="figure_type">integer</field>
                                 <field name="subformula">editable;rounding=0</field>
                             </record>
                         </field>

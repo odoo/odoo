@@ -912,3 +912,40 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(mo.picking_ids[1].move_ids_without_package[0].product_id, demo)
         self.assertEqual(mo.picking_ids[1].move_ids_without_package[1].product_id, bprod1)
         self.assertEqual(mo.picking_ids[1].move_ids_without_package[2].product_id, bprod2)
+
+    def test_update_mo_from_bom_forecast(self):
+        self.warehouse_1.manufacture_steps = 'pbm_sam'
+        self.env['stock.quant']._update_available_quantity(self.product_2, self.warehouse_1.lot_stock_id, 10)
+        self.env['stock.quant']._update_available_quantity(self.product_3, self.warehouse_1.lot_stock_id, 20)
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+            'picking_type_id': self.warehouse_1.manu_type_id.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(self.product_1.virtual_available, -4)
+        self.assertEqual(self.product_2.virtual_available, 8)
+        rr = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'John Cutter RR',
+            'product_id': self.product_1.id,
+            'warehouse_id': mo.warehouse_id.id,
+        })
+        self.assertEqual(rr.qty_forecast, -4)
+        # Update the BoM
+        self.bom_1.bom_line_ids[1].unlink()
+        self.bom_1.bom_line_ids[0].product_qty = 3
+        self.env['mrp.bom.line'].create({
+            'product_id': self.product_3.id,
+            'product_qty': 5,
+            'bom_id': self.bom_1.id,
+        })
+        mo.action_update_bom()
+        self.assertEqual(rr.qty_forecast, 0)
+        self.assertEqual(self.product_1.virtual_available, 0)
+        self.assertEqual(self.product_2.virtual_available, 7)
+        self.assertEqual(self.product_3.virtual_available, 15)
+        pre_prod_pick = mo.picking_ids.filtered(lambda p: p.picking_type_id == mo.warehouse_id.pbm_type_id)
+        self.assertRecordValues(pre_prod_pick.move_ids, [
+            {'product_id': self.product_2.id, 'product_uom_qty': 3, 'product_qty_available': 10},
+            {'product_id': self.product_1.id, 'product_uom_qty': 0, 'product_qty_available': 0},
+            {'product_id': self.product_3.id, 'product_uom_qty': 5, 'product_qty_available': 20},
+        ])

@@ -368,6 +368,7 @@ structure.
 import base64
 import contextlib
 import fnmatch
+import glob
 import io
 import logging
 import math
@@ -385,16 +386,18 @@ from collections.abc import Sized, Mapping
 from itertools import count, chain
 from lxml import etree
 from dateutil.relativedelta import relativedelta
+from os.path import join as opj
 from psycopg2.extensions import TransactionRollbackError
+from urllib.parse import unquote_plus
 
 from odoo import api, models, tools
-from odoo.modules import registry
+from odoo.modules import get_module_path, registry
 from odoo.tools import config, safe_eval, pycompat
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
 from odoo.tools.lru import LRU
-from odoo.tools.misc import str2bool
+from odoo.tools.misc import file_open, str2bool
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
@@ -424,6 +427,7 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'LOAD_FAST', 'STORE_FAST', 'UNPACK_SEQUENCE',
     'STORE_SUBSCR',
     'LOAD_GLOBAL',
+    'EXTENDED_ARG',
     # Following opcodes were added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
     'RESUME',
     'CALL',
@@ -443,6 +447,15 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
     'RERAISE',
     'CALL_INTRINSIC_1',
+    'STORE_SLICE',
+    # 3.13
+    'CALL_KW', 'LOAD_FAST_LOAD_FAST',
+    'STORE_FAST_STORE_FAST', 'STORE_FAST_LOAD_FAST',
+    'CONVERT_VALUE', 'FORMAT_SIMPLE', 'FORMAT_WITH_SPEC',
+    'SET_FUNCTION_ATTRIBUTE',
+    # 3.14 c.f. safe_eval
+    'LOAD_FAST_BORROW', 'LOAD_FAST_BORROW_LOAD_FAST_BORROW',
+    'POP_ITER', 'LOAD_COMMON_CONSTANT', 'NOT_TAKEN',
 ])) - _BLACKLIST
 
 
@@ -467,6 +480,11 @@ SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title'}
 # Name of the variable to insert the content in t-call in the template.
 # The slot will be replaced by the `t-call` tag content of the caller.
 T_CALL_SLOT = '0'
+
+
+# Only allow a javascript scheme if it is followed by [ ][window.]history.back()
+MALICIOUS_SCHEMES = re.compile(r'javascript:(?!((window\.)?)history\.back\(\)$)', re.I).findall
+WHITESPACE_REGEX = re.compile(r'[\s\x00-\x08\x0B\x0C\x0E-\x19]+')
 
 
 def indent_code(code, level):
@@ -617,6 +635,7 @@ class IrQWeb(models.AbstractModel):
 
     @QwebTracker.wrap_compile
     def _compile(self, template):
+        assert isinstance(self, IrQWeb)
         if isinstance(template, etree._Element):
             self = self.with_context(is_t_cache_disabled=True)
             ref = None
@@ -680,6 +699,8 @@ class IrQWeb(models.AbstractModel):
 
             :returns: tuple containing code, options and main method name
         """
+        if not isinstance(template, (int, str, etree._Element)):
+            template = str(template)
         # The `compile_context`` dictionary includes the elements used for the
         # cache key to which are added the template references as well as
         # technical information useful for generating the function. This
@@ -1335,7 +1356,7 @@ class IrQWeb(models.AbstractModel):
         """ Compile a purely static element into a list of string. """
         if not el.nsmap:
             unqualified_el_tag = el_tag = el.tag
-            attrib = self._post_processing_att(el.tag, el.attrib)
+            attrib = self._post_processing_att(el.tag, {**el.attrib, '__is_static_node': True})
         else:
             # Etree will remove the ns prefixes indirection by inlining the corresponding
             # nsmap definition into the tag attribute. Restore the tag and prefix here.
@@ -1365,7 +1386,7 @@ class IrQWeb(models.AbstractModel):
                 else:
                     attrib[key] = value
 
-            attrib = self._post_processing_att(el.tag, attrib)
+            attrib = self._post_processing_att(el.tag, {**attrib, '__is_static_node': True})
 
             # Update the dict of inherited namespaces before continuing the recursion. Note:
             # since `compile_context['nsmap']` is a dict (and therefore mutable) and we do **not**
@@ -1724,7 +1745,7 @@ class IrQWeb(models.AbstractModel):
         if el.text is not None:
             self._append_text(el.text, compile_context)
         body = []
-        for item in el:
+        for item in list(el):
             if isinstance(item, etree._Comment):
                 if compile_context.get('preserve_comments'):
                     self._append_text(f"<!--{item.text}-->", compile_context)
@@ -2400,6 +2421,11 @@ class IrQWeb(models.AbstractModel):
 
             @returns dict
         """
+        if atts.pop('__is_static_node', False):
+            return atts
+        href = str(atts.get('href') or '')
+        if MALICIOUS_SCHEMES(WHITESPACE_REGEX.sub('', unquote_plus(href))):
+            atts['href'] = ""
         return atts
 
     def _get_field(self, record, field_name, expression, tagName, field_options, values):
@@ -2647,7 +2673,11 @@ class IrQWeb(models.AbstractModel):
         """
         Returns the list of bundles to pregenerate.
         """
+        js_views_bundles, css_views_bundles = self._get_bundles_from_views()
+        lazy_bundles = self._get_lazy_bundles_from_js()
+        return (js_views_bundles | lazy_bundles, css_views_bundles | lazy_bundles)
 
+    def _get_bundles_from_views(self):
         views = self.env['ir.ui.view'].search([('type', '=', 'qweb'), ('arch_db', 'like', 't-call-assets')])
         js_bundles = set()
         css_bundles = set()
@@ -2661,6 +2691,19 @@ class IrQWeb(models.AbstractModel):
                 if css:
                     css_bundles.add(asset)
         return (js_bundles, css_bundles)
+
+    def _get_lazy_bundles_from_js(self):
+        modules = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
+        lazy_bundle_regex = re.compile(r'\bloadBundle\((["\'`])([\w\.-]+)\1\)', flags=re.ASCII)
+        bundles = set()
+        for modroot in filter(None, map(get_module_path, modules)):
+            for fname in glob.iglob('**/static/src/**/*.js', root_dir=modroot, recursive=True):
+                with file_open(opj(modroot, fname)) as f:
+                    fcontent = f.read()
+                    if match := lazy_bundle_regex.search(fcontent):
+                        bundles.add(match[2])
+        return bundles
+
 
 def render(template_name, values, load, **options):
     """ Rendering of a qweb template without database and outside the registry.

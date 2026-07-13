@@ -107,6 +107,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
      */
     _updateErrorDisplay(errors) {
         this.$('.o_wbooth_registration_error_section').toggleClass('d-none', !errors.length);
+        this.$('.o_wbooth_registration_error_signin').addClass('d-none');
 
         let errorMessages = [];
         let $errorMessage = this.$('.o_wbooth_registration_error_message');
@@ -121,6 +122,11 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
         if (errors.includes('boothCategoryError')) {
             errorMessages.push(_t("The booth category doesn't exist."));
+        }
+
+        if (errors.includes('existingPartnerError')) {
+            errorMessages.push(_t("It looks like your email is linked to an existing account."));
+            this.$('.o_wbooth_registration_error_signin').removeClass('d-none');
         }
 
         $errorMessage.text(errorMessages.join(' ')).change();

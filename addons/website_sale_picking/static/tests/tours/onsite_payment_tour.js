@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         test: true,
         url: '/web',
         steps: () => [
-        ...wsTourUtils.addToCart({productName: 'Chair floor protection'}),
+        ...wsTourUtils.addToCart({productName: 'Product Consumable'}),
         wsTourUtils.goToCart(),
         wsTourUtils.goToCheckout(),
         ...wsTourUtils.fillAdressForm(),
@@ -24,8 +24,8 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         },
 
         // Test multi products (Either physical or not)
-        ...wsTourUtils.addToCart({productName: 'Customizable Desk', productHasVariants: true}),
-        ...wsTourUtils.addToCart({productName: 'Warranty'}),
+        ...wsTourUtils.addToCart({productName: 'Product Consumable'}),
+        ...wsTourUtils.addToCart({productName: 'Product Service'}),
         wsTourUtils.goToCart({quantity: 2}),
         wsTourUtils.goToCheckout(),
         ...wsTourUtils.fillAdressForm(),
@@ -41,10 +41,15 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         },
 
         // Test without any physical product (option pay on site should not appear)
-        ...wsTourUtils.addToCart({productName: 'Warranty'}),
+        ...wsTourUtils.addToCart({productName: 'Product Service'}),
         wsTourUtils.goToCart(),
         wsTourUtils.goToCheckout(),
         ...wsTourUtils.fillAdressForm(),
+        {
+            content: 'Confirm Order page',
+            trigger: 'h3:contains("Confirm order")',
+            isCheck: true,
+        },
         {
             content: 'Assert pay on site is NOT an option',
             trigger: 'body:not(:contains("Test Payment Provider"))',

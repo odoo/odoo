@@ -26,11 +26,11 @@ class ProcurementGroup(models.Model):
     _inherit = "procurement.group"
 
     @api.model
-    def _get_rule_domain(self, location, values):
+    def _get_rule_domain(self, locations, values):
         if 'sale_line_id' in values and values.get('company_id'):
-            return [('location_dest_id', '=', location.id), ('action', '!=', 'push'), ('company_id', '=', values['company_id'].id)]
+            return [('location_dest_id', 'in', locations.ids), ('action', '!=', 'push'), ('company_id', '=', values['company_id'].id)]
         else:
-            return super(ProcurementGroup, self)._get_rule_domain(location, values)
+            return super()._get_rule_domain(locations, values)
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
@@ -84,3 +84,15 @@ class StockLot(models.Model):
             ('location_dest_id.usage', '=', 'customer'),
             ('location_id.usage', '=', 'supplier'),
         ]])
+
+
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    def _get_layer_candidates(self):
+        layer_candidates = super()._get_layer_candidates()
+        if self._is_dropshipped():
+            layer_candidates = layer_candidates.filtered(lambda svl: svl.quantity < 0)
+        elif self._is_dropshipped_returned():
+            layer_candidates = layer_candidates.filtered(lambda svl: svl.quantity > 0)
+        return layer_candidates

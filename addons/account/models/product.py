@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from difflib import SequenceMatcher
+
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import format_amount
+from odoo.tools import format_amount, split_every
 
 ACCOUNT_DOMAIN = "['&', ('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
+
 
 class ProductCategory(models.Model):
     _inherit = "product.category"
@@ -51,9 +54,22 @@ class ProductTemplate(models.Model):
 
     def _get_product_accounts(self):
         return {
-            'income': self.property_account_income_id or self.categ_id.property_account_income_categ_id,
-            'expense': self.property_account_expense_id or self.categ_id.property_account_expense_categ_id
+            'income': self.property_account_income_id or self._get_category_account('property_account_income_categ_id'),
+            'expense': self.property_account_expense_id or self._get_category_account('property_account_expense_categ_id')
         }
+
+    def _get_category_account(self, field_name):
+        """
+        Return the first account defined on the product category hierarchy
+        for the given field.
+        """
+        categ = self.categ_id
+        while categ:
+            account = categ[field_name]
+            if account:
+                return account
+            categ = categ.parent_id
+        return self.env['account.account']
 
     def _get_asset_accounts(self):
         res = {}
@@ -75,13 +91,16 @@ class ProductTemplate(models.Model):
             record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
 
     @api.depends('taxes_id', 'list_price')
+    @api.depends_context('company')
     def _compute_tax_string(self):
         for record in self:
             record.tax_string = record._construct_tax_string(record.list_price)
 
     def _construct_tax_string(self, price):
         currency = self.currency_id
-        res = self.taxes_id.compute_all(price, product=self, partner=self.env['res.partner'])
+        res = self.taxes_id._filter_taxes_by_company(self.env.company).compute_all(
+            price, product=self, partner=self.env['res.partner']
+        )
         joined = []
         included = res['total_included']
         if currency.compare_amounts(included, price):
@@ -120,15 +139,23 @@ class ProductTemplate(models.Model):
 
     def _force_default_sale_tax(self, companies):
         default_customer_taxes = companies.filtered('account_sale_tax_id').account_sale_tax_id
-        for product_grouped_by_tax in self.grouped('taxes_id').values():
-            product_grouped_by_tax.taxes_id += default_customer_taxes
-        self.invalidate_recordset(['taxes_id'])
+        if not default_customer_taxes:
+            return
+        links = [Command.link(t.id) for t in default_customer_taxes]
+        for sub_ids in self.env.cr.split_for_in_conditions(self.ids, size=10000):
+            chunk = self.browse(sub_ids)
+            chunk.write({'taxes_id': links})
+            chunk.invalidate_recordset(['taxes_id'])
 
     def _force_default_purchase_tax(self, companies):
         default_supplier_taxes = companies.filtered('account_purchase_tax_id').account_purchase_tax_id
-        for product_grouped_by_tax in self.grouped('supplier_taxes_id').values():
-            product_grouped_by_tax.supplier_taxes_id += default_supplier_taxes
-        self.invalidate_recordset(['supplier_taxes_id'])
+        if not default_supplier_taxes:
+            return
+        links = [Command.link(t.id) for t in default_supplier_taxes]
+        for sub_ids in self.env.cr.split_for_in_conditions(self.ids, size=10000):
+            chunk = self.browse(sub_ids)
+            chunk.write({'supplier_taxes_id': links})
+            chunk.invalidate_recordset(['supplier_taxes_id'])
 
     def _force_default_tax(self, companies):
         self._force_default_sale_tax(companies)
@@ -140,7 +167,7 @@ class ProductTemplate(models.Model):
         # If no company was set for the product, the product will be available for all companies and therefore should
         # have the default taxes of the other companies as well. sudo() is used since we're going to need to fetch all
         # the other companies default taxes which the user may not have access to.
-        other_companies = self.env['res.company'].sudo().search([('id', 'not in', self.env.companies.ids)])
+        other_companies = self.env['res.company'].sudo().search(['!', ('id', 'child_of', self.env.companies.ids)])
         if other_companies and products:
             products_without_company = products.filtered(lambda p: not p.company_id).sudo()
             products_without_company._force_default_tax(other_companies)
@@ -185,9 +212,10 @@ class ProductProduct(models.Model):
                 return 0.0
         if product_taxes is None:
             if document_type == 'sale':
-                product_taxes = product.taxes_id.filtered(lambda x: x.company_id == company)
+                product_taxes = product.taxes_id
             elif document_type == 'purchase':
-                product_taxes = product.supplier_taxes_id.filtered(lambda x: x.company_id == company)
+                product_taxes = product.supplier_taxes_id
+            product_taxes = product_taxes._filter_taxes_by_company(company)
         # Apply unit of measure.
         if product_uom and product.uom_id != product_uom:
             product_price_unit = product.uom_id._compute_price(product_price_unit, product_uom)
@@ -255,6 +283,7 @@ class ProductProduct(models.Model):
         return product_price_unit
 
     @api.depends('lst_price', 'product_tmpl_id', 'taxes_id')
+    @api.depends_context('company')
     def _compute_tax_string(self):
         for record in self:
             record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)
@@ -273,30 +302,69 @@ class ProductProduct(models.Model):
         :param extra_domain:    Any extra domain to add to the search.
         :returns:               A product or an empty recordset if not found.
         '''
+
+        def find_product_by_name_similarity(base_domain):
+            """ Returns the first product whose name similarity ratio with the provided name is at least 90%. """
+
+            # Get similarity threshold from system parameter, fallback to 0.9 if missing, invalid, or out of range (0, 1].
+            try:
+                similarity_threshold = float(
+                    self.env['ir.config_parameter'].sudo().get_param('account.product_name_similarity_threshold', '0.9')
+                )
+                if similarity_threshold <= 0.0 or similarity_threshold > 1.0:
+                    similarity_threshold = 0.9
+            except ValueError:
+                similarity_threshold = 0.9
+
+            all_product_ids = self.search(
+                expression.AND([
+                    [('name', 'ilike', name)],
+                    base_domain,
+                ]),
+            ).ids
+            lowered_name = name.lower()
+            for products in split_every(models.PREFETCH_MAX, all_product_ids, self.browse):
+                products.fetch(['product_tmpl_id'])
+                templates = products.product_tmpl_id
+                templates.fetch(['name'])
+                for product in products:
+                    if SequenceMatcher(None, lowered_name, product.name.lower()).ratio() >= similarity_threshold:
+                        return product
+                products.invalidate_recordset()
+                templates.invalidate_recordset()
+            return self.env['product.product']
+
         if name and '\n' in name:
             # cut Sales Description from the name
             name = name.split('\n')[0]
         domains = []
-        if default_code:
-            domains.append([('default_code', '=', default_code)])
         if barcode:
             domains.append([('barcode', '=', barcode)])
+        if default_code:
+            domains.append([('default_code', '=', default_code)])
+        if name:
+            domains.append([('name', '=ilike', name)])
 
-        # Search for the product with the exact name, then ilike the name
-        name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
         company = company or self.env.company
-        for name_domain in name_domains:
-            for extra_domain in (
-                [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
-                [('company_id', '=', False)],
-            ):
+        for company_domain in (
+            [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
+            [('company_id', '=', False)],
+        ):
+            base_domain = expression.AND([company_domain, extra_domain])
+            for domain in domains:
                 product = self.env['product.product'].search(
                     expression.AND([
-                        expression.OR(domains + [name_domain]),
-                        extra_domain,
+                        domain,
+                        base_domain,
                     ]),
                     limit=1,
                 )
+                # We need a single product. Exit early if one is found (implements the priority logic).
                 if product:
                     return product
+
+            # checking length to avoid matching unrelated products whose names merely contain that short string
+            if name and len(name) > 4 and (product := find_product_by_name_similarity(base_domain)):
+                return product
+
         return self.env['product.product']

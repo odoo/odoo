@@ -19,15 +19,19 @@ class IrAttachment(models.Model):
         """ Decodes a  into a list of one dictionary representing an attachment.
             :returns:           A list with a dictionary.
         """
-        if not (decoded_content := remove_signature(content)):
-            return []
+        def parse_xml(parser, name, content):
+            try:
+                return etree.fromstring(content, parser)
+            except (etree.ParseError, ValueError, TypeError) as e:
+                # Note: lxml < 5.0 raises ValueError; lxml 5.0+ / libxml2 2.12+ raises TypeError
+                _logger.info("XML parsing of %s failed: %s", name, e)
 
         parser = etree.XMLParser(recover=True, resolve_entities=False)
-        try:
-            xml_tree = etree.fromstring(decoded_content, parser)
-        except etree.ParseError as e:
-            _logger.exception("Error when converting the xml content to etree: %s", e)
-            return []
+        if (xml_tree := parse_xml(parser, name, content)) is None:
+            # The file may have a Cades signature, trying to remove it
+            if (xml_tree := parse_xml(parser, name, remove_signature(content))) is None:
+                _logger.info("Italian EDI invoice file %s cannot be decoded.", name)
+                return []
 
         return [{
             'filename': name,

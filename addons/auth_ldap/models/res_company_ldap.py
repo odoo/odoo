@@ -13,6 +13,23 @@ from odoo.tools.pycompat import to_text
 _logger = logging.getLogger(__name__)
 
 
+class LDAPWrapper:
+    def __init__(self, obj):
+        self.__obj__ = obj
+
+    def passwd_s(self, *args, **kwargs):
+        self.__obj__.passwd_s(*args, **kwargs)
+
+    def search_st(self, *args, **kwargs):
+        return self.__obj__.search_st(*args, **kwargs)
+
+    def simple_bind_s(self, *args, **kwargs):
+        self.__obj__.simple_bind_s(*args, **kwargs)
+
+    def unbind(self, *args, **kwargs):
+        self.__obj__.unbind(*args, **kwargs)
+
+
 class CompanyLDAP(models.Model):
     _name = 'res.company.ldap'
     _description = 'Company LDAP configuration'
@@ -95,7 +112,7 @@ class CompanyLDAP(models.Model):
             connection.set_option(ldap.OPT_REFERRALS, ldap.OPT_OFF)
         if conf['ldap_tls']:
             connection.start_tls_s()
-        return connection
+        return LDAPWrapper(connection)
 
     def _get_entry(self, conf, login):
         filter_tmpl = conf['ldap_filter']
@@ -192,12 +209,14 @@ class CompanyLDAP(models.Model):
         :return: parameters for a new resource of model res_users
         :rtype: dict
         """
-
-        return {
+        data = {
             'name': tools.ustr(ldap_entry[1]['cn'][0]),
             'login': login,
             'company_id': conf['company'][0]
         }
+        if tools.single_email_re.match(login):
+            data['email'] = login
+        return data
 
     def _get_or_create_user(self, conf, login, ldap_entry):
         """

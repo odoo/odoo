@@ -9,7 +9,7 @@ import threading
 import uuid
 
 from odoo import exceptions, _
-from odoo.tools import email_normalize, pycompat
+from odoo.tools import email_normalize, exception_to_unicode, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -43,7 +43,8 @@ _MAIL_PROVIDERS = {
     'freemail.hu', 'live.it', 'blackwaretech.com', 'byom.de', 'dispostable.com', 'dayrep.com', 'aim.com', 'prixgen.com', 'gmail.om',
     'asterisk-tech.mn', 'in.com', 'aliceadsl.fr', 'lycos.com', 'topnet.tn', 'teleworm.us', 'kedgebs.com', 'supinfo.com', 'posteo.de',
     'yahoo.com ', 'op.pl', 'gmail.fr', 'grr.la', 'oci.fr', 'aselcis.com', 'optusnet.com.au', 'mailcatch.com', 'rambler.ru', 'protonmail.ch',
-    'prisme.ch', 'bbox.fr', 'orbitalu.com', 'netcourrier.com', 'iinet.net.au', 'cegetel.net', 'proton.me', 'dbmail.com', 'club-internet.fr',
+    'prisme.ch', 'bbox.fr', 'orbitalu.com', 'netcourrier.com', 'iinet.net.au', 'cegetel.net', 'proton.me', 'dbmail.com', 'club-internet.fr', 'outlook.jp',
+    'pm.me',
     # Dummy entries
     'example.com',
 }
@@ -104,6 +105,10 @@ class InsufficientCreditError(Exception):
     pass
 
 
+class IAPServerError(Exception):
+    pass
+
+
 def iap_jsonrpc(url, method='call', params=None, timeout=15):
     """
     Calls the provided JSON-RPC endpoint, unwraps the result and
@@ -127,20 +132,20 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
         _logger.info("iap jsonrpc %s answered in %s seconds", url, req.elapsed.total_seconds())
         if 'error' in response:
             name = response['error']['data'].get('name').rpartition('.')[-1]
-            message = response['error']['data'].get('message')
             if name == 'InsufficientCreditError':
-                e_class = InsufficientCreditError
-            elif name == 'AccessError':
-                e_class = exceptions.AccessError
-            elif name == 'UserError':
-                e_class = exceptions.UserError
+                credit_error = InsufficientCreditError(response['error']['data'].get('message'))
+                credit_error.data = response['error']['data']
+                raise credit_error
             else:
-                raise requests.exceptions.ConnectionError()
-            e = e_class(message)
-            e.data = response['error']['data']
-            raise e
+                raise IAPServerError("An error occurred on the IAP server")
         return response.get('result')
-    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
+    except requests.exceptions.Timeout:
+        _logger.warning("iap jsonrpc %s timed out", url)
+        raise exceptions.AccessError(
+            _('The request to the service timed out. Please contact the author of the app. The URL it tried to contact was %s', url)
+        )
+    except (requests.exceptions.RequestException, IAPServerError) as e:
+        _logger.warning("iap jsonrpc %s failed, %s: %s", url, e.__class__.__name__, exception_to_unicode(e))
         raise exceptions.AccessError(
             _('The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was %s', url)
         )

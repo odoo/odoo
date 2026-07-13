@@ -8,7 +8,7 @@ from odoo.exceptions import MissingError, UserError
 from odoo.http import Stream, request
 from odoo.tools import file_open, replace_exceptions
 from odoo.tools.image import image_process, image_guess_size_from_field_name
-from odoo.tools.mimetypes import guess_mimetype, get_extension
+from odoo.tools.mimetypes import MIMETYPE_HEAD_SIZE, guess_mimetype, get_extension
 
 
 DEFAULT_PLACEHOLDER_PATH = 'web/static/img/placeholder.png'
@@ -73,21 +73,18 @@ class IrBinary(models.AbstractModel):
             return Stream.from_attachment(record)
 
         record.check_field_access_rights('read', [field_name])
-        field_def = record._fields[field_name]
 
-        # fields.Binary(attachment=False) or compute/related
-        if not field_def.attachment or field_def.compute or field_def.related:
-            return Stream.from_binary_field(record, field_name)
+        if record._fields[field_name].attachment:
+            field_attachment = self.env['ir.attachment'].sudo().search(
+                domain=[('res_model', '=', record._name),
+                        ('res_id', '=', record.id),
+                        ('res_field', '=', field_name)],
+                limit=1)
+            if not field_attachment:
+                raise MissingError("The related attachment does not exist.")
+            return Stream.from_attachment(field_attachment)
 
-        # fields.Binary(attachment=True)
-        field_attachment = self.env['ir.attachment'].sudo().search(
-            domain=[('res_model', '=', record._name),
-                    ('res_id', '=', record.id),
-                    ('res_field', '=', field_name)],
-            limit=1)
-        if not field_attachment:
-            raise MissingError("The related attachment does not exist.")
-        return Stream.from_attachment(field_attachment)
+        return Stream.from_binary_field(record, field_name)
 
     def _get_stream_from(
         self, record, field_name='raw', filename=None, filename_field='name',
@@ -133,10 +130,10 @@ class IrBinary(models.AbstractModel):
                 stream.mimetype = mimetype
             elif not stream.mimetype:
                 if stream.type == 'data':
-                    head = stream.data[:1024]
+                    head = stream.data[:MIMETYPE_HEAD_SIZE]
                 else:
                     with open(stream.path, 'rb') as file:
-                        head = file.read(1024)
+                        head = file.read(MIMETYPE_HEAD_SIZE)
                 stream.mimetype = guess_mimetype(head, default=default_mimetype)
 
             if filename:

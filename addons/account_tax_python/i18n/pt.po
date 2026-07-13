@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_tax_python
-# 
+#
 # Translators:
 # Wil Odoo, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
@@ -28,7 +29,8 @@ msgid ""
 "    - Percentage of Price: The tax amount is a % of the price:\n"
 "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
 "        e.g 110 / (1 + 10%) = 100 (price included)\n"
-"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"    - Percentage of Price Tax Included: The tax amount is a division of the "
+"price:\n"
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
@@ -39,7 +41,8 @@ msgstr ""
 "    - Percentagem do Preço: O valor do imposto é uma percentagem do preço:\n"
 "        ex. 100 * (1 + 10%) = 110 (preço não incluído)\n"
 "        ex. 110 / (1 + 10%) = 100 (preço incluído)\n"
-"    - Percentagem do Preço com Imposto Incluído: O valor do imposto está incluído no preço:\n"
+"    - Percentagem do Preço com Imposto Incluído: O valor do imposto está "
+"incluído no preço:\n"
 "        ex. 180 / (1 - 10%) = 200 (preço não incluído)\n"
 "        ex. 200 * (1 - 10%) = 180 (preço incluído)\n"
 "        "
@@ -73,7 +76,8 @@ msgstr ""
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
+"Determine if the tax will be applied by setting the variable 'result' to "
+"True or False.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
@@ -81,7 +85,8 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Determina se o imposto será aplicado ao ajustar a variável 'result' para Verdadeiro ou Falso.\n"
+"Determina se o imposto será aplicado ao ajustar a variável 'result' para "
+"Verdadeiro ou Falso.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
@@ -107,7 +112,6 @@ msgstr "Cálculo de Imposto"
 
 #. module: account_tax_python
 #. odoo-python
-#: code:addons/account_tax_python/models/account_tax.py:0
 #: code:addons/account_tax_python/models/account_tax.py:0
 #, python-format
 msgid ""

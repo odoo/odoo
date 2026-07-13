@@ -35,7 +35,8 @@
     <t t-name="website.form_field">
         <div t-attf-class="s_website_form_field mb-3 #{field.formatInfo.col or 'col-12'} #{field.custom and 's_website_form_custom' or ''} #{(field.required and 's_website_form_required' or '') or (field.modelRequired and 's_website_form_model_required' or '')} #{field.hidden and 's_website_form_field_hidden' or ''} #{field.dnone and 's_website_form_dnone' or ''}"
             t-att-data-type="field.type"
-            data-name="Field">
+            data-name="Field"
+            t-att-data-translated-name="defaultName">
             <div t-if="field.formatInfo.labelPosition != 'none' and field.formatInfo.labelPosition != 'top'" class="row s_col_no_resize s_col_no_bgcolor">
                 <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition == 'right' and 'text-end' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
                      <t t-call="website.form_label_content"/>
@@ -90,7 +91,7 @@
                 type="hidden"
                 class="form-control s_website_form_input"
                 t-att-name="field.name"
-                t-att-value="field.value"
+                t-attf-value="#{field.value}"
                 t-att-id="field.id"
             />
         </t>
@@ -104,7 +105,7 @@
                 class="form-control s_website_form_input"
                 t-att-name="field.name"
                 t-att-required="field.required || field.modelRequired || None"
-                t-att-value="field.value"
+                t-attf-value="#{field.value}"
                 t-att-data-fill-with="field.fillWith"
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
@@ -160,7 +161,7 @@
                 t-att-name="field.name"
                 step="1"
                 t-att-required="field.required || field.modelRequired || None"
-                t-att-value="field.value"
+                t-attf-value="#{field.value}"
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
             />
@@ -176,7 +177,7 @@
                 t-att-name="field.name"
                 step="any"
                 t-att-required="field.required || field.modelRequired || None"
-                t-att-value="field.value"
+                t-attf-value="#{field.value}"
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
             />
@@ -192,7 +193,7 @@
                         class="form-control datetimepicker-input s_website_form_input"
                         t-att-name="field.name"
                         t-att-required="field.required || field.modelRequired || None"
-                        t-att-value="field.value"
+                        t-attf-value="#{field.value}"
                         t-att-placeholder="field.placeholder"
                         t-att-id="field.id"
                 />
@@ -210,7 +211,7 @@
                         class="form-control datetimepicker-input s_website_form_input"
                         t-att-name="field.name"
                         t-att-required="field.required || field.modelRequired || None"
-                        t-att-value="field.value"
+                        t-attf-value="#{field.value}"
                         t-att-placeholder="field.placeholder"
                         t-att-id="field.id"
                 />

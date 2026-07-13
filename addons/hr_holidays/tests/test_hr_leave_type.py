@@ -72,3 +72,18 @@ class TestHrLeaveType(TestHrHolidaysCommon):
             ).search([('has_valid_allocation', '=', True)], limit=1)
 
         self.assertFalse(leave_types, "Got valid leaves outside vaild period")
+
+    def test_duplicate_leave(self):
+        employee = self.env['hr.employee'].create({'name': 'Test Employee'})
+        leave_type = self.env['hr.leave.type'].create({'name': 'Sick', 'requires_allocation': 'no'})
+        leave_1 = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2021, 11, 24),
+            'request_date_to': date(2021, 11, 24),
+        })
+        leave_1.action_refuse()
+        leave_2 = leave_1.copy()
+        self.assertEqual(leave_2.employee_id.id, employee.id)
+        self.assertEqual(len(leave_2.employee_ids), 1)
+        self.assertEqual(leave_2.employee_ids[0].id, employee.id)

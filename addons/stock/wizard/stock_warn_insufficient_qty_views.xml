@@ -5,6 +5,7 @@
         <field name="model">stock.warn.insufficient.qty</field>
         <field name="arch" type="xml">
             <form>
+                <field name="product_id" invisible="True"/>
                 <div>
                     The product is not available in sufficient quantity
                     <span class="oe_inline" groups="stock.group_stock_multi_locations"> in

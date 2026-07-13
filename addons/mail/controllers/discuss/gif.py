@@ -1,17 +1,29 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import requests
+import urllib3
 import werkzeug.urls
+from werkzeug.exceptions import BadRequest
 
 from odoo.http import request, route, Controller
+
+_logger = logging.getLogger(__name__)
 
 
 class DiscussGifController(Controller):
     def _request_gifs(self, endpoint):
-        response = requests.get(
-            f"https://tenor.googleapis.com/v2/{endpoint}", timeout=3
-        )
-        response.raise_for_status()
+        response = None
+        try:
+            response = requests.get(
+                f"https://api.klipy.com/v2/{endpoint}", timeout=3
+            )
+            response.raise_for_status()
+        except (urllib3.exceptions.MaxRetryError, requests.exceptions.HTTPError):
+            _logger.error("Exceeded the request's maximum size for a searching term.")
+
+        if not response:
+            raise BadRequest()
         return response
 
     @route("/discuss/gif/search", type="json", auth="user")
@@ -21,7 +33,7 @@ class DiscussGifController(Controller):
         query_string = werkzeug.urls.url_encode(
             {
                 "q": search_term,
-                "key": ir_config.get_param("discuss.tenor_api_key"),
+                "key": ir_config.get_param("discuss.klipy_api_key"),
                 "client_key": request.env.cr.dbname,
                 "limit": ir_config.get_param("discuss.tenor_gif_limit"),
                 "contentfilter": ir_config.get_param("discuss.tenor_content_filter"),
@@ -41,7 +53,7 @@ class DiscussGifController(Controller):
         ir_config = request.env["ir.config_parameter"].sudo()
         query_string = werkzeug.urls.url_encode(
             {
-                "key": ir_config.get_param("discuss.tenor_api_key"),
+                "key": ir_config.get_param("discuss.klipy_api_key"),
                 "client_key": request.env.cr.dbname,
                 "limit": ir_config.get_param("discuss.tenor_gif_limit"),
                 "contentfilter": ir_config.get_param("discuss.tenor_content_filter"),
@@ -62,8 +74,8 @@ class DiscussGifController(Controller):
         ir_config = request.env["ir.config_parameter"].sudo()
         query_string = werkzeug.urls.url_encode(
             {
-                "ids": ",".join(ids),
-                "key": ir_config.get_param("discuss.tenor_api_key"),
+                "ids": ",".join(ids) or None,
+                "key": ir_config.get_param("discuss.klipy_api_key"),
                 "client_key": request.env.cr.dbname,
                 "media_filter": "tinygif",
             }
@@ -77,6 +89,8 @@ class DiscussGifController(Controller):
         tenor_gif_ids = request.env["discuss.gif.favorite"].search(
             [("create_uid", "=", request.env.user.id)], limit=20, offset=offset
         )
+        if not tenor_gif_ids.mapped("tenor_gif_id"):
+            return ([],)
         return (self._gif_posts(tenor_gif_ids.mapped("tenor_gif_id")) or [],)
 
     @route("/discuss/gif/remove_favorite", type="json", auth="user")

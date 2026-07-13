@@ -180,6 +180,7 @@ patch(PosStore.prototype, {
      * @throws error
      */
     async _syncTableOrdersFromServer(tableId) {
+        await this.push_orders({ show_error: true }); // in case we were offline and we paid orders in the mean time
         await this._removeOrdersFromServer(); // in case we were offline and we deleted orders in the mean time
         const ordersJsons = await this._getTableOrdersFromServer([tableId]);
         await this._addPricelists(ordersJsons);

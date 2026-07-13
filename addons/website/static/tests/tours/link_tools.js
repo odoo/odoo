@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import wTourUtils from '@website/js/tours/tour_utils';
-import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { boundariesIn, setSelection, nodeSize } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const clickOnImgStep = {
     content: "Click somewhere else to save.",
@@ -33,6 +33,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         run: 'text odoo.com'
     },
     clickOnImgStep,
+    {
+        content: "Select the newly created link",
+        trigger: 'iframe #wrap .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+        run() {
+            setSelection(this.$anchor[0], 0, this.$anchor[0], nodeSize(this.$anchor[0]));
+        }
+    },
     // Remove the link.
     {
         content: "Click on the newly created link",
@@ -144,6 +151,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Re-select image.",
         trigger: 'iframe .s_three_columns .row > :nth-child(1) img',
+        run: function (actions) {
+            actions.click();
+            const el = this.$anchor[0];
+            const sel = el.ownerDocument.getSelection();
+            sel.collapse(el, 0);
+            el.focus();
+        },
     },
     {
         content: "Check that the second image is not within a link.",
@@ -171,6 +185,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Reselect the first image.",
         trigger: 'iframe .s_three_columns .row > :nth-child(1) div > a > img',
+        run: function (actions) {
+            actions.click();
+            const el = this.$anchor[0];
+            const sel = el.ownerDocument.getSelection();
+            sel.collapse(el, 0);
+            el.focus();
+        },
     },
     {
         content: "Check that link tools appear.",

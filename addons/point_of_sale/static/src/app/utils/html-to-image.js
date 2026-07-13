@@ -209,8 +209,11 @@ function canvasToBlob(canvas, options = {}) {
 function createImage(url) {
     return new Promise((resolve, reject) => {
         const img = new Image();
-        img.decode = () => resolve(img);
-        img.onload = () => resolve(img);
+        img.onload = () => {
+            img.decode().then(() => {
+                requestAnimationFrame(() => resolve(img));
+            });
+        };
         img.onerror = reject;
         img.crossOrigin = "anonymous";
         img.decoding = "async";

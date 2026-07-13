@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-# 
+#
 # Translators:
 # Wil Odoo, 2023
 # Abe Manyo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_stock
@@ -90,7 +90,7 @@ msgstr "Email Invalid"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/js/website_sale.js:0
 #, python-format
 msgid "Invalid email"
 msgstr "Invalid email"
@@ -130,6 +130,13 @@ msgstr "Persediaan-Habis"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
 msgstr "Pesan Persediaan-Habis"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid "Please sign in to proceed."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -189,8 +196,8 @@ msgstr "Tunjukkan ketersediaan Kuantitas"
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry"
-" for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry "
+"for the inconvenience."
 msgstr ""
 "Beberapa produk sudah tidak tersedia dan keranjang Anda telah diperbarui. "
 "Mohon maaf untuk ketidaknyamanan tersebut."
@@ -213,6 +220,13 @@ msgstr "Barang tidak ditambahkan ke keranjang Anda karena tidak tersedia."
 #, python-format
 msgid "The product '%(product_name)s' is now available"
 msgstr "Produk '%(product_name)s' sekarang tersedia"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid "This product is not eligible for stock notifications."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -294,12 +308,11 @@ msgstr ""
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
-"Anda meminta %(desired_qty)s produk tapi hanya %(new_qty)s produk yang masih"
-" tersedia"
+"Anda meminta %(desired_qty)s produk tapi hanya %(new_qty)s produk yang masih "
+"tersedia"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You ask for %s Units but only %s are available."

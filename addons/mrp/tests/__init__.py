@@ -18,3 +18,5 @@ from . import test_smp
 from . import test_performance
 from . import test_consume_component
 from . import test_manual_consumption
+from . import test_mrp_reports
+from . import test_mrp_product_qty

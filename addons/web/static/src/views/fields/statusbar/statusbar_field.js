@@ -144,8 +144,13 @@ export class StatusBarField extends Component {
                 {
                     category: "smart_action",
                     hotkey: "alt+x",
-                    isAvailable: () =>
-                        !this.props.isDisabled && !this.getAllItems().at(-1).isSelected,
+                    isAvailable: () => {
+                        if (this.props.isDisabled) {
+                            return false;
+                        }
+                        const items = this.getAllItems();
+                        return items.length && !items.at(-1).isSelected;
+                    }
                 }
             );
         }
@@ -284,6 +289,7 @@ export class StatusBarField extends Component {
 
     /**
      * @param {StatusBarItem} item
+     * TODO: unused, remove in master
      */
     getItemTooltip(item) {
         if (item.isSelected) {

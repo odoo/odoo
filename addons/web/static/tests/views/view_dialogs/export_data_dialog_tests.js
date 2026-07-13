@@ -1094,6 +1094,40 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
+    QUnit.test("Export dialog: no column_invisible fields in default export list", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="bar" column_invisible="1"/>
+                </tree>`,
+            actionMenus: {},
+            mockRPC(route) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            }
+        });
+
+        await openExportDataDialog();
+        assert.containsOnce(
+            target,
+            ".modal .o_export_field",
+            "there is only one field in export field list."
+        );
+        assert.strictEqual(
+            target.querySelector(".modal .o_export_field").textContent,
+            "Foo",
+            "the field to export corresponds to the visible one in the list view"
+        );
+    });
+
     QUnit.test(
         "Export dialog: export list contains field with 'default_export: true'",
         async function (assert) {
@@ -1258,6 +1292,54 @@ QUnit.module("ViewDialogs", (hooks) => {
             target,
             ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']",
             "subfield has been found with its technical name and is displayed"
+        );
+    });
+
+    QUnit.test("Export dialog: search with display names containing slashes", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+
+        // Expand activities to load subfields
+        const firstField = target.querySelector(
+            ".o_left_field_panel .o_export_tree_item:first-child"
+        );
+        await click(firstField);
+
+        // Search using display name format (with spaces and slashes)
+        // This tests that both pattern and field.string are reversed correctly
+        await editInput(target, ".o_export_search_input", "Activities/Email templates");
+        assert.containsOnce(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/mail_template_ids']",
+            "field should be found when searching with display name containing slashes"
+        );
+
+        // Clear and test another search with partial display name
+        await editInput(target, ".o_export_search_input", "");
+        await editInput(target, ".o_export_search_input", "Email templates");
+        assert.containsOnce(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/mail_template_ids']",
+            "field should be found when searching with partial display name"
         );
     });
 

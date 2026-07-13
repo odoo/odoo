@@ -69,14 +69,6 @@ class IotBoxOwlHomePage(Home):
             'message': 'Odoo service restarted',
         })
 
-    @http.route('/hw_posbox_homepage/restart_iotbox', auth='none', type='http', cors='*')
-    def iotbox_restart(self):
-        subprocess.call(['sudo', 'reboot'])
-        return json.dumps({
-            'status': 'success',
-            'message': 'IoT Box is restarting',
-        })
-
     @http.route('/hw_posbox_homepage/iot_logs', auth='none', type='http', cors='*')
     def get_iot_logs(self):
         with open("/var/log/odoo/odoo-server.log", encoding="utf-8") as file:
@@ -107,7 +99,7 @@ class IotBoxOwlHomePage(Home):
 
     @http.route('/hw_posbox_homepage/wifi_clear', auth='none', type='http', cors='*')
     def clear_wifi_configuration(self):
-        helpers.unlink_file('wifi_network.txt')
+        helpers.update_conf({'wifi_ssid': '', 'wifi_password': ''})
         return json.dumps({
             'status': 'success',
             'message': 'Successfully disconnected from wifi',
@@ -186,24 +178,33 @@ class IotBoxOwlHomePage(Home):
             'password': helpers.generate_password(),
         })
 
-    @http.route('/hw_posbox_homepage/upgrade', auth="none", type="http", cors='*')
-    def upgrade_iotbox(self):
-        commit = subprocess.check_output(
-            ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git", "log", "-1"]).decode('utf-8').replace("\n", "<br/>")
-        flashToVersion = helpers.check_image()
-        actualVersion = helpers.get_version()
+    @http.route('/hw_posbox_homepage/version_info', auth="none", type="http", cors='*')
+    def get_version_info(self):
+        git = ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git"]
+        # Check branch name and last commit hash on IoT Box
+        current_commit = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, check=False, text=True)
+        current_branch = subprocess.run(
+            [*git, "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, check=False, text=True
+        )
+        if current_commit.returncode != 0 or current_branch.returncode != 0:
+            return
+        current_commit = current_commit.stdout.strip()
+        current_branch = current_branch.stdout.strip()
 
-        if flashToVersion:
-            flashToVersion = '%s.%s' % (flashToVersion.get(
-                'major', ''), flashToVersion.get('minor', ''))
+        last_available_commit = subprocess.run(
+            [*git, "ls-remote", "origin", current_branch], capture_output=True, check=False, text=True
+        )
+        if last_available_commit.returncode != 0:
+            _logger.error("Failed to retrieve last commit available for branch origin/%s", current_branch)
+            return
+        last_available_commit = last_available_commit.stdout.split()[0].strip()
 
         return json.dumps({
-            'title': "Odoo's IoTBox - Software Upgrade",
-            'breadcrumb': 'IoT Box Software Upgrade',
-            'loading_message': 'Updating IoT box',
-            'commit': commit,
-            'flashToVersion': flashToVersion,
-            'actualVersion': actualVersion,
+            'status': 'success',
+            # Checkout requires db to align with its version (=branch)
+            'odooIsUpToDate': current_commit == last_available_commit or not bool(helpers.get_odoo_server_url()),
+            'imageIsUpToDate': not bool(helpers.check_image()),
+            'currentCommitHash': current_commit,
         })
 
     @http.route('/hw_posbox_homepage/log_levels', auth="none", type="http", cors='*')
@@ -308,15 +309,27 @@ class IotBoxOwlHomePage(Home):
     @http.route('/hw_posbox_homepage/connect_to_server', auth="none", type="json", methods=['POST'], cors='*')
     def connect_to_odoo_server(self, token=False, iotname=False):
         if token:
-            credential = token.split('|')
-            url = credential[0]
-            token = credential[1]
-            db_uuid = credential[2]
-            enterprise_code = credential[3]
             try:
-                helpers.save_conf_server(url, token, db_uuid, enterprise_code)
+                if len(token.split('|')) == 4:
+                    # Old style token with pipe separators (pre v18 DB)
+                    url, token, db_uuid, enterprise_code = token.split('|')
+                    configuration = helpers.parse_url(url)
+                    helpers.save_conf_server(configuration["url"], token, db_uuid, enterprise_code)
+                else:
+                    # New token using query params (v18+ DB)
+                    configuration = helpers.parse_url(token)
+                    helpers.save_conf_server(**configuration)
+            except ValueError:
+                _logger.warning("Wrong server token: %s", token)
+                return {
+                    'status': 'failure',
+                    'message': 'Invalid URL provided.',
+                }
             except (subprocess.CalledProcessError, OSError, Exception):
-                return 'Failed to write server configuration files on IoT. Please try again.'
+                return {
+                    'status': 'failure',
+                    'message': 'Failed to write server configuration files on IoT. Please try again.',
+                }
 
         if iotname and platform.system() == 'Linux' and iotname != helpers.get_hostname():
             subprocess.run([file_path(
@@ -370,6 +383,14 @@ class IotBoxOwlHomePage(Home):
         return {
             'status': 'success',
             'message': 'Logger level updated',
+        }
+
+    @http.route('/hw_posbox_homepage/update_git_tree', auth="none", type="json", methods=['POST'], cors='*')
+    def update_git_tree(self):
+        helpers.check_git_branch()
+        return {
+            'status': 'success',
+            'message': 'Successfully updated the IoT Box',
         }
 
     # ---------------------------------------------------------- #

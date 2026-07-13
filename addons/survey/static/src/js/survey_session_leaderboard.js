@@ -301,7 +301,7 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
                     false);
 
                 var maxUpdatedScore = parseInt($(this).data('maxUpdatedScore'));
-                var baseRatio = updatedScore / maxUpdatedScore;
+                var baseRatio = maxUpdatedScore ? updatedScore / maxUpdatedScore : 1;
                 var questionScore = parseInt($(this).data('questionScore'));
                 var questionRatio = questionScore /
                     (updatedScore && updatedScore !== 0 ? updatedScore : 1);

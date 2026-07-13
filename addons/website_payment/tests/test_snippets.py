@@ -15,8 +15,5 @@ class TestSnippets(odoo.tests.HttpCase):
 
         demo_provider = self.env['payment.provider'].search([('code', '=', "demo")])
         demo_provider.write({'state': 'test'})
-
-        if not odoo.tests.loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
+        self.env.ref('base.user_admin').partner_id.country_id = self.env.ref('base.be')
         self.start_tour("/?enable_editor=1", "donation_snippet_edition", login='admin')

@@ -1,28 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_mercado_pago
-# 
+# * pos_mercado_pago
+#
 # Translators:
-# Wil Odoo, 2024
-# 
+# Wil Odoo, 2025
+#
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2024-08-17 22:00+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"PO-Revision-Date: 2026-04-14 14:24+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-17/pos_mercado_pago/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: pos_mercado_pago
-#: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
-msgid "1494126963"
-msgstr "1494126963"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
@@ -31,9 +29,6 @@ msgstr "APP_USR-..."
 
 #. module: pos_mercado_pago
 #. odoo-python
-#: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
-#: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
-#: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 #, python-format
 msgid "Do not have access to fetch token from Mercado Pago"
@@ -54,20 +49,20 @@ msgstr "強制 PDV"
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
 msgid ""
-"Mercado Pago customer production user token: "
-"https://www.mercadopago.com.mx/developers/en/reference"
+"Mercado Pago customer production user token: https://www.mercadopago.com.mx/"
+"developers/en/reference"
 msgstr ""
-"Mercado Pago 客戶正式運行使用者權杖： "
-"https://www.mercadopago.com.mx/developers/en/reference"
+"Mercado Pago 客戶正式運行使用者權杖： https://www.mercadopago.com.mx/"
+"developers/en/reference"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
 msgid ""
-"Mercado Pago production secret key from integration application: "
-"https://www.mercadopago.com.mx/developers/panel/app"
+"Mercado Pago production secret key from integration application: https://"
+"www.mercadopago.com.mx/developers/panel/app"
 msgstr ""
-"來自整合應用程式的 Mercado Pago 正式運行密鑰： "
-"https://www.mercadopago.com.mx/developers/panel/app"
+"來自整合應用程式的 Mercado Pago 正式運行密鑰： https://"
+"www.mercadopago.com.mx/developers/panel/app"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart_complet
@@ -77,7 +72,6 @@ msgstr "Mp識別碼Point Smart已完成"
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
-#: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Payment has been canceled"
 msgstr "付款已取消"
@@ -85,10 +79,16 @@ msgstr "付款已取消"
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
+#, python-format
+msgid "Payment has been processed"
+msgstr "付款已處理"
+
+#. module: pos_mercado_pago
+#. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
-msgid "Payment has been finished"
-msgstr "付款已完成"
+msgid "Payment has been rejected"
+msgstr "付款被拒絕"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
@@ -121,7 +121,7 @@ msgstr "請驗證你的正式運行使用者權杖，因為它被拒絕了"
 #. module: pos_mercado_pago
 #: model:ir.model,name:pos_mercado_pago.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "POS付款條件"
+msgstr "POS 銷售點付款方式"
 
 #. module: pos_mercado_pago
 #: model:ir.model,name:pos_mercado_pago.model_pos_session
@@ -168,3 +168,6 @@ msgstr "未知付款狀態"
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "c2f3662..."
 msgstr "c2f3662..."
+
+#~ msgid "1494126963"
+#~ msgstr "1494126963"

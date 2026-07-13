@@ -33,7 +33,7 @@ class TestHttp(http.Controller):
     # =====================================================
     # Greeting
     # =====================================================
-    @http.route(['/test_http/greeting', '/test_http/greeting-none'], type='http', auth='none')
+    @http.route(('/test_http/greeting', '/test_http/greeting-none'), type='http', auth='none')
     def greeting_none(self):
         return "Tek'ma'te"
 
@@ -130,7 +130,7 @@ class TestHttp(http.Controller):
     def cors_http(self):
         return "Hello"
 
-    @http.route('/test_http/cors_http_methods', type='http', auth='none', methods=['GET', 'PUT'], cors='*')
+    @http.route('/test_http/cors_http_methods', type='http', auth='none', methods=('GET', 'PUT'), cors='*')
     def cors_http_verbs(self, **kwargs):
         return "Hello"
 

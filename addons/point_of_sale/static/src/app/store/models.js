@@ -182,8 +182,8 @@ export class Product extends PosModel {
         let attribute_custom_values = {};
         let extras = {};
 
-        if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
-            quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
+        if (code && this._getPackagingQty(code) !== undefined) {
+            quantity = this._getPackagingQty(code);
         }
 
         if (this.isConfigurable()) {
@@ -270,6 +270,11 @@ export class Product extends PosModel {
             extras,
         };
     }
+    _getPackagingQty(code) {
+        if (this.pos.db.product_packaging_by_barcode[code.code]) {
+            return this.pos.db.product_packaging_by_barcode[code.code].qty;
+        }
+    }
     isPricelistItemUsable(item, date) {
         const categories = this.parent_category_ids.concat(this.categ.id);
         return (
@@ -288,7 +293,7 @@ export class Product extends PosModel {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra = 0, recurring = false) {
+    get_price(pricelist, quantity, price_extra = 0, recurring = false, original_line = false, related_lines = []) {
         const date = DateTime.now();
 
         // In case of nested pricelists, it is necessary that all pricelists are made available in
@@ -311,8 +316,14 @@ export class Product extends PosModel {
                   this.isPricelistItemUsable(item, date)
               );
 
-        let price = this.lst_price + (price_extra || 0);
+        if(original_line && original_line.is_lot_tracked()) {
+            related_lines.push(...original_line.order.orderlines.filter((line) => line.product.id === this.id));
+            quantity = related_lines.reduce((sum, line) => { return sum + line.get_quantity() }, 0);
+        }
+
         const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+
+        let price = this.lst_price + (price_extra || 0);
         if (!rule) {
             return price;
         }
@@ -365,7 +376,7 @@ export class Product extends PosModel {
         const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
         const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
         const priceAfterFp = this.pos.computePriceAfterFp(price, currentTaxes);
-        const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
+        const allPrices = this.pos.compute_all(taxes, priceAfterFp, quantity, this.pos.currency.rounding);
         if (iface_tax_included === "total") {
             return allPrices.total_included;
         } else {
@@ -428,7 +439,6 @@ export class Orderline extends PosModel {
         this.product = this.pos.db.get_product_by_id(json.product_id);
         this.set_product_lot(this.product);
         this.price = json.price_unit;
-        this.price_type = json.price_type || "original";
         this.set_discount(json.discount);
         this.set_quantity(json.qty, "do not recompute unit price");
         this.attribute_value_ids = json.attribute_value_ids || [];
@@ -463,6 +473,7 @@ export class Orderline extends PosModel {
         this.combo_line_ids = json.combo_line_ids;
         this.combo_parent_id = json.combo_parent_id;
         this.comboLine = this.pos.db.combo_line_by_id[json.combo_line_id];
+        this.price_type = json.price_type || this.init_price_type();
     }
     clone() {
         var orderline = new Orderline(
@@ -487,6 +498,19 @@ export class Orderline extends PosModel {
     }
     getDisplayClasses() {
         return {};
+    }
+    init_price_type() {
+        const displayPrice = this.get_display_price();
+        const unitPriceDiscount =
+            this.product.get_price(this.order.pricelist, this.get_quantity()) *
+            (1.0 - this.get_discount() / 100.0);
+        const productDisplayedPrice =
+            this.product.get_display_price({
+                pricelist: this.order.pricelist,
+                quantity: this.get_quantity(),
+                price: unitPriceDiscount,
+            });
+        return displayPrice !== productDisplayedPrice ? "manual" : "original";
     }
     getPackLotLinesToEdit(isAllowOnlyOneLot) {
         const currentPackLotLines = this.pack_lot_lines;
@@ -662,13 +686,28 @@ export class Orderline extends PosModel {
 
         // just like in sale.order changing the quantity will recompute the unit price
         if (!keep_price && this.price_type === "original") {
-            this.set_unit_price(
-                this.product.get_price(
+            if (this.is_lot_tracked()) {
+                let related_lines = [];
+                const price = this.product.get_price(
                     this.order.pricelist,
                     this.get_quantity(),
-                    this.get_price_extra()
-                )
-            );
+                    this.get_price_extra(),
+                    false,
+                    this,
+                    related_lines,
+                );
+                related_lines.forEach((line) => line.set_unit_price(price));
+            }
+            else {
+                this.set_unit_price(
+                    this.product.get_price(
+                        this.order.pricelist,
+                        this.get_quantity(),
+                        this.get_price_extra(),
+                        false,
+                    )
+                );
+            }
             this.order.fix_tax_included_price(this);
         }
         return true;
@@ -761,6 +800,14 @@ export class Orderline extends PosModel {
     is_selected() {
         return this.selected;
     }
+
+    is_lot_tracked() {
+        return (
+            this.product.tracking === "lot" &&
+            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
+        );
+    }
+
     // when we add an new orderline we want to merge it with the last line to see reduce the number of items
     // in the orderline. This returns true if it makes sense to merge the two
     can_be_merged_with(orderline) {
@@ -800,10 +847,7 @@ export class Orderline extends PosModel {
                 price - order_line_price - orderline.get_price_extra(),
                 this.pos.currency.decimal_places
             ) &&
-            !(
-                this.product.tracking === "lot" &&
-                (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
-            ) &&
+            !this.is_lot_tracked() &&
             this.full_product_name === orderline.full_product_name &&
             orderline.get_customer_note() === this.get_customer_note() &&
             !this.refunded_orderline_id &&
@@ -1028,7 +1072,7 @@ export class Orderline extends PosModel {
         var taxes_ids = this.tax_ids || product.taxes_id;
         taxes_ids = taxes_ids.filter((t) => t in this.pos.taxes_by_id);
         var taxdetail = {};
-        var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
+        var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order?.fiscal_position);
 
         var all_taxes = this.compute_all(
             product_taxes,
@@ -1125,6 +1169,14 @@ export class Orderline extends PosModel {
     }
     isPartOfCombo() {
         return Boolean(this.comboParent || this.comboLines?.length);
+    }
+    getComboTotalPrice() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithTax, 0);
+    }
+    getComboTotalPriceWithoutTax() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_base_price() / line.quantity, 0);
     }
     findAttribute(values, customAttributes) {
         const listOfAttributes = [];
@@ -1442,7 +1494,7 @@ export class Order extends PosModel {
         }
 
         this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
-        this.trackingNumber = (
+        this.trackingNumber = this.trackingNumber || (
             (this.pos_session_id % 10) * 100 +
             (this.sequence_number % 100)
         ).toString();
@@ -1564,6 +1616,7 @@ export class Order extends PosModel {
         this.ticketCode = json.ticket_code || "";
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
+        this.trackingNumber = json.tracking_number;
     }
     updateSequenceNumber(json) {
         this.pos.pos_session.sequence_number = Math.max(
@@ -1650,7 +1703,7 @@ export class Order extends PosModel {
             footer: this.pos.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?
             shippingDate:
-                this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
+                this.shippingDate && formatDate(DateTime.fromSQL(this.shippingDate)),
             headerData: {
                 ...this.pos.getReceiptHeaderData(this),
                 trackingNumber: this.trackingNumber,
@@ -1786,6 +1839,7 @@ export class Order extends PosModel {
                         attribute_value_ids: orderline.attribute_value_ids,
                         quantity: quantityDiff,
                         note: note,
+                        isPartOfCombo: orderline.comboParent !== undefined,
                     };
                     changesCount += quantityDiff;
                     changeAbsCount += Math.abs(quantityDiff);
@@ -2057,9 +2111,28 @@ export class Order extends PosModel {
                 line.price_type === "original" && !(line.comboLines?.length || line.comboParent)
         );
         lines_to_recompute.forEach((line) => {
-            line.set_unit_price(
-                line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra())
-            );
+            if (line.is_lot_tracked()) {
+                let related_lines = [];
+                const price = line.product.get_price(
+                    self.pricelist,
+                    line.get_quantity(),
+                    line.get_price_extra(),
+                    false,
+                    line,
+                    related_lines,
+                );
+                related_lines.forEach((line) => line.set_unit_price(price));
+            }
+            else {
+                line.set_unit_price(
+                    line.product.get_price(
+                        self.pricelist,
+                        line.get_quantity(),
+                        line.get_price_extra(),
+                        false,
+                    )
+                );
+            }
             self.fix_tax_included_price(line);
         });
         const combo_parent_lines = orderlines.filter(
@@ -2166,6 +2239,19 @@ export class Order extends PosModel {
 
         this.set_orderline_options(line, options);
         line.set_full_product_name();
+
+        if (line.is_lot_tracked()) {
+            let related_lines = [];
+            const price = line.product.get_price(
+                line.order.pricelist,
+                line.get_quantity(),
+                line.get_price_extra(),
+                false,
+                line,
+                related_lines,
+            );
+            related_lines.forEach((line) => line.set_unit_price(price));
+        }
         var to_merge_orderline;
         for (var i = 0; i < this.orderlines.length; i++) {
             if (this.orderlines.at(i).can_be_merged_with(line) && options.merge !== false) {
@@ -2247,6 +2333,7 @@ export class Order extends PosModel {
                     comboParent,
                     comboLine: line.comboLine,
                     attribute_value_ids: line.attribute_value_ids,
+                    attribute_custom_values: line.comboLine?.configuration?.attribute_custom_values,
                     extras: {price_type: "manual"},
                 }
             );
@@ -2498,7 +2585,10 @@ export class Order extends PosModel {
                         orderLine.getUnitDisplayPriceBeforeDiscount() *
                         (orderLine.get_discount() / 100) *
                         orderLine.get_quantity();
-                    if (orderLine.display_discount_policy() === "without_discount") {
+                    if (
+                        orderLine.display_discount_policy() === "without_discount" &&
+                        !(orderLine.price_type === "manual")
+                    ) {
                         sum +=
                             (orderLine.get_taxed_lst_unit_price() -
                                 orderLine.getUnitDisplayPriceBeforeDiscount()) *

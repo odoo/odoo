@@ -106,7 +106,7 @@ class MaintenanceMixin(models.AbstractModel):
     def _compute_maintenance_request(self):
         for record in self:
             maintenance_requests = record.maintenance_ids.filtered(lambda mr: mr.maintenance_type == 'corrective' and mr.stage_id.done)
-            record.mttr = len(maintenance_requests) and (sum(int((request.close_date - request.request_date).days) for request in maintenance_requests) / len(maintenance_requests)) or 0
+            record.mttr = len(maintenance_requests) and (sum(int((request.close_date - request.request_date).days) if request.close_date and request.request_date else 0 for request in maintenance_requests) / len(maintenance_requests)) or 0
             record.latest_failure_date = max((request.request_date for request in maintenance_requests), default=False)
             record.mtbf = record.latest_failure_date and (record.latest_failure_date - record.effective_date).days / len(maintenance_requests) or 0
             record.estimated_next_failure = record.mtbf and record.latest_failure_date + relativedelta(days=record.mtbf) or False
@@ -326,11 +326,15 @@ class MaintenanceRequest(models.Model):
         # the stage (stage_id) of the Maintenance Request changes.
         if vals and 'kanban_state' not in vals and 'stage_id' in vals:
             vals['kanban_state'] = 'normal'
-        if 'stage_id' in vals and self.maintenance_type == 'preventive' and self.recurring_maintenance and self.env['maintenance.stage'].browse(vals['stage_id']).done:
-            schedule_date = self.schedule_date or fields.Datetime.now()
-            schedule_date += relativedelta(**{f"{self.repeat_unit}s": self.repeat_interval})
-            if self.repeat_type == 'forever' or schedule_date.date() <= self.repeat_until:
-                self.copy({'schedule_date': schedule_date, 'stage_id': self._default_stage().id})
+        now = fields.Datetime.now()
+        if 'stage_id' in vals and self.env['maintenance.stage'].browse(vals['stage_id']).done:
+            for request in self:
+                if request.maintenance_type != 'preventive' or not request.recurring_maintenance:
+                    continue
+                schedule_date = request.schedule_date or now
+                schedule_date += relativedelta(**{f"{request.repeat_unit}s": request.repeat_interval})
+                if request.repeat_type == 'forever' or schedule_date.date() <= request.repeat_until:
+                    request.copy({'schedule_date': schedule_date, 'stage_id': request._default_stage().id})
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
@@ -421,7 +425,7 @@ class MaintenanceTeam(models.Model):
             )
             team.todo_request_count = sum(count for (_, _, _, count) in data)
             team.todo_request_count_date = sum(count for (schedule_date, _, _, count) in data if schedule_date)
-            team.todo_request_count_high_priority = sum(count for (_, priority, _, count) in data if priority == 3)
+            team.todo_request_count_high_priority = sum(count for (_, priority, _, count) in data if priority == '3')
             team.todo_request_count_block = sum(count for (_, _, kanban_state, count) in data if kanban_state == 'blocked')
             team.todo_request_count_unscheduled = team.todo_request_count - team.todo_request_count_date
 

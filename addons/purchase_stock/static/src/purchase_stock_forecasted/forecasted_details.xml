@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
      <t t-name="purchase_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
          <xpath expr="//tr[@name='draft_picking_in']" position="after">
-            <tr t-if="props.docs.draft_purchase_qty" name="draft_po_in" t-attf-class="#{props.docs.draft_purchase_orders_matched and 'o_grid_match'}">
+            <tr t-if="props.docs.draft_purchase_qty" name="draft_po_in" t-attf-class="#{props.docs.draft_purchase_orders_matched and 'o_grid_match table-info'}">
                 <td colspan="2">Requests for quotation</td>
                 <td t-out="_formatFloat(props.docs.draft_purchase_qty)" class="text-end"/>
                 <td>

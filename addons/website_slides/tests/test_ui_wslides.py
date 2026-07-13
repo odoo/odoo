@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import logging
 
 from dateutil.relativedelta import relativedelta
 
@@ -10,6 +11,8 @@ from odoo.addons.gamification.tests.common import HttpCaseGamification
 from odoo.fields import Command, Datetime
 from odoo.tools import mute_logger
 from odoo.tools.misc import file_open
+
+_logger = logging.getLogger(__name__)
 
 
 class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
@@ -190,9 +193,29 @@ class TestUi(TestUICommon):
 
         self.start_tour('/slides', 'course_reviews', login=user_demo.login)
 
+    def test_fullscreen_slide_text_highlights(self):
+        slide = self.env['slide.slide'].create({
+            'name': 'Article test',
+            'channel_id': self.channel.id,
+            'slide_type': 'article',
+            'slide_category': 'article',
+            'is_published': True,
+            'html_content': "<section class=\"s_text_block\" data-snippet=\"s_text_block\"><p>Hello World!</p></section>"
+        })
+
+        self.start_tour(slide.website_url + '?enable_editor=1', 'fullscreen_slide_text_highlights', login='admin')
+
 
 @tests.common.tagged('post_install', '-at_install')
 class TestUiPublisher(HttpCaseGamification):
+
+    def fetch_proxy(self, url):
+        if url.endswith('ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg'):
+            _logger.info('External chrome request during tests: Sending dummy image for %s', url)
+            with file_open('base/tests/odoo.jpg', 'rb') as f:
+                content = f.read()
+            return self.make_fetch_proxy_response(content)
+        return super().fetch_proxy(url)
 
     def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo

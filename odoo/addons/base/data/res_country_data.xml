@@ -142,7 +142,7 @@
         <record id="bg" model="res.country">
             <field name="name">Bulgaria</field>
             <field name="code">bg</field>
-            <field name="currency_id" ref="BGN" />
+            <field name="currency_id" ref="EUR" />
             <field eval="359" name="phone_code" />
             <field name="vat_label">VAT</field>
         </record>
@@ -1008,19 +1008,21 @@
             <field name="currency_id" ref="MXN" />
             <field eval="52" name="phone_code" />
             <field name="vat_label">RFC</field>
-            <field eval="'%(street)s %(street2)s\n%(zip)s %(city)s, %(state_code)s\n%(country_name)s'"  name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s, %(state_code)s\n%(country_name)s'"  name="address_format" />
         </record>
         <record id="my" model="res.country">
             <field name="name">Malaysia</field>
             <field name="code">my</field>
             <field name="currency_id" ref="MYR" />
             <field eval="60" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'"  name="address_format" />
         </record>
         <record id="mz" model="res.country">
             <field name="name">Mozambique</field>
             <field name="code">mz</field>
             <field name="currency_id" ref="MZN" />
             <field eval="258" name="phone_code" />
+            <field name="vat_label">NUIT</field>
         </record>
         <record id="na" model="res.country">
             <field name="name">Namibia</field>
@@ -1114,6 +1116,7 @@
         <record id="pe" model="res.country">
             <field name="name">Peru</field>
             <field name="code">pe</field>
+            <field name='zip_required'>0</field>
             <field name="currency_id" ref="PEN" />
             <field eval="51" name="phone_code" />
             <field name="vat_label">RUC</field>
@@ -1430,7 +1433,7 @@
             <field eval="670" name="phone_code" />
         </record>
         <record id="tr" model="res.country">
-            <field name="name">Turkey</field>
+            <field name="name">Türkiye</field>
             <field name="code">tr</field>
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="TRY" />

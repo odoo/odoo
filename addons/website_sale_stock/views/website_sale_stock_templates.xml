@@ -15,7 +15,7 @@
       <div class="availability_messages o_not_editable"/>
     </xpath>
       <xpath expr="//div[@id='product_details']" position="inside">
-          <input id="wsale_user_email" type="hidden" t-att-value="user_email"/>
+          <input id="wsale_user_email" type="hidden" t-att-value="user_email" t-nocache="user_email changes between users"/>
       </xpath>
   </template>
 

@@ -405,8 +405,6 @@ def constraint_definition(cr, tablename, constraintname):
 
 def add_constraint(cr, tablename, constraintname, definition):
     """ Add a constraint on the given table. """
-    if "%" in definition:
-        definition = definition.replace("%", "%%")
     query1 = SQL(
         "ALTER TABLE %s ADD CONSTRAINT %s %s",
         SQL.identifier(tablename), SQL.identifier(constraintname), SQL(definition),

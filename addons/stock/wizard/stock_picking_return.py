@@ -3,7 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_is_zero, float_round
+from odoo.tools.float_utils import float_is_zero
 
 
 class ReturnPickingLine(models.TransientModel):
@@ -78,17 +78,17 @@ class ReturnPicking(models.TransientModel):
 
     @api.model
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
-        quantity = stock_move.quantity
+        uom = stock_move.product_id.uom_id
+        quantity = stock_move.product_uom._compute_quantity(stock_move.quantity, uom)
         for move in stock_move.move_dest_ids:
             if not move.origin_returned_move_id or move.origin_returned_move_id != stock_move:
                 continue
-            quantity -= move.quantity
-        quantity = float_round(quantity, precision_rounding=stock_move.product_id.uom_id.rounding)
+            quantity -= move.product_uom._compute_quantity(move.quantity, uom)
         return {
             'product_id': stock_move.product_id.id,
             'quantity': quantity,
             'move_id': stock_move.id,
-            'uom_id': stock_move.product_id.uom_id.id,
+            'uom_id': uom.id,
         }
 
     def _prepare_move_default_values(self, return_line, new_picking):

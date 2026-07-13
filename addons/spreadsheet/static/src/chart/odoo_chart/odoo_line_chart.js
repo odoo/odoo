@@ -14,6 +14,7 @@ const {
     getFillingMode,
     colorToRGBA,
     rgbaToHex,
+    formatValue,
 } = spreadsheet.helpers;
 
 export class OdooLineChart extends OdooChart {
@@ -22,6 +23,7 @@ export class OdooLineChart extends OdooChart {
         this.verticalAxisPosition = definition.verticalAxisPosition;
         this.stacked = definition.stacked;
         this.cumulative = definition.cumulative;
+        this.cumulatedStart = definition.cumulatedStart;
     }
 
     getDefinition() {
@@ -30,6 +32,7 @@ export class OdooLineChart extends OdooChart {
             verticalAxisPosition: this.verticalAxisPosition,
             stacked: this.stacked,
             cumulative: this.cumulative,
+            cumulatedStart: this.cumulatedStart,
         };
     }
 }
@@ -122,6 +125,11 @@ function getLineConfiguration(chart, labels, locale) {
             ticks: {
                 color: fontColor,
                 // y axis configuration
+                callback: (value) =>
+                    formatValue(value, {
+                        locale,
+                        format: Math.abs(value) >= 1000 ? "#,##" : undefined,
+                    }),
             },
             beginAtZero: true, // the origin of the y axis is always zero
         },

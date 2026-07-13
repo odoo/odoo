@@ -41,12 +41,13 @@ async function getModelDefinitions() {
 
     for (const [modelName, fields] of modelDefinitions) {
         // insert fields present in the fieldsToInsert registry : if the field
-        // exists, update its default value according to the one in the
+        // exists, update its default and digits value according to the one in the
         // registry; If it does not exist, add it to the model definition.
         const fieldNamesToFieldToInsert = fieldsToInsertRegistry.category(modelName).getEntries();
         for (const [fname, fieldToInsert] of fieldNamesToFieldToInsert) {
             if (fname in fields) {
                 fields[fname].default = fieldToInsert.default;
+                fields[fname].digits = fieldToInsert.digits;
             } else {
                 fields[fname] = fieldToInsert;
             }

@@ -8,7 +8,9 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import consteq
+from odoo.tools import consteq, str2bool
+
+from odoo.addons.payment import utils as payment_utils
 
 
 _logger = logging.getLogger(__name__)
@@ -17,6 +19,7 @@ _logger = logging.getLogger(__name__)
 class XenditController(http.Controller):
 
     _webhook_url = '/payment/xendit/webhook'
+    _return_url = '/payment/xendit/return'
 
     @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def xendit_webhook(self):
@@ -41,6 +44,19 @@ class XenditController(http.Controller):
             _logger.exception("Unable to handle notification data; skipping to acknowledge.")
 
         return request.make_json_response(['accepted'], status=200)
+
+    @http.route(_return_url, type='http', methods=['GET'], auth='public')
+    def xendit_return(self, tx_ref=None, success=False, access_token=None, **data):
+        """Set draft transaction to pending after successfully returning from Xendit."""
+        if access_token and str2bool(success, default=False):
+            tx_sudo = request.env['payment.transaction'].sudo().search([
+                ('provider_code', '=', 'xendit'),
+                ('reference', '=', tx_ref),
+                ('state', '=', 'draft'),
+            ], limit=1)
+            if tx_sudo and payment_utils.check_access_token(access_token, tx_ref, tx_sudo.amount):
+                tx_sudo._set_pending()
+        return request.redirect('/payment/status')
 
     def _verify_notification_token(self, received_token, tx_sudo):
         """ Check that the received token matches the saved webhook token.

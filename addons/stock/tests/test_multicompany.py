@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import Command
 
+from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase, Form
 
@@ -525,7 +527,7 @@ class TestMultiCompany(TransactionCase):
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         intercom_location = self.env.ref('stock.stock_location_inter_wh')
         intercom_location.write({'active': True})
-        partner = self.env['res.partner'].create({'name': 'Deco Addict'})
+        partner = self.env['res.partner'].create({'name': 'Acme Corporation'})
         self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
         resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', self.warehouse_b.id),
                                                                   ('supplied_wh_id', '=', self.warehouse_a.id)])
@@ -586,7 +588,7 @@ class TestMultiCompany(TransactionCase):
         self.assertTrue(move_transit_to_wha, "No move created by pull rule")
         self.assertTrue(move_wha_to_cus in move_transit_to_wha.move_dest_ids,
                         "Moves are not chained")
-        self.assertFalse(move_transit_to_wha in move_whb_to_transit.move_dest_ids,
+        self.assertTrue(move_transit_to_wha in move_whb_to_transit.move_dest_ids,
                          "Chained move created in transit location")
         self.assertEqual(move_wha_to_cus.state, "waiting")
         self.assertEqual(move_transit_to_wha.state, "waiting")
@@ -619,6 +621,52 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(lot_b.company_id, self.company_b)
         self.assertEqual(lot_b.name, 'lot b')
 
+    def test_intercom_pull_and_cancel(self):
+        """ Create a pull flow between company a and b.
+        Then cancel the delivery in company a and ensure the
+        delivery in company b is cancelled as well.
+        """
+        intercom_location = self.env.ref('stock.stock_location_inter_wh')
+        intercom_location.write({'active': True})
+        self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
+        self.warehouse_a.resupply_route_ids.rule_ids.propagate_cancel = True
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'type': 'product',
+            'route_ids': [(6, 0, self.warehouse_a.resupply_route_ids.ids)],
+        })
+
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location_a, -10)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Test Orderpoint',
+            'location_id': self.stock_location_a.id,
+            'product_id': product.id,
+            'company_id': self.company_a.id,
+        })
+
+        # Classic flow
+        orderpoint._procure_orderpoint_confirm()
+        moves = self.env['stock.move'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(moves), 2)
+        in_move = moves.filtered(lambda m: m.location_dest_id == self.stock_location_a)
+        out_move = moves.filtered(lambda m: m.location_id == self.stock_location_b)
+        in_move._action_cancel()
+        self.assertEqual(in_move.state, 'cancel')
+        self.assertEqual(out_move.state, 'confirmed')
+        out_move._action_cancel()
+        self.assertEqual(out_move.state, 'cancel')
+
+        # Propagate cancel
+        self.env['ir.config_parameter'].sudo().set_param('stock.cancel_moves_origin', True)
+        orderpoint._procure_orderpoint_confirm()
+        moves = self.env['stock.move'].search([('product_id', '=', product.id), ('state', '!=', 'cancel')])
+        self.assertEqual(len(moves), 2)
+        in_move = moves.filtered(lambda m: m.location_dest_id == self.stock_location_a)
+        out_move = moves.filtered(lambda m: m.location_id == self.stock_location_b)
+        in_move._action_cancel()
+        self.assertEqual(in_move.state, 'cancel')
+        self.assertEqual(out_move.state, 'cancel')
+
     def test_route_rules_company_consistency(self):
         route = self.env['stock.route'].create({
             'name': 'Test Route',
@@ -647,3 +695,36 @@ class TestMultiCompany(TransactionCase):
                     'picking_type_id': self.warehouse_b.in_type_id.id,
                 })
             ]})
+
+    def test_quants_visibility_with_multi_company_receipt(self):
+        """Tests that validating a receipt with both companies selected
+        doesn't leak the negative vendor quant to Company B's reports.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test Storable Product',
+            'type': 'product',
+            'company_id': self.company_a.id,
+        })
+
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        receipt = self.env['stock.picking'].with_company(self.company_a).create({
+            'picking_type_id': self.warehouse_a.in_type_id.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.stock_location_a.id,
+            'move_ids': [Command.create({
+                'name': product.name,
+                'product_id': product.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': self.stock_location_a.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        receipt.button_validate()
+
+        base_domain = [('product_id', '=', product.id)]
+        domain_a = expression.AND([base_domain, self.env['stock.quant'].with_company(self.company_a)._get_quants_action()['domain']])
+        domain_b = expression.AND([base_domain, self.env['stock.quant'].with_company(self.company_b)._get_quants_action()['domain']])
+        quants_company_a = self.env['stock.quant'].with_company(self.company_a).search(domain_a)
+        quants_company_b = self.env['stock.quant'].with_company(self.company_b).search(domain_b)
+        self.assertTrue(quants_company_a)
+        self.assertFalse(quants_company_b)

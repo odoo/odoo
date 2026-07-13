@@ -40,6 +40,11 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
     total: '220.00',
 }),
 wsTourUtils.goToCheckout(),
+{
+    content: 'Confirm Order page',
+    trigger: 'h3:contains("Confirm order")',
+    isCheck: true,
+},
 ...wsTourUtils.assertCartAmounts({
     taxes: '20.00',
     untaxed: '200.00',

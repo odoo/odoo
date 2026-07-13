@@ -191,10 +191,11 @@ export class HardwareProxy extends EventBus {
         return this.message("log", { arguments: [...arguments] });
     }
     async openCashbox(action = false) {
+        const isPrinterConnected = ["connected", "init"].includes(this.connectionInfo.status) || this.pos.config.epson_printer_ip;
         if (
             this.pos.config.iface_cashdrawer &&
             this.printer &&
-            ["connected", "init"].includes(this.connectionInfo.status)
+            isPrinterConnected
         ) {
             this.printer.openCashbox();
             if (action) {

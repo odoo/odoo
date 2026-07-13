@@ -4,6 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import {throttleForAnimation} from "@web/core/utils/timing";
+import { getTabableElements } from "@web/core/utils/ui";
 import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
 import {setUtmsHtmlDataset} from '@website/js/content/inject_dom';
 import wUtils from "@website/js/utils";
@@ -122,6 +123,7 @@ const PopupWidget = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off('mouseleave.open_popup');
+        this.releaseFocus && this.releaseFocus();
         this.$el.find('.modal').modal('hide');
         clearTimeout(this.timeout);
         if (this.modalShownOnClickEl) {
@@ -175,6 +177,7 @@ const PopupWidget = publicWidget.Widget.extend({
             return;
         }
         this.$el.find('.modal').modal('show');
+        this.releaseFocus = this._trapFocus();
     },
     /**
      * @private
@@ -202,6 +205,51 @@ const PopupWidget = publicWidget.Widget.extend({
             primaryBtnEl.classList.contains("s_website_form_send")
             || primaryBtnEl.classList.contains("o_website_form_send")
         );
+    },
+    /**
+     * Traps the focus within the modal.
+     *
+     * @private
+     * @returns {Function} refocuses the element that was focused before the
+     * modal opened.
+     */
+    _trapFocus() {
+        let tabableEls = getTabableElements(this.el);
+        const previouslyFocusedEl = document.activeElement || document.body;
+        if (tabableEls.length) {
+            tabableEls[0].focus();
+            this.el.querySelector(".modal").scrollTop = 0;
+        } else {
+            this.el.querySelector(".modal").focus();
+        }
+        // The focus should stay free for no backdrop popups.
+        if (this.el.querySelector(".s_popup_no_backdrop")) {
+            return () => previouslyFocusedEl.focus();
+        }
+        const _onKeydown = (ev) => {
+            if (ev.key !== "Tab") {
+                return;
+            }
+            // Update tabableEls: they might have changed in the meantime.
+            tabableEls = getTabableElements(this.el);
+            if (!tabableEls.length) {
+                ev.preventDefault();
+                return;
+            }
+            if (!ev.shiftKey && ev.target === tabableEls[tabableEls.length - 1]) {
+                ev.preventDefault();
+                tabableEls[0].focus();
+            }
+            if (ev.shiftKey && ev.target === tabableEls[0]) {
+                ev.preventDefault();
+                tabableEls[tabableEls.length - 1].focus();
+            }
+        };
+        this.el.addEventListener("keydown", _onKeydown);
+        return () => {
+            this.el.removeEventListener("keydown", _onKeydown);
+            previouslyFocusedEl.focus();
+        };
     },
 
     //--------------------------------------------------------------------------
@@ -233,6 +281,10 @@ const PopupWidget = publicWidget.Widget.extend({
         this.$el.find('.media_iframe_video iframe').each((i, iframe) => {
             iframe.src = '';
         });
+        this.releaseFocus && this.releaseFocus();
+        // Reset to avoid calling it twice. It may happen with cookie bars or in
+        // the destroy.
+        this.releaseFocus = null;
     },
     /**
      * @private
@@ -376,11 +428,82 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
     /**
      * @override
      */
+    start() {
+        this.el.querySelector(".modal").addEventListener("keydown", this._onKeydown);
+        this._super(...arguments);
+
+        this.isCookiePolicyPage = window.location.pathname === "/cookie-policy";
+
+        this._insertCookieBarToggleButton();
+
+        // Add a link to cookie policy page in the copyright footer.
+        // TODO: In master, add this link via XML.
+        const copyrightFooterContainerEl = document.querySelector(
+            ".o_footer_copyright_name"
+        )?.parentElement;
+        if (copyrightFooterContainerEl) {
+            const cookiePolicyLinkEl = wUtils.cloneContentEls(
+                `<p><a href='/cookie-policy' class='o_cookie_policy_link'>${_t(
+                    "Cookie Policy"
+                )}</a></p>`
+            ).firstElementChild;
+            copyrightFooterContainerEl.insertAdjacentElement("beforeend", cookiePolicyLinkEl);
+        }
+
+        // Since cookie preferences can be changed, update the gtag script that
+        // toggles the gtag consent. So, when the user modifies their cookie
+        // preference their gtag consent is also updated.
+        // TODO: In master, update the #tracking_code_config script via XML.
+        const trackingCodeConfigScriptEl = document.querySelector("#tracking_code_config");
+        if (trackingCodeConfigScriptEl) {
+            const updatedTrackingScript = `
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+
+                function updateConsents(consentState) {
+                    gtag("consent", "update", {
+                        "ad_storage": consentState,
+                        "ad_user_data": consentState,
+                        "ad_personalization": consentState,
+                        "analytics_storage": consentState,
+                    });
+                }
+
+                // Run our handler first and block the original script's handler
+                document.addEventListener("optionalCookiesAccepted", (ev) => {
+                    ev.stopImmediatePropagation();
+                    updateConsents("granted");
+                }, { capture: true });
+
+                document.addEventListener("optionalCookiesDenied", () => {
+                    updateConsents("denied");
+                });
+            `;
+
+            // Create a new script element
+            const newScriptEl = document.createElement("script");
+            newScriptEl.id = "tracking_code_config";
+            newScriptEl.textContent = updatedTrackingScript;
+
+            // Replace the old script with the new one
+            trackingCodeConfigScriptEl.parentNode.replaceChild(
+                newScriptEl,
+                trackingCodeConfigScriptEl
+            );
+        }
+    },
+
+    /**
+     * @override
+     */
     destroy() {
         if (this.toggleEl) {
             this.toggleEl.removeEventListener("click", this._onToggleCookiesBar);
             this.toggleEl.remove();
         }
+        this.el.querySelector(".modal").removeEventListener("keydown", this._onKeydown);
         this._super(...arguments);
     },
 
@@ -392,16 +515,22 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      * @override
      */
     _showPopup() {
+        if (this.isCookiePolicyPage) {
+            // Don't show the cookie bar by default if we are on the cookie
+            // policy page
+            return;
+        }
+
         this._super(...arguments);
-        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
-        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
+    },
+    _insertCookieBarToggleButton() {
+        if (this.isCookiePolicyPage) {
             this.toggleEl = wUtils.cloneContentEls(`
             <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex gap-2 align-items-center position-fixed pe-auto">
-                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
+                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label">${_t("Show the cookies bar")}</span>
             </button>
             `).firstElementChild;
             this.el.insertAdjacentElement("beforebegin", this.toggleEl);
-            this._toggleCookiesBar();
             this._onToggleCookiesBar = this._toggleCookiesBar.bind(this);
             this.toggleEl.addEventListener("click", this._onToggleCookiesBar);
         }
@@ -417,8 +546,17 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         // As we're using Bootstrap's events, the PopupWidget prevents the modal
         // from being shown after hiding it: override that behavior.
         this._popupAlreadyShown = false;
-        cookie.delete(this.el.id);
 
+        this._updateToggleButtonState();
+    },
+    /**
+     * Updates the toggle button state and position based on the visibility of
+     * the cookie bar.
+     *
+     * @private
+     */
+    _updateToggleButtonState() {
+        const popupEl = this.el.querySelector(".modal");
         const hidden = !popupEl.classList.contains("show");
         this.toggleEl.querySelector(".fa").className = `fa ${hidden ? "fa-eye" : "fa-eye-slash"}`;
         this.toggleEl.querySelector(".o_cookies_bar_toggle_label").innerText = hidden
@@ -457,14 +595,23 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         this.cookieValue = `{"required": true, "optional": ${isFullConsent}}`;
         if (isFullConsent) {
             document.dispatchEvent(new Event("optionalCookiesAccepted"));
+        } else {
+            document.dispatchEvent(new Event("optionalCookiesDenied"));
         }
         this._onHideModal();
-        this.toggleEl && this.toggleEl.remove();
+        if (this.toggleEl) {
+            this._updateToggleButtonState();
+        }
     },
     /**
      * @override
      */
     _onHideModal() {
+        // cookieValue starts as true and is only replaced after consent.
+        // If it is still true here, the modal closed without a choice.
+        if (this.cookieValue === true) {
+            return;
+        }
         this._super(...arguments);
         const params = new URLSearchParams(window.location.search);
         const trackingFields = {
@@ -479,7 +626,18 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
             }
         }
         setUtmsHtmlDataset();
-    }
+    },
+    /**
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onKeydown: (ev) => {
+        if (ev.key === "Escape") {
+            // Circumvent Bootstrap's keydown behavior which triggers a UI
+            // glitch.
+            ev.stopImmediatePropagation();
+        }
+    },
 });
 
 export default PopupWidget;

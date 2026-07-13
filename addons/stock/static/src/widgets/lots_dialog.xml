@@ -33,7 +33,8 @@
                             </div>
                             <div class="o_cell flex-grow-1 flex-sm-grow-0">
                                 <div name="next_serial_count" class="o_field_widget o_field_integer">
-                                    <input inputmode="numeric" t-ref="nextSerialCount" class="o_input" id="next_serial_count_0" type="text"/>
+                                    <input inputmode="numeric" t-ref="nextSerialCount" class="o_input" id="next_serial_count_0" type="number"
+                                        t-on-keydown="(ev) => ev.key === '.' and ev.preventDefault()"/>
                                 </div>
                             </div>
                         </div>

@@ -4,11 +4,18 @@
     'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/united_arab_emirates.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ae'],
-    'author': 'Tech Receptives',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
-United Arab Emirates accounting chart and localization.
+United Arab Emirates Accounting Module
 =======================================================
+United Arab Emirates accounting basic charts and localization.
+
+Activates:
+
+- Chart of Accounts
+- Taxes
+- Tax Report
+- Fiscal Positions
     """,
     'depends': [
         'base',

@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 from odoo import fields, Command
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestAccountFrFec(AccountTestInvoicingCommon):
+class TestAccountFrFec(AccountTestInvoicingCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='fr'):
@@ -68,16 +67,17 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
 
         cls.expected_report = (
             "JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|701100|Finished products (or group) A|||-|20210502|Hello Darkness|0,00| 000000000001437,12|||20210502|-000000000001437,12|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|701100|Finished products (or group) A|||-|20210502|my old friend|0,00| 000000000001676,64|||20210502|-000000000001676,64|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|701100|Finished products (or group) A|||-|20210502|/|0,00| 000000000003353,28|||20210502|-000000000003353,28|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|701000|Sales of finished products|||-|20210502|Hello Darkness|0,00| 000000000001437,12|||20210502|-000000000001437,12|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|701000|Sales of finished products|||-|20210502|my old friend|0,00| 000000000001676,64|||20210502|-000000000001676,64|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|701000|Sales of finished products|||-|20210502|/|0,00| 000000000003353,28|||20210502|-000000000003353,28|EUR\r\n"
             "INV|Customer Invoices|INV/2021/00001|20210502|445710|VAT collected|||-|20210502|TVA 20,0%|0,00| 000000000001293,41|||20210502|-000000000001293,41|EUR\r\n"
             f"INV|Customer Invoices|INV/2021/00001|20210502|411100|Customers - Sales of goods or services|{cls.partner_a.id}|partner_a|-|20210502|INV/2021/00001| 000000000007760,45|0,00|||20210502| 000000000007760,45|EUR"
         )
 
     def test_generate_fec_sanitize_pieceref(self):
-        self.wizard.generate_fec()
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
+        content_bytes = b''.join(list(data_generator))
+        content = content_bytes.decode('utf-8')
         self.assertEqual(self.expected_report, content)
 
     def test_generate_fec_exclude_journals(self):
@@ -100,23 +100,26 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
         }).action_post()
         self.env.flush_all()
 
-        self.wizard.generate_fec()
         expected_content = self.expected_report + (
             "\r\n"
             "MISC|Miscellaneous Operations|MISC/2021/05/0001|20210502|400000|Suppliers and related accounts|||-|20210502|/| 000000000000500,00|0,00|||20210502| 000000000000500,00|EUR\r\n"
             "MISC|Miscellaneous Operations|MISC/2021/05/0001|20210502|411100|Customers - Sales of goods or services|||-|20210502|/|0,00| 000000000000500,00|||20210502|-000000000000500,00|EUR"
         )
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
+        content_bytes = b''.join(list(data_generator))
+        content = content_bytes.decode('utf-8')
         self.assertEqual(expected_content, content)
 
         self.wizard.excluded_journal_ids = journal
-        self.wizard.generate_fec()
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
+        content_bytes = b''.join(list(data_generator))
+        content = content_bytes.decode('utf-8')
         self.assertEqual(self.expected_report, content)
 
     def test_fec_sub_companies(self):
         """When exporting FEC, data from child companies should be included"""
         main_company = self.env.company
+        self.maxDiff = None
         branch_a, branch_b = self.env['res.company'].create([
             {
                 'name': 'Branch A',
@@ -144,18 +147,20 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
 
         expected_content = self.expected_report + (
             "\r\n"
-            "INV|Customer Invoices|INV/2021/00002|20210502|707100|Goods for resale (or group) A|||-|20210502|test line|0,00| 000000000000100,00|||20210502|-000000000000100,00|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00002|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000100,00|||20210502|-000000000000100,00|EUR\r\n"
             f"INV|Customer Invoices|INV/2021/00002|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00002| 000000000000100,00|0,00|||20210502| 000000000000100,00|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00003|20210502|707100|Goods for resale (or group) A|||-|20210502|test line|0,00| 000000000000200,00|||20210502|-000000000000200,00|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00003|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000200,00|||20210502|-000000000000200,00|EUR\r\n"
             f"INV|Customer Invoices|INV/2021/00003|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00003| 000000000000200,00|0,00|||20210502| 000000000000200,00|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00004|20210502|707100|Goods for resale (or group) A|||-|20210502|test line|0,00| 000000000000300,00|||20210502|-000000000000300,00|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00004|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000300,00|||20210502|-000000000000300,00|EUR\r\n"
             f"INV|Customer Invoices|INV/2021/00004|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00004| 000000000000300,00|0,00|||20210502| 000000000000300,00|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00005|20210502|707100|Goods for resale (or group) A|||-|20210502|test line|0,00| 000000000000400,00|||20210502|-000000000000400,00|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00005|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000400,00|||20210502|-000000000000400,00|EUR\r\n"
             f"INV|Customer Invoices|INV/2021/00005|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00005| 000000000000400,00|0,00|||20210502| 000000000000400,00|EUR"
         )
 
-        self.wizard.generate_fec()
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        self.authenticate(self.env.user.login, self.env.user.login)
+        url_to_call = self.wizard.generate_fec()
+        res = self.url_open(url_to_call['url'])
+        content = res.content.decode('utf-8')
         self.assertEqual(expected_content, content)
 
         # Select only parent company
@@ -166,10 +171,11 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
 
         expected_content = self.expected_report + (
             "\r\n"
-            "INV|Customer Invoices|INV/2021/00002|20210502|707100|Goods for resale (or group) A|||-|20210502|test line|0,00| 000000000000100,00|||20210502|-000000000000100,00|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00002|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000100,00|||20210502|-000000000000100,00|EUR\r\n"
             f"INV|Customer Invoices|INV/2021/00002|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00002| 000000000000100,00|0,00|||20210502| 000000000000100,00|EUR"
         )
 
-        self.wizard.generate_fec()
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        url_to_call = self.wizard.generate_fec()
+        res = self.url_open(url_to_call['url'])
+        content = res.content.decode('utf-8')
         self.assertEqual(expected_content, content)

@@ -44,18 +44,22 @@
         {
             content: "Check the product is in the cart",
             trigger: 'div>a>h6:contains(Short (TEST))',
+            isCheck: true,
         },
         {
             content: "Check always variant",
             trigger: 'div>a>h6:contains(M always)',
+            isCheck: true,
         },
         {
             content: "Check dynamic variant",
             trigger: 'div>a>h6:contains(M dynamic)',
+            isCheck: true,
         },
         {
             content: "Check never variant",
             trigger: 'div.text-muted>span:contains(Never attribute size: M never)',
+            isCheck: true,
         },
         {
             content: "Check never custom variant",

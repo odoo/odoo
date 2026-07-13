@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sms.tests.common import SMSCommon
+from odoo.addons.sms_twilio.tests.common import MockSmsTwilioApi
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
+from odoo.tests import tagged, users
 
 
+@tagged('post_install', '-at_install', 'sms_composer')
 class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
     """ TODO LIST
 
@@ -169,16 +172,21 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
 
     def test_composer_nofield_w_customer(self):
         """ Test SMS composer without number field, the number on partner must be used instead"""
+        test_record = self.env['mail.test.sms.partner'].create({
+            'name': 'Test',
+            'customer_id': self.partner_1.id,
+        })
+
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
-                    default_res_model='mail.test.sms', default_res_id=self.test_record.id,
+                    default_res_model=test_record._name, default_res_id=test_record.id,
                 ).create({
                     'body': self._test_body,
                 })
-
+        self.assertFalse(composer.number_field_name)
         self.assertTrue(composer.recipient_single_valid)
-        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
-        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number, self.partner_numbers[0])
+        self.assertEqual(composer.recipient_single_number_itf, self.partner_numbers[0])
 
     def test_composer_internals(self):
         with self.with_user('employee'):
@@ -194,8 +202,8 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         self.assertEqual(composer.number_field_name, 'phone_nbr')
         self.assertTrue(composer.comment_single_recipient)
         self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
-        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
-        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number, self.test_numbers_san[1])
+        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers_san[1])
         self.assertTrue(composer.recipient_single_valid)
         self.assertEqual(composer.recipient_valid_count, 1)
         self.assertEqual(composer.recipient_invalid_count, 0)
@@ -282,7 +290,9 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
 
 
+@tagged('sms_composer')
 class TestSMSComposerBatch(SMSCommon):
+
     @classmethod
     def setUpClass(cls):
         super(TestSMSComposerBatch, cls).setUpClass()
@@ -332,6 +342,41 @@ class TestSMSComposerBatch(SMSCommon):
             )
 
 
+@tagged('sms_composer', 'twilio')
+class TestSMSComposerBatchTwilio(SMSCommon, MockSmsTwilioApi):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._test_body = 'Hello {{ object.name }} zizisse an SMS.'
+
+        cls._create_records_for_batch('mail.test.sms', 3)
+        cls.sms_template = cls._create_sms_template('mail.test.sms')
+
+        cls._setup_sms_twilio(cls.user_admin.company_id)
+
+    @users('employee')
+    def test_composer_batch_res_ids_twilio(self):
+        composer = self.env['sms.composer'].with_context(
+            default_composition_mode='comment',
+            default_res_model='mail.test.sms',
+            default_res_ids=repr(self.records.ids),
+        ).create({
+            'body': self._test_body,
+        })
+
+        with self.mock_sms_twilio_gateway():
+            messages = composer._action_send_sms()
+
+        for record, message in zip(self.records, messages):
+            self.assertSMSNotification(
+                [{'partner': record.customer_id}],
+                'Hello %s zizisse an SMS.' % record.name,
+                message
+            )
+
+
+@tagged('sms_composer')
 class TestSMSComposerMass(SMSCommon):
 
     @classmethod
@@ -618,3 +663,37 @@ class TestSMSComposerMass(SMSCommon):
             test_record_2.customer_id, None,
             content="Hello %s ceci est en français." % test_record_2.display_name
         )
+
+
+@tagged('sms_composer', 'twilio')
+class TestSMSComposerMassTwilio(SMSCommon, MockSmsTwilioApi):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._test_body = 'Hello {{ object.name }} zizisse an SMS.'
+
+        cls._create_records_for_batch('mail.test.sms', 10)
+        cls.sms_template = cls._create_sms_template('mail.test.sms')
+
+        cls._setup_sms_twilio(cls.user_admin.company_id)
+
+    @users('employee')
+    def test_composer_mass_active_ids_twilio(self):
+        composer = self.env['sms.composer'].with_context(
+            default_composition_mode='mass',
+            default_res_model='mail.test.sms',
+            active_ids=self.records.ids,
+        ).create({
+            'body': self._test_body,
+            'mass_keep_log': False,
+        })
+
+        with self.mock_sms_twilio_gateway():
+            composer.action_send_sms()
+
+        for partner, record in zip(self.partners, self.records):
+            self.assertSMSOutgoing(
+                partner, None,
+                content='Hello %s zizisse an SMS.' % record.name
+            )

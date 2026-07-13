@@ -114,6 +114,13 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
                                     ).id
         return self.env['account.bank.statement.line'].create(values)
 
+    def set_counterpart_account(self, st_line, account):
+        _liquidity, suspense, _other = st_line._seek_for_lines()
+        st_line.move_id.button_draft()
+        suspense.account_id = account
+        st_line.move_id.action_post()
+        return suspense
+
     # -------------------------------------------------------------------------
     # TESTS about the statement line model.
     # -------------------------------------------------------------------------
@@ -701,6 +708,18 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             {'is_valid': True, 'balance_start': False, 'balance_end_real': 100, 'date': False},
             {'is_valid': True, 'balance_start': -5, 'balance_end_real': -15,
              'date': fields.Date.from_string('2020-01-13')},
+        ])
+
+        # computing validity of non-consecutive statement shouldn't affect validity
+        line5 = self.create_bank_transaction(-10, '2020-01-13')
+        statement4 = self.env['account.bank.statement'].create({
+            'line_ids': [Command.set(line5.ids)],
+            'balance_start': -15,
+        })
+        (statement1 + statement4).invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1 + statement4, [
+            {'is_valid': True},
+            {'is_valid': True},
         ])
 
         # adding a statement to the first line should make statement1 invalid
@@ -1401,6 +1420,20 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             'is_complete': True,
         }])
 
+        # create the third statement using multi edit with canceled line in between
+        lines[2].move_id.button_cancel()
+        context = {
+            'active_ids': [lines[1].id, lines[3].id],
+            'st_line_id': lines[3].id,
+        }
+        st3 = self.env['account.bank.statement'].with_context(context).create({'name': 'Statement 3'})
+        self.assertRecordValues(st3, [{
+            'balance_start': 10.0,
+            'balance_end_real': 55.0,
+            'is_valid': True,
+            'is_complete': True,
+        }])
+
     def test_statement_attachments(self):
         ''' Ensure that attachments are properly linked to bank statements '''
 
@@ -1447,3 +1480,59 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         reversed_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertEqual(reversed_move.partner_id, partner)
+
+    def test_default_amls_matching_domain_keeps_transfer_account_lines(self):
+        transfer_account = self.env['account.account'].create({
+            'name': 'Liquidity Transfer Test',
+            'code': 'TRNF',
+            'account_type': 'asset_current',
+            'reconcile': True,
+        })
+
+        st_line_a = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_1.id,
+            'date': '2026-01-01',
+            'payment_ref': 'TRNFR-A',
+            'amount': 1000.0,
+        })
+        transfer_aml = self.set_counterpart_account(st_line_a, transfer_account)
+        self.assertTrue(st_line_a.is_reconciled)
+        self.assertEqual(transfer_aml.statement_line_id, st_line_a)
+
+        st_line_b = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_1.id,
+            'date': '2026-01-02',
+            'payment_ref': 'TRNFR-B',
+            'amount': -1000.0,
+        })
+
+        candidates = self.env['account.move.line'].search(
+            st_line_b._get_default_amls_matching_domain(),
+        )
+        self.assertIn(transfer_aml, candidates)
+
+    def test_default_amls_matching_domain_includes_reconciled_receivable(self):
+        receivable_account = self.company_data['default_account_receivable']
+
+        st_line_a = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_1.id,
+            'date': '2026-01-01',
+            'payment_ref': 'AR-A',
+            'partner_id': self.partner_a.id,
+            'amount': 500.0,
+        })
+        receivable_aml = self.set_counterpart_account(st_line_a, receivable_account)
+        self.assertTrue(st_line_a.is_reconciled)
+
+        st_line_b = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_1.id,
+            'date': '2026-01-02',
+            'payment_ref': 'AR-B',
+            'partner_id': self.partner_a.id,
+            'amount': -500.0,
+        })
+
+        candidates = self.env['account.move.line'].search(
+            st_line_b._get_default_amls_matching_domain(),
+        )
+        self.assertIn(receivable_aml, candidates)

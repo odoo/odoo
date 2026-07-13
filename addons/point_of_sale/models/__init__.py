@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import account_bank_statement
+from . import account_cash_rounding
 from . import account_payment
 from . import account_journal
 from . import account_tax
@@ -28,3 +29,4 @@ from . import pos_payment_method
 from . import pos_bill
 from . import report_sale_details
 from . import pos_printer
+from . import account_fiscal_position

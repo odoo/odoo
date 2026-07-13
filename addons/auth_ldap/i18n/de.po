@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_ldap
+# * auth_ldap
 #
 # Translators:
 # Leon Grill <leg@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Chris Egal <sodaswed@web.de>, 2019
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"PO-Revision-Date: 2026-06-20 10:21+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-17/auth_ldap/"
+"de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -37,6 +40,23 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Filter für die Suche nach Benutzerkonten in der LDAP-Datenbank. Es ist "
+"ein beliebiger LDAP-Filter in Zeichenkettendarstellung. Jeder `%s`-"
+"Platzhalter wird durch die vom Benutzer angegebene Anmeldung (Kennung) "
+"ersetzt, der Filter sollte mindestens einen solchen Platzhalter enthalten.\n"
+"\n"
+"Der Filter muss genau ein (1) Ergebnis liefern, andernfalls wird die "
+"Anmeldung als ungültig betrachtet.\n"
+"\n"
+"Beispiel (die tatsächlichen Attribute hängen vom LDAP-Server und der "
+"Einrichtung ab):\n"
+"\n"
+"(&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"oder\n"
+"\n"
+"(|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -56,7 +76,7 @@ msgstr "Unternehmen"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr "Firmen LDAP Konfiguration"
+msgstr "LDAP-Konfiguration des Unternehmens"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -82,6 +102,8 @@ msgstr "Erstellt am"
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
 msgid "DN of the user search scope: all descendants of this base will be searched for users."
 msgstr ""
+"DN des Benutzersuchbereichs: alle untergeordneten Ebenen dieser Basis werden "
+"nach Benutzern durchsucht."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -103,22 +125,22 @@ msgstr "LDAP-Konfiguration"
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
-msgstr "LDAP Parameter"
+msgstr "LDAP-Parameter"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr "LDAP Server"
+msgstr "LDAP-Server"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr "LDAP Server"
+msgstr "LDAP-Serveradresse"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr "LDAP Server Port"
+msgstr "LDAP-Server-Port"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
@@ -174,7 +196,10 @@ msgstr "Prozessparameter"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "Anforderung einer sicheren TLS/SSL Verschlüsselung für die Verbindung zum LDAP Server. STARTTLS muss aktiviert sein, sonst werden Authentifizierungsversuche fehlschlagen."
+msgstr ""
+"Fragen Sie nach einer sicheren TLS/SSL-Verschlüsselung für die Verbindung "
+"zum LDAP-Server. STARTTLS muss aktiviert sein, sonst werden "
+"Authentifizierungsversuche fehlschlagen."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -189,7 +214,7 @@ msgstr "Server-Informationen"
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr "Einrichtung Ihres LDAP Servers"
+msgstr "Einrichtung Ihres LDAP-Servers"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
@@ -204,7 +229,9 @@ msgstr "Das Passwort des Benutzers, der die LDAP Anfragen durchführt"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "Des Benutzerkonto für die Identifizierung auf dem LDAP Server. Leer für anonymen Zugang."
+msgstr ""
+"Das Benutzerkonto zur Identifizierung auf dem LDAP-Server. Leer für anonymen "
+"Zugang."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls

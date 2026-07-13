@@ -50,13 +50,12 @@ class MembershipLine(models.Model):
         if not self:
             return
 
-        self._cr.execute('''
-            SELECT reversed_entry_id, COUNT(id)
-            FROM account_move
-            WHERE reversed_entry_id IN %s
-            GROUP BY reversed_entry_id
-        ''', [tuple(self.mapped('account_invoice_id.id'))])
-        reverse_map = dict(self._cr.fetchall())
+        groups = self.env['account.move'].sudo().read_group(
+            domain=[('reversed_entry_id', 'in', self.account_invoice_id.ids)],
+            fields=['reversed_entry_id'],
+            groupby=['reversed_entry_id']
+        )
+        reverse_map = {g['reversed_entry_id'][0]: g['reversed_entry_id_count'] for g in groups}
         for line in self:
             move_state = line.account_invoice_id.state
             payment_state = line.account_invoice_id.payment_state

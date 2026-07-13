@@ -564,10 +564,12 @@
         top: map-get($spacers, 3);
     }
 
-    .o_column_quick_create,
-    .o_kanban_group:not(.o_column_folded) .o_kanban_header_title {
-        // Makes them come on top of the "no-content" background gradient.
-        z-index: calc(var(--o-view-nocontent-zindex) + 1);
+    &:has(> .o_view_nocontent) {
+        .o_column_quick_create,
+        .o_kanban_group:not(.o_column_folded) .o_kanban_header_title {
+            // Makes them come on top of the "no-content" background gradient.
+            z-index: calc(var(--o-view-nocontent-zindex) + 1);
+        }
     }
 
     .o_group_draggable .o_column_title {

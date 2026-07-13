@@ -220,9 +220,14 @@ class AccountJournal(models.Model):
     )
     accounting_date = fields.Date(compute='_compute_accounting_date')
 
+    display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (company_id, code)', 'Journal codes must be unique per company.'),
     ]
+
+    def _compute_display_alias_fields(self):
+        self.display_alias_fields = self.env['mail.alias.domain'].search_count([], limit=1)
 
     @api.depends('type', 'company_id')
     def _compute_code(self):
@@ -660,6 +665,10 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+        if 'bank_acc_number' in vals or 'bank_account_id' in vals:
+            for bank in self.filtered(lambda r: r.type == 'bank').bank_account_id:
+                if bank._user_can_trust():
+                    bank.allow_out_payment = True
         for record in self:
             if record.restrict_mode_hash_table and not record.secure_sequence_id:
                 record._create_secure_sequence(['secure_sequence_id'])
@@ -692,7 +701,7 @@ class AccountJournal(models.Model):
             ), False
         )
         if company != self.env.ref('base.main_company'):
-            company_identifier = company.name if self.env['mail.alias']._is_encodable(company.name) else company.id
+            company_identifier = self.env['mail.alias']._sanitize_alias_name(company.name) if self.env['mail.alias']._is_encodable(company.name) else company.id
             if f'-{company_identifier}' not in alias_name:
                 alias_name = f"{alias_name}-{company_identifier}"
         return self.env['mail.alias']._sanitize_alias_name(alias_name)
@@ -708,7 +717,7 @@ class AccountJournal(models.Model):
 
         domain = [('alias_name', '=', alias_name)]
         if alias_domain_name:
-            domain.append(('alias_domain', '=', alias_domain_name))
+            domain.extend(['|', ('alias_domain', '=', alias_domain_name), ('alias_domain_id', '=', False)])
 
         existing_alias = self.env['mail.alias'].search_count(domain, limit=1)
 
@@ -764,6 +773,7 @@ class AccountJournal(models.Model):
         )
         digits = len(random_account.code) if random_account else 6
 
+        Property = self.env['ir.property'].with_company(company)
         if journal_type in ('bank', 'cash'):
             has_liquidity_accounts = vals.get('default_account_id')
             has_profit_account = vals.get('profit_account_id')
@@ -794,6 +804,12 @@ class AccountJournal(models.Model):
                 vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
             if journal_type in ('cash', 'bank') and not has_loss_account:
                 vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
+        elif journal_type == 'purchase':
+            if account := Property._get('property_account_expense_categ_id', 'product.category'):
+                vals.setdefault('default_account_id', account.id)
+        elif journal_type == 'sale':
+            if account := Property._get('property_account_income_categ_id', 'product.category'):
+                vals.setdefault('default_account_id', account.id)
 
         if is_import and not vals.get('code'):
             code = vals['name'][:5]
@@ -824,8 +840,11 @@ class AccountJournal(models.Model):
 
         for journal, vals in zip(journals, vals_list):
             # Create the bank_account_id if necessary
-            if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
-                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+            if journal.type == 'bank':
+                if not journal.bank_account_id and vals.get('bank_acc_number'):
+                    journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+                if journal.bank_account_id and journal.bank_account_id._user_can_trust():
+                    journal.bank_account_id.allow_out_payment = True
 
             # Create the secure_sequence_id if necessary
             if journal.restrict_mode_hash_table and not journal.secure_sequence_id:
@@ -836,20 +855,16 @@ class AccountJournal(models.Model):
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
         self.ensure_one()
-        res_partner_bank = self.env['res.partner.bank'].search([
-            ('sanitized_acc_number', '=', sanitize_account_number(acc_number)),
-            ('partner_id', '=', self.company_id.partner_id.id),
-        ], limit=1)
-        if res_partner_bank:
-            self.bank_account_id = res_partner_bank.id
-        else:
-            self.bank_account_id = self.env['res.partner.bank'].create({
-                'acc_number': acc_number,
+        self.bank_account_id = self.env['res.partner.bank']._find_or_create_bank_account(
+            account_number=acc_number,
+            partner=self.company_id.partner_id, allow_company_account_creation=True,
+            company=self.company_id,
+            extra_create_vals={
                 'bank_id': bank_id,
                 'currency_id': self.currency_id.id,
-                'partner_id': self.company_id.partner_id.id,
                 'journal_id': self,
-            }).id
+            }
+        )
 
     @api.depends('currency_id')
     def _compute_display_name(self):
@@ -858,11 +873,6 @@ class AccountJournal(models.Model):
             if journal.currency_id and journal.currency_id != journal.company_id.currency_id:
                 name = f"{name} ({journal.currency_id.name})"
             journal.display_name = name
-
-    def action_archive(self):
-        if self.env['account.payment.method.line'].search_count([('journal_id', '=', self.id)], limit=1):
-            raise ValidationError(_("This journal is associated with a payment method. You cannot archive it"))
-        return super().action_archive()
 
     def action_configure_bank_journal(self):
         """ This function is called by the "configure" button of bank journals,

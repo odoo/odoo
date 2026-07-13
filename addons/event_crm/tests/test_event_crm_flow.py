@@ -7,7 +7,7 @@ from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
-@tagged('event_flow')
+@tagged('event_crm')
 class TestEventCrmFlow(TestEventCrmCommon):
 
     @classmethod

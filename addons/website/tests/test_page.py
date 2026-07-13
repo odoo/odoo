@@ -469,8 +469,8 @@ class WithContext(HttpCase):
         # -------------------------------------------
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertNotIn(b'<title> My Portal', r.content)
-        self.assertIn(b'<title> Contact Us', r.content)
+        self.assertNotIn(b'<title>My Portal', r.content)
+        self.assertIn(b'<title>Contact Us', r.content)
         self.assertURLEqual(r.url, contactus_url_full)
         self.assertEqual(r.history[0].status_code, 303)
         # Now with /contactus which is a public content
@@ -483,8 +483,8 @@ class WithContext(HttpCase):
         })
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertNotIn(b'<title> My Portal', r.content)
-        self.assertIn(b'<title> Login', r.content)
+        self.assertNotIn(b'<title>My Portal', r.content)
+        self.assertIn(b'<title>Login', r.content)
         self.assertIn('/web/login?redirect', r.url)
         self.assertEqual(r.history[0].status_code, 303)
 
@@ -581,3 +581,29 @@ class TestNewPage(common.TransactionCase):
         pages = self.env['website.page'].search([('url', '=', '/snippets')])
         self.assertEqual(len(pages), 1, "Exactly one page should be at /snippets.")
         self.assertNotEqual(pages.key, "website.snippets", "Page's key cannot be website.snippets.")
+
+    def test_pagenew_links_menu_without_leading_slash(self):
+        website = self.env.ref('website.default_website')
+        controller = Website()
+
+        menus = self.env['website.menu'].create([
+            {
+                'name': 'Without space and slash',
+                'url': 'foobar',
+                'website_id': website.id,
+            },
+            {
+                'name': 'With space and without slash',
+                'url': 'bar baz',
+                'website_id': website.id,
+            },
+        ])
+
+        with MockRequest(self.env, website=website):
+            for menu in menus:
+                controller.pagenew(path=menu.url)
+
+                self.assertTrue(
+                    menu.page_id,
+                    f"Menu '{menu.name}' was not linked to the created page."
+                )

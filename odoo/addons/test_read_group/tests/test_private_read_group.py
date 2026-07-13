@@ -709,3 +709,13 @@ class TestPrivateReadGroup(common.TransactionCase):
             self.env["test_read_group.order.line"].read_group(
                 [], ["order_id"], "order_id", orderby="order_id DESC"
             )
+
+    def test_duplicate_arguments(self):
+        Model = self.env['test_read_group.aggregate']
+        Model.create({'key': 1, 'value': 5})
+        self.assertEqual(
+            Model._read_group([], groupby=['key', 'key'], aggregates=['value:sum', 'value:sum', 'key:sum']),
+            [
+                (1, 1, 5, 5, 1),
+            ],
+        )

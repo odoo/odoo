@@ -20,6 +20,9 @@ from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_in
 
 _logger = logging.getLogger(__name__)
 
+BYPASS_RESTRICTED_RENDERING = object()
+
+
 def format_date(env, date, pattern=False, lang_code=False):
     try:
         return tools.format_date(env, date, date_format=pattern, lang_code=lang_code)
@@ -149,7 +152,7 @@ class MailRenderMixin(models.AbstractModel):
 
         _sub_relative2absolute.base_url = base_url
         html = re.sub(r"""(<(?:img|v:fill|v:image)(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
-        html = re.sub(r"""(<a(?=\s)[^>]*\shref=")(/[^/][^"]+)""", _sub_relative2absolute, html)
+        html = re.sub(r"""(<(?:a|v:roundrect|v:rect)(?=\s)[^>]*\shref=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(r"""(<[\w-]+(?=\s)[^>]*\sbackground=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(re.compile(
             r"""( # Group 1: element up to url in style
@@ -207,6 +210,14 @@ class MailRenderMixin(models.AbstractModel):
     # ------------------------------------------------------------
     # SECURITY
     # ------------------------------------------------------------
+
+    def _is_restricted(self):
+        return (
+            not self._unrestricted_rendering
+            and self.env.context.get("bypass_restricted_rendering") is not BYPASS_RESTRICTED_RENDERING
+            and not self.env.is_admin()
+            and not self.env.user.has_group('mail.group_mail_template_editor')
+        )
 
     def _is_dynamic(self):
         for template in self.sudo():
@@ -304,15 +315,13 @@ class MailRenderMixin(models.AbstractModel):
         if add_context:
             variables.update(**add_context)
 
-        is_restricted = not self._unrestricted_rendering and not self.env.is_admin() and not self.env.user.has_group('mail.group_mail_template_editor')
-
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
                 render_result = self.env['ir.qweb']._render(
                     html.fragment_fromstring(template_src, create_parent='div'),
                     variables,
-                    raise_on_code=is_restricted,
+                    raise_on_code=self._is_restricted(),
                     **(options or {})
                 )
                 # remove the rendered tag <div> that was added in order to wrap potentially multiples nodes into one.
@@ -324,12 +333,62 @@ class MailRenderMixin(models.AbstractModel):
                         _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
                            group_name=group.name)
                     ) from e
-                _logger.info("Failed to render template: %s", template_src, exc_info=True)
+                elif isinstance(e, QWebException):
+                    # We extract the message before the template dump to clean out the full template
+                    # source, since it will be added later again
+                    error_details = str(e).split('\nTemplate:')[0].strip()
+                else:
+                    error_details = str(e)
+                error_traceback = traceback.format_exc()
+
+                # Identify the template safely
+                template_label = _("Template name not identified")
+
+                if self._name == 'mail.template' and self.id:
+                    template_label = _("Mail Template: '%(name)s' (ID: %(record_id)s)",
+                                       name=self.name or _("Unnamed Mail Template"),
+                                       record_id=self.id)
+                    is_identified = True
+                elif self._name == 'mail.compose.message' and self.mass_mailing_id:
+                    template_label = _("Mass Mailing Template: '%(name)s' (ID: %(record_id)s)",
+                                       name=self.mass_mailing_id.display_name or _("Unnamed Mailing"),
+                                       record_id=self.mass_mailing_id.id)
+                    is_identified = True
+                else:
+                    # if we can't name the template, we output the full template src, so that we
+                    # can try to find the failing template by it's src
+                    template_label = _("Template name not identified")
+                    is_identified = False
+
+                # Truncation of the source to prevent log bloat
+                truncated_src = template_src
+                if len(template_src) > 1000 and is_identified:
+                    truncated_src = f"{template_src[:500]}\n[...] (content truncated) [...]\n{template_src[-500:]}"
+
+                lang_context = self.env.context.get('lang', _("No language detected in context"))
+                _logger.error(
+                    "Failed to render QWeb template for %s - Context language:%s\nTarget Model: %s\nError: %s\n%s",
+                    template_label, lang_context, model, error_details, truncated_src
+                )
+                # Log the full technical traceback for the sysadmin/developer
+                _logger.debug(
+                    "Failed to render QWeb template for %s - Context language:%s\nTarget Model: %s\nError: %s\n%s",
+                    template_label, lang_context, model, error_details, error_traceback
+                )
+
+                # Raise a cleaner error for the UI
                 raise UserError(
-                    _("Failed to render QWeb template: %(template_src)s\n\n%(template_traceback)s)",
-                      template_src=template_src,
-                      template_traceback=traceback.format_exc())
-                    ) from e
+                    _("Failed to render QWeb template for %(template_label)s\n"
+                    "Target Model: %(model_name)s\n"
+                    "Language context: %(lang_context)s\n"
+                    "Error: %(error_details)s\n\n"
+                    "Template Source Snippet:\n%(template_src)s",
+                    template_label=template_label,
+                    model_name=model,
+                    lang_context=lang_context,
+                    error_details=error_details,
+                    template_src=truncated_src)
+                ) from e
             results[record.id] = render_result
 
         return results
@@ -415,8 +474,7 @@ class MailRenderMixin(models.AbstractModel):
         template_instructions = parse_inline_template(str(template_txt))
         is_dynamic = len(template_instructions) > 1 or template_instructions[0][1]
 
-        if (not self._unrestricted_rendering and is_dynamic and not self.env.is_admin() and
-           not self.env.user.has_group('mail.group_mail_template_editor')):
+        if is_dynamic and self._is_restricted():
             group = self.env.ref('mail.group_mail_template_editor')
             raise AccessError(
                 _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
@@ -447,8 +505,10 @@ class MailRenderMixin(models.AbstractModel):
             except Exception as e:
                 _logger.info("Failed to render inline_template: \n%s", str(template_txt), exc_info=True)
                 raise UserError(
-                    _("Failed to render inline_template template: %(template_txt)s)",
-                      template_txt=template_txt)
+                    _("Failed to render inline_template template: %(template_txt)s\n"
+                    "Error details: %(error)s",
+                    template_txt=template_txt,
+                    error=str(e))
                 ) from e
 
         return results

@@ -43,6 +43,7 @@ export function makeRoot(target) {
     root.classList.add("o-livechat-root");
     root.style.zIndex = "calc(9e999)";
     root.style.position = "relative";
+    root.style.display = "block";
     target.appendChild(root);
     return root;
 }

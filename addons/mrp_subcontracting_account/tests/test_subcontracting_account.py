@@ -98,14 +98,14 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.move_ids.picked = True
         picking_receipt._action_done()
 
-        mo = picking_receipt._get_subcontract_production()
+        mo1 = picking_receipt._get_subcontract_production()
         # Finished is made of 1 comp1 and 1 comp2.
         # Cost of comp1 = 10
         # Cost of comp2 = 20
         # --> Cost of finished = 10 + 20 = 30
         # Additionnal cost = 30 (from the purchase order line or directly set on the stock move here)
         # Total cost of subcontracting 1 unit of finished = 30 + 30 = 60
-        self.assertEqual(mo.move_finished_ids.stock_valuation_layer_ids.value, 60)
+        self.assertEqual(mo1.move_finished_ids.stock_valuation_layer_ids.value, 60)
         self.assertEqual(picking_receipt.move_ids.stock_valuation_layer_ids.value, 0)
         self.assertEqual(picking_receipt.move_ids.product_id.value_svl, 60)
 
@@ -139,13 +139,14 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.move_ids.picked = True
         picking_receipt._action_done()
 
-        mo = picking_receipt._get_subcontract_production()
+        mo2 = picking_receipt._get_subcontract_production()
         # In this case, since there isn't any additionnal cost, the total cost of the subcontracting
         # is the sum of the components' costs: 10 + 20 = 30
-        self.assertEqual(mo.move_finished_ids.stock_valuation_layer_ids.value, 30)
+        self.assertEqual(mo2.move_finished_ids.stock_valuation_layer_ids.value, 30)
         self.assertEqual(picking_receipt.move_ids.product_id.value_svl, 90)
 
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
+        all_amls_ids += amls.ids
         self.assertRecordValues(amls, [
             # Receipt from subcontractor
             {'account_id': stock_cop_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
@@ -156,6 +157,23 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             # Delivery com2 to subcontractor
             {'account_id': stock_valu_acc_id,   'product_id': self.comp1.id,       'debit': 0.0,   'credit': 10.0},
             {'account_id': stock_cop_acc_id,    'product_id': self.comp1.id,       'debit': 10.0,  'credit': 0.0},
+        ])
+
+        # Scrap first subcontract MO and ensure that the additional cost is not added.
+        scrap = self.env['stock.scrap'].create({
+            'product_id': self.finished.id,
+            'product_uom_id': self.uom_unit.id,
+            'scrap_qty': 1,
+            'production_id': mo1.id,
+            'location_id': self.stock_location.id,
+        })
+        scrap.do_scrap()
+
+        amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
+        all_amls_ids += amls.ids
+        self.assertRecordValues(amls, [
+            {'account_id': stock_valu_acc_id, 'product_id': self.finished.id, 'debit': 0.0, 'credit': 60.0},
+            {'account_id': stock_out_acc_id, 'product_id': self.finished.id, 'debit': 60.0, 'credit': 0.0},
         ])
 
     def test_subcontracting_account_flow_2(self):
@@ -480,6 +498,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         product_category_all = self.env.ref('product.product_category_all')
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
+        self._setup_category_stock_journals()
         # set the production account to False
         product_category_all.property_stock_account_production_cost_id = False
         product_category_all.invalidate_recordset()

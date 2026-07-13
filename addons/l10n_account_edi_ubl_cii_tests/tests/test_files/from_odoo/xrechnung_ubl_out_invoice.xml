@@ -8,7 +8,8 @@
   <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
   <cbc:Note>test narration</cbc:Note>
   <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
-  <cbc:BuyerReference>ref_partner_2</cbc:BuyerReference>
+  <cbc:TaxCurrencyCode>EUR</cbc:TaxCurrencyCode>
+  <cbc:BuyerReference>DE186775212</cbc:BuyerReference>
   <cac:OrderReference>
     <cbc:ID>ref_move</cbc:ID>
   </cac:OrderReference>
@@ -51,7 +52,7 @@
   </cac:AccountingSupplierParty>
   <cac:AccountingCustomerParty>
     <cac:Party>
-      <cbc:EndpointID schemeID="9930">DE186775212</cbc:EndpointID>
+      <cbc:EndpointID schemeID="0204">DE186775212</cbc:EndpointID>
       <cac:PartyName>
         <cbc:Name>partner_2</cbc:Name>
       </cac:PartyName>
@@ -79,6 +80,7 @@
     </cac:Party>
   </cac:AccountingCustomerParty>
   <cac:Delivery>
+    <cbc:ActualDeliveryDate>2017-01-01</cbc:ActualDeliveryDate>
     <cac:DeliveryLocation>
       <cac:Address>
         <cbc:StreetName>Europa-Park-Straße 2</cbc:StreetName>
@@ -89,6 +91,11 @@
         </cac:Country>
       </cac:Address>
     </cac:DeliveryLocation>
+    <cac:DeliveryParty>
+        <cac:PartyName>
+            <cbc:Name>partner_2</cbc:Name>
+        </cac:PartyName>
+    </cac:DeliveryParty>
   </cac:Delivery>
   <cac:PaymentMeans>
     <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
@@ -125,6 +132,9 @@
       </cac:TaxCategory>
     </cac:TaxSubtotal>
   </cac:TaxTotal>
+  <cac:TaxTotal>
+	<cbc:TaxAmount currencyID="EUR">200.79</cbc:TaxAmount>
+  </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
     <cbc:LineExtensionAmount currencyID="USD">2682.00</cbc:LineExtensionAmount>
     <cbc:TaxExclusiveAmount currencyID="USD">2682.00</cbc:TaxExclusiveAmount>
@@ -139,7 +149,10 @@
     <cac:AllowanceCharge>
       <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
       <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+      <cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+      <cbc:MultiplierFactorNumeric>10.0</cbc:MultiplierFactorNumeric>
       <cbc:Amount currencyID="USD">198.00</cbc:Amount>
+      <cbc:BaseAmount currencyID="USD">1980.00</cbc:BaseAmount>
     </cac:AllowanceCharge>
     <cac:Item>
       <cbc:Description>product_a</cbc:Description>

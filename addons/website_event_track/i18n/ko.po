@@ -1,24 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_event_track
-# 
+# * website_event_track
+#
 # Translators:
 # Wil Odoo, 2023
 # Daye Jeong, 2023
-# 
+# Sarah Park, 2025
+#
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
-"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"POT-Creation-Date: 2026-04-03 18:40+0000\n"
+"PO-Revision-Date: 2026-05-09 08:07+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-17/"
+"website_event_track/ko/>\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -74,7 +79,7 @@ msgstr "초보자를 위한 목공 팁과 노하우 6가지"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "<b class=\"fw-normal\">Contact Information</b>"
-msgstr ""
+msgstr "<b class=\"fw-normal\">문의처 정보</b>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -105,12 +110,19 @@ msgstr "<b>강연 소개</b>:"
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
 "    <br>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
@@ -123,12 +135,18 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"   안녕하세요, <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t>님<br>\n"
-"    귀하의 <t t-out=\"object.name or ''\">What This Event Is All About</t> 행사에 대한 제안이 수락 및 확정 되었음을 알려드립니다. <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"   안녕하세요, <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t>님<br>\n"
+"    귀하의 <t t-out=\"object.name or ''\">What This Event Is All About</t> 행"
+"사에 대한 제안이 수락 및 확정 되었음을 알려드립니다. <t t-"
+"out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
 "    <br>\n"
 "    자세한 내용은 여기를 참조해주세요:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
@@ -165,15 +183,6 @@ msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
-"specific.\" groups=\"website.group_multi_website\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
-"specific.\" groups=\"website.group_multi_website\"/>"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
@@ -183,13 +192,17 @@ msgstr "<span class=\"fa fa-plus me-1\"/> 세션 예약하기"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 
 #. module: website_event_track
@@ -313,7 +326,8 @@ msgstr "파이프라인 활동 안에 새로운 단계 추가하기"
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
 msgid ""
 "Add tags to your tracks to help your attendees browse your event web pages."
-msgstr "세션에 태그를 추가하여 참가자가 행사 웹페이지를 찾아볼 수 있도록 하세요."
+msgstr ""
+"세션에 태그를 추가하여 참가자가 행사 웹페이지를 찾아볼 수 있도록 하세요."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -362,7 +376,8 @@ msgid ""
 "                            presentation, for publishing on our website."
 msgstr ""
 "웹 사이트에 게시할 수 있도록\n"
-"                            프레젠테이션의 비디오 및 오디오 녹화를 허용합니다."
+"                            프레젠테이션의 비디오 및 오디오 녹화를 허용합니"
+"다."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
@@ -394,19 +409,25 @@ msgid ""
 "As key track cannot be un-favorited, this field store the partner choice to "
 "remove the reminder for key tracks."
 msgstr ""
-"주요 세션은 즐겨찾기를 해제할 수 없으므로, 이 필드에서 협력사 선택 사항을 변경하여 주요 세션에 대한 알림을 삭제할 수 있습니다."
+"주요 세션은 즐겨찾기를 해제할 수 없으므로, 이 필드에서 협력사 선택 사항을 변"
+"경하여 주요 세션에 대한 알림을 삭제할 수 있습니다."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
-"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
-"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
-"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
-"이미 알고 계실지 모르겠지만, 나만의 가구를 제작하는 것은 생각보다 어렵거나 복잡한 일이 아닙니다.\n"
+"이미 알고 계실지 모르겠지만, 나만의 가구를 제작하는 것은 생각보다 어렵거나 복"
+"잡한 일이 아닙니다.\n"
 "    사실, 대부분의 작업은 누구나 완성할 수 있을 정도로 간단합니다.\n"
-"    낡은 타이어로 귀여운 의자를 쉽게 만들어 낼 수 있으며, 커피 테이블이 필요하다면\n"
+"    낡은 타이어로 귀여운 의자를 쉽게 만들어 낼 수 있으며, 커피 테이블이 필요"
+"하다면\n"
 "    나무 상자를 활용할 수도 있습니다."
 
 #. module: website_event_track
@@ -574,8 +595,9 @@ msgid ""
 "information about a construction process and final result. Step by step "
 "simple explanation! Interested?"
 msgstr ""
-"목조 주택을 짓고 싶으신가요? 이 동영상을 통해 건축 과정과 결과에 대한 자세한 정보를 확인해 보세요. 시공 단계별로 간단하게 설명되어 "
-"있습니다. 관심 있으십니까?"
+"목조 주택을 짓고 싶으신가요? 이 동영상을 통해 건축 과정과 결과에 대한 자세한 "
+"정보를 확인해 보세요. 시공 단계별로 간단하게 설명되어 있습니다. 관심 있으십니"
+"까?"
 
 #. module: website_event_track
 #. odoo-python
@@ -892,7 +914,6 @@ msgstr "행사 PWA"
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Favorite On"
@@ -1094,7 +1115,8 @@ msgstr "예외 활동을 표시하기 위한 아이콘"
 msgid ""
 "If checked, automatically publish tracks so that access links to customers "
 "are provided."
-msgstr "이 옵션을 선택하면 자동으로 세션을 게시하고 고객에게 링크를 제공합니다."
+msgstr ""
+"이 옵션을 선택하면 자동으로 세션을 게시하고 고객에게 링크를 제공합니다."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
@@ -1122,8 +1144,8 @@ msgstr "설정된 경우 과정이 이 단계에 도달하면 고객에게 이�
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
 msgid ""
-"If set, the talk will be set as favorite for each attendee registered to the"
-" event."
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
 msgstr "설정 시 해당 강연은 행사에 등록된 각 참석자의 즐겨찾기에 추가됩니다."
 
 #. module: website_event_track
@@ -1333,7 +1355,9 @@ msgstr "라이트닝 토크"
 msgid ""
 "Link to Q&amp;A here! The time has come to hide those old block walls. Love "
 "simple and transformation type projects like this! :)-"
-msgstr "Q&amp;A 링크는 여기에서 확인해주세요! 오래된 블록 벽을 덮어봅시다. 이런 간단한 변현형 프로젝트는 즐거워요! :)-"
+msgstr ""
+"Q&amp;A 링크는 여기에서 확인해주세요! 오래된 블록 벽을 덮어봅시다. 이런 간단"
+"한 변현형 프로젝트는 즐거워요! :)-"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -1404,7 +1428,7 @@ msgstr "여기에서 세션 장소(예: 채팅방, 채널 등)를 관리할 수 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
-msgstr "중간"
+msgstr "매체"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
@@ -1635,8 +1659,9 @@ msgid ""
 "woodworking! In this video I share with you how/why I started building "
 "furniture!"
 msgstr ""
-"제가 여러분에게 가장 많이 받은 질문 중 하나는 목공예를 어떻게 시작하게 되었느냐일 거예요! 이 영상에서는 제가 가구를 처음 만들기 "
-"시작했던 방법과 그 이유를 알려드립니다!"
+"제가 여러분에게 가장 많이 받은 질문 중 하나는 목공예를 어떻게 시작하게 되었느"
+"냐일 거예요! 이 영상에서는 제가 가구를 처음 만들기 시작했던 방법과 그 이유를 "
+"알려드립니다!"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -1657,7 +1682,7 @@ msgstr "웹사이트에서 제안"
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Published"
-msgstr "게시 됨"
+msgstr "게시 완료"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
@@ -1792,7 +1817,6 @@ msgstr "순서"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
@@ -2004,15 +2028,20 @@ msgstr "창작물을 홍보하는 새로운 방법"
 msgid ""
 "There are a lot of ideas worth exploring so start with the 10 DIY furniture "
 "ideas for absolute beginners."
-msgstr "반짝이는 아이디어로 가득 찬 초보자를 위한 10가지 DIY 가구 만들기부터 시작해 보세요."
+msgstr ""
+"반짝이는 아이디어로 가득 찬 초보자를 위한 10가지 DIY 가구 만들기부터 시작해 "
+"보세요."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"There are several variants of wood is available in the world but we are talking about most expensive\n"
-"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
 msgstr ""
-"세상에는 정말 많은 종류의 목재가 존재하지만, 저희는 가장 값비싼 목재에 대해 살펴보고 있습니다.\n"
+"세상에는 정말 많은 종류의 목재가 존재하지만, 저희는 가장 값비싼 목재에 대해 "
+"살펴보고 있습니다.\n"
 "    가장 비싼 목재 10가지에 대해 한번 알아봅시다."
 
 #. module: website_event_track
@@ -2020,7 +2049,9 @@ msgstr ""
 msgid ""
 "These are 30 minutes talks on many different topics. Most topics are "
 "accepted in lightning talks."
-msgstr "라이트닝 토크는 일반적으로 30분 동안 진행되며, 대부분의 주제에 대해 발표가 허용됩니다."
+msgstr ""
+"라이트닝 토크는 일반적으로 30분 동안 진행되며, 대부분의 주제에 대해 발표가 허"
+"용됩니다."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2030,8 +2061,7 @@ msgstr "슬라이드가 있는 일반 강연으로, 강의당 60분씩 시간이
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
-"They will be created automatically once attendees start browsing your "
-"events."
+"They will be created automatically once attendees start browsing your events."
 msgstr "참석자가 행사를 검색하기 시작하면 자동으로 생성됩니다."
 
 #. module: website_event_track
@@ -2044,7 +2074,9 @@ msgstr "이 행사는 제안을 수락하지 않습니다."
 msgid ""
 "This field holds the image used as mobile app icon on the website (PNG "
 "format)."
-msgstr "이 필드에는 웹사이트에서 모바일 앱 아이콘을 표시하는 데 사용되는 이미지(PNG 형식)가 저장됩니다."
+msgstr ""
+"이 필드에는 웹사이트에서 모바일 앱 아이콘을 표시하는 데 사용되는 이미지(PNG "
+"형식)가 저장됩니다."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
@@ -2057,7 +2089,9 @@ msgstr "이 필드에는 행사 진행형 웹 앱 이름이 표시됩니다."
 msgid ""
 "This page hasn't been saved for offline reading yet.<br/>Please check your "
 "network connection."
-msgstr "이 페이지는 오프라인 읽기 전용으로 저장되어 있지 않습니다.<br/>네트워크 연결을 다시 한번 확인해 주세요."
+msgstr ""
+"이 페이지는 오프라인 읽기 전용으로 저장되어 있지 않습니다.<br/>네트워크 연결"
+"을 다시 한번 확인해 주세요."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
@@ -2108,10 +2142,13 @@ msgstr "세계에서 가장 비싼 목재 10가지"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
-"    that there are hundreds of wood types exist around the globe following different properties and use."
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
 msgstr ""
-"세계에서 가장 비싼 목재는 꽤나 흥미로운 주제입니다. 다양한 특성과 용도에 따라\n"
+"세계에서 가장 비싼 목재는 꽤나 흥미로운 주제입니다. 다양한 특성과 용도에 따"
+"라\n"
 "    수백 가지의 목재 종류가 존재한다는 사실에 놀라시는 분들도 계실 것입니다."
 
 #. module: website_event_track
@@ -2223,7 +2260,9 @@ msgstr "세션 방문자"
 msgid ""
 "Track Visitors store statistics on your events, including how many times "
 "tracks have been wishlisted."
-msgstr "세션이 위시리스트에 저장된 횟수를 포함하여 행사에 대한 방문자 통계를 저장합니다."
+msgstr ""
+"세션이 위시리스트에 저장된 횟수를 포함하여 행사에 대한 방문자 통계를 저장합니"
+"다."
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
@@ -2256,7 +2295,9 @@ msgstr "웹사이트에서 과정 제안"
 msgid ""
 "Tracks define your event schedule. They can be talks, workshops or any "
 "similar activity."
-msgstr "세션은 행사 일정을 정의합니다. 강연, 워크샵 또는 이와 유사한 활동이 포함됩니다."
+msgstr ""
+"세션은 행사 일정을 정의합니다. 강연, 워크샵 또는 이와 유사한 활동이 포함됩니"
+"다."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
@@ -2282,24 +2323,46 @@ msgid "Unread Messages"
 msgstr "읽지 않은 메세지"
 
 #. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: code:addons/website_event_track/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on track wishlist visitors"
+msgstr "위시리스트 방문자 추적에서 지원되지 않는 '작업 안 함' 작업"
+
+#. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
-"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
-"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
 msgstr ""
-"간단한 몇 단계를 통해 소형 픽업트럭으로도 긴 목재를 쉽게 운반하는 방법을 알려드리겠습니다.\n"
-"    목수의 기발함과 목재 몇 개, 튼튼한 스트랩 및 나사 몇 개만 있으면 목재소부터 다음 단계의 목공소나 작업 현장으로\n"
+"간단한 몇 단계를 통해 소형 픽업트럭으로도 긴 목재를 쉽게 운반하는 방법을 알려"
+"드리겠습니다.\n"
+"    목수의 기발함과 목재 몇 개, 튼튼한 스트랩 및 나사 몇 개만 있으면 목재소부"
+"터 다음 단계의 목공소나 작업 현장으로\n"
 "    긴 목재를 쉽게 운반할 수 있습니다."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
-"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
 msgstr ""
-"화물 적재 고정장치 (신축성 있는 고무끈이 아닌!!!)에 독특한 포장 방법을 적용하면\n"
-"    복잡하고 힘들게 매듭을 묶고 풀 필요 없이 목재를 단단하게 고정할 수 있습니다."
+"화물 적재 고정장치 (신축성 있는 고무끈이 아닌!!!)에 독특한 포장 방법을 적용하"
+"면\n"
+"    복잡하고 힘들게 매듭을 묶고 풀 필요 없이 목재를 단단하게 고정할 수 있습니"
+"다."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Values set here are website-specific."
+msgstr "웹사이트별로 다르게 설정됩니다."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2470,7 +2533,9 @@ msgstr "강연의 주제가 무엇입니까?"
 msgid ""
 "Who will give this talk? We will show this to attendees to showcase your "
 "talk."
-msgstr "이 강연은 누가 진행하나요? 참석자에게 강연을 소개할 때 해당 내용이 같이 보여집니다."
+msgstr ""
+"이 강연은 누가 진행하나요? 참석자에게 강연을 소개할 때 해당 내용이 같이 보여"
+"집니다."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
@@ -2597,3 +2662,17 @@ msgstr "에 시작"
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 msgid "tracks"
 msgstr "세션"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "x"
+msgstr "x"
+
+#~ msgid ""
+#~ "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+#~ "specific.\" groups=\"website.group_multi_website\"/>"
+#~ msgstr ""
+#~ "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+#~ "specific.\" groups=\"website.group_multi_website\"/>"

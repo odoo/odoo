@@ -18,6 +18,13 @@ export function isBrowserFirefox() {
 }
 
 /**
+ * True if the browser is Microsoft Edge.
+ */
+export function isBrowserMicrosoftEdge() {
+    return /Edg/i.test(browser.navigator.userAgent);
+}
+
+/**
  * true if the browser is based on Safari (Safari, Epiphany)
  *
  * @returns {boolean}
@@ -31,9 +38,13 @@ export function isAndroid() {
 }
 
 export function isIOS() {
+    let isIOSPlatform = false;
+    if ("platform" in browser.navigator) {
+        isIOSPlatform = browser.navigator.platform === "MacIntel";
+    }
     return (
         /(iPad|iPhone|iPod)/i.test(browser.navigator.userAgent) ||
-        (browser.navigator.platform === "MacIntel" && maxTouchPoints() > 1)
+        (isIOSPlatform && maxTouchPoints() > 1)
     );
 }
 

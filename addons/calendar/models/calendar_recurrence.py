@@ -217,6 +217,11 @@ class RecurrenceRule(models.Model):
         for recurrence in self:
             if recurrence.rrule:
                 values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
+                until = values.get('until')
+                if until and until.tzinfo:
+                    # UNTIL=...Z is parsed as an aware UTC datetime; convert it to the
+                    # recurrence timezone so the stored date is the right local boundary day.
+                    values['until'] = until.astimezone(recurrence._get_timezone())
                 recurrence.with_context(dont_notify=True).write(values)
 
     def _reconcile_events(self, ranges):
@@ -402,7 +407,8 @@ class RecurrenceRule(models.Model):
         # Optional parameters starts with X- and they can be placed anywhere in the RRULE string.
         # RRULE:FREQ=MONTHLY;INTERVAL=3;X-RELATIVE=1
         # RRULE;X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
-        rule_str = re.sub(r';?X-[-\w]+=[^;:]*', '', rule_str).replace(":;", ":")
+        # X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+        rule_str = re.sub(r';?X-[-\w]+=[^;:]*', '', rule_str).replace(":;", ":").lstrip(":;")
 
         if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)

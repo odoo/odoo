@@ -19,6 +19,7 @@ from odoo.api import call_kw
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
+from odoo.tools.mimetypes import magic
 from odoo.tests.common import users
 
 
@@ -48,6 +49,17 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
+        })
+        cls.test_records_simple, _partners = cls._create_records_for_batch(
+            'mail.test.simple', 3,
+        )
+        cls.test_record_container = cls.env['mail.test.container.mc'].create({
+            'name': 'MC Container',
+        })
+        cls.test_record_ticket = cls.env['mail.test.ticket.mc'].create({
+            'container_id': cls.test_record_container.id,
+            'email_from': 'test.customer@test.example.com',
+            'name': 'MC Ticket',
         })
         cls._reset_mail_context(cls.test_record)
         cls.test_message = cls.env['mail.message'].create({
@@ -1074,43 +1086,69 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         scheduled_datetime = now + timedelta(days=5)
         self.user_admin.write({'notification_type': 'inbox'})
 
-        test_record = self.test_record.with_env(self.env)
-        test_record.message_subscribe((self.partner_1 | self.partner_admin).ids)
+        test_records = self.test_records_simple.with_env(self.env)
+        test_records.message_subscribe((self.partner_1 | self.partner_admin).ids)
 
+        # handy shortcut variables
+        deleted_record = test_records[2]
+        remaining_records = test_records - deleted_record
+
+        messages = self.env['mail.message']
         with self.mock_datetime_and_now(now), \
              self.assertMsgWithoutNotifications(), \
              self.capture_triggers(cron_id) as capt:
-            msg = test_record.message_post(
-                body=Markup('<p>Test</p>'),
-                message_type='comment',
-                subject='Subject',
-                subtype_xmlid='mail.mt_comment',
-                scheduled_date=scheduled_datetime,
-            )
-        self.assertEqual(capt.records.call_at, scheduled_datetime,
-                         msg='Should have created a cron trigger for the scheduled sending')
+            for test_record in test_records:
+                messages += test_record.message_post(
+                    body=f'<p>Test on {test_record.name}</p>',
+                    message_type='comment',
+                    subject=f'Subject for {test_record.name}',
+                    subtype_xmlid='mail.mt_comment',
+                    scheduled_date=scheduled_datetime,
+                )
+        self.assertEqual(
+            capt.records.mapped('call_at'), [scheduled_datetime] * 3,
+            msg='Should have created a cron trigger / scheduled post')
         self.assertFalse(self._new_mails)
         self.assertFalse(self._mails)
 
-        schedules = self.env['mail.message.schedule'].sudo().search([('mail_message_id', '=', msg.id)])
-        self.assertEqual(len(schedules), 1, msg='Should have scheduled the message')
-        self.assertEqual(schedules.scheduled_datetime, scheduled_datetime)
+        schedules = self.env['mail.message.schedule'].sudo().search([('mail_message_id', 'in', messages.ids)])
+        self.assertEqual(len(schedules), 3, msg='Should have one scheduled record / message to post')
+        self.assertEqual(schedules.mapped('scheduled_datetime'), [scheduled_datetime] * 3)
 
         # trigger cron now -> should not sent as in future
         with self.mock_datetime_and_now(now):
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
-        self.assertTrue(schedules.exists(), msg='Should not have sent the message')
+        self.assertTrue(schedules.exists(), msg='Should not have sent the messages')
+
+        # In the mean time, some FK deletes the record where the message is
+        # # scheduled, skipping its unlink() override
+        test_record_names = test_records.mapped('name')
+        self.env.cr.execute(
+            f"DELETE FROM {test_records._table} WHERE id = %s", (deleted_record.id,)
+        )
+        test_records.invalidate_recordset()
 
         # Send the scheduled message from the cron at right date
         with self.mock_datetime_and_now(now + timedelta(days=5)), self.mock_mail_gateway(mail_unlink_sent=True):
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
-        self.assertFalse(schedules.exists(), msg='Should have sent the message')
+        self.assertFalse(schedules.exists(), msg='Should have sent the messages')
+
         # check notifications have been sent
-        recipients_info = [{'content': '<p>Test</p>', 'notif': [
-            {'partner': self.partner_admin, 'type': 'inbox'},
-            {'partner': self.partner_1, 'type': 'email'},
-        ]}]
-        self.assertMailNotifications(msg, recipients_info)
+        for msg, test_record, test_record_name in zip(messages, test_records, test_record_names):
+            with self.subTest(test_record_name=test_record_name):
+                if test_record != deleted_record:
+                    # unlinked record -> skip notification
+                    self.assertMailNotifications(msg, [{
+                        'content': f'Test on {test_record_name}',
+                        'email_values': {
+                            'subject': f'Subject for {test_record_name}',
+                        },
+                        'notif': [
+                            {'partner': self.partner_admin, 'type': 'inbox'},
+                            {'partner': self.partner_1, 'type': 'email'},
+                        ],
+                    }])
+        self.assertEqual(len(self._new_mails), len(remaining_records), 'Should have skipped unlinked record')
 
         # manually create a new schedule date, resend it -> should not crash (aka
         # don't create duplicate notifications, ...)
@@ -1127,7 +1165,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         with self.mock_datetime_and_now(now), \
              self.mock_mail_gateway(mail_unlink_sent=False), \
              self.capture_triggers(cron_id) as capt:
-            msg = test_record.message_post(
+            msg = test_records[0].message_post(
                 body=Markup('<p>Test</p>'),
                 message_type='comment',
                 subject='Subject',
@@ -1193,9 +1231,9 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         Test the message_main_attachment heuristics with an emphasis on the XML/Octet/PDF types.
         -> we don't want XML nor Octet-Stream files to be set as message_main_attachment
         """
-        xml_attachment, octet_attachment, pdf_attachment = [('List1', b'My xml attachment')], \
-                                                           [('List2', b'My octet-stream attachment')], \
-                                                           [('List3', b'My pdf attachment')]
+        xml_attachment, octet_attachment, pdf_attachment = [('List1', b'<?xml version="1.0"?>My xml attachment<_/>')], \
+                                                           [('List2', b'My octet-stream attachment\20')], \
+                                                           [('List3', b'%PDF-1.0My pdf attachment')]
 
         xml_attachment_data, octet_attachment_data, pdf_attachment_data = self.env['ir.attachment'].create(
             self._generate_attachments_data(3, 'mail.compose.message', 0)
@@ -1209,7 +1247,6 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             'email_from': 'ignasse@example.com',
         })
         self.assertFalse(test_record.message_main_attachment_id)
-
         # test with xml attachment
         with self.mock_mail_gateway():
             test_record.message_post(
@@ -1303,10 +1340,11 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
         # notification email attachments
         self.assertEqual(len(self._mails), 1)
+        expected_mimetype = 'text/plain' if magic else 'application/octet-stream'
         self.assertSentEmail(
             self.user_employee.partner_id, [self.partner_1],
-            attachments=[('List1', b'My first attachment', 'application/octet-stream'),
-                         ('List2', b'My second attachment', 'application/octet-stream'),
+            attachments=[('List1', b'My first attachment', expected_mimetype),
+                         ('List2', b'My second attachment', expected_mimetype),
                          ('AttFileName_00.txt', b'AttContent_00', 'text/plain'),
                          ('AttFileName_01.txt', b'AttContent_01', 'image/png'),
                          ('AttFileName_02.txt', b'AttContent_02', 'text/plain'),
@@ -1352,63 +1390,102 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')
     def test_post_answer(self):
-        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        for subtype in (
+            self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd'),  # classic subtype creation msg like ticket
+            self.env.ref('mail.mt_note'),  # internal notes
+            self.env['mail.message.subtype'],  # classic 'note-like' default for mail.thread
+            self.env.ref('mail.mt_comment'),  # would begin with incoming email for example
+        ):
+            with self.subTest(subtype_name=subtype.name if subtype else 'None'):
+                test_record = self.test_record_ticket.with_env(self.env).copy()
+                self.assertEqual(len(test_record.message_ids), 1)
+                initial_msg = test_record.message_ids
+                self.assertEqual(initial_msg.reply_to, formataddr((f'{self.env.company.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')))
+                self.assertEqual(initial_msg.subtype_id, self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd'))
+                # for the sake of testing various use case, force update subtype
+                initial_msg.sudo().write({'subtype_id': subtype.id})
 
-        with self.mock_mail_gateway():
-            parent_msg = test_record.message_post(
-                body=Markup('<p>Test</p>'),
-                message_type='comment',
-                subject='Test Subject',
-                subtype_xmlid='mail.mt_comment',
-            )
-        self.assertFalse(parent_msg.partner_ids)
-        self.assertNotSentEmail()
+                # post a tracking message
+                with self.mock_mail_gateway():
+                    log_msg = test_record._message_log(
+                        body=Markup('<p>Blabla fake tracking</p>'),
+                        message_type='notification',
+                    )
+                self.assertFalse(log_msg.parent_id, 'FIXME: logs have no parent, strange but funny (somehow)')
+                self.assertNotSentEmail()
 
-        # post a first reply
-        with self.assertPostNotifications(
-                [{'content': '<p>Test Answer</p>', 'notif': [{'partner': self.partner_1, 'type': 'email'}]}]
-            ):
-            msg = test_record.message_post(
-                body=Markup('<p>Test Answer</p>'),
-                message_type='comment',
-                parent_id=parent_msg.id,
-                partner_ids=[self.partner_1.id],
-                subject='Welcome',
-                subtype_xmlid='mail.mt_comment',
-            )
-        self.assertEqual(msg.parent_id, parent_msg)
-        self.assertEqual(msg.partner_ids, self.partner_1)
-        self.assertFalse(parent_msg.partner_ids)
+                # post an internal tracking/custom message
+                with self.mock_mail_gateway():
+                    internal_msg = test_record.message_post(
+                        body=Markup('<p>Blabla internal</p>'),
+                        message_type='notification',
+                        subtype_id=self.env.ref('test_mail.st_mail_test_ticket_internal').id,
+                        partner_ids=self.user_admin.partner_id.ids,
+                    )
+                self.assertEqual(internal_msg.parent_id, initial_msg)
+                if subtype:
+                    references = f'{initial_msg.message_id} {log_msg.message_id} {internal_msg.message_id}'
+                else:  # no subtype = pure log = not in references
+                    references = f'{log_msg.message_id} {internal_msg.message_id}'
+                self.assertSentEmail(
+                    self.user_employee.partner_id,
+                    [self.user_admin.partner_id],
+                    body_content=Markup('<p>Blabla internal</p>'),
+                    reply_to=initial_msg.reply_to,
+                    subject=f'Ticket for {test_record.name} on {test_record.datetime.strftime("%m/%d/%Y, %H:%M:%S")}',
+                    # references contain even 'internal' messages, to help thread formation
+                    references=references,
+                )
 
-        # check notification emails: references
-        self.assertSentEmail(
-            self.user_employee.partner_id,
-            [self.partner_1],
-            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
-            # references should be sorted from the oldest to the newest
-            references=f'{parent_msg.message_id} {msg.message_id}',
-        )
+                # post a first real reply
+                with self.assertPostNotifications(
+                    [{'content': '<p>Test Answer</p>', 'notif': [{'partner': self.partner_1, 'type': 'email'}]}]
+                ):
+                    msg = test_record.message_post(
+                        body=Markup('<p>Test Answer</p>'),
+                        message_type='comment',
+                        partner_ids=[self.partner_1.id],
+                        subject='Welcome',
+                        subtype_xmlid='mail.mt_comment',
+                    )
+                self.assertEqual(msg.parent_id, initial_msg)
+                self.assertEqual(msg.partner_ids, self.partner_1)
+                self.assertFalse(initial_msg.partner_ids)
+                if subtype:
+                    references = f'{initial_msg.message_id} {log_msg.message_id} {internal_msg.message_id} {msg.message_id}'
+                else:  # no subtype = pure log = not in references
+                    references = f'{log_msg.message_id} {internal_msg.message_id} {msg.message_id}'
+                self.assertSentEmail(
+                    self.user_employee.partner_id,
+                    [self.partner_1],
+                    # references contain even 'internal' messages, to help thread formation
+                    references=references,
+                )
 
-        # post a reply to the reply: check parent is the first one
-        with self.mock_mail_gateway():
-            new_msg = test_record.message_post(
-                body=Markup('<p>Test Answer Bis</p>'),
-                message_type='comment',
-                subtype_xmlid='mail.mt_comment',
-                parent_id=msg.id,
-                partner_ids=[self.partner_2.id],
-            )
-        self.assertEqual(new_msg.parent_id, parent_msg, 'message_post: flatten error')
-        self.assertEqual(new_msg.partner_ids, self.partner_2)
-        self.assertSentEmail(
-            self.user_employee.partner_id,
-            [self.partner_2],
-            body_content='<p>Test Answer Bis</p>',
-            reply_to=msg.reply_to,
-            subject=self.test_record.name,
-            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
-            references=f'{parent_msg.message_id} {new_msg.message_id}',
-        )
+                # post a reply to the reply: we fill up with 'public' subtypes if possible
+                if subtype in [self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd'), self.env.ref('mail.mt_comment')]:
+                    top_msg = initial_msg  # not internal subtype -> wins
+                else:
+                    top_msg = log_msg
+                with self.mock_mail_gateway():
+                    new_msg = test_record.message_post(
+                        body=Markup('<p>Test Answer Bis</p>'),
+                        message_type='comment',
+                        parent_id=msg.id,
+                        subtype_xmlid='mail.mt_comment',
+                        partner_ids=[self.partner_2.id],
+                    )
+                self.assertEqual(new_msg.parent_id, initial_msg, 'message_post: flatten error')
+                self.assertEqual(new_msg.partner_ids, self.partner_2)
+                self.assertSentEmail(
+                    self.user_employee.partner_id,
+                    [self.partner_2],
+                    body_content='<p>Test Answer Bis</p>',
+                    reply_to=msg.reply_to,
+                    subject=f'Ticket for {test_record.name} on {test_record.datetime.strftime("%m/%d/%Y, %H:%M:%S")}',
+                    # references contain mainly 'public', then fill up with internal
+                    references=f'{top_msg.message_id} {internal_msg.message_id} {msg.message_id} {new_msg.message_id}',
+                )
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     @users('employee')

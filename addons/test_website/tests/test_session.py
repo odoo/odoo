@@ -25,7 +25,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         # Create session for demo user.
         public_session = self.authenticate(None, None)
         demo_session = self.authenticate('demo', 'demo')
-        record = self.env['test.model'].search([])
+        record = self.env['test.model'].search([], limit=1)
         result = self.url_open(f'/test_website/model_item_sudo/{record.id}')
         self.assertTrue(has_branding(result.text), "Should have branding for user demo")
 

@@ -80,7 +80,6 @@ class Channel(models.Model):
     allow_public_upload = fields.Boolean(default=False)
 
     _sql_constraints = [
-        ('channel_type_not_null', 'CHECK(channel_type IS NOT NULL)', 'The channel type cannot be empty'),
         ('uuid_unique', 'UNIQUE(uuid)', 'The channel UUID must be unique'),
         ('group_public_id_check',
          "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
@@ -232,7 +231,7 @@ class Channel(models.Model):
                                 field_name=field_name,
                             )
                         )
-            membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0]
+            membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0 and 'partner_id' in cmd[2]]
 
             partner_ids_to_add = partner_ids
             # always add current user to new channel to have right values for
@@ -630,7 +629,8 @@ class Channel(models.Model):
         """
         Automatically set the message posted by the current user as seen for themselves.
         """
-        self._set_last_seen_message(message)
+        if message.is_current_user_or_guest_author:
+            self._set_last_seen_message(message)
         return super()._message_post_after_hook(message, msg_vals)
 
     def _check_can_update_message_content(self, message):
@@ -638,6 +638,17 @@ class Channel(models.Model):
         mail.thread behavior completely """
         if not message.message_type == 'comment':
             raise UserError(_("Only messages type comment can have their content updated on model 'discuss.channel'"))
+
+    def _create_attachments_for_post(self, values_list, extra_list):
+        # Create voice metadata from meta information
+        attachments = super()._create_attachments_for_post(values_list, extra_list)
+        voice = attachments.env['ir.attachment']  # keep env, notably for potential sudo
+        for attachment, (_cid, _name, _token, info) in zip(attachments, extra_list):
+            if info.get('voice'):
+                voice += attachment
+        if voice:
+            voice._set_voice_metadata()
+        return attachments
 
     def _message_subscribe(self, partner_ids=None, subtype_ids=None, customer_ids=None):
         """ Do not allow follower subscription on channels. Only members are
@@ -1037,19 +1048,17 @@ class Channel(models.Model):
         channel_member_domain = expression.AND([
             [('channel_id', 'in', self.ids)],
             [('partner_id', '=', current_partner.id) if current_partner else ('guest_id', '=', current_guest.id)],
-            [] if allow_older else expression.OR([
-                [('seen_message_id', '=', False)],
-                [('seen_message_id', '<', last_message.id)]
-            ])
         ])
         member = self.env['discuss.channel.member'].search(channel_member_domain)
         if not member:
             return
-        member.write({
-            'fetched_message_id': max(member.fetched_message_id.id, last_message.id),
-            'seen_message_id': last_message.id,
-            'last_seen_dt': fields.Datetime.now(),
-        })
+        update_seen_message = allow_older or not member.seen_message_id or member.seen_message_id.id < last_message.id
+        if update_seen_message:
+            member.write({
+                'fetched_message_id': max(member.fetched_message_id.id, last_message.id),
+                'seen_message_id': last_message.id,
+                'last_seen_dt': fields.Datetime.now(),
+            })
         member_basic_info = {
             "id": member.id,
             "persona": {
@@ -1072,7 +1081,7 @@ class Channel(models.Model):
         notifications = [
             [current_partner or current_guest, "mail.record/insert", {"ChannelMember": member_self_info}],
         ]
-        if self.channel_type in self._types_allowing_seen_infos():
+        if update_seen_message and self.channel_type in self._types_allowing_seen_infos():
             notifications.append([self, "mail.record/insert", {"ChannelMember": member_basic_info}])
         self.env["bus.bus"]._sendmany(notifications)
 
@@ -1335,14 +1344,20 @@ class Channel(models.Model):
         payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
         payload['options']['data']['action'] = 'mail.action_discuss'
         record_name = msg_vals.get('record_name') if msg_vals and 'record_name' in msg_vals else message.record_name
+        author_id = [msg_vals["author_id"]] if msg_vals.get("author_id") else message.author_id.ids
+        author = self.env["res.partner"].browse(author_id) or self.env["mail.guest"].browse(
+            msg_vals.get("author_guest_id", message.author_guest_id.id)
+        )
         if self.channel_type == 'chat':
-            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
-            payload['title'] = self.env['res.partner'].browse(author_id).name
+            payload['title'] = author.name
             payload['options']['icon'] = '/discuss/channel/%d/partner/%d/avatar_128' % (message.res_id, author_id[0])
         elif self.channel_type == 'channel':
-            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
-            author_name = self.env['res.partner'].browse(author_id).name
-            payload['title'] = "#%s - %s" % (record_name, author_name)
+            payload['title'] = "#%s - %s" % (record_name, author.name)
+        elif self.channel_type == 'group':
+            if not record_name:
+                member_names = self.channel_member_ids.mapped(lambda m: m.partner_id.name if m.partner_id else m.guest_id.name)
+                record_name = f"{', '.join(member_names[:-1])} and {member_names[-1]}" if len(member_names) > 1 else member_names[0] if member_names else ""
+            payload['title'] = "%s - %s" % (record_name, author.name)
         else:
             payload['title'] = "#%s" % (record_name)
         return payload

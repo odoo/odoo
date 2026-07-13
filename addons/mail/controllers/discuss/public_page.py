@@ -98,6 +98,8 @@ class PublicPageController(http.Controller):
                 country_code=request.geoip.country_code,
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
             )
+        if guest:
+            discuss_public_view_data["guest_name"] = guest.name
         if guest and not guest_already_known:
             discuss_public_view_data.update(
                 {
@@ -109,6 +111,9 @@ class PublicPageController(http.Controller):
 
     def _response_discuss_public_template(self, channel, discuss_public_view_data=None):
         discuss_public_view_data = discuss_public_view_data or {}
+        if "guest_name" not in discuss_public_view_data:
+            guest = request.env["mail.guest"]._get_guest_from_context()
+            discuss_public_view_data["guest_name"] = guest.name
         return request.render(
             "mail.discuss_public_channel_template",
             {

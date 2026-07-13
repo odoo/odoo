@@ -86,6 +86,7 @@ export class ListDataSource extends OdooViewsDataSource {
                     spec[field.currency_field] = {
                         fields: {
                             ...spec[field.currency_field]?.fields,
+                            display_name: {},
                             name: {}, // currency code
                             symbol: {},
                             decimal_places: {},
@@ -252,5 +253,17 @@ export class ListDataSource extends OdooViewsDataSource {
                 resolve();
             });
         });
+    }
+
+    get source() {
+        this._assertMetadataIsLoaded();
+        const data = this._metaData;
+        return {
+            resModel: data.resModel,
+            type: "list",
+            fields: data.columns,
+            groupby: undefined,
+            domain: this._searchParams.domain,
+        };
     }
 }

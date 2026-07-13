@@ -175,3 +175,48 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'request_date_to': global_leave.date_to + timedelta(days=1),
         })
         self.assertEqual(leave.number_of_days, 2, 'There is a global leave')
+
+    @freeze_time('2024-12-01')
+    def test_global_leave_keeps_employee_resource_leave(self):
+        """
+            When a global leave is created, and it happens during a leave period of an employee,
+            if the employee's leave is not fully covered by the global leave, the employee's leave
+            should still have resource leaves linked to it.
+        """
+        employee = self.employee_emp
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'request_unit': 'hour',
+            'leave_validation_type': 'both',
+        })
+        self.env['hr.leave.allocation'].create({
+            'name': '20 days allocation',
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 20,
+            'employee_id': employee.id,
+            'state': 'confirm',
+            'date_from': date(2024, 12, 1),
+            'date_to': date(2024, 12, 30),
+        })
+
+        partially_covered_leave = self.env['hr.leave'].create({
+            'name': 'Holiday 1 week',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime(2024, 12, 3, 7, 0),
+            'request_date_to': datetime(2024, 12, 5, 18, 0),
+        })
+        partially_covered_leave.action_validate()
+
+        global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
+            'name': 'Public holiday',
+            'date_from': "2024-12-4 06:00:00",
+            'date_to': "2024-12-4 23:00:00",
+            'calendar_id': self.calendar_1.id,
+        })
+
+        # retrieve resource leaves linked to the employee's leave
+        resource_leaves = self.env['resource.calendar.leaves'].search([
+            ('holiday_id', '=', partially_covered_leave.id)
+        ])
+        self.assertTrue(resource_leaves, 'Resource leaves linked to the employee leave should exist.')

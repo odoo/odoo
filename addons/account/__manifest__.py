@@ -73,6 +73,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/bill_preview_template.xml',
         'data/account_reports_data.xml',
         'views/uom_uom_views.xml',
+        'data/ir_config_parameter_data.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
@@ -90,6 +91,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/scss/account_journal_dashboard.scss',
             'account/static/src/scss/account_searchpanel.scss',
             'account/static/src/scss/account_payment_term.scss',
+            'account/static/src/scss/account_type_selection.scss',
             'account/static/src/components/**/*',
             'account/static/src/services/*.js',
             'account/static/src/js/tours/account.js',

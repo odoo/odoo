@@ -42,10 +42,10 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             }
         }
 
-        await this.carriers.forEach(async (carrierInput) => {
-            this._showLoading((carrierInput));
-            await this._getCarrierRateShipment(carrierInput);
-        });
+        await Promise.all(this.carriers.map((carrierInput) => {
+            this._showLoading(carrierInput);
+            return this._getCarrierRateShipment(carrierInput);
+        }));
         if (this._super && typeof(this._super.apply)==="function") {
           return this._super.apply(this, arguments);
         }

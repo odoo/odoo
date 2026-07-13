@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo.tests import HttpCase, loaded_demo_data, tagged
+from odoo.tests import HttpCase, tagged
 
 _logger = logging.getLogger(__name__)
 
@@ -11,34 +11,19 @@ _logger = logging.getLogger(__name__)
 class TestUi(HttpCase):
     def setUp(self):
         super(TestUi, self).setUp()
-        # create a Chair floor protection product
-        self.env['product.product'].create({
-            'name': 'Chair floor protection',
+        self.env['product.product'].create([{
+            'name': 'Product Consumable',
             'type': 'consu',
             'website_published': True,
             'list_price': 1000,
-        })
-        # create a Customizable Desk product
-        self.env['product.product'].create({
-            'name': 'Customizable Desk',
-            'type': 'consu',
-            'website_published': True,
-            'list_price': 1000,
-        })
-        # create a Warranty product
-        self.env['product.product'].create({
-            'name': 'Warranty',
+        }, {
+            'name': 'Product Service',
             'type': 'service',
             'website_published': True,
             'list_price': 20,
-        })
+        }])
 
     def test_onsite_payment_tour(self):
-        # Make sure at least one onsite payment option exists.
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
-
         self.env['delivery.carrier'].create({
             'delivery_type': 'onsite',
             'is_published': True,

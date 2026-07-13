@@ -2,6 +2,7 @@
 
 import pytz
 from datetime import datetime
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
@@ -26,6 +27,14 @@ class TestHrAttendance(TransactionCase):
         cls.employee_kiosk = cls.env['hr.employee'].create({
             'name': "Machiavel",
             'pin': '5678',
+        })
+        cls.hr_user = cls.env['res.users'].create({
+            'name': 'HR Officer',
+            'login': 'hr_officer',
+            'groups_id': [(6, 0, [
+                cls.env.ref('hr.group_hr_user').id,
+                # Explicitly NOT adding: hr_attendance.group_hr_attendance_user
+            ])]
         })
 
     def setUp(self):
@@ -62,3 +71,28 @@ class TestHrAttendance(TransactionCase):
         # now = 2019/3/2 14:00 in the employee's timezone
         with patch.object(fields.Datetime, 'now', lambda: tz_datetime(2019, 3, 2, 14, 0).astimezone(pytz.utc).replace(tzinfo=None)):
             self.assertEqual(employee.hours_today, 5, "It should have counted 5 hours")
+
+    def test_attendance_checkout_while_employee_archived(self):
+        """An employee should be checked out by the system, if employee is getting archive."""
+        test_attendance = self.env['hr.attendance'].create({
+            'check_in': datetime(2024, 1, 1, 8, 0),
+            'employee_id': self.test_employee.id,
+        })
+
+        with freeze_time("2024-01-01 17:00:00"):
+            self.test_employee.action_archive()
+            self.assertEqual(test_attendance.check_out, fields.Datetime.now())
+            self.assertEqual(test_attendance.worked_hours, 8.0)
+
+    def test_attendance_checkout_while_employee_archived_without_rights(self):
+        """Test that archiving employee by HR user closes attendance even if lacks of attendance permissions"""
+
+        test_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': '2024-01-15 08:00:00',
+        })
+
+        with freeze_time("2024-01-15 17:00:00"):
+            self.test_employee.with_user(self.hr_user).action_archive()
+            self.assertTrue(not self.test_employee.active, "Employee should be archived successfully with sudo()")
+            self.assertEqual(test_attendance.check_out, fields.Datetime.now(), "Attendance should be checked out at the time of archiving")

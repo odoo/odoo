@@ -198,23 +198,27 @@ class Meeting(models.Model):
             existing_attendees = event.attendee_ids
         attendees_by_emails = {tools.email_normalize(a.email): a for a in existing_attendees}
         partners = self._get_sync_partner(emails)
-        for attendee in zip(emails, partners, google_attendees):
-            email = attendee[0]
-            if email in attendees_by_emails:
+        partners_by_email = {(p.email_normalized or p.email): p for p in partners}
+        for google_attendee in google_attendees:
+            attendee_email = google_attendee.get('email')
+            attendee_email_normalized = tools.email_normalize(attendee_email)
+            if attendee_email in attendees_by_emails:
                 # Update existing attendees
-                attendee_commands += [(1, attendees_by_emails[email].id, {'state': attendee[2].get('responseStatus')})]
+                attendee_commands += [(1, attendees_by_emails[attendee_email].id, {'state': google_attendee.get('responseStatus')})]
             else:
                 # Create new attendees
-                if attendee[2].get('self'):
+                if google_attendee.get('self'):
                     partner = self.env.user.partner_id
-                elif attendee[1]:
-                    partner = attendee[1]
+                elif partners_by_email.get(attendee_email_normalized):
+                    partner = partners_by_email[attendee_email_normalized]
+                elif partners_by_email.get(attendee_email):
+                    partner = partners_by_email[attendee_email]
                 else:
                     continue
-                attendee_commands += [(0, 0, {'state': attendee[2].get('responseStatus'), 'partner_id': partner.id})]
+                attendee_commands += [(0, 0, {'state': google_attendee.get('responseStatus'), 'partner_id': partner.id})]
                 partner_commands += [(4, partner.id)]
-                if attendee[2].get('displayName') and not partner.name:
-                    partner.name = attendee[2].get('displayName')
+                if google_attendee.get('displayName') and not partner.name:
+                    partner.name = google_attendee.get('displayName')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees but only if it does not correspond to the current user.
             email = tools.email_normalize(odoo_attendee.email)
@@ -278,16 +282,21 @@ class Meeting(models.Model):
         super(Meeting, self).action_mass_archive(recurrence_update_setting)
 
     def _google_values(self):
+        # In Google API, all-day events must have their 'dateTime' information set
+        # as null and timed events must have their 'date' information set as null.
+        # This is mandatory for allowing changing timed events to all-day and vice versa.
+        start = {'date': None, 'dateTime': None}
+        end = {'date': None, 'dateTime': None}
         if self.allday:
             # For all-day events, 'dateTime' must be set to None to indicate that it's an all-day event.
             # Otherwise, if both 'date' and 'dateTime' are set, Google may not recognize it as an all-day event.
-            start = {'date': self.start_date.isoformat(), 'dateTime': None}
-            end = {'date': (self.stop_date + relativedelta(days=1)).isoformat(), 'dateTime': None}
+            start['date'] = self.start_date.isoformat()
+            end['date'] = (self.stop_date + relativedelta(days=1)).isoformat()
         else:
             # For timed events, 'date' must be set to None to indicate that it's not an all-day event.
             # Otherwise, if both 'date' and 'dateTime' are set, Google may not recognize it as a timed event
-            start = {'dateTime': pytz.utc.localize(self.start).isoformat(), 'date': None}
-            end = {'dateTime': pytz.utc.localize(self.stop).isoformat(), 'date': None}
+            start['dateTime'] = pytz.utc.localize(self.start).isoformat()
+            end['dateTime'] = pytz.utc.localize(self.stop).isoformat()
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes

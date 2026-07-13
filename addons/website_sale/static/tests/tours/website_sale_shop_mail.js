@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add('shop_mail', {
     {
         content: "Open recipients dropdown",
         trigger: '.o_field_many2many_tags_email[name=partner_ids] input',
-        run: 'click',
+        run: 'text Azure Interior (Test)',
     },
     {
         content: "Select azure interior",

@@ -1,4 +1,5 @@
 import base64
+import binascii
 import requests
 
 from datetime import datetime
@@ -6,15 +7,15 @@ from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_join
 
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
-from odoo.tools import json
+from odoo.tools.safe_eval import json
 
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    l10n_ro_edi_client_id = fields.Char(string='Client ID')
+    l10n_ro_edi_client_id = fields.Char(string='eFactura Client ID')
     l10n_ro_edi_client_secret = fields.Char(string='Client Secret')
     l10n_ro_edi_access_token = fields.Char(string='Access Token')
     l10n_ro_edi_refresh_token = fields.Char(string='Refresh Token')
@@ -33,6 +34,21 @@ class ResCompany(models.Model):
             else:
                 company.l10n_ro_edi_callback_url = False
 
+    def _l10n_ro_edi_log_message(self, message: str, func: str):
+        with self.pool.cursor() as cr:
+            self = self.with_env(self.env(cr=cr))
+            self.env['ir.logging'].sudo().create({
+                'name': 'l10n_ro_edi_log',
+                'type': 'server',
+                'level': 'INFO',
+                'dbname': self.env.cr.dbname,
+                'message': message,
+                'func': func,
+                'path': '',
+                'line': '1',
+            })
+            self.env.cr.commit()
+
     def _l10n_ro_edi_process_token_response(self, response_json):
         """
         To be called just after processing the json response from https://logincert.anaf.ro/anaf-oauth2/v1/token
@@ -40,10 +56,7 @@ class ResCompany(models.Model):
         """
         self.ensure_one()
         if 'access_token' not in response_json or 'refresh_token' not in response_json:
-            error_message = _("Token not found.\nResponse: %s", response_json)
-            self.l10n_ro_edi_oauth_error = error_message
-            self.env.cr.commit()
-            raise UserError(error_message)
+            raise ValidationError(_("Token not found.\nResponse: %s", response_json))
 
         # The access_token is in JWT format, which consists of 3 parts separated by '.':
         # Header, Payload, and Signature. We only need the Payload part to decode the token
@@ -103,4 +116,22 @@ class ResCompany(models.Model):
         ])
         session = requests.Session()
         for company in ro_companies:
-            company._l10n_ro_edi_refresh_access_token(session)
+            error_cause = ''
+            try:
+                company._l10n_ro_edi_refresh_access_token(session)
+            except ValidationError as e:
+                # From access/refresh token not found after sending request
+                error_cause = e
+            except requests.exceptions.RequestException as e:
+                error_cause = _("Error when converting response to json: %s", e)
+            except binascii.Error as e:
+                error_cause = _("Error when decoding the access token payload: %s", e)
+            except Exception as e:
+                error_cause = _("Error when refreshing the access token: %s", e)
+
+            if error_cause:
+                error_header = _("Refresh token failed [company=%(company_id)s]", company_id=company.id)
+                self._l10n_ro_edi_log_message(
+                    message=f'{error_header}\n{error_cause}',
+                    func='_cron_l10n_ro_edi_refresh_access_token',
+                )

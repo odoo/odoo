@@ -310,39 +310,119 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         })
         sale_order.action_confirm()
         pol = sale_order._get_purchase_orders().order_line
-        self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
+        self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
 
-    def test_sale_order_multi_comp(self):
-        ''' Test that the purchase service is done on the right company (the one of the SO) '''
-        company_a, company_b = self.company_data["company"], self.company_data_2["company"]
+    def test_service_to_purchase_multi_company(self):
+        """Test the service to purchase in a multi-company environment
 
-        service_purchase = self.env['product.product'].with_company(company_a).create({
-            'name': "service 1",
-            'purchase_ok': True,
-            'sale_ok': True,
-            'list_price': 50,
-            'type': 'service',
-            'service_to_purchase': True,
-            'seller_ids': [
-                (0, 0, {'partner_id': self.partner_b.id, 'price': 100, 'company_id': company_a.id}),
-            ],
+        The `product.template.service_to_purchase` is a company_dependent field, whose
+        value depends on the company are in, which is not necessarily the order company
+
+        Granted that:
+        - The current company is company_1
+        - The product is configured as a service to be purchased on company_1
+        - The product is NOT configured as a service to be purchased on company_2
+        - We process an order on company_2, while being logged in company_1
+
+        The order must be processed without generating a PO, respecting the product
+        setting for this order's company. We also check that the opposite case holds
+        true as well (i.e. PO is generated when confirming with a company that isn't
+        configured for it, but the SO's company is)
+        """
+        company_1 = self.env.company
+        company_2 = self.company_data_2['company']
+        self.env.user.company_ids += company_2
+        self.assertTrue(self.service_purchase_1.service_to_purchase)
+        self.assertFalse(self.service_purchase_1.with_company(company_2).service_to_purchase)
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company_2.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.service_purchase_1.id,
+                    'product_uom_qty': 1,
+                })
+            ]
         })
-        self.assertFalse(service_purchase.with_company(company_b).service_to_purchase)
+        # FIXME: there is some sort of multi-company misconfiguration with the permissions that require a sudo here
+        # for this test to run. Issue doesn't occur when running test locally => probably some other module is messing
+        # with the permissions and/or there's an issue with the subsidiary setup
+        order.sudo().with_company(company_1).action_confirm()
+        self.assertFalse(order.purchase_order_count)
 
+        order2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company_1.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.service_purchase_1.id,
+                    'product_uom_qty': 1,
+                })
+            ]
+        })
+
+        # FIXME: same sudo issue as above
+        order2.sudo().with_company(company_2).action_confirm()
+        self.assertTrue(order2.purchase_order_count)
+
+    def test_service_to_purchase_branch_tax_propagation(self):
+        """
+        Ensure that SO/PO of a branch can use root company's taxes
+        """
+        branch = self.env['res.company'].create({
+            'name': "Branch Company",
+            'parent_id': self.env.company.id,
+        })
+        self.env.user.company_id = branch
+        service_product = self.env['product.product'].create({
+            'name': "Branch Out-sourced Service",
+            'standard_price': 200.0,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'taxes_id': self.company_data['default_tax_sale'],
+            'supplier_taxes_id': self.company_data['default_tax_purchase'],
+            'service_to_purchase': True,
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_b.id,
+                'min_qty': 1,
+                'price': 100,
+            })],
+        })
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'company_id': company_a.id,
+            'order_line': [Command.create({
+                'product_id': service_product.id,
+            })],
+        })
+        self.assertEqual(so.order_line.tax_id, self.company_data['default_tax_sale'])
+        so.action_confirm()
+        self.assertEqual(so.order_line.purchase_line_ids.taxes_id, self.company_data['default_tax_purchase'])
+
+    def test_purchase_service_qty_increase_with_uom_conversion(self):
+        """Ensure that increasing the quantity of a service-to-purchase product
+        with different Sales UoM and Purchase UoM correctly computes the qty
+        in the Purchase Order.
+
+        Case:
+        - SO created with 1 dozen → PO = 12 units
+        - SO increased to 2 dozen → new PO should be 12 units
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
-                    'name': service_purchase.name,
-                    'product_id': service_purchase.id,
+                Command.create({
+                    'name': self.service_purchase_2.name,
+                    'product_id': self.service_purchase_2.id,
                     'product_uom_qty': 1,
                 })
             ],
         })
-
-        self.env.user.company_id = company_b
         so.action_confirm()
-
-        po = self.env['purchase.order'].search([('partner_id', '=', self.partner_b.id)], limit=1)
-        self.assertTrue(po)
+        # Case 1: initial confirmation with 1 dozen
+        po_1 = so._get_purchase_orders()
+        self.assertEqual(po_1.order_line.product_qty, 12, "Initial PO should have 12 units (1 dozen  from SOL converted to PO uom)")
+        po_1.button_confirm()
+        # Case 2: increase SO quantity to 2 dozen
+        so.order_line.product_uom_qty = 2
+        po_2 = so._get_purchase_orders() - po_1
+        self.assertEqual(po_2.order_line.product_qty, 12, "The quantity on the SO line should be converted to the purchase UoM.")

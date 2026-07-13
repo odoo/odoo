@@ -55,6 +55,19 @@ export const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
     /**
      * @override
      */
+    _patchForComputeSnippetTemplates: function ($html) {
+        // TODO: Remove in master and remove the background filter from the snippet
+        const cover_snippet = $html.find("[data-oe-type='snippet'] [data-snippet='s_cover']");
+        if (cover_snippet.length) {
+            cover_snippet[0].querySelector('.o_we_bg_filter.bg-black-50').remove();
+            cover_snippet[0].querySelector('h1').classList.remove("text-white");
+            cover_snippet[0].querySelector('p').classList.remove("text-white");
+        }
+        return this._super($html);
+    },
+    /**
+     * @override
+     */
     _onClick: function (ev) {
         this._super(...arguments);
         var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;

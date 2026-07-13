@@ -123,35 +123,36 @@
                             </div>
                         </div>
                     </setting>
-                    <setting id="ups_provider_setting" string="UPS" help="Compute shipping costs and ship with UPS"
-                             documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                        <field name="module_delivery_ups" widget="upgrade_boolean"/>
-                    </setting>
-                    <setting id="shipping_provider_dhl_setting" string="DHL Express Connector" help="Compute shipping costs and ship with DHL"
-                             documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                        <field name="module_delivery_dhl" widget="upgrade_boolean"/>
-                        <div class="content-group">
-                            <div class="mt8" invisible="not module_delivery_dhl">
-                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="DHL Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'dhl'}"/>
+                    <setting id="ups_provider_setting">
+                        <div class="o_form_label">UPS</div>
+                        <a href="https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                        <div class="text-muted" id="website_delivery_ups">
+                            Compute shipping costs and ship with UPS<br/>
+                            <strong>(please go to Home>Apps to install)</strong>
                             </div>
+                    </setting>
+                    <setting id="shipping_provider_dhl_setting">
+                        <div class="o_form_label">DHL</div>
+                        <a href="https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                        <div class="text-muted" id="website_delivery_dhl">
+                            Compute shipping costs and ship with DHL<br/>
+                            <strong>(please go to Home>Apps to install)</strong>
                         </div>
                     </setting>
-                    <setting id="shipping_provider_fedex_setting" string="FedEx" help="Compute shipping costs and ship with FedEx"
-                             documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                        <field name="module_delivery_fedex" widget="upgrade_boolean"/>
-                        <div class="content-group">
-                            <div class="mt8" invisible="not module_delivery_fedex">
-                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="FedEx Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'fedex'}"/>
-                            </div>
+                    <setting id="shipping_provider_fedex_setting">
+                        <div class="o_form_label">FedEx</div>
+                        <a href="https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                        <div class="text-muted" id="website_delivery_fedex">
+                            Compute shipping costs and ship with FedEx<br/>
+                            <strong>(please go to Home>Apps to install)</strong>
                         </div>
                     </setting>
-                    <setting id="shipping_provider_usps_setting" string="USPS" help="Compute shipping costs and ship with USPS"
-                             documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                        <field name="module_delivery_usps" widget="upgrade_boolean"/>
-                        <div class="content-group">
-                            <div class="mt8" invisible="not module_delivery_usps">
-                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="USPS Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'usps'}"/>
-                            </div>
+                    <setting id="shipping_provider_usps_setting">
+                       <div class="o_form_label">USPS</div>
+                        <a href="https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                        <div class="text-muted" id="website_delivery_usps">
+                            Compute shipping costs and ship with USPS<br/>
+                            <strong>(please go to Home>Apps to install)</strong>
                         </div>
                     </setting>
                     <setting id="shipping_provider_bpost_setting" string="bpost" help="Compute shipping costs and ship with bpost"

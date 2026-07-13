@@ -1,31 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_crm
-# 
+# * event_crm
+#
 # Translators:
 # Wil Odoo, 2023
 # Vasco Rodrigues, 2024
 # Rita Bastos, 2024
-# 
+#
+# Humberto Sousa <humberto.sousa@smartimprove.pt>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rita Bastos, 2024\n"
-"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-20 16:05+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
+"event_crm/pt/>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
 #: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_count
 msgid "# Leads"
-msgstr "# Leads"
+msgstr "# Prospetos"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_count
@@ -48,7 +53,7 @@ msgstr "<span class=\"o_stat_text\"> Participantes</span>"
 #: model_terms:ir.ui.view,arch_db:event_crm.event_registration_view_form
 #: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
-msgstr "<span class=\"o_stat_text\"> Leads</span>"
+msgstr "<span class=\"o_stat_text\"> Prospetos</span>"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
@@ -99,7 +104,7 @@ msgstr "Empresa"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
 msgid "Counter for the registrations linked to this lead"
-msgstr "Contador dos registos ligados a esta lead."
+msgstr "Contador dos registos ligados a este prospeto"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
@@ -109,7 +114,7 @@ msgstr "Criar"
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Create a Lead Generation Rule"
-msgstr "Criar uma Regra de Geração de Lead."
+msgstr "Criar uma Regra de Geração de Prospeto"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
@@ -138,6 +143,10 @@ msgid ""
 "Registered: at attendee registration, manually or automatically;\n"
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
+"Criação: na criação do participante;\n"
+"Confirmação: no cadastro do participante, manual ou automaticamente;\n"
+"Participou: quando o comparecimento é confirmado e a inscrição definida como "
+"concluída;"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
@@ -197,14 +206,14 @@ msgid ""
 "not set, no event category restriction will be applied."
 msgstr ""
 "Filtrar os participantes para incluir os pertencentes a esta categoria de "
-"evento específica. Se não definido, nenhuma restrição de categoria de evento"
-" será aplicada."
+"evento específica. Se não definido, nenhuma restrição de categoria de evento "
+"será aplicada."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
 msgid ""
-"Filter the attendees to include those of this specific event. If not set, no"
-" event restriction will be applied."
+"Filter the attendees to include those of this specific event. If not set, no "
+"event restriction will be applied."
 msgstr ""
 "Filtrar os participantes para incluir os deste evento específico. Se não "
 "definido, nenhuma restrição de evento será aplicada."
@@ -319,7 +328,6 @@ msgstr "Oportunidade"
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_registration.py:0
-#: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Participants"
 msgstr "Participantes"
@@ -335,6 +343,9 @@ msgid ""
 "Per Attendee: A Lead is created for each Attendee (B2C).\n"
 "Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
+"Por participante: um lead é criado para cada participante (B2C).\n"
+"Por pedido: um único lead é criado por lote de ingressos/pedidos de venda "
+"(B2B)"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
@@ -364,10 +375,12 @@ msgstr "Inscrições que despoletaram a regra que criou esta lead"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
 msgid ""
-"Restrict the trigger of this rule to events belonging to a specific company.\n"
+"Restrict the trigger of this rule to events belonging to a specific "
+"company.\n"
 "If not set, no company restriction will be applied."
 msgstr ""
-"Restringe o gatilho desta regra a eventos que pertençam a uma empresa específica\n"
+"Restringe o gatilho desta regra a eventos que pertençam a uma empresa "
+"específica\n"
 "Se não definido, nenhuma restrição de empresa será aplicada."
 
 #. module: event_crm
@@ -427,7 +440,6 @@ msgstr "Tipo de Gatilho"
 
 #. module: event_crm
 #. odoo-python
-#: code:addons/event_crm/models/event_registration.py:0
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Updated registrations"

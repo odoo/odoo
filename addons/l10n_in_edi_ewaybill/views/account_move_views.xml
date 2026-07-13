@@ -11,12 +11,12 @@
             </xpath>
             <xpath expr="//notebook/page[@name='other_info']" position="before">
                 <page string="eWayBill" name="l10n_in_edi_ewaybill_page"
-                    invisible="move_type == 'entry' or country_code != 'IN'">
+                    invisible="move_type in ('entry', 'out_refund') or country_code != 'IN'">
                     <field name="l10n_in_edi_ewaybill_direct_api" invisible="1"/>
                     <group name="ewaybill_group">
                         <group string="Transaction Details" name="Transaction_group" 
                             invisible="not l10n_in_edi_ewaybill_direct_api">
-                            <field name="l10n_in_type_id" domain="[('code', '!=', 'CHL'), ('allowed_supply_type', 'in', ('in', 'both'))] if move_type in ('in_invoice', 'in_refund', 'in_receipt') else [('code', '!=', 'CHL'), ('allowed_supply_type', 'in', ('out', 'both'))]"/>
+                            <field name="l10n_in_type_id" domain="[('code', '!=', 'CHL'), ('allowed_supply_type', 'in', ('in', 'both'))] if move_type in ('in_invoice', 'out_refund', 'in_receipt') else [('code', '!=', 'CHL'), ('allowed_supply_type', 'in', ('out', 'both'))]"/>
                         </group>
                         <group string="Transportation Details" name="transportation_group">
                             <field name="l10n_in_mode" widget="radio" options="{'horizontal': True}"/>
@@ -37,6 +37,9 @@
                                 domain="[('vat','not in', ['', False]), ('country_id.code','=','IN')]"
                                 invisible="l10n_in_mode != '0'"
                                 required="l10n_in_mode == '0'"/>
+                            <field name="l10n_in_transporter_id"
+                                domain="[('country_id.code','=','IN')]"
+                                invisible="l10n_in_mode != '1'"/>
                             <field name="l10n_in_transportation_doc_no" 
                                 invisible="l10n_in_mode not in ('2', '3', '4')"
                                 required="l10n_in_mode in ('2', '3', '4')"

@@ -1,0 +1,863 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_loyalty
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2026-06-14 21:06+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-17/pos_loyalty/"
+"lo/>\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
+msgid ""
+"\n"
+"        Technical field used to link multiple reward lines from the same reward together.\n"
+"    "
+msgstr ""
+"\n"
+"        ຟີວທາງເຕັກນິກທີ່ໃຊ້ເພື່ອເຊື່ອມຕໍ່ຫຼາຍລາຍການລາງວັນຈາກລາງວັນດຽວກັນເຂົ້າກັນ.\n"
+"    "
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/partner_line/partner_line.js:0
+#, python-format
+msgid "%s Points"
+msgstr "%s ຄະແນນ"
+
+#. module: pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
+msgid "15% on next order"
+msgstr "ສ່ວນຫຼຸດ 15% ໃນຄຳສັ່ງຊື້ຖັດໄປ"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
+msgid "15% on your order"
+msgstr "ສ່ວນຫຼຸດ 15% ໃນຄຳສັ່ງຊື້ຂອງທ່ານ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "A better global discount is already applied."
+msgstr "ມີສ່ວນຫຼຸດລວມທີ່ດີກວ່ານີ້ຖືກນຳໃຊ້ແລ້ວ."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "A reward could not be loaded"
+msgstr "ບໍ່ສາມາດໂຫລດລາງວັນໄດ້"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
+msgid ""
+"A technical field used as an alternative to the promo code. This is "
+"automatically generated when the promo code is changed."
+msgstr ""
+"ຟີວທາງເຕັກນິກທີ່ໃຊ້ແທນລະຫັດໂປຣໂມຊັນ. ລະຫັດນີ້ຈະຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດເມື່ອລະຫັດໂປຣໂມຊັນຖືກປ່ຽນ."
+
+#. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
+msgid "All PoS"
+msgstr "ຈຸດຂາຍທັງໝົດ"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__any_product
+msgid "Any Product"
+msgstr "ສິນຄ້າໃດກໍ່ໄດ້"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid ""
+"Are you sure you want to remove %s from this order?\n"
+" You will still be able to claim it through the reward button."
+msgstr ""
+"ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບ %s ອອກຈາກຄຳສັ່ງຊື້ນີ້?\n"
+" ທ່ານຍັງສາມາດກົດຮັບລາງວັນໄດ້ຜ່ານປຸ່ມລາງວັນ."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Balance"
+msgstr "ຍອດເຫຼືອ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__promo_barcode
+#, python-format
+msgid "Barcode"
+msgstr "ບາໂຄ້ດ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "ກົດລະບຽບຂອງບາໂຄດ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_res_config_settings
+msgid "Config Settings"
+msgstr "ການຕັ້ງຄ່າລະບົບ"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__coupon_id
+#: model:ir.model.fields.selection,name:pos_loyalty.selection__barcode_rule__type__coupon
+msgid "Coupon"
+msgstr "ຄູປ໋ອງ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Coupon Codes"
+msgstr "ລະຫັດຄູປ໋ອງ"
+
+#. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
+msgid "Coupon point(s)"
+msgstr "ຄະແນນຄູປ໋ອງ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "Current Balance:"
+msgstr "ຍອດເຫຼືອປັດຈຸບັນ:"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Customer"
+msgstr "ຄຸ່ຄ້າ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Customer needed"
+msgstr "ຕ້ອງການຂໍ້ມູນລູກຄ້າ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid "Deactivating reward"
+msgstr "ກຳລັງຍົກເລີກການໃຊ້ລາງວັນ"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_config__gift_card_settings
+#: model:ir.model.fields,help:pos_loyalty.field_res_config_settings__pos_gift_card_settings
+msgid "Defines the way you want to set your gift cards."
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.ui.menu,name:pos_loyalty.menu_discount_loyalty_type_config
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
+msgid "Discount & Loyalty"
+msgstr "ສ່ວນຫຼຸດ & ບັດສະມາຊິກ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/promo_code_button/promo_code_button.js:0
+#: code:addons/pos_loyalty/static/src/app/control_buttons/promo_code_button/promo_code_button.xml:0
+#, python-format
+msgid "Enter Code"
+msgstr "ປ້ອນລະຫັດ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "Enter the gift card code"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "Error"
+msgstr "ຜິດພາດ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Error validating rewards"
+msgstr "ຂໍ້ຜິດພາດໃນການກວດສອບລາງວັນ"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
+msgid "Free Product - Simple Pen"
+msgstr "ສິນຄ້າຟຣີ - ບິກທຳມະດາ"
+
+#. module: pos_loyalty
+#: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
+msgid "Generate PDF cards"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "Generate a Gift Card"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid ""
+"Gift Card: %s\n"
+"Balance: %s"
+msgstr ""
+"ບັດຂອງຂວັນ: %s\n"
+"ຍອດເງິນ: %s"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__gift_card_settings
+#: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_gift_card_settings
+msgid "Gift Cards settings"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/promo_code_button/promo_code_button.js:0
+#, python-format
+msgid "Gift card or Discount code"
+msgstr "ບັດຂອງຂວັນ ຫຼື ລະຫັດສ່ວນຫຼຸດ"
+
+#. module: pos_loyalty
+#: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
+msgid "Gift cards & eWallet"
+msgstr "ບັດຂອງຂວັນ & eWallet"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
+msgid "How many point this reward cost on the coupon."
+msgstr "ລາງວັນນີ້ຕ້ອງໃຊ້ຈັກຄະແນນໃນຄູປ໋ອງ."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Invalid gift card program reward. Use 1 currency per point discount."
+msgstr "ລາງວັນໂຄງການບັດຂອງຂວັນບໍ່ຖືກຕ້ອງ. ໃຊ້ 1 ສະກຸນເງິນຕໍ່ 1 ຄະແນນສ່ວນຫຼຸດ."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Invalid gift card program rule. Use 1 point per currency spent."
+msgstr ""
+"ກົດລະບຽບໂຄງການບັດຂອງຂວັນບໍ່ຖືກຕ້ອງ. ໃຊ້ 1 ຄະແນນຕໍ່ 1 ຫົວໜ່ວຍເງິນທີ່ຈ່າຍ."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Invalid gift card program. More than one reward."
+msgstr "ໂຄງການບັດຂອງຂວັນບໍ່ຖືກຕ້ອງ. ມີລາງວັນຫຼາຍກວ່າໜຶ່ງລາຍການ."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Invalid gift card program. More than one rule."
+msgstr "ໂຄງການບັດຂອງຂວັນບໍ່ຖືກຕ້ອງ. ມີກົດລະບຽບຫຼາຍກວ່າໜຶ່ງຂໍ້."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
+msgid "Is Reward Line"
+msgstr "ແມ່ນລາຍການລາງວັນ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_mail
+msgid "Loyalty Communication"
+msgstr "ການສື່ສານດ້ານບັດສະມາຊິກ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_card
+msgid "Loyalty Coupon"
+msgstr "ຄູປ໋ອງສະມາຊິກ"
+
+#. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
+msgid "Loyalty Points"
+msgstr "ຄະແນນສະສົມ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_program
+#: model:loyalty.program,name:pos_loyalty.loyalty_program
+msgid "Loyalty Program"
+msgstr "ແຜນງານສະສົມຄະແນນ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_reward
+msgid "Loyalty Reward"
+msgstr "ລາງວັນສະມາຊິກ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_rule
+msgid "Loyalty Rule"
+msgstr "ກົດລະບຽບການສະສົມ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "New Total"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid "No"
+msgstr "ບໍ່"
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "No reward can be claimed with this coupon."
+msgstr "ບໍ່ສາມາດຮັບລາງວັນໃດໆໄດ້ດ້ວຍຄູປ໋ອງນີ້."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "No valid eWallet found"
+msgstr "ບໍ່ພົບ eWallet ທີ່ສາມາດໃຊ້ໄດ້"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/reward_button/reward_button.js:0
+#, python-format
+msgid "Please select a product for this reward"
+msgstr "ກະລຸນາເລືອກສິນຄ້າສຳລັບລາງວັນນີ້"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/reward_button/reward_button.js:0
+#, python-format
+msgid "Please select a reward"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
+msgid "PoS Order Count"
+msgstr "ຈຳນວນຄຳສັ່ງຊື້ PoS"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
+msgid "PoS Order Reference"
+msgstr "ອ້າງອີງຄຳສັ່ງຊື້ PoS"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
+msgid "PoS order where this coupon was generated."
+msgstr "ຄຳສັ່ງຊື້ PoS ທີ່ຄູປ໋ອງນີ້ຖືກສ້າງຂຶ້ນ."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
+msgid "Point of Sale"
+msgstr "ຈຸດຂາຍ (POS)"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "ການຕັ້ງຄ່າຈຸດຂາຍ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "ແຖວໃບສັ່ງຊື້ຈຸດຂາຍ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "ໃບສັ່ງຊື້ຈຸດຂາຍ"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_pos_session
+msgid "Point of Sale Session"
+msgstr "ຮອບການຂາຍຈຸດຂາຍ"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_config_ids
+msgid "Point of Sales"
+msgstr "ຈຸດຂາຍ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Points"
+msgstr "ຄະແນນ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "Points Balance"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__points_cost
+msgid "Points Cost"
+msgstr "ຄະແນນທີ່ຕ້ອງຈ່າຍ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "Points Spent"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "Points Won"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__pos_report_print_id
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_report_print_id
+msgid "Print Report"
+msgstr "ພິມລາຍງານ"
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Program: %(name)s, Reward Product: `%(reward_product)s`"
+msgstr "ແຜນງານ: %(name)s, ສິນຄ້າລາງວັນ: `%(reward_product)s`"
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Program: %(name)s, Rule Product: `%(rule_product)s`"
+msgstr "ແຜນງານ: %(name)s, ສິນຄ້າຕາມກົດລະບຽບ: `%(rule_product)s`"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "Refund with eWallet"
+msgstr "ຄືນເງິນດ້ວຍ eWallet"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/ticket_screen/ticket_screen.js:0
+#, python-format
+msgid ""
+"Refunding a top up or reward product for an eWallet or gift card program is "
+"not allowed."
+msgstr ""
+"ບໍ່ອະນຸຍາດໃຫ້ຄືນເງິນສຳລັບການເຕີມເງິນ ຫຼື ສິນຄ້າລາງວັນໃນໂຄງການ eWallet ຫຼື ບັດຂອງຂວັນ."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/reset_programs_button/reset_programs_button.xml:0
+#, python-format
+msgid "Reset Programs"
+msgstr "ຕັ້ງຄ່າແຜນງານໃໝ່"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
+msgid "Restrict publishing to those shops."
+msgstr "ຈຳກັດການເຜີຍແຜ່ສະເພາະຮ້ານຄ້າເຫຼົ່ານັ້ນ."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/reward_button/reward_button.xml:0
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_id
+#, python-format
+msgid "Reward"
+msgstr "ລາງວັນ"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_identifier_code
+msgid "Reward Identifier Code"
+msgstr "ລະຫັດລະບຸຕົວຕົນລາງວັນ"
+
+#. module: pos_loyalty
+#: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_use
+msgid "Scan existing cards"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "Select program"
+msgstr "ເລືອກແຜນງານ"
+
+#. module: pos_loyalty
+#: model:product.template,name:pos_loyalty.simple_pen_product_template
+msgid "Simple Pen"
+msgstr "ບິກທຳມະດາ"
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+#, python-format
+msgid ""
+"Some coupons are invalid. The applied coupons have been updated. Please "
+"check the order."
+msgstr ""
+"ຄູປ໋ອງບາງອັນໃຊ້ບໍ່ໄດ້. ຄູປ໋ອງທີ່ນຳໃຊ້ໄດ້ຖືກອັບເດດແລ້ວ. ກະລຸນາກວດສອບຄຳສັ່ງຊື້."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Spent:"
+msgstr "ໃຊ້ໄປ:"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
+msgid "Technical field, whether all product match"
+msgstr "ຟີວທາງເຕັກນິກ, ບໍ່ວ່າຈະເປັນສິນຄ້າທັງໝົດທີ່ກົງກັນ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That coupon code has already been scanned and activated."
+msgstr "ລະຫັດຄູປ໋ອງນັ້ນໄດ້ຖືກສະແກນ ແລະ ເປີດໃຊ້ແລ້ວ."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program has already been activated."
+msgstr "ແຜນງານລະຫັດໂປຣໂມຊັນນັ້ນໄດ້ຖືກເປີດໃຊ້ແລ້ວ."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program is expired."
+msgstr "ແຜນງານລະຫັດໂປຣໂມຊັນນັ້ນໝົດອາຍຸແລ້ວ."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program is not yet valid."
+msgstr "ແຜນງານລະຫັດໂປຣໂມຊັນນັ້ນຍັງໃຊ້ບໍ່ໄດ້ເທື່ອ."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program requires a specific pricelist."
+msgstr "ແຜນງານລະຫັດໂປຣໂມຊັນນັ້ນຕ້ອງການລາຍການລາຄາສະເພາະ."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__coupon_id
+msgid "The coupon used to claim that reward."
+msgstr "ຄູປ໋ອງທີ່ໃຊ້ເພື່ອຮັບລາງວັນນັ້ນ."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+#, python-format
+msgid ""
+"The following codes already exist in the database, perhaps they were already sold?\n"
+"%s"
+msgstr ""
+"ລະຫັດຕໍ່ໄປນີ້ມີຢູ່ໃນຖານຂໍ້ມູນແລ້ວ, ບາງທີພວກມັນອາດຈະຖືກຂາຍໄປແລ້ວບໍ?\n"
+"%s"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_mail__pos_report_print_id
+msgid ""
+"The report action to be executed when creating a coupon/gift card/loyalty "
+"card in the PoS."
+msgstr ""
+"ການດຳເນີນການລາຍງານທີ່ຈະເຮັດເມື່ອສ້າງ ຄູປ໋ອງ/ບັດຂອງຂວັນ/ບັດສະມາຊິກ ໃນ PoS."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid ""
+"The reward \"%s\" contain an error in its domain, your domain must be "
+"compatible with the PoS client"
+msgstr ""
+"ລາງວັນ \"%s\" ມີຂໍ້ຜິດພາດໃນໂດເມນ (Domain), ໂດເມນຂອງທ່ານຕ້ອງເຂົ້າກັນໄດ້ກັບລະບົບລູກຄ້າ PoS"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
+msgid "The reward associated with this line."
+msgstr "ລາງວັນທີ່ກ່ຽວຂ້ອງກັບລາຍການນີ້."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "The reward could not be applied."
+msgstr "ບໍ່ສາມາດນຳໃຊ້ລາງວັນໄດ້."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+#, python-format
+msgid "There are not enough points for the coupon: %s."
+msgstr "ມີຄະແນນບໍ່ພຽງພໍສຳລັບຄູປ໋ອງ: %s."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "There are not enough points on the coupon to claim this reward."
+msgstr "ມີຄະແນນໃນຄູປ໋ອງບໍ່ພຽງພໍທີ່ຈະຮັບລາງວັນນີ້."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "There are not enough products in the basket to claim this reward."
+msgstr "ມີສິນຄ້າໃນກະຕ່າບໍ່ພຽງພໍທີ່ຈະຮັບລາງວັນນີ້."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid ""
+"There is no email template on the gift card program and your pos is set to "
+"print them."
+msgstr ""
+"ບໍ່ມີແມ່ແບບອີເມວໃນໂຄງການບັດຂອງຂວັນ ແລະ PoS ຂອງທ່ານຖືກຕັ້ງຄ່າໃຫ້ພິມພວກມັນ."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid ""
+"There is no print report on the gift card program and your pos is set to "
+"print them."
+msgstr ""
+"ບໍ່ມີລາຍງານການພິມໃນໂຄງການບັດຂອງຂວັນ ແລະ PoS ຂອງທ່ານຖືກຕັ້ງຄ່າໃຫ້ພິມພວກມັນ."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
+msgid "These are the products that are valid for this rule."
+msgstr "ເຫຼົ່ານີ້ແມ່ນສິນຄ້າທີ່ສາມາດໃຊ້ໄດ້ກັບກົດລະບຽບນີ້."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "This coupon is expired (%s)."
+msgstr "ຄູປ໋ອງນີ້ໝົດອາຍຸແລ້ວ (%s)."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "This coupon is invalid (%s)."
+msgstr "ຄູປ໋ອງນີ້ໃຊ້ບໍ່ໄດ້ (%s)."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "This coupon is not available with the current pricelist."
+msgstr "ຄູປ໋ອງນີ້ບໍ່ສາມາດໃຊ້ໄດ້ກັບລາຍການລາຄາປັດຈຸບັນ."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "This coupon is not yet valid (%s)."
+msgstr "ຄູປ໋ອງນີ້ຍັງໃຊ້ບໍ່ໄດ້ເທື່ອ (%s)."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "This gift card has already been sold"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid ""
+"This gift card is not linked to any order. Do you really want to apply its "
+"reward?"
+msgstr ""
+"ບັດຂອງຂວັນນີ້ບໍ່ໄດ້ເຊື່ອມໂຍງກັບຄຳສັ່ງຊື້ໃດໆ. ທ່ານຕ້ອງການນຳໃຊ້ລາງວັນຂອງມັນແທ້ບໍ?"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
+msgid "This is used to print the generated gift cards from PoS."
+msgstr "ນີ້ແມ່ນໃຊ້ເພື່ອພິມບັດຂອງຂວັນທີ່ສ້າງຂຶ້ນຈາກ PoS."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid ""
+"To continue, make the following reward products available in Point of Sale."
+msgstr "ເພື່ອສືບຕໍ່, ໃຫ້ກຳນົດສິນຄ້າລາງວັນຕໍ່ໄປນີ້ໃຫ້ພ້ອມໃຊ້ງານໃນຈຸດຂາຍ (PoS)."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
+msgid "Type"
+msgstr "ປະເພດ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Unknown discount type"
+msgstr "ບໍ່ຮູ້ຈັກປະເພດສ່ວນຫຼຸດ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Unpaid gift card"
+msgstr "ບັດຂອງຂວັນທີ່ຍັງບໍ່ທັນຈ່າຍເງິນ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Unpaid gift card rejected."
+msgstr "ບັດຂອງຂວັນທີ່ຍັງບໍ່ທັນຈ່າຍເງິນຖືກປະຕິເສດ."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "Use eWallet to pay"
+msgstr "ໃຊ້ eWallet ເພື່ອຊຳລະ"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__valid_product_ids
+msgid "Valid Product"
+msgstr "ສິນຄ້າທີ່ສາມາດໃຊ້ໄດ້"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Valid until:"
+msgstr "ໃຊ້ໄດ້ຈົນເຖິງ:"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__is_reward_line
+msgid "Whether this line is part of a reward or not."
+msgstr "ບໍ່ວ່າລາຍການນີ້ຈະເປັນສ່ວນໜຶ່ງຂອງລາງວັນຫຼືບໍ່."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Won:"
+msgstr "ໄດ້ຮັບ:"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid "Yes"
+msgstr "ແມ່ນ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "You cannot sell a gift card that has already been sold."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid "You cannot set negative quantity or price to gift card or ewallet."
+msgstr ""
+"ທ່ານບໍ່ສາມາດກຳນົດຈຳນວນ ຫຼື ລາຄາເປັນຄ່າລົບໃຫ້ກັບບັດຂອງຂວັນ ຫຼື eWallet ໄດ້."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid ""
+"You either have not created an eWallet or all your eWallets have expired."
+msgstr "ທ່ານຍັງບໍ່ທັນໄດ້ສ້າງ eWallet ຫຼື eWallet ທັງໝົດຂອງທ່ານໝົດອາຍຸແລ້ວ."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "You must set '%s' before setting '%s'."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "eWallet"
+msgstr "eWallet"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "eWallet Pay"
+msgstr "ຊຳລະດ້ວຍ eWallet"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "eWallet Refund"
+msgstr "ຄືນເງິນຜ່ານ eWallet"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "eWallet requires a customer to be selected"
+msgstr "eWallet ຕ້ອງການໃຫ້ເລືອກລູກຄ້າກ່ອນ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "no expiration"
+msgstr "ບໍ່ມີວັນໝົດອາຍຸ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "the gift cards"
+msgstr "ບັດຂອງຂວັນ"

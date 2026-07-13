@@ -92,6 +92,39 @@ wTourUtils.registerWebsitePreviewTour("snippet_carousel", {
         trigger: `${carouselInnerSelector} > div.active:nth-child(2)`,
         isCheck: true,
     },
+    // Ensure quickly adding/removing slides doesn’t give a traceback
+    // (Includes delays to better simulate real user interactions and
+    // expose potential race conditions.)
+    {
+        content: "Add a slide",
+        trigger: ".snippet-option-CarouselItem .o_we_bg_success",
+        run: function(helpers) {
+            helpers.click();
+            return new Promise(resolve => {
+                setTimeout(resolve, 360);
+            });
+        },
+    },
+    {
+        content: "Remove a slide",
+        trigger: ".snippet-option-CarouselItem .o_we_bg_danger",
+        run: function(helpers) {
+            helpers.click();
+            return new Promise(resolve => {
+                setTimeout(resolve, 360);
+            });
+        },
+    },
+    {
+        content: "Add a slide",
+        trigger: ".snippet-option-CarouselItem .o_we_bg_success",
+        run: function(helpers) {
+            helpers.click();
+            return new Promise(resolve => {
+                setTimeout(resolve, 360);
+            });
+        },
+    },
     ...wTourUtils.clickOnSave(),
     // Check that saving always sets the first slide as active.
     {

@@ -32,14 +32,12 @@ export class Homepage extends Component {
         this.state = useState({ loading: true, waitRestart: false });
         this.data = useState({});
         this.store.advanced = localStorage.getItem("showAdvanced") === "true";
+        this.store.dev = new URLSearchParams(window.location.search).has("debug");
+        this.loadDataDelay = 10000;
 
         onWillStart(async () => {
             await this.loadInitialData();
         });
-
-        setInterval(() => {
-            this.loadInitialData();
-        }, 10000);
     }
 
     async loadInitialData() {
@@ -59,6 +57,10 @@ export class Homepage extends Component {
         } catch {
             console.warn("Error while fetching data");
         }
+        this.loadDataDelay *= 1.25;
+        setTimeout(async () => {
+            await this.loadInitialData();
+        }, Math.min(this.loadDataDelay, 30 * 60 * 1000));
     }
 
     async restartOdooService() {
@@ -86,7 +88,7 @@ export class Homepage extends Component {
     </LoadingFullScreen>
 
     <div t-if="!this.state.loading" class="w-100 d-flex flex-column align-items-center justify-content-center" style="background-color: #F1F1F1; height: 100vh">
-        <div class="bg-white p-4 rounded overflow-auto position-relative" style="min-width: 600px;">
+        <div class="bg-white p-4 rounded overflow-auto position-relative" style="width: 100%; max-width: 600px;">
             <div class="position-absolute end-0 top-0 mt-3 me-4 d-flex gap-1">
                 <IconButton onClick.bind="toggleAdvanced" icon="this.store.advanced ? 'fa-cog' : 'fa-cogs'" />
                 <IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" />
@@ -94,9 +96,13 @@ export class Homepage extends Component {
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
                 <h4 class="text-center m-0">IoT Box - <t t-esc="this.data.hostname" /></h4>
             </div>
-            <div t-if="this.store.advanced" class="alert alert-warning" role="alert">
-                <p class="m-0 fw-bold">HTTPS certificate</p>
-                <small>Error code: <t t-esc="this.data.certificate_details" /></small>
+            <div t-if="this.store.advanced" t-att-class="'alert ' + (this.data.is_certificate_ok === true ? 'alert-info' : 'alert-warning')" role="alert">
+                <p class="m-0 fw-bold">HTTPS Certificate</p>
+                <small>
+                    <t t-if="this.data.is_certificate_ok === true">Status: </t>
+                    <t t-else="">Error Code: </t>
+                    <t t-esc="this.data.certificate_details" />
+                </small>
             </div>
             <SingleData name="'Name'" value="this.data.hostname" icon="'fa-id-card'">
 				<t t-set-slot="button">
@@ -105,7 +111,7 @@ export class Homepage extends Component {
 			</SingleData>
             <SingleData t-if="this.store.advanced" name="'Version'" value="this.data.version" icon="'fa-microchip'">
                 <t t-set-slot="button">
-                    <UpdateDialog t-if="this.store.isLinux" />
+                    <UpdateDialog />
                 </t>
             </SingleData>
             <SingleData t-if="this.store.advanced" name="'IP address'" value="this.data.ip" icon="'fa-globe'" />

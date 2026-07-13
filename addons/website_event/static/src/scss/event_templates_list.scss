@@ -33,6 +33,12 @@
             .card-header {
                 min-height: 130px;
             }
+            @include media-breakpoint-down(md) {
+                .o_wevent_badge {
+                    position: relative !important;
+                    max-width: fit-content;
+                }
+            }
         }
         .o_wevent_badge_event {
             @include o-position-absolute($top: 0, $right: 0);
@@ -91,6 +97,11 @@
             @include border-bottom-radius($border-radius);
             color: #fff;
         }
+    }
+    a:has(.o_wevent_sidebar_figure) {
+        // This is required for Chrome. Without it, the <figcaption> element
+        // inside the second photo will not be editable properly.
+        display: block;
     }
     .o_half_screen_height {
         // Set min-height to the same value as the header

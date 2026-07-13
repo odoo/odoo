@@ -285,7 +285,10 @@ export class ProductConfiguratorDialog extends Component {
         if (parentCombination) {
             for(const ptavId of parentCombination) {
                 for(const excludedPtavId of (parentExclusions[ptavId]||[])) {
-                    ptavList.find(ptav => ptav.id === excludedPtavId).excluded = true;
+                    const ptav = ptavList.find(ptav => ptav.id === excludedPtavId);
+                    if (ptav) {
+                        ptav.excluded = true; // Assign only if the element exists
+                    }
                 }
             }
         }

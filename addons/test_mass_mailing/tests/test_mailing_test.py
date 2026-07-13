@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import lxml.html
 
+from odoo.addons.sms_twilio.tests.common import MockSmsTwilioApi
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.fields import Command
 from odoo.tests.common import users, tagged
@@ -127,13 +128,16 @@ class TestMailingTest(TestMassMailCommon):
             'mass_mailing_id': mailing.id,
         })
 
-        with self.mock_mail_gateway():
+        with self.mock_mail_gateway(mail_unlink_sent=True):
             mailing_test.send_mail_test()
 
         expected_test_record = self.env[mailing.mailing_model_real].search([], limit=1)
         self.assertEqual(expected_test_record, self.test_records[0], 'Should take first found one')
         expected_subject = f'Subject {expected_test_record.name} <t t-out="object.name"/>'
         expected_body = 'Hello {{ object.name }}' + f' {expected_test_record.name}'
+        # Also test that related messages were properly deleted
+        self.assertFalse(self.env['mail.mail'].search([('subject', '=', expected_subject)]))
+        self.assertFalse(self.env['mail.message'].search([('subject', '=', expected_subject)]))
 
         self.assertSentEmail(self.env.user.partner_id, ['test@test.com'],
             subject=expected_subject,
@@ -150,3 +154,48 @@ class TestMailingTest(TestMassMailCommon):
             subject=expected_subject,
             body_content=expected_body,
         )
+
+
+@tagged('mailing_manage', 'twilio')
+class TestMailingSMSTest(TestMassMailCommon, MockSmsTwilioApi):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_sms_twilio(cls.user_marketing.company_id)
+
+    def test_mass_sms_test_button_twilio(self):
+        """ Test the testing tool when twilio is activated on company """
+        self._setup_sms_twilio(self.user_marketing.company_id)
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestButton',
+            'subject': 'Subject {{ object.name }}',
+            'preview': 'Preview {{ object.name }}',
+            'state': 'draft',
+            'mailing_type': 'sms',
+            'body_plaintext': 'Hello {{ object.name }}',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        mailing_test = self.env['mailing.sms.test'].with_user(self.user_marketing).create({
+            'numbers': '+32456001122',
+            'mailing_id': mailing.id,
+        })
+
+        for error_type, exp_state, exp_msg in [
+            (False, 'outgoing', '<ul><li>Test SMS successfully sent to +32456001122</li></ul>'),
+            (
+                'wrong_number_format', 'outgoing',  # not sure why outgoing but hey
+                "<ul><li>Test SMS could not be sent to +32456001122: The number you're trying to reach is not correctly formatted</li></ul>"
+            ),
+        ]:
+            with self.subTest(error_type=error_type):
+                with self.with_user('user_marketing'):
+                    with self.mock_sms_twilio_gateway(error_type=error_type):
+                        mailing_test.action_send_sms()
+
+                notification = mailing.message_ids[0]
+                self.assertEqual(notification.body, exp_msg)
+                self.assertSMS(
+                    self.env["res.partner"], '+32456001122', exp_state,
+                )

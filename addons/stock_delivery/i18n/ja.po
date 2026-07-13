@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_delivery
-# 
+# * stock_delivery
+#
 # Translators:
-# Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Junko Augias, 2024
-# 
+# Wil Odoo, 2025
+# Junko Augias, 2025
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2026-01-24 08:09+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
+"stock_delivery/ja/>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -53,7 +55,7 @@ msgstr "<span>荷物重量: </span>"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr "<strong>運送会社:</strong>"
+msgstr "<strong>配送業者:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
@@ -120,8 +122,7 @@ msgstr "取消"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr "配送の取消は行えない場合があります。本当に続けますか？"
 
 #. module: stock_delivery
@@ -130,17 +131,17 @@ msgstr "配送の取消は行えない場合があります。本当に続けま
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier"
-msgstr "運送会社"
+msgstr "配送業者"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr "運送会社コード"
+msgstr "配送業者コード"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr "運送会社名"
+msgstr "配送業者名"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
@@ -167,7 +168,7 @@ msgstr "作成日"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr "運送会社選択ガイド"
+msgstr "配送業者選択ガイド"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
@@ -182,7 +183,7 @@ msgstr "配送パッケージの種類"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
 msgid "Destination"
-msgstr "遷移後"
+msgstr "配送先"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__destination_country_code
@@ -208,11 +209,28 @@ msgstr "追跡リンクの表示"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"見積金額：顧客に見積金額が請求されます。\n"
-"実費: 顧客に送料の実費が請求されます。送料は納品後に販売オーダで更新されます。"
+"見積金額：顧客に送料の見積金額が請求されます。\n"
+"実費: 顧客に送料の実費が請求されます。送料は納品後に販売オーダで更新されま"
+"す。"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr "転送時に配送業者に関して例外が発生しました。"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "例外:"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -234,7 +252,7 @@ msgstr "在庫ルート"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
 msgid "Invoicing Policy"
-msgstr "請求方針"
+msgstr "請求ポリシー"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
@@ -252,9 +270,16 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr "手動操作が必要になる場合があります。"
+
+#. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
-msgstr "連携運送会社はありません。"
+msgstr "連携配送業者はありません。"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -321,7 +346,7 @@ msgstr "プロバイダ"
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
 msgid "Real cost"
-msgstr "実価格"
+msgstr "実費"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
@@ -331,7 +356,7 @@ msgstr "返品ラベル"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "ピッキングの戻し"
+msgstr "返品ピッキング"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__route_ids
@@ -343,10 +368,13 @@ msgstr "ルート"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
-"原産地規則は、商品の原産地、すなわち、出荷元ではなく、どこで生産または製造されたかを決定します。\n"
+"原産地ルールは、商品の原産地、すなわち、出荷元ではなく、どこで生産または製造"
+"されたかを決定します。\n"
 "そのため、 ‘原産地’ とは、商業的に取引される商品の ‘経済的国籍’ なのです。"
 
 #. module: stock_delivery
@@ -381,7 +409,7 @@ msgstr "配送業者に送る"
 msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s"
-msgstr "運送会社 %(carrier_name)s に配送用に送られた配送、追跡番号%(ref)s"
+msgstr "配送業者 %(carrier_name)s に配送用に送られた配送、追跡番号%(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -416,8 +444,8 @@ msgstr "荷物重量:"
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
-msgstr "国際輸送と貨物申告のための標準コード。現時点では、FedExの配送業者にのみ使用されます。"
+"moment, only used for FedEx and USPS shipping providers."
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -452,12 +480,12 @@ msgstr ""
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
-#: code:addons/stock_delivery/models/delivery_carrier.py:0
 #, python-format
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
-msgstr "梱包を作成できません。ピッキングのプロダクトの合計重量が0.0 %sのためです。 "
+msgstr ""
+"梱包を作成できません。ピッキングのプロダクトの合計重量が0.0 %sのためです。 "
 
 #. module: stock_delivery
 #. odoo-python
@@ -473,14 +501,16 @@ msgstr "配送料金は、配送が完了した時点で設定されます。"
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
-msgstr "荷物の重量が、この梱包タイプで許可されている最大重量を超えています。他の梱包タイプを選んで下さい。"
+msgstr ""
+"荷物の重量が、この梱包タイプで許可されている最大重量を超えています。他の梱包"
+"タイプを選んで下さい。"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr "一致する配送規則がありません。"
+msgstr "一致する配送ルールがありません。"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
@@ -491,10 +521,12 @@ msgstr "梱包に含まれる全てのプロダクトの総重量"
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
 msgid ""
 "Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
+"shipping weight specified will default to their products' total weight. This "
+"is the weight used to compute the cost of the shipping."
 msgstr ""
-"梱包と梱包に入っていないプロダクトの合計重量。配送重量が指定されていない梱包は、デフォルトでそのプロダクトの合計重量になります。これは送料の計算に使用される重量です。"
+"梱包と梱包に入っていないプロダクトの合計重量。配送重量が指定されていない梱包"
+"は、デフォルトでそのプロダクトの合計重量になります。これは送料の計算に使用さ"
+"れる重量です。"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
@@ -546,7 +578,7 @@ msgstr "追跡:"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking
 msgid "Transfer"
-msgstr "移動"
+msgstr "転送"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
@@ -584,10 +616,12 @@ msgstr "重量:"
 #, python-format
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
-"プロダクトの輸送会社が異なる場合、同じパッケージに梱包することはできません(つまり、全ての運送に運送会社が割当てられており、同じ運送会社を使用していることを確認して下さい）"
+"プロダクトの輸送会社が異なる場合、同じパッケージに梱包することはできません(つ"
+"まり、全ての転送に配送業者が割当てられており、同じ配送業者を使用していること"
+"を確認して下さい）"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -601,7 +635,9 @@ msgstr "複数のトラッカーリンクがあり、それらはチャッター
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
-msgstr "この配送方法は、この注文を追跡するための宅配業者のウェブサイトにリダイレクトされていません。"
+msgstr ""
+"この配送方法は、この注文を追跡するための宅配業者のウェブサイトにリダイレクト"
+"されていません。"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix

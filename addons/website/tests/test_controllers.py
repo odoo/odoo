@@ -3,9 +3,13 @@
 
 import json
 
+from werkzeug.test import EnvironBuilder
 from werkzeug.urls import url_encode
 
+from unittest.mock import patch, Mock
 from odoo import tests
+from odoo.addons.website.controllers.main import Website
+from odoo.addons.website.tools import MockRequest
 from odoo.tools import mute_logger, submap
 
 
@@ -111,4 +115,99 @@ class TestControllers(tests.HttpCase):
                 res.status_code,
                 404,
                 "Public user shouldn't access record fields with a `groups` even if published"
+            )
+
+    @patch('requests.get')
+    def test_05_seo_suggest_language_regex(self, mock_get):
+        """
+        Test the seo_suggest method to verify it properly handles different
+        language inputs, sends correct parameters ('hl' for host language and
+        'gl' for geolocation) to the Google API, and returns the expected
+        suggestions. The test checks a variety of cases including:
+        - Regional language codes (e.g., 'en_US', 'fr_FR')
+        - Basic language codes (e.g., 'es', 'sr')
+        - Language codes with script modifier (e.g., 'sr_RS@latin',
+          'zh_CN@pinyin')
+        - Empty string input to handle default case
+        """
+
+        # Mocking the response from Google API to simulate what would be
+        # returned by the seo_suggest method.
+        mock_response = Mock()
+        mock_response.content = '''<?xml version="1.0"?>
+        <toplevel>
+            <CompleteSuggestion>
+                <suggestion data="test suggestion"/>
+            </CompleteSuggestion>
+        </toplevel>'''
+        mock_get.return_value = mock_response
+
+        # Test cases with different language inputs and expected hl and gl
+        # values.
+        test_cases = [
+            ('en_US', ['en', 'US']),         # US English
+            ('fr_FR', ['fr', 'FR']),         # French in France
+            ('es', ['es', '']),              # Spanish without country code
+            ('sr_RS@latin', ['sr', 'RS']),   # Serbian with script in Serbia
+            ('zh_CN@pinyin', ['zh', 'CN']),  # Chinese with pinyin script in China
+            ('sr@latin', ['sr', '']),        # Serbian with script but no country
+            ('', ['en', 'US'])               # Default case (empty lang. input)
+        ]
+
+        for lang_input, expected_output in test_cases:
+            # subTest creates an isolated context for each test case, allowing
+            # failures to be reported separately.
+            with self.subTest(lang=lang_input):
+                result = Website.seo_suggest(self, keywords="test", lang=lang_input)
+
+                # Extract the parameters that were passed in the mock
+                # requests.get call.
+                called_params = mock_get.call_args[1]['params']
+
+                # Verify that the 'hl' parameter (host language) matches the
+                # expected output
+                self.assertEqual(called_params['hl'], expected_output[0])
+
+                # Verify that the 'gl' parameter (geolocation) matches the
+                # expected output
+                self.assertEqual(called_params['gl'], expected_output[1])
+
+                # Verify that the returned result contains the expected
+                # suggestion "test suggestion"
+                self.assertIn('test suggestion', result)
+
+    def test_06_website_action(self):
+        """
+        Test the website action controller to ensure it correctly handles
+        different action types and returns the expected results.
+        """
+        self.authenticate("admin", "admin")
+        self.env['ir.actions.server'].create({
+            'name': 'Test Action',
+            'website_published': True,
+            'website_path': 'my_test_action',
+            'model_id': self.ref('base.model_res_partner'),
+            'code': """response = request.make_response("{'message': 'Succeeded'}")""",
+            'state': 'code',
+            'type': 'ir.actions.server',
+        })
+
+        # Test that the action response is correctly returned when accessed
+        res = self.url_open('/website/action/my_test_action')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, "{'message': 'Succeeded'}")
+
+    def test_website_force_domain_redirect(self):
+        """
+        Test that /website/force/{website.id} redirects domain correctly
+        """
+        self.env.user.groups_id += self.env.ref('website.group_multi_website')
+        website = self.env['website'].search([], limit=1)
+        website.domain = self.base_url()
+        with MockRequest(self.env, website=website, url_root='http://example.com') as mock_request:
+            mock_request.httprequest.environ = EnvironBuilder(base_url='http://example.com').get_environ()
+            redirect = Website().website_force(website_id=website.id, path='/?a=b&c=d')
+            self.assertEqual(
+                redirect.headers['Location'],
+                f'{self.base_url()}/website/force/{website.id}?isredir=1&path=%2F%3Fa%3Db%26c%3Dd'
             )

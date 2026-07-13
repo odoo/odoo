@@ -4,6 +4,7 @@
 from markupsafe import Markup
 from unittest.mock import patch
 from unittest.mock import DEFAULT
+import base64
 
 from odoo import exceptions
 from odoo.addons.mail.tests.common import MailCommon
@@ -453,6 +454,36 @@ class TestDiscuss(MailCommon, TestRecipients):
 @tagged('mail_thread')
 class TestNoThread(MailCommon, TestRecipients):
     """ Specific tests for cross models thread features """
+
+    @users('employee')
+    def test_mail_sending_on_non_thread_model(self):
+        """ This test simulates scenarios where a required method called `_process_attachments_for_post` is missing,
+        in such case composer should fallback to the method implementation in mail.thread. """
+        record = self.env['mail.test.nothread'].sudo().create({
+            'name': 'Test Model Missing Method',
+        })
+        attachment = self.env['ir.attachment'].create({
+            'name': 'Test Attachment',
+            'datas': base64.b64encode(b'This is test attachment content'),
+            'res_model': 'mail.test.nothread',
+            'res_id': record.id,
+            'mimetype': 'text/plain',
+        })
+        template = self.env['mail.template'].create({
+            'name': 'TestTemplate',
+            'model_id': self.env['ir.model']._get_id('mail.test.nothread'),
+        })
+        mail_compose_message = self.env['mail.compose.message'].create({
+            'composition_mode': 'mass_mail',
+            'model': 'mail.test.nothread',
+            'template_id': template.id,
+            'res_ids': record.ids,
+            'attachment_ids': [(6, 0, [attachment.id])]
+        })
+        with self.mock_mail_gateway():
+            mail_compose_message.action_send_mail()
+        self.assertEqual(self._new_mails.attachment_ids['datas'], base64.b64encode(b'This is test attachment content'),
+            "The attachment was not included correctly in the sent message")
 
     @users('employee')
     def test_message_format(self):

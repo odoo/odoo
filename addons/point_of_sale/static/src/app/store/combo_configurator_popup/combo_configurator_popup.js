@@ -55,8 +55,13 @@ export class ComboConfiguratorPopup extends AbstractAwaitablePopup {
                 this.state.configuration[combo_line.id] = payload;
             } else {
                 // Do not select the product if configuration popup is cancelled.
-                this.state.combo[combo_line.id] = 0;
+                this.state.combo[combo_line.combo_id[0]] = 0;
             }
         }
+    }
+    getAvailableComboLines(combo) {
+        return combo.combo_line_ids
+            .map((combo_line_id) => this.pos.db.combo_line_by_id[combo_line_id])
+            .filter((line) => this.pos.db.product_by_id[line.product_id[0]]?.active);
     }
 }

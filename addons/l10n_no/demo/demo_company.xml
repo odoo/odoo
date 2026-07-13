@@ -6,7 +6,7 @@
         <field name="street"/>
         <field name="city">Åmot</field>
         <field name="country_id" ref="base.no"/>
-        
+
         <field name="zip"/>
         <field name="phone">+47 406 12 345</field>
         <field name="email">info@company.noexample.com</field>
@@ -23,6 +23,7 @@
         <field name="acc_number">NO8330001234567</field>
         <field name="partner_id" ref="partner_demo_company_no"/>
         <field name="company_id" ref="demo_company_no"/>
+        <field name="allow_out_payment" eval="True"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">

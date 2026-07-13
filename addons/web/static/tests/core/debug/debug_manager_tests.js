@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { DebugMenu } from "@web/core/debug/debug_menu";
-import { regenerateAssets } from "@web/core/debug/debug_menu_items";
+import { regenerateAssets, becomeSuperuser } from "@web/core/debug/debug_menu_items";
 import { registry } from "@web/core/registry";
 import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ormService } from "@web/core/orm_service";
@@ -290,6 +290,23 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.strictEqual(item.textContent, "Regenerate Assets Bundles");
         await click(item);
         assert.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
+    });
+
+    QUnit.test("cannot acess the Become superuser menu if not admin", async (assert) => {
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        debugRegistry.category("default").add("becomeSuperuser", becomeSuperuser);
+
+        testConfig = { mockRPC };
+        const env = await makeTestEnv(testConfig);
+        env.services.user.isAdmin = false;
+        await mount(DebugMenuParent, target, { env });
+
+        await click(target.querySelector("button.dropdown-toggle"));
+        assert.containsNone(target, ".dropdown-menu .dropdown-item");
     });
 
     QUnit.test("can open a view", async (assert) => {
@@ -883,5 +900,73 @@ QUnit.module("DebugMenu", (hooks) => {
             ["partner", "reference", {"displayName": "Test", "resId": 1, "resModel": "pony"}, true, true, false],
             ["partner", "m2o", 1, true, true, false],
         ]);
+    });
+
+    QUnit.test("set defaults: settings default value for a very long value", async (assert) => {
+        prepareRegistriesWithCleanup();
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+        registry.category("services").add("user", makeFakeUserService());
+        registry.category("debug").category("form").add("setDefaults", setDefaults);
+
+        const serverData = getActionManagerServerData();
+        serverData.models.partner.fields.description = { string: "Description", type: "html" };
+        serverData.actions[1234] = {
+            id: 1234,
+            xml_id: "action_1234",
+            name: "Partners",
+            res_model: "partner",
+            res_id: 1,
+            type: "ir.actions.act_window",
+            views: [[18, "form"]],
+        };
+        const fooValue = "12".repeat(250);
+        serverData.views["partner,18,form"] = `
+            <form>
+                <group>
+                    <field name="display_name"/>
+                    <field name="description"/>
+                    <field name="foo"/>
+                </group>
+            </form>
+        `;
+        serverData.models.partner.records[0].foo = fooValue;
+        serverData.models.partner.records[0].description = fooValue;
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+            if (args.method === "set" && args.model === "ir.default") {
+                assert.step("setting default");
+                assert.deepEqual(args.args, ["partner", "foo", fooValue, true, true, false]);
+                return true;
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1234);
+        await click(target.querySelector(".o_debug_manager button"));
+        await click(target.querySelector(".o_debug_manager .dropdown-item"));
+        const select = target.querySelector(".modal #formview_default_fields");
+
+        const options = Object.fromEntries(
+            Array.from(select.querySelectorAll("option")).map((option) => [
+                option.value,
+                option.textContent,
+            ])
+        );
+        assert.deepEqual(options, {
+            "": "",
+            display_name: "Display Name = First record",
+            foo: "Foo = 121212121212121212121212121212121212121212121212121212121...",
+            description:
+                "Description = 121212121212121212121212121212121212121212121212121212121...",
+        });
+
+        select.value = "foo";
+        select.dispatchEvent(new Event("change"));
+        await nextTick();
+        await click(target.querySelectorAll(".modal .modal-footer button")[1]);
+        assert.verifySteps(["setting default"]);
     });
 });

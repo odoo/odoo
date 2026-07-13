@@ -18,6 +18,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
         this.debouncedUpdateQuantity = useDebounced(this._updateQuantity, 500, {
             execBeforeUnmount: true,
         });
+        this._pendingUpdate = Promise.resolve();
 
         useSubEnv({
             currencyId: this.props.record.context.product_catalog_currency_id,
@@ -65,7 +66,15 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     }
 
     _updateQuantityAndGetPrice() {
-        return this.rpc("/product/catalog/update_order_line_info", this._getUpdateQuantityAndGetPrice());
+        // Chain RPC calls to ensure that each request is completed before starting the next one.
+        // This prevents race conditions and ensures the server processes updates sequentially.
+        this._pendingUpdate = this._pendingUpdate.then(() =>
+            this.env.services.rpc(
+                "/product/catalog/update_order_line_info",
+                this._getUpdateQuantityAndGetPrice()
+            )
+        );
+        return this._pendingUpdate;
     }
 
     _getUpdateQuantityAndGetPrice() {

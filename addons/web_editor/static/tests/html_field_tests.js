@@ -3,6 +3,7 @@
 import { click, editInput, getFixture, makeDeferred, mockSendBeacon, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { contains } from "@web/../tests/utils";
 import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";
 import { FormController } from '@web/views/form/form_controller';
 import { HtmlField } from "@web_editor/js/backend/html_field";
@@ -882,6 +883,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const node = editor.editable.querySelector('p').childNodes[0];
         newHistoryStepPromise();
         node.textContent = 'b';
+        editor.historyStep();
         await historyStepPromise;
 
         assert.equal(editor.editable.children[0].children[0].innerHTML.trim(), '<p>b</p>');
@@ -945,6 +947,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const node = editor.editable.querySelector('p').childNodes[0];
         newHistoryStepPromise();
         node.textContent = 'b';
+        editor.historyStep();
         await historyStepPromise;
 
         assert.equal(editor.editable.children[0].children[0].innerHTML.trim(), '<p class="oe_unremovable">b</p>');
@@ -1008,6 +1011,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const node = editor.editable.querySelector('div.oe_unremovable');
         newHistoryStepPromise();
         node.textContent = 'b';
+        editor.historyStep();
         await historyStepPromise;
 
         assert.equal(editor.editable.children[0].children[0].innerHTML.trim(), '<div class="oe_unremovable"><p class="oe_unremovable">a</p></div>');
@@ -1073,11 +1077,18 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
     QUnit.module("Link");
 
     QUnit.test("link preview in Link Dialog", async (assert) => {
-        assert.expect(6);
+        assert.expect(7);
 
         serverData.models.partner.records.push({
             id: 1,
             txt: "<p class='test_target'><a href='/test'>This website</a></p>",
+        });
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                wysiwygPromise.resolve();
+            },
         });
         await makeView({
             type: "form",
@@ -1089,17 +1100,21 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                     <field name="txt" widget="html"/>
                 </form>`,
         });
+        await wysiwygPromise;
 
         // Test the popover option to edit the link
         const a = document.querySelector(".test_target a");
         // Wait for the popover to appear
         await nextTick();
         a.click();
+        setSelection(a, 0, a, 0); // Selection must be in the link otherwise the popover will close.
         await nextTick();
         // Click on the edit link icon
         document.querySelector("a.mx-1.o_we_edit_link.text-dark").click();
         // Make sure popover is closed
         await new Promise(resolve => $(a).on('hidden.bs.popover.link_popover', resolve));
+        // Make sure modal is open
+        await contains(".modal input#o_link_dialog_label_input");
         let labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
         let linkPreview = document.querySelector(".modal a#link-preview");
         assert.strictEqual(labelInputField.value, 'This website',
@@ -1168,6 +1183,200 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.strictEqual(htmlField.wysiwyg.getValue(), '<p>abc</p>', 'the value should be sanitized by the wysiwyg');
         assert.strictEqual(htmlField._isDirty(), false, 'should not be dirty as the content has not changed');
 
+    });
+
+    QUnit.module("Image transform");
+
+    QUnit.test("Image transform should reset after click twice", async (assert) => {
+        assert.expect(8);
+
+        const isElementRotated = (element) => {
+            // Get the computed style of the element
+            const style = window.getComputedStyle(element);
+
+            // Get the transform property value
+            const transform = style.transform || style.mozTransform;
+
+            // If transform is 'none', the element is not rotated
+            if (transform === "none") {
+                return false;
+            }
+
+            // The matrix values will be in the form of matrix(a, b, c, d, e, f)
+            // For rotation, a and d will reflect the cosine of the angle, and b and c the sine.
+            const values = transform.split("(")[1].split(")")[0].split(",");
+
+            const a = parseFloat(values[0]);
+            const b = parseFloat(values[1]);
+
+            // Calculate the angle of rotation in degrees
+            const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+
+            // If the angle is not 0, the element is rotated
+            return angle !== 0;
+        };
+
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: `<p class="content"><br></p>`,
+        });
+        let htmlField;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                htmlField = this;
+                wysiwygPromise.resolve();
+            },
+            // To prevent saving when calling onWillUnmount
+            async commitChanges() {},
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+
+        const paragraph = editor.editable.querySelector(".content");
+        setSelection(paragraph, 0, paragraph, 0);
+        await nextTick();
+
+        // Paste image.
+        const img = await pasteImage(editor, "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII");
+        // p.childnodes = [text, img]
+        setSelection(paragraph, 1, paragraph, 2);
+        await nextTick();
+
+        // we need to trigger a mousup event manually so the wysiwyg run `_updateEditorUI`
+        let mouseUpEvent = new MouseEvent("mouseup", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        img.dispatchEvent(mouseUpEvent);
+
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should be visible"
+        );
+        assert.ok(document.querySelector("div#image-transform"), "Image toolbar is shown");
+
+        setSelection(paragraph, 0, paragraph, 0);
+        await nextTick();
+
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: hidden"]'),
+            "Toolbar should be hidden"
+        );
+
+        img.setAttribute(
+            "style",
+            "transform: rotate(20deg) translateX(-0.5%) translateY(1%); animation-play-state: paused; transition: none;"
+        );
+
+        // setSelection(paragraph, 1, paragraph, 2);
+        // await nextTick();
+        mouseUpEvent = new MouseEvent("mouseup", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        img.dispatchEvent(mouseUpEvent);
+        await nextTick();
+
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should be visible"
+        );
+        assert.ok(document.querySelector("div#image-transform"), "Image toolbar is shown");
+        document.querySelector("div#image-transform").click();
+        await nextTick();
+        assert.ok(
+            document.querySelector("div.transfo-container"),
+            "Transform div should be visible around the image"
+        );
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should stay visible"
+        );
+        // click second time
+        // simply using click on the element doesn't trigger the mousedown event
+        const mouseDownEvent = new MouseEvent("mousedown", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+        });
+        document.querySelector("div#image-transform").dispatchEvent(mouseDownEvent);
+        await nextTick();
+        const isRotated = isElementRotated(img);
+        assert.notOk(isRotated, "The image should not be rotated");
+    });
+
+    QUnit.module("Image Delete");
+
+    QUnit.test("Image should delete without making any element", async (assert) => {
+        assert.expect(3);
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: `<p class="content"><br></p><p class="content"><img></p>`,
+        });
+        let htmlField;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                htmlField = this;
+                wysiwygPromise.resolve();
+            },
+            // To prevent saving when calling onWillUnmount
+            async commitChanges() { },
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+        const paragraph = editor.editable.querySelectorAll(".content")[1];
+        setSelection(paragraph, 0, paragraph, 0);
+        await nextTick();
+
+        const img = editor.editable.querySelector("img");
+        setSelection(paragraph, 1, paragraph, 2);
+        await nextTick();
+
+        // Trigger mouseup manually to run `_updateEditorUI`.
+        const mouseUpEvent = new MouseEvent("mouseup", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        img.dispatchEvent(mouseUpEvent);
+        await nextTick();
+        document.querySelector("#image-delete").click();
+        await nextTick();
+        assert.equal(
+            editor.editable.innerHTML,
+            '<p class="content"><br></p><p class="content oe-hint oe-command-temporary-hint" placeholder="Type &quot;/&quot; for commands"></p>'
+        );
+        const selection = document.getSelection();
+        assert.equal(selection.anchorNode, paragraph);
+        assert.equal(selection.anchorOffset, 0);
     });
 });
 

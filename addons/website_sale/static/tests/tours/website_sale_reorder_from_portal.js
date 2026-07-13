@@ -62,6 +62,39 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",
+        },
+        // Fourth reorder making sure confirmation dialog doesn't pop up unnecessary
+        {
+            content: "Deleting All products from cart",
+            trigger: 'div.js_cart_lines',
+            run: async () => {
+                $('a.js_delete_product:first').click();
+                await new Promise((r) => setTimeout(r, 1000));
+                $('a.js_delete_product:first').click();
+                await new Promise((r) => setTimeout(r, 1000));
+                $('a.js_delete_product:first').click();
+                await new Promise((r) => setTimeout(r, 1000));
+                $('a.js_delete_product:first').click();
+                await new Promise((r) => setTimeout(r, 1000));
+            }
+        },
+        {
+            content: "Go to my orders",
+            trigger: 'body',
+            run: () => {
+                window.location = '/my/orders';
+            }
+        },
+        {
+            content: "Select first order",
+            trigger: '.o_portal_my_doc_table a:first',
+        },
+        wTourUtils.clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
+        wTourUtils.clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
+        wsTourUtils.assertCartContains({productName: 'Reorder Product 1'}),
+        {
+            content: "Check that quantity is 1",
+            trigger: ".js_quantity[value='1']",
             isCheck: true,
         },
     ]

@@ -3,7 +3,6 @@ from typing import Dict, List
 
 import babel.dates
 import base64
-import copy
 import itertools
 import json
 import pytz
@@ -14,7 +13,7 @@ from odoo.models import BaseModel, NewId
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
 from odoo.tools import date_utils, unique
 from odoo.tools.misc import OrderedSet, get_lang
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from collections import defaultdict
 
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
@@ -134,23 +133,64 @@ class Base(models.AbstractModel):
 
                 co_records = self[field_name]
 
-                if 'order' in field_spec and field_spec['order']:
-                    co_records = co_records.search([('id', 'in', co_records.ids)], order=field_spec['order'])
+                field_spec_order = field_spec.get('order')
+                field_spec_has_fields = 'fields' in field_spec
+                has_co_records = any(co_records.ids)
+                has_model_read_access = (
+                    has_co_records
+                    and co_records.env['ir.model.access'].check(
+                        co_records._name, 'read', raise_exception=False,
+                    )
+                )
+
+                # Filter out co-records the user cannot read (cache may keep
+                # inaccessible ids after a sudo write/read).
+                if field_spec_order and has_co_records:
+                    if not has_model_read_access:
+                        # If the comodel is not readable, keep the x2many empty.
+                        co_records = co_records.browse()
+                    else:
+                        try:
+                            co_records = co_records.with_context(active_test=False).search(
+                                [('id', 'in', co_records.ids)], order=field_spec_order,
+                            ).with_context(co_records.env.context)  # Reapply previous context
+                        # Keep UserError if the model does not accept the search
+                        # (e.g. account.code.mapping).
+                        except (AccessError, UserError):
+                            co_records = co_records.browse()
+
+                elif field_spec_has_fields and has_model_read_access:
+                    # Filter co-records only if the user can read the comodel.
+                    # Some x2many fields have models that are not directly
+                    # readable by the user (e.g. hr.employee from hr.appraisal for a
+                    # base.group_user). In that case, keep the relation ids unchanged.
+                    co_records = co_records.with_context(
+                        active_test=False,
+                    )._filter_access_rules('read').with_context(
+                        co_records.env.context
+                    )
+
+                if has_co_records and (field_spec_order or field_spec_has_fields):
+                    co_records_ids = set(co_records.ids)
+
+                    for values in values_list:
+                        # filter out inaccessible corecords in case of "cache pollution"
+                        values[field_name] = [id_ for id_ in values[field_name] if id_ in co_records_ids]
+
+                if field_spec_order:
                     order_key = {
                         co_record.id: index
                         for index, co_record in enumerate(co_records)
                     }
                     for values in values_list:
-                        # filter out inaccessible corecords in case of "cache pollution"
-                        values[field_name] = [id_ for id_ in values[field_name] if id_ in order_key]
                         values[field_name] = sorted(values[field_name], key=order_key.__getitem__)
 
                 if 'context' in field_spec:
                     co_records = co_records.with_context(**field_spec['context'])
 
-                if 'fields' in field_spec:
-                    if field_spec.get('limit') is not None:
-                        limit = field_spec['limit']
+                if field_spec_has_fields:
+                    limit = field_spec.get('limit')
+                    if limit is not None:
                         ids_to_read = OrderedSet(
                             id_
                             for values in values_list
@@ -1063,8 +1103,10 @@ class Base(models.AbstractModel):
         # process names in order
         while todo:
             # apply field-specific onchange methods
+            visited_onchanges = set()
             for field_name in todo:
-                record._apply_onchange_methods(field_name, result)
+                record._apply_onchange_methods(field_name, result, visited_onchanges)
+                visited_onchanges.update(self._onchange_methods.get(field_name, ()))
                 done.add(field_name)
 
             if not env.context.get('recursive_onchanges', True):

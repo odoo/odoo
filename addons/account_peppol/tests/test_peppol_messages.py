@@ -1,23 +1,25 @@
 import json
 from base64 import b64encode
 from contextlib import contextmanager
-from freezegun import freeze_time
-from requests import Session, PreparedRequest, Response
+from urllib import parse
 
-from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from freezegun import freeze_time
+from requests import PreparedRequest, Response, Session
+
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged
 from odoo.tools.misc import file_open
 
+from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 FAKE_UUID = ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy',
              'zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz']
 FILE_PATH = 'account_peppol/tests/assets'
 
-@freeze_time('2023-01-01')
-@tagged('-at_install', 'post_install')
-class TestPeppolMessage(TestAccountMoveSendCommon):
+
+class TestPeppolMessageCommon(TestAccountMoveSendCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -62,6 +64,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         cls.env['res.partner.bank'].create({
             'acc_number': '0144748555',
             'partner_id': cls.env.company.partner_id.id,
+            'allow_out_payment': True,
         })
 
     def create_move(self, partner):
@@ -83,50 +86,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         })
 
     @classmethod
-    def _get_mock_data(cls, error=False):
-        proxy_documents = {
-            FAKE_UUID[0]: {
-                'accounting_supplier_party': False,
-                'filename': 'test_outgoing.xml',
-                'enc_key': '',
-                'document': '',
-                'state': 'done' if not error else 'error',
-                'direction': 'outgoing',
-                'document_type': 'Invoice',
-            },
-            FAKE_UUID[1]: {
-                'accounting_supplier_party': '0198:dk16356706',
-                'filename': 'test_incoming',
-                'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='rb').read(),
-                'document': b64encode(file_open(f'{FILE_PATH}/document', mode='rb').read()),
-                'state': 'done' if not error else 'error',
-                'direction': 'incoming',
-                'document_type': 'Invoice',
-            },
-        }
-
-        responses = {
-            '/api/peppol/1/send_document': {'result': {
-                'messages': [{'message_uuid': FAKE_UUID[0]}]}},
-            '/api/peppol/1/ack': {'result': {}},
-            '/api/peppol/1/get_all_documents': {'result': {
-                'messages': [
-                    {
-                        'accounting_supplier_party': '0198:dk16356706',
-                        'filename': 'test_incoming.xml',
-                        'uuid': FAKE_UUID[1],
-                        'state': 'done',
-                        'direction': 'incoming',
-                        'document_type': 'Invoice',
-                        'sender': '0198:dk16356706',
-                        'receiver': '0208:0477472701',
-                        'timestamp': '2022-12-30',
-                        'error': False if not error else 'Test error',
-                    }
-                ],
-            }}
-        }
-        return proxy_documents, responses
+    def _get_incoming_invoice_content(cls):
+        with file_open(f'{FILE_PATH}/document', mode='rb') as f:
+            return f.read()
 
     @contextmanager
     def _set_context(self, other_context):
@@ -139,41 +101,127 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         response = Response()
         response.status_code = 200
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A0477472701'):
-            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0477472701</id:ParticipantIdentifier>'
-            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
-            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A3141592654'):
-            response.status_code = 404
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A2718281828'):
-            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:2718281828</id:ParticipantIdentifier></smp:ServiceGroup>'
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0198%3Adk16356706'):
-            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0198:dk16356706</id:ParticipantIdentifier></smp:ServiceGroup>'
-            return response
 
-        proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'))
+        if r.path_url.startswith('/api/peppol/1/lookup'):
+            peppol_identifier = parse.parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+            url_quoted_peppol_identifier = parse.quote_plus(peppol_identifier)
+            if peppol_identifier.endswith('0477472701'):
+                response.status_code = 200
+                response.json = lambda: {
+                    "result": {
+                        'identifier': peppol_identifier,
+                        'smp_base_url': "http://iap-services.odoo.com",
+                        'ttl': 60,
+                        'service_group_url': f'http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}',
+                        'services': [
+                            {
+                                "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1",
+                                "document_id": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
+                            },
+                        ],
+                    },
+                }
+                return response
+            if peppol_identifier.endswith('3141592654'):
+                response.status_code = 404
+                response.json = lambda: {"error": {"code": "NOT_FOUND", "message": "no naptr record", "retryable": False}}
+                return response
+            if peppol_identifier.endswith('2718281828'):
+                response.status_code = 200
+                response.json = lambda: {
+                    "result": {
+                        'identifier': peppol_identifier,
+                        'smp_base_url': "http://iap-services.odoo.com",
+                        'ttl': 60,
+                        'service_group_url': f'http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}',
+                        'services': [
+                            {
+                                "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1",
+                                "document_id": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
+                            },
+                            {
+                                "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Aselfbilling%3A3.0%3A%3A2.1",
+                                "document_id": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0::2.1",
+                            },
+                        ],
+                    },
+                }
+                return response
+
+            if peppol_identifier == '0198:dk16356706':
+                response.status_code = 200
+                response.json = lambda: {"result": {
+                        'identifier': peppol_identifier,
+                        'smp_base_url': "http://iap-services.odoo.com",
+                        'ttl': 60,
+                        'service_group_url': f'http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}',
+                        'services': [],
+                    },
+                }
+                return response
+
         url = r.path_url
         body = json.loads(r.body)
         if url == '/api/peppol/1/send_document':
             if not body['params']['documents']:
                 raise UserError('No documents were provided')
+            num_invoices = len(body['params']['documents'])
+            response.json = lambda: {
+                'result': {
+                    'messages': [{'message_uuid': FAKE_UUID[0]}] * num_invoices
+                }
+            }
+            return response
+
+        if url == '/api/peppol/1/ack':
+            response.json = lambda: {'result': {}}
+            return response
+
+        if url == '/api/peppol/1/get_all_documents':
+            response.json = lambda: {
+                'result': {
+                    'messages': [
+                        {
+                            'accounting_supplier_party': '0198:dk16356706',
+                            'filename': 'test_incoming.xml',
+                            'uuid': FAKE_UUID[1],
+                            'state': 'done',
+                            'direction': 'incoming',
+                            'document_type': 'Invoice',
+                            'sender': '0198:dk16356706',
+                            'receiver': '0208:0477472701',
+                            'timestamp': '2022-12-30',
+                            'error': False if not cls.env.context.get('error') else 'Test error',
+                        }
+                    ],
+                }
+            }
+            return response
 
         if url == '/api/peppol/1/get_document':
             uuid = body['params']['message_uuids'][0]
-            response.json = lambda: {'result': {uuid: proxy_documents[uuid]}}
+            response_content = {
+                'accounting_supplier_party': '0198:dk16356706',
+                'filename': 'test_incoming',
+                'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='rb').read(),
+                'document': b64encode(cls._get_incoming_invoice_content()),
+                'state': 'done' if not cls.env.context.get('error') else 'error',
+                'direction': 'incoming',
+                'document_type': 'Invoice',
+            }
+            response.json = lambda: {'result': {uuid: response_content}}
             return response
 
-        if url not in responses:
-            return super()._request_handler(s, r, **kw)
-        response.json = lambda: responses[url]
-        return response
+        return super()._request_handler(s, r, **kw)
+
+
+@tagged('-at_install', 'post_install')
+class TestPeppolMessage(TestPeppolMessageCommon):
 
     def test_attachment_placeholders(self):
-        move = self.create_move(self.valid_partner)
-        move.action_post()
+        with freeze_time('2023-01-01'):
+            move = self.create_move(self.valid_partner)
+            move.action_post()
 
         builder = self.valid_partner._get_edi_builder()
         filename = builder._export_invoice_filename(move)
@@ -262,15 +310,15 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             checkbox_send_peppol=True,
         )
 
-        wizard.action_send_and_print()
-
-        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
-        self.assertRecordValues(move, [{
-                'peppol_move_state': 'done',
-                'peppol_message_uuid': FAKE_UUID[0],
-            }],
-        )
-        self.assertTrue(bool(move.ubl_cii_xml_id))
+        # Try to send the invoice twice to ensure the second send doesn't mark the state as skipped
+        for _ in range(2):
+            wizard.action_send_and_print()
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+            self.assertRecordValues(move, [{
+                    'peppol_move_state': 'done',
+                    'peppol_message_uuid': FAKE_UUID[0],
+                }],
+            )
 
     def test_send_peppol_and_email_default_values(self):
         # If both "Send by Email" and "Send by Peppol" are set, we deactivate the "Send by Email" option
@@ -317,6 +365,30 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
         self.assertRecordValues(
             move, [{
+                'peppol_move_state': 'done',
+                'move_type': 'in_invoice',
+            }])
+
+    def test_peppol_document_retrieval_with_company_context(self):
+        # Ensure that the bill creation is done using the move company/proxy user context
+
+        other_company = self.company_data_2["company"]
+        self.env["ir.default"].create({
+            'company_id': other_company.id,
+            'field_id': self.env['ir.model.fields']._get('res.partner', 'company_id').id,
+            'json_value': other_company.id,
+        })
+        initial_company = self.env.company
+        other_companies = self.env.companies
+        self.env['account_edi_proxy_client.user']\
+            .with_company(other_company)\
+            .with_context(allowed_company_ids=other_companies.ids)\
+            ._cron_peppol_get_new_documents()
+
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertRecordValues(
+            move, [{
+                'company_id': initial_company.id,
                 'peppol_move_state': 'done',
                 'move_type': 'in_invoice',
             }])
@@ -368,3 +440,236 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0477472701',
             }])
+
+    def test_automatic_invoicing_auto_update_partner_peppol_status(self):
+        self.ensure_installed('sale')
+        tax = self.env['account.tax'].create({
+            'name': "test_automatic_invoicing_auto_update_partner_peppol_status",
+            'amount_type': 'percent',
+            'amount': 21.0,
+        })
+        product = self.env['product.product'].create({
+            'name': "test_automatic_invoicing_auto_update_partner_peppol_status",
+            'lst_price': 100.0,
+            'taxes_id': [Command.set(tax.ids)],
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'partner_be',
+            'street': "Rue des Bourlottes 9",
+            'zip': "1367",
+            'city': "Ramillies",
+            'vat': 'BE0477472701',
+            'company_registry': '0477472701',
+            'company_id': self.env.company.id,
+            'country_id': self.env.ref('base.be').id,
+        })
+        self.env.user.groups_id |= self.env.ref('sales_team.group_sale_salesman')
+
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', True)
+        so = self.env['sale.order'].create([{
+            'partner_id': partner.id,
+            'order_line': [Command.create({'product_id': product.id})],
+        }])
+        so.action_confirm()
+
+        payment_method = self.env.ref('payment.payment_method_unknown')
+
+        dummy_provider = self.env['payment.provider'].create({
+            'name': "Dummy Provider",
+            'code': 'none',
+            'state': 'test',
+            'is_published': True,
+            'payment_method_ids': [Command.set(payment_method.ids)],
+            'allow_tokenization': True,
+        })
+        self._create_dummy_payment_method_for_provider(
+            provider=dummy_provider,
+            journal=self.company_data['default_journal_bank'],
+        )
+        transaction = self.env['payment.transaction'].create({
+            'payment_method_id': payment_method.id,
+            'amount': so.amount_total,
+            'state': 'done',
+            'provider_id': dummy_provider.id,
+            'currency_id': so.currency_id.id,
+            'reference': so.name,
+            'partner_id': partner.id,
+            'sale_order_ids': [Command.set(so.ids)],
+        })
+        transaction._invoice_sale_orders()
+
+        self.assertRecordValues(partner, [{'account_peppol_verification_label': 'valid'}])
+
+    def test_peppol_after_pdf_generation(self):
+        """
+        Test that the Peppol option is available and works after the PDF generation
+        It should generate the UBL/CII xml and send it to Peppol
+        """
+        with freeze_time('2023-01-01'):
+            move = self.create_move(self.valid_partner)
+            move.action_post()
+
+        wizard_email = self.create_send_and_print(
+            move,
+            checkbox_send_mail=True,
+            checkbox_ubl_cii_xml=False,
+            checkbox_send_peppol=False,
+        )
+        wizard_email.action_send_and_print()
+        self.assertTrue(move.invoice_pdf_report_id)
+
+        wizard_peppol = self.create_send_and_print(move)
+        self.assertTrue(wizard_peppol.enable_peppol)
+        wizard_peppol.checkbox_send_peppol = True
+        self.assertRecordValues(wizard_peppol, [{'checkbox_ubl_cii_xml': True, 'enable_ubl_cii_xml': True}])
+        wizard_peppol.action_send_and_print()
+
+        self.assertTrue('Peppol' in move.message_ids[0].preview, 'The last message should be about Peppol')
+        self.assertRecordValues(move.message_ids[0].attachment_ids, [{
+            'name': 'INV_2023_00001_ubl_bis3.xml',
+            'mimetype': 'application/xml',
+        }])
+
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.assertRecordValues(move, [{
+                'peppol_move_state': 'done',
+                'peppol_message_uuid': FAKE_UUID[0],
+            }],
+        )
+        self.assertTrue(move.ubl_cii_xml_id)
+
+    def test_peppol_after_xml_generation(self):
+        """
+        Test that the Peppol option is available and works after the UBL/CII xml generation
+        """
+        with freeze_time('2023-01-01'):
+            move = self.create_move(self.valid_partner)
+            move.action_post()
+
+        wizard_email = self.create_send_and_print(
+            move,
+            checkbox_send_mail=True,
+            checkbox_ubl_cii_xml=True,
+            checkbox_send_peppol=False,
+        )
+        wizard_email.action_send_and_print()
+        self.assertTrue(move.invoice_pdf_report_id)
+        self.assertTrue(move.ubl_cii_xml_id)
+
+        wizard_peppol = self.create_send_and_print(move)
+        self.assertTrue(wizard_peppol.enable_peppol)
+        wizard_peppol.checkbox_send_peppol = True
+        self.assertRecordValues(wizard_peppol, [{'checkbox_ubl_cii_xml': False, 'enable_ubl_cii_xml': False}])
+        wizard_peppol.action_send_and_print()
+
+        self.assertTrue('Peppol' in move.message_ids[0].preview, 'The last message should be about Peppol')
+        self.assertRecordValues(move.message_ids[0].attachment_ids, [{
+            'name': 'INV_2023_00001_ubl_bis3.xml',
+            'mimetype': 'application/xml',
+        }])
+
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.assertRecordValues(move, [{
+                'peppol_move_state': 'done',
+                'peppol_message_uuid': FAKE_UUID[0],
+            }],
+        )
+
+
+@tagged('-at_install', 'post_install')
+class TestPeppolSelfBillingImport(TestPeppolMessageCommon):
+    @classmethod
+    def _get_incoming_invoice_content(cls):
+        with file_open('account_peppol_selfbilling/tests/assets/incoming_self_billed_invoice', mode='rb') as f:
+            return f.read()
+
+    def test_receive_self_billed_invoice_from_peppol(self):
+        """Test receiving a self-billed invoice from Peppol.
+
+        Self-billed invoices received via Peppol should be created as out_invoice
+        in the self-billing reception journal.
+        """
+        # Set up the 21% VAT sale tax which should be put on the invoice line
+        tax_21 = self.percent_tax(21.0, type_tax_use='sale')
+
+        sale_journal = self.env['account.journal'].search([
+            ('company_id', '=', self.env.company.id),
+            ('type', '=', 'sale'),
+        ], limit=1)
+
+        # Receive the self-billed invoice (using existing mock data)
+        # The mock data already includes a document that will be processed
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+
+        # Verify the self-billed invoice was created correctly
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertRecordValues(move, [{
+            'peppol_move_state': 'done',
+            'move_type': 'out_invoice',
+            'journal_id': sale_journal.id,
+        }])
+
+        self.assertRecordValues(move.line_ids, [
+            {
+                'name': 'product_a',
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': tax_21.ids,
+                'amount_currency': -100.0,
+                'currency_id': self.env.ref('base.EUR').id,
+            },
+            {
+                'name': 'percent_21.0_(1)',
+                'quantity': False,
+                'price_unit': False,
+                'tax_ids': [],
+                'amount_currency': -21.0,
+                'currency_id': self.env.ref('base.EUR').id,
+            },
+            {
+                'name': 'BILL/2017/01/0001',
+                'quantity': False,
+                'price_unit': False,
+                'tax_ids': [],
+                'amount_currency': 121.0,
+                'currency_id': self.env.ref('base.EUR').id,
+            },
+        ])
+
+    def test_receive_self_billed_invoice_from_peppol_multi_company(self):
+        """Test that when two companies exist in the database and both are registered on Peppol, receiving a
+        self-billed invoice from Peppol assigns the invoice to the correct company."""
+
+        other_company = self.company_data_2["company"]
+        other_company.write(
+            {
+                "country_id": self.env.ref("base.be").id,
+                "peppol_eas": "0208",
+                "peppol_endpoint": "0477472701",
+                "account_peppol_proxy_state": "active",
+            }
+        )
+        edi_identification = self.env["account_edi_proxy_client.user"]._get_proxy_identification(
+            other_company, "peppol"
+        )
+        self.env["account_edi_proxy_client.user"].create(
+            {
+                "company_id": other_company.id,
+                "id_client": "random-id",
+                "proxy_type": "peppol",
+                "edi_mode": "test",
+                "edi_identification": edi_identification,
+                "private_key": b64encode(file_open(f"{FILE_PATH}/private_key.pem", "rb").read()),
+                "refresh_token": FAKE_UUID[0],
+            }
+        )
+
+        # Receive the self-billed invoices (using existing mock data)
+        self.env["account_edi_proxy_client.user"]._cron_peppol_get_new_documents()
+
+        # Verify that 1 invoice was received in each company
+        moves = self.env["account.move"].search([("peppol_message_uuid", "=", FAKE_UUID[1])])
+        self.assertEqual(len(moves), 2)
+        self.assertEqual(len(moves.company_id), 2)
+        self.assertEqual(len(moves.line_ids), 4)
+        self.assertEqual(set(moves.mapped("move_type")), {"out_invoice"})

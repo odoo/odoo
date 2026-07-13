@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* analytic
-# 
+# * analytic
+#
 # Translators:
 # Egon Raamat <egon@avalah.ee>, 2023
 # Rivo Zängov <eraser@eraser.ee>, 2023
@@ -21,20 +21,23 @@
 # Birgit Vijar, 2024
 # Anna, 2024
 # Leaanika Randmets, 2024
-# 
+# Katrin Kampura, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Leaanika Randmets, 2024\n"
-"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"POT-Creation-Date: 2026-01-29 18:35+0000\n"
+"PO-Revision-Date: 2025-11-15 17:25+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-17/"
+"analytic/et/>\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: analytic
 #. odoo-python
@@ -61,6 +64,8 @@ msgid ""
 "A 'Project' plan needs to exist and its id needs to be set as "
 "`analytic.project_plan` in the system variables"
 msgstr ""
+" 'Projekti' plaan peab olema loodud ja selle ID peab olema määratud  "
+"'analytic.project_plan' süsteemi muutujate hulgas"
 
 #. module: analytic
 #. odoo-javascript
@@ -73,6 +78,11 @@ msgstr "Konto väli"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
 msgid "Accounts"
 msgstr "Kontod"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_agrolait
+msgid "Acme Corporation"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -300,7 +310,7 @@ msgstr "Äridomeen"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
 msgid "Camp to Camp"
-msgstr ""
+msgstr "Camp to Camp"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_integration_c2c
@@ -320,7 +330,7 @@ msgstr "Analüütiliste kontode tabel"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr ""
+msgstr "Alamplaanide arv"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
@@ -330,7 +340,7 @@ msgstr "Alam"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "Vajuta, et lisada uus analüütilise konto plaan."
 
 #. module: analytic
 #. odoo-javascript
@@ -370,7 +380,7 @@ msgstr "Täielik nimi"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Conditions to meet"
-msgstr ""
+msgstr "Täitmist vajavad tingimused"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
@@ -449,11 +459,6 @@ msgid "Debit"
 msgstr "Deebet"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_agrolait
-msgid "Deco Addict"
-msgstr "Deco Addict"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
 msgstr "Vaikimisi rakendatavus"
@@ -477,7 +482,7 @@ msgstr "Kirjeldus"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
 msgid "Desertic - Hispafuentes"
-msgstr ""
+msgstr "Desertic - Hispafuentes"
 
 #. module: analytic
 #. odoo-javascript
@@ -496,9 +501,15 @@ msgid "Display Name"
 msgstr "Kuvatav nimi"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Jaotumise analüütiline konto"
+
+#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Distribution to apply"
-msgstr ""
+msgstr "Rakendatav jaotus"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
@@ -562,11 +573,13 @@ msgstr "Kui valitud, on mõningate sõnumitel saatmiserror."
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "Odoos on müügitellimused ja projektid lahendatud kasutades\n"
-"                analüütilisi kontosid. Sul on võimalik jälgida kulusid ja tulusid\n"
+"                analüütilisi kontosid. Sul on võimalik jälgida kulusid ja "
+"tulusid\n"
 "                analüüsimaks lihtsasti kasumlikkust."
 
 #. module: analytic
@@ -794,12 +807,15 @@ msgstr "Teadus- ja arendustegevus"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Müügitulu luuakse automaatselt, kui sa koostad müügiarveid.\n"
-"               Müügiarveid saab koostada müügitellimuste (fikseeritud hinnaga\n"
+"               Müügiarveid saab koostada müügitellimuste (fikseeritud "
+"hinnaga\n"
 "               arved), ajaandmike (tehtud töö alusel) või kulude (näiteks\n"
 "               edasiarveldatavad reisikulud) baasil."
 
@@ -818,7 +834,7 @@ msgstr "Algplaan"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "Save as new analytic distribution model"
-msgstr ""
+msgstr "Salvesta uus analüütilise jaotuse mudel"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
@@ -831,12 +847,22 @@ msgid "Search Analytic Lines"
 msgstr "Otsi analüütilistelt ridadelt"
 
 #. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "See them"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
 msgid ""
 "Select a company for which the analytic distribution will be used (e.g. "
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Vali ettevõte, millele analüütiline jaotus rakendub (nt. kui luua uus "
+"müügiarve või müügitellimus, kui valida antud ettevõtte, valitakse "
+"automaatselt määratud analüütiline konto)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -845,6 +871,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
+"Vali partneri kategooria, millele analüütiline jaotus rakendub (nt. kui luua "
+"uus müügiarve või müügitellimus, kui valida antud partner, valitakse "
+"automaatselt määratud analüütilise konto)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -853,6 +882,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Vali partner, millele analüütiline jaotus rakendub (nt kui luua uus "
+"müügiarve või müügitellimus, kui valida antud partner, valitakse "
+"automaatselt määratud analüütiline konto)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__sequence
@@ -868,6 +900,20 @@ msgstr "Spark süsteemid"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
 msgstr "Alamplaanid"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Süsteemi parameeter"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr ""
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -910,8 +956,26 @@ msgstr "Vaade"
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
+msgstr ""
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
+msgstr ""
+"Analüütilisele kontole ei saa lisada erinevat ettevõtet, sest kontoga on "
+"seotud mõned analüütilised kanded."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
 msgstr ""
 
 #. module: analytic
@@ -922,8 +986,14 @@ msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
 msgstr ""
+"Defineerisid jaotuse analüütilisele konto(de)le, mis kuulub konkreetsele "
+"ettevõttele, kuid mille jaotusmudel on jagatud ettevõtete vahel või muu "
+"ettevõttega."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "nt projekt XYZ"
+
+#~ msgid "Deco Addict"
+#~ msgstr "Deco Addict"

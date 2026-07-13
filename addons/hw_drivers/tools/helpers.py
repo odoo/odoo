@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import certifi
 import configparser
 import contextlib
 import datetime
@@ -19,26 +20,18 @@ import requests
 import secrets
 import socket
 import subprocess
+from urllib.parse import parse_qs
 import urllib3
 from threading import Thread, Lock
 import time
 import zipfile
 
-from odoo import _, http, release, service
+from odoo import http, release, service
 from odoo.tools.func import lazy_property
 from odoo.tools.misc import file_path
 
 lock = Lock()
 _logger = logging.getLogger(__name__)
-
-try:
-    import crypt
-except ImportError:
-    _logger.warning('Could not import library crypt')
-
-#----------------------------------------------------------
-# Helper
-#----------------------------------------------------------
 
 
 class CertificateStatus(Enum):
@@ -122,13 +115,46 @@ def check_certificate():
         if key[0] == b'CN':
             cn = key[1].decode('utf-8')
     if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
-        message = _('Your certificate %s must be updated', cn)
+        message = 'Your certificate %s must be updated' % cn
         _logger.info(message)
         return {"status": CertificateStatus.NEED_REFRESH}
     else:
-        message = _('Your certificate %s is valid until %s', cn, cert_end_date)
+        message = 'Your certificate %s is valid until %s' % (cn, cert_end_date)
         _logger.info(message)
         return {"status": CertificateStatus.OK, "message": message}
+
+
+def check_version_upgrades(local_branch, db_branch):
+    """
+    Check if the iot is < 19.1 and upgrading to >= saas-19.1
+    If so and current python version is less than 3.12, run the scripts
+    located in upgrade_scripts/ to upgrade the python version
+    :param local_branch: The local git branch (Ex: "19.0" / "17.0-hw-drivers-compatibility-with-trixie-yaso")
+    :param db_branch: The git branch of the connected Odoo database (Ex: "saas-19.1" / "master" etc.)
+    """
+    if platform.system() != 'Linux':
+        _logger.debug("Ignoring version upgrade check on non-Linux system")
+        return
+
+    try:
+        # 1. Check if the upgrade script needs to be ran
+        # Needed if local branch is < 19.1 and db branch is >= 19.1 + python version < 3.12
+        _logger.info("Checking for version upgrades for local branch %s / db_branch %s", local_branch, db_branch)
+        version_db = db_branch[-4:]
+        version_local = local_branch[-4:] if local_branch != 'master' else local_branch
+        local_python_version = tuple(int(x) for x in platform.python_version_tuple()[:2])
+        if version_local >= '19.1' or version_db < '19.1' or local_python_version >= (3, 12):
+            _logger.info("Ignoring unnecessary upgrade for local branch %s / db_branch %s with python version %s", local_branch, db_branch, local_python_version)
+            return
+        with writable():
+            _logger.warning("Updating to Debian Trixie for >= 19.1")
+            subprocess.run(
+                ['/home/pi/odoo/addons/hw_drivers/tools/upgrade_scripts/upgrade_trixie/upgrade_trixie.sh'], check=True,
+            )
+            # If we reach this point, we are about to reboot. Sleep to prevent git checkout.
+            time.sleep(30)
+    except subprocess.CalledProcessError:
+        _logger.exception("Failed to upgrade to debian Trixie. Check /home/pi/upgrade.log file for more details")
 
 
 def check_git_branch():
@@ -137,6 +163,9 @@ def check_git_branch():
     checkout to match it if needed.
     """
     server = get_odoo_server_url()
+    if not server or platform.system() == 'Windows':
+        _logger.debug('Ignoring git branch check')
+        return
     urllib3.disable_warnings()
     http = urllib3.PoolManager(cert_reqs='CERT_NONE')
     try:
@@ -152,8 +181,8 @@ def check_git_branch():
 
             db_branch = json.loads(response.data)['result']['server_serie'].replace('~', '-')
             if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
-                db_branch = 'master'
-
+                _logger.warning("Connected database is a development branch, skipping as it's likely an error.")
+                return
             local_branch = (
                 subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
             )
@@ -164,17 +193,25 @@ def check_git_branch():
             )
 
             if db_branch != local_branch:
-                with writable():
-                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
-                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
-                    _logger.info("Updating odoo folder to the branch %s", db_branch)
-                    subprocess.run(
-                        ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
-                    )
+                try:
+                    check_version_upgrades(local_branch, db_branch)
+
+                    with writable():
+                        subprocess.run(git + ['branch', '-m', db_branch], check=True)
+                        subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
+                        _logger.info("Updating odoo folder to the branch %s", db_branch)
+                        subprocess.run(
+                            ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
+                        )
+                except subprocess.CalledProcessError:
+                    # reset local branch name if update failed, to allow new attempt on next restart
+                    with writable():
+                        subprocess.run(git + ['branch', '-m', local_branch], check=False)
+                    _logger.exception("Failed to update the code with git.")
+                finally:
                     odoo_restart()
     except Exception:
-        _logger.exception('An error occurred while connecting to server')
-
+        _logger.exception('An error occurred while trying to update the code with git')
 
 def check_image():
     """
@@ -200,36 +237,35 @@ def check_image():
     return {'major': version[0], 'minor': version[1]}
 
 
-def save_conf_server(url, token, db_uuid, enterprise_code):
+def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
     """
     Save server configurations in odoo.conf
     :param url: The URL of the server
     :param token: The token to authenticate the server
     :param db_uuid: The database UUID
     :param enterprise_code: The enterprise code
+    :param db_name: The database name
     """
     update_conf({
         'remote_server': url,
         'token': token,
         'db_uuid': db_uuid,
         'enterprise_code': enterprise_code,
+        'db_name': db_name,
     })
 
 
 def generate_password():
+    """Resets (pi) user password generating a new random one.
+
+    :return: The new generated password
     """
-    Generate an unique code to secure raspberry pi
-    """
-    alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
-    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    password = secrets.token_urlsafe(16)
     try:
-        shadow_password = crypt.crypt(password, crypt.mksalt())
-        subprocess.run(('sudo', 'usermod', '-p', shadow_password, 'pi'), check=True)
-        with writable():
-            subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
+        subprocess.run(['sudo', 'chpasswd'], input=f"pi:{password}", text=True, check=True)
         return password
     except subprocess.CalledProcessError as e:
-        _logger.error("Failed to generate password: %s", e.output)
+        _logger.exception("Failed to generate password: %s", e.output)
         return 'Error: Check IoT log'
 
 
@@ -273,6 +309,20 @@ def get_mac_address():
             addr = netifaces.ifaddresses(interface).get(netifaces.AF_LINK)[0]['addr']
             if addr != '00:00:00:00:00:00':
                 return addr
+
+
+def get_serial_number():
+    if platform.system() == 'Linux':
+        return read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
+
+    # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
+    command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
+    p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
+    if p.returncode != 0:
+        _logger.error("Failed to get Windows IoT serial number")
+        return False
+
+    return p.stdout.decode().strip() or False
 
 def get_path_nginx():
     return str(list(Path().absolute().parent.glob('*nginx*'))[0])
@@ -344,14 +394,14 @@ def load_certificate():
     """
     db_uuid = get_conf('db_uuid')
     enterprise_code = get_conf('enterprise_code')
-    if not (db_uuid and enterprise_code):
+    if not db_uuid:
         return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
 
     url = 'https://www.odoo.com/odoo-enterprise/iot/x509'
     data = {
         'params': {
             'db_uuid': db_uuid,
-            'enterprise_code': enterprise_code
+            'enterprise_code': enterprise_code or ''
         }
     }
     urllib3.disable_warnings()
@@ -370,8 +420,16 @@ def load_certificate():
     if response.status != 200:
         return "ERR_IOT_HTTPS_LOAD_REQUEST_STATUS %s\n\n%s" % (response.status, response.reason)
 
-    result = json.loads(response.data.decode('utf8'))['result']
-    if not result:
+    response_body = json.loads(response.data.decode())
+    server_error = response_body.get('error')
+    if server_error:
+        _logger.error("A server error received from odoo.com while trying to get the certificate: %s", server_error)
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    result = response_body.get('result', {})
+    certificate_error = result.get('error')
+    if certificate_error:
+        _logger.error("An error received from odoo.com while trying to get the certificate: %s", certificate_error)
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
     update_conf({'subject': result['subject_cn']})
@@ -393,17 +451,17 @@ def load_certificate():
 
 
 def delete_iot_handlers():
-    """
-    Delete all the drivers and interfaces
-    This is needed to avoid conflicts
-    with the newly downloaded drivers
+    """Delete all drivers, interfaces and libs if any.
+    This is needed to avoid conflicts with the newly downloaded drivers.
     """
     try:
-        for directory in ['drivers', 'interfaces']:
-            path = file_path(f'hw_drivers/iot_handlers/{directory}')
-            iot_handlers = list_file_by_os(path)
-            for file in iot_handlers:
-                unlink_file(f"odoo/addons/hw_drivers/iot_handlers/{directory}/{file}")
+        iot_handlers = Path(file_path(f'hw_drivers/iot_handlers'))
+        filenames = [
+            f"odoo/addons/hw_drivers/iot_handlers/{file.relative_to(iot_handlers)}"
+            for file in iot_handlers.glob('**/*')
+            if file.is_file()
+        ]
+        unlink_file(*filenames)
         _logger.info("Deleted old IoT handlers")
     except OSError:
         _logger.exception('Failed to delete old IoT handlers')
@@ -415,20 +473,23 @@ def download_iot_handlers(auto=True):
     server = get_odoo_server_url()
     if server:
         urllib3.disable_warnings()
-        pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
+        pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
         server = server + '/iot/get_handlers'
         try:
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
+            if resp.status != 200:
+                _logger.error('Bad IoT handlers response received: status %s', resp.status)
+                return
             if resp.data:
+                zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                 delete_iot_handlers()
+                path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
                 with writable():
-                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
-                    path = path_file(str(Path().joinpath(*drivers_path)))
-                    zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                     zip_file.extractall(path)
-        except Exception as e:
-            _logger.error('Could not reach configured server')
-            _logger.error('A error encountered : %s ' % e)
+        except zipfile.BadZipFile:
+            _logger.exception('Bad IoT handlers response received: not a zip file')
+        except Exception:
+            _logger.exception('Could not reach configured server to download IoT handlers')
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
     return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
@@ -449,9 +510,8 @@ def load_iot_handlers():
                 module = util.module_from_spec(spec)
                 try:
                     spec.loader.exec_module(module)
-                except Exception as e:
-                    _logger.error('Unable to load file: %s ', file)
-                    _logger.error('An error encountered : %s ', e)
+                except Exception:
+                    _logger.exception('Unable to load handler file: %s', file)
     lazy_property.reset_all(http.root)
 
 def list_file_by_os(file_list):
@@ -471,12 +531,16 @@ def odoo_restart(delay=0):
     IR.start()
 
 
-def path_file(filename):
+def path_file(*args):
+    """Return the path to the file from IoT Box root or Windows Odoo
+    server folder
+    :return: The path to the file
+    """
     platform_os = platform.system()
     if platform_os == 'Linux':
-        return Path.home() / filename
+        return Path("~pi", *args).expanduser() # Path.home() returns odoo user's home instead of pi's
     elif platform_os == 'Windows':
-        return Path().absolute().parent.joinpath('server/' + filename)
+        return Path().absolute().parent.joinpath('server', *args)
 
 
 def read_file_first_line(filename):
@@ -486,11 +550,12 @@ def read_file_first_line(filename):
             return f.readline().strip('\n')
 
 
-def unlink_file(filename):
+def unlink_file(*filenames):
     with writable():
-        path = path_file(filename)
-        if path.exists():
-            path.unlink()
+        for filename in filenames:
+            path = path_file(filename)
+            if path.exists():
+                path.unlink()
 
 
 def write_file(filename, text, mode='w'):
@@ -523,8 +588,8 @@ def download_from_url(download_url, path_to_filename):
         request_response.raise_for_status()
         write_file(path_to_filename, request_response.content, 'wb')
         _logger.info('Downloaded %s from %s', path_to_filename, download_url)
-    except Exception as e:
-        _logger.error('Failed to download from %s: %s', download_url, e)
+    except Exception:
+        _logger.exception('Failed to download from %s', download_url)
 
 def unzip_file(path_to_filename, path_to_extract):
     """
@@ -541,8 +606,8 @@ def unzip_file(path_to_filename, path_to_extract):
                 zip_file.extractall(path_file(path_to_extract))
             Path(path).unlink()
         _logger.info('Unzipped %s to %s', path_to_filename, path_to_extract)
-    except Exception as e:
-        _logger.error('Failed to unzip %s: %s', path_to_filename, e)
+    except Exception:
+        _logger.exception('Failed to unzip %s', path_to_filename)
 
 
 @cache
@@ -557,18 +622,20 @@ def update_conf(values, section='iot.box'):
     :param values: The dictionary of key-value pairs to update the config with.
     :param section: The section to update the key-value pairs in (Default: iot.box).
     """
-    _logger.debug("Updating odoo.conf with values: %s", values)
-    conf = get_conf()
-    get_conf.cache_clear()  # Clear the cache to get the updated config
+    with writable():
+        _logger.debug("Updating odoo.conf with values: %s", values)
+        conf = get_conf()
+        get_conf.cache_clear()  # Clear the cache to get the updated config
 
-    if not conf.has_section(section):
-        _logger.debug("Creating new section '%s' in odoo.conf", section)
-        conf.add_section(section)
+        if not conf.has_section(section):
+            _logger.debug("Creating new section '%s' in odoo.conf", section)
+            conf.add_section(section)
 
-    for key, value in values.items():
-        conf.set(section, key, value) if value else conf.remove_option(section, key)
+        for key, value in values.items():
+            conf.set(section, key, value) if value else conf.remove_option(section, key)
 
-    write_file("odoo.conf", conf)
+        with open(path_file("odoo.conf"), "w", encoding='utf-8') as f:
+            conf.write(f)
 
 
 @cache
@@ -592,6 +659,10 @@ def disconnect_from_server():
         'remote_server': '',
         'token': '',
         'db_uuid': '',
+        'db_name': '',
+        'screen_orientation': '',
+        'browser_url': '',
+        'iot_handlers_etag': '',
     })
 
 
@@ -636,3 +707,38 @@ def migrate_old_config_files_to_new_config_file():
         unlink_file('odoo-remote-server.conf')
         unlink_file('token')
         unlink_file('odoo-subject.conf')
+
+
+def url_is_valid(url):
+    """
+    Checks whether the provided url is a valid one or not
+    :param url: the URL to check
+    :return: boolean indicating if the URL is valid.
+    """
+    try:
+        result = urllib3.util.parse_url(url.strip())
+        return all([result.scheme in ["http", "https"], result.netloc, result.host != 'localhost'])
+    except urllib3.exceptions.LocationParseError:
+        return False
+
+
+def parse_url(url):
+    """
+    Parses URL params and returns them as a dictionary starting by the url.
+
+    Does not allow multiple params with the same name (e.g. <url>?a=1&a=2 will return the same as <url>?a=1)
+    :param url: the URL to parse
+    :return: the dictionary containing the URL and params
+    """
+    if not url_is_valid(url):
+        raise ValueError("Invalid URL provided.")
+
+    url = urllib3.util.parse_url(url.strip())
+    search_params = {
+        key: value[0]
+        for key, value in parse_qs(url.query, keep_blank_values=True).items()
+    }
+    return {
+        "url": f"{url.scheme}://{url.netloc}",
+        **search_params,
+    }

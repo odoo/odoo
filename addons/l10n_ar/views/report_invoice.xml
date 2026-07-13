@@ -114,6 +114,9 @@
         <!-- remove default document title -->
         <h2 position="replace"/>
 
+        <!-- remove detail of taxes when currency != from company's currency -->
+        <t t-call="account.document_tax_totals_company_currency_template" position="replace"/>
+
         <!-- NCM column for fiscal bond -->
         <th name="th_description" position="after">
             <th t-if="fiscal_bond" name="th_ncm_code" class="text-start"><span>NCM</span></th>
@@ -129,7 +132,7 @@
         <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
             <attribute name="t-field"></attribute>
             <attribute name="t-out">l10n_ar_values['price_unit']</attribute>
-            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+            <attribute name="t-options">{"widget": "float", "display_currency": o.currency_id, "decimal_precision": "Product Price"}</attribute>
         </xpath>
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
             <attribute name="t-value">current_subtotal + l10n_ar_values['price_subtotal']</attribute>
@@ -153,14 +156,15 @@
         </t>
 
         <!-- use column vat instead of taxes and only if vat discriminated -->
-        <xpath expr="//th[@name='th_taxes']/span" position="replace">
-            <span>% VAT</span>
+        <xpath expr="//th[@name='th_taxes']" position="replace">
+            <th name="th_taxes"
+                t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"
+                t-if="not o._l10n_ar_include_vat()">
+                <span t-if="o.company_id.country_id.code == 'AR'">% VAT</span>
+                <span t-else="">Taxes</span>
+            </th>
         </xpath>
 
-        <!-- use column vat instead of taxes and only list vat taxes-->
-        <xpath expr="//th[@name='th_taxes']" position="attributes">
-            <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
-        </xpath>
         <xpath expr="//span[@id='line_tax_ids']/.." position="attributes">
             <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
         </xpath>
@@ -179,7 +183,9 @@
                     <!-- IDENTIFICACION (ADQUIRIENTE-LOCATARIO-PRESTARIO) -->
 
                     <!-- (14) Apellido uy Nombre: Denominicacion o Razon Soclial -->
-                    <strong>Customer: </strong><span t-field="o.partner_id.commercial_partner_id.name"/>
+                    <t t-if="o.is_sale_document(include_receipts=True)"><strong>Customer: </strong></t>
+                    <t t-else=""><strong>Supplier: </strong></t>
+                    <span t-field="o.partner_id.commercial_partner_id.name"/>
 
                     <!-- (15) Domicilio Comercial -->
                     <br/>
@@ -268,6 +274,28 @@
         <t t-call="account.document_tax_totals" position="attributes">
             <attribute name="t-call">l10n_ar.document_tax_totals</attribute>
         </t>
+
+        <div id="qrcode" position="after">
+            <!-- RG 5614/2024: Show ARCA VAT and Other National Internal Taxes -->
+            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}">
+                <table class="table table-sm table-borderless" style="page-break-inside: avoid;" t-if="tax_totals.get('detail_ar_tax')">
+                    <th class="border-black" style="border-bottom: 1px solid" colspan="2">
+                           Fiscal Transparency Regime for the Final Consumer (Law 27.743)
+                    </th>
+                    <t t-foreach="tax_totals['detail_ar_tax']" t-as="detail">
+                        <tr>
+                            <td class="text-end"><strong t-esc="detail['name']"/></td>
+                            <td class="text-end">
+                                <span
+                                    t-att-class="oe_subtotal_footer_separator"
+                                    t-esc="detail['formatted_amount_tax']"
+                                />
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+        </div>
 
     </template>
 

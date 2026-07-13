@@ -2,7 +2,7 @@
 <odoo>
     <record id="partner_demo_company_rs" model="res.partner">
         <field name="name">RS Company</field>
-        <field name="vat"/>
+        <field name="vat">RS113112332</field>
         <field name="street">Pasterova 2</field>
         <field name="city">Beograd</field>
         <field name="country_id" ref="base.rs"/>
@@ -21,6 +21,7 @@
         <field name="acc_number">RS35105008123123123173</field>
         <field name="partner_id" ref="partner_demo_company_rs"/>
         <field name="company_id" ref="demo_company_rs"/>
+        <field name="allow_out_payment" eval="True"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">

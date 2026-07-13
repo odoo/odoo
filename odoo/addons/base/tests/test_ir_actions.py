@@ -203,6 +203,20 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
 
+    def test_object_write_equation(self):
+        # Do: update partners city
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'city',
+            'evaluation_type': 'equation',
+            'value': 'record.id',
+        })
+        partners = self.test_partner + self.test_partner.copy()
+        self.action.with_context(self.context, active_ids=partners.ids).run()
+        # Test: partners updated
+        self.assertEqual(partners[0].city, str(partners[0].id))
+        self.assertEqual(partners[1].city, str(partners[1].id))
+
     def test_35_crud_write_selection(self):
         # Don't want to use res.partner because no 'normal selection field' exists there
         # we'll use a speficic action for this test instead of the one from the test setup

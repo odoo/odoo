@@ -17,7 +17,7 @@ def add_stripped_items_before(node, spec, extract):
     text = spec.text or ''
 
     before_text = ''
-    prev = node.getprevious()
+    prev = next((n for n in node.itersiblings(preceding=True) if not (n.tag == etree.ProcessingInstruction and n.target == "apply-inheritance-specs-node-removal")), None)
     if prev is None:
         parent = node.getparent()
         result = parent.text and RSTRIP_REGEXP.search(parent.text)
@@ -150,7 +150,14 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 if mode == "outer":
                     for loc in spec.xpath(".//*[text()='$0']"):
                         loc.text = ''
-                        loc.append(copy.deepcopy(node))
+                        copied_node = copy.deepcopy(node)
+                        # TODO: Remove 'inherit_branding' logic if possible;
+                        # currently needed to track node removal for branding
+                        # distribution. Avoid marking root nodes to prevent
+                        # sibling branding issues.
+                        if inherit_branding:
+                            copied_node.set('data-oe-no-branding', '1')
+                        loc.append(copied_node)
                     if node.getparent() is None:
                         spec_content = None
                         comment = None

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import chain
+
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 
@@ -336,3 +338,181 @@ class TestSaleOrder(SaleManagementCommon):
         # after changing the quantity of the product, the price unit should not be recomputed
         sale_order_with_option.order_line.product_uom_qty = 10
         self.assertEqual(sale_order_with_option.sale_order_option_ids.price_unit, 10)
+
+    def test_reload_template_translations(self):
+        """
+        Check that quotation template gets reloaded with correct translations on partner change.
+        """
+        # Add some display type lines to the template
+        self.quotation_template_no_discount.sale_order_template_line_ids = [
+            Command.create({
+                'name': "Section 1",
+                'display_type': 'line_section',
+            }),
+            Command.create({
+                'name': "Note 1",
+                'display_type': 'line_note',
+            }),
+        ]
+
+        # Commence activation of Dutch vernacular
+        self.env['res.lang']._activate_lang('nl_NL')
+        partner_NL = self.partner.copy({'lang': 'nl_NL', 'name': "Pieter-Jan Hollandman"})
+        names_EN = ["Product 1", "Section 1", "Note 1", "Optional product"]
+        names_NL = ["Artikel 1", "Sectie 1", "Nota 1", "Optioneel artikel"]
+        trans_dict = dict(zip(names_EN, names_NL))
+        for record in chain(
+            self.quotation_template_no_discount.sale_order_template_line_ids,
+            self.quotation_template_no_discount.sale_order_template_option_ids,
+        ):
+            record.with_context(lang='nl_NL').name = trans_dict[record.name]
+
+        # Create sale order form (and a way to retrieve line names)
+        def get_form_field_names(form):
+            return [
+                form.order_line.edit(0).name,
+                form.order_line.edit(1).name,
+                form.order_line.edit(2).name,
+                form.sale_order_option_ids.edit(0).name,
+            ]
+
+        order_form = Form(self.sale_order.browse())
+        order_form.sale_order_template_id = self.quotation_template_no_discount
+
+        # Sanity check English names
+        self.assertSequenceEqual(
+            get_form_field_names(order_form),
+            names_EN,
+            "Lines should be displayed in English for an American partner",
+        )
+
+        # Go Dutch
+        order_form.partner_id = partner_NL
+        self.assertSequenceEqual(
+            get_form_field_names(order_form),
+            names_NL,
+            "Lines should be displayed in Dutch for a Dutch partner",
+        )
+
+        # Edit a line & change back to American partner
+        with order_form.order_line.edit(0) as order_line:
+            order_line.product_uom_qty += 1
+        order_form.partner_id = self.partner
+        self.assertSequenceEqual(
+            get_form_field_names(order_form),
+            names_NL,
+            "Lines shouldn't change when edited",
+        )
+
+        # Reload template manually
+        order_form.sale_order_template_id = self.quotation_template_no_discount
+        self.assertSequenceEqual(
+            get_form_field_names(order_form),
+            names_EN,
+            "Lines should change after manual template reload",
+        )
+
+        # Add a line & return to Dutch
+        with order_form.sale_order_option_ids.new() as optional_product:
+            optional_product.product_id = self.product
+        order_form.partner_id = partner_NL
+        self.assertSequenceEqual(
+            get_form_field_names(order_form),
+            names_EN,
+            "Lines shouldn't change after a new one was added",
+        )
+
+        # Reload template, save, and change partner again
+        order_form.sale_order_template_id = self.quotation_template_no_discount
+        order_form.save()
+        order_form.partner_id = self.partner
+        self.assertSequenceEqual(
+            get_form_field_names(order_form),
+            names_NL,
+            "Lines shouldn't change once saved",
+        )
+
+    def test_warning_quotation(self):
+        """
+        ensure "warning for the change of your quotation's company" isn't triggered
+        during the creation of a quotation when a quotation template is set as default
+        """
+        quotation_template = self.empty_order_template
+        quotation_template.sale_order_template_line_ids = [
+            Command.create({'product_id': self.product.id})
+        ]
+        self.env['ir.default'].set('sale.order', 'sale_order_template_id', quotation_template.id)
+        try:
+            with self.assertLogs('odoo.tests.form.onchange') as log_catcher:
+                Form(self.env['sale.order'])
+        except AssertionError:
+            pass
+        self.assertEqual(len(log_catcher.output), 0, "Form creation shouldn't trigger a warning")
+
+    def test_updating_price_upon_changing_pricelist(self):
+        optional_product = self.env['product.product'].create({'name': 'Optional Product'})
+        pricelist_1 = self.env['product.pricelist'].create({
+            'name': 'pricelist 1',
+            'currency_id': self.env.ref('base.USD').id,
+            'item_ids': [Command.create({
+                'name': 'Item 1',
+                'compute_price': 'fixed',
+                'base': 'list_price',
+                'fixed_price': 10,
+                'applied_on': '1_product',
+                'product_tmpl_id': optional_product.product_tmpl_id.id,
+            })],
+        })
+
+        pricelist_2 = self.env['product.pricelist'].create({
+            'name': 'pricelist 2',
+            'currency_id': self.env.ref('base.USD').id,
+            'item_ids': [Command.create({
+                'name': 'Item 1',
+                'compute_price': 'fixed',
+                'base': 'list_price',
+                'fixed_price': 20,
+                'applied_on': '1_product',
+                'product_tmpl_id': optional_product.product_tmpl_id.id,
+            })],
+        })
+
+        product = self.env['product.product'].create({'name': 'Product'})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'pricelist_id': pricelist_1.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+            })],
+            'sale_order_option_ids': [Command.create({
+                'product_id': optional_product.id,
+            })],
+        })
+
+        sale_order.sale_order_option_ids.add_option_to_order()
+        sale_order.write({
+            'pricelist_id': pricelist_2.id,
+        })
+        sale_order.action_update_prices()
+
+        self.assertEqual(sale_order.order_line[1].price_unit, pricelist_2.item_ids.fixed_price)
+
+    def test_show_update_pricelist_false_on_sale_order_open(self):
+        """Ensure the update pricelist button is disabled when opening a sale order
+        with a default quotation template applied.
+        """
+        quotation_template = self.env['sale.order.template'].create({
+            'name': 'Test Quotation Template',
+            'sale_order_template_line_ids': [
+                Command.create({
+                    'product_id': self.product.id,
+                }),
+            ],
+        })
+        self.env['ir.default'].set('sale.order', 'sale_order_template_id', quotation_template.id)
+        with Form(self.env['sale.order']) as sale_order_form:
+            self.assertTrue(sale_order_form.sale_order_template_id)
+            self.assertTrue(sale_order_form.order_line)
+            self.assertFalse(sale_order_form.show_update_pricelist)
+            sale_order_form.partner_id = self.partner

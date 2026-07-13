@@ -128,7 +128,7 @@
                         <div class="row">
                             <div class="text-center col-12">
                                 <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}">Name Demo</span>
-                                <span t-field="o.name" style="font-size:20px; margin:100px;">Name Demo</span>
+                                <span t-field="o.name" style="font-size:20px; margin:100px; white-space: nowrap;">Name Demo</span>
                             </div>
                         </div>
                         <div t-if="o.pack_date" class="col-12 text-center" style="font-size:24px; font-weight:bold;">Pack Date: <span t-field="o.pack_date">2023-01-01</span></div>

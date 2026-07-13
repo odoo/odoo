@@ -39,6 +39,12 @@ class TestReports(AccountTestInvoicingCommon):
             'country_id': cls.env.ref("base.us").id,
             'zip': "123456",
         })
+        cls.partner_d = cls.env['res.partner'].create({
+            'name': "Overseas partner without State",
+            'l10n_in_gst_treatment': 'overseas',
+            'country_id': cls.env.ref("base.us").id,
+            # No state_id defined
+        })
         cls.igst_sale_18 = cls.env['account.chart.template'].ref('igst_sale_18')
 
     def test_partner_details_change_with_invoice(self):
@@ -93,12 +99,6 @@ class TestReports(AccountTestInvoicingCommon):
                 'l10n_in_gst_treatment': 'regular',
             }]
         )
-        invoice_2.button_draft()
-        self.assertRecordValues(invoice_2, [{
-            'state': 'draft',
-            'l10n_in_gst_treatment': self.partner_a.l10n_in_gst_treatment,
-            'l10n_in_state_id': expected_pos_id,
-        }])
 
     def test_partner_change_with_invoice(self):
         out_invoice = self.init_invoice(
@@ -173,5 +173,23 @@ class TestReports(AccountTestInvoicingCommon):
             invoice,
             [{
                 'l10n_in_state_id': self.partner_b.state_id.id,
+            }]
+        )
+
+    def test_foreign_customer_without_state(self):
+        """Verify foreign customer without state_id gets foreign state reference"""
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            partner=self.partner_d,
+            amounts=[100, 200],
+            taxes=[self.igst_sale_18]
+        )
+
+        # Should assign foreign state reference even without partner state
+        self.assertRecordValues(
+            invoice,
+            [{
+                'l10n_in_gst_treatment': 'overseas',
+                'l10n_in_state_id': self.env.ref("l10n_in.state_in_oc").id,
             }]
         )

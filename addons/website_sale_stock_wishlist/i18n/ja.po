@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_sale_stock_wishlist
-# 
+# * website_sale_stock_wishlist
+#
 # Translators:
 # Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# 
+# Junko Augias, 2025
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"PO-Revision-Date: 2026-05-20 11:50+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
+"website_sale_stock_wishlist/ja/>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_sale_stock_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
@@ -28,15 +31,6 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-bell\"/>\n"
 "                        プロダクトが再入荷しましたらお知らせいたします。"
-
-#. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
-msgid ""
-"<i class=\"fa fa-times text-danger\"/>\n"
-"                                Invalid email"
-msgstr ""
-"<i class=\"fa fa-times text-danger\"/>\n"
-"                                無効なEメール"
 
 #. module: website_sale_stock_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
@@ -54,11 +48,11 @@ msgstr ""
 #. module: website_sale_stock_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
 msgid ""
-"Add\n"
-"                <span class=\"d-none d-md-inline\">to Cart</span>"
+"<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
+"                <span class=\"d-none d-md-inline\">Add</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">カート</span>に\n"
-"                入れる"
+"<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
+"                <span class=\"d-none d-md-inline\">追加</span>"
 
 #. module: website_sale_stock_wishlist
 #. odoo-javascript
@@ -72,7 +66,7 @@ msgstr "ウィッシュリストに追加"
 #: code:addons/website_sale_stock_wishlist/static/src/xml/product_availability.xml:0
 #, python-format
 msgid "Added to your wishlist"
-msgstr "ウィッシュリストに追加"
+msgstr "ウィッシュリストに追加されました"
 
 #. module: website_sale_stock_wishlist
 #: model:ir.model,name:website_sale_stock_wishlist.model_product_template
@@ -89,7 +83,7 @@ msgstr "商品ウィッシュリスト"
 #: code:addons/website_sale_stock_wishlist/static/src/xml/product_availability.xml:0
 #, python-format
 msgid "Save for later"
-msgstr "後に保存する"
+msgstr "いったん保存"
 
 #. module: website_sale_stock_wishlist
 #: model:ir.model.fields,field_description:website_sale_stock_wishlist.field_product_wishlist__stock_notification
@@ -105,3 +99,10 @@ msgstr "一時的に在庫切れ"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
 msgid "youremail@gmail.com"
 msgstr "youremail@gmail.com"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-times text-danger\"/>\n"
+#~ "                                Invalid email"
+#~ msgstr ""
+#~ "<i class=\"fa fa-times text-danger\"/>\n"
+#~ "                                無効なEメール"

@@ -18,7 +18,7 @@
                     />)
                 </p>
                 <p style="margin-left: 0.5em; margin-right: 0.5em">-</p>
-                <p t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
+                <p t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}" hidden=""/>
             </div>
             <p t-esc="product.description_sale"/>
             <div style="display: flex; justify-content: center; width: 100%;">

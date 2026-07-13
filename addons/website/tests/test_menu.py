@@ -9,6 +9,7 @@ from werkzeug.urls import url_parse
 
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import common
+from odoo.exceptions import UserError
 
 
 class TestMenu(common.TransactionCase):
@@ -238,6 +239,64 @@ class TestMenu(common.TransactionCase):
         submenu.url = '/sub/slug-3'
         test_full_case(submenu)
 
+        # Test with a menu that is linked to a page
+        result = website_1.new_page(
+            name='/sub/page-3',
+            add_menu=True,
+        )
+        menu = Menu.browse(result['menu_id'])
+        page = self.env['website.page'].browse(result['page_id'])
+        self.assertEqual(menu.url, page.url, "Menu url should be the same than the page url")
+
+        with MockRequest(self.env, website=website_1), \
+             patch('odoo.addons.website.models.website_menu.url_parse', new=url_parse_mock):
+
+            self.request_url_mock = 'http://localhost:8069/sub/slug-3'
+            self.assertFalse(menu._is_active(), "Page linked, same unslug, should not match")
+
+    def test_07_menu_hierarchy_validation(self):
+        Menu = self.env['website.menu']
+
+        # Validation 1: Parent menu validation
+        self.main_menu = Menu.create({
+            'name': 'Main',
+        })
+        self.child_menu_1 = Menu.create({
+            'name': 'Child1',
+        })
+        self.child_menu_1.parent_id = self.main_menu.id
+
+        # Attempt to assign a second child menu as a child of the first child menu,
+        # which should raise a UserError due to hierarchy restrictions.
+        self.child_menu_2 = Menu.create({
+            'name': 'Child2',
+        })
+        with self.assertRaises(UserError):
+            self.child_menu_2.parent_id = self.child_menu_1.id
+
+        # Validation 2: Mega menu validation
+        self.mega_menu = Menu.create({
+            'name': 'Mega menu',
+            'is_mega_menu': True,
+        })
+        self.another_menu = Menu.create({
+            'name': 'Sample_menu',
+        })
+
+        # Attempt to assign a parent to the mega menu and a child to it,
+        # which should both raise UserErrors due to mega menu restrictions.
+        with self.assertRaises(UserError):
+            self.mega_menu.parent_id = self.another_menu.id
+
+        with self.assertRaises(UserError):
+            self.another_menu.parent_id = self.mega_menu.id
+
+        # Validation 3: Child menu condition validation
+        # Attempt to assign another_menu as a parent of main_menu chain having Child1,
+        # which should raise a UserError because a main_menu had child.
+        with self.assertRaises(UserError):
+            self.main_menu.parent_id = self.another_menu.id
+
 
 class TestMenuHttp(common.HttpCase):
     def setUp(self):
@@ -310,6 +369,23 @@ class TestMenuHttp(common.HttpCase):
         self.assertFalse(self.menu.page_id, "M2o should have been unset as this is an anchor URL.")
         self.assertEqual(self.menu.url, self.page_url + '#anchor', "Page URL should have been properly prefixed with the referer url")
         self.assertEqual(self.page.url, self.page_url, "Page URL should not have changed")
+
+    def test_menu_special_anchors(self):
+        data = {
+            'id': self.menu.id,
+            'parent_id': self.menu.parent_id.id,
+            'name': self.menu.name,
+        }
+
+        data['url'] = '#top'
+        self.simulate_rpc_save_menu(data)
+        self.assertEqual(self.menu.url, '#top', "Menu #top anchor without a page prefix")
+        self.assertEqual(self.menu._clean_url(), '#top', "Clean URL should not have a prefix for #top anchor")
+
+        data['url'] = '#bottom'
+        self.simulate_rpc_save_menu(data)
+        self.assertEqual(self.menu.url, '#bottom', "Menu #bottom anchor without a page prefix")
+        self.assertEqual(self.menu._clean_url(), '#bottom', "Clean URL should not have a prefix for #bottom anchor")
 
     def test_03_mega_menu_translate(self):
         # Setup

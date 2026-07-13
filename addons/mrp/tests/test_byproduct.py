@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import Form
 from odoo.tests import common
 from odoo.exceptions import ValidationError
@@ -497,3 +498,59 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(picking.state, 'assigned')
         byproduct_move = picking.move_ids.filtered(lambda m: m.product_id == self.bom_byproduct.byproduct_ids.product_id)
         self.assertEqual(byproduct_move.product_qty, 1.0)
+
+    def test_3_steps_byproduct(self):
+        """ Test that non-bom byproducts are correctly pushed from
+        post-production to the stock location in 3-steps manufacture. """
+        self.warehouse.manufacture_steps = 'pbm_sam'
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        component, final_product, byproduct = self.env['product.product'].create([{
+            'name': name,
+            'type': 'product'
+        } for name in ['Old Blood', 'Insight', 'Eyes on the Inside']])
+        self.env['stock.quant']._update_available_quantity(component, self.warehouse.lot_stock_id, 1)
+        mo = self.env["mrp.production"].create({
+            'product_id': final_product.id,
+            'product_qty': 1.0,
+        })
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = component
+            line.product_uom_qty = 1
+        with mo_form.move_byproduct_ids.new() as line:
+            line.product_id = byproduct
+            line.product_uom_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        preprod_picking = mo.picking_ids.filtered(lambda p: p.state == 'assigned')
+        preprod_picking.button_validate()
+        mo.button_mark_done()
+        postprod_picking = mo.picking_ids.filtered(lambda p: p.state == 'assigned')
+
+        self.assertEqual(len(postprod_picking.move_ids), 2)
+        self.assertEqual(postprod_picking.move_ids.product_id, final_product + byproduct)
+        self.assertEqual(postprod_picking.location_dest_id, self.warehouse.lot_stock_id)
+
+    def test_over_produce_by_products_with_cost_share(self):
+        """
+        Tests that overproducing by-products with a set cost share
+        behaves as expected (as it should rely on the merge move) for
+        the extra move.
+        """
+        # Create new MO
+        self.env.user.groups_id = [Command.link(self.ref('mrp.group_mrp_byproducts'))]
+        self.bom_byproduct.byproduct_ids.cost_share = 3.3
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_a.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+            with mo_form.move_byproduct_ids.edit(0) as by_product_move:
+                by_product_move.quantity = 10.0
+        mo.button_mark_done()
+        self.assertRecordValues(mo.move_byproduct_ids, [
+            {'quantity': 10.0, 'state': 'done'},
+        ])

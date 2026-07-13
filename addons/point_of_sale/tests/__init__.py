@@ -22,3 +22,4 @@ from . import test_js
 from . import test_report_pos_order
 from . import test_report_session
 from . import test_res_config_settings
+from . import test_stock_product_updates

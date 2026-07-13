@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import_module
-# 
+#
 # Translators:
 # Michael Hofer, 2023
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
-# 
+# Larissa Manderfeld, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import_module
@@ -27,12 +27,17 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
-"If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
+"You may need the Enterprise version to install the data module. Please visit "
+"https://www.odoo.com/pricing-plan for more information.\n"
+"If you need Website themes, it can be downloaded from https://github.com/"
+"odoo/design-themes.\n"
 msgstr ""
 "\n"
-"Für die Installation des Datenmoduls benötigen Sie möglicherweise die Enterprise-Version. Bitte besuchen Sie https://www.odoo.com/pricing-plan für weitere Informationen.\n"
-"Wenn Sie Website-Designmotive benötigen, können Sie diese von https://github.com/odoo/design-themes herunterladen.\n"
+"Für die Installation des Datenmoduls benötigen Sie möglicherweise die "
+"Enterprise-Version. Bitte besuchen Sie https://www.odoo.com/pricing-plan für "
+"weitere Informationen.\n"
+"Wenn Sie Website-Designmotive benötigen, können Sie diese von https://"
+"github.com/odoo/design-themes herunterladen.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
@@ -94,15 +99,6 @@ msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr ""
-"Demodaten sollten nur auf Testdatenbanken verwendet werden! Sobald Sie "
-"verwendet wurden, können sie nicht mehr entfernt werden!"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
@@ -125,7 +121,6 @@ msgstr ""
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Die Datei „%s“ überschreitet die maximal erlaubte Dateigröße"
@@ -137,8 +132,7 @@ msgstr "Init erzwingen"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
-msgid ""
-"Force init mode even if installed. (will update `noupdate='1'` records)"
+msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr ""
 "Erzwingen Sie den init-Modus, auch wenn bereits installiert (Aktualisierung "
 "von „noupdate='1'“-Daten)"
@@ -159,11 +153,6 @@ msgstr "Importmitteilung"
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 msgid "Import Module"
 msgstr "Modul importieren"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "Demodaten importieren"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
@@ -208,6 +197,23 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Demodaten laden"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
+"Laden Sie Demodaten hoch, um die Funktionen der Branche mit "
+"Beispieldatensätzen zu testen. Laden Sie sie nicht, wenn Sie sich in Ihrer "
+"Produktionsdatenbank befinden."
+
+#. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
 msgstr "Modul"
@@ -221,6 +227,11 @@ msgstr "Modul .ZIP-Datei"
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
 msgstr "Modultyp"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Modul deinstallieren"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -270,19 +281,12 @@ msgstr "Nur Administratoren können ein Modul hochladen"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only zip files are supported."
-msgstr "Nur zip Dateien-werden unterstützt"
+msgstr "Nur ZIP-Dateien werden unterstützt."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
 msgid "Status"
 msgstr "Status"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
-msgid "Studio customizations require Studio"
-msgstr "Studio-Anpassungen erfordern Studio"
 
 #. module: base_import_module
 #. odoo-python
@@ -295,16 +299,9 @@ msgstr "Für Studio-Anpassungen ist die Odoo-Studio-App erforderlich."
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "The following modules will also be installed:\n"
-msgstr "Die folgenden Module werden ebenfalls installiert:\n"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid ""
-"The installation of the data module would fail as the following dependencies"
-" can't be found in the addons-path:\n"
+"The installation of the data module would fail as the following dependencies "
+"can't be found in the addons-path:\n"
 msgstr ""
 "Die Installation des Datenmoduls würde fehlschlagen, da die folgenden "
 "Abhängigkeiten nicht im Add-ons-Pfad gefunden werden können:\n"
@@ -325,6 +322,13 @@ msgstr ""
 #, python-format
 msgid "The module %s cannot be downloaded"
 msgstr "Das Modul %s kann nicht heruntergeladen werden"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
+msgstr "Unbekannte Modulabhängigkeiten: "
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit

@@ -737,6 +737,10 @@ a.no-decoration {
                 border-radius: 0;
                 background-color: var(--o-cc1-bg) !important;
                 color: inherit;
+
+                .text-muted {
+                    color: adjust-color-to-background($text-muted, $body-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+                }
             }
         }
     }
@@ -812,13 +816,10 @@ a.no-decoration {
     // bottom of the page.
     @include media-breakpoint-down(lg){
         .o_cta_navigation_container {
+            top: 100%;
+            bottom: auto !important;
             padding: 0 calc(var(--gutter-x) * .5);
         }
-    }
-
-    // TODO This height is arbitrary and the calculation should be improved.
-    .o_cta_navigation_placeholder {
-        height: o-to-rem(111px) + map-get($spacers, 4) + 2rem;
     }
 
     a.disabled {
@@ -828,4 +829,8 @@ a.no-decoration {
 
 .accordion-button:not(.collapsed).bg-transparent::after {
     background-image: escape-svg($accordion-button-icon);
+}
+
+.object-fit-contain {
+    object-fit: var(--o-wsale-card-thumb-fill-mode, contain) !important;
 }

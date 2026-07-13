@@ -14,6 +14,24 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         self._web_base_url = 'https://test.odoo.com'
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', self._web_base_url)
 
+    def test_absolute_url(self):
+        """
+        Test the absolute url of a link tracker having scheme in url and then removing the
+        scheme to give the absolute_url as a combination of the system parameter and tracker's url
+        """
+        # Creating a link tracker with url having the scheme
+        link_tracker = self.env['link.tracker'].create({
+            'url': 'https://odoo.com',
+            'title': 'Odoo',
+        })
+        # Validate the absolute url
+        self.assertEqual(link_tracker.absolute_url, link_tracker.url)
+
+        # Make the scheme as an empty string by removing the http:// from the url
+        link_tracker.write({'url': "odoo"})
+        # Validate the absolute url is the combination of system parameter and link tracker's url
+        self.assertEqual(link_tracker.absolute_url, f'{self._web_base_url}/odoo')
+
     def test_create(self):
         link_trackers = self.env['link.tracker'].create([
             {
@@ -162,3 +180,19 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '?debug=1'})
         self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '#'})
         self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '#model=project.task&id=3603607'})
+
+    def test_url_encoding(self):
+        """Test that the redirect URL is properly encoded."""
+        campaign = self.env['utm.campaign'].create({'name': 'campai.gn...'})
+        source = self.env['utm.source'].create({'name': 'source...'})
+        medium = self.env['utm.medium'].create({'name': 'medium'})
+        link = self.env['link.tracker'].create({
+            'url': 'http://example.com',
+            'title': 'Odoo',
+            'campaign_id': campaign.id,
+            'source_id': source.id,
+            'medium_id': medium.id,
+        })
+        self.assertIn('utm_campaign=campai.gn%2E%2E%2E', link.redirected_url)
+        self.assertIn('utm_source=source%2E%2E%2E', link.redirected_url)
+        self.assertIn('utm_medium=medium', link.redirected_url)

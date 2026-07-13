@@ -88,6 +88,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
                 const listDefinition = this.getters.getListModelDefinition(cmd.listId);
                 const dataSourceId = this._getListDataSourceId(cmd.listId);
                 this.dataSources.add(dataSourceId, ListDataSource, listDefinition);
+                this._addDomain(cmd.listId);
                 break;
             }
             case "UPDATE_CELL":
@@ -125,6 +126,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
                     const listDefinition = this.getters.getListModelDefinition(cmd.listId);
                     const dataSourceId = this._getListDataSourceId(cmd.listId);
                     this.dataSources.add(dataSourceId, ListDataSource, listDefinition);
+                    this._addDomain(cmd.listId);
                 }
 
                 if (!this.getters.getListIds().length) {

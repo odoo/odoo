@@ -86,6 +86,14 @@ QUnit.test("tabs share message from a channel", async () => {
 });
 
 QUnit.test("second tab still receives notifications after main pagehide", async () => {
+    patchWebsocketWorkerWithCleanup({
+        _unregisterClient(client) {
+            // Ensure that the worker does not receive any messages from the main tab
+            // after pagehide, mimicking real-world behavior.
+            client.onmessage = null;
+            super._unregisterClient(client);
+        },
+    });
     addBusServicesToRegistry();
     const pyEnv = await startServer();
     const mainEnv = await makeTestEnv({ activateMockServer: true });
@@ -220,11 +228,15 @@ QUnit.test("Websocket disconnects upon user log out", async () => {
     const firstTabEnv = await makeTestEnv();
     firstTabEnv.services["bus_service"].start();
     await waitForBusEvent(firstTabEnv, "connect");
-    // second tab connects to the worker after disconnection: user_id
-    // is now false.
-    patchWithCleanup(session, { user_id: false });
+    patchWithCleanup(session, { db: undefined });
+    // second tab connects to the worker, ommiting the DB name. Consider same DB.
     const env2 = await makeTestEnv();
     env2.services["bus_service"].start();
+    await waitForBusEvent(firstTabEnv, "disconnect", { received: false });
+    // third tab connects to the worker after disconnection: user_id is now false.
+    patchWithCleanup(session, { user_id: false });
+    const env3 = await makeTestEnv();
+    env3.services["bus_service"].start();
     await waitForBusEvent(firstTabEnv, "disconnect");
 });
 

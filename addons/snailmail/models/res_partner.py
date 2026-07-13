@@ -38,6 +38,12 @@ class ResPartner(models.Model):
     @api.model
     def _get_address_format(self):
         # When sending a letter, the fields 'street' and 'street2' should be on a single line to fit in the address area
+        if self.env.context.get('snailmail_layout') and self.country_id.code == 'DE':
+            # Germany requires specific address formatting for Pingen
+            result = "%(street)s"
+            if self.street2:
+                result += " // %(street2)s"
+            return result + "\n%(zip)s %(city)s\n%(country_name)s"
         if self.env.context.get('snailmail_layout') and self.street2:
             return "%(street)s, %(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
 

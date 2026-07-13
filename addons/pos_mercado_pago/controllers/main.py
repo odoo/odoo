@@ -17,17 +17,15 @@ class PosMercadoPagoWebhook(http.Controller):
 
         Notification format is always json
         """
-        _logger.debug('POST message received on the end point')
-
         # Check for mandatory keys in header
         x_request_id = request.httprequest.headers.get('X-Request-Id')
         if not x_request_id:
-            _logger.debug('POST message received with no X-Request-Id in header')
+            _logger.warning('POST message received with no X-Request-Id in header')
             return http.Response(status=400)
 
         x_signature = request.httprequest.headers.get('X-Signature')
         if not x_signature:
-            _logger.debug('POST message received with no X-Signature in header')
+            _logger.warning('POST message received with no X-Signature in header')
             return http.Response(status=400)
 
         ts_m = re.search(r"ts=(\d+)", x_signature)
@@ -35,13 +33,13 @@ class PosMercadoPagoWebhook(http.Controller):
         ts = ts_m.group(1) if ts_m else None
         v1 = v1_m.group(1) if v1_m else None
         if not ts or not v1:
-            _logger.debug('Webhook bad X-Signature, ts: %s, v1: %s', ts, v1)
+            _logger.warning('Webhook bad X-Signature, ts: %s, v1: %s', ts, v1)
             return http.Response(status=400)
 
         # Check for payload
         data = request.httprequest.get_json(silent=True)
         if not data:
-            _logger.debug('POST message received with no data')
+            _logger.warning('POST message received with no data')
             return http.Response(status=400)
 
         # If and only if this webhook is related with a payment intend (see payment_mercado_pago.js)
@@ -51,7 +49,7 @@ class PosMercadoPagoWebhook(http.Controller):
         external_reference = data.get('additional_info', {}).get('external_reference')
 
         if not external_reference or not re.fullmatch(r'\d+_\d+[_\d-]*', external_reference):
-            _logger.debug('POST message received with no or malformed "external_reference" key')
+            _logger.warning('POST message received with no or malformed "external_reference" key: %s', external_reference)
             return http.Response(status=400)
 
         session_id, payment_method_id, _ = external_reference.split('_')

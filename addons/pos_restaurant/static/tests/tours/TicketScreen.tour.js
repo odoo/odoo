@@ -76,10 +76,10 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
             FloorScreen.backToFloor(),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
-            TicketScreen.nthColumnContains(6, 2, "Order"),
-            TicketScreen.nthColumnContains(6, 3, "01"),
-            TicketScreen.nthColumnContains(7, 2, "Self-Order"),
-            TicketScreen.nthColumnContains(7, 3, "S"),
-            TicketScreen.nthColumnContains(7, 3, "01")
+            TicketScreen.nthColumnContains(2, 2, "Order"),
+            TicketScreen.nthColumnContains(2, 3, "1"),
+            TicketScreen.nthColumnContains(3, 2, "Self-Order"),
+            TicketScreen.nthColumnContains(3, 3, "S"),
+            TicketScreen.nthColumnContains(3, 3, "1")
         ].flat(),
 });

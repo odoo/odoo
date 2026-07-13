@@ -5,6 +5,6 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Thread, {
     get onlineMemberStatuses() {
-        return super.onlineMemberStatuses + ["leave_online", "leave_away"];
+        return [...super.onlineMemberStatuses, "leave_online", "leave_away"];
     },
 });

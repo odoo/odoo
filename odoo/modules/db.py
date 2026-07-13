@@ -78,19 +78,24 @@ def initialize(cr):
             )
 
     # Install recursively all auto-installing modules
+    from odoo.tools import config  # noqa: PLC0415
     while True:
+        if config.get('skip_auto_install'):
+            break
         # this selects all the auto_install modules whose auto_install_required
         # deps are marked as to install
         cr.execute("""
         SELECT m.name FROM ir_module_module m
         WHERE m.auto_install
-        AND state != 'to install'
+        AND state not in ('to install', 'uninstallable')
         AND NOT EXISTS (
             SELECT 1 FROM ir_module_module_dependency d
-            JOIN ir_module_module mdep ON (d.name = mdep.name)
+            LEFT JOIN ir_module_module mdep ON (d.name = mdep.name)
             WHERE d.module_id = m.id
-              AND d.auto_install_required
-              AND mdep.state != 'to install'
+              AND (
+                  mdep.id IS NULL
+                  OR (d.auto_install_required AND mdep.state != 'to install')
+              )
         )""")
         to_auto_install = [x[0] for x in cr.fetchall()]
         # however if the module has non-required deps we need to install

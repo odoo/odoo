@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_iap_mine
-# 
+# * crm_iap_mine
+#
 # Translators:
 # Wil Odoo, 2023
 # Larissa Manderfeld, 2023
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
-"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"POT-Creation-Date: 2026-01-29 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-17/"
+"crm_iap_mine/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -38,18 +42,57 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
 "    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Guten Tag,</p>\n"
-"    <p>Sie haben kein Guthaben mehr auf Ihrem IAP-Konto für die Lead-Generierung.<br>\n"
-"    Sie können Ihr Guthaben in den Einstellungen der CRM-App wieder aufladen.<br></p>\n"
+"    <p>Sie haben kein Guthaben mehr auf Ihrem IAP-Konto für die Lead-"
+"Generierung.<br>\n"
+"    Sie können Ihr Guthaben in den Einstellungen der CRM-App wieder aufladen."
+"<br></p>\n"
 "    <p>Mit freundlichen Grüßen</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-address-book text-primary\"/>\n"
+"                    <b>Address</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-address-book text-primary\"/>\n"
+"                    <b>Adresse</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+"                    <b>Industries</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+"                    <b>Branchen</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-globe text-primary\"/>\n"
+"                    <b>Website</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-globe text-primary\"/>\n"
+"                    <b>Website</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-solid fa-id-card text-primary\"/>\n"
+"                    <b>Tax ID</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-solid fa-id-card text-primary\"/>\n"
+"                    <b>USt-IdNr.</b>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -72,8 +115,8 @@ msgid ""
 "<span invisible=\"error_type != 'no_result'\">Your request did not return "
 "any result (no credits were used). Try removing some filters.</span>"
 msgstr ""
-"<span invisible=\"error_type != 'no_result'\">Ihre Anfrage hat keine Treffer"
-" ergeben (es wurde kein Guthaben verwendet). Versuchen Sie es mit weniger "
+"<span invisible=\"error_type != 'no_result'\">Ihre Anfrage hat keine Treffer "
+"ergeben (es wurde kein Guthaben verwendet). Versuchen Sie es mit weniger "
 "Filtern.</span>"
 
 #. module: crm_iap_mine
@@ -332,8 +375,7 @@ msgstr "Leads generieren"
 #, python-format
 msgid "Generate new leads based on their country, industry, size, etc."
 msgstr ""
-"Generieren Sie neue Leads basierend auf ihrem Land, ihrer Branche, Größe "
-"usw."
+"Generieren Sie neue Leads basierend auf ihrem Land, ihrer Branche, Größe usw."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
@@ -487,8 +529,7 @@ msgstr "Rechtliches"
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
-msgid ""
-"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
 "Suchen Sie nach weiteren Verkaufschancen? <br>Probieren Sie das <b>Lead-"
 "Generierungstool</b> aus."
@@ -528,9 +569,6 @@ msgstr "Brauchen Sie Hilfe beim Erreichen Ihres Ziels?"
 
 #. module: crm_iap_mine
 #. odoo-python
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "New"
@@ -835,3 +873,31 @@ msgstr "Manager"
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
 msgstr "bis"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-building text-primary\"/>\n"
+#~ "                    <b>Company type</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-building text-primary\"/>\n"
+#~ "                    <b>Unternehmenstyp</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+#~ "                    <b>Sector</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+#~ "                    <b>Sektor</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-industry text-primary\"/>\n"
+#~ "                    <b>Industries</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-industry text-primary\"/>\n"
+#~ "                    <b>Branchen</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-phone text-primary\"/>\n"
+#~ "                    <b>Phone</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-phone text-primary\"/>\n"
+#~ "                    <b>Telefon</b>"

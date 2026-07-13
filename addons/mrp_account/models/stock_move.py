@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from collections import defaultdict
+
+from odoo import _, Command, fields, models
 
 
 class StockMove(models.Model):
@@ -44,3 +46,6 @@ class StockMove(models.Model):
     def _is_production_consumed(self):
         self.ensure_one()
         return self.location_dest_id.usage == 'production' and self.location_id._should_be_valued()
+
+    def _get_all_related_sm(self, product):
+        return super()._get_all_related_sm(product).filtered(lambda m: m.bom_line_id.bom_id.type != 'phantom')

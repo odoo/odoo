@@ -4,13 +4,13 @@
     <t t-name="account.TaxGroupComponent">
         <tr>
             <td class="o_td_label">
-                <label class="o_form_label o_tax_total_label" t-out="props.taxGroup.tax_group_name"/>
+                <label class="o_form_label o_tax_total_label text-wrap" t-out="props.taxGroup.tax_group_name"/>
             </td>
 
             <td  class="o_tax_group">
                 <t t-if="!props.isReadonly">
                     <t t-if="['edit', 'disable'].includes(state.value)">
-                        <span class="o_tax_group_edit_input">
+                        <span class="o_tax_group_edit_input" t-ref="numpadDecimal">
                             <input
                                 type="text"
                                 t-ref="taxValueInput"

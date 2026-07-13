@@ -106,7 +106,7 @@ patch(SaleOrderLineProductField.prototype, {
         return super.isConfigurableTemplate || this.props.record.data.is_configurable_product;
     },
 
-    async _openProductConfigurator(edit=false) {
+    async getProductConfiguratorDialogProps(edit=false) {
         const saleOrderRecord = this.props.record.model.root;
         let ptavIds = this.props.record.data.product_template_attribute_value_ids.records.map(
             record => record.resId
@@ -138,7 +138,7 @@ patch(SaleOrderLineProductField.prototype, {
                 )
         }
 
-        this.dialog.add(ProductConfiguratorDialog, {
+        return {
             productTemplateId: this.props.record.data.product_template_id[0],
             ptavIds: ptavIds,
             customAttributeValues: customAttributeValues.map(
@@ -172,6 +172,11 @@ patch(SaleOrderLineProductField.prototype, {
             discard: () => {
                 saleOrderRecord.data.order_line.delete(this.props.record);
             },
-        });
+        }
+    },
+
+    async _openProductConfigurator(edit=false) {
+        const productConfiguratorDialogProps = await this.getProductConfiguratorDialogProps(edit);
+        return this.dialog.add(ProductConfiguratorDialog, productConfiguratorDialogProps);
     },
 });

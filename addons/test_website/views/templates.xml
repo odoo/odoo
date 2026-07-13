@@ -49,4 +49,13 @@
             </xpath>
         </field>
     </record>
+
+    <!-- Front end page for test model -->
+    <template id="test_model_page_layout" name="Test Model">
+        <t t-call="website.layout">
+            <t t-set="additional_title" t-value="test_model.name" />
+            <span t-field="test_model.name"/>
+        </t>
+    </template>
+
 </odoo>

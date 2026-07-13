@@ -67,7 +67,7 @@ class ResConfigSettings(models.TransientModel):
         if self.pos_self_ordering_service_mode == 'counter' and self.pos_self_ordering_mode == 'mobile':
             self.pos_self_ordering_pay_after = "each"
 
-        if self.pos_self_ordering_pay_after == "each" and not self.module_pos_preparation_display:
+        if self.pos_self_ordering_mode not in ['nothing', 'consultation'] and self.pos_self_ordering_pay_after == "each" and not self.module_pos_preparation_display:
             self.module_pos_preparation_display = True
 
     def custom_link_action(self):
@@ -79,7 +79,7 @@ class ResConfigSettings(models.TransientModel):
             "domain": ['|', ['pos_config_ids', 'in', self.pos_config_id.id], ["pos_config_ids", "=", False]],
         }
 
-    def _generate_single_qr_code(self, url):
+    def __generate_single_qr_code(self, url):
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -104,12 +104,12 @@ class ResConfigSettings(models.TransientModel):
 
             for table in table_ids:
                 qr_images.append({
-                    'image': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url(table.id))),
+                    'image': self.__generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url(table.id))),
                     'name': f"{table.floor_id.name} - {table.name}",
                 })
         else:
             qr_images.append({
-                'image': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url())),
+                'image': self.__generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url())),
                 'name': "generic",
             })
 
@@ -145,17 +145,16 @@ class ResConfigSettings(models.TransientModel):
         """
         Generate the data needed to print the QR codes page
         """
+        name = ""
+        url = url_unquote(self.pos_config_id._get_self_order_url())
         if self.pos_self_ordering_mode == 'mobile' and self.pos_module_pos_restaurant:
             table_ids = self.pos_config_id.floor_ids.table_ids
-
             if not table_ids:
                 raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
 
-            url = url_unquote(self.pos_config_id._get_self_order_url(table_ids[0].id))
-            name = table_ids[0].name
-        else:
-            url = url_unquote(self.pos_config_id._get_self_order_url())
-            name = ""
+            if self.pos_self_ordering_service_mode == 'table':
+                url = url_unquote(self.pos_config_id._get_self_order_url(table_ids[0].id))
+                name = table_ids[0].name
 
         return self.env.ref("pos_self_order.report_self_order_qr_codes_page").report_action(
             [], data={

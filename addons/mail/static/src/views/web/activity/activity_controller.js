@@ -73,10 +73,12 @@ export class ActivityController extends Component {
             title: _t("Search: %s", this.props.archInfo.title),
             multiSelect: false,
             context: this.props.context,
+            noCreate: this.props.context?.create === false,
             onSelected: async (resIds) => {
                 await this.activity.schedule(this.props.resModel, resIds);
-                this.model.load(this.getSearchProps());
             },
+        }, {
+            onClose: () => this.model.load(this.getSearchProps())
         });
     }
 

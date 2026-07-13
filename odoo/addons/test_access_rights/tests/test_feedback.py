@@ -415,6 +415,29 @@ If you really, really need access, perhaps you can win over your friendly admini
         ):
             p.with_user(self.user).val
 
+    def test_access_error_reports_correct_rules_with_archived_record(self):
+        """ Ensure archived records do not cause unrelated rules to be reported as failing
+        """
+        self._make_rule('rule 0', '[("company_id", "in", company_ids + [False])]', global_=True, attr='read')
+        self._make_rule('rule 1', '[("val", "=", 1)]', global_=False, attr='read')
+        self.record.active = False
+        self.debug_mode()
+        with self.assertRaises(AccessError) as ctx:
+            _ = self.record.val
+        self.maxDiff = None
+        self.assertEqual(
+            ctx.exception.args[0],
+            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+
+Sorry, %s (id=%s) doesn't have 'read' access to:
+- %s, %s (%s: %s)
+
+Blame the following rules:
+- rule 1
+
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
+        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
+
 class TestFieldGroupFeedback(Feedback):
 
     @classmethod

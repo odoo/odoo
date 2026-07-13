@@ -13,7 +13,7 @@ import {
 } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import { Component, useChildSubEnv, useExternalListener, useRef, useState } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -63,6 +63,15 @@ export class ChatWindow extends Component {
             inChatWindow: true,
             messageHighlight: this.messageHighlight,
         });
+
+        if (this.isMobileForLivechatVisitor) {
+            useExternalListener(document.body, "scroll", this._onScroll, { capture: true });
+        }
+    }
+
+    _onScroll(ev) {
+        const container = ev.target;
+        this.state.moveUp = container.scrollHeight - container.scrollTop === container.clientHeight;
     }
 
     get composerType() {
@@ -80,12 +89,20 @@ export class ChatWindow extends Component {
         const maxHeight = !this.ui.isSmall ? "max-height: 95vh;" : "";
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
-        const visibleOffset = this.ui.isSmall ? 0 : this.props.right;
+        let visibleOffset = this.ui.isSmall ? 0 : this.props.right;
+        if (this.isMobileFoldedForLivechatVisitor) {
+            visibleOffset = 10;
+        }
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
         return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto; ${maxHeight}`;
     }
 
     onKeydown(ev) {
+        if (ev.key === "Escape" && this.threadActions.activeAction) {
+            this.threadActions.activeAction.close();
+            ev.stopPropagation();
+            return;
+        }
         if (ev.target.closest(".o-dropdown")) {
             return;
         }
@@ -120,13 +137,25 @@ export class ChatWindow extends Component {
     }
 
     onClickHeader() {
-        if (!this.ui.isSmall && !this.state.editingName) {
+        if ((!this.ui.isSmall || this.isMobileForLivechatVisitor) && !this.state.editingName) {
             this.toggleFold();
         }
     }
 
+    get isMobileFoldedForLivechatVisitor() {
+        return (
+            this.ui.isSmall &&
+            this.env.services["im_livechat.livechat"] &&
+            this.props.chatWindow.folded
+        );
+    }
+
+    get isMobileForLivechatVisitor() {
+        return this.ui.isSmall && this.env.services["im_livechat.livechat"];
+    }
+
     toggleFold() {
-        if (this.ui.isSmall || this.state.actionsMenuOpened) {
+        if ((this.ui.isSmall && !this.isMobileForLivechatVisitor) || this.state.actionsMenuOpened) {
             return;
         }
         if (this.props.chatWindow.hidden) {

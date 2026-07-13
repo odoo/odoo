@@ -100,6 +100,11 @@ QUnit.module("Components", (hooks) => {
                             relation: "product",
                             searchable: true,
                         },
+                        json_field: {
+                            string: "Json field",
+                            type: "json",
+                            searchable: true,
+                        },
                     },
                     records: [
                         { id: 1, foo: "yop", bar: true, product_id: 37 },

@@ -13,16 +13,21 @@ class AccountMoveReversal(models.TransientModel):
     l10n_latam_document_number = fields.Char(string='Document Number')
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
 
-    @api.depends('l10n_latam_document_type_id')
+    @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
         self.l10n_latam_manual_document_number = False
-        for rec in self.filtered('move_ids'):
-            move = rec.move_ids[0]
-            if move.journal_id and move.journal_id.l10n_latam_use_documents:
-                rec.l10n_latam_manual_document_number = move._is_manual_document_number()
+        for wiz in self.filtered(lambda x: x.journal_id and x.journal_id.l10n_latam_use_documents):
+            wiz.l10n_latam_manual_document_number = self.env['account.move'].new({
+                'move_type': wiz._reverse_type_map(wiz.move_ids[0].move_type),
+                'journal_id': wiz.journal_id.id,
+                'partner_id': wiz.move_ids[0].partner_id.id,
+                'company_id': wiz.move_ids[0].company_id.id,
+                'reversed_entry_id': wiz.move_ids[0].id,
+            })._is_manual_document_number()
 
     @api.model
     def _reverse_type_map(self, move_type):
+        self.ensure_one()
         match = {
             'entry': 'entry',
             'out_invoice': 'out_refund',
@@ -32,7 +37,7 @@ class AccountMoveReversal(models.TransientModel):
             'in_receipt': 'out_receipt'}
         return match.get(move_type)
 
-    @api.depends('l10n_latam_available_document_type_ids')
+    @api.depends('l10n_latam_available_document_type_ids', 'journal_id')
     def _compute_document_type(self):
         for record in self.filtered(
                 lambda x: not x.l10n_latam_document_type_id or
@@ -50,7 +55,7 @@ class AccountMoveReversal(models.TransientModel):
                 if move_ids_use_document:
                     raise UserError(_('You can only reverse documents with legal invoicing documents from Latin America one at a time.\nProblematic documents: %s', ", ".join(move_ids_use_document.mapped('name'))))
             else:
-                record.l10n_latam_use_documents = record.move_ids.journal_id.l10n_latam_use_documents
+                record.l10n_latam_use_documents = record.journal_id.l10n_latam_use_documents
 
             if record.l10n_latam_use_documents:
                 refund = record.env['account.move'].new({

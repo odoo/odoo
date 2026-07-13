@@ -10,6 +10,9 @@ class StockRule(models.Model):
         Subcontracting delay =
             max(Vendor lead time, Manufacturing lead time + DTPMO) + Days to Purchase + Purchase security lead time
         """
+        if not product.sudo().bom_ids:
+            return super()._get_lead_days(product, **values)
+
         bypass_delay_description = self.env.context.get('bypass_delay_description')
         buy_rule = self.filtered(lambda r: r.action == 'buy')
         seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
@@ -25,7 +28,7 @@ class StockRule(models.Model):
             return super()._get_lead_days(product, **values)
 
         delays, delay_description = super(StockRule, self - buy_rule)._get_lead_days(product, **values)
-        extra_delays, extra_delay_description = super(StockRule, buy_rule.with_context(ignore_vendor_lead_time=True))._get_lead_days(product, **values)
+        extra_delays, extra_delay_description = super(StockRule, buy_rule.with_context(ignore_vendor_lead_time=True, ignore_global_visibility_days=True))._get_lead_days(product, **values)
         if seller.delay >= bom.produce_delay + bom.days_to_prepare_mo:
             delays['total_delay'] += seller.delay
             delays['purchase_delay'] += seller.delay

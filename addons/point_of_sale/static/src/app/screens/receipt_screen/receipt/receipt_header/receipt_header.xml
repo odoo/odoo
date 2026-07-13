@@ -11,7 +11,7 @@
                 <div>Tel:<t t-esc="props.data.company.phone" /></div>
             </t>
             <t t-if="props.data.company.vat">
-                <div><t t-esc="props.data.company.country?.vat_label || 'Tax ID'"/>: <t t-esc="props.data.company.vat" /></div>
+                <div t-esc="vatText"/>
             </t>
             <div t-if="props.data.company.email" t-esc="props.data.company.email" />
             <div t-if="props.data.company.website" t-esc="props.data.company.website" />

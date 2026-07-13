@@ -20,6 +20,8 @@ class StockMoveLine(models.Model):
         return res
 
     def write(self, vals):
+        if self.env.context.get('skip_subcontract_lot_propagation'):
+            return super().write(vals)
         for move_line in self:
             if vals.get('lot_id') and move_line.move_id.is_subcontract and move_line.location_id.is_subcontracting_location:
                 # Update related subcontracted production to keep consistency between production and reception.

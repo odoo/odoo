@@ -1,24 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* spreadsheet
-# 
+# * spreadsheet
+#
 # Translators:
-# Wil Odoo, 2024
-# Daye Jeong, 2024
-# 
+# Wil Odoo, 2023
+# Daye Jeong, 2025
+# Sarah Park, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
-"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"POT-Creation-Date: 2026-04-24 17:38+0000\n"
+"PO-Revision-Date: 2026-06-14 21:00+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-17/"
+"spreadsheet/ko/>\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -27,7 +32,9 @@ msgstr ""
 msgid ""
 " A string, possible empty, or a reference to a valid string. If empty, the "
 "text will be simply concatenated."
-msgstr "비어있는 문자열 또는 유효한 문자열에 대한 참조입니다. 문자열이 비어있는 경우 텍스트는 단순하게 연결됩니다."
+msgstr ""
+"비어있는 문자열 또는 유효한 문자열에 대한 참조입니다. 문자열이 비어있는 경우 "
+"텍스트는 단순하게 연결됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -104,24 +111,26 @@ msgid ""
 "(0) Exact match. (-1) Return next smaller item if no match. (1) Return next "
 "greater item if no match."
 msgstr ""
-"(0) 정확히 일치. (-1) 일치하는 항목이 없으면 그 다음으로 작은 항목으로 반환 (1) 일치하는 항목이 없으면 다음으로 큰 항목으로"
-" 반환"
+"(0) 정확히 일치. (-1) 일치하는 항목이 없으면 그 다음으로 작은 항목으로 반환 "
+"(1) 일치하는 항목이 없으면 다음으로 큰 항목으로 반환"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"(1) Search starting at first item. \n"
-"      (-1) Search starting at last item. \n"
-"      (2) Perform a binary search that relies on lookup_array being sorted in ascending order. If not sorted, invalid results will be returned. \n"
-"      (-2) Perform a binary search that relies on lookup_array being sorted in descending order. If not sorted, invalid results will be returned.\n"
-"      "
+"(1) Search starting at first item.       (-1) Search starting at last "
+"item.       (2) Perform a binary search that relies on lookup_array being "
+"sorted in ascending order. If not sorted, invalid results will be "
+"returned.       (-2) Perform a binary search that relies on lookup_array "
+"being sorted in descending order. If not sorted, invalid results will be "
+"returned.      "
 msgstr ""
-"(1) 첫 번째 항목부터 검색합니다. \n"
-"      (-1) 마지막 항목부터 검색합니다. \n"
-"      (2) 오름차순으로 정렬되는 lookup_array에 의존하는 이진 검색을 수행합니다. 정렬되지 않은 경우 잘못된 결과가 반환됩니다.\n"
-"      (-2) 내림차순으로 정렬되는 lookup_array에 의존하는 이진 검색을 수행합니다. 정렬되지 않은 경우 잘못된 결과가 반환됩니다."
+"(1) 첫 번째 항목부터 검색합니다.       (-1) 마지막 항목부터 "
+"검색합니다.       (2) 오름차순으로 lookup_array 기준으로 정렬하여 바이너리 "
+"검색을 수행합니다. 정렬되지 않은 경우 잘못된 결과가 반환됩니다.       (-2) "
+"내림차순으로 lookup_array 기준으로 정렬하여 바이너리 검색을 수행합니다. "
+"정렬되지 않은 경우 잘못된 결과가 반환됩니다.      "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -132,7 +141,6 @@ msgstr "(공백)"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "+ Add another rule"
@@ -175,12 +183,21 @@ msgstr "2 행"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "A"
+msgstr "A"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "A boolean indicating whether to use A1 style notation (TRUE) or R1C1 style "
 "notation (FALSE)."
-msgstr "A1 표기법(TRUE)과 R1C1 표기법(FALSE) 중 어떤 스타일을 사용할지 여부를 나타내는 불리언입니다."
+msgstr ""
+"A1 표기법(TRUE)과 R1C1 표기법(FALSE) 중 어떤 스타일을 사용할지 여부를 나타내"
+"는 불리언입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -189,7 +206,9 @@ msgstr "A1 표기법(TRUE)과 R1C1 표기법(FALSE) 중 어떤 스타일을 사�
 msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
-msgstr "불리언; TRUE인 경우 텍스트 인자에서 선택한 빈 셀은 결과값에 포함되지 않습니다."
+msgstr ""
+"불리언; TRUE인 경우 텍스트 인자에서 선택한 빈 셀은 결과값에 포함되지 않습니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -198,7 +217,9 @@ msgstr "불리언; TRUE인 경우 텍스트 인자에서 선택한 빈 셀은 �
 msgid ""
 "A column or row containing true or false values corresponding to the first "
 "column or row of range."
-msgstr "범위의 첫 번째 열 또는 행에 해당하는 참 또는 거짓 값을 포함하는 열 또는 행입니다."
+msgstr ""
+"범위의 첫 번째 열 또는 행에 해당하는 참 또는 거짓 값을 포함하는 열 또는 행입"
+"니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -224,14 +245,12 @@ msgstr "필터는 연속 선택 항목에 대해서만 생성할 수 있습니�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A flag specifying wheter to compute the slope or not"
 msgstr "경사도 계산 여부를 지정하는 플래그입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A flag specifying whether to compute the intercept or not."
@@ -240,12 +259,13 @@ msgstr "인터셉트 계산 여부를 지정하는 플래그입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"A flag specifying whether to return additional regression statistics or only"
-" the linear coefficients and the y-intercept"
-msgstr "추가 회귀 통계를 반환할지, 아니면 선형 계수와 y-절편만 반환할지 지정하는 플래그입니다."
+"A flag specifying whether to return additional regression statistics or only "
+"the linear coefficients and the y-intercept"
+msgstr ""
+"추가 회귀 통계를 반환할지, 아니면 선형 계수와 y-절편만 반환할지 지정하는 플래"
+"그입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -268,11 +288,12 @@ msgstr "최소 범위 제한 값 필요"
 msgid ""
 "A number indicating which numbering system to use to represent weekdays. By "
 "default, counts starting with Sunday = 1."
-msgstr "요일을 나타내는 데 사용되는 숫자입니다. 기본적으로 일요일 = 1으로 카운트가 시작됩니다."
+msgstr ""
+"요일을 나타내는 데 사용되는 숫자입니다. 기본적으로 일요일 = 1으로 카운트가 시"
+"작됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -282,7 +303,6 @@ msgstr "요일 중 주말을 나타내는 숫자 또는 문자열입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A number raised to a power."
@@ -323,7 +343,9 @@ msgstr "0을 포함하고 1을 제외한 두 숫자 사이의 임의의 수입�
 msgid ""
 "A range containing the income or payments associated with the investment. "
 "The array should contain bot payments and incomes."
-msgstr "투자 관련 수입 또는 지불을 포함한 범위입니다. 배열에는 봇 결제와 수입이 포함되어야 합니다."
+msgstr ""
+"투자 관련 수입 또는 지불을 포함한 범위입니다. 배열에는 봇 결제와 수입이 포함"
+"되어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -345,13 +367,11 @@ msgstr "휴일로 고려할 날짜의 일련번호가 포함된 범위 또는 �
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"A range or array constant containing the dates to consider as holidays."
+msgid "A range or array constant containing the dates to consider as holidays."
 msgstr "휴일로 고려할 날짜가 포함된 범위 또는 배열 상수입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A range or array constant containing the dates to consider holidays."
@@ -409,15 +429,17 @@ msgid ""
 "of whole years between start_date and end_date), \"M\" (the number of whole "
 "months between start_date and end_date), \"D\" (the number of days between "
 "start_date and end_date), \"MD\" (the number of days between start_date and "
-"end_date after subtracting whole months), \"YM\" (the number of whole months"
-" between start_date and end_date after subtracting whole years), \"YD\" (the"
-" number of days between start_date and end_date, assuming start_date and "
+"end_date after subtracting whole months), \"YM\" (the number of whole months "
+"between start_date and end_date after subtracting whole years), \"YD\" (the "
+"number of days between start_date and end_date, assuming start_date and "
 "end_date were no more than one year apart)."
 msgstr ""
-"시간의 단위를 나타내는 약어입니다. 허용되는 값은 \"Y\"(시작일과 종료일 사이의 연도 수), \"M\"(시작일과 종료일 사이의 월 "
-"수), \"D\"(시작일과 종료일 사이의 일 수), \"MD\"(전체 연도와 월을 뺀 시작일과 종료일 사이의 일 수) 등입니다, "
-"\"YM\"(전체 연도를 뺀 시작일과 종료일 사이의 월 수), \"YD\"(시작일과 종료일이 1년 이상 떨어져 있지 않은 것으로 간주했을"
-" 때 두 날짜 사이의 일 수) 입니다."
+"시간의 단위를 나타내는 약어입니다. 허용되는 값은 \"Y\"(시작일과 종료일 사이"
+"의 연도 수), \"M\"(시작일과 종료일 사이의 월 수), \"D\"(시작일과 종료일 사이"
+"의 일 수), \"MD\"(전체 연도와 월을 뺀 시작일과 종료일 사이의 일 수) 등입니"
+"다, \"YM\"(전체 연도를 뺀 시작일과 종료일 사이의 월 수), \"YD\"(시작일과 종료"
+"일이 1년 이상 떨어져 있지 않은 것으로 간주했을 때 두 날짜 사이의 일 수) 입니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -449,12 +471,21 @@ msgstr "숫자의 절댓값입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+#, python-format
+msgid "Access Error"
+msgstr "접근 에러"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "Access to the clipboard denied by the browser. Please enable clipboard "
 "permission for this page in your browser settings."
-msgstr "브라우저에서 클립보드에 대한 액세스를 거부했습니다. 브라우저 설정에서 이 페이지에 대한 클립보드 권한을 활성화해주세요."
+msgstr ""
+"브라우저에서 클립보드에 대한 액세스를 거부했습니다. 브라우저 설정에서 이 페이"
+"지에 대한 클립보드 권한을 활성화해주세요."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -466,14 +497,12 @@ msgstr "만기 시 지급되는 유가증권의 누적 이자."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr "활성 필터"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add"
@@ -524,7 +553,6 @@ msgstr "이전 조건이 FALSE인 경우 평가할 추가 조건입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional criteria to check."
 msgstr "확인해야 할 추가 기준."
@@ -553,19 +581,17 @@ msgstr "값에 추가할 추가 숫자 또는 value1."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "Additional ranges over which to evaluate the additional criteria. The "
-"filtered set will be the intersection of the sets produced by each "
-"criterion-range pair."
-msgstr "추가 기준을 평가할 수 있는 추가 범위입니다. 필터링된 집합은 각 기준 범위 쌍에 의해 생성된 집합의 교집합이 됩니다."
+"filtered set will be the intersection of the sets produced by each criterion-"
+"range pair."
+msgstr ""
+"추가 기준을 평가할 수 있는 추가 범위입니다. 필터링된 집합은 각 기준 범위 쌍"
+"에 의해 생성된 집합의 교집합이 됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional ranges to add to range1."
@@ -609,7 +635,6 @@ msgstr "고유성을 위해 고려해야 할 추가 값 또는 범위."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "Additional values or ranges to consider when calculating the average value."
@@ -617,7 +642,6 @@ msgstr "평균값을 계산할 때 고려해야 할 추가 값 또는 범위."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -635,7 +659,6 @@ msgstr "중간값을 계산할 때 고려해야 할 추가 값 또는 범위."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "Additional values or ranges to consider when calculating the minimum value."
@@ -644,7 +667,6 @@ msgstr "최소값을 계산할 때 고려해야 할 추가 값 또는 범위"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values or ranges to consider when counting."
 msgstr "계산 시 고려할 추가 값 또는 범위."
@@ -652,23 +674,12 @@ msgstr "계산 시 고려할 추가 값 또는 범위."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values or ranges to include in the population."
 msgstr "모집단에 포함시킬 추가 값 또는 범위."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values or ranges to include in the sample."
@@ -699,8 +710,6 @@ msgstr "추가 무게."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Aggregate"
 msgstr "종합"
@@ -724,9 +733,10 @@ msgstr "전체"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"All the dates should be greater or equal to the first date in cashflow_dates"
-" (%s)."
-msgstr "모든 날짜는 cashflow_dates 의 첫 번째 날짜보다 크거나 같아야 합니다. (%s)."
+"All the dates should be greater or equal to the first date in cashflow_dates "
+"(%s)."
+msgstr ""
+"모든 날짜는 cashflow_dates 의 첫 번째 날짜보다 크거나 같아야 합니다. (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -758,7 +768,9 @@ msgstr "투자 관련 수입 또는 지불을 포함한 배열 또는 범위."
 msgid ""
 "An array or range containing zero or more criteria to filter the database "
 "values by before operating."
-msgstr "작동 전 데이터베이스 값을 필터링할 기준을 0개 이상 포함하고 있는 배열 또는 범위."
+msgstr ""
+"작동 전 데이터베이스 값을 필터링할 기준을 0개 이상 포함하고 있는 배열 또는 범"
+"위."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -770,7 +782,6 @@ msgstr "이자율에 대한 예상치입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "An estimate for what the internal rate of return will be."
 msgstr "내부 수익률에 대한 추정치입니다."
@@ -778,15 +789,14 @@ msgstr "내부 수익률에 대한 추정치입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "An expression or reference to a cell containing an expression that "
-"represents some logical value, i.e. TRUE or FALSE, or an expression that can"
-" be coerced to a logical value."
+"represents some logical value, i.e. TRUE or FALSE, or an expression that can "
+"be coerced to a logical value."
 msgstr ""
-"논리 값, TRUE 또는 FALSE를 나타내는 표현식 또는 논리 값으로 강제할 수 있는 표현식이 포함된 셀에 대한 참조입니다."
+"논리 값, TRUE 또는 FALSE를 나타내는 표현식 또는 논리 값으로 강제할 수 있는 표"
+"현식이 포함된 셀에 대한 참조입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -795,7 +805,9 @@ msgstr ""
 msgid ""
 "An expression or reference to a cell containing an expression that "
 "represents some logical value, i.e. TRUE or FALSE."
-msgstr "논리 값, TRUE 또는 FALSE를 나타내는 표현식 또는 표현식이 포함된 셀에 대한 참조입니다."
+msgstr ""
+"논리 값, TRUE 또는 FALSE를 나타내는 표현식 또는 표현식이 포함된 셀에 대한 참"
+"조입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -804,24 +816,11 @@ msgstr "논리 값, TRUE 또는 FALSE를 나타내는 표현식 또는 표현식
 msgid ""
 "An expression or reference to a cell holding an expression that represents "
 "some logical value."
-msgstr "논리 값을 나타내는 표현식 또는 표현식이 들어 있는 셀에 대한 참조입니다."
+msgstr ""
+"논리 값을 나타내는 표현식 또는 표현식이 들어 있는 셀에 대한 참조입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "An indicator of what day count method to use."
@@ -834,7 +833,8 @@ msgstr "사용할 일수 계산 방법을 나타내는 지표."
 msgid ""
 "An indicator of what day count method to use. (0) US NASD method (1) "
 "European method"
-msgstr "사용할 일수 계산 방법을 나타내는 지표입니다. (0) 미국 NASD식 (1) 유럽식"
+msgstr ""
+"사용할 일수 계산 방법을 나타내는 지표입니다. (0) 미국 NASD식 (1) 유럽식"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -846,8 +846,9 @@ msgid ""
 "A$1), 3 is row relative and column absolute (e.g. $A1), and 4 is row and "
 "column relative (e.g. A1)."
 msgstr ""
-"참조가 행/열의 절대 참조인지 여부를 나타내는 지표입니다. 1 은행 및 열의 절대 참조(예. $A$1), 2는 행 절대 참조 및 열 상대"
-" 참조(예. A$1), 3은 행 상대 참조 및 열 절대 참조(예. $A1), 4는 행 및 열의 상대 참조(예. A1)입니다."
+"참조가 행/열의 절대 참조인지 여부를 나타내는 지표입니다. 1 은행 및 열의 절대 "
+"참조(예. $A$1), 2는 행 절대 참조 및 열 상대 참조(예. A$1), 3은 행 상대 참조 "
+"및 열 절대 참조(예. $A1), 4는 행 및 열의 상대 참조(예. A1)입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -856,11 +857,11 @@ msgstr ""
 msgid ""
 "An integer specifying the dimension size of the unit matrix. It must be "
 "positive."
-msgstr "단위 행렬의 dimension 크기를 지정하는 정수입니다. 이 수는 양수여야 합니다."
+msgstr ""
+"단위 행렬의 dimension 크기를 지정하는 정수입니다. 이 수는 양수여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -874,7 +875,9 @@ msgstr "투자 관련 수입 또는 지불액을 포함된 범위."
 msgid ""
 "An range with an equal number of rows and columns representing a matrix "
 "whose determinant will be calculated."
-msgstr "행렬식이 계산될 곱셈 역수 행렬을 표시하는 동일한 개수의 행과 열이 있는 범위입니다."
+msgstr ""
+"행렬식이 계산될 곱셈 역수 행렬을 표시하는 동일한 개수의 행과 열이 있는 범위입"
+"니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -883,11 +886,11 @@ msgstr "행렬식이 계산될 곱셈 역수 행렬을 표시하는 동일한 �
 msgid ""
 "An range with an equal number of rows and columns representing a matrix "
 "whose multiplicative inverse will be calculated."
-msgstr "행렬식이 계산될 행렬을 표시하는 동일한 개수의 행과 열이 있는 범위입니다."
+msgstr ""
+"행렬식이 계산될 행렬을 표시하는 동일한 개수의 행과 열이 있는 범위입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -1038,7 +1041,6 @@ msgstr "큰 숫자 서식 적용"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Apply to range"
 msgstr "범위에 적용"
@@ -1061,7 +1063,6 @@ msgstr "이 시트를 정말로 삭제하시겠습니까?"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Argument ignore must be between 0 and 3"
 msgstr "인수 무시 값은 0에서 3 사이여야 합니다."
@@ -1075,7 +1076,6 @@ msgstr "인수는 셀 또는 범위를 참조하는 값이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Argument range must be a single row or column."
@@ -1104,7 +1104,6 @@ msgstr "배열 결과가 %s의 데이터를 덮어쓰기 때문에 확장되지 
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Arrow"
@@ -1170,10 +1169,6 @@ msgstr "평균"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Background Color"
 msgstr "배경 색상"
@@ -1181,17 +1176,12 @@ msgstr "배경 색상"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Background color"
 msgstr "배경 색상"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Bad zone format"
@@ -1273,8 +1263,6 @@ msgstr "테두리"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Bottom"
 msgstr "맨 아래"
@@ -1300,7 +1288,8 @@ msgstr "실효 이자율을 계산합니다."
 msgid ""
 "Calculates the expected y-value for a specified x based on a linear "
 "regression of a dataset."
-msgstr "데이터 집합의 선형 회귀를 기반으로 지정된 x에 대한 예상 y 값을 계산합니다."
+msgstr ""
+"데이터 집합의 선형 회귀를 기반으로 지정된 x에 대한 예상 y 값을 계산합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1330,7 +1319,8 @@ msgstr "두 날짜 사이의 일, 월 또는 연도 수를 계산합니다."
 msgid ""
 "Calculates the price of a security paying interest at maturity, based on "
 "expected yield."
-msgstr "예상 수익률을 기준으로 만기 시 이자를 지급하는 증권의 가격을 계산합니다."
+msgstr ""
+"예상 수익률을 기준으로 만기 시 이자를 지급하는 증권의 가격을 계산합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1339,7 +1329,8 @@ msgstr "예상 수익률을 기준으로 만기 시 이자를 지급하는 증�
 msgid ""
 "Calculates the standard error of the predicted y-value for each x in the "
 "regression of a dataset."
-msgstr "데이터 집합의 회귀에서 각 x에 대해 예측된 y 값의 표준 오차를 계산합니다."
+msgstr ""
+"데이터 집합의 회귀에서 각 x에 대해 예측된 y 값의 표준 오차를 계산합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1378,9 +1369,6 @@ msgstr "두 배열에 있는 값의 제곱합의 합을 계산합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "취소"
@@ -1417,13 +1405,6 @@ msgstr "시트의 모든 행을 숨길 수는 없습니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "행렬을 곱할 수 없음: 호환되지 않는 행렬 크기입니다."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid "Cannot remove duplicates for an unknown reason"
 msgstr "알 수 없는 이유로 중복된 항목을 제거할 수 없습니다."
 
@@ -1434,7 +1415,9 @@ msgstr "알 수 없는 이유로 중복된 항목을 제거할 수 없습니다.
 msgid ""
 "Cannot sort. To sort, select only cells or only merges that have the same "
 "size."
-msgstr "정렬할 수 없습니다. 정렬하려면 하나의 셀만 선택하거나 크기가 같은 병합된 셀을 선택하십시오."
+msgstr ""
+"정렬할 수 없습니다. 정렬하려면 하나의 셀만 선택하거나 크기가 같은 병합된 셀"
+"을 선택하십시오."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1453,8 +1436,6 @@ msgstr "지정된 문자열에 있는 각 단어를 대문자로 표시합니다
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Categories / Labels"
 msgstr "카테고리 / 라벨"
@@ -1468,13 +1449,6 @@ msgstr "셀 값"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "CellIsRule"
-msgstr "CellIsRule"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Center"
@@ -1482,7 +1456,6 @@ msgstr "중앙"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Chart"
@@ -1504,7 +1477,6 @@ msgstr "차트 유형"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Checkbox"
@@ -1661,13 +1633,6 @@ msgstr "색 견본"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "ColorScaleRule"
-msgstr "ColorScaleRule"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Column %s"
@@ -1754,8 +1719,6 @@ msgstr "데이터 집합의 다항식 회귀 계수를 계산합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Compute the intercept of the linear regression."
 msgstr "선형 회귀의 절댓값을 계산합니다."
@@ -1791,7 +1754,8 @@ msgstr "투자가 가치에 도달하기까지 필요한 기간 수를 계산합
 msgid ""
 "Computes the rate needed for an investment to reach a specific value within "
 "a specific number of periods."
-msgstr "특정 기간 내에 투자가 특정 가치에 도달하기까지 필요한 이율을 계산합니다."
+msgstr ""
+"특정 기간 내에 투자가 특정 가치에 도달하기까지 필요한 이율을 계산합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1810,7 +1774,6 @@ msgstr "두 값의 연결."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Conditional formatting"
 msgstr "조건부 서식 "
@@ -1824,9 +1787,6 @@ msgstr "설정"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Confirm"
@@ -1885,6 +1845,13 @@ msgstr "지정된 문자열을 대문자로 변환합니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Converts a string to a numeric value."
+msgstr "문자열을 숫자 값으로 변환합니다."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Converts a time string into its serial number representation."
 msgstr "시간 문자열을 일련번호 식으로 변환합니다."
 
@@ -1925,7 +1892,6 @@ msgstr "복사됨"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Copy"
@@ -2019,7 +1985,6 @@ msgstr "표와 같은 범위에서 값을 계산합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Create filter"
@@ -2169,7 +2134,6 @@ msgstr "사용자 지정 구분 기호"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cut"
 msgstr "잘라내기"
@@ -2183,8 +2147,6 @@ msgstr "데이터"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Data Series"
@@ -2250,7 +2212,6 @@ msgstr "데이터베이스"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date"
 msgstr "날짜"
@@ -2293,7 +2254,6 @@ msgstr "날짜는"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is %s"
 msgstr "날짜는 %s일입니다."
@@ -2308,7 +2268,6 @@ msgstr "날짜는 다음 이후"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is after %s"
 msgstr "날짜는 %s일 이후입니다."
@@ -2322,7 +2281,6 @@ msgstr "날짜는 다음 이전"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is before %s"
@@ -2366,7 +2324,6 @@ msgstr "날짜는 다음 날짜이거나 그 이후입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is on or after %s"
 msgstr "날짜는 %s일이거나 그 이후입니다."
@@ -2380,7 +2337,6 @@ msgstr "날짜는 다음 날짜이거나 그 이전입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is on or before %s"
@@ -2459,7 +2415,6 @@ msgstr "입력한 날짜의 요일(숫자로 표시)."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Days from settlement until next coupon."
 msgstr "결제일 이후 다음 쿠폰 날짜까지 남은 일수"
@@ -2488,8 +2443,6 @@ msgstr "소수점 이하 자릿수 감소"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Delete"
@@ -2645,7 +2598,6 @@ msgstr "가격에 따른 유가증권 할인율."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Display style"
 msgstr "표시 스타일"
@@ -2658,10 +2610,7 @@ msgid "Does not contain"
 msgstr "포함하지 않음"
 
 #. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.js:0
 #: model_terms:ir.ui.view,arch_db:spreadsheet.public_spreadsheet_layout
-#, python-format
 msgid "Download"
 msgstr "다운로드"
 
@@ -2682,7 +2631,6 @@ msgstr "소요시간"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Edit"
 msgstr "편집"
@@ -2697,7 +2645,6 @@ msgstr "링크 편집"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Else"
@@ -2755,20 +2702,8 @@ msgstr "오일러의 수 e(~2.718)를 거듭제곱한 값입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error."
+msgid "Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error."
 msgstr "함수 [[FUNCTION_NAME]]를 산출하는 중 0으로 나누기 오류가 발생했습니다."
 
 #. module: spreadsheet
@@ -2846,7 +2781,6 @@ msgstr "%s 필드는 (%s) 형식으로 인해 지원되지 않습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Field name."
 msgstr "필드명."
@@ -2868,8 +2802,6 @@ msgstr "파일"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Fill Color"
@@ -3041,8 +2973,6 @@ msgstr "서식 스타일"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Formula"
 msgstr "수식"
@@ -3109,7 +3039,8 @@ msgid ""
 "Function ${name} has an argument that has been declared with more than one "
 "type whose type 'META'. The 'META' type can only be declared alone."
 msgstr ""
-"함수 ${name}에 'META' 형식의 인수가 두 개 이상 선언되어 있습니다. 'META' 형은 단독으로만 선언할 수 있습니다."
+"함수 ${name}에 'META' 형식의 인수가 두 개 이상 선언되어 있습니다. 'META' 형"
+"은 단독으로만 선언할 수 있습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3119,16 +3050,19 @@ msgid ""
 "Function ${name} has at mandatory arguments declared after optional ones. "
 "All optional arguments must be after all mandatory arguments."
 msgstr ""
-"함수 ${name}에 선택적 인수 뒤에 선언된 필수 인수가 있습니다. 모든 선택적 인수는 모든 필수 인수 뒤에 나열되어야 합니다."
+"함수 ${name}에 선택적 인수 뒤에 선언된 필수 인수가 있습니다. 모든 선택적 인수"
+"는 모든 필수 인수 뒤에 나열되어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Function ${name} has no-repeatable arguments declared after repeatable ones."
-" All repeatable arguments must be declared last."
-msgstr "함수 ${name}에 불변 인수가 가변 인수 다음에 선언되어 있습니다. 모든 가변 인수는 마지막에 선언되어야 합니다."
+"Function ${name} has no-repeatable arguments declared after repeatable ones. "
+"All repeatable arguments must be declared last."
+msgstr ""
+"함수 ${name}에 불변 인수가 가변 인수 다음에 선언되어 있습니다. 모든 가변 인수"
+"는 마지막에 선언되어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3137,7 +3071,8 @@ msgstr "함수 ${name}에 불변 인수가 가변 인수 다음에 선언되어 
 msgid ""
 "Function %s expects its parameters to be single values or single cell "
 "references, not ranges."
-msgstr "%s 함수의 매개 변수는 범위가 아닌 단일 값 또는 단일 셀 참조여야 합니다."
+msgstr ""
+"%s 함수의 매개 변수는 범위가 아닌 단일 값 또는 단일 셀 참조여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3146,15 +3081,16 @@ msgstr "%s 함수의 매개 변수는 범위가 아닌 단일 값 또는 단일 
 msgid ""
 "Function %s expects the parameter %s to be a single value or a single cell "
 "reference, not a range."
-msgstr "%s 함수의 %s 매개 변수는 범위가 아닌 단일 값 또는 단일 셀 참조여야 합니다."
+msgstr ""
+"%s 함수의 %s 매개 변수는 범위가 아닌 단일 값 또는 단일 셀 참조여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Function %s expects the parameter %s to be reference to a cell or range, not"
-" a %s."
+"Function %s expects the parameter %s to be reference to a cell or range, not "
+"a %s."
 msgstr "%s 함수의 %s 매개 변수는 %s가 아닌 셀 또는 범위를 참조해야 합니다."
 
 #. module: spreadsheet
@@ -3183,7 +3119,6 @@ msgstr "함수 [[FUNCTION_NAME]] 에서 0으로 나누기 오류가 발생했습
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] didn't find any result."
 msgstr "함수 [[FUNCTION_NAME]] 에서 결과를 찾지 못했습니다."
@@ -3193,24 +3128,31 @@ msgstr "함수 [[FUNCTION_NAME]] 에서 결과를 찾지 못했습니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr "[[FUNCTION_NAME]] 는 criteria_range와 criterion이 쌍으로 구성되는 함수입니다."
+"Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
+msgstr ""
+"함수 [[FUNCTION_NAME]] 의 %s에 기대되는 값은 숫자 값이나, 부울 값이 출력되었"
+"습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr "함수 [[FUNCTION_NAME]]의 criteria_range는 동일한 dimension을 가져야 합니다."
+"Function [[FUNCTION_NAME]] expects number values for %s, but got a string."
+msgstr ""
+"함수 [[FUNCTION_NAME]] 의 %s에 기대되는 값은 숫자 값이나, 문자열이 출력되었습"
+"니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
-msgstr "함수 [[FUNCTION_NAME]]는 %s에 대한 숫자 값을 예측했으나 %s를 계산했습니다."
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got an empty "
+"value."
+msgstr ""
+"함수 [[FUNCTION_NAME]] 의 %s에 기대되는 값은 숫자 값이나, 빈 값이 출력되었습"
+"니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3220,10 +3162,11 @@ msgid ""
 "Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
 "or a single cell reference, not a range."
 msgstr ""
+"[[FUNCTION_NAME]] 함수에서 매개변수 '%s' 는 단일 값 또는 단일 셀 참조여야 하"
+"며, 범위가 아니어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] parameter 2 value (%s) is out of range."
@@ -3231,7 +3174,6 @@ msgstr "함수 [[FUNCTION_NAME]] 의 매개변수 (%s) 값이 범위를 벗어�
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] parameter 2 value is out of range."
@@ -3329,8 +3271,8 @@ msgid ""
 "Given a general exponential form of y = b*m^x for a curve fit, calculates b "
 "if TRUE or forces b to be 1 and only calculates the m values if FALSE."
 msgstr ""
-"커브 맞춤에 대한 일반적인 지수 형태인 y = b*m^x가 주어지면 TRUE인 경우 b를 계산하거나 b를 1로 강제하고 FALSE인 경우"
-" m 값만 계산합니다."
+"커브 맞춤에 대한 일반적인 지수 형태인 y = b*m^x가 주어지면 TRUE인 경우 b를 계"
+"산하거나 b를 1로 강제하고 FALSE인 경우 m 값만 계산합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3341,8 +3283,9 @@ msgid ""
 "TRUE or forces b to be 0 and only calculates the m values if FALSE, i.e. "
 "forces the curve fit to pass through the origin."
 msgstr ""
-"커브 맞춤에 대한 일반적인 선형 형태인 y = m*x+b가 주어지면 TRUE인 경우 b를 계산하거나 b를 0으로 강제하고, FALSE인 "
-"경우, 즉 커브 맞춤이 원점을 통과하도록 강제하는 경우 m 값만 계산합니다."
+"커브 맞춤에 대한 일반적인 선형 형태인 y = m*x+b가 주어지면 TRUE인 경우 b를 계"
+"산하거나 b를 0으로 강제하고, FALSE인 경우, 즉 커브 맞춤이 원점을 통과하도록 "
+"강제하는 경우 m 값만 계산합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3508,16 +3451,12 @@ msgstr "모든 실수의 쌍곡 탄젠트"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/list_functions.js:0
-#: code:addons/spreadsheet/static/src/list/list_functions.js:0
 #, python-format
 msgid "ID of the list."
 msgstr "목록의 ID."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "ID of the pivot."
@@ -3542,13 +3481,6 @@ msgstr "아이콘 설정"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
-msgid "IconSetRule"
-msgstr "IconSetRule"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
 msgid "Icons"
 msgstr "아이콘"
 
@@ -3567,8 +3499,8 @@ msgid ""
 "If number is negative, specifies the rounding direction. If 0 or blank, it "
 "is rounded away from zero. Otherwise, it is rounded towards zero."
 msgstr ""
-"숫자가 음수인 경우 반올림 방향을 지정합니다. 0이거나 공백문자이면 0에서 멀어지는 방향으로 올림합니다. 그렇지 않으면 0에 가까워지는 "
-"방향으로 내림합니다."
+"숫자가 음수인 경우 반올림 방향을 지정합니다. 0이거나 공백문자이면 0에서 멀어"
+"지는 방향으로 올림합니다. 그렇지 않으면 0에 가까워지는 방향으로 내림합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3578,8 +3510,8 @@ msgid ""
 "If number is negative, specifies the rounding direction. If 0 or blank, it "
 "is rounded towards zero. Otherwise, it is rounded away from zero."
 msgstr ""
-"숫자가 음수인 경우 반올림 방향을 지정합니다. 0이거나 공백문자이면 0에 가까워지는 방향으로 내림합니다. 그렇지 않으면 0에서 멀어지는 "
-"방향으로 올림합니다."
+"숫자가 음수인 경우 반올림 방향을 지정합니다. 0이거나 공백문자이면 0에 가까워"
+"지는 방향으로 내림합니다. 그렇지 않으면 0에서 멀어지는 방향으로 올림합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3598,7 +3530,6 @@ msgstr "이미지"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "In [[FUNCTION_NAME]] evaluation, cannot find '%s' within '%s'."
 msgstr "[[FUNCTION_NAME]] 계산에서 '%s'가 포함된 '%s'를 찾을 수 없습니다."
@@ -3608,11 +3539,9 @@ msgstr "[[FUNCTION_NAME]] 계산에서 '%s'가 포함된 '%s'를 찾을 수 없�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be equal to the \n"
-"        number of rows of the second matrix (%s)."
+"In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
+"equal to the         number of rows of the second matrix (%s)."
 msgstr ""
-"[[FUNCTION_NAME]]에서 첫 번째 행렬의 열 수 (%s)는 \n"
-"        두 번째 행렬의 행 수 (%s)와 같아야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3637,7 +3566,8 @@ msgid ""
 "specified range) is sorted, in which case the closest match for search_key "
 "will be returned."
 msgstr ""
-"검색할 열(지정된 범위의 첫 번째 열)을 정렬할지 여부를 나타내며, 이 경우 search_key와 가장 가까운 일치 항목이 반환됩니다."
+"검색할 열(지정된 범위의 첫 번째 열)을 정렬할지 여부를 나타내며, 이 경우 "
+"search_key와 가장 가까운 일치 항목이 반환됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3648,7 +3578,8 @@ msgid ""
 "range) is sorted, in which case the closest match for search_key will be "
 "returned."
 msgstr ""
-"검색할 행(지정된 범위의 첫 번째 행)을 정렬할지 여부를 나타내며, 이 경우 search_key와 가장 가까운 일치 항목이 반환됩니다."
+"검색할 행(지정된 범위의 첫 번째 행)을 정렬할지 여부를 나타내며, 이 경우 "
+"search_key와 가장 가까운 일치 항목이 반환됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3676,7 +3607,6 @@ msgstr "삽입"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert %s columns"
 msgstr "%s 열 삽입"
@@ -3697,7 +3627,6 @@ msgstr "오른쪽에 %s 열 삽입"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert %s rows"
@@ -3741,7 +3670,6 @@ msgstr "셀을 삽입하고 오른쪽으로 이동"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert column"
 msgstr "열 삽입"
@@ -3769,7 +3697,6 @@ msgstr "링크 삽입"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert row"
@@ -3862,8 +3789,6 @@ msgstr "잘못된 표현식"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid formula"
 msgstr "잘못된 수식"
@@ -3875,7 +3800,9 @@ msgstr "잘못된 수식"
 msgid ""
 "Invalid function name %s. Function names can exclusively contain "
 "alphanumerical values separated by dots (.) or underscore (_)"
-msgstr "잘못된 함수 이름 %s입니다. 함수 이름에는 점 (.) 또는 밑줄 (_)을 포함한 영숫자 문자만이 허용됩니다."
+msgstr ""
+"잘못된 함수 이름 %s입니다. 함수 이름에는 점 (.) 또는 밑줄 (_)을 포함한 영숫"
+"자 문자만이 허용됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3891,7 +3818,9 @@ msgstr "잘못된 하한 변곡점 수식"
 msgid ""
 "Invalid number of arguments for the %s function. Expected %s maximum, but "
 "got %s instead."
-msgstr "%s 함수에 대한 잘못된 인수 값입니다. 최대 %s를 예상했으나,  %s 를 가져왔습니다."
+msgstr ""
+"%s 함수에 대한 잘못된 인수 값입니다. 최대 %s를 예상했으나,  %s 를 가져왔습니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3900,7 +3829,8 @@ msgstr "%s 함수에 대한 잘못된 인수 값입니다. 최대 %s를 예상�
 msgid ""
 "Invalid number of arguments for the %s function. Expected %s minimum, but "
 "got %s instead."
-msgstr "%s 함수에 대한 잘못된 인수 값입니다. 최소 %s를 예상했으나, %s를 가져왔습니다."
+msgstr ""
+"%s 함수에 대한 잘못된 인수 값입니다. 최소 %s를 예상했으나, %s를 가져왔습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3909,7 +3839,9 @@ msgstr "%s 함수에 대한 잘못된 인수 값입니다. 최소 %s를 예상�
 msgid ""
 "Invalid number of arguments for the %s function. Expected all arguments "
 "after position %s to be supplied by groups of %s arguments"
-msgstr "%s 함수에 대한 잘못된 인수 값입니다.  %s 위치 뒤의 모든 인수가 인수 %s 의 그룹으로 제공될 것으로 예상됩니다."
+msgstr ""
+"%s 함수에 대한 잘못된 인수 값입니다.  %s 위치 뒤의 모든 인수가 인수 %s 의 그"
+"룹으로 제공될 것으로 예상됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4005,7 +3937,6 @@ msgstr "라디안 단위 값의 아크탄젠트."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is between"
 msgstr "사이임"
@@ -4020,7 +3951,6 @@ msgstr "비어 있음"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is equal to"
 msgstr "같음"
@@ -4034,7 +3964,6 @@ msgstr "같거나 큼"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is greater than"
@@ -4057,7 +3986,6 @@ msgstr "같거나 작음"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is less than"
 msgstr "보다 작음"
@@ -4072,7 +4000,6 @@ msgstr "같거나 작음"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is not between"
 msgstr "사이가 아님"
@@ -4086,7 +4013,6 @@ msgstr "비어있지 않음"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is not equal to"
@@ -4231,18 +4157,12 @@ msgstr "특정 날짜가 속한 연도의 마지막 날."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Left"
 msgstr "왼쪽"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Legend position"
@@ -4301,7 +4221,6 @@ msgstr "링크"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Link URL"
@@ -4451,7 +4370,6 @@ msgstr "수학"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Matrix is not invertible"
 msgstr "행렬은 반전할 수 없습니다."
@@ -4527,7 +4445,9 @@ msgstr "셀 병합"
 msgid ""
 "Merged cells are preventing this operation. Unmerge those cells and try "
 "again."
-msgstr "병합된 셀에는 이 작업을 처리할 수 없습니다. 해당 셀의 병합을 해제하고 다시 시도해주세요."
+msgstr ""
+"병합된 셀에는 이 작업을 처리할 수 없습니다. 해당 셀의 병합을 해제하고 다시 시"
+"도해주세요."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4617,7 +4537,6 @@ msgstr "중간점"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Minute component of a specific time."
 msgstr "특정 시간의 분 단위 구성 요소입니다."
@@ -4681,14 +4600,12 @@ msgstr "특정 날짜가 속한 연도의 달"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "More date formats"
 msgstr "더 많은 데이터 형식"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "More expressions that evaluate to logical values."
@@ -4760,7 +4677,6 @@ msgstr "이름을 찾을 수 없습니다. 액세스 권한이 있는지 확인�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/list_functions.js:0
-#: code:addons/spreadsheet/static/src/list/list_functions.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Name of the field."
@@ -4796,10 +4712,6 @@ msgstr "제공된 두 날짜 사이의 순 근무일수."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "New Chart"
@@ -4892,11 +4804,7 @@ msgstr "고유 값을 찾을 수 없습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
@@ -4941,9 +4849,6 @@ msgstr "데이터 집합에서 N번째로 작은 요소."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Number"
@@ -4967,8 +4872,7 @@ msgstr "결제일와 만기일 사이의 쿠폰 개수."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"Number of days between two dates on a 360-day year (months of 30 days)."
+msgid "Number of days between two dates on a 360-day year (months of 30 days)."
 msgstr "360일 단위의 1년(30일 단위의 달)에서 두 날짜 사이의 일수."
 
 #. module: spreadsheet
@@ -5047,10 +4951,11 @@ msgid ""
 "returned from the last row or column in the array. If search_key is not "
 "found, a non-exact match may be returned."
 msgstr ""
-"이 함수를 사용하는 첫 번째 방법은 정렬된 단일 행 또는 열 search_array를 제공하여 두 번째 인수 result_range와 "
-"함께 search_key를 찾는 것입니다. 다른 방법은 이 두 인수를 하나의 search_array로 결합하여 첫 번째 행 또는 열을 "
-"검색하고 배열의 마지막 행 또는 열에서 값을 반환하는 것입니다. search_key를 찾을 수 없는 경우 정확히 일치하지 않는 값이 "
-"반환될 수 있습니다."
+"이 함수를 사용하는 첫 번째 방법은 정렬된 단일 행 또는 열 search_array를 제공"
+"하여 두 번째 인수 result_range와 함께 search_key를 찾는 것입니다. 다른 방법"
+"은 이 두 인수를 하나의 search_array로 결합하여 첫 번째 행 또는 열을 검색하고 "
+"배열의 마지막 행 또는 열에서 값을 반환하는 것입니다. search_key를 찾을 수 없"
+"는 경우 정확히 일치하지 않는 값이 반환될 수 있습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5120,15 +5025,14 @@ msgstr "값만 붙여넣기"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Pasting from the context menu is not supported in this browser. Use keyboard"
-" shortcuts ctrl+c / ctrl+v instead."
+"Pasting from the context menu is not supported in this browser. Use keyboard "
+"shortcuts ctrl+c / ctrl+v instead."
 msgstr ""
-"해당 브라우저에서는 마우스 우측 버튼 메뉴를 사용한 붙여넣기가 지원되지 않습니다. 키보드의 ctrl+c / ctrl+v 단축키를 대신 "
-"사용하세요."
+"해당 브라우저에서는 마우스 우측 버튼 메뉴를 사용한 붙여넣기가 지원되지 않습니"
+"다. 키보드의 ctrl+c / ctrl+v 단축키를 대신 사용하세요."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Payment on the principal of an investment."
@@ -5144,9 +5048,6 @@ msgstr "비율"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Percentage"
 msgstr "비율"
@@ -5160,8 +5061,6 @@ msgstr "키 값에서 변경된 백분율"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Percentile"
@@ -5191,7 +5090,6 @@ msgstr "피벗 #%s"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Plain text"
@@ -5276,7 +5174,6 @@ msgstr "미리보기"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Preview text"
@@ -5390,7 +5287,6 @@ msgstr "열 그룹 제거"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Remove duplicates"
@@ -5454,7 +5350,6 @@ msgstr "이름 바꾸기"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Replace"
@@ -5553,7 +5448,9 @@ msgstr "셀 참조를 문자열로 반환합니다."
 msgid ""
 "Returns a filtered version of the source range, returning only rows or "
 "columns that meet the specified conditions."
-msgstr "지정된 조건을 충족하는 행 또는 열만 반환하는 소스 범위의 필터링된 버전을 반환합니다."
+msgstr ""
+"지정된 조건을 충족하는 행 또는 열만 반환하는 소스 범위의 필터링된 버전을 반환"
+"합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5630,8 +5527,7 @@ msgstr "정방 행렬의 행렬식을 반환합니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Returns the maximum value in a range of cells, filtered by a set of "
-"criteria."
+"Returns the maximum value in a range of cells, filtered by a set of criteria."
 msgstr "기준 집합에 따라 필터링된 셀 범위 내 최대값을 반환합니다."
 
 #. module: spreadsheet
@@ -5639,8 +5535,7 @@ msgstr "기준 집합에 따라 필터링된 셀 범위 내 최대값을 반환�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Returns the minimum value in a range of cells, filtered by a set of "
-"criteria."
+"Returns the minimum value in a range of cells, filtered by a set of criteria."
 msgstr "기준 집합에 따라 필터링된 셀 범위 내 최소값을 반환합니다."
 
 #. module: spreadsheet
@@ -5675,10 +5570,6 @@ msgstr "역순 아이콘"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Right"
 msgstr "오른쪽"
@@ -5695,8 +5586,7 @@ msgstr "표준 규칙에 따라 숫자를 반올림합니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Rounds a number down to the nearest integer that is less than or equal to "
-"it."
+"Rounds a number down to the nearest integer that is less than or equal to it."
 msgstr "숫자를 이보다 작거나 같은 가장 가까운 정수로 반올림합니다."
 
 #. module: spreadsheet
@@ -5716,17 +5606,12 @@ msgstr "숫자를 내림합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rounds number down to nearest multiple of factor."
 msgstr "숫자를 가장 가까운 계수의 배수로 내림합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Rounds number up to nearest multiple of factor."
@@ -5777,7 +5662,6 @@ msgstr "토요일"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Save"
 msgstr "저장"
@@ -5803,7 +5687,9 @@ msgstr "검색"
 msgid ""
 "Search a range for a match and return the corresponding item from a second "
 "range."
-msgstr "범위 내에서 일치하는 항목이 있는지 검색하고 두 번째 범위에서 해당 항목을 반환합니다."
+msgstr ""
+"범위 내에서 일치하는 항목이 있는지 검색하고 두 번째 범위에서 해당 항목을 반환"
+"합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5850,17 +5736,12 @@ msgstr "레코드 보기"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Select a color..."
 msgstr "색상 선택..."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Select all"
@@ -5927,7 +5808,6 @@ msgstr "웹에 공유하기"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sheet"
 msgstr "표"
@@ -5942,7 +5822,6 @@ msgstr "시트1"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Shift down"
 msgstr "아래로 이동"
@@ -5956,7 +5835,6 @@ msgstr "왼쪽으로 이동"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Shift right"
@@ -6039,7 +5917,9 @@ msgstr "표와 같은 범위의 단일 값."
 msgid ""
 "Some used characters are not allowed in a sheet name (Forbidden characters "
 "are %s)."
-msgstr "시트 이름에 허용되지 않는 문자가 포함되어 있습니다 (%s 문자는 사용할 수 없습니다)."
+msgstr ""
+"시트 이름에 허용되지 않는 문자가 포함되어 있습니다 (%s 문자는 사용할 수 없습"
+"니다)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6083,7 +5963,8 @@ msgstr "범위 정렬"
 msgid ""
 "Sorts the rows of a given array or range by the values in one or more "
 "columns."
-msgstr "지정된 배열 또는 범위의 행을 하나 이상의 열에 있는 값을 기준으로 정렬합니다."
+msgstr ""
+"지정된 배열 또는 범위의 행을 하나 이상의 열에 있는 값을 기준으로 정렬합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6187,7 +6068,6 @@ msgstr "표에서 전체 모집단의 표준 편차."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Standard deviation of entire population."
 msgstr "전체 모집단의 표준 편차."
@@ -6208,7 +6088,6 @@ msgstr "표본의 표준 편차 (텍스트는 0으로 표시)."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Standard deviation."
@@ -6309,13 +6188,13 @@ msgstr "통화 기호"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "TRUE or FALSE indicating whether to sort sort_column in ascending order. "
 "FALSE sorts in descending order."
 msgstr ""
-"TRUE 또는 FALSE - sort_column을 오름차순으로 정렬할지 여부를 나타냅니다. FALSE는 내림차순으로 정렬합니다."
+"TRUE 또는 FALSE - sort_column을 오름차순으로 정렬할지 여부를 나타냅니다. "
+"FALSE는 내림차순으로 정렬합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6342,7 +6221,6 @@ msgstr "문자"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Text Color"
@@ -6393,14 +6271,12 @@ msgstr "텍스트는 정확하게 \"%s\"이다"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text is valid email"
 msgstr "텍스트는 유효한 이메일입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text is valid link"
@@ -6415,7 +6291,6 @@ msgstr "The _delimiter (%s)는 비어있을 수 없습니다. "
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The amortization period, in terms of number of periods."
@@ -6451,8 +6326,6 @@ msgstr "복리를 적용할 초기 자본금 또는 가치."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The amount per period to be paid."
@@ -6524,15 +6397,6 @@ msgstr "탄젠트를 구할 라디안 단위 각도."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The annualized rate of interest."
 msgstr "연 이자율."
@@ -6561,14 +6425,12 @@ msgstr "인수가 누락되었습니다. 값을 입력해주세요"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The argument square_matrix must be a matrix of numbers."
 msgstr "인자 square_matrix는 숫자의 행렬이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -6610,7 +6472,9 @@ msgstr "계산할 값을 포함하는 범위의 배열입니다."
 msgid ""
 "The array or range containing dependent (y) values that are already known, "
 "used to curve fit an ideal exponential growth curve."
-msgstr "지수 성장 곡선에 맞는 커브를 맞추는 데 사용되는 이미 알려진 종속(y) 값이 포함된 배열 또는 범위입니다."
+msgstr ""
+"지수 성장 곡선에 맞는 커브를 맞추는 데 사용되는 이미 알려진 종속(y) 값이 포함"
+"된 배열 또는 범위입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6619,25 +6483,23 @@ msgstr "지수 성장 곡선에 맞는 커브를 맞추는 데 사용되는 이�
 msgid ""
 "The array or range containing dependent (y) values that are already known, "
 "used to curve fit an ideal linear trend."
-msgstr "선형 추세에 맞는 커브를 만드는 데 사용되는 이미 알려진 종속(y) 값이 포함된 배열 또는 범위입니다."
+msgstr ""
+"선형 추세에 맞는 커브를 만드는 데 사용되는 이미 알려진 종속(y) 값이 포함된 배"
+"열 또는 범위입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The array or range containing the data to consider, structured in such a way"
-" that the first row contains the labels for each column's values."
-msgstr "데이터가 포함된 배열 또는 범위로, 첫 번째 행에 각 열의 값에 대한 레이블이 포함되도록 구조화합니다."
+"The array or range containing the data to consider, structured in such a way "
+"that the first row contains the labels for each column's values."
+msgstr ""
+"데이터가 포함된 배열 또는 범위로, 첫 번째 행에 각 열의 값에 대한 레이블이 포"
+"함되도록 구조화합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The array or range containing the dataset to consider."
@@ -6650,7 +6512,9 @@ msgstr "고려할 데이터세트를 포함하는 배열 또는 범위입니다.
 msgid ""
 "The array or range of values that will be reduced by corresponding entries "
 "in array_y, squared, and added together."
-msgstr "array_y의 해당 항목에 의해 축소되고 제곱되어 합산될 값의 배열 또는 범위입니다."
+msgstr ""
+"array_y의 해당 항목에 의해 축소되고 제곱되어 합산될 값의 배열 또는 범위입니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6659,7 +6523,9 @@ msgstr "array_y의 해당 항목에 의해 축소되고 제곱되어 합산될 �
 msgid ""
 "The array or range of values that will be subtracted from corresponding "
 "entries in array_x, the result squared, and all such results added together."
-msgstr "array_x의 해당 항목에서 뺄 값의 배열 또는 범위, 결과의 제곱 및 모든 결과를 더한 값입니다."
+msgstr ""
+"array_x의 해당 항목에서 뺄 값의 배열 또는 범위, 결과의 제곱 및 모든 결과를 더"
+"한 값입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6668,7 +6534,9 @@ msgstr "array_x의 해당 항목에서 뺄 값의 배열 또는 범위, 결과�
 msgid ""
 "The array or range of values whose squares will be added to the squares of "
 "corresponding entries in array_x and added together."
-msgstr "array_x에 있는 해당 항목의 제곱에 제곱을 더하여 합산될 값의 배열 또는 범위입니다."
+msgstr ""
+"array_x에 있는 해당 항목의 제곱에 제곱을 더하여 합산될 값의 배열 또는 범위입"
+"니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6677,16 +6545,20 @@ msgstr "array_x에 있는 해당 항목의 제곱에 제곱을 더하여 합산�
 msgid ""
 "The array or range of values whose squares will be added to the squares of "
 "corresponding entries in array_y and added together."
-msgstr "array_y에 있는 해당 항목의 제곱에 제곱을 더하여 합산될 값의 배열 또는 범위입니다."
+msgstr ""
+"array_y에 있는 해당 항목의 제곱에 제곱을 더하여 합산될 값의 배열 또는 범위입"
+"니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The array or range of values whose squares will be reduced by the squares of"
-" corresponding entries in array_y and added together."
-msgstr "array_y에 있는 해당 항목의 제곱에 제곱을 빼고 합산할 값의 배열 또는 범위입니다."
+"The array or range of values whose squares will be reduced by the squares of "
+"corresponding entries in array_y and added together."
+msgstr ""
+"array_y에 있는 해당 항목의 제곱에 제곱을 빼고 합산할 값의 배열 또는 범위입니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6695,7 +6567,9 @@ msgstr "array_y에 있는 해당 항목의 제곱에 제곱을 빼고 합산할 
 msgid ""
 "The array or range of values whose squares will be subtracted from the "
 "squares of corresponding entries in array_x and added together."
-msgstr "array_x에 있는 해당 항목의 제곱에 제곱을 빼고 합산할 값의 배열 또는 범위입니다."
+msgstr ""
+"array_x에 있는 해당 항목의 제곱에 제곱을 빼고 합산할 값의 배열 또는 범위입니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6736,6 +6610,27 @@ msgstr "base (%s) 는 2과 36을 포함한 두 숫자 사이의 값이여야 합
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr "기준(%s)은 반드시 양수여야 합니다."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr "기준은 1이 아니어야 합니다."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr "로그의 밑변입니다."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The base to convert the value from."
 msgstr "값을 변환하는 기준값."
 
@@ -6751,9 +6646,10 @@ msgstr "유효하지 않은 기준값입니다"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The cashflow_amounts and cashflow_dates ranges must have the same "
-"dimensions."
-msgstr "cashflow_amounts 및 cashflow_dates ranges 는 동일한 dimension을 가져야 합니다."
+"The cashflow_amounts and cashflow_dates ranges must have the same dimensions."
+msgstr ""
+"cashflow_amounts 및 cashflow_dates ranges 는 동일한 dimension을 가져야 합니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6767,9 +6663,11 @@ msgstr "cashflow_amounts은 반드시 양수 및 음수 값을 포함해야 합�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The cell whose column number will be returned. Column A corresponds to 1. By"
-" default, the function use the cell in which the formula is entered."
-msgstr "열 번호를 반환할 셀입니다. 열 A는 1에 해당합니다. 기본적으로 함수는 수식이 입력된 셀을 사용합니다."
+"The cell whose column number will be returned. Column A corresponds to 1. By "
+"default, the function use the cell in which the formula is entered."
+msgstr ""
+"열 번호를 반환할 셀입니다. 열 A는 1에 해당합니다. 기본적으로 함수는 수식이 입"
+"력된 셀을 사용합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6778,7 +6676,9 @@ msgstr "열 번호를 반환할 셀입니다. 열 A는 1에 해당합니다. 기
 msgid ""
 "The cell whose row number will be returned. By default, this function uses "
 "the cell in which the formula is entered."
-msgstr "행 번호를 반환할 셀입니다. 기본적으로 이 함수는 수식이 입력된 셀을 사용합니다."
+msgstr ""
+"행 번호를 반환할 셀입니다. 기본적으로 이 함수는 수식이 입력된 셀을 사용합니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6803,7 +6703,6 @@ msgstr "연결된 값 사이에 배치할 문자 또는 문자열입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The character within text_to_search at which to start the search."
@@ -6872,8 +6771,8 @@ msgid ""
 "1 is to ignore blanks, 2 is to ignore errors, and 3 is to ignore blanks and "
 "errors."
 msgstr ""
-"공백 및 오류를 무시하는 컨트롤입니다. 0 (기본값)은 모든 값을 유지하고, 1은 공백을 무시, 2는 오류를 무시, 3은 공백 및 오류를"
-" 무시합니다."
+"공백 및 오류를 무시하는 컨트롤입니다. 0 (기본값)은 모든 값을 유지하고, 1은 공"
+"백을 무시, 2는 오류를 무시, 3은 공백 및 오류를 무시합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6892,7 +6791,6 @@ msgstr "비용 (%s) 은 반드시 양수여야 합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The covariance of a dataset."
 msgstr "데이터세트의 공분산."
@@ -6907,14 +6805,6 @@ msgstr "기준 범위에는 %s 행이 포함되며, 최소 2개 이상의 행이
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The current value of the annuity."
 msgstr "연금의 현재 가치."
@@ -6926,11 +6816,12 @@ msgstr "연금의 현재 가치."
 msgid ""
 "The current window is too small to display this sheet properly. Consider "
 "resizing your browser window or adjusting frozen rows and columns."
-msgstr "현재 창 크기가 작아 이 시트를 제대로 표시할 수 없습니다. 브라우저 창 크기를 조정하거나 고정된 행과 열을 조정해 보세요."
+msgstr ""
+"현재 창 크기가 작아 이 시트를 제대로 표시할 수 없습니다. 브라우저 창 크기를 "
+"조정하거나 고정된 행과 열을 조정해 보세요."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The data points to return the y values for on the ideal curve fit."
@@ -6953,7 +6844,6 @@ msgstr "필터링할 데이터."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The data to be sorted."
 msgstr "정렬할 데이터."
@@ -6970,7 +6860,8 @@ msgstr "고유 항목별로 필터링할 데이터입니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The data you entered in %s violates the data validation rule set on the cell:\n"
+"The data you entered in %s violates the data validation rule set on the "
+"cell:\n"
 "%s"
 msgstr ""
 "%s에 입력한 데이터가 셀에 설정된 데이터 유효성 검사 규칙을 위반합니다:\n"
@@ -6990,7 +6881,9 @@ msgstr "유효하지 않은 데이터세트입니다."
 msgid ""
 "The date for which to determine the ISO week number. Must be a reference to "
 "a cell containing a date, a function returning a date type, or a number."
-msgstr "날짜에 맞는 ISO 주 번호를 계산합니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 또는 숫자에 대한 참조여야 합니다."
+msgstr ""
+"날짜에 맞는 ISO 주 번호를 계산합니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 "
+"함수 또는 숫자에 대한 참조여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6999,7 +6892,9 @@ msgstr "날짜에 맞는 ISO 주 번호를 계산합니다. 날짜가 포함된 
 msgid ""
 "The date for which to determine the day of the week. Must be a reference to "
 "a cell containing a date, a function returning a date type, or a number."
-msgstr "날짜에 맞는 요일을 계산합니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 또는 숫자에 대한 참조여야 합니다."
+msgstr ""
+"날짜에 맞는 요일을 계산합니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 또"
+"는 숫자에 대한 참조여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7008,11 +6903,12 @@ msgstr "날짜에 맞는 요일을 계산합니다. 날짜가 포함된 셀, 날
 msgid ""
 "The date for which to determine the week number. Must be a reference to a "
 "cell containing a date, a function returning a date type, or a number."
-msgstr "날짜에 맞는 주 번호를 계산합니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 또는 숫자에 대한 참조여야 합니다."
+msgstr ""
+"날짜에 맞는 주 번호를 계산합니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함"
+"수 또는 숫자에 대한 참조여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date from which to begin counting."
@@ -7034,9 +6930,6 @@ msgstr "연말을 계산하는 기준일입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date from which to calculate the result."
@@ -7101,8 +6994,6 @@ msgstr "첫 번째 기간이 종료된 날짜입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date the security was initially issued."
 msgstr "증권이 처음 발행된 날짜입니다."
@@ -7124,10 +7015,10 @@ msgstr "날짜의 요일 구성 요소."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The day_count_convention (%s) must be between 0 and 4 inclusive."
-msgstr "day_count_convention (%s)은 0과 4를 포함한 두 숫자 사이의 값이여야 합니다."
+msgstr ""
+"day_count_convention (%s)은 0과 4를 포함한 두 숫자 사이의 값이여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7167,14 +7058,12 @@ msgstr "할인 (%s) 은 반드시 양수여야 합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The discount rate of the bill at time of purchase."
 msgstr "채권 매수 시점의 할인율."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The discount rate of the investment over one period."
@@ -7225,11 +7114,10 @@ msgstr "실효금리 (%s) 는 반드시 0보다 큰 수여야 합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The end date of the period from which to calculate the number of net working"
-" days."
+"The end date of the period from which to calculate the number of net working "
+"days."
 msgstr "순 근무일 수를 계산하는 기간의 종료일."
 
 #. module: spreadsheet
@@ -7246,7 +7134,9 @@ msgstr "계산하는 기간의 종료일."
 msgid ""
 "The end date to consider in the calculation. Must be a reference to a cell "
 "containing a DATE, a function returning a DATE type, or a number."
-msgstr "계산에서 필요한 종료 날짜입니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 또는 숫자에 대한 참조여야 합니다."
+msgstr ""
+"계산에서 필요한 종료 날짜입니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 "
+"또는 숫자에 대한 참조여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7255,7 +7145,9 @@ msgstr "계산에서 필요한 종료 날짜입니다. 날짜가 포함된 셀, 
 msgid ""
 "The end date to consider in the calculation. Must be a reference to a cell "
 "containing a date, a function returning a date type, or a number."
-msgstr "계산에서 필요한 종료 날짜입니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 또는 숫자에 대한 참조여야 합니다."
+msgstr ""
+"계산에서 필요한 종료 날짜입니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 "
+"또는 숫자에 대한 참조여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7288,9 +7180,6 @@ msgstr "end_period (%s) 는 life (%s) 보다 작거나 같아야 합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The expected annual yield of the security."
 msgstr "유가증권의 연간 예상 수익률."
@@ -7304,7 +7193,6 @@ msgstr "기저가 음수인 경우 지수 (%s)  는 정수여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The exponent to raise base to."
@@ -7326,7 +7214,6 @@ msgstr "extract_length 인수는 (%s) 양수이거나 null이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The factor (%s) must be positive when the value (%s) is positive."
@@ -7353,7 +7240,9 @@ msgstr "필드 %s 가 존재하지 않거나 해당 필드에 대한 접근 권�
 msgid ""
 "The field (%s) must be one of %s or must be a number between 1 and %s "
 "inclusive."
-msgstr "field  (%s) 는 %s 중 하나이거나 또는 1 과 %s 을 포함한 두 숫자 사이의 값이여야 합니다."
+msgstr ""
+"field  (%s) 는 %s 중 하나이거나 또는 1 과 %s 을 포함한 두 숫자 사이의 값이여"
+"야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7380,6 +7269,17 @@ msgstr "첫 번째 추가."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+"[[FUNCTION_NAME]]의 첫 번째 및 두 번째 인수는 비어 있지 않은 행렬이어야 합니"
+"다."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The first column index of the columns to be returned."
 msgstr "반환할 열의 첫 번째 열 인덱스."
 
@@ -7390,7 +7290,9 @@ msgstr "반환할 열의 첫 번째 열 인덱스."
 msgid ""
 "The first condition to be evaluated. This can be a boolean, a number, an "
 "array, or a reference to any of those."
-msgstr "산출을 위한 첫 번째 조건입니다. 이 조건은 불리언, 숫자, 배열 또는 이들 중 하나에 대한 참조일 수 있습니다."
+msgstr ""
+"산출을 위한 첫 번째 조건입니다. 이 조건은 불리언, 숫자, 배열 또는 이들 중 하"
+"나에 대한 참조일 수 있습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7436,7 +7338,6 @@ msgstr "비교할 첫 번째 숫자."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first range to be appended."
@@ -7489,23 +7390,12 @@ msgstr "공백 수를 계산할 때 고려해야 할 첫 번째 값 또는 범�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first value or range of the population."
 msgstr "모집단의 첫 번째 값 또는 범위."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first value or range of the sample."
@@ -7521,7 +7411,6 @@ msgstr "고유성을 위해 고려해야 할 첫 번째 값 또는 범위."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "The first value or range to consider when calculating the average value."
@@ -7529,7 +7418,6 @@ msgstr "평균값을 계산할 때 고려해야 할 첫 번째 값 또는 범위
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -7540,13 +7428,11 @@ msgstr "최대값을 계산할 때 고려야해야 할 첫 번째 값 또는 범
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"The first value or range to consider when calculating the median value."
+msgid "The first value or range to consider when calculating the median value."
 msgstr "중간값을 계산할 때 고려해야 할 첫 번째 값 또는 범위."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -7556,14 +7442,12 @@ msgstr "최소값을 계산할 때 고려해야 할 첫 번째 값 또는 범위
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first value or range to consider when counting."
 msgstr "계산 시 고려해야 할 첫 번째 값 또는 범위."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first value."
@@ -7573,8 +7457,7 @@ msgstr "첫 번째 값."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"The first_period (%s) must be smaller or equal to the last_period (%s)."
+msgid "The first_period (%s) must be smaller or equal to the last_period (%s)."
 msgstr "first_period (%s) 는 last_period (%s) 보다 작거나 같아야 합니다."
 
 #. module: spreadsheet
@@ -7619,7 +7502,9 @@ msgstr "따옴표로 묶인 링크의 전체 URL."
 msgid ""
 "The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, "
 "and cannot be coerced to a number."
-msgstr "함수 [[FUNCTION_NAME]] 는 불리언 값을 예측하지만, '%s' 는 문자이므로 숫자로 강제로 지정할 수 없습니다."
+msgstr ""
+"함수 [[FUNCTION_NAME]] 는 불리언 값을 예측하지만, '%s' 는 문자이므로 숫자로 "
+"강제로 지정할 수 없습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7628,7 +7513,9 @@ msgstr "함수 [[FUNCTION_NAME]] 는 불리언 값을 예측하지만, '%s' 는 
 msgid ""
 "The function [[FUNCTION_NAME]] expects a number value between %s and %s "
 "inclusive, but receives %s."
-msgstr "함수 [[FUNCTION_NAME]] 는 %s 과 %s 를 포함한 두 숫자 사이의 값을 예측했으나 %s 를 계산했습니다."
+msgstr ""
+"함수 [[FUNCTION_NAME]] 는 %s 과 %s 를 포함한 두 숫자 사이의 값을 예측했으나 "
+"%s 를 계산했습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7637,25 +7524,31 @@ msgstr "함수 [[FUNCTION_NAME]] 는 %s 과 %s 를 포함한 두 숫자 사이�
 msgid ""
 "The function [[FUNCTION_NAME]] expects a number value to be greater than or "
 "equal to 1, but receives %s."
-msgstr "함수 [[FUNCTION_NAME]] 는 1과 같거나 큰 숫자 값을 예측했으나 %s의 결과값을 계산했습니다."
+msgstr ""
+"함수 [[FUNCTION_NAME]] 는 1과 같거나 큰 숫자 값을 예측했으나 %s의 결과값을 계"
+"산했습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string,"
-" and cannot be coerced to a number."
-msgstr "함수 [[FUNCTION_NAME]] 는 숫자 값을 예측했지만, '%s' 는 문자열이므로 숫자로 강제로 지정할 수 없습니다."
+"The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, "
+"and cannot be coerced to a number."
+msgstr ""
+"함수 [[FUNCTION_NAME]] 는 숫자 값을 예측했지만, '%s' 는 문자열이므로 숫자로 "
+"강제로 지정할 수 없습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The function [[FUNCTION_NAME]] has an argument with value '%s'. It should be"
-" one of: %s."
-msgstr "함수 [[FUNCTION_NAME]] 에 값이 '%s'인 인수가 있습니다. 다음 중 하나입니다: %s."
+"The function [[FUNCTION_NAME]] has an argument with value '%s'. It should be "
+"one of: %s."
+msgstr ""
+"함수 [[FUNCTION_NAME]] 에 값이 '%s'인 인수가 있습니다. 다음 중 하나입니다: "
+"%s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7682,11 +7575,6 @@ msgstr "투자의 미래 가치."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The future value remaining after the final payment has been made."
@@ -7727,17 +7615,19 @@ msgstr "시간의 시간 구성 요소."
 msgid ""
 "The index from the left of string from which to begin extracting. The first "
 "character in string has the index 1."
-msgstr "추출을 시작할 문자열 왼쪽의 인덱스입니다. 문자열의 첫 번째 인덱스는 1입니다."
+msgstr ""
+"추출을 시작할 문자열 왼쪽의 인덱스입니다. 문자열의 첫 번째 인덱스는 1입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "The index of the column in range or a range outside of range containing the "
 "values by which to sort."
-msgstr "지정된 범위 내 열 또는 지정된 범위를 벗어난 범위의 열 인덱스로, 정렬에 사용되는 값을 나타냅니다."
+msgstr ""
+"지정된 범위 내 열 또는 지정된 범위를 벗어난 범위의 열 인덱스로, 정렬에 사용되"
+"는 값을 나타냅니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7753,17 +7643,11 @@ msgstr "지정된 셀 범위에서 검색할 열을 지정하는 인덱스입니
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The index of the row to be returned from within the reference range of "
-"cells."
+"The index of the row to be returned from within the reference range of cells."
 msgstr "지정된 셀 범위에서 검색할 행을 지정하는 인덱스입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The initial cost of the asset."
@@ -7786,8 +7670,9 @@ msgid ""
 "however, if occurrence_number is specified, only the indicated instance of "
 "search_for is replaced."
 msgstr ""
-"text_to_search 내에서 replace_with로 대체할 search_for 인스턴스입니다. 기본적으로 search_for의 "
-"모든 인스턴스가 대체되지만, occurrence_number를 지정하면 지정된 search_for 인스턴스만 대체됩니다."
+"text_to_search 내에서 replace_with로 대체할 search_for 인스턴스입니다. 기본적"
+"으로 search_for의 모든 인스턴스가 대체되지만, occurrence_number를 지정하면 지"
+"정된 search_for 인스턴스만 대체됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7798,11 +7683,6 @@ msgstr "투자한 자금에 대해 지급되는 이자율."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The interest rate."
@@ -7883,6 +7763,13 @@ msgstr "숫자의 로그, 밑 e(오일러의 수)."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr "주어진 밑수에 대한 로그 숫자입니다."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The low end of the random range."
 msgstr "무작위 범위의 최하단."
 
@@ -7917,20 +7804,6 @@ msgstr "유가증권의 만기일"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "The maturity or end date of the security, when it can be redeemed at face, "
@@ -7942,8 +7815,7 @@ msgstr "액면가 또는 액면가로 상환할 수 있는 유가증권의 만�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The maximum (%s) and minimum (%s) must be integers when whole_number is "
-"TRUE."
+"The maximum (%s) and minimum (%s) must be integers when whole_number is TRUE."
 msgstr "whole_number가 TRUE인 경우 최대 (%s) 및 최소 (%s)값은 정수여야 합니다."
 
 #. module: spreadsheet
@@ -7994,12 +7866,14 @@ msgstr "최대값은 숫자여야 합니다"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/odoo_menu/figure_component.js:0
+#: code:addons/spreadsheet/static/src/helpers/helpers.js:0
 #, python-format
 msgid ""
 "The menu linked to this chart doesn't have an corresponding action. Please "
 "link the chart to another menu."
-msgstr "이 차트에 연결된 메뉴에는 해당 동작이 없습니다. 차트를 다른 메뉴에 연결하세요."
+msgstr ""
+"이 차트에 연결된 메뉴에는 해당 동작이 없습니다. 차트를 다른 메뉴에 연결하세"
+"요."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8127,8 +8001,8 @@ msgstr "제한된 배열의 열 수."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The number of columns in the expanded array. If missing, columns will not be"
-" expanded."
+"The number of columns in the expanded array. If missing, columns will not be "
+"expanded."
 msgstr "확장된 배열의 열 수입니다. 누락된 경우 열은 확장되지 않습니다."
 
 #. module: spreadsheet
@@ -8141,7 +8015,6 @@ msgstr "반환할 열의 수."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of compounding periods per year."
 msgstr "연간 복리 기간 수."
@@ -8149,18 +8022,12 @@ msgstr "연간 복리 기간 수."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of decimal places to which to round."
 msgstr "반올림할 소수점 이하 자릿수."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of interest or coupon payments per year (1, 2, or 4)."
@@ -8194,7 +8061,6 @@ msgstr "고려해야 할 'start_date' 이전 (음수) 또는 이후 (양수)의 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of months in the first year of depreciation."
 msgstr "감가상각 첫해의 개월 수."
@@ -8209,21 +8075,12 @@ msgstr "데이터세트에 있는 숫자 값 개수."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of payments to be made."
 msgstr "결제할 횟수."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of periods by year (%s) must strictly greater than 0."
@@ -8238,10 +8095,6 @@ msgstr "기간의 수는 0이 될 수 없습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of periods over which the asset is depreciated."
@@ -8289,8 +8142,7 @@ msgstr "반환할 행의 수."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The number of significant digits to the right of the decimal point to "
-"retain."
+"The number of significant digits to the right of the decimal point to retain."
 msgstr "소수점 이하 자릿수를 소수점 오른쪽으로 이동하여 유지합니다."
 
 #. module: spreadsheet
@@ -8300,11 +8152,11 @@ msgstr "소수점 이하 자릿수를 소수점 오른쪽으로 이동하여 유
 msgid ""
 "The number of the character to look up from the current Unicode table in "
 "decimal format."
-msgstr "현재 유니코드 테이블에서 조회할 문자의 숫자를 십진수 형식으로 입력합니다."
+msgstr ""
+"현재 유니코드 테이블에서 조회할 문자의 숫자를 십진수 형식으로 입력합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of the payment period to begin the cumulative calculation."
@@ -8312,7 +8164,6 @@ msgstr "누적 계산을 시작할 결제 기간 수."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of the payment period to end the cumulative calculation."
@@ -8335,12 +8186,12 @@ msgstr "절대값을 반환할 수."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "The number of working days to advance from start_date. If negative, counts "
 "backwards."
-msgstr "start_date부터 앞으로의 영업일 수입니다. 음수일 경우 거꾸로 계산됩니다."
+msgstr ""
+"start_date부터 앞으로의 영업일 수입니다. 음수일 경우 거꾸로 계산됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8380,7 +8231,6 @@ msgstr "변환할 숫자."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to divide by."
 msgstr "나눌 숫자."
@@ -8396,7 +8246,6 @@ msgstr "부호를 반전시킬 숫자입니다. 동등한 값으로 -1을 곱할
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to raise to the exponent power."
@@ -8419,15 +8268,12 @@ msgstr "가장 가까운 정수로 내림할 숫자입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to whose multiples number will be rounded."
 msgstr "곱한 값을 반올림할 숫자."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -8437,7 +8283,6 @@ msgstr "곱한 값을 반올림할 숫자입니다. 올림할 자릿수의 부�
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to whose multiples value will be rounded."
@@ -8459,7 +8304,6 @@ msgstr "숫자."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number_of_characters (%s) must be positive or null."
@@ -8489,7 +8333,6 @@ msgstr "검색할 1차원 배열."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The order of the polynomial to fit the data, between 1 and 6."
 msgstr "데이터에 맞출 다항식의 순서를 1에서 6까지 원하는 순서로 선택합니다."
@@ -8507,8 +8350,7 @@ msgstr "다른 범위의 항목에 다른 범위의 해당 항목을 곱합니�
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"The pattern by which to format the number, enclosed in quotation marks."
+msgid "The pattern by which to format the number, enclosed in quotation marks."
 msgstr "따옴표로 묶어 숫자의 서식을 지정하는 패턴."
 
 #. module: spreadsheet
@@ -8521,18 +8363,16 @@ msgstr "criteria_range에 적용할 패턴 또는 테스트."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "The pattern or test to apply to criteria_range1, such that each cell that "
 "evaluates to TRUE will be included in the filtered set."
-msgstr "criteria_range1에 적용할 패턴 또는 테스트로, TRUE 값의 각 셀이 필터링된 집합에 포함됩니다."
+msgstr ""
+"criteria_range1에 적용할 패턴 또는 테스트로, TRUE 값의 각 셀이 필터링된 집합"
+"에 포함됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The pattern or test to apply to criteria_range1."
@@ -8541,16 +8381,12 @@ msgstr "criteria_range1에 적용할 패턴 또는 테스트."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The pattern or test to apply to criteria_range2."
 msgstr "criteria_range2에 적용할 패턴 또는 테스트."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The pattern or test to apply to range."
@@ -8559,10 +8395,8 @@ msgstr "범위에 적용할 패턴 또는 테스트."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"The percentile whose value within data will be calculated and returned."
+msgid "The percentile whose value within data will be calculated and returned."
 msgstr "데이터 내 값을 계산하고 반환할 백분위수."
 
 #. module: spreadsheet
@@ -8661,9 +8495,6 @@ msgstr "가격 (%s) 은 반드시 양수여야 합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The price at which the security is bought per 100 face value."
 msgstr "액면가 100당 유가증권을 매수하는 가격."
@@ -8717,7 +8548,8 @@ msgstr "고려할 데이터세트를 포함하는 범위입니다."
 msgid ""
 "The range containing the return value. Should have the same dimensions as "
 "lookup_range."
-msgstr "반환값이 포함된 범위입니다. lookup_range와 동일한 dimensions이어야 합니다."
+msgstr ""
+"반환값이 포함된 범위입니다. lookup_range와 동일한 dimensions이어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8736,8 +8568,9 @@ msgid ""
 "only a single row or column and should not be used if using the "
 "search_result_array method."
 msgstr ""
-"결과를 반환할 범위입니다. search_range에서 search_key가 있는 위치에 결과 값이 반환됩니다. 이 범위는 단일 행 또는 "
-"열이어야 하며 search_result_array 메서드를 사용하는 경우에는 사용할 수 없습니다."
+"결과를 반환할 범위입니다. search_range에서 search_key가 있는 위치에 결과 값"
+"이 반환됩니다. 이 범위는 단일 행 또는 열이어야 하며 search_result_array 메서"
+"드를 사용하는 경우에는 사용할 수 없습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8785,8 +8618,6 @@ msgstr "값이 반환되는 셀의 범위입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range of cells over which to evaluate criterion1."
 msgstr "criterion1을 산출할 셀의 범위입니다."
@@ -8794,38 +8625,12 @@ msgstr "criterion1을 산출할 셀의 범위입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range representing the array or matrix of dependent data."
 msgstr "종속 데이터의 배열 또는 행렬을 나타내는 범위입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range representing the array or matrix of independent data."
@@ -8866,7 +8671,8 @@ msgstr "평균 범위."
 msgid ""
 "The range to average. If not included, criteria_range is used for the "
 "average instead."
-msgstr "평균을 구할 범위입니다. 포함되지 않은 경우, criteria_range가 대신 사용됩니다."
+msgstr ""
+"평균을 구할 범위입니다. 포함되지 않은 경우, criteria_range가 대신 사용됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8892,8 +8698,6 @@ msgstr "criterion과 비교할 범위입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range to check against criterion1."
 msgstr "criterion1과 비교할 범위입니다."
@@ -8914,16 +8718,18 @@ msgstr "검색할 범위입니다. 범위는 단일 열 또는 단일 행이어�
 msgid ""
 "The range to consider for the search. The first column in the range is "
 "searched for the key specified in search_key."
-msgstr "검색할 범위입니다. 범위의 첫 번째 열에서 search_key에 지정된 키가 검색됩니다."
+msgstr ""
+"검색할 범위입니다. 범위의 첫 번째 열에서 search_key에 지정된 키가 검색됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The range to consider for the search. The first row in the range is searched"
-" for the key specified in search_key."
-msgstr "검색할 범위입니다. 범위의 첫 번째 행에서 search_key에 지정된 키가 검색됩니다."
+"The range to consider for the search. The first row in the range is searched "
+"for the key specified in search_key."
+msgstr ""
+"검색할 범위입니다. 범위의 첫 번째 행에서 search_key에 지정된 키가 검색됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8941,7 +8747,6 @@ msgstr "합산할 범위."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range to wrap."
@@ -8985,10 +8790,6 @@ msgstr "반환할 요소 중 가장 작은 요소부터 가장 큰 요소까지�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rate (%s) must be positive or null."
 msgstr "rate (%s) 는 양수이거나 null이어야 합니다."
@@ -9023,11 +8824,6 @@ msgstr "redemption (%s) 은 반드시 양수여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The redemption amount per 100 face value, or par."
@@ -9135,14 +8931,15 @@ msgstr "데이터세트의 표본 공분산."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The search method. 1 (default) finds the largest value less than or equal to"
-" search_key when range is sorted in ascending order. 0 finds the exact value"
-" when range is unsorted. -1 finds the smallest value greater than or equal "
-"to search_key when range is sorted in descending order."
+"The search method. 1 (default) finds the largest value less than or equal to "
+"search_key when range is sorted in ascending order. 0 finds the exact value "
+"when range is unsorted. -1 finds the smallest value greater than or equal to "
+"search_key when range is sorted in descending order."
 msgstr ""
-"검색 방법. 오름차순으로 정렬된 경우, 1 (기본 값)은 search_key보다 작거나 같은 값 중 가장 큰 값을 찾아냅니다. 범위가 "
-"정렬되지 않은 경우, 0은 정확값을 찾아냅니다. 범위가 내림차순으로 정렬된 경우, -1은  search_key보다 크거나 같은 값 중 "
-"가장 작은 값을 찾아냅니다."
+"검색 방법. 오름차순으로 정렬된 경우, 1 (기본 값)은 search_key보다 작거나 같"
+"은 값 중 가장 큰 값을 찾아냅니다. 범위가 정렬되지 않은 경우, 0은 정확값을 찾"
+"아냅니다. 범위가 내림차순으로 정렬된 경우, -1은  search_key보다 크거나 같은 "
+"값 중 가장 작은 값을 찾아냅니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9203,9 +9000,6 @@ msgstr "두 번째 값은 숫자여야 합니다"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The second value."
 msgstr "두 번째 값."
@@ -9236,20 +9030,6 @@ msgstr "결제일 (%s) 은 발행일 (%s) 보다 반드시 큰 값이여야 합�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
 "The settlement date of the security, the date after issuance when the "
@@ -9266,16 +9046,12 @@ msgstr "시트명은 비워둘 수 없습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The single period within life for which to calculate depreciation."
 msgstr "단일 기간 내 내용연수에 따른 감가상각 계산."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -9295,18 +9071,22 @@ msgstr "계산하는 기간의 시작일."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The start date to consider in the calculation. Must be a reference to a cell"
-" containing a DATE, a function returning a DATE type, or a number."
-msgstr "계산에서 필요한 시작 날짜입니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 또는 숫자에 대한 참조여야 합니다."
+"The start date to consider in the calculation. Must be a reference to a cell "
+"containing a DATE, a function returning a DATE type, or a number."
+msgstr ""
+"계산에서 필요한 시작 날짜입니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 "
+"또는 숫자에 대한 참조여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The start date to consider in the calculation. Must be a reference to a cell"
-" containing a date, a function returning a date type, or a number."
-msgstr "계산에서 필요한 시작 날짜입니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 또는 숫자에 대한 참조여야 합니다."
+"The start date to consider in the calculation. Must be a reference to a cell "
+"containing a date, a function returning a date type, or a number."
+msgstr ""
+"계산에서 필요한 시작 날짜입니다. 날짜가 포함된 셀, 날짜 유형을 반환하는 함수 "
+"또는 숫자에 대한 참조여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9338,7 +9118,6 @@ msgstr "start_period (%s) 는 end_period (%s) 보다 작거나 같아야 합니�
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The starting_at (%s) must be greater than or equal to 1."
@@ -9410,7 +9189,6 @@ msgstr "세그먼트를 추출할 문자열."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string to look for within text_to_search."
 msgstr "text_to_search 내에서 검색할 문자열."
@@ -9467,7 +9245,6 @@ msgstr "분할할 텍스트."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text to search for the first occurrence of search_for."
 msgstr "search_for의 첫 번째 어커런스를 검색할 텍스트."
@@ -9486,7 +9263,9 @@ msgstr "원본 텍스트에 삽입할 텍스트."
 msgid ""
 "The text which will be returned with the first letter of each word in "
 "uppercase and all other letters in lowercase."
-msgstr "반환되는 텍스트에서 각 단어의 첫 글자는 대문자로, 그 외 모든 글자는 소문자로 표시됩니다."
+msgstr ""
+"반환되는 텍스트에서 각 단어의 첫 글자는 대문자로, 그 외 모든 글자는 소문자로 "
+"표시됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9511,7 +9290,6 @@ msgstr "텍스트 일부가 대체됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text_to_search must be non-empty."
@@ -9562,7 +9340,6 @@ msgstr "유형 (%s) 은 1, 2 또는 3이어야 합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The unit (%s) must be strictly positive."
 msgstr "단위 (%s) 은 반드시 양수여야 합니다."
@@ -9571,8 +9348,7 @@ msgstr "단위 (%s) 은 반드시 양수여야 합니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"The units of the desired fraction, e.g. 8 for 1/8ths or 32 for 1/32nds."
+msgid "The units of the desired fraction, e.g. 8 for 1/8ths or 32 for 1/32nds."
 msgstr "원하는 분수의 단위, 예. 1/8의 경우 8, 1/32의 경우 32를 입력."
 
 #. module: spreadsheet
@@ -9599,7 +9375,6 @@ msgstr "값 (%s) 은 -1과 1을 포함한 두 숫자 사이의 값이 될 수 �
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be a valid base %s representation."
 msgstr "값 (%s) 은 유효한 기준값 %s 으로 표시되어야 합니다."
@@ -9613,7 +9388,6 @@ msgstr "값 (%s) 은 -1과 1을 포함하지 않은 두 숫자 사이의 값이�
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be between -1 and 1 inclusive."
@@ -9654,7 +9428,8 @@ msgstr "값이 사용자 지정 수식 데이터 유효성 검사 규칙과 일�
 msgid ""
 "The value for which to calculate the inverse cosine. Must be between -1 and "
 "1, inclusive."
-msgstr "아크코사인을 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 합니다."
+msgstr ""
+"아크코사인을 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9670,7 +9445,9 @@ msgstr "아크코탄젠트를 계산하는 값."
 msgid ""
 "The value for which to calculate the inverse hyperbolic cosine. Must be "
 "greater than or equal to 1."
-msgstr "쌍곡 코사인을 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 합니다."
+msgstr ""
+"쌍곡 코사인을 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 합니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9679,7 +9456,9 @@ msgstr "쌍곡 코사인을 계산할 값입니다. -1과 1을 포함한 두 숫
 msgid ""
 "The value for which to calculate the inverse hyperbolic cotangent. Must not "
 "be between -1 and 1, inclusive."
-msgstr "쌍곡 아크코탄젠트를 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 합니다."
+msgstr ""
+"쌍곡 아크코탄젠트를 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 "
+"합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9695,16 +9474,19 @@ msgstr "쌍곡 아크사인을 계산하는 값."
 msgid ""
 "The value for which to calculate the inverse hyperbolic tangent. Must be "
 "between -1 and 1, exclusive."
-msgstr "쌍곡 아크탄젠트를 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 합니다."
+msgstr ""
+"쌍곡 아크탄젠트를 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 합"
+"니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"The value for which to calculate the inverse sine. Must be between -1 and 1,"
-" inclusive."
-msgstr "아크사인을 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 합니다."
+"The value for which to calculate the inverse sine. Must be between -1 and 1, "
+"inclusive."
+msgstr ""
+"아크사인을 계산할 값입니다. -1과 1을 포함한 두 숫자 사이의 값이여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9719,6 +9501,13 @@ msgstr "아크탄젠트를 계산하는 값."
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "로그를 계산할 값, 밑 e."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
+msgstr "로그를 계산할 값입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9744,14 +9533,12 @@ msgstr "값은 반드시 날짜여야 합니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date after %s"
 msgstr "값은 %s일 이후의 날짜여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date before %s"
@@ -9774,14 +9561,12 @@ msgstr "값은 %s와  %s사이가 아닌 날짜여야 합니다. "
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date on or after %s"
 msgstr "값은 %s일 이후의 날짜여야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date on or before %s"
@@ -9944,11 +9729,6 @@ msgstr " 값은 %s과 같을 수 없습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value of the asset at the end of depreciation."
 msgstr "감가상각 종료 시점의 자산 가치."
@@ -10026,15 +9806,12 @@ msgstr "숫자로 확인할 값."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to be verified as an error type."
 msgstr "에러 유형으로 확인할 값."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to be verified as even."
@@ -10077,7 +9854,6 @@ msgstr "가장 가까운 계수의 정수 배수로 내림할 값."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -10122,8 +9898,6 @@ msgstr "가장 가까운 계수의 정수 배수로 반올림할 값."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to round up to the nearest integer multiple of significance."
 msgstr "significance 배수의 가장 가까운 정수로 올림할 값."
@@ -10137,9 +9911,6 @@ msgstr "검색할 값."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to search for. For example, 42, 'Cats', or I24."
@@ -10204,7 +9975,6 @@ msgstr "순위가 결정되는 값입니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value with which to fill the extra cells in the range."
 msgstr "범위 내 추가 셀을 채울 값."
@@ -10219,14 +9989,12 @@ msgstr "패딩을 적용할 값."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value(s) on the x-axis to forecast."
 msgstr "예측할 X축의 값입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -10290,8 +10058,6 @@ msgstr "날짜의 연도 구성 요소."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The yield (%s) must be positive or null."
 msgstr "yield (%s) 는 양수이거나 null이어야 합니다."
@@ -10339,11 +10105,11 @@ msgid ""
 "There must be both positive and negative values in [payment_amount, "
 "present_value, future_value]."
 msgstr ""
-"[payment_amount, present_value, future_value]에는 양수 값과 음수 값이 모두 있어야 합니다."
+"[payment_amount, present_value, future_value]에는 양수 값과 음수 값이 모두 있"
+"어야 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "There must be both positive and negative values in cashflow_amounts."
@@ -10365,7 +10131,9 @@ msgstr "cashflow_amounts과 cashflow_dates에는 동일한 수의 값이 있어�
 msgid ""
 "This formula has over 100 parts. It can't be processed properly, consider "
 "splitting it into multiple cells"
-msgstr "해당 수식은 100개가 넘습니다. 정상적으로 처리하려면 여러 셀로 분할하는 것이 좋습니다."
+msgstr ""
+"해당 수식은 100개가 넘습니다. 정상적으로 처리하려면 여러 셀로 분할하는 것이 "
+"좋습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10374,7 +10142,9 @@ msgstr "해당 수식은 100개가 넘습니다. 정상적으로 처리하려면
 msgid ""
 "This function takes in two currency codes as arguments, and returns the "
 "exchange rate from the first currency to the second as float."
-msgstr "이 함수는 두 개의 통화 코드를 인수로 받아 첫 번째 통화에서 두 번째 통화로의 환율을 실수값으로 반환합니다."
+msgstr ""
+"이 함수는 두 개의 통화 코드를 인수로 받아 첫 번째 통화에서 두 번째 통화로의 "
+"환율을 실수값으로 반환합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10385,7 +10155,6 @@ msgstr "고정된 창이 겹쳐져 있어 요청한 작업을 수행할 수 없�
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "This operation is not allowed with multiple selections."
@@ -10398,7 +10167,9 @@ msgstr "이 작업은 여러 선택 항목에서는 허용되지 않습니다."
 msgid ""
 "This operation is not possible due to a merge. Please remove the merges "
 "first than try again."
-msgstr "병합된 셀에서는 이 작업을 수행할 수 없습니다. 먼저 병합을 취소한 후 다시 시도해주세요."
+msgstr ""
+"병합된 셀에서는 이 작업을 수행할 수 없습니다. 먼저 병합을 취소한 후 다시 시도"
+"해주세요."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10443,10 +10214,6 @@ msgstr "시간"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Title"
 msgstr "제목"
@@ -10454,8 +10221,6 @@ msgstr "제목"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Top"
@@ -10527,7 +10292,6 @@ msgstr "화요일"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Type"
 msgstr "유형"
@@ -10556,7 +10320,6 @@ msgstr "취소"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unexpected token: %s"
@@ -10663,8 +10426,6 @@ msgstr "현재 행까지"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Use row"
 msgstr "행 사용"
@@ -10672,7 +10433,6 @@ msgstr "행 사용"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Value"
@@ -10687,7 +10447,6 @@ msgstr "0과 1을 제외한 데이터세트의 지정된 백분위수 값."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value at a given percentile of a dataset."
@@ -10704,10 +10463,8 @@ msgstr "키 값에서 값 변경"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"Value for parameter %d is missing, while the function [[FUNCTION_NAME]] "
-"expect a number or a range."
-msgstr "매개 변수 %d의 값이 누락되었으며, 함수 [[FUNCTION_NAME]]에 숫자 또는 범위가 필요합니다."
+msgid "Value for parameter %s is missing in [[FUNCTION_NAME]]."
+msgstr "%s 매개변수 값이 [[FUNCTION_NAME]] 항목에서 누락되었습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10811,13 +10568,11 @@ msgstr "값이 %s와 같지 않습니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"Value nearest to a specific quartile of a dataset exclusive of 0 and 4."
+msgid "Value nearest to a specific quartile of a dataset exclusive of 0 and 4."
 msgstr "데이터세트의 특정 사분위수에서 0과 4를 제외한 값 중 가장 근접한 값."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value nearest to a specific quartile of a dataset."
@@ -10855,7 +10610,6 @@ msgstr "번역할 값."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Value."
 msgstr "값."
@@ -10872,7 +10626,8 @@ msgstr "평균을 구할 값."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variable declining balance. WARNING : does not handle decimal periods."
-msgstr "Variable declining balance. 경고: 소수점 이하 마침표를 처리하지 않았습니다."
+msgstr ""
+"Variable declining balance. 경고: 소수점 이하 마침표를 처리하지 않았습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10890,7 +10645,6 @@ msgstr "전체 모집단의 분산 (텍스트는 0으로 표시)."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variance of entire population."
@@ -10913,7 +10667,6 @@ msgstr "표본의 분산 (텍스트는 0으로 표시)."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Variance."
 msgstr "분산."
@@ -10927,7 +10680,6 @@ msgstr "세로 정렬"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Vertical axis position"
@@ -10962,7 +10714,8 @@ msgid ""
 "We found data next to your selection. Since this data was not selected, it "
 "will not be sorted. Do you want to extend your selection?"
 msgstr ""
-"선택 항목에 포함되지 않은 데이터를 찾았습니다. 이 데이터는 선택되지 않았으므로 정렬되지 않습니다. 선택 범위를 확장하시겠습니까?"
+"선택 항목에 포함되지 않은 데이터를 찾았습니다. 이 데이터는 선택되지 않았으므"
+"로 정렬되지 않습니다. 선택 범위를 확장하시겠습니까?"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11082,22 +10835,13 @@ msgstr "구분 기호에 포함된 각 문자를 중심으로 텍스트를 나�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Whether or not to remove empty text messages from the split results. The default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells values are added between consecutive delimiters."
+"Whether or not to remove empty text messages from the split results. The "
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"분할 결과에서 빈 텍스트 메시지를 제거할 지 여부를 설정합니다. 기본 동작은 연속된 구분 기호를 \n"
-"        하나로 처리하는 것입니다. (TRUE일 경우). FALSE일 경우, 연속된 구분 기호 사이에 빈 셀 값이 추가됩니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
@@ -11109,15 +10853,12 @@ msgstr "결제일이 각 기간의 말일 (0) 인지 또는 시작일 (1) 인지
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Whether the array should be scanned by column. True scans the array by column and false (default) \n"
-"      scans the array by row."
+"Whether the array should be scanned by column. True scans the array by "
+"column and false (default)       scans the array by row."
 msgstr ""
-"배열을 열을 기준으로 스캔할지 여부입니다. True는 열을 기준으로 배열을 스캔하고 false (기본값)는 \n"
-"      배열을 행별로 스캔합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether the provided value is even."
@@ -11173,11 +10914,12 @@ msgstr "중복이 없는 항목만 반환할지 여부를 설정합니다."
 msgid ""
 "Whether to switch to straight-line depreciation when the depreciation is "
 "greater than the declining balance calculation."
-msgstr "정률법으로 계산했을 때 감가상각비가 더 큰 경우 정액법으로 전환할지 여부입니다."
+msgstr ""
+"정률법으로 계산했을 때 감가상각비가 더 큰 경우 정액법으로 전환할지 여부입니"
+"다."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Which quartile value to return."
@@ -11200,7 +10942,6 @@ msgstr "줄바꿈"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrapping"
 msgstr "줄바꿈"
@@ -11212,7 +10953,9 @@ msgstr "줄바꿈"
 msgid ""
 "Wraps the provided row or column of cells by columns after a specified "
 "number of elements to form a new array."
-msgstr "지정된 수의 요소 뒤에 지정된 행 또는 열의 셀을 열 단위로 래핑하여 새 배열을 만듭니다."
+msgstr ""
+"지정된 수의 요소 뒤에 지정된 행 또는 열의 셀을 열 단위로 래핑하여 새 배열을 "
+"만듭니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11221,7 +10964,9 @@ msgstr "지정된 수의 요소 뒤에 지정된 행 또는 열의 셀을 열 �
 msgid ""
 "Wraps the provided row or column of cells by rows after a specified number "
 "of elements to form a new array."
-msgstr "지정된 수의 요소 뒤에 지정된 행 또는 열의 셀을 행 단위로 래핑하여 새 배열을 만듭니다."
+msgstr ""
+"지정된 수의 요소 뒤에 지정된 행 또는 열의 셀을 행 단위로 래핑하여 새 배열을 "
+"만듭니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11249,16 +10994,20 @@ msgstr "인수의 수가 잘못되었습니다. 인수의 수는 짝수로 예�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrong size for %s. Expected a range of size 1x%s. Got %sx%s."
-msgstr "%s의 크기가 잘못되었습니다. 크기 범위 1x%s를 예상했으나, %sx%s의 값을 얻었습니다."
+msgstr ""
+"%s의 크기가 잘못되었습니다. 크기 범위 1x%s를 예상했으나, %sx%s의 값을 얻었습"
+"니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid ""
-"Wrong value of 'display_ties_mode'. Expected a positive number between 0 and"
-" 3. Got %s."
-msgstr "'display_ties_mode'의 값이 잘못되었습니다. 0에서 3 사이의 양수를 예상했으나, %s의 값을 얻었습니다."
+"Wrong value of 'display_ties_mode'. Expected a positive number between 0 and "
+"3. Got %s."
+msgstr ""
+"'display_ties_mode'의 값이 잘못되었습니다. 0에서 3 사이의 양수를 예상했으나, "
+"%s의 값을 얻었습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11304,6 +11053,21 @@ msgstr "필터는 중복해서 만들 수 없습니다."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+#, python-format
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
+msgstr "데이터를 내보낼 권한이 없습니다. 관리자에게 문의하십시오."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "Z"
+msgstr "Z"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] cannot be called from the spreadsheet."
@@ -11311,7 +11075,6 @@ msgstr "스프레드시트에서 [[FUNCTION_NAME]] 을 호출할 수 없습니�
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] evaluates to an out of bounds range."
@@ -11334,17 +11097,20 @@ msgstr "[[FUNCTION_NAME]] 가 평가하는 범위에서 행의 값 %s이 벗어�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr "[[FUNCTION_NAME]] 두 매개변수에 대해 비어있지 않은 범위가 필요합니다."
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]] 에는 숫자 값이 필요합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] 에는 숫자 값이 필요합니다."
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
+"[[FUNCTION_NAME]]의 제공된 %(argName)s 값은 비어 있지 않은 행렬이라고 가정합"
+"니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11364,8 +11130,7 @@ msgstr "[[FUNCTION_NAME]] 인수 수가 %s vs %s와 일치하지 않습니다."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid ""
-"[[FUNCTION_NAME]] has mismatched dimensions for argument %s (%s vs %s)."
+msgid "[[FUNCTION_NAME]] has mismatched dimensions for argument %s (%s vs %s)."
 msgstr "[[FUNCTION_NAME]] 차원이 %s (%s vs %s)와 일치하지 않습니다."
 
 #. module: spreadsheet
@@ -11378,11 +11143,6 @@ msgstr "[[FUNCTION_NAME]] 의 범위 크기가 일치하지 않습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]] 에 올바른 입력 데이터가 없습니다."
@@ -11390,17 +11150,10 @@ msgstr "[[FUNCTION_NAME]] 에 올바른 입력 데이터가 없습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters"
-msgstr "[[FUNCTION_NAME]]은 두 매개변수에 대해 최소 두 개의 값을 필요로 합니다."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "and"
-msgstr "그리고"
+msgstr "및"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11412,28 +11165,9 @@ msgstr "그리고 값 또는 공식"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "arrow"
-msgstr "화살"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "as headers"
 msgstr "헤더"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "bottom"
-msgstr "하단"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11444,20 +11178,6 @@ msgstr "기본 값:"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "difference"
-msgstr "차이"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/components/filter_date_value/filter_date_value.xml:0
-#, python-format
-msgid "empty"
-msgstr "비어 있음"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "exact date"
@@ -11465,37 +11185,6 @@ msgstr "정확한 날짜"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "false"
-msgstr "X"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "formula"
-msgstr "공식"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "ge"
-msgstr "ge"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "gt"
-msgstr "gt"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "in the past month"
@@ -11504,7 +11193,6 @@ msgstr "지난 달"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "in the past week"
 msgstr "지난 주"
@@ -11512,21 +11200,9 @@ msgstr "지난 주"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "in the past year"
 msgstr "작년"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "left"
-msgstr "왼쪽"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11548,26 +11224,6 @@ msgstr "matchMode는 [-1, 0, 1]에 해당하는 값이어야 합니다."
 #, python-format
 msgid "more rows at the bottom"
 msgstr "하단에 더 많은 행"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "none"
-msgstr "없음"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "number"
-msgstr "숫자"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11600,34 +11256,6 @@ msgstr "일년 전"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "percentage"
-msgstr "백분율"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "percentile"
-msgstr "백분위수"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "plainText"
-msgstr "plainText"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "repeatable"
 msgstr "반복 가능"
@@ -11638,17 +11266,6 @@ msgstr "반복 가능"
 #, python-format
 msgid "return_range should have the same dimensions as lookup_range."
 msgstr "return_range는 lookup_range과 동일한 dimension이어야 합니다."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "right"
-msgstr "오른쪽"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11666,15 +11283,13 @@ msgstr "start_date (%s) 는 end_date (%s) 과 같거나 이전 날짜여야 합�
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "text"
-msgstr "본문"
+msgid "the string to be converted"
+msgstr "변환할 문자열"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "today"
@@ -11683,40 +11298,114 @@ msgstr "오늘"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "tomorrow"
 msgstr "내일"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
 #, python-format
-msgid "top"
-msgstr "제일 위"
+msgid "x"
+msgstr "x"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "true"
-msgstr "O"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "value"
-msgstr "값"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "yesterday"
 msgstr "어제"
+
+#, python-format
+#~ msgid ""
+#~ "(1) Search starting at first item. \n"
+#~ "      (-1) Search starting at last item. \n"
+#~ "      (2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in ascending order. If not sorted, invalid results will be "
+#~ "returned. \n"
+#~ "      (-2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in descending order. If not sorted, invalid results will be "
+#~ "returned.\n"
+#~ "      "
+#~ msgstr ""
+#~ "(1) 첫 번째 항목부터 검색합니다. \n"
+#~ "      (-1) 마지막 항목부터 검색합니다. \n"
+#~ "      (2) 오름차순으로 정렬되는 lookup_array에 의존하는 이진 검색을 수행합"
+#~ "니다. 정렬되지 않은 경우 잘못된 결과가 반환됩니다.\n"
+#~ "      (-2) 내림차순으로 정렬되는 lookup_array에 의존하는 이진 검색을 수행"
+#~ "합니다. 정렬되지 않은 경우 잘못된 결과가 반환됩니다."
+
+#, python-format
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] 는 criteria_range와 criterion이 쌍으로 구성되는 함수입니"
+#~ "다."
+
+#, python-format
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "함수 [[FUNCTION_NAME]]의 criteria_range는 동일한 dimension을 가져야 합니"
+#~ "다."
+
+#, python-format
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "        number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]]에서 첫 번째 행렬의 열 수 (%s)는 \n"
+#~ "        두 번째 행렬의 행 수 (%s)와 같아야 합니다."
+
+#, python-format
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "분할 결과에서 빈 텍스트 메시지를 제거할 지 여부를 설정합니다. 기본 동작은 "
+#~ "연속된 구분 기호를 \n"
+#~ "        하나로 처리하는 것입니다. (TRUE일 경우). FALSE일 경우, 연속된 구"
+#~ "분 기호 사이에 빈 셀 값이 추가됩니다."
+
+#, python-format
+#~ msgid ""
+#~ "Whether the array should be scanned by column. True scans the array by "
+#~ "column and false (default) \n"
+#~ "      scans the array by row."
+#~ msgstr ""
+#~ "배열을 열을 기준으로 스캔할지 여부입니다. True는 열을 기준으로 배열을 스캔"
+#~ "하고 false (기본값)는 \n"
+#~ "      배열을 행별로 스캔합니다."
+
+#, python-format
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
+#~ msgstr ""
+#~ "함수 [[FUNCTION_NAME]]는 %s에 대한 숫자 값을 예측했으나 %s를 계산했습니다."
+
+#, python-format
+#~ msgid ""
+#~ "Value for parameter %d is missing, while the function [[FUNCTION_NAME]] "
+#~ "expect a number or a range."
+#~ msgstr ""
+#~ "매개 변수 %d의 값이 누락되었으며, 함수 [[FUNCTION_NAME]]에 숫자 또는 범위"
+#~ "가 필요합니다."
+
+#, python-format
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "행렬을 곱할 수 없음: 호환되지 않는 행렬 크기입니다."
+
+#, python-format
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] 두 매개변수에 대해 비어있지 않은 범위가 필요합니다."
+
+#, python-format
+#~ msgid "[[FUNCTION_NAME]] needs at least two values for both parameters"
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]]은 두 매개변수에 대해 최소 두 개의 값을 필요로 합니다."

@@ -347,6 +347,7 @@ QUnit.module("Fields", (hooks) => {
             target,
             ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o-kanban-button-new"
         );
+        await nextTick();
         await click(target, ".o_kanban_quick_create .o_kanban_add");
         await click(target.querySelector(".o_priority a.o_priority_star.fa-star-o"));
         assert.verifySteps(['web_save [[6],{"selection":"1"}]']);

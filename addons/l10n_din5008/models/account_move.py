@@ -18,12 +18,21 @@ class AccountMove(models.Model):
                 data.append((_("Invoice Date"), format_date(self.env, record.invoice_date)))
             if record.invoice_date_due:
                 data.append((_("Due Date"), format_date(self.env, record.invoice_date_due)))
+            if record.invoice_incoterm_id:
+                value = (
+                    f"{record.invoice_incoterm_id.code} - {record.incoterm_location}"
+                    if record.incoterm_location
+                    else record.invoice_incoterm_id.code
+                )
+                data.append((_("Incoterm"), value))
             if record.delivery_date:
                 data.append((_("Delivery Date"), format_date(self.env, record.delivery_date)))
             if record.invoice_origin:
                 data.append((_("Source"), record.invoice_origin))
             if record.ref:
                 data.append((_("Reference"), record.ref))
+            if record.partner_id.commercial_partner_id == record.partner_id and record.partner_id.commercial_partner_id.vat:
+                data.append((_("VAT"), record.partner_id.commercial_partner_id.vat))
 
     def _compute_l10n_din5008_document_title(self):
         for record in self:
@@ -53,18 +62,18 @@ class AccountMove(models.Model):
             # To avoid repetition in the address block.
             if different_partner_count <= 1:
                 continue
-            elif different_partner_count == 3:
-                data.extend([(_("Shipping Address:"), delivery_partner), (_("Invoicing Address:"), invoice_partner)])
-                continue
-            elif commercial_partner == invoice_partner:
+
+            if delivery_partner and delivery_partner != commercial_partner:
                 data.append((_("Shipping Address:"), delivery_partner))
-                continue
-            elif commercial_partner == delivery_partner:
-                data.append((_("Invoicing Address:"), invoice_partner))
-                continue
-            elif invoice_partner == delivery_partner:
-                data.append((_("Invoicing and Shipping Address:"), invoice_partner))
-                continue
+            if invoice_partner and invoice_partner != commercial_partner:
+                data.append((
+                    _("Beneficiary:"),
+                    commercial_partner,
+                    # if the invoice address is different from the company address,
+                    # the main address block will be the invoice address, and the
+                    # vat number will only be shown in the beneficiary address block.
+                    {'show_tax_id': True},
+                ))
 
     def check_field_access_rights(self, operation, field_names):
         field_names = super().check_field_access_rights(operation, field_names)

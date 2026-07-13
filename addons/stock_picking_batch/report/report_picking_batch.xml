@@ -94,7 +94,7 @@
                                                 </td>
                                                 <td>
                                                     <span t-esc="sum(move_operation.mapped('quantity'))">Quantity Done</span>
-                                                    <span t-field="move_operation.uom_id" groups="move_operation.group_uom">Unit of Measure</span>
+                                                    <span t-field="move_operation.product_uom_id" groups="uom.group_uom"/>
                                                 </td>
                                                 <td>
                                                     <span t-out="move_operation.picking_id.display_name">Transfer Display Name</span>

@@ -5,11 +5,13 @@
 
 """
 
+import datetime
 import itertools
 import logging
 import sys
 import threading
 import time
+import traceback
 
 import odoo
 import odoo.modules.db
@@ -88,7 +90,7 @@ def load_demo(env, package, idref, mode):
             with env.cr.savepoint(flush=False):
                 load_data(env(su=True), idref, mode, kind='demo', package=package)
         return True
-    except Exception as e:
+    except Exception:  # noqa: BLE001
         # If we could not install demo data for this module
         _logger.warning(
             "Module %s demo data failed to install, installed without demo data",
@@ -98,7 +100,7 @@ def load_demo(env, package, idref, mode):
         Failure = env.get('ir.demo_failure')
         if todo and Failure is not None:
             todo.state = 'open'
-            Failure.create({'module_id': package.id, 'error': str(e)})
+            Failure.create({'module_id': package.id, 'error': traceback.format_exc()})
         return False
 
 
@@ -280,7 +282,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
                     registry.setup_models(env.cr)
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
-                test_results = loader.run_suite(suite, module_name)
+                test_results = loader.run_suite(suite, module_name, global_report=report)
                 report.update(test_results)
                 test_time = time.time() - tests_t0
                 test_queries = odoo.sql_db.sql_counter - tests_q0
@@ -409,6 +411,9 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
             raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
+        if update_module and tools.config['update']:
+            for pyfile in tools.config['pre_upgrade_scripts'].split(','):
+                odoo.modules.migration.exec_script(cr, graph['base'].installed_version, pyfile, 'base', 'pre')
 
         if update_module and odoo.tools.table_exists(cr, 'ir_model_fields'):
             # determine the fields which are currently translated in the database
@@ -534,6 +539,12 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(processed_modules)
+            # Cleanup cron
+            vacuum_cron = env.ref('base.autovacuum_job', raise_if_not_found=False)
+            if vacuum_cron:
+                # trigger after a small delay to give time for assets to regenerate
+                vacuum_cron._trigger(at=datetime.datetime.now() + datetime.timedelta(minutes=1))
+
             env.flush_all()
 
         for kind in ('init', 'demo', 'update'):

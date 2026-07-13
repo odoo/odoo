@@ -48,6 +48,11 @@ class L10nARWebsiteSale(WebsiteSale):
 
                 id_type = request.env['l10n_latam.identification.type'].browse(id_type_id) if id_type_id else False
                 afip_resp = request.env['l10n_ar.afip.responsibility.type'].browse(afip_resp_id) if afip_resp_id else False
+
+                if not id_type or not afip_resp:
+                    # Those two values were not provided and are not required, skip the validation
+                    return error, error_message
+
                 cuit_id_type = request.env.ref('l10n_ar.it_cuit')
 
                 # Check if the AFIP responsibility is different from Final Consumer or Foreign Customer,

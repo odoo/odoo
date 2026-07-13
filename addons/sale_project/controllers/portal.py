@@ -39,3 +39,10 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
         if search_in in ('invoice', 'all'):
             search_domain.append([('sale_order_id.invoice_ids.name', 'ilike', search)])
         return OR(search_domain)
+
+    def _prepare_project_sharing_session_info(self, project, task=None):
+        session_info = super()._prepare_project_sharing_session_info(project, task)
+        session_info['user_context'].update({
+            'allow_billable': project.allow_billable,
+        })
+        return session_info

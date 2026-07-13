@@ -76,15 +76,16 @@ class AccountMove(models.Model):
                         'quantity': relevant_qty,
                         'price_unit': price_unit_val_dif,
                         'price_subtotal': relevant_qty * price_unit_val_dif,
-                        'amount_currency': relevant_qty * price_unit_val_dif * line.move_id.direction_sign,
+                        'amount_currency': relevant_qty * price_unit_val_dif,
                         'balance': line.currency_id._convert(
-                            relevant_qty * price_unit_val_dif * line.move_id.direction_sign,
+                            relevant_qty * price_unit_val_dif,
                             line.company_currency_id,
                             line.company_id, fields.Date.today(),
                         ),
                         'account_id': debit_pdiff_account.id,
                         'analytic_distribution': line.analytic_distribution,
                         'display_type': 'cogs',
+                        'tax_ids': [],
                     }
                     lines_vals_list.append(vals)
 
@@ -99,15 +100,16 @@ class AccountMove(models.Model):
                         'quantity': relevant_qty,
                         'price_unit': -price_unit_val_dif,
                         'price_subtotal': relevant_qty * -price_unit_val_dif,
-                        'amount_currency': relevant_qty * -price_unit_val_dif * line.move_id.direction_sign,
+                        'amount_currency': relevant_qty * -price_unit_val_dif,
                         'balance': line.currency_id._convert(
-                            relevant_qty * -price_unit_val_dif * line.move_id.direction_sign,
+                            relevant_qty * -price_unit_val_dif,
                             line.company_currency_id,
                             line.company_id, fields.Date.today(),
                         ),
                         'account_id': line.account_id.id,
                         'analytic_distribution': line.analytic_distribution,
                         'display_type': 'cogs',
+                        'tax_ids': [],
                     }
                     lines_vals_list.append(vals)
         return lines_vals_list

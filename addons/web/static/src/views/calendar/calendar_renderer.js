@@ -28,6 +28,7 @@ export class CalendarRenderer extends Component {
         };
     }
 }
+CalendarRenderer.props = ["*"];
 CalendarRenderer.components = {
     day: CalendarCommonRenderer,
     week: CalendarCommonRenderer,

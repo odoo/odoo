@@ -179,9 +179,13 @@ paymentExpressCheckoutForm.include({
                         },
                     },
                 );
-                if (availableCarriers.length === 0) {
+                const recomputedAmount = await this.rpc(
+                    this.paymentContext['shippingAddressUpdateRoute'] + '/compute_taxes',
+                );
+                if (availableCarriers.length === 0 || recomputedAmount.external_tax_error) {
                     ev.updateWith({status: 'invalid_shipping_address'});
                 } else {
+                    this.paymentContext['minorAmount'] = recomputedAmount;
                     ev.updateWith({
                         status: 'success',
                         shippingOptions: availableCarriers.map(carrier => ({

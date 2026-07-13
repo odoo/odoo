@@ -45,6 +45,7 @@ class StockMoveLine(models.Model):
         for line in self:
             line_by_picking[line.picking_id] |= line
         picking_to_wave_vals_list = []
+        split_pickings_ids = set()
         for picking, lines in line_by_picking.items():
             # Move the entire picking if all the line are taken
             line_by_move = defaultdict(lambda: self.env['stock.move.line'])
@@ -72,6 +73,7 @@ class StockMoveLine(models.Model):
                 'move_line_ids': [],
                 'batch_id': wave.id,
             })[0]
+            split_pickings_ids.add(picking.id)
             for move, move_lines in line_by_move.items():
                 picking_to_wave_vals['move_line_ids'] += [Command.link(line.id) for line in lines]
                 # if all the line of a stock move are taken we change the picking on the stock move
@@ -87,5 +89,6 @@ class StockMoveLine(models.Model):
             picking_to_wave_vals_list.append(picking_to_wave_vals)
 
         if picking_to_wave_vals_list:
-            self.env['stock.picking'].create(picking_to_wave_vals_list)
+            split_pickings = self.env['stock.picking'].browse(split_pickings_ids) | self.env['stock.picking'].create(picking_to_wave_vals_list)
+            split_pickings._add_to_wave_post_picking_split_hook()
         wave.action_confirm()

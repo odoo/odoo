@@ -123,7 +123,7 @@ class FleetVehicleLogContract(models.Model):
         delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
         date_today = fields.Date.from_string(fields.Date.today())
         outdated_days = fields.Date.to_string(date_today + relativedelta(days=+delay_alert_contract))
-        reminder_activity_type = self.env.ref('fleet.mail_act_fleet_contract_to_renew', raise_if_not_found=False) or self.env['mail.activity.type']
+        reminder_activity_type = self.env.ref('fleet.mail_act_fleet_contract_to_renew')
         nearly_expired_contracts = self.search([
             ('state', '=', 'open'),
             ('expiration_date', '<', outdated_days),

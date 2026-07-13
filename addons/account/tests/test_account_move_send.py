@@ -394,6 +394,62 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         # invoice update
         self.assertTrue(test_move.is_move_sent)
 
+    def test_move_composer_with_dynamic_reports(self):
+        """
+        It makes sure that when an invoice is sent using a template that
+        has additional dynamic reports, those extra reports are also
+        generated and sent by mail along side the invoice PDF and the
+        other attachments that were manually added.
+        """
+        test_move = self.test_account_moves[0].with_env(self.env)
+        test_customer = self.test_customers[0].with_env(self.env)
+        move_template = self.move_template.with_env(self.env)
+
+        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill')
+        move_template.report_template_ids += extra_dynamic_report
+
+        composer = self.env['account.move.send']\
+            .with_context(active_model='account.move', active_ids=test_move.ids)\
+            .create({'mail_template_id': move_template.id})
+
+        with self.mock_mail_gateway(mail_unlink_sent=False), \
+             self.mock_mail_app():
+            composer.action_send_and_print()
+            self.env.cr.flush()  # force tracking message
+
+        self.assertMailMail(
+            test_customer,
+            'sent',
+            author=self.user_account_other.partner_id,  # author: synchronized with email_from of template
+            content=f'TemplateBody for {test_move.name}',
+            email_values={
+                'attachments_info': [
+                    {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
+                    {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
+                    {'name': f'{test_move.name}.pdf', 'type': 'application/pdf'},
+                    {'name': f'{extra_dynamic_report.name.lower()}_{test_move.name}.pdf', 'type': 'application/pdf'},
+                ],
+                'body_content': f'TemplateBody for {test_move.name}',
+                'email_from': self.user_account_other.email_formatted,
+                'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
+                'reply_to': formataddr((
+                    f'{test_move.company_id.name} {test_move.display_name}',
+                    f'{self.alias_catchall}@{self.alias_domain}'
+                )),
+            },
+            fields_values={
+                'auto_delete': True,
+                'email_from': self.user_account_other.email_formatted,
+                'is_notification': True,  # should keep logs by default
+                'mail_server_id': self.mail_server_default,
+                'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
+                'reply_to': formataddr((
+                    f'{test_move.company_id.name} {test_move.display_name}',
+                    f'{self.alias_catchall}@{self.alias_domain}'
+                )),
+            },
+        )
+
     def test_invoice_sent_to_additional_partner(self):
         """
         Make sure that when an invoice is sent to a partner who is not
@@ -1061,3 +1117,20 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.assertTrue(self._get_mail_message(invoice))  # email was sent
         self.assertEqual(res['type'], 'ir.actions.act_window_close')  # the download which is a default value didn't happen
+
+    def test_is_move_sent_state(self):
+        # Post a move, nothing sent yet
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        self.assertFalse(invoice.is_move_sent)
+        # Send via send & print
+        wizard = self.create_send_and_print(invoice)
+        wizard.action_send_and_print()
+        self.assertTrue(invoice.is_move_sent)
+        # Revert move to draft
+        invoice.button_draft()
+        self.assertTrue(invoice.is_move_sent)
+        # Unlink PDF
+        pdf_report = invoice.invoice_pdf_report_id
+        self.assertTrue(pdf_report)
+        invoice.invoice_pdf_report_id.unlink()
+        self.assertTrue(invoice.is_move_sent)

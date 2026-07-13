@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* purchase_requisition
-# 
+# * purchase_requisition
+#
 # Translators:
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2023
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
@@ -24,50 +24,29 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Martin Trigaux, 2024
 # Miika Nissi <miika.nissi@tawasta.fi>, 2024
-# 
+# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2024
+# Jessica Jakara, 2025
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2024\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
+"PO-Revision-Date: 2026-06-20 11:01+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/"
+"purchase_requisition/fi/>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "$50"
-msgstr "50€"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
 msgid "'Purchase Agreement - %s' % (object.name)"
 msgstr "'Ostosopimus - %s' % (object.name)"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "2023-08-11"
-msgstr "2023-08-11"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "2023-08-15"
-msgstr "2023-08-15"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "2023-08-20"
-msgstr "2023-08-20"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "2023-09-15"
-msgstr "2023-09-15"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -180,12 +159,12 @@ msgstr "Sopimustyyppi"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Agreement00004"
-msgstr ""
+msgstr "Sopimus00004"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Agreement:"
-msgstr ""
+msgstr "Sopimus:"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__alternative_po_ids
@@ -375,13 +354,20 @@ msgstr "Luo vaihtoehto"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid ""
-"Create a call for tender by adding alternative requests for quotation to different vendors.\n"
-"                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
-"                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
+"Create a call for tender by adding alternative requests for quotation to "
+"different vendors.\n"
+"                            Make your choice by selecting the best "
+"combination of lead time, OTD and/or total amount.\n"
+"                            By comparing product lines you can also decide "
+"to order some products from one vendor and others from another vendor."
 msgstr ""
-"Luo tarjouspyyntö lisäämällä vaihtoehtoisia tarjouspyyntöjä eri toimittajille.\n"
-"                            Tee valintasi valitsemalla paras yhdistelmä läpimenoajasta, OTD:stä ja/tai kokonaissummasta.\n"
-"                            Vertailemalla tuotelinjoja voit myös päättää tilata joitakin tuotteita yhdeltä toimittajalta ja toisia tuotteita toiselta toimittajalta."
+"Luo tarjouspyyntö lisäämällä vaihtoehtoisia tarjouspyyntöjä eri "
+"toimittajille.\n"
+"                            Tee valintasi valitsemalla paras yhdistelmä "
+"läpimenoajasta, OTD:stä ja/tai kokonaissummasta.\n"
+"                            Vertailemalla tuotelinjoja voit myös päättää "
+"tilata joitakin tuotteita yhdeltä toimittajalta ja toisia tuotteita toiselta "
+"toimittajalta."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -456,6 +442,11 @@ msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Jaon kustannuspaikka"
+
+#. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
 msgid "Do not create RfQ lines automatically"
 msgstr "Älä luo RfQ-linjoja automaattisesti"
@@ -491,11 +482,13 @@ msgstr "Font awesome -ikoni esim.. fa-tasks"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specific period\n"
-"            (e.g. a year) and you order products within this agreement to benefit\n"
+"            (e.g. a year) and you order products within this agreement to "
+"benefit\n"
 "            from the negotiated prices."
 msgstr ""
 "Yleistilausta varten voit kirjata sopimuksen tietyksi ajanjaksoksi\n"
-"            (esim. vuosi) ja tilaat tuotteita tämän sopimuksen puitteissa hyötyäksesi siinä\n"
+"            (esim. vuosi) ja tilaat tuotteita tämän sopimuksen puitteissa "
+"hyötyäksesi siinä\n"
 "            neuvotelluista hinnoista."
 
 #. module: purchase_requisition
@@ -555,14 +548,14 @@ msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid ""
 "If the chosen vendor or if any of the products in the original PO have a "
-"blocking warning then we prevent creation of alternative PO. This is because"
-" normally these fields are cleared w/warning message within form view, but "
-"we cannot recreate that in this case."
+"blocking warning then we prevent creation of alternative PO. This is because "
+"normally these fields are cleared w/warning message within form view, but we "
+"cannot recreate that in this case."
 msgstr ""
 "Jos valitulla toimittajalla tai jollakin alkuperäisen tilauksen tuotteella "
 "on estovaroitus, estämme vaihtoehtoisen tilauksen luomisen. Tämä johtuu "
-"siitä, että normaalisti nämä kentät tyhjennetään varoitusviestillä lomakkeen"
-" näkymässä, mutta emme voi luoda sitä uudelleen tässä tapauksessa."
+"siitä, että normaalisti nämä kentät tyhjennetään varoitusviestillä lomakkeen "
+"näkymässä, mutta emme voi luoda sitä uudelleen tässä tapauksessa."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
@@ -779,7 +772,7 @@ msgstr "Tuotevariaatio"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Product description"
-msgstr ""
+msgstr "Tuotekuvaus"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -891,7 +884,7 @@ msgstr "Arviointi"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Reference"
-msgstr "Numero"
+msgstr "Viite"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
@@ -951,13 +944,19 @@ msgstr "Valitse vain yksi RFQ (yksinoikeus)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid ""
-"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
+"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel "
+"the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple "
+"purchase orders. On confirmation of a purchase order it does not cancel the "
+"remaining orders"
 msgstr ""
-"Valitse vain yksi RFQ (yksinoikeus): kun ostotilaus on vahvistettu, peruuta loput ostotilaukset.\n"
+"Valitse vain yksi RFQ (yksinoikeus): kun ostotilaus on vahvistettu, peruuta "
+"loput ostotilaukset.\n"
 "\n"
-"                    Valitse useampi RFQ (ei-yksinoikeus): sallii useita ostotilauksia. Kun ostotilaus vahvistetaan, se ei peruuta jäljellä olevia tilauksia"
+"                    Valitse useampi RFQ (ei-yksinoikeus): sallii useita "
+"ostotilauksia. Kun ostotilaus vahvistetaan, se ei peruuta jäljellä olevia "
+"tilauksia"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -967,8 +966,7 @@ msgstr "Järjestys"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
 msgid ""
-"Set active to false to hide the Purchase Agreement Types without removing "
-"it."
+"Set active to false to hide the Purchase Agreement Types without removing it."
 msgstr ""
 "Aseta aktiivinen arvoksi false, jos haluat piilottaa ostosopimustyypit "
 "poistamatta niitä."
@@ -1051,30 +1049,28 @@ msgstr "Tekninen malli ostotilausten ryhmittelyä varten tarjouspyyntöä varten
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Terms and Conditions"
-msgstr "Toimitusehdot"
+msgstr "Käyttöehdot"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
 msgstr ""
-"Odotettu ja suunniteltu toimituspäivä, jolloin kaikki tuotteet "
-"vastaanotetaan"
+"Odotettu ja suunniteltu toimituspäivä, jolloin kaikki tuotteet vastaanotetaan"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "The original PO that this alternative PO is being created for."
-msgstr ""
-"Alkuperäinen ostotilaus, jolle tämä vaihtoehtoinen ostotilaus luodaan."
+msgstr "Alkuperäinen ostotilaus, jolle tämä vaihtoehtoinen ostotilaus luodaan."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
-"The vendor you have selected or at least one of the products you are copying"
-" from the original order has a blocking warning on it and cannot be selected"
-" to create an alternative."
+"The vendor you have selected or at least one of the products you are copying "
+"from the original order has a blocking warning on it and cannot be selected "
+"to create an alternative."
 msgstr ""
 "Valitsemallasi toimittajalla tai ainakin yhdellä alkuperäisestä tilauksesta "
 "kopioimallasi tuotteella on estovaroitus, eikä sitä voi valita vaihtoehdon "
@@ -1102,7 +1098,6 @@ msgstr ""
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
 msgstr "Tämä on estovaroitus!\n"
@@ -1114,11 +1109,14 @@ msgstr "Tämä on estovaroitus!\n"
 msgid ""
 "To close this purchase requisition, cancel related Requests for Quotation.\n"
 "\n"
-"Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"
+"Imagine the mess if someone confirms these duplicates: double the order, "
+"double the trouble :)"
 msgstr ""
-"Jos haluat sulkea tämän ostopyynnön, peruuta siihen liittyvät tarjouspyynnöt.\n"
+"Jos haluat sulkea tämän ostopyynnön, peruuta siihen liittyvät "
+"tarjouspyynnöt.\n"
 "\n"
-"Kuvittele, millainen sotku syntyy, jos joku vahvistaa päällekkäiset tilaukset - kaksinkertainen tilaus, kaksinkertainen vaiva"
+"Kuvittele, millainen sotku syntyy, jos joku vahvistaa päällekkäiset "
+"tilaukset - kaksinkertainen tilaus, kaksinkertainen vaiva"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1148,7 +1146,7 @@ msgstr "Yksikköhinta"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "UoM"
-msgstr "Yksikkö"
+msgstr "Mittayksikkö"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
@@ -1231,8 +1229,8 @@ msgstr "Entä vaihtoehtoiset tarjouspyynnöt?"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
 msgid ""
-"Whether or not this purchase order is linked to another purchase order as an"
-" alternative."
+"Whether or not this purchase order is linked to another purchase order as an "
+"alternative."
 msgstr ""
 "Onko tämä ostotilaus linkitetty toiseen ostotilaukseen vaihtoehtona vai ei."
 
@@ -1266,8 +1264,6 @@ msgstr "Et voi vahvistaa sopimusta '%s', koska sillä ei ole tuoterivejä."
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
 msgstr "Huopatilausta ei voi vahvistaa ilman hintaa."
@@ -1283,3 +1279,18 @@ msgstr "Huopatilausta ei voi vahvistaa ilman määrää."
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "esim. PO0025"
+
+#~ msgid "$50"
+#~ msgstr "50€"
+
+#~ msgid "2023-08-11"
+#~ msgstr "2023-08-11"
+
+#~ msgid "2023-08-15"
+#~ msgstr "2023-08-15"
+
+#~ msgid "2023-08-20"
+#~ msgstr "2023-08-20"
+
+#~ msgid "2023-09-15"
+#~ msgstr "2023-09-15"

@@ -2,6 +2,7 @@
 
 import json
 import logging
+import psycopg2
 
 
 import odoo
@@ -129,6 +130,7 @@ class Home(http.Controller):
             values['disable_database_manager'] = True
 
         response = request.render('web.login', values)
+        response.headers['Cache-Control'] = 'no-cache'
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
@@ -151,14 +153,34 @@ class Home(http.Controller):
         return request.redirect(self._login_redirect(uid))
 
     @http.route('/web/health', type='http', auth='none', save_session=False)
-    def health(self):
-        data = json.dumps({
-            'status': 'pass',
-        })
+    def health(self, db_server_status=False):
+        health_info = {'status': 'pass'}
+        status = 200
+        if db_server_status:
+            try:
+                odoo.sql_db.db_connect('postgres').cursor().close()
+                health_info['db_server_status'] = True
+            except psycopg2.Error:
+                health_info['db_server_status'] = False
+                health_info['status'] = 'fail'
+                status = 500
+        data = json.dumps(health_info)
         headers = [('Content-Type', 'application/json'),
                    ('Cache-Control', 'no-store')]
-        return request.make_response(data, headers)
+        return request.make_response(data, headers, status=status)
 
     @http.route(['/robots.txt'], type='http', auth="none")
     def robots(self, **kwargs):
-        return "User-agent: *\nDisallow: /\n"
+        allowed_routes = self._get_allowed_robots_routes()
+        robots_content = ["User-agent: *", "Disallow: /"]
+        robots_content.extend(f"Allow: {route}" for route in allowed_routes)
+
+        return request.make_response("\n".join(robots_content), [('Content-Type', 'text/plain')])
+
+    def _get_allowed_robots_routes(self):
+        """Override this method to return a list of allowed routes.
+
+        :return: A list of URL paths that should be allowed by robots.txt
+              Examples: ['/social_instagram/', '/sitemap.xml', '/web/']
+        """
+        return []

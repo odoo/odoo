@@ -56,6 +56,12 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_website_event_tour_admin(self):
+        self.upcoming_event = self.env['event.event'].create({
+            'name': 'Upcoming Event',
+            'date_begin': fields.Datetime.now() + relativedelta(days=10),
+            'date_end': fields.Datetime.now() + relativedelta(days=13),
+            'website_published': True,
+        })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin', step_delay=100)
 
     def test_website_event_pages_seo(self):
@@ -266,7 +272,7 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
 
         unpublished_events = self.events.filtered(lambda event: not event.website_published)
         resp = self.url_open('/event/%i' % unpublished_events[0].id)
-        self.assertEqual(resp.status_code, 403, 'Public must not have access to unpublished event')
+        self.assertEqual(resp.status_code, 404, 'Public must not have access to unpublished event')
 
         resp = self.url_open('/event')
         self.assertTrue(published_events[0].name in resp.text, 'Public must see the published events.')

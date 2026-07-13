@@ -4,9 +4,11 @@ import { _t } from "@web/core/l10n/translation";
 import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useComponent } from "@odoo/owl";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 
 export function formatNumber(lang, number, maxDecimals = 2) {
-    const userLang = lang.split("_").join("-");
+    const userLang = pyToJsLocale(lang);
+
     const numberFormat = new Intl.NumberFormat(userLang, { maximumFractionDigits: maxDecimals });
     return numberFormat.format(number);
 }
@@ -17,10 +19,10 @@ export function useMandatoryDays(props) {
         const mandatoryDay = props.model.mandatoryDays[date];
         if (mandatoryDay) {
             const dayNumberElTop = info.view.el.querySelector(
-                `.fc-day-top[data-date="${info.el.dataset.date}"]`
+                `.fc-day-top[data-date="${date}"]`
             );
             const dayNumberEl = info.view.el.querySelector(
-                `.fc-day[data-date="${info.el.dataset.date}"]`
+                `.fc-day[data-date="${date}"]`
             );
             if (dayNumberElTop) {
                 dayNumberElTop.classList.add('hr_mandatory_day', `hr_mandatory_day_top_${mandatoryDay}`);

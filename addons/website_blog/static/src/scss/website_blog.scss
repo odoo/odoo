@@ -115,6 +115,22 @@ $o-wblog-loader-size: 50px;
         }
     }
 
+    #o_wblog_post_content, .blog_header {
+        > nav.breadcrumb {
+            .breadcrumb-item:not(.active) {
+                flex-shrink: 0;
+            }
+            @include media-breakpoint-down(md) {
+                flex-wrap: wrap !important;
+
+                .breadcrumb-item {
+                    flex-shrink: 1 !important;
+                    @include text-truncate();
+                }
+            }
+        }
+    }
+
     #o_wblog_post_comments {
         .o_portal_chatter > hr {
             display: none;
@@ -273,6 +289,19 @@ $o-wblog-loader-size: 50px;
             }
         }
 
+    }
+
+    > nav > .container {
+        > ul.navbar-nav {
+            flex-wrap: wrap;
+            flex-shrink: 2;
+        }
+        // If the navbar contains at least 10 items (random choice), the search
+        // input is placed at the top to avoid being centered in a multi-line
+        // navbar, which wouldn’t look good.
+        &:has(> ul.navbar-nav .nav-item:nth-child(10)) .o_searchbar_form {
+            align-self: start;
+        }
     }
 
     //  Editor Helpers

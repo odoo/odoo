@@ -6,6 +6,39 @@ import wTourUtils from "@website/js/tours/tour_utils";
 const adminCssModif = '#wrap {display: none;}';
 const demoCssModif = '// demo_edition';
 
+wTourUtils.registerWebsitePreviewTour('html_editor_language', {
+    url: '/test_page',
+    test: true,
+}, () => [{
+    content: "open site menu",
+    trigger: 'button[data-menu-xmlid="website.menu_site"]',
+}, {
+    content: "open html editor",
+    trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+}, {
+    content: "add something in the page's default language version",
+    trigger: 'div.ace_line .ace_xml:contains("rommelpot")',
+    run: () => {
+        ace.edit(document.querySelector('#resource-editor div')).getSession().insert({
+            row: 1,
+            column: 1,
+        }, '<div class="test_language"/>\n');
+    },
+}, {
+    content: "save the html editor",
+    extra_trigger: 'div.ace_line .ace_xml:contains("test_language")',
+    trigger: ".o_resource_editor .btn-primary",
+}, {
+    content: "check that the page has the modification",
+    trigger: 'iframe #wrapwrap:has(.test_language)',
+    run: function () {}, // it's a check
+}, {
+    content: "check that the page has not lost the original text",
+    trigger: 'iframe #wrapwrap:contains("rommelpot")',
+    run: function () {}, // it's a check
+}]
+);
+
 wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
     url: '/generic',
     edition: true,

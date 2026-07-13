@@ -14,7 +14,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
     },
     // There's no need to save, but canceling might or might not show a popup...
     ...wTourUtils.clickOnSave(),
-    ...wTourUtils.switchWebsite(2, 'My Website 2'),
+    ...wTourUtils.testSwitchWebsite('Test Website'),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Check that the custom snippet is not here",

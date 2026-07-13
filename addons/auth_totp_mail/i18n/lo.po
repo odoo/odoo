@@ -1,0 +1,164 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_totp_mail
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2026-07-04 09:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-17/"
+"auth_totp_mail/lo/>\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor authentication to protect your account.<br><br>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
+"        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
+"\n"
+"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                Activate my two-factor Authentication\n"
+"            </a>\n"
+"        </p>\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
+msgid "<span>Consider</span>"
+msgstr "<span>ພິຈາລະນາ</span>"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+#, python-format
+msgid "A trusted device has just been added to your account: %(device_name)s"
+msgstr "ອຸປະກອນທີ່ເຊື່ອຖືໄດ້ຫາກໍ່ຖືກເພີ່ມເຂົ້າໃນບັນຊີຂອງທ່ານ: %(device_name)s"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+#, python-format
+msgid ""
+"A trusted device has just been removed from your account: %(device_names)s"
+msgstr "ອຸປະກອນທີ່ເຊື່ອຖືໄດ້ຫາກໍ່ຖືກລຶບອອກຈາກບັນຊີຂອງທ່ານ: %(device_names)s"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, python-format
+msgid "Account Security"
+msgstr "ຄວາມປອດໄພຂອງບັນຊີ"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_auth_totp_device
+msgid "Authentication Device"
+msgstr "ອຸປະກອນຢືນຢັນຕົວຕົນ"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
+msgid "Invitation to activate two-factor authentication on your Odoo account"
+msgstr "ຄຳເຊີນໃຫ້ເປີດນຳໃຊ້ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນໃນບັນຊີ Odoo ຂອງທ່ານ"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, python-format
+msgid ""
+"Invitation to use two-factor authentication sent for the following user(s): "
+"%s"
+msgstr "ສົ່ງຄຳເຊີນໃຫ້ໃຊ້ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນສຳລັບຜູ້ໃຊ້ຕໍ່ໄປນີ້ແລ້ວ: %s"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
+msgid "Invite to use 2FA"
+msgstr "ເຊີນໃຫ້ໃຊ້ 2FA"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
+msgid "Invite to use two-factor authentication"
+msgstr "ເຊີນໃຫ້ໃຊ້ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Name"
+msgstr "ຊື່"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
+msgid "Open two-factor authentication configuration"
+msgstr "ເປີດການຕັ້ງຄ່າການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, python-format
+msgid "Security Update: 2FA Activated"
+msgstr "ອັບເດດຄວາມປອດໄພ: ເປີດນຳໃຊ້ 2FA ແລ້ວ"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, python-format
+msgid "Security Update: 2FA Deactivated"
+msgstr "ອັບເດດຄວາມປອດໄພ: ປິດການນຳໃຊ້ 2FA ແລ້ວ"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+#, python-format
+msgid "Security Update: Device Added"
+msgstr "ອັບເດດຄວາມປອດໄພ: ເພີ່ມອຸປະກອນແລ້ວ"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+#, python-format
+msgid "Security Update: Device Removed"
+msgstr "ອັບເດດຄວາມປອດໄພ: ລຶບອຸປະກອນອອກແລ້ວ"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
+msgid "Settings: 2Fa Invitation"
+msgstr "ການຕັ້ງຄ່າ: ຄຳເຊີນ 2FA"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication has been activated on your account"
+msgstr "ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນໄດ້ຖືກເປີດນຳໃຊ້ໃນບັນຊີຂອງທ່ານແລ້ວ"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication has been deactivated on your account"
+msgstr "ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນໄດ້ຖືກປິດການນຳໃຊ້ໃນບັນຊີຂອງທ່ານແລ້ວ"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_users
+msgid "User"
+msgstr "ຜູ້ໃຊ້"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
+msgid "activating Two-factor Authentication"
+msgstr "ກຳລັງເປີດນຳໃຊ້ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ"

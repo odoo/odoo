@@ -6,10 +6,11 @@ from unittest.mock import patch
 
 from odoo import SUPERUSER_ID
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.service import security
 from odoo.tests.common import Form, TransactionCase, new_test_user, tagged, HttpCase, users
 from odoo.tools import mute_logger
+from odoo import Command
 
 
 class TestUsers(TransactionCase):
@@ -193,6 +194,33 @@ class TestUsers(TransactionCase):
         self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
         self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
 
+    def test_delete_public_user(self):
+        """Test that the public user cannot be deleted."""
+        public_user = self.env.ref('base.public_user')
+        public_partner = public_user.partner_id
+
+        # Attempt to delete the public user
+        with self.assertRaises(UserError, msg="Public user should not be deletable"):
+            public_user.unlink()
+
+        # Ensure the public user still exists and is inactive
+        self.assertTrue(public_user.exists() and not public_user.active, "Public user should still exist and be inactive")
+        self.assertTrue(public_partner.exists() and not public_partner.active, "Public partner should still exist and be inactive")
+
+    def test_user_home_action_restriction(self):
+        test_user = new_test_user(self.env, 'hello world')
+
+        # Find an action that contains restricted context ('active_id')
+        restricted_action = self.env['ir.actions.act_window'].search([('context', 'ilike', 'active_id')], limit=1)
+        with self.assertRaises(ValidationError):
+            test_user.action_id = restricted_action.id
+
+        # Find an action without restricted context
+        allowed_action = self.env['ir.actions.act_window'].search(['!', ('context', 'ilike', 'active_id')], limit=1)
+
+        test_user.action_id = allowed_action.id
+        self.assertEqual(test_user.action_id.id, allowed_action.id)
+
     def test_context_get_lang(self):
         self.env['res.lang'].with_context(active_test=False).search([
             ('code', 'in', ['fr_FR', 'es_ES', 'de_DE', 'en_US'])
@@ -349,6 +377,14 @@ class TestUsers2(TransactionCase):
         user_form[group_field_name] = group_public.id
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
 
+    def test_update_user_groups_view(self):
+        """Test that the user groups view can still be built if all user type groups are share"""
+        self.env['res.groups'].search([
+            ("category_id", "=", self.env.ref("base.module_category_user_type").id)
+        ]).write({'share': True})
+
+        self.env['res.groups']._update_user_groups_view()
+
 
 @tagged('post_install', '-at_install', 'res_groups')
 class TestUsersGroupWarning(TransactionCase):
@@ -451,6 +487,54 @@ class TestUsersGroupWarning(TransactionCase):
                 cls.group_field_service_administrator).ids,
         })
 
+    def test_prevent_inherited_views_in_group_assignment(self):
+        """ Groups can only be assigned non-inherited (primary) views.
+
+        Inherited views (mode='extension') must not be linked to groups directly.
+        They inherit access from their parent view. Attempting to assign an
+        inherited view to a group should raise a ValidationError. """
+
+        View = self.env['ir.ui.view']
+        group = self.group_sales_user
+        normal_view = View.create({
+            'name': 'Test Base View',
+            'type': 'form',
+            'model': 'res.partner',
+            'arch': '<form><field name="name"/></form>',
+        })
+        inherited_view = View.create({
+            'name': 'Inherited View',
+            'type': 'form',
+            'model': 'res.partner',
+            'inherit_id': normal_view.id,
+            'mode': 'extension',
+            'arch': '''
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="email"/>
+                </xpath>
+            ''',
+        })
+
+        # Case 1: inherited view should fail
+        with self.assertRaises(ValidationError):
+            group.write({
+                'view_access': [Command.link(inherited_view.id)],
+            })
+
+        # Case 2: normal view should pass
+        group.write({
+            'view_access': [Command.link(normal_view.id)],
+        })
+        self.assertIn(normal_view, group.view_access)
+
+        # Case 3: both views should fail
+        with self.assertRaises(ValidationError):
+            group.write({
+                'view_access': [
+                    Command.link(normal_view.id),
+                    Command.link(inherited_view.id)
+                ],
+            })
 
     def test_user_group_empty_group_warning(self):
         """ User changes Empty Sales access from 'Sales: Administrator'. The

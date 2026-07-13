@@ -116,7 +116,7 @@
                                     unlinkAttachment.bind="onClickAttachmentUnlink"
                                     imagesHeight="message.attachments.length === 1 ? 300 : 75"
                                     messageSearch="props.messageSearch"/>
-                                <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
+                                <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="message.isSelfAuthored or store.user?.isAdmin"/>
                             </div>
                             <t t-if="!message.hasTextContent or env.inChatWindow" t-call="mail.Message.actions"/>
                         </div>
@@ -155,8 +155,11 @@
                 <t t-set-slot="default">
                     <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
                         <DropdownItem class="'px-2 d-flex align-items-center rounded-0'" title="action.title" onSelected="action.onClick">
-                            <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
-                            <t t-esc="action.title"/>
+                            <t t-if="action.callComponent" t-component="action.callComponent" t-props="action.props"/>
+                            <t t-else="">
+                                <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
+                                <t t-esc="action.title"/>
+                            </t>
                         </DropdownItem>
                     </t>
                 </t>

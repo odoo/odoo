@@ -65,10 +65,7 @@ class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
         self.assertEqual(self.project_portal.stage_id, self.project_stage_with_sms)
         self.assertSMSIapSent([self.project_portal.partner_id.mobile])
 
-
-@tagged('post_install', '-at_install')
-class TestPostInstallProjectSharingWithSms(TestProjectSharingWithSms):
-
+    @tagged('post_install', '-at_install')
     def test_project_user_can_change_stage_with_sms_template(self):
         """ Test that users with the rights to change the stage of a task can perform this action
             when the stage has an sms template.

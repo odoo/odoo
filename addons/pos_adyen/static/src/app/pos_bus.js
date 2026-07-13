@@ -9,9 +9,11 @@ patch(PosBus.prototype, {
         super.dispatch(...arguments);
 
         if (message.type === "ADYEN_LATEST_RESPONSE" && message.payload === this.pos.config.id) {
-            this.pos
-                .getPendingPaymentLine("adyen")
-                .payment_method.payment_terminal.handleAdyenStatusResponse();
+            const pendingLine = this.pos.getPendingPaymentLine("adyen");
+
+            if (pendingLine) {
+                pendingLine.payment_method.payment_terminal.handleAdyenStatusResponse();
+            }
         }
     },
 });

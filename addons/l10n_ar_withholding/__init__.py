@@ -12,24 +12,22 @@ _logger = logging.getLogger(__name__)
 def _l10n_ar_withholding_post_init(env):
     """ Existing companies that have the Argentinean Chart of Accounts set """
     template_codes = ['ar_ri', 'ar_ex', 'ar_base']
-    ar_companies = env['res.company'].search([('chart_template', 'in', template_codes)])
-    used_template_codes = set(ar_companies.mapped('chart_template'))
-    for template_code in used_template_codes:
+    ar_companies = env['res.company'].search([('chart_template', 'in', template_codes), ('parent_id', '=', False)])
+    for company in ar_companies:
+        template_code = company.chart_template
+        ChartTemplate = env['account.chart.template'].with_company(company)
         data = {
-            model: env['account.chart.template']._parse_csv(template_code, model, module='l10n_ar_withholding')
+            model: ChartTemplate._parse_csv(template_code, model, module='l10n_ar_withholding')
             for model in [
                 'account.account',
                 'account.tax.group',
                 'account.tax',
             ]
         }
-        for company in ar_companies.filtered(lambda c: c.chart_template == template_code):
-            _logger.info("Company %s already has the Argentinean localization installed, updating...", company.name)
-            company_chart_template = env['account.chart.template'].with_company(company)
-            company_chart_template._deref_account_tags(template_code, data['account.tax'])
-            company_chart_template._pre_reload_data(company, {}, data)
-            company_chart_template._load_data(data)
-            company.l10n_ar_tax_base_account_id = env.ref('account.%i_base_tax_account' % company.id)
+        ChartTemplate._deref_account_tags(template_code, data['account.tax'])
+        ChartTemplate._pre_reload_data(company, {}, data)
+        ChartTemplate._load_data(data)
+        company.l10n_ar_tax_base_account_id = ChartTemplate.ref('base_tax_account')
 
-            if env.ref('base.module_l10n_ar_withholding').demo:
-                env['account.chart.template']._post_load_demo_data(company)
+        if env.ref('base.module_l10n_ar_withholding').demo:
+            env['account.chart.template']._post_load_demo_data(company)

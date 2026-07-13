@@ -13,7 +13,7 @@
                     <group>
                         <group class="w-100">
                             <field name="type"/>
-                            <label for="datas" class="mt-1"/>
+                            <label for="datas" class="mt-1" invisible="type == 'url'"/>
                             <field name="datas" nolabel="1" class="w-100" filename="name" invisible="type == 'url'"/>
                             <field name="url" widget="url" invisible="type == 'binary'"/>
                             <field name="mimetype" groups="base.group_no_one"/>

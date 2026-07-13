@@ -4,11 +4,13 @@ from datetime import date, timedelta
 
 from odoo import Command
 from odoo.fields import Date
+from odoo.osv import expression
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
-from odoo.tests import tagged
+from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 
 @tagged('-at_install', 'post_install')
@@ -20,6 +22,45 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         For that, we check the task/project created, the invoiced amounts, the delivered
         quantities changes,  ...
     """
+
+    def test_compute_commercial_partner(self):
+        """Ensure user without project access can compute commercial partner without AccessError.
+            Steps:
+                1. Create a commercial partner and a sub-partner.
+                2. Create a project assigned to the sub-partner and a task under that project. Link both to a timesheet.
+                3. Create a restricted user with no access to the Project module but with Timesheet Administrator access.
+                4. Compute the commercial partner as the restricted user and verify it's derived from the project partner.
+                5. Set the task partner, recompute, and verify the commercial partner updates accordingly.
+        """
+        commercial_partner = self.env['res.partner'].create({'name': 'Commercial Partner', 'is_company': True})
+        sub_partner = self.env['res.partner'].create({'name': 'Sub Partner', 'parent_id': commercial_partner.id})
+        project = self.env['project.project'].create({
+            'name': 'Test Project',
+            'partner_id': sub_partner.id,
+            'privacy_visibility': 'followers',
+            'task_ids': [Command.create({'name': 'Test Task'})]
+        })
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Timesheet',
+            'project_id': project.id,
+            'task_id': project.task_ids[0].id,
+            'employee_id': self.employee_user.id,
+        })
+        timesheet_manager_no_project_user = new_test_user(self.env, login='no_project_user', groups='hr_timesheet.group_timesheet_manager')
+
+        timesheet.with_user(timesheet_manager_no_project_user)._compute_commercial_partner()
+        self.assertEqual(
+            timesheet.commercial_partner_id,
+            commercial_partner,
+            "The commercial partner should match the partner linked to the project."
+        )
+        project.task_ids[0].partner_id = sub_partner.id
+        timesheet.with_user(timesheet_manager_no_project_user)._compute_commercial_partner()
+        self.assertEqual(
+            timesheet.commercial_partner_id,
+            commercial_partner,
+            "The commercial partner should match the partner linked to the task."
+        )
 
     def test_timesheet_order(self):
         """ Test timesheet invoicing with 'invoice on order' timetracked products
@@ -1004,6 +1045,164 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         invoices = advance_payment._create_invoices(sale_orders)
 
         self.assertEqual(len(invoices), 2, "The number of invoices created should be equal to the number of sales orders.")
+
+    def test_linked_timesheet_after_invoice_reversal(self):
+        """Test that uneditable timesheet entries aren't linked to a reversed invoice form"""
+
+        # Full refund credit note
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        task = so_line.task_id
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Invoice Reversal',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        invoice = sale_order._create_invoices()[0]
+        invoice.action_post()
+        self.assertEqual(timesheet.timesheet_invoice_id, invoice, "Timesheet should be linked to the invoice")
+        reversal_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids
+        ).create({
+            'reason': 'full refund',
+            'journal_id': invoice.journal_id.id,
+        })
+        reversal_wizard.modify_moves()
+        self.assertFalse(timesheet.timesheet_invoice_id, "Timesheet should not be linked to the invoice after reversal")
+        timesheet.write({'unit_amount': 7})
+        self.assertEqual(timesheet.unit_amount, 7, "It Should be possible to edit timesheet after invoice reversal")
+
+        # Partial refund credit note
+        sale_order2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        so_line1 = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order2.id,
+        })
+        so_line2 = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order2.id,
+        })
+        sale_order2.action_confirm()
+        task1 = so_line1.task_id
+        task2 = so_line2.task_id
+        timesheet1 = self.env['account.analytic.line'].create({
+            'name': 'Timesheet Task 1',
+            'project_id': task1.project_id.id,
+            'task_id': task1.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        timesheet2 = self.env['account.analytic.line'].create({
+            'name': 'Timesheet Task 2',
+            'project_id': task2.project_id.id,
+            'task_id': task2.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        invoice2 = sale_order2._create_invoices()[0]
+        invoice2.action_post()
+        self.assertEqual(timesheet1.timesheet_invoice_id, invoice2, "Timesheet1 should be linked to the invoice")
+        self.assertEqual(timesheet2.timesheet_invoice_id, invoice2, "Timesheet2 should be linked to the invoice")
+
+        refund_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=invoice2.ids
+        ).create({
+            'reason': 'partial refund',
+            'journal_id': invoice2.journal_id.id,
+        })
+        refund_action = refund_wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(refund_action['res_id'])
+        invoice_line_to_remove = credit_note.invoice_line_ids.filtered(
+            lambda line: line.sale_line_ids.id == so_line2.id
+        )
+        invoice_line_to_remove.unlink()
+        credit_note.action_post()
+        self.assertFalse(timesheet1.timesheet_invoice_id, "Timesheet1 should be cleared after partial refund of its task")
+        self.assertEqual(timesheet2.timesheet_invoice_id, invoice2, "Timesheet2 should still be linked to the original invoice")
+
+    def test_portal_sale_order_timesheet_visibility(self):
+        """
+        Ensure a portal user only sees timesheets of subscribed SO lines.
+        Steps:
+        1. Create a portal user.
+        2. Use one SO line from self.so.
+        3. Create a second SO with product.
+        4. Log timesheets on both SO lines' tasks.
+        5. Subscribe portal user only to the first SO line's task.
+        6. Verify:
+        - User can sees timesheet for subscribed SO line (line 1).
+        - User does not see timesheet for the other SO line (line 2).
+        """
+        portal_user = mail_new_test_user(
+            self.env,
+            name='Portal user',
+            login='portal_user',
+            email='portal_user@example.com',
+            groups='base.group_portal',
+        )
+        so_line_1 = self.so.order_line[1]
+        sale_order_2 = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'user_id': self.user_employee_company_B.id,
+        })
+        so_line_2 = self.env['sale.order.line'].create({
+            'order_id': sale_order_2.id,
+            'product_id': self.product_order_timesheet3.id,
+        })
+        sale_order_2.action_confirm()
+        AnalyticLine = self.env['account.analytic.line']
+        timesheets_entry = AnalyticLine.create([
+            {
+                'name': 'Timesheet for line 1',
+                'employee_id': self.employee_user.id,
+                'task_id': so_line_1.task_id.id,
+                'so_line': so_line_1.id,
+            },
+            {
+                'name': 'Timesheet for line 2',
+                'employee_id': self.employee_user.id,
+                'task_id': so_line_2.task_id.id,
+                'so_line': so_line_2.id,
+            },
+        ])
+        timesheet_1, timesheet_2 = timesheets_entry[0], timesheets_entry[1]
+        (so_line_1.task_id | so_line_2.task_id).message_subscribe(partner_ids=portal_user.partner_id.ids)
+        domain = AnalyticLine.with_user(portal_user)._timesheet_get_portal_domain()
+        domain = expression.AND([
+            domain,
+            [('so_line', 'in', so_line_1.ids)]
+        ])
+
+        timesheets = AnalyticLine.search(domain)
+        self.assertIn(
+            timesheet_1.id, timesheets.ids,
+            "Portal user should see the timesheet of the subscribed SO line (line 1)."
+        )
+        self.assertNotIn(
+            timesheet_2.id, timesheets.ids,
+            "Portal user should not see the timesheet of another SO line (line 2)."
+        )
 
 
 class TestSaleTimesheetView(TestCommonTimesheet):

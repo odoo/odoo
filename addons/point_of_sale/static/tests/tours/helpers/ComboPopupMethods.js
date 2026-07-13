@@ -2,7 +2,7 @@
 
 const popup = ".popup.combo-configurator-popup";
 const productTrigger = (productName) =>
-    `label.combo-line:has(article.product .product-name:contains("${productName}"))`;
+    `label.combo-line article.product:has( .product-name:contains("${productName}"))`;
 const isNot = (trigger) => `body:not(:has(${trigger}))`;
 const isComboSelectedTrigger = (productName) => `input:checked ~ ${productTrigger(productName)}`;
 const confirmationButtonTrigger = `${popup} footer button.confirm`;
@@ -45,5 +45,13 @@ export function confirm() {
     return {
         content: "Click `confirm`",
         trigger: confirmationButtonTrigger,
+    };
+}
+
+export function isNotPresent(productName) {
+    return {
+        content: `Check that ${productName} is not present in the combo options`,
+        trigger: isNot(productTrigger(productName)),
+        isCheck: true,
     };
 }

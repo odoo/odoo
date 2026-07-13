@@ -108,7 +108,3 @@ class ResConfigSettings(models.TransientModel):
         super().set_values()
         if self.default_invoice_policy != 'order':
             self.env['ir.config_parameter'].set_param('sale.automatic_invoice', False)
-
-        send_invoice_cron = self.env.ref('sale.send_invoice_cron', raise_if_not_found=False)
-        if send_invoice_cron and send_invoice_cron.active != self.automatic_invoice:
-            send_invoice_cron.active = self.automatic_invoice

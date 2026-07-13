@@ -11,7 +11,7 @@ import io
 
 from odoo.exceptions import UserError
 from odoo.tools import sql
-from odoo.tools.translate import quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader
+from odoo.tools.translate import _push, quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader, TranslationReader
 from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
@@ -152,6 +152,74 @@ class TranslationToolsTestCase(BaseCase):
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
         self.assertItemsEqual(terms, ['Form stuff'])
+
+    def test_translate_xml_o_translate_inline_on_block(self):
+        """ Test xml_translate() with non-inline elements with o_translate_inline. """
+        terms = []
+        source = """<div>
+                        <h1 class="o_translate_inline">Blah</h1>more text
+                        <h1 class="o_translate_inline" t-if="True">Other Blah</h1>even more text
+                    </div>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms,
+            ['<h1 class="o_translate_inline">Blah</h1>more text', 'Other Blah', 'even more text'])
+
+    def test_translate_xml_o_translate_inline_on_parent(self):
+        """ Test xml_translate() with non-inline elements inside o_translate_inline. """
+        terms = []
+        source = """<div>
+                        <span class="o_translate_inline">Blah<h1>more text</h1></span>
+                        <span class="o_translate_inline">Other Blah<h1 t-if="True">even more text</h1></span>
+                    </div>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms,
+            ['<span class="o_translate_inline">Blah<h1>more text</h1></span>', 'Other Blah', 'even more text'])
+
+    def test_translate_xml_highlight(self):
+        """ Test xml_translate() with highlight span (with o_translate_inline). """
+        terms = []
+        source = """<div>
+                        <span class="o_text_highlight o_translate_inline">
+                            <a>solo link</a>
+                        </span>
+                    </div>
+                    <div>
+                        <span class="o_text_highlight o_translate_inline">
+                            <span>Here is a <a>nested link</a> in highlight</span>
+                        </span>
+                    </div>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms, ["""<span class="o_text_highlight o_translate_inline">
+                            <a>solo link</a>
+                        </span>""", """<span class="o_text_highlight o_translate_inline">
+                            <span>Here is a <a>nested link</a> in highlight</span>
+                        </span>"""])
+
+    def test_translate_xml_o_translate_inline_with_groups(self):
+        """ Test xml_translate() with groups attribute and with o_translate_inline. """
+        terms = []
+        source = """<div>
+                        <a class="o_translate_inline" href="#" groups="anyone">Skip</a>
+                    </div>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms, ['Skip'])
+
+    def test_translate_xml_groups(self):
+        """ Test xml_translate() with groups attributes. """
+        terms = []
+        source = """<t t-name="stuff">
+                        stuff before
+                        <span groups="anyone"/>
+                        stuff after
+                    </t>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms,
+            ['stuff before', 'stuff after'])
 
     def test_translate_xml_t(self):
         """ Test xml_translate() with t-* attributes. """
@@ -329,6 +397,24 @@ class TranslationToolsTestCase(BaseCase):
         result = html_translate(lambda term: term, source)
         self.assertEqual(result, source)
 
+    def test_push_filters_no_letter_strings(self):
+        """Strings with no letters should not be exported for translation."""
+        terms = []
+
+        def callback(term, line):
+            return terms.append(term)
+        _push(callback, 'hello', 1)
+        _push(callback, '123', 1)
+        _push(callback, '!@#', 1)
+        _push(callback, '', 1)
+        self.assertEqual(terms, ['hello'])
+
+    def test_push_exports_one_letter_strings(self):
+        """One-letter strings should be exported (e.g. UoM abbreviations like 'g' for grams)."""
+        terms = []
+        _push(lambda term, line: terms.append(term), 'g', 1)
+        self.assertEqual(terms, ['g'])
+
 
 class TestLanguageInstall(TransactionCase):
     def test_language_install(self):
@@ -359,6 +445,23 @@ class TestTranslationExport(TransactionCase):
         """Read files of installed modules and export translatable terms"""
         with self.assertNoLogs('odoo.tools.translate', "ERROR"):
             TranslationModuleReader(self.env.cr)
+
+    def test_push_translation_filters_no_letter_strings(self):
+        """Strings with no letters should not be queued for translation export."""
+        reader = TranslationReader(self.env.cr)
+        reader._push_translation('module', 'model', 'res.partner,name', 1, 'hello')
+        reader._push_translation('module', 'model', 'res.partner,name', 2, '123')
+        reader._push_translation('module', 'model', 'res.partner,name', 3, '!@#')
+        reader._push_translation('module', 'model', 'res.partner,name', 4, '')
+        sources = [entry[1] for entry in reader._to_translate]
+        self.assertEqual(sources, ['hello'])
+
+    def test_push_translation_exports_one_letter_strings(self):
+        """One-letter strings should be queued for export (e.g. UoM abbreviations like 'g' for grams)."""
+        reader = TranslationReader(self.env.cr)
+        reader._push_translation('module', 'model', 'res.partner,name', 1, 'g')
+        sources = [entry[1] for entry in reader._to_translate]
+        self.assertEqual(sources, ['g'])
 
 
 class TestTranslation(TransactionCase):
@@ -1038,6 +1141,20 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
+    def test_sync_xml_attribute(self):
+        """ check translations with attribute can be cleaned up after write """
+        self.env['res.lang']._activate_lang('fr_FR')
+        archf = '<form><i title="%s"/></form>'
+        terms_en = ('Fork',)
+        terms_fr = ('Fourchetta',)
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        terms_en = ('Cheese',)
+        view.write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_en)
+
     def test_sync_text_to_xml(self):
         """ Check translations of 'arch' after xml tags changes in source terms. """
         archf = '<form string="X">%s</form>'
@@ -1145,6 +1262,7 @@ class TestXMLTranslation(TransactionCase):
         terms_en = ('Bread and cheese', 'Knife and Fork', 'Knife <span invisible="1">and</span> Fork')
         view.with_env(env_en).write({'arch_db': archf % terms_en})
         terms_fr = ('Pain et fromage', 'Couteau et Fourchette', 'Couteau <span style="font-weight:bold" invisible="1">et</span> Fourchette')
+        terms_nl = ('Brood and kaas', 'Mes en Vork', 'Knife <span invisible="1">and</span> Fork')
 
         # check whether translations have been kept
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
@@ -1153,9 +1271,10 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
         # modify attributes in source term
-        terms_en = ('Bread and cheese', 'Knife and Fork', 'Knife <span readonly="1">and</span> Fork')
+        terms_en = ('Bread and cheese', 'Knife and Fork', 'Knife <span style="text-align: center;" readonly="1">and</span> Fork')
         view.with_env(env_en).write({'arch_db': archf % terms_en})
-        terms_fr = ('Pain et fromage', 'Couteau et Fourchette', 'Couteau <span style="font-weight:bold" readonly="1">et</span> Fourchette')
+        terms_fr = ('Pain et fromage', 'Couteau et Fourchette', 'Couteau <span style="text-align: center;" readonly="1">et</span> Fourchette')
+        terms_nl = ('Brood and kaas', 'Mes en Vork', 'Knife <span style="text-align: center;" readonly="1">and</span> Fork')
 
         # check whether translations have been kept
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
@@ -1186,6 +1305,78 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % ('RandomRandom1', 'SomethingElse', 'AléatoireAléatoire3'))
+
+    def test_sync_xml_upgrade(self):
+        # text term and xml term with the same text content, text term is removed, xml term is changed
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('Draft', '<span invisible="1">Draft</span>')
+        terms_fr = ('Brouillon', '<span invisible="1">Brouillon</span>')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div>%s</div></form>'
+        terms_en = ('<span invisible="0">Draft</span>')
+        terms_fr = ('<span invisible="0">Brouillon</span>')
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
+
+        # change the order of the text term and the xml term and redo the previous test
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('<span invisible="1">Draft</span>', 'Draft')
+        terms_fr = ('<span invisible="1">Brouillon</span>', 'Brouillon')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div>%s</div></form>'
+        terms_en = ('<span invisible="0">Draft</span>')
+        terms_fr = ('<span invisible="0">Brouillon</span>')
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
+
+        # xml terms with same text context but different structure, one is removed, another is changed
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('<i>Draft</i>', '<span invisible="1">Draft</span>')
+        terms_fr = ('<i>Brouillon</i>', '<span invisible="1">Brouillon</span>')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div>%s</div></form>'
+        terms_en = ('<span invisible="2">Draft</span>')
+        terms_fr = ('<span invisible="2">Brouillon</span>')
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
+
+        # terms with same text context but different structure, both are removed
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('<i>Draft</i>', '<span invisible="1">Draft</span>')
+        terms_fr = ('<i>Brouillon</i>', '<span invisible="1">Brouillon</span>')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div title="%s"/>%s</form>'
+        terms_en = ('Draft', 'Draft')
+        terms_fr = ('Draft', 'Draft')  # ('Brouillon', 'Brouillon') would be better
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
+
+        # text term and xml text term with the same text content, both are removed
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('Draft', '<span invisible="1">Draft</span>')
+        terms_fr = ('Brouillon', '<span invisible="1">Brouillon</span>')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div>%s</div></form>'
+        terms_en = ('<i>Draft</i>')
+        terms_fr = ('<i>Draft</i>')  # '<i>Brouillon</i> would be better
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
+
 
     def test_cache_consistency(self):
         view = self.env["ir.ui.view"].create({

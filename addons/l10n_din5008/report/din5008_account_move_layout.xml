@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="external_layout_din5008_account_move" inherit_id="l10n_din5008.external_layout_din5008">
+            <xpath expr="//t[@t-set='address']" position="before">
+                <t t-if="o and o._name == 'account.move' and o.partner_id">
+                    <t t-set="address">
+                        <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

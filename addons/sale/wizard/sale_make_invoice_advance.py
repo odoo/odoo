@@ -4,7 +4,7 @@
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools import format_date, frozendict
+from odoo.tools import format_date, formatLang, frozendict
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -133,7 +133,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.depends('sale_order_ids')
     def _compute_display_draft_invoice_warning(self):
         for wizard in self:
-            wizard.display_draft_invoice_warning = wizard.sale_order_ids.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
+            invoice_states = wizard.sale_order_ids._origin.sudo().invoice_ids.mapped('state')
+            wizard.display_draft_invoice_warning = 'draft' in invoice_states
 
     @api.depends('sale_order_ids')
     def _compute_invoice_amounts(self):
@@ -334,24 +335,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 line['analytic_distribution'],
                 tax_repartition['price_subtotal']
             ])
-            for fixed_tax in fixed_taxes:
-                # Fixed taxes cannot be set as taxes on down payments as they always amounts to 100%
-                # of the tax amount. Therefore fixed taxes are removed and are replace by a new line
-                # with appropriate amount, and non fixed taxes if the fixed tax affected the base of
-                # any other non fixed tax.
-                if fixed_tax.price_include:
-                    continue
-
-                if fixed_tax.include_base_amount:
-                    pct_tax = taxes[list(taxes).index(fixed_tax) + 1:]\
-                        .filtered(lambda t: t.is_base_affected and t.amount_type != 'fixed')
-                else:
-                    pct_tax = self.env['account.tax']
-                down_payment_values.append([
-                    pct_tax,
-                    line['analytic_distribution'],
-                    line['quantity'] * fixed_tax.amount
-                ])
 
         downpayment_line_map = {}
         analytic_map = {}
@@ -420,7 +403,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         self.ensure_one()
         context = {'lang': order.partner_id.lang}
         if self.advance_payment_method == 'percentage':
-            name = _("Down payment of %s%%", self.amount)
+            name = _("Down payment of %s%%", formatLang(self.env(context=context), self.amount))
         else:
             name = _('Down Payment')
         del context

@@ -72,10 +72,35 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: '.modal-footer .btn-primary',
     },
     {
-        content: "It didn't save without a url. Fill url input.",
+        content: "It didn't save without a url. Enter a relative URL containing a space",
         trigger: '.modal-dialog .o_website_dialog input:eq(1)',
         extra_trigger: '.modal-dialog .o_website_dialog input.is-invalid',
-        run: 'text #',
+        run: "text /url with space",
+    },
+    {
+        content: "Check that a warning is shown for relative URLs with spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning:not(.invisible)",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Enter an absolute URL with spaces (should not show warning)",
+        trigger: ".modal-dialog .o_website_dialog input:eq(1)",
+        run: "text http://example.com/url with space",
+    },
+    {
+        content: "Verify the warning is hidden for absolute URLs with spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning.invisible",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Clear the URL and enter a valid one without spaces",
+        trigger: ".modal-dialog .o_website_dialog input:eq(1)",
+        run: "text #",
+    },
+    {
+        content: "Verify the warning remains hidden when the URL has no spaces",
+        trigger: ".modal-dialog .o_website_dialog small.text-warning.invisible",
+        run: () => {}, // It's a check.
     },
     {
         content: "Confirm the new menu entry",
@@ -160,6 +185,28 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         content: "Label should have changed",
         trigger: 'iframe .top_menu .nav-item a:contains("Modnar !!")',
         run: () => {}, // It's a check.
+    },
+    {
+        content: "Click on the extra menu dropdown toggle if it is there to close it",
+        trigger: "iframe .top_menu",
+        run: async function (actions) {
+            // Note: the button might not exist (it only appear if there is many
+            // menu items).
+            const extraMenuButtonEl = this.$anchor[0].querySelector(
+                ".o_extra_menu_items a.nav-link"
+            );
+            // Don't click on the extra menu button if it's already hidden
+            if (extraMenuButtonEl && extraMenuButtonEl.classList.contains("show")) {
+                const dropdownFullyClosed = Promise.withResolvers();
+                extraMenuButtonEl.addEventListener(
+                    "hidden.bs.dropdown",
+                    dropdownFullyClosed.resolve,
+                    { once: true }
+                );
+                await actions.click(extraMenuButtonEl);
+                await dropdownFullyClosed.promise;
+            }
+        },
     },
     // Nest menu item from the menu.
     {
@@ -293,6 +340,93 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: function (actions) {
             this.$anchor[0].dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
         },
+    },
+    ...wTourUtils.clickOnSave(),
+    // Nest and re-arrange menu items for a newly created menu
+    {
+        content: "Open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
+    },
+    {
+        content: "Click on Edit Menu",
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: 'text new_menu',
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: 'text #',
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Check if new menu(new_menu) is added",
+        trigger: ".oe_menu_editor li:contains('new_menu')",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: 'text new_nested_menu',
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: 'text #',
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Check if new menu(new_nested_menu) is added",
+        trigger: ".oe_menu_editor li:contains('new_nested_menu')",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Nest 'new_nested_menu' under 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('new_nested_menu') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+    {
+        content: "Drag 'new_menu' above 'Modnar !!'",
+        trigger: ".oe_menu_editor li:contains('new_menu') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Modnar !!') .fa-bars",
+    },
+    {
+        content: "Nest 'Modnar !!' under 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('Modnar !!') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+
+    {
+        content: "Check if 'nested_menu' and 'Modnar !!' is nested under 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('new_menu') > ul > li:contains('nested_menu') + li:contains('Modnar !!')",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Move 'Modnar !!' above 'new_nested_menu' inside the 'new_menu'",
+        trigger: ".oe_menu_editor  li:contains('new_menu') > ul > li:contains('Modnar !!') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor  li:contains('new_menu') > ul > li:contains('new_nested_menu') .fa-bars",
+    },
+    {
+        content: "Check if 'Modnar !!' is now above 'new_nested_menu' in 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('new_menu') > ul > li:first:contains('Modnar !!')",
+        run: () => {}, // It's a check.
     },
 ]);
 

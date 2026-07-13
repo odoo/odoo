@@ -13,7 +13,8 @@ _logger = logging.getLogger(__name__)
 class InterfaceMetaClass(type):
     def __new__(cls, clsname, bases, attrs):
         new_interface = super(InterfaceMetaClass, cls).__new__(cls, clsname, bases, attrs)
-        interfaces[clsname] = new_interface
+        if clsname != 'Interface':
+            interfaces[clsname] = new_interface
         return new_interface
 
 

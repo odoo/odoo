@@ -53,6 +53,7 @@ def MockRequest(
             geoip={'country_code': country_code},
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
+            force_website_id=website and website.id,
             context={'lang': ''},
         ),
         geoip=odoo.http.GeoIP('127.0.0.1'),
@@ -171,6 +172,18 @@ def text_from_html(html_fragment, collapse_whitespace=False):
     """
     # lxml requires one single root element
     tree = etree.fromstring('<p>%s</p>' % html_fragment, etree.XMLParser(recover=True))
+
+    # Remove scripts or other technical elements that should not be converted
+    # into text.
+    xpath_filters = [
+        '//script',
+        '//style',
+        '//svg',
+        '//*[@class="css_non_editable_mode_hidden"]',
+    ]
+    for xpath_filter in xpath_filters:
+        for element in tree.xpath(xpath_filter): element.getparent().remove(element)
+
     content = ' '.join(tree.itertext())
     if collapse_whitespace:
         content = re.sub('\\s+', ' ', content).strip()
@@ -213,7 +226,8 @@ def add_form_signature(html_fragment, env_sudo):
         email_to_value = form_values['email_to'].attrib.get('value')
         if (not email_to_value
             or (email_to_value == 'info@yourcompany.example.com'
-                and html_fragment.xpath('//span[@data-for="contactus_form"]'))):
+                and html_fragment.xpath('//span[@data-for="contactus_form"]')
+                and html_fragment.xpath('//form[@id="contactus_form"]'))):
             # This means that the mail will be sent to the value of the dataFor
             # which is the company email.
             email_to_value = env_sudo.company.email or ''

@@ -5,6 +5,7 @@ import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filt
 import { addGlobalFilter } from "@spreadsheet/../tests/utils/commands";
 import { freezeOdooData } from "../../src/helpers/model";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
+import { setCellContent } from "../utils/commands";
 
 QUnit.module("Public spreadsheet", {}, function () {
     QUnit.test("show spreadsheet in readonly mode", async function (assert) {
@@ -59,4 +60,15 @@ QUnit.module("Public spreadsheet", {}, function () {
         assert.isVisible(fixture.querySelector(".o-public-spreadsheet-filter-button"));
         assert.equal(fixture.querySelector(".o-public-spreadsheet-filters"), null);
     });
+
+    QUnit.test(
+        "Internal links converted to neutralized are not clickable",
+        async function (assert) {
+            const model = await createModelWithDataSource();
+            setCellContent(model, "A1", "[label](odoo://ir_menu_xml_id/test_menu)");
+            const data = await freezeOdooData(model);
+            const fixture = await mountPublicSpreadsheet(data, "dashboardDataUrl", "dashboard");
+            assert.equal(fixture.querySelector(".o-dashboard-clickable-cell"), null);
+        }
+    );
 });

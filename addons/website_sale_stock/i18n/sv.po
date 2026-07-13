@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-# 
+#
 # Translators:
 # Simon S, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
@@ -10,19 +10,20 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Lasse L, 2023
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+# Claes-Johan Dahlin, 2024
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Claes-Johan Dahlin, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_stock
@@ -94,7 +95,7 @@ msgstr "Ogiltig E-postadress"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/js/website_sale.js:0
 #, python-format
 msgid "Invalid email"
 msgstr "Ogiltig e-postadress"
@@ -134,6 +135,13 @@ msgstr "Slut i lager"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
 msgstr "Slut i lager meddelande"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid "Please sign in to proceed."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -193,8 +201,8 @@ msgstr "Visa tillgängligt antal"
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry"
-" for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry "
+"for the inconvenience."
 msgstr ""
 "Vissa produkter blev otillgängliga och din kundvagn har uppdaterats. Vi "
 "beklagar att det inträffade."
@@ -210,8 +218,7 @@ msgstr "Följande produkt är nu tillgänglig."
 #, python-format
 msgid "The item has not been added to your cart since it is not available."
 msgstr ""
-"Artikeln har inte lagts till i din kundvagn eftersom den inte är "
-"tillgänglig."
+"Artikeln har inte lagts till i din kundvagn eftersom den inte är tillgänglig."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -219,6 +226,13 @@ msgstr ""
 #, python-format
 msgid "The product '%(product_name)s' is now available"
 msgstr "Produkten '%(product_name)s' är nu tillgänglig"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid "This product is not eligible for stock notifications."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -291,6 +305,8 @@ msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
 msgstr ""
+"Du efterfrågar %(desired_qty)s %(product_name)s men bara %(new_qty)s är "
+"tillgänglig(a)"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -303,7 +319,6 @@ msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You ask for %s Units but only %s are available."

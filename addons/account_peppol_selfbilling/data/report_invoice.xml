@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//span[@t-elif=&quot;o.move_type == 'in_refund'&quot;]" position="replace">
+            <span t-elif="o.move_type == 'in_refund' and not o.journal_id.is_self_billing">
+                <t name="vendor_credit_note_title">Vendor Credit Note</t>
+            </span>
+            <span t-elif="o.move_type == 'in_refund' and o.journal_id.is_self_billing">
+                <t name="self_billing_credit_note_title">Self Billing Credit Note</t>
+            </span>
+        </xpath>
+        <xpath expr="//span[@t-elif=&quot;o.move_type == 'in_invoice'&quot;]" position="replace">
+            <span t-elif="o.move_type == 'in_invoice' and not o.journal_id.is_self_billing">
+                <t name="vendor_bill_title">Vendor Bill</t>
+            </span>
+            <span t-elif="o.move_type == 'in_invoice' and o.journal_id.is_self_billing">
+                <t name="self_billing_invoice_title">Self Billing</t>
+            </span>
+        </xpath>
+    </template>
+</odoo>

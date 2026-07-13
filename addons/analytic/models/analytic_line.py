@@ -94,6 +94,10 @@ class AccountAnalyticLine(models.Model):
         for line in self:
             line.auto_account_id = bool(plan) and line[plan._column_name()]
 
+    def _compute_partner_id(self):
+        # TO OVERRIDE
+        pass
+
     def _inverse_auto_account(self):
         for line in self:
             line[line.auto_account_id.plan_id._column_name()] = line.auto_account_id
@@ -107,7 +111,7 @@ class AccountAnalyticLine(models.Model):
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
-        if self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
+        if not self._context.get("studio") and self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
             project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
 
             # Find main account nodes
@@ -129,9 +133,18 @@ class AccountAnalyticLine(models.Model):
         return arch, view
 
     @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        account_id = self.env.context.get('default_auto_account_id')
+        account = self.env['account.analytic.account'].browse(account_id).exists()
+        if account:
+            defaults[account.plan_id._column_name()] = account.id
+        return defaults
+
+    @api.model
     def fields_get(self, allfields=None, attributes=None):
         fields = super().fields_get(allfields, attributes)
-        if self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
+        if not self._context.get("studio") and self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
             project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
             for plan in project_plan + other_plans:
                 fname = plan._column_name()

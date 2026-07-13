@@ -11,20 +11,18 @@ from odoo.addons.web_editor import tools
 class TestVideoUtils(common.BaseCase):
     urls = {
         'youtube': 'https://www.youtube.com/watch?v=xCvFZrrQq7k',
+        'youtube_mobile': 'https://m.youtube.com/watch?v=xCvFZrrQq7k',
         'vimeo': 'https://vimeo.com/395399735',
         'vimeo_unlisted_video': 'https://vimeo.com/795669787/0763fdb816',
         'vimeo_player': 'https://player.vimeo.com/video/395399735',
         'vimeo_player_unlisted_video': 'https://player.vimeo.com/video/795669787?h=0763fdb816',
         'dailymotion': 'https://www.dailymotion.com/video/x7svr6t',
-        'youku': 'https://v.youku.com/v_show/id_XMzY1MjY4.html?spm=a2hzp.8244740.0.0',
         'instagram': 'https://www.instagram.com/p/B6dXGTxggTG/',
         'dailymotion_hub_no_video': 'http://www.dailymotion.com/hub/x9q_Galatasaray',
         'dailymotion_hub_#video': 'http://www.dailymotion.com/hub/x9q_Galatasaray#video=x2jvvep',
         'dai.ly': 'https://dai.ly/x578has',
         'dailymotion_embed': 'https://www.dailymotion.com/embed/video/x578has?autoplay=1',
         'dailymotion_video_extra': 'https://www.dailymotion.com/video/x2jvvep_hakan-yukur-klip_sport',
-        'player_youku': 'https://player.youku.com/player.php/sid/XMTI5Mjg5NjE4MA==/v.swf',
-        'youku_embed': 'https://player.youku.com/embed/XNTIwMzE1MzUzNg',
     }
 
     def test_player_regexes(self):
@@ -37,8 +35,6 @@ class TestVideoUtils(common.BaseCase):
         self.assertIsNotNone(re.search(tools.player_regexes['vimeo_player'], TestVideoUtils.urls['vimeo_player_unlisted_video']))
         #dailymotion
         self.assertIsNotNone(re.search(tools.player_regexes['dailymotion'], TestVideoUtils.urls['dailymotion']))
-        #youku
-        self.assertIsNotNone(re.search(tools.player_regexes['youku'], TestVideoUtils.urls['youku']))
         #instagram
         self.assertIsNotNone(re.search(tools.player_regexes['instagram'], TestVideoUtils.urls['instagram']))
 
@@ -47,6 +43,8 @@ class TestVideoUtils(common.BaseCase):
         #youtube
         self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube'])[0])
         self.assertEqual('xCvFZrrQq7k', tools.get_video_source_data(TestVideoUtils.urls['youtube'])[1])
+        self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube_mobile'])[0])
+        self.assertEqual('xCvFZrrQq7k', tools.get_video_source_data(TestVideoUtils.urls['youtube_mobile'])[1])
         #vimeo
         self.assertEqual('vimeo', tools.get_video_source_data(TestVideoUtils.urls['vimeo'])[0])
         self.assertEqual('395399735', tools.get_video_source_data(TestVideoUtils.urls['vimeo'])[1])
@@ -68,13 +66,6 @@ class TestVideoUtils(common.BaseCase):
         self.assertEqual('x578has', tools.get_video_source_data(TestVideoUtils.urls['dailymotion_embed'])[1])
         self.assertEqual('dailymotion', tools.get_video_source_data(TestVideoUtils.urls['dailymotion_video_extra'])[0])
         self.assertEqual('x2jvvep', tools.get_video_source_data(TestVideoUtils.urls['dailymotion_video_extra'])[1])
-        #youku
-        self.assertEqual('youku', tools.get_video_source_data(TestVideoUtils.urls['youku'])[0])
-        self.assertEqual('XMzY1MjY4', tools.get_video_source_data(TestVideoUtils.urls['youku'])[1])
-        self.assertEqual('youku', tools.get_video_source_data(TestVideoUtils.urls['player_youku'])[0])
-        self.assertEqual('XMTI5Mjg5NjE4MA', tools.get_video_source_data(TestVideoUtils.urls['player_youku'])[1])
-        self.assertEqual('youku', tools.get_video_source_data(TestVideoUtils.urls['youku_embed'])[0])
-        self.assertEqual('XNTIwMzE1MzUzNg', tools.get_video_source_data(TestVideoUtils.urls['youku_embed'])[1])
         #instagram
         self.assertEqual('instagram', tools.get_video_source_data(TestVideoUtils.urls['instagram'])[0])
         self.assertEqual('B6dXGTxggTG', tools.get_video_source_data(TestVideoUtils.urls['instagram'])[1])
@@ -105,8 +96,6 @@ class TestVideoUtils(common.BaseCase):
             })
         #dailymotion
         self.assertEqual('dailymotion', tools.get_video_url_data(TestVideoUtils.urls['dailymotion'])['platform'])
-        #youku
-        self.assertEqual('youku', tools.get_video_url_data(TestVideoUtils.urls['youku'])['platform'])
         #instagram
         self.assertEqual('instagram', tools.get_video_url_data(TestVideoUtils.urls['instagram'])['platform'])
 
@@ -126,5 +115,3 @@ class TestVideoUtilsExternal(common.BaseCase):
         self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['dailymotion']), bytes)
         #instagram
         self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['instagram']), bytes)
-        #default
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['youku']), bytes)

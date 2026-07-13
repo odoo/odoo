@@ -18,10 +18,12 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if self.provider_id.so_reference_type == 'so_name':
             order_reference = order.name
-        else:
-            # self.provider_id.so_reference_type == 'partner'
+        elif self.provider_id.so_reference_type == 'partner':
             identification_number = order.partner_id.id
             order_reference = '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
+        else:
+            # self.provider_id.so_reference_type is empty
+            order_reference = False
 
         invoice_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
         if invoice_journal:
@@ -105,14 +107,18 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._log_message_on_linked_documents(message)
-        author = self.env.user.partner_id if self.env.uid == SUPERUSER_ID else self.partner_id
+        if self.env.uid == SUPERUSER_ID or self.env.context.get('payment_backend_action'):
+            author = self.env.user.partner_id
+        else:
+            author = self.partner_id
         for order in self.sale_order_ids or self.source_transaction_id.sale_order_ids:
             order.message_post(body=message, author_id=author.id)
 
     def _reconcile_after_done(self):
         """ Override of payment to automatically confirm quotations and generate invoices. """
         confirmed_orders = self._check_amount_and_confirm_order()
-        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+        payment_txs = self.filtered(lambda tx: tx.operation != 'validation')
+        (payment_txs.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
         auto_invoice = str2bool(
             self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
@@ -121,9 +127,15 @@ class PaymentTransaction(models.Model):
             # even if only a partial payment was made.
             self._invoice_sale_orders()
         super()._reconcile_after_done()
-        if auto_invoice:
-            # Must be called after the super() call to make sure the invoice are correctly posted.
-            self._send_invoice()
+        if auto_invoice and not self.env.context.get('skip_sale_auto_invoice_send'):
+            if (
+                str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+                and (send_invoice_cron := self.env.ref('sale.send_invoice_cron', raise_if_not_found=False))
+            ):
+                send_invoice_cron._trigger()
+            else:
+                # Must be called after the super() call to make sure the invoice are correctly posted.
+                self._send_invoice()
 
     def _send_invoice(self):
         template_id = int(self.env['ir.config_parameter'].sudo().get_param(
@@ -192,7 +204,8 @@ class PaymentTransaction(models.Model):
                 # edi postprocessing of invoice and displaying the sale order on the portal
                 for invoice in invoices:
                     invoice._portal_ensure_token()
-                tx.invoice_ids = [Command.set(invoices.ids)]
+                if invoices:
+                    tx.invoice_ids = [Command.set(invoices.ids)]
 
     @api.model
     def _compute_reference_prefix(self, provider_code, separator, **values):

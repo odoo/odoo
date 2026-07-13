@@ -5,6 +5,7 @@
     'icon': '/account/static/description/l10n.png',
     'countries': ['br'],
     'category': 'Accounting/Localizations/Account Charts',
+    'version': '1.1',
     'description': """
 Base module for the Brazilian localization
 ==========================================

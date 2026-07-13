@@ -94,9 +94,10 @@ export class Colorpicker extends Component {
                 // `inOwnerDocument`).
                 return;
             }
-            if (newProps.selectedColor) {
-                this.setSelectedColor(newProps.selectedColor);
-            }
+            const newSelectedColor = newProps.selectedColor
+                ? newProps.selectedColor
+                : newProps.defaultColor;
+            this.setSelectedColor(newSelectedColor);
         });
         onWillDestroy(() => {
             this.destroy();
@@ -122,7 +123,10 @@ export class Colorpicker extends Component {
         this.$opacitySlider = this.$el.find(".o_opacity_slider");
         this.$opacitySliderPointer = this.$el.find(".o_opacity_pointer");
 
-        const rgba = convertCSSColorToRgba(this.props.defaultColor);
+        const defaultCssColor = this.props.selectedColor
+            ? this.props.selectedColor
+            : this.props.defaultColor;
+        const rgba = convertCSSColorToRgba(defaultCssColor);
         if (rgba) {
             this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
         }

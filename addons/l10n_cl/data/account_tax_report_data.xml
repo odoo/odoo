@@ -315,6 +315,26 @@
                     </record>
                 </field>
             </record>
+            <record id="tax_report_base_compras_combustibles" model="account.report.line">
+                <field name="name">Fuel Purchases (Base)</field>
+                <field name="expression_ids">
+                    <record id="tax_report_base_compras_combustibles_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Compras Des Combustibles</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_tax_compras_combustibles" model="account.report.line">
+                <field name="name">Fuel Purchases (Tax)</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tax_compras_combustibles_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">IEC Compras Des Combustibles</field>
+                    </record>
+                </field>
+            </record>
         </field>
     </record>
 </odoo>

@@ -32,7 +32,7 @@ class PortalAccount(CustomerPortal):
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
         values = {
             'page_name': 'invoice',
-            'invoice': invoice,
+            **invoice._get_invoice_portal_extra_values(),
         }
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
 
@@ -48,7 +48,7 @@ class PortalAccount(CustomerPortal):
             'date': {'label': _('Date'), 'order': 'invoice_date desc'},
             'duedate': {'label': _('Due Date'), 'order': 'invoice_date_due desc'},
             'name': {'label': _('Reference'), 'order': 'name desc'},
-            'state': {'label': _('Status'), 'order': 'state'},
+            'state': {'label': _('Status'), 'order': 'payment_state'},
         }
 
     def _get_account_searchbar_filters(self):
@@ -111,7 +111,7 @@ class PortalAccount(CustomerPortal):
             'page_name': 'invoice',
             'pager': {  # vals to define the pager.
                 "url": url,
-                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
                 "total": AccountInvoice.search_count(domain) if AccountInvoice.check_access_rights('read', raise_exception=False) else 0,
                 "page": page,
                 "step": self._items_per_page,

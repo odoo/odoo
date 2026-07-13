@@ -8,7 +8,7 @@ from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 from odoo.tests import tagged
 
 
-@tagged('website_visitor')
+@tagged('website_visitor', 'is_query_count')
 class WebsiteVisitorTestsEventTrack(TestEventOnlineCommon, WebsiteVisitorTests):
 
     def test_clean_inactive_visitors_event_track(self):

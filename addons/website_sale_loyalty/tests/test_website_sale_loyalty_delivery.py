@@ -4,42 +4,48 @@ from odoo import Command
 from odoo.tests.common import HttpCase
 from odoo.tests import tagged
 
+from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleDelivery(HttpCase):
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.env.ref('base.user_admin').write({
+        cls.env.ref('base.user_admin').write({
             'name': 'Mitchell Admin',
             'street': '215 Vine St',
             'phone': '+1 555-555-5555',
             'city': 'Scranton',
             'zip': '18503',
-            'country_id': self.env.ref('base.us').id,
-            'state_id': self.env.ref('base.state_us_39').id,
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_39').id,
         })
 
-        self.env['product.product'].create({
+        # Disable mail logic
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
+        # Disable existing reward programs
+        cls.env['loyalty.program'].search([]).active = False
+        # Remove taxes completely during the following tests.
+        cls.env.companies.account_sale_tax_id = False
+
+        cls.env['product.product'].create({
             'name': "Plumbus",
             'list_price': 100.0,
             'website_published': True,
         })
 
-        self.gift_card = self.env['product.product'].create({
+        product_gift_card = cls.env['product.product'].create({
             'name': 'TEST - Gift Card',
             'list_price': 50,
             'type': 'service',
             'is_published': True,
             'sale_ok': True,
-            'taxes_id': False,
         })
 
-        # Disable any other program
-        self.env['loyalty.program'].search([]).write({'active': False})
-
-        self.gift_card_program = self.env['loyalty.program'].create({
+        gift_card_program = cls.env['loyalty.program'].create({
             'name': 'Gift Cards',
             'program_type': 'gift_card',
             'applies_on': 'future',
@@ -48,7 +54,7 @@ class TestWebsiteSaleDelivery(HttpCase):
                 'reward_point_amount': 1,
                 'reward_point_mode': 'money',
                 'reward_point_split': True,
-                'product_ids': self.gift_card,
+                'product_ids': product_gift_card.ids,
             })],
             'reward_ids': [Command.create({
                 'reward_type': 'discount',
@@ -61,13 +67,30 @@ class TestWebsiteSaleDelivery(HttpCase):
         })
 
         # Create a gift card to be used
-        self.env['loyalty.card'].create({
-            'program_id': self.gift_card_program.id,
+        cls.env['loyalty.card'].create({
+            'program_id': gift_card_program.id,
             'points': 50000,
             'code': '123456',
         })
 
-        self.ewallet_program = self.env['loyalty.program'].create({
+        # Create a 50% discount on order code
+        cls.env['loyalty.program'].create({
+            'name': "50% discount code",
+            'program_type': 'promo_code',
+            'trigger': 'with_code',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'code': "test-50pc",
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 50.0,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+
+        ewallet_program = cls.env['loyalty.program'].create({
             'name': "eWallet",
             'program_type': 'ewallet',
             'applies_on': 'future',
@@ -80,39 +103,35 @@ class TestWebsiteSaleDelivery(HttpCase):
             })],
         })
 
-        self.ewallet = self.env['loyalty.card'].create({
-            'program_id': self.ewallet_program.id,
+        cls.ewallet = cls.env['loyalty.card'].create({
+            'program_id': ewallet_program.id,
             'points': 6e66,
             'code': 'infinite-money-glitch',
         })
 
-        self.product_delivery_normal1 = self.env['product.product'].create({
+        delivery_product1, delivery_product2 = cls.env['product.product'].create([{
             'name': 'Normal Delivery Charges',
             'invoice_policy': 'order',
             'type': 'service',
-        })
-
-        self.product_delivery_normal2 = self.env['product.product'].create({
+        }, {
             'name': 'Normal Delivery Charges',
             'invoice_policy': 'order',
             'type': 'service',
-        })
+        }])
 
-        self.normal_delivery = self.env['delivery.carrier'].create({
+        cls.normal_delivery, cls.normal_delivery2 = cls.env['delivery.carrier'].create([{
             'name': 'delivery1',
             'fixed_price': 5,
             'delivery_type': 'fixed',
             'website_published': True,
-            'product_id': self.product_delivery_normal1.id,
-        })
-
-        self.normal_delivery2 = self.env['delivery.carrier'].create({
+            'product_id': delivery_product1.id,
+        }, {
             'name': 'delivery2',
             'fixed_price': 10,
             'delivery_type': 'fixed',
             'website_published': True,
-            'product_id': self.product_delivery_normal2.id,
-        })
+            'product_id': delivery_product2.id,
+        }])
 
     def test_shop_sale_gift_card_keep_delivery(self):
         # Get admin user and set his preferred shipping method to normal delivery
@@ -142,3 +161,10 @@ class TestWebsiteSaleDelivery(HttpCase):
         })
         self.normal_delivery.fixed_price = 100
         self.start_tour("/", 'check_shipping_discount', login="admin")
+
+    def test_update_shipping_after_discount(self):
+        """
+        Verify that after applying a discount code, any `free_over` shipping gets recalculated.
+        """
+        self.normal_delivery.write({'free_over': True, 'amount': 75.0})
+        self.start_tour("/shop", 'update_shipping_after_discount', login="admin")

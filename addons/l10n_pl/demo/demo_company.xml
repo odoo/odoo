@@ -6,7 +6,7 @@
         <field name="street"/>
         <field name="city">Racibórz</field>
         <field name="country_id" ref="base.pl"/>
-        
+
         <field name="zip">47-400</field>
         <field name="phone">+48 512 345 678</field>
         <field name="email">info@company.plexample.com</field>
@@ -22,6 +22,7 @@
         <field name="acc_number">PL47109024022846836723239796</field>
         <field name="partner_id" ref="partner_demo_company_pl"/>
         <field name="company_id" ref="demo_company_pl"/>
+        <field name="allow_out_payment" eval="True"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">

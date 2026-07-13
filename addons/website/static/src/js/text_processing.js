@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { isVisible } from "@web/core/utils/ui";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 // SVG generator: contains all information needed to draw highlight SVGs
@@ -289,9 +290,15 @@ export function drawTextHighlightSVG(textEl, highlightID) {
  * @param {String} highlightID
  */
 export function applyTextHighlight(topTextEl, highlightID) {
+    const endHighlightUpdate = () =>
+        topTextEl.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
     // Don't reapply the effects to a highlighted text.
-    if (topTextEl.querySelector(".o_text_highlight_item")) {
-        return;
+    // If the target is invisible, we still need to notify the public widget
+    // that a highlight was detected (It's needed anyway, so the public widget
+    // can link the element to its observer, which tracks size changes and
+    // adapts the highlights accordingly).
+    if (topTextEl.querySelector(".o_text_highlight_item") || !isVisible(topTextEl)) {
+        return endHighlightUpdate();
     }
     const style = window.getComputedStyle(topTextEl);
     if (!style.getPropertyValue("--text-highlight-width")) {
@@ -359,7 +366,7 @@ export function applyTextHighlight(topTextEl, highlightID) {
     [...topTextEl.querySelectorAll(".o_text_highlight_item")].forEach(container => {
         container.append(drawTextHighlightSVG(container, highlightID || getCurrentTextHighlight(topTextEl)));
     });
-    topTextEl.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
+    endHighlightUpdate();
 }
 
 /**
@@ -400,6 +407,14 @@ export function removeTextHighlight(topTextEl) {
  * if we just want to adapt the effect).
  */
 export function switchTextHighlight(textEl, highlightID) {
+    if (!isVisible(textEl)) {
+        // No need to adapt the effects on hidden targets, since they will be
+        // immediately fixed by the `resizeObserver` once they become visible.
+        // This will also prevent conflicts with the field's synchronizations
+        // in some specific cases (e.g. desktop & mobile navbar duplicated
+        // fields with highlighted content).
+        return;
+    }
     highlightID = highlightID || getCurrentTextHighlight(textEl);
     const ownerDocument = textEl.ownerDocument;
     const sel = ownerDocument.getSelection();

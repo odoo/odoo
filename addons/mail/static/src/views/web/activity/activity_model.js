@@ -6,10 +6,13 @@ export class ActivityModel extends RelationalModel {
     static DEFAULT_LIMIT = 100;
 
     async load(params = {}) {
-        this.originalDomain = params.domain ? [...params.domain] : [];
+        this.originalDomain = params.domain ? [...params.domain] : this.originalDomain;
         // Ensure that only (active) records with at least one activity, "done" (archived) or not, are fetched.
         // We don't use active_test=false in the context because otherwise we would also get archived records.
-        params.domain = [...(params.domain || []), ["activity_ids.active", "in", [true, false]]];
+        params.domain = [
+            ...(params.domain || this.originalDomain),
+            ["activity_ids.active", "in", [true, false]],
+        ];
         if (params && "groupBy" in params) {
             params.groupBy = [];
         }

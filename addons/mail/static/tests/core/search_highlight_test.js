@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_hook";
+import { markup } from "@odoo/owl";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
@@ -17,17 +18,17 @@ QUnit.test("Search highlight", async (assert) => {
             searchTerm: "odoo",
         },
         {
-            input: '<a href="https://www.odoo.com">https://www.odoo.com</a>',
+            input: markup('<a href="https://www.odoo.com">https://www.odoo.com</a>'),
             output: `<a href="https://www.odoo.com">https://www.<span class="${HIGHLIGHT_CLASS}">odoo</span>.com</a>`,
             searchTerm: "odoo",
         },
         {
-            input: '<a href="https://www.odoo.com">Odoo</a>',
+            input: markup('<a href="https://www.odoo.com">Odoo</a>'),
             output: `<a href="https://www.odoo.com"><span class="${HIGHLIGHT_CLASS}">Odoo</span></a>`,
             searchTerm: "odoo",
         },
         {
-            input: '<a href="https://www.odoo.com">Odoo</a> Odoo is a free software',
+            input: markup('<a href="https://www.odoo.com">Odoo</a> Odoo is a free software'),
             output: `<a href="https://www.odoo.com"><span class="${HIGHLIGHT_CLASS}">Odoo</span></a> <span class="${HIGHLIGHT_CLASS}">Odoo</span> is a free software`,
             searchTerm: "odoo",
         },
@@ -42,10 +43,10 @@ QUnit.test("Search highlight", async (assert) => {
             searchTerm: "odoo",
         },
         {
-            input: `<ul>
+            input: markup(`<ul>
                 <li>Odoo</li>
                 <li><a href="https://odoo.com">Odoo ERP</a> Best ERP</li>
-            </ul>`,
+            </ul>`),
             output: `<ul>
                 <li><span class="${HIGHLIGHT_CLASS}">Odoo</span></li>
                 <li><a href="https://odoo.com"><span class="${HIGHLIGHT_CLASS}">Odoo</span> ERP</a> Best ERP</li>
@@ -53,42 +54,42 @@ QUnit.test("Search highlight", async (assert) => {
             searchTerm: "odoo",
         },
         {
-            input: "test <strong>Odoo</strong> test",
+            input: markup("test <strong>Odoo</strong> test"),
             output: `<span class="${HIGHLIGHT_CLASS}">test</span> <strong><span class="${HIGHLIGHT_CLASS}">Odoo</span></strong> <span class="${HIGHLIGHT_CLASS}">test</span>`,
             searchTerm: "odoo test",
         },
         {
-            input: "test <br> test",
+            input: markup("test <br> test"),
             output: `<span class="${HIGHLIGHT_CLASS}">test</span> <br> <span class="${HIGHLIGHT_CLASS}">test</span>`,
             searchTerm: "odoo test",
         },
         {
-            input: "<strong>test</strong> test",
+            input: markup("<strong>test</strong> test"),
             output: `<strong><span class="${HIGHLIGHT_CLASS}">test</span></strong> <span class="${HIGHLIGHT_CLASS}">test</span>`,
             searchTerm: "test",
         },
         {
-            input: "<strong>a</strong> test",
+            input: markup("<strong>a</strong> test"),
             output: `<strong><span class="${HIGHLIGHT_CLASS}">a</span></strong> <span class="${HIGHLIGHT_CLASS}">test</span>`,
             searchTerm: "a test",
         },
         {
-            input: "&amp;amp;",
+            input: markup("&amp;amp;"),
             output: `<span class="${HIGHLIGHT_CLASS}">&amp;amp;</span>`,
             searchTerm: "&amp;",
         },
         {
-            input: "&amp;amp;",
+            input: markup("&amp;amp;"),
             output: `<span class="${HIGHLIGHT_CLASS}">&amp;</span>amp;`,
             searchTerm: "&",
         },
         {
-            input: "<strong>test</strong> hello",
+            input: markup("<strong>test</strong> hello"),
             output: `<strong><span class="${HIGHLIGHT_CLASS}">test</span></strong> <span class="${HIGHLIGHT_CLASS}">hello</span>`,
             searchTerm: "test hello",
         },
         {
-            input: "<p>&lt;strong&gt;test&lt;/strong&gt; hello</p>",
+            input: markup("<p>&lt;strong&gt;test&lt;/strong&gt; hello</p>"),
             output: `<p>&lt;strong&gt;<span class="${HIGHLIGHT_CLASS}">test</span>&lt;/strong&gt; <span class="${HIGHLIGHT_CLASS}">hello</span></p>`,
             searchTerm: "test hello",
         },
@@ -98,7 +99,7 @@ QUnit.test("Search highlight", async (assert) => {
     }
 });
 
-QUnit.test("Display highligthed search in chatter", async () => {
+QUnit.test("Display highlighted search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -115,7 +116,7 @@ QUnit.test("Display highligthed search in chatter", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
-QUnit.test("Display multiple highligthed search in chatter", async () => {
+QUnit.test("Display multiple highlighted search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -132,7 +133,7 @@ QUnit.test("Display multiple highligthed search in chatter", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`, { count: 2 });
 });
 
-QUnit.test("Display highligthed search in Discuss", async () => {
+QUnit.test("Display highlighted search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -151,7 +152,7 @@ QUnit.test("Display highligthed search in Discuss", async () => {
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
-QUnit.test("Display multiple highligthed search in Discuss", async () => {
+QUnit.test("Display multiple highlighted search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -172,7 +173,7 @@ QUnit.test("Display multiple highligthed search in Discuss", async () => {
     });
 });
 
-QUnit.test("Display highligthed with escaped character must ignore them", async () => {
+QUnit.test("Display highlighted with escaped character must ignore them", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });

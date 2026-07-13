@@ -31,6 +31,57 @@ export function clickDisplayedProduct(name) {
         },
     ];
 }
+export function clickProductInfo(name) {
+    return [
+        {
+            content: `click info button for product '${name}'`,
+            trigger: `article.product:has(.product-name:contains("${name}")) .product-information-tag`,
+        },
+    ];
+}
+export function priceOnProductInfoIs(amount) {
+    return [
+        {
+            content: `Check if product info price is ${amount}`,
+            trigger: `.product-info-popup`,
+            run: function () {
+                const priceElement = document.querySelector(`.product-info-price-with-tax`);
+                const extractedPrice = parseFloat(priceElement ? priceElement.textContent.replace(/[^\d.]/g, '') : 0);
+                if (extractedPrice !== parseFloat(amount)) {
+                    throw new Error(`Expected price: ${amount}, but found: ${extractedPrice}`);
+                }
+            },
+        },
+    ];
+}
+export function productInfoTaxesAre(tax_amount_arr) {
+    return [
+        {
+            content: `Check if product tax information matches ${tax_amount_arr}`,
+            trigger: ".product-info-popup",
+            run: function () {
+                const taxDivs = document.querySelectorAll('.tax-name-amount');
+                let extractedTaxes = Array.from(taxDivs).map(div => div.textContent.trim());
+                extractedTaxes = JSON.stringify(extractedTaxes).replace(/\s+/g, '')
+                tax_amount_arr = JSON.stringify(tax_amount_arr).replace(/\s+/g, '');
+                const isSame = extractedTaxes === tax_amount_arr;
+                if (!isSame) {
+                    throw new Error(
+                        `Expected tax info: ${tax_amount_arr}, but found: ${extractedTaxes}`
+                    );
+                }
+            },
+        },
+    ];
+}
+export function clickCloseProductInfo() {
+    return [
+        {
+            content: `close product info popup`,
+            trigger: `.product-info-popup .fa-times`,
+        },
+    ];
+}
 export function clickOrderline(productName, quantity = "1.0") {
     return [
         ...clickLine(productName, quantity),
@@ -38,6 +89,14 @@ export function clickOrderline(productName, quantity = "1.0") {
             content: "Check the product page",
             trigger: ".product-list-container .product-list",
             isCheck: true,
+        },
+    ];
+}
+export function clickProductInfoAttributeValue(attributeName, attributeValue) {
+    return [
+        {
+            content: `Choose the attribute ${attributeValue} for ${attributeName}`,
+            trigger: `.product-info-popup .section-variants div:contains("${attributeName}") + div .searchable:contains("${attributeValue}")`,
         },
     ];
 }
@@ -118,6 +177,26 @@ export function clickCustomer(name) {
             content: "go back to the products",
             trigger: ".pos-rightheader .floor-button",
             mobile: true,
+        },
+    ];
+}
+export function inputCustomerSearchbar(value) {
+    return [
+        {
+            trigger: ".pos-search-bar input",
+            run: `text ${value}`,
+        },
+        {
+            /**
+             * Manually trigger keyup event to show the search field list
+             * because the previous step do not trigger keyup event.
+             */
+            trigger: ".pos-search-bar input",
+            run: function () {
+                document
+                    .querySelector(".pos-search-bar input")
+                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
+            },
         },
     ];
 }
@@ -234,6 +313,33 @@ export function enterLotNumber(number) {
             trigger: ".popup .button.confirm",
         },
     ];
+}
+
+export function enterLotNumbers(numbers) {
+    return numbers
+        .map((number) => [
+            {
+                content: "enter lot number",
+                trigger: ".list-line-input:last()",
+                run: "text " + number,
+            },
+            {
+                content: "Press Enter",
+                trigger: ".list-line-input:last()",
+                run() {
+                    this.$anchor[0].dispatchEvent(
+                        new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
+                    );
+                },
+            },
+        ])
+        .flat()
+        .concat([
+            {
+                content: "click validate lot number",
+                trigger: ".popup .button.confirm",
+            },
+        ]);
 }
 
 export function isShown() {
@@ -423,6 +529,21 @@ export function checkOrderlinesNumber(number) {
     ];
 }
 
+export function checkProductsNumber(number) {
+    return [
+        {
+            content: `check products number should be ${number}`,
+            trigger: `.product-list .product`,
+            run: () => {
+                const productsCount = $(".product-list .product").length;
+                if (productsCount !== number) {
+                    throw new Error(`Expected ${number} products, got ${productsCount}`);
+                }
+            },
+        },
+    ];
+}
+
 export function checkTaxAmount(number) {
     return inLeftSide([
         {
@@ -430,4 +551,39 @@ export function checkTaxAmount(number) {
             trigger: `.subentry:contains("${number}")`,
         },
     ]);
+}
+
+export function clickOrderMenu() {
+    return [
+        {
+            content: "Click Orders dropdown item",
+            trigger: '.dropdown-item.with-badge.py-2:contains("Orders")',
+        },
+    ];
+}
+
+export function doubleClickOrder(name) {
+    return [
+        {
+            content: `Select order`,
+            trigger: `.order-row:contains("${name}")`,
+            run: 'dblclick',
+        },
+    ];
+}
+
+export function saveOrder() {
+    return inLeftSide(
+        [
+            {
+                content: "click more button",
+                trigger: ".mobile-more-button",
+                mobile: true,
+            },
+            {
+                content: "click save button",
+                trigger: '.control-buttons .control-button:contains("Save")',
+            },
+        ].flat()
+    );
 }

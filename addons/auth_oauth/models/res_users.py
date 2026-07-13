@@ -4,14 +4,18 @@
 import json
 
 import requests
-import werkzeug.http
+from werkzeug import http, datastructures
+
+if hasattr(datastructures.WWWAuthenticate, "from_header"):
+    parse_auth = datastructures.WWWAuthenticate.from_header
+else:
+    parse_auth = http.parse_www_authenticate_header
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessDenied, UserError
 from odoo.addons.auth_signup.models.res_users import SignupError
 
 from odoo.addons import base
-base.models.res_users.USER_PRIVATE_FIELDS.append('oauth_access_token')
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -33,9 +37,8 @@ class ResUsers(models.Model):
         if response.ok: # nb: could be a successful failure
             return response.json()
 
-        auth_challenge = werkzeug.http.parse_www_authenticate_header(
-            response.headers.get('WWW-Authenticate'))
-        if auth_challenge.type == 'bearer' and 'error' in auth_challenge:
+        auth_challenge = parse_auth(response.headers.get("WWW-Authenticate"))
+        if auth_challenge and auth_challenge.type == 'bearer' and 'error' in auth_challenge:
             return dict(auth_challenge)
 
         return {'error': 'invalid_request'}
@@ -143,3 +146,7 @@ class ResUsers(models.Model):
 
     def _get_session_token_fields(self):
         return super(ResUsers, self)._get_session_token_fields() | {'oauth_access_token'}
+
+    @property
+    def USER_PRIVATE_FIELDS(self):
+        return super().USER_PRIVATE_FIELDS + ['oauth_access_token']

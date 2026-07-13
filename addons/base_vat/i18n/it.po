@@ -1,32 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_vat
-# 
+# * base_vat
+#
 # Translators:
 # Wil Odoo, 2023
-# Marianna Ciofani, 2024
-# 
+# Marianna Ciofani, 2025
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
-"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-26 13:25+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-17/base_vat/"
+"it/>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
-msgid ""
-"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr "10XXXXXXXXY o 20XXXXXXXXY o 15XXXXXXXXY o 16XXXXXXXXY o 17XXXXXXXXY"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr "11111111111 (NIN) oppure 2222222222 (VKN)"
 
 #. module: base_vat
 #. odoo-python
@@ -59,6 +70,11 @@ msgid "AR200-5536168-2 or 20055361682"
 msgstr "AR200-5536168-2 oppure 20055361682"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr "IVA di base: sincronizza gli aggiornamenti da IAP VIES"
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
@@ -82,17 +98,6 @@ msgstr "Aziende"
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-"Connessione al server VIES non riuscita. Non è stato possibile convalidare "
-"il numero di partita IVA %s."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -122,6 +127,15 @@ msgstr ""
 "database VIES."
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
+msgstr ""
+"Esempio: '219999830019' (formato: 12 cifre, numeri, cifra valida assegno)"
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
 msgstr "Posizione fiscale"
@@ -146,14 +160,21 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
-"Se la casella è spuntata, la posizione di bilancio predefinita dipenderà dal"
-" risultato della verifica da parte del servizio europeo VIES."
+"Se la casella è spuntata, la posizione di bilancio predefinita dipenderà dal "
+"risultato della verifica da parte del servizio europeo VIES."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
 msgstr "Intracomunitaria valida"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "Invalid IAP VIES endpoint"
+msgstr "Endpoint IAP VIES non valido"
 
 #. module: base_vat
 #. odoo-python
@@ -167,13 +188,6 @@ msgstr "MXGODE561231GR8 oppure GODE561231GR8"
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
 msgstr "Esegui convalida VIES"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-msgstr "TR1234567890 (VERGINO) oppure TR17291716060 (TCKIMLIKNO)"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -196,19 +210,36 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
+"to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
-"Il numero %(vat_label)s [%(wrong_vat)s] per %(record_label)s non sembra essere valido.\n"
+"Il numero %(vat_label)s [%(wrong_vat)s] per %(record_label)s non sembra "
+"essere valido.\n"
 "Nota: il formato previsto è %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
-msgid "The VAT number %s could not be interpreted by the VIES server."
+msgid "The Intra-Community validity has been updated to: %s."
+msgstr "La validità intracomunitaria è stata aggiornata a: %s."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "The VIES check failed. Please check the Tax ID manually."
 msgstr ""
-"Il server VIES non è riuscito a interpretare il numero di partita IVA %s."
+"Il controllo VIES non è andato a buon fine. Verifica manualmente il codice "
+"fiscale."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr "Il controllo VIES è in sospeso. Lo stato verrà aggiornato a breve."
 
 #. module: base_vat
 #. odoo-python
@@ -218,30 +249,19 @@ msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
 msgstr ""
-"Il paese trovato per questa partita IVA estera non corrisponde a nessuno dei"
-" Paesi che caratterizzano il gruppo impostato su questa posizione fiscale."
+"Il paese trovato per questa partita IVA estera non corrisponde a nessuno dei "
+"Paesi che caratterizzano il gruppo impostato su questa posizione fiscale."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
+"The country of the foreign VAT number could not be detected. Please assign a "
+"country to the fiscal position or set a country group"
 msgstr ""
 "Non è stato possibile individuare il Paese corrispondente al numero IVA "
 "estero. Assegna un Paese alla posizione fiscale o configura un gruppo"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded"
-" with the following error: %s"
-msgstr ""
-"La richiesta per la convalida dell'IVA non è stata elaborata. Il sistema "
-"VIES ha segnalato il seguente errore: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -280,15 +300,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "11 cifre per CPF oppure 14 cifre per CNPJ"
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr "11 cifre per il CPF o 14 caratteri per il CNPJ"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr "posizione di bilancio [%s]"
+msgstr "posizione fiscale [%s]"
 
 #. module: base_vat
 #. odoo-python
@@ -296,3 +316,40 @@ msgstr "posizione di bilancio [%s]"
 #, python-format
 msgid "partner [%s]"
 msgstr "partner [%s]"
+
+#, python-format
+#~ msgid "The Intra-Community validity has been updated."
+#~ msgstr "La validità intracomunitaria è stata aggiornata."
+
+#, python-format
+#~ msgid "either 11 digits for CPF or 14 digits for CNPJ"
+#~ msgstr "11 cifre per CPF oppure 14 cifre per CNPJ"
+
+#, python-format
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr ""
+#~ "Connessione al server VIES non riuscita. Non è stato possibile "
+#~ "convalidare il numero di partita IVA %s."
+
+#, python-format
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr ""
+#~ "Il server VIES non è riuscito a interpretare il numero di partita IVA %s."
+
+#, python-format
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "La richiesta per la convalida dell'IVA non è stata elaborata. Il sistema "
+#~ "VIES ha segnalato il seguente errore: %s"
+
+#, python-format
+#~ msgid "3101012009"
+#~ msgstr "3101012009"
+
+#, python-format
+#~ msgid "17291716060 (NIN) or 1729171602 (VKN)"
+#~ msgstr "17291716060 (NIN) o 1729171602 (VKN)"

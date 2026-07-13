@@ -120,7 +120,7 @@ class TestReadProgressBar(common.TransactionCase):
         # check date aggregation and format
         result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
         self.assertEqual(result, {
-            'W53 2018': {'foo': 3, 'bar': 1, 'baz': 1},
+            'W1 2019': {'foo': 3, 'bar': 1, 'baz': 1},
             'W2 2019': {'foo': 3, 'bar': 2, 'baz': 2},
             'W3 2019': {'foo': 0, 'bar': 0, 'baz': 3},
         })

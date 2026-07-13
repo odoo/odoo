@@ -41,6 +41,7 @@ class PaymentTransaction(models.Model):
         order_id = self._razorpay_create_order(customer_id)['id']
         return {
             'razorpay_key_id': self.provider_id.razorpay_key_id,
+            'razorpay_public_token': self.provider_id._razorpay_get_public_token(),
             'razorpay_customer_id': customer_id,
             'is_tokenize_request': self.tokenize,
             'razorpay_order_id': order_id,
@@ -53,7 +54,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         payload = {
-            'name': self.partner_name,
+            'name': self.partner_name.replace(',', ' ')[:50],
             'email': self.partner_email or '',
             'contact': self.partner_phone and self._validate_phone_number(self.partner_phone) or '',
             'fail_existing': '0',  # Don't throw an error if the customer already exists.
@@ -389,7 +390,7 @@ class PaymentTransaction(models.Model):
         # Update the payment method.
         payment_method_type = entity_data.get('method', '')
         if payment_method_type == 'card':
-            payment_method_type = entity_data.get('card', {}).get('network').lower()
+            payment_method_type = entity_data.get('card', {}).get('network', '').lower()
         payment_method = self.env['payment.method']._get_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )

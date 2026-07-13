@@ -170,16 +170,17 @@ functionRegistry.add("ODOO.CREDIT", {
             .map((code) => code.trim())
             .sort();
         offset = toNumber(offset.value, this.locale);
+        companyId = companyId.value === null ? null : toNumber(companyId.value, this.locale);
         dateRange = parseAccountingDate(dateRange, this.locale);
         includeUnposted = toBoolean(includeUnposted.value);
         const value = this.getters.getAccountPrefixCredit(
             accountCodes,
             dateRange,
             offset,
-            companyId.value,
+            companyId,
             includeUnposted
         );
-        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId) || "#,##0.00";
         return { value, format };
     },
 });
@@ -201,16 +202,17 @@ functionRegistry.add("ODOO.DEBIT", {
             .map((code) => code.trim())
             .sort();
         offset = toNumber(offset.value, this.locale);
+        companyId = companyId.value === null ? null : toNumber(companyId.value, this.locale);
         dateRange = parseAccountingDate(dateRange, this.locale);
         includeUnposted = toBoolean(includeUnposted.value);
         const value = this.getters.getAccountPrefixDebit(
             accountCodes,
             dateRange,
             offset,
-            companyId.value,
+            companyId,
             includeUnposted
         );
-        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId) || "#,##0.00";
         return { value, format };
     },
 });
@@ -232,6 +234,7 @@ functionRegistry.add("ODOO.BALANCE", {
             .map((code) => code.trim())
             .sort();
         offset = toNumber(offset.value, this.locale);
+        companyId = companyId.value === null ? null : toNumber(companyId.value, this.locale);
         dateRange = parseAccountingDate(dateRange, this.locale);
         includeUnposted = toBoolean(includeUnposted.value);
         const value =
@@ -239,17 +242,17 @@ functionRegistry.add("ODOO.BALANCE", {
                 accountCodes,
                 dateRange,
                 offset,
-                companyId.value,
+                companyId,
                 includeUnposted
             ) -
             this.getters.getAccountPrefixCredit(
                 accountCodes,
                 dateRange,
                 offset,
-                companyId.value,
+                companyId,
                 includeUnposted
             );
-        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId) || "#,##0.00";
         return { value, format };
     },
 });
@@ -294,9 +297,35 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
     },
 });
 
+const ACCOUNT_TYPES = [
+    "asset_receivable",
+    "asset_cash",
+    "asset_current",
+    "asset_non_current",
+    "asset_prepayments",
+    "asset_fixed",
+    "liability_payable",
+    "liability_credit_card",
+    "liability_current",
+    "liability_non_current",
+    "equity",
+    "equity_unaffected",
+    "income",
+    "income_other",
+    "expense",
+    "expense_depreciation",
+    "expense_direct_cost",
+    "off_balance",
+];
+
 functionRegistry.add("ODOO.ACCOUNT.GROUP", {
-    description: _t("Returns the account ids of a given group."),
-    args: [arg("type (string)", _t("The account type (income, expense, asset_current,...)."))],
+    description: _t("Returns the account codes of a given group."),
+    args: [
+        arg(
+            "type (string)",
+            _t("The technical account type (possible values are: %s).", ACCOUNT_TYPES.join(", "))
+        ),
+    ],
     category: "Odoo",
     returns: ["NUMBER"],
     compute: function (accountType) {

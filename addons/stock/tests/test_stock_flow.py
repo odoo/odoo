@@ -2250,6 +2250,27 @@ class TestStockFlow(TestStockCommon):
         picking.write({'partner_id': partner_2.id})
         self.assertEqual(picking.move_ids.partner_id, partner_2)
 
+    def test_scrap_tracked_product_without_lot(self):
+        """Scrapping a tracked product without lot should not raise
+        if is_scrap context is set."""
+        stock_location = self.StockLocationObj.browse(self.stock_location)
+        tracked_product = self.env['product.product'].create({
+            'name': 'Tracked Product',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+        self.env['stock.quant']._update_available_quantity(tracked_product, stock_location, 1.0)
+
+        scrap = self.env['stock.scrap'].create({
+            'product_id': tracked_product.id,
+            'product_uom_id': tracked_product.uom_id.id,
+            'location_id': self.stock_location,
+            'scrap_qty': 1.0,
+        })
+        scrap.do_scrap()
+
+        self.assertEqual(scrap.move_ids.state, 'done')
+
     def test_cancel_picking_with_scrapped_products(self):
         """
         The user scraps some products of a picking, then cancel this picking

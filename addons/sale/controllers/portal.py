@@ -108,6 +108,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
         request.session['my_orders_history'] = values['orders'].ids[:100]
         return request.render("sale.portal_my_orders", values)
 
+    # ------------------------------------------------------------
+    # My Order
+    # ------------------------------------------------------------
+
+    def _sale_order_get_page_view_values(self, order_sudo, access_token, values, history_session_key, **kwargs):
+        return self._get_page_view_values(order_sudo, access_token, values, history_session_key, False, **kwargs)
+
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
     def portal_order_page(
         self,
@@ -132,7 +139,9 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 download=download,
             )
 
-        if request.env.user.share and access_token:
+        # If the route is fetched from the link previewer avoid triggering that quotation is viewed.
+        is_link_preview = request.httprequest.headers.get('Odoo-Link-Preview')
+        if request.env.user.share and access_token and is_link_preview != 'True':
             # If a public/portal user accesses the order with the access token
             # Log a note on the chatter.
             today = fields.Date.today().isoformat()
@@ -182,8 +191,8 @@ class CustomerPortal(payment_portal.PaymentPortal):
         else:
             history_session_key = 'my_orders_history'
 
-        values = self._get_page_view_values(
-            order_sudo, access_token, values, history_session_key, False)
+        values = self._sale_order_get_page_view_values(
+            order_sudo, access_token, values, history_session_key, **kw)
 
         return request.render('sale.sale_order_portal_template', values)
 
@@ -278,14 +287,15 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 'signed_on': fields.Datetime.now(),
                 'signature': signature,
             })
-            request.env.cr.commit()
+            # flush now to make signature data available to PDF render request
+            request.env.cr.flush()
         except (TypeError, binascii.Error) as e:
             return {'error': _('Invalid signature data.')}
 
         if not order_sudo._has_to_be_paid():
             order_sudo.with_context(send_email=True).action_confirm()
 
-        pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
+        pdf = request.env['ir.actions.report'].sudo().with_context(sale_include_signature=True)._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
 
         _message_post_helper(
             'sale.order',
@@ -413,6 +423,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 access_token, order_sudo.partner_invoice_id.id, amount, order_sudo.currency_id.id
             ):
                 raise ValidationError(_("The provided parameters are invalid."))
+
+            if order_sudo.is_expired:
+                raise ValidationError(_("The sale order has expired."))
 
             kwargs.update({
                 # To display on the payment form; will be later overwritten when creating the tx.

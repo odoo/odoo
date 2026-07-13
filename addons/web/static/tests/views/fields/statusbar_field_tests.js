@@ -461,7 +461,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector("[aria-label='Current state']").textContent,
+            target.querySelector("[aria-checked='true']").textContent,
             "aaa",
             "default status is 'aaa'"
         );
@@ -476,7 +476,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
         await click(target, ".o-dropdown .dropdown-item");
         assert.strictEqual(
-            target.querySelector("[aria-label='Current state']").textContent,
+            target.querySelector("[aria-checked='true']").textContent,
             "second record",
             "status has changed to the selected dropdown item"
         );
@@ -892,5 +892,48 @@ QUnit.module("Fields", (hooks) => {
             ["Stage Project 2"]
         );
         assert.verifySteps([]);
+    });
+
+    QUnit.test('"status" with no stages does not crash command palette', async function (assert) {
+        serverData.models = {
+            stage: {
+                fields: {
+                    name: { string: "Stage Name", type: "char" },
+                },
+                records: [],
+            },
+            task: {
+                fields: {
+                    status: { string: "Stage", type: "many2one", relation: "stage" },
+                },
+                records: [
+                    { id: 1, status: false }, // no stage set
+                ],
+            },
+        };
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "task",
+            arch: `
+                <form>
+                    <header>
+                        <field name="status" widget="statusbar" options="{'withCommand': true, 'clickable': true}"/>
+                    </header>
+                </form>`,
+            resId: 1,
+        });
+
+        // Open the command palette (Ctrl+K)
+        triggerHotkey("control+k");
+        await nextTick();
+
+        const commands = [...target.querySelectorAll(".o_command")].map((el) => el.textContent);
+
+        assert.notOk(
+            commands.some((txt) => txt.includes("Move to next Stage")),
+            "No 'Move to next stage' command available when no stages exist"
+        );
     });
 });

@@ -5,6 +5,7 @@ from . import analytic
 from . import account_move
 from . import account_move_line
 from . import crm_team
+from . import ir_config_parameter
 from . import onboarding_onboarding
 from . import onboarding_onboarding_step
 from . import payment_provider
