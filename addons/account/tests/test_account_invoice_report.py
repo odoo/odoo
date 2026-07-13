@@ -228,19 +228,19 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
         report = self.env['account.invoice.report'].formatted_read_group(
             [('product_id', '=', product.id)],
             [],
-            ['price_subtotal:sum', 'quantity:sum', 'price_average:avg'],
+            ['price_subtotal:sum', 'quantity:sum', 'price_average:avg_currency'],
         )
         self.assertEqual(report[0]['quantity:sum'], 35)
         self.assertEqual(report[0]['price_subtotal:sum'], 165)
-        self.assertEqual(round(report[0]['price_average:avg'], 2), 4.71)
+        self.assertEqual(round(report[0]['price_average:avg_currency'], 2), 4.71)
 
-        # ensure that it works with only 'price_average:avg' in aggregates
+        # ensure that it works with only 'price_average:avg_currency' in aggregates
         report = self.env['account.invoice.report'].formatted_read_group(
             [('product_id', '=', product.id)],
             [],
-            ['price_average:avg'],
+            ['price_average:avg_currency'],
         )
-        self.assertEqual(round(report[0]['price_average:avg'], 2), 4.71)
+        self.assertEqual(round(report[0]['price_average:avg_currency'], 2), 4.71)
 
     def test_avg_price_group_by_month(self):
         """
@@ -299,18 +299,18 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
         report = self.env['account.invoice.report'].formatted_read_group(
             [('product_id', '=', self.product_a.id)],
             ['invoice_date:month'],
-            ['__count', 'price_subtotal:sum', 'quantity:sum', 'price_average:avg'],
+            ['__count', 'price_subtotal:sum', 'quantity:sum', 'price_average:avg_currency'],
         )
 
         self.assertEqual(report[0]['__count'], 2)
         self.assertEqual(report[0]['quantity:sum'], 15.0)
         self.assertEqual(report[0]['price_subtotal:sum'], 125.0)
-        self.assertEqual(round(report[0]['price_average:avg'], 2), 8.33)
+        self.assertEqual(round(report[0]['price_average:avg_currency'], 2), 8.33)
 
         self.assertEqual(report[1]['__count'], 1)
         self.assertEqual(report[1]['quantity:sum'], 0.0)
         self.assertEqual(report[1]['price_subtotal:sum'], 0.0)
-        self.assertEqual(report[1]['price_average:avg'], 0.00)
+        self.assertEqual(report[1]['price_average:avg_currency'], 0.00)
 
     def test_inventory_margin_currency(self):
         invoice = self.env['account.move'].create({
@@ -342,8 +342,10 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
         })
         self.env.flush_all()
         self.env['account.invoice.report'].invalidate_model()
-        report = self.env['account.invoice.report'].search(
+        report = self.env['account.invoice.report'].formatted_read_group(
             [('move_id', '=', invoice.id)],
+            [],
+            ['inventory_value:sum_currency', 'price_margin:sum_currency'],
         )
-        self.assertEqual(report.inventory_value, -1600)
-        self.assertEqual(report.price_margin, -100)
+        self.assertEqual(report[0]['inventory_value:sum_currency'], -1600)
+        self.assertEqual(report[0]['price_margin:sum_currency'], -100)
