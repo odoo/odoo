@@ -13,6 +13,7 @@ import {
     findCircular,
     getActiveField,
     getCustomField,
+    getDefaultFieldType,
     getDefaultFormat,
     getDependencyEl,
     getDomain,
@@ -462,8 +463,8 @@ export class FormOptionPlugin extends Plugin {
             formInfo.formFields?.forEach((field) => {
                 // Create a shallow copy of field to prevent unintended
                 // mutations to the original field stored in the registry
-                const _field = { ...field };
-                _field.formatInfo = formatInfo;
+                const _field = { ...field, formatInfo };
+                _field.type = getDefaultFieldType(_field);
                 const locationEl = el.querySelector(
                     ".s_website_form_submit, .s_website_form_recaptcha"
                 );
@@ -1451,6 +1452,7 @@ export class ExistingFieldAction extends BuilderAction {
     apply({ editingElement: fieldEl, value, loadResult: fields }) {
         const field = fields[value];
         setActiveProperties(fieldEl, field);
+        field.type = getDefaultFieldType(field);
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
     }
     isApplied({ editingElement: fieldEl, value }) {
