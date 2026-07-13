@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillStart, props, proxy, signal, t } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { Component, onWillStart, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -126,7 +126,6 @@ export const modelFieldSelectorPopoverProps = {
 export class ModelFieldSelectorPopover extends Component {
     static template = "web.ModelFieldSelectorPopover";
     props = props(modelFieldSelectorPopoverProps);
-
     rootRef = signal(null);
 
     setup() {
@@ -150,26 +149,32 @@ export class ModelFieldSelectorPopover extends Component {
             }
         });
 
-        useLayoutEffect(() => {
-            const focusedElement = this.rootRef()?.querySelector(
+        let focusedPage;
+        useEffect(() => {
+            const root = this.rootRef();
+            if (!root) {
+                return;
+            }
+            // re-run whenever the active item moves (page change, navigation or search)
+            const page = this.state.page;
+            void page?.focusedFieldName;
+            const focusedElement = root.querySelector(
                 ".o_model_field_selector_popover_item.active"
             );
             if (focusedElement) {
                 // current page can be empty (e.g. after a search)
                 focusedElement.scrollIntoView({ block: "center" });
             }
-        });
-        useLayoutEffect(
-            () => {
+            if (page !== focusedPage) {
+                focusedPage = page;
                 if (this.props.showSearchInput) {
-                    const searchInput = this.rootRef()?.querySelector(
+                    const searchInput = root.querySelector(
                         ".o_model_field_selector_popover_search .o_input"
                     );
                     searchInput.focus();
                 }
-            },
-            () => [this.state.page]
-        );
+            }
+        });
     }
 
     get fieldNames() {
