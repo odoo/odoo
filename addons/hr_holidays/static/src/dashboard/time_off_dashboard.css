@@ -11,11 +11,16 @@
 .o_timeoff_dashboard {
     display: flex;
     flex-direction: column;
+    max-width: 100vw;
     height: auto;
     position: sticky;
     top: 0;
     z-index: 100;
     background-color: var(--o-webclient-background-color);
+
+    @include media-breakpoint-down(md) {
+        box-shadow: inset 0 1px 0 var(--border-color);
+    }
 }
 
 .o_timeoff_dashboard_cards {

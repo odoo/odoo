@@ -180,3 +180,22 @@
         }
     }
 }
+
+.o_time_off_calendar_dashboard_view {
+    .o_timeoff_dashboard > div {
+        @include media-breakpoint-down(lg) {
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    .fc-daygrid-day:active {
+        background-color: rgba($o-action, 0.08);
+    }
+}
