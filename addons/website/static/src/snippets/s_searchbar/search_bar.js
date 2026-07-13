@@ -17,6 +17,14 @@ export class SearchBar extends Interaction {
                 "show": this.hasDropdown,
             }),
         },
+        ".oe_search_found small": {
+            "t-out": () => {
+                if (this.foundResult !== undefined) {
+                    return `(${this.foundResult} found)`;
+                }
+                return Interaction.INITIAL_VALUE;
+            },
+        },
         ".search-query": {
             "t-on-input": this.debounced(this.onInput, 400),
             "t-on-keydown": this.onKeydown,
@@ -70,6 +78,15 @@ export class SearchBar extends Interaction {
                 this.options[decodeURIComponent(pathParts[indexNumber - 1])] = value;
             }
         }
+
+        // Note: Adapt this code in xml in master, kept it for stable versions only
+        const searchButtonEl = this.el.querySelector(".oe_search_button");
+        if (searchButtonEl && !searchButtonEl.querySelector(".oe_search_found")) {
+            const spanEl = document.createElement("span");
+            spanEl.classList.add("oe_search_found");
+            spanEl.appendChild(document.createElement("small"));
+            searchButtonEl.appendChild(spanEl);
+        }
     }
 
     start() {
@@ -110,6 +127,7 @@ export class SearchBar extends Interaction {
      * @param {Object} res
      */
     render(res) {
+        this.foundResult = undefined;
         if (this.menuEl) {
             this.services["public.interactions"].stopInteractions(this.menuEl);
         }
@@ -129,6 +147,7 @@ export class SearchBar extends Interaction {
                 fuzzySearch: res["fuzzy_search"],
                 widget: this.options,
             }, this.el)[0];
+            this.foundResult = res.results_count;
         }
         this.hasDropdown = !!res;
         prevMenuEl?.remove();
