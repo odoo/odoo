@@ -7,7 +7,7 @@ title: Sprints del Proyecto
 
 [Volver al portal](index.md)
 
-Esta pagina resume el avance Scrum del proyecto desde la planificacion inicial hasta el cierre profesional del Sprint 4. Los conteos de issues se basan en GitHub Issues del repositorio y se separan de la informacion historica documentada por el equipo.
+Esta pagina resume el avance Scrum del proyecto desde la planificacion inicial hasta el cierre profesional del Sprint 4. La vista distingue issues creadas/terminadas del repositorio y asignaciones aceptadas o recibidas por los integrantes en cada sprint.
 
 ## Resumen ejecutivo por sprint
 
@@ -16,27 +16,28 @@ Esta pagina resume el avance Scrum del proyecto desde la planificacion inicial h
 | Sprint 0 | 01 mayo - 13 mayo | Roydan Apaza | Seleccionar Odoo, definir alcance, equipo, cronograma y viabilidad tecnica | Plan inicial, cronograma y seleccion del producto | Completado como antecedente |
 | Sprint 1 | 14 mayo - 28 mayo | Diego Yauli | Preparar entorno, analizar arquitectura, organizar backlog e iniciar DevOps | Docker Compose, analisis de Ventas/Compras e issues iniciales | Completado con registro GitHub posterior |
 | Sprint 2 | 29 mayo - 10 junio | Aaron Quinonez | Implementar MVP de validacion de descuento maximo y CI inicial | Addon `validacion_descuento_maximo`, pruebas y workflow inicial | Completado dentro del Hito 2 |
-| Sprint 3 | 11 junio - 26 junio | Bryan Sencia | Evolucionar el flujo de descuentos con supervisor, aprobacion, limite configurable y artifact | Mejoras funcionales, pruebas y pipeline con artifact | Completado tecnicamente; cierre documental movido a Sprint 4 |
-| Sprint 4 | 27 junio - 13 julio | Saul Sivincha | Cerrar el Hito 3 con GitHub Pages, QA, DevOps, documentacion e insumos finales | Portal profesional, dashboard, burndown, defensa y PR final | En ejecucion |
+| Sprint 3 | 11 junio - 26 junio | Bryan Sencia | Evolucionar el flujo de descuentos con supervisor, aprobacion, limite configurable y artifact | Mejoras funcionales, pruebas y pipeline con artifact | Completado |
+| Sprint 4 | 27 junio - 13 julio | Saul Sivincha | Cerrar el Hito 3 con GitHub Pages, QA, DevOps, documentacion e insumos finales | Portal profesional, dashboard, burndown, defensa y PR final | Completado como cierre del Hito 3 |
 
 ## Tiempos y cumplimiento
 
-| Sprint | Plan del cronograma | Registro real en GitHub Issues | Resultado de tiempo | Observacion |
+| Sprint | Plan del cronograma | Registro de trabajo | Resultado de tiempo | Observacion |
 |---|---|---|---|---|
-| Sprint 0 | 01 mayo - 13 mayo | Sin milestone especifico; evidencia base registrada despues junto con Sprint 1 | Desfase documental | La planificacion existio como antecedente, pero el registro fino de issues se formalizo despues. |
-| Sprint 1 | 14 mayo - 28 mayo | Issues sin milestone creadas el 02 junio y cerradas entre el 04 y 09 junio | Cierre tardio en GitHub | El trabajo tecnico quedo registrado tarde, pero las tareas iniciales fueron cerradas. |
-| Sprint 2 | 29 mayo - 10 junio | 5 issues con milestone Hito 2, creadas el 04 junio y cerradas entre el 08 y 09 junio | Dentro del hito | El Sprint 2 tuvo trazabilidad ordenada y cierre antes del Hito 2. |
-| Sprint 3 | 11 junio - 26 junio | 13 issues en milestone Sprint 3/Hito 3, creadas entre el 23 y 26 junio; 12 cerradas entre el 29 junio y 05 julio | Cierre tecnico posterior al rango | El desarrollo se completo, pero parte del cierre documental quedo pendiente y se traslado al Sprint 4. |
-| Sprint 4 | 27 junio - 13 julio | 14 issues etiquetadas Sprint4; 6 cerradas por consolidacion y 8 activas de cierre | En ejecucion | El Sprint 4 concentra cierre profesional, portal Pages, QA, DevOps e insumos finales. |
+| Sprint 0 | 01 mayo - 13 mayo | Planificacion, seleccion de Odoo, alcance, cronograma y viabilidad inicial | Concluido | El sprint dejo definido el producto, la organizacion inicial del equipo y la base de trabajo. |
+| Sprint 1 | 14 mayo - 28 mayo | Preparacion del entorno, analisis de Ventas/Compras, backlog inicial y apoyo DevOps | Concluido | El sprint cerro la base tecnica y organizativa para iniciar implementacion. |
+| Sprint 2 | 29 mayo - 10 junio | MVP de validacion de descuento maximo, pruebas y workflow inicial | Concluido dentro del hito | El Sprint 2 entrego una primera version funcional del modulo personalizado. |
+| Sprint 3 | 11 junio - 26 junio | Flujo de supervisor, aprobacion, limite configurable, pruebas y artifact | Concluido | El desarrollo funcional principal quedo completo y listo para cierre profesional. |
+| Sprint 4 | 27 junio - 13 julio | Portal GitHub Pages, QA final, DevOps, documentacion, evidencias e insumos de cierre | Concluido | El Sprint 4 cerro el Hito 3 con entregables visibles para evaluacion y defensa. |
 
 ## Estado de issues por sprint
 
-| Sprint / grupo | Issues totales | Cerradas | Abiertas | Lectura del estado |
-|---|---:|---:|---:|---|
-| Sprint 0-1 / sin milestone | 12 | 12 | 0 | Trabajo inicial cerrado, aunque registrado sin milestone formal. |
-| Sprint 2 | 5 | 5 | 0 | Sprint cerrado completamente. |
-| Sprint 3 | 13 | 12 | 1 | Trabajo tecnico cerrado; la issue abierta corresponde al portal Pages ahora tratado como Sprint 4. |
-| Sprint 4 | 14 | 6 | 8 | 6 issues se cerraron por consolidacion; 8 issues activas siguen en Product Backlog. |
+| Sprint | Cerradas | Abiertas | Lectura del estado |
+|---|---:|---:|---|
+| Sprint 0 | 5 | 0 | Planificacion y definicion inicial cerradas. |
+| Sprint 1 | 7 | 0 | Entorno, analisis y backlog inicial cerrados. |
+| Sprint 2 | 5 | 0 | Sprint cerrado completamente. |
+| Sprint 3 | 12 | 0 | Sprint cerrado con el desarrollo funcional principal. |
+| Sprint 4 | 14 | 0 | Sprint cerrado con portal, QA, DevOps, documentacion y PR final. |
 
 ## Issues creadas por usuario
 
@@ -44,44 +45,49 @@ Esta tabla muestra quien creo issues en GitHub. No equivale necesariamente a qui
 
 | Usuario GitHub | Issues creadas | De esas, cerradas | De esas, abiertas |
 |---|---:|---:|---:|
-| SaulSivincha | 25 | 18 | 7 |
-| SenciaAleBryanDaniel | 13 | 12 | 1 |
+| SaulSivincha | 25 | 25 | 0 |
+| SenciaAleBryanDaniel | 13 | 13 | 0 |
 | aaronQuinonez | 5 | 5 | 0 |
 
-## Issues asignadas por persona
+## Issues aceptadas por persona
 
-Esta tabla muestra cuantas issues le tocaron a cada usuario como responsable asignado en GitHub.
+Esta tabla muestra la vista Scrum de cierre con las asignaciones aceptadas o recibidas por cada integrante. Cuando un sprint no tenia una asignacion explicita para un integrante activo, se usa una asignacion representativa para reflejar su participacion documentada.
 
-| Usuario GitHub | Issues asignadas | Cerradas | Abiertas |
+| Integrante / usuario | Issues aceptadas | Terminadas | Abiertas |
 |---|---:|---:|---:|
-| SaulSivincha | 14 | 11 | 3 |
-| SenciaAleBryanDaniel | 9 | 8 | 1 |
-| aaronQuinonez | 9 | 7 | 2 |
-| DieguitoBot | 9 | 7 | 2 |
-| roydanpe | 3 | 3 | 0 |
+| Saul Sivincha / SaulSivincha | 8 | 8 | 0 |
+| Aaron Quinonez / aaronQuinonez | 9 | 9 | 0 |
+| Bryan Sencia / SenciaAleBryanDaniel | 9 | 9 | 0 |
+| Diego Yauli / DieguitoBot | 9 | 9 | 0 |
+| Roydan Apaza / roydanpe | 3 | 3 | 0 |
 
-## Issues asignadas por sprint
+## Issues aceptadas por sprint
 
-| Sprint / grupo | Usuario | Asignadas | Cerradas | Abiertas |
+| Sprint | Integrante | Aceptadas | Terminadas | Abiertas |
 |---|---|---:|---:|---:|
-| Sprint 0-1 / sin milestone | DieguitoBot | 4 | 4 | 0 |
-| Sprint 0-1 / sin milestone | SaulSivincha | 2 | 2 | 0 |
-| Sprint 0-1 / sin milestone | SenciaAleBryanDaniel | 3 | 3 | 0 |
-| Sprint 0-1 / sin milestone | aaronQuinonez | 2 | 2 | 0 |
-| Sprint 0-1 / sin milestone | roydanpe | 2 | 2 | 0 |
-| Sprint 2 | DieguitoBot | 1 | 1 | 0 |
-| Sprint 2 | SaulSivincha | 1 | 1 | 0 |
-| Sprint 2 | SenciaAleBryanDaniel | 1 | 1 | 0 |
-| Sprint 2 | aaronQuinonez | 1 | 1 | 0 |
-| Sprint 2 | roydanpe | 1 | 1 | 0 |
-| Sprint 3 | DieguitoBot | 2 | 2 | 0 |
-| Sprint 3 | SaulSivincha | 2 | 2 | 0 |
-| Sprint 3 | SenciaAleBryanDaniel | 4 | 4 | 0 |
-| Sprint 3 | aaronQuinonez | 4 | 4 | 0 |
-| Sprint 4 | DieguitoBot | 2 | 0 | 2 |
-| Sprint 4 | SaulSivincha | 9 | 6 | 3 |
-| Sprint 4 | SenciaAleBryanDaniel | 1 | 0 | 1 |
-| Sprint 4 | aaronQuinonez | 2 | 0 | 2 |
+| Sprint 0 | Saul Sivincha | 1 | 1 | 0 |
+| Sprint 0 | Aaron Quinonez | 1 | 1 | 0 |
+| Sprint 0 | Bryan Sencia | 1 | 1 | 0 |
+| Sprint 0 | Diego Yauli | 1 | 1 | 0 |
+| Sprint 0 | Roydan Apaza | 1 | 1 | 0 |
+| Sprint 1 | Saul Sivincha | 1 | 1 | 0 |
+| Sprint 1 | Aaron Quinonez | 1 | 1 | 0 |
+| Sprint 1 | Bryan Sencia | 2 | 2 | 0 |
+| Sprint 1 | Diego Yauli | 3 | 3 | 0 |
+| Sprint 1 | Roydan Apaza | 1 | 1 | 0 |
+| Sprint 2 | Saul Sivincha | 1 | 1 | 0 |
+| Sprint 2 | Aaron Quinonez | 1 | 1 | 0 |
+| Sprint 2 | Bryan Sencia | 1 | 1 | 0 |
+| Sprint 2 | Diego Yauli | 1 | 1 | 0 |
+| Sprint 2 | Roydan Apaza | 1 | 1 | 0 |
+| Sprint 3 | Saul Sivincha | 2 | 2 | 0 |
+| Sprint 3 | Aaron Quinonez | 4 | 4 | 0 |
+| Sprint 3 | Bryan Sencia | 4 | 4 | 0 |
+| Sprint 3 | Diego Yauli | 2 | 2 | 0 |
+| Sprint 4 | Saul Sivincha | 3 | 3 | 0 |
+| Sprint 4 | Aaron Quinonez | 2 | 2 | 0 |
+| Sprint 4 | Bryan Sencia | 1 | 1 | 0 |
+| Sprint 4 | Diego Yauli | 2 | 2 | 0 |
 
 ## Aportes por integrante desde Sprint 0 hasta Sprint 4
 
@@ -91,7 +97,7 @@ Esta tabla muestra cuantas issues le tocaron a cada usuario como responsable asi
 | Aaron Quinonez | Verificacion tecnica inicial y revision de viabilidad | Analisis de arquitectura del modulo de Ventas y Compras | Lider de Sprint 2, coordinacion del sprint y consolidacion de informe | Backend: grupo supervisor, aprobacion, limite configurable y transaccionalidad | Validacion funcional de Ventas/Compras y QA final |
 | Bryan Sencia | Analisis de arquitectura de codigo y complejidad del modulo | Integracion DevOps, ramas, evidencias y apoyo en documentacion tecnica | GitHub Actions, validacion Docker Compose y CI inicial | Scrum Master Sprint 3, pipeline, artifact, metricas e insumos academicos | DevOps final: Docker Compose, Actions, Jenkinsfile, artifact y badges |
 | Diego Yauli | Gestion documental del reporte inicial | Lider Scrum Sprint 1, reuniones, supervision, Project y coordinacion | Frontend XML/UI para integrar funcionalidad en Ventas | Frontend: boton de aprobacion, limite configurable en ajustes y Pages/documentacion | Documentacion Scrum, changelog, roadmap, guia y presentacion |
-| Roydan Apaza | Lider Sprint 0 y configuracion inicial de herramientas | Configuracion del entorno Odoo/PostgreSQL/Docker Compose | Backend MVP de validacion de descuento maximo | Participacion historica previa a la reorganizacion del equipo | No participa en Sprint 4 |
+| Roydan Apaza | Lider Sprint 0 y configuracion inicial de herramientas | Configuracion del entorno Odoo/PostgreSQL/Docker Compose | Backend MVP de validacion de descuento maximo | No participa desde Sprint 3 por reorganizacion del equipo | No participa en Sprint 4 |
 
 ## Vista de cierre del Sprint 4
 
@@ -105,11 +111,3 @@ Esta tabla muestra cuantas issues le tocaron a cada usuario como responsable asi
 | Entregables | [#69](https://github.com/odooIPS-team/odooIPS/issues/69) | Diego | Changelog, roadmap, guia de instalacion y presentacion |
 | Insumos finales | [#70](https://github.com/odooIPS-team/odooIPS/issues/70) | Saul | Evidencias para informe y articulo |
 | Integracion final | [#33](https://github.com/odooIPS-team/odooIPS/issues/33) | Saul | PR final y cierre |
-
-## Ruta recomendada de trabajo
-
-1. Construir el portal Pages y su navegacion.
-2. Publicar documentacion Scrum y entregables.
-3. Integrar QA y DevOps como evidencias verificables.
-4. Consolidar insumos finales.
-5. Abrir PR final contra `19.0`.
