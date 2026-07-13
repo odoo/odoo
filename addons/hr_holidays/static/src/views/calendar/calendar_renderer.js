@@ -1,4 +1,3 @@
-import { useService } from "@web/core/utils/hooks";
 import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
 
 import { TimeOffCalendarCommonRenderer } from "./common/calendar_common_renderer";
@@ -26,11 +25,7 @@ export class TimeOffCalendarRenderer extends CalendarRenderer {
 }
 
 export class TimeOffDashboardCalendarRenderer extends TimeOffCalendarRenderer {
-    setup() {
-        super.setup();
-        this.uiService = useService("ui");
-    }
     get showDashboard() {
-        return !this.uiService.isSmall;
+        return true;
     }
 }

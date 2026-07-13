@@ -486,6 +486,7 @@
                     .fc-daygrid-day-number {
                         $padding-size: map-get($spacers, 1);
                         padding: $padding-size;
+                        min-width: calc(1lh + 2 * #{$padding-size});
                         line-height: calc(100% + #{$padding-size});
                         aspect-ratio: 1/1;
                         border-radius: 50%;
