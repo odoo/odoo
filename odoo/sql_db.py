@@ -563,14 +563,25 @@ class Cursor(_CursorProtocol):
         """ Rollback the current transaction. """
         self.precommit.clear()
         self.postcommit.clear()
-        self.prerollback.run()
+        try:
+            self.prerollback.run()
+        except Exception:
+            _logger.exception("Error during prerollback execution, ignore")
+            self.prerollback.clear()
         rollbacking = self.transaction.rollbacking() if self.transaction is not None else nullcontext()
         with rollbacking:
             self._cnx.rollback()
             self._now = None
         if self._closing:
             self._close()
-        self.postrollback.run()
+        try:
+            self.postrollback.run()
+        except Exception:
+            _logger.exception("Error during postrollback execution, rollback again")
+            # make sure there are no more hooks and retry
+            self.prerollback.clear()
+            self.postrollback.clear()
+            self.rollback()
 
     def __getattr__(self, name):
         if self._closed and name == '_obj':
