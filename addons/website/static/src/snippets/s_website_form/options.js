@@ -1592,7 +1592,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             }
         }
         const newInputEl = this.$target[0].querySelector('input');
-        if (newInputEl && dataFillWith) {
+        // Keep prefill only when rerendering the same field.
+        if (newInputEl && dataFillWith && previousName === newName && previousType === newType) {
             newInputEl.dataset.fillWith = dataFillWith;
         }
     },
