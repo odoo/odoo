@@ -560,3 +560,43 @@ test("Option list input editing is enabled for custom forms", async () => {
         .querySelectorAll('.o-hb-input-base');
     expect([...inputs].every(input => input.disabled)).toBe(false);
 });
+
+test("Changing field type removes data-fill-with attribute", async () => {
+    onRpc("get_authorized_fields", () => ({
+        cc: {
+            name: "cc",
+            relation: "res.partner",
+            string: "CC",
+            type: "char",
+        },
+    }));
+
+    await setupWebsiteBuilder(`
+        <form data-model_name="mail.mail">
+            <div class="s_website_form_field" data-type="char">
+                <label class="s_website_form_label" for="field">
+                    <span class="s_website_form_label_content">Company</span>
+                </label>
+                <input id="field" class="s_website_form_input" type="text" data-fill-with="commercial_company_name"/>
+            </div>
+            <div class="s_website_form_field" data-type="char">
+                <label class="s_website_form_label" for="field1">
+                    <span class="s_website_form_label_content">Phone Number</span>
+                </label>
+                <input id="field1" class="s_website_form_input" type="tel" data-fill-with="phone"/>
+            </div>
+        </form>
+    `);
+
+    // Change the field type to custom field.
+    await contains(":iframe input[type='text'][data-fill-with='commercial_company_name']").click();
+    await contains(".hb-row[data-label='Type'] button.o-hb-select-toggle").click();
+    await contains(".o_popover [data-action-value='email']").click();
+    expect(":iframe input[type='email']").not.toHaveAttribute("data-fill-with");
+
+    // Change the field type to existing field.
+    await contains(":iframe input[type='tel'][data-fill-with='phone']").click();
+    await contains(".hb-row[data-label='Type'] button.o-hb-select-toggle").click();
+    await contains(".o_popover [data-action-value='cc']").click();
+    expect(":iframe input[name='cc']").not.toHaveAttribute("data-fill-with");
+});
