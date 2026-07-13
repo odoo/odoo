@@ -35,7 +35,7 @@ class IrQWeb(models.AbstractModel):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
-        return super()._get_template_cache_keys() + ['website_id']
+        return super()._get_template_cache_keys() + ['website_id', 'inherit_branding_restricted_user']
 
     def _prepare_frontend_environment(self, values):
         """ Update the values and context with website specific value
@@ -45,6 +45,7 @@ class IrQWeb(models.AbstractModel):
 
         current_website = request.website
         editable = irQweb.env.user.has_group('website.group_website_designer')
+        is_designer = editable
         has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
         if not editable and has_group_restricted_editor and 'main_object' in values:
             try:
@@ -93,6 +94,13 @@ class IrQWeb(models.AbstractModel):
             if editable:
                 # in edit mode add branding on ir.ui.view tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
+                if not is_designer:
+                    # Restricted editors only keep branding on the views they
+                    # are allowed to save, see ir.ui.view `_can_be_branded`.
+                    # The key is part of the template cache keys and its
+                    # value is the user id, so that user-dependent branding
+                    # never ends up in cache entries shared between users.
+                    irQweb = irQweb.with_context(inherit_branding_restricted_user=irQweb.env.user.id)
             elif has_group_restricted_editor:
                 # will add the branding on fields (into values)
                 irQweb = irQweb.with_context(inherit_branding_auto=True)
