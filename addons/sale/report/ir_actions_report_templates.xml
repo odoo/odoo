@@ -225,7 +225,7 @@
                                         class="text-muted fw-normal ms-1"
                                     >(<span
                                             t-field="line.section_qty"
-                                            t-options="{'widget': 'float', 'min_precision': 0}"
+                                            t-options="{'min_precision': 0}"
                                         /> <span t-field="line.section_uom_id"/>)</span>
                                 </td>
                                 <td t-if="show_section_total" name="td_section_price" class="text-end o_price_total">
@@ -273,7 +273,7 @@
                                     <span t-field="line.label">Combo Product</span>
                                 </td>
                                 <td name="td_combo_quantity" class="text-end">
-                                    <span t-field="line.product_uom_qty"/>
+                                    <span t-field="line.product_uom_qty" t-options="{'min_precision': 0}"/>
                                     <span t-field="line.product_uom_id"/>
                                 </td>
                                 <td
@@ -319,14 +319,14 @@
                                     </div>
                                 </td>
                                 <td name="td_product_quantity" class="o_td_quantity text-end">
-                                    <span t-field="line.product_uom_qty" class="text-nowrap">3</span>
+                                    <span t-field="line.product_uom_qty" t-options="{'min_precision': 0}" class="text-nowrap">3</span>
                                     <span t-field="line.product_uom_id">units</span>
                                     <span
                                         t-if="line.product_id and line.product_uom_id != line.product_id.uom_id"
                                         class="text-muted small"
                                     >
                                         <t t-set="quantity_in_product_uom" t-value="line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)"/>
-                                        <br/><span t-out="quantity_in_product_uom" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="line.product_id.uom_id"/>
+                                        <br/><span t-out="quantity_in_product_uom" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit', 'min_precision': 0}"/> <span t-field="line.product_id.uom_id"/>
                                     </span>
                                 </td>
                                 <td name="td_product_priceunit" class="text-end text-nowrap">
@@ -388,7 +388,7 @@
                                     </span>
                                 </td>
                                 <td name="td_section_group_quantity" class="text-end text-nowrap">
-                                    <span t-field="line.section_qty"/>
+                                    <span t-field="line.section_qty" t-options="{'min_precision': 0}"/>
                                     <span t-field="line.section_uom_id"/>
                                 </td>
                                 <td name="td_section_group_priceunit" class="text-end text-nowrap">
