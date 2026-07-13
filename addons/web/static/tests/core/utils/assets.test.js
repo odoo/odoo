@@ -1,20 +1,39 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { mockFetch } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    beforeEach,
+    describe,
+    expect,
+    getFixture,
+    manuallyDispatchProgrammaticEvent,
+    mockFetch,
+    test,
+} from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { assets, loadBundle, loadCSS, loadJS } from "@web/core/assets";
 
 describe.current.tags("headless");
 
+function mountIframe() {
+    const iframe = document.createElement("iframe");
+    getFixture().appendChild(iframe);
+    return iframe.contentDocument;
+}
+
 /**
- * @param {(node: Node) => void} callback
+ * @param {Document} doc
+ * @param {(node: Node) => any} [callback]
  */
-const mockHeadAppendChild = (callback) => {
-    patchWithCleanup(document.head, {
-        appendChild: callback,
+function stepOnAssetAppended(doc, callback) {
+    patchWithCleanup(doc.head, {
+        appendChild(node) {
+            const srcAttribute = node.tagName === "LINK" ? "href" : "src";
+            expect.step([doc, node.tagName, node.type, node.getAttribute(srcAttribute)]);
+
+            callback?.(node);
+        },
     });
-};
+}
 
 const bundles = {
     "/web/bundle/test.bundle": [
@@ -37,13 +56,7 @@ beforeEach(() => {
 });
 
 test("loadJS: load invalid JS lib", async () => {
-    expect.assertions(4);
-
-    mockHeadAppendChild((node) => {
-        expect(node).toBeInstanceOf(HTMLScriptElement);
-        expect(node).toHaveAttribute("type", "text/javascript");
-        expect(node).toHaveAttribute("src", "/some/invalid/file.js");
-
+    stepOnAssetAppended(document, (node) => {
         // Simulates a failed request to an invalid file.
         manuallyDispatchProgrammaticEvent(node, "error");
     });
@@ -52,19 +65,18 @@ test("loadJS: load invalid JS lib", async () => {
         /The loading of \/some\/invalid\/file.js failed/,
         { message: "Trying to load an invalid file rejects the promise" }
     );
+
+    expect.verifySteps([[document, "SCRIPT", "text/javascript", "/some/invalid/file.js"]]);
 });
 
 test("loadCSS: load invalid CSS lib", async () => {
-    expect.assertions(4 * 4 + 1);
+    patchWithCleanup(assets.retries, {
+        count: 3,
+        delay: 1, // Fail fast.
+        extraDelay: 1,
+    });
 
-    assets.retries = { count: 3, delay: 1, extraDelay: 1 }; // Fail fast.
-
-    mockHeadAppendChild((node) => {
-        expect(node).toBeInstanceOf(HTMLLinkElement);
-        expect(node).toHaveAttribute("rel", "stylesheet");
-        expect(node).toHaveAttribute("type", "text/css");
-        expect(node).toHaveAttribute("href", "/some/invalid/file.css");
-
+    stepOnAssetAppended(document, (node) => {
         // Simulates a failed request to an invalid file.
         manuallyDispatchProgrammaticEvent(node, "error");
     });
@@ -73,154 +85,106 @@ test("loadCSS: load invalid CSS lib", async () => {
         /The loading of \/some\/invalid\/file.css failed/,
         { message: "Trying to load an invalid file rejects the promise" }
     );
+
+    expect.verifySteps([
+        // First try
+        [document, "LINK", "text/css", "/some/invalid/file.css"],
+        // 3 other tries
+        [document, "LINK", "text/css", "/some/invalid/file.css"],
+        [document, "LINK", "text/css", "/some/invalid/file.css"],
+        [document, "LINK", "text/css", "/some/invalid/file.css"],
+    ]);
 });
 
 test("loadBundle: load js and css files", async () => {
-    mockHeadAppendChild(async (node) => {
-        const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-        expect.step(`add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`);
-    });
+    stepOnAssetAppended(document);
 
     loadBundle("test.bundle");
     await animationFrame();
     expect.verifySteps([
         "fetch bundle: /web/bundle/test.bundle",
-        "add LINK - text/css - file1.css",
-        "add LINK - text/css - file2.css",
-        "add SCRIPT - text/javascript - file1.js",
-        "add SCRIPT - text/javascript - file2.js",
+        [document, "LINK", "text/css", "file1.css"],
+        [document, "LINK", "text/css", "file2.css"],
+        [document, "SCRIPT", "text/javascript", "file1.js"],
+        [document, "SCRIPT", "text/javascript", "file2.js"],
     ]);
 });
 
 test("loadBundle: load only js files", async () => {
-    mockHeadAppendChild(async (node) => {
-        const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-        expect.step(`add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`);
-    });
+    stepOnAssetAppended(document);
 
     loadBundle("test.bundle", { css: false });
     await animationFrame();
     expect.verifySteps([
         "fetch bundle: /web/bundle/test.bundle",
-        "add SCRIPT - text/javascript - file1.js",
-        "add SCRIPT - text/javascript - file2.js",
+        [document, "SCRIPT", "text/javascript", "file1.js"],
+        [document, "SCRIPT", "text/javascript", "file2.js"],
     ]);
 });
 
 test("loadBundle: load only css files", async () => {
-    mockHeadAppendChild(async (node) => {
-        const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-        expect.step(`add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`);
-    });
+    stepOnAssetAppended(document);
 
     loadBundle("test.bundle", { js: false });
     await animationFrame();
     expect.verifySteps([
         "fetch bundle: /web/bundle/test.bundle",
-        "add LINK - text/css - file1.css",
-        "add LINK - text/css - file2.css",
+        [document, "LINK", "text/css", "file1.css"],
+        [document, "LINK", "text/css", "file2.css"],
     ]);
 });
 
 test("loadBundle: load same bundle in main document and an iframe", async () => {
-    mockHeadAppendChild(async (node) => {
-        const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-        expect.step(
-            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`
-        );
-    });
+    const iframeDoc = mountIframe();
 
-    const iframe = document.createElement("iframe");
-    document.body.appendChild(iframe);
-    const iframeDocument = iframe.contentDocument;
-    patchWithCleanup(iframeDocument.head, {
-        appendChild: (node) => {
-            const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-            expect.step(
-                `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
-                    srcAttribute
-                )}`
-            );
-        },
-    });
+    stepOnAssetAppended(document);
+    stepOnAssetAppended(iframeDoc);
 
     loadBundle("test.bundle");
     await animationFrame();
     expect.verifySteps([
         "fetch bundle: /web/bundle/test.bundle",
-        "add document LINK - text/css - file1.css",
-        "add document LINK - text/css - file2.css",
-        "add document SCRIPT - text/javascript - file1.js",
-        "add document SCRIPT - text/javascript - file2.js",
+        [document, "LINK", "text/css", "file1.css"],
+        [document, "LINK", "text/css", "file2.css"],
+        [document, "SCRIPT", "text/javascript", "file1.js"],
+        [document, "SCRIPT", "text/javascript", "file2.js"],
     ]);
 
-    loadBundle("test.bundle", { targetDoc: iframeDocument });
+    loadBundle("test.bundle", { targetDoc: iframeDoc });
     await animationFrame();
     expect.verifySteps([
         // no fetching as the bundle is cached globally
-        "add iframe document LINK - text/css - file1.css",
-        "add iframe document LINK - text/css - file2.css",
-        "add iframe document SCRIPT - text/javascript - file1.js",
-        "add iframe document SCRIPT - text/javascript - file2.js",
+        [iframeDoc, "LINK", "text/css", "file1.css"],
+        [iframeDoc, "LINK", "text/css", "file2.css"],
+        [iframeDoc, "SCRIPT", "text/javascript", "file1.js"],
+        [iframeDoc, "SCRIPT", "text/javascript", "file2.js"],
     ]);
-
-    iframe.remove();
 });
 
 test("loadBundle: load same bundles in 2 iframes", async () => {
-    mockHeadAppendChild(async (node) => {
-        const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-        expect.step(
-            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`
-        );
-    });
+    const firstDoc = mountIframe();
+    const secondDoc = mountIframe();
 
-    const iframeFirst = document.createElement("iframe");
-    const iframeSecond = document.createElement("iframe");
-    document.body.appendChild(iframeFirst);
-    document.body.appendChild(iframeSecond);
-    const iframeDocumentFirst = iframeFirst.contentDocument;
-    const iframeDocumentSecond = iframeSecond.contentDocument;
-    patchWithCleanup(iframeDocumentFirst.head, {
-        appendChild: (node) => {
-            const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-            expect.step(
-                `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
-                    srcAttribute
-                )}`
-            );
-        },
-    });
-    patchWithCleanup(iframeDocumentSecond.head, {
-        appendChild: (node) => {
-            const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-            expect.step(
-                `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
-                    srcAttribute
-                )}`
-            );
-        },
-    });
+    stepOnAssetAppended(document); // Nothing should be added in this test
+    stepOnAssetAppended(firstDoc);
+    stepOnAssetAppended(secondDoc);
 
-    loadBundle("test.bundle", { targetDoc: iframeDocumentFirst });
+    loadBundle("test.bundle", { targetDoc: firstDoc });
     await animationFrame();
     expect.verifySteps([
         "fetch bundle: /web/bundle/test.bundle",
-        "add iframe document LINK - text/css - file1.css",
-        "add iframe document LINK - text/css - file2.css",
-        "add iframe document SCRIPT - text/javascript - file1.js",
-        "add iframe document SCRIPT - text/javascript - file2.js",
+        [firstDoc, "LINK", "text/css", "file1.css"],
+        [firstDoc, "LINK", "text/css", "file2.css"],
+        [firstDoc, "SCRIPT", "text/javascript", "file1.js"],
+        [firstDoc, "SCRIPT", "text/javascript", "file2.js"],
     ]);
 
-    loadBundle("test.bundle", { targetDoc: iframeDocumentSecond });
+    loadBundle("test.bundle", { targetDoc: secondDoc });
     await animationFrame();
     expect.verifySteps([
-        "add iframe document LINK - text/css - file1.css",
-        "add iframe document LINK - text/css - file2.css",
-        "add iframe document SCRIPT - text/javascript - file1.js",
-        "add iframe document SCRIPT - text/javascript - file2.js",
+        [secondDoc, "LINK", "text/css", "file1.css"],
+        [secondDoc, "LINK", "text/css", "file2.css"],
+        [secondDoc, "SCRIPT", "text/javascript", "file1.js"],
+        [secondDoc, "SCRIPT", "text/javascript", "file2.js"],
     ]);
-
-    iframeFirst.remove();
-    iframeSecond.remove();
 });
