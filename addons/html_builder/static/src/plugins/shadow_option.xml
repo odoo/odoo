@@ -5,13 +5,13 @@
     <BuilderRow label.translate="Shadow">
         <BuilderSelect action="this.props.setShadowClassAction">
             <BuilderSelectItem actionParam="''">None</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'shadow'">
-                <t t-set="onClick" t-value="this.getOnClick('shadow')"/>
-                <t t-call="html_builder.ShadowOptionItem">Normal</t>
-            </BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow-sm'">
                 <t t-set="onClick" t-value="this.getOnClick('shadow-sm')"/>
                 <t t-call="html_builder.ShadowOptionItem">Small</t>
+            </BuilderSelectItem>
+            <BuilderSelectItem actionParam="'shadow'">
+                <t t-set="onClick" t-value="this.getOnClick('shadow')"/>
+                <t t-call="html_builder.ShadowOptionItem">Normal</t>
             </BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow-lg'">
                 <t t-set="onClick" t-value="this.getOnClick('shadow-lg')"/>
