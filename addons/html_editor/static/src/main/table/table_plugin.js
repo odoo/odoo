@@ -209,6 +209,11 @@ export class TablePlugin extends Plugin {
                 return true;
             }
         },
+        is_no_inline_root_predicates: (node) => {
+            if (isTableWrapper(node)) {
+                return true;
+            }
+        },
 
         /** Selectors */
         move_node_whitelist_selectors: `${TABLE_WRAPPER_SELECTOR}, :not(${TABLE_WRAPPER_SELECTOR}) > table`,

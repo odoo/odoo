@@ -537,7 +537,7 @@ describe("Around icons", () => {
     });
 });
 
-describe("Selection correction when it lands at the editable root", () => {
+describe("Selection correction when it lands on a no-inline root", () => {
     test("should place cursor between two tables (1)", async () => {
         await testEditor({
             contentBefore:
@@ -598,6 +598,36 @@ describe("Selection correction when it lands at the editable root", () => {
             contentAfter:
                 "<p>[]<br></p>" +
                 "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>",
+        });
+    });
+
+    test("should place cursor in the paragraph above a table in a scroll container", async () => {
+        await testEditor({
+            config: {
+                allowTableWrapper: true,
+            },
+            contentBefore: unformat(`
+                <table class="o_table" style="width: 120%"><tbody>
+                    <tr><td><p>[]a</p><p>b</p></td></tr>
+                </tbody></table>
+            `),
+            contentBeforeEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table class="o_table" style="width: 120%"><tbody>
+                        <tr><td><p>[]a</p><p>b</p></td></tr>
+                    </tbody></table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
+            stepFunction: keyPress("ArrowLeft"),
+            contentAfterEdit: unformat(`
+                <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                <div class="o_table_wrapper">
+                    <table class="o_table" style="width: 120%"><tbody>
+                        <tr><td><p>a</p><p>b</p></td></tr>
+                    </tbody></table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
         });
     });
 
