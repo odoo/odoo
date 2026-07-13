@@ -28,6 +28,7 @@ export class PosData {
         this.syncInProgress = false;
         this.dataLoadedFromCache = false;
         this.mutex = markRaw(new Mutex());
+        this.indexedDBMutex = markRaw(new Mutex());
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
@@ -161,6 +162,14 @@ export class PosData {
     }
 
     async synchronizeLocalDataInIndexedDB() {
+        return this.indexedDBMutex.exec(async () => await this._synchronizeLocalDataInIndexedDB());
+    }
+
+    /**
+     * Private method that synchronizes local data and state in indexedDB.
+     * DO NOT CALL THIS METHOD DIRECTLY, use synchronizeLocalDataInIndexedDB instead.
+     */
+    async _synchronizeLocalDataInIndexedDB() {
         // This methods will synchronize local data and state in indexedDB. This methods is mostly
         // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
         // in the frontend and are not loaded from the backend.
