@@ -11,7 +11,7 @@ PAYMENT_METHODS_MAPPING = {
     "bancontact": 3012,
     "bizum": 5001,
     "cartes_bancaires": 130,
-    "cofidis": 3012,
+    "cofidis": 5129,
     "diners": 132,
     "discover": 128,
     "eps": 5406,
@@ -37,6 +37,7 @@ PAYMENT_METHODS_MAPPING = {
 REDIRECT_PAYMENT_METHODS = {
     "alipay_plus",
     "bizum",
+    "cofidis",
     "eps",
     "floa_bank",
     "ideal",
