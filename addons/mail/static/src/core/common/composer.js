@@ -20,7 +20,6 @@ import { Wysiwyg } from "@html_editor/wysiwyg";
 
 import { rpc } from "@web/core/network/rpc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
 
 import { Component, markup, onMounted, onWillUnmount, toRaw, EventBus } from "@odoo/owl";
@@ -737,7 +736,7 @@ export class Composer extends Component {
 
     clear() {
         this.props.composer.clear();
-        browser.localStorage.removeItem(this.props.composer.localId);
+        this.deleteSavedContent();
     }
 
     notifySendFromMailbox() {
