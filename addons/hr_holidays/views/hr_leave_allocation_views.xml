@@ -105,9 +105,9 @@
                 <field name="expiring_carryover_days" invisible="1"/>
                 <field name="carried_over_days_expiration_date" invisible="1"/>
                 <header>
-                    <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or not id"/>
-                    <button string="Validate" name="action_approve" invisible="not can_validate or can_approve or not id" type="object" class="oe_highlight"/>
-                    <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse or not id"/>
+                    <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or not id" data-hotkey="v"/>
+                    <button string="Validate" name="action_approve" invisible="not can_validate or can_approve or not id" type="object" class="oe_highlight" data-hotkey="v"/>
+                    <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse or not id" data-hotkey="x"/>
                     <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
                     <field name="state" widget="statusbar" statusbar_visible="confirm,validate" invisible="validation_type == 'both'"/>
                 </header>
@@ -296,18 +296,21 @@
                         name="%(hr_holidays.action_hr_leave_allocation_generate_multi_wizard)d"
                         string="New Group Allocation" class="btn btn-secondary"
                         groups="hr_holidays.group_hr_holidays_responsible" display="always"
+                        data-hotkey="v"
                     />
                     <button type="object"
                         name="action_approve"
                         string="Approve"
                         icon="fa-thumbs-up"
                         class="btn btn-outline-success"
+                        data-hotkey="q"
                     />
                     <button type="object"
                         name="action_refuse"
                         string="Refuse"
                         icon="fa-times"
                         class="btn btn-outline-danger"
+                        data-hotkey="x"
                     />
                 </header>
                 <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_employee" readonly="state in ['refuse', 'validate']"/>
@@ -406,7 +409,8 @@
                     <button type="action"
                         name="%(hr_holidays.action_hr_leave_allocation_generate_multi_wizard)d"
                         string="New Group Allocation" class="btn btn-secondary"
-                        groups="hr_holidays.group_hr_holidays_responsible" display="always"/>
+                        groups="hr_holidays.group_hr_holidays_responsible" display="always"
+                        data-hotkey="v"/>
                 </header>
                 <field name="can_approve"/>
                 <field name="can_validate"/>

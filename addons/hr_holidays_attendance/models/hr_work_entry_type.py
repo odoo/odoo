@@ -8,7 +8,7 @@ class HrWorkEntryType(models.Model):
     _inherit = 'hr.work.entry.type'
 
     overtime_deductible = fields.Boolean(
-        "Deduct Extra Hours", default=False,
+        "Deduct Extra Hours", default=False, tracking=True,
         help="Once a time off of this type is approved, extra hours in attendances will be deducted.")
 
     @api.depends('overtime_deductible', 'requires_allocation')

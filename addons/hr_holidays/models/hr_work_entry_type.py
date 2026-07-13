@@ -107,7 +107,7 @@ class HrWorkEntryType(models.Model):
     count_days_as = fields.Selection([
         ('working', 'Working Days'),
         ('calendar', 'Calendar Days'),
-        ], string='Count Days as', default='working',
+        ], string='Count Days as', default='working', tracking=True,
         help="If you take a leave on the whole week, worked days will result in a various number based on the working hours of the employee, calendar days will result in 7 in every case.")
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative',
@@ -199,7 +199,7 @@ class HrWorkEntryType(models.Model):
 
                 if leave_from_date <= public_holiday_to_date and leave_to_date >= public_holiday_from_date:
                     raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
-                        time type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
+time type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
 
     @api.constrains('count_days_as')
     def _check_leaves_for_count_days_as(self):
@@ -209,7 +209,7 @@ class HrWorkEntryType(models.Model):
         ], limit=1)
         if leave_count:
             raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting because one or more leaves have already \
-                been taken for this time off type. Changing it now would affect existing employee balances."))
+been taken for this time off type. Changing it now would affect existing employee balances."))
 
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         allocation_by_work_entry_type = dict(self.env['hr.leave.allocation']._read_group(

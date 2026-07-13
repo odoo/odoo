@@ -340,12 +340,12 @@ class HrLeave(models.Model):
                 msg = self.env._('An employee already booked time off which overlaps with this period:')
 
             holiday.dashboard_warning_message = msg + "".join(
-                ('\n\t' + self.env._('%(employee_name)s from %(date_from)s to %(date_to)s - %(state)s')) % {
+                ('\n' + (self.env._('%(employee_name)s from %(date_from)s to %(date_to)s - %(state)s') % {
                     'employee_name': conflicting_holiday_data['employee_name'] if not holidays_only_have_uid else "",
                     'date_from': conflicting_holiday_data['date_from'],
                     'date_to': conflicting_holiday_data['date_to'],
                     'state': conflicting_holiday_data['state']
-                } for conflicting_holiday_data in conflicting_holidays_list
+                }).lstrip()) for conflicting_holiday_data in conflicting_holidays_list
             )
 
     @api.depends_context('uid')
