@@ -239,23 +239,6 @@ class SocialMediaOptionPlugin extends Plugin {
     }
 
     normalize(root) {
-        // Add https:// if needed, to the links from db, and the links from dom
-        if (this.recordedSocialMediaAreEdited) {
-            for (const [name, value] of this.recordedSocialMedia.entries()) {
-                const newValue = this.addHttpsIfNeeded(value);
-                if (value !== newValue) {
-                    this.recordedSocialMedia.set(name, newValue);
-                }
-            }
-        }
-        for (const element of selectElements(root, ".s_social_media > a[href]")) {
-            const value = element.attributes.href.value;
-            const newHref = this.addHttpsIfNeeded(value);
-            if (value !== newHref) {
-                element.href = newHref;
-            }
-        }
-
         // ensure one '\n' between each element + before and after
         for (const element of selectElements(root, ".s_social_media > *")) {
             if (element.nextSibling?.nodeType === Node.TEXT_NODE) {

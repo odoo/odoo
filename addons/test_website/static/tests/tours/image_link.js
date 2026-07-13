@@ -56,7 +56,7 @@ registerWebsitePreviewTour(
         {
             content: "check popover content has site URL",
             trigger:
-                ".o-we-linkpopover a.o_we_url_link[href='http://odoo.com']:contains(http://odoo.com)",
+                ".o-we-linkpopover a.o_we_url_link[href='https://odoo.com']:contains(https://odoo.com)",
         },
         {
             content: "remove URL",

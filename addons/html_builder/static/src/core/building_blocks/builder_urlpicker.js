@@ -6,6 +6,7 @@ import {
     useBuilderComponent,
     useInputBuilderComponent,
 } from "@html_builder/core/utils";
+import { normalizeLinkUrlInput } from "@html_editor/main/link/utils";
 import { Component } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
@@ -16,6 +17,10 @@ export class BuilderUrlPicker extends Component {
         ...basicContainerBuilderComponentProps,
         ...textInputBasePassthroughProps,
         default: { type: String, optional: true },
+        previewButton: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        previewButton: true,
     };
     static components = {
         BuilderComponent,
@@ -28,10 +33,15 @@ export class BuilderUrlPicker extends Component {
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
             defaultValue: this.props.default,
+            parseDisplayValue: this.parseDisplayValue.bind(this),
         });
         this.commit = commit;
         this.preview = preview;
         this.state = state;
+    }
+
+    parseDisplayValue(value) {
+        return normalizeLinkUrlInput(value, { href: this.state.value || "" });
     }
 
     get textInputBaseProps() {
