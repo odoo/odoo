@@ -13,14 +13,6 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
         this.declinedCount = this.props.record.data.declined_count;
         this.uncertainCount = this.attendeesCount - this.acceptedCount - this.declinedCount;
     }
-
-    get tagLimit() {
-        return this.state.expanded ? Number.POSITIVE_INFINITY : 5;
-    }
-
-    onExpanderClick() {
-        this.state.expanded = !this.state.expanded;
-    }
 }
 
 export const many2ManyAttendeeExpandable = {

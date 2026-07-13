@@ -14,13 +14,8 @@
                         <br/><t t-out="this.declinedCount"/> declined
                         <br/><t t-out="this.uncertainCount"/> uncertain
                     </div>
-                    <i role="button" t-on-click="this.onExpanderClick" t-att-class="this.state.expanded ? 'oi oi-chevron-up' : 'oi oi-chevron-down'"></i>
                 </div>
             </t>
-        </xpath>
-        <xpath expr="//TagsList" position="replace">
-            <t t-if="!this.state.expanded and this.tags.length > 10"> </t>
-            <t t-else="">$0</t>
         </xpath>
     </t>
 
