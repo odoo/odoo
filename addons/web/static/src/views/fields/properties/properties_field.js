@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -15,7 +15,16 @@ import { standardFieldProps } from "../standard_field_props";
 import { PropertyDefinition } from "./property_definition";
 import { PropertyValue } from "./property_value";
 
-import { Component, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillStart,
+    onWillUpdateProps,
+    proxy,
+    untrack,
+    useEffect,
+} from "@odoo/owl";
 import { deepCopy } from "@web/core/utils/objects";
 
 export class PropertiesField extends Component {
@@ -112,8 +121,10 @@ export class PropertiesField extends Component {
             });
         });
 
-        useLayoutEffect(
-            () => {
+        useEffect(() => {
+            // subscribe to the definition record changing
+            void this.props.record.data[this.definitionRecordField];
+            untrack(() => {
                 // when the field has a new definition record:
                 if (this.props.readonly || (!this.state.isInEditMode && !this.props.editMode)) {
                     return;
@@ -126,9 +137,8 @@ export class PropertiesField extends Component {
                         (this.state.isInEditMode || this.props.editMode);
                     this.setEditMode(editable);
                 });
-            },
-            () => [this.props.record.data[this.definitionRecordField]]
-        );
+            });
+        });
 
         onWillUpdateProps(async (nextProps) => {
             if (nextProps.readonly && !this.props.readonly) {
@@ -151,22 +161,14 @@ export class PropertiesField extends Component {
             }
         });
 
-        useLayoutEffect(
-            () => {
-                if (this.openPropertyDefinition) {
-                    const propertyName = this.openPropertyDefinition;
-                    const labels = this.propertiesRef.el.querySelectorAll(
-                        `.o_property_field[property-name="${propertyName}"] .o_field_property_open_popover`
-                    );
-                    this.openPropertyDefinition = null;
-                    const lastLabel = labels[labels.length - 1];
-                    this._openPropertyDefinition(lastLabel, propertyName, true);
-                }
-            },
-            () => [this.openPropertyDefinition]
-        );
-
-        useLayoutEffect(() => this._movePopoverIfNeeded());
+        onMounted(() => {
+            this._openPendingPropertyDefinition();
+            this._movePopoverIfNeeded();
+        });
+        onPatched(() => {
+            this._openPendingPropertyDefinition();
+            this._movePopoverIfNeeded();
+        });
 
         // sort properties
         useSortable({
@@ -785,8 +787,9 @@ export class PropertiesField extends Component {
      * Move the popover to the given property id.
      * Used when we change the position of the properties.
      *
-     * We change the popover position after the DOM has been updated (see @useLayoutEffect)
-     * because if we update it after changing the component properties,
+     * We change the popover position after the DOM has been updated (see the
+     * onMounted/onPatched hooks) because if we update it after changing the
+     * component properties,
      */
     _movePopoverIfNeeded() {
         if (!this.movePopoverToProperty) {
@@ -803,6 +806,23 @@ export class PropertiesField extends Component {
         );
 
         reposition(popover, target, { position: "top", margin: 10 });
+    }
+
+    /**
+     * Open the definition popover of a property that was just created, once the
+     * new property has been rendered in the DOM.
+     */
+    _openPendingPropertyDefinition() {
+        if (!this.openPropertyDefinition) {
+            return;
+        }
+        const propertyName = this.openPropertyDefinition;
+        const labels = this.propertiesRef.el.querySelectorAll(
+            `.o_property_field[property-name="${propertyName}"] .o_field_property_open_popover`
+        );
+        this.openPropertyDefinition = null;
+        const lastLabel = labels[labels.length - 1];
+        this._openPropertyDefinition(lastLabel, propertyName, true);
     }
 
     /**
