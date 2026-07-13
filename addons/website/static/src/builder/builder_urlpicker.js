@@ -14,6 +14,11 @@ export class AutoCompleteBuilderUrlPicker extends AutoComplete {
         ...textInputBasePassthroughProps,
         default: { type: String, optional: true },
         inputClass: { type: String, optional: true },
+        previewButton: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        ...AutoComplete.defaultProps,
+        previewButton: true,
     };
     static template = "website.AutoCompleteBuilderUrlPicker";
 
@@ -60,7 +65,8 @@ patch(BuilderUrlPicker.prototype, {
         if (isOptionSelected) {
             return;
         }
-        this.commit(inputValue);
+        const normalizedDisplayValue = this.commit(inputValue);
+        this.urlRef.el.value = normalizedDisplayValue;
     },
 
     openPreviewUrl() {
