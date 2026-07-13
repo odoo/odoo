@@ -1,8 +1,16 @@
 .o_cw_popover {
+    max-height: 80vh;
     max-width: 95vw;
     width: 448px;
     z-index: $zindex-modal - 1;
     font-size: $font-size-base;
+
+    .o_card {
+        min-height: 0;
+        .o_popover_body {
+            min-height: 0;
+        }
+    }
 
     .o_card_record:focus-visible {
         outline: none;

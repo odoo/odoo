@@ -286,6 +286,7 @@ export class CalendarCommonPopover extends Component {
             resModel,
             resId: this.props.record.id,
             readonly: !this.isEventEditable,
+            className: "d-flex flex-column",
             afterButtonClicked: () => {
                 this.props.reloadOnClose();
                 this.props.close();

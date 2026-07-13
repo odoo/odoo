@@ -9,7 +9,7 @@ import { Component, signal, useRef, xml } from "@odoo/owl";
 
 export class Card extends Component {
     static template = xml`
-        <div class="o_card" t-custom-ref="root">
+        <div class="o_card" t-att-class="this.props.className" t-custom-ref="root">
             <Record t-props="this.recordProps" t-slot-scope="data" t-key="this.key()">
                 <CardRenderer record="data.record" t-props="this.rendererProps"/>
             </Record>
@@ -23,6 +23,7 @@ export class Card extends Component {
         "resModel",
         "resId",
         "fields",
+        "className?",
         "Compiler?",
         "context?",
         "hooks?",

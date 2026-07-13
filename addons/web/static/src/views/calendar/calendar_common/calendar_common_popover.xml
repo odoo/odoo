@@ -3,14 +3,14 @@
 
     <t t-name="web.CalendarCardRenderer">
         <div t-if="this.templates[this.constructor.HEADER_ATTRIBUTE]"
-            class="o_popover_header d-flex justify-content-between p-3 fs-4 fw-bold border-bottom">
+            class="o_popover_header flex-shrink-0 d-flex justify-content-between p-3 fs-4 fw-bold border-bottom">
             <t t-call="{{ this.templates[this.constructor.HEADER_ATTRIBUTE] }}"
                 t-call-context="this.renderingContext"/>
         </div>
-        <div class="o_popover_body p-3 o_cw_body">
+        <div class="o_popover_body p-3 o_cw_body flex-grow-1 flew-shrink-1 overflow-y-auto">
             <t t-call="web.CardRenderer"/>
         </div>
-        <div class="o_popover_footer d-flex gap-1 p-3 border-top">
+        <div class="o_popover_footer flex-shrink-0 d-flex gap-1 p-3 border-top">
             <t t-call-slot="defaultFooter"/>
             <t t-if="this.templates[this.constructor.FOOTER_ATTRIBUTE]">
                 <t t-call="{{ this.templates[this.constructor.FOOTER_ATTRIBUTE] }}"
@@ -20,7 +20,7 @@
     </t>
 
     <t t-name="web.CalendarCommonPopover">
-        <div class="o_cw_popover position-relative" t-att-class="this.rootClass">
+        <div class="o_cw_popover position-relative d-flex flex-column overflow-hidden" t-att-class="this.rootClass">
             <div class="o_cw_popover_close p-1 cursor-pointer d-flex justify-content-center position-absolute top-0 end-0"
                 t-on-click.stop="this.props.close">
                 <i class="oi oi-close"></i>
