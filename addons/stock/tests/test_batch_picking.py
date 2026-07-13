@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -104,11 +103,10 @@ class TestBatchPicking(TestStockBatchCommon):
         # view not handling the M2M widget assigned to picking_ids (O2M). Hopefully if this changes then
         # commented parts of this test can be used later.
 
-
         # manually set batch scheduled date => picking's scheduled dates auto update to match (onchange logic test)
         # with Form(self.batch) as batch_form:
-            # batch_form.scheduled_date = now - timedelta(days=1)
-            # batch_form.save()
+        #     batch_form.scheduled_date = now - timedelta(days=1)
+        #     batch_form.save()
         # self.assertEqual(self.batch.scheduled_date, self.picking_client_1.scheduled_date)
         # self.assertEqual(self.batch.scheduled_date, self.picking_client_2.scheduled_date)
 
@@ -867,19 +865,19 @@ class TestBatchPicking02(TestStockBatchCommon):
             'location_id': loc1.id,
             'location_dest_id': loc2.id,
             'picking_type_id': self.picking_type_internal.id,
-            'move_ids': [(0, 0, {
+            'move_ids': [Command.create({
                 'location_id': loc1.id,
                 'location_dest_id': loc2.id,
                 'product_id': self.productA.id,
                 'uom_id': self.productA.uom_id.id,
                 'product_uom_qty': qty,
-            }), (0, 0, {
+            }), Command.create({
                 'location_id': loc1.id,
                 'location_dest_id': loc2.id,
                 'product_id': self.productB.id,
                 'uom_id': self.productB.uom_id.id,
                 'product_uom_qty': qty,
-            }) ]
+            })]
         } for qty in (3, 7)])
         pickings.action_confirm()
         pickings.action_assign()
@@ -895,9 +893,9 @@ class TestBatchPicking02(TestStockBatchCommon):
         pickings.move_line_ids.filtered(lambda l: l.product_id == self.productA).result_package_id = package
 
         batch.action_done()
-        self.assertEqual(batch.estimated_shipping_weight, 10 + 10*10 + 10*15)
+        self.assertEqual(batch.estimated_shipping_weight, 10 + (10 * 10) + (10 * 15))
         precision = self.env['decimal.precision'].precision_get('Product Unit')
-        volume = float_round((500*500*500)/1000**3, precision_digits=precision)
+        volume = float_round((500 * 500 * 500) / 1000**3, precision_digits=precision)
         self.assertEqual(batch.estimated_shipping_volume, volume)
         self.assertRecordValues(pickings.move_ids, [
             {'state': 'done', 'quantity': 3},
