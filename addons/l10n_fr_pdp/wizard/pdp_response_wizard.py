@@ -1,6 +1,8 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, float_round, format_list
+from odoo.tools import float_repr, float_round
+
+from odoo.addons.account_peppol.tools import format_list
 
 
 class PdpResponseWizard(models.TransientModel):

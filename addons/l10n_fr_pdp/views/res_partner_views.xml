@@ -7,13 +7,13 @@
             <field name="inherit_id" ref="account_peppol_response.res_partner_form_account_peppol_response"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//label[@for='peppol_verification_state']" position="attributes">
+                <xpath expr="//label[@for='account_peppol_verification_label']" position="attributes">
                     <attribute name="for">pdp_verification_display_state</attribute>
                 </xpath>
-                <xpath expr="//div[@invisible='not peppol_response_support']/field[@name='peppol_verification_state' and @readonly='1']" position="attributes">
+                <xpath expr="//div[@invisible='not peppol_response_support']/field[@name='account_peppol_verification_label' and @readonly='1']" position="attributes">
                     <attribute name="name">pdp_verification_display_state</attribute>
                 </xpath>
-                <xpath expr="//div[@invisible='peppol_response_support']/field[@name='peppol_verification_state' and @readonly='1']" position="attributes">
+                <xpath expr="//div[@invisible='peppol_response_support']/field[@name='account_peppol_verification_label' and @readonly='1']" position="attributes">
                     <attribute name="name">pdp_verification_display_state</attribute>
                 </xpath>
             </data>

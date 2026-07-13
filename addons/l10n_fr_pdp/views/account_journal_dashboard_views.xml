@@ -6,6 +6,10 @@
         <field name="inherit_id" ref="account_peppol.account_journal_dashboard_kanban_view" />
         <field name="arch" type="xml">
             <data>
+                <!-- `country_code` is used below in the `invisible` modifiers -->
+                <xpath expr="//a[@name='peppol_get_message_status']" position="before">
+                    <field name="country_code" invisible="1"/>
+                </xpath>
                 <xpath expr="//a[@name='peppol_get_message_status']" position="attributes">
                     <attribute name="invisible" add="country_code == 'FR'" separator="or"/>
                 </xpath>

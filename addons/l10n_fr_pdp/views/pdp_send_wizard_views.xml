@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <form string="Send Flow">
                 <sheet>
+                    <field name="flow_id" invisible="1"/>  <!-- used in `invisible` modifiers below -->
                     <div class="alert alert-warning" role="alert">
                         <p>Some invoices were excluded because of validation errors.  <button name="action_view_errors" type="object" class="oe_link" string="View invoices"/></p>
                         <p invisible="flow_id.transmission_type == 'rectificative'">Click "Send anyway" to submit without them.</p>

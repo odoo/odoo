@@ -7,7 +7,7 @@ from types import MappingProxyType
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.translate import _lt
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_fr_pdp.models.account_peppol_response import PEPPOL_TO_PDP_STATUS, PDP_STATUSES
@@ -15,7 +15,6 @@ from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 from odoo.addons.l10n_fr_pdp.utils.cdar import _parse_datetime_node as _parse_cdar_datetime_node
 
 _logger = logging.getLogger(__name__)
-_lt = LazyTranslate(__name__)
 BATCH_SIZE = 50
 
 CDAR_NSMAP = MappingProxyType({

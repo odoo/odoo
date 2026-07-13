@@ -84,6 +84,10 @@ class ResCompany(models.Model):
         compute='_compute_peppol_purchase_journal_id', store=True, readonly=False,
         inverse='_inverse_peppol_purchase_journal_id',
     )
+    account_peppol_edi_user = fields.Many2one(
+        comodel_name='account_edi_proxy_client.user',
+        compute='_compute_account_peppol_edi_user',
+    )
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -198,6 +202,13 @@ class ResCompany(models.Model):
                 except ValidationError:
                     continue
 
+    @api.depends('account_edi_proxy_client_ids')
+    def _compute_account_peppol_edi_user(self):
+        for company in self:
+            company.account_peppol_edi_user = company.account_edi_proxy_client_ids.filtered(
+                lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()
+            )
+
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
@@ -271,3 +282,10 @@ class ResCompany(models.Model):
             for module, identifiers in self._peppol_modules_document_types().items()
             for identifier, document_name in identifiers.items()
         }
+
+    def _get_peppol_proxy_type(self):
+        self.ensure_one()
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(
+            lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()
+        )
+        return peppol_user.proxy_type or 'peppol'

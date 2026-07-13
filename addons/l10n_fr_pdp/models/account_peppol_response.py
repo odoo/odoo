@@ -2,9 +2,7 @@ from types import MappingProxyType
 
 from odoo import api, fields, models
 
-from odoo.tools.translate import LazyTranslate
-
-_lt = LazyTranslate(__name__)
+from odoo.tools.translate import _lt
 
 NEW_STATUSES = MappingProxyType({
     'submitted': _lt('Submitted'),  # required by PPF

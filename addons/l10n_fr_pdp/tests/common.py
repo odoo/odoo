@@ -78,7 +78,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
             'siret': '96851575905823',
-            'invoice_edi_format': 'ubl_21_fr',
+            'ubl_cii_format': 'ubl_21_fr',
             'peppol_eas': '0225',
             'peppol_endpoint': '968515759_96851575905823',
         })
@@ -90,7 +90,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.be').id,
             'phone': '061928374',
             'vat': 'BE0897223670',
-            'invoice_edi_format': 'ubl_bis3',
+            'ubl_cii_format': 'ubl_bis3',
             'peppol_eas': '0208',
             'peppol_endpoint': '0239843188',
         })

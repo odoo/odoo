@@ -15,6 +15,9 @@
                         <div colspan="2" class="text-muted mb-3">
                             Send invoices and receive bills automatically on the French e-Invoicing network.
                         </div>
+                        <field name="account_peppol_proxy_state" invisible="1"/>  <!-- used in `invisible` modifier below -->
+                        <field name="pdp_kyc_status" invisible="1"/>  <!-- used in `invisible` modifier below -->
+                        <field name="edi_mode" invisible="1"/>  <!-- used in `invisible` modifier below -->
 
                         <!-- business fields -->
                         <field name="pdp_identifier"

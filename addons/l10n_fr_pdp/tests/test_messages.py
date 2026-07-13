@@ -134,7 +134,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         move.action_post()
 
         wizard = self.create_send_and_print(move, sending_methods=['email', 'peppol'])
-        self.assertEqual(wizard.invoice_edi_format, 'ubl_21_fr')
+        self.assertEqual(wizard.ubl_cii_format, 'ubl_21_fr')
 
         # the ubl xml placeholder should be generated
         self._assert_mail_attachments_widget(wizard, [
@@ -161,18 +161,18 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         wizard = self.env['account.move.send.wizard'].create({
             'move_id': move.id,
         })
-        self.assertEqual(move.partner_id.peppol_verification_state, 'valid')
+        self.assertEqual(move.partner_id.account_peppol_verification_label, 'valid')
         self.assertTrue('peppol' not in wizard.sending_method_checkboxes)  # peppol checkbox not shown
         self.assertTrue('peppol' not in wizard.sending_methods)  # peppol is not checked by default
 
     def test_send_pdp_not_valid_format(self):
         move = self._create_french_invoice()
         move.action_post()
-        move.partner_id.invoice_edi_format = 'xrechnung'
+        move.partner_id.ubl_cii_format = 'xrechnung'
         wizard = self.env['account.move.send.wizard'].create({
             'move_id': move.id,
         })
-        self.assertEqual(move.partner_id.peppol_verification_state, 'not_valid_format')
+        self.assertEqual(move.partner_id.account_peppol_verification_label, 'not_valid_format')
         self.assertTrue('peppol' not in wizard.sending_methods)  # peppol is not checked by default
         self.assertTrue(wizard.sending_method_checkboxes['peppol']['readonly'])  # can't select peppol
         self.assertFalse(wizard.alerts)  # there is no alerts
@@ -182,7 +182,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         partner.write({
             'peppol_eas': '0225',
             'peppol_endpoint': '111111111',
-            'invoice_edi_format': 'ubl_21_fr',
+            'ubl_cii_format': 'ubl_21_fr',
         })
         move = self._create_french_invoice()
         move.partner_id = partner
@@ -190,7 +190,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         wizard = self.env['account.move.send.wizard'].create({
             'move_id': move.id,
         })
-        self.assertEqual(partner.peppol_verification_state, 'not_valid')
+        self.assertEqual(partner.account_peppol_verification_label, 'not_valid')
         self.assertTrue('peppol' not in wizard.sending_methods)  # peppol is not checked by default
         self.assertTrue(wizard.sending_method_checkboxes['peppol']['readonly'])  # can't select peppol
         self.assertFalse(wizard.alerts)  # there is no alerts
@@ -201,7 +201,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         move.action_post()
 
         wizard = self.create_send_and_print(move)
-        self.assertEqual(wizard.invoice_edi_format, 'ubl_21_fr')
+        self.assertEqual(wizard.ubl_cii_format, 'ubl_21_fr')
         self.assertTrue('peppol' in wizard.sending_methods)
         with self._set_context({'error': True}):
             wizard.action_send_and_print()
@@ -212,7 +212,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         # we can't send the ubl document again unless we regenerate the pdf
         move.invoice_pdf_report_id.unlink()
         wizard = self.create_send_and_print(move)
-        self.assertEqual(wizard.invoice_edi_format, 'ubl_21_fr')
+        self.assertEqual(wizard.ubl_cii_format, 'ubl_21_fr')
         self.assertTrue('peppol' in wizard.sending_methods)
 
         wizard.action_send_and_print()
@@ -228,7 +228,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         move.action_post()
 
         wizard = self.create_send_and_print(move)
-        self.assertEqual(wizard.invoice_edi_format, 'ubl_21_fr')
+        self.assertEqual(wizard.ubl_cii_format, 'ubl_21_fr')
         self.assertTrue('peppol' in wizard.sending_methods)
 
         wizard.action_send_and_print()
@@ -275,7 +275,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         def mocked_export_invoice_constraints(self, invoice, vals):
             return {'test_error_key': 'test_error_description'}
 
-        self.partner_a.invoice_edi_format = 'ubl_21_fr'
+        self.partner_a.ubl_cii_format = 'ubl_21_fr'
         move_1 = self._create_french_invoice()
         move_2 = self._create_french_invoice()
         (move_1 + move_2).action_post()

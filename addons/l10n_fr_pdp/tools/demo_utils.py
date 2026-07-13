@@ -68,23 +68,24 @@ def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification):
     return {'in_annuaire': peppol_eas == '0225'}
 
 
-def _mock_get_peppol_verification_state(func, self, peppol_endpoint, peppol_eas, invoice_edi_format):
+# TODO: function does not exist anymore
+def _mock_get_peppol_verification_state(func, self, peppol_endpoint, peppol_eas, ubl_cii_format):
     if peppol_eas != '0225' or self.env.company._get_peppol_proxy_type() != 'pdp':
-        return func(self, peppol_endpoint, peppol_eas, invoice_edi_format)
-    if not invoice_edi_format:
+        return func(self, peppol_endpoint, peppol_eas, ubl_cii_format)
+    if not ubl_cii_format:
         return 'not_valid'
-    if invoice_edi_format != 'ubl_21_fr':
+    if ubl_cii_format != 'ubl_21_fr':
         return 'not_valid_format'
     return 'valid'
 
 
 def _mock_button_verify_partner_endpoint(func, self, company=None):
     self.ensure_one()
-    old_value = self.peppol_verification_state
+    old_value = self.account_peppol_verification_label
     company = company or self.env.company
     endpoint, eas, edi_format = self.peppol_endpoint, self.peppol_eas, self._get_peppol_edi_format()
     state = _mock_get_peppol_verification_state(ResPartner._get_peppol_verification_state, self, endpoint, eas, edi_format)
-    self.with_company(company).peppol_verification_state = state
+    self.with_company(company).account_peppol_verification_label = state
     self._log_verification_state_update(company, old_value, state)
 
 
@@ -107,7 +108,6 @@ _demo_behaviour = {
     '_peppol_register_receiver': _mock_peppol_register_receiver,  # account_edi_proxy_client.user
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
     '_pdp_annuaire_lookup_participant': _mock_pdp_annuaire_lookup_participant,  # res.partner
-    '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
     '_l10n_fr_pdp_update_pilot_phase': _mock_l10n_fr_pdp_update_pilot_phase,  # res.company
     'button_trigger_authentication': _mock_button_trigger_authentication,  # pdp.registration
 }

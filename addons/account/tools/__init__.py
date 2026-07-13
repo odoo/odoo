@@ -1,6 +1,7 @@
 import requests
 from urllib3.util.ssl_ import create_urllib3_context
 
+from .dict_to_xml import dict_to_xml
 from .structured_reference import *
 
 

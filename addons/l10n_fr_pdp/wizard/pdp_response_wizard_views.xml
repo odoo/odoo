@@ -7,6 +7,8 @@
             <form string="Send Response Message">
                 <sheet>
                     <group>
+                        <field name="show_reason_code" invisible="1"/>  <!-- used in `invisible` modifier below -->
+                        <field name="move_count" invisible="1"/>  <!-- used in `invisible` modifier below -->
                         <field name="available_statuses" invisible="1"/>  <!-- needed for the dynamic_selection widget on `status`-->
                         <field name="status" required="True" widget="dynamic_selection"
                                options="{'available_field': 'available_statuses'}"/>

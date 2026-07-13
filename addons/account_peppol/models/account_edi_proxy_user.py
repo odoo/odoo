@@ -32,6 +32,10 @@ class AccountEdiProxyClientUser(models.Model):
     def _make_request_peppol(self, url, params=False):
         return super()._make_request(url, params)
 
+    @api.model
+    def _get_peppol_proxy_types(self):
+        return ['peppol']
+
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
         urls['peppol'] = {

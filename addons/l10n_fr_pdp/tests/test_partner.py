@@ -21,7 +21,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
             'siret': '96851575905877',
-            'invoice_edi_format': 'ubl_21_fr',
+            'ubl_cii_format': 'ubl_21_fr',
         })
         self.assertRecordValues(partner, [{
             'peppol_endpoint': '968515759',
@@ -37,7 +37,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
             'company_registry': '96851575905877',
-            'invoice_edi_format': 'ubl_21_fr',
+            'ubl_cii_format': 'ubl_21_fr',
         })
         self.assertRecordValues(partner, [{
             'peppol_endpoint': '968515759',
@@ -53,7 +53,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
             'siret': '968515759',
-            'invoice_edi_format': 'ubl_21_fr',
+            'ubl_cii_format': 'ubl_21_fr',
         })
         self.assertRecordValues(partner, [{
             'peppol_endpoint': '968515759',
@@ -69,7 +69,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
             'company_registry': '968515759',
-            'invoice_edi_format': 'ubl_21_fr',
+            'ubl_cii_format': 'ubl_21_fr',
         })
         self.assertRecordValues(partner, [{
             'peppol_endpoint': '968515759',
@@ -81,17 +81,17 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner.invoice_sending_method = 'peppol'
         self.assertEqual(partner._get_pdp_receiver_identification_info()[0], 'pdp')
         with self.assertRaises(UserError):
-            partner.invoice_edi_format = 'ubl_bis3'
+            partner.ubl_cii_format = 'ubl_bis3'
 
         partner.invoice_sending_method = 'email'
-        partner.invoice_edi_format = 'ubl_bis3'
+        partner.ubl_cii_format = 'ubl_bis3'
 
     def test_validate_partner_be_invalid_format(self):
         partner = self.partner_b
         self.assertRecordValues(partner, [{
-            'peppol_verification_state': 'not_valid',
+            'account_peppol_verification_label': 'not_valid',
             'pdp_verification_display_state': 'peppol_not_valid',
-            'invoice_edi_format': 'ubl_bis3',
+            'ubl_cii_format': 'ubl_bis3',
         }])
 
         self.assertEqual(
@@ -109,10 +109,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
                 mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
                 mock.patch.object(requests.sessions.Session, 'send', _request_handler),
         ):
-            partner.invoice_edi_format = 'xrechnung'  # this should trigger a verification state update
+            partner.ubl_cii_format = 'xrechnung'  # this should trigger a verification state update
 
         self.assertRecordValues(partner, [{
-            'peppol_verification_state': 'not_valid_format',
+            'account_peppol_verification_label': 'not_valid_format',
             'pdp_verification_display_state': 'peppol_not_valid_format',
         }])
 
@@ -123,9 +123,9 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             ('peppol', "0208:0239843188")
         )
         self.assertRecordValues(partner, [{
-            'peppol_verification_state': 'not_valid',
+            'account_peppol_verification_label': 'not_valid',
             'pdp_verification_display_state': 'peppol_not_valid',
-            'invoice_edi_format': 'ubl_bis3',
+            'ubl_cii_format': 'ubl_bis3',
         }])
 
         def _request_handler_1(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
@@ -142,7 +142,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             partner.button_account_peppol_check_partner_endpoint()
 
         self.assertRecordValues(partner, [{
-            'peppol_verification_state': 'not_valid_format',
+            'account_peppol_verification_label': 'not_valid_format',
             'pdp_verification_display_state': 'peppol_not_valid_format',
         }])
 
@@ -161,7 +161,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             partner.button_account_peppol_check_partner_endpoint()
 
         self.assertRecordValues(partner, [{
-            'peppol_verification_state': 'valid',
+            'account_peppol_verification_label': 'valid',
             'pdp_verification_display_state': 'peppol_valid',
             'invoice_sending_method': False,
         }])
@@ -173,9 +173,9 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             ('pdp', "0225:968515759_96851575905823")
         )
         self.assertRecordValues(partner, [{
-            'peppol_verification_state': 'not_valid',
+            'account_peppol_verification_label': 'not_valid',
             'pdp_verification_display_state': 'pdp_not_valid',
-            'invoice_edi_format': 'ubl_21_fr',
+            'ubl_cii_format': 'ubl_21_fr',
         }])
 
         def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
@@ -196,7 +196,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             partner.button_account_peppol_check_partner_endpoint()
 
         self.assertRecordValues(partner, [{
-            'peppol_verification_state': 'valid',
+            'account_peppol_verification_label': 'valid',
             'pdp_verification_display_state': 'pdp_valid',
             'invoice_sending_method': False,
         }])
