@@ -141,11 +141,13 @@ class ResCompany(models.Model):
             periods.append('monthly')
         domain = Domain([
             ('inventory_period', 'in', periods),
-            ('inventory_valuation', '!=', 'real_time'),
         ])
         companies = self.env['res.company'].search(domain)
         for company in companies:
-            company.with_context(closing_cron=True).action_close_stock_valuation(auto_post=True)
+            try:
+                company.with_context(closing_cron=True).action_close_stock_valuation(auto_post=True)
+            except UserError:
+                continue
 
     def _get_valuation_product_domain(self):
         return [('is_storable', '=', True)]
