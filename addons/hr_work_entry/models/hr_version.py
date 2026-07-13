@@ -373,6 +373,7 @@ class HrVersion(models.Model):
         return vals_list
 
     @api.model
+<<<<<<< 283d0b7114a2771f2ef8b4e4419405a82150e929
     def _get_work_entry_source_fields(self):
         """
         Returns the list of work entry fields that should be merged/aggregated
@@ -518,3 +519,68 @@ class HrVersion(models.Model):
             else:
                 merged_vals[key] = vals.copy()
         return list(merged_vals.values())
+||||||| 164ba2d712e55b6e14d30db914b9b56cbe25b91c
+    def _cron_generate_missing_work_entries(self):
+        # retrieve versions for the current month
+        today = fields.Date.today()
+        start = datetime.combine(today + relativedelta(day=1), time.min)
+        stop = datetime.combine(today + relativedelta(months=1, day=31), time.max)
+        all_versions = self.env['hr.employee']._get_all_versions_with_contract_overlap_with_period(start.date(), stop.date())
+        # determine versions to do (the ones whose generated dates have open periods this month)
+        versions_todo = all_versions.filtered(
+            lambda v:
+            (v.date_generated_from > start or v.date_generated_to < stop) and
+            (not v.last_generation_date or v.last_generation_date < today))
+        if not versions_todo:
+            return
+        version_todo_count = len(versions_todo)
+        # Filter versions by company, work entries generation is not supposed to be called on
+        # versions from differents companies, as we will retrieve the resource.calendar.leave
+        # and we don't want to mix everything up. The other versions will be treated when the
+        # cron is re-triggered
+        versions_todo = versions_todo.filtered(lambda v: v.company_id == versions_todo[0].company_id)
+        # generate a batch of work entries
+        BATCH_SIZE = 100
+        # Since attendance based are more volatile for their work entries generation
+        # it can happen that the date_generated_from and date_generated_to fields are not
+        # pushed to start and stop
+        # It is more interesting for batching to process statically generated work entries first
+        # since we get benefits from having multiple versions on the same calendar
+        versions_todo = versions_todo.sorted(key=lambda v: 1 if v.has_static_work_entries() else 100)
+        versions_todo = versions_todo[:BATCH_SIZE].generate_work_entries(start.date(), stop.date(), False)
+        # if necessary, retrigger the cron to generate more work entries
+        if version_todo_count > BATCH_SIZE:
+            self.env.ref('hr_work_entry.ir_cron_generate_missing_work_entries')._trigger()
+=======
+    def _cron_generate_missing_work_entries(self):
+        # retrieve versions for the current month
+        today = fields.Date.today()
+        start = datetime.combine(today + relativedelta(day=1), time.min)
+        stop = datetime.combine(today + relativedelta(months=1, day=31), time.max)
+        all_versions = self.env['hr.employee']._get_all_versions_with_contract_overlap_with_period(start.date(), stop.date())
+        # determine versions to do (the ones whose generated dates have open periods this month)
+        versions_todo = all_versions.filtered(
+            lambda v:
+            (v.date_generated_from > start or v.date_generated_to < stop) and
+            (not v.last_generation_date or v.last_generation_date < today))
+        if not versions_todo:
+            return
+        version_todo_count = len(versions_todo)
+        # Filter versions by company, work entries generation is not supposed to be called on
+        # versions from differents companies, as we will retrieve the resource.calendar.leave
+        # and we don't want to mix everything up. The other versions will be treated when the
+        # cron is re-triggered
+        versions_todo = versions_todo.filtered(lambda v: v.company_id == versions_todo[0].company_id)
+        # generate a batch of work entries
+        BATCH_SIZE = 100
+        # Since attendance based are more volatile for their work entries generation
+        # it can happen that the date_generated_from and date_generated_to fields are not
+        # pushed to start and stop
+        # It is more interesting for batching to process statically generated work entries first
+        # since we get benefits from having multiple versions on the same calendar
+        versions_todo = versions_todo.sorted(key=lambda v: 1 if v.has_static_work_entries() else 100)
+        versions_todo = versions_todo[:BATCH_SIZE].with_context(lang=self.env.user.lang).generate_work_entries(start.date(), stop.date(), False)
+        # if necessary, retrigger the cron to generate more work entries
+        if version_todo_count > BATCH_SIZE:
+            self.env.ref('hr_work_entry.ir_cron_generate_missing_work_entries')._trigger()
+>>>>>>> 6aa51214536aa12f305dffc1ec72d218290c6b4e
