@@ -1607,3 +1607,33 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
             analytic_account1 | analytic_account2,
             "As the timesheet SOL's distribution only contains the main account of the project, we fallback on the project's accounts and add them to the distribution.",
         )
+
+    def test_remove_so_line_upon_change_project(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'SO Test',
+            'partner_id': self.partner_a.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_order_timesheet4.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+            'analytic_distribution': {f'{self.analytic_account_sale.id}': 100},
+        })
+        analytic_line = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': self.project_global.id,
+            'unit_amount': 50,
+            'employee_id': self.employee_manager.id,
+            'is_so_line_edited': True,
+            'so_line': so_line.id,
+        })
+
+        self.assertEqual(analytic_line.so_line, so_line)
+        self.assertTrue(analytic_line.is_so_line_edited)
+
+        analytic_line.write({
+            'project_id': self.project_non_billable.id,
+        })
+
+        self.assertFalse(analytic_line.so_line)
+        self.assertFalse(analytic_line.is_so_line_edited)
