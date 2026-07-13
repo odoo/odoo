@@ -2,7 +2,7 @@ import calendar
 import logging
 from markupsafe import Markup
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -144,7 +144,7 @@ class PdpFlow(models.Model):
     @api.ondelete(at_uninstall=False)
     def _ondelete_flow(self):
         if any(flow.state in FLOW_SENT_STATES for flow in self):
-            raise UserError(self.env._("You cannot delete sent flows."))
+            raise UserError(_("You cannot delete sent flows."))
 
     # -------------------------------------------------------------------------
     # Business Methods - Validation
@@ -185,9 +185,9 @@ class PdpFlow(models.Model):
         if not existing_flows or is_rectificative:
             name = ' • '.join([
                 f'{period_data["period_start"]} > {period_data["period_end"]}',
-                self.env._('Transaction') if report_type == 'transaction' else self.env._('Payment'),
-                self.env._('Sale') if scope_params['operation_type'] == 'sale' else self.env._('Purchase'),
-                self.env._('Rect.') if is_rectificative else self.env._('Init.'),
+                _('Transaction') if report_type == 'transaction' else _('Payment'),
+                _('Sale') if scope_params['operation_type'] == 'sale' else _('Purchase'),
+                _('Rect.') if is_rectificative else _('Init.'),
             ])
             existing_flows += self.create({
                 **scope_params,
@@ -209,14 +209,14 @@ class PdpFlow(models.Model):
         invalid_move_states = {None, 'out_of_scope', 'error'}
         for flow in self:
             if flow.state not in FLOW_OPEN_STATES:
-                raise UserError(self.env._("Flow %(name)s has already been sent.", name=flow.name))
+                raise UserError(_("Flow %(name)s has already been sent.", name=flow.name))
 
             if moves is None:
                 moves = flow._get_moves()
             valid_moves = moves.filtered(lambda move: move.l10n_fr_pdp_status not in invalid_move_states)
 
             if not valid_moves:
-                flow._message_post_once(self.env._("Payload build failed: no valid invoices."))
+                flow._message_post_once(_("Payload build failed: no valid invoices."))
                 continue
 
             payload = self.env['pdp.flow.10.xml.builder']._build_payload(flow, valid_moves)
@@ -236,13 +236,13 @@ class PdpFlow(models.Model):
             # Log build completion
             error_moves_len = len(valid_moves) < len(moves)
             if error_moves_len:
-                flow._message_post_once(self.env._(
+                flow._message_post_once(_(
                     "Payload built with %(valid)s valid invoice(s) and %(invalid)s error(s).",
                     valid=len(valid_moves),
                     invalid=error_moves_len,
                 ))
             else:
-                flow._message_post_once(self.env._(
+                flow._message_post_once(_(
                     "Payload built successfully with %(count)s invoice(s).",
                     count=len(valid_moves),
                 ))
@@ -281,19 +281,19 @@ class PdpFlow(models.Model):
             if flow.initial_flow_id:
                 previous_flow = (flow.initial_flow_id + flow.initial_flow_id.rectificative_flow_ids - flow).sorted('id')[-1]
                 if previous_flow.state not in FLOW_SENT_STATES:
-                    flow._message_post_once(self.env._(
+                    flow._message_post_once(_(
                         "Previous flow %(name)s shoul have been sent.",
                         name=previous_flow.name
                     ))
                     continue
                 if set(previous_flow.sent_move_ids.ids) == set(valid_moves_ids):
-                    flow._message_post_once(self.env._(
+                    flow._message_post_once(_(
                         "This flow is identical to the previous flow %(name)s.",
                         name=previous_flow.name
                     ))
                     continue
             elif not valid_moves_ids:
-                flow._message_post_once(self.env._("No valid transactions/payments to send."))
+                flow._message_post_once(_("No valid transactions/payments to send."))
                 continue
 
             flow._build_payload(flow_moves)
@@ -309,7 +309,7 @@ class PdpFlow(models.Model):
                 valid_moves.l10n_fr_pdp_sent_in_flow_ids += flow
 
             # Log send result
-            flow._message_post_once(self.env._(
+            flow._message_post_once(_(
                 "Flow sent: status %(status)s, (message uuid %(transport)s).",
                 status=flow.state,
                 transport=response['uuid'],
@@ -326,7 +326,7 @@ class PdpFlow(models.Model):
         """Post audit message on successfully sent moves."""
         self.ensure_one()
         flow_link = Markup('<a href="/web#id=%s&amp;model=l10n.fr.pdp.reports.flow&amp;view_type=form">%s</a>') % (self.id, self.name)
-        body = self.env._("E-reports %s sent", flow_link)
+        body = _("E-reports %s sent", flow_link)
         for move in moves:
             move.message_post(body=body, subtype_xmlid='mail.mt_note')
 
@@ -334,7 +334,7 @@ class PdpFlow(models.Model):
         self.ensure_one()
         proxy_user = self.company_id.account_peppol_edi_user
         if not proxy_user:
-            raise UserError(self.env._(
+            raise UserError(_(
                 "No active PDP proxy user is configured for company %(company)s.",
                 company=self.company_id.display_name,
             ))
@@ -343,7 +343,7 @@ class PdpFlow(models.Model):
     def _send_to_proxy(self):
         self.ensure_one()
         if not self.payload_id:
-            raise UserError(self.env._("The flow payload is missing. Build the payload before sending."))
+            raise UserError(_("The flow payload is missing. Build the payload before sending."))
         proxy_user = self._get_pdp_proxy_user()
         payload_doc = {
             'flow_number': 10,
@@ -358,7 +358,7 @@ class PdpFlow(models.Model):
         )
         ppf_messages = result.get('ppf_messages') or []
         if not ppf_messages:
-            raise UserError(self.env._("The PDP proxy did not return a flow tracking identifier."))
+            raise UserError(_("The PDP proxy did not return a flow tracking identifier."))
 
         proxy_message = ppf_messages[0]
         return {
@@ -509,7 +509,7 @@ class PdpFlow(models.Model):
         today = fields.Date.context_today(self)
         for flow in self:
             if flow.error_moves_count and not (ctx.get('ignore_error_invoices') or today == flow.due_period_end):
-                raise UserError(self.env._(
+                raise UserError(_(
                     "This flow still contains invoices with validation errors. "
                     "Fix them or use the 'Send without invalid invoices' button.",
                 ))
@@ -518,7 +518,7 @@ class PdpFlow(models.Model):
 
     def action_view_error_moves(self):
         """Open list view of invalid invoices."""
-        action = self._get_moves()._get_records_action(name=self.env._("Invalid Invoices"))
+        action = self._get_moves()._get_records_action(name=_("Invalid Invoices"))
         domain = action.get('domain') or []
         action['domain'] = expression.AND([domain, [('l10n_fr_pdp_has_error', '=', True)]])
         return action
@@ -541,7 +541,7 @@ class PdpFlow(models.Model):
     def action_view_moves(self):
         """Open list view of related invoices."""
         return self._get_moves()._get_records_action(
-            name=self.env._("Related Invoices"),
+            name=_("Related Invoices"),
             context={'create': False, 'group_by': ['move_type']},
         )
 
@@ -586,9 +586,9 @@ class PdpFlow(models.Model):
                         continue
                 flow.with_company(flow.company_id).sudo().action_send(check_totp=False)
                 flow._log_cron_event(
-                    self.env._("Flow automatically sent by cron (status: %(status)s). %(extra)s",
+                    _("Flow automatically sent by cron (status: %(status)s). %(extra)s",
                       status=flow.transport_status or flow.state,
-                      extra=self.env._("Invalid invoices were excluded.") if flow.error_moves_count else ""),
+                      extra=_("Invalid invoices were excluded.") if flow.error_moves_count else ""),
                 )
             except Exception:
                 _logger.exception('Failed to send Flow 10 %s', flow.name)

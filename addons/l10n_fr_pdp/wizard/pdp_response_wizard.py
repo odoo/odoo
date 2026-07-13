@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, float_round
 
@@ -84,7 +84,7 @@ class PdpResponseWizard(models.TransientModel):
     def _compute_currency_id(self):
         eur = self.env['res.currency'].search([('name', '=', 'EUR')], limit=1)
         if not eur:
-            raise UserError(self.env._("The EUR currency is missing."))
+            raise UserError(_("The EUR currency is missing."))
         self.currency_id = eur
 
     @api.depends('move_ids')
@@ -108,7 +108,7 @@ class PdpResponseWizard(models.TransientModel):
         for wizard in self:
             categories = set(self.move_ids.mapped(lambda m: move_type_map.get(m.move_type)))
             if len(categories) != 1 or categories - {'sale', 'purchase'}:
-                raise UserError(self.env._("All journal entries must either be purchase or sale documents."))
+                raise UserError(_("All journal entries must either be purchase or sale documents."))
             category = next(iter(categories))
             if category == 'sale':
                 statuses = ['PD', 'cancelled']
@@ -257,20 +257,20 @@ class PdpResponseWizard(models.TransientModel):
         self.ensure_one()
 
         if not self.status:
-            raise UserError(self.env._("Please select a Status."))
+            raise UserError(_("Please select a Status."))
         # Note: `_compute_available_statuses` ensures that all moves are either sale or puchase documents
 
         if (unsent_moves := self.move_ids.filtered(lambda m: not m.pdp_is_sent)):
-            raise UserError(self.env._("Some of the journal entries were not sent to the Approved Platform yet: %s", format_list(self.env, unsent_moves.mapped('display_name'))))
+            raise UserError(_("Some of the journal entries were not sent to the Approved Platform yet: %s", format_list(self.env, unsent_moves.mapped('display_name'))))
 
         if self.status == 'refused' and not self.reason_code:
-            raise UserError(self.env._("To refuse an invoice please select a Reason Code."))
+            raise UserError(_("To refuse an invoice please select a Reason Code."))
         if self.status == 'refused' and not self.note:
-            raise UserError(self.env._("To refuse an invoice please enter a Note."))
+            raise UserError(_("To refuse an invoice please enter a Note."))
         if self.status in ('cancelled', 'refused') and (not_cancelled_moves := self.move_ids.filtered(lambda m: m.state != 'cancel')):
-            raise UserError(self.env._("Some of the journal entries are not cancelled: %s", format_list(self.env, not_cancelled_moves.mapped('display_name'))))
+            raise UserError(_("Some of the journal entries are not cancelled: %s", format_list(self.env, not_cancelled_moves.mapped('display_name'))))
         if self.status == 'AP' and (not_approved_moves := self.move_ids.filtered(lambda m: m.state != 'posted')):
-            raise UserError(self.env._("Some of the journal entries are not posted: %s", format_list(self.env, not_approved_moves.mapped('display_name'))))
+            raise UserError(_("Some of the journal entries are not posted: %s", format_list(self.env, not_approved_moves.mapped('display_name'))))
         forced_amount = None
         if (
             self.status == 'PD'
@@ -281,12 +281,12 @@ class PdpResponseWizard(models.TransientModel):
             forced_amount = self.paid_amount
 
         if self.status == 'PD' and any(move.currency_id.name != 'EUR' for move in self.move_ids):
-            raise UserError(self.env._("Only journal entries in currency EUR are supported."))
+            raise UserError(_("Only journal entries in currency EUR are supported."))
 
         if self.status == 'PD' and (untaxed_moves := self.move_ids.filtered(lambda m: not m.amount_tax)):
-            raise UserError(self.env._("Some of the journal entries are without tax: %s", format_list(self.env, untaxed_moves.mapped('display_name'))))
+            raise UserError(_("Some of the journal entries are without tax: %s", format_list(self.env, untaxed_moves.mapped('display_name'))))
         if self.status == 'PD' and not forced_amount and (up_to_date_moves := self.move_ids.filtered(lambda m: not m.pdp_lifecycle_residual)):
-            raise UserError(self.env._("Some of the journal entries have no payments to send: %s", format_list(self.env, up_to_date_moves.mapped('display_name'))))
+            raise UserError(_("Some of the journal entries have no payments to send: %s", format_list(self.env, up_to_date_moves.mapped('display_name'))))
 
         base_info = {
             field: value for field in ['note', 'reason_code'] if (value := self[field])

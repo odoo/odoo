@@ -1,15 +1,14 @@
 from odoo import Command
 from odoo.tests import tagged
 
-from .common import TestL10nFrPdpCommon
+from .messages_common import TestPdpMessagesCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nFrPdpXml(TestL10nFrPdpCommon):
+class TestL10nFrPdpXml(TestPdpMessagesCommon):
 
-    @classmethod
-    def subfolders(cls):
-        return 'ubl_21_fr', 'invoice', 'fr'
+    def subfolder(self):
+        return 'export/ubl_21_fr/invoice/fr'
 
     def test_export_invoice_partner_fr(self):
         invoice = self._create_french_invoice()
@@ -28,7 +27,7 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
                 'journal_id': invoice.journal_id.id,
             }
         ).reverse_moves()
-        credit_note = invoice.reversal_move_ids
+        credit_note = invoice.reversal_move_id
         credit_note.action_post()
         self._send_patched(credit_note)
         self._assert_invoice_ubl_file(credit_note, "ubl_21_fr_out_credit_note")

@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import _, fields, models
 
 
 class PdpSendWizard(models.TransientModel):
@@ -13,7 +13,7 @@ class PdpSendWizard(models.TransientModel):
     )
     warning = fields.Text(
         readonly=True,
-        default=lambda self: self.env._("Some invoices were excluded due to validation errors."),
+        default=lambda self: _("Some invoices were excluded due to validation errors."),
     )
 
     def action_view_errors(self):

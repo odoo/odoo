@@ -12,9 +12,10 @@ from odoo.addons.l10n_fr_pdp.tests.common import TestL10nFrPdpCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'test_flow_lifecycle')
 class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
+
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref='fr'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.company = cls.company_data['company']
 

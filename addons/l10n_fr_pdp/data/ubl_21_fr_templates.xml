@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="ubl_21_fr_InvoiceLineType" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceLineType" primary="True">
+        <xpath expr="//*[local-name()='Price']//*[local-name()='BaseQuantity']" position="after">
+            <cac:AllowanceCharge t-if="price_vals.get('allowance_charge_vals', {})"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <t t-call="{{AllowanceChargeType_template}}">
+                    <t t-set="vals" t-value="price_vals.get('allowance_charge_vals', {})"/>
+                </t>
+            </cac:AllowanceCharge>
+        </xpath>
+    </template>
+
+    <template id="ubl_21_fr_CreditNoteLineType" inherit_id="account_edi_ubl_cii.ubl_21_CreditNoteLineType" primary="True">
+        <xpath expr="//*[local-name()='Price']//*[local-name()='BaseQuantity']" position="after">
+            <cac:AllowanceCharge t-if="price_vals.get('allowance_charge_vals', {})"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <t t-call="{{AllowanceChargeType_template}}">
+                    <t t-set="vals" t-value="price_vals.get('allowance_charge_vals', {})"/>
+                </t>
+            </cac:AllowanceCharge>
+        </xpath>
+    </template>
+</odoo>

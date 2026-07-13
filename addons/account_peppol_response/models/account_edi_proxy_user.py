@@ -207,7 +207,7 @@ class AccountEdiProxyClientUser(models.Model):
         # IAP knows about the Peppol user: we just send every services we want to support.
         receivers = self.search([
             ('proxy_type', '=', 'peppol'),
-            ('company_id.account_peppol_proxy_state', '=', 'receiver')
+            ('company_id.account_peppol_proxy_state', '=', 'active')
         ])
         supported_identifiers = list(self.env['res.company']._peppol_supported_document_types())
         failed = False

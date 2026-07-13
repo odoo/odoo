@@ -1,10 +1,14 @@
+import base64
 import logging
 import uuid
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
 from lxml import etree
 from markupsafe import Markup
 from types import MappingProxyType
 
-from odoo import api, fields, models, tools
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
 from odoo.tools.translate import _lt
@@ -135,7 +139,7 @@ class AccountEdiProxyClientUser(models.Model):
             return super()._get_proxy_identification(company, proxy_type)
         if not company.pdp_identifier:
             scheme = dict(self.env["res.partner"]._fields['peppol_eas']._description_selection(self.env))["0225"]
-            raise UserError(self.env._("Please fill the Peppol Endpoint field with scheme '%s' on the company partner.", scheme))
+            raise UserError(_("Please fill the Peppol Endpoint field with scheme '%s' on the company partner.", scheme))
         return f'0225:{company.pdp_identifier}'
 
     def _get_company_details(self):
@@ -152,9 +156,20 @@ class AccountEdiProxyClientUser(models.Model):
         if proxy_type != 'pdp':
             return super()._register_proxy_user(company, proxy_type, edi_mode)
 
-        private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(
-            company,
-            name=f"{proxy_type}_{edi_mode}_{company.id}.key",
+        private_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,
+            backend=default_backend()
+        )
+        private_pem = private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        )
+        public_key = private_key.public_key()
+        public_pem = public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
         peppol_identifier = self._get_proxy_identification(company, proxy_type)
         if edi_mode == 'demo':
@@ -167,7 +182,7 @@ class AccountEdiProxyClientUser(models.Model):
                     'dbuuid': company.env['ir.config_parameter'].sudo().get_param('database.uuid'),
                     'company_id': company.id,
                     'peppol_identifier': peppol_identifier,
-                    'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
+                    'public_key': public_pem.decode(),
                     'auth_url_hash': company.pdp_authentication_uuid,
                 })
             except AccountEdiProxyError as e:
@@ -182,7 +197,7 @@ class AccountEdiProxyClientUser(models.Model):
             'proxy_type': 'pdp',
             'edi_mode': edi_mode,
             'edi_identification': peppol_identifier,
-            'private_key_id': private_key_sudo.id,
+            'private_key': base64.b64encode(private_pem),
             'refresh_token': response['refresh_token'],
         })
 
@@ -193,10 +208,10 @@ class AccountEdiProxyClientUser(models.Model):
             return super()._peppol_register_receiver()
 
         company = self.company_id
-        if company.account_peppol_proxy_state in {'smp_registration', 'receiver'}:
+        if company.account_peppol_proxy_state in {'pending', 'active'}:
             # A participant can only try registering as a receiver if they are not registered
             proxy_state_translated = dict(company._fields['account_peppol_proxy_state']._description_selection(self.env))[company.account_peppol_proxy_state]
-            raise UserError(self.env._("Cannot register a user with a '%(proxy_state)s' application.", proxy_state=proxy_state_translated))
+            raise UserError(_("Cannot register a user with a '%(proxy_state)s' application.", proxy_state=proxy_state_translated))
 
         super()._peppol_register_receiver()
 
@@ -279,7 +294,7 @@ class AccountEdiProxyClientUser(models.Model):
                 else:
                     peppol_response.peppol_state = 'error'
                     peppol_response.move_id._message_log(
-                        body=self.env._("French e-invoicing response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
+                        body=_("French e-invoicing response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
                     )
                 processed_message_uuids.append(uid)
                 continue
@@ -302,7 +317,7 @@ class AccountEdiProxyClientUser(models.Model):
             )
             response_code_description = PDP_STATUSES.get(peppol_response.response_code) or peppol_response.response_code
             origin_move._message_log(
-                body=self.env._(
+                body=_(
                     "The Response issued on %(issue_date)s with Response Code '%(response_code)s' was sent by the access point.",
                     response_code=response_code_description,
                     issue_date=format_date(self.env, peppol_response.pdp_issue_date),
@@ -320,7 +335,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         status_string = PDP_STATUSES.get(status)
         if not status_string:
-            raise UserError(self.env._("Unsupported response status: '%s'.", status))
+            raise UserError(_("Unsupported response status: '%s'.", status))
 
         try:
             issue_time = fields.Datetime.now()
@@ -337,7 +352,7 @@ class AccountEdiProxyClientUser(models.Model):
                 },
             )
         except UserError as e:
-            log_message = self.env._(
+            log_message = _(
                 "An error occurred with the Approved Platform while sending a response.%(br)sStatus: %(status)s - %(error)s",
                 br=Markup('<br>'),
                 status=status_string,
@@ -349,7 +364,7 @@ class AccountEdiProxyClientUser(models.Model):
             return
 
         if response.get('error'):
-            log_message = self.env._(
+            log_message = _(
                 "An error occurred with the Approved Platform while sending a response.%(br)sStatus: %(status)s - %(error)s",
                 br=Markup('<br>'),
                 status=status_string,
@@ -375,7 +390,7 @@ class AccountEdiProxyClientUser(models.Model):
             }
             for message, move in zip(response.get('messages'), reference_moves)
         ])
-        log_message = self.env._(
+        log_message = _(
             "A French e-invoicing response with Response Code '%(status)s' was sent to the French e-invoicing Access Point.",
             status=status_string,
         )
@@ -475,7 +490,7 @@ class AccountEdiProxyClientUser(models.Model):
             return origin_move
 
         if content.get('error'):
-            body = self.env._("[Flow 1] There was an error when sending the tax extract to the PPF: %s",
+            body = _("[Flow 1] There was an error when sending the tax extract to the PPF: %s",
                               content['error'].get('data', {}).get('message') or content['error']['message'])
             origin_move._message_log(body=body)
             origin_move.pdp_ppf_move_state = 'error'
@@ -505,7 +520,7 @@ class AccountEdiProxyClientUser(models.Model):
         if content.get('error'):
             error_message = content['error'].get('data', {}).get('message') or content['error']['message']
             status = dict(response._fields['response_code']._description_selection(self.env))[response.response_code]
-            body = self.env._("[Flow 6] There was an error when sending a '%(status)s' response (UUID %(uuid)s) to the PPF: %(error)s",
+            body = _("[Flow 6] There was an error when sending a '%(status)s' response (UUID %(uuid)s) to the PPF: %(error)s",
                               status=status, uuid=response.peppol_message_uuid, error=error_message)
             origin_move._message_log(body=body)
             response.pdp_ppf_state = 'error'
@@ -536,14 +551,14 @@ class AccountEdiProxyClientUser(models.Model):
 
         if not response_code_description or not issue_date or (flow_number == '6' and not ref_status_code_description):
             if origin_ref_status_code:
-                main_message = self.env._(
+                main_message = _(
                     "Failed to process incoming response for status %(ref_status_info)s with Response Code '%(response_code)s' issued on %(issue_date)s.",
                     ref_status_info=(ref_status_code_description or origin_ref_status_code),
                     response_code=response_code_description,
                     issue_date=format_date(self.env, issue_date),
                 )
             else:
-                main_message = self.env._(
+                main_message = _(
                     "Failed to process incoming response with Response Code '%(response_code)s' issued on %(issue_date)s.",
                     response_code=response_code_description,
                     issue_date=format_date(self.env, issue_date),
@@ -579,14 +594,14 @@ class AccountEdiProxyClientUser(models.Model):
         })
         if content['state'] == 'done':
             if origin_ref_status_code:
-                main_message = self.env._(
+                main_message = _(
                     "Received response for status %(ref_status_info)s with Response Code '%(response_code)s' issued on %(issue_date)s.",
                     ref_status_info=(ref_status_code_description or origin_ref_status_code),
                     response_code=response_code_description,
                     issue_date=format_date(self.env, issue_date),
                 )
             else:
-                main_message = self.env._(
+                main_message = _(
                     "Received response with Response Code '%(response_code)s' issued on %(issue_date)s.",
                     response_code=response_code_description,
                     issue_date=format_date(self.env, issue_date),
@@ -651,10 +666,10 @@ class AccountEdiProxyClientUser(models.Model):
         elif type_code:
             infos.append(f"[{type_code}]")
         if amount and tax_percent:
-            infos.append(self.env._("%(amount)s %(currency_code)s (including %(tax_percent)s%% VAT)",
+            infos.append(_("%(amount)s %(currency_code)s (including %(tax_percent)s%% VAT)",
                                     amount=amount, currency_code=currency, tax_percent=tax_percent))
         elif amount:
-            infos.append(self.env._("%(amount)s %(currency_code)s", amount=amount, currency_code=currency))
+            infos.append(_("%(amount)s %(currency_code)s", amount=amount, currency_code=currency))
 
         return separator.join(infos)
 
@@ -677,7 +692,7 @@ class AccountEdiProxyClientUser(models.Model):
             infos.append(note)
         # Payment Infos
         if payment_infos := status.get('payment_infos'):
-            infos.append(self.env._("Payment Info:"))
+            infos.append(_("Payment Info:"))
             for payment_info in payment_infos:
                 infos.append(self._format_payment_info(payment_info, separator=separator))
 
@@ -686,11 +701,11 @@ class AccountEdiProxyClientUser(models.Model):
     @api.model
     def _pdp_format_message_body(self, flow_number, main_message, markup_status_info):
         messages = [
-            self.env._("[Flow %(flow_number)s] %(main_message)s", flow_number=flow_number, main_message=main_message),
+            _("[Flow %(flow_number)s] %(main_message)s", flow_number=flow_number, main_message=main_message),
         ]
         if markup_status_info:
             status_message = Markup('<br/>').join([
-                self.env._("It included the following status info:"),
+                _("It included the following status info:"),
                 markup_status_info
             ])
             messages.append(status_message)
@@ -737,9 +752,9 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
 
     def _cron_pdp_get_regulatory_documents(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'pdp')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('proxy_type', '=', 'pdp')])
         edi_users._pdp_get_regulatory_documents()
 
     def _cron_pdp_send_lifecycles(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'pdp')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('proxy_type', '=', 'pdp')])
         edi_users._pdp_send_lifecycles()

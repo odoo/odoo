@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import _, api, models
 
 
 class AccountMoveSend(models.TransientModel):
@@ -13,7 +13,7 @@ class AccountMoveSend(models.TransientModel):
         pdp_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
         if self.company_id._get_peppol_proxy_type() != 'pdp' or pdp_partner._get_pdp_receiver_identification_info()[0] != 'pdp':
             return super()._get_peppol_checkbox_label(default_label)
-        return self.env._("French E-Invoicing")
+        return _("French E-Invoicing")
 
     def _get_peppol_checkbox_addendum_disable_reason(self):
         self.ensure_one()
@@ -24,11 +24,11 @@ class AccountMoveSend(models.TransientModel):
         verification_display_state_map = dict(pdp_partner._fields['pdp_verification_display_state']._description_selection(self.env))
         reason = None
         if pdp_partner._l10n_fr_pdp_is_b2c():
-            reason = self.env._("no VAT")
+            reason = _("no VAT")
         if not partner_is_valid:
             reason = verification_display_state_map[pdp_partner.pdp_verification_display_state]
         if self.move_id.peppol_is_sent:
-            reason = self.env._("Previously sent")
+            reason = _("Previously sent")
         if reason:
             return f" ({reason})"
         return ""
@@ -60,7 +60,7 @@ class AccountMoveSend(models.TransientModel):
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
         if method == 'peppol' and company._get_peppol_proxy_type() == 'pdp':
-            return company.account_peppol_proxy_state == 'receiver'
+            return company.account_peppol_proxy_state == 'active'
         return super()._is_applicable_to_company(method, company)
 
     def _get_peppol_document_params(self, partner, invoice, invoice_data):
@@ -81,14 +81,14 @@ class AccountMoveSend(models.TransientModel):
         if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
             alert['action'].update({
                 'tag': 'l10n_fr_pdp.what_is_pdp',
-                'name': self.env._("Why should I use E-Invoicing?"),
+                'name': _("Why should I use E-Invoicing?"),
             })
-            alert['action_text'] = self.env._("Why should you use it ?")
+            alert['action_text'] = _("Why should you use it ?")
         return alert
 
     def _get_peppol_what_is_peppol_message(self, companies, moves, relevant_moves):
         if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
-            return self.env._("You can send this invoice electronically via Approved Platform.")
+            return _("You can send this invoice electronically via Approved Platform.")
         return super()._get_peppol_what_is_peppol_message(companies, moves, relevant_moves)
 
     def _get_peppol_partner_want_peppol_message(self, partners, relevant_moves):
@@ -99,11 +99,11 @@ class AccountMoveSend(models.TransientModel):
             )
         )
         if french_regulated_moves:
-            return self.env._("%s has requested electronic invoices reception via French E-Invoicing.", partners.display_name)
+            return _("%s has requested electronic invoices reception via French E-Invoicing.", partners.display_name)
         return super()._get_peppol_partner_want_peppol_message(partners, relevant_moves)
 
     def _get_peppol_what_is_pdp_message(self, companies, moves, relevant_moves):
-        return self.env._("Consider registering to use the Approved Platform for French E-Invoicing")
+        return _("Consider registering to use the Approved Platform for French E-Invoicing")
 
     def action_what_is_peppol_activate(self, moves):
         companies = moves.company_id

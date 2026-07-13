@@ -30,9 +30,8 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
     TEST_PAYMENT_DATE = fields.Date.from_string('2025-02-15')
 
     @classmethod
-    @TestUblCiiCommon.setup_country('fr')
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref='fr'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.fakenow = datetime.datetime(2024, 12, 5)
         cls.startClassPatcher(freeze_time(cls.fakenow))
@@ -54,18 +53,15 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'acc_number': 'FR5000400440116243',
             'allow_out_payment': True,
         })
+        cls.company = company
 
         edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'pdp')
-        cls.private_key = cls.env['certificate.key'].create({
-            'name': 'Test key PDP',
-            'content': b64encode(file_open(f'{FILE_PATH}/private_key.pem', 'rb').read()),
-        })
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': ID_CLIENT,
             'proxy_type': 'pdp',
             'edi_mode': 'test',
             'edi_identification': edi_identification,
-            'private_key_id': cls.private_key.id,
+            'private_key': b64encode(file_open(f'{FILE_PATH}/private_key.pem', 'rb').read()),
             'refresh_token': FAKE_UUID[0],
         })
 
@@ -198,10 +194,10 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
 
     @classmethod
     def _send_patched(cls, invoice):
-        valid_peppol_verification_state = mock.patch('odoo.addons.l10n_fr_pdp.models.res_partner.ResPartner._get_peppol_verification_state', return_value='valid')
-        with valid_peppol_verification_state:
-            # The successful verification sets the `invoice_sending_method` to `peppol` on the partner
-            wizard = cls.env['account.move.send.wizard'] \
+        valid_peppol_endpoint = mock.patch('odoo.addons.account_peppol.models.res_partner.ResPartner._check_peppol_participant_exists', return_value=True)
+        with valid_peppol_endpoint:
+            invoice.partner_id.button_account_peppol_check_partner_endpoint()
+            wizard = cls.env['account.move.send'] \
                 .with_context(active_model=invoice._name, active_ids=invoice.ids) \
                 .create({})
             wizard.action_send_and_print()

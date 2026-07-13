@@ -196,6 +196,7 @@ class ResPartner(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    # TODO: maybe should exclude ubl_21_fr
     @api.depends('ubl_cii_format')
     def _compute_is_peppol_edi_format(self):
         for partner in self:
@@ -267,3 +268,10 @@ class ResPartner(models.Model):
         return self.env['res.company'].search([
             ('account_peppol_proxy_state', 'in', ['pending', 'active']),
         ]).mapped('partner_id')
+
+    @api.model
+    def _get_peppol_proxy_identification_info(self, peppol_eas, peppol_endpoint):
+        # Return tuple `(proxy_type, peppol_identifier)` where `peppol_identifier` is in form "{scheme}:{identifier}"
+        if not peppol_eas or not peppol_endpoint:
+            return None, ""
+        return 'peppol', f"{peppol_eas}:{peppol_endpoint}"

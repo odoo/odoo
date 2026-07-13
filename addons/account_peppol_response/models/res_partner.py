@@ -31,7 +31,7 @@ class ResPartner(models.Model):
     def button_account_peppol_check_partner_endpoint(self, company=None):
         # EXTENDS account_peppol
         self.ensure_one()
-        super().button_account_peppol_check_partner_endpoint(company)
+        super(ResPartner, self.with_company(company)).button_account_peppol_check_partner_endpoint()
 
         if not company:
             company = self.env.company

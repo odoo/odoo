@@ -13,7 +13,7 @@ class TestPdpUser(TestL10nFrPdpCommon):
 
     @classmethod
     def _get_mock_responses(cls):
-        participant_state = cls.env.context.get('participant_state', 'receiver')
+        participant_state = cls.env.context.get('participant_state', 'active')
         return {
             '/api/pdp/1/connect': {
                 'result': {
@@ -135,7 +135,7 @@ class TestPdpUser(TestL10nFrPdpCommon):
         })
         wizard.button_register_pdp_participant()
         self.assertRecordValues(company, [{
-            'account_peppol_proxy_state': 'smp_registration',
+            'account_peppol_proxy_state': 'pending',
             'pdp_identifier': '000000000',
             'peppol_eas': '0225',
             'peppol_endpoint': '000000000',
@@ -147,16 +147,16 @@ class TestPdpUser(TestL10nFrPdpCommon):
         wizard = self.env['pdp.registration'].create(self._get_participant_vals())
         wizard.button_register_pdp_participant()
         self.assertRecordValues(company, [{
-            'account_peppol_proxy_state': 'smp_registration',
+            'account_peppol_proxy_state': 'pending',
             'pdp_identifier': '000000000',
             'peppol_eas': '0225',
             'peppol_endpoint': '000000000',
         }])
 
         # The participant should be automatically registered as receiver after some time
-        with self._set_context({'participant_state': 'receiver'}):
+        with self._set_context({'participant_state': 'active'}):
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
-            self.assertEqual(self.env.company.account_peppol_proxy_state, 'receiver')
+            self.assertEqual(self.env.company.account_peppol_proxy_state, 'active')
 
     def test_pdp_create_reject_participant(self):
         # the account_peppol_proxy_state should change to rejected
@@ -176,12 +176,12 @@ class TestPdpUser(TestL10nFrPdpCommon):
 
         wizard.account_peppol_proxy_state = False
         wizard.button_register_pdp_participant()
-        self.assertEqual(self.env.company.account_peppol_proxy_state, 'smp_registration')
+        self.assertEqual(self.env.company.account_peppol_proxy_state, 'pending')
 
         # The participant is still a receiver on IAP
-        with self._set_context({'participant_state': 'receiver'}):
+        with self._set_context({'participant_state': 'active'}):
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
-            self.assertEqual(self.env.company.account_peppol_proxy_state, 'receiver')
+            self.assertEqual(self.env.company.account_peppol_proxy_state, 'active')
 
     def test_peppol_pdp_unqiue_constraint(self):
         """Test that we can either have a PDP or a Peppol user per company (and per edi mode)"""
@@ -198,7 +198,7 @@ class TestPdpUser(TestL10nFrPdpCommon):
                 'id_client': 'client-demo',
                 'company_id': self.env.company.id,
                 'edi_identification': 'client-demo',
-                'private_key_id': self.env['certificate.key'].sudo()._generate_rsa_private_key(self.env.company).id,
+                'private_key': self.proxy_user.private_key,
                 'refresh_token': False,
                 'proxy_type': 'pdp',
                 'edi_mode': 'test',
@@ -210,32 +210,32 @@ class TestPdpUser(TestL10nFrPdpCommon):
                 'id_client': 'client-demo',
                 'company_id': self.env.company.id,
                 'edi_identification': 'client-demo',
-                'private_key_id': self.env['certificate.key'].sudo()._generate_rsa_private_key(self.env.company).id,
+                'private_key': self.proxy_user.private_key,
                 'refresh_token': False,
                 'proxy_type': 'peppol',
                 'edi_mode': 'test',
             }])
 
-        other_company = self.setup_other_company(name='other')['company']
+        other_company = self.setup_company_data('other')['company']
         other_pdp_user = self.env['account_edi_proxy_client.user'].create([{
             'active': True,
             'id_client': 'client-demo-pdp',
             'company_id': other_company.id,
             'edi_identification': 'client-demo',
-            'private_key_id': self.env['certificate.key'].sudo()._generate_rsa_private_key(self.env.company).id,
+            'private_key': self.proxy_user.private_key,
             'refresh_token': False,
             'proxy_type': 'pdp',
             'edi_mode': 'test',
         }])
         self.assertTrue(other_pdp_user)
 
-        other2_company = self.setup_other_company(name='other2')['company']
+        other2_company = self.setup_company_data('other2')['company']
         other2_peppol_user = self.env['account_edi_proxy_client.user'].create([{
             'active': True,
             'id_client': 'client-demo-peppol',
             'company_id': other2_company.id,
             'edi_identification': 'client-demo',
-            'private_key_id': self.env['certificate.key'].sudo()._generate_rsa_private_key(self.env.company).id,
+            'private_key': self.proxy_user.private_key,
             'refresh_token': False,
             'proxy_type': 'peppol',
             'edi_mode': 'test',

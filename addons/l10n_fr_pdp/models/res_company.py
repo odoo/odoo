@@ -1,7 +1,7 @@
 import re
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 from odoo.exceptions import UserError
 from odoo.tools.sql import SQL
@@ -101,7 +101,7 @@ class ResCompany(models.Model):
             match = PDP_identifier_re.match(record.pdp_identifier or '')
             siren = match and match.group(1)
             if not siren:
-                raise UserError(self.env._("The identifier %s is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage", record.pdp_identifier))
+                raise UserError(_("The identifier %s is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage", record.pdp_identifier))
             siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
             record.partner_id.write({
                 'peppol_eas': '0225',
@@ -113,7 +113,7 @@ class ResCompany(models.Model):
     def _compute_l10n_fr_pdp_registered(self):
         for company in self:
             company.l10n_fr_pdp_registered = (
-                company.account_peppol_proxy_state == 'receiver'
+                company.account_peppol_proxy_state == 'active'
                 and company.l10n_fr_pdp_annuaire_start_date
                 and company.l10n_fr_pdp_annuaire_start_date <= fields.Date.context_today(self)
             )
@@ -127,7 +127,7 @@ class ResCompany(models.Model):
             return
         account_ids = self.env['account.account'].search([
             ('account_type', 'in', ['asset_receivable', 'liability_payable']),
-            ('company_ids', 'in', companies.ids),
+            # ('company_ids', 'in', companies.ids),  # TODO: FIXME:
         ]).ids
         date_company_conditions = SQL(
             '(%s)',
@@ -202,7 +202,7 @@ class ResCompany(models.Model):
     def _l10n_fr_pdp_update_pilot_phase(self, value):
         self.ensure_one()
         pdp_user = self.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'pdp')[:1]
-        if not pdp_user or self.account_peppol_proxy_state not in ('smp_registration', 'receiver'):
+        if not pdp_user or self.account_peppol_proxy_state not in ('pending', 'active'):
             return
 
         result = pdp_user._call_peppol_proxy(

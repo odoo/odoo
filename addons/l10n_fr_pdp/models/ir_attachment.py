@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import _, api, models
 from odoo.exceptions import UserError
 from odoo.addons.l10n_fr_pdp.models.pdp_flow import FLOW_SENT_STATES
 
@@ -13,4 +13,4 @@ class IrAttachment(models.Model):
             [('id', 'in', res_ids), ('state', 'in', FLOW_SENT_STATES)],
             limit=1,
         ):
-            raise UserError(self.env._("You can't delete an attachment linked to a sent Flow."))
+            raise UserError(_("You can't delete an attachment linked to a sent Flow."))

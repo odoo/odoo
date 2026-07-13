@@ -4,7 +4,7 @@ from datetime import datetime
 
 from markupsafe import Markup
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict, html2plaintext
 
@@ -255,9 +255,9 @@ class AccountMove(models.Model):
             return {}
         payment_term = self.invoice_payment_term_id
         return {
-            'PMT': self.env._("In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce)."),
-            'PMD': self.env._("Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date."),
-            'AAB': html2plaintext(payment_term.note) if payment_term.early_discount else self.env._("No discount for early payment."),
+            'PMT': _("In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce)."),
+            'PMD': _("Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date."),
+            'AAB': html2plaintext(payment_term.note) if payment_term.early_discount else _("No discount for early payment."),
         }
 
     @api.model
@@ -274,9 +274,9 @@ class AccountMove(models.Model):
 
     def action_pdp_open_response_wizard(self, **wizard_kwargs):
         if not (pdp_moves := self.filtered('pdp_can_send_response')):
-            raise UserError(self.env._("Cannot send response for any of the journal entries."))
+            raise UserError(_("Cannot send response for any of the journal entries."))
         wizard = self.env['pdp.response.wizard'].create({'move_ids': pdp_moves.ids, **wizard_kwargs})
-        return wizard._get_records_action(name=self.env._("Send Response Message"), target='new')
+        return wizard._get_records_action(name=_("Send Response Message"), target='new')
 
     def _post(self, soft=True):
         res = super(AccountMove, self.with_context(l10n_fr_pdp_skip_ereporting_tracking=True))._post(soft)
@@ -330,17 +330,17 @@ class AccountMove(models.Model):
                 + Markup('</a>')
             )
         else:
-            flow_label = self.env._("None")
+            flow_label = _("None")
         body = (
             Markup('<ul>')
-            + Markup('<li><span class="fw-bold">') + self.env._("E-reporting Flow:")
+            + Markup('<li><span class="fw-bold">') + _("E-reporting Flow:")
             + Markup('</span> ') + flow_label + Markup('</li>')
-            + Markup('<li><span class="fw-bold">') + self.env._("E-reporting Status:")
+            + Markup('<li><span class="fw-bold">') + _("E-reporting Status:")
             + Markup('</span> ') + status_label + Markup('</li>')
         )
         if (errors := (
             self.l10n_fr_pdp_last_flow_id.state == 'error'
-            and [self.env._("Last Flow is in error")]
+            and [_("Last Flow is in error")]
             or self._get_l10n_fr_pdp_errors()
         )):
             error_lines = Markup('').join(
@@ -349,7 +349,7 @@ class AccountMove(models.Model):
                 if error
             )
             body += (
-                Markup('<li><span class="fw-bold">') + self.env._("E-reporting Errors:")
+                Markup('<li><span class="fw-bold">') + _("E-reporting Errors:")
                 + Markup('</span><ul>') + error_lines + Markup('</ul></li>')
             )
         body += Markup('</ul>')
@@ -513,7 +513,7 @@ class AccountMove(models.Model):
     def _compute_l10n_fr_pdp_error_message(self):
         for move in self:
             if move.l10n_fr_pdp_last_flow_id.state == 'error':
-                move.l10n_fr_pdp_error_message = self.env._('Last Flow is in error')
+                move.l10n_fr_pdp_error_message = _('Last Flow is in error')
                 continue
             errors = move._get_l10n_fr_pdp_errors()
             move.l10n_fr_pdp_error_message = '- ' + '\n- '.join(errors) if errors else None
@@ -554,23 +554,23 @@ class AccountMove(models.Model):
                 try:
                     self.commercial_partner_id.check_vat()
                 except ValidationError:
-                    yield self.env._("Invalid partner VAT (%(vat)s).", vat=self.commercial_partner_id.vat)
+                    yield _("Invalid partner VAT (%(vat)s).", vat=self.commercial_partner_id.vat)
 
             for move in (self + self._l10n_fr_pdp_get_referenced_documents()):
                 if not move or move.move_type == 'entry':
                     continue
-                ref_move = self.env._(" in referenced move %s", move.name) if move != self else ""
+                ref_move = _(" in referenced move %s", move.name) if move != self else ""
                 if not move.name or not G1_05_RE.match(move.name):
-                    yield self.env._("Move name is not valid%s.", ref_move)
+                    yield _("Move name is not valid%s.", ref_move)
                 if transaction_type == 'b2bi':
                     if not move.partner_shipping_id.street:
-                        yield self.env._("Missing address street (line 1)%s.", ref_move)
+                        yield _("Missing address street (line 1)%s.", ref_move)
                     if not move.partner_shipping_id.city:
-                        yield self.env._("Missing address city%s.", ref_move)
+                        yield _("Missing address city%s.", ref_move)
                     if not move.partner_shipping_id.zip:
-                        yield self.env._("Missing address zip code%s.", ref_move)
+                        yield _("Missing address zip code%s.", ref_move)
                     if not move.partner_shipping_id.country_id:
-                        yield self.env._("Missing address country%s.", ref_move)
+                        yield _("Missing address country%s.", ref_move)
 
         transaction_type = self._l10n_fr_pdp_get_transaction_type()
         if lazy:
@@ -635,7 +635,7 @@ class AccountMove(models.Model):
     def _check_draftable(self):
         """Prevent resetting to draft when invoice already sent to PDP."""
         if not self.env.context.get('l10n_fr_pdp_bypass_draft_check') and self.l10n_fr_pdp_sent_in_flow_ids:
-            raise UserError(self.env._(
+            raise UserError(_(
                 "You cannot reset an invoice to draft if it was already sent to PDP. "
                 "Create a credit note and issue a new invoice instead or cancel this invoice."
             ))

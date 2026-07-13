@@ -11,7 +11,7 @@ class AccountJournal(models.Model):
         """
         super().peppol_get_new_documents()
         edi_users = self.env['account_edi_proxy_client.user'].search([
-            ('company_id.account_peppol_proxy_state', '=', 'receiver'),
+            ('company_id.account_peppol_proxy_state', '=', 'active'),
             ('company_id', 'in', self.company_id.ids),
             ('proxy_type', '=', 'pdp'),
         ])

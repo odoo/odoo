@@ -1,10 +1,12 @@
 import json
 
 from base64 import b64encode
+from datetime import datetime
+from freezegun import freeze_time
 from requests import PreparedRequest, Response, Session
 from urllib import parse
 
-from odoo.tests.common import tagged, freeze_time
+from odoo.tests.common import tagged
 from odoo.tools.misc import file_open
 
 from odoo.addons.account_peppol.tests.test_peppol_messages import FAKE_UUID, TestPeppolMessage
@@ -18,9 +20,16 @@ FAKE_INCOMING_RESPONSE_UUID = 'fakefake-fake-fake-fake-fakefakefake'
 RESPONSE_FILE_PATH = 'account_peppol_response/tests/assets'
 
 
-@freeze_time('2023-01-01')
 @tagged('-at_install', 'post_install')
 class TestPeppolMessageResponse(TestPeppolMessage):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
+
+        cls.fakenow = datetime(2023, 1, 1, 10, 00, 00)
+        cls.startClassPatcher(freeze_time(cls.fakenow))
 
     @classmethod
     def _get_incoming_response_content(cls):

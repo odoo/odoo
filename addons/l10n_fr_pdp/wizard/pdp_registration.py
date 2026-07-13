@@ -1,6 +1,6 @@
 import logging
 
-from odoo import api, fields, models, modules
+from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools import single_email_re
 
@@ -126,16 +126,16 @@ class PdpRegistration(models.TransientModel):
             if not wizard.siren_number:
                 warnings['company_siren_warning'] = {
                     'level': 'warning',
-                    'message': self.env._("The SIREN of the company could not be determined."),
-                    'action_text': self.env._("Go to company"),
-                    'action': wizard.company_id._get_records_action(name=self.env._("Check Company Data")),
+                    'message': _("The SIREN of the company could not be determined."),
+                    'action_text': _("Go to company"),
+                    'action': wizard.company_id._get_records_action(name=_("Check Company Data")),
                 }
             # Check SIREN
             kyc_siren = wizard._get_kyc_siren()
             if wizard.siren_number != kyc_siren:
                 warnings['kyc_siren_warning'] = {
                     'level': 'info',
-                    'message': self.env._("%s will be used as SIREN for the KYC", kyc_siren),
+                    'message': _("%s will be used as SIREN for the KYC", kyc_siren),
                 }
             # Check identifier
             if (
@@ -144,7 +144,7 @@ class PdpRegistration(models.TransientModel):
             ):
                 warnings['company_pdp_identifier_warning'] = {
                     'level': 'warning',
-                    'message': self.env._("The endpoint number might not be correct. "
+                    'message': _("The endpoint number might not be correct. "
                                           "Please check if you entered the right identification number."),
                 }
             # Check whether the identifier is already associated with a platform on the annuaire
@@ -157,7 +157,7 @@ class PdpRegistration(models.TransientModel):
                 platform_name = participant_info.get("platform_name")
                 warnings["company_pdp_annuaire_warning"] = {
                     "level": "warning",
-                    "message": self.env._(
+                    "message": _(
                         "Another platform is already assigned to this identifier in the annuaire (Platform%(platform_name)s with ID %(platform_id)s). "
                         "If you previously registered with an Approved Platform, please unregister.",
                         platform_name=f" '{platform_name}'" if platform_name else "",
@@ -178,7 +178,7 @@ class PdpRegistration(models.TransientModel):
 
     def _ensure_mandatory_fields(self):
         if not self.contact_email:
-            raise ValidationError(self.env._("The contact email is required."))
+            raise ValidationError(_("The contact email is required."))
 
     def _action_send_notification(self, title, message):
         move_ids = self.env.context.get('active_ids')
@@ -203,18 +203,18 @@ class PdpRegistration(models.TransientModel):
         """ No longer used, need to remove in master """
         if not self.env.user.totp_enabled and not bool(self.env['ir.config_parameter'].sudo().get_param('auth_totp.policy')) and self.edi_mode != 'demo':
             raise RedirectWarning(
-                message=self.env._("To be able to register, you need to enable the two-factor authentication."),
+                message=_("To be able to register, you need to enable the two-factor authentication."),
                 action=self.env.user._get_records_action(
                     target='new',
                     views=[(self.env.ref('base.view_users_form_simple_modif').id, "form")],
                 ),
-                button_text=self.env._("Go to the Preferences panel"),
+                button_text=_("Go to the Preferences panel"),
             )
 
     def _action_open_pdp_form(self, reopen=True):
         self.ensure_one()
         return self._get_records_action(
-            name=self.env._("Send via French electronic invoicing"),
+            name=_("Send via French electronic invoicing"),
             target='new',
             view_mode='form',
         )
@@ -228,12 +228,12 @@ class PdpRegistration(models.TransientModel):
         self.ensure_one()
         if not self.siren_number:
             raise RedirectWarning(
-                message=self.env._("You need to have a valid siren number to authenticate."),
+                message=_("You need to have a valid siren number to authenticate."),
                 action=self.company_id._get_records_action(),
-                button_text=self.env._("Go to company"),
+                button_text=_("Go to company"),
             )
         if not self.contact_email or not single_email_re.match(self.contact_email):
-            raise ValidationError(self.env._("Invalid email address '%s'", self.contact_email))
+            raise ValidationError(_("Invalid email address '%s'", self.contact_email))
         base_url = self.company_id._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/id_authentication/1/authentication', params={
             'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
@@ -249,7 +249,7 @@ class PdpRegistration(models.TransientModel):
         self.pdp_authentication_uuid = response.get('object_uuid')
 
         if not self.pdp_authentication_uuid or not response.get('url_hash'):
-            raise UserError(self.env._("Something wrong happened."))
+            raise UserError(_("Something wrong happened."))
         self.pdp_kyc_status = 'processing'
 
         return {
@@ -262,20 +262,20 @@ class PdpRegistration(models.TransientModel):
         self.ensure_one()
         if self.pdp_kyc_status == 'success':
             return {
-                'message': self.env._("Identity verified."),
+                'message': _("Identity verified."),
                 'type': 'success',
                 'sticky': True,
                 'next': self.button_register_pdp_participant(),
             }
         elif self.pdp_kyc_status == 'fail':
             return {
-                'message': self.env._("Authentication failed."),
+                'message': _("Authentication failed."),
                 'type': 'danger',
                 'sticky': True,
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         return {
-            'message': self.env._("Status updated."),
+            'message': _("Status updated."),
             'type': 'info',
             'sticky': False,
             'next': self._action_open_pdp_form(),
@@ -317,7 +317,7 @@ class PdpRegistration(models.TransientModel):
             raise UserError(error)
 
         if not response.get('url_hash'):
-            raise UserError(self.env._("Something wrong happened."))
+            raise UserError(_("Something wrong happened."))
 
         return {
             'type': 'ir.actions.act_url',
@@ -332,7 +332,7 @@ class PdpRegistration(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'message': self.env._("Authentication cancelled"),
+                'message': _("Authentication cancelled"),
                 'type': 'danger',
                 'next': {'type': 'ir.actions.act_window_close'},
             }
@@ -343,15 +343,15 @@ class PdpRegistration(models.TransientModel):
 
         self._ensure_mandatory_fields()
 
-        if self.account_peppol_proxy_state in ('smp_registration', 'receiver'):
+        if self.account_peppol_proxy_state in ('pending', 'active'):
             pdp_state_translated = dict(self._fields['account_peppol_proxy_state']._description_selection(self.env))[self.account_peppol_proxy_state]
-            raise UserError(self.env._("Cannot register a user with a '%s' application", pdp_state_translated))
+            raise UserError(_("Cannot register a user with a '%s' application", pdp_state_translated))
 
         if self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol'):
-            raise UserError(self.env._("There is a connection to Peppol (non-PA) already"))
+            raise UserError(_("There is a connection to Peppol (non-PA) already"))
 
         if not self.env["res.company"]._check_pdp_identifier(self.pdp_identifier):
-            raise UserError(self.env._("The Identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"))
+            raise UserError(_("The Identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"))
 
         self.company_id.pdp_identifier = self.pdp_identifier  # For the initial compute the inverse is not triggered.
         edi_user = self.edi_user_id or self.env['account_edi_proxy_client.user']._register_proxy_user(self.company_id, 'pdp', self.edi_mode)
@@ -363,15 +363,15 @@ class PdpRegistration(models.TransientModel):
         if not modules.module.current_test:
             self.env.cr.commit()
 
-        if self.account_peppol_proxy_state not in ('smp_registration', 'receiver'):
+        if self.account_peppol_proxy_state not in ('pending', 'active'):
             edi_user._peppol_register_receiver()
             self.invalidate_recordset()  # registering may i.e. have changed self.account_peppol_proxy_state
 
         notifications = {
-            False: self.env._('Something went wrong.'),
-            'smp_registration': self.env._('Your registration will be activated soon.'),
-            'receiver': self.env._('You can now send and receive electronic invoices.'),
-            'rejected': self.env._('Your registration has been rejected.'),
+            False: _('Something went wrong.'),
+            'pending': _('Your registration will be activated soon.'),
+            'active': _('You can now send and receive electronic invoices.'),
+            'rejected': _('Your registration has been rejected.'),
         }
         return self._action_send_notification(
             title="PA Status",

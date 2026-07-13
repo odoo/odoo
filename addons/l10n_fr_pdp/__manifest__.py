@@ -15,6 +15,7 @@
     'auto_install': ['l10n_fr'],
     'data': [
         'data/ir_cron.xml',
+        'data/ubl_21_fr_templates.xml',
         'security/ir.model.access.csv',
         'views/account_journal_dashboard_views.xml',
         'views/account_move_views.xml',

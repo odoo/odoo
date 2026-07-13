@@ -1,4 +1,5 @@
 from . import common
+from . import messages_common
 from . import test_flow_lifecycle
 from . import test_messages
 from . import test_partner

@@ -5,8 +5,7 @@ import requests
 from markupsafe import Markup
 from urllib import parse
 
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import _, api, fields, models
 
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
@@ -33,17 +32,6 @@ class ResPartner(models.Model):
         compute="_compute_pdp_verification_display_state",
     )
 
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        # Extend to rename the `peppol` option in the `invoice_sending_method` selection
-        fields = super().fields_get(allfields, attributes)
-        company = self.env.company
-        if not self._context.get("studio") and (company.country_code == 'FR' or company.pdp_identifier) and 'invoice_sending_method' in fields:
-            field = fields['invoice_sending_method']
-            if 'selection' in field:
-                field['selection'] = [('peppol', self.env._('by Approved Platform')) if option[0] == 'peppol' else option for option in field['selection']]
-        return fields
-
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -54,21 +42,15 @@ class ResPartner(models.Model):
         for partner in self:
             partner.pdp_verification_display_state = partner._get_pdp_display_verification_state(partner.account_peppol_verification_label)
 
-    # -------------------------------------------------------------------------
-    # CONSTRAINT
-    # -------------------------------------------------------------------------
-
-    @api.constrains('ubl_cii_format', 'invoice_sending_method')
-    def _check_pdp_send_ubl_21_fr(self):
-        if self.filtered(
-            lambda partner: (
-                partner.invoice_sending_method == "peppol"
-                and partner._get_pdp_receiver_identification_info()[0] == 'pdp'
-                and partner.ubl_cii_format != "ubl_21_fr"
-            )
-        ):
-            ubl_21_fr_string = self.env._("France E-Invoicing (UBL 2.1)")
-            raise ValidationError(self.env._("For French regulated invoices, only %(format_name)s is supported.", format_name=ubl_21_fr_string))
+    @api.depends('country_code')
+    def _compute_ubl_cii_format(self):
+        super()._compute_ubl_cii_format()
+        # TODO: `ubl_cii_format` is not company_dependent
+        if self.env.company._get_peppol_proxy_type() != 'pdp':
+            return
+        for partner in self:
+            if partner.country_code == 'FR':
+                partner.ubl_cii_format = 'ubl_21_fr'
 
     # -------------------------------------------------------------------------
     # OVERRIDE AND HELPERS
@@ -112,13 +94,13 @@ class ResPartner(models.Model):
         if eas != '0225':
             return super()._build_error_peppol_endpoint(eas, endpoint)
         if not self.env["res.company"]._check_pdp_identifier(endpoint):
-            return self.env._("The Peppol endpoint is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage")
+            return _("The Peppol endpoint is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage")
 
-    def _get_edi_builder(self, ubl_cii_format):
+    def _get_edi_builder(self):
         # EXTENDS 'account_edi_ubl_cii'
-        if ubl_cii_format == 'ubl_21_fr':
+        if self.ubl_cii_format == 'ubl_21_fr':
             return self.env['account.edi.xml.ubl_21_fr']
-        return super()._get_edi_builder(ubl_cii_format)
+        return super()._get_edi_builder()
 
     def _get_ubl_cii_formats_info(self):
         # EXTENDS 'account_edi_ubl_cii'
@@ -244,7 +226,3 @@ class ResPartner(models.Model):
         if peppol_eas == '0225':
             proxy_type = 'pdp'
         return proxy_type, identifier
-
-    @handle_demo
-    def button_account_peppol_check_partner_endpoint(self, company=None):
-        return super().button_account_peppol_check_partner_endpoint(company=company)

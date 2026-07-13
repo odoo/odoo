@@ -1,6 +1,4 @@
-from odoo import models
-
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+from odoo import _, models
 
 PDP_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017'  # Not accepted by SuperPDP due to missing validator
 
@@ -19,34 +17,34 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
     def _export_invoice_filename(self, invoice):
         return f"{invoice.name.replace('/', '_')}_ubl_21_fr.xml"
 
-    def _export_invoice(self, invoice, convert_fixed_taxes=True):
-        # Use new helpers
-        return self._export_invoice_new(invoice)
-
-    def _export_invoice_constraints_new(self, invoice, vals):
+    def _export_invoice_constraints(self, invoice, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        constraints = super()._export_invoice_constraints_new(invoice, vals)
+        constraints = super()._export_invoice_constraints(invoice, vals)
 
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
             commercial_partner = partner.commercial_partner_id
             if commercial_partner.peppol_eas != '0225' or not commercial_partner.peppol_endpoint:
-                constraints[f"ubl_21_fr_{partner_type}_pdp_identifier_required"] = self.env._("The following partner's PDP identifier is missing: %s", commercial_partner.display_name)
+                constraints[f"ubl_21_fr_{partner_type}_pdp_identifier_required"] = _("The following partner's PDP identifier is missing: %s", commercial_partner.display_name)
             id_type, id_value = commercial_partner._l10n_fr_pdp_get_base_identifier()
             if not id_type or not id_value:
-                constraints[f"ubl_21_fr_{partner_type}_siret_required"] = self.env._("The following partner's SIREN or SIRET is missing: %s", commercial_partner.display_name)
+                constraints[f"ubl_21_fr_{partner_type}_siret_required"] = _("The following partner's SIREN or SIRET is missing: %s", commercial_partner.display_name)
             if not commercial_partner.vat or commercial_partner.vat == '/':
-                constraints[f"ubl_21_fr_{partner_type}_vat_required"] = self.env._("The following partner's VAT is missing: %s", commercial_partner.display_name)
+                constraints[f"ubl_21_fr_{partner_type}_vat_required"] = _("The following partner's VAT is missing: %s", commercial_partner.display_name)
 
         if vals['document_type'] == 'credit_note' and not (invoice.reversed_entry_id.name or invoice.reversed_entry_id.invoice_date):
-            constraints[f"ubl_21_fr_{partner_type}_refund_invoice_reference"] = self.env._("The original journal entry's name or issue date are missing: %s", vals['invoice'].name)
+            constraints[f"ubl_21_fr_{partner_type}_refund_invoice_reference"] = _("The original journal entry's name or issue date are missing: %s", vals['invoice'].name)
 
         return constraints
 
-    def _add_invoice_header_nodes(self, document_node, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        invoice = vals['invoice']
-        super()._add_invoice_header_nodes(document_node, vals)
+    def _export_invoice_vals(self, invoice):
+        # EXTENDS account.edi.xml.ubl_ib2d
+        vals = super()._export_invoice_vals(invoice)
+
+        vals.update({
+            'InvoiceLineType_template': 'l10n_fr_pdp.ubl_21_fr_InvoiceLineType',
+            'CreditNoteLineType_template': 'l10n_fr_pdp.ubl_21_fr_CreditNoteLineType',
+        })
 
         # Les valeurs autorisées pour le Cadre (Mode de Facturation) sont:
         # B1 : Dépôt d'une facture de bien
@@ -78,87 +76,57 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             # After downpayment
             profile_number = "4"
 
-        profile_id = f"{profile_scope}{profile_number}"
-        document_node.update({
-            'cbc:CustomizationID': {'_text': PDP_CUSTOMIZATION_ID},
-            'cbc:ProfileID': {'_text': profile_id},
+        vals['vals'].update({
+            'customization_id': PDP_CUSTOMIZATION_ID,
+            'profile_id': f"{profile_scope}{profile_number}",
+            # Règles de gestion G1.31
+            'billing_reference_vals': {
+               'id': invoice.reversed_entry_id.name,
+               'issue_date': invoice.reversed_entry_id.invoice_date,
+            },
         })
 
+        return vals
+
+    def _get_note_vals_list(self, invoice):
+        # EXTENDS account.edi.xml.ubl_20
+        note_vals = super()._get_note_vals_list(invoice)
         # [BR-FR-05] Add mandatory notes with defaults if not already present
-        # Initialize / Listify 'cbc:Note'
-        existing_note = document_node.get('cbc:Note')
-        if not existing_note or not isinstance(document_node.get('cbc:Note'), list):
-            document_node['cbc:Note'] = [existing_note] if existing_note else []
-        # Add default notes
-        for code, default_content in invoice._l10n_fr_pdp_get_default_notes().items():
-            document_node['cbc:Note'].append({
-                '_text': f"#{code}#{default_content}",
-            })
+        return note_vals + [
+            {'note': f"#{code}#{default_content}"}
+            for code, default_content in invoice._l10n_fr_pdp_get_default_notes().items()
+        ]
 
-        # Règles de gestion G1.52
-        if vals['document_type'] == 'credit_note':
-            document_node['cac:BillingReference'] = {
-                'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': invoice.reversed_entry_id.name},
-                    'cbc:IssueDate': {'_text': invoice.reversed_entry_id.invoice_date},
-                }
-            }
-
-    def _ubl_add_party_identification_nodes(self, vals):
-        super()._ubl_add_party_identification_nodes(vals)
-        partner = vals['party_vals']['partner']
+    def _get_partner_party_identification_vals_list(self, partner):
+        # OVERRIDE
+        # [UBL-SR-16] Buyer identifier shall occur maximum once
         commercial_partner = partner.commercial_partner_id
-
         id_type, party_id = commercial_partner._l10n_fr_pdp_get_base_identifier()
         if id_type == 'siret':
             party_id_scheme = "0009"
         else:  # id_type == 'siren'
             party_id_scheme = "0002"
-        # [UBL-SR-16] Buyer identifier shall occur maximum once
-        vals['party_node']['cac:PartyIdentification'] = {
-            'cbc:ID': {'_text': party_id, 'schemeID': party_id_scheme},
-        }
+        return [{
+            'id_attrs': {'schemeID': party_id_scheme},
+            'id': party_id,
+        }]
 
-    def _ubl_add_party_legal_entity_nodes(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        super()._ubl_add_party_legal_entity_nodes(vals)
-        partner = vals['party_vals']['partner']
+    def _get_partner_party_legal_entity_vals_list(self, partner):
         commercial_partner = partner.commercial_partner_id
+        return [{
+            'registration_name': commercial_partner.name,
+            'company_id': commercial_partner._l10n_fr_pdp_get_siren(),
+            'company_id_attrs': {'schemeID': '0002'},
+        }]
 
-        vals['party_node']['cac:PartyLegalEntity'] = {
-            'cbc:RegistrationName': {'_text': commercial_partner.name},
-            'cbc:CompanyID': {
-                '_text': commercial_partner._l10n_fr_pdp_get_siren(),
-                'schemeID': '0002',
-            },
+    def _get_invoice_line_price_vals(self, line):
+        price_vals = super()._get_invoice_line_price_vals(line)
+        currency = price_vals['currency']
+        price_vals['allowance_charge_vals'] = {
+            'charge_indicator': 'false',
+            'currency_dp': price_vals['product_price_dp'],
+            'currency_name': currency.name,
+            'amount': 0,  # Discount amount
+            'base_amount': price_vals['price_amount'],  # Pre-discount amount
         }
-
-    def _ubl_add_line_price_node(self, vals, in_foreign_currency=True):
-        # OVERRIDE
-        line_node = vals['line_node']
-        base_line = vals['line_vals']['base_line']
-        suffix = '_currency' if in_foreign_currency else ''
-        currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
-        price_amount = base_line['tax_details'][f'raw_gross_price_unit{suffix}']
-
-        line_node['cac:Price'] = {
-            'cbc:PriceAmount': {
-                '_text': FloatFmt(price_amount, min_dp=1, max_dp=6),
-                'currencyID': currency.name,
-            },
-            'cac:AllowanceCharge': {
-                "cbc:ChargeIndicator": [{
-                    "_text": 'false',
-                }],
-                # Discount amount
-                "cbc:Amount": [{
-                    "_text": FloatFmt(0, min_dp=1, max_dp=6),
-                    "currencyID": currency.name,
-                }],
-                # Pre-discount amount
-                'cbc:BaseAmount': {
-                    '_text': FloatFmt(price_amount, min_dp=1, max_dp=6),
-                    'currencyID': currency.name,
-                },
-            }
-        }
+        return price_vals

@@ -110,7 +110,7 @@ class AccountMoveSend(models.TransientModel):
         }
         for wizard in self:
             edi_user = wizard.company_id.sudo().account_edi_proxy_client_ids.filtered(
-                lambda usr: usr.proxy_type == 'peppol'
+                lambda usr: usr.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()
             )
             mode = mode_strings.get(edi_user.edi_mode)
             wizard.account_peppol_edi_mode_info = f' ({mode})' if mode else ''
@@ -210,11 +210,11 @@ class AccountMoveSend(models.TransientModel):
             return
 
         edi_user = next(iter(invoices_data)).company_id.account_edi_proxy_client_ids.filtered(
-            lambda u: u.proxy_type == 'peppol')
+            lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types())
 
         try:
             response = edi_user._make_request(
-                f"{edi_user._get_server_url()}/api/peppol/1/send_document",
+                edi_user._get_server_url() + edi_user._get_peppol_proxy_endpoint('1/send_document'),
                 params=params,
             )
         except AccountEdiProxyError as e:
