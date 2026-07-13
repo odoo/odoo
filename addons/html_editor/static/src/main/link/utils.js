@@ -44,7 +44,7 @@ export function cleanZWChars(text) {
  * 'http' and 'https'.
  *
  * @param {String} text
- * @param {HTMLAnchorElement} [link]
+ * @param {HTMLAnchorElement|{href: string}} [link]
  * @returns {String|null}
  */
 export function deduceURLfromText(text, link) {
@@ -75,3 +75,57 @@ export function deduceURLfromText(text, link) {
     return null;
 }
 
+/**
+ * Completes and validates a URL value for use as a link href.
+ * Adds `https://` to plain web URLs while preserving special URL forms such as
+ * `tel:`, `mailto:`, relative paths, anchors, and dynamic expressions.
+ *
+ * @param {string} url
+ * @returns {string}
+ */
+function correctLinkUrl(url) {
+    if (
+        url &&
+        !url.startsWith("tel:") &&
+        !url.startsWith("mailto:") &&
+        !url.includes("://") &&
+        !url.startsWith("/") &&
+        !url.startsWith("#") &&
+        !url.startsWith("${")
+    ) {
+        url = "https://" + url;
+    }
+    if (url && (url.startsWith("http:") || url.startsWith("https:"))) {
+        url = URL.parse(url) ? url : "";
+    }
+    return url;
+}
+
+/**
+ * Deduces a link URL from user-entered text. Explicit `http:`, `https:`,
+ * `mailto:`, and `tel:` values are accepted as-is; other values are inferred
+ * through `deduceURLfromText`.
+ *
+ * @param {string} text
+ * @param {HTMLAnchorElement|{href: string}} [link]
+ * @returns {string}
+ */
+export function deduceLinkUrl(text, link) {
+    text = text.trim();
+    if (/^(https?:|mailto:|tel:)/.test(text)) {
+        return text;
+    }
+    return deduceURLfromText(text, link) || "";
+}
+
+/**
+ * Normalizes user-entered link input: first deduce a URL from the input, then
+ * complete and validate it.
+ *
+ * @param {string} text
+ * @param {HTMLAnchorElement|{href: string}} [link]
+ * @returns {string}
+ */
+export function normalizeLinkUrlInput(text, link) {
+    return correctLinkUrl(deduceLinkUrl(text, link) || text);
+}

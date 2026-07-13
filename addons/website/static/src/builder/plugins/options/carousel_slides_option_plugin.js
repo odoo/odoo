@@ -71,7 +71,7 @@ export class SetSlideAnchorUrlAction extends BuilderAction {
         const linkEl = editingElement.querySelector("a.slide-link");
 
         if (!url) {
-            linkEl.remove();
+            linkEl?.remove();
             return;
         }
         if (linkEl) {
