@@ -137,7 +137,6 @@ class ResCompany(models.Model):
             periods.append('monthly')
         domain = Domain([
             ('inventory_period', 'in', periods),
-            ('inventory_valuation', '!=', 'real_time'),
         ])
         companies = self.env['res.company'].search(domain)
         for company in companies:
