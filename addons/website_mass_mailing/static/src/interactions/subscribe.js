@@ -4,11 +4,13 @@ import { rpc } from '@web/core/network/rpc';
 import { session } from '@web/session';
 import { ReCaptcha } from '@google_recaptcha/js/recaptcha';
 import { isVisible } from "@html_editor/utils/dom_info";
+import { redirect } from "@web/core/utils/urls";
 
 export class Subscribe extends Interaction {
     static selector = '.js_subscribe';
     dynamicContent = {
-        '.js_subscribe_btn': { 't-on-click': this.onSubscribeClick },
+        ".js_subscribe_btn": { "t-on-click": this.locked(this.onSubscribeClick, true) },
+        ".js_subscribe_value": { "t-on-keydown": this.locked(this.onInputKeydown) },
     };
 
     setup() {
@@ -66,13 +68,16 @@ export class Subscribe extends Interaction {
      * @param {boolean} isSubscriber
      */
     _updateSubscribeControlsStatus(isSubscriber) {
-        const thanksWrapEl = this.el.querySelector('.js_subscribed_wrap');
         const subscribeWrapEl = this.el.querySelector('.js_subscribe_wrap');
         const subscribeBtnEl = this.el.querySelector('.js_subscribe_btn');
 
+        if (this.el.dataset.successMode !== "closePopup") {
+            const thanksWrapEl = this.el.querySelector(".js_subscribed_wrap");
+            thanksWrapEl.classList.toggle("d-none", !isSubscriber);
+        }
+
         subscribeBtnEl.disabled = isSubscriber;
         subscribeWrapEl.classList.toggle('d-none', isSubscriber);
-        thanksWrapEl.classList.toggle('d-none', !isSubscriber);
 
         // js_subscribe_email is kept for compatibility (old name of js_subscribe_value)
         const valueInputEl = this.el.querySelector('input.js_subscribe_value, input.js_subscribe_email');
@@ -91,13 +96,16 @@ export class Subscribe extends Interaction {
     }
 
     _getListId() {
-        // TODO this should be improved: we currently have snippets (e.g. the
-        // s_newsletter_block one) who relies on the fact the list-id is saved
-        // on the snippet's main section, and ignores the one saved on the inner
-        // form snippet. Some other (e.g. the s_newsletter_popup one) relies on
-        // the ID of the inner form snippet. We should make it more consistent:
-        // probably always relying on the inner form list-id? (upgrade...)
-        return this.el.closest('section[data-list-id]')?.dataset.listId || this.el.dataset.listId;
+        // The newsletter-related options have been moved from the block level
+        // to the form level. Therefore, the `data-list-id` attribute is now
+        // available only on editing element i.e. `s_newsletter_subscribe_form`.
+        return this.el.dataset.listId;
+    }
+
+    async onInputKeydown(ev) {
+        if (ev.key === "Enter") {
+            await this.onSubscribeClick();
+        }
     }
 
     async onSubscribeClick() {
@@ -129,11 +137,21 @@ export class Subscribe extends Interaction {
             turnstile_captcha: this.el.parentElement.querySelector('input[name="turnstile_captcha"]')?.value,
         }));
         const toastType = result.toast_type;
-        if (toastType === 'success') {
-            this._updateSubscribeControlsStatus(true);
-            const modalEl = this.el.closest('.o_newsletter_modal');
-            if (modalEl) {
-                window.Modal.getOrCreateInstance(modalEl).hide();
+        if (toastType === "success") {
+            const { successMode, successPage } = this.el.dataset;
+            switch (successMode) {
+                case "redirect":
+                    successPage && redirect(successPage);
+                    this._updateSubscribeControlsStatus(true);
+                    break;
+                case "closePopup": {
+                    const modalEl = this.el.closest(".o_newsletter_modal");
+                    modalEl && window.Modal.getOrCreateInstance(modalEl).hide();
+                    break;
+                }
+                case "message":
+                    this._updateSubscribeControlsStatus(true);
+                    break;
             }
         }
         this.notification.add(result.toast_content, {

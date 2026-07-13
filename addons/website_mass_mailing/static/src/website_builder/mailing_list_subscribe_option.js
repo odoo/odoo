@@ -13,4 +13,8 @@ export class MailingListSubscribeOption extends BaseOptionComponent {
             this.mailingLists = await fetchMailingLists();
         });
     }
+
+    isNewsletterPopup() {
+        return !!this.env.getEditingElement().closest(".o_newsletter_popup");
+    }
 }
