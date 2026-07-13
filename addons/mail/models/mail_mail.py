@@ -12,6 +12,7 @@ import smtplib
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from dateutil.parser import parse
+from lxml import html
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -388,7 +389,25 @@ class MailMail(models.Model):
         self.ensure_one()
         if tools.is_html_empty(self.body_html):
             return ''
-        return self.env['mail.render.mixin']._replace_local_links(self.body_html)
+        body = self._transform_mention_links_for_email(self.body_html)
+        return self.env['mail.render.mixin']._replace_local_links(body)
+
+    def _transform_mention_links_for_email(self, html_body):
+        if not html_body or (
+            "o_mail_redirect" not in html_body and "o-discuss-mention" not in html_body
+        ):
+            return html_body
+        root = html.fromstring(html_body)
+        mentions = root.xpath("//a[hasclass('o_mail_redirect') or hasclass('o-discuss-mention')]")
+        if not mentions:
+            return html_body
+
+        for mention in mentions:
+            mention.attrib.pop("href", None)
+            mention.attrib.pop("target", None)
+            mention.set("style", "color:#0d6efd; font-weight:bold;")
+
+        return html.tostring(root, encoding="unicode", method="html")
 
     def _personalize_outgoing_body(self, body, partner=False, doc_to_followers=None):
         """ Return a modified body based on the recipient (partner).
