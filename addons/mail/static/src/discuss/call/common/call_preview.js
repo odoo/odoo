@@ -282,9 +282,6 @@ export class CallPreview extends Component {
         this.state.videoStream = await navigator.mediaDevices.getUserMedia({
             video: this.store.settings.cameraConstraints,
         });
-        if (!this.videoRef.el) {
-            return;
-        }
         if (status(this) === "destroyed") {
             closeStream(this.state.videoStream);
             return;

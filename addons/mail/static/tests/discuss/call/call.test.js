@@ -157,6 +157,102 @@ test("show call UI in chat window when in call", async () => {
     await contains(".o-mail-ChatWindow-header [title='Start Call']", { count: 0 });
 });
 
+test("joining a video call from a chat window opens the wide meeting view", async () => {
+    const { isBrowserFullscreen } = mockBrowserFullscreen();
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_id: channelId,
+        channel_member_id: memberId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem-name:text('Partner 2')");
+    await contains(".o-mail-ChatWindow");
+    await click(".o-mail-ChatWindow button[title='Join Video Call']");
+    await contains(".o-mail-Meeting");
+    await contains(".o-discuss-Call", { count: 1 });
+    await contains(".o-mail-Meeting:has(.o-discuss-Call)");
+    await contains(
+        ".o-discuss-Call-topNotifications .o-discuss-Call-notification:text('To minimize, press ESC')"
+    );
+    expect(isBrowserFullscreen()).toBe(false);
+});
+
+test("starting a video call from a chat window opens the wide meeting view", async () => {
+    const { isBrowserFullscreen } = mockBrowserFullscreen();
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem-name:text('Partner 2')");
+    await contains(".o-mail-ChatWindow");
+    await click(".o-mail-ChatWindow button[title='Start Video Call']");
+    await contains(".o-mail-Meeting");
+    await contains(".o-discuss-Call", { count: 1 });
+    await contains(".o-mail-Meeting:has(.o-discuss-Call)");
+    await contains(
+        ".o-discuss-Call-topNotifications .o-discuss-Call-notification:text('To minimize, press ESC')"
+    );
+    expect(isBrowserFullscreen()).toBe(false);
+});
+
+test("starting a video call from the Discuss app opens the wide meeting view", async () => {
+    const { isBrowserFullscreen } = mockBrowserFullscreen();
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Video Call']");
+    await contains(".o-mail-Meeting"); // opens wide, like in a chat window
+    // "To minimize, press ESC" hint shown at the top of the call view
+    await contains(
+        ".o-discuss-Call-topNotifications .o-discuss-Call-notification:text('To minimize, press ESC')"
+    );
+    expect(isBrowserFullscreen()).toBe(false); // not in fullscreen
+});
+
+test("starting a plain call from the Discuss app stays inline (no meeting view)", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    patchWithCleanup(env.services["mail.sound_effects"], {
+        play(name) {
+            expect.step(`play - ${name}`);
+        },
+    });
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    await expect.waitForSteps(["play - call-join"]); // call is fully joined, meeting-view decision is settled
+    expect(rtc.isFullscreen).toBe(false); // stayed inline: no wide meeting view for a camera-less call
+});
+
 test("should disconnect when closing page while in call", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -490,7 +586,7 @@ test("Dropzones below fullscreen meeting view are disabled", async () => {
     await contains(".o-mail-Discuss .o-mail-AttachmentContainer:not(.o-isUploading)", { count: 2 });
 });
 
-test("Fullscreen button enters browser fullscreen and the label reflects it", async () => {
+test("Fullscreen button enters browser fullscreen; the menu then offers Wide View", async () => {
     const fullscreen = mockBrowserFullscreen();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -500,17 +596,27 @@ test("Fullscreen button enters browser fullscreen and the label reflects it", as
     await click("[title='Start Call']");
     await click(".o-discuss-CallActionList button[title='More']");
     await contains("[name='fullscreen'][aria-label='Fullscreen']");
+    await contains("[name='wide-view'][aria-label='Wide View']");
+    await contains("[name='minimize']", { count: 0 });
     await click("[name='fullscreen']");
     await contains(".o-mail-Meeting.o-fullscreen");
     expect(fullscreen.isBrowserFullscreen()).toBe(true);
     expect(rtc.isBrowserFullscreen).toBe(true);
-    // The action mirrors the real browser fullscreen state and now offers to exit it.
     await click(".o-mail-Meeting [title='More']");
-    await contains("[name='fullscreen'][aria-label='Exit Fullscreen']");
-    await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting", { count: 0 });
+    await contains("[name='fullscreen']", { count: 0 });
+    await contains("[name='wide-view'][aria-label='Wide View']");
+    await contains("[name='minimize'][aria-label='Minimize']");
+    await click("[name='wide-view']");
+    await contains(".o-mail-Meeting.o-fullscreen");
     expect(fullscreen.isBrowserFullscreen()).toBe(false);
     expect(rtc.isBrowserFullscreen).toBe(false);
+    await contains(
+        ".o-discuss-Call-topNotifications .o-discuss-Call-notification:text('To minimize, press ESC')"
+    );
+    await click(".o-mail-Meeting [title='More']");
+    await contains("[name='fullscreen'][aria-label='Fullscreen']");
+    await contains("[name='wide-view']", { count: 0 });
+    await contains("[name='minimize'][aria-label='Minimize']");
 });
 
 test("Fullscreen button label reflects a denied browser fullscreen request", async () => {
@@ -577,6 +683,36 @@ test("Closing picture-in-picture from browser fullscreen restores the windowed m
     expect(rtc.isBrowserFullscreen).toBe(false);
 });
 
+test("Minimize button leaves the meeting view like pressing Escape", async () => {
+    const fullscreen = mockBrowserFullscreen();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting.o-fullscreen");
+    expect(rtc.isBrowserFullscreen).toBe(true);
+    await click(".o-mail-Meeting [title='More']");
+    await click("[name='minimize'][aria-label='Minimize']");
+    await contains(".o-mail-Discuss .o-discuss-Call");
+    await contains(".o-mail-Meeting", { count: 0 });
+    expect(fullscreen.isBrowserFullscreen()).toBe(false);
+    expect(rtc.isBrowserFullscreen).toBe(false);
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='wide-view']");
+    await contains(".o-mail-Meeting.o-fullscreen");
+    expect(rtc.isFullscreen).toBe(true);
+    expect(rtc.isBrowserFullscreen).toBe(false);
+    await press("escape");
+    await contains(".o-mail-Discuss .o-discuss-Call");
+    await contains(".o-mail-Meeting", { count: 0 });
+    expect(rtc.isFullscreen).toBe(false);
+});
+
 test("Systray icon shows latest action", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -605,7 +741,7 @@ test("Can use Call actions in Call Systray Menu", async () => {
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await click(".o-discuss-CallMenu-dropdownMore");
-    await contains(".o-dropdown-item", { count: 8 });
+    await contains(".o-dropdown-item", { count: 9 });
     await contains(".o-dropdown-item:has(:text('Mute'))");
     await contains(".o-dropdown-item:has(:text('Deafen'))");
     await contains(".o-dropdown-item:has(:text('Turn camera on'))");
@@ -613,6 +749,7 @@ test("Can use Call actions in Call Systray Menu", async () => {
     await contains(".o-dropdown-item:has(:text('Raise Hand'))");
     await contains(".o-dropdown-item:has(:text('Picture in Picture'))");
     await contains(".o-dropdown-item:has(:text('Fullscreen'))");
+    await contains(".o-dropdown-item:has(:text('Wide View'))");
     await contains(".o-dropdown-item:has(:text('Disconnect'))");
 });
 

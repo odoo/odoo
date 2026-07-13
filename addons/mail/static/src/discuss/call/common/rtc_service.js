@@ -359,6 +359,7 @@ export class Rtc extends Record {
     viewToRestore = VIEW_TO_RESTORE.NONE;
     /** @type {RtcLog} */
     logs = {};
+    /** @type {Map<any, {id: any, position: "bottom"|"top", text: string}>} call notifications by id */
     notifications = proxy(new Map());
     /** @type {Map<string, number>} timeoutId by notificationId for call notifications */
     timeouts = new Map();
@@ -738,12 +739,13 @@ export class Rtc extends Record {
      * @param {any} param0.id
      * @param {string} param0.text
      * @param {number} [param0.delay]
+     * @param {"bottom"|"top"} [param0.position="bottom"] Corner of the call view the notification is anchored to.
      */
-    addCallNotification({ id, text, delay = 3000 }) {
+    addCallNotification({ id, text, delay = 3000, position = "bottom" }) {
         if (this.notifications.has(id)) {
             return;
         }
-        this.notifications.set(id, { id, text });
+        this.notifications.set(id, { id, position, text });
         this.timeouts.set(
             id,
             browser.setTimeout(() => {
@@ -866,6 +868,15 @@ export class Rtc extends Record {
                 ? VIEW_TO_RESTORE.FULLSCREEN
                 : VIEW_TO_RESTORE.NONE;
         this.store.fullscreenChannel = this.channel;
+        if (browserFullscreen) {
+            this.removeCallNotification("minimize_hint");
+        } else {
+            this.addCallNotification({
+                id: "minimize_hint",
+                position: "top",
+                text: _t("To minimize, press ESC"),
+            });
+        }
         await this.fullscreen.enter(Meeting, {
             id: CALL_FULLSCREEN_ID,
             browserFullscreen,
@@ -889,6 +900,19 @@ export class Rtc extends Record {
     async exitBrowserFullscreen() {
         if (this.viewToRestore === VIEW_TO_RESTORE.FULLSCREEN && this.channel) {
             await this.enterFullscreen();
+            return;
+        }
+        await this.exitFullscreen();
+    }
+
+    /**
+     * Leave the meeting view entirely and return to the Discuss layout or small window the call was
+     * opened from, whether currently in the windowed wide view or true browser fullscreen.
+     *
+     * @returns {Promise<void>}
+     */
+    async minimize() {
+        if (!this.isFullscreen) {
             return;
         }
         await this.exitFullscreen();

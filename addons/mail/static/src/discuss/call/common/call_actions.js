@@ -212,19 +212,39 @@ registerCallAction("share-screen", {
 });
 registerCallAction("fullscreen", {
     btnAttrs: { "data-available-offline": true },
-    condition: ({ channel, owner }) => channel?.isSelfInCall && !owner.env.pipWindow,
-    name: ({ store }) => (store.rtc.isBrowserFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
-    isActive: ({ store }) => store.rtc.isBrowserFullscreen,
-    icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
+    condition: ({ channel, owner, store }) =>
+        channel?.isSelfInCall && !owner.env.pipWindow && !store.rtc.isBrowserFullscreen,
+    name: _t("Fullscreen"),
+    icon: "fa fa-expand",
     onSelected: ({ channel, store }) => {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
-        if (store.rtc.isBrowserFullscreen) {
-            store.rtc.exitBrowserFullscreen();
-        } else {
-            store.rtc.closePip();
-            store.rtc.enterFullscreen(undefined, { browserFullscreen: true });
-        }
+        store.rtc.closePip();
+        store.rtc.enterFullscreen(undefined, { browserFullscreen: true });
     },
+    sequence: 70,
+    tags: ACTION_TAGS.CALL_LAYOUT,
+});
+registerCallAction("wide-view", {
+    condition: ({ channel, owner, store }) =>
+        channel?.isSelfInCall &&
+        !owner.env.pipWindow &&
+        (!store.rtc.isFullscreen || store.rtc.isBrowserFullscreen),
+    name: _t("Wide View"),
+    icon: "fa fa-window-maximize",
+    onSelected: ({ channel, store }) => {
+        channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
+        store.rtc.closePip();
+        store.rtc.enterFullscreen();
+    },
+    sequence: 72,
+    tags: ACTION_TAGS.CALL_LAYOUT,
+});
+registerCallAction("minimize", {
+    condition: ({ channel, owner, store }) =>
+        channel?.isSelfInCall && store.rtc.isFullscreen && !owner.env.pipWindow,
+    name: _t("Minimize"),
+    icon: "fa fa-window-minimize",
+    onSelected: ({ store }) => store.rtc.minimize(),
     sequence: 80,
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
@@ -245,7 +265,7 @@ registerCallAction("picture-in-picture", {
             store.rtc.openPip({ context: owner });
         }
     },
-    sequence: 70,
+    sequence: 90,
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("change-layout", {
@@ -299,7 +319,12 @@ registerCallAction("join-with-camera", {
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Video Call"),
     icon: "fa fa-video-camera",
-    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
+    onSelected: async ({ channel, store }) => {
+        await store.rtc.toggleCall(channel, { camera: true });
+        if (store.rtc.selfSession) {
+            store.rtc.enterFullscreen();
+        }
+    },
     sequence: 120,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],

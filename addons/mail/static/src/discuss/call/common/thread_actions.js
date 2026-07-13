@@ -18,7 +18,12 @@ registerThreadAction("camera-call", {
     icon: "fa fa-fw fa-video-camera",
     name: ({ channel }) =>
         channel?.hasRtcSessionActive ? _t("Join the Call with Camera") : _t("Start Video Call"),
-    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
+    onSelected: async ({ channel, store }) => {
+        await store.rtc.toggleCall(channel, { camera: true });
+        if (store.rtc.selfSession) {
+            store.rtc.enterFullscreen();
+        }
+    },
     sequence: 5,
     sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
