@@ -573,13 +573,14 @@ class ProductProduct(models.Model):
             if qty_on_first_move:
                 valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move
-                in_value = move_value * in_qty / valued_qty
+                in_value = (move_value * in_qty / valued_qty) if valued_qty else 0
                 qty_on_first_move = 0
             else:
                 in_qty = move._get_valued_qty(lot=lot)
                 in_value = move_value
                 if lot:
-                    in_value = in_value * in_qty / move._get_valued_qty()
+                    valued_qty = move._get_valued_qty()
+                    in_value = (in_value * in_qty / valued_qty) if valued_qty else 0
             if in_qty > quantity:
                 in_value = in_value * quantity / in_qty
                 in_qty = quantity

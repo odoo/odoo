@@ -712,3 +712,34 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.product.qty_available, 1)
         self.assertEqual(in_move_lot1.remaining_qty, 0)
         self.assertEqual(in_move_lot2.remaining_qty, 1)
+
+    def test_fifo_lot_value_with_zero_qty_incoming_move(self):
+        """ Reading a lot value must not raise ZeroDivisionError when its FIFO
+        stack contains a zero-quantity incoming move.
+
+        Such a move is produced e.g. by a migration that carries historical
+        inventory adjustments over as ``done`` incoming moves whose move line
+        ends up with a zero quantity: the move is still ``is_in`` (a picked line
+        into a valued location) but ``_get_valued_qty()`` returns 0, and
+        ``_run_fifo`` used to divide by it.
+        """
+        self.product.categ_id = self.category_fifo
+        # Two real receipts (10 @ 5, then 10 @ 7) with a zero-quantity inventory
+        # move sitting in the middle of lot1's FIFO stack.
+        self._make_in_move(self.product, 10, 5, lot_ids=[self.lot1])
+        zero_move = self._make_in_move(
+            self.product, 5, 5, lot_ids=[self.lot1],
+            location_id=self.inventory_location.id,
+        )
+        self._make_in_move(self.product, 10, 7, lot_ids=[self.lot1])
+
+        # Emulate the migrated state: the done incoming move keeps a picked line
+        # into a valued location but with a zero quantity (its quant is adjusted
+        # back accordingly, so lot1 holds only the 20 from the real receipts).
+        zero_move.move_line_ids.quantity = 0
+        self.assertTrue(zero_move.is_in)
+        self.assertEqual(zero_move._get_valued_qty(), 0)
+        self.assertEqual(self.lot1.product_qty, 20)
+
+        # Used to raise ZeroDivisionError in _run_fifo.
+        self.assertAlmostEqual(self.lot1.total_value, 120)  # 10 * 5 + 10 * 7
