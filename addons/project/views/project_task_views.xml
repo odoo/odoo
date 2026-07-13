@@ -717,7 +717,7 @@
                                 <field t-if="record.date_deadline.raw_value" invisible="state in ['1_done', '1_canceled']" name="date_deadline" widget="relative_date"/>
                                 <field name="task_properties" widget="properties"/>
                                 <field name="displayed_image_id" widget="attachment_image"/>
-                                <footer t-if="!selection_mode" class="pt-1">
+                                <footer class="pt-1">
                                     <div class="d-flex align-items-center gap-1">
                                         <field name="activity_ids" widget="kanban_activity" style="margin-right: 2px"/>
                                         <b t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0">
