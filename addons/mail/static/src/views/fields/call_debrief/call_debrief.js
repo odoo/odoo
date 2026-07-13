@@ -89,6 +89,9 @@ export class CallDebrief extends Component {
         useListener(document, "fullscreenchange", () => {
             this.state.isFullscreen = !!document.fullscreenElement;
         });
+        useListener(document, "webkitfullscreenchange", () => {
+            this.state.isFullscreen = !!document.webkitFullscreenElement;
+        });
 
         onWillUnmount(() => {
             clearTimeout(this.feedbackTimeout);
@@ -537,10 +540,23 @@ export class CallDebrief extends Component {
         if (!rootEl || !this.hasVideo) {
             return;
         }
-        if (!document.fullscreenElement) {
-            rootEl.requestFullscreen();
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (rootEl.requestFullscreen) {
+                rootEl.requestFullscreen().catch(() => {});
+            } else if (rootEl.webkitRequestFullscreen) {
+                rootEl.webkitRequestFullscreen();
+            } else {
+                const videoEl = rootEl.querySelector("video");
+                if (videoEl && videoEl.webkitEnterFullscreen) {
+                    videoEl.webkitEnterFullscreen();
+                }
+            }
         } else {
-            document.exitFullscreen();
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
         }
     }
 }
