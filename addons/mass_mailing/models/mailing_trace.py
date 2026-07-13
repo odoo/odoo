@@ -201,14 +201,25 @@ class MailingTrace(models.Model):
         })
         return traces
 
-    def set_failed(self, domain=None, failure_type=False):
+    def set_failed(self, domain=None, failure_reason=False, failure_type=False):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
-        traces.write({'trace_status': 'error', 'failure_type': failure_type})
+        traces.write({
+            'failure_reason': failure_reason,
+            'failure_type': failure_type,
+            'trace_status': 'error',
+        })
         return traces
 
-    def set_canceled(self, domain=None):
+    def set_canceled(self, domain=None, failure_reason=False, failure_type=False):
+        """ Note: cancel trace_status is mainly done when detecting invalid recipients
+        at sending time. Trace is created in 'cancel' state, which explains this
+        method is seldom used. """
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
-        traces.write({'trace_status': 'cancel'})
+        traces.write({
+            'failure_reason': failure_reason,
+            'failure_type': failure_type,
+            'trace_status': 'cancel',
+        })
         return traces
 
     def _action_view_mailing_statistics_filtered(self, domain: Domain, view_filter: str):
