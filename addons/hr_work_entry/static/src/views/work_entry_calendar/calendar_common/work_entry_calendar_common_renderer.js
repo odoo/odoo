@@ -47,7 +47,6 @@ export class WorkEntryCalendarCommonRenderer extends CalendarCommonRenderer {
             readonly: !this.props.editRecord || record.state === "validated",
             onReload: async () => await this.props.model.load(),
             originalRecord: record,
-            editArchInfo: this.editArchInfo,
             getDurationStr: (duration) =>
                 formatFloatTime(duration, {
                     noLeadingZeroHour: true,
