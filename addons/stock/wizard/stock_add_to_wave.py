@@ -32,18 +32,17 @@ class StockAddToWave(models.TransientModel):
     mode = fields.Selection([('existing', 'an existing wave transfer'), ('new', 'a new wave transfer')], default='existing')
     user_id = fields.Many2one('res.users', string='Responsible')
 
-
     def attach_pickings(self):
         self.ensure_one()
 
-        self = self.with_context(active_owner_id=self.user_id.id)
-        if self.line_ids:
-            company = self.line_ids.company_id
+        wizard = self.with_context(active_owner_id=self.user_id.id)
+        if wizard.line_ids:
+            company = wizard.line_ids.company_id
             if len(company) > 1:
                 raise UserError(_("The selected operations should belong to a unique company."))
-            return self.line_ids._add_to_wave(self.wave_id)
-        if self.picking_ids:
-            company = self.picking_ids.company_id
+            return wizard.line_ids._add_to_wave(wizard.wave_id)
+        if wizard.picking_ids:
+            company = wizard.picking_ids.company_id
             if len(company) > 1:
                 raise UserError(_("The selected transfers should belong to a unique company."))
         else:
@@ -58,12 +57,12 @@ class StockAddToWave(models.TransientModel):
             'res_model': 'stock.move.line',
             'target': 'new',
             'domain': [
-                ('picking_id', 'in', self.picking_ids.ids),
+                ('picking_id', 'in', wizard.picking_ids.ids),
                 ('state', '!=', 'done')
             ],
             'context': dict(
                 self.env.context,
-                picking_to_wave=self.picking_ids.ids,
-                active_wave_id=self.wave_id.id,
+                picking_to_wave=wizard.picking_ids.ids,
+                active_wave_id=wizard.wave_id.id,
                 from_wave_form=self.env.context.get('from_wave_form'),
             )}
