@@ -1,4 +1,4 @@
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, signal, t } from "@odoo/owl";
 import { OptionsContainer } from "./option_container";
 import { useVisibilityObserver } from "../core/utils";
 import { CustomizeComponent } from "@html_builder/sidebar/customize_component";
@@ -9,6 +9,7 @@ export class CustomizeTab extends Component {
     props = props({
         currentOptionsContainers: t.array().optional([]),
     });
+    contentRef = signal(null);
 
     setup() {
         this.state = proxy({
@@ -17,7 +18,7 @@ export class CustomizeTab extends Component {
         this.customizeComponent = proxy(
             this.env.editor.shared.customizeTab.getCustomizeComponent()
         );
-        useVisibilityObserver("content", (hasContent) => {
+        useVisibilityObserver(this.contentRef, (hasContent) => {
             this.state.hasContent = hasContent;
         });
         this.overlayPreviewedEl = null;

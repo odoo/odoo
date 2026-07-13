@@ -46,7 +46,7 @@
                 </div>
                 <div
                     class="hb-row-content d-flex"
-                    t-custom-ref="content"
+                    t-ref="this.contentRef"
                     t-on-click="this.onRowContentClick"
                     >
                     <t t-call-slot="default"/>
@@ -56,12 +56,12 @@
                 t-else=""
                 class="d-flex"
                 style="flex-grow: 1; flex-basis: 0; min-width: 0; gap: 4px;"
-                t-custom-ref="content"
+                t-ref="this.contentRef"
                 >
                 <t t-call-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
             </div>
         </div>
-        <div t-if="this.displayCollapseContent" t-att-class="this.collapseContentClass" t-custom-ref="collapse-content" t-att-id="this.collapseContentId">
+        <div t-if="this.displayCollapseContent" t-att-class="this.collapseContentClass" t-ref="this.collapseContentRef" t-att-id="this.collapseContentId">
             <t t-call-slot="collapse"/>
         </div>
     </BuilderComponent>

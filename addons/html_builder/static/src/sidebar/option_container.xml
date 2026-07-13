@@ -59,7 +59,7 @@
                 </t>
             </div>
         </div>
-        <div t-att-id="this.containerId" t-if="!this.props.folded" class="we-bg-options-container pb-3" t-custom-ref="content">
+        <div t-att-id="this.containerId" t-if="!this.props.folded" class="we-bg-options-container pb-3" t-ref="this.contentRef">
             <t t-foreach="this.options()" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template + '-' + OptionClass_index">
                 <BuilderContext applyTo="OptionClass.applyTo">
                     <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>

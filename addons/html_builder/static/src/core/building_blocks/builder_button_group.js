@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
     useVisibilityObserver,
@@ -14,9 +14,10 @@ export class BuilderButtonGroup extends Component {
         slots: { type: Object, optional: true },
     };
     static components = { BuilderComponent };
+    rootRef = signal.ref();
 
     setup() {
-        useVisibilityObserver("root", useApplyVisibility("root"));
+        useVisibilityObserver(this.rootRef, useApplyVisibility(this.rootRef));
 
         useSelectableComponent(this.props.id);
     }

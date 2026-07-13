@@ -1,5 +1,5 @@
 import { useRef, useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, props, t, xml } from "@odoo/owl";
+import { Component, onMounted, props, signal, t, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useVisibilityObserver, useApplyVisibility, useSelectableComponent } from "../utils";
@@ -51,9 +51,10 @@ export class BuilderSelect extends Component {
         BuilderComponent,
         WithIgnoreItem,
     };
+    contentRef = signal(null);
 
     setup() {
-        useVisibilityObserver("content", useApplyVisibility("root"));
+        useVisibilityObserver(this.contentRef, useApplyVisibility("root"));
 
         this.dropdown = useDropdownState();
 

@@ -1,4 +1,4 @@
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
@@ -21,11 +21,12 @@ export class BuilderFontFamilyPicker extends Component {
         BuilderSelect,
         BuilderSelectItem,
     };
+    contentRef = signal.ref();
 
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
-        useVisibilityObserver("content", useApplyVisibility("root"));
+        useVisibilityObserver(this.contentRef, useApplyVisibility("root"));
         this.fonts = [];
         onWillStart(async () => {
             const fontsData = await this.env.editor.shared.builderFont.getFontsData();

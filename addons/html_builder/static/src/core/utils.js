@@ -1,10 +1,4 @@
-import {
-    useComponent,
-    useEnv,
-    useLayoutEffect,
-    useRef,
-    useSubEnv,
-} from "@web/owl2/utils";
+import { useComponent, useEnv, useRef, useSubEnv } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     onMounted,
@@ -1049,18 +1043,19 @@ export function useInputBuilderComponent({
     };
 }
 
-export function useApplyVisibility(refName) {
-    const ref = useRef(refName);
+export function useApplyVisibility(ref) {
+    if (typeof ref === "string") {
+        const contentRef = useRef(ref);
+        ref = () => contentRef.el;
+    }
     return (hasContent) => {
-        ref.el?.classList.toggle("d-none", !hasContent);
+        ref()?.classList.toggle("d-none", !hasContent);
     };
 }
 
-export function useVisibilityObserver(contentName, callback) {
-    const contentRef = useRef(contentName);
-
+export function useVisibilityObserver(contentRef, callback) {
     const applyVisibility = () => {
-        const hasContent = [...contentRef.el.childNodes].some(
+        const hasContent = [...contentRef().childNodes].some(
             (el) =>
                 (isTextNode(el) && el.textContent !== "") ||
                 (isElement(el) && !el.classList.contains("d-none"))
@@ -1069,24 +1064,22 @@ export function useVisibilityObserver(contentName, callback) {
     };
 
     const observer = new MutationObserver(applyVisibility);
-    useLayoutEffect(
-        (contentEl) => {
-            if (!contentEl) {
-                return;
-            }
-            applyVisibility();
-            observer.observe(contentEl, {
-                subtree: true,
-                attributes: true,
-                childList: true,
-                attributeFilter: ["class"],
-            });
-            return () => {
-                observer.disconnect();
-            };
-        },
-        () => [contentRef.el]
-    );
+    useEffect(() => {
+        const contentEl = contentRef();
+        if (!contentEl) {
+            return;
+        }
+        applyVisibility();
+        observer.observe(contentEl, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+            attributeFilter: ["class"],
+        });
+        return () => {
+            observer.disconnect();
+        };
+    });
 }
 
 export function useInputDebouncedCommit(ref) {

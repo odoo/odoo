@@ -1,6 +1,6 @@
 import { useExternalListener, useRef } from "@web/owl2/utils";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { asyncComputed, onWillStart, props, t, useListener } from "@odoo/owl";
+import { asyncComputed, onWillStart, props, signal, t, useListener } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
@@ -27,6 +27,7 @@ export class OptionsContainer extends BaseOptionComponent {
         containerTitle: t.object().optional({}),
         headerMiddleButtons: t.array().optional([]),
     });
+    contentRef = signal(null);
 
     setup() {
         useOptionsSubEnv(() => [this.props.editingElement]);
@@ -34,7 +35,7 @@ export class OptionsContainer extends BaseOptionComponent {
         this.containerId = uniqueId("option-container-");
         this.notification = useService("notification");
         this.getItemValue = useGetItemValue();
-        useVisibilityObserver("content", useApplyVisibility("root"));
+        useVisibilityObserver(this.contentRef, useApplyVisibility("root"));
 
         this.rootRef = useRef("root");
         this.titleRef = useRef("title");
@@ -46,7 +47,9 @@ export class OptionsContainer extends BaseOptionComponent {
         this.callOperation = useOperation();
 
         this.hasGroup = {};
-        this.options = asyncComputed(() => this.filterAccessGroup(this.props.options), { initial: [] });
+        this.options = asyncComputed(() => this.filterAccessGroup(this.props.options), {
+            initial: [],
+        });
         onWillStart(() => this.options.currentPromise());
     }
 

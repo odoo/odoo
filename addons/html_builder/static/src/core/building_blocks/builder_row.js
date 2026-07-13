@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useApplyVisibility, useBuilderComponent, useVisibilityObserver } from "../utils";
@@ -35,17 +35,19 @@ export class BuilderRow extends Component {
         disabled: t.boolean().optional(),
         fullRowToggler: t.boolean().optional(false),
     });
+    contentRef = signal(null);
+    collapseContentRef = signal(null);
 
     setup() {
         useBuilderComponent();
-        useVisibilityObserver("content", useApplyVisibility("root"));
+        useVisibilityObserver(this.contentRef, useApplyVisibility("root"));
 
         this.state = proxy({
             expanded: this.props.expand,
         });
 
         if (this.props.slots.collapse) {
-            useVisibilityObserver("collapse-content", useApplyVisibility("collapse"));
+            useVisibilityObserver(this.collapseContentRef, useApplyVisibility("collapse"));
 
             this.collapseContentId = uniqueId("builder_collapse_content_");
         }
@@ -53,7 +55,6 @@ export class BuilderRow extends Component {
         this.labelWrapperRef = useRef("label-wrapper");
         this.labelRef = useRef("label");
         this.rootRef = useRef("root");
-        this.collapseContentRef = useRef("collapse-content");
         let isMounted = false;
 
         onMounted(() => {
@@ -74,7 +75,7 @@ export class BuilderRow extends Component {
             (stage) => {
                 const isFirstMount = !isMounted;
                 isMounted = true;
-                const contentEl = this.collapseContentRef.el;
+                const contentEl = this.collapseContentRef();
                 if (!contentEl) {
                     return;
                 }

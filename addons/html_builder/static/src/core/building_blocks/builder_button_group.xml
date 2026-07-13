@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderButtonGroup">
     <BuilderComponent>
-        <div class="o-hb-button-group btn-group" t-custom-ref="root">
+        <div class="o-hb-button-group btn-group" t-ref="this.rootRef">
             <t t-call-slot="default"/>
         </div>
     </BuilderComponent>
