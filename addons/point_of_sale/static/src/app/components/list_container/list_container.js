@@ -1,5 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, props, t, xml } from "@odoo/owl";
+import { Component, props, signal, t, useEffect, xml } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -40,7 +39,7 @@ export class ListContainer extends Component {
             </button>
             <span t-if="this.props.onClickPlus" class="navbar-separator mx-1"/>
             <div class="overflow-hidden flex-grow-1">
-                <div t-custom-ref="container" class="list-container-items d-flex align-items-center gap-1">
+                <div t-ref="this.container" class="list-container-items d-flex align-items-center gap-1">
                     <div t-if="!this.props.forceSmall" t-foreach="this.props.items" t-as="item" t-key="item_index" t-att-class="{'invisible order-2': this.shouldBeInvisible(item_index)}">
                         <t t-call-slot="default" item="item"/>
                     </div>
@@ -54,18 +53,20 @@ export class ListContainer extends Component {
             </div>
         </div>
     `;
+    container = signal.ref();
     setup() {
-        this.container = useRef("container");
         this.sizing = useIsChildLarger(this.container);
         this.ui = useService("ui");
         this.dialog = useService("dialog");
 
-        useLayoutEffect(
-            () => {
+        useEffect(() => {
+            if (!this.container()) {
+                return;
+            }
+            if (this.props.items.length >= 0) {
                 this.sizing.reload();
-            },
-            () => [this.props.items]
-        );
+            }
+        });
     }
     shouldBeInvisible(itemIndex) {
         return itemIndex >= this.sizing.maxItems;

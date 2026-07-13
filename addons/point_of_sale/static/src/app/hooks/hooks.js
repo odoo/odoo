@@ -1,4 +1,4 @@
-import { onMounted, onPatched, proxy, useListener } from "@odoo/owl";
+import { onMounted, onPatched, proxy, signal, useListener } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useRef } from "@web/owl2/utils";
@@ -109,36 +109,35 @@ export function useTrackedAsync(asyncFn, options = {}) {
     };
 }
 
-export function useIsChildLarger(container) {
-    const state = proxy({
-        isLarger: false,
-        maxItems: 0,
-    });
+export function useIsChildLarger(containerRef) {
+    const isLarger = signal(false);
+    const maxItems = signal(0);
 
     const computeSize = () => {
-        if (!container.el || !container.el.children.length) {
+        const el = containerRef();
+        if (!el || !el.children.length) {
             return;
         }
 
         let acc = 0;
         let nbrItems = 0;
-        let isLarger = false;
-        const containerWidth = container.el.clientWidth - 10;
+        let anyChildLarger = false;
+        const containerWidth = el.clientWidth - 10;
 
-        for (const child of container.el.children) {
+        for (const child of el.children) {
             acc += child.clientWidth;
             if (acc < containerWidth) {
                 nbrItems++;
             } else {
-                isLarger = true;
+                anyChildLarger = true;
                 break;
             }
         }
 
-        state.isLarger = isLarger;
-        state.maxItems = nbrItems;
-        if (state.isLarger) {
-            state.maxItems = Math.max(0, state.maxItems - 1);
+        isLarger.set(anyChildLarger);
+        maxItems.set(nbrItems);
+        if (isLarger()) {
+            maxItems.set(Math.max(0, maxItems() - 1));
         }
     };
 
@@ -148,10 +147,10 @@ export function useIsChildLarger(container) {
 
     return {
         get isLarger() {
-            return state.isLarger;
+            return isLarger();
         },
         get maxItems() {
-            return state.maxItems;
+            return maxItems();
         },
         reload: () => {
             computeSize();
