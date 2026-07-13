@@ -121,23 +121,6 @@ export class MediaTranslationPlugin extends Plugin {
             onClose.then(resolve);
         });
     }
-    /**
-     * @param {HTMLElement} el - element whose attribute is translated
-     * @param {string} translation - new translation
-     * @param {string} originalText - text before the new translation
-     * @param {string} attribute - attribute to update in the translation map
-     */
-    handleTranslationMapHistory(el, translation, originalText, attribute) {
-        const updateTranslationMap = this.dependencies.translation.updateTranslationMap;
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {
-                updateTranslationMap(el, translation, attribute);
-            },
-            revert: () => {
-                updateTranslationMap(el, originalText, attribute);
-            },
-        });
-    }
 
     saveImage(editingElement, newImgEl) {
         // Replicate all attributes from the new image to the current element,
@@ -152,23 +135,6 @@ export class MediaTranslationPlugin extends Plugin {
             if (!attributesToKeep.includes(attr.name)) {
                 editingElement.setAttribute(attr.name, attr.value);
             }
-        }
-        const elTranslationInfo = this.dependencies.translation.getTranslationInfo(editingElement);
-        const originalSrc = elTranslationInfo.src.translation;
-        const originalSrcset = elTranslationInfo.srcset?.translation;
-        const translatedSrc = editingElement.getAttribute("src");
-        this.handleTranslationMapHistory(editingElement, translatedSrc, originalSrc, "src");
-        if (originalSrcset) {
-            // Hack: we don't have the new srcset yet (it's computed on save).
-            // Instead, register the new src: on most images, the actual srcset
-            // will be updated on save; on others (e.g. CORS-protected), it will
-            // make up for the lack of actual srcset.
-            this.handleTranslationMapHistory(
-                editingElement,
-                translatedSrc,
-                originalSrcset,
-                "srcset"
-            );
         }
     }
 }

@@ -16,13 +16,7 @@ import { uniqueId } from "@web/core/utils/functions";
  */
 export class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
-    static dependencies = [
-        "translateWebpageOption",
-        "translation",
-        "history",
-        "domObserver",
-        "valueHistory",
-    ];
+    static dependencies = ["translateWebpageOption", "translation", "valueHistory"];
 
     setup() {
         this.canTimeout = false;
@@ -145,8 +139,11 @@ export class TranslateToAction extends BuilderAction {
                 enqueueTranslation(el, uniqueId("ta_"), text, "textContent");
             }
             if (el.classList.contains("o_translatable_attribute")) {
+                const translatableAttrNames = new Set(
+                    this.dependencies.translation.getTranslatableAttributes(el)
+                );
                 for (const attr of ["alt", "title", "placeholder", "value"]) {
-                    if (el.hasAttribute(attr)) {
+                    if (translatableAttrNames.has(attr)) {
                         const attrValue = el.getAttribute(attr);
                         enqueueTranslation(el, uniqueId("ta_"), attrValue, attr);
                     }
@@ -256,33 +253,22 @@ export class TranslateToAction extends BuilderAction {
                 numOfFailedTranslationNodes--;
                 if (id.startsWith("t_")) {
                     node.textContent = text;
-                    const parentEl = node.parentElement?.closest("[data-oe-translation-state]");
-                    if (parentEl) {
-                        parentEl.dataset.oeTranslationState = "translated";
-                    }
                 } else if (id.startsWith("ta_")) {
                     const { el, attribute } = node;
-                    const attributeInfo =
-                        this.dependencies.translation.getTranslationInfo(el)?.[attribute];
-                    if (attributeInfo && text != attributeInfo.translation) {
-                        const oldValue = attributeInfo.translation;
-                        this.dependencies.domObserver.applyCustomMutation({
-                            apply: () => (attributeInfo.translation = text),
-                            revert: () => (attributeInfo.translation = oldValue),
-                        });
-                        el.dataset.oeTranslationState = "translated";
-                        if (attribute === "textContent" || attribute === "value") {
+                    const isTextContent = attribute === "textContent";
+                    const isSetWithValueProperty = isTextContent || attribute === "value";
+                    const oldValue = isSetWithValueProperty ? el.value : el.getAttribute(attribute);
+                    if (text !== oldValue) {
+                        if (isSetWithValueProperty) {
                             this.dependencies.valueHistory.setValue(el, text);
                         }
-                        if (attribute !== "textContent") {
+                        if (!isTextContent) {
                             el.setAttribute(attribute, text);
                         }
                     }
                 }
             }
         }
-        this.dependencies.history.commit();
-
         return numOfFailedTranslationNodes;
     }
 
