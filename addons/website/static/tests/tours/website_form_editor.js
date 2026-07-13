@@ -268,6 +268,15 @@ registerWebsitePreviewTour(
                 ":iframe .s_website_form_field:has(textarea.s_website_form_input) .s_website_form_label_content",
             run: "editor Renamed",
         },
+        {
+            trigger: ':iframe .s_website_form_field:has(label:contains("Renamed"))',
+        },
+        {
+            content: "Restore the field label",
+            trigger:
+                ":iframe .s_website_form_field:has(textarea.s_website_form_input) .s_website_form_label_content",
+            run: "editor Your Question",
+        },
         goBackToBlocks(),
         {
             trigger: ":iframe .s_website_form_field",
