@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import _, api, models, fields
-from odoo.tools.float_utils import float_is_zero, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
 
@@ -23,25 +23,42 @@ class StockMove(models.Model):
         line = self.purchase_line_id
         # price_unit here with uom of product
         kit_price_unit = line._get_gross_price_unit()
-        bom_line = self.bom_line_id
-        bom = bom_line.bom_id
         if line.currency_id != self.company_id.currency_id:
             kit_price_unit = line.currency_id._convert(kit_price_unit, self.company_id.currency_id, self.company_id, fields.Date.context_today(self), round=False)
+        purchase_qty = self.purchase_line_id.product_uom._compute_quantity(
+            self.purchase_line_id.product_qty,
+            self.purchase_line_id.product_id.uom_id,
+        )
         cost_share = self.cost_share / 100
-        uom_factor = 1.0
-        kit_product = bom.product_id or bom.product_tmpl_id
-
-        # Convert uom from product_uom to bom_uom for kit product
-        uom_factor = bom.product_uom_id._compute_quantity(uom_factor, kit_product.uom_id)
-
-        # Convert uom from bom_line_uom to product_uom for bom_line
-        uom_factor = bom_line.product_id.uom_id._compute_quantity(uom_factor, bom_line.product_uom_id)
-
-        price_unit = kit_price_unit * cost_share * uom_factor * bom.product_qty / bom_line.product_qty
+        price_unit = kit_price_unit * cost_share * purchase_qty * self._get_kit_ratio()
         if self.product_id.lot_valuated:
             return {lot: price_unit for lot in self.lot_ids}
         else:
             return {self.env['stock.lot']: price_unit}
+
+    def _get_kit_ratio(self):
+        self.ensure_one()
+        kit_ratio = 1
+        if self.bom_line_id.bom_id.type == "phantom" and self.purchase_line_id and self.purchase_line_id.product_id != self.product_id:
+            active_demand = self.product_qty
+            for move in self.purchase_line_id.move_ids:
+                if (
+                    move.state != 'cancel'
+                    and move.product_id == self.product_id
+                    and move.picking_id != self.picking_id
+                    and move.bom_line_id == self.bom_line_id
+                    and float_compare(move.cost_share, self.cost_share, precision_digits=6) == 0
+                ):
+                    active_demand += move.product_qty
+            if not float_is_zero(1, precision_rounding=self.product_id.uom_id.rounding):
+                kit_ratio = (1 / active_demand)
+        return kit_ratio
+
+    def _merge_moves_fields(self):
+        res = super()._merge_moves_fields()
+        if not self.env.context.get('merge_extra'):
+            res['cost_share'] = sum(self.mapped('cost_share'))
+        return res
 
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total, valuation_total_qty = super()._get_valuation_price_and_qty(related_aml, to_curr)
