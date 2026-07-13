@@ -1201,6 +1201,11 @@ patch(PosOrder.prototype, {
         }
 
         const discountFactor = discountable ? Math.min(1, maxDiscount / discountable) : 1;
+        // Round like `getUnitPrice()`: the UI taxes the rounded price unit,
+        // but the raw value is what gets stored and re-taxed by the server.
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
         const result = Object.entries(discountablePerTax).reduce((lst, entry) => {
             // Ignore 0 price lines
             if (!entry[1]) {
@@ -1211,7 +1216,9 @@ patch(PosOrder.prototype, {
 
             lst.push({
                 product_id: discountProduct,
-                price_unit: -(Math.min(this.getTotalWithTax(), entry[1]) * discountFactor),
+                price_unit: -ProductPrice.round(
+                    Math.min(this.getTotalWithTax(), entry[1]) * discountFactor
+                ),
                 qty: 1,
                 reward_id: reward,
                 is_reward_line: true,
