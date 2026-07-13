@@ -128,6 +128,7 @@
                             <t t-if="!message.is_note and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
                         </div>
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
+                        <t name="after-reactions"/>
                     </div>
                 </div>
             </div>
