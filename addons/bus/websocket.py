@@ -59,7 +59,7 @@ def acquire_cursor(db):
             # Yield before trying to acquire the cursor to let other
             # greenlets release their cursor.
             time.sleep(0)
-            with suppress(PoolError), Registry(db).cursor() as cr:
+            with suppress(PoolError), odoo.sql_db.db_connect(db).cursor() as cr:
                 yield cr
                 return
             time.sleep(delay + random.uniform(0, JITTER_ON_POOL_ERROR))
