@@ -46,9 +46,10 @@
                     </div>
                 </button>
             </div>
-            <group name="identification" class="o_form_fw_labels" position="inside">
-                <field name="time_off_selectable"/>
-            </group>
+            <xpath expr="//div[@name='availability_row']/field[@name='resource_calendar_selectable']" position="before">
+                <field name="time_off_selectable" nolabel="1" help="Tells whether this time type can be selected as time off or not"/>
+                <label for="time_off_selectable" string="Time Off"/>
+            </xpath>
             <xpath expr="//field[@name='count_as']" position="after">
                 <field name="unit_of_measure" widget="radio" options="{'horizontal': True}"/>
                 <field name="request_unit" widget="radio" options="{'horizontal': True}"/>

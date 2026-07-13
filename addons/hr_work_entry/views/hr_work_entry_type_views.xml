@@ -65,6 +65,11 @@
                             <field name="active" invisible="1"/>
                             <field name="code" string="Code" placeholder="e.g. WORK100, LEAVE210, OUT, ..."/>
                             <field string="Considered as" name="count_as" widget="radio" options="{'horizontal': True}" />
+                            <span class="fw-bold">Availability</span>
+                            <div class="o_row" name="availability_row">
+                                <field name="resource_calendar_selectable" nolabel="1" help="Tells whether this time type can be selected in working schedules or not"/>
+                                <label for="resource_calendar_selectable" string="Working Schedule"/>
+                            </div>
                         </group>
                         <group>
                             <field name="country_id" options="{'no_create': True, 'no_open': True}" placeholder="All Countries"/>

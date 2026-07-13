@@ -51,6 +51,7 @@ class HrWorkEntryType(models.Model):
         help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.")
     description = fields.Text(translate=True, tracking=True)
     resource_calendar_attendance_ids = fields.One2many('resource.calendar.attendance', 'work_entry_type_id', readonly=True, copy=False)
+    resource_calendar_selectable = fields.Boolean(string="Selectable in Working Schedule", compute='_compute_resource_calendar_selectable', store=True, readonly=False, tracking=True)
 
     @api.constrains('code', 'country_id')
     def _check_code_unicity(self):
@@ -111,3 +112,8 @@ Time type "%(name)s" of code "%(code)s", with no country assigned, already exist
             if 'code' not in default:
                 data['code'] = f"{record.code}_{uuid4().hex[:6]}"
         return data_list
+
+    @api.depends('count_as')
+    def _compute_resource_calendar_selectable(self):
+        for we in self:
+            we.resource_calendar_selectable = bool(we.count_as == 'working_time')
