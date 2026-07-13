@@ -22,7 +22,6 @@ _logger = logging.getLogger('odoo.tests.test_module_operations')
 
 BLACKLIST = {
     'auth_ldap',
-    'pos_blackbox_be',
 }
 IGNORE = ('hw_', 'theme_', 'l10n_', 'test_')
 

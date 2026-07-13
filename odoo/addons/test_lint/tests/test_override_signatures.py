@@ -23,9 +23,6 @@ Incompatible override definition in {child_module}:{override_decorators}
     def {method}{override_signature}"""
 
 
-MODULES_TO_IGNORE = {
-    'pos_blackbox_be',  # TODO cannot update to sanitize without certification
-}
 METHODS_TO_IGNORE = {
     # base
     'action_timer_stop',
@@ -166,8 +163,6 @@ class TestLintOverrideSignatures(LintCase):
         registry = Registry(get_db_name())
 
         for model_name, model_cls in registry.items():
-            if model_cls._module in MODULES_TO_IGNORE:
-                continue
             for method_name, _ in inspect.getmembers(model_cls, inspect.isroutine):
                 if (
                     method_name.startswith('__')

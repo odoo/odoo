@@ -19,7 +19,6 @@ EXCLUDED_PATH = (
 
 
 CHECKSUM_FILES = (
-    'pos_blackbox_be/static/src/pos/overrides/navbar/navbar.xml',
     'iot_drivers/iot_handlers/drivers/serial_scale_driver.py',
 )
 
@@ -1070,7 +1069,6 @@ MISC_WHITELIST = {
     "mrp_workorder.ProductCatalogKanbanRenderer": {'groupOrRecord'},  # Nested t-call or inherit
     "planning.PlanningCalendarCommonPopover.body": {'slot'},  # dynamic t-calls from loops
     "point_of_sale.ScenarioCard": {'item'},  # dynamic t-call
-    "pos_blackbox_be.CashierClockButtons": {'employee', 'isCachier'},  # dynamic t-call
     "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
     "pos.floor_screen_shape": {'shape'},  # didn't check
     "pos_restaurant.floor_screen_element": {'element', 'kanbanMode'},  # for each + t-call
