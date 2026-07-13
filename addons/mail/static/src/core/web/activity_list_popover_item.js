@@ -33,6 +33,7 @@ export class ActivityListPopoverItem extends Component {
         this.hasMarkDoneView = signal(false);
         this.toggleFn = toggleFn;
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "right" });
+        this.pendingAttachmentIds = [];
         // bound once so `close` can be passed as a stable (useProps.static) handler
         this.closeMarkDoneView = () => this.hasMarkDoneView.set(false);
         if (this.activity().activity_category === "upload_file") {
@@ -169,11 +170,19 @@ export class ActivityListPopoverItem extends Component {
     }
 
     async onFileUploaded(data) {
-        const activity = this.activity();
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
-            activity,
+            activity: this.activity(),
         });
-        await activity.markAsDone([attachmentId]);
+        this.pendingAttachmentIds.push(attachmentId);
+    }
+
+    async onFilesUploadComplete() {
+        const attachmentIds = this.pendingAttachmentIds;
+        this.pendingAttachmentIds = [];
+        if (!attachmentIds.length) {
+            return;
+        }
+        await this.activity().markAsDone(attachmentIds);
         this.onActivityChanged?.();
     }
 }
