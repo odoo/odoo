@@ -110,7 +110,16 @@ class PosOrder(models.Model):
         involved_cards.lock_for_update()
 
         credited_cards = self.env['loyalty.card']
+        LoyaltyHistory = self.env['loyalty.history']
+        base_values = {
+            'order_model': 'pos.order',
+            'order_id': self.id,
+            'description': self.name,
+        }
+        # A balance is read back from the history, so a line spending points has to be created
+        # after the ones awarding them: the awards are gathered first, the spending after.
         history_vals = []
+        movements = []
 
         topup_lines = self.lines.filtered(
             lambda l: not l.is_reward_line and not l._is_tip_line() and (
@@ -148,16 +157,18 @@ class PosOrder(models.Model):
                 card.source_pos_order_id = self.id
                 if card.points:
                     points_issued = 0
-            card.points += points_issued
             credited_cards |= card
-            history_vals.append({
-                'card_id': card.id,
-                'order_model': 'pos.order',
-                'order_id': self.id,
-                'issued': points_issued,
-                'used': 0,
-                'description': self.name,
-            })
+            # Selling a gift card that already holds points awards nothing, but the card
+            # still gets a row: this order's history is what tells a second run it is done.
+            history_vals += LoyaltyHistory._get_history_lines_values(
+                card, base_values, points_issued
+            ) or [{**base_values, 'card_id': card.id, 'issued': 0, 'used': 0}]
+
+        # The programs below read `card.points`, which only counts the top-ups once their
+        # lines exist.
+        if history_vals:
+            LoyaltyHistory.create(history_vals)
+            history_vals = []
 
         earning_lines = self.lines - topup_lines
         for program in programs:
@@ -218,19 +229,31 @@ class PosOrder(models.Model):
                         available=available_points,
                     ))
 
-                card.points += card_issued - points_used
                 credited_cards |= card
-                history_vals.append({
-                    'card_id': card.id,
-                    'order_model': 'pos.order',
-                    'order_id': self.id,
-                    'issued': card_issued,
-                    'used': points_used,
-                    'description': self.name,
-                })
+                if card_issued or points_used:
+                    movements += [(card, card_issued), (card, -points_used)]
+                else:
+                    # A card that moved no points still gets a row, same as a top-up.
+                    history_vals.append(
+                        {**base_values, 'card_id': card.id, 'issued': 0, 'used': 0}
+                    )
 
-        if history_vals:
-            self.env['loyalty.history'].create(history_vals)
+        # A refund reverses both directions at once, which flips the sign of each movement:
+        # taking earned points back spends them, and returning spent points awards them. The
+        # movements are therefore grouped by sign rather than by where they come from, so that
+        # the awarding lines always exist before the consuming ones draw on them.
+        for awarding in (True, False):
+            history_vals += [
+                line_values
+                for card, points in movements
+                if points and (points > 0) is awarding
+                for line_values in LoyaltyHistory._get_history_lines_values(
+                    card, base_values, points
+                )
+            ]
+            if history_vals:
+                LoyaltyHistory.create(history_vals)
+                history_vals = []
 
         new_cards = credited_cards.filtered(lambda c: c.source_pos_order_id == self)
         if new_cards:

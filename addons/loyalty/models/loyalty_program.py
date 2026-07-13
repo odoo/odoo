@@ -164,6 +164,7 @@ class LoyaltyProgram(models.Model):
         readonly=False,
         default="Points",
     )
+    expire_after = fields.Integer()
     is_nominative = fields.Boolean(compute="_compute_is_nominative")
     is_payment_program = fields.Boolean(compute="_compute_is_payment_program")
 
@@ -185,6 +186,9 @@ class LoyaltyProgram(models.Model):
     _check_max_usage = models.Constraint(
         "CHECK (limit_usage = False OR max_usage > 0)",
         "Max usage must be strictly positive if a limit is used.",
+    )
+    _check_expire_after = models.Constraint(
+        "CHECK (expire_after >= 0)", "The points validity cannot be negative."
     )
 
     @api.constrains("currency_id", "pricelist_ids")
@@ -393,7 +397,7 @@ class LoyaltyProgram(models.Model):
                 ],
             },
             "loyalty": {
-                "applies_on": "both",
+                "applies_on": "future",
                 "trigger": "auto",
                 "portal_visible": True,
                 "portal_point_name": self.env._("Loyalty point(s)"),

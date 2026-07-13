@@ -87,11 +87,14 @@ class SaleOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        # Update our coupon points if the order is in a confirmed state
-        for line in res:
-            if line.coupon_id and line.points_cost and line.state == "sale":
-                line.coupon_id.points -= line.points_cost
-                line.order_id._update_loyalty_history(line.coupon_id, line.points_cost)
+        # Rebuild the consumption history if the order is in a confirmed state
+        pairs = {
+            (line.order_id, line.coupon_id)
+            for line in res
+            if line.coupon_id and line.points_cost and line.state == "sale"
+        }
+        if pairs:
+            self.env["sale.order"]._recompute_loyalty_history(pairs)
         return res
 
     def write(self, vals):
@@ -100,21 +103,18 @@ class SaleOrderLine(models.Model):
             previous_vals = {line: (line.points_cost, line.coupon_id) for line in self}
         res = super().write(vals)
         if cost_in_vals:
-            # Update our coupon points if the order is in a confirmed state
+            # Rebuild the consumption history if the order is in a confirmed state
+            pairs = set()
             for line, (previous_cost, previous_coupon) in previous_vals.items():
                 if line.state != "sale":
                     continue
                 if line.points_cost != previous_cost or line.coupon_id != previous_coupon:
-                    previous_coupon.points += previous_cost
-                    line.coupon_id.points -= line.points_cost
-                    # Same coupon: apply the delta in a single call to avoid a redundant search.
-                    if line.coupon_id == previous_coupon:
-                        line.order_id._update_loyalty_history(line.coupon_id, line.points_cost - previous_cost)
-                    else:
-                        if previous_coupon:
-                            line.order_id._update_loyalty_history(previous_coupon, -previous_cost)
-                        if line.coupon_id:
-                            line.order_id._update_loyalty_history(line.coupon_id, line.points_cost)
+                    if previous_coupon:
+                        pairs.add((line.order_id, previous_coupon))
+                    if line.coupon_id and line.coupon_id != previous_coupon:
+                        pairs.add((line.order_id, line.coupon_id))
+            if pairs:
+                self.env["sale.order"]._recompute_loyalty_history(pairs)
         return res
 
     def unlink(self):
@@ -155,12 +155,17 @@ class SaleOrderLine(models.Model):
                             lambda r: r.program_id != line.coupon_id.program_id
                         )
                     )
-        # Give back the points if the order is confirmed, points are given back if the order is
-        # canceled but in this case we need to do it directly.
-        for line in related_lines:
-            if line.state == "sale":
-                line.coupon_id.points += line.points_cost
+        # Give back the points if the order is confirmed, points are given back if the
+        # order is canceled too, but in that case _action_cancel handles it directly by
+        # deleting the whole order's history.
+        pairs = {
+            (line.order_id, line.coupon_id)
+            for line in related_lines
+            if line.coupon_id and line.state == "sale"
+        }
         res = super(SaleOrderLine, self | related_lines).unlink()
+        if pairs:
+            self.env["sale.order"]._recompute_loyalty_history(pairs)
         coupons_to_unlink.sudo().unlink()
         return res
 

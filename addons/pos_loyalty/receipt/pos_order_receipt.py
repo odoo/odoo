@@ -24,21 +24,26 @@ class PosOrderReceipt(models.AbstractModel):
             ('order_model', '=', 'pos.order'),
             ('order_id', '=', self.id),
         ])
-        for history in histories:
-            program = history.card_id.program_id
+        # Spending points takes one line per award drawn from, so a card can hold several
+        # rows for the same order. The receipt shows one figure per card, not per row.
+        for card, card_histories in histories.grouped('card_id').items():
+            program = card.program_id
             if program.program_type != 'loyalty':
                 continue
-            for field, label in [('issued', _("Won:")), ('used', _("Spent:"))]:
-                if history[field] > 0:
+            for points, label in [
+                (sum(card_histories.mapped('issued')), _("Won:")),
+                (sum(card_histories.mapped('used')), _("Spent:")),
+            ]:
+                if points > 0:
                     loyalties.append({
                         'name': program.portal_point_name,
                         'type': label,
-                        'points': float_round(history[field], precision_rounding=0.01),
+                        'points': float_round(points, precision_rounding=0.01),
                     })
             loyalties.append({
                 'name': program.portal_point_name,
                 'type': _("Balance:"),
-                'points': float_round(history.card_id.points, precision_rounding=0.01),
+                'points': float_round(card.points, precision_rounding=0.01),
             })
         data['extra_data']['loyalties'] = loyalties
 

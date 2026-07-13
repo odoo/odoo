@@ -84,7 +84,6 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         card = self.env['loyalty.card'].create({
             'program_id': program.id,
             'partner_id': self.partner.id,
-            'points': 0,
         })
 
         order_no_code = self._create_order([self._line(self.whiteboard_pen_product, 1, 100)])
@@ -99,7 +98,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         )
         card.invalidate_recordset()
         history = card.history_ids.filtered(lambda h: h.order_id == order_with_code.id)
-        self.assertEqual(history.issued, 10.0, "The with_code rule should earn its points once the code is applied")
+        self.assertEqual(sum(history.mapped('issued')), 10.0, "The with_code rule should earn its points once the code is applied")
         self.assertEqual(card.points, 10.0)
 
     def test_points_cost_recomputed_not_trusted(self):
@@ -111,8 +110,8 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         card = self.env['loyalty.card'].create({
             'program_id': program.id,
             'partner_id': self.partner.id,
-            'points': 50,
         })
+        card._adjust_points(50, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             reward.discount_line_product_id, 1, -10,
@@ -123,7 +122,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
 
         card.invalidate_recordset()
         history = card.history_ids.filtered(lambda h: h.order_id == order.id)
-        self.assertEqual(history.used, 5.0, "The cost must be recomputed from the reward, not the client-sent points_cost")
+        self.assertEqual(sum(history.mapped('used')), 5.0, "The cost must be recomputed from the reward, not the client-sent points_cost")
         self.assertEqual(order.lines.filtered('is_reward_line').points_cost, 5.0)
         # 50 preloaded + 100 earned on the $100 line - 5 spent
         self.assertEqual(card.points, 145.0)
@@ -139,8 +138,8 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         card = self.env['loyalty.card'].create({
             'program_id': program.id,
             'partner_id': self.partner.id,
-            'points': 50,
         })
+        card._adjust_points(50, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             self.whiteboard_pen_product, 5, 0,
@@ -151,7 +150,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         card.invalidate_recordset()
         history = card.history_ids.filtered(lambda h: h.order_id == order.id)
         # ceil(5 / 2) * 3 = 9 points
-        self.assertEqual(history.used, 9.0)
+        self.assertEqual(sum(history.mapped('used')), 9.0)
         self.assertEqual(card.points, 41.0)
 
     def test_insufficient_balance_raises(self):
@@ -160,8 +159,8 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         card = self.env['loyalty.card'].create({
             'program_id': program.id,
             'partner_id': self.partner.id,
-            'points': 3,
         })
+        card._adjust_points(3, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             reward.discount_line_product_id, 1, -10,
@@ -193,7 +192,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
 
         card.invalidate_recordset()
         history = card.history_ids.filtered(lambda h: h.order_id == refund_order.id)
-        self.assertEqual(history.issued, -50.0, "Refunding half the order should reverse half the points")
+        self.assertEqual(sum(history.mapped('used')), 50.0, "Refunding half the order should reverse half the points")
         self.assertEqual(card.points, 50.0)
 
     def test_gift_card_refund_reverses_balance(self):
@@ -210,7 +209,6 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         card = self.env['loyalty.card'].create({
             'program_id': gift_card_program.id,
             'code': 'GC-REFUND-1',
-            'points': 0,
         })
 
         origin_order = self._create_order([
@@ -229,7 +227,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
 
         card.invalidate_recordset()
         history = card.history_ids.filtered(lambda h: h.order_id == refund_order.id)
-        self.assertEqual(history.issued, -50.0, "Refunding the gift card sale should debit the card")
+        self.assertEqual(sum(history.mapped('used')), 50.0, "Refunding the gift card sale should debit the card")
         self.assertEqual(card.points, 0.0)
 
     def _earn_and_spend_program(self, points_per_unit):
@@ -258,8 +256,8 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         card = self.env['loyalty.card'].create({
             'program_id': program.id,
             'partner_id': self.partner.id,
-            'points': 200,
         })
+        card._adjust_points(200, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             reward.discount_line_product_id, 1, -10,
@@ -269,8 +267,8 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
 
         card.invalidate_recordset()
         origin_history = card.history_ids.filtered(lambda h: h.order_id == origin_order.id)
-        self.assertEqual(origin_history.issued, 70.0)
-        self.assertEqual(origin_history.used, 150.0)
+        self.assertEqual(sum(origin_history.mapped('issued')), 70.0)
+        self.assertEqual(sum(origin_history.mapped('used')), 150.0)
         # 200 preloaded + 70 earned - 150 spent
         self.assertEqual(card.points, 120.0)
 
@@ -285,8 +283,8 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
 
         card.invalidate_recordset()
         refund_history = card.history_ids.filtered(lambda h: h.order_id == refund_order.id)
-        self.assertEqual(refund_history.issued, -70.0, "The earned points must be removed")
-        self.assertEqual(refund_history.used, -150.0, "The spent points must be returned")
+        self.assertEqual(sum(refund_history.mapped('used')), 70.0, "The earned points must be removed")
+        self.assertEqual(sum(refund_history.mapped('issued')), 150.0, "The spent points must be returned")
         self.assertEqual(card.points, 200.0, "A full refund restores the pre-order balance")
 
     def test_refund_prorates_earned_and_spent(self):
@@ -296,8 +294,8 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         card = self.env['loyalty.card'].create({
             'program_id': program.id,
             'partner_id': self.partner.id,
-            'points': 200,
         })
+        card._adjust_points(200, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             reward.discount_line_product_id, 1, -10,
@@ -321,6 +319,6 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         card.invalidate_recordset()
         refund_history = card.history_ids.filtered(lambda h: h.order_id == refund_order.id)
         # Half the order refunded: reverse half of both earned (70) and spent (150).
-        self.assertEqual(refund_history.issued, -35.0)
-        self.assertEqual(refund_history.used, -75.0)
+        self.assertEqual(sum(refund_history.mapped('used')), 35.0)
+        self.assertEqual(sum(refund_history.mapped('issued')), 75.0)
         self.assertEqual(card.points, 160.0)

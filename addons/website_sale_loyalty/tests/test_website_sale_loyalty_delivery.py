@@ -14,12 +14,12 @@ from odoo.addons.website_sale_loyalty.controllers.delivery import WebsiteSaleLoy
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -83,9 +83,9 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         # Create a gift card to be used
         cls.gift_card = cls.env["loyalty.card"].create({
             "program_id": gift_card_program.id,
-            "points": 50000,
             "code": "123456",
         })
+        cls.gift_card._adjust_points(50000, "Initial balance")
 
         # Create a 50% discount on order code
         cls.promo_discount_code = cls.env["loyalty.program"].create({
@@ -122,8 +122,8 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         cls.ewallet = cls.env["loyalty.card"].create({
             "program_id": ewallet_program.id,
             "partner_id": cls.partner_admin.id,
-            "points": 1000000,
         })
+        cls.ewallet._adjust_points(1000000, "Initial balance")
 
         delivery_product1, delivery_product2 = cls.env["product.product"].create([
             {"name": "Delivery 1", "invoice_policy": "order", "type": "service"},
