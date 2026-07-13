@@ -2,6 +2,8 @@
 
 from odoo import fields, models, api, _
 
+_COPY_ATTACHMENT_FROM_SPLIT_WIZARD = object()  # sentinel
+
 
 class HrExpenseSplitWizard(models.TransientModel):
     _name = 'hr.expense.split.wizard'
@@ -58,7 +60,7 @@ class HrExpenseSplitWizard(models.TransientModel):
 
                 for copied_expense in copied_expenses:
                     for attachment in attachment_ids:
-                        attachment.copy({'res_model': 'hr.expense', 'res_id': copied_expense.id})
+                        attachment.with_context(from_split_wizard=_COPY_ATTACHMENT_FROM_SPLIT_WIZARD).copy({'res_model': 'hr.expense', 'res_id': copied_expense.id})
 
         split_expense_ids = self.env['hr.expense']
         if self.expense_id.split_expense_origin_id:

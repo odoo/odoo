@@ -319,6 +319,27 @@ class TestExpenses(TestExpenseCommon):
             }
         ])
 
+    def test_expense_split_approved_with_attachment(self):
+        """ Check splitting an approved expense with attachments does not raise an Access Error. """
+        expense = self.create_expenses({
+            'tax_ids': [Command.set(self.tax_purchase_a.ids)],
+            'analytic_distribution': {self.analytic_account_1.id: 100}
+        })
+        self.env['ir.attachment'].create({
+            'raw': b"receipt content",
+            'name': 'receipt.png',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        })
+        expense.action_submit()
+        expense.action_approve()
+        wizard = self.env['hr.expense.split.wizard'].browse(expense.action_split_wizard()['res_id'])
+        wizard.action_split_expense()
+        expenses_after_split = self.env['hr.expense'].search([('split_expense_origin_id', '=', expense.id)])
+
+        self.assertEqual(len(expenses_after_split), 2)
+        self.assertEqual(len(expenses_after_split.attachment_ids), 2)
+
     #############################################
     #  Test Multi-currency
     #############################################
