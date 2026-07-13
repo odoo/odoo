@@ -313,3 +313,14 @@ describe("selected cell color in toolbar", () => {
         });
     });
 });
+
+describe("table width on setup", () => {
+    test("does not crash on a table without a tbody", async () => {
+        // A rowless table has no tbody element (tBodies[0] is undefined). The
+        // width-to-tbody move on setup must skip it instead of throwing.
+        const { editor } = await setupEditor(
+            `<table class="table table-bordered o_table" style="width: 500px;"><caption>c</caption></table>`
+        );
+        expect(editor.isDestroyed).toBe(false);
+    });
+});

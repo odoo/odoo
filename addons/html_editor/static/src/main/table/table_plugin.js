@@ -187,6 +187,9 @@ export class TablePlugin extends Plugin {
         // Move table width and margin to tbody to prevent scrollbars on the editable.
         this.editable.querySelectorAll("table").forEach((table) => {
             const tBody = table.tBodies[0];
+            if (!tBody) {
+                return;
+            }
             for (const property of ["width", "marginLeft"]) {
                 if (table.style[property]) {
                     tBody.style[property] = table.style[property];
