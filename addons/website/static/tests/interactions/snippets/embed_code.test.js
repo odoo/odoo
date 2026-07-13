@@ -1,7 +1,8 @@
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
+import { startInteractionsWithSnippet } from "../helpers";
 
 setupInteractionWhiteList("website.embed_code");
 
@@ -21,21 +22,17 @@ test("embed code executed only once", async () => {
 */
 
 test("embed_code resets on stop", async () => {
-    const { core } = await startInteractions(`
-        <section class="s_embed_code text-center pt64 pb64 o_colored_level" data-snippet="s_embed_code" data-name="Embed Code">
-            <template class="s_embed_code_saved">
-                <div>original</div>
-            </template>
-            <div class="s_embed_code_embedded container o_not_editable">
-                <div>original</div>
-            </div>
-        </section>
-    `);
+    const { core } = await startInteractionsWithSnippet("s_embed_code");
     expect(core.interactions).toHaveLength(1);
     const embeddedEl = queryOne(".s_embed_code_embedded div");
+    expect(embeddedEl).toHaveText(
+        'Click on "Edit" in the right panel to replace this with your own HTML code'
+    );
     embeddedEl.textContent = "changed";
     expect(embeddedEl).toHaveText("changed");
     core.stopInteractions();
     expect(core.interactions).toHaveLength(0);
-    expect(".s_embed_code_embedded div").toHaveText("original");
+    expect(".s_embed_code_embedded div").toHaveText(
+        'Click on "Edit" in the right panel to replace this with your own HTML code'
+    );
 });

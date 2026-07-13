@@ -530,8 +530,8 @@ export async function setupSidebarBuilderForTranslation(options) {
     return { getEditor, getEditableContent, waitSidebarUpdated };
 }
 
-export async function getStructureSnippet(snippetName) {
-    const html = await getWebsiteSnippets();
+export async function getStructureSnippet(snippetName, withImgSrc = false) {
+    const html = await getWebsiteSnippets(withImgSrc);
     const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
     const processors = registry.category("html_builder.snippetsPreprocessor").getAll();
     for (const processor of Object.values(processors)) {

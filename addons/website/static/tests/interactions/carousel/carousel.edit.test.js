@@ -1,15 +1,15 @@
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList } from "@web/../tests/public/helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { switchToEditMode } from "../../helpers";
 import { queryAll } from "@odoo/hoot-dom";
-import { defaultCarouselStyleSnippet } from "./carousel_helpers";
+import { startInteractionsWithSnippet } from "../helpers";
 
 setupInteractionWhiteList("website.carousel_edit");
 
 describe.current.tags("interaction_dev");
 
 test("[EDIT] carousel_edit resets slide to attributes", async () => {
-    const { core } = await startInteractions(defaultCarouselStyleSnippet("true", 3000), {
+    const { core } = await startInteractionsWithSnippet("s_carousel", {
         waitForStart: true,
         editMode: true,
     });
