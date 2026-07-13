@@ -215,6 +215,34 @@ test("RedirectWarningDialog", async () => {
     expect.verifySteps(["dialog-closed"]);
 });
 
+test("RedirectWarningDialog using service action", async () => {
+    expect(".o_dialog").toHaveCount(0);
+    const env = await makeDialogMockEnv();
+    delete env.services.action;
+    await mountWithCleanup(RedirectWarningDialog, {
+        env,
+        props: {
+            data: {
+                arguments: [
+                    "You must set an API key to use this feature.",
+                    "settings_action_id",
+                    "Go to General Settings",
+                ],
+            },
+            close() {
+                expect.step("dialog-closed");
+            },
+        },
+    });
+    expect(".o_dialog").toHaveCount(1);
+    expect("main").toHaveText("You must set an API key to use this feature.");
+    expect(queryAllTexts("footer button")).toEqual(["Go to General Settings", "Close"]);
+
+    await click("footer button");
+    await animationFrame();
+    expect.verifySteps(["dialog-closed"]);
+});
+
 test("Error504Dialog", async () => {
     expect(".o_dialog").toHaveCount(0);
     const env = await makeDialogMockEnv();
