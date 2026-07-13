@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_move_send_inherit_account_peppol">
+            <field name="name">account.move.send.form.inherit.peppol</field>
+            <field name="model">account.move.send</field>
+            <field name="inherit_id" ref="account_peppol.account_move_send_inherit_account_peppol"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='checkbox_send_peppol']" position="attributes">
+                    <attribute name="invisible">company_on_pdp</attribute>
+                </xpath>
+                <xpath expr="//label[@for='checkbox_send_peppol']" position="after">
+                    <field name="company_on_pdp" invisible="1"/>  <!-- used in `invisible` modifier -->
+                    <label for="checkbox_send_peppol" string="French E-Invoicing" invisible="not company_on_pdp"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

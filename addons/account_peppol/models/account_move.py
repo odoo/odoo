@@ -28,6 +28,7 @@ class AccountMove(models.Model):
         copy=False,
     )
     peppol_is_demo_uuid = fields.Boolean(compute="_compute_peppol_is_demo_uuid")
+    peppol_is_sent = fields.Boolean(compute='_compute_peppol_is_sent')
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
@@ -74,6 +75,11 @@ class AccountMove(models.Model):
                 move.peppol_move_state = False
             else:
                 move.peppol_move_state = move.peppol_move_state
+
+    @api.depends('peppol_move_state')
+    def _compute_peppol_is_sent(self):
+        for move in self:
+            move.peppol_is_sent = move.peppol_move_state not in {False, 'ready', 'to_send', 'error'}
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):

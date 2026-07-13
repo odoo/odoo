@@ -76,36 +76,17 @@ class ResConfigSettings(models.TransientModel):
     # -------------------------------------------------------------------------
 
     def _call_peppol_proxy(self, endpoint, params=None, edi_user=None):
-        errors = {
-            'code_incorrect': _('The verification code is not correct'),
-            'code_expired': _('This verification code has expired. Please request a new one.'),
-            'too_many_attempts': _('Too many attempts to request an SMS code. Please try again later.'),
-        }
-
         if not edi_user:
-            edi_user = self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+            edi_user = self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types())
 
-        params = params or {}
-        try:
-            response = edi_user._make_request(
-                f"{edi_user._get_server_url()}{endpoint}",
-                params=params,
-            )
-        except AccountEdiProxyError as e:
-            raise UserError(e.message)
-
-        if 'error' in response:
-            error_code = response['error'].get('code')
-            error_message = response['error'].get('message') or response['error'].get('data', {}).get('message')
-            raise UserError(errors.get(error_code) or error_message or _('Connection error, please try again later.'))
-        return response
+        return edi_user._call_peppol_proxy(endpoint, params=params)
 
     def _peppol_deregister(self):
         edi_user = self.account_peppol_edi_user
         company = edi_user.company_id or self.company_id
         if edi_user and company.account_peppol_proxy_state not in ('not_registered', 'rejected'):
             try:
-                edi_user._make_request(f'{edi_user._get_server_url()}/api/peppol/1/cancel_peppol_registration')
+                edi_user._make_request(edi_user._get_server_url() + edi_user._get_peppol_proxy_endpoint('1/cancel_peppol_registration'))
             except AccountEdiProxyError as e:
                 # if user no longer exists, we can consider it deregistered
                 if e.code not in ['client_gone', 'no_such_user_found']:
@@ -116,7 +97,7 @@ class ResConfigSettings(models.TransientModel):
     def _use_parent_connection(self, company):
         for parent_company in company.parent_ids[::-1][1:]:
             if all((
-                parent_company.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol'),  # `sudo` needed otherwise empty from no access right
+                parent_company.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()),  # `sudo` needed otherwise empty from no access right
                 parent_company.peppol_eas == company.peppol_eas,
                 parent_company.peppol_endpoint == company.peppol_endpoint,
             )):
@@ -131,7 +112,7 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('account_peppol_endpoint')
     def _onchange_account_peppol_endpoint(self):
         if self.account_peppol_endpoint:
-            self.account_peppol_endpoint = ''.join(char for char in self.account_peppol_endpoint if char.isalnum())
+            self.account_peppol_endpoint = ''.join(char for char in self.account_peppol_endpoint if not char.isspace())
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -157,7 +138,7 @@ class ResConfigSettings(models.TransientModel):
     def _compute_account_peppol_edi_user(self):
         for config in self:
             config.account_peppol_edi_user = config.company_id.account_edi_proxy_client_ids.filtered(
-                lambda u: u.proxy_type == 'peppol')
+                lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types())
 
     @api.depends('account_peppol_eas', 'account_peppol_endpoint')
     def _compute_account_peppol_endpoint_warning(self):
@@ -204,6 +185,12 @@ class ResConfigSettings(models.TransientModel):
         if self.account_peppol_proxy_state != 'not_registered':
             raise UserError(_('Cannot register a user with a %s application', self.account_peppol_proxy_state))
 
+        blocking_proxy_types = set(self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()) - {'peppol'}
+        blocking_user = self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type in blocking_proxy_types)
+        if blocking_user:
+            blocking_proxy_type = dict(blocking_user._fields['proxy_type']._description_selection(self.env))[blocking_user[:1].proxy_type]
+            raise UserError(_("A connection to '%s' already exists.", blocking_proxy_type))
+
         if not self.account_peppol_phone_number:
             raise ValidationError(_("Please enter a mobile number to verify your application."))
         if not self.account_peppol_contact_email:
@@ -225,7 +212,7 @@ class ResConfigSettings(models.TransientModel):
                 self.env.cr.commit()
 
             self._call_peppol_proxy(
-                endpoint='/api/peppol/1/register_sender',
+                endpoint=edi_user._get_peppol_proxy_endpoint('1/register_sender'),
                 params={'company_details': edi_user._get_company_details()},
                 edi_user=edi_user,
             )
@@ -259,7 +246,7 @@ class ResConfigSettings(models.TransientModel):
         self.account_peppol_proxy_state = 'not_verified'
         if should_offer_sender_only:
             self._call_peppol_proxy(
-                endpoint='/api/peppol/1/register_sender',
+                endpoint=edi_user._get_peppol_proxy_endpoint('1/register_sender'),
                 params={'company_details': edi_user._get_company_details()},
                 edi_user=edi_user,
             )
@@ -271,7 +258,7 @@ class ResConfigSettings(models.TransientModel):
             }
 
             self._call_peppol_proxy(
-                endpoint='/api/peppol/1/activate_participant',
+                endpoint=edi_user._get_peppol_proxy_endpoint('1/activate_participant'),
                 params=params,
                 edi_user=edi_user,
             )
@@ -284,6 +271,11 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
         return self.with_context(account_peppol_register_sender_only=True).button_create_peppol_proxy_user()
 
+    def _check_mandatory_peppol_user_data(self):
+        self.ensure_one()
+        if not self.account_peppol_contact_email or not self.account_peppol_phone_number:
+            raise ValidationError(_("Contact email and mobile number are required."))
+
     @handle_demo
     def button_update_peppol_user_data(self):
         """
@@ -292,18 +284,17 @@ class ResConfigSettings(models.TransientModel):
         """
         self.ensure_one()
 
-        if not self.account_peppol_contact_email or not self.account_peppol_phone_number:
-            raise ValidationError(_("Contact email and mobile number are required."))
+        self._check_mandatory_peppol_user_data()
 
         params = {
             'update_data': {
-                'peppol_phone_number': self.account_peppol_phone_number,
+                **({'peppol_phone_number': self.account_peppol_phone_number} if self.account_peppol_phone_number else {}),
                 'peppol_contact_email': self.account_peppol_contact_email,
             }
         }
 
         self._call_peppol_proxy(
-            endpoint='/api/peppol/1/update_user',
+            endpoint=self.account_peppol_edi_user._get_peppol_proxy_endpoint('1/update_user'),
             params=params,
         )
 
@@ -318,7 +309,7 @@ class ResConfigSettings(models.TransientModel):
         self.button_update_peppol_user_data()
 
         self._call_peppol_proxy(
-            endpoint='/api/peppol/1/send_verification_code',
+            endpoint=self.account_peppol_edi_user._get_peppol_proxy_endpoint('1/send_verification_code'),
             params={'message': _("Your Peppol activation code in Odoo is")},
         )
         self.account_peppol_proxy_state = 'sent_verification'
@@ -334,7 +325,7 @@ class ResConfigSettings(models.TransientModel):
             raise ValidationError(_("The verification code should contain six digits."))
 
         self._call_peppol_proxy(
-            endpoint='/api/peppol/1/verify_phone_number',
+            endpoint=self.account_peppol_edi_user._get_peppol_proxy_endpoint('1/verify_phone_number'),
             params={'verification_code': self.account_peppol_verification_code},
         )
         self.account_peppol_proxy_state = 'pending'
@@ -389,7 +380,7 @@ class ResConfigSettings(models.TransientModel):
         try:
             # call _make_request directly because _peppol_get_participant_status()
             # is cron-safe and swallows AccountEdiProxyError.
-            proxy_user = edi_user._make_request(f"{edi_user._get_server_url()}/api/peppol/1/participant_status")
+            proxy_user = edi_user._make_request(edi_user._get_server_url() + edi_user._get_peppol_proxy_endpoint('1/participant_status'))
             proxy_state = proxy_user.get('peppol_state')
         except AccountEdiProxyError as e:
             # If user no longer exists on IAP side, don't try to fetch docs/statuses (they will fail).
@@ -419,7 +410,7 @@ class ResConfigSettings(models.TransientModel):
                 self.env.cr.commit()
 
         if self.account_peppol_proxy_state != 'sender':
-            self._call_peppol_proxy(endpoint='/api/peppol/1/unregister_to_sender')
+            self._call_peppol_proxy(endpoint=self.account_peppol_edi_user._get_peppol_proxy_endpoint('1/unregister_to_sender'))
 
         self.account_peppol_proxy_state = 'sender'
         self.account_peppol_migration_key = False
@@ -433,14 +424,15 @@ class ResConfigSettings(models.TransientModel):
         if self.account_peppol_proxy_state != 'sender':
             raise UserError(_('Only sender-only connections can be reactivated for reception.'))
 
+        edi_user = self.account_peppol_edi_user
         self._call_peppol_proxy(
-            endpoint='/api/peppol/1/register_sender_as_receiver',
+            endpoint=edi_user._get_peppol_proxy_endpoint('1/register_sender_as_receiver'),
             params={
                 'supported_identifiers': [],
             },
         )
 
-        connection_status = self._call_peppol_proxy(endpoint='/api/peppol/2/participant_status')
+        connection_status = self._call_peppol_proxy(endpoint=edi_user._get_peppol_proxy_endpoint('2/participant_status'))
         connection_state = connection_status.get('peppol_state')
 
         if connection_state == 'sender':
@@ -457,3 +449,19 @@ class ResConfigSettings(models.TransientModel):
         self.account_peppol_migration_key = False
         self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger()
         return True
+
+    def _get_peppol_proxy_type(self):
+        self.ensure_one()
+        return self.account_peppol_edi_user.proxy_type
+
+    def action_open_peppol_form(self):
+        # There is no form / wizard for peppol registration in 17.0 (only in 18.0+)
+        return self.button_create_peppol_proxy_user()
+
+    def button_peppol_reregister(self):
+        self.ensure_one()
+        if self.country_code == 'FR' and self.env['ir.module.module']._get('l10n_fr_pdp').state != 'installed':
+            raise UserError(_("Please install the 'France - E-Invoicing (Approved Platform)' module (l10n_fr_pdp) first"))
+        self.button_deregister_peppol_participant()
+        self.company_id._reset_peppol_configuration()
+        return self.action_open_peppol_form()

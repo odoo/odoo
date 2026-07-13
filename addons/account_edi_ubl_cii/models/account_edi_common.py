@@ -63,7 +63,7 @@ EAS_MAPPING = {
     'EE': {'9931': 'vat'},
     'ES': {'9920': 'vat'},
     'FI': {'0216': None},
-    'FR': {'0009': 'siret', '9957': 'vat'},
+    'FR': {'0225': 'peppol_endpoint', '0009': 'siret', '9957': 'vat'},  # `peppol_endpoint` used as place holder for custom logic via `_get_peppol_endpoint_value`
     'SG': {'0195': 'l10n_sg_unique_entity_number'},
     'GB': {'9932': 'vat'},
     'GR': {'9933': 'vat'},
@@ -452,6 +452,21 @@ class AccountEdiCommon(models.AbstractModel):
             invoice.partner_id = self.env['res.partner'].create(partner_vals)
             if vat and self.env['res.partner']._run_vat_test(vat, country, invoice.partner_id.is_company):
                 invoice.partner_id.vat = vat
+        if not invoice.partner_id or not self.env.context.get('_from_peppol_get_new_documents'):
+            return
+        if peppol_eas and peppol_endpoint:
+            invoice.partner_id.write({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
+        if not invoice.partner_id.ubl_cii_format:
+            # Set the `ubl_cii_format` to be the same as the imported document
+            for (ubl_cii_format, _label) in invoice.partner_id._fields['ubl_cii_format'].selection:
+                try:
+                    format_partner = self.env['res.partner'].new({'ubl_cii_format': ubl_cii_format})
+                    edi_builder = format_partner.is_peppol_edi_format and format_partner._get_edi_builder()
+                except Exception:  # noqa: BLE001
+                    continue
+                if isinstance(edi_builder, models.AbstractModel) and self._name == edi_builder._name:
+                    invoice.partner_id.ubl_cii_format = ubl_cii_format
+                    break
 
     def _import_retrieve_and_fill_partner_bank_details(self, invoice, bank_details):
         """ Retrieve the bank account, if no matching bank account is found, create it

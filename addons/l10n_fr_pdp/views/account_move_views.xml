@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_fr_pdp_view_in_invoice_refund_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.list.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_refund_tree" />
+        <field name="arch" type="xml">
+            <field name="payment_state" position="before">
+                <field name="peppol_move_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_fr_pdp_view_in_bill_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree" />
+        <field name="arch" type="xml">
+            <field name="payment_state" position="before">
+                <field name="peppol_move_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_fr_pdp_view_move_form" model="ir.ui.view">
+        <field name="name">l10n.fr.pdp.view.move.form</field>
+        <field name="model">account.move</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="account_peppol.account_peppol_view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- We do not show the "Reset to draft" but stil need to be able to cancel-->
+            <button name="button_cancel" position="after">
+                <button name="button_cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
+                        string="Cancel" confirm="Do you really want to cancel this journal entry?"
+                        invisible="state != 'posted' or show_reset_to_draft_button or not pdp_is_sent"
+                        />
+            </button>
+            <label for="peppol_move_state" position="attributes">
+                <attribute name="string">E-Invoicing Status</attribute>
+            </label>
+            <xpath expr="//group[@name='accounting_info_group']" position="inside">
+                <field name="pdp_is_sent" invisible="1"/>  <!-- used in `invisible` modifier above -->
+            </xpath>
+            <xpath expr="//group[@name='accounting_info_group']/div" position="after">
+                <label for="pdp_ppf_move_state" groups="base.group_no_one" invisible="not pdp_ppf_move_state"/>
+                <div name="pdp_ppf_info" groups="base.group_no_one" invisible="not pdp_ppf_move_state">
+                    <field name="pdp_ppf_move_state"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="l10n_fr_pdp_view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_peppol.account_peppol_view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <filter name="peppol_ready" position="attributes">
+                <attribute name="string">E-Invoicing Ready</attribute>
+            </filter>
+            <filter name="peppol_move_state" position="attributes">
+                <attribute name="string">E-Invoicing Status</attribute>
+            </filter>
+        </field>
+    </record>
+
+    <record id="l10n_fr_pdp_reports_view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form.l10n.fr.pdp.status</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <button name="button_cancel" position="after">
+                <button
+                    name="button_cancel" string="Cancel" type="object"
+                    groups="account.group_account_invoice" data-hotkey="x"
+                    invisible="not id or state != 'posted' or not l10n_fr_pdp_sent_in_flow_ids"
+                />
+            </button>
+            <xpath expr="//group[@name='accounting_info_group']" position="inside">
+                <field name="l10n_fr_pdp_sent_in_flow_ids" invisible="1"/>  <!-- used in `invisible` modifier above -->
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

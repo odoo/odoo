@@ -364,6 +364,11 @@
                 <cbc:BaseQuantity
                     t-att="price_vals.get('base_quantity_attrs', {})"
                     t-out="price_vals.get('base_quantity')"/>
+                <cac:AllowanceCharge t-foreach="price_vals.get('allowance_charge_vals_list', [])" t-as="foreach_vals">
+                    <t t-call="{{AllowanceChargeType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:AllowanceCharge>
             </cac:Price>
         </t>
     </template>
