@@ -34,5 +34,5 @@ class AccountMove(models.Model):
             # sending_methods={} skips email; ZATCA is already 'accepted'/'warning' so
             # _is_sa_edi_applicable returns False and it is not re-submitted.
             self.env['account.move.send']._generate_and_send_invoices(
-                self, sending_methods={}
+                self, sending_methods=[]
             )

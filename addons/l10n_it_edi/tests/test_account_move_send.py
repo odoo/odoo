@@ -43,7 +43,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
 
         def _get_default_extra_edis(self, move):
             # in batch sending we use default settings, which is to use italian gov edi, bypass it
-            return {}
+            return []
 
         with patch(
                 'odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis',
@@ -69,7 +69,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
 
         def _get_default_extra_edis(self, move):
             # in batch sending we use default settings, which is to use italian gov edi, bypass it
-            return {}
+            return []
 
         with patch(
                 'odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis',
@@ -329,7 +329,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         self.italian_partner_a.with_company(invoice.company_id).invoice_edi_format = 'it_edi_xml'
 
         def _get_default_extra_edis(self, move):
-            return {}
+            return []
 
         # Fake sending to the EDI and reset to draft
         with patch(
@@ -427,7 +427,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         invoice = self._create_invoice_it(partner_id=self.partner_a.id)
         invoice.partner_id.with_company(invoice.company_id).invoice_edi_format = False
 
-        settings_email = {'sending_methods': {'email'}, 'extra_edis': set()}
+        settings_email = {'sending_methods': ['email'], 'extra_edis': list()}
         self.env['account.move.send']._generate_and_send_invoices(invoice, **settings_email)
         self.assertTrue(invoice.invoice_pdf_report_id)
         self.assertFalse(invoice.l10n_it_edi_attachment_file)

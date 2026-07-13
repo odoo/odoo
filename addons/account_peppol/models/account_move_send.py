@@ -22,8 +22,9 @@ class AccountMoveSend(models.AbstractModel):
         if (
             self._is_applicable_to_move('peppol', move)
             and any(country in PEPPOL_DEFAULT_COUNTRIES for country in move.commercial_partner_id.mapped('country_id.code'))
+            and 'peppol' not in default_sending_methods
         ):
-            default_sending_methods.add('peppol')
+            default_sending_methods.append('peppol')
         return default_sending_methods
 
     @api.model
