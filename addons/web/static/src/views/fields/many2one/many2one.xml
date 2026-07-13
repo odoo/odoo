@@ -28,6 +28,17 @@
                     </t>
                 </t>
             </t>
+            <t t-elif="this.isBottomSheet">
+                <div class="o_field_many2one_selection" t-custom-ref="root">
+                    <div class="o_input_dropdown">
+                        <input type="text" t-att-id="this.props.id" class="o_input" readonly="" autocomplete="off"
+                            t-att-placeholder="this.props.placeholder"
+                            t-att-value="this.displayName"
+                            t-on-click="(ev) => this.openBottomSheet(ev.currentTarget)"/>
+                        <span class="o_dropdown_button"/>
+                    </div>
+                </div>
+            </t>
             <t t-else="">
                 <div class="o_field_many2one_selection" t-ref="this.rootRef">
                     <Many2XAutocomplete t-props="this.many2XAutocompleteProps"/>
@@ -48,6 +59,20 @@
                         <div t-out="line" t-att-title="line"  class="text-truncate"/>
                     </t>
                 </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.Many2XBottomSheetOptions">
+        <div t-custom-ref="autocomplete_container">
+            <t t-foreach="this.preloadedOptions" t-as="option" t-key="option_index">
+                <a t-if="option.onSelect"
+                    class="o-dropdown-item dropdown-item o-navigable text-truncate"
+                    t-att-class="option.cssClass"
+                    href="#" role="menuitem" tabindex="0"
+                    t-on-click.prevent="() => option.onSelect()"
+                    t-out="option.label"/>
+                <span t-else="" class="text-muted fst-italic px-3 py-2 d-block" t-out="option.label"/>
             </t>
         </div>
     </t>
