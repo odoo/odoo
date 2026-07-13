@@ -16,6 +16,7 @@ from odoo.http.response import Response
 from odoo.http.router import db_filter
 from odoo.http.session import (
     authenticate,
+    ensure_device_fingerprint,
     logout,
     save_session,
     touch,
@@ -101,9 +102,15 @@ class Session(Controller):
         """ JSON route used to receive the authentication form sent by the user. """
         return request.env['ir.http']._check_identity(kwargs)
 
+    @route('/web/session/fingerprint/ensure', type='http', auth='user', methods=['POST'], check_identity=False, csrf=False)
+    def session_fingerprint_set(self, fingerprint):
+        """ HTTP route used to set the fingerprint of the current device. """
+        ensure_device_fingerprint(request.session, fingerprint)
+        return Response(status=HTTPStatus.NO_CONTENT)
+
     @route('/web/session/fingerprint/check', type='http', auth='user', methods=['POST'], check_identity=False, csrf=False)
     def session_fingerprint_check(self, fingerprint):
-        """ HTTP route used to receive the fingerprint of the current device. """
+        """ HTTP route used to check the fingerprint of the current device. """
         if not update_device_fingerprint(request.session, request, fingerprint):
             e = "Invalid fingerprint"
             raise Forbidden(e)

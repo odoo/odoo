@@ -60,7 +60,7 @@ export class CheckIdentityForm extends Component {
             // Attempting to verify the identity of the device using its fingerprint
             if (data.fingerprint_check && (await this.checkIdentityService.updateFingerprint())) {
                 // There is no need to re-authenticate the user explicitly via the form
-                this.checkIdentityService.identityCheckCleanUp();
+                this.checkIdentityService.identityCheckCleanUp?.();
                 this.checkIdentityService.channel.postMessage("identityChecked");
             }
 
@@ -162,8 +162,8 @@ export class CheckIdentity {
         // Multi-tab sync: if another tab verified the identity, clean up locally
         this.channel = new BroadcastChannel("check_identity");
         this.channel.addEventListener("message", (event) => {
-            if (event.data === "identityChecked" && this.identityCheckCleanUp) {
-                this.identityCheckCleanUp();
+            if (event.data === "identityChecked") {
+                this.identityCheckCleanUp?.();
             }
         });
 
@@ -171,18 +171,14 @@ export class CheckIdentity {
             .category("error_handlers")
             .add("verifyUserErrorHandler", this.verifyUserErrorHandler.bind(this), { force: true });
 
-        // Check the fingerprint each time webclient is loaded
-        // Only for internal user
+        // Fingerprint bootstraping:
+        // Set the fingerprint each time webclient is loaded for internal user.
+        // The result doesn't matter, because if the fingerprint is incorrect,
+        // the device will not be trusted and will be blocked on the next auth
+        // request.
         env.bus.addEventListener("WEB_CLIENT_READY", () => {
             if (session.device_salt) {
-                this.updateFingerprint()
-                    .then((result) => !result && this.run())
-                    .catch(() => {});
-                // Swallows the error because the goal is to update backend
-                // information. If we have already continued the flow (page
-                // change or other), the request will be closed on the
-                // client side and the error will be `TypeError: Failed to
-                // fetch`. This is a false positive.
+                this.setFingerprint();
             }
         });
     }
@@ -240,20 +236,46 @@ export class CheckIdentity {
         return await rpc("/web/session/identity/check");
     }
 
+    async setFingerprint() {
+        const fingerprint = await this.getFingerprint();
+        if (!fingerprint) {
+            return;
+        }
+
+        // Swallows the error because the goal is to update backend
+        // information. If we have already continued the flow (page
+        // change or other), the request will be closed on the
+        // client side and the error will be `TypeError: Failed to
+        // fetch`. This is a false positive.
+        fetch("/web/session/fingerprint/ensure", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({ fingerprint: fingerprint }),
+            signal: AbortSignal.timeout(10000),
+        }).catch(() => {});
+    }
+
     async updateFingerprint() {
         const fingerprint = await this.getFingerprint();
         if (!fingerprint) {
             return false;
         }
 
-        const response = await fetch("/web/session/fingerprint/check", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({ fingerprint: fingerprint }),
-        });
-        return response.ok;
+        try {
+            const response = await fetch("/web/session/fingerprint/check", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({ fingerprint: fingerprint }),
+                signal: AbortSignal.timeout(10000),
+            });
+            return response.ok;
+        } catch {
+            return false;
+        }
     }
 
     async check(credential) {
@@ -261,7 +283,7 @@ export class CheckIdentity {
         if (result?.mfa) {
             return { success: false, mfa: result.mfa, auth_methods: result.auth_methods };
         }
-        this.identityCheckCleanUp();
+        this.identityCheckCleanUp?.();
         this.channel.postMessage("identityChecked");
     }
 

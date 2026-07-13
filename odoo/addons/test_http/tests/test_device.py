@@ -10,6 +10,7 @@ from odoo.http._facade import HTTPRequest
 from odoo.http.session import (
     DEVICE_ACTIVITY_UPDATE_FREQUENCY,
     SESSION_LIFETIME,
+    ensure_device_fingerprint,
     session_store,
     update_device_fingerprint,
 )
@@ -638,9 +639,10 @@ class TestDevice(TestHttpBase):
         ICP = self.env['ir.config_parameter']
         ICP.set_bool('base.session_check_device', True)
 
-        TRUSTED_FINGERPRINT = '123456789'
+        TRUSTED_FINGERPRINT = '<fringerprint>'
         UA_DEVICE_1 = USER_AGENT_linux_chrome
         UA_DEVICE_2 = USER_AGENT_linux_firefox
+        UA_DEVICE_3 = USER_AGENT_android_chrome
 
         URL = '/test_http/greeting-user?readonly=0'
 
@@ -655,47 +657,32 @@ class TestDevice(TestHttpBase):
 
         self.authenticate(self.user_admin.login, self.user_admin.login)
 
-        res_1 = self.hit('2026-01-01 08:00:00', URL,
+        res = self.hit('2026-01-01 08:00:00', URL,
             ip=TEST_IP, headers={'User-Agent': UA_DEVICE_1}, allow_redirects=False,
         )
-        res_2 = self.hit('2026-01-01 08:00:00', URL,
+        self.assertEqual(res.status_code, 200, 'First device is always trusted')
+
+        res = self.hit('2026-01-01 08:00:00', URL,
             ip=TEST_IP, headers={'User-Agent': UA_DEVICE_2}, allow_redirects=False,
         )
-        sess_2 = res_2.session
+        self.assertEqual(res.status_code, 200, 'Second device is not blocked because no fingerprint')
 
-        self.assertEqual(len(sess_2['_devices']), 2, 'All devices are detected')
+        session = res.session
+        ensure_device_fingerprint(session, TRUSTED_FINGERPRINT)
+        session_store().save(session)
 
-        self.assertEqual(res_1.status_code, 200, 'First device is always trusted')
-        self.assertEqual(res_2.status_code, 303, 'Second device is not trusted, re-authentication requested')
-        self.assertURLEqual(res_2.headers.get('Location'), f'/web/session/identity?redirect={URL}')
-
-        device_2 = next(device for device in sess_2['_devices'].values() if device['user_agent'] == UA_DEVICE_2)
-        device_2['trusted'] = True
-        session_store().save(sess_2)
-
-        res_2 = self.hit('2026-01-01 08:00:00', URL,
-            ip=TEST_IP, headers={'User-Agent': UA_DEVICE_2}, allow_redirects=False,
+        res = self.hit('2026-01-01 08:00:00', URL,
+            ip=TEST_IP, headers={'User-Agent': UA_DEVICE_3}, allow_redirects=False,
         )
-        sess_2 = res_2.session
+        self.assertEqual(res.status_code, 303, 'Third device is blocked because it is not trusted')
 
-        self.assertEqual(res_2.status_code, 200, 'Second device must be trusted')
+        # Trust the device using fingerprint
+        session = res.session
+        update_device_fingerprint(session, _Request(TEST_IP, UA_DEVICE_3), TRUSTED_FINGERPRINT)
+        session_store().save(session)
 
-        device_2 = next(device for device in sess_2['_devices'].values() if device['user_agent'] == UA_DEVICE_2)
-        device_2['trusted'] = False  # Remove the fact that the second device is verified
-        session_store().save(sess_2)
-
-        # Try to validate the second device using fingerprint
-        self.assertFalse(sess_2.get('_device_fingerprint'))
-        # The first device add a fingerprint for the session
-        request_1 = _Request(TEST_IP, UA_DEVICE_1)
-        update_device_fingerprint(sess_2, request_1, TRUSTED_FINGERPRINT)
-        self.assertTrue(sess_2['_device_fingerprint'])
-        # The second device has the correct fingerprint (hypothetical for testing purposes)
-        request_2 = _Request(TEST_IP, UA_DEVICE_2)
-        update_device_fingerprint(sess_2, request_2, TRUSTED_FINGERPRINT)
-        session_store().save(sess_2)
-
-        res_2 = self.hit('2026-01-01 08:00:00', URL,
-            ip=TEST_IP, headers={'User-Agent': UA_DEVICE_2}, allow_redirects=False,
+        # Retry the request
+        res = self.hit('2026-01-01 08:00:00', URL,
+            ip=TEST_IP, headers={'User-Agent': UA_DEVICE_3}, allow_redirects=False,
         )
-        self.assertEqual(res_2.status_code, 200, 'Second device must be trusted')
+        self.assertEqual(res.status_code, 200, 'Third device is trusted')

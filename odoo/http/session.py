@@ -348,6 +348,11 @@ def update_device(session: Session, request: Request) -> Device | None:
     return device
 
 
+def ensure_device_fingerprint(session: Session, fingerprint: str) -> None:
+    if not session.get('_device_fingerprint'):
+        session['_device_fingerprint'] = fingerprint
+
+
 def update_device_fingerprint(session: Session, request: Request, fingerprint: str) -> bool:
     """
     :return: ``True`` if the current device is trusted, ``False`` otherwise
@@ -355,7 +360,8 @@ def update_device_fingerprint(session: Session, request: Request, fingerprint: s
     device = get_device(session, request)
     if device.get('trusted'):
         session['_device_fingerprint'] = fingerprint
-    elif consteq(session.setdefault('_device_fingerprint', fingerprint), fingerprint):
+    elif not session.get('_device_fingerprint') \
+        or consteq(session['_device_fingerprint'], fingerprint):
         device['trusted'] = True
         session.is_dirty = True
     else:

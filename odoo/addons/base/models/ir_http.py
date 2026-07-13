@@ -523,13 +523,20 @@ class IrHttp(models.AbstractModel):
         device = get_device(request.session, request)
         if device.get('trusted', False):
             return {}
+
+        # If the session fingerprint has not been bootstrapped (e.g. scripts)
+        if not request.session.get('_device_fingerprint'):
+            device['trusted'] = True
+            request.session.is_dirty = True
+            return {}
+
         # If it is not an internal user or the feature is not activated, trust the device
         must_check_device = request.env['ir.config_parameter'].sudo().get_bool('base.session_check_device')
         if not request.env.user._is_internal() or not must_check_device:
             device['trusted'] = True
             request.session.is_dirty = True
             return {}
-        # The current request is using an unknown device
+        # The current request (fingerprinted session) is using an unknown device
         return {
             'check_identity': True,
             'mfa': True,
