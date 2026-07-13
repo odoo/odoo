@@ -1465,13 +1465,14 @@ class ResCompany(models.Model):
     def _cron_post_stock_valuation(self):
         companies = self.env['res.company'].search([
             ('inventory_period', 'in', ['daily', 'monthly']),
-            ('inventory_valuation', '!=', 'real_time'),
         ])
         for company in companies:
             today = company._get_company_today()
             if company.inventory_period == 'monthly' and today != today + relativedelta(day=31):
-                continue
-            company.action_close_stock_valuation(auto_post=True, raise_error_if_closed=False)
+                try:
+                    company.with_context(closing_cron=True).action_close_stock_valuation(auto_post=True)
+                except UserError:
+                    continue
 
     def _get_inventory_valuation_products_domain(self):
         return [('is_storable', '=', True)]
