@@ -23,5 +23,10 @@
                 separator=" || "
             />
         </button>
+        <SubItemQuantityButtons position="attributes">
+            <attribute name="isPlusButtonDisabled">
+                !this.getSelectedOrProvidedComboItem(combo.id, comboItem).product.isQuantityAllowed(this.getItemQuantity(combo.id, comboItem.id) + 1)
+            </attribute>
+        </SubItemQuantityButtons>
     </t>
 </templates>
