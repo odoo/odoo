@@ -13,7 +13,7 @@ title: Portal del Proyecto
 
 ## Resumen ejecutivo
 
-Este portal presenta el proyecto completo: objetivos, avance por sprint, evidencias, burndown, defensa, arquitectura y verificacion tecnica. La portada funciona como punto de entrada; los detalles estan separados en paginas especificas para evitar duplicar informacion.
+Este portal presenta el proyecto completo: objetivos, avance por sprint, evidencias, burndown, defensa, arquitectura, verificacion tecnica y documentacion academica. La portada funciona como punto de entrada; los detalles estan separados en paginas especificas para evitar duplicar informacion.
 
 <div class="kpi-grid">
   <div class="kpi-card"><strong>5</strong><span>Sprints documentados</span></div>
@@ -55,14 +55,24 @@ Este portal presenta el proyecto completo: objetivos, avance por sprint, evidenc
     <a href="defensa.html">Ver defensa</a>
   </div>
   <div class="nav-card">
+    <h3>Cronograma</h3>
+    <p>Fechas, hitos, actividades Scrum, actividades DevOps y entregables esperados.</p>
+    <a href="docs/cronograma-sprints.html">Ver cronograma</a>
+  </div>
+  <div class="nav-card">
+    <h3>Documentacion</h3>
+    <p>Indice academico con arquitectura, verificacion tecnica e informes de sprint.</p>
+    <a href="docs/README.html">Ver documentos</a>
+  </div>
+  <div class="nav-card">
     <h3>Arquitectura</h3>
     <p>Analisis tecnico del modulo de Ventas y estructura funcional revisada.</p>
-    <a href="ArquitecturaModuloVnetas.html">Ver arquitectura</a>
+    <a href="docs/arquitectura-modulo-ventas.html">Ver arquitectura</a>
   </div>
   <div class="nav-card">
     <h3>Verificacion</h3>
     <p>Reporte tecnico, pruebas y evidencias de validacion del comportamiento implementado.</p>
-    <a href="REPORTE_VERIFICACION.html">Ver verificacion</a>
+    <a href="docs/reporte-verificacion-sprint-0.html">Ver verificacion</a>
   </div>
 </div>
 

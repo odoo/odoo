@@ -3,14 +3,16 @@ layout: default
 title: Arquitectura del Modulo de Ventas
 ---
 
-[Volver al portal](index.html)
+[Volver al portal](../index.html)
 
-# Módulo Seleccionado: Ventas (Odoo)
+# Arquitectura del módulo de Ventas de Odoo
 
 El proyecto trabajará exclusivamente con el módulo de **Ventas (sale)** de Odoo. Este componente es esencial para gestionar el ciclo comercial completo y la interacción con los clientes.
 
 ## 1. Alcance Funcional
+
 El módulo permite administrar los siguientes procesos:
+
 * **Cotizaciones:** Creación y seguimiento de presupuestos.
 * **Órdenes de venta:** Gestión de pedidos confirmados.
 * **Clientes:** Base de datos y perfiles de contacto.
@@ -20,6 +22,7 @@ El módulo permite administrar los siguientes procesos:
 * **Facturación:** Generación de borradores y facturas finales.
 
 ## 2. Verificación de Líneas de Código
+
 Para cumplir con el requerimiento de análisis de software, se ha estimado la extensión del código fuente:
 
 | Módulo / Componente | Líneas Estimadas |
@@ -31,6 +34,7 @@ Para cumplir con el requerimiento de análisis de software, se ha estimado la ex
 *El conjunto funcional asociado al módulo supera las 10,000 líneas de código requeridas.*
 
 ## 3. Arquitectura del Módulo
+
 Representación simplificada de los componentes integrados:
 
 | Componentes de Ventas (sale) |Integraciones |

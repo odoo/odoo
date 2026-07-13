@@ -3,7 +3,7 @@ layout: default
 title: Sprint 1 - Analisis y configuracion
 ---
 
-[Volver al portal](index.html)
+[Volver al portal](../../index.html)
 
 # UNIVERSIDAD NACIONAL DE SAN AGUSTÍN DE AREQUIPA
 
@@ -25,7 +25,7 @@ Arequipa - Perú, 2026
 
 ---
 
-# Informe de Sprint 1 — Mejoras al Módulo de Ventas de Odoo
+# Informe del Sprint 1 — Mejoras al módulo de Ventas de Odoo
 
 ## Resumen del Proyecto
 

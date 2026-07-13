@@ -92,7 +92,7 @@ Esta pagina organiza la evidencia del proyecto por sprint. Cada bloque muestra o
   </div>
 
   <div class="evidence-links">
-    <a href="cronograma.html">Cronograma</a>
+    <a href="docs/cronograma-sprints.html">Cronograma</a>
     <a href="sprints.html">Resumen de sprints</a>
     <a href="https://github.com/orgs/odooIPS-team/projects/1">Project Kanban</a>
   </div>
@@ -149,8 +149,8 @@ Esta pagina organiza la evidencia del proyecto por sprint. Cada bloque muestra o
   </div>
 
   <div class="evidence-links">
-    <a href="sprint1.html">Sprint 1</a>
-    <a href="ArquitecturaModuloVnetas.html">Arquitectura Ventas</a>
+    <a href="docs/sprints/informe-sprint-1.html">Sprint 1</a>
+    <a href="docs/arquitectura-modulo-ventas.html">Arquitectura Ventas</a>
     <a href="docker-config/docker-compose.yml">Docker Compose</a>
     <a href="https://github.com/odooIPS-team/odooIPS/actions">Actions</a>
   </div>
@@ -209,8 +209,8 @@ Esta pagina organiza la evidencia del proyecto por sprint. Cada bloque muestra o
   </div>
 
   <div class="evidence-links">
-    <a href="sprint2.html">Sprint 2</a>
-    <a href="REPORTE_VERIFICACION.html">Verificacion tecnica</a>
+    <a href="docs/sprints/informe-sprint-2.html">Sprint 2</a>
+    <a href="docs/reporte-verificacion-sprint-0.html">Verificacion tecnica</a>
     <a href="https://github.com/odooIPS-team/odooIPS/issues?q=is%3Aissue%20milestone%3A%22Hito%202%20-%20Sprint%202%22">Issues Sprint 2</a>
   </div>
 </section>

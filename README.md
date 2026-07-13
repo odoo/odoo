@@ -51,11 +51,15 @@ Repositorio oficial del proyecto:
 
 ---
 
-## 6. Documentación del Proyecto
+## 6. Documentación del proyecto
 
 | Documento | Enlace |
 | --- | --- |
-| Github Page| [Ver documento](https://roydanpe.github.io/odooIPS/) |
-| Arquitectura del Módulo | [Ver documento](ArquitecturaModuloVnetas.md) |
-| Reporte de Verificación | [Ver documento](REPORTE_VERIFICACION.md) |
-| Cronograma | [Ver documento](https://roydanpe.github.io/odooIPS/cronograma.html) |
+| Índice de documentación | [Ver documentos](docs/README.md) |
+| GitHub Pages | [Ver sitio](https://roydanpe.github.io/odooIPS/) |
+| Arquitectura del módulo | [Ver documento](docs/arquitectura-modulo-ventas.md) |
+| Reporte de verificación — Sprint 0 | [Ver documento](docs/reporte-verificacion-sprint-0.md) |
+| Cronograma | [Ver documento](docs/cronograma-sprints.md) |
+| Informe del Sprint 1 | [Ver informe](docs/sprints/informe-sprint-1.md) |
+| Informe del Sprint 2 | [Ver informe](docs/sprints/informe-sprint-2.md) |
+| Informe del Sprint 3 | [Ver informe](docs/sprints/informe-sprint-3.md) |
