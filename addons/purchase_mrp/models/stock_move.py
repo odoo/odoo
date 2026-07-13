@@ -3,6 +3,7 @@
 
 from odoo import api, models
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
 class StockMove(models.Model):
@@ -23,7 +24,11 @@ class StockMove(models.Model):
                 unit_kit_purchase = 1
                 if self.purchase_line_id:
                     active_moves = self.purchase_line_id.move_ids.filtered(lambda m:
-                        m.state != 'cancel' and m.product_id == self.product_id and m.picking_id != self.picking_id,
+                        m.state != 'cancel'
+                        and m.product_id == self.product_id
+                        and m.picking_id != self.picking_id
+                        and m.bom_line_id == self.bom_line_id
+                        and float_compare(m.cost_share, self.cost_share, precision_digits=6) == 0
                     )
                     active_quantity = quantity + sum(active_moves.mapped('quantity'))
                     if active_quantity:
@@ -48,6 +53,12 @@ class StockMove(models.Model):
         if self.purchase_line_id:
             vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
+
+    def _merge_moves_fields(self):
+        res = super()._merge_moves_fields()
+        if not self.env.context.get('merge_extra'):
+            res['cost_share'] = sum(self.mapped('cost_share'))
+        return res
 
     def _get_qty_received_without_self(self):
         line = self.purchase_line_id
