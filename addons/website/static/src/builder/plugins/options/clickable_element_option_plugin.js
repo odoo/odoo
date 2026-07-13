@@ -1,7 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { setHrefUrl } from "@html_builder/plugins/utils";
 
 export const CLICKABLE_LINK_SELECTOR = ":scope > a.stretched-link, :scope > a.slide-link";
 
@@ -75,7 +74,11 @@ class SetElementAnchorUrlAction extends BuilderAction {
     apply({ editingElement, value }) {
         const linkEl = getClickableLink(editingElement);
         if (linkEl) {
-            setHrefUrl(linkEl, value);
+            if (value) {
+                linkEl.setAttribute("href", value);
+            } else {
+                linkEl.removeAttribute("href");
+            }
         }
     }
     getValue({ editingElement }) {

@@ -28,7 +28,7 @@
                 inputClass="'o_hb_input_base o_builder_url_input'"
                 onChange.bind="this.onChange"
             />
-            <button class="btn" title="Preview this URL in a new tab" t-on-click="this.openPreviewUrl">
+            <button class="btn" title="Preview this URL in a new tab" t-if="this.props.previewButton" t-on-click="this.openPreviewUrl">
                 <i class="oi oi-fw" data-icon="open_in_new" role="img" aria-hidden="true"/>
             </button>
         </xpath>
