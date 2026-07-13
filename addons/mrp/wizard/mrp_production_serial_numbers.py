@@ -54,7 +54,7 @@ class MrpProductionSerials(models.TransientModel):
     def action_split_and_assign_serials(self):
         self.ensure_one()
         if self.qty_produced != self.workorder_id.qty_produced:
-            self.workorder_id.qty_produced = self.qty_produced
+            self.workorder_id.with_context(allow_qty_change=True).qty_produced = self.qty_produced
         lots, new_lots = self._parse_serial_numbers()
         split_amounts = {self.production_id: [1] * len(lots)}
         mos = self.production_id._split_productions(amounts=split_amounts)

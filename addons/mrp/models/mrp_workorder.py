@@ -46,7 +46,7 @@ class MrpWorkorder(models.Model):
         related='production_id.reservation_state', store=True) # Technical: used in views and domains only
     production_state = fields.Selection(
         string='Production State', readonly=True,
-        related='production_id.state') # Technical: used in views only
+        related='production_id.state', tracking=False)  # Technical: used in views only
     production_bom_id = fields.Many2one('mrp.bom', related='production_id.bom_id')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')
     company_id = fields.Many2one(related='production_id.company_id')
@@ -167,10 +167,13 @@ class MrpWorkorder(models.Model):
             has_all_qties_ready = workorder.uom_id.compare(workorder.qty_ready, workorder.qty_remaining) == 0
             has_qty_ready = workorder.uom_id.compare(workorder.qty_ready, 0) > 0
             continuous_production = not workorder.blocked_by_workorder_ids or workorder.production_bom_id.continuous
-            if all_blocked_by_workorders_done or has_all_qties_ready or (has_qty_ready and continuous_production):
-                workorder.write({'state': 'ready'})
+            has_all_qties_ready = workorder.uom_id.compare(workorder.qty_ready, workorder.qty_remaining) == 0 and continuous_production
+            if workorder.qty_produced and workorder.state != 'blocked':
+                workorder.state = 'progress'
+            elif all_blocked_by_workorders_done or has_all_qties_ready or (has_qty_ready and continuous_production):
+                workorder.state = 'ready'
             else:
-                workorder.write({'state': 'blocked'})
+                workorder.state = 'blocked'
 
     def set_state(self, state):
         ids_to_update, ids_by_state = [], defaultdict(list)
@@ -494,7 +497,7 @@ class MrpWorkorder(models.Model):
             for wo in self:
                 if wo.uom_id.compare(values['qty_produced'], 0) < 0:
                     raise UserError(_('The quantity produced must be positive.'))
-                if wo.state == 'done':
+                if wo.state == 'done' and not self.env.context.get('allow_qty_change'):
                     raise UserError(_('This production order has been closed.'))
 
         workorders_with_new_wc = self.env['mrp.workorder']
@@ -688,7 +691,7 @@ class MrpWorkorder(models.Model):
                     continue
                 raise UserError(_('You cannot start a work order that is already done or cancelled'))
 
-            if wo.qty_producing == 0:
+            if wo.qty_producing == 0 and not wo.production_bom_id.continuous:
                 wo.qty_producing = wo.qty_remaining
 
             if wo._should_start_timer():
