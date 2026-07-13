@@ -26,7 +26,10 @@
                                         <td colspan="2"><span class="fw-bold" t-out="location.display_name">Shelf A</span></td>
                                         <td groups="stock.group_production_lot"></td>
                                         <td groups="stock.group_tracking_lot"></td>
-                                        <td></td>
+                                        <td class="o_td_quantity text-end"></td>
+                                        <td class="o_td_quantity text-end"></td>
+                                        <td class="o_td_quantity text-end"></td>
+                                        
                                     </tr>
                                     <tr t-foreach="docs.filtered(lambda quant: quant.location_id.id == location.id)" t-as="line">
                                         <td groups="stock.group_stock_multi_locations"></td>
