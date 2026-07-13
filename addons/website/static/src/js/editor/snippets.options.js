@@ -518,7 +518,10 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         });
                         return;
                     }
-                    // Create attachment.
+                    // Create attachment. The description is also used to
+                    // hide those attachments from the media dialog's
+                    // "Documents" tab, see `attachmentsDomain` in
+                    // document_selector.js, keep them in sync.
                     const [fontCssId] = await this.orm.call("ir.attachment", "create_unique", [[{
                         name: uploadedFontName,
                         description: `CSS font face for ${uploadedFontName}`,
