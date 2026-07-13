@@ -146,7 +146,7 @@ test("reorder social medias", async () => {
     await click(":iframe h4");
 
     await contains("button[data-action-id='addSocialMediaLink']").click();
-    await contains("tr:nth-child(9) input").fill("/first");
+    await contains("tr:nth-child(9) input").edit("https://www.example.com/first");
     await contains("button[data-action-id='addSocialMediaLink']").click();
 
     expect("tr:nth-child(1) input").toHaveValue("https://fb.com/odoo");
