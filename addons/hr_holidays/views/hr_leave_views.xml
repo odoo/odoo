@@ -412,7 +412,7 @@
                                         ]"
                                         context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to, 'leave_date_from': date_from, 'ignored_leave_ids': id and [id] or []}"
                                         readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"
-                                        options="{'no_create': True, 'request_type': 'leave'}"
+                                        options="{'no_create': True, 'request_type': 'leave', 'bottom_sheet': True}"
                                         placeholder="eg. Sickness, Paid time off, Unpaid, ..."
                                     />
                                 </div>
@@ -552,9 +552,9 @@
             <xpath expr="//div[@name='support_document_alert']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//group[@name='attachments_relapse']" position="inside">
-                <div class="d-flex align-items-baseline gap-2" colspan="2" invisible="not attachment_is_visible or state != 'confirm'">
-                    <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" class="w-auto"/>
+            <xpath expr="//group[@name='attachments_relapse']" position="replace">
+                <div class="o_hr_leave_attachments d-flex flex-column flex-md-row align-items-md-baseline gap-1 gap-md-2 mb-3 my-md-2" invisible="not attachment_is_visible or state != 'confirm'">
+                    <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" class="w-100 w-md-auto"/>
                     <span class="text-danger" invisible="not work_entry_type_support_document or supported_attachment_ids">Required</span>
                 </div>
             </xpath>

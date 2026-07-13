@@ -1,5 +1,5 @@
 .o_timeoff_card {
-    min-height: 80px;
+    flex: 0 0 auto;
 
     span {
         line-height: 1;
@@ -7,9 +7,10 @@
 
     .o_timeoff_name {
         color: var(--body-color);
-        font-size: 15px;
-        margin-bottom: 3px;
-        font-weight: bolder;
+
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
+            font-size: 15px;
+        }
     }
 
     .o_timeoff_duration {
@@ -17,6 +18,10 @@
         width: auto;
         padding: auto 5px;
         line-height: 1;
+
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+            font-size: 1rem;
+        }
 
         img {
             height: 30px;
