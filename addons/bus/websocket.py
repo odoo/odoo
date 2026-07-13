@@ -235,6 +235,7 @@ class ControlCommand(IntEnum):
     CLOSE = 0
     SEND = 1
     DISPATCH = 2
+    PUSH = 3
 
 
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
@@ -317,6 +318,14 @@ class Websocket:
     RL_BURST = int(config['websocket_rate_limit_burst'])
     # How many seconds between each request.
     RL_DELAY = float(config['websocket_rate_limit_delay'])
+    # Minimum delay (in seconds) between two session token validations for
+    # the same websocket. The session store is still read at every dispatch,
+    # which catches logged out sessions immediately. The token validation on
+    # the other hand requires a cursor and a query, which is too expensive
+    # to run for every dispatched notification. As a consequence, a session
+    # invalidated by a credential change is kicked with up to this much
+    # delay.
+    SESSION_TOKEN_CHECK_DELAY = 60
 
     def __init__(self, sock, session, cookies, prelude=b''):
         # Session linked to the current websocket connection.
@@ -342,6 +351,9 @@ class Websocket:
         # History of last sent notifications in the format (notif_id, send_time)
         # always sorted by notif_id ASC
         self._notif_history = []
+        # Time after which the session token should be validated again, see
+        # `SESSION_TOKEN_CHECK_DELAY`.
+        self._next_session_token_check = 0
         # Websocket start up
         self.__selector = (
             selectors.PollSelector()
@@ -434,6 +446,21 @@ class Websocket:
         # Ignore if the socket was closed in the meantime.
         with suppress(OSError):
             self._enqueue_control_command(ControlCommand.DISPATCH)
+
+    def push_notifications(self, notifications):
+        """
+        Push notifications fetched by the dispatcher to this websocket.
+        They will be filtered against the subscription state and sent
+        during the subsequent iteration of the event loop.
+
+        :param notifications: list of dicts with ``id``, ``channel`` and
+            ``message`` keys.
+        """
+        if self.state is not ConnectionState.OPEN:
+            return
+        # Ignore if the socket was closed in the meantime.
+        with suppress(OSError):
+            self._enqueue_control_command(ControlCommand.PUSH, notifications)
 
     # ------------------------------------------------------
     # PRIVATE METHODS
@@ -781,8 +808,11 @@ class Websocket:
             return
         if session.uid is None:
             return
+        if time.time() < self._next_session_token_check:
+            return
         with acquire_cursor(session.db) as cr:
             check_session(cr, session)
+        self._next_session_token_check = time.time() + self.SESSION_TOKEN_CHECK_DELAY
 
     def _enqueue_control_command(self, command, data=None):
         """Enqueue a command to be processed by the websocket event loop.
@@ -804,10 +834,18 @@ class Websocket:
             case ControlCommand.DISPATCH:
                 self._assert_session_validity()
                 self._dispatch_bus_notifications()
+            case ControlCommand.PUSH:
+                self._assert_session_validity()
+                self._dispatch_pushed_notifications(data)
             case ControlCommand.CLOSE:
                 self._disconnect(data['code'], data.get('reason'))
 
     def _dispatch_bus_notifications(self):
+        """Fetch and send this websocket's pending notifications, based on
+        its own subscription state (pull-based dispatching). Used to catch
+        up after a subscription and as a fallback when the dispatcher could
+        not push the notifications itself.
+        """
         self._waiting_for_dispatch = False
         with acquire_cursor(self._session.db) as cr:
             notifications = fetch_bus_notifications(
@@ -815,6 +853,30 @@ class Websocket:
                 self._min_id_by_channel,
                 [n[0] for n in self._notif_history],
             )
+        self._record_and_send_notifications(notifications)
+
+    def _dispatch_pushed_notifications(self, notifications):
+        """Send notifications pushed by the dispatcher. In-memory
+        counterpart of the SQL filtering done in `fetch_bus_notifications`:
+        discard notifications for channels this websocket is not subscribed
+        to (anymore), notifications preceding the channel's minimum id and
+        already sent notifications.
+        """
+        history_ids = {notif_id for notif_id, _ in self._notif_history}
+        accepted = []
+        for notif in notifications:
+            min_id = self._min_id_by_channel.get(notif["channel"])
+            if min_id is None:
+                continue
+            if notif["id"] <= min_id or notif["id"] in history_ids:
+                continue
+            accepted.append({"id": notif["id"], "message": notif["message"]})
+        self._record_and_send_notifications(accepted)
+
+    def _record_and_send_notifications(self, notifications):
+        """Record the given notifications in the history, advance the
+        channels minimum ids accordingly and send them to the peer.
+        """
         if not notifications:
             return
         for notif in notifications:

@@ -56,15 +56,15 @@ class NotifyTests(TransactionCase):
             check_payloads_size(payloads)
 
     def test_postcommit(self):
-        """Asserts all ``postcommit`` channels are fetched with a single listen."""
+        """Asserts all ``postcommit`` notifications are fetched with a single listen."""
         if ODOO_NOTIFY_FUNCTION != "pg_notify":
             return
-        channels = []
+        notifications = []
         stop_event = threading.Event()
         selector_ready_event = threading.Event()
 
         def single_listen():
-            nonlocal channels
+            nonlocal notifications
             with (
                 odoo.sql_db.db_connect(config['db_system']).cursor() as cr,
                 selectors.DefaultSelector() as sel,
@@ -79,12 +79,12 @@ class NotifyTests(TransactionCase):
                     if sel.select(timeout=5):
                         conn.poll()
                         while conn.notifies:
-                            if notify_channels := [
-                                c
-                                for c in json.loads(conn.notifies.pop().payload)
-                                if c[0] == self.env.cr.dbname
+                            if notify_notifications := [
+                                n
+                                for n in json.loads(conn.notifies.pop().payload)
+                                if n[0][0] == self.env.cr.dbname
                             ]:
-                                channels = notify_channels
+                                notifications = notify_notifications
                                 found = True
                                 break
 
@@ -96,14 +96,20 @@ class NotifyTests(TransactionCase):
         self.env["bus.bus"]._sendone("channel 2", "test 2", {})
         self.env["bus.bus"]._sendone("channel 1", "test 3", {})
         self.assertEqual(self.env["bus.bus"].search_count([]), 0)
-        self.assertEqual(channels, [])
+        self.assertEqual(notifications, [])
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.assertEqual(self.env["bus.bus"].search_count([]), 3)
-        self.assertEqual(channels, [])
+        self.assertEqual(notifications, [])
         self.env.cr.postcommit.run()  # notify
         thread.join(timeout=5)
         stop_event.set()
-        self.assertEqual(self.env["bus.bus"].search_count([]), 3)
+        records = self.env["bus.bus"].search([], order="id")
+        self.assertEqual(len(records), 3)
         self.assertEqual(
-            channels, [[self.env.cr.dbname, "channel 1"], [self.env.cr.dbname, "channel 2"]]
+            notifications,
+            [
+                [[self.env.cr.dbname, "channel 1"], records[0].id],
+                [[self.env.cr.dbname, "channel 2"], records[1].id],
+                [[self.env.cr.dbname, "channel 1"], records[2].id],
+            ],
         )
