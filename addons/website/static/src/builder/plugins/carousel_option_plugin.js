@@ -235,7 +235,7 @@ export class CarouselOptionPlugin extends Plugin {
                 { once: true }
             );
 
-            const carouselInstance = window.Carousel.getOrCreateInstance(editingElement, {
+            const carouselInstance = this.window.Carousel.getOrCreateInstance(editingElement, {
                 ride: false,
                 pause: true,
                 keyboard: false,
