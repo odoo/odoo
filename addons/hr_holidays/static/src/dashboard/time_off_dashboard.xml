@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <div t-name="hr_holidays.TimeOffDashboard" class="o_timeoff_dashboard">
-        <div class="d-flex flex-row p-0 justify-content-around">
+    <div t-name="hr_holidays.TimeOffDashboard" class="o_timeoff_dashboard overflow-x-auto overflow-y-hidden">
+        <div class="d-flex flex-row p-0 justify-content-around h-100">
             <t t-foreach="this.state.holidays" t-as="holiday" t-key="holiday[3]">
                 <TimeOffCard
                     name="holiday[0]"
@@ -17,7 +17,7 @@
                     </span>
                     <div class="d-flex flex-column align-items-start justify-content-center">
                         <span class="o_timeoff_name">Pending Allocations</span>
-                        <a href="#" class="o_timeoff_validity" t-on-click.prevent="this.openNewAllocation">
+                        <a href="#" class="o_timeoff_validity d-none d-md-block" t-on-click.prevent="this.openNewAllocation">
                             New Request
                         </a>
                     </div>

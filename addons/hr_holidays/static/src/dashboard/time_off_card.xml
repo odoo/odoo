@@ -4,7 +4,7 @@
         <t t-set="data" t-value="this.props.data"/>
         <t t-set="duration" t-value="this.props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
         <t t-set="parsed_duration" t-value="this.formatDuration(duration)"/>
-        <div class="d-flex align-items-center justify-content-center gap-2 cursor-pointer o_timeoff_card_inner"
+        <div class="d-flex align-items-baseline align-items-md-center justify-content-center gap-1 gap-md-2 cursor-pointer o_timeoff_card_inner"
             t-on-click.stop="(ev) => this.onClickInfo(ev)">
             <span class="o_timeoff_duration">
                 <span t-att-style="data.holds_changes ? 'color: #B6D369;' : ''">
@@ -20,11 +20,11 @@
                     </t>
                 </span>
                 <span t-if="this.props.requires_allocation and data.closest_allocation_expire !== false"
-                    t-att-class="'o_timeoff_validity' + (this.warning() ? ' text-warning' : '')">
+                    t-att-class="'o_timeoff_validity d-none d-md-block' + (this.warning() ? ' text-warning' : '')">
                     Validity <t t-out="data.closest_allocation_expire"/>
                     <i t-if="this.warning()" class="fa fa-exclamation-triangle ms-1"/>
                 </span>
-                <span t-else="" class="o_timeoff_validity">
+                <span t-else="" class="o_timeoff_validity d-none d-md-block">
                     <t t-if="this.props.requires_allocation" name="duration_type">Available</t>
                     <t t-else="">Taken</t>
                 </span>

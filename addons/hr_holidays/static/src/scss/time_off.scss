@@ -200,3 +200,29 @@
         }
     }
 }
+
+.o_time_off_calendar_dashboard_view {
+    .o_expand_filter_button {
+        position: relative;
+        z-index: 1;
+
+        &::before {
+            position: absolute;
+            right: 100%;
+            top: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(to right, transparent, var(--expand-button-shadow-color, $o-white));
+            pointer-events: none;
+            content: "";
+        }
+
+        i {
+            transform: scale(0.75);
+        }
+    }
+
+    .fc-daygrid-day:active {
+        background-color: rgba($o-action, 0.08);
+    }
+}

@@ -386,14 +386,14 @@
                                     required="not date_from or not date_to"
                                     options="{'end_date_field': 'request_date_to', 'always_range': True}"/>
                                 <field name="request_date_to" required="not date_from or not date_to" invisible="1"/> <!-- For Form view test-->
-                                <div>
+                                <div class="o_hr_leave_duration flex-grow-0">
                                     ( <field name="duration_display" readonly="1" class="w-auto"/> )
                                 </div>
                             </div>
                             <!-- half day or custom hours-->
                             <label for="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" string="Day Period"/>
                             <div class="o_row" invisible="work_entry_type_request_unit != 'half_day'">
-                                <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field me-2"/>
+                                <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field me-auto"/>
                                 <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field"/>
                             </div>
                             <label for="request_hour_from" invisible="work_entry_type_request_unit != 'hour'" string="Hours"/>
@@ -428,7 +428,7 @@
                                                     ('allows_negative', '=', False),
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to, 'leave_date_from': date_from}"
-                                options="{'no_create': True, 'request_type': 'leave'}"
+                                options="{'no_create': True, 'request_type': 'leave', 'bottom_sheet': True}"
                                 readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"
                                 placeholder="eg. Sickness, Paid time off, Unpaid, ..."/>
                             <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" />
