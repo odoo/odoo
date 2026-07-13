@@ -7,8 +7,8 @@
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row mt8">
+                        <t t-set="picking" t-value="o"/>
                         <t t-call="stock.return_label_header">
-                            <t t-set="picking" t-value="o"/>
                             <t
                                 t-set="wh_address_id"
                                 t-value="o.picking_type_code == 'incoming' and o.location_id.warehouse_id.partner_id or o.partner_id"
