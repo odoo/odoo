@@ -45,7 +45,7 @@ registerWebsitePreviewTour('test_image_link', {
     ...selectImageSteps,
     {
         content: "check popover content has site URL",
-        trigger: ".o-we-linkpopover a.o_we_url_link[href='http://odoo.com']:contains(http://odoo.com)",
+        trigger: ".o-we-linkpopover a.o_we_url_link[href='https://odoo.com']:contains(https://odoo.com)",
     }, {
         content: "remove URL",
         trigger: ".o_customize_tab [data-container-title='Image'] div[data-action-id='setUrl'] input",
