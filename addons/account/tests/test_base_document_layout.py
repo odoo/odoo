@@ -35,3 +35,26 @@ class TestAccountBaseDocumentLayout(AccountTestInvoicingCommon):
 
         self.assertEqual(company.external_report_layout_id, report_layout.view_id)
         self.assertEqual(company.report_header, '<p>Test invoice header</p>')
+
+    def test_configure_later_continues_send_flow_without_configuring_layout(self):
+        company = self.company_data['company']
+        company.external_report_layout_id = False
+        report_layout = self.env['report.layout'].search([], limit=1)
+        report_action = {
+            'type': 'ir.actions.report',
+            'context': {},
+        }
+
+        wizard = self.env['base.document.layout'].with_user(self.account_user).with_context(
+            account_document_layout_configurator=True,
+            can_configure_later=True,
+            report_action=report_action,
+        ).create({
+            'company_id': company.id,
+            'report_layout_id': report_layout.id,
+        })
+
+        action = wizard.action_configure_later()
+
+        self.assertEqual(action, report_action)
+        self.assertFalse(company.external_report_layout_id)

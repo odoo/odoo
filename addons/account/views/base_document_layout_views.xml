@@ -13,6 +13,20 @@
                     <field name="account_number" string="Bank Account" required="qr_code" placeholder="BE71096123456769"/>
                     <field name="qr_code" string="QR Code" invisible="not from_invoice"/>
                 </xpath>
+
+                <xpath expr="//footer/button[@special='cancel']" position="replace">
+                    <button
+                        string="Configure Later"
+                        type="object"
+                        name="action_configure_later"
+                        invisible="not can_configure_later"
+                    />
+                    <button
+                        special="cancel"
+                        data-hotkey="x"
+                        invisible="can_configure_later"
+                    />
+                </xpath>
             </field>
         </record>
 

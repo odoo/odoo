@@ -7086,6 +7086,7 @@ class AccountMove(models.Model):
                 report_action,
                 "account.action_base_document_layout_configurator",
             )
+            report_action['context']['can_configure_later'] = True
             report_action['context']['default_from_invoice'] = self.move_type == 'out_invoice'
         return report_action
 
