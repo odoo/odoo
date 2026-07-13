@@ -3476,7 +3476,8 @@ class TestStockValuation(TestStockValuationCommon):
 
     def test_cron_post_stock_valuation_domain(self):
         """ Cron must process daily/periodic every day and add monthly/periodic
-        on the last day of the month. Real-time and manual companies must be skipped.
+        on the last day of the month, regardless of the valuation method.
+        Manual companies must be skipped.
         """
         # SETUP: res.company master-data (create implies res.partner create) -> sudo
         Company = self.env['res.company'].sudo()
@@ -3515,7 +3516,7 @@ class TestStockValuation(TestStockValuationCommon):
                 Company._cron_post_stock_valuation()
                 self.assertIn(daily_periodic.id, called_ids)
                 self.assertNotIn(monthly_periodic.id, called_ids)
-                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertIn(daily_realtime.id, called_ids)
                 self.assertNotIn(manual_periodic.id, called_ids)
 
             with freeze_time('2026-03-31'):
@@ -3523,7 +3524,7 @@ class TestStockValuation(TestStockValuationCommon):
                 Company._cron_post_stock_valuation()
                 self.assertIn(daily_periodic.id, called_ids)
                 self.assertIn(monthly_periodic.id, called_ids)
-                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertIn(daily_realtime.id, called_ids)
                 self.assertNotIn(manual_periodic.id, called_ids)
 
             with freeze_time('2026-02-28'):
@@ -3531,7 +3532,7 @@ class TestStockValuation(TestStockValuationCommon):
                 Company._cron_post_stock_valuation()
                 self.assertIn(daily_periodic.id, called_ids)
                 self.assertIn(monthly_periodic.id, called_ids)
-                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertIn(daily_realtime.id, called_ids)
                 self.assertNotIn(manual_periodic.id, called_ids)
 
     def test_multi_company_valuation(self):

@@ -153,11 +153,19 @@ class ResCompany(models.Model):
             periods.append('monthly')
         domain = Domain([
             ('inventory_period', 'in', periods),
-            ('inventory_valuation', '!=', 'real_time'),
         ])
         companies = self.env['res.company'].search(domain)
         for company in companies:
+<<<<<<< 5738fd9e54558a80575755311a3b78918385fb7b
             company.action_close_stock_valuation(auto_post=True)
+||||||| 9b1d65acc28ea8af10bb9d8e3da535cc503097b2
+            company.with_context(closing_cron=True).action_close_stock_valuation(auto_post=True)
+=======
+            try:
+                company.with_context(closing_cron=True).action_close_stock_valuation(auto_post=True)
+            except UserError:
+                continue
+>>>>>>> 26d8f1fefcf4b0e2ee2534e35e4eaee59271ba34
 
     def _get_valuation_product_domain(self):
         return [('is_storable', '=', True)]
