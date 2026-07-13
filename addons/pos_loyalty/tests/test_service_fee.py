@@ -65,8 +65,7 @@ class TestPosLoyaltyServiceFee(TestPointOfSaleHttpCommon):
         self.env["loyalty.card"].create({
             "program_id": program.id,
             "code": "GIFTCARD",
-            "points": 100,
-        })
+        })._adjust_points(100, "Initial balance")
         self._start_tour(
             "ServiceFeeGiftCardSingleLineTour",
             self._create_preset("Percent 10 before discount", "percent", 0.1),
@@ -100,8 +99,7 @@ class TestPosLoyaltyServiceFee(TestPointOfSaleHttpCommon):
         self.env["loyalty.card"].create({
             "program_id": program.id,
             "partner_id": partner.id,
-            "points": 100,
-        })
+        })._adjust_points(100, "Initial balance")
         self._start_tour(
             "ServiceFeeEWalletCoversFeeTour",
             self._create_preset("Percent 10 before discount", "percent", 0.1),

@@ -10,12 +10,12 @@ from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 @tagged("post_install", "-at_install")
 class TestClaimReward(WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -81,10 +81,11 @@ class TestClaimReward(WebsiteSaleCommon):
                         "required_points": 1,
                     }),
                 ],
-                "coupon_ids": [Command.create({"points": 1})],
+                "coupon_ids": [Command.create({})],
             },
         ])
         cls.coupon = cls.coupon_program.coupon_ids
+        cls.coupon._adjust_points(1, "Initial balance")
 
         installed_modules = set(
             cls.env["ir.module.module"].search([("state", "=", "installed")]).mapped("name")

@@ -5,7 +5,7 @@
         <field name="name">loyalty.history.view.form</field>
         <field name="model">loyalty.history</field>
         <field name="arch" type="xml">
-            <form>
+            <form create="false">
                 <sheet>
                     <group>
                         <group>
@@ -17,6 +17,7 @@
                         <group>
                             <field name="issued"/>
                             <field name="used"/>
+                            <field name="expiration_date" invisible="program_type != 'loyalty'"/>
                         </group>
                     </group>
                 </sheet>

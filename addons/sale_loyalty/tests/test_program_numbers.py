@@ -2239,9 +2239,10 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             ],
         })
         order = self.empty_order
-        self.env["loyalty.card"].create([
-            {"program_id": loyalty_program.id, "partner_id": order.partner_id.id, "points": 3.39}
+        card = self.env["loyalty.card"].create([
+            {"program_id": loyalty_program.id, "partner_id": order.partner_id.id}
         ])
+        card._adjust_points(3.39, "Initial balance")
 
         # Create taxes
         tax_15pc_excl = self.env["account.tax"].create({
@@ -2281,9 +2282,10 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             ],
         })
         order = self.empty_order
-        self.env["loyalty.card"].create([
-            {"program_id": loyalty_program.id, "partner_id": order.partner_id.id, "points": 3030}
+        card = self.env["loyalty.card"].create([
+            {"program_id": loyalty_program.id, "partner_id": order.partner_id.id}
         ])
+        card._adjust_points(3030, "Initial balance")
         product_a = self._create_product(name="product_a", lst_price=3000.0, taxes_id=False)
         order.order_line = [Command.create({"product_id": product_a.id})]
 
@@ -2331,8 +2333,8 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         coupon = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": order.partner_id.id,
-            "points": 1,
         })
+        coupon._adjust_points(1, "Initial balance")
 
         points = order._get_real_points_for_coupon(coupon)
         self.assertEqual(
@@ -2381,8 +2383,8 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         loyalty_card = self.env["loyalty.card"].create({
             "program_id": loyalty_program.id,
             "partner_id": partner.id,
-            "points": 10,
         })
+        loyalty_card._adjust_points(10, "Initial balance")
 
         order = (
             self
