@@ -35,7 +35,10 @@ test("Reordering a carousel item should update the container title", async () =>
 });
 
 test("Remove slide", async () => {
-    await setupWebsiteBuilderWithSnippet("s_carousel");
+    await setupWebsiteBuilderWithSnippet("s_carousel", {
+        loadIframeBundles: true,
+        loadAssetsFrontendJS: true,
+    });
 
     expect(":iframe .carousel-item").toHaveCount(3);
     await contains(":iframe .carousel-item").click();
@@ -57,7 +60,10 @@ test("Remove slide", async () => {
 });
 
 test("Should disable reordering and navigation buttons when carousel has a single slide", async () => {
-    const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_carousel");
+    const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_carousel", {
+        loadIframeBundles: true,
+        loadAssetsFrontendJS: true,
+    });
     expect(":iframe .carousel-item").toHaveCount(3);
     await contains(":iframe .carousel-item").click();
     expect("[data-action-value='first']").toHaveClass("disabled");
