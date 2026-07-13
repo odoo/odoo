@@ -5,12 +5,12 @@ class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
     @api.model
-    def _get_default_sending_methods(self, move) -> str:
+    def _get_default_sending_methods(self, move) -> list:
         # EXTENDS 'account_peppol' to not select Peppol / PDP for B2C invoices
         partner = move.commercial_partner_id.with_company(move.company_id)
         if move.company_id._get_peppol_proxy_type() != 'pdp' or not partner._l10n_fr_pdp_is_b2c():
             return super()._get_default_sending_methods(move)
-        return {'email'}
+        return ['email']
 
     # -------------------------------------------------------------------------
     # SENDING METHODS

@@ -23,9 +23,9 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_default_sending_methods(self, move) -> set:
+    def _get_default_sending_methods(self, move) -> list:
         """ By default, we use the sending method set on the partner or email. """
-        return {move.commercial_partner_id.with_company(move.company_id).invoice_sending_method or 'email'}
+        return [move.commercial_partner_id.with_company(move.company_id).invoice_sending_method or 'email']
 
     @api.model
     def _get_all_extra_edis(self) -> dict:
@@ -35,10 +35,10 @@ class AccountMoveSend(models.AbstractModel):
         return {}
 
     @api.model
-    def _get_default_extra_edis(self, move) -> set:
+    def _get_default_extra_edis(self, move) -> list:
         """ By default, we use all applicable extra EDIs. """
         extra_edis = self._get_all_extra_edis()
-        return {edi_key for edi_key, edi_vals in extra_edis.items() if edi_vals['is_applicable'](move)}
+        return [edi_key for edi_key, edi_vals in extra_edis.items() if edi_vals['is_applicable'](move)]
 
     @api.model
     def _get_default_invoice_edi_format(self, move, **kwargs) -> str:
@@ -73,8 +73,8 @@ class AccountMoveSend(models.AbstractModel):
             return custom_settings.get(key) if key in custom_settings else move.sending_data.get(key) if from_cron else default_value
 
         vals = {
-            'sending_methods': get_setting('sending_methods', default_value=self._get_default_sending_methods(move)) or {},
-            'extra_edis': get_setting('extra_edis', default_value=self._get_default_extra_edis(move)) or {},
+            'sending_methods': get_setting('sending_methods', default_value=self._get_default_sending_methods(move)) or [],
+            'extra_edis': get_setting('extra_edis', default_value=self._get_default_extra_edis(move)) or [],
             'pdf_report': get_setting('pdf_report') or self._get_default_pdf_report_id(move),
             'author_user_id': get_setting('author_user_id', from_cron=from_cron) or self.env.user.id,
             'author_partner_id': get_setting('author_partner_id', from_cron=from_cron) or self.env.user.partner_id.id,

@@ -757,8 +757,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         def get_default_extra_edis(self, move):
             if move == invoice1:
-                return {'edi1'}
-            return {'edi1', 'edi2'}
+                return ['edi1']
+            return ['edi1', 'edi2']
 
         def get_all_extra_edis(self):
             return {
