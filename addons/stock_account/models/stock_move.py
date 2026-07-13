@@ -152,6 +152,15 @@ class StockMove(models.Model):
                 'company_id': move.company_id.id,
             })
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        moves = super().create(vals_list)
+        # a move added to a done picking is created done: `_action_done` won't value it
+        if done_moves := moves.filtered(lambda m: m.state == 'done'):
+            done_moves.filtered(lambda m: m._is_out())._set_value()
+            done_moves._create_account_move()
+        return moves
+
     def action_adjust_valuation(self):
         if len(self) != 1:
             raise UserError(_("You can only adjust valuation for one move at a time."))

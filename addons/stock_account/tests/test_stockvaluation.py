@@ -2827,6 +2827,24 @@ class TestStockValuation(TestStockValuationCommon):
             ]
         )
 
+    def test_scrap_valuation_from_done_picking(self):
+        """A scrap from a done picking must still post its valuation entry (real_time)."""
+        product = self.product_standard_auto
+        accounts_data = product.product_tmpl_id.get_product_accounts()
+        receipt = self._make_in_move(product, 10, create_picking=True).picking_id
+
+        scrap_form = Form(self.env['stock.scrap'].with_context(default_picking_id=receipt.id))
+        scrap_form.product_id = product
+        scrap_form.scrap_qty = 2
+        scrap = scrap_form.save()
+        scrap.scrap_location_id.valuation_account_id = self.account_stock_variation
+        scrap.action_validate()
+
+        self.assertRecordValues(scrap.move_ids.account_move_id.line_ids, [
+            {'account_id': accounts_data['stock_valuation'].id, 'debit': 0.0, 'credit': 20.0},
+            {'account_id': self.account_stock_variation.id, 'debit': 20.0, 'credit': 0.0},
+        ])
+
     def test_positive_stock_adjustment_valuation(self):
         product = self.product_standard_auto
         accounts_data = product.product_tmpl_id.get_product_accounts()
