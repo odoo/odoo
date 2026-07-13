@@ -30,7 +30,15 @@ export class DocumentSelector extends FileSelector {
 
     get attachmentsDomain() {
         const domain = super.attachmentsDomain;
-        domain.push(['mimetype', 'not in', IMAGE_MIMETYPES]);
+        domain.push(
+            ['mimetype', 'not in', IMAGE_MIMETYPES],
+            // Fonts are not documents, neither are their CSS font face
+            // declarations.
+            '!',
+            ['mimetype', '=like', 'font/%'],
+            ['description', 'not like', 'CSS font face for'],
+            ['name', '!=', 'googleFontMetadata']
+        );
         // The assets should not be part of the documents.
         // All assets begin with '/web/assets/', see _get_asset_template_url().
         domain.unshift('&', '|', ['url', '=', null], '!', ['url', '=like', '/web/assets/%']);
