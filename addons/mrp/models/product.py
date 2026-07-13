@@ -228,6 +228,14 @@ class ProductProduct(models.Model):
         This override is used to get the correct quantities of products
         with 'phantom' as BoM type.
         """
+        # Portal/public users may read shop stock fields but have no ACL on mrp.bom,
+        # and kit qty also needs component stock (often unpublished). Compute under
+        # sudo - same idea as website_sale_mrp reading product.sudo().free_qty.
+        if not self.env.su and (self.env.user._is_portal() or self.env.user._is_public()):
+            return self.sudo()._compute_quantities_dict(
+                lot_id, owner_id, package_id, from_date=from_date, to_date=to_date,
+            )
+
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
         kits = self.filtered(lambda p: bom_kits.get(p))
         regular_products = self - kits
