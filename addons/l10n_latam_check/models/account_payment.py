@@ -178,21 +178,27 @@ class AccountPayment(models.Model):
         # if only one check we don't create the split line, we add same data on liquidity line ?
 
         if self.payment_method_code == 'own_checks' and self.payment_type == 'outbound' and len(self.l10n_latam_new_check_ids) >= 1 and check_ids:
-            liquidity_balance_total = 0.0
+            company_currency = self.company_id.currency_id
+            amount_currency_total = 0.0
+            balance_total = 0.0
             line_vals = []
             for check in check_ids:
                 if check == self.l10n_latam_new_check_ids[-1]:
-                    liquidity_balance = self.currency_id.round(abs(default_values['balance']) - liquidity_balance_total)
+                    # last check absorbs rounding: close each column against its own total
+                    liquidity_amount_currency = self.currency_id.round(abs(default_values['amount_currency']) - amount_currency_total)
+                    liquidity_balance = company_currency.round(abs(default_values['balance']) - balance_total)
                 else:
-                    liquidity_balance = self.currency_id.round(check.amount)
-                    liquidity_balance_total += liquidity_balance
+                    # check.amount is expressed in the payment currency (check.currency_id)
+                    liquidity_amount_currency = self.currency_id.round(check.amount)
+                    liquidity_balance = self.currency_id._convert(
+                        liquidity_amount_currency,
+                        company_currency,
+                        self.company_id,
+                        self.date
+                    )
+                    amount_currency_total += liquidity_amount_currency
+                    balance_total += liquidity_balance
 
-                liquidity_amount_currency = self.company_id.currency_id._convert(
-                    liquidity_balance,
-                    self.currency_id,
-                    self.company_id,
-                    self.date
-                )
                 line_vals.append({
                     'name': _(
                         'Check %(check_number)s - %(suffix)s',
