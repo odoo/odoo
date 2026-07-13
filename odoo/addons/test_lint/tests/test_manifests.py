@@ -1,12 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+import io
 import logging
+import tokenize
 from os.path import join as opj
 from pathlib import Path
 
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.tests import HttpCase, tagged
-from odoo.tools.misc import file_path
+from odoo.tools.misc import file_open, file_path
 
 from .common import LintCase
 
@@ -70,6 +73,140 @@ class ManifestLinter(LintCase):
                 self._test_manifest_keys(manifest)
                 self._test_manifest_values(manifest)
                 self._test_data_files(manifest)
+
+    def test_manifest_depends(self):
+        """Check that the dependency declarations are minimal:
+
+        - a declared dependency already implied by another declared dependency
+          is redundant: remove it, or mark it as deliberately explicit (a
+          direct use) with a comment (``# ...``) on its line in the manifest;
+        - an auto_install trigger element implied by another one is vacuous,
+          and one that can be replaced by an equivalent declared dependency
+          hides a removable dependency. The same comment convention on the
+          ``'auto_install'`` list applies.
+        """
+        manifests = {m.name: m for m in Manifest.all_addon_manifests()}
+        depends = {name: [d for d in manifest['depends'] if d in manifests]
+                   for name, manifest in manifests.items()}
+
+        closures: dict[str, set] = {}
+
+        def closure(module: str) -> set:
+            stack, opened = [module], set()
+            while stack:
+                name = stack[-1]
+                if name in closures:
+                    stack.pop()
+                    continue
+                if name in opened:
+                    # a dependency cycle leaves some closures unresolved;
+                    # under-approximating keeps the check sound
+                    closures[name] = set(depends[name]).union(
+                        *(closures.get(dep, set()) for dep in depends[name]))
+                    stack.pop()
+                    continue
+                opened.add(name)
+                stack.extend(dep for dep in depends[name]
+                             if dep not in closures and dep not in opened)
+            return closures[module]
+
+        def auto_trigger(name: str) -> set | None:
+            auto_install = manifests[name]['auto_install']  # normalized: set or False
+            if auto_install is False:
+                return None
+            return {dep for dep in auto_install if dep in manifests} or None
+
+        def commented_elements(name: str, manifest_key: str) -> set:
+            """elements of a manifest list whose line (or the list's opening
+            line) has a '# ...' comment: deliberately explicit, exempt"""
+            try:
+                with file_open(opj(manifests[name].path, '__manifest__.py')) as manifest_file:
+                    source = manifest_file.read()
+                tree = ast.parse(source)
+            except (OSError, SyntaxError, ValueError):
+                return set()
+            node = None
+            for statement in tree.body:
+                if isinstance(statement, (ast.Expr, ast.Assign)) \
+                        and isinstance(statement.value, ast.Dict):
+                    for key, value in zip(statement.value.keys, statement.value.values):
+                        if isinstance(key, ast.Constant) and key.value == manifest_key \
+                                and isinstance(value, ast.List):
+                            node = value
+            if node is None:
+                return set()
+            comment_lines = set()
+            for token in tokenize.generate_tokens(io.StringIO(source).readline):
+                if token.type == tokenize.COMMENT \
+                        and node.lineno <= token.start[0] <= node.end_lineno:
+                    comment_lines.add(token.start[0])
+            element_lines = {element.value: element.lineno
+                             for element in node.elts if isinstance(element, ast.Constant)}
+            if node.lineno in comment_lines:
+                return set(element_lines)
+            return {element for element, line in element_lines.items()
+                    if line in comment_lines}
+
+        for name in sorted(manifests):
+            deps = depends[name]
+            if not deps or not manifests[name]['installable']:
+                continue
+            errors = []
+            auto_install = manifests[name]['auto_install'] or set()
+            exempt = None  # lazy: most modules need no manifest re-read
+            for dep in deps:
+                if dep in auto_install:
+                    continue  # removing it would change the auto_install trigger
+                implier = next((other for other in deps
+                                if other != dep and dep in closure(other)), None)
+                if implier is None:
+                    continue
+                if exempt is None:
+                    exempt = commented_elements(name, 'depends')
+                if dep not in exempt:
+                    errors.append(
+                        f"dependency {dep!r} is redundant, already implied by"
+                        f" {implier!r}; remove it, or comment (# ...) its line"
+                        " in the manifest to keep it explicit")
+            # improvable auto_install trigger (explicit list only: with True
+            # the trigger simply follows the dependencies, and a list equal
+            # to all of them is indistinguishable after normalization)
+            if auto_install and auto_install != set(manifests[name]['depends']) \
+                    and auto_install <= set(deps):
+                trigger_closure = set()
+                for trigger_element in auto_install:
+                    trigger_closure |= {trigger_element} | closure(trigger_element)
+                exempt_triggers = commented_elements(name, 'auto_install')
+                for trigger_element in sorted(auto_install - exempt_triggers):
+                    implied = next((other for other in auto_install
+                                    if other != trigger_element
+                                    and trigger_element in closure(other)), None)
+                    if implied is not None:
+                        errors.append(
+                            f"auto_install trigger {trigger_element!r} is"
+                            f" redundant, already implied by trigger {implied!r}")
+                        continue
+                    glue = next(
+                        (g for g in deps
+                         if g not in auto_install and g != trigger_element
+                         and manifests[g]['installable']
+                         and not manifests[g]['countries']
+                         and (glue_trigger := auto_trigger(g)) is not None
+                         and trigger_element in closure(g)
+                         and glue_trigger <= trigger_closure
+                         and not glue_trigger <= {trigger_element} | closure(trigger_element)),
+                        None)
+                    if glue is not None:
+                        errors.append(
+                            f"auto_install trigger {trigger_element!r} can be"
+                            f" replaced by the declared dependency {glue!r},"
+                            " which is always auto-installed alongside the rest"
+                            f" of the trigger; {trigger_element!r} then becomes"
+                            " an implicit dependency")
+            if errors:
+                with self.subTest(module=name):
+                    self.fail(f"Improvable dependency declarations in module {name!r}:\n"
+                              + "\n".join(f"- {error}" for error in errors))
 
     def _test_manifest_keys(self, manifest_data: Manifest):
         manifest_keys = manifest_data._Manifest__manifest_content.keys()
