@@ -31,6 +31,6 @@ export class TimeOffDashboardCalendarRenderer extends TimeOffCalendarRenderer {
         this.uiService = useService("ui");
     }
     get showDashboard() {
-        return !this.uiService.isSmall;
+        return true;
     }
 }
