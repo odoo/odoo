@@ -15,6 +15,7 @@ class AccountAnalyticDistributionModel(models.Model):
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
+    analytic_distribution = fields.Json(required=True)
     sequence = fields.Integer(default=10)
     partner_id = fields.Many2one(
         'res.partner',
@@ -46,8 +47,7 @@ class AccountAnalyticDistributionModel(models.Model):
               JOIN account_analytic_account account
                 ON ARRAY[account.id::text] && %s
              WHERE account.company_id IS NOT NULL AND model.id = ANY(%s)
-               AND (model.company_id IS NULL 
-                OR model.company_id != account.company_id)
+               AND (model.company_id IS NULL OR model.company_id != account.company_id)
             """,
             self._query_analytic_accounts('model'),
             self.ids,

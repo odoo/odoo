@@ -29,6 +29,9 @@ class TestAnalyticMixin(TransactionCase):
             and the "in" operator used to directly indicate a tuple/list of analytic account ids.
             This test verifies that the public method handles all these operators.
         """
+        # We use `account.analytic.distribution.model` since it is the only model inheriting `analytic.mixin` in this module, but
+        # `analytic_distribution` is generally not required on other models and we want to test what happens in those cases as well
+        self.env.cr.execute("ALTER TABLE account_analytic_distribution_model ALTER analytic_distribution DROP NOT NULL")
 
         self.adm_sales_admin_ad = self.env['account.analytic.distribution.model'].create({
             'analytic_distribution': {
