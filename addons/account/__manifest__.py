@@ -13,7 +13,7 @@ You could use this simplified accounting in case you work with an (external) acc
     """,
     'category': 'Accounting/Accounting',
     'website': 'https://www.odoo.com/app/invoicing',
-    'depends': ['base_setup', 'onboarding', 'product', 'analytic', 'portal', 'digest'],
+    'depends': ['onboarding', 'product', 'analytic', 'digest'],
     'data': [
         'security/account_security.xml',
         'data/account_data.xml',

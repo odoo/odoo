@@ -8,7 +8,6 @@ Allows users to send documents by post
     'version': '0.4',
     'depends': [
         'iap_mail',
-        'mail'
     ],
     'data': [
         'data/iap_service_data.xml',

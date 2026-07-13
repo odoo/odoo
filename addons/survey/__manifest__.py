@@ -16,10 +16,6 @@ sent mails with personal token for the invitation of the survey.
     'summary': 'Send your surveys or share them live.',
     'website': 'https://www.odoo.com/app/surveys',
     'depends': [
-        'auth_signup',
-        'http_routing',
-        'mail',
-        'web_tour',
         'gamification',
         'digest',
     ],

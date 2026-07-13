@@ -2,7 +2,7 @@
     "name": "POS Self Order",
     "summary": "Addon for the POS App that allows customers to view the menu on their smartphone.",
     "category": "Sales/Point Of Sale",
-    "depends": ["pos_restaurant", "http_routing", "link_tracker", "google_address_autocomplete", "base_geolocalize"],
+    "depends": ["pos_restaurant", "link_tracker", "base_geolocalize"],
     "auto_install": ["pos_restaurant"],
     "data": [
         "data/mail_template_data.xml",

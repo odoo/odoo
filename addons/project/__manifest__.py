@@ -9,12 +9,7 @@
     'summary': 'Manage tasks and collaborate on projects',
     'depends': [
         'analytic',
-        'base_setup',
-        'mail',
         'portal_rating',
-        'resource',
-        'web',
-        'web_tour',
         'digest',
     ],
     'data': [

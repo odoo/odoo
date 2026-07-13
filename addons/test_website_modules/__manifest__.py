@@ -9,13 +9,11 @@ It allows to test website business code when another website module is
 installed.""",
     'depends': [
         'theme_default',
-        'website',
         'website_blog',
         'website_event_sale',
         'website_slides',
         'website_livechat',
         'website_crm_iap_reveal',
-        'website_sale',
     ],
     'assets': {
         'web.assets_tests': [

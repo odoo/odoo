@@ -11,8 +11,6 @@
         'static/src/img/default_image.png',
     ],
     'depends': [
-        'auth_signup',
-        'base_setup',
         'digest',
         'phone_validation',
         'resource_mail',

@@ -9,7 +9,7 @@ This addon provides an extensible, maintainable editor.
 
     'author': 'Odoo S.A.',
     'category': 'Hidden',
-    'depends': ['base', 'bus', 'web'],
+    'depends': ['bus'],
     'data': [
         'security/ir.access.csv',
     ],

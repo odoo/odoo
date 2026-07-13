@@ -4,7 +4,7 @@
     "name": "Coupons & Loyalty",
     "summary": "Use discounts, gift cards, eWallets and loyalty programs in your sales channels",
     "category": "Sales",
-    "depends": ["product", "portal", "account"],
+    "depends": ["account"],
     "data": [
         "report/loyalty_report_templates.xml",
         "report/loyalty_report.xml",

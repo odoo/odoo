@@ -33,7 +33,6 @@ print the amount in words (special Chinese characters for numbers)
 correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
     """,
     'depends': [
-        'base',
         'account',
     ],
     'auto_install': ['account'],

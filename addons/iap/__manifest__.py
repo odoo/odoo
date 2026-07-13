@@ -9,8 +9,7 @@
 This module provides standard tools (account model, context manager and helpers)
 to support In-App Purchase inside Odoo. """,
     'depends': [
-        'web',
-        'base_setup'
+        'base_setup',
     ],
     'data': [
         'data/services.xml',

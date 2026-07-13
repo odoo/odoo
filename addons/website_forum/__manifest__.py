@@ -12,7 +12,6 @@ Ask questions, get answers, no distractions
         """,
     'website': 'https://www.odoo.com/app/forum',
     'depends': [
-        'auth_signup',
         'website_mail',
         'website_profile',
     ],

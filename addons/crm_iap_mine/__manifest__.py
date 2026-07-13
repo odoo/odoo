@@ -7,7 +7,6 @@
     'version': '1.2',
     'depends': [
         'iap_crm',
-        'iap_mail',
     ],
     'data': [
         'data/crm.iap.lead.industry.division.csv',

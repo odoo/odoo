@@ -6,7 +6,6 @@
     'category': "Hidden",
     'depends': [
         'event_sale',
-        'sale_management',
         'sale_product_matrix',
     ],
     'assets': {

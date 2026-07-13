@@ -39,8 +39,6 @@ Master Data:
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/ecuador.html',
     'license': 'LGPL-3',
     'depends': [
-        'base',
-        'account_debit_note',
         'l10n_latam_invoice_document',
         'l10n_latam_base',
         'account',

@@ -3,7 +3,7 @@
     'name': 'Test HTTP',
     'category': 'Hidden/Tests',
     'description': """A module to test HTTP""",
-    'depends': ['web', 'web_tour', 'mail', 'rpc'],
+    'depends': ['mail', 'rpc'],
     'data': [
         'data.xml',
         'views.xml',

@@ -70,7 +70,7 @@ Help your customers with this chat, and analyse their feedback.
         "demo/im_livechat_channel/im_livechat_support_bot_session_6.xml",
         "demo/im_livechat_channel/im_livechat_support_bot_session_7.xml",
     ],
-    'depends': ["mail", "digest", "utm", "phone_validation"],
+    'depends': ["digest", "utm", "phone_validation"],
     'application': True,
     'assets': {
         'web.assets_frontend': [

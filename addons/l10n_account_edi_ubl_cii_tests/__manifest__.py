@@ -16,7 +16,6 @@ We also test that generating xml from odoo with given parameters gives exactly t
 valid ones.
     """,
     'depends': [
-        'account_edi_ubl_cii',
         'l10n_fr_account',
         'l10n_be',
         'l10n_de',

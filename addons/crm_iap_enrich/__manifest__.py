@@ -7,7 +7,6 @@
     'version': '1.1',
     'depends': [
         'iap_crm',
-        'iap_mail',
     ],
     'data': [
         'data/ir_cron.xml',

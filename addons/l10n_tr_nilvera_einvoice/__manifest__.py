@@ -12,7 +12,7 @@ Features include:
 - Configuration of withholding reasons and exemption reasons
 - Addition of Tax Offices.
     """,
-    'depends': ['l10n_tr_nilvera', 'account_edi_ubl_cii', 'contacts'],
+    'depends': ['l10n_tr_nilvera', 'account_edi_ubl_cii'],
     'data': [
         'data/cron.xml',
         'data/res_partner_category_data.xml',

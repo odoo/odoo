@@ -6,7 +6,7 @@
 This module will test the main workflow of Odoo.
 It will install some main apps and will try to execute the most important actions.
 """,
-    'depends': ['web_tour', 'crm', 'sale_timesheet', 'purchase_stock', 'mrp', 'account'],
+    'depends': ['crm', 'sale_timesheet', 'purchase_stock', 'mrp'],
     'post_init_hook': '_auto_install_enterprise_dependencies',
     'data': ['ir.access.csv'],
     'assets': {

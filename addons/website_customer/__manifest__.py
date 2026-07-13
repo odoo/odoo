@@ -9,8 +9,6 @@ Publish your customers as business references on your website to attract new pot
     """,
     'depends': [
         'website_crm_partner_assign',
-        'website_partner',
-        'website_google_map',
     ],
     'demo': [
         'data/res_partner_demo.xml',

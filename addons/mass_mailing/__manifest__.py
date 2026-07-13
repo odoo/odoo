@@ -9,12 +9,9 @@
     'category': 'Marketing/Email Marketing',
     'depends': [
         'contacts',
-        'mail',
         'html_builder',
-        'utm',
         'link_tracker',
         'social_media',
-        'web_tour',
         'digest',
     ],
     'data': [
