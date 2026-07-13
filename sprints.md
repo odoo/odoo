@@ -5,7 +5,7 @@ title: Sprints del Proyecto
 
 # Sprints del Proyecto
 
-[Volver al portal](index.md)
+[Volver al portal](index.html)
 
 Esta pagina resume el avance Scrum del proyecto desde la planificacion inicial hasta el cierre profesional del Sprint 4. La vista distingue issues creadas/terminadas del repositorio y asignaciones aceptadas o recibidas por los integrantes en cada sprint.
 

@@ -5,174 +5,7 @@ title: Dashboard de Evidencias
 
 # Dashboard de Evidencias
 
-[Volver al portal](index.md)
-
-<style>
-.dashboard-note {
-    margin: 14px 0 18px;
-    color: #6c757d;
-    max-width: 980px;
-}
-.quick-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 18px 0 24px;
-}
-.quick-nav a {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 7px 10px;
-    text-decoration: none;
-    background: #ffffff;
-    font-size: 14px;
-}
-.kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-    margin: 16px 0 20px;
-}
-.metric-card {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    background: #ffffff;
-    padding: 13px;
-}
-.metric-card strong {
-    display: block;
-    color: #714B67;
-    font-size: 28px;
-    line-height: 1.1;
-}
-.metric-card span {
-    display: block;
-    color: #6c757d;
-    font-size: 13px;
-    margin-top: 5px;
-}
-.timeline {
-    border-top: 1px solid #dee2e6;
-    border-bottom: 1px solid #dee2e6;
-    padding: 16px 0;
-    margin: 20px 0 28px;
-}
-.chart-row {
-    display: grid;
-    grid-template-columns: minmax(120px, 170px) 1fr 54px;
-    gap: 10px;
-    align-items: center;
-    margin: 9px 0;
-    font-size: 14px;
-}
-.chart-track {
-    height: 18px;
-    border-radius: 4px;
-    overflow: hidden;
-    background: #dee2e6;
-}
-.chart-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #714B67, #017e84);
-}
-.chart-fill.scrum {
-    background: #714B67;
-}
-.chart-fill.producto {
-    background: #017e84;
-}
-.chart-fill.qa {
-    background: #71639e;
-}
-.chart-fill.devops {
-    background: #ffac00;
-}
-.chart-fill.docs {
-    background: #8f8f8f;
-}
-.sprint-section {
-    border-top: 2px solid #dee2e6;
-    padding-top: 22px;
-    margin-top: 34px;
-}
-.sprint-header {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 12px;
-    align-items: start;
-}
-.sprint-meta {
-    color: #6c757d;
-    margin: 4px 0 0;
-}
-.status-pill {
-    display: inline-block;
-    border-radius: 999px;
-    padding: 5px 10px;
-    background: #e6f2f3;
-    color: #017e84;
-    font-size: 12px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-.dashboard-columns {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    margin: 18px 0;
-}
-.chart-panel {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 14px;
-    background: #f8f9fa;
-}
-.chart-panel h3 {
-    margin: 0 0 4px;
-    font-size: 17px;
-}
-.chart-desc {
-    color: #6c757d;
-    font-size: 12px;
-    margin: 0 0 10px;
-}
-.role-list {
-    display: grid;
-    gap: 8px;
-    margin: 14px 0;
-}
-.role-item {
-    border-left: 4px solid #714B67;
-    padding: 6px 10px;
-    background: #f8f9fa;
-}
-.role-item strong {
-    display: block;
-}
-.evidence-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin: 14px 0;
-}
-.evidence-links a {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 6px 9px;
-    text-decoration: none;
-    background: #ffffff;
-    font-size: 13px;
-}
-@media (max-width: 680px) {
-    .sprint-header {
-        grid-template-columns: 1fr;
-    }
-    .chart-row {
-        grid-template-columns: 92px 1fr 44px;
-        font-size: 13px;
-    }
-}
-</style>
+[Volver al portal](index.html)
 
 <p class="dashboard-note">
 Esta pagina organiza la evidencia del proyecto por sprint. Cada bloque muestra objetivo, lider, issues creadas, asignaciones aceptadas/recibidas por integrante, issues terminadas, rol de cada integrante y graficos de lectura rapida.
@@ -259,8 +92,8 @@ Esta pagina organiza la evidencia del proyecto por sprint. Cada bloque muestra o
   </div>
 
   <div class="evidence-links">
-    <a href="cronograma.md">Cronograma</a>
-    <a href="sprints.md">Resumen de sprints</a>
+    <a href="cronograma.html">Cronograma</a>
+    <a href="sprints.html">Resumen de sprints</a>
     <a href="https://github.com/orgs/odooIPS-team/projects/1">Project Kanban</a>
   </div>
 </section>
@@ -316,8 +149,8 @@ Esta pagina organiza la evidencia del proyecto por sprint. Cada bloque muestra o
   </div>
 
   <div class="evidence-links">
-    <a href="sprint1.md">Sprint 1</a>
-    <a href="ArquitecturaModuloVnetas.md">Arquitectura Ventas</a>
+    <a href="sprint1.html">Sprint 1</a>
+    <a href="ArquitecturaModuloVnetas.html">Arquitectura Ventas</a>
     <a href="docker-config/docker-compose.yml">Docker Compose</a>
     <a href="https://github.com/odooIPS-team/odooIPS/actions">Actions</a>
   </div>
@@ -376,8 +209,8 @@ Esta pagina organiza la evidencia del proyecto por sprint. Cada bloque muestra o
   </div>
 
   <div class="evidence-links">
-    <a href="sprint2.md">Sprint 2</a>
-    <a href="REPORTE_VERIFICACION.md">Verificacion tecnica</a>
+    <a href="sprint2.html">Sprint 2</a>
+    <a href="REPORTE_VERIFICACION.html">Verificacion tecnica</a>
     <a href="https://github.com/odooIPS-team/odooIPS/issues?q=is%3Aissue%20milestone%3A%22Hito%202%20-%20Sprint%202%22">Issues Sprint 2</a>
   </div>
 </section>
@@ -435,7 +268,7 @@ Esta pagina organiza la evidencia del proyecto por sprint. Cada bloque muestra o
   <div class="evidence-links">
     <a href="https://github.com/odooIPS-team/odooIPS/issues?q=is%3Aissue%20milestone%3A%22Sprint%203%20-Hito%203%22">Issues Sprint 3</a>
     <a href="https://github.com/odooIPS-team/odooIPS/actions">GitHub Actions</a>
-    <a href="burndown.md">Burndown</a>
+    <a href="burndown.html">Burndown</a>
   </div>
 </section>
 
@@ -497,7 +330,7 @@ Esta pagina organiza la evidencia del proyecto por sprint. Cada bloque muestra o
     <a href="https://github.com/odooIPS-team/odooIPS/issues/66">Issue #66 - QA</a>
     <a href="https://github.com/odooIPS-team/odooIPS/issues/68">Issue #68 - DevOps</a>
     <a href="https://github.com/odooIPS-team/odooIPS/issues/33">Issue #33 - PR final</a>
-    <a href="defensa.md">Defensa ejecutiva</a>
+    <a href="defensa.html">Defensa ejecutiva</a>
   </div>
 </section>
 

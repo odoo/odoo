@@ -1,3 +1,10 @@
+---
+layout: default
+title: Reporte de Verificacion Tecnica
+---
+
+[Volver al portal](index.html)
+
 # Reporte de Verificación Técnica - Proyecto Odoo 19.0 Sprint 0
 
 ## 1. Introducción

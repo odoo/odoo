@@ -3,13 +3,6 @@ layout: default
 title: Cronograma Maestro
 ---
 
-<style>
-table th {
-    background-color: #020d1a !important;
-    color: white !important;
-}
-</style>
-
 # Cronograma Maestro del Proyecto
 
 ## Proyecto: Scrum y DevOps aplicado a un producto software open source
@@ -29,4 +22,4 @@ El presente cronograma maestro organiza el desarrollo del proyecto final del cur
 | Sprint 4: Cierre, documentación final y presentación | 27 junio - 13 julio | 100%            | Realizar Sprint Review final, retrospectiva general, cierre del Product Backlog y consolidación de evidencias del proceso Scrum.                                    | Validar despliegue CI/CD, publicar documentación final, preparar informe, elaborar artículo IEEE y dejar el repositorio organizado.                                                         | Producto final mejorado, despliegue automatizado, documentación técnica, informe final, artículo IEEE y presentación del proyecto. |
 | Hito 3                                               | **13 julio**        | **100%**        | Cierre del proceso Scrum.                                                                                                                                           | Validación final del flujo DevOps.                                                                                                                                                          | Entrega final: producto con mejoras, CI/CD automatizado, documentación completa, informe y artículo IEEE.                          |
 
-[Volver al plan de proyecto](index.md)
+[Volver al plan de proyecto](index.html)

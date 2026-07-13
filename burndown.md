@@ -5,122 +5,7 @@ title: Burndown y Avance Scrum
 
 # Burndown y Avance Scrum
 
-[Volver al portal](index.md)
-
-<style>
-.page-note {
-    max-width: 980px;
-    color: #6c757d;
-    margin: 12px 0 20px;
-}
-.quick-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 18px 0 24px;
-}
-.quick-nav a {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 7px 10px;
-    text-decoration: none;
-    background: #ffffff;
-    font-size: 14px;
-}
-.summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
-    margin: 18px 0;
-}
-.summary-card {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 14px;
-    background: #ffffff;
-}
-.summary-card strong {
-    display: block;
-    color: #714B67;
-    font-size: 28px;
-    line-height: 1.1;
-}
-.summary-card span {
-    display: block;
-    color: #6c757d;
-    font-size: 13px;
-    margin-top: 4px;
-}
-.chart-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 16px;
-    margin: 18px 0;
-}
-.chart-panel {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 16px;
-    background: #f8f9fa;
-}
-.chart-panel h2,
-.chart-panel h3 {
-    margin: 0 0 4px;
-}
-.chart-desc {
-    color: #6c757d;
-    font-size: 12px;
-    margin: 0 0 10px;
-}
-.bar-row {
-    display: grid;
-    grid-template-columns: 92px 1fr 62px;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0;
-    font-size: 14px;
-}
-.bar-track {
-    height: 18px;
-    border-radius: 4px;
-    background: #dee2e6;
-    overflow: hidden;
-}
-.bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #714B67, #017e84);
-}
-.bar-fill.pending {
-    background: #dc3545;
-}
-.bar-fill.scope {
-    background: #71639e;
-}
-.milestone-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px;
-    margin: 18px 0;
-}
-.milestone-card {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 14px;
-    background: #ffffff;
-}
-.milestone-card h3 {
-    margin-top: 0;
-}
-.status-pill {
-    display: inline-block;
-    padding: 4px 9px;
-    border-radius: 999px;
-    background: #e6f2f3;
-    color: #017e84;
-    font-size: 12px;
-    font-weight: 700;
-}
-</style>
+[Volver al portal](index.html)
 
 <p class="page-note">
 El burndown muestra como se redujo el trabajo pendiente del proyecto completo desde Sprint 0 hasta Sprint 4. No mide solo el portal publico: resume planificacion, analisis, implementacion, QA, DevOps, documentacion y cierre.
@@ -219,4 +104,4 @@ El burndown muestra como se redujo el trabajo pendiente del proyecto completo de
 | Para que sirve este burndown | Para demostrar que el trabajo pendiente bajo sprint por sprint hasta llegar a cero. |
 | Que muestra sobre Scrum | Que hubo planificacion, seguimiento, distribucion de trabajo y cierre por sprint. |
 | Que muestra sobre el proyecto | Que el equipo avanzo desde analisis hasta implementacion, QA, DevOps y documentacion final. |
-| Donde se verifican las evidencias | En [Sprints](sprints.md), [Dashboard de evidencias](evidencias.md), [Issues](https://github.com/odooIPS-team/odooIPS/issues), [Project](https://github.com/orgs/odooIPS-team/projects/1) y [Actions](https://github.com/odooIPS-team/odooIPS/actions). |
+| Donde se verifican las evidencias | En [Sprints](sprints.html), [Dashboard de evidencias](evidencias.html), [Issues](https://github.com/odooIPS-team/odooIPS/issues), [Project](https://github.com/orgs/odooIPS-team/projects/1) y [Actions](https://github.com/odooIPS-team/odooIPS/actions). |

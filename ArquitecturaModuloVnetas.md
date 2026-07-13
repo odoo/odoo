@@ -1,3 +1,10 @@
+---
+layout: default
+title: Arquitectura del Modulo de Ventas
+---
+
+[Volver al portal](index.html)
+
 # Módulo Seleccionado: Ventas (Odoo)
 
 El proyecto trabajará exclusivamente con el módulo de **Ventas (sale)** de Odoo. Este componente es esencial para gestionar el ciclo comercial completo y la interacción con los clientes.

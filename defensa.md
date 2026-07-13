@@ -5,90 +5,7 @@ title: Defensa Ejecutiva
 
 # Defensa Ejecutiva del Proyecto
 
-[Volver al portal](index.md)
-
-<style>
-.page-note {
-    max-width: 980px;
-    color: #6c757d;
-    margin: 12px 0 20px;
-}
-.quick-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 18px 0 24px;
-}
-.quick-nav a {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 7px 10px;
-    text-decoration: none;
-    background: #ffffff;
-    font-size: 14px;
-}
-.kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: 12px;
-    margin: 18px 0;
-}
-.kpi-card {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 14px;
-    background: #ffffff;
-}
-.kpi-card strong {
-    display: block;
-    color: #714B67;
-    font-size: 28px;
-    line-height: 1.1;
-}
-.kpi-card span {
-    display: block;
-    color: #6c757d;
-    font-size: 13px;
-    margin-top: 4px;
-}
-.section-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 14px;
-    margin: 18px 0;
-}
-.info-card {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 15px;
-    background: #ffffff;
-}
-.info-card h3 {
-    margin-top: 0;
-}
-.flow {
-    display: grid;
-    gap: 10px;
-    margin: 18px 0;
-}
-.flow-step {
-    border-left: 4px solid #714B67;
-    padding: 9px 12px;
-    background: #f8f9fa;
-}
-.flow-step strong {
-    display: block;
-}
-.status-pill {
-    display: inline-block;
-    padding: 4px 9px;
-    border-radius: 999px;
-    background: #e6f2f3;
-    color: #017e84;
-    font-size: 12px;
-    font-weight: 700;
-}
-</style>
+[Volver al portal](index.html)
 
 <p class="page-note">
 Esta pagina funciona como guion para explicar el proyecto completo ante el docente: problema, solucion, incremento funcional, Scrum, DevOps, QA, evidencias y cierre.
@@ -166,9 +83,9 @@ En un proceso comercial, descuentos excesivos pueden afectar margenes, generar v
 |---|---|---|
 | Product Backlog | Issues creadas, priorizadas y asignadas | [GitHub Issues](https://github.com/odooIPS-team/odooIPS/issues) |
 | Kanban | Seguimiento en tablero de proyecto | [Project Kanban](https://github.com/orgs/odooIPS-team/projects/1) |
-| Sprints | Sprint 0 a Sprint 4 con objetivos y responsables | [Sprints](sprints.md) |
-| Burndown | Seguimiento de trabajo pendiente y completado | [Burndown](burndown.md) |
-| Evidencias | Dashboard por sprint y por responsable | [Dashboard de evidencias](evidencias.md) |
+| Sprints | Sprint 0 a Sprint 4 con objetivos y responsables | [Sprints](sprints.html) |
+| Burndown | Seguimiento de trabajo pendiente y completado | [Burndown](burndown.html) |
+| Evidencias | Dashboard por sprint y por responsable | [Dashboard de evidencias](evidencias.html) |
 
 <h2 id="devops">DevOps aplicado</h2>
 

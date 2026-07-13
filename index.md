@@ -3,116 +3,6 @@ layout: default
 title: Portal del Proyecto
 ---
 
-<style>
-:root {
-    --odoo-primary: #714B67;
-    --odoo-action: #017e84;
-    --odoo-community: #71639e;
-    --odoo-muted: #6c757d;
-    --odoo-border: #dee2e6;
-    --odoo-bg: #f8f9fa;
-}
-table th {
-    background-color: var(--odoo-primary) !important;
-    color: white !important;
-}
-.hero {
-    border: 1px solid var(--odoo-border);
-    border-radius: 6px;
-    padding: 20px;
-    margin: 16px 0;
-    background: var(--odoo-bg);
-}
-.hero p {
-    max-width: 960px;
-}
-.meta-line {
-    color: var(--odoo-muted);
-    margin-top: 10px;
-}
-.kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-    margin: 18px 0;
-}
-.kpi-card {
-    border: 1px solid var(--odoo-border);
-    border-radius: 6px;
-    padding: 14px;
-    background: #ffffff;
-}
-.kpi-card strong {
-    display: block;
-    color: var(--odoo-primary);
-    font-size: 28px;
-    line-height: 1.1;
-}
-.kpi-card span {
-    display: block;
-    color: var(--odoo-muted);
-    font-size: 13px;
-    margin-top: 4px;
-}
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 14px;
-    margin: 18px 0;
-}
-.nav-card,
-.info-card {
-    border: 1px solid var(--odoo-border);
-    border-radius: 6px;
-    padding: 15px;
-    background: #ffffff;
-}
-.nav-card h3,
-.info-card h3 {
-    margin-top: 0;
-}
-.nav-card a {
-    color: var(--odoo-action);
-    font-weight: 700;
-    text-decoration: none;
-}
-.feature-list {
-    display: grid;
-    gap: 8px;
-    margin: 16px 0;
-}
-.feature-item {
-    border-left: 4px solid var(--odoo-primary);
-    background: var(--odoo-bg);
-    padding: 9px 12px;
-}
-.feature-item strong {
-    display: block;
-}
-.team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-    margin: 18px 0;
-}
-.team-card {
-    border: 1px solid var(--odoo-border);
-    border-radius: 6px;
-    padding: 14px;
-    background: #ffffff;
-}
-.team-card strong {
-    display: block;
-    color: var(--odoo-primary);
-}
-.team-card span {
-    display: block;
-    color: var(--odoo-muted);
-    margin-top: 4px;
-    font-size: 13px;
-}
-</style>
-
 # Scrum y DevOps aplicado a Odoo ERP
 
 <div class="hero">
@@ -147,32 +37,32 @@ Este portal presenta el proyecto completo: objetivos, avance por sprint, evidenc
   <div class="nav-card">
     <h3>Sprints</h3>
     <p>Objetivos, lideres, tiempos, asignaciones y aportes desde Sprint 0 hasta Sprint 4.</p>
-    <a href="sprints.md">Ver sprints</a>
+    <a href="sprints.html">Ver sprints</a>
   </div>
   <div class="nav-card">
     <h3>Evidencias</h3>
     <p>Dashboard visual por sprint con issues, asignaciones, roles y enlaces de verificacion.</p>
-    <a href="evidencias.md">Ver evidencias</a>
+    <a href="evidencias.html">Ver evidencias</a>
   </div>
   <div class="nav-card">
     <h3>Burndown</h3>
     <p>Avance Scrum del proyecto completo y reduccion del trabajo pendiente por sprint.</p>
-    <a href="burndown.md">Ver burndown</a>
+    <a href="burndown.html">Ver burndown</a>
   </div>
   <div class="nav-card">
     <h3>Defensa</h3>
     <p>Guion ejecutivo para explicar problema, solucion, Scrum, DevOps y QA.</p>
-    <a href="defensa.md">Ver defensa</a>
+    <a href="defensa.html">Ver defensa</a>
   </div>
   <div class="nav-card">
     <h3>Arquitectura</h3>
     <p>Analisis tecnico del modulo de Ventas y estructura funcional revisada.</p>
-    <a href="ArquitecturaModuloVnetas.md">Ver arquitectura</a>
+    <a href="ArquitecturaModuloVnetas.html">Ver arquitectura</a>
   </div>
   <div class="nav-card">
     <h3>Verificacion</h3>
     <p>Reporte tecnico, pruebas y evidencias de validacion del comportamiento implementado.</p>
-    <a href="REPORTE_VERIFICACION.md">Ver verificacion</a>
+    <a href="REPORTE_VERIFICACION.html">Ver verificacion</a>
   </div>
 </div>
 
