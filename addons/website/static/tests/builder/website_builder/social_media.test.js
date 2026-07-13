@@ -146,7 +146,15 @@ test("reorder social medias", async () => {
     await click(":iframe h4");
 
     await contains("button[data-action-id='addSocialMediaLink']").click();
+<<<<<<< d8557b0eb1c8483b6be9b54b75c7c69a2afd1758
     await contains("tr:nth-child(9) input").fill("/first");
+||||||| 55af7ee8ccc550c51d715b1c3b55c7f6e90fdb3c
+    await contains("div[data-action-id='editSocialMediaLink'] input").fill("/first");
+=======
+    await contains("div[data-action-id='editSocialMediaLink'] input").edit(
+        "https://www.example.com/first"
+    );
+>>>>>>> 124f9ca09b17788819db58a5135456080bb9023a
     await contains("button[data-action-id='addSocialMediaLink']").click();
 
     expect("tr:nth-child(1) input").toHaveValue("https://fb.com/odoo");

@@ -15,12 +15,38 @@
                         </button>
                     </td>
                     <td width="100%">
+<<<<<<< d8557b0eb1c8483b6be9b54b75c7c69a2afd1758
                         <BuilderTextInput
+||||||| 55af7ee8ccc550c51d715b1c3b55c7f6e90fdb3c
+                        <BuilderTextInput
+                            t-if="item.media"
+                            action="'editRecordedSocialMediaLink'"
+                            actionParam="item.media"
+                            placeholder="`https://${item.media}.com/your-page`"
+                        />
+                        <BuilderTextInput
+                            t-else=""
+=======
+                        <BuilderUrlPicker
+                            t-if="item.media"
+                            action="'editRecordedSocialMediaLink'"
+                            actionParam="item.media"
+                            placeholder="`https://${item.media}.com/your-page`"
+                            previewButton="false"
+                        />
+                        <BuilderUrlPicker
+                            t-else=""
+>>>>>>> 124f9ca09b17788819db58a5135456080bb9023a
                             action="'editSocialMediaLink'"
                             attributeAction="'href'"
                             applyTo="`a:nth-of-type(${item.domPosition})`"
                             placeholder="'https://example.com/your-page'"
+<<<<<<< d8557b0eb1c8483b6be9b54b75c7c69a2afd1758
                             default="itemsLength === 1 ? '#' : ''"
+||||||| 55af7ee8ccc550c51d715b1c3b55c7f6e90fdb3c
+=======
+                            previewButton="false"
+>>>>>>> 124f9ca09b17788819db58a5135456080bb9023a
                         />
                     </td>
                     <td style="'min-width: 2.5em'">

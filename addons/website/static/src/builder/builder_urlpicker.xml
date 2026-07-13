@@ -28,7 +28,13 @@
                 inputClass="'o-hb-input-base o_builder_url_input'"
                 onChange.bind="this.onChange"
             />
+<<<<<<< d8557b0eb1c8483b6be9b54b75c7c69a2afd1758
             <button class="btn" title="Preview this URL in a new tab" t-on-click="this.openPreviewUrl">
+||||||| 55af7ee8ccc550c51d715b1c3b55c7f6e90fdb3c
+            <button class="btn" title="Preview this URL in a new tab" t-on-click="openPreviewUrl">
+=======
+            <button class="btn" title="Preview this URL in a new tab" t-if="this.props.previewButton" t-on-click="openPreviewUrl">
+>>>>>>> 124f9ca09b17788819db58a5135456080bb9023a
                 <i class="fa fa-fw fa-external-link"/>
             </button>
         </xpath>

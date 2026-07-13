@@ -214,6 +214,7 @@ export class SocialMediaOptionPlugin extends Plugin {
     }
 
     normalize(root) {
+<<<<<<< d8557b0eb1c8483b6be9b54b75c7c69a2afd1758
         // Add https:// if needed, to the links from dom
         for (const element of selectElements(root, ".s_social_media > a[href]")) {
             const value = element.attributes.href.value;
@@ -223,6 +224,26 @@ export class SocialMediaOptionPlugin extends Plugin {
             }
         }
 
+||||||| 55af7ee8ccc550c51d715b1c3b55c7f6e90fdb3c
+        // Add https:// if needed, to the links from db, and the links from dom
+        if (this.recordedSocialMediaAreEdited) {
+            for (const [name, value] of this.recordedSocialMedia.entries()) {
+                const newValue = this.addHttpsIfNeeded(value);
+                if (value !== newValue) {
+                    this.recordedSocialMedia.set(name, newValue);
+                }
+            }
+        }
+        for (const element of selectElements(root, ".s_social_media > a[href]")) {
+            const value = element.attributes.href.value;
+            const newHref = this.addHttpsIfNeeded(value);
+            if (value !== newHref) {
+                element.href = newHref;
+            }
+        }
+
+=======
+>>>>>>> 124f9ca09b17788819db58a5135456080bb9023a
         // ensure one '\n' between each element + before and after
         for (const element of selectElements(root, ".s_social_media > *, .s_share > *")) {
             if (element.nextSibling?.nodeType === Node.TEXT_NODE) {
