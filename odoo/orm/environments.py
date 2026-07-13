@@ -812,9 +812,7 @@ class Transaction:
 
     def _reset_registry_change(self):
         """ When the registry was invalidated, re-setup models. """
-        if not self._registry_invalidated:
-            return
-
+        assert not self.field_data, "Transaction must be cleared"
         env = self.default_env or next(iter(self.envs), None)
         if env is None:
             raise RuntimeError("resetting registry changes, but no cursor found!")
@@ -909,7 +907,9 @@ class Transaction:
         # get the registry and rebuild the stack of states
         new_registry = Registry(self.registry.db_name)
         if self.registry is new_registry:
-            self._reset_registry_change()
+            if self._registry_invalidated:
+                self.clear()  # clear existing data if any
+                self._reset_registry_change()
         else:
             self.registry = new_registry
             self._registry_invalidated = 0
@@ -1073,9 +1073,9 @@ class Transaction:
             name: CacheLayer(data)
             for name, data in parent_ormcaches.items()
         }
-        if self._registry_invalidated != registry_invalidated:
+        if self._registry_invalidated and self._registry_invalidated != registry_invalidated:
             self._reset_registry_change()
-            self._registry_invalidated = registry_invalidated
+        self._registry_invalidated = registry_invalidated
 
 
 class TransactionState(typing.NamedTuple):
