@@ -3,11 +3,18 @@
 
 import json
 import logging as logger
+import secrets
+from datetime import timedelta
 
 from odoo import api, fields, models
 from ..tools.jwt import generate_vapid_keys, InvalidVapidError
 
 _logger = logger.getLogger(__name__)
+
+# Access token lifetime: short-lived, stored in the service worker's IndexedDB.
+_ACCESS_TOKEN_LIFETIME = timedelta(hours=1)
+# Refresh token lifetime: long-lived, stored in an HttpOnly cookie by the browser.
+_REFRESH_TOKEN_LIFETIME = timedelta(days=30)
 
 
 class MailPushDevice(models.Model):
@@ -24,11 +31,57 @@ class MailPushDevice(models.Model):
                              "          keep the private key secret and use it for decrypting the payload\n"
                              "- auth: The auth value should be treated as a secret and not shared outside of Odoo"))
     expiration_time = fields.Datetime(string='Expiration Token Date')
+    token = fields.Char(
+        string='Access Token',
+        copy=False,
+        help="Short-lived access token (1 hour) stored in the service worker's IndexedDB. "
+             "Used to refresh the push subscription endpoint without requiring an active "
+             "login session.",
+    )
+    token_expiry = fields.Datetime(
+        string='Access Token Expiry',
+        copy=False,
+        help="Expiry datetime for the access token. After this the service worker must "
+             "use the refresh token to obtain a new access token.",
+    )
+    refresh_token = fields.Char(
+        string='Refresh Token',
+        copy=False,
+        groups='base.no_one',
+        help="Long-lived one-time-use token (30 days) stored in an HttpOnly cookie by the "
+             "browser. Exchanged for a new access + refresh token pair when the access token "
+             "expires, without requiring a full login session.",
+    )
+    refresh_token_expiry = fields.Datetime(
+        string='Refresh Token Expiry',
+        copy=False,
+        groups='base.no_one',
+    )
 
     _endpoint_unique = models.Constraint(
         'unique(endpoint)',
         'The endpoint must be unique !',
     )
+
+    def _issue_tokens(self):
+        """Issue a fresh access token (1 h) and refresh token (30 d).
+
+        Writes the new tokens and expiry dates to self. Returns the plain-text
+        values so the calling controller can forward them to the client.
+
+        :returns: {'access_token': str, 'refresh_token': str}
+        :rtype: dict
+        """
+        now = fields.Datetime.now()
+        access_token = secrets.token_urlsafe(32)
+        refresh_token_val = secrets.token_urlsafe(32)
+        self.write({
+            'token': access_token,
+            'token_expiry': now + _ACCESS_TOKEN_LIFETIME,
+            'refresh_token': refresh_token_val,
+            'refresh_token_expiry': now + _REFRESH_TOKEN_LIFETIME,
+        })
+        return {'access_token': access_token, 'refresh_token': refresh_token_val}
 
     @api.model
     def get_web_push_vapid_public_key(self):
@@ -65,12 +118,14 @@ class MailPushDevice(models.Model):
                     'partner_id': self.env.user.partner_id,
                 })
         else:
-            self.sudo().create([{
+            mail_push_device = self.sudo().create([{
                 'endpoint': endpoint,
                 'expiration_time': kw.get('expirationTime'),
                 'keys': json.dumps(browser_keys),
                 'partner_id': self.env.user.partner_id.id,
             }])
+        tokens = mail_push_device._issue_tokens()
+        return {'token': tokens['access_token'], 'refresh_token': tokens['refresh_token']}
 
     @api.model
     def unregister_devices(self, **kw):
@@ -82,6 +137,82 @@ class MailPushDevice(models.Model):
         ])
         if mail_push_device:
             mail_push_device.unlink()
+
+    @api.model
+    def refresh_subscription_by_token(self, token, endpoint, keys, vapid_public_key,
+                                      previous_endpoint=None, expiration_time=None):
+        """Update a push subscription without a user session.
+
+        Called by the service worker's pushsubscriptionchange handler via
+        POST /web/push/device/refresh. The device is looked up by its previous
+        endpoint (a non-secret URL) and the access token is verified using
+        secrets.compare_digest() to prevent timing side-channels.
+
+        On success the access token is rotated (new 1-hour credential) and the
+        new value is returned so the service worker can update its IndexedDB copy.
+
+        :param str token: access token from the service worker's IndexedDB
+        :param str endpoint: new push subscription endpoint URL
+        :param dict keys: new push subscription keys (p256dh, auth)
+        :param str vapid_public_key: server VAPID public key (cross-check)
+        :param str previous_endpoint: old endpoint used to locate the device record
+        :param expiration_time: optional new expiration timestamp
+        :returns: {'success': True, 'token': new_token},
+            {'success': False, 'reason': 'expired'} if the access token is expired,
+            or {'success': False} on any other failure
+        :rtype: dict
+        """
+        if not self._verify_vapid_public_key(vapid_public_key):
+            return {'success': False}
+        search_endpoint = previous_endpoint or endpoint
+        mail_push_device = self.sudo().search([('endpoint', '=', search_endpoint)], limit=1)
+        if not mail_push_device:
+            return {'success': False}
+        # Verify the token with a constant-time comparison to prevent timing attacks.
+        if not secrets.compare_digest(mail_push_device.token or '', token or ''):
+            return {'success': False}
+        # Only reveal 'expired' once the token identity has been confirmed.
+        if mail_push_device.token_expiry and mail_push_device.token_expiry < fields.Datetime.now():
+            return {'success': False, 'reason': 'expired'}
+        # Update subscription and rotate access token atomically.
+        new_access_token = secrets.token_urlsafe(32)
+        mail_push_device.write({
+            'endpoint': endpoint,
+            'keys': json.dumps(keys),
+            'expiration_time': expiration_time,
+            'token': new_access_token,
+            'token_expiry': fields.Datetime.now() + _ACCESS_TOKEN_LIFETIME,
+        })
+        return {'success': True, 'token': new_access_token}
+
+    @api.model
+    def _rotate_tokens(self, refresh_token, previous_endpoint=None):
+        """Issue a new access + refresh token pair in exchange for a valid refresh token.
+
+        Called by POST /web/push/device/token/rotate when the service worker's
+        access token has expired. The refresh token value is read from the HttpOnly
+        cookie by the controller and passed here.
+
+        The old refresh token is immediately invalidated (one-time use) and a new
+        pair is written atomically before the response is sent.
+
+        :param str refresh_token: current refresh token from the HttpOnly cookie
+        :param str previous_endpoint: current device endpoint for record lookup
+        :returns: {'access_token': str, 'refresh_token': str} or ``None`` on failure
+        :rtype: dict or None
+        """
+        if not refresh_token or not previous_endpoint:
+            return None
+        device = self.sudo().search([('endpoint', '=', previous_endpoint)], limit=1)
+        if not device or not device.refresh_token:
+            return None
+        # Constant-time comparison to prevent timing attacks on the refresh token.
+        if not secrets.compare_digest(device.refresh_token, refresh_token):
+            return None
+        if device.refresh_token_expiry and device.refresh_token_expiry < fields.Datetime.now():
+            return None
+        tokens = device._issue_tokens()
+        return {'access_token': tokens['access_token'], 'refresh_token': tokens['refresh_token']}
 
     def _verify_vapid_public_key(self, sw_public_key):
         ir_params_sudo = self.env['ir.config_parameter'].sudo()
