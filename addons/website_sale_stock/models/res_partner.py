@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 
 
 class ResPartner(models.Model):
@@ -11,6 +12,12 @@ class ResPartner(models.Model):
         help="The delivery method that generated this pickup point.",
         ondelete="cascade",
     )
+
+    def _get_delivery_address_domain(self):
+        """Override to exclude pickup point addresses from the delivery address list."""
+        return super()._get_delivery_address_domain() & Domain([
+            ("pickup_delivery_method_id", "=", False)
+        ])
 
     @api.model
     def _address_from_json(self, json_location_data, parent_id, pickup_delivery_method_id=False):
