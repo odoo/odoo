@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, proxy, props, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy, props, t, useEffect } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
@@ -27,25 +26,22 @@ export class ConfirmationPage extends Component {
                 }, 30000);
             }
         });
-        useLayoutEffect(
-            () => {
-                if (
-                    !this.confirmedOrder ||
-                    !this.confirmedOrder.uiState?.receiptReady ||
-                    typeof this.confirmedOrder.id !== "number"
-                ) {
-                    return;
-                }
+        useEffect(() => {
+            if (
+                !this.confirmedOrder ||
+                !this.confirmedOrder.uiState?.receiptReady ||
+                typeof this.confirmedOrder.id !== "number"
+            ) {
+                return;
+            }
 
-                const printReceipts = async () => {
-                    await this.printOrder();
-                    await this.printOrderChanges();
-                };
+            const printReceipts = async () => {
+                await this.printOrder();
+                await this.printOrderChanges();
+            };
 
-                printReceipts();
-            },
-            () => [this.confirmedOrder?.uiState?.receiptReady]
-        );
+            printReceipts();
+        });
         onWillUnmount(() => {
             clearTimeout(this.defaultTimeout);
         });
