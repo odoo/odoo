@@ -455,7 +455,10 @@ class Http(models.AbstractModel):
             if not request.env['website'].get_current_website().cookies_bar:
                 # Cookies bar is disabled on this website
                 return True
-            accepted_cookie_types = json_scriptsafe.loads(request.cookies.get('website_cookies_bar', '{}'))
+            try:
+                accepted_cookie_types = json_scriptsafe.loads(request.cookies.get('website_cookies_bar', '{}'))
+            except ValueError:
+                accepted_cookie_types = None
 
             # pre-16.0 compatibility, `website_cookies_bar` was `"true"`.
             # In that case we delete that cookie and let the user choose again.
