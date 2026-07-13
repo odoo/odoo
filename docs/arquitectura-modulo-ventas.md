@@ -1,4 +1,4 @@
-# Módulo Seleccionado: Ventas (Odoo)
+# Arquitectura del módulo de Ventas de Odoo
 
 El proyecto trabajará exclusivamente con el módulo de **Ventas (sale)** de Odoo. Este componente es esencial para gestionar el ciclo comercial completo y la interacción con los clientes.
 

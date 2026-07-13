@@ -1,4 +1,4 @@
-# Hito 2 - Sprint 2: Implementación Inicial e Integración CI/CD en Odoo
+# Informe del Sprint 2 — Implementación inicial e integración CI/CD en Odoo
 
 **Universidad Nacional de San Agustín de Arequipa**  
 Facultad de Ingeniería de Producción y Servicios  
@@ -281,4 +281,3 @@ La automatización del Smoke Test dinámico en GitHub Actions asegura un control
 - Apaza Anahua, R. A. (2026). *odooIPS* [Código fuente]. GitHub. [https://github.com/roydanpe/odooIPS](https://github.com/roydanpe/odooIPS)
 - Odoo S.A. (2026). *Odoo Source Code (Versión 19.0)* [Código fuente]. GitHub. [https://github.com/odoo/odoo](https://github.com/odoo/odoo)
 - Docker Inc. (2026). *Docker* [Software de computadora]. [https://www.docker.com/](https://www.docker.com/)
-

@@ -18,7 +18,7 @@ Arequipa - Perú, 2026
 
 ---
 
-# Informe de Sprint 1 — Mejoras al Módulo de Ventas de Odoo
+# Informe del Sprint 1 — Mejoras al módulo de Ventas de Odoo
 
 ## Resumen del Proyecto
 

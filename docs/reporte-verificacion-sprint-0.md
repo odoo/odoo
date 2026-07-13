@@ -1,4 +1,4 @@
-# Reporte de Verificación Técnica - Proyecto Odoo 19.0 Sprint 0
+# Reporte de verificación técnica — Sprint 0
 
 ## 1. Introducción
 El presente documento detalla la validación técnica del producto de software de código abierto Odoo en su versión 19.0. El objetivo es certificar que el repositorio seleccionado cumple con los criterios de complejidad, licencia e infraestructura necesarios para la implementación del proceso de desarrollo basado en Scrum y DevOps.

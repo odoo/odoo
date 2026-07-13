@@ -14,14 +14,14 @@ table th {
 # Plan de Proyecto: SCRUM y DevOps – Odoo (Módulo Ventas)
 
 ## 1. Objetivo del Proyecto
-Implementar un proceso de desarrollo de software que integre la metodología ágil **Scrum** con prácticas **DevOps** automatizadas sobre el proyecto de código abierto **Odoo ([Módulo de Ventas](ArquitecturaModuloVnetas.md))**. El propósito es que el equipo comprenda, analice y ejecute las fases del ciclo de vida del software mediante la refactorización o mejora de este producto.
+Implementar un proceso de desarrollo de software que integre la metodología ágil **Scrum** con prácticas **DevOps** automatizadas sobre el proyecto de código abierto **Odoo ([Módulo de Ventas](docs/arquitectura-modulo-ventas.md))**. El propósito es que el equipo comprenda, analice y ejecute las fases del ciclo de vida del software mediante la refactorización o mejora de este producto.
 
 ## 2. Información del Software Seleccionado
 * **Nombre del Producto:** Odoo ERP (Open Source).
 * **Repositorio:** [https://github.com/roydanpe/odooIPS](https://github.com/roydanpe/odooIPS)
 * **Dominio:** Sistema empresarial (ERP/CRM) aplicado al rubro comercial.
-* **Complejidad:** Mediana. Se trabajará con el [**Módulo de Ventas**](ArquitecturaModuloVnetas.md), el cual cuenta con más de 10,000 líneas de código (> 10 KLOC).
-* **Viabilidad Técnica y Legal:** [GNU Lesser General Public License, version 3 (LGPL-3)](REPORTE_VERIFICACION.md) (verificada para uso académico) e infraestructura DevOps adaptable, permitiendo la implementación de un entorno containerizado basado en [Docker Compose](REPORTE_VERIFICACION.md), facilitando la implementación del pipeline de automatización solicitado.
+* **Complejidad:** Mediana. Se trabajará con el [**Módulo de Ventas**](docs/arquitectura-modulo-ventas.md), el cual cuenta con más de 10,000 líneas de código (> 10 KLOC).
+* **Viabilidad Técnica y Legal:** [GNU Lesser General Public License, version 3 (LGPL-3)](docs/reporte-verificacion-sprint-0.md) (verificada para uso académico) e infraestructura DevOps adaptable, permitiendo la implementación de un entorno containerizado basado en [Docker Compose](docs/reporte-verificacion-sprint-0.md), facilitando la implementación del pipeline de automatización solicitado.
 
 ## 3. Equipo y Metodología de Trabajo
 El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equipo** será rotativo por cada Sprint para desarrollar habilidades de liderazgo y responsabilidad.
@@ -45,7 +45,7 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **Sivincha Machaca Saul Andre** | Cronograma Maestro | Planificación de los Sprints de 15 días alineados a los hitos del curso. |
 
 ### Sprint 1 
-### Roles y Responsabilidades ([ver en github page](sprint1.md)):
+### Roles y Responsabilidades ([ver informe](docs/sprints/informe-sprint-1.md)):
 
 | Integrante | Rol | Responsabilidades |
 |------------|-----|-------------------|
@@ -56,7 +56,7 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **Sencia Ale Bryan Daniel** | Integración DevOps y Evidencias | Configurar ramas de trabajo, apoyar en GitHub Actions, registrar commits, recopilar evidencias y colaborar en la documentación técnica del Sprint. |
 
 ### Sprint 2 
-### Roles y Responsabilidades ([ver en github page](sprint2.md)):
+### Roles y Responsabilidades ([ver informe](docs/sprints/informe-sprint-2.md)):
 
 | Integrante | Rol Sprint 2 | Responsabilidades |
 |------------|-------------|-------------------|
@@ -66,16 +66,16 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **Sivincha Machaca Saul Andre** | Especialista QA y Documentación | Ejecutar pruebas funcionales, validar resultados, actualizar documentación y consolidar evidencias del Sprint. |
 | **Quiñonez Delgado Aarón Fernando** | Líder de Sprint (Scrum Master) | Coordinar el Sprint, gestionar GitHub Projects, supervisar Issues y consolidar el informe de avance. |
 
-### Sprint 3 
-### Roles y Responsabilidades :
+### Sprint 3
+### Roles y Responsabilidades ([ver informe](docs/sprints/informe-sprint-3.md)):
 
 | Integrante | Rol | Responsabilidades |
 | --- | --- | --- |
-| **Apaza Anahua Roydan** |  |  |
-| **Quiñonez Delgado Aarón Fernando** |  |  |
-| **Sencia Ale Bryan Daniel** |  |  |
-| **Yauli Merma Diego Raul** |  |  |
-| **Sivincha Machaca Saul Andre** |  |  |
+| **Apaza Anahua Roydan** | No consignado en el PDF | El informe fuente del Sprint 3 no especifica un frente asignado. |
+| **Quiñonez Delgado Aarón Fernando** | Product Owner / Backend | Gestionar la lógica de aprobación y la parametrización del límite por compañía. |
+| **Sencia Ale Bryan Daniel** | Scrum Master / DevOps | Coordinar el sprint e implementar el pipeline de integración continua. |
+| **Yauli Merma Diego Raul** | Frontend XML / GitHub Pages | Implementar las vistas heredadas y publicar la documentación técnica. |
+| **Sivincha Machaca Saul Andre** | Aseguramiento de la Calidad | Adaptar y ejecutar las pruebas automatizadas del comportamiento final. |
 
 ### Sprint 4 
 ### Roles y Responsabilidades :
@@ -98,10 +98,11 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **GitHub Pages** | Publicar el entorno de staging, la documentación técnica y el burndown chart. |
 | **Google Meet** | Reuniones virtuales y coordinación del equipo de trabajo. |
 
-## 5. [Cronograma de Sprints e Hitos](cronograma.md)
+## 5. [Cronograma de Sprints e Hitos](docs/cronograma-sprints.md)
 
 El cronograma maestro consolida el Sprint 0, los cuatro Sprints de desarrollo, los hitos de evaluación y los entregables esperados para el avance del proyecto.
 
-[Ver cronograma maestro](cronograma.md)
+[Ver cronograma maestro](docs/cronograma-sprints.md)
 
+[Consultar el índice completo de documentación](docs/README.md)
 
