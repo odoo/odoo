@@ -1,7 +1,7 @@
-import { proxy, signal } from "@odoo/owl";
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { proxy, signal, onMounted, onPatched, useEffect } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { useAutofocus } from "@web/core/utils/hooks";
+import { useAutofocus, useDomSignal } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { formView } from "@web/views/form/form_view";
 import { SettingsConfirmationDialog } from "./settings_confirmation_dialog";
@@ -35,30 +35,23 @@ export class SettingsFormController extends formView.Controller {
         });
         this.canCreate = false;
         useSubEnv({ searchState: this.searchState });
-        useLayoutEffect(
-            () => {
-                if (this.searchState.value) {
-                    if (
-                        this.rootRef().querySelector(".o_settings_container:not(.d-none)") ||
-                        this.rootRef().querySelector(
-                            ".settings .o_settings_container:not(.d-none) .o_setting_box.o_searchable_setting"
-                        )
-                    ) {
-                        this.state.displayNoContent = false;
-                    } else {
-                        this.state.displayNoContent = true;
-                    }
-                } else {
-                    this.state.displayNoContent = false;
-                }
-            },
-            () => [this.searchState.value]
+        const hasContent = useDomSignal(
+            () =>
+                !!this.rootRef()?.querySelector(".o_settings_container:not(.d-none)") ||
+                !!this.rootRef()?.querySelector(
+                    ".settings .o_settings_container:not(.d-none) .o_setting_box.o_searchable_setting"
+                )
         );
-        useLayoutEffect(() => {
+        useEffect(() => {
+            this.state.displayNoContent = !!this.searchState.value && !hasContent();
+        });
+        const removeLocalState = () => {
             if (this.env.__getLocalState__) {
                 this.env.__getLocalState__.remove(this);
             }
-        });
+        };
+        onMounted(removeLocalState);
+        onPatched(removeLocalState);
 
         this.searchBarToggler = useSearchBarToggler();
         this.initialApp = "module" in this.props.context ? this.props.context.module : "";
