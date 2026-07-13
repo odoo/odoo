@@ -236,11 +236,7 @@ class StockMove(models.Model):
         inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
         for move in self:
             location_dest = False
-            if move.picking_id:
-                location_dest = move.picking_id.location_dest_id
-            elif move.rule_id.location_dest_from_rule:
-                location_dest = move.rule_id.location_dest_id
-            elif move.is_scrap:
+            if move.is_scrap:
                 curr_location_dest = move.location_dest_id
                 if (
                     curr_location_dest
@@ -252,6 +248,10 @@ class StockMove(models.Model):
                 ):
                     location_dest = curr_location_dest
                 location_dest = location_dest or move.company_id.scrap_location_id
+            elif move.picking_id:
+                location_dest = move.picking_id.location_dest_id
+            elif move.rule_id.location_dest_from_rule:
+                location_dest = move.rule_id.location_dest_id
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
             is_move_to_interco_transit = False
