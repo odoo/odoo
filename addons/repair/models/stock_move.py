@@ -143,7 +143,7 @@ class StockMove(models.Model):
 
     # Needed to also cancel the lastly added part
     def _action_cancel(self):
-        self._clean_repair_linked_lines
+        self._clean_repair_linked_lines()
         return super()._action_cancel()
 
     def _create_repair_invoice_line(self):
