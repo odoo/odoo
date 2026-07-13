@@ -11,7 +11,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.models import Query
-from odoo.tools import SQL, OrderedSet, float_compare, frozendict, groupby
+from odoo.tools import SQL, OrderedSet, float_compare, float_is_zero, frozendict, groupby
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.web.controllers.utils import clean_action
@@ -1213,7 +1213,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.sequence = seq_map.get(line.display_type, 100)
 
-    @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id', 'document_tax_mode')
+    @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id', 'document_tax_mode', 'move_type')
     def _compute_totals(self):
         """ Compute 'price_subtotal' / 'price_total' outside of `_sync_tax_lines` because those values must be visible for the
         user on the UI with draft moves and the dynamic lines are synchronized only when saving the record.
@@ -4029,3 +4029,20 @@ class AccountMoveLine(models.Model):
     def _get_discount_lines(self):
         ''' Return the discount move lines associated with the move line.'''
         return self.filtered(lambda line: line.display_type == 'discount')
+
+    def _is_zero_quantity_product_line(self):
+        ''' Return whether the line is a product line with zero quantity.'''
+        self.ensure_one()
+        if self.display_type != 'product':
+            return False
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
+        return float_is_zero(self.quantity, precision_digits=precision_digits)
+
+    def _is_zero_qty_customer_credit_note_line(self):
+        ''' Return whether this is a zero-quantity product line on a customer credit note.
+
+        Such lines represent adjustments where no goods are returned and are kept
+        to preserve the original tax details.
+        '''
+        self.ensure_one()
+        return self.move_type == 'out_refund' and self._is_zero_quantity_product_line()

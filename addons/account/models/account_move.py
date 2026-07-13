@@ -1643,7 +1643,11 @@ class AccountMove(models.Model):
 
         kwargs = {
             'price_unit': product_line.price_unit if is_invoice else product_line.amount_currency,
-            'quantity': product_line.quantity if is_invoice else 1.0,
+            'quantity': (
+                product_line.quantity
+                if is_invoice and not product_line._is_zero_qty_customer_credit_note_line()
+                else 1.0
+            ),
             'discount': product_line.discount if is_invoice else 0.0,
             'rate': self._get_product_base_line_currency_rate(product_line),
             'sign': sign,
@@ -5803,11 +5807,18 @@ class AccountMove(models.Model):
                 'partner_id': move.partner_id.id,
                 'document_tax_mode': move.document_tax_mode,
             })
-            reverse_moves += move.with_context(
+            reverse_move = move.with_context(
                 move_reverse_cancel=cancel,
                 include_business_fields=True,
                 skip_invoice_sync=move.move_type == 'entry',
             ).copy(default_values)
+            if move.move_type == 'out_invoice':
+                lines_to_remove = reverse_move.line_ids.filtered(
+                    lambda line: line._is_zero_quantity_product_line()
+                )
+                if lines_to_remove:
+                    reverse_move.write({'line_ids': [Command.unlink(line.id) for line in lines_to_remove]})
+            reverse_moves += reverse_move
 
         reverse_moves.with_context(skip_invoice_sync=cancel).write({'line_ids': [
             Command.update(line.id, {
