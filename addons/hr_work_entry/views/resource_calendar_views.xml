@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="resource.view_resource_calendar_leaves_search"/>
         <field name="arch" type="xml">
             <filter name="resource" position="after">
-                <field name="work_entry_type_id" groups="hr.group_hr_user"/>
+                <field name="work_entry_type_id" groups="hr.group_hr_user" domain="[('resource_calendar_selectable', '=', True)]"/>
                 <filter name="work_entry" string="Time Type" context="{'group_by':'work_entry_type_id'}" groups="hr.group_hr_user"/>
             </filter>
         </field>
@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="resource.view_resource_calendar_attendance_tree"/>
         <field name="arch" type="xml">
             <field name="hour_to" position="after">
-                <field name="work_entry_type_id" placeholder="Default: Attendance" optional="hidden"/>
+                <field name="work_entry_type_id" placeholder="Default: Attendance" optional="hidden" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>
         </field>
     </record>
@@ -28,7 +28,7 @@
         <field name="inherit_id" ref="resource.view_resource_calendar_attendance_form"/>
         <field name="arch" type="xml">
             <div id="resource_attendance_hours" position="after">
-                <field name="work_entry_type_id"/>
+                <field name="work_entry_type_id" domain="[('resource_calendar_selectable', '=', True)]"/>
             </div>
         </field>
     </record>
@@ -43,7 +43,7 @@
                 <field name="display_code" invisible="1"/>
             </group>
             <field name="recurrency" position="before">
-                <field name="work_entry_type_id" widget="many2one_work_entry_type" placeholder="Attendance"/>
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" placeholder="Attendance" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>
         </field>
     </record>
@@ -66,7 +66,7 @@
         <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
         <field name="arch" type="xml">
             <field name="resource_id" position="after">
-                <field name="work_entry_type_id"/>
+                <field name="work_entry_type_id" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>
         </field>
     </record>
@@ -77,7 +77,7 @@
         <field name="inherit_id" ref="resource.resource_calendar_leave_tree"/>
         <field name="arch" type="xml">
             <field name="date_to" position="after">
-                <field name="work_entry_type_id" required="1"/>
+                <field name="work_entry_type_id" required="1" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>
         </field>
     </record>
