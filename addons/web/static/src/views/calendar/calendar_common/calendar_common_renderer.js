@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -14,7 +14,7 @@ import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_hook";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -68,10 +68,12 @@ export class CalendarCommonRenderer extends Component {
         cleanSquareSelection: Function,
     };
 
+    ref = signal.ref();
+
     setup() {
         this.uiService = useService("ui");
         this.fc = useFullCalendar(
-            "fullCalendar",
+            this.ref,
             this.props.isDisabled ? this.disabledOptions : this.interactiveOptions
         );
         this.clickTimeoutId = null;
@@ -95,8 +97,7 @@ export class CalendarCommonRenderer extends Component {
             () => [this.fc.el]
         );
 
-        this.ref = useRef("fullCalendar");
-        useSquareSelection();
+        useSquareSelection(this.ref);
     }
 
     get disabledOptions() {
@@ -396,7 +397,7 @@ export class CalendarCommonRenderer extends Component {
         return event.end.getDate() === event.start.getDate() || event.allDay;
     }
     onEventDragStop(info) {
-        this.ref.el.classList.remove("o_interacting", "o_grabbing");
+        this.ref().classList.remove("o_interacting", "o_grabbing");
         if (!this.uiService.isSmall) {
             const point = info.jsEvent.changedTouches?.[0] ?? info.jsEvent;
             const x = point.clientX;
@@ -498,7 +499,7 @@ export class CalendarCommonRenderer extends Component {
         info.el.classList.add(info.view.type);
         this.fc.api.unselect();
         this.highlightEvent(info.event, "o_cw_custom_highlight");
-        this.ref.el.classList.add("o_interacting", "o_grabbing");
+        this.ref().classList.add("o_interacting", "o_grabbing");
         if (!this.uiService.isSmall) {
             this.props.model.bus.trigger("CALENDAR_EVENT_DRAG", { dragging: true });
         }

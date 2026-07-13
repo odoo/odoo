@@ -1,9 +1,9 @@
-import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useComponent } from "@web/owl2/utils";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";
 import { useCallbackRecorder } from "@web/search/action_hook";
-import { useListener } from "@odoo/owl";
+import { untrack, useListener } from "@odoo/owl";
 
 const CELL_SELECTOR = `.fc-day:not(.fc-col-header-cell, .fc-timegrid-col)`;
 const ROW_SELECTOR = `tr[role="row"]`;
@@ -99,9 +99,13 @@ const useBlockSelection = makeDraggableHook({
     },
 });
 
-export function useSquareSelection() {
+export function useSquareSelection(fullCalendarRef) {
     const component = useComponent();
-    const ref = useRef("fullCalendar");
+    const ref = {
+        get el() {
+            return untrack(fullCalendarRef);
+        },
+    };
     const highlightClass = "o-highlight";
 
     const removeHighlight = () => {
@@ -205,17 +209,10 @@ export function useSquareSelection() {
         component.props.onSquareSelection([...allSelectedCells]);
     };
 
-    useLayoutEffect(
-        (el, hasMultiCreate) => {
-            if (!hasMultiCreate) {
-                return;
-            }
-            el && el.addEventListener("click", onClick);
-            return () => {
-                el && el.removeEventListener("click", onClick);
-            };
-        },
-        () => [ref.el, component.props.model.hasMultiCreate]
+    useListener(
+        () => (component.props.model.hasMultiCreate ? fullCalendarRef() : null),
+        "click",
+        onClick
     );
 
     let ctrlPressed = false;

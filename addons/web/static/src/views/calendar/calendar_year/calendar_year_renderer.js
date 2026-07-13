@@ -8,7 +8,7 @@ import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_com
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
@@ -31,11 +31,10 @@ export class CalendarYearRenderer extends Component {
     setup() {
         this.months = luxon.Info.months();
         this.fcs = {};
+        this.fcRefs = {};
         for (const month of this.months) {
-            this.fcs[month] = useFullCalendar(
-                `fullCalendar-${month}`,
-                this.getOptionsForMonth(month)
-            );
+            this.fcRefs[month] = signal.ref();
+            this.fcs[month] = useFullCalendar(this.fcRefs[month], this.getOptionsForMonth(month));
         }
         this.popover = useCalendarPopover(this.constructor.components.Popover);
         this.rootRef = useRef("root");

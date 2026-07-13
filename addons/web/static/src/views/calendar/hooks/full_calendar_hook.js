@@ -1,11 +1,10 @@
-import { useComponent, useRef } from "@web/owl2/utils";
+import { useComponent } from "@web/owl2/utils";
 import { loadBundle } from "@web/core/assets";
 
-import { onMounted, onPatched, onWillStart, onWillUnmount } from "@odoo/owl";
+import { onMounted, onPatched, onWillStart, onWillUnmount, untrack } from "@odoo/owl";
 
-export function useFullCalendar(refName, params) {
+export function useFullCalendar(ref, params) {
     const component = useComponent();
-    const ref = useRef(refName);
     let instance = null;
 
     function boundParams() {
@@ -21,7 +20,7 @@ export function useFullCalendar(refName, params) {
 
     onMounted(() => {
         try {
-            instance = new FullCalendar.Calendar(ref.el, boundParams());
+            instance = new FullCalendar.Calendar(untrack(ref), boundParams());
             instance.render();
         } catch (e) {
             throw new Error(`Cannot instantiate FullCalendar\n${e.message}`);
@@ -45,7 +44,7 @@ export function useFullCalendar(refName, params) {
             return instance;
         },
         get el() {
-            return ref.el;
+            return untrack(ref);
         },
     };
 }
