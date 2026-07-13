@@ -150,7 +150,10 @@ class ResPartner(models.Model):
 
     def _log_verification_state_update(self, old_value, new_value):
         self.ensure_one()
-        if self._get_pdp_receiver_identification_info()[0] != 'pdp':
+        if (
+            self.env.company._get_peppol_proxy_type() != 'pdp'
+            or self._get_pdp_receiver_identification_info()[0] != 'pdp'
+        ):
             super()._log_verification_state_update(old_value, new_value)
             return
 
