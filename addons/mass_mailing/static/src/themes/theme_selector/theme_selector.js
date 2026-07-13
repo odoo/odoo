@@ -9,7 +9,7 @@ import {
     signal,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { FavoritePreview } from "./favorite_preview";
+import { FavoritePreview } from "./template_preview";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { _t } from "@web/core/l10n/translation";
