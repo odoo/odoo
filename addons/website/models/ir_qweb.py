@@ -37,6 +37,19 @@ class IrQWeb(models.AbstractModel):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id']
 
+    def _compile(self, template):
+        # Restricted editors only get the branding on the templates they are
+        # allowed to save, together with their extensions. Checking it on each
+        # call, rather than in the compiled templates, keeps those shared
+        # between users.
+        if view_id := self.env.context.get('inherit_branding_restricted') and self._get_view_id(template):
+            view = self.env['ir.ui.view'].browse(view_id)
+            # Not `_check_user_can_modify`: each access error is logged, and
+            # this runs at each rendering.
+            if not (view.check_access_rights('write', raise_exception=False) and view._filter_access_rules('write')):
+                self = self.with_context(inherit_branding=False)  # noqa: PLW0642
+        return super()._compile(template)
+
     def _prepare_frontend_environment(self, values):
         """ Update the values and context with website specific value
             (required to render website layout template)
@@ -44,7 +57,7 @@ class IrQWeb(models.AbstractModel):
         irQweb = super()._prepare_frontend_environment(values)
 
         current_website = request.website
-        editable = irQweb.env.user.has_group('website.group_website_designer')
+        is_designer = editable = irQweb.env.user.has_group('website.group_website_designer')
         has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
         if not editable and has_group_restricted_editor and 'main_object' in values:
             try:
@@ -93,6 +106,12 @@ class IrQWeb(models.AbstractModel):
             if editable:
                 # in edit mode add branding on ir.ui.view tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
+                if not is_designer:
+                    # Restricted editors only get the branding on the templates
+                    # they are allowed to save, see `_compile`. The t-cache
+                    # blocks are shared between users, with the branding of
+                    # the templates they call, so they are not used.
+                    irQweb = irQweb.with_context(inherit_branding_restricted=True, is_t_cache_disabled=True)
             elif has_group_restricted_editor:
                 # will add the branding on fields (into values)
                 irQweb = irQweb.with_context(inherit_branding_auto=True)
