@@ -93,7 +93,7 @@ patch(WebClient.prototype, {
         }
         const kwargs = subscription.toJSON();
         if (previousEndpoint && subscription.endpoint !== previousEndpoint) {
-            kwargs.previous_endpoint = previousEndpoint;
+            kwargs.previousEndpoint = previousEndpoint;
         }
         try {
             kwargs.vapid_public_key = this._arrayBufferToBase64(
