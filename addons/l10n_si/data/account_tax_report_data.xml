@@ -462,6 +462,7 @@
             <record id="tax_report_51" model="account.report.line">
                 <field name="name">51. VAT liability</field>
                 <field name="name@sl">51. Obveznost za DDV</field>
+                <field name="code">c51</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_51_formula" model="account.report.expression">
@@ -487,11 +488,18 @@
                         </field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
+                    <record id="tax_report_51_closing_amount" model="account.report.expression">
+                    <field name="label">_closing_amount</field>
+                    <field name="engine">aggregation</field>
+                    <field name="formula">c51.balance</field>
+                    <field name="subformula">if_above(EUR(0))</field>
+                </record>
                 </field>
             </record>
             <record id="tax_report_52" model="account.report.line">
                 <field name="name">52. VAT surplus</field>
                 <field name="name@sl">52. Presežek DDV</field>
+                <field name="code">c52</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_52_formula" model="account.report.expression">
@@ -515,6 +523,12 @@
                             c25b.balance -
                             c26.balance
                         </field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                    <record id="tax_report_52_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">c52.balance</field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
                 </field>

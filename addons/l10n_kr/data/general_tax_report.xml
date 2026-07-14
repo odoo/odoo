@@ -630,6 +630,11 @@
                                     KR_PTSPG.tax - KR_PTCCC.tax - KR_TPP.tax
                                 </field>
                             </record>
+                            <record id="l10n_kr_general_tp_vat_tpt_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">KR_TPT.tax</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_kr_general_tp_vat_tptmb" model="account.report.line">
