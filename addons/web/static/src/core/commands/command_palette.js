@@ -352,7 +352,7 @@ export class CommandPalette extends Component {
      * Close the palette on outside click.
      */
     onWindowMouseDown(ev) {
-        if (!this.root.el.contains(ev.target)) {
+        if (!this.root.el?.contains(ev.target)) {
             this.props.close();
         }
     }
