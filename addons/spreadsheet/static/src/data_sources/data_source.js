@@ -98,6 +98,10 @@ export class LoadableDataSource {
      * @protected
      */
     async _load() {}
+
+    isValid() {
+        return this.isReady() && this._isValid;
+    }
 }
 
 const LOADING_ERROR = new LoadingDataError();
