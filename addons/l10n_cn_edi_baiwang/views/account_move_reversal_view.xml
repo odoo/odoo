@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_account_move_reversal_l10n_cn_baiwang" model="ir.ui.view">
+        <field name="name">account.move.reversal.form.l10n_cn_baiwang</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="account.view_account_move_reversal"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <field name="l10n_cn_baiwang_use_red_form_reason" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='reason']" position="attributes">
+                <attribute name="invisible">move_type == 'entry' or l10n_cn_baiwang_use_red_form_reason</attribute>
+            </xpath>
+            <xpath expr="//field[@name='reason']" position="after">
+                <field name="l10n_cn_baiwang_red_form_type"
+                       invisible="move_type == 'entry' or not l10n_cn_baiwang_use_red_form_reason"
+                       required="l10n_cn_baiwang_use_red_form_reason"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
