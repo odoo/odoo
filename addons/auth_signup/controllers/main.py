@@ -187,6 +187,18 @@ class AuthSignupHome(Home):
         if do_login:
             authenticate(request.session, request.env, credential)
 
+    @http.route(["/.well-known/change-password"], type="http", auth="public")
+    def well_known_change_password(self, **kwargs):
+        """Redirect to the password reset form.
+
+        Implements the Change Password URL specification:
+        https://wicg.github.io/change-password-url/
+        """
+        url = "/web/reset_password"
+        if kwargs:
+            url += "?" + url_encode(kwargs)
+        return request.redirect(url, code=302)
+
 class AuthBaseSetup(BaseSetup):
     @http.route()
     def base_setup_data(self, **kwargs):
