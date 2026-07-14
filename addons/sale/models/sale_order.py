@@ -785,7 +785,7 @@ class SaleOrder(models.Model):
     @api.depends('company_id', 'partner_id', 'amount_total')
     def _compute_partner_credit_warning(self):
         for order in self:
-            order.with_company(order.company_id)
+            order = order.with_company(order.company_id)
             order.partner_credit_warning = ''
             show_warning = order.state in ('draft', 'sent') and \
                            order.company_id.account_use_credit_limit
