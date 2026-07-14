@@ -128,6 +128,33 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
         self.days += 1
         return out_move
 
+    def test_out_move_validate_as_stock_user(self):
+        """An Inventory/User (no landed costs access) must be able to validate the delivery
+        of a dropship product with an AVCO costing method."""
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        account_expense_product = self.env['account.account'].create({
+            'code': 'EXPENSE.PROD111',
+            'name': 'Expense - Test Account',
+            'account_type': 'expense',
+        })
+        self.product1.product_tmpl_id.categ_id.write({
+            'property_account_expense_categ_id': account_expense_product.id,
+        })
+        self._make_in_move(self.product1, 100, unit_cost=10)
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.supplier_location_id,
+            'location_dest_id': self.customer_location_id,
+            'move_line_ids': [Command.create({
+                'product_id': self.product1.id,
+                'quantity': 100
+            })],
+        })
+        self._make_lc(picking.move_ids, 500)
+        # Shoud not raise an Access Error
+        self.assertTrue(picking.with_user(self.res_users_stock_user).button_validate())
+        self.assertEqual(picking.move_ids.state, 'done')
+        self.assertEqual(self.product1.standard_price, 12.5)
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFO(TestStockValuationLCCommon):
