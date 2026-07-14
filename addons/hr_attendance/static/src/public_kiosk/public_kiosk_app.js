@@ -1,3 +1,4 @@
+import { BreakDurationDialog } from "@hr_attendance/components/break_duration_dialog/break_duration_dialog";
 import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskConfirmation } from "@hr_attendance/components/confirmation/confirmation";
 import { KioskGreetings } from "@hr_attendance/components/greetings/greetings";
@@ -57,6 +58,7 @@ class kioskAttendanceApp extends Component {
         });
         this.lockScanner = false;
         this.cameraCapture = null;
+        this.lastIdentification = null;
         if (this.state.kioskMode === "settings" || this.props.fromTrialMode) {
             this.manualKioskMode = false;
             useBus(this.barcode.bus, "barcode_scanned", (ev) =>
@@ -194,6 +196,10 @@ class kioskAttendanceApp extends Component {
             check_in_image: checkInImage,
         });
         if (result && result.attendance) {
+            this.lastIdentification = {
+                employeeId,
+                params: { employee_id: employeeId, pin_code: enteredPin },
+            };
             this.employeeData = result;
             this.displayServerNotification(result.notification);
             this.switchDisplay("greet");
@@ -221,6 +227,10 @@ class kioskAttendanceApp extends Component {
             });
 
             if (result && result.employee_name) {
+                this.lastIdentification = {
+                    employeeId: result.id,
+                    params: { barcode },
+                };
                 this.employeeData = result;
                 this.displayServerNotification(result.notification);
                 this.switchDisplay("greet");
@@ -237,10 +247,67 @@ class kioskAttendanceApp extends Component {
         }
     }
 
+    async continueAsBreakTime() {
+        const employee = this.employeeData;
+        if (!employee?.id) {
+            this.kioskReturn();
+            return;
+        }
+
+        const minutes = await this.requestBreakDuration(employee.employee_name);
+        if (minutes === null) {
+            this.kioskReturn();
+            return;
+        }
+
+        this.ui.block();
+        try {
+            const identificationParams =
+                this.lastIdentification?.employeeId === employee.id
+                    ? this.lastIdentification.params
+                    : { employee_id: employee.id };
+            const result = await rpc("update_break_duration", {
+                token: this.props.token,
+                ...identificationParams,
+                attendance_id: employee.attendance.id,
+                break_duration: minutes / 60,
+            });
+
+            if (result && result.attendance) {
+                this.employeeData = result;
+                this.displayServerNotification(result.notification);
+            } else {
+                this.displayNotification(_t("Could not save break duration. Please identify again."));
+            }
+            this.kioskReturn();
+        } catch (error) {
+            this.displayNotification(error?.data?.message || error?.message);
+            this.kioskReturn();
+        } finally {
+            this.ui.unblock();
+        }
+    }
+
     removeDemoMessage() {
         this.state.displayDemoMessage = false;
         browser.localStorage.setItem("hr_attendance.ShowDemoMessage", "false");
         return;
+    }
+
+    requestBreakDuration(employeeName) {
+        return new Promise((resolve) => {
+            let selectedMinutes = null;
+            this.dialogService.add(
+                BreakDurationDialog,
+                {
+                    employeeName,
+                    onConfirm: (minutes) => (selectedMinutes = minutes),
+                },
+                {
+                    onClose: () => resolve(selectedMinutes),
+                }
+            );
+        });
     }
 
     setCameraCapture(capturePicture) {

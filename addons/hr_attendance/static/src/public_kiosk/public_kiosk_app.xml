@@ -106,6 +106,7 @@
         companyImageUrl="this.companyImageUrl"
         kioskReturn.bind="this.kioskReturn"
         activeDisplay="this.state.active_display"
+        kioskModeClasses="this.state.active_display === 'greet' ? 'flex-grow-1 h-auto' : ''"
     >
         <t t-if="this.state.active_display === 'settings'">
             <t t-call="hr_attendance.PublicKiosksSettingScreen"/>
@@ -182,7 +183,10 @@
             />
         </t>
         <t t-if="this.state.active_display === 'greet'">
-            <KioskGreetings employeeData="this.employeeData" kioskReturn="() => this.kioskReturn(true)"/>
+            <KioskGreetings
+                employeeData="this.employeeData"
+                kioskReturn="() => this.kioskReturn(true)"
+                kioskContinueBreak.bind="this.continueAsBreakTime"/>
         </t>
         <t t-if="this.state.active_display === 'pin'">
             <KioskPinCode

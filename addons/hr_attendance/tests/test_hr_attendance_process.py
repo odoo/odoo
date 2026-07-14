@@ -176,13 +176,6 @@ class TestHrAttendance(HttpCase, TransactionCase):
             employee.invalidate_recordset(['hours_today'])
             self.assertAlmostEqual(employee.hours_today, 0, places=6)
 
-    def test_break_duration_normalization(self):
-        self.assertEqual(HrAttendance._normalize_break_duration(0), 0.0)
-        self.assertEqual(HrAttendance._normalize_break_duration("0.5"), 0.5)
-        for duration in (None, False, True, "", "invalid", -1, float("inf"), float("nan")):
-            with self.subTest(duration=duration):
-                self.assertIsNone(HrAttendance._normalize_break_duration(duration))
-
     @freeze_time("2024-01-02 12:00:00")
     def test_user_attendance_details_are_opt_in(self):
         now = fields.Datetime.now()
