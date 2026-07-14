@@ -19,7 +19,7 @@
                         <td class="text-end pe-1">
                             <t t-out="float(snln_line['quantity'])" t-options="{'widget': 'float', 'min_precision': 0}">6</t><t groups="uom.group_uom">&#160;<t t-out="snln_line['uom_name']">units</t></t>
                         </td>
-                        <td class="text-end pe-1"><t t-out="snln_line['lot_name']">BC46282798</t></td>
+                        <td class="text-end pe-1" name="lot"><t t-out="snln_line['lot_name']">BC46282798</t></td>
                     </tr>
                 </tbody>
             </table>
