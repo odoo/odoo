@@ -43,7 +43,7 @@ patch(Navbar.prototype, {
         return this.canClick() && this.pos.navigate("FloorScreen");
     },
     get mainButton() {
-        return this.pos.router.state.current === "FloorScreen" ? "table" : super.mainButton;
+        return this.pos.router.currentScreen() === "FloorScreen" ? "table" : super.mainButton;
     },
     get currentOrderName() {
         return this.pos.getOrder().getName().replace("T ", "");

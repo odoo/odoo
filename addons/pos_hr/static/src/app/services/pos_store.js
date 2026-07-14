@@ -157,7 +157,7 @@ patch(PosStore.prototype, {
     },
     async handleUrlParams() {
         if (this.config.module_pos_hr && !this.cashier) {
-            if (this.router.state.current !== "LoginScreen") {
+            if (this.router.currentScreen() !== "LoginScreen") {
                 this.router.navigate("LoginScreen", {});
             }
             return;

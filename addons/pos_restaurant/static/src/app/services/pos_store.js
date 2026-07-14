@@ -57,7 +57,7 @@ patch(PosStore.prototype, {
                     this.dialog.closeAll() &&
                     this.config.module_pos_restaurant &&
                     !["PaymentScreen", "TicketScreen", "ActionScreen", "LoginScreen"].includes(
-                        this.router.state.current
+                        this.router.currentScreen()
                     ) &&
                     this.navigate("FloorScreen"),
             },
@@ -319,7 +319,7 @@ patch(PosStore.prototype, {
             hasBeenRemoved &&
             wasCurrentOrder &&
             this.config.module_pos_restaurant &&
-            this.router.state.current !== "TicketScreen"
+            this.router.currentScreen() !== "TicketScreen"
         );
     },
     async closingSessionNotification(data) {
@@ -360,8 +360,8 @@ patch(PosStore.prototype, {
     },
     async handleUrlParams(event) {
         await super.handleUrlParams(...arguments);
-        if (this.config.module_pos_restaurant && this.router.state.current === "ProductScreen") {
-            const orderUuid = this.router.state.params.orderUuid;
+        if (this.config.module_pos_restaurant && this.router.currentScreen() === "ProductScreen") {
+            const orderUuid = this.router.currentScreenParams().orderUuid;
             const order = this.models["pos.order"].getBy("uuid", orderUuid);
             if (order && order.table_id) {
                 this.setTable(order.table_id);
@@ -647,7 +647,7 @@ patch(PosStore.prototype, {
             }
 
             // Transferring order to another order from FloorScreen
-            if (this.router.state.current === "FloorScreen") {
+            if (this.router.currentScreen() === "FloorScreen") {
                 const tableElement = ev.target.closest(".table");
                 if (!tableElement) {
                     return;
@@ -672,7 +672,7 @@ patch(PosStore.prototype, {
                 } finally {
                     this.ui.unblock();
                 }
-            } else if (this.router.state.current === "TicketScreen") {
+            } else if (this.router.currentScreen() === "TicketScreen") {
                 const orderElement = ev.target.closest(".order-row");
                 if (!orderElement) {
                     return;

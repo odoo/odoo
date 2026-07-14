@@ -33,8 +33,8 @@ export const setupPosEnv = async () => {
     store.setCashier(store.user);
     patchWithCleanup(store.router, {
         navigate(routeName, routeParams = {}) {
-            this.state.current = routeName;
-            this.state.params = routeParams;
+            this.currentScreen.set(routeName);
+            this.currentScreenParams.set(routeParams);
         },
     });
     return store;

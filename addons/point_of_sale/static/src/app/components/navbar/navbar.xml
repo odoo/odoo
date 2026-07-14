@@ -45,7 +45,7 @@
                     t-if="this.pos.showSearchButton()"
                     isOpenCallback="(isOpen) => this.state.searchBarOpen = isOpen" />
                     <OrderTrackerDropdown t-if="this.showOderTrackerDropdown"/>
-                    <button class="btn btn-light btn-lg lh-lg" t-if="this.isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(this.pos.router.state.current) and !this.pos.config.module_pos_restaurant" t-on-click="this.onClickScan">
+                    <button class="btn btn-light btn-lg lh-lg" t-if="this.isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(this.pos.router.currentScreen()) and !this.pos.config.module_pos_restaurant" t-on-click="this.onClickScan">
                         <i class="oi oi-fw oi-lg" data-icon="barcode"/><span t-if="this.pos.scanning" class="ms-1">Stop</span>
                     </button>
                     <!-- No need to show the cashier name on small screens -->
@@ -79,7 +79,7 @@
                                 <DropdownItem t-if="this.showPrinterButton" onSelected="() => this.pos.ticketPrinter.selectPrinter(true)">
                                     <i class="oi oi-fw" data-icon="print" aria-hidden="true" /> Printers
                                 </DropdownItem>
-                                <DropdownItem t-if="this.isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and this.ui.isSmall and !this.pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
+                                <DropdownItem t-if="this.isBarcodeScannerSupported() and this.pos.router.currentScreen() == 'ProductScreen' and this.ui.isSmall and !this.pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
                                     <i class="oi oi-fw" data-icon="barcode" aria-hidden="true" /> <t t-if="this.pos.scanning">Stop</t> Barcode Scanner
                                 </DropdownItem>
                                 <DropdownItem t-if="this.pos.ticketPrinter.hasReceiptPrinters" onSelected="() => this.showSaleDetails()">

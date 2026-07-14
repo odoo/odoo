@@ -1,8 +1,8 @@
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
-import { usePos, usePosRouter } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, useEffect, props, t } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { Component, onMounted, useEffect, props, t, usePlugin } from "@odoo/owl";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
 import { useIdleTimer } from "./utils/use_idle_timer";
@@ -10,6 +10,8 @@ import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
 import { debounce } from "@web/core/utils/timing";
 import { getColorScheme } from "@point_of_sale/utils";
+import { PosRouter } from "./plugins/pos_router_plugin";
+
 /**
  * Chrome is the root component of the PoS App.
  */
@@ -17,9 +19,10 @@ export class Chrome extends Component {
     static template = "point_of_sale.Chrome";
     static components = { Transition, MainComponentsContainer, Navbar };
     props = props({ disableLoader: t.function() });
+    router = usePlugin(PosRouter);
+
     setup() {
         this.pos = usePos();
-        this.router = usePosRouter();
         useIdleTimer(this.pos.idleTimeout, (ev) => {
             const stopEventPropagation = ["mousedown", "click", "keypress"];
             if (stopEventPropagation.includes(ev.type)) {
@@ -28,7 +31,7 @@ export class Chrome extends Component {
             this.pos.navigateToFirstPage();
             return false;
         });
-        if (this.pos.router.state.current === "SaverScreen") {
+        if (this.router.currentScreen() === "SaverScreen") {
             this.pos.navigateToFirstPage();
         }
 
@@ -53,12 +56,12 @@ export class Chrome extends Component {
         this.dispatchDebounced = debounce(() => this.adapter.dispatch(this.pos));
 
         useEffect(() => {
-            this.sendOrderToCustomerDisplay(this.pos, this.router.state);
+            this.sendOrderToCustomerDisplay(this.pos, this.router.currentScreen());
         });
     }
 
-    sendOrderToCustomerDisplay({ selectedOrder }, routerState) {
-        if (routerState.current === "SaverScreen" || routerState.current === "LoginScreen") {
+    sendOrderToCustomerDisplay({ selectedOrder }, currentRouterState) {
+        if (currentRouterState === "SaverScreen" || currentRouterState === "LoginScreen") {
             this.adapter.displayScreenSaver();
         } else if (selectedOrder) {
             this.adapter.formatOrderData(selectedOrder);

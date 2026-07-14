@@ -103,7 +103,7 @@ export class PaymentDPOPay extends PaymentInterface {
         const dpopayFetchPaymentStatus = async (resolve, reject) => {
             clearTimeout(this.pollingTimeout);
 
-            if (this.pos.router.state.current !== "PaymentScreen") {
+            if (this.pos.router.currentScreen() !== "PaymentScreen") {
                 this._removePaymentHandler();
                 return;
             }

@@ -1,8 +1,8 @@
 import { registry } from "@web/core/registry";
-import { Reactive } from "@web/core/utils/reactive";
 import { browser } from "@web/core/browser/browser";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
+import { signal, Plugin, computed } from "@odoo/owl";
 
 const parseParams = (matches, paramSpecs) =>
     Object.fromEntries(
@@ -19,26 +19,23 @@ const parseParams = (matches, paramSpecs) =>
         })
     );
 
-export class PosRouter extends Reactive {
-    static serviceDependencies = [];
-
-    constructor(...args) {
-        super(...args);
-        this.setup(...args);
-    }
+export class PosRouter extends Plugin {
+    registeredScreens = signal.Map(new Map());
+    currentScreen = signal(null);
+    currentScreenParams = signal({});
+    historyPage = signal(null);
+    page = computed(() => {
+        const posPage = registry.category("pos_pages").get(this.currentScreen());
+        return {
+            name: posPage.name,
+            component: posPage.component,
+            params: this.currentScreenParams(),
+        };
+    });
 
     setup(env) {
-        this.path = window.location.pathname;
-        this.registeredRoutes = {};
         this.popStateCallback = null;
-        this.state = {
-            params: {},
-            current: null,
-            previous: null,
-        };
-
         window.addEventListener("popstate", (event) => {
-            this.path = window.location.pathname;
             this.matchURL();
             this.popStateCallback && this.popStateCallback(event);
         });
@@ -47,27 +44,17 @@ export class PosRouter extends Reactive {
         this.matchURL();
     }
 
-    get page() {
-        const page = registry.category("pos_pages").get(this.state.current);
-        const params = this.state.params;
-        return {
-            name: page.name,
-            component: page.component,
-            params,
-        };
-    }
-
     initRegisteredRoutes() {
         const pages = registry.category("pos_pages").getAll();
         for (const { name, route } of pages) {
             const paramStrings = route.match(/\{\w+:\w+\}/g);
 
             if (!paramStrings) {
-                this.registeredRoutes[name] = {
+                this.registeredScreens().set(name, {
                     route,
                     paramSpecs: [],
                     regex: new RegExp(`^${route}$`),
-                };
+                });
                 continue;
             }
 
@@ -83,12 +70,12 @@ export class PosRouter extends Reactive {
                     .join("([^/]+)")}$`
             );
 
-            this.registeredRoutes[name] = { route, regex, paramSpecs };
+            this.registeredScreens().set(name, { route, regex, paramSpecs });
         }
     }
 
     back() {
-        if (!this.historyPage.length) {
+        if (!this.historyPage() || !this.historyPage().length) {
             this.navigate("LoginScreen", {
                 configId: odoo.pos_config_id,
             });
@@ -96,8 +83,6 @@ export class PosRouter extends Reactive {
         }
 
         history.back();
-        this.path = window.location.pathname;
-        this.state.previous = window.location.pathname;
     }
 
     close() {
@@ -105,28 +90,27 @@ export class PosRouter extends Reactive {
     }
 
     matchURL(props = {}) {
-        const path = this.path;
-
-        for (const [routeName, { regex, paramSpecs }] of Object.entries(this.registeredRoutes)) {
+        const path = window.location.pathname;
+        for (const [routeName, { regex, paramSpecs }] of this.registeredScreens()) {
             const match = path.match(regex);
             if (match) {
                 const parsedParams = parseParams(match.slice(1), paramSpecs);
-                this.state.current = routeName;
-                this.state.params = { ...props, ...parsedParams };
+                this.currentScreen.set(routeName);
+                this.currentScreenParams.set({ ...props, ...parsedParams });
                 return;
             }
         }
 
         // In case no route matches, we default to the LoginScreen
-        this.state.current = "LoginScreen";
+        this.currentScreen.set("LoginScreen");
     }
 
     getRoute(routeName) {
         try {
-            const { route } = this.registeredRoutes[routeName];
+            const { route } = this.registeredScreens().get(routeName);
             return route;
         } catch {
-            const { route } = this.registeredRoutes["ProductScreen"];
+            const { route } = this.registeredScreens().get("ProductScreen");
             return route;
         }
     }
@@ -141,21 +125,13 @@ export class PosRouter extends Reactive {
         );
 
         history.pushState({}, "", url);
-        this.path = window.location.pathname;
-        this.historyPage = this.path;
+        this.historyPage.set(window.location.pathname);
         this.matchURL(routeParams);
     }
 
     registerRoutes(routes) {
-        Object.assign(this.registeredRoutes, routes);
+        Object.entries(routes).forEach(([key, value]) => {
+            this.registeredScreens().set(key, value);
+        });
     }
 }
-
-export const PosRouterService = {
-    dependencies: PosRouter.serviceDependencies,
-    async start(env, deps) {
-        return new PosRouter(env, deps);
-    },
-};
-
-registry.category("services").add("pos_router", PosRouterService);

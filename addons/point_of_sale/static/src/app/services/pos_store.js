@@ -1,4 +1,4 @@
-import { proxy } from "@odoo/owl";
+import { proxy, usePlugin } from "@odoo/owl";
 import { Mutex } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -46,6 +46,7 @@ import { Domain } from "@web/core/domain";
 import { PosOrderAccounting } from "@point_of_sale/app/models/accounting/pos_order_accounting";
 import { PosOrderlineAccounting } from "@point_of_sale/app/models/accounting/pos_order_line_accounting";
 import { ComboSuggestion } from "../models/utils/combo_suggestion";
+import { PosRouter } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { SIZES } from "@web/core/ui/ui_service";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
 
@@ -56,6 +57,7 @@ export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
     feedbackScreenAutoSkipDelay = 1000;
+    router = usePlugin(PosRouter);
 
     static excludedLazyGetters = [
         "defaultPage",
@@ -81,7 +83,6 @@ export class PosStore extends WithLazyGetterTrap {
         "pos_ticket_printer",
         "action",
         "alert",
-        "pos_router",
         "mail.sound_effects",
     ];
 
@@ -106,7 +107,6 @@ export class PosStore extends WithLazyGetterTrap {
             bus_service,
             pos_data,
             action,
-            pos_router,
             alert,
         }
     ) {
@@ -120,7 +120,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.data = pos_data;
         this.action = action;
         this.alert = alert;
-        this.router = pos_router;
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
         this.pushOrderMutex = new Mutex();
@@ -360,12 +359,12 @@ export class PosStore extends WithLazyGetterTrap {
             {
                 timeout: 300000, // 5 minutes
                 action: () =>
-                    this.router.state.current !== "PaymentScreen" && this.navigate("SaverScreen"),
+                    this.router.currentScreen() !== "PaymentScreen" && this.navigate("SaverScreen"),
             },
             {
                 timeout: 120000, // 2 minutes
                 action: () =>
-                    this.router.state.current === "LoginScreen" && this.navigate("SaverScreen"),
+                    this.router.currentScreen() === "LoginScreen" && this.navigate("SaverScreen"),
             },
         ];
     }
@@ -442,16 +441,16 @@ export class PosStore extends WithLazyGetterTrap {
         this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
         const process = await this.afterProcessServerData();
 
-        if (this.router.state.current !== "LoginScreen" && !this.config.module_pos_hr) {
+        if (this.router.currentScreen() !== "LoginScreen" && !this.config.module_pos_hr) {
             this.setCashier(this.user);
         }
 
         const page =
-            this.router.state.current === "LoginScreen"
+            this.router.currentScreen() === "LoginScreen"
                 ? this.firstPage
                 : {
-                      page: this.router.state.current,
-                      params: this.router.state.params,
+                      page: this.router.currentScreen(),
+                      params: this.router.currentScreenParams(),
                   };
         this.navigate(page.page, page.params);
         return process;
@@ -802,7 +801,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async handleUrlParams() {
-        const orderPathUuid = this.router.state.params.orderUuid;
+        const orderPathUuid = this.router.currentScreenParams().orderUuid;
         const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
         if (orderPathUuid && !order) {
             await this.data.loadServerOrders([["uuid", "=", orderPathUuid]]);
@@ -832,8 +831,8 @@ export class PosStore extends WithLazyGetterTrap {
         await this.syncAllOrders();
 
         if (!this.config.module_pos_restaurant) {
-            if (this.router.state.params.orderUuid) {
-                this.selectedOrderUuid = this.router.state.params.orderUuid;
+            if (this.router.currentScreenParams().orderUuid) {
+                this.selectedOrderUuid = this.router.currentScreenParams().orderUuid;
             } else {
                 this.selectedOrderUuid = openOrders.length
                     ? openOrders[openOrders.length - 1].uuid
@@ -2335,7 +2334,7 @@ export class PosStore extends WithLazyGetterTrap {
                     onClose: () => {
                         if (
                             this.session.state !== "opened" &&
-                            this.router.state.current === "ProductScreen"
+                            this.router.currentScreen() === "ProductScreen"
                         ) {
                             this.closePos();
                         }
@@ -2382,11 +2381,11 @@ export class PosStore extends WithLazyGetterTrap {
         return (
             this.ui.isSmall &&
             this.numpadMode !== "table" &&
-            (this.router.state.current !== "ProductScreen" || this.mobile_pane === "left")
+            (this.router.currentScreen() !== "ProductScreen" || this.mobile_pane === "left")
         );
     }
     async onClickBackButton() {
-        if (this.router.state.current === "TicketScreen") {
+        if (this.router.currentScreen() === "TicketScreen") {
             if (this.ticket_screen_mobile_pane == "left") {
                 const next = this.defaultPage;
                 this.navigate(next.page, next.params);
@@ -2395,13 +2394,13 @@ export class PosStore extends WithLazyGetterTrap {
             }
         } else if (
             this.mobile_pane == "left" ||
-            ["PaymentScreen", "ActionScreen"].includes(this.router.state.current)
+            ["PaymentScreen", "ActionScreen"].includes(this.router.currentScreen())
         ) {
-            if (this.router.state.current === "ProductScreen") {
+            if (this.router.currentScreen() === "ProductScreen") {
                 this.getOrder().deselectOrderline();
             }
 
-            this.mobile_pane = this.router.state.current === "PaymentScreen" ? "left" : "right";
+            this.mobile_pane = this.router.currentScreen() === "PaymentScreen" ? "left" : "right";
             this.navigate("ProductScreen", {
                 orderUuid: this.getOrder().uuid,
             });
@@ -2409,7 +2408,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     showSearchButton() {
-        if (this.router.state.current === "ProductScreen") {
+        if (this.router.currentScreen() === "ProductScreen") {
             return this.ui.isSmall ? this.mobile_pane === "right" : true;
         }
         return false;

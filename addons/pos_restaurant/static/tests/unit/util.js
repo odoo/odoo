@@ -4,8 +4,8 @@ import { Chrome } from "@point_of_sale/app/pos_app";
 
 export async function mountPosApp(store) {
     store.session.state = "opened";
-    store.router.state.current = "FloorScreen";
-    store.router.state.params = {};
+    store.router.currentScreen.set("FloorScreen");
+    store.router.currentScreenParams.set({});
     await mountWithCleanup(Chrome, { props: { disableLoader: () => {} } });
     await tick();
 }

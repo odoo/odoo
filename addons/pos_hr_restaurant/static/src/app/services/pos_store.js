@@ -5,7 +5,8 @@ import { PosStore } from "@point_of_sale/app/services/pos_store";
 patch(PosStore.prototype, {
     shouldResetIdleTimer() {
         return (
-            this.router.state.current !== "LoginScreen" && super.shouldResetIdleTimer(...arguments)
+            this.router.currentScreen() !== "LoginScreen" &&
+            super.shouldResetIdleTimer(...arguments)
         );
     },
     get showEditPlanButton() {
