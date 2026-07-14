@@ -14,10 +14,15 @@
                                 <div name="landed_cost_info"/>
                             </div>
                         </setting>
-                        <setting invisible="not group_stock_production_lot" id="group_lot_on_invoice" help="Lots &amp; Serial numbers will appear on the invoice">
+                    </block>
+                </block>
+                <block id="production_lot_info">
+                    <xpath expr="//setting[@id='group_stock_production_lot']" position="after">
+                        <setting invisible="not group_stock_production_lot" id="group_lot_on_invoice"
+                                 help="Lots &amp; Serial numbers will appear on the invoice">
                             <field name="group_lot_on_invoice"/>
                         </setting>
-                    </block>
+                    </xpath>
                 </block>
             </field>
         </record>
