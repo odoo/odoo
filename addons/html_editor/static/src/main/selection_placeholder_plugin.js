@@ -3,6 +3,7 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import {
     allowsParagraphRelatedElements,
+    isContentEditable,
     isEmpty,
     isNotEditableNode,
     isPhrasingContent,
@@ -38,16 +39,24 @@ export class SelectionPlaceholderPlugin extends Plugin {
             }
         },
         selection_blocker_predicates: (blocker) => {
-            if (isNotEditableNode(blocker)) {
-                return isBlock(blocker);
+            if (
+                (blocker.nodeType === Node.ELEMENT_NODE &&
+                    blocker.hasAttribute(PLACEHOLDER_ATTRIBUTE)) ||
+                !isBlock(blocker)
+            ) {
+                return false;
+            } else if (isNotEditableNode(blocker)) {
+                return true;
             }
         },
         selection_placeholder_container_predicates: (container) => {
             if (
-                container.getAttribute("contenteditable") === "true" &&
-                !isPhrasingContent(container) &&
-                allowsParagraphRelatedElements(container)
+                !isContentEditable(container) ||
+                isPhrasingContent(container) ||
+                !allowsParagraphRelatedElements(container)
             ) {
+                return false;
+            } else if (container.getAttribute("contenteditable") === "true") {
                 return true;
             }
         },
