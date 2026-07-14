@@ -214,6 +214,11 @@ export class ListPlugin extends Plugin {
                 }
             }
         },
+        can_contain_selection_placeholder_predicates: (container) => {
+            if (isListItemElement(container)) {
+                return true;
+            }
+        },
 
         /** Providers */
         color_target_providers: (node) => {
