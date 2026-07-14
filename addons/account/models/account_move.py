@@ -4902,7 +4902,10 @@ class AccountMove(models.Model):
             new_lines.is_imported = True
             if not existing_lines:
                 try:
-                    self.with_context(default_move_type=self.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
+                    self.with_context(
+                        default_move_type=self.move_type,
+                        invoice_origin_from_description=any(file_data.get('invoice_origin_from_description') for file_data in files_data),
+                    )._link_bill_origin_to_purchase_orders(timeout=4)
                 except (UserError, ValueError):
                     _logger.exception("Failed to link bill to purchase order")
 
