@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import api, models
 
 
 class AccountMove(models.Model):
@@ -14,6 +14,22 @@ class AccountMove(models.Model):
             move.l10n_latam_document_type_id = move.debit_origin_id.l10n_latam_document_type_id
 
         return super(AccountMove, self - br_debit_notes)._compute_l10n_latam_document_type()
+
+    @api.onchange("invoice_line_ids")
+    def _onchange_l10n_br_invoice_line_ids(self):
+        """ Select the document type based on the first product added. Not added to _compute_l10n_latam_document_type to avoid
+        adding invoice_line_ids to the dependencies of that method. It wouldn't work well across multiple localizations, as they
+        would recompute their document type every time a line changes. """
+        if self.country_code == "BR" and self.l10n_latam_use_documents and len(self.invoice_line_ids.filtered('product_id')) == 1:
+            document_type = self.l10n_latam_document_type_id
+
+            first_type = self.invoice_line_ids.product_id.type
+            if first_type == "service":
+                document_type = self.env.ref("l10n_br.dt_SE")
+            elif first_type:
+                document_type = self.env.ref("l10n_br.dt_55")
+
+            self.l10n_latam_document_type_id = document_type
 
     def _get_last_sequence_domain(self, relaxed=False):
         """ Override to give sequence names in the same journal their own, independent numbering. """
