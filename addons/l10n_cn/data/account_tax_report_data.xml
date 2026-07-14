@@ -929,6 +929,12 @@
                         <field name="engine">aggregation</field>
                         <field name="formula">TTP.refunduponcollection - TPI.refunduponcollection</field>
                     </record>
+                    <record id="tax_report_main_line_TPRC_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">domain</field>
+                        <field name="formula">[('tax_repartition_line_id.use_in_tax_closing', '=', True)]</field>
+                        <field name="subformula">-sum</field>
+                    </record>
                 </field>
             </record>
             <record id="tax_report_main_line_TRRUC" model="account.report.line">

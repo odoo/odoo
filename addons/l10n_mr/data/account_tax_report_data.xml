@@ -222,6 +222,7 @@
                                 <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
+                                <field name="subformula">closing_account_id=receivable</field>
                                 <field name="date_scope">previous_return_period</field>
                             </record>
                             <record id="tax_report_deductions_prev_month_expr" model="account.report.expression">
@@ -320,6 +321,11 @@
                                 <field name="label">tax_18</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">mr_vat_net_gross.tax_18 - mr_vat_net_deductable.tax_18</field>
+                            </record>
+                            <record id="tax_report_vat_net_total_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_vat_net_total.tax_18</field>
                             </record>
                         </field>
                     </record>

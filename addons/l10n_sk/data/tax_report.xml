@@ -888,6 +888,11 @@ line 1 (sk_01) and its VAT label,
                                 <field name="formula">sk_32.vat - sk_34.vat</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
+                            <record id="sk_final_35_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_32.calcul - sk_34.vat</field>
+                            </record>
                         </field>
                     </record>
                 </field>
