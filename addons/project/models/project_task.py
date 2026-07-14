@@ -434,6 +434,9 @@ class ProjectTask(models.Model):
             self.project_id = self.parent_id.project_id.id
             self.display_in_project = False
 
+        if not self._origin and not self.parent_id and self.project_id.partner_id:
+            self.partner_id = self.project_id.partner_id
+
     def is_blocked_by_dependences(self):
         return any(blocking_task.state not in CLOSED_STATES for blocking_task in self.depend_on_ids)
 
