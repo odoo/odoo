@@ -1,4 +1,4 @@
-import { onWillRender, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
@@ -49,23 +49,15 @@ export class AutoComplete extends Component {
     setup() {
         this.nextSourceId = 0;
         this.nextOptionId = 0;
-        this.sources = [];
+        this.sources = proxy([]);
         this.inEdition = false;
         this.mouseSelectionActive = false;
         this.isOptionSelected = false;
 
         this.state = proxy({
-            navigationRev: 0,
-            optionsRev: 0,
             open: false,
             activeSourceOption: null,
             value: this.props.value,
-        });
-        onWillRender(() => {
-            // FIXME : We should read every part of the state
-            // to actually subscribe the component
-            // this is roughly equivalent to what owl2 did
-            [...Object.entries(this.state)];
         });
 
         this.inputRef = useForwardRefToParent("input");
@@ -188,7 +180,7 @@ export class AutoComplete extends Component {
     }
 
     async loadSources(useInput) {
-        this.sources = [];
+        this.sources.splice(0);
         this.state.activeSourceOption = null;
         const proms = [];
         for (const pSource of this.props.sources) {
@@ -204,7 +196,6 @@ export class AutoComplete extends Component {
                 const prom = options.then((options) => {
                     source.options = options.map((option) => this.makeOption(option));
                     source.isLoading = false;
-                    this.state.optionsRev++;
                 });
                 proms.push(prom);
             } else {
@@ -236,13 +227,13 @@ export class AutoComplete extends Component {
         };
     }
     makeSource(source) {
-        return {
+        return proxy({
             id: ++this.nextSourceId,
             options: [],
             isLoading: false,
             placeholder: source.placeholder,
             optionSlot: source.optionSlot,
-        };
+        });
     }
 
     isActiveSourceOption([sourceIndex, optionIndex]) {
@@ -270,9 +261,6 @@ export class AutoComplete extends Component {
 
     navigate(direction) {
         const step = Math.sign(direction);
-        if (step) {
-            this.state.navigationRev++;
-        }
 
         const navigableOptions = [];
         for (let sourceIndex = 0; sourceIndex < this.sources.length; sourceIndex++) {
