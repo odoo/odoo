@@ -33,10 +33,10 @@ class MvVideoFile(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends()
+    @api.depends('isci')
     def _compute_isci_no_char(self):
         # SF formula (verbatim, may need translation):
         #   SUBSTITUTE(ISCI__c, "-", "")
         for rec in self:
             # TODO: translate SF formula to Python
-            rec.isci_no_char = False
+            rec.isci_no_char = (rec.isci or "").replace("-", "")

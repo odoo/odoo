@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+  <!-- ================================================================
+       Data Loader security group (Phase 17).
+       Only members of this group can access the Data Loader menu,
+       upload files, and run imports/deletes/exports. Read-only
+       history is available to any user with backend access via the
+       ACLs in ir.model.access.csv.
+
+       Auto-grant: this group is implied by base.group_system so any
+       Odoo Settings admin gets Data Loader Manager access without
+       manual assignment. Regular internal users still have to be
+       explicitly added.
+
+       NOTE: Odoo 19 dropped res.groups.category_id in favour of
+       res.groups.privilege_id. Neither is strictly required; leaving
+       both out is safe.
+       ================================================================ -->
+  <record id="group_dataloader_manager" model="res.groups">
+    <field name="name">Data Loader Manager</field>
+    <field name="comment">Members can create and execute Data Loader import/export jobs.</field>
+  </record>
+
+  <!-- Make base.group_system imply group_dataloader_manager so
+       Settings admins auto-inherit it. Kept in a separate record
+       so upgrading the module doesn't wipe custom user->group
+       assignments (implied_ids is set-based, not overwrite-based
+       when using (4, id) tuples). -->
+  <record id="base.group_system" model="res.groups">
+    <field name="implied_ids" eval="[(4, ref('marathon_ventures.group_dataloader_manager'))]"/>
+  </record>
+
   <data noupdate="1">
     <!-- Record rules placeholder.  Uncomment + adapt if a SF object has OWD = Private. -->
     <!--

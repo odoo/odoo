@@ -9,8 +9,9 @@
     'category': 'Custom',
     'depends': ["base", "mail", "contacts", "crm", "sale_management", "product", "calendar"],
     'data': [
-        'security/ir.model.access.csv',
+        # Groups must load before ACLs that reference them.
         'security/mv_security.xml',
+        'security/ir.model.access.csv',
         'data/sequences.xml',
         'data/mv_data.xml',
         'data/days_allowed_seed.xml',
@@ -122,6 +123,7 @@
         'views/phase14_report_types_views.xml',
         'views/phase14_reports_views.xml',
         'views/phase16_program_daypart_views.xml',
+        'views/phase17_dataloader_views.xml',
         'views/menus_root_action.xml',
     ],
     'assets': {
@@ -139,6 +141,9 @@
             'marathon_ventures/static/src/scss/report_builder.scss',
             'marathon_ventures/static/src/js/report_builder/report_builder.js',
             'marathon_ventures/static/src/js/report_builder/report_builder.xml',
+            'marathon_ventures/static/src/scss/dataloader_wizard.scss',
+            'marathon_ventures/static/src/js/dataloader/dataloader_wizard.js',
+            'marathon_ventures/static/src/js/dataloader/dataloader_wizard.xml',
         ],
     },
     'installable': True,

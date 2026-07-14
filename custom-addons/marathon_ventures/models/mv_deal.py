@@ -104,45 +104,63 @@ class MvDeal(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends()
+    @api.depends('contactaccount', 'advertiser', 'brands.name')
     def _compute_account_advertiser_brand(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c &"-"& Advertiser__c &"-"& Brands__r.Name
         for rec in self:
             # TODO: translate SF formula to Python
-            rec.account_advertiser_brand = False
+            rec.account_advertiser_brand = '%s-%s-%s' % (
+                rec.contactaccount or '',
+                rec.advertiser or '',
+                rec.brands.name or '',
+            )
 
-    @api.depends()
+    @api.depends('contactaccount', 'advertiser', 'program.name')
     def _compute_account_advertiser_program(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c & " - " &  Advertiser__c & " - " & Program__r.Name
         for rec in self:
             # TODO: translate SF formula to Python
-            rec.account_advertiser_program = False
+            rec.account_advertiser_program = '%s - %s - %s' % (
+                rec.contactaccount or '',
+                rec.advertiser or '',
+                rec.program.name or '',
+            )
 
-    @api.depends()
+    @api.depends('contactaccount', 'advertiser')
     def _compute_account_advertiser(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c &"-"& Advertiser__c
         for rec in self:
             # TODO: translate SF formula to Python
-            rec.account_advertiser = False
+            rec.account_advertiser = '%s-%s' % (
+                rec.contactaccount or '',
+                rec.advertiser or '',
+            )
 
-    @api.depends()
+    @api.depends('contactaccount', 'brands.name', 'program.name')
     def _compute_account_brand_program(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c & " - " &  Brands__r.Name & " - " &  Program__r.Name
         for rec in self:
             # TODO: translate SF formula to Python
-            rec.account_brand_program = False
+            rec.account_brand_program = '%s - %s - %s' % (
+                rec.contactaccount or '',
+                rec.brands.name or '',
+                rec.program.name or '',
+            )
 
-    @api.depends()
+    @api.depends('contactaccount', 'brands.name')
     def _compute_account_brand(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c & " - " &  Brands__r.Name
         for rec in self:
             # TODO: translate SF formula to Python
-            rec.account_brand = False
+            rec.account_brand = '%s - %s' % (
+                rec.contactaccount or '',
+                rec.brands.name or '',
+            )
 
     @api.depends()
     def _compute_actual_rating_year(self):
