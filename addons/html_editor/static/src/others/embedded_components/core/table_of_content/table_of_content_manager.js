@@ -50,10 +50,7 @@ export class TableOfContentManager {
                     offset = Math.max(offset, parseInt(height));
                 }
             }
-            scrollTo(target, { behavior: "smooth", offset: -offset }).then(() => {
-                // Scroll again in case we actually went downwards.
-                scrollTo(target, { behavior: "smooth" });
-            });
+            scrollTo(target, { behavior: "smooth", isAnchor: true, offset: -offset });
         }
         target.classList.add("o_embedded_toc_header_highlight");
         window.setTimeout(() => {
