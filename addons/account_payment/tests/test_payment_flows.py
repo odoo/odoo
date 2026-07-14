@@ -134,13 +134,8 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
                 tx_route=tx_context['transaction_route'], **tx_route_values
             )
         tx_sudo = self._get_tx(processing_values['reference'])
-        self._update_transaction(tx_sudo, state='done')
-
-        url = self._build_url('/payment/post_process')
-        resp = self.make_jsonrpc_request(url, {})
+        tx_sudo.action_confirm()
         self.assertTrue(tx_sudo.is_post_processed)
-
-        self.assertEqual(resp['state'], 'done')
         self.assertTrue(invoice.payment_state in ('in_payment', 'paid'))
 
     def test_invoice_overdue_payment_flow(self):
@@ -196,16 +191,12 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
                 tx_route=tx_context['transaction_route'], **tx_route_values
             )
         tx_sudo = self._get_tx(processing_values['reference'])
-        self._update_transaction(tx_sudo, state='done')
+        tx_sudo.action_confirm()
 
         # Validate the transaction amount is equal to the invoice amount
         self.assertEqual(tx_sudo.amount, invoice.amount_total)
 
-        url = self._build_url('/payment/post_process')
-        resp = self.make_jsonrpc_request(url, {})
         self.assertTrue(tx_sudo.is_post_processed)
-
-        self.assertEqual(resp['state'], 'done')
         self.assertTrue(invoice.payment_state == invoice._get_invoice_in_payment_state())
 
     def test_out_invoice_get_page_view_values(self):

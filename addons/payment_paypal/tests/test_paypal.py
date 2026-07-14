@@ -69,6 +69,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_paypal.controllers.main")
     def test_complete_order_confirms_transaction(self):
         """Test the processing of a webhook notification."""
+        self._disable_process_patcher()
         tx = self._create_transaction("direct")
         normalized_data = paypal_utils.normalize_payment_data(
             self.completed_order, has_capture_data=True
@@ -78,6 +79,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         self.assertEqual(tx.provider_reference, normalized_data["id"])
 
     def test_feedback_processing(self):
+        self._disable_process_patcher()
         normalized_data = paypal_utils.normalize_payment_data(self.payment_data.get("resource"))
 
         # Confirmed transaction
@@ -102,6 +104,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_paypal.controllers.main")
     def test_webhook_notification_confirms_transaction(self):
         """Test the processing of a webhook notification."""
+        self._disable_process_patcher()
         tx = self._create_transaction("direct")
         url = self._build_url(const.WEBHOOK_ROUTE)
         with patch(
@@ -115,6 +118,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_paypal.controllers.main")
     def test_order_declined_webhook_errors_transaction(self):
         """Test that a `CHECKOUT.ORDER.DECLINED` webhook notification errors the transaction."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         url = self._build_url(const.WEBHOOK_ROUTE)
         with patch(
@@ -133,6 +137,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         The transaction is matched through the order id (`provider_reference`) as the denied capture
         resource does not echo back the shared reference_id.
         """
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         self._update_transaction(tx, provider_reference=self.order_id)
         denied_notification = {
@@ -184,6 +189,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     def test_deferred_vaulting_creates_token_from_webhook(self):
         """A wallet vaulted asynchronously (vault.status APPROVED, no vault id) is tokenized from
         the VAULT.PAYMENT-TOKEN.CREATED webhook, correlated through the order id."""
+        self._disable_process_patcher()
         paypal_pm = self.env.ref("payment_paypal.payment_method_paypal").id
         tx = self._create_transaction("direct", payment_method_id=paypal_pm, tokenize=True)
         vault_id = "VAULT456"
@@ -224,6 +230,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     def test_paypal_token_payment(self):
         """A customer-present token payment is charged through `_send_payment_request` and recorded
         without any payer action."""
+        self._disable_process_patcher()
         paypal_pm = self.env.ref("payment_paypal.payment_method_paypal").id
         token = self._create_token(payment_method_id=paypal_pm, provider_ref="VAULT-TOKEN-1")
         tx = self._create_transaction("token", payment_method_id=paypal_pm, token_id=token.id)

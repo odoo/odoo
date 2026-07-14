@@ -31,6 +31,7 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
 
     def test_paymob_return_data(self):
         """Test the processing of the paymob return data."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",

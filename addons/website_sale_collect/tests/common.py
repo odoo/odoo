@@ -8,12 +8,12 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 class ClickAndCollectCommon(PaymentCustomCommon, WebsiteSaleStockCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -35,11 +35,17 @@ class ClickAndCollectCommon(PaymentCustomCommon, WebsiteSaleStockCommon):
             name="Example in-store delivery",
             is_published=True,
         )
+        cls.pickup_location_partner = cls.env["res.partner"].create({
+            "name": "Test Pickup",
+            "pickup_location_data": {"id": cls.warehouse.id},
+            "pickup_delivery_method_id": cls.in_store_dm.id,
+        })
 
     @classmethod
     def _create_in_store_delivery_order(cls, **values):
         default_values = {
             "partner_id": cls.partner.id,
+            "partner_shipping_id": cls.pickup_location_partner.id,
             "website_id": cls.website.id,
             "order_line": [
                 Command.create({"product_id": cls.storable_product.id, "product_uom_qty": 5.0})

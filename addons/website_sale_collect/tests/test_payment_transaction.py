@@ -11,14 +11,16 @@ class TestOnSitePaymentTransaction(HttpCase, ClickAndCollectCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     def test_choosing_on_site_payment_confirms_order(self):
-        order = self._create_so(carrier_id=self.carrier.id, state="draft")
-        tx = self._create_transaction(
+        self._disable_post_process_patcher()
+        order = self._create_in_store_delivery_order()
+        self._create_transaction(
             flow="direct",
             sale_order_ids=[order.id],
-            state="done",
+            state="pending",
+            provider_id=self.provider.id,
             payment_method_id=self.provider.payment_method_ids.id,
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            self._run_post_processing(tx)
+            self._run_post_processing()
 
         self.assertEqual(order.state, "sale")

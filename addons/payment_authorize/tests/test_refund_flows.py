@@ -82,6 +82,7 @@ class TestRefundFlows(AuthorizeCommon):
     def test_voided_refund_tx_is_done(self):
         """Test that voided refund transactions due to the payment not being settled yet are
         correctly marked as done."""
+        self._disable_process_patcher()
         source_tx = self._create_transaction("direct", state="done")
         with (
             patch(
