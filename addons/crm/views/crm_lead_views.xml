@@ -67,13 +67,13 @@
                         </div>
                         <h2 class="d-none d-sm-flex d-touch-none align-items-end mb-4">
                             <!-- in this view, we want to have a different desktop UI, so we have two different 'touch' and 'desktop' templates -->
-                            <div class="col-3 d-flex flex-column justify-content-between"  invisible="type == 'lead'">
+                            <div class="col-auto d-flex flex-column justify-content-between" invisible="type == 'lead'">
                                 <field name="company_currency" invisible="1"/>
                                 <label for="expected_revenue" class="oe_edit_only mb-2"/>
                                 <div class="d-flex flex-wrap align-items-baseline">
-                                    <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                    <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" class="o_input_16ch"/>
                                     <span groups="crm.group_use_recurring_revenues" class="opacity-50 ms-3 me-1"> + </span>
-                                    <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"
+                                    <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" class="o_input_10ch me-3"
                                         groups="crm.group_use_recurring_revenues"/>
                                 </div>
                             </div>
@@ -81,8 +81,9 @@
                                 <field name="recurring_plan" placeholder='e.g. "Monthly"'
                                     required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
                             </div>
-                            <span class="ms-2 mb-1"> at</span>
-                            <div class="col-auto d-flex flex-column ms-3">
+                            <span class="mx-3 mb-1" invisible="type == 'lead'"> at</span>
+                            <span class="mx-3 mb-1" groups="crm.group_use_recurring_revenues" invisible="type != 'lead'"> at</span>
+                            <div class="col-auto d-flex flex-column">
                                 <div>
                                     <label for="probability" class="d-inline-block"/>
                                     <a class="border-0 mx-1 p-0 mb-1 mb-md-0 btn btn-light"
