@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="hr_resume_data_row">
+    <tr class="o_data_row cursor-default" t-attf-class="o_data_row #{is_last? 'o_data_row_last' : ''}" t-att-data-id="id">
+        <t t-if="data.display_type === 'classic'">
+            <td class="o_resume_timeline_cell position-relative pe-lg-2">
+                <div class="rounded-circle bg-info position-relative"/>
+            </td>
+            <td class="o_data_cell pt-0 w-100">
+                <div class="o_resume_line" t-att-data-id="id">
+                    <small class="o_resume_line_dates">
+                        <b t-esc="data.date_start"/> - <b t-esc="data.date_end"/>
+                    </small>
+                    <h4 class="o_resume_line_title mt-2" t-esc="data.name"/>
+                    <p t-if="data.description" class="o_resume_line_desc" t-esc="data.description"/>
+                </div>
+            </td>
+        </t>
+    </tr>
+</t>
+
+<t t-name="hr_trash_button">
+    <td class="o_list_record_remove pe-3">
+        <button name="delete" arial-label="Delete row" class="btn btn-link text-danger">
+            <i class="fa fa-trash"/>
+        </button>
+    </td>
+</t>
+
+<t t-name="hr_resume_group_row">
+    <tr class="o_resume_group_header">
+        <td class="o_group_name" colspan="100%"><span class="o_horizontal_separator my-0" t-esc="display_name"/></td>
+    </tr>
+</t>
+
+<t t-name="group_add_item">
+    <t t-set="empty" t-value="Object.keys(context).length == 2"/>
+
+    <div t-attf-class="o_field_x2many_list_row_add #{empty? 'd-block w-100' : 'd-inline float-end'}">
+        <a href="#"
+            role="button"
+            t-attf-class="btn btn-secondary o-kanban-button-new #{empty? 'btn-primary mt-3' : 'btn-secondary btn-sm'}"
+            t-attf-data-context="{{ context }}">
+                <t t-if="empty">CREATE A NEW ENTRY</t>
+                <t t-else="">ADD</t>
+            </a>
+    </div>
+</t>
+
+
+</templates>

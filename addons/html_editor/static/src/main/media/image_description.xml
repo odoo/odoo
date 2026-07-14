@@ -1,0 +1,32 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.ImageDescription">
+        <button class="btn btn-light" t-att-title="props.title" t-on-click="openDescriptionDialog">
+            Description
+        </button>
+    </t>
+
+    <t t-name="html_editor.ImageDescriptionDialog">
+        <Dialog size="'lg'" title.translate="Change media description and tooltip">
+            <div class="mb-3 row">
+                <label class="col-md-3 col-form-label" for="alt" title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
+                    Description <small>(ALT Tag)</small>
+                </label>
+                <div class="col-md-8">
+                    <input t-model="this.state.description" name="description" class="form-control" required="required" type="text"/>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-md-3 col-form-label" for="title" title="'Title tag' is shown as a tooltip when you hover the picture."> 
+                    Tooltip <small>(TITLE Tag)</small>
+                </label>
+                <div class="col-md-8">
+                    <input t-model="this.state.tooltip" name="tooltip" class="form-control" required="required" type="text"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.onSave">Save</button>
+                <button class="btn btn-secondary" t-on-click="this.props.close">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

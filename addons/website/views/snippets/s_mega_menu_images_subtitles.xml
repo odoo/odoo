@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_images_subtitles" name="Menu - images &amp; subtitles" groups="base.group_user">
+    <section class="s_mega_menu_images_subtitles pt16 pb16 o_colored_level o_cc o_cc1">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-4 py-2">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_images_subtitles_item">
+                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_1"/>
+                            <t t-set="_title">About us</t>
+                            <t t-set="_text">Discover our culture and our values</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_images_subtitles_item">
+                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_2"/>
+                            <t t-set="_title">Customers</t>
+                            <t t-set="_text">They trust us since years</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_images_subtitles_item">
+                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_3"/>
+                            <t t-set="_title">Services</t>
+                            <t t-set="_text">Find the perfect solution for you</t>
+                        </t>
+                    </nav>
+                </div>
+                <div class="col-12 col-lg-4 py-2">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_images_subtitles_item">
+                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_4"/>
+                            <t t-set="_title">Blog</t>
+                            <t t-set="_text">Latests news and case studies</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_images_subtitles_item">
+                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_5"/>
+                            <t t-set="_title">Events</t>
+                            <t t-set="_text">Our seminars and trainings for you</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_images_subtitles_item">
+                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_6"/>
+                            <t t-set="_title">Help center</t>
+                            <t t-set="_text">Contact us for any issue or question</t>
+                        </t>
+                    </nav>
+                </div>
+                <div class="col-12 col-lg-4 py-2">
+                    <img src="/web/image/website.s_mega_menu_images_subtitles_default_image_7" class="mb-3 rounded shadow img-fluid" alt=""/>
+                    <h4 class="o_default_snippet_text">The team</h4>
+                    <p class="text-muted o_default_snippet_text small">
+                        Created in 2021, the company is young and dynamic. Discover the composition of the team and their skills.
+                    </p>
+                    <a href="#" class="btn btn-primary o_default_snippet_text">Discover our team</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mega_menu_images_subtitles_item">
+    <a href="#" class="nav-link o_default_snippet_text px-2 rounded text-wrap" data-name="Menu Item">
+        <div class="d-flex">
+            <img t-att-src="_img_src" class="me-3 rounded shadow" alt=""/>
+            <div class="flex-grow-1">
+                <h4 class="mt-0 mb-0" t-esc="_title"/>
+                <span class="small"><t t-esc="_text"/></span>
+            </div>
+        </div>
+    </a>
+</template>
+
+<asset id="website.s_mega_menu_images_subtitles_000_scss" name="Menu - images &amp; subtitles 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_mega_menu_images_subtitles/000.scss</path>
+</asset>
+
+</odoo>

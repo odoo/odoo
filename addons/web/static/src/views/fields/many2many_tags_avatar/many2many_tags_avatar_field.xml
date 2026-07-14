@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2ManyTagsAvatarField">
+        <div
+            class="many2many_tags_avatar_field_container o_field_tags d-inline-flex flex-wrap mw-100 gap-1"
+            t-att-class="{'o_tags_input o_input': !props.readonly}"
+            t-ref="many2ManyTagsField"
+        >
+            <TagsList tags="tags" visibleItemsLimit="visibleItemsLimit"/>
+            <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
+                <Many2XAutocomplete
+                    id="props.id"
+                    placeholder="tags.length ? '' : props.placeholder"
+                    resModel="relation"
+                    autoSelect="true"
+                    fieldString="string"
+                    activeActions="activeActions"
+                    update="update"
+                    quickCreate="activeActions.create ? quickCreate : null"
+                    context="props.context"
+                    getDomain.bind="getDomain"
+                    isToMany="true"
+                    getOptionClassnames.bind="getOptionClassnames"
+                />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
+        <xpath expr="//t[@t-foreach='visibleTags']" position="before">
+            <t t-if="canDisplayQuickAssignAvatar">
+                <a t-on-click.stop.prevent="openPopover" tabIndex="-1" href="#" title="Assign"
+                   aria-label="Assign" class="o_quick_assign fa fa-user-plus o_m2m_avatar btn-link d-flex align-items-center text-dark" role="button"/>
+            </t>
+        </xpath>
+        <xpath expr="//span[hasclass('o_m2m_avatar_empty')]" position="attributes">
+            <attribute name="t-on-click.stop.prevent">openPopover</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="web.KanbanMany2ManyTagsAvatarField" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary"
+      >
+        <xpath expr="//TagsList" position="attributes">
+            <attribute name="popoverProps">popoverProps</attribute>
+            <attribute name="readonly">!props.isEditable</attribute>
+        </xpath>
+    </t>
+    <t t-name="web.Many2ManyTagsAvatarFieldPopover" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_field_tags')]" position="attributes">
+            <attribute name="class" add="p-2 o_m2m_tags_avatar_field_popover o_field_widget o_field_many2many_tags_avatar" remove="d-inline-flex mw-100" separator=" " />
+        </xpath>
+        <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="attributes">
+            <attribute name="class" add="w-100" separator=" " />
+        </xpath>
+        <Many2XAutocomplete position="attributes">
+            <attribute name="dropdown">false</attribute>
+            <attribute name="placeholder">props.placeholder</attribute>
+            <attribute name="autofocus">true</attribute>
+        </Many2XAutocomplete>
+    </t>
+
+</templates>

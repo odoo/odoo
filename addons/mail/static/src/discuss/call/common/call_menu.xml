@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallMenu">
+        <div class="dropdown" t-attf-class="{{ className }}" t-ref="root">
+            <button t-if="rtc.state.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="rtc.state.channel.open">
+                <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center o-gap-0_5 rounded-3 opacity-75 opacity-100-hover px-1" t-att-class="{ 'o-isOdooCommunity': !isEnterprise }">
+                    <span class="position-relative small bg-inherit">
+                        <i class="me-2 fa fa-fw" t-att-class="icon" />
+                        <small class="d-flex position-absolute top-0 end-0 smaller bg-inherit">
+                            <i class="o-discuss-CallMenu-animation fa fa-volume-up o-discuss-inCallIconColor bg-inherit" t-att-class="{ 'o-isOdooCommunity': !isEnterprise }"/>
+                        </small>
+                    </span>
+                    <span class="text-truncate fw-bold pe-1" t-esc="rtc.state.channel.displayName"/>
+                </div>
+            </button>
+        </div>
+    </t>
+
+</templates>

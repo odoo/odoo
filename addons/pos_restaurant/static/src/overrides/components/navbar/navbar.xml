@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="before">
+            <t t-if="pos.mainScreen.component.name == 'FloorScreen'">
+                <DropdownItem t-if="showEditPlanButton and this.pos.config.floor_ids.length" onSelected="() => this.pos.toggleEditMode()">
+                    Edit Plan
+                </DropdownItem>
+            </t>
+            <DropdownItem t-if="pos.mainScreen.component.name == 'FloorScreen'" onSelected="() => this.onSwitchButtonClick()">
+                Switch Floor View
+            </DropdownItem>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-leftheader')]/OrderTabs" position="attributes">
+            <attribute name="t-if">!pos.config.module_pos_restaurant or !ui.isSmall</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-leftheader')]/OrderTabs" position="before">
+            <div t-if="pos.config.module_pos_restaurant" class="d-flex flex-shrink-0 gap-1 position-relative">
+               <div class="navbar-menu d-flex d-lg-grid gap-1">
+                    <t t-set="screen" t-value="pos.mainScreen.component.name" />
+                    <button class="back-button btn btn-lg lh-lg" t-att-class="{'btn-primary': screen === 'FloorScreen'}" t-on-click="() => this.onClickPlanButton()">
+                        <span t-if="!ui.isSmall">Plan</span>
+                        <img t-else="" src="/pos_restaurant/static/img/plan.svg" class="navbar-icon" alt="Floor Plan"/>
+                    </button>
+                    <button class="table-free-order-label btn btn-lg lh-lg" t-att-class="{'btn-primary': !['ActionScreen', 'FloorScreen'].includes(screen)}" t-on-click="() => this.onClickTableTab()">
+                        <span t-if="pos.get_order()" t-esc="pos.get_order().getName().slice(0, 7)"/>
+                        <span t-elif="!ui.isSmall">Table</span>
+                        <img t-else="" src="/pos_restaurant/static/img/table.svg" class="navbar-icon" alt="Table Selector"/>
+                    </button>
+                </div>
+                <div t-if="!ui.isSmall" class="ms-1 me-2 my-2 border-start border"/>
+                <div class="d-flex align-items-center" t-if="pos.isOrderTransferMode">
+                    <strong class="mx-2 text-warning">
+                        Select table to transfer order
+                    </strong>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

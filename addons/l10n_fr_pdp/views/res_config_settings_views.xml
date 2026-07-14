@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account_peppol.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='peppol']" position="attributes">
+                <attribute name="invisible" add="country_code == 'FR'" separator="or"/>
+            </xpath>
+
+            <xpath expr="//block[@id='peppol']" position="after">
+                <block title="French Electronic Invoicing" id="pdp" invisible="country_code != 'FR'">
+                    <div id="l10n_fr_pdp" class="col-12 o_setting_box">
+                        <div class="o_setting_right_pane border-0">
+                            <div invisible="account_peppol_eas == '0225' or peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'receiver', 'smp_registration')">
+                                Your Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>
+                                <field name="account_peppol_proxy_state" class="oe_inline o_form_label text-lowercase" readonly="1"/>
+                                <span class="ps-2" invisible="account_peppol_edi_mode == 'prod'">
+                                    (<field class="oe_inline o_form_label text-uppercase" name="account_peppol_edi_mode" />)
+                                </span>
+                            </div>
+                            <div invisible="account_peppol_eas != '0225' or peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'receiver', 'smp_registration')">
+                                Your french e-invoicing ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/><span> </span>
+                                <field invisible="account_peppol_proxy_state == 'smp_registration'" name="account_peppol_proxy_state" class="oe_inline o_form_label text-lowercase" readonly="1"/>
+                                <span invisible="account_peppol_proxy_state != 'smp_registration'" class="o_form_label"> is waiting to be activated</span>
+                                <span invisible="account_peppol_proxy_state == 'smp_registration'" class="o_form_label"> invoices and credit notes.</span>
+                                <span class="ps-2" invisible="account_peppol_edi_mode == 'prod'">
+                                    (<field class="oe_inline o_form_label text-uppercase" name="account_peppol_edi_mode" />)
+                                </span>
+                                <p invisible="account_peppol_proxy_state not in ('smp_registration', 'receiver') or not l10n_fr_pdp_annuaire_start_date">
+                                    You are registered on the annuaire starting on <field class="oe_inline o_form_label text-uppercase" name="l10n_fr_pdp_annuaire_start_date"/>
+                                </p>
+                                <p invisible="l10n_fr_pdp_annuaire_start_date or account_peppol_eas != '0225' or account_peppol_proxy_state != 'smp_registration'">
+                                    For information: French administration annuaire can be updated once a day so your validation should be done tomorrow.
+                                </p>
+                                <p invisible="account_peppol_proxy_state != 'receiver' or l10n_fr_pdp_registered" class="text-warning">
+                                    <i class="fa fa-exclamation-triangle"/>You can only send and receive <span class="o_form_label">unregulated</span> messages currently (via Peppol).
+                                </p>
+                            </div>
+                            <div invisible="peppol_use_parent_company or account_peppol_proxy_state != 'rejected'">
+                                You registration has been rejected, the reason has been sent to you via email.
+                                Please contact our support if you need further assistance.
+                            </div>
+
+                            <!-- Participant register as its parent company. -->
+                            <div invisible="not peppol_use_parent_company">
+                                You are sending from <field name="peppol_parent_company_name" class="oe_inline o_form_label" readonly="1"/>.
+                            </div>
+
+                            <!-- The participant registered as a sender: display register as a receiver button, email, migration key field -->
+                            <div class="row" invisible="peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
+                                <label string="Primary contact email"
+                                       for="account_peppol_contact_email"
+                                       class="col-lg-3 o_light_label"/>
+                                <field name="account_peppol_contact_email" required="account_peppol_proxy_state in ('sender', 'smp_registration', 'receiver')"/>
+                            </div>
+
+                            <!-- The participant is waiting to be registered on the SMP -->
+                            <div invisible="peppol_use_parent_company or account_peppol_proxy_state not in ('smp_registration', 'receiver')">
+                                <div class="row">
+                                    <label string="Incoming Invoices Journal"
+                                           for="account_peppol_purchase_journal_id"
+                                           class="col-lg-3 o_light_label"/>
+                                    <field name="account_peppol_purchase_journal_id"
+                                           required="account_peppol_proxy_state in ('smp_registration', 'receiver')"/>
+                                </div>
+                            </div>
+
+                            <div class="mt-4"
+                                 invisible="peppol_use_parent_company or account_peppol_proxy_state != 'receiver'"
+                                 groups="base.group_no_one">
+                                <div invisible="not account_peppol_migration_key">
+                                    Your migration key is:
+                                    <field name="account_peppol_migration_key"
+                                           nolabel="1"
+                                           readonly="account_peppol_proxy_state == 'receiver' and account_peppol_migration_key"/>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-1 action_buttons" colspan="3">
+                                <div invisible="peppol_use_parent_company or account_peppol_proxy_state not in ('not_registered', 'in_verification')">
+                                    <div class="text-muted">
+                                        Allow sending and receiving invoices through the approved platform (AP)
+                                    </div>
+                                    <button name="action_open_peppol_form"
+                                            type="object"
+                                            string="Activate Electronic Invoicing"
+                                            class="oe_highlight mt-2"/>
+                                </div>
+                                <widget name="peppol_settings_buttons"
+                                        invisible="peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')"/>
+                            </div>
+
+                            <!--Branch company connected to parent's active peppol connection.-->
+                            <div invisible="not peppol_use_parent_company" class="mt-2">
+                                <button string="Disconnect"
+                                        name="button_peppol_disconnect_branch_from_parent"
+                                        type="object"
+                                        class="btn-secondary me-1"/>
+                            </div>
+                            <br/>
+                            <div id="l10n_fr_pdp_" class="col-12 o_setting_box"
+                                 invisible="account_peppol_eas != '0225' or account_peppol_proxy_state not in ('sender', 'receiver')">
+                                <field name="l10n_fr_pdp_send_to_ppf"/>
+                                <span class="text-muted">
+                                    Enable e-reporting &amp; sending of invoices to the PPF
+                                </span>
+                                <br/>
+                                <field name="l10n_fr_pdp_pilot_phase"/>
+                                <span class="text-muted">
+                                    Participate in the pilot phase
+                                </span>
+                                <br/>
+                                <label string="E-Reporting Periodicity"
+                                        for="l10n_fr_pdp_periodicity"
+                                        class="col-lg-3 o_light_label"/>
+                                <field name="l10n_fr_pdp_periodicity"/>
+                            </div>
+                        </div>
+                    </div>
+                </block>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

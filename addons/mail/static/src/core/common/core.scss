@@ -1,0 +1,199 @@
+$o-discuss-talkingColor: lighten($success, 10%);
+
+.o-mail-discussSidebarBgColor {
+    background-color: $white;
+}
+
+.o-mail-brighter {
+    filter: brightness(1.2);
+}
+
+.o-bg-black {
+    background-color: rgba(0, 0, 0, var(--bg-opacity, 1));
+}
+
+.o-discuss-badge {
+    --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
+    color: white !important;
+    background-color: var(--o-discuss-badge-bg) !important;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 4px;
+
+    &.o-muted {
+        --o-discuss-badge-bg: #{$gray-400};
+    }
+}
+
+.o-discuss-mobileContextMenu {
+    top: auto !important;
+    border-top: $border-width solid $border-color !important;
+}
+
+.o-discuss-separator {
+    opacity: $hr-opacity / 3;
+}
+
+.o-discuss-badge, .o-discuss-badgeShape {
+    display: flex;
+    transform: translate(0, 0) !important; // cancel systray style on badge
+    font-size: .78572 * $font-size-base !important; // roughly 11px, small but readable
+    user-select: none;
+}
+
+.o-min-height-0 {
+    min-height: 0;
+}
+
+.o-min-width-0 {
+    min-width: 0;
+}
+
+.o-opacity-35 {
+    opacity: 35%;
+}
+
+.o-gap-0_5 {
+    gap: map-get($spacers, 1) / 2;
+}
+
+.o-py-0_5 {
+    padding-top: map-get($spacers, 1) / 2;
+    padding-bottom: map-get($spacers, 1) / 2;
+}
+
+.o-hover-text-underline:hover {
+    text-decoration: underline;
+}
+
+.o-xsmaller {
+    font-size: 0.65rem;
+}
+
+.o-text-white {
+    color: #FFF;
+}
+
+.o-xsmaller {
+    font-size: 0.65rem;
+}
+
+.o-xxsmaller {
+    font-size: 0.5rem;
+}
+
+.o-yellow {
+    color: $yellow;
+}
+
+@mixin o-mail-call-bordered($opacity) {
+    border: 1px solid rgba($o-action, $opacity) !important;
+    background-color: mix(mix($white, $gray-100, 15%), $o-action, 97.5%) !important;
+}
+
+// see `@mixin button-variant`, this is the implementation without requiring `.btn` classname
+@mixin o-mention-variant(
+    $background,
+    $border,
+    $color: color-contrast($background),
+    $hover-background: if($color == $color-contrast-light, shade-color($background, $btn-hover-bg-shade-amount), tint-color($background, $btn-hover-bg-tint-amount)),
+    $hover-border: if($color == $color-contrast-light, shade-color($border, $btn-hover-border-shade-amount), tint-color($border, $btn-hover-border-tint-amount)),
+    $hover-color: color-contrast($hover-background),
+    $active-background: if($color == $color-contrast-light, shade-color($background, $btn-active-bg-shade-amount), tint-color($background, $btn-active-bg-tint-amount)),
+    $active-border: if($color == $color-contrast-light, shade-color($border, $btn-active-border-shade-amount), tint-color($border, $btn-active-border-tint-amount)),
+    $active-color: color-contrast($active-background),
+    $disabled-background: $background,
+    $disabled-border: $border,
+    $disabled-color: color-contrast($disabled-background)
+) {
+    color: #{$color};
+    background-color: #{$background};
+    border-color: #{$border};
+    &:hover {
+        color: #{$hover-color};
+        background-color: #{$hover-background};
+        border-color: #{$hover-border};
+    }
+    &:focus {
+        box-shadow: #{to-rgb(mix($color, $border, 15%))};
+    }
+    &:active {
+        color: #{$active-color};
+        background-color: #{$active-background};
+        border-color: #{$active-border};
+    }
+    &:disabled {
+        color: #{$disabled-color};
+        background-color: #{$disabled-background};
+        border-color: #{$disabled-border};
+    }
+}
+
+a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
+    border-radius: $btn-border-radius-sm;
+    padding: 0rem 0.1875rem;
+    border: 1px solid;
+    font-weight: $font-weight-bold;
+    display: inline-block;
+}
+
+a.o_mail_redirect, a.o_channel_redirect {
+    @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .2), rgba($primary, .5), darken($primary, 15%));
+}
+
+a.o-discuss-mention {
+    @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .15), rgba($primary, .25), darken($primary, 10%));
+    cursor: default !important;
+}
+
+.o-discuss-inCallIconColor {
+    color: $o-action;
+}
+
+.o-mail-DiscussSystray {
+    --border-color: #{$o-gray-300} !important; // cancel custom border color of dropdown
+}
+
+.o-mail-DiscussSystray-class {
+    margin-top: - $o-navbar-padding-v; // cancel navbar padding
+    margin-bottom: - $o-navbar-padding-v; // cancel navbar padding
+    display: flex;
+    align-items: center;
+
+    &:hover, &.show {
+        background-color: rgba(0, 0, 0, 0.075);
+    }
+}
+
+.o-mail-systrayFullscreenDropdownMenu {
+    top: $o-navbar-height !important;
+    height: calc(100% - #{$o-navbar-height}); // no bottom-0 otherwise performance issue
+}
+
+.o-pointer-events-none {
+    pointer-events: none;
+}
+
+.o-visible-short-delay {
+    animation: o-visible-short-delay-animation 0s ease-in 0.25s forwards;
+    display: none;
+}
+
+@keyframes o-visible-short-delay-animation {
+    to {
+        display: inline-flex;
+    }
+}
+
+// .o-opacity-hoberable class disable the opacity effect (see opacity-100-hover) on
+// device that dont support the hover effect (mainly touch device).
+@media (hover: none) {
+    .o-opacity-hoverable {
+        opacity: 100 !important;
+    }
+}
+
+.o-mail-Discuss-threadActionPopover {
+    width: Min(95vw, 400px);
+    max-height: Min(50vh, 530px);
+}

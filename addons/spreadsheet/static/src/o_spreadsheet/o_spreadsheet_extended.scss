@@ -1,0 +1,47 @@
+.o-spreadsheet {
+    height: 100%;
+
+    .fa {
+        font-family: FontAwesome;
+    }
+
+    .o-selection input {
+        display: initial;
+    }
+
+    .o-scorecard, .o-gauge-chart {
+        border-radius: 8px;
+    }
+
+    .o-sp-badge {
+        background-color: #374151C2;
+        color: #fff;
+    }
+}
+
+.o-sidePanel {
+    --o-spreadsheet-input-border-color: #D8DADD;
+    .o_input {
+        color: #111827;
+        border-color: var(--o-spreadsheet-input-border-color);
+        &::placeholder {
+            opacity: 0.5;
+        }
+    }
+
+    .o_field_invalid, .o_missing_field{
+        .o-input, .o_input {
+            border-color: var(--o-input-border-color);
+        }
+    }
+
+    .o_required_modifier:not(.o_field_invalid):not(.o_missing_field) {
+        .o_input {
+            border-color: #111827;
+        }
+    }
+
+    .o_tree_editor_condition {
+        flex-wrap: wrap;
+    }
+}

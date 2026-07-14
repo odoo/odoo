@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account_peppol.NonFocusableSelectionField" t-inherit="web.SelectionField" t-inherit-mode="primary">
+        <xpath expr="//select" position="attributes">
+            <attribute name="tabindex">-1</attribute>
+        </xpath>
+    </t>
+
+</templates>

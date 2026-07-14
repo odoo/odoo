@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.EditListPopup">
+        <Dialog title="props.title">
+            <t t-set-slot="header">
+                <h4 class="modal-title title" t-esc="props.title" />
+                <span class="sub-title" t-esc="props.name"/>
+            </t>
+            <div t-ref="root">
+                <div class="edit-list-inputs" t-ref="edit-list-inputs" t-on-scroll="onScroll">
+                    <t t-foreach="state.array" t-as="item" t-key="item._id">
+                        <EditListInput
+                            item="item"
+                            shouldShowOptions="this.shouldShowOptionsForItem(item)"
+                            hasInvalidValue="!!(item.text and !this.hasValidValue(item._id, item.text))"
+                            getOptions="() => this.getRemainingOptions()"
+                            customInput="props.customInput"
+                            createNewItem.bind="createNewItem"
+                            removeItem="() => this.removeItem(item._id)"
+                            deletable="_hasMoreThanOneItem()"
+                            onInputChange.bind="onInputChange"
+                            onSelectItem.bind="onSelectItem"
+                            onUnselectItem.bind="onUnselectItem" />
+                    </t>
+                </div>
+             </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary btn-lg lh-lg o-default-button" t-on-click="confirm">Ok</button>
+            </t>
+       </Dialog>
+    </t>
+</templates>

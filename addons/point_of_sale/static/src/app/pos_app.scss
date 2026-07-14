@@ -1,0 +1,101 @@
+.pos {
+    background: $gray-900;
+    --btn-height-size: 54px;
+    direction: ltr;
+    padding: 0;
+    margin: 0;
+    background-color: #f0eeee;
+    color: $gray-700;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+    text-shadow: none;
+    touch-action: manipulation;
+}
+/*  ********* Generic element styling  ********* */
+
+.dvh-100 {
+  // we specify the 100vh as a fallback in case the browser does not
+  // know dvh
+  height: 100vh !important;
+  height: 100dvh !important;
+}
+
+.pos a {
+    text-decoration: none;
+    color: $gray-700;
+}
+.pos ul, .pos ol {
+    padding: 0;
+    margin: 0;
+}
+
+.pos li {
+    list-style-type: none;
+}
+
+/* --- Generic Restyling and Resets --- */
+
+html {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    font-family: sans-serif;
+}
+
+table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+td {
+    padding: 0px;
+}
+
+.oe_invisible{
+    visibility: hidden !important;
+}
+.clearfix:after {
+    content:" ";
+    display: block;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+    clear: both;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+@media screen and (max-width: 575px) {
+    .pos .modal-dialog{
+        margin: 0;
+        max-height: 92dvh;
+    }
+    .pos .modal-content{
+        max-height: 92dvh;
+        border-radius: 1rem 1rem 0 0;
+        animation: popUp 0.2s ease-in-out forwards;
+    }
+    .pos .modal-body{
+        overflow: auto;
+    }
+    .modal-dialog-centered {
+        position: fixed;
+        inset: auto 0 0 0;
+        min-height: unset;
+    }
+}
+
+@keyframes popUp {
+    0% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.pos .o_error_detail {
+    user-select: text;
+}

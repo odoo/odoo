@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="nemhandel_response_view_form" model="ir.ui.view">
+        <field name="name">nemhandel.response.view.form</field>
+        <field name="model">nemhandel.response</field>
+        <field name="arch" type="xml">
+            <form string="Nemhandel Response">
+                <field name="nemhandel_message_uuid"/>
+                <field name="response_code"/>
+                <field name="nemhandel_state"/>
+                <field name="move_id"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="nemhandel_response_view_list" model="ir.ui.view">
+        <field name="name">nemhandel.response.view.list</field>
+        <field name="model">nemhandel.response</field>
+        <field name="arch" type="xml">
+            <list string="Nemhandel Responses">
+                <field name="nemhandel_message_uuid"/>
+                <field name="response_code"/>
+                <field name="nemhandel_state"/>
+                <field name="move_id"/>
+            </list>
+        </field>
+    </record>
+</odoo>

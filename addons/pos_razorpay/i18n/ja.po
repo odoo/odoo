@@ -1,0 +1,215 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_razorpay
+#
+# Translators:
+# Wil Odoo, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__all
+msgid "All"
+msgstr "全て"
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__bharatqr
+msgid "BHARATQR"
+msgstr "BHARATQR"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
+msgid "Cannot decode Razorpay POS response"
+msgstr "Razorpay POSレスポンスをデコードできません。"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+msgid "Cannot process transactions with negative amount."
+msgstr "負の金額の取引は処理できません。"
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__card
+msgid "Card"
+msgstr "カード"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
+msgid ""
+"Choose allow payment mode: \n"
+" All/Card/UPI or QR"
+msgstr ""
+"可能な支払モードを選択して下さい:\n"
+"全て/カード/UPIまたはQR"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
+msgstr ""
+"Odooサーバに接続できませんでした。インターネット接続を確認して、もう一度お試"
+"し下さい。"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_tid
+msgid ""
+"Device Serial No \n"
+" ex: 7000012300"
+msgstr ""
+"デバイスシリアル番号 \n"
+" 例: 7000012300"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+msgid ""
+"Payment has been queued. You may choose to wait for the payment to initiate "
+"on terminal or proceed to cancel this transaction"
+msgstr ""
+"支払の順番待ちです。端末で支払が開始されるのを待つか、この取引を取消するか選"
+"択できます。"
+
+#. module: pos_razorpay
+#: model:ir.model,name:pos_razorpay.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "POS支払い方法"
+
+#. module: pos_razorpay
+#: model:ir.model,name:pos_razorpay.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "POS支払い"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
+msgid "Razorpay API Key"
+msgstr "Razorpay APIキー"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
+msgid "Razorpay Allowed Payment Modes"
+msgstr "Razorpay許可済支払モード"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
+msgid "Razorpay Device Serial No"
+msgstr "Razorpayデバイスシリアル番号"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+msgid "Razorpay Error"
+msgstr "Razorpayエラー"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid ""
+"Razorpay POS payment cancel request expected errorCode not found in the "
+"response"
+msgstr ""
+"Razorpay POSの支払取消リクエストのerrorCodeがレスポンスに見つかりません。"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid ""
+"Razorpay POS payment request expected errorCode not found in the response"
+msgstr "Razorpay POSの支払リクエストのerrorCodeがレスポンスに見つかりません。"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid ""
+"Razorpay POS payment status request expected errorCode not found in the "
+"response"
+msgstr ""
+"Razorpay POSの支払ステータス要求で予想されたerrorCodeがレスポンスに見つかりま"
+"せん。"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid "Razorpay POS transaction canceled successfully"
+msgstr "Razorpay POS取引は正常に取消されました。"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid "Razorpay POS transaction failed"
+msgstr "Razorpay POS取引に失敗しました"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
+msgid "Razorpay Reverse Reference No."
+msgstr "Razorpay逆仕訳参照番号"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
+msgid "Razorpay Test Mode"
+msgstr "Razorpayテストモード"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
+msgid "Razorpay Username"
+msgstr "Razorpayユーザ名"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+msgid "Reference number mismatched"
+msgstr "参照番号が不一致です"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+msgid "This Payment Terminal is only valid for INR Currency"
+msgstr "この決済端末はINR通貨のみに有効です。"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+msgid "Transaction failed due to inactivity"
+msgstr "無効のため取引に失敗しました。"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
+msgid "Turn it on when in Test Mode"
+msgstr "テストモードでオンにします。"
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
+msgid "UPI"
+msgstr "UPI"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
+msgid ""
+"Used when connecting to Razorpay: https://razorpay.com/docs/payments/"
+"dashboard/account-settings/api-keys/"
+msgstr ""
+"Razorpayに接続する際に使用されます: https://razorpay.com/docs/payments/"
+"dashboard/account-settings/api-keys/"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
+msgid ""
+"Username(Device Login) \n"
+" ex: 1234500121"
+msgstr ""
+"ユーザ名(デバイスログイン) \n"
+" 例: 1234500121"

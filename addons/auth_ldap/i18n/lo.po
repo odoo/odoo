@@ -1,0 +1,247 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_ldap
+#
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Bone NI <bounkirdni@gmail.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2026-05-30 08:12+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/auth_ldap/"
+"lo/>\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.17\n"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
+msgid ""
+"    Filter used to look up user accounts in the LDAP database. It is an    arbitrary LDAP filter in string representation. Any `%s` placeholder    will be replaced by the login (identifier) provided by the user, the filter    should contain at least one such placeholder.\n"
+"\n"
+"    The filter must result in exactly one (1) result, otherwise the login will    be considered invalid.\n"
+"\n"
+"    Example (actual attributes depend on LDAP server and setup):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+msgstr ""
+"    ຕົວກັ່ນຕອງທີ່ໃຊ້ເພື່ອຄົ້ນຫາບັນຊີຜູ້ໃຊ້ໃນຖານຂໍ້ມູນ LDAP. ມັນແມ່ນຕົວກັ່ນຕອງ LDAP ຕາມໃຈມັກໃນຮູບແບບຂໍ້ຄວ"
+"າມ. ບ່ອນວາງ `%s` ໃດໆ ຈະຖືກແທນທີ່ດ້ວຍຊື່ເຂົ້າລະບົບ (identifier) ທີ່ຜູ້ໃຊ້ສະໜອງໃຫ້, ຕົວກັ່ນຕອງຄວນປ"
+"ະກອບມີຢ່າງໜ້ອຍໜຶ່ງບ່ອນວາງດັ່ງກ່າວ.\n"
+"\n"
+"    ຕົວກັ່ນຕອງຕ້ອງໃຫ້ຜົນຮັບພຽງແຕ່ໜຶ່ງ (1) ລາຍການເທົ່ານັ້ນ, ຖ້າບໍ່ດັ່ງນັ້ນການເຂົ້າລະບົບຈະຖືກຖືວ່າບໍ່ຖືກຕ້ອ"
+"ງ.\n"
+"\n"
+"    ຕົວຢ່າງ (ຄຸນລັກສະນະຕົວຈິງແມ່ນຂຶ້ນກັບເຊີເວີ LDAP ແລະ ການຕັ້ງຄ່າ):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    ຫຼື\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+msgid "Automatically create local user accounts for new users authenticating via LDAP"
+msgstr ""
+"ສ້າງບັນຊີຜູ້ໃຊ້ພາຍໃນໂດຍອັດຕະໂນມັດ ສຳລັບຜູ້ໃຊ້ໃໝ່ທີ່ຢືນຢັນຕົວຕົນຜ່ານ LDAP"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+msgid "Companies"
+msgstr "ບໍລິສັດ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
+msgid "Company"
+msgstr "ບໍລິສັດ"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr "ການຕັ້ງຄ່າ LDAP ຂອງບໍລິສັດ"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+msgid "Config Settings"
+msgstr "ການຕັ້ງຄ່າກຳນົດຄ່າ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
+msgid "Create User"
+msgstr "ສ້າງຜູ້ໃຊ້"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
+msgid "Created by"
+msgstr "ສ້າງໂດຍ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
+msgid "Created on"
+msgstr "ສ້າງເມື່ອ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
+msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgstr ""
+"DN ຂອງຂອບເຂດການຄົ້ນຫາຜູ້ໃຊ້: ລູກຫຼານທັງໝົດຂອງຖານນີ້ຈະຖືກຄົ້ນຫາເພື່ອຫາຜູ້ໃຊ້."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+msgid "Display Name"
+msgstr "ຊື່ທີ່ສະແດງ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "LDAP Configuration"
+msgstr "ການຕັ້ງຄ່າ LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
+msgid "LDAP Parameters"
+msgstr "ພາຣາມິເຕີ LDAP"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
+msgid "LDAP Server"
+msgstr "ເຊີເວີ LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
+msgid "LDAP Server address"
+msgstr "ທີ່ຢູ່ເຊີເວີ LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
+msgid "LDAP Server port"
+msgstr "ພອດເຊີເວີ LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
+msgid "LDAP base"
+msgstr "ຖານ LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
+msgid "LDAP binddn"
+msgstr "LDAP binddn"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
+msgid "LDAP filter"
+msgstr "ຕົວກັ່ນຕອງ LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
+msgid "LDAP password"
+msgstr "ລະຫັດຜ່ານ LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
+msgid "Last Modified on"
+msgstr "ແກ້ໄຂຫຼ້າສຸດເມື່ອ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
+msgid "Last Updated by"
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
+msgid "Last Updated on"
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Login Information"
+msgstr "ຂໍ້ມູນການເຂົ້າລະບົບ"
+
+#. module: auth_ldap
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "No local user found for LDAP login and not configured to create one"
+msgstr "ບໍ່ພົບຜູ້ໃຊ້ພາຍໃນສຳລັບການເຂົ້າລະບົບ LDAP ແລະ ບໍ່ໄດ້ຕັ້ງຄ່າເພື່ອສ້າງໃໝ່"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Process Parameter"
+msgstr "ພາຣາມິເຕີຂະບວນການ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
+msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
+msgstr ""
+"ຮ້ອງຂໍການເຂົ້າລະຫັດ TLS/SSL ທີ່ປອດໄພເມື່ອເຊື່ອມຕໍ່ກັບເຊີເວີ LDAP. ຕົວເລືອກນີ້ຕ້ອງການເຊີເວີທີ່ເປີດໃຊ້ "
+"STARTTLS, ຖ້າບໍ່ດັ່ງນັ້ນການພະຍາຍາມຢືນຢັນຕົວຕົນທັງໝົດຈະລົ້ມເຫຼວ."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
+msgid "Sequence"
+msgstr "ລຳດັບ"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Server Information"
+msgstr "ຂໍ້ມູນເຊີເວີ"
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "ຕັ້ງຄ່າເຊີເວີ LDAP ຂອງທ່ານ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
+msgid "Template User"
+msgstr "ຜູ້ໃຊ້ຕົ້ນແບບ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
+msgid "The password of the user account on the LDAP server that is used to query the directory."
+msgstr ""
+"ລະຫັດຜ່ານຂອງບັນຊີຜູ້ໃຊ້ໃນເຊີເວີ LDAP ທີ່ໃຊ້ເພື່ອສອບຖາມຂໍ້ມູນໃນໄດເຣັກທໍຣີ."
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
+msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
+msgstr ""
+"ບັນຊີຜູ້ໃຊ້ໃນເຊີເວີ LDAP ທີ່ໃຊ້ເພື່ອສອບຖາມຂໍ້ມູນໃນໄດເຣັກທໍຣີ. ປະຫວ່າງໄວ້ເພື່ອເຊື່ອມຕໍ່ແບບບໍ່ລະບຸຕົວຕົນ."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
+msgid "Use TLS"
+msgstr "ໃຊ້ TLS"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "User Information"
+msgstr "ຂໍ້ມູນຜູ້ໃຊ້"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
+msgid "User to copy when creating new users"
+msgstr "ຜູ້ໃຊ້ທີ່ຈະກ່າຍແບບເມື່ອສ້າງຜູ້ໃຊ້ໃໝ່"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "Users"
+msgstr "ຜູ້ໃຊ້"

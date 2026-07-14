@@ -1,0 +1,93 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_stock
+#
+# Translators:
+# Tony Ng, 2024
+# Wil Odoo, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_project_stock
+#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
+msgid "No stock move found"
+msgstr "未發現庫存移動"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_project_project
+msgid "Project"
+msgstr "專案"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "銷售訂單資料行"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_stock_move
+msgid "Stock Move"
+msgstr "庫存移動"
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s is cancelled. "
+"You cannot validate a stock picking on a cancelled Sales Order."
+msgstr ""
+"連結至專案 %(project)s 的銷售單 %(order)s 已取消。你不可驗證已取消銷售單的庫"
+"存提取。"
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s is currently "
+"locked. You cannot validate a stock picking on a locked Sales Order. Please "
+"create a new SO linked to this Project."
+msgstr ""
+"連結至專案 %(project)s 的銷售單 %(order)s 目前已鎖定。你不可驗證已鎖定銷售單"
+"的庫存提取。請建立一張連結至該專案的新銷售單。"
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s must be "
+"validated before validating the stock picking."
+msgstr ""
+"驗證庫存提取之前，必須先驗證連結至專案 %(project)s 的銷售單 %(order)s。"
+
+#. module: sale_project_stock
+#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
+msgid ""
+"This menu gives you the full traceability of inventory\n"
+"                operations on a specific product. You can filter on the "
+"product\n"
+"                to see all the past or future movements for the product."
+msgstr ""
+"此選單能讓您完整的追蹤某一特定產品的盤點\n"
+"作業。您可以在產品上篩選此產品過去和將來的的所有的移動."
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_stock_picking
+msgid "Transfer"
+msgstr "轉移"
+
+#. module: sale_project_stock
+#: model:ir.actions.act_window,name:sale_project_stock.stock_move_per_sale_order_line_action
+msgid "Transfers"
+msgstr "調撥"

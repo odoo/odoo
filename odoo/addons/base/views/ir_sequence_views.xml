@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Sequences -->
+        <record id="sequence_view" model="ir.ui.view">
+            <field name="model">ir.sequence</field>
+            <field name="arch" type="xml">
+                <form string="Sequences">
+                  <sheet>
+                    <group>
+                      <group>
+                        <field name="name"/>
+                        <field name="implementation"/>
+                      </group>
+                      <group>
+                        <field name="code"/>
+                        <field name="active" widget="boolean_toggle"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                      </group>
+                    </group>
+                    <notebook>
+                    <page string="Sequence" name="sequence">
+                        <group>
+                          <group>
+                            <field name="prefix"/>
+                            <field name="suffix"/>
+                            <field name="use_date_range"/>
+                          </group>
+                          <group>
+                            <field name="padding"/>
+                            <field name="number_increment"/>
+                            <field name="number_next_actual" string="Next Number" invisible="use_date_range"/>
+                          </group>
+                        </group>
+                        <field name="date_range_ids" invisible="not use_date_range">
+                            <list string="Sequences" editable="top">
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="number_next_actual" string="Next Number"/>
+                            </list>
+                        </field>
+                        <group col="3" string="Legend (for prefix, suffix)">
+                            <group>
+                                <span colspan="2">Current Year with Century: %%(year)s</span>
+                                <span colspan="2">Current Year without Century: %%(y)s</span>
+                                <span colspan="2">Month: %%(month)s</span>
+                                <span colspan="2">Day: %%(day)s</span>
+                            </group>
+                            <group>
+                                <span colspan="2">Day of the Year: %%(doy)s</span>
+                                <span colspan="2">Week of the Year: %%(woy)s</span>
+                                <span colspan="2">Day of the Week (0:Monday): %%(weekday)s</span>
+                            </group>
+                            <group>
+                                <span colspan="2">Hour 00->24: %%(h24)s</span>
+                                <span colspan="2">Hour 00->12: %%(h12)s</span>
+                                <span colspan="2">Minute: %%(min)s</span>
+                                <span colspan="2">Second: %%(sec)s</span>
+                            </group>
+                        </group>
+                        <group invisible="not use_date_range">
+                            <div colspan="2">
+                                When subsequences per date range are used, you can prefix variables with 'range_'
+                                to use the beginning of the range instead of the current date, e.g. %%(range_year)s instead of %%(year)s.
+                            </div>
+                        </group>
+                    </page>
+                    </notebook>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="sequence_view_tree" model="ir.ui.view">
+            <field name="model">ir.sequence</field>
+            <field name="arch" type="xml">
+                <list string="Sequences">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="prefix"/>
+                    <field name="padding"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="number_next_actual" string="Next Number"/>
+                    <field name="number_increment"/>
+                    <field name="implementation"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_sequence_search" model="ir.ui.view">
+            <field name="model">ir.sequence</field>
+            <field name="arch" type="xml">
+                <search string="Sequences">
+                    <field name="name" string="Sequence"/>
+                    <field name="code"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="ir_sequence_form" model="ir.actions.act_window">
+            <field name="name">Sequences</field>
+            <field name="res_model">ir.sequence</field>
+            <field name="view_id" ref="sequence_view_tree"/>
+            <field name="context">{'active_test': False}</field>
+        </record>
+
+        <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
+
+</odoo>

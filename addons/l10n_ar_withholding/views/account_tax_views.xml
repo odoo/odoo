@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form-l10n_ar" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n_ar.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="type_tax_use" position="attributes">
+                <attribute name="invisible" separator="or" add="country_code == 'AR'"/>
+            </field>
+            <field name="amount_type" position="attributes">
+                <attribute name="invisible" separator="or" add="l10n_ar_tax_type == 'earnings_scale'"/>
+            </field>
+            <label for="amount" position="attributes">
+                <attribute name="invisible" separator="or" add="l10n_ar_tax_type == 'earnings_scale'"/>
+            </label>
+            <xpath expr="//field[@name='amount']/.." position="attributes">
+                <attribute name="invisible" separator="or" add="l10n_ar_tax_type == 'earnings_scale'"/>
+            </xpath>
+            <field name="name" position="after">
+                <field name="l10n_ar_tax_type" invisible="l10n_ar_type_tax_use not in ('customer', 'supplier')"/>
+                <field name="l10n_ar_scale_id" invisible="l10n_ar_tax_type != 'earnings_scale'" required="l10n_ar_tax_type == 'earnings_scale'" options="{'no_create': True}"/>
+            </field>
+            <field name="type_tax_use" position="after">
+                <field name="l10n_ar_type_tax_use" invisible="country_code != 'AR'" string="Tax Type" required="country_code == 'AR'"/>
+            </field>
+            <xpath expr="//field[@name='amount']/.." position="after">
+                <field name="l10n_ar_withholding_payment_type" invisible="1"/><!-- Because of onchange-->
+                <field name="l10n_ar_state_id" invisible="l10n_ar_tax_type not in ['iibb_untaxed', 'iibb_total']" required="l10n_ar_tax_type in ['iibb_untaxed', 'iibb_total']" options="{'no_create': True}"/>
+                <field name="l10n_ar_non_taxable_amount" invisible="country_code != 'AR' or l10n_ar_type_tax_use != 'supplier'"/>
+                <field name="l10n_ar_minimum_threshold" invisible="country_code != 'AR' or l10n_ar_type_tax_use != 'supplier'"/>
+                <field name="l10n_ar_withholding_sequence_id" context="{'default_name': name}" invisible="l10n_ar_withholding_payment_type != 'supplier'"/>
+                <field name="l10n_ar_code" invisible="l10n_ar_tax_type not in ['earnings', 'earnings_scale'] or l10n_ar_type_tax_use != 'supplier'" required="l10n_ar_tax_type in ['earnings', 'earnings_scale'] and l10n_ar_type_tax_use == 'supplier'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

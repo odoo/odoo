@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <group name="group1" position="inside">
+                <field name="should_withhold_tax" invisible="not display_withholding"/>
+            </group>
+            <footer position="before">
+                <notebook name="payment_register_notebook" colspan="2" invisible="not should_withhold_tax or not display_withholding">
+                    <page name="withholding_page" string="Withholding">
+                        <group>
+                            <field name="withholding_line_ids" nolabel="1" colspan="2">
+                                <list editable="bottom">
+                                    <field name="source_base_amount_currency" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                    <field name="source_base_amount" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                    <field name="source_tax_amount_currency" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                    <field name="source_tax_amount" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                    <field name="source_currency_id" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                    <field name="comodel_currency_id" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                    <field name="placeholder_value" column_invisible="True"/> <!-- Needed for the placeholder widget -->
+                                    <field name="name"
+                                           required="not withholding_sequence_id"
+                                           widget="char_with_placeholder_field"
+                                           options="{'placeholder_field': 'placeholder_value'}"
+                                           width="92px"/>
+                                    <field name="account_id"
+                                           column_invisible="parent.withholding_hide_tax_base_account"
+                                           width="184px"
+                                           optional="show"/>
+                                    <field name="base_amount"/>
+                                    <field name="tax_id"
+                                           options="{'no_open': True, 'no_create': True}"
+                                           width="92px"/>  <!-- Tax names tend to be short -->
+                                    <field name="analytic_distribution"
+                                           widget="analytic_distribution"
+                                           groups="analytic.group_analytic_accounting"
+                                           optional="hide"
+                                           width="200px"/> <!-- Can be opened if needed -->
+                                    <field name="amount" sum="Total Withheld Amount"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="withholding_outstanding_account_id"
+                                       required="should_withhold_tax and withholding_line_ids and not withholding_payment_account_id"
+                                       invisible="(not withholding_line_ids) or withholding_payment_account_id or not display_withholding"/>
+                            </group>
+                            <group>
+                                <field name="withholding_net_amount"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </footer>
+        </field>
+    </record>
+</odoo>

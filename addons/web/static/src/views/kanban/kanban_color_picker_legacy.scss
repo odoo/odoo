@@ -1,0 +1,13 @@
+@mixin o-kanban-colorpicker-colors-legacy {
+    @for $size from 2 through length($o-colors) {
+        // Note: the first color is not defined as it is the 'no color' for kanban
+        .oe_kanban_color_#{$size - 1}:after {
+            background-color: nth($o-colors, $size);
+        }
+    }
+}
+
+.oe_kanban_colorpicker {
+    @include o-kanban-colorpicker-colors-legacy;
+    @include o-kanban-colorpicker;
+}

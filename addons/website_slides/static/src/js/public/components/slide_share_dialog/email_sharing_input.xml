@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_slides.EmailSharingInput">
+        <div class="o_wslides_js_share_email">
+            <div t-if="!this.state.isDone and !this.isWebsiteUser" class="input-group">
+                <input t-ref="input" type="text" placeholder="friend1@email.com, friend2@email.com"
+                       class="form-control" t-att-class="{'is-invalid': this.state.isInvalid}"
+                       t-on-keypress="onKeyPress"/>
+                <button type="button" class="btn btn-primary" t-on-click.stop="onShareByEmailClick">
+                    <i class="fa fa-envelope-o mx-1"/>Send Email
+                </button>
+            </div>
+            <div t-if="this.state.isDone or this.isWebsiteUser" class="alert alert-info" role="alert">
+                <span t-if="this.state.isDone">
+                    <strong>Sharing is caring!</strong> Your email(s) will arrive shortly.
+                </span>
+                <span t-if="this.isWebsiteUser">
+                    Please <a t-attf-href="/odoo?redirect={{ window.location.href }}" class="fw-bold"> login </a>
+                    to share this <span t-esc="this.props.category">course</span> by email.
+                </span>
+            </div>
+        </div>
+    </t>
+
+</templates>

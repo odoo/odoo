@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mail.discuss_public_channel_template" name="Discuss Public Template">&lt;!DOCTYPE html&gt;
+        <html class="h-100">
+            <head>
+                <meta charset="utf-8"/>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <title t-esc="title or 'Odoo'"/>
+                <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
+                <script>
+                    window.odoo = {
+                        __session_info__: <t t-out="json.dumps(session_info)"/>,
+                        csrf_token: "<t t-out="request.csrf_token(None)"/>",
+                        debug: "<t t-out="debug"/>",
+                        discuss_data: <t t-out="json.dumps(data)"/>
+                    };
+                    {
+                        const { user_context,  cache_hashes } = odoo.__session_info__;
+                        fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);
+                    }
+                </script>
+                <t t-call-assets="mail.assets_public"/>
+                <t t-call-assets="mail.assets_discuss_public_test_tours" t-if="'tests' in debug or test_mode_enabled"/>
+                <style>
+                    body {
+                        direction: <t t-out="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'" />;
+                    }
+                </style>
+            </head>
+            <body class="d-flex flex-column h-100">
+                <t t-out="body or ''"/>
+            </body>
+        </html>
+    </template>
+</odoo>

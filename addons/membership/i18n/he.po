@@ -1,0 +1,695 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * membership
+#
+# Translators:
+# דודי מלכה <Dudimalka6@gmail.com>, 2024
+# Hed Shefer <hed@laylinetech.com>, 2024
+# Adi Sharashov <Adi@laylinetech.com>, 2024
+# NoaFarkash, 2024
+# Yihya Hugirat <hugirat@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Roy Sayag, 2024
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
+# ExcaliberX <excaliberx@gmail.com>, 2024
+# Sagi Ahiel, 2024
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
+# or balmas, 2025
+# or balmas <or@laylinetech.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 22:20+0000\n"
+"Last-Translator: or balmas <or@laylinetech.com>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-18/"
+"membership/he/>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 2) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__num_invoiced
+msgid "# Invoiced"
+msgstr "מספר חשבוניות"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__num_paid
+msgid "# Paid"
+msgstr "מספר שולם"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__num_waiting
+msgid "# Waiting"
+msgstr "מספר ממתין"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong>מאת:</strong>"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<strong> To:</strong>"
+msgstr "<strong>עבור:</strong>"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__associate_member
+#: model:ir.model.fields,help:membership.field_res_users__associate_member
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr ""
+"מנוי שאליו אתה רוצה לשייך את המנוי שלך. זה ישקול את מצב המנוי של המנוי "
+"המשויך."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
+msgid "Account Invoice line"
+msgstr "שורת חשבון חשבונית"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Add a description..."
+msgstr "הוסף תיאור..."
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_membership_members
+msgid "Add a new member"
+msgstr "הוספת משתמש חדש"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line__member_price
+msgid "Amount for the membership"
+msgstr "מספר מנויים"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__associate_member_id
+#: model:ir.model.fields,field_description:membership.field_res_partner__associate_member
+#: model:ir.model.fields,field_description:membership.field_res_users__associate_member
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Associate Member"
+msgstr "חבר/ה מקושר/ת"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Associated Partner"
+msgstr "שותף מקושר"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_partner_form
+msgid "Buy Membership"
+msgstr "רכוש.י מנוי"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
+msgid "Cancel"
+msgstr "בטל"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_cancel
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_cancel
+msgid "Cancel Membership Date"
+msgstr "תאריך ביטול המנוי"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
+msgid "Cancel date"
+msgstr "תאריך ביטול"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__canceled
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__canceled
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__canceled
+msgid "Cancelled Member"
+msgstr "חבר מבוטל"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Category"
+msgstr "קטגוריה"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_product_product__membership
+#: model:ir.model.fields,help:membership.field_product_template__membership
+msgid "Check if the product is eligible for membership."
+msgstr "בדוק אם המוצר נתן לרישום כמנוי."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__company_id
+#: model:ir.model.fields,field_description:membership.field_report_membership__company_id
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Company"
+msgstr "חברה"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_marketing_config_association
+msgid "Configuration"
+msgstr "תצורה"
+
+#. module: membership
+#: model:ir.model,name:membership.model_res_partner
+msgid "Contact"
+msgstr "איש קשר"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__create_uid
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_uid
+msgid "Created by"
+msgstr "נוצר על-ידי"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__create_date
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_date
+msgid "Created on"
+msgstr "נוצר ב-"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Current Membership State"
+msgstr "מצב מנוי נוכחית"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_state
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_state
+msgid "Current Membership Status"
+msgstr "מצב מנוי נוכחית"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Customers"
+msgstr "לקוחות"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_product_product__membership_date_from
+#: model:ir.model.fields,help:membership.field_product_template__membership_date_from
+#: model:ir.model.fields,help:membership.field_res_partner__membership_start
+#: model:ir.model.fields,help:membership.field_res_users__membership_start
+msgid "Date from which membership becomes active."
+msgstr "התאריך שבו המנוי הפך לפעיל."
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line__date
+msgid "Date on which member has joined the membership"
+msgstr "תאריך בו המנוי נרשם"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__membership_cancel
+#: model:ir.model.fields,help:membership.field_res_users__membership_cancel
+msgid "Date on which membership has been cancelled"
+msgstr "תאריך ביטול המנוי"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_product_product__membership_date_to
+#: model:ir.model.fields,help:membership.field_product_template__membership_date_to
+#: model:ir.model.fields,help:membership.field_res_partner__membership_stop
+#: model:ir.model.fields,help:membership.field_res_users__membership_stop
+msgid "Date until which membership remains active."
+msgstr "התאריך שעד אליו המנוי נשאר פעיל."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__display_name
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:membership.field_report_membership__display_name
+msgid "Display Name"
+msgstr "שם לתצוגה"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__tot_earned
+msgid "Earned Amount"
+msgstr "סכום שהתקבל"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__date_to
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "End Date"
+msgstr "תאריך סיום"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "End Membership Date"
+msgstr "תאריך סיום המנוי"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Ending Date Of Membership"
+msgstr "תאריך סיום המנוי"
+
+#. module: membership
+#: model:ir.model.constraint,message:membership.constraint_product_template_membership_date_greater
+msgid "Error! Ending Date cannot be set before Beginning Date."
+msgstr "שגיאה! תאריך סיום לא יכול להיות מוגדר לפני תאריך התחלה."
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Forecast"
+msgstr "תחזית"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__free_member
+#: model:ir.model.fields,field_description:membership.field_res_users__free_member
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__free
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__free
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__free
+msgid "Free Member"
+msgstr "חברות חינם"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
+msgid "From"
+msgstr "מ"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Group By"
+msgstr "קבץ לפי"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Group by..."
+msgstr "קבץ לפי..."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:membership.field_report_membership__id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Inactive"
+msgstr "לא פעיל"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_id
+msgid "Invoice"
+msgstr "חשבונית מס"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
+msgid "Invoice Membership"
+msgstr "חשבונית מנוי"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__invoiced
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__invoiced
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__invoiced
+msgid "Invoiced Member"
+msgstr "חברות בתשלום"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Invoiced/Paid/Free"
+msgstr "בחשבונית/שולם/חינם"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__membership_state
+#: model:ir.model.fields,help:membership.field_res_users__membership_state
+msgid ""
+"It indicates the membership state.\n"
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
+msgstr ""
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line__state
+msgid ""
+"It indicates the membership status.\n"
+"-Non Member: A member who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paid Member: A member who has paid the membership amount."
+msgstr ""
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date
+msgid "Join Date"
+msgstr "תאריך הצטרפות"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+msgid "Join Membership"
+msgstr "הרשם כמנוי"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_move
+msgid "Journal Entry"
+msgstr "פקודת יומן"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_move_line
+msgid "Journal Item"
+msgstr "תנועת יומן"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__write_uid
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_uid
+msgid "Last Updated by"
+msgstr "עודכן לאחרונה על-ידי"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__write_date
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_date
+msgid "Last Updated on"
+msgstr "עדכון אחרון ב"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__partner_id
+msgid "Member"
+msgstr "חבר"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__member_price
+msgid "Member Price"
+msgstr "מחיר חברות"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_association
+#: model:ir.ui.menu,name:membership.menu_membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_members_tree
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Members"
+msgstr "אנשי צוות"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_report_membership_tree
+msgid "Members Analysis"
+msgstr "ניתוח חברים"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__product_id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__membership_id
+#: model:ir.model.fields,field_description:membership.field_product_product__membership
+#: model:ir.model.fields,field_description:membership.field_product_template__membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__member_lines
+#: model:ir.model.fields,field_description:membership.field_res_users__member_lines
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+#: model_terms:ir.ui.view,arch_db:membership.view_partner_form
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_graph1
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_pivot
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Membership"
+msgstr "מנוי"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_amount
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_amount
+msgid "Membership Amount"
+msgstr "עלות המנוי"
+
+#. module: membership
+#: model:ir.model,name:membership.model_report_membership
+msgid "Membership Analysis"
+msgstr "ניתוח מנויים"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Membership Duration"
+msgstr "תקופת חברות"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_product_product__membership_date_to
+#: model:ir.model.fields,field_description:membership.field_product_template__membership_date_to
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_stop
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_stop
+msgid "Membership End Date"
+msgstr "תאריך סיום המנוי"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__member_price
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
+msgid "Membership Fee"
+msgstr "עלות המנוי"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_invoice
+#: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
+msgid "Membership Invoice"
+msgstr "חשבונית המנוי"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "Membership Line"
+msgstr "שורת מנוי"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Membership Partners"
+msgstr "איש הקשר של המנוי"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__membership_id
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Membership Product"
+msgstr "מוצרי לרישום מנויים"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Membership Products"
+msgstr "מוצרי לרישום מנויים"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_product_product__membership_date_from
+#: model:ir.model.fields,field_description:membership.field_product_template__membership_date_from
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_start
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_start
+msgid "Membership Start Date"
+msgstr "תאריך תחילת המנוי"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Membership State"
+msgstr "סטטוס מנוי"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__state
+msgid "Membership Status"
+msgstr "סטטוס מנוי"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
+msgid "Membership products"
+msgstr "מוצרי לרישום מנויים"
+
+#. module: membership
+#: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
+msgid "Membership: update memberships"
+msgstr "מנוי: עדכן.י מנויים"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_partner_form
+msgid "Memberships"
+msgstr "מנויים"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Month"
+msgstr "חודש"
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_report_membership_tree
+msgid "No data yet!"
+msgstr "אין מידע עדיין"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__none
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__none
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__none
+msgid "Non Member"
+msgstr "לא מנוי"
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_membership_members
+msgid ""
+"Odoo helps you easily track all activities related to a member: \n"
+"                  Current Membership Status, Discussions and History of "
+"Membership, etc."
+msgstr ""
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__old
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__old
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__old
+msgid "Old Member"
+msgstr "מנוי ישן"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__paid
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__paid
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__paid
+msgid "Paid Member"
+msgstr "מנוי בתשלום"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__partner
+msgid "Partner"
+msgstr "לקוח/ספק"
+
+#. module: membership
+#. odoo-python
+#: code:addons/membership/models/partner.py:0
+msgid "Partner doesn't have an address to make the invoice."
+msgstr "לשותף אין כתובת כדי לייצר חשבונית."
+
+#. module: membership
+#. odoo-python
+#: code:addons/membership/models/partner.py:0
+msgid "Partner is a free Member."
+msgstr "השותף הנו מנוי חינם"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
+msgid "Pending Amount"
+msgstr "סכום שממתין"
+
+#. module: membership
+#: model:ir.model,name:membership.model_product_template
+msgid "Product"
+msgstr "מוצר"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Product Name"
+msgstr "שם מוצר"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__quantity
+msgid "Quantity"
+msgstr "כמות"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Reporting"
+msgstr "דו\"חות"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Revenue Done"
+msgstr ""
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__user_id
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Salesperson"
+msgstr "איש מכירות"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__free_member
+#: model:ir.model.fields,help:membership.field_res_users__free_member
+msgid "Select if you want to give free membership."
+msgstr "בחר אם תרצה לתת מנוי חינם."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership__start_date
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Start Date"
+msgstr "תאריך תחילה"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Starting Date Of Membership"
+msgstr "תאריך תחילת המנוי"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of # Invoiced"
+msgstr "סך הכל נדרש"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of # Paid"
+msgstr "סך הכל שולם"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of Earned Amount"
+msgstr "סך סכום שהתקבל"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of Quantity"
+msgstr "סך כמות"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Taxes"
+msgstr "מיסים"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__membership_amount
+#: model:ir.model.fields,help:membership.field_res_users__membership_amount
+msgid "The price negotiated by the partner"
+msgstr "המחיר שהשותף ביקש"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "This note will be displayed on quotations..."
+msgstr "הערה זו תופיע על הצעות מחיר..."
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "This will display paid, old and total earned columns"
+msgstr "זה יציג עמודות שולם, ישן, וסך הכל"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "This will display waiting, invoiced and total pending columns"
+msgstr "זה יציג עמודות ממתינים, נשלחו, וסך הכל ממתינים"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
+msgid "To"
+msgstr "ל"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Vendors"
+msgstr "ספקים"
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__waiting
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__waiting
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__waiting
+msgid "Waiting Member"
+msgstr "חברות בהמתנה"
+
+#. module: membership
+#. odoo-python
+#: code:addons/membership/models/partner.py:0
+msgid "You cannot create recursive associated members."
+msgstr ""

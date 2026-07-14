@@ -1,0 +1,151 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_flutterwave
+#
+# Translators:
+# Murat Kaplan <muratk@projetgrup.com>, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# abc Def <hdogan1974@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Umur Akın <umura@projetgrup.com>, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Melih Melik Sonmez, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-11-21 02:32+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
+"payment_flutterwave/tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: payment_flutterwave
+#. odoo-python
+#: code:addons/payment_flutterwave/models/payment_transaction.py:0
+msgid ""
+"An error occurred during the processing of your payment (status %s). Please "
+"try again."
+msgstr ""
+"Ödemenizin işlenmesi sırasında bir hata oluştu (durum %s). Lütfen tekrar "
+"deneyiniz."
+
+#. module: payment_flutterwave
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
+msgid "Code"
+msgstr "Kod"
+
+#. module: payment_flutterwave
+#. odoo-python
+#: code:addons/payment_flutterwave/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "API bağlantısı kurulamadı."
+
+#. module: payment_flutterwave
+#: model:ir.model.fields.selection,name:payment_flutterwave.selection__payment_provider__code__flutterwave
+msgid "Flutterwave"
+msgstr "Flutterwave"
+
+#. module: payment_flutterwave
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__flutterwave_customer_email
+msgid "Flutterwave Customer Email"
+msgstr "Flutterwave Müşteri E-postası"
+
+#. module: payment_flutterwave
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_public_key
+msgid "Flutterwave Public Key"
+msgstr "Flutterwave Açık Anahtarı"
+
+#. module: payment_flutterwave
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_secret_key
+msgid "Flutterwave Secret Key"
+msgstr "Flutterwave Gizli Anahtarı"
+
+#. module: payment_flutterwave
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_webhook_secret
+msgid "Flutterwave Webhook Secret"
+msgstr "Flutterwave Webhook Sırrı"
+
+#. module: payment_flutterwave
+#. odoo-python
+#: code:addons/payment_flutterwave/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "Referans %s eşleşen bir işlem bulunamadı."
+
+#. module: payment_flutterwave
+#: model:ir.model,name:payment_flutterwave.model_payment_provider
+msgid "Payment Provider"
+msgstr "Ödeme Sağlayıcı"
+
+#. module: payment_flutterwave
+#: model:ir.model,name:payment_flutterwave.model_payment_token
+msgid "Payment Token"
+msgstr "Ödeme Belirteci"
+
+#. module: payment_flutterwave
+#: model:ir.model,name:payment_flutterwave.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Ödeme İşlemi"
+
+#. module: payment_flutterwave
+#: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
+msgid "Public Key"
+msgstr "Genel Anahtar"
+
+#. module: payment_flutterwave
+#. odoo-python
+#: code:addons/payment_flutterwave/models/payment_transaction.py:0
+msgid "Received data with missing reference."
+msgstr "Referansı eksik olan veriler alındı."
+
+#. module: payment_flutterwave
+#: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
+msgid "Secret Key"
+msgstr "Gizli Şifre"
+
+#. module: payment_flutterwave
+#. odoo-python
+#: code:addons/payment_flutterwave/models/payment_provider.py:0
+msgid ""
+"The communication with the API failed. Flutterwave gave us the following "
+"information: '%s'"
+msgstr ""
+
+#. module: payment_flutterwave
+#: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
+msgid "The email of the customer at the time the token was created."
+msgstr "Belirtecin oluşturulduğu sırada müşterinin e-postası."
+
+#. module: payment_flutterwave
+#: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__flutterwave_public_key
+msgid "The key solely used to identify the account with Flutterwave."
+msgstr "Yalnızca Flutterwave ile hesabı tanımlamak için kullanılan anahtar."
+
+#. module: payment_flutterwave
+#: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Bu ödeme sağlayıcısının teknik kodu."
+
+#. module: payment_flutterwave
+#. odoo-python
+#: code:addons/payment_flutterwave/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr "İşlem bir belirteçle bağlantılı değildir."
+
+#. module: payment_flutterwave
+#. odoo-python
+#: code:addons/payment_flutterwave/models/payment_transaction.py:0
+msgid "Unknown payment status: %s"
+msgstr "Bilinmeyen ödeme durumu: %s"
+
+#. module: payment_flutterwave
+#: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
+msgid "Webhook Secret"
+msgstr "Webhook Sırrı"

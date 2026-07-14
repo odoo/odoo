@@ -1,0 +1,136 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * cloud_storage
+#
+# Translators:
+# Abe Manyo, 2024
+# Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2024
+# Wil Odoo, 2024
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-29 18:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-18/"
+"cloud_storage/id/>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: cloud_storage
+#: model:ir.model,name:cloud_storage.model_ir_attachment
+msgid "Attachment"
+msgstr "Lampiran"
+
+#. module: cloud_storage
+#: model:ir.model.fields.selection,name:cloud_storage.selection__ir_attachment__type__cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Cloud Storage"
+msgstr "Penyimpanan Cloud"
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
+msgid "Cloud Storage Provider for new attachments"
+msgstr "Penyedia Cloud Storage untuk lampiran baru"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Cloud Storage Settings"
+msgstr "Pengaturan Penyimpanan Cloud"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid "Cloud Storage is not enabled"
+msgstr "Penyimpanan Cloud tidak diaktifkan"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/controllers/attachment.py:0
+msgid "Cloud storage configuration has been changed. Please refresh the page."
+msgstr ""
+"Konfigurasi penyimpanan Cloud telah diubah. Silakan muat ulang halaman."
+
+#. module: cloud_storage
+#. odoo-javascript
+#: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
+msgid "Cloud storage error"
+msgstr "Kesalahan penyimpanan Cloud"
+
+#. module: cloud_storage
+#: model:ir.model,name:cloud_storage.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfig"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid ""
+"Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s"
+msgstr ""
+"Gagal untuk mengunduh lampiran (%(id)s) dari cloud: %(code)s - %(reason)s"
+
+#. module: cloud_storage
+#: model:ir.model,name:cloud_storage.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP routing"
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
+msgid "Minimum File Size (bytes)"
+msgstr "Ukuran File Minimum (byte)"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Minimum size(bytes) for attachments to be stored in the cloud storage"
+msgstr "Ukuran minimum (byte) untuk lampiran untuk disimpan di cloud storage"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/res_config_settings.py:0
+msgid "Please configure the Cloud Storage before enabling it"
+msgstr "Konfigurasikan Penyimpanan Cloud sebelum mengaktifkannya"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Select the cloud storage provider to store new attachments."
+msgstr "Pilih penyedia penyimpanan Cloud untuk menyimpan lampiran baru."
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__type
+msgid "Type"
+msgstr "Tipe"
+
+#. module: cloud_storage
+#. odoo-javascript
+#: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
+msgid "You are not allowed to upload file to the cloud storage"
+msgstr "Anda tidak diizinkan untuk mengunggah file ke penyimpanan Cloud"
+
+#. module: cloud_storage
+#: model:ir.model.fields,help:cloud_storage.field_ir_attachment__type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr ""
+"Anda dapat mengunggah file dari komputer Anda maupun salin/tempel dari "
+"tautan internet ke file Anda."
+
+#. module: cloud_storage
+#: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
+msgid ""
+"webclient can upload files larger than the minimum file size\n"
+"        (in bytes) as url attachments to the server and then upload the file "
+"to\n"
+"        the cloud storage."
+msgstr ""
+"webclient dapat mengunggah file yang lebih besar dari ukuran file "
+"minimum        (di bytes) sebagai lampiran url ke server dan lalu mengunggah "
+"file ke\n"
+"        cloud storage."

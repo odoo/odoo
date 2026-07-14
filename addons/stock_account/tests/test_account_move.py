@@ -1,0 +1,584 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
+from odoo.tests import Form, tagged
+from odoo import fields, Command
+from unittest.mock import patch
+
+class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.other_currency = cls.setup_other_currency('EUR')
+
+        (
+            cls.stock_input_account,
+            cls.stock_output_account,
+            cls.stock_valuation_account,
+            cls.expense_account,
+            cls.stock_journal,
+        ) = _create_accounting_data(cls.env)
+
+        # `all_categ` should not be altered, so we can test the `post_init` hook of `stock_account`
+        cls.all_categ = cls.env.ref('product.product_category_all')
+
+        cls.auto_categ = cls.env['product.category'].create({
+            'name': 'child_category',
+            'parent_id': cls.all_categ.id,
+            "property_stock_account_input_categ_id": cls.stock_input_account.id,
+            "property_stock_account_output_categ_id": cls.stock_output_account.id,
+            "property_stock_valuation_account_id": cls.stock_valuation_account.id,
+            "property_stock_journal": cls.stock_journal.id,
+            "property_valuation": "real_time",
+            "property_cost_method": "standard",
+        })
+        cls.product_A = cls.env["product.product"].create(
+            {
+                "name": "Product A",
+                "is_storable": True,
+                "default_code": "prda",
+                "categ_id": cls.auto_categ.id,
+                "taxes_id": [(5, 0, 0)],
+                "supplier_taxes_id": [(5, 0, 0)],
+                "lst_price": 100.0,
+                "standard_price": 10.0,
+                "property_account_income_id": cls.company_data["default_account_revenue"].id,
+                "property_account_expense_id": cls.company_data["default_account_expense"].id,
+            }
+        )
+
+        cls.branch_a = cls.setup_other_company(name="Branch A", parent_id=cls.env.company.id)
+
+
+@tagged("post_install", "-at_install")
+class TestAccountMove(TestAccountMoveStockCommon):
+    def test_standard_perpetual_01_mc_01(self):
+        rate = self.other_currency.rate_ids.sorted()[0].rate
+
+        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
+        move_form.partner_id = self.partner_a
+        move_form.currency_id = self.other_currency
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_A
+            line_form.tax_ids.clear()
+        invoice = move_form.save()
+
+        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
+        self.assertEqual(len(invoice.mapped("line_ids")), 2)
+        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
+
+        invoice._post()
+
+        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
+        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
+        self.assertEqual(len(invoice.mapped("line_ids")), 4)
+        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
+        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+
+    def test_fifo_perpetual_01_mc_01(self):
+        self.product_A.categ_id.property_cost_method = "fifo"
+        rate = self.other_currency.rate_ids.sorted()[0].rate
+
+        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
+        move_form.partner_id = self.partner_a
+        move_form.currency_id = self.other_currency
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_A
+            line_form.tax_ids.clear()
+        invoice = move_form.save()
+
+        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
+        self.assertEqual(len(invoice.mapped("line_ids")), 2)
+        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
+
+        invoice._post()
+
+        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
+        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
+        self.assertEqual(len(invoice.mapped("line_ids")), 4)
+        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
+        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+
+    def test_average_perpetual_01_mc_01(self):
+        self.product_A.categ_id.property_cost_method = "average"
+        rate = self.other_currency.rate_ids.sorted()[0].rate
+
+        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
+        move_form.partner_id = self.partner_a
+        move_form.currency_id = self.other_currency
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_A
+            line_form.tax_ids.clear()
+        invoice = move_form.save()
+
+        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
+        self.assertEqual(len(invoice.mapped("line_ids")), 2)
+        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
+
+        invoice._post()
+
+        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
+        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
+        self.assertEqual(len(invoice.mapped("line_ids")), 4)
+        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
+        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+
+    def test_storno_accounting(self):
+        """Storno accounting uses negative numbers on debit/credit to cancel other moves.
+        This test checks that we do the same for the anglosaxon lines when storno is enabled.
+        """
+        self.env.company.account_storno = True
+        self.env.company.anglo_saxon_accounting = True
+
+        move = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'partner_id': self.partner_a.id,
+            'currency_id': self.other_currency.id,
+            'invoice_line_ids': [
+                (0, None, {'product_id': self.product_A.id}),
+            ]
+        })
+        move.action_post()
+
+        stock_output_line = move.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+        self.assertEqual(stock_output_line.debit, 0)
+        self.assertEqual(stock_output_line.credit, -10)
+
+        expense_line = move.line_ids.filtered(lambda l: l.account_id == self.product_A.property_account_expense_id)
+        self.assertEqual(expense_line.debit, -10)
+        self.assertEqual(expense_line.credit, 0)
+
+    def test_standard_manual_tax_edit(self):
+        ''' Test manually editing tax amount, cogs creation should not reset tax amount '''
+        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
+        move_form.partner_id = self.partner_a
+        self.company_data["default_account_revenue"].write({
+            'tax_ids': [(6, 0, [self.env.company.account_sale_tax_id.id])]
+        })
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_A
+        invoice = move_form.save()
+
+        self.assertEqual(invoice.amount_total, 115)
+        self.assertEqual(invoice.amount_untaxed, 100)
+        self.assertEqual(invoice.amount_tax, 15)
+
+        # simulate manual tax edit via widget
+        tax_totals = invoice.tax_totals
+        tax_totals['subtotals'][0]['tax_groups'][0]['tax_amount_currency'] = 14.0
+        invoice.tax_totals = tax_totals
+
+        self.assertEqual(len(invoice.mapped("line_ids")), 3)
+        self.assertEqual(invoice.amount_total, 114)
+        self.assertEqual(invoice.amount_untaxed, 100)
+        self.assertEqual(invoice.amount_tax, 14)
+
+        invoice._post()
+
+        self.assertEqual(len(invoice.mapped("line_ids")), 5)
+        self.assertEqual(invoice.amount_total, 114)
+        self.assertEqual(invoice.amount_untaxed, 100)
+        self.assertEqual(invoice.amount_tax, 14)
+
+    def test_basic_bill(self):
+        """
+        When billing a storable product with a basic category (manual
+        valuation), the account used should be the expenses one. This test
+        checks the flow with two companies:
+        - One that existed before the installation of `stock_account` (to test
+        the post-install hook)
+        - One created after the module installation
+        """
+        first_company = self.env['res.company'].browse(1)
+        self.env.user.company_ids |= first_company
+        basic_product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'is_storable': True,
+            'categ_id': self.all_categ.id,
+        })
+
+        for company in (self.env.company | first_company):
+            bill_form = Form(self.env['account.move'].with_company(company.id).with_context(default_move_type='in_invoice'))
+            bill_form.partner_id = self.partner_a
+            bill_form.invoice_date = fields.Date.today()
+            with bill_form.invoice_line_ids.new() as line:
+                line.product_id = basic_product
+                line.price_unit = 100
+            bill = bill_form.save()
+            bill.action_post()
+
+            product_accounts = basic_product.product_tmpl_id.with_company(company.id).get_product_accounts()
+            self.assertEqual(bill.invoice_line_ids.account_id, product_accounts['expense'])
+
+    def test_product_valuation_method_change_to_automated_negative_on_hand_qty(self):
+        """ We have a product whose category has manual valuation and on-hand quantity is negative:
+        Upon switching to an automated valuation method for the product category, the following
+        entries should be generated in the stock journal:
+            1. CREDIT to valuation account
+            2. DEBIT to stock output account
+        """
+        stock_location = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+        categ = self.env['product.category'].create({'name': 'categ'})
+        product = self.product_a
+        product.write({
+            'is_storable': True,
+            'categ_id': categ.id,
+        })
+
+        out_picking = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_type_id': stock_location.warehouse_id.out_type_id.id,
+        })
+        sm = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'product_uom': product.uom_id.id,
+            'location_id': out_picking.location_id.id,
+            'location_dest_id': out_picking.location_dest_id.id,
+            'picking_id': out_picking.id,
+        })
+        out_picking.action_confirm()
+        sm.quantity = 1
+        out_picking.button_validate()
+
+        categ.write({
+            'property_valuation': 'real_time',
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+        })
+
+        amls = self.env['account.move.line'].search([('product_id', '=', product.id)]).sorted(
+            # ensure the aml with the stock_valuation_account is the first one
+            lambda amls: amls.account_id != self.stock_valuation_account
+        )
+
+        expected_valuation_line = {
+            'account_id': self.stock_valuation_account.id,
+            'credit': product.standard_price,
+            'debit': 0,
+        }
+        expected_output_line = {
+            'account_id': self.stock_output_account.id,
+            'credit': 0,
+            'debit': product.standard_price,
+        }
+        self.assertRecordValues(amls, [expected_valuation_line, expected_output_line])
+
+    def test_stock_account_move_automated_not_standard_with_branch_company(self):
+        """
+        Test that the validation of a stock picking does not fail `_check_company`
+        at the creation of the account move with sub company
+        """
+        branch_a = self.branch_a['company']
+        self.env.user.company_id = branch_a
+
+        self.auto_categ.write({'property_cost_method': 'average', 'property_valuation': 'real_time'})
+        product = self.product_A
+        product.write({'categ_id': self.auto_categ.id, 'standard_price': 300, 'company_id': branch_a.id})
+
+        stock_location = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+
+        in_picking = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_type_id': stock_location.warehouse_id.in_type_id.id,
+        })
+
+        sm = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'product_uom': product.uom_id.id,
+            'location_id': in_picking.location_id.id,
+            'location_dest_id': in_picking.location_dest_id.id,
+            'picking_id': in_picking.id,
+        })
+        in_picking.button_validate()
+        self.assertEqual(sm.state, 'done')
+        self.assertEqual(sm.account_move_ids.company_id, self.env.company)
+
+    def test_cogs_analytic_accounting(self):
+        """Check analytic distribution is correctly propagated to COGS lines.
+        Both the debit interim account line and the credit expense account line
+        should carry the analytic distribution; otherwise analytic accounting
+        becomes unbalanced."""
+        self.env.company.anglo_saxon_accounting = True
+        default_plan = self.env['account.analytic.plan'].create({
+            'name': 'Default',
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Account 1',
+            'plan_id': default_plan.id,
+            'company_id': False,
+        })
+
+        move = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'analytic_distribution': {
+                        analytic_account.id: 100,
+                    },
+                }),
+            ]
+        })
+        move.action_post()
+
+        cogs_lines = move.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertRecordValues(cogs_lines.sorted('balance'), [
+            {'analytic_distribution': {str(analytic_account.id): 100}, 'account_id': self.company_data["default_account_expense"].id},
+            {'analytic_distribution': {str(analytic_account.id): 100}, 'account_id': self.auto_categ.property_stock_account_output_categ_id.id},
+        ])
+
+    def test_cogs_account_branch_company(self):
+        """Check branch company accounts are selected"""
+        branch = self.branch_a['company']
+        test_account = self.env['account.account'].with_company(branch.id).create({
+            'name': '10001 Test Account',
+            'code': 'STCKIN',
+            'reconcile': True,
+            'account_type': 'asset_current',
+        })
+        self.auto_categ.with_company(branch.id).property_valuation = "real_time"
+        self.auto_categ.with_company(branch.id).property_stock_account_input_categ_id = test_account
+
+        bill = self.env['account.move'].with_company(branch.id).with_context(default_move_type='in_invoice').create({
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'price_unit': 100,
+                }),
+            ],
+        })
+
+        self.assertEqual(bill.invoice_line_ids.account_id, test_account)
+
+    def test_no_currency_rate_on_cogs(self):
+        """Check that when confirming a invoice with no date and a different rate than the one
+        of the current date, no currency rate is applied to the cogs.
+        """
+        self.other_currency.rate_ids.sorted()[0].rate = 2
+
+        invoice = self._create_invoice_one_line(
+            currency_id=self.other_currency,
+            invoice_currency_rate=10,
+            product_id=self.product_A,
+            price_unit=200,
+            date=False,
+            tax_ids=[],
+        )
+
+        # check that the cost of the product is 10
+        self.assertEqual(self.product_A.standard_price, 10)
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'credit': 20.0,    'debit': 0.0,    'balance': -20.0,   'account_id': self.company_data["default_account_revenue"].id},
+            {'credit': 0.0,     'debit': 20.0,   'balance': 20.0,    'account_id': self.company_data["default_account_receivable"].id},
+        ])
+
+        invoice._post()
+        # check that the lines generate for the cogs have a value of 10 (and other lines' value didn't change)
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'credit': 20.0,   'debit': 0.0,    'balance': -20.0,   'account_id': self.company_data["default_account_revenue"].id},
+            {'credit': 10.0,   'debit': 0.0,    'balance': -10.0,   'account_id': self.auto_categ.property_stock_account_output_categ_id.id},
+            {'credit': 0.0,    'debit': 10.0,   'balance': 10.0,    'account_id': self.company_data["default_account_expense"].id},
+            {'credit': 0.0,    'debit': 20.0,   'balance': 20.0,    'account_id': self.company_data["default_account_receivable"].id},
+        ])
+
+    def test_apply_inventory_adjustment_on_multiple_quants_simultaneously(self):
+        products = self.product_a + self.product_b
+        products.write({'is_storable': True, 'categ_id': self.auto_categ.id})
+        stock_loc = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+        self.env['stock.quant']._update_available_quantity(self.product_a, stock_loc, 5)
+        self.env['stock.quant']._update_available_quantity(self.product_b, stock_loc, 15)
+        quants = products.stock_quant_ids
+        quants.inventory_quantity = 10.0
+        wizard = self.env['stock.inventory.adjustment.name'].create({'quant_ids': quants})
+        wizard.action_apply()
+        inv_adjustment_journal_items = self.env['account.move.line'].search([('product_id', 'in', products.ids)], order='id asc', limit=4)
+        stock_input_account, stock_valuation_account, stock_output_account = (
+            self.auto_categ.property_stock_account_input_categ_id,
+            self.auto_categ.property_stock_valuation_account_id,
+            self.auto_categ.property_stock_account_output_categ_id,
+        )
+        self.assertRecordValues(
+            inv_adjustment_journal_items,
+            [
+                {'account_id': stock_input_account.id, 'product_id': self.product_a.id},
+                {'account_id': stock_valuation_account.id, 'product_id': self.product_a.id},
+                {'account_id': stock_valuation_account.id, 'product_id': self.product_b.id},
+                {'account_id': stock_output_account.id, 'product_id': self.product_b.id},
+            ]
+        )
+
+    def test_invoice_with_journal_item_without_label(self):
+        """Test posting an invoice whose invoice lines have no label.
+        The 'name' field is optional on account.move.line and should be
+        handled safely when generating accounting entries.
+        """
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'name': False,
+                }),
+            ],
+        })
+        move.action_post()
+        # name should remain falsy on the invoice line
+        self.assertFalse(move.invoice_line_ids.name)
+        # ensure the invoice is posted successfully
+        self.assertEqual(move.state, 'posted')
+
+    def test_product_standard_price_multicompany_with_taxes(self):
+        """Test updating standard price on storable product with taxes from multiple companies."""
+        def _mock_get_product_accounts(p_self):
+            tax_income = p_self.taxes_id.filtered_domain(p_self.env['account.tax']._check_company_domain(p_self.env.company))
+            tax_expense = p_self.supplier_taxes_id.filtered_domain(p_self.env['account.tax']._check_company_domain(p_self.env.company))
+            return {
+                'income': p_self.env['account.account'].search([
+                    ('internal_group', '=', 'income'),
+                    ('tax_ids', 'in', tax_income.ids),
+                ], limit=1),
+                'expense': p_self.env['account.account'].search([
+                    ('internal_group', '=', 'expense'),
+                    ('tax_ids', 'in', tax_expense.ids),
+                ], limit=1),
+            }
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'consu',
+            'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'taxes_id': [Command.set(self.company_data['default_tax_sale'].ids)],
+        })
+        with patch('odoo.addons.account.models.product.ProductTemplate._get_product_accounts', _mock_get_product_accounts):
+            product.quantity_svl = 10.0
+            product.standard_price = 100
+            specification = {
+                'standard_price': {},
+                'taxes_id': {'fields': {'name': {}}},
+            }
+            product.web_read(specification)
+
+    def test_return_inter_company_delivery(self):
+        stock_location = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+        transit_loc = self.env.ref('stock.stock_location_inter_company')
+
+        # Provide stock in the source location so returns and their reservations work correctly
+        self.env['stock.quant']._update_available_quantity(self.product_A, stock_location, 1.0)
+
+        delivery = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': transit_loc.id,
+            'partner_id': self.branch_a['company'].partner_id.id,
+            'picking_type_id': stock_location.warehouse_id.out_type_id.id,
+            'move_ids': [Command.create({
+                'name': self.product_A.name,
+                'product_id': self.product_A.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_A.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': transit_loc.id,
+            })]
+        })
+        delivery.action_confirm()
+        delivery.move_ids.quantity = 1
+        delivery.button_validate()
+        stock_output_lines = delivery.move_ids.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+
+        self.assertTrue(stock_output_lines, "Inter-company delivery was not accounted to output account")
+
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking').create({})
+        res = return_wizard.action_create_returns_all()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.button_validate()
+        return_stock_output_lines = return_picking.move_ids.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+
+        self.assertTrue(return_stock_output_lines, "Inter-company delivery return was not accounted to output account")
+        self.assertEqual(
+            stock_output_lines.full_reconcile_id,
+            return_stock_output_lines.full_reconcile_id,
+            "Inter-company delivery return accounting was not reconciled against the original delivery",
+        )
+
+        return_return_wizard = self.env['stock.return.picking'].with_context(active_id=return_picking.id, active_model='stock.picking').create({})
+        res = return_return_wizard.action_create_returns_all()
+        return_return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_return_picking.button_validate()
+        return_return_stock_output_lines = return_return_picking.move_ids.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+
+        self.assertTrue(return_return_stock_output_lines, "Inter-company delivery return return (a delivery) was not accounted to the output account")
+
+    def test_return_inter_company_receipt(self):
+        stock_location = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+        transit_loc = self.env.ref('stock.stock_location_inter_company')
+
+        # Provide stock in the source location so returns and their reservations work correctly
+        self.env['stock.quant']._update_available_quantity(self.product_A, transit_loc, 1.0)
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': transit_loc.id,
+            'location_dest_id': stock_location.id,
+            'partner_id': self.branch_a['company'].partner_id.id,
+            'picking_type_id': stock_location.warehouse_id.in_type_id.id,
+            'move_ids': [Command.create({
+                'name': self.product_A.name,
+                'product_id': self.product_A.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_A.uom_id.id,
+                'location_id': transit_loc.id,
+                'location_dest_id': stock_location.id,
+            })]
+        })
+        receipt.action_confirm()
+        receipt.move_ids.quantity = 1
+        receipt.button_validate()
+        stock_input_lines = receipt.move_ids.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.account_id == self.stock_input_account)
+
+        self.assertTrue(stock_input_lines, "Inter-company receipt was not accounted to input account")
+
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking').create({})
+        res = return_wizard.action_create_returns_all()
+        return_picking = self.env['stock.picking'].browse(res["res_id"])
+        return_picking.button_validate()
+        return_stock_input_lines = return_picking.move_ids.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.account_id == self.stock_input_account)
+
+        self.assertTrue(return_stock_input_lines, "Inter-company receipt return was not accounted to input account")
+        self.assertEqual(
+            stock_input_lines.full_reconcile_id,
+            return_stock_input_lines.full_reconcile_id,
+            "Inter-company receipt return accounting was not reconciled against the original receipt",
+        )
+
+        return_return_wizard = self.env['stock.return.picking'].with_context(active_id=return_picking.id, active_model='stock.picking').create({})
+        res = return_return_wizard.action_create_returns_all()
+        return_return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_return_picking.button_validate()
+        return_return_stock_input_lines = return_return_picking.move_ids.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.account_id == self.stock_input_account)
+
+        self.assertTrue(return_return_stock_input_lines, "Inter-company receipt return return (a receipt) was not accounted to the input account")

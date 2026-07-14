@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="ubl_tr_InvoiceType" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">
+        <!-- the placement of <cac:AllowanceCharge> node is improper for Nilvera, so it is replaced. -->
+        <xpath expr="//*[local-name()='AllowanceCharge']" position="replace"/>
+        <xpath expr="//*[local-name()='PaymentTerms']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:AllowanceCharge t-foreach="vals.get('allowance_charge_vals', [])" t-as="foreach_vals">
+                    <t t-call="{{AllowanceChargeType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:AllowanceCharge>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

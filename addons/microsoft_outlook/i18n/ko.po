@@ -1,0 +1,281 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* microsoft_outlook
+#
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
+msgstr "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        Connect your Outlook account"
+msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        Outlook 계정 연결하기"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
+msgid ""
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Outlook Token Valid\n"
+"                    </span>"
+msgstr ""
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        유효한 Outlook 토큰\n"
+"                    </span>"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Outlook Token Valid\n"
+"                    </span>"
+msgstr ""
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        유효한 Outlook 토큰\n"
+"                    </span>"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "An error occurred when fetching the access token. %s"
+msgstr "액세스 토큰을 가져오는 중 오류가 발생했습니다. %s"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
+msgid "Authenticate with"
+msgstr "다음으로 인증"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
+msgid "Authentication URI"
+msgstr "인증 URL"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경 설정"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+msgid ""
+"Connect your Outlook account with the OAuth Authentication process.  \n"
+"By default, only a user with a matching email address will be able to use "
+"this server. To extend its use, you should set a \"mail.default.from\" "
+"system parameter."
+msgstr ""
+"OAuth 인증 프로세스를 통하여 Outlook 계정을 연결합니다.  \n"
+"기본값으로, 이메일 주소가 일치하는 사용자만 이 서버를 사용할 수 있습니다. 확"
+"장해서 사용하려면, \"mail.default.from\" 시스템 매개변수를 설정해야 합니다."
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/fetchmail_server.py:0
+msgid ""
+"Connect your personal Outlook account using OAuth. \n"
+"You will be redirected to the Outlook login page to accept the permissions."
+msgstr ""
+"OAuth를 사용하여 Outlook 개인 계정을 연결시킵니다. \n"
+"권한을 수락할 수 있도록 Outlook 로그인 페이지로 이동합니다."
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
+msgid "Go back to your mail server"
+msgstr "메일 서버로 돌아가기"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "ID"
+msgstr "ID"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "ID of your Outlook app"
+msgstr "Outlook 앱 아이디"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_fetchmail_server
+msgid "Incoming Mail Server"
+msgstr "수신 메일 서버"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+msgid ""
+"Incorrect Connection Security for Outlook mail server “%s”. Please set it to "
+"\"TLS (STARTTLS)\"."
+msgstr ""
+"Outlook 메일 서버 “%s”에 대한 연결 보안이 잘못되었습니다. \"TLS (STARTTLS)"
+"\"로 설정하시기 바랍니다."
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
+msgid "Is Outlook Credential Configured"
+msgstr "Outlook 자격 증명 설정 여부"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_ir_mail_server
+msgid "Mail Server"
+msgstr "메일 서버"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
+msgid "Microsoft Outlook Mixin"
+msgstr "Microsoft Outlook 믹스인"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "Only the administrator can link an Outlook mail server."
+msgstr "관리자만 Outlook 메일 서버를 연결할 수 있습니다."
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
+msgid "Outlook Access Token"
+msgstr "Outlook 액세스 토큰"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
+msgid "Outlook Access Token Expiration Timestamp"
+msgstr "Outlook 액세스 토큰 만료 타임스탬프"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
+msgid "Outlook Client Id"
+msgstr "Outlook 클라이언트 아이디"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
+msgid "Outlook Client Secret"
+msgstr "Outlook 클라이언트 비밀번호"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
+#: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
+msgid "Outlook OAuth Authentication"
+msgstr "Outlook OAuth 인증"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
+msgid "Outlook Refresh Token"
+msgstr "Outlook 새로고침 토큰"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "Please configure your Outlook credentials."
+msgstr "Outlook 자격 증명을 구성하십시오."
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "Please connect with your Outlook account before using it."
+msgstr "사용 전에 Outlook 계정에 연결하세요."
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+msgid ""
+"Please fill the \"Username\" field with your Outlook/Office365 username "
+"(your email address). This should be the same account as the one used for "
+"the Outlook OAuthentication Token."
+msgstr ""
+"\"사용자 이름\" 필드에 Outlook/Office365 사용자 이름 (이메일 주소)을 입력하세"
+"요. 이 계정은 Outlook OAuth 인증 토큰에 사용된 계정과 동일해야 합니다."
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+msgid ""
+"Please leave the password field empty for Outlook mail server “%s”. The "
+"OAuth process does not require it"
+msgstr ""
+"OAuth 프로세스에는 암호가 필요하지 않습니다. Outlook 메일 서버 “%s”의 암호 필"
+"드를 비워 두세요."
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid "Read More"
+msgstr "더 읽기"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/fetchmail_server.py:0
+msgid "SSL is required for server “%s”."
+msgstr "서버 “%s”에 SSL이 필요합니다."
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "Secret"
+msgstr "비밀"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "Secret of your Outlook app"
+msgstr "Outlook 앱 비밀번호"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
+msgid "Server Type"
+msgstr "서버 유형"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"Setup your Outlook API credentials in the general settings to link a Outlook "
+"account."
+msgstr ""
+"Outlook 계정을 연결하려면 일반 설정 항목에서 Outlook API 자격 증명을 설정하십"
+"시오."
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
+#: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
+#: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
+msgid "The URL to generate the authorization code from Outlook"
+msgstr "Outlook에서 인증 코드를 생성하기 위한 URL."
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "Unknown error."
+msgstr "알 수 없는 오류"

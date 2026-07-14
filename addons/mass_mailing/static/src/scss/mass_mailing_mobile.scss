@@ -1,0 +1,7 @@
+@include media-breakpoint-down(md) {
+    // For field to occupy full width in small devices. We need '!important'
+    // here because of the 'w-auto' class used in the view.
+    .o_form_editable div[name="mailing_filter_id"] {
+        width: 100% !important;
+    }
+}

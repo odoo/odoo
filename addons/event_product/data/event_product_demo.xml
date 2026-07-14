@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_product_event_standard" model="product.product">
+            <field name="list_price">30.0</field>
+            <field name="standard_price">10.0</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="name">Event Registration - Standard</field>
+            <field name="description_sale" eval="False"/>
+            <field name="categ_id" ref="event_product.product_category_events"/>
+            <field name="type">service</field>
+            <field name="service_tracking">event</field>
+        </record>
+        <record id="product_product_event_vip" model="product.product">
+            <field name="list_price">100.0</field>
+            <field name="standard_price">50.0</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="name">Event Registration - VIP</field>
+            <field name="description_sale" eval="False"/>
+            <field name="categ_id" ref="event_product.product_category_events"/>
+            <field name="type">service</field>
+            <field name="service_tracking">event</field>
+        </record>
+    </data>
+</odoo>

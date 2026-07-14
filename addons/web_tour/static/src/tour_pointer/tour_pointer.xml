@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="web_tour.TourPointer">
+        <div
+            t-if="this.isVisible"
+            t-ref="pointer"
+            t-attf-class="
+                o_tour_pointer
+                o_{{ position }}
+                {{ isOpen ? 'o_open' : (props.bounce ? 'o_bouncing' : '') }}
+                {{ props.pointerState.onClick ? 'cursor-pointer' : '' }}
+            "
+            t-attf-style="
+                --TourPointer__width: {{ constructor.width }}px;
+                --TourPointer__height: {{ constructor.height }}px;
+            "
+            t-on-mouseenter="props.pointerState.onMouseEnter or (() => {})"
+            t-on-mouseleave="props.pointerState.onMouseLeave or (() => {})"
+            t-on-click="props.pointerState.onClick or (() => {})"
+        >
+            <div class="o_tour_pointer_tip position-absolute" />
+            <div
+                class="o_tour_pointer_content rounded overflow-hidden px-3 py-2 w-100 h-100 position-relative"
+                t-att-class="{ 'invisible': !isOpen }"
+            >
+                <t t-out="content" />
+            </div>
+        </div>
+        <div class="o_tour_dropzone position-fixed pe-none" t-if="props.pointerState.isVisible and props.pointerState.isZone" t-ref="zone" style="border: 3px dashed #714b67;"/>
+    </t>
+</templates>

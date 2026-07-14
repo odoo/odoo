@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.MessagingMenu" t-inherit-mode="extension">
+        <xpath expr="//*[@t-name='mail.MessagingMenu']" position="inside">
+            <div t-if="!env.inDiscussApp" t-att-class="discussSystray.class">
+                <Dropdown state="dropdown" beforeOpen.bind="beforeOpen" position="'bottom-end'" menuClass="discussSystray.menuClass">
+                    <button>
+                        <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"></i>
+                        <span t-if="!store.settings.mute_until_dt and counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-call="mail.MessagingMenu.content"/>
+                    </t>
+                </Dropdown>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='notification-list']" position="before">
+            <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
+                <t t-if="!ui.isSmall">
+                    <MessagingMenuQuickSearch t-if="state.searchOpen" onClose.bind="toggleSearch"/>
+                    <t t-else="">
+                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
+                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
+                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
+                        <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
+                        <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//*[@name='threads']" position="before">
+            <div t-if="store.channels.status !== 'fetching' and !hasPreviews and !store.discuss.searchTerm" class="d-flex justify-content-center py-4 px-2 text-muted">
+                No conversation yet...
+            </div>
+            <div t-if="store.discuss.searchTerm and !threads.length" class="d-flex justify-content-center py-4 px-2 text-muted">
+                No thread found.
+            </div>
+            <t t-set="itemIndex" t-value="0"/>
+            <t t-if="installationRequest.isShown and !store.discuss.searchTerm">
+                <NotificationItem
+                    isActive="state.activeIndex === itemIndex"
+                    body="installationRequest.body"
+                    iconSrc="installationRequest.iconSrc"
+                    onClick="installationRequest.onClick"
+                    onSwipeRight="hasTouch() ? { action: () => this.pwa.decline(), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
+                >
+                    <t t-set-slot="name"><t  t-esc="installationRequest.displayName"/></t>
+                    <t t-set-slot="icon">
+                        <ImStatus persona="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                    </t>
+                    <t t-set-slot="requestContent">
+                        <a t-if="ui.isSmall" class="btn fa fa-cloud-download" />
+                        <t t-else="">
+                            <a class="btn btn-primary px-2 py-1 smaller">Install</a>
+                            <span t-if="!hasTouch()" t-on-click.stop="() => this.pwa.decline()" class="text-dark bg-transparent oi oi-close opacity-50 opacity-100-hover" title="Dismiss"></span>
+                        </t>
+                    </t>
+                </NotificationItem>
+                <t t-set="itemIndex" t-value="itemIndex + 1"/>
+            </t>
+            <t t-if="notificationRequest.isShown and !store.discuss.searchTerm">
+                <NotificationItem
+                    isActive="state.activeIndex === itemIndex"
+                    body="notificationRequest.body"
+                    iconSrc="notificationRequest.iconSrc"
+                    onClick="() => notification.requestPermission()"
+                >
+                    <t t-set-slot="name"><t t-esc="notificationRequest.displayName"/></t>
+                    <t t-set-slot="icon">
+                        <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                    </t>
+                    <t t-set-slot="requestContent">
+                        <a t-if="ui.isSmall" class="btn fa fa-bell" />
+                        <t t-else="">
+                            <a class="btn btn-primary px-2 py-1 smaller">Enable</a>
+                            <span t-if="!hasTouch()" t-on-click.stop="() => this.store.isNotificationPermissionDismissed = true" class="text-dark bg-transparent oi oi-close opacity-50 opacity-100-hover" title="Dismiss"></span>
+                        </t>
+                    </t>
+                </NotificationItem>
+                <t t-set="itemIndex" t-value="itemIndex + 1"/>
+            </t>
+            <t t-if="store.discuss.activeTab === 'main' and !env.inDiscussApp and !store.discuss.searchTerm">
+                <t t-foreach="store.failures" t-as="failure" t-key="failure.id">
+                    <NotificationItem
+                        isActive="state.activeIndex === itemIndex"
+                        body="failure.body"
+                        counter="failure.notifications.length > 1 ? failure.notifications.length : undefined"
+                        datetime="failure.datetime"
+                        iconSrc="failure.iconSrc"
+                        hasMarkAsReadButton="true"
+                        onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
+                        onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
+                    >
+                        <t t-set-slot="name"><t t-esc="getFailureNotificationName(failure)"/></t>
+                    </NotificationItem>
+                    <t t-set="itemIndex" t-value="itemIndex + 1"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

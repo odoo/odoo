@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.AccountPaymentRegisterHtmlField" t-inherit="web_editor.HtmlField" t-inherit-mode="primary">
+        <xpath expr="//div[@t-ref='readonlyElement']" position="attributes">
+            <attribute name="t-on-click">switchInstallmentsAmount</attribute>
+        </xpath>
+    </t>
+</templates>

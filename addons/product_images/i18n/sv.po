@@ -1,0 +1,292 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_images
+#
+# Translators:
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
+# Haojun Zou <apollo_zhj@msn.com>, 2024
+# Robin Calvin, 2024
+# Simon S, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Martin Trigaux, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"%(matching_images_count)s matching images have been found for %"
+"(product_count)s products."
+msgstr ""
+"%(matching_images_count)s matchande bilder har hittats för %(product_count)s "
+"produkter."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"<span invisible=\"nb_products_selected &lt;= 10000\">\n"
+"                            As only 10,000 products can be processed per "
+"day, the remaining will be\n"
+"                            done tomorrow.\n"
+"                        </span>"
+msgstr ""
+"<span invisible=\"nb_products_selected &lt;= 10000\">\n"
+"                            Eftersom endast 10.000 produkter kan bearbetas "
+"per dag, kommer de återstående att\n"
+"                            göras i morgon.\n"
+"                        </span>"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"A task to process products in the background is already running. Please try "
+"againlater."
+msgstr ""
+"En uppgift för att bearbeta produkter i bakgrunden är redan igång. Vänligen "
+"försök igen senare."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
+msgid "API Key"
+msgstr "API-nyckel"
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_res_config_settings
+msgid "Config Settings"
+msgstr "Inställningar"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_product_fetch_image_wizard
+msgid ""
+"Fetch product images from Google Images based on the product's barcode "
+"number."
+msgstr ""
+"Hämta produktbilder från Google Images baserat på produktens "
+"streckkodsnummer."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "Get Pictures"
+msgstr "Hämta bilder"
+
+#. module: product_images
+#: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
+#: model:ir.actions.act_window,name:product_images.product_template_action_get_pic_with_barcode
+msgid "Get Pictures from Google Images"
+msgstr "Hämta bilder från Google Images"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
+msgid "Google Custom Search API Key"
+msgstr "API-nyckel för Google anpassad sökning"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_product__image_fetch_pending
+msgid "Image Fetch Pending"
+msgstr "Bildhämtning pågår"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_unable_to_process
+msgid "Number of product unprocessable"
+msgstr "Antal produkter som inte kan bearbetas"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_to_process
+msgid "Number of products to process"
+msgstr "Antal produkter som ska bearbetas"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
+msgid "Number of selected products"
+msgstr "Antal utvalda produkter"
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"Please note that some images might not be royalty-free. You should not\n"
+"                        publish these on your website."
+msgstr ""
+"Observera att vissa bilder kanske inte är royaltyfria. Du bör inte\n"
+"                        publicera dessa på din webbplats."
+
+#. module: product_images
+#: model:ir.actions.server,name:product_images.ir_cron_fetch_image_ir_actions_server
+msgid "Product Images: Get product images from Google"
+msgstr "Produktbilder: Hämta produktbilder från Google"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_product_product
+msgid "Product Variant"
+msgstr "Produktvariant"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid "Product images"
+msgstr "Produktbilder"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__products_to_process
+msgid "Products To Process"
+msgstr "Produkter till process"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"Products are processed in the background. Images will be updated "
+"progressively."
+msgstr ""
+"Produkterna bearbetas i bakgrunden. Bilder kommer att uppdateras successivt."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
+msgid "Search Engine ID"
+msgstr "Sökmotor-ID"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid "The API Key and Search Engine ID must be set in the General Settings."
+msgstr ""
+"API-nyckeln och sökmotor-ID:t måste anges i de allmänna inställningarna."
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"The Custom Search API is not enabled in your Google project. Please visit "
+"your Google Cloud Platform project page and enable it, then retry. If you "
+"enabled this API recently, please wait a few minutes and retry."
+msgstr ""
+"API:t för anpassad sökning är inte aktiverat i ditt Google-projekt. Gå till "
+"projektsidan för Google Cloud Platform och aktivera det och försök sedan "
+"igen. Om du aktiverade detta API nyligen, vänta några minuter och försök "
+"igen."
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
+msgid "The identifier of the Google Programmable Search Engine"
+msgstr "Identifieraren för Googles programmerbara sökmotor"
+
+#. module: product_images
+#: model:ir.model.fields,help:product_images.field_product_fetch_image_wizard__products_to_process
+msgid ""
+"The list of selected products that meet the criteria (have a barcode and no "
+"image)"
+msgstr ""
+"Listan över utvalda produkter som uppfyller kriterierna (har en streckkod "
+"och ingen bild)"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"The scheduled action \"Product Images: Get product images from Google\" has "
+"been deleted. Please contact your administrator to have the action restored "
+"or to reinstall the module \"product_images\"."
+msgstr ""
+"Den schemalagda åtgärden \"Produktbilder: Hämta produktbilder från Google\" "
+"har tagits bort. Kontakta din administratör för att få åtgärden återställd "
+"eller för att installera om modulen \"product_images\"."
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/models/ir_cron_trigger.py:0
+msgid "This action is already scheduled. Please try again later."
+msgstr "Denna åtgärd är redan planerad. Vänligen försök igen senare."
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_ir_cron_trigger
+msgid "Triggered actions"
+msgstr "Utlösta åtgärder"
+
+#. module: product_images
+#: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
+msgid "Whether an image must be fetched for this product. Handled by a cron."
+msgstr "Om en bild måste hämtas för den här produkten. Hanteras av en cron."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "You selected"
+msgstr "Du valde"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid "Your API Key or your Search Engine ID is incorrect."
+msgstr "Din API-nyckel eller ditt sökmotor-ID är felaktigt."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "of which will be processed."
+msgstr "av vilka kommer att bearbetas."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"products will not be\n"
+"                            processed because they either already have an "
+"image or their barcode\n"
+"                            number is not set."
+msgstr ""
+"produkter kommer inte att\n"
+"                            eftersom de antingen redan har en bild eller för "
+"att streckkodsnumret\n"
+"                            nummer inte är angivet."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "products,"
+msgstr "produkter,"

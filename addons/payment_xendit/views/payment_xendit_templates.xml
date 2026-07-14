@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="get"/>
+    </template>
+
+    <template id="inline_form">
+        <div name="o_xendit_form" t-att-data-xendit-public-key="provider_sudo.xendit_public_key">
+            <t t-if="pm_sudo.code == 'card'">
+                <!-- Name -->
+                <div class="row">
+                    <div class="col-sm-6 mb-3">
+                        <label for="o_xendit_first_name">Card Holder First Name</label>
+                            <input
+                                id="o_xendit_first_name"
+                                type="text"
+                                placeholder="John"
+                                required=""
+                                class="form-control"
+                            />
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="o_xendit_last_name">Card Holder Last Name</label>
+                            <input
+                                id="o_xendit_last_name"
+                                type="text"
+                                placeholder="Smith"
+                                required=""
+                                class="form-control"
+                            />
+                    </div>
+                </div>
+                <!-- Phone and email -->
+                <div class="row">
+                    <div class="col-sm-6 mb-3">
+                        <label for="o_xendit_phone">Phone Number</label>
+                            <input
+                                id="o_xendit_phone"
+                                type="text"
+                                required=""
+                                class="form-control"
+                            />
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="o_xendit_email">Email</label>
+                            <input
+                                id="o_xendit_email"
+                                type="text"
+                                required=""
+                                placeholder="john.smith@example.com"
+                                class="form-control"
+                            />
+                    </div>
+                </div>
+                <!-- Card Number -->
+                <div class="mb-3">
+                    <label for="o_xendit_card" class="col-form-label">Card Number</label>
+                    <input
+                        id="o_xendit_card"
+                        type="text"
+                        required=""
+                        maxlength="19"
+                        autocomplete="cc-number"
+                        class="form-control"
+                    />
+                </div>
+                <!-- Expiry date and security code -->
+                <div class="row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="o_xendit_month">Expiration</label>
+                        <div class="input-group">
+                            <input
+                                id="o_xendit_month"
+                                type="number"
+                                placeholder="MM"
+                                min="1"
+                                max="12"
+                                autocomplete="cc-exp-month"
+                                required=""
+                                class="form-control"
+                            />
+                            <input
+                                id="o_xendit_year"
+                                type="number"
+                                placeholder="YYYY"
+                                min="1000"
+                                max="9999"
+                                autocomplete="cc-exp-year"
+                                required=""
+                                class="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mb-3">
+                        <label for="o_xendit_cvn">Card Code</label>
+                        <input
+                            id="o_xendit_cvn"
+                            type="number"
+                            max="9999"
+                            autocomplete="cc-csc"
+                            required=""
+                            class="form-control"
+                        />
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+
+</odoo>

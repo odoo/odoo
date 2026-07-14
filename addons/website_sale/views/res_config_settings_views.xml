@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit_sale" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Remove customer accounts setting from sales settings tab -->
+            <!-- It must not be in the view at all to make sure settings can be saved
+                (because auth_signup_uninvited is specified as required) -->
+            <setting id="auth_signup_documents" position="replace"/>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="website_info_settings" position="after">
+                <block title="Shop - Checkout Process" id="website_shop_checkout">
+                    <setting id="cart_redirect_setting" string="Add to Cart" help="What should be done on &quot;Add to Cart&quot;?">
+                        <div class="content-group">
+                            <div class="row mt16 ms-4">
+                                <field name="add_to_cart_action" widget="radio"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="website_checkout_registration" title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*."
+                         string="Sign in/up at checkout" help="&quot;Optional&quot; allows guests to register from the order confirmation email to track their order.">
+                        <field name="account_on_checkout" class="w-75" widget="radio"/>
+                    </setting>
+                    <setting help="Instant checkout, instead of adding to cart">
+                        <field name="enabled_buy_now_button"/>
+                    </setting>
+                    <setting help="Add a customizable form during checkout (after address)">
+                        <field name="enabled_extra_checkout_step"/>
+                        <div class="row mt8 ms-4" invisible="not enabled_extra_checkout_step">
+                            <button type="object" name="action_open_extra_info" string="Configure Form " class="btn-link" icon="oi-arrow-right"/>
+                        </div>
+                    </setting>
+                    <setting string="Assignment" help="Assignment of online orders">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label class="o_light_label col-lg-3" string="Sales Team" for="salesteam_id"/>
+                                <field name="salesteam_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                            </div>
+                            <div class="row">
+                                <label class="o_light_label col-lg-3" for="salesperson_id"/>
+                                <field name="salesperson_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting help="Allow your customer to add products from previous order in their cart.">
+                        <field name="website_sale_enabled_portal_reorder_button"/>
+                    </setting>
+                </block>
+
+                <block title="Shop - Products" id="sale_product_catalog_settings">
+                    <setting id="website_tax_inclusion_setting">
+                        <label for="show_line_subtotals_tax_selection" string="Display Product Prices"/>
+                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                        <div class="text-muted">
+                            Prices displayed on your eCommerce
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <field name="show_line_subtotals_tax_selection" class="o_light_label" widget="radio"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting
+                        id="pricelists_setting"
+                        help="Manage pricelists to apply specific prices per country, customer, products, etc"
+                        documentation="/applications/sales/sales/products_prices/prices/pricing.html"
+                    >
+                        <field name="group_product_pricelist"/>
+                        <div class="content-group mt16" invisible="not group_product_pricelist">
+                            <button
+                                name="%(product.product_pricelist_action2)d"
+                                icon="oi-arrow-right"
+                                type="action"
+                                string="Pricelists"
+                                groups="product.group_product_pricelist"
+                                class="btn-link"/>
+                        </div>
+                    </setting>
+                    <setting help="Add a strikethrough price, as a comparison">
+                        <field name="group_product_price_comparison"/>
+                    </setting>
+                    <setting id="ecom_uom_price_option_setting" string="Product Reference Price" help="Add a reference price per UoM on products (i.e $/kg), in addition to the sale price">
+                        <field name="group_show_uom_price"/>
+                    </setting>
+                    <setting
+                        id="product_attributes_setting"
+                        string="Product Variants"
+                        help="One product might have different attributes (size, color, ...)"
+                        documentation="/applications/websites/ecommerce/managing_products/variants.html"
+                    >
+                        <field name="group_product_variant"/>
+                        <div class="content-group" invisible="not group_product_variant">
+                            <div class="mt8">
+                                <button type="action" name="%(product.attribute_action)d" string="Attributes" class="btn-link" icon="oi-arrow-right"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting
+                        id="promotion_coupon_programs"
+                        title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products."
+                        string="Discounts, Loyalty &amp; Gift Card"
+                        help="Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet"
+                        documentation="/applications/sales/sales/products_prices/loyalty_discount.html"
+                    >
+                        <field name="module_loyalty" />
+                    </setting>
+                    <setting id="wishlist_option_setting" help="Allow signed-in users to save product in a wishlist">
+                        <field name="module_website_sale_wishlist"/>
+                    </setting>
+                    <setting id="comparator_option_setting" string="Product Comparison Tool" help="Allow shoppers to compare products based on their attributes">
+                        <field name="module_website_sale_comparison"/>
+                    </setting>
+                    <setting id="hide_add_to_cart_setting" help="If product price equals 0, replace 'Add to Cart' by 'Contact us'.">
+                        <field name="website_sale_prevent_zero_price_sale"/>
+                        <div class="content-group" invisible="not website_sale_prevent_zero_price_sale">
+                            <div class="row mt16">
+                                <label class="o_light_label col-lg-3" string="Button url" for="website_sale_contact_us_button_url"/>
+                                <field name="website_sale_contact_us_button_url"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+
+                <block title="Delivery" id="sale_shipping_settings">
+                    <setting id="shipping_address_setting" help="Let the customer enter a delivery address">
+                        <field name="group_delivery_invoice_address"/>
+                    </setting>
+                    <setting id="delivery_method_setting" string="Shipping Costs" help="Compute shipping costs on orders"
+                             documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                        <div class="content-group">
+                            <div class="mt16">
+                                <button
+                                    string="Delivery Methods"
+                                    type="action"
+                                    name="%(delivery.action_delivery_carrier_form)d"
+                                    class="btn-link"
+                                    icon="oi-arrow-right"
+                                />
+                            </div>
+                        </div>
+                    </setting>
+                    <setting
+                        id="click_and_collect_setting"
+                        help="Allow customers to pick up their online purchases at your store and pay in person"
+                    >
+                        <field name="module_website_sale_collect"/>
+                    </setting>
+                    <setting id="shipping_provider_ups_setting">
+                        <div class="o_form_label">UPS</div>
+                        <a href="https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                        <div class="text-muted" id="website_delivery_ups">
+                            Compute shipping costs and ship with UPS<br/>
+                            <strong>(please go to Home>Apps to install)</strong>
+                        </div>
+                    </setting>
+                    <setting id="shipping_provider_dhl_setting">
+                        <div class="o_form_label">DHL</div>
+                        <a href="https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                        <div class="text-muted" id="website_delivery_dhl">
+                            Compute shipping costs and ship with DHL<br/>
+                            <strong>(please go to Home>Apps to install)</strong>
+                        </div>
+                    </setting>
+                    <setting id="shipping_provider_fedex_setting">
+                        <div class="o_form_label">FedEx</div>
+                        <a href="https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                        <div class="text-muted" id="website_delivery_fedex">
+                            Compute shipping costs and ship with FedEx<br/>
+                            <strong>(please go to Home>Apps to install)</strong>
+                        </div>
+                    </setting>
+                    <setting id="shipping_provider_usps_setting">
+                       <div class="o_form_label">USPS</div>
+                        <a href="https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                        <div class="text-muted" id="website_delivery_usps">
+                            Compute shipping costs and ship with USPS<br/>
+                            <strong>(please go to Home>Apps to install)</strong>
+                        </div>
+                    </setting>
+                    <setting id="shipping_provider_bpost_setting" string="bpost" help="Compute shipping costs and ship with bpost"
+                             documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                        <field name="module_delivery_bpost" widget="upgrade_boolean"/>
+                        <div class="content-group">
+                            <div class="mt8" invisible="not module_delivery_bpost">
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="bpost Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'bpost'}"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="shipping_provider_easypost_setting" string="Easypost" help="Compute shipping cost and ship with Easypost"
+                             documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                        <field name="module_delivery_easypost" widget="upgrade_boolean"/>
+                        <div class="content-group">
+                            <div class="mt8" invisible="not module_delivery_easypost">
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="Easypost Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'easypost'}"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting
+                        id="shipping_provider_shiprocket_setting"
+                        string="Shiprocket"
+                        help="Compute shipping cost and ship with Shiprocket"
+                        documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html"
+                    >
+                        <field name="module_delivery_shiprocket" widget="upgrade_boolean"/>
+                            <div class="content-group">
+                                <div class="mt8" invisible="not module_delivery_shiprocket">
+                                    <button
+                                        name="%(delivery.action_delivery_carrier_form)d"
+                                        icon="oi-arrow-right"
+                                        type="action"
+                                        string="Shiprocket Shipping Methods"
+                                        class="btn-link"
+                                        context="{'search_default_delivery_type': 'shiprocket'}"/>
+                                </div>
+                            </div>
+                    </setting>
+                    <setting id="shipping_provider_mondialrelay_setting" string="Mondial Relay" help="Let the customer select a Mondial Relay shipping point">
+                        <field name="module_delivery_mondialrelay"/>
+                    </setting>
+                </block>
+
+                <field name='module_account' invisible="1"/>
+                    <block title="Invoicing" id="sale_invoicing_settings" invisible="not module_account">
+                        <setting id="invoicing_policy_setting" title="The mode selected here applies as invoicing policy of any new product created but not of products already existing." string="Invoicing Policy" help="Issue invoices to customers">
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="default_invoice_policy" class="o_light_label" widget="radio"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="automatic_invoice_generation" invisible="default_invoice_policy == 'delivery'" help="Generate the invoice automatically when the online payment is confirmed">
+                            <field name="automatic_invoice"/>
+                            <div  invisible="not automatic_invoice">
+                                <label for="invoice_mail_template_id" class="o_light_label me-2"/>
+                                <field name="invoice_mail_template_id" class="oe_inline"/>
+                            </div>
+                        </setting>
+                    </block>
+            </block>
+
+            <setting id="website_marketing_automation" position="after">
+                <setting
+                    id="abandoned_carts_setting"
+                    title="Customer needs to be signed in otherwise the mail address is not known.
+    &#10;&#10;- If a potential customer creates one or more abandoned checkouts and then completes a sale before the recovery email gets sent, then the email won't be sent.
+    &#10;&#10;- If user has manually sent a recovery email, the mail will not be sent a second time
+    &#10;&#10;- If a payment processing error occurred when the customer tried to complete their checkout, then the email won't be sent.
+    &#10;&#10;- If your shop does not support shipping to the customer's address, then the email won't be sent.
+    &#10;&#10;- If none of the products in the checkout are available for purchase (empty inventory, for example), then the email won't be sent.
+    &#10;&#10;- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
+                    string="Automatically send abandoned checkout emails"
+                    help="Mail only sent to signed in customers with items available for sale in their cart.">
+                    <field name="send_abandoned_cart_email"/>
+
+                    <div invisible="not send_abandoned_cart_email" class="content-group" title="Carts are flagged as abandoned after this delay.">
+                        <div class="row mt16">
+                            <div class="col-12">
+                                <label for="cart_abandoned_delay" string="Send after" class="o_light_label"/>
+                                <field class="col-2" name="cart_abandoned_delay" widget="float_time" /> Hours.
+                            </div>
+                        </div>
+                    </div>
+                    <div invisible="not send_abandoned_cart_email" class="mt8">
+                        <button type="object" name="action_open_abandoned_cart_mail_template" string="Customize Abandoned Email Template" class="btn-link" icon="oi-arrow-right"/>
+                    </div>
+                </setting>
+            </setting>
+
+            <setting id="website_login_documents" position="after">
+                <setting
+                    id="ecommerce_access"
+                    help="Enforce a customer to be logged in to access 'Shop'"
+                    title="Shop, products, cart and wishlist visibility"
+                >
+                    <field
+                        name="ecommerce_access"
+                        widget="radio"
+                        class="o_light_label"
+                    />
+                </setting>
+            </setting>
+
+            <setting id="google_analytics_setting" position="after">
+                <setting
+                    id="autocomplete_googleplaces_setting"
+                    help="Use Google Places API to validate addresses entered by your visitors"
+                    documentation="/applications/websites/website/configuration/address_autocomplete.html"
+                >
+                    <field name="module_website_sale_autocomplete"/>
+                </setting>
+            </setting>
+
+        </field>
+    </record>
+</odoo>

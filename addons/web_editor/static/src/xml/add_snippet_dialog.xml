@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web_editor.AddSnippetDialog">
+    <Dialog
+        title.translate="Insert a block"
+        contentClass="'o_add_snippet_dialog h-100'"
+        footer="false"
+        size="'xl'">
+        <div class="overflow-hidden w-100">
+            <div class="d-flex w-100 h-100 vertical flex-row">
+                <aside class="border-end overflow-auto">
+                    <div class="d-block position-relative p-2 bg-100 border-bottom">
+                        <input type="search" class="form-control bg-white pe-4" placeholder="Search for a block"
+                            aria-label="Search for a block" t-model="state.search" t-ref="search-input"/>
+                        <span class="input-group-text position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent text-muted">
+                            <i class="oi oi-search" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <!-- TODO the t-if="!state.search" should be on the list-group itself -->
+                    <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto" role="tablist">
+                        <t t-if="!state.search" t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.name">
+                            <button class="list-group-item list-group-item-light list-group-item-action p-3" role="tab"
+                                t-att-class="{ 'active': this.state.groupSelected === snippetGroup.name}"
+                                t-on-click="() => this.state.groupSelected = snippetGroup.name">
+                                <t t-out="snippetGroup.displayName"/>
+                            </button>
+                        </t>
+                    </div>
+                </aside>
+                <div class="position-relative flex-grow-1 flex-shrink-1">
+                    <div class="spinner-grow position-absolute top-50 start-50 translate-middle" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <iframe class="border-0 fade bg-200 position-relative o_add_snippet_iframe" tabindex="-1" t-ref="iframe" src="about:blank" height="333%" width="333%"/>
+                </div>
+            </div>
+        </div>
+    </Dialog>
+</t>
+
+<t t-name="web_editor.RenameCustomSnippetDialog">
+    <Dialog title.translate="Rename the block" contentClass="'o_rename_custom_snippet_dialog'" size="'md'">
+        <div class="mb-3 row">
+            <label class="col-form-label col-md-2" for="customSnippetName">Name</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" id="customSnippetName" t-ref="renameInput"
+                    t-attf-value="#{props.currentName}" placeholder="Snippet name"/>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="onClickConfirm">Save</button>
+            <button class="btn btn-secondary" t-on-click="onClickDiscard">Discard</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

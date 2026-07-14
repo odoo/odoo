@@ -1,0 +1,138 @@
+// Color system
+//
+// Note: all of these variables use BS default values, will be eventually
+// overridden by website and are declared here just to allow components
+// customization (eg. form-range)
+
+// gray-color-variables
+$white: #fff !default;
+$gray-400: #ced4da !default;
+
+// color-variables
+$blue: #0d6efd !default;
+
+// theme-color-variables
+$primary: $blue !default;
+
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio: $o-frontend-min-contrast-ratio !default;
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-smooth-scroll: false !default;
+
+// Color contrast variables used in the color-contrast function
+$color-contrast-dark: $black !default; // BS Default
+$color-contrast-light: $white !default; // BS Default
+
+// Body
+
+$body-bg: $white !default; // BS Default
+$body-color: $gray-900 !default; // BS Default
+$body-emphasis-color: $black !default; // BS Default
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$border-width: 1px !default; // BS Default
+
+$component-active-bg: $primary !default;
+$component-active-color: color-contrast($component-active-bg) !default;
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif: o-add-unicode-support-font($o-system-fonts) !default;
+
+$font-size-base: (14 / 16) * 1rem !default;
+
+$text-muted: mute-color($body-color) !default;
+
+// Link
+$link-decoration: none !default;
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+// Bootstrap tables can basically be customized with the `$table-bg` and
+// `$table-color` variables. The problem is that, by default, BS5 defines them
+// so that the background-color is null (so transparent: displaying the
+// background-color of its ancestors) but the color is forced to the body color
+// (by default: white). This is a problem as soon as the ancestors background
+// colors are a color close to the body text color: the text becomes invisible.
+// We disable this behavior by not forcing a text color for tables.
+$table-color: inherit !default;
+// With BS5.3, $table-bg is set $body-bg by default, and we want it transparent.
+$table-bg: transparent !default;
+
+// Buttons
+$btn-hover-bg-shade-amount: 15% !default;
+
+// Forms
+
+$input-transition: background-color .05s ease-in-out, border-color .05s ease-in-out, box-shadow .05s ease-in-out !default;
+$input-color: $body-color !default;
+$input-bg: $body-bg !default;
+
+$input-disabled-bg: $gray-200 !default;
+$input-disabled-border-color: rgba($input-color, 0.15) !default;
+
+$form-check-input-border: $border-width solid $gray-400 !default;
+$form-check-input-border-radius: 0 !default;
+$form-check-input-checked-color: color-contrast($component-active-bg, $body-color, $white) !default;
+
+$form-switch-color: $input-color !default;
+$form-switch-checked-color: $form-check-input-checked-color !default;
+
+$form-select-indicator-color: $input-color !default;
+$form-select-disabled-color: mix($input-color, $input-bg) !default;
+$form-select-disabled-bg: $input-disabled-bg !default;
+$form-select-disabled-border-color: $input-disabled-border-color !default;
+
+$form-range-track-height: .1rem !default;
+$form-range-thumb-border: $border-width solid $primary !default;
+$form-range-thumb-bg: $body-bg !default;
+$form-range-thumb-active-bg: $primary !default;
+$form-range-thumb-disabled-bg: $input-disabled-bg !default;
+
+$form-file-button-bg: mix($input-color, $input-bg, $btn-hover-bg-shade-amount * 0.3) !default;
+$form-file-button-hover-bg: mix($input-color, $input-bg, $btn-hover-bg-shade-amount) !default;
+
+// Dropdowns
+$dropdown-bg: $body-bg !default;
+$dropdown-link-active-bg: rgba(color-contrast($dropdown-bg), .2) !default;
+$dropdown-link-active-color: color-contrast($dropdown-link-active-bg) !default;
+
+// Figures
+
+// Inherit color for figure-caption, use text-muted on top of it if you want
+// a muted one. This is defined here to be consistent in the whole frontend, as
+// when used with background classes, it should not be forced to a gray color.
+$figure-caption-color: inherit !default;
+
+// Offcanvas
+
+$offcanvas-border-width: 0 !default;
+$offcanvas-backdrop-opacity: .3 !default;
+
+// Modal
+
+$modal-content-bg: $body-bg !default;
+
+// Card
+
+$card-bg: $body-bg !default;
+
+// Dropdown
+
+$dropdown-bg: $body-bg !default;
+
+// Navbar
+
+$navbar-light-toggler-border-color: rgba($body-emphasis-color, 0.15) !default;

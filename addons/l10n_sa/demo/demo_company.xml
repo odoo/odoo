@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_sa" model="res.partner" forcecreate="1">
+        <field name="name">SA Company</field>
+        <field name="vat"/>
+        <field name="street">Al Amir Mohammed Bin Abdul Aziz Street</field>
+        <field name="city">المدينة المنورة</field>
+        <field name="country_id" ref="base.sa"/>
+
+        <field name="zip">42317</field>
+        <field name="phone">+966 51 234 5678</field>
+        <field name="email">info@company.saexample.com</field>
+        <field name="website">www.saexample.com</field>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="base.demo_company_sa" model="res.company" forcecreate="1">
+        <field name="name">SA Company</field>
+        <field name="vat">310175397400003</field>
+        <field name="partner_id" ref="base.partner_demo_company_sa"/>
+        <field name="paperformat_id" ref="l10n_sa.paperformat_l10n_sa_a4"></field>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_sa')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_sa'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>sa</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_sa')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>

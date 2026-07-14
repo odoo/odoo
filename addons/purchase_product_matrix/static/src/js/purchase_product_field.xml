@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="purchase.PurchaseProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
+        <xpath expr="//button[@t-if='hasExternalButton']" position="before">
+            <button
+                t-if="isConfigurableTemplate"
+                type="button"
+                class="btn btn-link fa fa-pencil px-2"
+                tabindex="-1"
+                draggable="false"
+                t-att-aria-label="configurationButtonHelp"
+                t-att-data-tooltip="configurationButtonHelp"
+                t-on-click="onEditConfiguration"/>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+
+    <t t-name="web_hierarchy.HierarchyRenderer">
+        <div class="o_hierarchy_renderer w-100 d-flex justify-content-center" t-ref="renderer">
+            <div class="o_hierarchy_container d-flex flex-column w-100 w-lg-75 h-100 pt-5 px-2">
+                <t t-foreach="rows" t-as="row" t-key="row_index">
+                    <t t-set="previousRow" t-value="!row_first ? rows[row_index - 1] : null"/>
+                    <t t-if="!row_first">
+                        <div t-if="row.parentNode and previousRow.nodes.length > 1"
+                            class="o_hierarchy_parent_node_container d-flex justify-content-center"
+                        >
+                            <span t-esc="row.parentNode.data.display_name || row.parentNode.data.name" />
+                        </div>
+                        <div class="o_hierarchy_separator d-flex pb-4">
+                            <div class="o_hierarchy_line_part o_hierarchy_line_left"></div>
+                            <div class="o_hierarchy_line_part o_hierarchy_line_right"></div>
+                        </div>
+                    </t>
+                    <div class="o_hierarchy_row row justify-content-center flex-wrap row-cols-2 row-cols-lg-5 g-2 g-lg-3 pt-3"
+                        t-att-class="{ 'pb-4': row_last }" t-att-data-parent-node-id="row.parentNode?.id"
+                        t-att-data-row-id="row_index"
+                    >
+                        <t t-foreach="row.nodes" t-as="node" t-key="node.id">
+                            <HierarchyCard
+                                node="node"
+                                openRecord="props.openRecord"
+                                archInfo="props.archInfo"
+                                templates="props.templates"
+                            />
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

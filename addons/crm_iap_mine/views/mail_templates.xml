@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template id="enrich_company" inherit_id="iap_mail.enrich_company">
+        <xpath expr="//div[hasclass('o_partner_autocomplete_enrich_info')]" position="inside">
+            <div class="col-sm-12 row m-0 p-0">
+                <div t-if="vat" class="d-flex my-1 p-0 col-sm-3">
+                    <i class="fa fa-fw me-2 fa-solid fa-id-card text-primary"/>
+                    <b>Tax ID</b>
+                </div>
+                <div t-if="vat" class="my-1 col-sm-9" t-out="vat" />
+                <div t-if="country" class="d-flex my-1 p-0 col-sm-3">
+                    <i class="fa fa-fw me-2 fa-address-book text-primary"/>
+                    <b>Address</b>
+                </div>
+                <div class="my-1 col-sm-9">
+                    <div class="o_address_format">
+                        <div t-if="zip_code">
+                            <div t-if="street" class="o_address_street" t-out="street"/>
+                            <div t-if="street2"  class="o_address_street" t-out="street2"/>
+                            <div>
+                                <span t-if="city" t-out="city"/>
+                                <span t-if="zip_code" t-out="zip_code"/>
+                                <span t-if="state" t-out="state"/>
+                                <span t-if="state_name" t-out="state_name"/>
+                            </div>
+                            <div t-if="country" class="o_address_country" t-out="country"/>
+                        </div>
+                    </div>
+                </div>
+                <div t-if="website" class="d-flex my-1 p-0 col-sm-3">
+                    <i class="fa fa-fw me-2 fa-globe text-primary"/>
+                    <b>Website</b>
+                </div>
+                <div t-if="website" class="col-sm-9">
+                    <a target="_blank" t-attf-href="https://{{website}}" t-out="website" style="font-weight:normal; padding: 2px 0px; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
+                </div>
+                <div t-if="unspsc_codes" class="d-flex my-1 p-0 col-sm-3">
+                    <i class="fa fa-fw me-2 fa-cube text-primary"/>
+                    <b>Industries</b>
+                </div>
+                 <div t-if="unspsc_codes" class="col-sm-9">
+                    <t t-foreach="unspsc_codes" t-as="tag_item">
+                        <label t-out="tag_item[1]" class="o_tag o_tag_color_7"  style="font-weight:normal; padding: 2px 10px; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
+                    </t>
+                </div>
+            </div>
+            <t t-if="people_data">
+                <t t-set="hasPhoneNumbers" t-value="any([people['phone'] for people in people_data])"/>
+                <div style="font-size:16px; margin: 9px 0;">
+                    <b>Contacts</b>
+                </div>
+                <table style="width:100%;
+                    border-top-style: solid;border-top-color: #eeeeee;border-top-width: 1px;
+                    border-bottom-style: solid;border-bottom-color: #eeeeee;border-bottom-width: 1px;
+                    border-start-style: solid;border-start-color: #eeeeee;border-start-width: 1px;
+                    border-end-style: solid;border-end-color: #eeeeee;border-end-width: 1px;" t-if="people_data">
+                    <thead>
+                        <tr style="background-color: #eeeeee">
+                            <th t-attf-style="padding: 5px; width: {{hasPhoneNumbers and '30%;' or '50%;'}}">
+                                <img style="vertical-align: text-top;" src="web_editor/font_to_img/61447/rgb(102,102,102)/13"/>
+                                Name
+                            </th>
+                            <th t-attf-style="padding: 5px; width: {{hasPhoneNumbers and '40%;' or '50%;'}}">
+                                <img style="vertical-align: text-top;" src="web_editor/font_to_img/61664/rgb(102,102,102)/13"/>
+                                Email
+                            </th>
+                            <th style="padding: 5px; width: 30%;" t-if="hasPhoneNumbers">
+                                <img style="vertical-align: text-top;" src="web_editor/font_to_img/61589/rgb(102,102,102)/13"/>
+                                Phone
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="people_data" t-as="people">
+                            <tr t-att-style="people_odd and 'background-color:#eeeeee' or None">
+                                <td style="padding: 5px">
+                                    <t t-set="fullName" t-value="people['full_name'] or ''"/>
+                                    <t t-set="title" t-value="people['title'] or ''"/>
+                                    <t t-if="fullName">
+                                        <h5 style="margin: 0;"><t t-esc="fullName"/><t t-if="title">,</t></h5>
+                                    </t>
+                                    <small t-esc="title" t-if="title"/>
+                                </td>
+                                <td style="padding: 5px">
+                                    <a t-if="people['email']" t-attf-href="mailto:{{people['email']}}" target="_top">
+                                        <t t-esc="people['email']"/>
+                                    </a>
+                                </td>
+                                <td style="padding: 5px" t-if="hasPhoneNumbers">
+                                    <a t-if="people['phone']" t-attf-href="tel:{{people['phone']}}">
+                                        <t t-esc="people['phone']"/>
+                                    </a>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+</odoo>

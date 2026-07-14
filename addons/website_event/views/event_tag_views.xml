@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_tag_view_form_inherit" model="ir.ui.view">
+        <field name="name">event.tag.view.form.inherit</field>
+        <field name="model">event.tag</field>
+        <field name="inherit_id" ref="event.event_tag_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="before">
+                <field name="website_id" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                <attribute name="domain">['|', ('website_id', '=', website_id), ('website_id', '=', False)]</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

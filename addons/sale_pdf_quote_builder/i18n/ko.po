@@ -1,0 +1,709 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_pdf_quote_builder
+#
+# Translators:
+# Tiffany Chang, 2024
+# Wil Odoo, 2024
+# Sarah Park, 2024
+# Daye Jeong, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
+msgstr ""
+"(object.state in ('draft', 'sent') and '견적 - %s' % (object.name)) or '주문 "
+"- %s' % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "<span class=\"pe-2\">Templates:</span>"
+msgstr "<span class=\"pe-2\">템플릿:</span>"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "<span>Document type:</span>"
+msgstr "<span>문서 유형:</span>"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"A form field set as used in product documents can't be linked to a quotation "
+"document."
+msgstr ""
+"제품 문서에 사용하도록 지정된 양식 필드는 견적 문서에 연결할 수 없습니다."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"A form field set as used in quotation documents can't be linked to a product "
+"document."
+msgstr ""
+"견적 문서에 사용하도록 지정된 양식 필드는 제품 문서에 연결할 수 없습니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
+msgid "Access Token"
+msgstr "사용 권한 토큰"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__active
+msgid "Active"
+msgstr "활성화"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "All"
+msgstr "전체"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/controllers/quotation_document.py:0
+msgid "All files uploaded"
+msgstr "모든 파일을 업로드 했습니다"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
+msgid ""
+"Allows you to share the document with your customers within a sale.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
+"e.g. this option can be useful to share Product description files.\n"
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
+msgstr ""
+"판매 앱에서 고객과 문서를 공유할 수 있습니다.\n"
+"고객과 해당 문서를 공유하지 않으려면 비워두세요.\n"
+"견적서: 언제든지 고객에게 문서를 전송하거나 고객이 액세스할 수 있습니다.\n"
+"예: 해당 옵션을 통해 품목에 대한 설명 파일을 편리하게 공유할 수 있습니다\n"
+"주문 확정: 고객에게 문서를 전송하거나 고객이 액세스할 수 있습니다.\n"
+"예: 해당 옵션을 통해 사용자 매뉴얼이나 이커머스에서 구매한 디지털 콘텐츠를 편"
+"리하게 공유할 수 있습니다.\n"
+"내부 견적서 PDF: 문서가 머릿말 페이지 및 견적표 사이의 견적서 PDF 안에 포함됩"
+"니다. "
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Archived"
+msgstr "보관됨"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Attached To"
+msgstr "첨부 대상"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__local_url
+msgid "Attachment URL"
+msgstr "첨부 파일 URL"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_product_document_ids
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__available_product_document_ids
+msgid "Available Product Documents"
+msgstr "사용 가능 품목 문서"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__checksum
+msgid "Checksum/SHA1"
+msgstr "체크섬/SHA1"
+
+#. module: sale_pdf_quote_builder
+#. odoo-javascript
+#: code:addons/sale_pdf_quote_builder/static/src/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card.js:0
+msgid "Click to write content for the PDF quote..."
+msgstr "PDF 견적서의 내용을 입력하려면 클릭하세요... "
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Configure dynamic fields"
+msgstr "동적 필드 구성"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
+msgid "Configure the path to fill the form fields."
+msgstr "양식 필드를 채울 경로를 구성합니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__create_uid
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__create_date
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Creation"
+msgstr "생성"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
+msgid "Customizable"
+msgstr "맞춤 설정 가능"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__customizable_pdf_form_fields
+msgid "Customizable PDF Form Fields"
+msgstr "사용자 정의 가능한 PDF 양식 필드"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__db_datas
+msgid "Database Data"
+msgstr "데이터베이스 데이터"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "Delete"
+msgstr "삭제"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__description
+msgid "Description"
+msgstr "설명"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__document_type
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__document_type
+msgid "Document Type"
+msgstr "문서 종류"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Document type"
+msgstr "문서 유형"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "Download"
+msgstr "다운로드"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Download examples"
+msgstr "다운로드 예시"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "Edit"
+msgstr "편집"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__datas
+msgid "File Content (base64)"
+msgstr "파일 컨텐츠(base64)"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__raw
+msgid "File Content (raw)"
+msgstr "파일 컨텐츠(raw)"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__file_size
+msgid "File Size"
+msgstr "파일 크기"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__quotation_document__document_type__footer
+msgid "Footer"
+msgstr "바닥글"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__name
+msgid "Form Field Name"
+msgstr "양식 필드 이름"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
+msgid "Form Fields"
+msgstr "양식 필드"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__form_field_ids
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__form_field_ids
+msgid "Form Fields Included"
+msgstr "포함된 양식 필드"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
+msgid "Form field name must be unique for a given document type."
+msgstr "양식 필드 이름은 문서 유형마다 고유해야 합니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
+msgid "Form fields of inside quotation documents."
+msgstr "견적 문서 내의 양식 필드."
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__quotation_document__document_type__header
+msgid "Header"
+msgstr "머리글"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_form_field__document_type__quotation_document
+msgid "Header/Footer"
+msgstr "머리글/바닥글"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__quotation_document_ids
+msgid "Headers and footers"
+msgstr "머리글 및 바닥글"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.act_window,name:sale_pdf_quote_builder.quotation_document_action
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__quotation_document_ids
+#: model:ir.ui.menu,name:sale_pdf_quote_builder.sale_menu_quotation_document_action
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid "Headers/Footers"
+msgstr "머리글/바닥글"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "History"
+msgstr "기록"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__active
+msgid ""
+"If unchecked, it will allow you to hide the header or footer without "
+"removing it."
+msgstr ""
+"이 옵션을 선택하지 않으면 머리글이나 바닥글을 제거하지 않고 숨길 수 있습니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
+msgid "Image Height"
+msgstr "이미지 높이"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_src
+msgid "Image Src"
+msgstr "이미지 Src"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_width
+msgid "Image Width"
+msgstr "이미지 폭"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__index_content
+msgid "Indexed Content"
+msgstr "색인화된 콘텐츠"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on_sale__inside
+msgid "Inside quote pdf"
+msgstr "내부 견적서 PDF"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"Invalid form field name %(field_name)s. A form field name in a header or a "
+"footer can not start with \"sol_id_\"."
+msgstr ""
+"잘못된 양식 필드 이름 %(field_name)s입니다. 머리글 또는 바닥글의 양식 필드 이"
+"름은 “sol_id_”로 시작할 수 없습니다."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"Invalid form field name %(field_name)s. It should only contain "
+"alphanumerics, hyphens or underscores."
+msgstr ""
+"잘못된 양식 필드 이름 %(field_name)s입니다. 영문, 숫자, - 또는 _만 포함해야 "
+"합니다."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
+"underscores or points."
+msgstr "잘못된 경로 %(path)s입니다. 영문, 숫자, - 또는 _만 포함해야 합니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__is_pdf_quote_builder_available
+msgid "Is Pdf Quote Builder Available"
+msgstr "PDF 견적서 작성기를 사용 여부"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__public
+msgid "Is public document"
+msgstr "공개문서 여부"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"견적서 내에서 이 PDF를 처리할 수 없습니다. 암호화되었거나 지원되지 않는 형식"
+"으로 인코딩되어 있을 수 있습니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__key
+msgid "Key"
+msgstr "키"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__write_uid
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__write_date
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Mark fields as safe to fill in the quote."
+msgstr "필드를 안전으로 표시하여 견적을 작성할 수 있습니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__mimetype
+msgid "Mime Type"
+msgstr "MIME 유형"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__name
+msgid "Name"
+msgstr "이름"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/ir_actions_report.py:0
+msgid "No"
+msgstr "아니오"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+msgid "Only PDF documents can be attached inside a quote."
+msgstr "견적서 내부에는 PDF 문서만 첨부할 수 있습니다."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
+msgid "Only PDF documents can be used as header or footer."
+msgstr "PDF 문서만 머리글 또는 바닥글로 사용할 수 있습니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
+msgid "Original (unoptimized, unresized) attachment"
+msgstr "원본(최적화되지 않은, 크기 조정되지 않은) 첨부 파일"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__path
+msgid "Path"
+msgstr "경로"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
+msgid ""
+"Personalize your quotes with catchy header and footer pages\n"
+"                <br>\n"
+"                to boost your sales."
+msgstr ""
+"매력적인 머리글과 바닥글 페이지로 견적을 맞춤 설정하여\n"
+"                <br>\n"
+"                매출을 향상시키세요. "
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid "Please use only relational fields until the last value of your path."
+msgstr "경로의 마지막 값까지는 관계형 필드만 사용하세요."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
+msgid "Product"
+msgstr "품목"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_product_document
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_form_field__document_type__product_document
+msgid "Product Document"
+msgstr "품목 문서"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__product_document_ids
+msgid "Product Documents"
+msgstr "제품 문서"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Provide header pages and footer pages to compose an attractive quotation "
+"with more information\n"
+"                        about your company, your products and you services. "
+"<br/>\n"
+"                        The pdf of your quotes will be built by putting "
+"together header pages, product descriptions,\n"
+"                        details of the quote and then the footer pages. <br/"
+">\n"
+"                        If empty, it will use those define in the company "
+"settings. <br/>"
+msgstr ""
+"견적서를 한층 멋지게 만들기 위해서 머리글 페이지와 바닥글 페이지에\n"
+"                        회사 및 품목, 서비스에 대해서 자세한 정보를 기재합니"
+"다.<br/>\n"
+"                        견적서의 PDF는 머리글 페이지와 품목 설명 및\n"
+"                        세부 내역, 그리고 바닥글 페이지로 구성됩니다.<br/>\n"
+"                        비워놓는 경우, 회사 설정에 정의되어 있는 내용을 사용"
+"합니다. <br/>"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid "Quotation / Order"
+msgstr "견적 / 주문"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Quotation Document"
+msgstr "견적 문서"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__quotation_document_ids
+msgid "Quotation Documents"
+msgstr "견적 문서"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Quotation Template"
+msgstr "견적서 양식"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__quotation_template_ids
+msgid "Quotation Templates"
+msgstr "견적서 양식"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_quotation_document
+msgid "Quotation's Headers & Footers"
+msgstr "견적서의 머리글 및 바닥글"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Quote Builder"
+msgstr "견적서 작성기"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
+msgid "Related attachment"
+msgstr "관련 첨부 파일"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
+msgid "Report Action"
+msgstr "보고서 작업"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_field
+msgid "Resource Field"
+msgstr "리소스 필드"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_id
+msgid "Resource ID"
+msgstr "리소스 ID"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_model
+msgid "Resource Model"
+msgstr "리소스 모델"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_name
+msgid "Resource Name"
+msgstr "리소스명"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
+msgid "Sale : Visible at"
+msgstr "판매 : 다음에서 확인 가능"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server
+msgid "Sale Pdf Quote Builder: assign form fields to documents post upgrade"
+msgstr "판매 PDF 견적서 작성기: 업그레이드 후 문서에 양식 필드를 할당합니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 내역"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__store_fname
+msgid "Stored Filename"
+msgstr "저장된 파일 이름"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
+msgstr "%(field_name)s 필드가 모델 %(model_name)s에 없습니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__name
+msgid "The form field name as written in the PDF."
+msgstr "PDF에 표시되는 양식 필드 이름입니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__path
+msgid ""
+"The path to follow to dynamically fill the form field. \n"
+"Leave empty to be able to customized it in the quotation form."
+msgstr ""
+"양식 필드를 동적으로 채우기 위해 따를 경로입니다.\n"
+"견적 양식에서 사용자 지정할 수 있도록 하려면 비워둡니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
+msgid ""
+"The product documents for this order line that will be merged in the PDF "
+"quote."
+msgstr "PDF 견적에 병합될 이 주문 항목의 제품 문서입니다."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__theme_template_id
+msgid "Theme Template"
+msgstr "테마 서식"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
+msgid "This document"
+msgstr "이 문서"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__type
+msgid "Type"
+msgstr "유형"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
+msgid "Upload quotation headers and footers"
+msgstr "견적서 머리글 및 바닥글 업로드하기"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__url
+msgid "Url"
+msgstr "Url"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Visible to all"
+msgstr "모든 사람에게 표시"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__voice_ids
+msgid "Voice"
+msgstr "음성"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__website_id
+msgid "Website"
+msgstr "웹사이트"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr "견적서 안에 문서를 첨부하려면 URL이 아닌 파일을 사용해야 합니다."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/ir_actions_report.py:0
+msgid "Yes"
+msgstr "예"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr ""
+"컴퓨터에서 파일을 업로드하거나 인터넷 링크를 복사하여 파일에 붙여넣기 할 수 "
+"있습니다."
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "on"
+msgstr "있음"

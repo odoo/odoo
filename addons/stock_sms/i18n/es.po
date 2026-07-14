@@ -1,0 +1,168 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_sms
+#
+# Translators:
+# Wil Odoo, 2024
+#
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-08-25 10:09+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/"
+"stock_sms/es/>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: stock_sms
+#: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
+msgid ""
+"\n"
+"                {{ (object.company_id.name + ': We are glad to inform you "
+"that your order n° ' + object.origin + ' has been shipped.' if object.origin "
+"else object.company_id.name + ': We are glad to inform you that your order "
+"has been shipped.') + (' Your tracking reference is ' + "
+"(object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
+msgstr ""
+"\n"
+"                {{ (object.company_id.name + ': Nos alegra informarle que su "
+"orden con el número ' + object.origin + ' ha sido enviada.' if object.origin "
+"else object.company_id.name + ': Nos alegra informarle que su orden ha sido "
+"enviada.') + (' Su referencia de rastreo es ' + "
+"(object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_confirm_stock_sms
+msgid "Confirm Stock SMS"
+msgstr "Confirmar SMS de stock"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: stock_sms
+#: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
+msgid "Delivery: Send by SMS Text Message"
+msgstr "Entrega: Enviar por mensaje de texto SMS"
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Disable SMS"
+msgstr "Deshabilitar SMS"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
+msgid "Has Received Warning Stock Sms"
+msgstr "Ha recibido un SMS de advertencia de stock"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__pick_ids
+msgid "Pick"
+msgstr "Recolección"
+
+#. module: stock_sms
+#. odoo-python
+#: code:addons/stock_sms/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "SMS"
+msgstr "SMS"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
+msgid "SMS Confirmation"
+msgstr "Confirmación por SMS"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
+msgid "SMS Template"
+msgstr "Plantilla de SMS"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
+msgid "SMS Validation with stock move"
+msgstr "Validación de SMS con movimiento de stock"
+
+#. module: stock_sms
+#: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
+#: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
+msgid "SMS sent to the customer once the order is delivered."
+msgstr "SMS que se envía al cliente una vez que se entrega la orden."
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_stock_picking
+msgid "Transfer"
+msgstr "Traslado"
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid ""
+"You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
+"                This feature can easily be disabled from the Settings of "
+"Inventory or by clicking on \"Disable SMS\".<br/>"
+msgstr ""
+"Está a punto de confirmar esta orden de entrega por mensaje de texto SMS.<br/"
+">\n"
+"                Esta característica se puede desactivar fácilmente desde los "
+"ajustes de inventario o haciendo clic en \"Deshabilitar SMS\".<br/>"

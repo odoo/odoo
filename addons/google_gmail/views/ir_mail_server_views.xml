@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_mail_server_view_form" model="ir.ui.view">
+        <field name="name">ir.mail_server.view.form.inherit.gmail</field>
+        <field name="model">ir.mail_server</field>
+        <field name="inherit_id" ref="base.ir_mail_server_form"/>
+        <field name="arch" type="xml">
+            <field name="smtp_user" position="after">
+                <div invisible="smtp_authentication != 'gmail'"
+                    class="d-flex flex-row align-items-center" colspan="8"
+                    groups="base.group_system">
+                    <span invisible="smtp_authentication != 'gmail' or not google_gmail_refresh_token"
+                        class="badge text-bg-success">
+                        Gmail Token Valid
+                    </span>
+                    <button type="object"
+                        name="open_google_gmail_uri" class="btn-link px-0"
+                        invisible="not google_gmail_uri or smtp_authentication != 'gmail' or google_gmail_refresh_token">
+                        <i class="oi oi-arrow-right"/>
+                        Connect your Gmail account
+                    </button>
+                    <button type="object"
+                        name="open_google_gmail_uri" class="btn-link px-0 ms-2"
+                        invisible="not google_gmail_uri or smtp_authentication != 'gmail' or not google_gmail_refresh_token">
+                        <i class="fa fa-cog" title="Edit Settings"/>
+                    </button>
+                    <button class="alert alert-warning d-block mt-2 text-start"
+                        icon="oi-arrow-right" type="action" role="alert"
+                        name="%(base.res_config_setting_act_window)d"
+                        invisible="smtp_authentication != 'gmail' or google_gmail_uri">
+                        Setup your Gmail API credentials in the general settings to link a Gmail account.
+                    </button>
+                </div>
+            </field>
+            <field name="smtp_authentication_info" position="after">
+                <widget name="documentation_link" path="/applications/general/email_communication/email_servers.html?highlight=outgoing email server#use-a-default-from-email-address"
+                    invisible="smtp_authentication != 'gmail'" label="Read More"/>
+            </field>
+        </field>
+    </record>
+</odoo>

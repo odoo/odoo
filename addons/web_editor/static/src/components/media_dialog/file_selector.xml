@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_editor.FileSelectorControlPanel">
+    <div class="o_we_file_selector_control_panel sticky-top d-flex flex-wrap gap-2 mb-1 p-3 align-items-end">
+        <SearchMedia searchPlaceholder="props.searchPlaceholder" needle="props.needle" search="props.search"/>
+        <div class="d-flex gap-3 justify-content-start align-items-center">
+            <div t-if="props.showOptimizedOption" class="flex-shrink-0 form-check form-switch align-items-center" t-on-change="props.changeShowOptimized">
+                <input class="o_we_show_optimized form-check-input" type="checkbox" t-att-checked="props.showOptimized" id="o_we_show_optimized_switch"/>
+                <label class="form-check-label" for="o_we_show_optimized_switch">
+                    Show optimized images
+                </label>
+            </div>
+            <select t-if="showSearchServiceSelect" class="o_input o_we_search_select form-select pe-5" t-on-change="ev => props.changeSearchService(ev.target.value)">
+                <option t-att-selected="props.searchService === 'all'" value="all">All</option>
+                <option t-att-selected="props.searchService === 'database'" value="database">My Images</option>
+                <option t-if="props.useMediaLibrary" t-att-selected="props.searchService === 'media-library'" value="media-library">Illustrations</option>
+            </select>
+        </div>
+        <div class="col justify-content-end flex-nowrap input-group has-validation">
+            <input type="text" class="form-control o_input o_we_url_input o_we_transition_ease flex-grow-0" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput, 'w-auto': state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput" t-if="state.showUrlInput"/>
+            <button type="button" class="btn o_upload_media_url_button text-nowrap" t-att-class="{ 'btn-primary': state.urlInput, 'btn-secondary': !state.urlInput}" t-on-click="onUrlUploadClick" t-att-disabled="!enableUrlUploadClick">
+                    <t t-esc="props.addText"/>
+            </button>
+            <div class="d-flex align-items-center">
+                <span t-if="state.urlInput and state.isValidatingUrl" class="o_we_url_loading mx-2 fa fa-lg fa-spinner" title="Loading..."/>
+                <span t-elif="state.urlInput and state.isValidUrl and state.isValidFileFormat" class="o_we_url_success text-success mx-2 fa fa-lg fa-check" title="The URL seems valid."/>
+                <span t-elif="state.urlInput and !state.isValidUrl" class="o_we_url_error text-danger mx-2 fa fa-lg fa-times" title="The URL does not seem to work."/>
+                <span t-elif="props.urlWarningTitle and state.urlInput and state.isValidUrl and !state.isValidFileFormat" class="o_we_url_warning text-warning mx-2 fa fa-lg fa-warning" t-att-title="props.urlWarningTitle"/>
+            </div>
+        </div>
+        <input type="file" class="d-none o_file_input" t-on-change="onChangeFileInput" t-ref="file-input" t-att-accept="props.accept" t-att-multiple="props.multiSelect and 'multiple'"/>
+        <div class="col-auto btn-group">
+            <button type="button" class="btn btn-primary o_upload_media_button" t-on-click="onClickUpload">
+                <t t-esc="props.uploadText"/>
+            </button>
+        </div>
+    </div>
+</t>
+
+<t t-name="web_editor.FileSelector">
+    <div>
+        <FileSelectorControlPanel uploadText="uploadText"
+            accept="fileMimetypes"
+            urlPlaceholder="urlPlaceholder"
+            addText="addText"
+            searchPlaceholder="searchPlaceholder"
+            urlWarningTitle="urlWarningTitle"
+            uploadUrl="(url) => this.uploadUrl(url)"
+            uploadFiles="(files) => this.uploadFiles(files)"
+            showOptimizedOption="showOptimizedOption"
+            showOptimized="state.showOptimized"
+            changeShowOptimized="showOptimized => this.state.showOptimized = !this.state.showOptimized"
+            changeSearchService="service => this.state.searchService = service"
+            searchService="state.searchService"
+            needle="state.needle"
+            search="(needle) => this.handleSearch(needle)"
+            useMediaLibrary="props.useMediaLibrary"
+            validateUrl="validateUrl"
+            multiSelect="props.multiSelect"/>
+        <t t-call="{{ constructor.attachmentsListTemplate }}"/>
+        <div name="load_more_attachments"
+            class="pt-3 pb-1 text-center mx-auto o_we_load_more"
+            t-ref="load-more-button">
+            <button t-if="canLoadMore"
+                class="btn btn-primary o_load_more"
+                type="button"
+                t-on-click="handleLoadMore">
+                Load more...
+            </button>
+            <div t-elif="hasContent" class="mt-2 o_load_done_msg">
+                <span><i t-esc="allLoadedText"/></span>
+            </div>
+        </div>
+        <div t-if="this.state.canScrollAttachments"
+            class="position-sticky d-flex align-items-center mx-auto btn btn-primary rounded-circle oi oi-chevron-down o_scroll_attachments"
+            t-on-click="handleScrollAttachments"/>
+    </div>
+</t>
+</templates>

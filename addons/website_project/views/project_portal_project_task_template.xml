@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="task_submitted" name="Task Submitted">
+        <t t-call="website.layout">
+            <div class="oe_structure oe_empty h-100">
+                <div class="container d-flex flex-column justify-content-center h-100">
+                    <div class="row justify-content-center mb16">
+                        <t t-if="request.session.get('form_builder_model_model', '') == 'project.task'">
+                            <t t-set="task" t-value="request.website._website_form_last_record()"/>
+                        </t>
+                        <h1 class="text-center">
+                            <i class="fa fa-check-circle fa-1x text-success me-2" role="img" aria-label="Success" title="Success"/>
+                                <t t-if="task">
+                                    <span>
+                                    Your Task Number is
+                                        <a t-if="request.session.uid and task.sudo().project_id.id and task.project_privacy_visibility != 'followers'"
+                                            t-attf-href="/my/task/#{task.id}">
+                                            #<span t-field="task.id"/>
+                                        </a>
+                                        <t t-else="">#<span t-field="task.id"/></t>.
+                                    </span>
+                                </t>
+                        </h1>
+                        <h2 class="text-center">Thank you for contacting us, our team will get right on it!</h2>
+                        <div class="text-center">
+                            <a class="btn btn-primary" t-attf-href="/my/task/#{task.id}"
+                                t-if="task and task.id and request.session.uid and task.project_id.id and task.project_privacy_visibility != 'followers'">
+                                View Task
+                            </a>
+                            <a class="btn btn-primary" href='/'>Go to the Homepage</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <record id="task_submitted_page" model="website.page">
+        <field name="is_published">True</field>
+        <field name="url">/your-task-has-been-submitted</field>
+        <field name="website_indexed" eval="False"/>
+        <field name="view_id" ref="task_submitted"/>
+    </record>
+
+    <template id="website_portal_my_task" name="My Task website" inherit_id="project.portal_my_task">
+        <xpath expr="//t[@t-set='title']" position="replace">
+            <t t-set="additional_title" t-value="task.name"/>
+        </xpath>
+    </template>
+</odoo>

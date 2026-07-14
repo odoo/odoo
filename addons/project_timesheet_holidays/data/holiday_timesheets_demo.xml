@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <function model="hr.leave" name="_remove_resource_leave">
+            <value eval="[ref('hr_holidays.hr_holidays_sl'), ref('hr_holidays.hr_holidays_cl_qdp'), ref('hr_holidays.hr_holidays_sl_qdp')]"/>
+        </function>
+        <function model="hr.leave" name="_validate_leave_request">
+            <value eval="[ref('hr_holidays.hr_holidays_sl'), ref('hr_holidays.hr_holidays_cl_qdp'), ref('hr_holidays.hr_holidays_sl_qdp')]"/>
+        </function>
+        <function model="hr.leave" name="_create_resource_leave">
+            <value eval="[ref('hr_holidays.hr_holidays_sl'), ref('hr_holidays.hr_holidays_cl_qdp'), ref('hr_holidays.hr_holidays_sl_qdp')]"/>
+        </function>
+    </data>
+</odoo>

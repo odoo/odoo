@@ -1,0 +1,49 @@
+id,name,description,invoice_label,l10n_uy_tax_category,amount,amount_type,type_tax_use,tax_group_id,repartition_line_ids/repartition_type,repartition_line_ids/document_type,repartition_line_ids/tag_ids,repartition_line_ids/account_id,price_include_override,description@es,invoice_label@es
+vat1,22%,VAT Sales (22%),VAT Sales (22%),vat,22,percent,sale,tax_group_iva_22,base,invoice,+Base Sales 22%,,,IVA Ventas (22%),IVA Ventas (22%)
+,,,,,,,,,tax,invoice,+Sales VAT 22%,uy_code_21402,,,
+,,,,,,,,,base,refund,-Taxable Sales Base,,,,
+,,,,,,,,,tax,refund,-VAT Sales - received,uy_code_21402,,,
+vat2,10%,VAT Sales (10%),VAT Sales (10%),vat,10,percent,sale,tax_group_iva_10,base,invoice,+Base Sales 10%,,,IVA Ventas (10%),IVA Ventas (10%)
+,,,,,,,,,tax,invoice,+Sales VAT 10%,uy_code_21401,,,
+,,,,,,,,,base,refund,-Taxable Sales Base,,,,
+,,,,,,,,,tax,refund,-VAT Sales - received,uy_code_21401,,,
+vat3,0% EXEMPT,VAT Exempt Sales,VAT Exempt Sales,vat,0,percent,sale,tax_group_exenton,base,invoice,+Base Sales 0%,,,Ventas Exentos IVA,Ventas Exentos IVA
+,,,,,,,,,tax,invoice,,uy_code_21405,,,
+,,,,,,,,,base,refund,-Taxable Sales Base,,,,
+,,,,,,,,,tax,refund,,uy_code_21405,,,
+vat4,22%,VAT Purchases (22%),VAT Purchases (22%),vat,22,percent,purchase,tax_group_iva_22,base,invoice,+Base Purchases 22%,,,IVA Compras (22%),IVA Compras (22%)
+,,,,,,,,,tax,invoice,+VAT Purchases 22%,uy_code_11502,,,
+,,,,,,,,,base,refund,-Tax Base Purchases,,,,
+,,,,,,,,,tax,refund,-VAT Purchases - paid,uy_code_11502,,,
+vat5,10%,VAT Purchases (10%),VAT Purchases (10%),vat,10,percent,purchase,tax_group_iva_10,base,invoice,+Base Purchases 10%,,,IVA Compras (10%),IVA Compras (10%)
+,,,,,,,,,tax,invoice,+VAT Purchases 10%,uy_code_11501,,,
+,,,,,,,,,base,refund,-Tax Base Purchases,,,,
+,,,,,,,,,tax,refund,-VAT Purchases - paid,uy_code_11501,,,
+vat6,0% EXEMPT,Purchases Exempt from VAT,Purchases Exempt from VAT,vat,0,percent,purchase,tax_group_exenton,base,invoice,+Base Purchases 0%,,,Compras Exento IVA,Compras Exentos IVA
+,,,,,,,,,tax,invoice,,uy_code_11503,,,
+,,,,,,,,,base,refund,-Tax Base Purchases,,,,
+,,,,,,,,,tax,refund,,uy_code_11503,,,
+vat7,22% included,VAT Included Sales (22%),VAT Included Sales (22%),vat,22,percent,sale,tax_group_iva_22,base,invoice,+Base Sales 22%,,tax_included,IVA Ventas Incluído (22%),IVA Ventas Incluído (22%)
+,,,,,,,,,tax,invoice,+Sales VAT 22%,uy_code_21402,,,
+,,,,,,,,,base,refund,-Taxable Sales Base,,,,
+,,,,,,,,,tax,refund,-VAT Sales - received,uy_code_21402,,,
+vat8,10% included,VAT Included Sales (10%),VAT Included Sales (10%),vat,10,percent,sale,tax_group_iva_10,base,invoice,+Base Sales 10%,,tax_included,IVA Ventas Incluído (10%),IVA Ventas Incluído (10%)
+,,,,,,,,,tax,invoice,+Sales VAT 10%,uy_code_21401,,,
+,,,,,,,,,base,refund,-Taxable Sales Base,,,,
+,,,,,,,,,tax,refund,-VAT Sales - received,uy_code_21401,,,
+vat9,22% included,VAT Included Purchases (22%),VAT Included Purchases (22%),vat,22,percent,purchase,tax_group_iva_22,base,invoice,+Base Purchases 22%,,tax_included,IVA Compras Incluído (22%),IVA Compras Incluído (22%)
+,,,,,,,,,tax,invoice,+VAT Purchases 22%,uy_code_11502,,,
+,,,,,,,,,base,refund,-Tax Base Purchases,,,,
+,,,,,,,,,tax,refund,-VAT Purchases - paid,uy_code_11502,,,
+vat10,10% included,VAT Included Purchases (10%),VAT Included Purchases (10%),vat,10,percent,purchase,tax_group_iva_10,base,invoice,+Base Purchases 10%,,tax_included,IVA Compras Incluído (10%),IVA Compras Incluído (10%)
+,,,,,,,,,tax,invoice,+VAT Purchases 10%,uy_code_11501,,,
+,,,,,,,,,base,refund,-Tax Base Purchases,,,,
+,,,,,,,,,tax,refund,-VAT Purchases - paid,uy_code_11501,,,
+vat11,20% Reduced VAT,Sales Reduced VAT,Sales Reduced VAT,vat,20,percent,sale,tax_group_reduced_vat,base,invoice,+Base Sales Reduced VAT,,,IVA Ventas Tasa Reducida,IVA Ventas Tasa Reducida
+,,,,,,,,,tax,invoice,+Sales Reduced VAT,uy_code_21406,,,
+,,,,,,,,,base,refund,-Taxable Sales Base,,,,
+,,,,,,,,,tax,refund,-VAT Sales - received,uy_code_21406,,,
+vat12,20% Reduced VAT,Purchase Reduced VAT,Purchase Reduced VAT,vat,20,percent,purchase,tax_group_reduced_vat,base,invoice,+Base Purchases Reduced VAT,,,IVA Compras Tasa Reducida,IVA Compras Tasa Reducida
+,,,,,,,,,tax,invoice,+Purchases Reduced VAT,uy_code_11504,,,
+,,,,,,,,,base,refund,-Tax Base Purchases,,,,
+,,,,,,,,,tax,refund,-VAT Purchases - paid,uy_code_11504,,,

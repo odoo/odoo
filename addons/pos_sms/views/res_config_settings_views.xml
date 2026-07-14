@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_sms_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sms.pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="95"/>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="warning_text_pos_sms" position="replace">
+                <div class="row">
+                    <label string="Receipt template" for="pos_sms_receipt_template_id" class="col-lg-3 o_light_label"/>
+                    <field name="pos_sms_receipt_template_id" required="pos_module_pos_sms"/>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

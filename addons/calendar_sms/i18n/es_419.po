@@ -1,0 +1,109 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* calendar_sms
+#
+# Translators:
+# Wil Odoo, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/"
+"41243/es_419/)\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_event
+msgid "Calendar Event"
+msgstr "Evento del calendario"
+
+#. module: calendar_sms
+#: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
+msgid "Calendar Event: Reminder"
+msgstr "Evento de calendario: recordatorio"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "Alerta de evento"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Gestor de alertas de eventos"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+msgid "Event reminder: %(name)s, %(time)s."
+msgstr "Recordatorio de evento: %(name)s, %(time)s."
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid ""
+"Event reminder: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
+msgstr ""
+"Recordatorio de evento: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_alarm.py:0
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
+msgid "Notify Responsible"
+msgstr "Notificar al responsable"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "SMS"
+msgstr "SMS"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "SMS Template"
+msgstr "Plantilla de SMS"
+
+#. module: calendar_sms
+#: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
+msgid "SMS Text Message"
+msgstr "Mensaje de texto SMS"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
+msgid "Send SMS"
+msgstr "Enviar SMS"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "Send SMS to attendees"
+msgstr "Enviar SMS a los asistentes"
+
+#. module: calendar_sms
+#: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "Template used to render SMS reminder content."
+msgstr ""
+"Plantilla que se utiliza para visualizar el contenido de los recordatorios "
+"por SMS."
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+msgid "There are no attendees on these events"
+msgstr "No hay asistentes para estos eventos"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
+msgid "Type"
+msgstr "Tipo"

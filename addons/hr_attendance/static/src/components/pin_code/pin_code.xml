@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.KioskPinConfirm">
+    <t t-if="this.props.employeeData">
+        <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 justify-content-center align-items-center">
+            <div class="card rounded-3">
+                <div class="card-body rounded-3 text-center">
+                    <t t-call="hr_attendance.EmployeeBadge">
+                        <t t-set="employeeAvatar" t-value="this.props.employeeData.employee_avatar"/>
+                        <t t-set="employeeAvatarHeight" t-value="'60'"/>
+                    </t>
+                    <h3 class="mt-2 mb-1"><t t-esc="this.props.employeeData.employee_name"/></h3>
+                    <h5 class="text-muted my-0">
+                        Please enter your PIN to
+                        <t t-if="checkedIn">check out</t>
+                        <t t-else="">check in</t>
+                    </h5>
+                    <div class="o_hr_kiosk_mode_code mb-2">
+                        <div class="row">
+                            <div class="col-md-8 offset-md-2 o_hr_attendance_pin_pad">
+                                <div class="row g-0 my-2" >
+                                    <input t-att-value="state.codePin" class="o_hr_attendance_PINbox py-0 border-0 bg-white text-center fs-3" type="password" disabled="true"/>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-4" t-foreach="padButtons" t-as="btn" t-key="btn[0]">
+                                        <a href="#" t-on-click="() => this.onClickPadButton(btn[0])" t-attf-class="o_hr_attendance_PINbox_button btn {{btn[1]? btn[1] : 'btn-secondary'}} d-flex align-items-center justify-content-center py-2 py-xl-3 rounded-1">
+                                            <t t-esc="btn[0]"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="o_hr_kiosk_mode_bottom my-4 mx-auto">
+            <button class="btn btn-light btn-lg rounded-pill px-5" t-on-click="() => this.props.onClickBack()">
+                <i class="oi oi-chevron-left me-2"/>
+                <span>Go back</span>
+            </button>
+        </div>
+    </t>
+    <t t-else="">
+        <div class="alert alert-danger mx-3" role="alert">
+            <h4 class="alert-heading">Error: could not find corresponding employee.</h4>
+            <p>Please return to the main menu.</p>
+        </div>
+        <a role="button" class="oe_attendance_sign_in_out" aria-label="Sign out" title="Sign out"/>
+    </t>
+</t>
+
+</templates>

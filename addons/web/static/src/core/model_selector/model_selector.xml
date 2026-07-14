@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="web.ModelSelector">
+        <div class="o_model_selector" t-ref="autocomplete_container">
+            <input t-if="env.isSmall"
+                type="text"
+                class="o_input"
+                readonly=""
+                t-att-id="props.id"
+                t-att-value="props.value"
+            />
+            <AutoComplete t-else=""
+                id="props.id"
+                value="props.value || ''"
+                sources="sources"
+                placeholder.translate="Type a model here..."
+                autoSelect="props.autoSelect"
+                onSelect.bind="onSelect"
+            />
+            <span class="o_dropdown_button" />
+        </div>
+    </t>
+</templates>

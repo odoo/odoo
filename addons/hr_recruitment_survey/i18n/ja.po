@@ -1,0 +1,387 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_recruitment_survey
+#
+# Translators:
+# Wil Odoo, 2024
+# Junko Augias, 2024
+#
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-13 09:08+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
+"hr_recruitment_survey/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_recruitment_survey
+#: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant "
+"name]</t><br/><br/>\n"
+"        <t>\n"
+"            You've progressed through the recruitment process and we would "
+"like you to answer some questions.\n"
+"        </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-"
+"color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    Start the written interview\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Please answer the interview for <t t-"
+"out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
+"        </t>\n"
+"        <t>\n"
+"            We wish you good luck! Thank you in advance for your "
+"participation.\n"
+"        </t>\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"         <t t-out=\"object.partner_id.name or 'applicant'\">[applicant "
+"name]</t>様<br/><br/>\n"
+"        <t>\n"
+"            現在、選考を進めさせて頂いております。以下の質問にお答え下さ"
+"い。\n"
+"        </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-"
+"color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    筆記試験を開始する\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            <t t-out=\"format_date(object.deadline)\">[deadline date]</t>まで"
+"にご回答下さい。<br/><br/>\n"
+"        </t>\n"
+"        <t>\n"
+"            ご健闘をお祈りします! ご回答をお願い致します。\n"
+"        </t>\n"
+"    \n"
+"</div>\n"
+"            "
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>採用に移動"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid ""
+"<span class=\"o_stat_text\">Consult</span>\n"
+"                        <span class=\"o_stat_text\">Interview</span>"
+msgstr ""
+"<span class=\"o_stat_text\">相談</span>\n"
+"                        <span class=\"o_stat_text\">面接</span>"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
+msgid "About you"
+msgstr "あなた自身について"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
+msgid "Activities"
+msgstr "活動"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr "新しいアンケートを追加します。"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
+msgid "Applicant"
+msgstr "応募者"
+
+#. module: hr_recruitment_survey
+#: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
+msgid "Applicant: Interview"
+msgstr "応募者: 面接"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
+msgid ""
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
+msgstr ""
+"この職種の面接用紙を選ぶと、この職種に応募した全ての面接用紙を印刷できます。"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Display Interview Form"
+msgstr "面接用紙を表示"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
+msgid "Education"
+msgstr "学歴"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
+msgid "From which university did or will you graduate?"
+msgstr "どの大学を卒業または卒業予定ですか？"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
+msgid "Getting on with colleagues"
+msgstr "同僚と仲が良いこと"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
+msgid "Getting perks such as free parking, gym passes"
+msgstr "駐車場無料、ジムパスなどの特典があること"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
+msgid "Having a good pay"
+msgstr "給料が高いこと"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row3
+msgid "Having a nice office environment"
+msgstr "オフィス環境が整っていること "
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
+msgid "Having freebies such as tea, coffee and stationery"
+msgstr "お茶やコーヒー、文房具などが無償で提供されること"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
+msgid "Important"
+msgstr "重要"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Interview Form"
+msgstr "面接用紙"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
+msgid "Interview Form: %s"
+msgstr "面接フォーム: %s"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
+msgid "Interview Survey"
+msgstr "インタビュー調査"
+
+#. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Interviews"
+msgstr "面接"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
+msgid "Job Position"
+msgstr "職位"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
+msgid "Knowledge"
+msgstr "ナレッジ"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
+msgid "Management quality"
+msgstr "マネジメント品質"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col1
+msgid "Not important"
+msgstr "重要でない"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row5
+msgid "Office location"
+msgstr "オフィス所在地"
+
+#. module: hr_recruitment_survey
+#: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
+msgid "Participate to {{ object.survey_id.display_name }} interview"
+msgstr " {{ object.survey_id.display_name }} 面接に参加する"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
+msgid "Past work experiences"
+msgstr "職歴"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
+msgstr ""
+"採用担当者があなたの応募書類を事前に処理するために、これらの質問にお答え下さ"
+"い。"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
+msgid ""
+"Please fill information about you: who you are, what are your education, "
+"experience, and activities.\n"
+"    It will help us managing your application."
+msgstr ""
+"学歴、経験、活動内容など、あなたに関する情報を記入して下さい。\n"
+"応募を管理するために利用させて頂きます。"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
+msgid "Please provide an applicant name."
+msgstr "応募者の名前を記入して下さい。"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr "学歴を要約して下さい: 学校、ロケーション、卒業証書など"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
+msgstr "あなた自身についてもう少し教えて下さい:主な活動は？"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
+msgstr "採用"
+
+#. module: hr_recruitment_survey
+#: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
+msgid "Recruitment Form"
+msgstr "採用情報フォーム"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
+msgid "Responses"
+msgstr "回答"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid "See interview report"
+msgstr "インタビューレポートを表示"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid "Send Interview"
+msgstr "面接を送信"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
+msgid "Send an interview"
+msgstr "面接を送信"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
+msgid "Survey"
+msgstr "調査"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_survey_invite
+msgid "Survey Invitation Wizard"
+msgstr "アンケート招待ウィザード"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr "アンケートタイプ"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "アンケート回答データ"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
+msgid "Thank you for answering this survey. We will come back to you soon."
+msgstr "アンケートにご協力頂きありがとうございました。追ってご連絡致します。"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_user_input.py:0
+msgid "The applicant \"%s\" has finished the survey."
+msgstr "応募者 \"%s\" はアンケートを完了しています。"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
+msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
+msgstr "アンケート %(survey_link)sが %(partner_link)sに送信されました。"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
+msgid "Very important"
+msgstr "非常に重要"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
+msgid "Were you referred by an employee?"
+msgstr "弊社の従業員からの紹介ですか？"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
+msgid "What are your main knowledge regarding the job you are applying to?"
+msgstr "応募しようとしている仕事に関して、主にどんな知識をお持ちですか？"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
+msgid "What is important for you?"
+msgstr "あなたにとって重要なことは何ですか？"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
+msgid "Which country are you from?"
+msgstr "どちらの国出身ですか？"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
+msgid "Working with state of the art technology"
+msgstr "最先端の技術に関する仕事をすること"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""
+"採用のためのアンケートを作成し、面接を簡単にデザイン。\n"
+"                 招待を送り、回答を分析します。"
