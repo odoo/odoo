@@ -2159,6 +2159,7 @@ class Application:
         """
 
         netloc, path = urlparse(url)[1:3]
+        path = os.path.normpath(os.path.normcase(path))
         try:
             path_netloc, module, static, resource = path.split('/', 3)
         except ValueError:
