@@ -332,10 +332,10 @@ class TestHTTPCursor(HttpCase):
         def return_readonly(self, *args, **kwargs):
             return ['ok', self.env.cr.readonly]
 
-        with patch.object(type(self.env['res.partner']), 'read', return_readonly):
+        with patch.object(self.env.registry['test_orm.partner'], 'read', return_readonly):
             result_read = self.url_open('/web/dataset/call_kw', data=json.dumps({
                 "params": {
-                    'model': 'res.partner',
+                    'model': 'test_orm.partner',
                     'method': 'read',
                     'args': [self.env.user.partner_id.id, ['name']],
                     'kwargs': {},
@@ -346,10 +346,10 @@ class TestHTTPCursor(HttpCase):
             self.assertEqual(ok, 'ok')
             self.assertEqual(readonly, True, 'Call to read are expecte to be read only')
 
-        with patch.object(type(self.env['res.partner']), 'write', return_readonly):
+        with patch.object(self.env.registry['test_orm.partner'], 'write', return_readonly):
             result_write = self.url_open('/web/dataset/call_kw', data=json.dumps({
                 "params": {
-                    'model': 'res.partner',
+                    'model': 'test_orm.partner',
                     'method': 'write',
                     'args': [self.env.user.partner_id.id, {'name': 'Urgo'}],
                     'kwargs': {},
@@ -371,18 +371,18 @@ class TestTestCursor(common.TransactionCase):
         self.cr = self.registry.cursor()
         self.addCleanup(self.cr.close)
         self.env = api.Environment(self.cr, api.SUPERUSER_ID, {})
-        self.record = self.env['res.partner'].create({'name': 'Foo'})
+        self.record = self.env['test_orm.partner'].create({'name': 'Foo'})
 
     def write(self, record, value):
-        record.ref = value
+        record.email = value
 
     def flush(self, record):
-        record.flush_model(['ref'])
+        record.flush_model(['email'])
 
     def check(self, record, value):
         # make sure to fetch the field from the database
         record.invalidate_recordset()
-        self.assertEqual(record.read(['ref'])[0]['ref'], value)
+        self.assertEqual(record.read(['email'])[0]['email'], value)
 
     def test_single_cursor(self):
         """ Check the behavior of a single test cursor. """
