@@ -1,11 +1,21 @@
 /** @odoo-module alias=@web/../tests/mobile/core/action_swiper_tests default=false */
 
-import { beforeEach, expect, hover, mockTouch, queryFirst, test } from "@odoo/hoot";
+import {
+    advanceTime,
+    beforeEach,
+    expect,
+    freezeTime,
+    hover,
+    mockTouch,
+    queryFirst,
+    test,
+} from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineParams,
     mountWithCleanup,
+    patchWithCleanup,
     swipeLeft,
     swipeRight,
 } from "@web/../tests/web_test_helpers";
@@ -228,6 +238,8 @@ test("can perform actions by swiping in both directions", async () => {
             clientY: 0,
         },
     });
+    // The finger rests before the release, so that it isn't a flick either
+    await advanceTime(100);
 
     await dragHelper.drop();
 
@@ -643,4 +655,163 @@ test("an async action is awaited before being executed", async () => {
     expect.verifySteps(["action started"]);
     prom.resolve();
     await expect.waitForSteps(["action done"]);
+});
+
+class ShortSwipeParent extends Component {
+    static components = { ActionSwiper };
+    static template = xml`
+        <div class="d-flex">
+            <ActionSwiper onRightSwipe="{
+                action: () => this.onRightSwipe(),
+                iconClass: 'oi-filled',
+                bgColor: 'bg-warning',
+            }">
+                <div class="target-component" style="width: 200px; height: 80px">Test</div>
+            </ActionSwiper>
+        </div>
+    `;
+    onRightSwipe() {
+        expect.step("onRightSwipe");
+    }
+}
+
+/**
+ * Swipes 30px to the right, which is less than a quarter of the 200px target,
+ * and lifts the finger after `duration` ms. Time is frozen so that the speed
+ * of the gesture only depends on `duration`, not on the speed of the machine.
+ *
+ * @param {number} duration
+ */
+async function shortSwipeRight(duration) {
+    freezeTime();
+    const { moveTo, drop } = await contains(".o_actionswiper").drag({
+        position: { x: 0 },
+        relative: true,
+        initialPointerMoveDistance: 0,
+        // By default, the helper holds the touch for 500ms before moving,
+        // which would make every swipe slow.
+        pointerDownDuration: 1,
+    });
+    await moveTo(".o_actionswiper", { position: { x: 30 }, relative: true });
+    await advanceTime(duration);
+    await drop();
+    await advanceTime(1000);
+}
+
+test("a quick swipe shorter than a quarter of the width is performed", async () => {
+    await mountWithCleanup(ShortSwipeParent);
+    await shortSwipeRight(20);
+    expect.verifySteps(["onRightSwipe"]);
+});
+
+test("a slow swipe shorter than a quarter of the width is cancelled", async () => {
+    await mountWithCleanup(ShortSwipeParent);
+    await shortSwipeRight(1000);
+    expect.verifySteps([]);
+    expect(queryFirst(".o_actionswiper_target_container").style.transform).not.toInclude(
+        "translateX"
+    );
+});
+
+test("a quick swipe shorter than the flick distance is cancelled", async () => {
+    await mountWithCleanup(ShortSwipeParent);
+    freezeTime();
+    const { moveTo, drop } = await contains(".o_actionswiper").drag({
+        position: { x: 0 },
+        relative: true,
+        initialPointerMoveDistance: 0,
+        pointerDownDuration: 1,
+    });
+    await moveTo(".o_actionswiper", { position: { x: 20 }, relative: true });
+    await advanceTime(10);
+    await drop();
+    await advanceTime(1000);
+    expect.verifySteps([]);
+});
+
+test("the flick speed ignores the time the finger rested", async () => {
+    await mountWithCleanup(ShortSwipeParent);
+    freezeTime();
+    const { moveTo, drop } = await contains(".o_actionswiper").drag({
+        position: { x: 0 },
+        relative: true,
+        initialPointerMoveDistance: 0,
+        pointerDownDuration: 250,
+    });
+    await moveTo(".o_actionswiper", { position: { x: 30 }, relative: true });
+    await advanceTime(20);
+    await drop();
+    await advanceTime(1000);
+    expect.verifySteps(["onRightSwipe"]);
+});
+
+test("a quick swipe taken back before the release is cancelled", async () => {
+    await mountWithCleanup(ShortSwipeParent);
+    freezeTime();
+    const { moveTo, drop } = await contains(".o_actionswiper").drag({
+        position: { x: 0 },
+        relative: true,
+        initialPointerMoveDistance: 0,
+        pointerDownDuration: 1,
+    });
+    await moveTo(".o_actionswiper", { position: { x: 60 }, relative: true });
+    await advanceTime(40);
+    // Back under a quarter of the width, but still over the flick distance
+    await moveTo(".o_actionswiper", { position: { x: 30 }, relative: true });
+    await advanceTime(10);
+    await drop();
+    await advanceTime(1000);
+    expect.verifySteps([]);
+});
+
+test("a tap during the swipe animation doesn't perform the action again", async () => {
+    patchWithCleanup(ActionSwiper, { animationLength: 400 });
+    await mountWithCleanup(ShortSwipeParent);
+    const { moveTo, drop } = await contains(".o_actionswiper").drag({
+        position: { x: 0 },
+        relative: true,
+        initialPointerMoveDistance: 0,
+        pointerDownDuration: 1,
+    });
+    await moveTo(".o_actionswiper", { position: { x: 150 }, relative: true });
+    await drop();
+    await contains(".o_actionswiper").click();
+    await advanceTime(1000);
+    expect.verifySteps(["onRightSwipe"]);
+});
+
+test("a swipe that starts too late is left to the browser", async () => {
+    await mountWithCleanup(ShortSwipeParent);
+    await swipeRight(".o_actionswiper");
+    expect.verifySteps(["onRightSwipe"]);
+
+    // Any horizontal move is now considered as starting too late.
+    patchWithCleanup(ActionSwiper, { swipeStartMaxDelay: -1 });
+    await swipeRight(".o_actionswiper");
+    expect.verifySteps([]);
+});
+
+test("resting the finger before swiping doesn't prevent the swipe", async () => {
+    await mountWithCleanup(ShortSwipeParent);
+    const el = queryFirst(".o_actionswiper");
+    const { left, top } = el.getBoundingClientRect();
+    // The helpers can't set the timestamps the start delay is measured with.
+    const dispatchTouch = (type, x, timeStamp) => {
+        const touch = new Touch({ identifier: 1, target: el, clientX: left + x, clientY: top });
+        const ev = new TouchEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            touches: type === "touchend" ? [] : [touch],
+            changedTouches: [touch],
+        });
+        Object.defineProperty(ev, "timeStamp", { value: timeStamp });
+        el.dispatchEvent(ev);
+    };
+    // The finger rests for 1s, then swipes over a quarter of the width.
+    dispatchTouch("touchstart", 0, 0);
+    dispatchTouch("touchmove", 5, 1000);
+    dispatchTouch("touchmove", 60, 1050);
+    dispatchTouch("touchend", 60, 1080);
+    await advanceTime(1000);
+    expect.verifySteps(["onRightSwipe"]);
 });
