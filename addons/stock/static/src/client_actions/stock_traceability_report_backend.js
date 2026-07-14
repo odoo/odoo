@@ -112,7 +112,7 @@ export class TraceabilityReport extends Component {
                 active_model: line.model,
                 auto_unfold: true,
                 lot_name: line.lot_name !== undefined && line.lot_name,
-                url: "/stock/output_format/stock/active_id",
+                url: "/stock/output_format/stock?active_id=:active_id&active_model=:active_model",
             },
         });
     }
