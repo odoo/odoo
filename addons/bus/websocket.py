@@ -36,6 +36,7 @@ from odoo.http.session import (
 )
 from odoo.modules.registry import Registry
 from odoo.service.server import CommonServer
+from odoo.sql_db import db_connect
 from odoo.tools import config
 
 from .models.bus import dispatch, fetch_bus_notifications
@@ -59,7 +60,7 @@ def acquire_cursor(db):
             # Yield before trying to acquire the cursor to let other
             # greenlets release their cursor.
             time.sleep(0)
-            with suppress(PoolError), Registry(db).cursor() as cr:
+            with suppress(PoolError), db_connect(db).cursor() as cr:
                 yield cr
                 return
             time.sleep(delay + random.uniform(0, JITTER_ON_POOL_ERROR))
