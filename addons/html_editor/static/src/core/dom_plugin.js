@@ -668,12 +668,9 @@ export class DomPlugin extends Plugin {
             el.append(newEl);
             newEl.replaceChildren(...content);
         } else {
-            if (el.parentElement) {
-                el.before(newEl);
-            }
             this.copyAttributes(el, newEl);
             newEl.replaceChildren(...content);
-            el.remove();
+            el.replaceWith(newEl);
         }
         return newEl;
     }
