@@ -456,6 +456,12 @@
                                                     l10n_tn_vat_carryover.deductible_vat - l10n_tn_vat_returned_amount.deductible_vat</field>
                                 <field name="subformula">if_above(TND(0))</field>
                             </record>
+                            <record id="l10n_tn_tr_VAT_conclusion_after_carryover_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_tn_vat_remaining_total.vat_due - l10n_tn_vat_remaining_total.deductible_vat</field>
+                                <field name="subformula">if_above(TND(0))</field>
+                            </record>
                         </field>
                     </record>
                 </field>

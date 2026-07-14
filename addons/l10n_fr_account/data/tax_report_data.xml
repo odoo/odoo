@@ -2814,6 +2814,11 @@
                                 <field name="carryover_target">box_22._applied_carryover_balance</field>
                                 <field name="subformula" eval="False"/>
                             </record>
+                            <record id="tax_report_27_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_27.balance</field>
+                            </record>
                         </field>
                     </record>
                     <record id="tax_report_Y5" model="account.report.line">
@@ -2891,6 +2896,11 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">box_28.balance + box_29.balance + box_Z5.balance</field>
                                 <field name="subformula">round(0)</field>
+                            </record>
+                            <record id="tax_report_32_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_32.balance</field>
                             </record>
                         </field>
                     </record>

@@ -348,6 +348,18 @@
                     </record>
                 </field>
             </record>
+            <record id="diot_report_closing_amount_line" model="account.report.line">
+                <field name="name">Closing Amount</field>
+                <field name="hide_if_zero" eval="True"/>
+                <field name="expression_ids">
+                    <record id="diot_report_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">domain</field>
+                        <field name="formula">[('tax_line_id', '!=', False), ('tax_repartition_line_id.use_in_tax_closing', '=', True)]</field>
+                        <field name="subformula">-sum</field>
+                    </record>
+                </field>
+            </record>
         </field>
     </record>
 </odoo>

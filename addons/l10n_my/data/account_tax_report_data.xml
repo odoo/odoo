@@ -278,12 +278,18 @@
                     <record id="l10n_my_sst_total_including_penalty" model="account.report.line">
                         <field name="name">16) Total of Tax Payable Inclusive Penalty</field>
                         <field name="name@ms_MY">16) Jumlah Cukai Kena Dibayar Termasuk Penalti</field>
+                        <field name="code">SST02_TIP</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_my_sst_total_including_penalty_agg_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">SST02_PTBP.balance_d + SST02_P.balance_d</field>
+                            </record>
+                            <record id="l10n_my_sst_total_including_penalty_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SST02_TIP.balance_d</field>
                             </record>
                         </field>
                     </record>
@@ -593,6 +599,13 @@
                         <field name="name@ms_MY">10) Jumlah Nilai Jualan dan Cukai Yang Kena dibayar Mengikut Kadar Cukai</field>
                         <field name="code">SST02A_10</field>
                         <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_total_value_of_tax_payable_line_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SST02A_VOI.balance_b + SST02A_VOA.balance_b</field>
+                            </record>
+                        </field>
                         <field name="children_ids">
                             <record id="l10n_my_sst_value_of_imported_services" model="account.report.line">
                                 <field name="name">a) Value Of Imported Services</field>
@@ -609,6 +622,11 @@
                                         <field name="label">balance_b</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">SST02A_10A_B</field>
+                                    </record>
+                                    <record id="l10n_my_sst_total_value_of_tax_payable_closing_amount" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SST02A_VOI.balance_a + SST02A_VOI.balance_b</field>
                                     </record>
                                 </field>
                             </record>

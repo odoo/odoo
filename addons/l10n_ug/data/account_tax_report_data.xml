@@ -618,6 +618,17 @@
                                 <field name="formula">UG_TAX_D21_i.tax + UG_TAX_D21_iii.tax + UG_TAX_D21_iv.tax</field>
                                 <field name="subformula">cross_report(l10n_ug.section_CD)</field>
                             </record>
+                            <record id="F34_tax_c10_cross" model="account.report.expression">
+                                <field name="label">c10_cross</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C10.tax</field>
+                                <field name="subformula">cross_report(l10n_ug.section_CD)</field>
+                            </record>
+                            <record id="F34_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_F34.c10_cross - UG_TAX_F34.allowed</field>
+                            </record>
                         </field>
                     </record>
                 </field>

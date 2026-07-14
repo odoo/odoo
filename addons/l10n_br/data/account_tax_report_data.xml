@@ -20,6 +20,18 @@
                 <field name="name@pt">ICMS</field>
                 <field name="aggregation_formula">TRIBUTADA_INTEGRALMENTE.balance + TRIBUTADA_E_COM_COBRANCA_DO_ICMS_POR_SUBSTITUICAO_TRIBUTARIA.balance</field>
                 <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <!-- BR's report has no single "net amount due" line - it lists ~38 independent taxes,
+                         each split into a base (_1) and tax (_2) sub-line. This sums every tax component
+                         (never the bases) across the whole report, via the tax_tags engine so manual
+                         adjustment entries are picked up exactly like invoice/bill-generated tax lines. -->
+                    <record id="tax_report_icms_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ICMS_2.balance + ICMSST_2.balance + IRPJ_2.balance + IR_2.balance + ISSQN_2.balance + CSLL_2.balance + COFINS_2.balance + PIS_2.balance + IPI_2.balance + II_2.balance + INSS_2.balance + IS_2.balance + ISST_2.balance + CBS_2.balance + IBS_2.balance + IBSUF_2.balance + IBSM_2.balance + CBSPC_2.balance + IBSPC_2.balance + CBSPCSP_2.balance + IBSPCSC_2.balance + CBSR_2.balance + IBSUFR_2.balance + IBSMR_2.balance + CBSD_2.balance + IBSD_2.balance + IBSUFD_2.balance + IBSMD_2.balance + CBSSW_2.balance + CBSPW_2.balance + IBSSW_2.balance + IBSPW_2.balance + IBSUFRT_2.balance + IBSMRT_2.balance + CBSGC_2.balance + IBSUFGC_2.balance + IBSMGC_2.balance + IBSZFMPC_2.balance + CBSTC_2.balance + IBSTC_2.balance</field>
+                        <field name="subformula" eval="False"/>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="tax_report_icms_tributada" model="account.report.line">
                         <field name="name">Taxed in full</field>

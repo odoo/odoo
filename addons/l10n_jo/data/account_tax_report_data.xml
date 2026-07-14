@@ -595,14 +595,21 @@
             <record id="tax_report_vat_payable_amount" model="account.report.line">
                 <field name="name">14. Payable Amount</field>
                 <field name="name@ar_001">14. المبلغ المستحق الدفع </field>
+                <field name="code">jo_14</field>
                 <field name="sequence">37</field>
                 <field name="expression_ids">
                     <record id="tax_report_vat_payable_tax_amount_tag" model="account.report.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">(jo_1.tax + jo_6.tax + jo_11.tax + jo_13.tax) - 
+                        <field name="formula">(jo_1.tax + jo_6.tax + jo_11.tax + jo_13.tax) -
                             (jo_2.tax + jo_3.tax + jo_12.tax)
                         </field>
+                        <field name="subformula">if_above(JOD(0))</field>
+                    </record>
+                    <record id="tax_report_vat_payable_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_14.tax</field>
                         <field name="subformula">if_above(JOD(0))</field>
                     </record>
                 </field>
@@ -617,9 +624,15 @@
                     <record id="tax_report_vat_claimable_tax_amount_tag" model="account.report.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">(jo_1.tax + jo_6.tax + jo_11.tax + jo_13.tax) - 
+                        <field name="formula">(jo_1.tax + jo_6.tax + jo_11.tax + jo_13.tax) -
                             (jo_2.tax + jo_3.tax + jo_12.tax)
                         </field>
+                        <field name="subformula">if_below(JOD(0))</field>
+                    </record>
+                    <record id="tax_report_vat_claimable_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_15.tax</field>
                         <field name="subformula">if_below(JOD(0))</field>
                     </record>
                 </field>

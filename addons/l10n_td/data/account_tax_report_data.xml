@@ -189,6 +189,12 @@
                                 <field name="formula">TD_VAT_DEDUCT.tax - TD_SALES.tax</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
+                            <record id="account_tax_report_line_td_credit_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TD_VAT_CREDIT.tax</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="account_tax_report_line_td_to_pay" model="account.report.line">
@@ -200,6 +206,12 @@
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TD_SALES.tax - TD_VAT_DEDUCT.tax</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="account_tax_report_line_td_to_pay_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TD_VAT_TO_PAY.tax</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
                         </field>

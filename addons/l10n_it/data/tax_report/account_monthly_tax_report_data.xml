@@ -310,6 +310,18 @@
                                 <field name="formula">(VP6.credit + VP8.credit + VP9.credit + VP10.credit + VP11.credit + VP13.credit) - (VP6.debit + VP7.debit + VP12.debit)</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
+                            <record id="tax_monthly_report_line_vp14_closing_amount_debit" model="account.report.expression">
+                                <field name="label">_closing_amount_debit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP14.debit</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp14_closing_amount_credit" model="account.report.expression">
+                                <field name="label">_closing_amount_credit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP14.credit</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
                             <record id="tax_monthly_report_line_vp14_vp14b_carryover" model="account.report.expression">
                                 <field name="label">_carryover_credit</field>
                                 <field name="engine">aggregation</field>
