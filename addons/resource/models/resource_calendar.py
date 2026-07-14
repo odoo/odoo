@@ -592,6 +592,8 @@ class ResourceCalendar(models.Model):
         with them so this method merely calculates the proportion that is
         covered by the intervals.
         """
+        if self:
+            self.ensure_one()
         day_hours = defaultdict(float)
         day_days = defaultdict(float)
         for start, stop, _ in attendance_intervals:
@@ -601,11 +603,20 @@ class ResourceCalendar(models.Model):
             day_hours[start.date()] += interval_hours
 
         for day, hours in day_hours.items():
-            if len(self) == 1 and self._is_duration_based_on_date(day):
+            if not self:
+                day_days[day] = 1
+            elif self._is_duration_based_on_date(day):
                 hours_per_day = self._get_duration_based_work_hours_on_date(day)
                 day_days[start.date()] += hours / hours_per_day if hours_per_day else 0
             else:
-                day_days[day] = 0.5 if hours <= self.hours_per_day * 3 / 4 else 1
+                attendances = self._get_attendances_on_date(day)
+                # A morning + afternoon day counts as a full day when entirely covered
+                spans_whole_day = (
+                    attendances
+                    and sum(attendances.mapped('duration_hours')) > self.hours_per_day * 3 / 4
+                    and float_compare(hours, sum(attendances.mapped('duration_hours')), precision_digits=2) >= 0
+                )
+                day_days[day] = 1 if spans_whole_day or hours > self.hours_per_day * 3 / 4 else 0.5
 
         return {
             # Round the number of days to the closest 16th of a day.
@@ -889,12 +900,16 @@ class ResourceCalendar(models.Model):
             weektype = str(self.env['resource.calendar.attendance'].get_week_type(date))
         return working_days[weektype][dayofweek]
 
-    def _is_duration_based_on_date(self, date):
+    def _get_attendances_on_date(self, date):
         self.ensure_one()
         week_type = False
         if self.two_weeks_calendar:
             week_type = str(self.env['resource.calendar.attendance'].get_week_type(date))
-        return bool(self.attendance_ids.filtered(lambda a: a.duration_based and int(a.dayofweek) == date.weekday() and a.week_type == week_type))
+        return self.attendance_ids.filtered(lambda a: int(a.dayofweek) == date.weekday() and a.week_type == week_type)
+
+    def _is_duration_based_on_date(self, date):
+        self.ensure_one()
+        return bool(self._get_attendances_on_date(date).filtered('duration_based'))
 
     def _get_duration_based_work_hours_on_date(self, date):
         attendances_per_week_type = self.attendance_ids.filtered(lambda a: int(a.dayofweek) == date.weekday()).grouped('week_type')
