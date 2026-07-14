@@ -74,6 +74,208 @@ class AccountMoveLine(models.Model):
         return tax_details
 
     @api.model
+    def _get_tax_details_from_domain(self, domain, fallback=True):
+        """Return tax details rows using the Python implementation over a cached scalar snapshot."""
+        return self._get_python_tax_details_from_cache_domain(domain, fallback=fallback)
+
+    @api.model
+    def _warm_tax_details_cache(self, domain):
+        selected_lines = self.search_fetch(domain, [
+            'move_id',
+            'display_type',
+            'tax_repartition_line_id',
+            'tax_line_id',
+            'group_tax_id',
+            'balance',
+            'amount_currency',
+            'quantity',
+            'account_id',
+            'partner_id',
+            'currency_id',
+            'company_currency_id',
+            'analytic_distribution',
+            'tax_ids',
+        ], order='move_id, id')
+        move_lines = selected_lines.move_id.line_ids
+        move_lines.fetch([
+            'move_id',
+            'display_type',
+            'tax_repartition_line_id',
+            'tax_line_id',
+            'group_tax_id',
+            'balance',
+            'amount_currency',
+            'quantity',
+            'account_id',
+            'partner_id',
+            'currency_id',
+            'company_currency_id',
+            'analytic_distribution',
+            'tax_ids',
+        ])
+        selected_lines.move_id.fetch(['move_type', 'tax_cash_basis_rec_id', 'always_tax_exigible', 'line_ids'])
+        taxes = move_lines.tax_ids | move_lines.tax_line_id | move_lines.group_tax_id
+        taxes.fetch([
+            'sequence',
+            'amount',
+            'amount_type',
+            'is_base_affected',
+            'include_base_amount',
+            'tax_exigibility',
+            'cash_basis_transition_account_id',
+            'analytic',
+            'children_tax_ids',
+        ])
+        taxes.children_tax_ids.fetch([
+            'sequence',
+            'amount',
+            'amount_type',
+            'is_base_affected',
+            'include_base_amount',
+            'tax_exigibility',
+            'cash_basis_transition_account_id',
+            'analytic',
+            'children_tax_ids',
+        ])
+        move_lines.tax_repartition_line_id.fetch(['tax_id', 'account_id', 'factor_percent', 'use_in_tax_closing'])
+        (move_lines.currency_id | move_lines.company_currency_id).fetch(['decimal_places'])
+        return selected_lines, move_lines, taxes
+
+    @api.model
+    def _raw_ids_from_rel_cache(self, value):
+        if not value:
+            return []
+        if hasattr(value, '_ids'):
+            return list(value._ids)
+        if isinstance(value, (tuple, list, set, frozenset)):
+            return list(value)
+        return list(value)
+
+    @api.model
+    def _get_python_tax_details_from_cache_domain(self, domain, fallback=True):
+        selected_lines, move_lines, taxes = self._warm_tax_details_cache(domain)
+        selected_line_ids = set(selected_lines.ids)
+
+        snapshot = {
+            'lines_by_move_id': defaultdict(list),
+            'taxes': {},
+            'tax_reps': {},
+            'currencies': {},
+        }
+
+        move_fields = self.env['account.move']._fields
+        move_cache = {
+            'move_type': move_fields['move_type']._get_cache(self.env),
+            'tax_cash_basis_rec_id': move_fields['tax_cash_basis_rec_id']._get_cache(self.env),
+            'always_tax_exigible': move_fields['always_tax_exigible']._get_cache(self.env),
+        }
+        line_fields = self._fields
+        line_cache = {
+            name: line_fields[name]._get_cache(self.env)
+            for name in (
+                'move_id',
+                'display_type',
+                'tax_repartition_line_id',
+                'tax_line_id',
+                'group_tax_id',
+                'balance',
+                'amount_currency',
+                'quantity',
+                'account_id',
+                'partner_id',
+                'currency_id',
+                'company_currency_id',
+                'analytic_distribution',
+                'tax_ids',
+            )
+        }
+
+        for line_id in move_lines.ids:
+            move_id = line_cache['move_id'][line_id]
+            snapshot['lines_by_move_id'][move_id].append({
+                'id': line_id,
+                'move_id': move_id,
+                'display_type': line_cache['display_type'][line_id],
+                'tax_repartition_line_id': line_cache['tax_repartition_line_id'].get(line_id),
+                'tax_line_id': line_cache['tax_line_id'].get(line_id),
+                'group_tax_id': line_cache['group_tax_id'].get(line_id),
+                'balance': line_cache['balance'][line_id],
+                'amount_currency': line_cache['amount_currency'][line_id],
+                'quantity': line_cache['quantity'][line_id],
+                'account_id': line_cache['account_id'].get(line_id),
+                'partner_id': line_cache['partner_id'].get(line_id),
+                'currency_id': line_cache['currency_id'][line_id],
+                'company_currency_id': line_cache['company_currency_id'][line_id],
+                'analytic_distribution': line_cache['analytic_distribution'].get(line_id),
+                'move_type': move_cache['move_type'][move_id],
+                'tax_cash_basis_rec_id': move_cache['tax_cash_basis_rec_id'].get(move_id),
+                'always_tax_exigible': move_cache['always_tax_exigible'][move_id],
+                'selected': line_id in selected_line_ids,
+                'tax_ids': self._raw_ids_from_rel_cache(line_cache['tax_ids'].get(line_id)),
+            })
+
+        tax_fields = self.env['account.tax']._fields
+        tax_cache = {
+            name: tax_fields[name]._get_cache(self.env)
+            for name in (
+                'sequence',
+                'amount',
+                'amount_type',
+                'is_base_affected',
+                'include_base_amount',
+                'tax_exigibility',
+                'cash_basis_transition_account_id',
+                'analytic',
+                'children_tax_ids',
+            )
+        }
+        for tax_id in taxes.ids + taxes.children_tax_ids.ids:
+            if not tax_id:
+                continue
+            snapshot['taxes'][tax_id] = {
+                'id': tax_id,
+                'sequence': tax_cache['sequence'][tax_id],
+                'amount': tax_cache['amount'][tax_id],
+                'amount_type': tax_cache['amount_type'][tax_id],
+                'is_base_affected': tax_cache['is_base_affected'][tax_id],
+                'include_base_amount': tax_cache['include_base_amount'][tax_id],
+                'tax_exigibility': tax_cache['tax_exigibility'][tax_id],
+                'cash_basis_transition_account_id': tax_cache['cash_basis_transition_account_id'].get(tax_id),
+                'analytic': tax_cache['analytic'][tax_id],
+                'children_tax_ids': self._raw_ids_from_rel_cache(tax_cache['children_tax_ids'].get(tax_id)),
+            }
+
+        tax_reps = move_lines.tax_repartition_line_id
+        rep_fields = self.env['account.tax.repartition.line']._fields
+        rep_cache = {
+            name: rep_fields[name]._get_cache(self.env)
+            for name in ('tax_id', 'account_id', 'factor_percent', 'use_in_tax_closing')
+        }
+        for rep_id in tax_reps.ids:
+            snapshot['tax_reps'][rep_id] = {
+                'id': rep_id,
+                'tax_id': rep_cache['tax_id'][rep_id],
+                'account_id': rep_cache['account_id'].get(rep_id),
+                'factor_percent': rep_cache['factor_percent'][rep_id],
+                'use_in_tax_closing': rep_cache['use_in_tax_closing'][rep_id],
+            }
+
+        currency_cache = self.env['res.currency']._fields['decimal_places']._get_cache(self.env)
+        for currency_id in (move_lines.currency_id | move_lines.company_currency_id).ids:
+            snapshot['currencies'][currency_id] = {
+                'id': currency_id,
+                'decimal_places': currency_cache[currency_id],
+            }
+
+        for lines in snapshot['lines_by_move_id'].values():
+            lines.sort(key=lambda line: line['id'])
+
+        tax_details = []
+        for move_id in sorted(snapshot['lines_by_move_id']):
+            tax_details += self._get_python_tax_details_from_snapshot_move(snapshot, snapshot['lines_by_move_id'][move_id], fallback=fallback)
+        return tax_details
+
+    @api.model
     def _get_python_tax_details_from_snapshot_domain(self, domain, fallback=True):
         query = self.env['account.move.line']._search(domain)
         return self._get_python_tax_details_from_snapshot_query(query.from_clause, query.where_clause, fallback=fallback)
@@ -480,17 +682,19 @@ class AccountMoveLine(models.Model):
                 src_line = row['src_line']
                 cumulated_base_amount += base_value(base_line, row['base_amount'], tax)
                 cumulated_base_amount_currency += base_value(base_line, row['base_amount_currency'], tax)
+                company_precision_digits = snapshot['currencies'][tax_line['company_currency_id']]['decimal_places']
+                currency_precision_digits = snapshot['currencies'][tax_line['currency_id']]['decimal_places']
                 tax_amount = prorata_amount(
                     cumulated_base_amount,
                     total_base_amount,
                     tax_line['balance'],
-                    snapshot['currencies'][tax_line['company_currency_id']]['decimal_places'],
+                    company_precision_digits,
                 )
                 tax_amount_currency = prorata_amount(
                     cumulated_base_amount_currency,
                     total_base_amount_currency,
                     tax_line['amount_currency'],
-                    snapshot['currencies'][tax_line['currency_id']]['decimal_places'],
+                    currency_precision_digits,
                 )
                 results.append({
                     'id': f"{tax_line['id']}-{base_line['id']}-{src_line['id']}",
@@ -512,9 +716,9 @@ class AccountMoveLine(models.Model):
                     'base_account_id': base_line['account_id'],
                     'tax_repartition_line_id': tax_line['tax_repartition_line_id'],
                     'base_amount': row['base_amount'],
-                    'tax_amount': tax_amount - previous_tax_amount,
+                    'tax_amount': round_digits(tax_amount - previous_tax_amount, company_precision_digits),
                     'base_amount_currency': row['base_amount_currency'],
-                    'tax_amount_currency': tax_amount_currency - previous_tax_amount_currency,
+                    'tax_amount_currency': round_digits(tax_amount_currency - previous_tax_amount_currency, currency_precision_digits),
                 })
                 previous_tax_amount = tax_amount
                 previous_tax_amount_currency = tax_amount_currency
@@ -810,17 +1014,19 @@ class AccountMoveLine(models.Model):
                 src_line = row['src_line']
                 cumulated_base_amount += base_value(base_line, row['base_amount'], tax)
                 cumulated_base_amount_currency += base_value(base_line, row['base_amount_currency'], tax)
+                company_precision_digits = tax_line.company_currency_id.decimal_places
+                currency_precision_digits = tax_line.currency_id.decimal_places
                 tax_amount = prorata_amount(
                     cumulated_base_amount,
                     total_base_amount,
                     tax_line.balance,
-                    tax_line.company_currency_id.decimal_places,
+                    company_precision_digits,
                 )
                 tax_amount_currency = prorata_amount(
                     cumulated_base_amount_currency,
                     total_base_amount_currency,
                     tax_line.amount_currency,
-                    tax_line.currency_id.decimal_places,
+                    currency_precision_digits,
                 )
                 results.append({
                     'id': f'{tax_line.id}-{base_line.id}-{src_line.id}',
@@ -842,9 +1048,9 @@ class AccountMoveLine(models.Model):
                     'base_account_id': base_line.account_id.id,
                     'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
                     'base_amount': row['base_amount'],
-                    'tax_amount': tax_amount - previous_tax_amount,
+                    'tax_amount': round_digits(tax_amount - previous_tax_amount, company_precision_digits),
                     'base_amount_currency': row['base_amount_currency'],
-                    'tax_amount_currency': tax_amount_currency - previous_tax_amount_currency,
+                    'tax_amount_currency': round_digits(tax_amount_currency - previous_tax_amount_currency, currency_precision_digits),
                 })
                 previous_tax_amount = tax_amount
                 previous_tax_amount_currency = tax_amount_currency

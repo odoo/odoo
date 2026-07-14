@@ -50,14 +50,20 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
 
     def _get_tax_details(self, fallback=False, extra_domain=None, use_simplified_query=False):
         domain = [('company_id', '=', self.env.company.id)] + (extra_domain or [])
-        tax_details_query = self.env['account.move.line']._get_query_tax_details_from_domain(
-            domain,
-            fallback=fallback,
-            use_simplified_query=use_simplified_query,
-        )
-        self.env['account.move.line'].flush_model()
-        self.cr.execute(tax_details_query)
-        tax_details_res = self.cr.dictfetchall()
+        if use_simplified_query:
+            tax_details_query = self.env['account.move.line']._get_query_tax_details_from_domain(
+                domain,
+                fallback=fallback,
+                use_simplified_query=use_simplified_query,
+            )
+            self.env['account.move.line'].flush_model()
+            self.cr.execute(tax_details_query)
+            tax_details_res = self.cr.dictfetchall()
+        else:
+            tax_details_res = self.env['account.move.line']._get_tax_details_from_domain(
+                domain,
+                fallback=fallback,
+            )
         python_tax_details = self.env['account.move.line']._get_python_tax_details_from_domain(
             domain,
             fallback=fallback,
