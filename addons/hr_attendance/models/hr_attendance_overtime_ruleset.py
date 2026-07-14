@@ -55,7 +55,7 @@ class HrAttendanceOvertimeRuleset(models.Model):
             ruleset.rules_count = len(ruleset.rule_ids)
 
     def _compute_versions_count(self):
-        count_by_ruleset = dict(self.env['hr.version']._read_group(
+        count_by_ruleset = dict(self.env['hr.version'].sudo()._read_group(
                 domain=self._get_versions_with_current_ruleset_domain(),
                 groupby=['ruleset_id'],
                 aggregates=['__count'],
@@ -65,7 +65,7 @@ class HrAttendanceOvertimeRuleset(models.Model):
 
     def _attendances_to_regenerate_for(self):
         self.ensure_one()
-        elligible_version = self.env['hr.version'].search([('ruleset_id', '=', self.id)])
+        elligible_version = self.env['hr.version'].sudo().search([('ruleset_id', '=', self.id)])
         if not elligible_version:
             return self.env['hr.attendance']
         big_domain = Domain.FALSE
