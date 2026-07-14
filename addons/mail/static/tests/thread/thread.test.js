@@ -729,15 +729,26 @@ test("[text composer] Opening thread with needaction messages should mark all me
             ["res_id", "=", channelId],
         ]);
     });
-    pyEnv["mail.message"].create({
+    const helloMessageId = pyEnv["mail.message"].create({
         body: "Hello there!",
         model: "discuss.channel",
         res_id: channelId,
         author_id: partnerId,
     });
+    // Mark the pre-existing message as read: otherwise reopening the channel
+    // reloads it around the 0 separator, and that /discuss/channel/messages
+    // fetch marks the needaction message as read (set_message_done) instead of
+    // the tested `mark_all_as_read` flow, racing (and losing to) the assertion.
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: helloMessageId + 1,
+    });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message:contains('Hello there!)");
+    await contains(".o-mail-Message", { text: "Hello there!" });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
