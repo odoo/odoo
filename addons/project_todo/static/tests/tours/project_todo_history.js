@@ -68,13 +68,13 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         trigger: `div.note-editable.odoo-editor-editable .o-paragraph:contains(${baseDescriptionContent} 3)`,
     }, {
         content: "Open History Dialog",
-        trigger: ".o_form_view .o_cp_action_menus i.fa-cog",
+        trigger: ".o_form_view .o_cp_action_menus i[data-icon='settings']",
         run: "click",
     }, {
         trigger: ".dropdown-menu",
     }, {
         content: "Open History Dialog",
-        trigger: ".o_menu_item i.fa-history",
+        trigger: ".o_menu_item i[data-icon='history']",
         run: "click",
     }, {
         trigger: ".modal .html-history-dialog.html-history-loaded",

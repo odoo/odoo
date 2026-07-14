@@ -24,13 +24,13 @@
                                 title="Previous"
                                 aria-label="Previous"
                                 t-on-click.stop="() => this.setDate('previous')"
-                            ><i class="oi oi-arrow-left"/></button>
+                            ><i class="oi" data-icon="west"/></button>
                             <button
                                 class="o_calendar_button_next btn btn-secondary d-none d-md-block"
                                 title="Next"
                                 aria-label="Next"
                                 t-on-click.stop="() => this.setDate('next')"
-                            ><i class="oi oi-arrow-right"/></button>
+                            ><i class="oi" data-icon="east"/></button>
                         </div>
                         <ViewScaleSelector scales="this.scales" currentScale="this.model.scale" isWeekendVisible="this.state.isWeekendVisible" setScale.bind="this.setScale" toggleWeekendVisibility.bind="this.toggleWeekendVisibility" dropdownClass="'d-print-none order-3 order-lg-0'"/>
                         <button

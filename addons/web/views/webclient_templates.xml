@@ -169,7 +169,7 @@
                     <label for="db" class="col-form-label">Database</label>
                     <div class="input-group">
                         <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
-                        <a role="button" href="/web/database/selector" class="btn border border-start-0">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
+                        <a role="button" href="/web/database/selector" class="btn border border-start-0">Select <i class="oi" data-icon="database" role="img" aria-label="Database" title="Database"></i></a>
                     </div>
                 </div>
 
@@ -185,7 +185,7 @@
                     <div class="input-group mb-1">
                         <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                         <button type="button" class="btn btn-sm border border-start-0 o_show_password">
-                            <i class="fa fa-eye"/>
+                            <i class="oi" data-icon="visibility"/>
                         </button>
                     </div>
                 </div>
@@ -238,7 +238,7 @@
             <em class="d-block my-3 small text-center text-muted">- or -</em>
             <div class="list-group">
                 <a t-foreach="auth_btns" t-as="p" t-attf-class="{{p.get('list_item_class')}} list-group-item list-group-item-action d-flex align-items-center gap-2 py-2" t-att-href="p.get('auth_link') or '#'">
-                    <i t-att-class="p['css_class']" role="presentation"/>
+                    <i t-att-class="p['css_class']" t-att-data-icon="p.get('icon') or 'login'" role="presentation"/>
                     <span class="mx-auto" t-out="p['body']"/>
                 </a>
             </div>

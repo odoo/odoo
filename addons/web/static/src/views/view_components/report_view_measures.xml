@@ -5,7 +5,7 @@
       <Dropdown>
         <button class="btn btn-primary o_report_measures">
           <t t-if="!this.props.multiSelect and this.props.activeMeasures.length" t-out="this.props.measures[this.props.activeMeasures[0]].string"/>
-          <t t-else="">Measures</t> <i class="fa fa-caret-down ms-1"/>
+          <t t-else="">Measures</t> <i class="oi ms-1" data-icon="arrow_drop_down"/>
         </button>
         <t t-set-slot="content">
           <t t-foreach="this.props.measures" t-as="measure" t-key="measure_value.name">

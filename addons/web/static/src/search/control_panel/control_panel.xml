@@ -10,7 +10,7 @@
                         <t t-if="this.display.buttons" t-call-slot="control-panel-buttons"/>
                         <Dropdown t-if="this.uiService.isSmall" menuClass="'o-control-panel-adaptive-dropdown'" onOpened.bind="this.dropdownifyButtons">
                             <button class="btn btn-secondary o-control-panel-adaptive-dropdown" title="More">
-                                <i class="oi oi-fw oi-ellipsis-v" />
+                                <i class="oi oi-fw" data-icon="more_vert" />
                             </button>
                             <t t-set-slot="content">
                                 <t t-if="this.display.buttons" t-call-slot="control-panel-buttons"/>
@@ -71,14 +71,14 @@
                             t-att-class="{active: this.embeddedPanelState.embeddedInfos.showEmbedded}"
                             t-on-click="() => this.embeddedPanelState.onClickShowEmbedded()"
                             title="View related documents">
-                        <i class="fa fa-sliders" />
+                        <i class="oi" data-icon="tune" />
                     </button>
                     <t t-if="this.env.config.viewSwitcherEntries?.length > 1">
                         <div t-if="this.uiService.isSmall" class="o_cp_switch_buttons btn-group d-print-none">
                             <Dropdown menuClass="{o_cp_switch_buttons: true, o_custom_bottom_sheet: true }">
                                 <button class="btn btn-secondary" data-available-offline="">
                                     <t t-set="activeView" t-value="this.env.config.viewSwitcherEntries.find((view) => view.active)"/>
-                                    <i class="oi-fw" t-att-class="activeView.icon" data-tooltip="Switch view" />
+                                    <i class="oi oi-fw" t-att-data-icon="activeView.icon" data-tooltip="Switch view" />
                                 </button>
                                 <t t-set-slot="content">
                                     <t t-foreach="this.env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
@@ -87,7 +87,7 @@
                                             attrs="{ 'data-available-offline': this.isViewAvailable(view)}"
                                             onSelected="() => this.switchView(view.type)"
                                             class="{ 'selected': view.active }">
-                                                <i class="oi-fw" t-att-class="view.icon"/>
+                                                <i class="oi oi-fw" t-att-data-icon="view.icon"/>
                                                 <span class="ms-1" t-out="view.name"/>
                                         </DropdownItem>
                                     </t>
@@ -104,7 +104,7 @@
                                     t-custom-click="(ev, isMiddleClick) => this.switchView(view.type, isMiddleClick)"
                                     t-att-aria-label="view.name + ' View'"
                                 >
-                                    <i class="oi-fw" t-att-class="view.icon" />
+                                    <i class="oi" t-att-data-icon="view.icon"/>
                                 </button>
                             </t>
                         </nav>

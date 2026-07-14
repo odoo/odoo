@@ -258,7 +258,7 @@ test("show confirm and reset buttons only when selection has changed", async () 
 
 test("No collapse and have search input when less than 10 companies", async () => {
     await mountWithCleanup(MobileSwitchCompanyMenu);
-    expect(".o_burger_menu_companies .fa-caret-right").toHaveCount(0);
+    expect(".o_burger_menu_companies [data-icon='arrow_right']").toHaveCount(0);
     expect(".o_burger_menu_companies input[type='checkbox']:indeterminate").toHaveCount(1);
     expect(".o_burger_menu_companies input[role='searchbox']").toHaveCount(1);
 });

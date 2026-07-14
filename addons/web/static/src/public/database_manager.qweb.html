@@ -51,20 +51,20 @@
                             <div class="list-group-item d-flex align-items-center">
                                 <a t-attf-href="/odoo?db={{ db }}" class="d-block flex-grow-1">
                                     <t t-if="db in incompatible_databases">
-                                        <i class="icon fa fa-warning float-end text-warning" title="This database may not be compatible"></i>
+                                        <i class="icon oi float-end text-warning" data-icon="warning" title="This database may not be compatible"></i>
                                     </t>
                                     <t t-out="db" />
                                 </a>
                                 <t t-if="manage">
                                     <div class="btn-group btn-group-sm float-end">
                                         <button type="button" t-att-data-db="db" data-bs-target=".o_database_backup" class="o_database_action btn btn-primary">
-                                            <i class="fa fa-floppy-o fa-fw"></i> Backup
+                                            <i class="oi oi-fw" data-icon="save"></i> Backup
                                         </button>
                                         <button type="button" t-att-data-db="db" data-bs-target=".o_database_duplicate" class="o_database_action btn btn-secondary">
-                                            <i class="fa fa-files-o fa-fw"></i> Duplicate
+                                            <i class="oi oi-fw" data-icon="content_copy"></i> Duplicate
                                         </button>
                                         <button type="button" t-att-data-db="db" data-bs-target=".o_database_delete" class="o_database_action btn btn-danger">
-                                            <i class="fa fa-trash-o fa-fw"></i> Delete
+                                            <i class="oi oi-fw" data-icon="delete"></i> Delete
                                         </button>
                                     </div>
                                 </t>
@@ -186,7 +186,7 @@
                                 <div class="col-md-7">
                                     <div class="input-group">
                                         <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="new-password"/>
-                                        <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
+                                        <span class="oi o_little_eye input-group-text" data-icon="visibility" aria-hidden="true" style="cursor: pointer;"></span>
                                     </div>
                                 </div>
                             </div>

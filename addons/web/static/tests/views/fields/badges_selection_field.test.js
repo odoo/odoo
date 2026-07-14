@@ -40,7 +40,7 @@ class Product extends models.Model {
     color = fields.Integer("color");
     icon = fields.Char("icon");
     _records = [
-        { id: 37, display_name: "xphone", name: "xphone", color: 6, icon: "fa-mobile" },
+        { id: 37, display_name: "xphone", name: "xphone", color: 6, icon: "smartphone" },
         { id: 41, display_name: "xpad", name: "xpad", color: 7, icon: false },
     ];
 }
@@ -142,15 +142,15 @@ test("BadgesSelectionField: selection type with icon_mapping and default_icon", 
         arch: `
             <form>
                 <field name="color" widget="badges_selection" options="{
-                    'icon_mapping': {'black': 'fa-moon-o'},
-                    'default_icon': 'fa-gratipay'
+                    'icon_mapping': {'black': 'dark_mode'},
+                    'default_icon': 'oi_gratipay'
                 }"/>
             </form>`,
     });
     // 'black' should use the mapping
-    expect("span.o_selection_badge:contains(Black) span.fa-moon-o").toHaveCount(1);
+    expect("span.o_selection_badge:contains(Black) span[data-icon='dark_mode']").toHaveCount(1);
     // 'red' should use the default icon
-    expect("span.o_selection_badge:contains(Red) span.fa-gratipay").toHaveCount(1);
+    expect("span.o_selection_badge:contains(Red) span[data-icon='oi_gratipay']").toHaveCount(1);
 });
 
 test("BadgesSelectionField: switching to SelectMenu when badge_limit is exceeded", async () => {

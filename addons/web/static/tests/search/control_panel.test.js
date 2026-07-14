@@ -73,8 +73,8 @@ test("view switcher", async () => {
         { resModel: "foo" },
         {
             viewSwitcherEntries: [
-                { type: "list", active: true, icon: "oi-view-list", name: "List" },
-                { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
+                { type: "list", active: true, icon: "view_list", name: "List" },
+                { type: "kanban", icon: "oi_view-kanban", name: "Kanban" },
             ],
         }
     );
@@ -84,10 +84,10 @@ test("view switcher", async () => {
     const views = queryAll`.o_switch_view`;
     expect(views[0]).toHaveAttribute("data-tooltip", "List");
     expect(views[0]).toHaveClass("active");
-    expect(`.o_switch_view:eq(0) .oi-view-list`).toHaveCount(1);
+    expect(`.o_switch_view:eq(0) [data-icon='view_list']`).toHaveCount(1);
     expect(views[1]).toHaveAttribute("data-tooltip", "Kanban");
     expect(views[1]).not.toHaveClass("active");
-    expect(`.o_switch_view:eq(1) .oi-view-kanban`).toHaveCount(1);
+    expect(`.o_switch_view:eq(1) [data-icon='oi_view-kanban']`).toHaveCount(1);
 
     getService("action").switchView = (viewType) => expect.step(viewType);
     await click(views[1]);
@@ -101,8 +101,8 @@ test("view switcher (middle click)", async () => {
         { resModel: "foo" },
         {
             viewSwitcherEntries: [
-                { type: "list", active: true, icon: "oi-view-list", name: "List" },
-                { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
+                { type: "list", active: true, icon: "view_list", name: "List" },
+                { type: "kanban", icon: "oi_view-kanban", name: "Kanban" },
             ],
         }
     );
@@ -123,8 +123,8 @@ test("views aria labels", async () => {
         { resModel: "foo" },
         {
             viewSwitcherEntries: [
-                { type: "list", active: true, icon: "oi-view-list", name: "List" },
-                { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
+                { type: "list", active: true, icon: "view_list", name: "List" },
+                { type: "kanban", icon: "oi_view-kanban", name: "Kanban" },
             ],
         }
     );
@@ -141,8 +141,8 @@ test("view switcher on mobile", async () => {
         { resModel: "foo" },
         {
             viewSwitcherEntries: [
-                { type: "list", active: true, icon: "oi-view-list", name: "List" },
-                { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
+                { type: "list", active: true, icon: "view_list", name: "List" },
+                { type: "kanban", icon: "oi_view-kanban", name: "Kanban" },
             ],
         }
     );
@@ -156,10 +156,10 @@ test("view switcher on mobile", async () => {
     const views = queryAll`.dropdown-item`;
     expect(views[0]).toHaveText("List");
     expect(views[0]).toHaveClass("selected");
-    expect(queryAll(`.oi-view-list`, { root: views[0] })).toHaveCount(1);
+    expect(queryAll(`[data-icon='view_list']`, { root: views[0] })).toHaveCount(1);
     expect(views[1]).toHaveText("Kanban");
     expect(views[1]).not.toHaveClass("selected");
-    expect(queryAll(`.oi-view-kanban`, { root: views[1] })).toHaveCount(1);
+    expect(queryAll(`[data-icon='oi_view-kanban']`, { root: views[1] })).toHaveCount(1);
 
     getService("action").switchView = (viewType) => expect.step(viewType);
     await click(views[1]);
@@ -270,8 +270,8 @@ test("Control panel is shown/hide on top when scrolling", async () => {
         { resModel: "foo" },
         {
             viewSwitcherEntries: [
-                { type: "list", active: true, icon: "oi-view-list", name: "List" },
-                { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
+                { type: "list", active: true, icon: "view_list", name: "List" },
+                { type: "kanban", icon: "oi_view-kanban", name: "Kanban" },
             ],
         }
     );

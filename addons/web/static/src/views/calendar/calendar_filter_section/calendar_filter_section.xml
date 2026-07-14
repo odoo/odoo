@@ -27,8 +27,8 @@
                     >
                         <span class="o_cw_filter_label fw-bolder text-truncate flex-grow-1" t-out="this.section.label"/>
                         <i
-                            class="o_cw_filter_collapse_icon fa ms-1"
-                            t-attf-class="fa-caret-{{ this.state.collapsed ? 'left' : 'down' }}"
+                            class="o_cw_filter_collapse_icon oi ms-1"
+                            t-attf-data-icon="{{ this.state.collapsed ? 'arrow_left' : 'arrow_drop_down' }}"
                         />
                     </label>
                 </div>
@@ -91,7 +91,7 @@
                     aria-label="Remove this favorite from the list"
                     t-on-click="(ev) => this.onFilterRemoveBtnClick(filter, ev)"
                 >
-                    <i class="oi oi-close"/>
+                    <i class="oi" data-icon="close_small"/>
                 </button>
             </t>
         </div>

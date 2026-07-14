@@ -704,13 +704,13 @@ test("disjoint groups", async () => {
         resId: 1,
     });
 
-    expect(".o_group_info_button.fa-info-circle:not(.invisible)").toHaveCount(3);
-    expect(".o_group_info_button.fa-exclamation-triangle:not(.invisible)").toHaveCount(0);
+    expect(".o_group_info_button[data-icon='info']:not(.invisible)").toHaveCount(3);
+    expect(".o_group_info_button[data-icon='warning']:not(.invisible)").toHaveCount(0);
     expect(".o_is_disjoint").toHaveCount(0);
 
     await contains(".o_inner_group:eq(3) input[type=checkbox]").click();
-    expect(".o_group_info_button.fa-info-circle:not(.invisible)").toHaveCount(2);
-    expect(".o_group_info_button.fa-exclamation-triangle:not(.invisible)").toHaveCount(2);
+    expect(".o_group_info_button[data-icon='info']:not(.invisible)").toHaveCount(2);
+    expect(".o_group_info_button[data-icon='warning']:not(.invisible)").toHaveCount(2);
     expect(".o_is_disjoint").toHaveCount(2);
 
     await contains(".o_inner_group:eq(3) .o_group_info_button").click();

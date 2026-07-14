@@ -102,7 +102,7 @@ const TOOLBAR = (language) =>
                 <i class="fa fa-caret-down"></i>
             </button>
             <button type="button" class="text-nowrap btn o_clipboard_button">
-                <span class="mx-1 fa fa-clipboard"></span>
+                <span class="oi mx-1" data-icon="assignment"></span>
                 <span>Copy</span>
             </button>
             <button class="text-nowrap btn" name="wrap" title="Wrap the code">

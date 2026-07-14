@@ -56,7 +56,7 @@
 
         <t t-if="this.props.delete and this.displayDeleteButton">
             <button class="btn btn-secondary d-flex flex-nowrap align-items-center justify-content-center gap-1 ms-md-auto o_btn_remove" t-on-click="this.remove" data-hotkey="k">
-                <i class="fa fa-trash"/>
+                <i class="oi oi-filled" data-icon="delete"/>
                 <t t-if="this.props.deleteButtonLabel" t-out="this.props.deleteButtonLabel"/>
                 <t t-else="">Remove</t>
             </button>

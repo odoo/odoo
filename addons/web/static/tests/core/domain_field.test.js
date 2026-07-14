@@ -603,13 +603,13 @@ test("domain field: does not wait for the count to render", async function () {
             </form>`,
     });
 
-    expect(".o_field_domain_panel .fa-circle-o-notch.fa-spin").toHaveCount(1);
+    expect(".o_field_domain_panel [data-icon='autorenew'].oi-spin").toHaveCount(1);
     expect(".o_field_domain_panel .o_domain_show_selection_button").toHaveCount(0);
 
     def.resolve();
     await animationFrame();
 
-    expect(".o_field_domain_panel .fa-circle-o-notch .fa-spin").toHaveCount(0);
+    expect(".o_field_domain_panel [data-icon='autorenew'] .oi-spin").toHaveCount(0);
     expect(".o_field_domain_panel .o_domain_show_selection_button").toHaveCount(1);
     expect(".o_domain_show_selection_button").toHaveText("2 record(s)");
 });
@@ -993,7 +993,7 @@ test("debug input corrections don't need a focus out to be saved", async functio
     await contains(".o_form_button_save").click();
     expect(".o_field_domain").toHaveClass("o_field_invalid");
     await contains(SELECTORS.debugArea).edit("[('id', '=', 1)]", { confirm: false });
-    expect(".o_form_status_indicator span i.fa-warning").toHaveCount(0);
+    expect(".o_form_status_indicator span i[data-icon='warning']").toHaveCount(0);
     expect(".o_form_button_save[disabled]").toHaveCount(0);
     expect(".o_form_button_save").toHaveCount(1);
 });
@@ -1141,7 +1141,7 @@ test("foldable domain field unfolds and hides caret when domain is invalid", asy
             </form>`,
     });
     expect(".o_field_domain span").toHaveText("Invalid domain");
-    expect(".fa-caret-down").toHaveCount(0);
+    expect("[data-icon='arrow_drop_down']").toHaveCount(0);
     expect(".o_domain_selector_row").toHaveText("This domain is not supported.\nReset domain");
     await contains(".o_domain_selector_row button").click();
     expect(".o_field_domain span:first").toHaveText("Match all records");

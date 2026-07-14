@@ -8,7 +8,7 @@
             t-custom-ref="many2ManyTagsField"
         >
             <t t-if="this.canDisplayQuickAssignAvatar">
-                <a class="o_quick_assign fa o_m2m_avatar btn-link d-flex align-items-center text-dark" href="#" role="button" tabindex="0" t-attf-class="{{ this.tags.length ? 'fa-pencil' : 'fa-user-plus' }}" t-att-data-tooltip="this.assignBtnTooltip" t-att-aria-label="this.assignBtnTooltip" t-on-click.stop.prevent="this.openPopover"/>
+                <a class="o_quick_assign o_m2m_avatar btn-link oi oi-filled d-flex align-items-center text-dark" href="#" role="button" tabindex="0" t-attf-data-icon="{{ this.tags.length ? 'edit' : 'person_add' }}" t-att-data-tooltip="this.assignBtnTooltip" t-att-aria-label="this.assignBtnTooltip" t-on-click.stop.prevent="this.openPopover"/>
             </t>
             <TagsList t-props="this.tagsListProps" t-slot-scope="tag">
                 <Tag t-props="tag.props"/>

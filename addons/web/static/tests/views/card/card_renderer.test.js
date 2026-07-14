@@ -454,7 +454,7 @@ test("support styling of anchor tags with action type", async () => {
                 <templates>
                     <div t-name="card">
                         <field name="foo"/>
-                        <a type="action" name="42" class="btn-primary" style="margin-left: 10px"><i class="oi oi-arrow-right"/> Click me !</a>
+                        <a type="action" name="42" class="btn-primary" style="margin-left: 10px"><i class="oi" data-icon="east"/> Click me !</a>
                     </div>
                 </templates>
             </card>`,
@@ -739,9 +739,9 @@ test("priority field should not be editable when missing access rights", async (
             </card>`,
         readonly: true,
     });
-    expect(".o_card_record .o_priority .fa-star-o").toHaveCount(2);
+    expect(".o_card_record .o_priority [data-icon='star']:not(.oi-filled)").toHaveCount(2);
     await contains(".o_card_record .o_priority_star:first-child").click();
-    expect(".o_card_record .o_priority .fa-star-o").toHaveCount(2);
+    expect(".o_card_record .o_priority [data-icon='star']:not(.oi-filled)").toHaveCount(2);
 });
 
 test("can use JSON in card template", async () => {

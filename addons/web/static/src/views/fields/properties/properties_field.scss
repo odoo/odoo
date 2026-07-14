@@ -55,12 +55,12 @@
 .o_field_property_label {
     width: 180px;
 
-    .fa-caret-down,
-    .fa-caret-right {
+    [data-icon="arrow_drop_down"],
+    [data-icon="arrow_right"] {
         width: 8px;
     }
     .o_field_property_open_popover,
-    .oi-draggable {
+    [data-icon='drag_indicator'] {
         cursor: pointer;
         font-size: 15px;
         @include o-hover-text-color($o-main-color-muted, $o-main-text-color);
@@ -104,7 +104,7 @@
 }
 
 .o_field_properties {
-    .oi-draggable {
+    [data-icon='drag_indicator'] {
         cursor: grab;
     }
     @include media-breakpoint-down(sm) {
