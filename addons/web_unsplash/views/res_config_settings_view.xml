@@ -7,16 +7,16 @@
         <field name="arch" type="xml">
             <div id="web_unsplash_warning" position="replace">
                 <div invisible="not module_web_unsplash">
-                    <div class="content-group mt16">
-                        <label for="unsplash_access_key" class="o_light_label mr8"/>
+                    <a href="https://unsplash.com/join" class="fw-bold" target="_blank">
+                        <i class="oi" data-icon="east"/> Create Unsplash Account
+                    </a>
+                    <div class="row mt16">
+                        <label for="unsplash_access_key" class="col-3 o_light_label mr8"/>
                         <field name="unsplash_access_key"/>
                     </div>
-                    <div class="content-group">
-                        <label for="unsplash_app_id" class="o_light_label mr8"/>
+                    <div class="row">
+                        <label for="unsplash_app_id" class="col-3 text-nowrap o_light_label mr8"/>
                         <field name="unsplash_app_id"/>
-                    </div>
-                    <div>
-                        <widget name="documentation_link" path="/applications/websites/website/optimize/unsplash.html#generate-an-unsplash-access-key" label=" Generate an Access Key" icon="east" class="oe_link"/>
                     </div>
                 </div>
             </div>

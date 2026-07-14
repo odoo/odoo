@@ -76,12 +76,12 @@
                             </setting>
                             <setting id="tenor_api_key" string="Send GIFs" help="Share GIFs in your conversations using the Klipy API." documentation="https://docs.klipy.com/getting-started">
                                 <field name="use_tenor_api"/>
-                                <label for="tenor_api_key" string="API Key:" invisible="not use_tenor_api" class="col-lg-2 o_light_label"/>
+                                <label for="tenor_api_key" string="API Key" invisible="not use_tenor_api" class="col-lg-2 o_light_label me-2"/>
                                 <field name="tenor_api_key" invisible="not use_tenor_api" placeholder="e.g. AIabCd5543a0b450ar4c7t95f1b6e8" required="1"/>
                             </setting>
                             <setting id="message_translation_setting" string="Translate Messages" help="Translate customer messages using the Google Translate API" documentation="https://cloud.google.com/translate/docs/setup">
                                 <field name="use_google_translate_api"/>
-                                <label for="google_translate_api_key" string="API Key:" invisible="not use_google_translate_api" class="col-lg-2 o_light_label"/>
+                                <label for="google_translate_api_key" string="API Key" invisible="not use_google_translate_api" class="col-lg-2 o_light_label me-2"/>
                                 <field name="google_translate_api_key" invisible="not use_google_translate_api" placeholder="e.g. ACzb1d3455b0aar4c7t95f1b6e8" required="1"/>
                             </setting>
                             <setting string="Custom Call Servers" help="Use your own SFU or ICE servers for video calls">
@@ -101,11 +101,11 @@
                                 <field name="use_sfu_server"/>
                                 <div class="content-group" invisible="not use_sfu_server">
                                     <div class="row mt16">
-                                        <label for="sfu_server_url" string="URL" class="col-lg-3"/>
+                                        <label for="sfu_server_url" string="URL" class="col-lg-3 o_light_label"/>
                                         <field name="sfu_server_url"/>
                                     </div>
                                     <div class="row mt16">
-                                        <label for="sfu_server_key" string="Key" class="col-lg-3"/>
+                                        <label for="sfu_server_key" string="Key" class="col-lg-3 o_light_label"/>
                                         <field name="sfu_server_key"/>
                                     </div>
                                 </div>
@@ -119,12 +119,12 @@
                                 <field name="use_twilio_rtc_servers"/>
                                 <div class="content-group" invisible="not use_twilio_rtc_servers">
                                     <div class="row mt16" id="mail_twilio_sid">
-                                        <label for="twilio_account_sid" class="col-lg-3"/>
-                                        <field name="twilio_account_sid" string="Account SID" placeholder="e.g. ACd5543a0b450ar4c7t95f1b6e8a39t543"/>
+                                        <label for="twilio_account_sid" class="col-lg-3 o_light_label"/>
+                                        <field name="twilio_account_sid" string="SID" placeholder="e.g. ACd5543a0b450ar4c7t95f1b6e8a39t543"/>
                                     </div>
                                     <div class="row mt16" id="mail_twilio_auth_token">
-                                        <label for="twilio_account_token" class="col-lg-3"/>
-                                        <field name="twilio_account_token" string="Account Auth Token" placeholder="e.g. 65ea4f9e948b693N5156F350256bd152"/>
+                                        <label for="twilio_account_token" class="col-lg-3 o_light_label"/>
+                                        <field name="twilio_account_token" string="Token" placeholder="e.g. 65ea4f9e948b693N5156F350256bd152"/>
                                     </div>
                                 </div>
                             </setting>
