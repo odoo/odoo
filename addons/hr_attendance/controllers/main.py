@@ -3,6 +3,8 @@
 import base64
 import binascii
 import re
+from datetime import UTC
+from zoneinfo import ZoneInfo
 
 from requests.exceptions import RequestException
 
@@ -26,23 +28,48 @@ class HrAttendance(http.Controller):
         return company
 
     @staticmethod
-    def _get_user_attendance_data(employee):
+    def _get_user_attendance_data(
+        employee, include_attendance_details=False, include_attendance_settings=True,
+    ):
         response = {}
         if employee:
+            attendance_fields = ['check_in', 'check_out', 'worked_hours']
+            if include_attendance_details:
+                attendance_fields += [
+                    'break_duration',
+                    'can_edit',
+                    'in_location',
+                    'out_location',
+                ]
+                now_utc = fields.Datetime.now().replace(tzinfo=UTC)
+                tz = ZoneInfo(employee.tz or 'UTC')
+                now_local = now_utc.astimezone(tz).replace(tzinfo=None)
+                today_start = fields.Datetime.start_of(now_local, 'day')
+                attendance_details = {
+                    'break_today': employee.today_attendance_ids._get_break_duration_within_period(
+                        today_start, now_local,
+                    ),
+                }
+            else:
+                attendance_details = {}
             response = {
                 'id': employee.id,
                 'name': employee.name,
                 'hours_today': float_round(employee.hours_today, precision_digits=3),
                 'hours_previously_today': float_round(employee.hours_previously_today, precision_digits=2),
-                'today_attendance_ids': employee.today_attendance_ids.read(['check_in', 'check_out', 'worked_hours']),
+                'today_attendance_ids': employee.today_attendance_ids.read(attendance_fields),
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
-                'display_systray': employee.company_id.attendance_from_systray,
-                'device_tracking_enabled': employee.company_id.attendance_device_tracking,
-                'capture_check_in_image': employee.company_id.attendance_capture_check_in,
-                'has_attendance_check_in_ability': employee._has_attendance_check_in_ability(),
+                **attendance_details,
             }
+            if include_attendance_settings:
+                response.update({
+                    'display_systray': employee.company_id.attendance_from_systray,
+                    'device_tracking_enabled': employee.company_id.attendance_device_tracking,
+                    'capture_check_in_image': employee.company_id.attendance_capture_check_in,
+                    'has_attendance_check_in_ability': employee._has_attendance_check_in_ability(),
+                })
         return response
 
     @staticmethod
@@ -339,12 +366,16 @@ class HrAttendance(http.Controller):
                                                   device_tracking_enabled=employee.company_id.attendance_device_tracking)
         check_in_image_data = self._get_validated_check_in_image_and_type(check_in_image, employee.company_id.attendance_capture_check_in)
         notification = employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response, check_in_image_data)
-        return self._get_attendance_action_response(employee, notification)
+        response = self._get_attendance_action_response(employee, notification)
+        response.update(self._get_user_attendance_data(employee, include_attendance_details=True))
+        return response
 
     @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", readonly=True)
     def user_attendance_data(self):
         employee = request.env.user.with_company(self._get_active_company(request)).employee_id
-        return self._get_user_attendance_data(employee)
+        return self._get_user_attendance_data(
+            employee, include_attendance_details=True, include_attendance_settings=False,
+        )
 
     def has_password(self):
         # With this method we try to know whether it's the user is on trial mode or not.

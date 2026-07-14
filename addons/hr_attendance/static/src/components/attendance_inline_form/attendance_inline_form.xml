@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_attendance.AttendanceInlineForm">
+        <div class="row g-2 align-items-start" t-on-keydown="this.props.onKeydown">
+            <div class="col-6 min-w-0">
+                <label class="small fw-semibold text-muted mb-1">
+                    Check In
+                </label>
+                <DateTimeField name="'check_in'" record="this.props.record"
+                    readonly="!this.props.record.data.can_edit" showSeconds="false" rounding="1"/>
+                <div class="small text-muted text-break" t-if="this.props.record.data.in_location">
+                    <t t-out="this.props.record.data.in_location"/>
+                </div>
+            </div>
+            <div class="col-6 min-w-0">
+                <label class="small fw-semibold text-muted mb-1">
+                    Check Out
+                </label>
+                <DateTimeField name="'check_out'" record="this.props.record"
+                    readonly="!this.props.record.data.can_edit" showSeconds="false" rounding="1"/>
+                <div class="small text-muted text-break" t-if="this.props.record.data.out_location">
+                    <t t-out="this.props.record.data.out_location"/>
+                </div>
+            </div>
+            <div t-if="this.props.showBreak and this.props.record.data.check_out" class="col-12">
+                <label class="small fw-semibold text-muted mb-1">
+                    Break
+                </label>
+                <Field name="'break_duration'" type="'float_time'" record="this.props.record"
+                    readonly="!this.props.record.data.can_edit" class="'w-100'"/>
+            </div>
+        </div>
+        <div t-if="this.isDirty" class="d-flex justify-content-end gap-2 mt-2">
+            <button type="button" class="btn btn-sm btn-primary"
+                t-on-click="() => this.props.onSave(this.props.record)">
+                Save
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary"
+                t-on-click="() => this.props.onDiscard(this.props.record)">
+                Discard
+            </button>
+        </div>
+    </t>
+
+</templates>

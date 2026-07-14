@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
@@ -138,10 +138,13 @@ class TestHrAttendance(HttpCase, TransactionCase):
             'check_out': '2024-01-01 17:00:00',
         })
         initial_hours = attendance.worked_hours
-        attendance.break_duration = 1.0
-        self.assertAlmostEqual(attendance.worked_hours, max(initial_hours - 1.0, 0.0))
         with patch.object(fields.Datetime, 'now', lambda: datetime(2024, 1, 1, 18, 0, 0)):
+            self.test_employee.invalidate_recordset(['hours_today'])
+            initial_hours_today = self.test_employee.hours_today
+            attendance.break_duration = 1.0
+            self.assertAlmostEqual(attendance.worked_hours, max(initial_hours - 1.0, 0.0))
             self.assertAlmostEqual(self.test_employee.hours_today, attendance.worked_hours)
+            self.assertAlmostEqual(self.test_employee.hours_today, initial_hours_today - 1.0)
         with self.assertRaises(ValidationError):
             attendance.break_duration = -1
         with self.assertRaises(ValidationError):

@@ -15,6 +15,11 @@
 .att_container {
     font-variant-numeric: tabular-nums;
 
+    .dropdown-menu:not(.o_bottom_sheet_body) & {
+        width: 400px;
+        max-width: 100%;
+    }
+
     .o_wrap_btn_sign_out {
         background: var(--#{$prefix}popover-bg);
     }
