@@ -18,6 +18,7 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import html2plaintext, sql
 from odoo.tools.pdf import PdfFileReader
+from odoo.tools.misc import limited_field_access_token
 
 _logger = logging.getLogger(__name__)
 
@@ -800,6 +801,9 @@ class Slide(models.Model):
             })
 
         return embed_entry
+
+    def get_image_1024_access_token(self):
+        return limited_field_access_token(self, 'image_1024')
 
     def _post_publication(self):
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
