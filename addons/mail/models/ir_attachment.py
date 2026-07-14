@@ -18,6 +18,8 @@ class IrAttachment(models.Model):
 
     thumbnail = fields.Image()
     has_thumbnail = fields.Boolean(compute="_compute_has_thumbnail")
+    mail_message_ids = fields.Many2many('mail.message', 'message_attachment_rel',
+                                        'attachment_id', 'message_id', string='Mail Messages', copy=False)
 
     @api.depends("thumbnail")
     def _compute_has_thumbnail(self):
@@ -75,21 +77,26 @@ class IrAttachment(models.Model):
                 with contextlib.suppress(AccessError):
                     related_record._message_set_main_attachment_id(attachment, force=force)
 
-    def _delete_and_notify(self, message=None):
-        if message:
-            # sudo: mail.message - safe write just updating the date, because guests don't have the rights
-            message.sudo().write({})  # to make sure write_date on the message is updated
+    def _remove_and_notify(self):
+        message_ids = self.mail_message_ids.ids
+        now = fields.Datetime.now()
+        if message_ids:
+            # Make sure write_date on the messages are updated even if the user has no write access (guests)
+            self.env.cr.execute("UPDATE mail_message SET write_date=%s AT TIME ZONE 'UTC' WHERE id in %s",
+                                (now, tuple(message_ids)))
+            self.env['mail.message'].browse(message_ids).invalidate_recordset(['write_date'])
         for attachment in self:
+            message = attachment.mail_message_ids[:1]
             attachment._bus_send(
                 "ir.attachment/delete",
                 {
                     "id": attachment.id,
                     "message": (
-                        {"id": message.id, "write_date": message.write_date} if message else None
+                        {"id": message.id, "write_date": now} if message else None
                     ),
                 },
             )
-        self.unlink()
+        self.with_context(remove_from_chatter=True)._remove()
 
     def _store_ownership_fields(self, res: Store.FieldList):
         res.attr("ownership_token", lambda a: a._get_ownership_token())
