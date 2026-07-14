@@ -1,8 +1,9 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Component, onMounted, onWillUnmount, props, proxy, status, types } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
+import { useOnChange } from "@mail/utils/common/hooks";
 
 const WAVE_COLOR = "#7775";
 
@@ -59,15 +60,16 @@ export class VoicePlayer extends Component {
             repeat: false,
             visualTime: "-- : --",
         });
-        useLayoutEffect(
+        useOnChange(
+            () => [this.state.playing],
             (playing) => {
                 if (playing) {
                     this.addOnAudioProcess();
                 }
-            },
-            () => [this.state.playing]
+            }
         );
-        useLayoutEffect(
+        useOnChange(
+            () => [this.props.attachment.uploading],
             (uploading) => {
                 if (uploading) {
                     return;
@@ -76,8 +78,7 @@ export class VoicePlayer extends Component {
                     this.makeAudio();
                 }
                 this.wasUploading = uploading;
-            },
-            () => [this.props.attachment.uploading]
+            }
         );
         onMounted(() => {
             this.initElements();
