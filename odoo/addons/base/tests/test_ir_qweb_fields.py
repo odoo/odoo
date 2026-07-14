@@ -67,14 +67,14 @@ class TestQwebFieldFloatConverter(common.TransactionCase):
         return self.env['ir.qweb.field.float'].value_to_html(value, options)
 
     def test_float_value_to_html_no_precision(self):
-        self.assertEqual(self.value_to_html(3), '3.0')
+        self.assertEqual(self.value_to_html(3), '3')
         self.assertEqual(self.value_to_html(3.1), '3.1')
         self.assertEqual(self.value_to_html(3.1231239), '3.123124')
 
     def test_float_value_to_html_with_precision(self):
         options = {'precision': 3}
-        self.assertEqual(self.value_to_html(3, options), '3.000')
-        self.assertEqual(self.value_to_html(3.1, options), '3.100')
+        self.assertEqual(self.value_to_html(3, options), '3')
+        self.assertEqual(self.value_to_html(3.1, options), '3.1')
         self.assertEqual(self.value_to_html(3.123, options), '3.123')
         self.assertEqual(self.value_to_html(3.1239, options), '3.124')
 

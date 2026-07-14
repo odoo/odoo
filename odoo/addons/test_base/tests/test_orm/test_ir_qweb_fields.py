@@ -68,8 +68,8 @@ class TestFloatExport(TestExport):
     def test_float(self):
         converter = self.get_converter('float')
 
-        self.assertEqual(converter(42.0), '42.0')
-        self.assertEqual(converter(-42.0), '-\N{ZERO WIDTH NO-BREAK SPACE}42.0')
+        self.assertEqual(converter(42.0), '42')
+        self.assertEqual(converter(-42.0), '-\N{ZERO WIDTH NO-BREAK SPACE}42')
         self.assertEqual(converter(42.0100), '42.01')
         self.assertEqual(converter(42.01234), '42.01234')
         self.assertEqual(converter(42.12345), '42.12345')
@@ -78,7 +78,7 @@ class TestFloatExport(TestExport):
     def test_float_precision(self):
         converter = self.get_converter('float')
 
-        self.assertEqual(converter(42.0, {'precision': 4}), '42.0000')
+        self.assertEqual(converter(42.0, {'precision': 4}), '42')
         self.assertEqual(converter(42.12345, {'precision': 4}), '42.1235')
 
     def test_float_decimal_precision(self):
@@ -93,16 +93,16 @@ class TestFloatExport(TestExport):
 
         converter = self.get_converter('float')
 
-        self.assertEqual(converter(42.0, {'decimal_precision': '2 digits'}), '42.00')
+        self.assertEqual(converter(42.0, {'decimal_precision': '2 digits'}), '42')
         self.assertEqual(converter(42.12345, {'decimal_precision': '2 digits'}), '42.12')
 
-        self.assertEqual(converter(42.0, {'decimal_precision': '6 digits'}), '42.000000')
-        self.assertEqual(converter(42.12345, {'decimal_precision': '6 digits'}), '42.123450')
+        self.assertEqual(converter(42.0, {'decimal_precision': '6 digits'}), '42')
+        self.assertEqual(converter(42.12345, {'decimal_precision': '6 digits'}), '42.12345')
 
     def test_numeric(self):
         converter = self.get_converter('numeric')
 
-        self.assertEqual(converter(42.0), '42.00')
+        self.assertEqual(converter(42.0), '42')
         self.assertEqual(converter(42.01234), '42.01')
         self.assertEqual(converter(42.12345), "42.12")
 

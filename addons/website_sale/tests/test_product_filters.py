@@ -135,7 +135,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             )
             self.assertEqual(
                 tree.xpath('//*[@name="product_price"]/span')[0].text,
-                self.env["ir.qweb.field.float"].value_to_html(product.lst_price, {"precision": 2}),
+                self.env["ir.qweb.field.float"].value_to_html(product.lst_price, {"precision": 2, "min_precision": 2}),
             )
 
         # A visitor / public user must not be able to guess the cost price of sold products through
