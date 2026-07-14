@@ -19,7 +19,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-
+import { makeStoreWithModel } from "@spreadsheet/../tests/helpers/stores";
 import { user } from "@web/core/user";
 import {
     getBasicServerData,
@@ -32,6 +32,7 @@ import { createSheet, deleteSheet, setGlobalFilterValue } from "../../helpers/co
 
 const { chartDataSourceRegistry } = spreadsheet.registries;
 const { toZone } = spreadsheet.helpers;
+const { ClipboardStore } = spreadsheet.stores;
 
 const cumulativeDateServerData = getBasicServerData();
 cumulativeDateServerData.models.partner.records = [
@@ -600,6 +601,7 @@ test("Bar chart with stacked attribute is supported", async () => {
 
 test("Can copy/paste Odoo chart", async () => {
     const { model } = await createSpreadsheetWithChart({ type: "pie" });
+    makeStoreWithModel(model, ClipboardStore);
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
     model.dispatch("SELECT_FIGURE", { figureId: model.getters.getFigureIdFromChartId(chartId) });
@@ -619,6 +621,7 @@ test("Can copy/paste Odoo chart", async () => {
 
 test("Can cut/paste Odoo chart", async () => {
     const { model } = await createSpreadsheetWithChart({ type: "pie" });
+    makeStoreWithModel(model, ClipboardStore);
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
     const chartRuntime = model.getters.getChartRuntime(chartId);
