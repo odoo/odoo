@@ -1,3 +1,5 @@
+from random import randint
+
 from odoo import api, fields, models
 
 
@@ -90,9 +92,15 @@ class TestOrmMixedComputes(models.Model):
 class TestOrmPartnerCategory(models.Model):
     _name = 'test_orm.partner.category'
     _description = 'Test ORM Partner Category'
+    _parent_store = True
+
+    def _get_default_color(self):
+        return randint(1, 11)
 
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean(default=True)
+    color = fields.Integer(default=_get_default_color)
+    parent_path = fields.Char(index=True)
     parent_id = fields.Many2one('test_orm.partner.category')
     child_ids = fields.One2many('test_orm.partner.category', 'parent_id')
     partner_ids = fields.Many2many('test_orm.partner', column1='category_id', column2='partner_id')
@@ -111,6 +119,7 @@ class TestOrmPartner(models.Model):
     website = fields.Char()
     vat = fields.Char(compute='_compute_vat')
     category_id = fields.Many2many('test_orm.partner.category', column1='partner_id', column2='category_id', default=_default_category)
+    business_id = fields.Many2one('test_orm.business')
     user_ids = fields.One2many('test_orm.users', 'partner_id', string="user_ids")
     parent_id = fields.Many2one('test_orm.partner')
     child_ids = fields.One2many('test_orm.partner', 'parent_id')
@@ -133,12 +142,33 @@ class TestOrmPartner(models.Model):
         self.vat = 'Tax ID'
 
 
+class TestOrmBusiness(models.Model):
+    _name = 'test_orm.business'
+    _description = 'Test ORM Business'
+
+    name = fields.Char(related='partner_id.name', required=True, store=True, readonly=False, precompute=True)
+    active = fields.Boolean(default=True)
+    partner_id = fields.Many2one('test_orm.partner', required=True)
+    parent_id = fields.Many2one('test_orm.business')
+    child_ids = fields.One2many('test_orm.business', 'parent_id')
+
+
 class TestOrmUsers(models.Model):
     _name = 'test_orm.users'
     _description = 'Test ORM Users'
 
     name = fields.Char(required=True)
-    partner_id = fields.Many2one('test_orm.partner')
+    partner_id = fields.Many2one('test_orm.partner', required=True)
+    group_ids = fields.Many2many('test_orm.groups', 'test_orm_groups_users_rel', 'uid', 'gid')
+    business_id = fields.Many2one('test_orm.business')
+
+
+class TestOrmGroups(models.Model):
+    _name = 'test_orm.groups'
+    _description = 'Test ORM Groups'
+
+    name = fields.Char(required=True)
+    user_ids = fields.Many2many('test_orm.users', 'test_orm_groups_users_rel', 'gid', 'uid')
 
 
 class TestOrmCountry(models.Model):
@@ -158,4 +188,4 @@ class TestOrmCountryState(models.Model):
 
     name = fields.Char(required=True)
     code = fields.Char()
-    country_id = fields.Many2one('test_orm.country')
+    country_id = fields.Many2one('test_orm.country', required=True)

@@ -360,6 +360,7 @@ class PropertiesCase(TestPropertiesMixin):
                        "test_orm_partner"."email",
                        "test_orm_partner"."active",
                        "test_orm_partner"."website",
+                       "test_orm_partner"."business_id",
                        "test_orm_partner"."parent_id",
                        "test_orm_partner"."country_id",
                        "test_orm_partner"."state_id",
