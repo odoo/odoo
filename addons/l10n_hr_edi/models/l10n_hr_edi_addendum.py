@@ -34,6 +34,7 @@ class L10nHrEdiAddendum(models.Model):
             ('1', "Unsuccessful"),
             ('2', "Pending"),
         ],
+        default='2',
         string='Fiscalization status',
     )
     fiscalization_error = fields.Char(
@@ -59,13 +60,9 @@ class L10nHrEdiAddendum(models.Model):
         default=0.0,
     )
     payment_method_type = fields.Selection(
-        selection=[
-            ('T', 'Transakcijski račun'),  # Bank account
-            ('O', 'Obračunsko plaćanje'),  # Settlement payment
-            ('Z', 'Ostalo'),               # Other
-        ],
-        string='Payment Method Type',
-        default='T',
+        related='move_id.l10n_hr_payment_method_type',
+        store=True,
+        readonly=False,
     )
     # MojEracun integration fields
     mer_document_eid = fields.Char(string='MojEracun document ElectronicId')
