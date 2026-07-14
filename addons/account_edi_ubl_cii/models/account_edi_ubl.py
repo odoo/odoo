@@ -2857,6 +2857,7 @@ class AccountEdiUBL(models.AbstractModel):
                 pattern = f'{prefix}\\d{{{sequence.padding}}}{suffix}'
                 refs = re.findall(pattern, ' '.join([desc.text for desc in tree.findall('.//{*}Item/{*}Description') if desc.text]))
                 invoice_origin = ' '.join(refs)
+                collected_values['file_data']['invoice_origin_from_description'] = bool(invoice_origin)
 
         if invoice_origin:
             collected_values['to_write']['invoice_origin'] = invoice_origin
