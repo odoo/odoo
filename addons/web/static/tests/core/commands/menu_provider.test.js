@@ -38,6 +38,14 @@ defineMenus([
                 name: "Report",
                 appID: 2,
                 actionID: 1004,
+                children: [
+                    {
+                        id: 5,
+                        name: "Customers",
+                        appID: 2,
+                        actionID: 1005,
+                    },
+                ],
             },
         ],
     },
@@ -47,6 +55,7 @@ defineActions([
     { ...testAction, id: 1001, params: { description: "Id 1" } },
     { ...testAction, id: 1003, params: { description: "Info" } },
     { ...testAction, id: 1004, params: { description: "Report" } },
+    { ...testAction, id: 1005, params: { description: "Customers" } },
 ]);
 
 test.tags("desktop");
@@ -96,8 +105,31 @@ test("displays apps and menu items if the search value is not only '/'", async (
     await contains(".o_command_palette_search input").edit("/sal", { confirm: false });
     await animationFrame();
     expect(".o_command_palette").toHaveCount(1);
-    expect(".o_command").toHaveCount(3);
-    expect(queryAllTexts(".o_command_name")).toEqual(["Sales", "Sales / Info", "Sales / Report"]);
+    expect(".o_command").toHaveCount(4);
+    expect(queryAllTexts(".o_command_name")).toEqual([
+        "Sales",
+        "Sales / Info",
+        "Sales / Report",
+        "Sales / Report / Customers",
+    ]);
+});
+
+test.tags("desktop");
+test("matches menu breadcrumbs in both directions", async () => {
+    await mountWithCleanup(WebClient);
+
+    await press(["control", "k"]);
+    await animationFrame();
+
+    // Top down search
+    await contains(".o_command_palette_search input").edit("/salrepcust", { confirm: false });
+    await animationFrame();
+    expect(queryAllTexts(".o_command_name")).toEqual(["Sales / Report / Customers"]);
+
+    // Bottom up search
+    await contains(".o_command_palette_search input").edit("/custrepsal", { confirm: false });
+    await animationFrame();
+    expect(queryAllTexts(".o_command_name")).toEqual(["Sales / Report / Customers"]);
 });
 
 test.tags("desktop");
