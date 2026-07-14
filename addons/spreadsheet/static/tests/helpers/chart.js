@@ -53,7 +53,7 @@ export async function createSpreadsheetWithChart(params = {}) {
     return { model, env };
 }
 
-function getChartDefinition(type) {
+export function getChartDefinition(type) {
     return {
         dataSource: {
             type: "odoo",
