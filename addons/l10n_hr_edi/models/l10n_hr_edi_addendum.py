@@ -34,6 +34,7 @@ class L10nHrEdiAddendum(models.Model):
             ('1', "Unsuccessful"),
             ('2', "Pending"),
         ],
+        default='2',
         string='Fiscalization status',
     )
     fiscalization_error = fields.Char(
