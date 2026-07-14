@@ -88,13 +88,13 @@ export class HighlightPlugin extends Plugin {
                     closestElement(editableSelection.anchorNode, ".o_text_highlight") && "compact"
             ),
         ],
-        normalize_processors: (root) => {
+        normalize_processors: withSequence(0, (root) => {
             for (const node of root.querySelectorAll(".o_text_highlight")) {
                 // Signal to the interaction that there is (maybe) a new element
                 node.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
             }
             return root;
-        },
+        }),
         is_format_class_predicates: (className) => {
             if (className.startsWith("o_text_highlight")) {
                 return true;
