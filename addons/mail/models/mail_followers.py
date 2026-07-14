@@ -18,7 +18,7 @@ class MailFollowers(models.Model):
     :param: res_id: ID of resource (may be 0 for every objects)
     """
     _name = 'mail.followers'
-    _log_access = False
+    _log_access = True
     _description = 'Document Follower'
 
     # Note. There is no integrity check on model names for performance reasons.
