@@ -74,6 +74,21 @@ Este portal presenta el proyecto completo: objetivos, avance por sprint, evidenc
     <p>Reporte tecnico, pruebas y evidencias de validacion del comportamiento implementado.</p>
     <a href="docs/reporte-verificacion-sprint-0.html">Ver verificacion</a>
   </div>
+  <div class="nav-card">
+    <h3>Historial de cambios</h3>
+    <p>Resumen breve de los avances alcanzados desde el Sprint 0 hasta el Sprint 4.</p>
+    <a href="CHANGELOG.html">Ver changelog</a>
+  </div>
+  <div class="nav-card">
+    <h3>Roadmap</h3>
+    <p>Mejoras técnicas y funcionales propuestas para iteraciones futuras.</p>
+    <a href="ROADMAP.html">Ver roadmap</a>
+  </div>
+  <div class="nav-card">
+    <h3>Instalacion</h3>
+    <p>Pasos reproducibles para levantar Odoo y PostgreSQL con Docker Compose.</p>
+    <a href="docs/instalacion.html">Ver guia</a>
+  </div>
 </div>
 
 ## Equipo
