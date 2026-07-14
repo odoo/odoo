@@ -481,6 +481,8 @@ class PaymentTransaction(models.Model):
         self.with_context(
             payment_safe_write=True  # No API call was made; safe to replay
         )._set_done(state_message=self.env._("Manually confirmed by the user."))
+        # Post-process immediately, as the state change skipped the processing cron
+        self._try_post_process()
 
     def action_post_process(self):
         """Run the post-processing of the transactions.
@@ -488,10 +490,7 @@ class PaymentTransaction(models.Model):
         :return: A client action to soft-reload the view.
         :rtype: dict
         """
-        self.with_context(
-            # Post-processing is idempotent and can be rolled back in case of failure
-            payment_safe_write=True
-        )._post_process()
+        self._post_process_with_lock()
         return {"type": "ir.actions.client", "tag": "soft_reload"}
 
     # === LIFECYCLE METHODS - CREATION === #
@@ -713,6 +712,8 @@ class PaymentTransaction(models.Model):
             self.with_context(
                 payment_safe_write=True  # API request failed; safe to replay
             )._set_error(str(e))
+            # Post-process immediately, as the error path skipped the processing cron
+            self._try_post_process()
 
     def _send_payment_request(self):
         """Request the provider handling the transaction to send a token payment request.
@@ -749,6 +750,8 @@ class PaymentTransaction(models.Model):
             capture_tx.with_context(
                 payment_safe_write=True  # API request failed; safe to replay
             )._set_error(str(e))
+            # Post-process immediately, as the error path skipped the processing cron
+            capture_tx._try_post_process()
         return capture_tx
 
     def _send_capture_request(self):
@@ -783,6 +786,8 @@ class PaymentTransaction(models.Model):
             void_tx.with_context(
                 payment_safe_write=True  # API request failed; safe to replay
             )._set_error(str(e))
+            # Post-process immediately, as the error path skipped the processing cron
+            void_tx._try_post_process()
         return void_tx
 
     def _send_void_request(self):
@@ -817,6 +822,8 @@ class PaymentTransaction(models.Model):
             refund_tx.with_context(
                 payment_safe_write=True  # API request failed; safe to replay
             )._set_error(str(e))
+            # Post-process immediately, as the error path skipped the processing cron
+            refund_tx._try_post_process()
         return refund_tx
 
     def _send_refund_request(self):
@@ -961,9 +968,6 @@ class PaymentTransaction(models.Model):
 
         # Update the transaction with the payment data
         self._apply_updates(payment_data)
-
-        # Notify the client that processing completed
-        self._bus_send("payment.notify_transaction_processed", {})
 
         if self.state in {"authorized", "done"}:  # The payment was successful
             # Check that the payment data match the initial payment request
@@ -1261,50 +1265,113 @@ class PaymentTransaction(models.Model):
 
     # === LIFECYCLE METHODS - POST-PROCESSING === #
 
+    @api.model
     def _cron_post_process(self):
-        """Trigger the post-processing of the transactions that were not handled by the client in
-        the `poll_status` controller method.
+        """Post-process the transactions that have not been post-processed yet.
 
-        :return: None
+        This method is the entry point of the post-processing cron, which serves as a safety net for
+        transactions whose post-processing previously failed.
+
+        :rtype: None
         """
-        txs_to_post_process = self
-        if not txs_to_post_process:
-            # Don't try forever to post-process a transaction that doesn't go through. Set the limit
-            # to 4 days because some providers (PayPal) need that much for the payment verification.
-            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
-            # Retrieve all transactions matching the criteria for post-processing
-            txs_to_post_process = self.search([
-                ("is_post_processed", "=", False),
-                ("last_state_change", ">=", retry_limit_date),
-            ])
+        # Leave transactions that still fail to be post-processed after 24h for manual intervention
+        retry_limit_date = datetime.now() - relativedelta.relativedelta(days=1)
+        txs_to_post_process = self.search([
+            ("is_post_processed", "=", False),
+            ("last_state_change", ">=", retry_limit_date),
+        ])
+        IrCron = self.env["ir.cron"]
+        IrCron._commit_progress(remaining=len(txs_to_post_process))
+
         for tx in txs_to_post_process:
-            tx = tx.with_prefetch()  # Restrict pre-fetching before cache invalidation
             try:
-                if not tx.is_post_processed:  # No other flow post-processed the tx since the search
-                    tx.with_context(
-                        # Post-processing is idempotent and can be rolled back in case of failure
-                        payment_safe_write=True
-                    )._post_process()
-                    self.env.cr.commit()
-            except psycopg2.OperationalError:
-                self.env.cr.rollback()  # Rollback and try later.
+                tx._post_process_with_lock()
+                remaining_time = IrCron._commit_progress(processed=1)
+            except psycopg2.OperationalError:  # Post-processing ran into a concurrent update
+                IrCron._rollback_progress()
+                remaining_time = IrCron._commit_progress(processed=0)  # Let the cron be rescheduled
             except Exception:
+                IrCron._rollback_progress()
                 _logger.exception(
-                    "An error occurred while post-processing transaction %s.", tx.reference
+                    "Failed to post-process transaction %s; retrying on the next run.", tx.reference
                 )
-                self.env.cr.rollback()
+                remaining_time = IrCron._commit_progress(processed=1)
+
+            if not remaining_time:  # The cron job might be killed soon
+                return
+
+    def _try_post_process(self):
+        """Try to post-process the transactions and defer to the cron in case of failure.
+
+        Use this method to synchronously post-process transactions whose state was updated without
+        going through the processing. The source transactions are also post-processed, as their
+        state may have changed as a side effect of their child transaction's state change.
+
+        If the post-processing fails, it is rolled back to a savepoint to preserve the caller's work
+        and is deferred to the post-processing cron. The client is notified either way, as it
+        doesn't prevent the customer from being redirected.
+
+        :rtype: None
+        """
+        try:
+            with self.env.cr.savepoint():  # Protect the caller's uncommitted work
+                (self | self.source_transaction_id)._post_process_with_lock()
+        except Exception:
+            _logger.exception(
+                "Failed to post-process transactions %s; deferring to the post-processing cron.",
+                ", ".join(self.mapped("reference")),
+            )
+            self.env.ref("payment.post_processing_cron")._trigger()
+        self._notify_status()
+
+    def _post_process_with_lock(self):
+        """Lock the transactions and post-process those that are not yet post-processed.
+
+        This method is the internal driver shared by the post-processing entry points. It guarantees
+        that each transaction is post-processed at most once even across concurrent flows, and skips
+        transactions that could not be locked. Error handling is left to the callers.
+
+        :return: The post-processed transactions
+        :rtype: payment.transaction
+        """
+        locked_txs = self.try_lock_for_update()
+        txs_to_post_process = locked_txs.filtered(lambda tx: not tx.is_post_processed)
+        txs_to_post_process.with_context(
+            # Post-processing should be idempotent and can be rolled back in case of failure
+            payment_safe_write=True
+        )._post_process()
+        return txs_to_post_process
 
     def _post_process(self):
         """Post-process the transactions.
 
         The generic post-processing only consists in flagging the transactions as post-processed.
-        For a module to add its own logic to the post-processing, it must overwrite this method and
-        apply its specific logic to the transactions, optionally after filtering them based on their
-        state.
 
-        :return: None
+        Override this method to run business logic on the outcome of a payment: filter transactions
+        based on their state, apply the app-specific logic, and call super.
+
+        :rtype: None
         """
         self.is_post_processed = True
+
+    def _notify_status(self):
+        """Notify the client of the current status of the transactions.
+
+        The status values include everything that the payment status page needs to decide whether
+        the customer can be redirected to the landing route.
+
+        :rtype: None
+        """
+        for tx in self:
+            tx._bus_send(
+                "payment.transaction_status",
+                {
+                    "reference": tx.reference,
+                    "provider_code": tx.provider_code,
+                    "state": tx.state,
+                    "landing_route": tx.landing_route,
+                },
+            )
 
     # === REQUEST HELPERS === #
 

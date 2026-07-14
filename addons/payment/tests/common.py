@@ -98,22 +98,45 @@ class PaymentCommon(BaseCommon):
 
         account_payment_module = cls.env["ir.module.module"]._get("account_payment")
         cls.account_payment_installed = account_payment_module.state in ("installed", "to upgrade")
+        cls.enable_process_patcher = True
         cls.enable_post_process_patcher = True
 
     def setUp(self):
         super().setUp()
-        if self.account_payment_installed and self.enable_post_process_patcher:
-            # Disable the generation of account payments if account_payment is installed, because
-            # the accounting setup of providers is not managed in this common, but mark transactions
-            # as post-processed to allow redirecting users from /payment/status to the landing page.
-            self.post_process_patcher = patch(
-                "odoo.addons.account_payment.models.payment_transaction.PaymentTransaction"
-                "._post_process",
-                new=lambda self_: self_.with_context(payment_safe_write=True).write({
+        PaymentTransaction = self.registry["payment.transaction"]
+        self.process_mock = self.post_process_mock = None
+        self._process_patcher = self._post_process_patcher = None
+        if self.enable_process_patcher:
+            # Skip the processing business logic
+            self._process_patcher = patch.object(PaymentTransaction, "_process", autospec=True)
+            self.process_mock = self._process_patcher.start()
+            self.addCleanup(self._disable_process_patcher)
+        if self.enable_post_process_patcher:
+            # Skip the post-processing business logic (e.g., account payment generation).
+            # Transactions are still flagged as post-processed so users can be redirected from
+            # /payment/status to the landing page.
+            self._post_process_patcher = patch.object(
+                PaymentTransaction,
+                "_post_process",
+                autospec=True,
+                side_effect=lambda txs: txs.with_context(payment_safe_write=True).write({
                     "is_post_processed": True
                 }),
             )
-            self.startPatcher(self.post_process_patcher)
+            self.post_process_mock = self._post_process_patcher.start()
+            self.addCleanup(self._disable_post_process_patcher)
+
+    def _disable_process_patcher(self):
+        """Restore the real `_process` to test its business logic."""
+        if self._process_patcher:
+            self._process_patcher.stop()
+            self._process_patcher = None
+
+    def _disable_post_process_patcher(self):
+        """Restore the real `_post_process` to test its business logic."""
+        if self._post_process_patcher:
+            self._post_process_patcher.stop()
+            self._post_process_patcher = None
 
     # === Utils ===#
 
@@ -152,6 +175,24 @@ class PaymentCommon(BaseCommon):
     @classmethod
     def _get_provider_domain(cls, code, **_kwargs):
         return [("code", "=", code)]
+
+    def _patch_provider_feature_support(self, **feature_values):
+        """Patch computed feature-support fields on all providers for the duration of the test.
+
+        Call this method to persist the given feature-support values on the providers after a cache
+        invalidation (typically triggered by a cron job).
+
+        :param dict feature_values: The feature-support field values to patch
+        :rtype: None
+        """
+
+        def _patched_compute(providers):
+            og_compute(providers)
+            providers.update(feature_values)
+
+        PaymentProvider = self.registry["payment.provider"]
+        og_compute = PaymentProvider._compute_feature_support_fields
+        self.patch(PaymentProvider, "_compute_feature_support_fields", _patched_compute)
 
     @classmethod
     def _prepare_user(cls, user, group_xmlid):
@@ -236,7 +277,6 @@ class PaymentCommon(BaseCommon):
             "inputs": inputs,
         }
 
-    @mute_logger("odoo.addons.base.models.ir_cron")
     def _run_processing(self):
         """Run the processing of all transactions with pending payment data.
 
@@ -246,16 +286,26 @@ class PaymentCommon(BaseCommon):
 
         :rtype: None
         """
-        with nullcontext() if self._registry_patched else self.registry_test_mode():
-            self.env(su=True).ref("payment.processing_cron").method_direct_trigger()
+        self._run_cron_job("payment.processing_cron")
 
-    def _run_post_processing(self, transactions):
-        """Run the post-processing of the given transactions while bypassing the write guard.
+    def _run_post_processing(self):
+        """Run the post-processing of all transactions that have not been post-processed yet.
 
-        :param payment.transaction transactions: The transactions to post-process.
+        By running the post-processing through the cron, this method bypasses the write guard.
+
         :rtype: None
         """
-        transactions.with_context(payment_safe_write=True)._post_process()
+        self._run_cron_job("payment.post_processing_cron")
+
+    @mute_logger("odoo.addons.base.models.ir_cron")
+    def _run_cron_job(self, cron_xml_id):
+        """Directly trigger the cron with the given XML ID while preserving test isolation.
+
+        :param str cron_xml_id: The XMLID of the cron to run
+        :rtype: None
+        """
+        with nullcontext() if self._registry_patched else self.registry_test_mode():
+            self.env(su=True).ref(cron_xml_id).method_direct_trigger()
 
     def _assert_does_not_raise(self, exception_class, func, *args, **kwargs):
         """Fail if an exception of the provided class is raised when calling the function.

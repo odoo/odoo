@@ -45,6 +45,8 @@ class TestProcessingFlows(XenditCommon, PaymentHttpCommon):
             )
 
     def test_set_xendit_transactions_to_pending_on_return(self):
+        self._disable_process_patcher()
+
         def build_return_url(**kwargs):
             url_params = url_encode(dict(kwargs, tx_ref=self.reference))
             return self._build_url(f"{XenditController._return_url}?{url_params}")
