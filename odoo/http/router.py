@@ -3,6 +3,7 @@ from __future__ import annotations
 import datetime as dt
 import functools
 import logging
+import os.path
 import re
 import threading
 import typing
@@ -181,7 +182,8 @@ class Application:
         the given ``host``.
         """
 
-        netloc, path = urlparse(url)[1:3]  # TODO: use urllib3
+        netloc, path = urlparse(url)[1:3]
+        path = os.path.normpath(os.path.normcase(path))
         try:
             path_netloc, module, static, resource = path.split('/', 3)
         except ValueError:
