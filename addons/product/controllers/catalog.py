@@ -16,14 +16,11 @@ class ProductCatalogController(Controller):
         :return: A dict with the following structure:
             {
                 product.id: {
+                    'quantity': float,
                     'price': float,
-                    'uomDisplayName': string,
-                    'uomId': int,
-                    'productUomFactor': float (optional),
-                    'sellerUomFactor': float (optional),
-                    'quantity': float (optional)
-                    'productType': string,
-                    'productUomDisplayName': string (optional),
+                    'uomId': int (optional),
+                    'productUomId': int (optional),
+                    'availableUoms': list (optional),
                     'readOnly': bool (optional),
                 }
             }
@@ -43,7 +40,6 @@ class ProductCatalogController(Controller):
         :param int order_id: The order id.
         :param int product_id: The product, as a `product.product` id.
         :return: A dictionary containing the product's unit price and any additional values.
-
         :rtype: dict
         """
         request.update_context(catalog_update=True)

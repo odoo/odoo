@@ -1316,23 +1316,21 @@ class PurchaseOrder(models.Model):
             return res
 
         available_uoms = product._get_available_uoms() | product.seller_ids.uom_id
-        res['availableUoms'] = available_uoms.read(["name", "factor"])
+        res['availableUoms'] = available_uoms.read(["display_name", "factor"])
         return res
 
-    def _get_product_catalog_seller_data(self, product, *, uom=None, **kwargs):
+    def _get_product_catalog_seller_data(self, product, *, uom=None, **kwargs) -> dict:
         """Return a dict containing the updated product data according to the seller (if found).
 
         :param object product: Recordset of `product.product`.
         :param recordset uom: Recordset of `uom.uom`.
-        :rtype: dict
-        :return: A dict with the following structure:
+        :return: A dict with the following structure (can be empty):
             {
-                'price': float,
-                'uomDisplayName': string,
-                'uomId' : int,
-                'sellerUomFactor': float (optional),
-                'productUomDisplayName': string (optional),
-                'min_qty': float (optional)
+                'uomId': int (optional),
+                'productUomId': int (optional),
+                'availableUoms': list (optional),
+                'price': float (optional),
+                'minimumProductQuantity': float (optional),
             }
         """
         self.ensure_one()
@@ -1354,12 +1352,12 @@ class PurchaseOrder(models.Model):
                     to_currency=self.currency_id,
                     round=False
                 )
+                source_uom = seller.uom_id or product.uom_id
                 target_uom = uom or seller.uom_id
                 product_infos.update(
                     self._get_product_catalog_uom_data(product, target_uom, **kwargs),
-                    price=product.uom_id._compute_price(seller_price, target_uom),
-                    min_qty=seller.min_qty,
-                    sellerUomFactor=seller.uom_id.factor / product.uom_id.factor,
+                    price=source_uom._compute_price(seller_price, target_uom),
+                    minimumProductQuantity=source_uom._compute_quantity(seller.min_qty, target_uom),
                 )
         return product_infos
 

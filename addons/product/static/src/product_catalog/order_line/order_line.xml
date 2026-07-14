@@ -7,7 +7,7 @@
             <div class="d-inline-flex align-items-baseline">
                 <span t-if="this.showPrice" t-out="this.price" class="o_product_catalog_price fw-bold me-4"/>
             </div>
-            <span t-if="this.displayPriceByProductUoM" class="d-flex text-muted small" t-out="`${this.productUnitPrice}/${this.props.productUomDisplayName}`"/>
+            <span t-if="this.displayPriceByProductUoM" class="d-flex text-muted small" t-out="`${this.productUnitPrice}/${this.productUomDisplayName}`"/>
         </Portal>
         <div
             t-if="this.props.readOnly and this.props.warning"
@@ -28,7 +28,7 @@
                     class="btn btn-primary border"
                     t-on-click.stop="this.env.decreaseQuantity"
                     t-att-disabled="this.disableRemove"
-                    t-att-data-tooltip="this.disabledButtonTooltip"
+                    t-att-data-tooltip="this.decreaseButtonTooltip"
                     aria-label="Decrease quantity"
                 >
                     <i class="oi" data-icon="remove" aria-hidden="true"/>
@@ -41,21 +41,25 @@
                     t-on-change="this.env.setQuantity"
                     t-on-focus="this._onFocus"
                 />
-                <select t-if="this.hasMultipleUoms"
+                <select
+                    t-if="this.hasMultipleUoms"
                     class="input-group-text form-select rounded-0"
                     t-att-style="this.uomSelectStyle"
                     t-on-change="this.onUomChange"
                 >
-                    <option t-foreach="this.props.availableUoms" t-as="uom" t-key="uom.id"
+                    <option
+                        t-foreach="this.props.availableUoms"
+                        t-as="uom"
+                        t-key="uom.id"
                         t-att-value="uom.id"
                         t-att-selected="uom.id === this.props.uomId"
-                        t-out="uom.name"
+                        t-out="uom.display_name"
                     />
                 </select>
                 <span
-                    t-elif="this.props.uomDisplayName"
+                    t-elif="this.isUoMFeatureEnabled"
                     class="input-group-text d-block rounded-0 text-truncate cursor-default"
-                    t-out="this.props.uomDisplayName" t-att-title="this.props.uomDisplayName"
+                    t-out="this.uomDisplayName" t-att-title="this.uomDisplayName"
                 />
                 <button
                     class="btn btn-primary border"

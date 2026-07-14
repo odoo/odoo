@@ -20,7 +20,7 @@ class ProductCatalogLineMixin(models.AbstractModel):
 
         return {
             **parent_record._get_product_catalog_uom_data(self.product_id, uom=catalog_uom),
-            "readOnly": parent_record._is_readonly() or len(self) > 1,
+            **({"readOnly": True} if len(self) > 1 else {}),
             "quantity": sum(
                 self.mapped(
                     lambda line: line._get_product_uom()._compute_quantity(
@@ -85,15 +85,12 @@ class ProductCatalogLineMixin(models.AbstractModel):
 
         Note: Self can be a multi-records recordset.
         """
-        price_type = parent_record._get_product_price_type()
-        if not price_type:
-            return 0.0
-
         product = self.product_id
         product.ensure_one()
-        return product._price_compute(
-            price_type, uom=self._get_product_uom(), currency=parent_record._get_catalog_currency()
-        )[product.id]
+
+        return parent_record._get_product_catalog_default_unit_price(
+            product, uom=self._get_product_uom()
+        )
 
     def _can_be_unlinked_from_catalog(self) -> bool:
         """Determine whether the current line can be deleted (if its quantity becomes zero)."""

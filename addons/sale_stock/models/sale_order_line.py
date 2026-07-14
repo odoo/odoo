@@ -417,16 +417,18 @@ class SaleOrderLine(models.Model):
 
     def _get_product_catalog_lines_data(self, *args, **kwargs) -> dict:
         """Override of `sale` to add the delivered quantity."""
-        return {
-            **super()._get_product_catalog_lines_data(*args, **kwargs),
-            "deliveredQty": sum(
-                self.mapped(
-                    lambda line: line.product_uom_id._compute_quantity(
-                        qty=line.qty_delivered, to_unit=self._get_product_uom()
-                    )
+        res = super()._get_product_catalog_lines_data(*args, **kwargs)
+        minimum_quantity = sum(
+            self.mapped(
+                lambda line: line.product_uom_id._compute_quantity(
+                    qty=line.qty_delivered, to_unit=self._get_product_uom()
                 )
-            ),
-        }
+            )
+        )
+        if minimum_quantity:
+            res["minimumLineQuantity"] = minimum_quantity
+
+        return res
 
     def _is_returnable(self):
         """Return whether this line contains a product eligible for return."""

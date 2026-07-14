@@ -1784,10 +1784,10 @@ class SaleOrder(models.Model):
 
         txs_to_be_linked = self.sudo().transaction_ids.filtered(
             lambda tx: (
-                tx.state in ('pending', 'authorized')
+                tx.state in ("pending", "authorized")
                 or (
-                    tx.state == 'done'
-                    and tx.payment_id.move_id.state == 'posted'
+                    tx.state == "done"
+                    and tx.payment_id.move_id.state == "posted"
                     and not tx.payment_id.is_reconciled
                 )
             )
@@ -2636,24 +2636,15 @@ class SaleOrder(models.Model):
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain("sale_ok", "=", True)
 
-    def _get_product_price_type(self) -> str:
-        """Specify the price type that should be computed as product 'price' in the catalog."""
-        self.ensure_one()
-        # Disable the default price computation as the pricelist should be considered instead
-        return ""
-
-    def _get_product_catalog_order_data(self, products, **kwargs):
-        res = super()._get_product_catalog_order_data(products, **kwargs)
-        prices = self.pricelist_id._get_products_price(
+    def _get_default_prices(self, products, **kwargs) -> dict:
+        # Override the default price computation to consider the pricelist prices instead.
+        return self.pricelist_id._get_products_price(
             quantity=1.0,
             products=products,
-            currency=self.currency_id,
+            currency=self._get_catalog_currency(),
             date=self.date_order,
             **kwargs,
         )
-        for product in products:
-            res[product.id]["price"] = prices.get(product.id)
-        return res
 
     def _is_readonly(self) -> bool:
         """Return whether the sale order is read-only or not based on the state or the lock status.
@@ -2669,16 +2660,6 @@ class SaleOrder(models.Model):
         if product.sale_line_warn_msg and has_warning_group:
             product_data.update(warning=product.sale_line_warn_msg)
         return product_data
-
-    def _get_product_catalog_default_unit_price(self, product, uom, **kwargs):
-        return self.pricelist_id._get_product_price(
-            product=product,
-            quantity=1.0,
-            currency=self.currency_id,
-            uom=uom,
-            date=self.date_order,
-            **kwargs,
-        )
 
     def _has_sections(self) -> bool:
         return True

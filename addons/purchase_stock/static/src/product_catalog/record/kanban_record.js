@@ -17,13 +17,11 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
         return ProductCatalogPurchaseSuggestOrderLine;
     }
 
-    /** Add suggested_qty or pricelist_min_qty (the greater one) if positive, otherwise add 1. */
-    addProduct() {
-        const { min_qty = 1, suggested_qty = 0 } = this.productCatalogData;
-        let quantity_to_add = Math.max(min_qty, suggested_qty, 1);
-        if (this.productCatalogData.sellerUomFactor) {
-            quantity_to_add = Math.ceil(quantity_to_add / this.productCatalogData.sellerUomFactor);
+    /** Add suggested_qty if greater than requested quantity. */
+    addProduct(qty = 1) {
+        if (this.productCatalogData.quantity === 0 && qty < this.productCatalogData.suggested_qty) {
+            qty = this.productCatalogData.suggested_qty; // Take minimum quantity when trying to add less.
         }
-        super.addProduct(quantity_to_add);
+        super.addProduct(qty);
     }
 }
