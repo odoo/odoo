@@ -16,7 +16,7 @@ const TEXT_ALIGN_FIXABLE_VALUES = new Set(["start", "end"]);
 export class ContextStylePlugin extends Plugin {
     static id = "contextStyle";
     static dependencies = ["measurementSnapshot", "rules", "style"];
-    static shared = ["getTableContextStyleInfo"];
+    static shared = ["getContextNode", "getTableContextStyleInfo"];
 
     setup() {
         // TODO EGGMAIL: evaluate rules redundancy with filter_content_plugin
@@ -49,6 +49,19 @@ export class ContextStylePlugin extends Plugin {
                 }
             },
         });
+    }
+
+    getContextNode(emailNode) {
+        let contextNode;
+        let currentNode = emailNode;
+        do {
+            contextNode = currentNode.lastReferenceNode;
+            currentNode = currentNode.parent;
+        } while (currentNode && !contextNode);
+        if (!contextNode) {
+            contextNode = this.config.referenceDocument.body;
+        }
+        return contextNode;
     }
 
     getTableContextStyleInfo(element) {

@@ -4,6 +4,9 @@ import { StyleInfo } from "../core/style_models";
 import { parseCssValue } from "../css_parsers";
 import { ImageLayout, ImageLinkLayout } from "./image_models";
 import { Rules } from "../core/rules_models";
+import { isParagraphRelatedElement } from "@html_editor/utils/dom_info";
+import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageStrategyPlugin extends Plugin {
     static id = "imageStrategy";
@@ -13,14 +16,19 @@ export class ImageStrategyPlugin extends Plugin {
         "rules",
         "referenceNode",
         "render",
+        "spacing",
         "style",
     ];
     resources = {
-        element_layout_analysis_processors: this.analyzeImageLayout.bind(this),
+        element_layout_analysis_processors: [this.analyzeImageLayout.bind(this)],
         merge_email_node_overrides: this.discardImageEmailNodeInLink.bind(this),
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), ImageStrategyPlugin.id],
         ],
+        refine_layout_processors: withSequence(
+            DEFAULT_SPACING_SEQUENCE,
+            this.applyImageSpacing.bind(this)
+        ),
         style_rules_processors: [[this.provideStyleRules.bind(this), ImageStrategyPlugin.id]],
     };
 
@@ -71,6 +79,11 @@ export class ImageStrategyPlugin extends Plugin {
         // TODO EGGMAIL: find a solution to display a padding and a border for some images?
         rules.block(/^border(-.*)?$/, { when: this.isImg.bind(this) });
         rules.block(/^padding(-(top|right|bottom|left))?$/, { when: this.isImg.bind(this) });
+    }
+
+    applyImageSpacing(layout, { emailNode }) {
+        // if image can handle spacing => wrap image in a spacing table
+        // TODO EGGGMAIL: WORKING HERE 
     }
 
     isImg({ referenceNode }) {
@@ -308,7 +321,7 @@ export class ImageStrategyPlugin extends Plugin {
             return true;
         }
         const parent = referenceNode.parentElement;
-        if (!this.isBlock(parent)) {
+        if (!this.isBlock(parent) || isParagraphRelatedElement(parent)) {
             return false;
         }
         let prevSibling, nextSibling;

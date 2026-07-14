@@ -82,10 +82,11 @@ export class SpacingPlugin extends Plugin {
     // - horizontal centering (vertical centering does not happen on a spacing table, it should
     // happen more globally (and requires handling (TODO)))
     //
-    buildMarginNode(facts) {
+    buildMarginNode(emailNode, spacingNodeArgs = {}) {
+        const facts = emailNode.analysis.facts;
         // TODO EGGMAIL: discard negative paddings
         // for % values, use computed value in px (desktop mode) instead
-        const marginNode = new SpacingNode();
+        const marginNode = new SpacingNode(spacingNodeArgs);
         const marginLayout = marginNode.layout;
         const styleInfo = facts.desktopMarginStyleInfo;
         let isRelevant = false;
@@ -118,12 +119,19 @@ export class SpacingPlugin extends Plugin {
             }
         }
         if (isRelevant) {
+            const contextNode = this.getContextNode(emailNode);
+            const context = { style: this.getTableContextStyleInfo(contextNode) };
+            marginNode.layout.setAttributes(context, "cell");
             return marginNode;
         }
     }
 
-    buildPaddingNode(facts) {
-        const paddingNode = new SpacingNode();
+    buildPaddingNode(
+        emailNode,
+        spacingNodeArgs = { refs: { root: { style: { width: "100%" } } } }
+    ) {
+        const facts = emailNode.analysis.facts;
+        const paddingNode = new SpacingNode(spacingNodeArgs);
         const paddingLayout = paddingNode.layout;
         const styleInfo = facts.desktopPaddingStyleInfo;
         let isRelevant = false;
@@ -139,37 +147,32 @@ export class SpacingPlugin extends Plugin {
             }
         }
         if (isRelevant) {
+            const contextNode = this.getContextNode(emailNode);
+            const context = { style: this.getTableContextStyleInfo(contextNode) };
+            paddingNode.layout.setAttributes(context, "cell");
             return paddingNode;
         }
     }
 
     applyDefaultSpacing(layout, { emailNode }) {
-        let contextNode;
-        let currentNode = emailNode;
-        do {
-            contextNode = currentNode.lastReferenceNode;
-            currentNode = currentNode.parent;
-        } while (currentNode && !contextNode);
+        const contextNode = this.getContextNode(emailNode);
         const renderNode = this.config.referenceDocument.createElement(
             emailNode.layout.descendantTag
         );
-        if (!contextNode) {
-            contextNode = this.config.referenceDocument.body;
-        }
         if (
             !this.isBlock(contextNode, { evaluateDisconnected: true }) ||
             isPhrasingContent(renderNode)
         ) {
             return layout;
         }
-        const context = { style: this.getTableContextStyleInfo(contextNode) };
         if (
             emailNode.analysis.facts.desktopMarginStyleInfo &&
             !paragraphRelatedElements.includes(layout.ancestorTag)
         ) {
-            const marginNode = this.buildMarginNode(emailNode.analysis.facts);
+            const marginNode = this.buildMarginNode(emailNode, {
+                refs: { root: { style: { width: "100%" } } },
+            });
             if (marginNode) {
-                marginNode.layout.setAttributes(context, "cell");
                 emailNode.marginNode = marginNode;
             }
         }
@@ -177,9 +180,10 @@ export class SpacingPlugin extends Plugin {
             emailNode.analysis.facts.desktopPaddingStyleInfo &&
             !paragraphRelatedElements.includes(layout.descendantTag)
         ) {
-            const paddingNode = this.buildPaddingNode(emailNode.analysis.facts);
+            const paddingNode = this.buildPaddingNode(emailNode, {
+                refs: { root: { style: { width: "100%" } } },
+            });
             if (paddingNode) {
-                paddingNode.layout.setAttributes(context, "cell");
                 emailNode.paddingNode = paddingNode;
             }
         }

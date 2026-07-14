@@ -344,6 +344,7 @@ export class RenderPlugin extends Plugin {
     enforceConstraints(emailNode) {
         // keep original layout (inside emailNode) untouched during the
         // whole process, but the current layout can be used
+        // don't replace existing siblings emailNodes during refinement
         emailNode.layout = this.processThrough("refine_layout_processors", emailNode.layout, {
             emailNode,
         });
