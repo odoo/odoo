@@ -126,10 +126,7 @@ export class SpacingPlugin extends Plugin {
         }
     }
 
-    buildPaddingNode(
-        emailNode,
-        spacingNodeArgs = { refs: { root: { style: { width: "100%" } } } }
-    ) {
+    buildPaddingNode(emailNode, spacingNodeArgs = {}) {
         const facts = emailNode.analysis.facts;
         const paddingNode = new SpacingNode(spacingNodeArgs);
         const paddingLayout = paddingNode.layout;

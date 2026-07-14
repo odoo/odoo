@@ -27,7 +27,7 @@ export class ImageStrategyPlugin extends Plugin {
         ],
         refine_layout_processors: withSequence(
             DEFAULT_SPACING_SEQUENCE,
-            this.applyImageSpacing.bind(this)
+            this.refineImage.bind(this)
         ),
         style_rules_processors: [[this.provideStyleRules.bind(this), ImageStrategyPlugin.id]],
     };
@@ -72,18 +72,71 @@ export class ImageStrategyPlugin extends Plugin {
         rules.allow("width", { when: this.isImg.bind(this) });
         rules.allow("height", { when: this.isImg.bind(this) });
         rules.allow("max-width", { when: this.isImg.bind(this) });
-        // Since width/height can be set on this img, we can't set border nor
-        // padding, as the standard rendering box-sizing is "content-box"
+        // Since width/height can be set on an img, we can't blindly allow border
+        // nor padding, as the standard rendering box-sizing is "content-box"
         // meaning all calculations for width need to be made with padding
         // and border in mind.
-        // TODO EGGMAIL: find a solution to display a padding and a border for some images?
+        // border is added back manually using getBorderStyleInfo when building
+        // layouts
         rules.block(/^border(-.*)?$/, { when: this.isImg.bind(this) });
+        // padding is handled by refineImage
         rules.block(/^padding(-(top|right|bottom|left))?$/, { when: this.isImg.bind(this) });
     }
 
-    applyImageSpacing(layout, { emailNode }) {
-        // if image can handle spacing => wrap image in a spacing table
-        // TODO EGGGMAIL: WORKING HERE 
+    refineImage(layout, { emailNode }) {
+        if (!emailNode.analysis.facts.isImage && !emailNode.analysis.facts.isImageLink) {
+            return layout;
+        }
+        const imgRef = emailNode.analysis.facts.isImage ? "root" : "img";
+        // Neutralize borders in cases that never support padding.
+        // All imageLinks or images that are not handled in this function AND have width 100%
+        // can not have a border because of box-sizing: content-box (overlapping issue).
+        const neutralizeBorder = (callback = () => {}) => {
+            const styleInfo = layout.getRef(imgRef).styleInfo;
+            const borderStyleInfo = this.filterStyleInfo(
+                styleInfo,
+                emailNode.analysis.imageNode,
+                this.imageBorderStyleRules
+            );
+            for (const [propertyName, propertyInfo] of borderStyleInfo.entries()) {
+                styleInfo.removeProperty(propertyName);
+                callback(propertyName, propertyInfo);
+            }
+        };
+        const width = layout.getRef().styleInfo.getPropertyValue("width");
+        const parentRenderNode = this.config.referenceDocument.createElement(
+            emailNode.parent.layout.descendantTag
+        );
+        if (
+            !this.isBlock(parentRenderNode, { evaluateDisconnected: true }) ||
+            // TODO EGGMAIL: if paragraphRelatedElement and link/image is the only
+            // child, the paragraph can be replaced by a DIV (like buttonStrategy)
+            isParagraphRelatedElement(parentRenderNode)
+        ) {
+            if (width === "100%") {
+                neutralizeBorder();
+            }
+            return layout;
+        }
+        let needsFullWidthSpacing = false;
+        if (width) {
+            const parsedWidth = parseCssValue(width);
+            needsFullWidthSpacing = parsedWidth.unit === "%";
+        }
+        const spacingNodeArgs = needsFullWidthSpacing
+            ? { refs: { root: { style: { width: "100%" } } } }
+            : {};
+        const paddingNode = this.buildPaddingNode(emailNode, spacingNodeArgs);
+        if (paddingNode) {
+            // image padding behaves like a margin (space around the image)
+            emailNode.marginNode = paddingNode;
+            // recover border from the image email node and put it on the
+            // spacing node
+            neutralizeBorder((propertyName, propertyInfo) => {
+                paddingNode.layout.getRef("cell").styleInfo.set(propertyName, propertyInfo);
+            });
+        }
+        return layout;
     }
 
     isImg({ referenceNode }) {
@@ -111,6 +164,8 @@ export class ImageStrategyPlugin extends Plugin {
         let { layout, analysis } = defaultEmailNodeArguments;
         let detectionResult = this.detectImageLink(referenceNode);
         if (detectionResult) {
+            analysis.facts.imageNode = detectionResult.imageNode;
+            analysis.facts.linkNode = detectionResult.linkNode;
             analysis.facts.isImageLink = true;
             analysis.parsingFacts.canMerge = true;
             analysis.parsingFacts.canParentMerge = false;
@@ -123,6 +178,7 @@ export class ImageStrategyPlugin extends Plugin {
                 analysis.parsingFacts.canParentMerge = false;
                 layout = this.buildImageLayout(detectionResult);
             }
+            analysis.facts.imageNode = detectionResult.imageNode;
             analysis.facts.isImage = true;
             analysis.parsingFacts.canMerge = false;
         }
@@ -133,13 +189,10 @@ export class ImageStrategyPlugin extends Plugin {
         return defaultEmailNodeArguments;
     }
 
-    getForcedImageStyle({ shouldBeBlock, allowBorderWidth }) {
+    getForcedImageStyle({ shouldBeBlock }) {
         // TODO EGGMAIL: remove important, but add rule to remove the css properties
         // from the original styleInfo, (in case its values are important)
         const styleInfo = new StyleInfo();
-        if (!allowBorderWidth) {
-            styleInfo.setProperty("border-width", "0", "important", Infinity);
-        }
         if (shouldBeBlock) {
             styleInfo.setProperty("display", "block", "important", Infinity);
         }
@@ -222,7 +275,7 @@ export class ImageStrategyPlugin extends Plugin {
             height: `${height.number}px`,
             "vertical-align": "middle",
         });
-        const forcedStyleInfo = this.getForcedImageStyle({ shouldBeBlock, allowBorderWidth: true });
+        const forcedStyleInfo = this.getForcedImageStyle({ shouldBeBlock });
         return {
             attributes: Object.assign(this.getAttributes(fontIcon), {
                 src,
@@ -275,7 +328,10 @@ export class ImageStrategyPlugin extends Plugin {
     discardImageEmailNodeInLink({ parentEmailNode, analysis }) {
         if (parentEmailNode.analysis.facts.isImageLink && analysis.facts.isImage) {
             // the imageLink will be handled as a whole from the link, no need to
-            // keep the image node in the render tree
+            // keep the image node in the render tree. Only the image padding
+            // needs to be kept.
+            parentEmailNode.analysis.facts.desktopPaddingStyleInfo =
+                analysis.facts.desktopPaddingStyleInfo;
             return true;
         }
     }
