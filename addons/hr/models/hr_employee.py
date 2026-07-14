@@ -47,6 +47,7 @@ class HrEmployee(models.Model):
     _mailing_enabled = True
     _primary_email = 'work_email'
     _inherits = {'hr.version': 'version_id'}
+    _check_inherits_access = False
 
     # versions
     version_id = fields.Many2one(
@@ -1409,7 +1410,7 @@ class HrEmployee(models.Model):
         if operation == 'read' and self.env.context.get('_allow_read_hr_employee') is _ALLOW_READ_HR_EMPLOYEE:
             return Domain.TRUE
 
-        return self.env['ir.access']._get_domain_for(self._name, operation, include_inherits=False)
+        return super()._access_domain(operation)
 
     def _check_private_fields(self, field_names):
         """ Check whether ``field_names`` contain private fields. """

@@ -13,6 +13,7 @@ class MailAliasMixin(models.AbstractModel):
     _name = 'mail.alias.mixin'
     _inherit = ['mail.alias.mixin.optional']
     _inherits = {'mail.alias': 'alias_id'}
+    _check_inherits_access = False
     _description = 'Email Aliases Mixin'
 
     alias_id = fields.Many2one(
@@ -47,10 +48,3 @@ class MailAliasMixin(models.AbstractModel):
             record.with_context(mail_notrack=True).alias_id = alias
             _logger.info('Mail alias created for %s %s (id %s)',
                          record._name, record.display_name, record.id)
-
-    # --------------------------------------------------
-    # access rights: ignore parent model
-    # --------------------------------------------------
-
-    def _access_domain(self, operation):
-        return self.env['ir.access']._get_domain_for(self._name, operation, include_inherits=False)

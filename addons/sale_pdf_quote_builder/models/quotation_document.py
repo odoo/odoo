@@ -2,13 +2,14 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 
 
 class QuotationDocument(models.Model):
     _name = "quotation.document"
     _description = "Quotation's Headers & Footers"
     _inherits = {"ir.attachment": "ir_attachment_id"}
+    _check_inherits_access = False
     _order = "document_type desc, sequence, name"
     _check_company_auto = True
 
@@ -52,12 +53,9 @@ class QuotationDocument(models.Model):
     )
 
     def _access_domain(self, operation):
-        # this override gets the record rules only from the current model and
-        # ignores record rules on ir.attachment (inherits)
-        domain = super()._access_domain(operation)
-        if domain.is_false():
-            return domain
-        return self.env['ir.access']._get_domain_for(self._name, operation, include_inherits=False)
+        if not self.env['ir.attachment'].has_access(operation):
+            return Domain.FALSE
+        return super()._access_domain(operation)
 
     # === CONSTRAINT METHODS ===#
 

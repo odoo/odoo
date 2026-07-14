@@ -205,7 +205,7 @@ class Environment(Mapping[str, "BaseModel"]):
         return self.transaction.cache
 
     @property
-    def _access_context(self):
+    def _access_context(self) -> tuple:
         """Return the context values used by the access caches."""
         return (self.uid, *self['ir.access']._get_access_context())
 

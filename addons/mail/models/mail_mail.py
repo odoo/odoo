@@ -17,6 +17,7 @@ from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tools.attachment import extract_attachment_ids_from_html
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.modules.registry import Registry
 
 _logger = logging.getLogger(__name__)
@@ -29,14 +30,14 @@ class MailMail(models.Model):
     _name = 'mail.mail'
     _description = 'Outgoing Mail'
     _inherits = {'mail.message': 'mail_message_id'}
+    _check_inherits_access = False
     _order = 'id desc'
     _rec_name = 'subject'
 
     def _access_domain(self, operation):
-        domain = super()._access_domain(operation)
-        if domain.is_false():
-            return domain
-        return self.env['ir.access']._get_domain_for(self._name, operation, include_inherits=False)
+        if not self.env['mail.message'].has_access(operation):
+            return Domain.FALSE
+        return super()._access_domain(operation)
 
     @api.model
     def default_get(self, fields):

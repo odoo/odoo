@@ -303,46 +303,6 @@ class IrAccess(models.Model):
 
         return frozendict({model_name: tuple(infos) for model_name, infos in result.items()})
 
-    @api.ormcache('self.env.uid', 'model_name', 'operation', 'include_inherits', 'tuple(self._get_access_context())')
-    def _get_domain_for(self, model_name: str, operation: str, *, include_inherits=True) -> Domain:
-        """ Return the domain that determines on which records of ``model_name``
-        the current user is allowed to perform ``operation``.  The domain comes
-        from the permissions and restrictions that applies to the current user.
-        If no permission exists for the current user, the method returns ``None``.
-        """
-        assert operation in IN_SELECTION, f"Invalid access operation {operation!r} (expected {", ".join(map(repr, IN_SELECTION))}"
-        operations = IN_SELECTION[operation]
-
-        # collect permissions and restrictions
-        permissions = []
-        restrictions = []
-
-        # add access for parent models as restrictions
-        if include_inherits:
-            for parent_model_name, parent_field_name in self.env[model_name]._inherits.items():
-                domain = self._get_domain_for(parent_model_name, operation)
-                if domain.is_false():
-                    return Domain.FALSE
-                restrictions.append(Domain(parent_field_name, 'any', domain))
-
-        # include False in user groups to catch global rules
-        group_ids = {*self.env.user._get_group_ids(), False}
-        # some domains have been pre-evaluated, evaluate only if needed
-        eval_context = None
-        for access in self._get_all_access().get(model_name, ()):
-            if access.operation in operations and access.group_id in group_ids:
-                domain = access.domain
-                if not isinstance(domain, Domain):
-                    if eval_context is None:
-                        eval_context = self._eval_context()
-                    domain = Domain(safe_eval(domain, eval_context))
-                if access.group_id:
-                    permissions.append(domain)
-                else:
-                    restrictions.append(domain)
-
-        return Domain.OR(permissions) & Domain.AND(restrictions)
-
     def _get_access_context(self) -> Iterator:
         """ Return the context values that the evaluation of the access domain depends on. """
         yield tuple(self.env.context.get('allowed_company_ids', ()))

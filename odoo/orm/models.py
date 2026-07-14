@@ -53,7 +53,7 @@ from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
 from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
-from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_checker
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_checker, safe_eval
 from odoo.tools.translate import _, LazyTranslate
 
 from . import decorators as api
@@ -461,6 +461,7 @@ class BaseModel(metaclass=MetaModel):
       :attr:`~odoo.models.Model._inherits`-ed models, the inherited field will
       correspond to the last one (in the inherits list order).
     """
+    _check_inherits_access: bool = True           #: check access for _inherits models
     _table: str = ''                 #: SQL table name used by model if :attr:`_auto`
     _table_query: SQL | str | None = None  #: SQL expression of the table's content (optional)
     _table_objects: dict[str, TableObject] = frozendict()  #: SQL/Table objects
@@ -3577,13 +3578,52 @@ class BaseModel(metaclass=MetaModel):
         return None
 
     @api.model
+    @api.ormcache('operation', 'self.env._access_context')
     def _access_domain(self, operation: str) -> Domain:
         """Get the security domain for the given operation.
 
-        If the user has no model access, return the false domain.
-        Otherwise, the default implementation returns the access rule domain.
+        Return the domain that determines on which records of this model
+        the current user is allowed to perform ``operation``.  The domain comes
+        from the permissions and restrictions that apply to the current user.
         """
-        return self.env['ir.access']._get_domain_for(self._name, operation)
+        from odoo.addons.base.models.ir_access import IN_SELECTION  # noqa: PLC0415
+
+        assert operation in IN_SELECTION, (
+            f"Invalid access operation {operation!r} "
+            f"(expected {', '.join(map(repr, IN_SELECTION))})"
+        )
+        operations = IN_SELECTION[operation]
+
+        # collect permissions and restrictions
+        permissions = []
+        restrictions = []
+
+        # add access for parent models as restrictions
+        if self._check_inherits_access:
+            for parent_model_name, parent_field_name in self._inherits.items():
+                domain = self.env[parent_model_name]._access_domain(operation)
+                if domain.is_false():
+                    return Domain.FALSE
+                restrictions.append(Domain(parent_field_name, 'any', domain))
+
+        IrAccess = self.env['ir.access']
+        # include False in user groups to catch global rules
+        group_ids = {*self.env.user._get_group_ids(), False}
+        # some domains have been pre-evaluated, evaluate only if needed
+        eval_context = None
+        for access in IrAccess._get_all_access().get(self._name, ()):
+            if access.operation in operations and access.group_id in group_ids:
+                domain = access.domain
+                if not isinstance(domain, Domain):
+                    if eval_context is None:
+                        eval_context = IrAccess._eval_context()
+                    domain = Domain(safe_eval(domain, eval_context))
+                if access.group_id:
+                    permissions.append(domain)
+                else:
+                    restrictions.append(domain)
+
+        return Domain.OR(permissions) & Domain.AND(restrictions)
 
     def _make_access_error_message(self, operation: str, domain: Domain) -> AccessError:
         """Create the access error for the given operation.
