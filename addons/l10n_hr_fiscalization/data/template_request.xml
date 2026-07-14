@@ -1,0 +1,339 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!-- QWeb template for the original invoice submission (InvoiceRequest) -->
+        <template id="template_invoice_fisicalization" name="Request for original invoice">
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Body>
+                    <tns:RacunZahtjev xmlns:tns="http://www.apis-it.hr/fin/2012/types/f73"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Id="RacunZahtjev"
+                        xsi:schemaLocation="http://www.apis-it.hr/fin/2012/types/f73 ../schema/FiskalizacijaSchema.xsd">
+                        <tns:Zaglavlje>
+                            <tns:IdPoruke t-out="message_id" />
+                            <tns:DatumVrijeme t-out="timestamp" />
+                        </tns:Zaglavlje>
+                        <tns:Racun>
+                            <tns:Oib t-out="oib" />
+                            <tns:USustPdv t-out="vat_applicable" />
+                            <tns:DatVrijeme t-out="invoice_sending_time" />
+                            <tns:OznSlijed t-out="sequence_identifier" />
+                            <tns:BrRac>
+                                <tns:BrOznRac t-out="invoice_number" />
+                                <tns:OznPosPr t-out="sales_outlet_id" />
+                                <tns:OznNapUr t-out="invoice_sequence_number" />
+                            </tns:BrRac>
+                            <t t-if="pdv">
+                                <tns:Pdv>
+                                    <t t-foreach="pdv" t-as="pdv">
+                                        <tns:Porez>
+                                            <tns:Stopa t-out="pdv['rate']" />
+                                            <tns:Osnovica t-out="pdv['base_amount']" />
+                                            <tns:Iznos t-out="pdv['tax_amount']" />
+                                        </tns:Porez>
+                                    </t>
+                                </tns:Pdv>
+                            </t>
+                            <t t-if="pnp">
+                                <tns:Pnp>
+                                    <t t-foreach="pnp" t-as="pnp">
+                                        <tns:Porez>
+                                            <tns:Stopa t-out="pnp['rate']" />
+                                            <tns:Osnovica t-out="pnp['base_amount']" />
+                                            <tns:Iznos t-out="pnp['tax_amount']" />
+                                        </tns:Porez>
+                                    </t>
+                                </tns:Pnp>
+                            </t>
+                            <t t-if="other_taxes">
+                                <tns:OstaliPor>
+                                    <t t-foreach="other_taxes" t-as="tax">
+                                        <tns:Porez>
+                                            <tns:Naziv t-out="tax['name']" />
+                                            <tns:Stopa t-out="tax['rate']" />
+                                            <tns:Osnovica t-out="tax['base_amount']" />
+                                            <tns:Iznos t-out="tax['tax_amount']" />
+                                        </tns:Porez>
+                                    </t>
+                                </tns:OstaliPor>
+                            </t>
+                            <t t-if="vat_exempt_amount">
+                                <tns:IznosOslobPdv t-out="vat_exempt_amount" />
+                            </t>
+                            <t t-if="margin_amount">
+                                <tns:IznosMarza t-out="margin_amount" />
+                            </t>
+                            <t t-if="non_taxable_amount">
+                                <tns:IznosNePodlOpor t-out="non_taxable_amount" />
+                            </t>
+                            <t t-if="fee_items">
+                                <tns:Naknade>
+                                    <t t-foreach="fee_items" t-as="fee">
+                                        <tns:Naknada>
+                                            <tns:NazivN t-out="fee['name']" />
+                                            <tns:IznosN t-out="fee['amount']" />
+                                        </tns:Naknada>
+                                    </t>
+                                </tns:Naknade>
+                            </t>
+                            <tns:IznosUkupno t-out="amount_total" />
+                            <tns:NacinPlac t-out="payment_method" />
+                            <tns:OibOper t-out="operator_oib" />
+                            <tns:ZastKod t-out="zki" />
+                            <tns:NakDost t-out="is_subsequent_delivery" />
+                            <t t-if="receipt_number">
+                                <tns:ParagonBrRac t-out="receipt_number" />
+                            </t>
+                            <t t-if="special_purpose">
+                                <tns:SpecNamj t-out="special_purpose" />
+                            </t>
+                        </tns:Racun>
+                    </tns:RacunZahtjev>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </template>
+
+        <!-- Template for payment method type change request (ChangePaymentMethodRequest) -->
+        <template id="template_invoice_payment_method_change_request" name="Request to change the original payment method">
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Body>
+                    <tns:PromijeniNacPlacZahtjev
+                        xmlns:tns="http://www.apis-it.hr/fin/2012/types/f73"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        Id="PromijeniNacPlacZahtjev"
+                        xsi:schemaLocation="http://www.apis-it.hr/fin/2012/types/f73 ../schema/FiskalizacijaSchema.xsd">
+                        <tns:Zaglavlje>
+                            <tns:IdPoruke t-out="message_id" />
+                            <tns:DatumVrijeme t-out="timestamp" />
+                        </tns:Zaglavlje>
+                        <tns:Racun>
+                            <tns:Oib t-out="oib" />
+                            <tns:USustPdv t-out="vat_applicable" />
+                            <tns:DatVrijeme t-out="invoice_sending_time" />
+                            <tns:OznSlijed t-out="sequence_identifier" />
+                            <tns:BrRac>
+                                <tns:BrOznRac t-out="invoice_number" />
+                                <tns:OznPosPr t-out="sales_outlet_id" />
+                                <tns:OznNapUr t-out="invoice_sequence_number" />
+                            </tns:BrRac>
+                            <t t-if="pdv">
+                                <tns:Pdv>
+                                    <t t-foreach="pdv" t-as="pdv">
+                                        <tns:Porez>
+                                            <tns:Stopa t-out="pdv['rate']" />
+                                            <tns:Osnovica t-out="pdv['base_amount']" />
+                                            <tns:Iznos t-out="pdv['tax_amount']" />
+                                        </tns:Porez>
+                                    </t>
+                                </tns:Pdv>
+                            </t>
+                            <t t-if="pnp">
+                                <tns:Pnp>
+                                    <t t-foreach="pnp" t-as="pnp">
+                                        <tns:Porez>
+                                            <tns:Stopa t-out="pnp['rate']" />
+                                            <tns:Osnovica t-out="pnp['base_amount']" />
+                                            <tns:Iznos t-out="pnp['tax_amount']" />
+                                        </tns:Porez>
+                                    </t>
+                                </tns:Pnp>
+                            </t>
+                            <t t-if="other_taxes">
+                                <tns:OstaliPor>
+                                    <t t-foreach="other_taxes" t-as="tax">
+                                        <tns:Porez>
+                                            <tns:Naziv t-out="tax['name']" />
+                                            <tns:Stopa t-out="tax['rate']" />
+                                            <tns:Osnovica t-out="tax['base_amount']" />
+                                            <tns:Iznos t-out="tax['tax_amount']" />
+                                        </tns:Porez>
+                                    </t>
+                                </tns:OstaliPor>
+                            </t>
+                            <t t-if="vat_exempt_amount">
+                                <tns:IznosOslobPdv t-out="vat_exempt_amount" />
+                            </t>
+                            <t t-if="margin_amount">
+                                <tns:IznosMarza t-out="margin_amount" />
+                            </t>
+                            <t t-if="non_taxable_amount">
+                                <tns:IznosNePodlOpor t-out="non_taxable_amount" />
+                            </t>
+                            <t t-if="fee_items">
+                                <tns:Naknade>
+                                    <t t-foreach="fee_items" t-as="fee">
+                                        <tns:Naknada>
+                                            <tns:NazivN t-out="fee['name']" />
+                                            <tns:IznosN t-out="fee['amount']" />
+                                        </tns:Naknada>
+                                    </t>
+                                </tns:Naknade>
+                            </t>
+                            <tns:IznosUkupno t-out="amount_total" />
+                            <tns:NacinPlac t-out="payment_method" />
+                            <tns:OibOper t-out="operator_oib" />
+                            <tns:ZastKod t-out="zki" />
+                            <tns:NakDost t-out="is_subsequent_delivery" />
+                            <tns:PromijenjeniNacinPlac t-out="changed_payment_method" />
+                            <t t-if="change_oib">
+                                <t t-if="changed_recipient_oib">
+                                    <tns:PromijenjeniOibPrimatelja t-out="changed_recipient_oib" />
+                                </t>
+                                <t t-else="">
+                                    <tns:PromijenjeniOibPrimatelja />
+                                </t>
+                            </t>
+                        </tns:Racun>
+                    </tns:PromijeniNacPlacZahtjev>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </template>
+
+        <!-- Template for checking fiscalization status (RequestVertification) -->
+        <template id="template_invoice_check_fisicalization_status" name="Request to check fiscalization status">
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Body>
+                    <tns:ProvjeraZahtjev xmlns:tns="http://www.apis-it.hr/fin/2012/types/f73"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Id="ProvjeraZahtjev"
+                        xsi:schemaLocation="http://www.apis-it.hr/fin/2012/types/f73 ../schema/FiskalizacijaSchema.xsd">
+                        <tns:Zaglavlje>
+                            <tns:IdPoruke t-out="message_id" />
+                            <tns:DatumVrijeme t-out="timestamp" />
+                        </tns:Zaglavlje>
+                        <tns:Racun>
+                            <tns:Oib t-out="oib" />
+                            <tns:USustPdv t-out="vat_applicable" />
+                            <tns:DatVrijeme t-out="invoice_sending_time" />
+                            <tns:OznSlijed t-out="sequence_identifier" />
+                            <tns:BrRac>
+                                <tns:BrOznRac t-out="invoice_number" />
+                                <tns:OznPosPr t-out="sales_outlet_id" />
+                                <tns:OznNapUr t-out="invoice_sequence_number" />
+                            </tns:BrRac>
+                            <t t-if="pdv">
+                                <tns:Pdv>
+                                    <t t-foreach="pdv" t-as="pdv">
+                                        <tns:Porez>
+                                            <tns:Stopa t-out="pdv['rate']" />
+                                            <tns:Osnovica t-out="pdv['base_amount']" />
+                                            <tns:Iznos t-out="pdv['tax_amount']" />
+                                        </tns:Porez>
+                                    </t>
+                                </tns:Pdv>
+                            </t>
+                            <t t-if="pnp">
+                                <tns:Pnp>
+                                    <t t-foreach="pnp" t-as="pnp">
+                                        <tns:Porez>
+                                            <tns:Stopa t-out="pnp['rate']" />
+                                            <tns:Osnovica t-out="pnp['base_amount']" />
+                                            <tns:Iznos t-out="pnp['tax_amount']" />
+                                        </tns:Porez>
+                                    </t>
+                                </tns:Pnp>
+                            </t>
+                            <t t-if="other_taxes">
+                                <tns:OstaliPor>
+                                    <t t-foreach="other_taxes" t-as="tax">
+                                        <tns:Porez>
+                                            <tns:Naziv t-out="tax['name']" />
+                                            <tns:Stopa t-out="tax['rate']" />
+                                            <tns:Osnovica t-out="tax['base_amount']" />
+                                            <tns:Iznos t-out="tax['tax_amount']" />
+                                        </tns:Porez>
+                                    </t>
+                                </tns:OstaliPor>
+                            </t>
+                            <t t-if="vat_exempt_amount">
+                                <tns:IznosOslobPdv t-out="vat_exempt_amount" />
+                            </t>
+                            <t t-if="margin_amount">
+                                <tns:IznosMarza t-out="margin_amount" />
+                            </t>
+                            <t t-if="non_taxable_amount">
+                                <tns:IznosNePodlOpor t-out="non_taxable_amount" />
+                            </t>
+                            <t t-if="fee_items">
+                                <tns:Naknade>
+                                    <t t-foreach="fee_items" t-as="fee">
+                                        <tns:Naknada>
+                                            <tns:NazivN t-out="fee['name']" />
+                                            <tns:IznosN t-out="fee['amount']" />
+                                        </tns:Naknada>
+                                    </t>
+                                </tns:Naknade>
+                            </t>
+                            <tns:IznosUkupno t-out="amount_total" />
+                            <tns:NacinPlac t-out="payment_method" />
+                            <tns:OibOper t-out="operator_oib" />
+                            <tns:ZastKod t-out="zki" />
+                            <tns:NakDost t-out="is_subsequent_delivery" />
+                            <t t-if="receipt_number">
+                                <tns:ParagonBrRac t-out="receipt_number" />
+                            </t>
+                            <t t-if="special_purpose">
+                                <tns:SpecNamj t-out="special_purpose" />
+                            </t>
+                        </tns:Racun>
+                    </tns:ProvjeraZahtjev>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </template>
+
+        <!-- Rendered alone first, then C14N'd and signed to produce SignatureValue -->
+        <template id="template_invoice_fiscalization_signed_info" name="XML-DSig SignedInfo">
+            <SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+                <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+                <Reference t-attf-URI="##{element_id}">
+                    <Transforms>
+                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                        <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                    </Transforms>
+                    <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                    <DigestValue>
+                        <t t-out="digest_value" />
+                    </DigestValue>
+                </Reference>
+            </SignedInfo>
+        </template>
+
+        <template id="template_invoice_fiscalization_digital_signature"
+            name="Digital signature template">
+            <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+                <SignedInfo>
+                    <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                    <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+                    <Reference t-attf-URI="##{element_id}">
+                        <Transforms>
+                            <Transform
+                                Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                            <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                        </Transforms>
+                        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                        <DigestValue>
+                            <t t-out="digest_value" />
+                        </DigestValue>
+                    </Reference>
+                </SignedInfo>
+                <SignatureValue>
+                    <t t-out="signature_value" />
+                </SignatureValue>
+                <KeyInfo>
+                    <X509Data>
+                        <X509Certificate>
+                            <t t-out="certificate" />
+                        </X509Certificate>
+                        <X509IssuerSerial>
+                            <X509IssuerName>
+                                <t t-out="issuer_name" />
+                            </X509IssuerName>
+                            <X509SerialNumber>
+                                <t t-out="serial_number" />
+                            </X509SerialNumber>
+                        </X509IssuerSerial>
+                    </X509Data>
+                </KeyInfo>
+            </Signature>
+        </template>
+    </data>
+</odoo>

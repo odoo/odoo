@@ -1,3 +1,4 @@
+from freezegun import freeze_time
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_hr_edi.tests.test_hr_edi_common import TestL10nHrEdiCommon
@@ -15,6 +16,7 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
         super().setUpClass()
         cls.env.company.partner_id.l10n_hr_business_unit_code = '12345'
 
+    @freeze_time('2025-01-02')
     def test_export_invoice_from_account_edi_xml_ubl_hr(self):
         """
         Test content of a generated basic invoice in Croation UBL format.
@@ -52,6 +54,7 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(expected_content),
         )
 
+    @freeze_time('2025-01-02')
     def test_export_invoice_with_multiple_taxes(self):
         """
         Test content of a generated invoice with multiple taxes in Croation UBL format.
@@ -101,6 +104,7 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(expected_content),
         )
 
+    @freeze_time('2025-01-02')
     def test_export_invoice_with_cash_basis(self):
         """
         Test content of a generated invoice with an 'on_payment' exigibility tax in Croation UBL format.
@@ -139,6 +143,7 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(expected_content),
         )
 
+    @freeze_time('2025-01-02')
     def test_export_invoice_with_exemption_k(self):
         """
         Test the content of a generated invoice with HR:K exemption in Croation UBL format.
@@ -215,6 +220,7 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(expected_content),
         )
 
+    @freeze_time('2025-01-02')
     def test_export_invoice_with_refund(self):
         """
         Test content of a generated credit note in Croation UBL format.
@@ -289,6 +295,7 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
         profile_id = tree.findtext('.//{*}ProfileID')
         self.assertEqual(profile_id, 'P10')
 
+    @freeze_time('2025-01-02')
     def test_export_invoice_with_no_oib(self):
         """
         Test that OIB is substituted correctly from VAT when it is not explicitly set on partner.
