@@ -7,7 +7,7 @@ title: Instalación con Docker Compose
 
 # Instalación con Docker Compose
 
-Esta guía levanta Odoo 19 y PostgreSQL 15 con la configuración versionada en [`docker-config/docker-compose.yml`](../docker-config/docker-compose.yml).
+Esta guía levanta Odoo 19 y PostgreSQL 15 con la configuración versionada en [`docker-config/docker-compose.yml`](https://github.com/odooIPS-team/odooIPS/blob/19.0/docker-config/docker-compose.yml).
 
 ## Requisitos
 
@@ -52,7 +52,7 @@ En el administrador inicial de Odoo:
 
 ## 4. Instalar la mejora de descuentos
 
-El directorio versionado [`addons`](../addons) se monta como `/mnt/extra-addons` dentro del contenedor.
+El directorio versionado [`addons`](https://github.com/odooIPS-team/odooIPS/tree/19.0/addons) se monta como `/mnt/extra-addons` dentro del contenedor.
 
 1. Abra **Aplicaciones** en Odoo.
 2. Actualice la lista de aplicaciones si el módulo no aparece.

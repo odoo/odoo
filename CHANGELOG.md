@@ -7,7 +7,7 @@ title: Historial de cambios
 
 # Historial de cambios
 
-Resumen de los principales avances del proyecto por sprint. El detalle y las evidencias se conservan en la [documentación versionada](docs/README.md).
+Resumen de los principales avances del proyecto por sprint. El detalle y las evidencias se conservan en la [documentación del portal](docs/README.html).
 
 ## Sprint 0 — Planificación y selección
 
@@ -37,5 +37,4 @@ Resumen de los principales avances del proyecto por sprint. El detalle y las evi
 
 - Se consolidó el portal de GitHub Pages con sprints, evidencias, burndown y material de defensa.
 - Se realizó el cierre de QA, DevOps y trazabilidad del proyecto.
-- Se incorporaron este historial, el [roadmap](ROADMAP.md) y la [guía de instalación](docs/instalacion.md).
-
+- Se incorporaron este historial, el [roadmap](ROADMAP.html) y la [guía de instalación](docs/instalacion.html).

@@ -55,11 +55,11 @@ Repositorio oficial del proyecto:
 
 | Documento | Enlace |
 | --- | --- |
-| Índice de documentación | [Ver documentos](docs/README.md) |
-| GitHub Pages | [Ver sitio](https://roydanpe.github.io/odooIPS/) |
-| Arquitectura del módulo | [Ver documento](docs/arquitectura-modulo-ventas.md) |
-| Reporte de verificación — Sprint 0 | [Ver documento](docs/reporte-verificacion-sprint-0.md) |
-| Cronograma | [Ver documento](docs/cronograma-sprints.md) |
-| Informe del Sprint 1 | [Ver informe](docs/sprints/informe-sprint-1.md) |
-| Informe del Sprint 2 | [Ver informe](docs/sprints/informe-sprint-2.md) |
-| Informe del Sprint 3 | [Ver informe](docs/sprints/informe-sprint-3.md) |
+| Índice de documentación | [Ver documentos](https://odooips-team.github.io/odooIPS/docs/README.html) |
+| GitHub Pages | [Ver sitio](https://odooips-team.github.io/odooIPS/) |
+| Arquitectura del módulo | [Ver documento](https://odooips-team.github.io/odooIPS/docs/arquitectura-modulo-ventas.html) |
+| Reporte de verificación — Sprint 0 | [Ver documento](https://odooips-team.github.io/odooIPS/docs/reporte-verificacion-sprint-0.html) |
+| Cronograma | [Ver documento](https://odooips-team.github.io/odooIPS/docs/cronograma-sprints.html) |
+| Informe del Sprint 1 | [Ver informe](https://odooips-team.github.io/odooIPS/docs/sprints/informe-sprint-1.html) |
+| Informe del Sprint 2 | [Ver informe](https://odooips-team.github.io/odooIPS/docs/sprints/informe-sprint-2.html) |
+| Informe del Sprint 3 | [Ver informe](https://odooips-team.github.io/odooIPS/docs/sprints/informe-sprint-3.html) |
