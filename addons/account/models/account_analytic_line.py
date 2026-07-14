@@ -104,7 +104,7 @@ class AccountAnalyticLine(models.Model):
                 or (not account_type and line.category not in ['invoice', 'other'])
                 or (not account_type and line.category == 'other' and line.amount < 0)
             ):
-                line.analytic_profitablity = 'loss'
+                line.analytic_profitability = 'loss'
             elif (
                 account_type.split('_')[0] == 'income'
                 or (not account_type and line.category == 'other' and line.amount > 0)
