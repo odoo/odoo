@@ -14,6 +14,7 @@ import { registry } from "@web/core/registry";
 import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 import { useService } from "@web/core/utils/hooks";
 import { Many2ManyTagsAvatarFieldPopover } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 class ResourceTag extends Component {
     static template = "resource_mail.ResourceTag";
@@ -40,6 +41,7 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
 
     static components = {
         ...super.components,
+        Many2XAutocomplete,
         Tag: ResourceTag,
     };
     static optionTemplate = "resource_mail.Many2ManyAvatarResourceField.option";
