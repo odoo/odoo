@@ -28,6 +28,8 @@ class PaymentTransaction(models.Model):
         self.with_context(
             payment_safe_write=True  # No API call was made; safe to replay
         )._process(payment_data)
+        # Post-process immediately, as the state change skipped the processing cron
+        self._try_post_process()
 
     def action_demo_set_canceled(self):
         """Set the state of the demo transaction to 'cancel'.
@@ -45,6 +47,8 @@ class PaymentTransaction(models.Model):
         self.with_context(
             payment_safe_write=True  # No API call was made; safe to replay
         )._process(payment_data)
+        # Post-process immediately, as the state change skipped the processing cron
+        self._try_post_process()
 
     def action_demo_set_error(self):
         """Set the state of the demo transaction to 'error'.
@@ -62,6 +66,8 @@ class PaymentTransaction(models.Model):
         self.with_context(
             payment_safe_write=True  # No API call was made; safe to replay
         )._process(payment_data)
+        # Post-process immediately, as the state change skipped the processing cron
+        self._try_post_process()
 
     # === BUSINESS METHODS === #
 
@@ -127,10 +133,6 @@ class PaymentTransaction(models.Model):
                 self._set_authorized()
             else:
                 self._set_done()
-                # Immediately post-process the transaction if it is a refund, as the post-processing
-                # will not be triggered by a customer browsing the transaction from the portal.
-                if self.operation == "refund":
-                    self.env.ref("payment.cron_post_process_payment_tx")._trigger()
         elif state == "cancel":
             self._set_canceled()
         else:  # Simulate an error state.

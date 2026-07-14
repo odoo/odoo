@@ -1,8 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from unittest.mock import patch
 
-from odoo.exceptions import AccessError, LockError, UserError
+from psycopg2 import OperationalError
+
+from odoo import fields
+from odoo.exceptions import AccessError, LockError, UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -11,6 +15,13 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentTransaction(PaymentCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.IrCron = cls.registry["ir.cron"]
+        cls.PaymentTransaction = cls.registry["payment.transaction"]
+
     def test_is_live_when_created_by_live_provider(self):
         self.provider.is_live = True
         tx = self._create_transaction("redirect")
@@ -84,14 +95,14 @@ class TestPaymentTransaction(PaymentCommon):
             "validation",
             "refund",
         }):
-            refund_tx = self._create_transaction(
+            self._create_transaction(
                 "dummy",
                 reference=f"R-{tx.reference}-{reference_index + 1}",
                 state="done",
                 operation=operation,  # Override the computed flow
                 source_transaction_id=tx.id,
             )
-            self._run_post_processing(refund_tx)
+            self._run_post_processing()
 
         self.assertEqual(
             tx.refunds_count,
@@ -214,10 +225,7 @@ class TestPaymentTransaction(PaymentCommon):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(flow="direct", state="authorized")
         child_tx_1 = source_tx._create_child_transaction(100)
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-            "._update_source_transaction_state"
-        ) as patched:
+        with patch.object(self.PaymentTransaction, "_update_source_transaction_state") as patched:
             child_tx_1.with_context(payment_safe_write=True)._set_done()
             patched.assert_called_once()
 
@@ -228,10 +236,7 @@ class TestPaymentTransaction(PaymentCommon):
         child_tx_1 = source_tx._create_child_transaction(100)
         self._update_transaction(child_tx_1, state="done")
         child_tx_2 = source_tx._create_child_transaction(source_tx.amount - 100)
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-            "._update_source_transaction_state"
-        ) as patched:
+        with patch.object(self.PaymentTransaction, "_update_source_transaction_state") as patched:
             child_tx_2.with_context(payment_safe_write=True)._set_canceled()
             patched.assert_called_once()
 
@@ -263,6 +268,19 @@ class TestPaymentTransaction(PaymentCommon):
             "'done'.",
         )
 
+    def test_action_confirm_post_processes_tx(self):
+        tx = self._create_transaction("redirect", state="done")
+        tx.action_confirm()
+        self.assertEqual(self.post_process_mock.call_count, 1)
+
+    def test_action_post_process_acquires_lock(self):
+        tx = self._create_transaction("redirect", state="done")
+        with patch.object(
+            self.PaymentTransaction, "try_lock_for_update"
+        ) as try_lock_for_update_mock:
+            tx.action_post_process()
+        self.assertEqual(try_lock_for_update_mock.call_count, 1)
+
     def test_recording_payment_data_registers_payload(self):
         tx = self._create_transaction("redirect")
         payload = {"key": "value"}
@@ -273,64 +291,59 @@ class TestPaymentTransaction(PaymentCommon):
 
     def test_recording_payment_data_triggers_processing_cron(self):
         tx = self._create_transaction("redirect")
-        IrCron = self.registry["ir.cron"]
-        with patch.object(IrCron, "_trigger") as trigger_mock:
+        with patch.object(self.IrCron, "_trigger") as trigger_mock:
             tx._record({"key", "value"})
         self.assertEqual(trigger_mock.call_count, 1)
 
     def test_run_processing_triggers_cron_if_not_already_running(self):
-        IrCron = self.registry["ir.cron"]
-        with patch.object(IrCron, "method_direct_trigger") as direct_trigger_mock:
+        with patch.object(self.IrCron, "method_direct_trigger") as direct_trigger_mock:
             self.env["payment.transaction"]._run_processing()
         self.assertEqual(direct_trigger_mock.call_count, 1)
 
     def test_run_processing_does_not_trigger_cron_if_already_running(self):
-        IrCron = self.registry["ir.cron"]
         with (
-            patch.object(IrCron, "lock_for_update", side_effect=LockError("dummy")),
-            patch.object(IrCron, "method_direct_trigger") as direct_trigger_mock,
+            patch.object(self.IrCron, "lock_for_update", side_effect=LockError("dummy")),
+            patch.object(self.IrCron, "method_direct_trigger") as direct_trigger_mock,
         ):
             self.env["payment.transaction"]._run_processing()
         self.assertEqual(direct_trigger_mock.call_count, 0)
 
     def test_processing_applies_updates_to_error_txs_with_valid_amount_data(self):
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect", state="error")
         with (
-            patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._validate_amount"
-            ),
-            patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._apply_updates"
-            ) as apply_updates_mock,
+            patch.object(self.PaymentTransaction, "_validate_amount"),
+            patch.object(self.PaymentTransaction, "_apply_updates") as apply_updates_mock,
         ):
             tx._process({})
         self.assertEqual(apply_updates_mock.call_count, 1)
 
     def test_processing_sets_authorized_and_done_tx_to_error_on_invalid_amount(self):
+        self._disable_process_patcher()
         self.provider.support_manual_capture = "full_only"
         for state in ["authorized", "done"]:
             tx = self._create_transaction(
                 "redirect", reference=f"Test {state}", state=state, amount=100
             )
-            with patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-                "._extract_amount_data",
+            with patch.object(
+                self.PaymentTransaction,
+                "_extract_amount_data",
                 return_value={"amount": 10, "currency_code": "USD"},
             ):
                 tx.with_context(payment_safe_write=True)._process({})
             self.assertEqual(tx.state, "error")
 
     def test_processing_skips_amount_validation_for_non_authorized_and_done_states(self):
+        self._disable_process_patcher()
         for state in ["draft", "pending", "error", "cancel"]:
             tx = self._create_transaction("redirect", reference=f"Test {state}", state=state)
-            with patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._validate_amount"
-            ) as validate_amount_mock:
+            with patch.object(self.PaymentTransaction, "_validate_amount") as validate_amount_mock:
                 tx._process({})
             self.assertEqual(validate_amount_mock.call_count, 0)
 
     def test_processing_tokenizes_validated_transaction(self):
         """Test that `_process` tokenizes 'authorized' and 'done' transactions when possible."""
+        self._disable_process_patcher()
         self.provider.support_manual_capture = "partial"
         self.provider.capture_manually = True
         for state in ["authorized", "done"]:
@@ -338,14 +351,10 @@ class TestPaymentTransaction(PaymentCommon):
                 "redirect", reference=f"Test {state}", state=state, tokenize=True
             )
             with (
-                patch(
-                    "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-                    "._validate_amount",
-                    return_value=None,
-                ),
-                patch(
-                    "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-                    "._extract_token_values",
+                patch.object(self.PaymentTransaction, "_validate_amount", return_value=None),
+                patch.object(
+                    self.PaymentTransaction,
+                    "_extract_token_values",
                     return_value={"provider_ref": "test"},
                 ),
             ):
@@ -354,16 +363,11 @@ class TestPaymentTransaction(PaymentCommon):
 
     def test_processing_only_tokenizes_when_requested(self):
         """Test that `_process` only triggers tokenization if the user requested it."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect", state="done", tokenize=False)
         with (
-            patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-                "._validate_amount",
-                return_value=None,
-            ),
-            patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._tokenize"
-            ) as tokenize_mock,
+            patch.object(self.PaymentTransaction, "_validate_amount", return_value=None),
+            patch.object(self.PaymentTransaction, "_tokenize") as tokenize_mock,
         ):
             tx._process({})
         self.assertEqual(tokenize_mock.call_count, 0)
@@ -371,9 +375,9 @@ class TestPaymentTransaction(PaymentCommon):
     def test_validate_amount_skips_validation_transactions(self):
         """Test that the amount validation is skipped for validation transactions."""
         tx = self._create_transaction("redirect", operation="validation")
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-            "._extract_amount_data",
+        with patch.object(
+            self.PaymentTransaction,
+            "_extract_amount_data",
             return_value={"amount": None, "currency_code": None},
         ):
             tx._validate_amount({})
@@ -401,7 +405,7 @@ class TestPaymentTransaction(PaymentCommon):
         tx = self._create_transaction("redirect", state="draft")
         tx.with_context(payment_safe_write=True)._set_pending()
         self.assertFalse(tx.is_post_processed)
-        self._run_post_processing(tx)
+        self._run_post_processing()
         self.assertTrue(tx.is_post_processed)
 
         tx.with_context(payment_safe_write=True)._set_done()
@@ -410,10 +414,105 @@ class TestPaymentTransaction(PaymentCommon):
     def test_validate_amount_uses_payment_minor_unit(self):
         self.currency_euro.rounding = 0.001
         tx = self._create_transaction("direct", amount=123.452, currency_id=self.currency_euro.id)
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-            "._extract_amount_data",
+        with patch.object(
+            self.PaymentTransaction,
+            "_extract_amount_data",
             return_value={"amount": 123.45, "currency_code": self.currency_euro.name},
         ):
             tx._validate_amount({})
         self.assertNotEqual(tx.state, "error")
+
+    def test_post_processing_cron_post_processes_transactions(self):
+        self._create_transaction("redirect", state="done")
+        self._run_post_processing()
+        self.assertEqual(self.post_process_mock.call_count, 1)
+
+    def test_post_processing_cron_skips_old_transactions(self):
+        self._create_transaction(
+            "redirect", state="done", last_state_change=fields.Datetime.now() - timedelta(days=2)
+        )
+        self._run_post_processing()
+        self.assertEqual(self.post_process_mock.call_count, 0)
+
+    def test_post_processing_cron_locks_records(self):
+        tx = self._create_transaction("redirect", state="done")
+        with patch.object(
+            self.PaymentTransaction, "try_lock_for_update", return_value=tx
+        ) as lock_mock:
+            self._run_post_processing()
+        self.assertEqual(lock_mock.call_count, 1)
+
+    @mute_logger("odoo.addons.payment.models.payment_transaction")
+    def test_post_processing_cron_releases_locks_when_post_processing_fails(self):
+        self._create_transaction("redirect", state="done")
+        with patch.object(self.IrCron, "_rollback_progress") as rollback_mock:
+            self.post_process_mock.side_effect = OperationalError
+            self._run_post_processing()
+            self.post_process_mock.side_effect = Exception
+            self._run_post_processing()
+        self.assertEqual(rollback_mock.call_count, 2)
+
+    def test_try_post_process_post_processes_transaction(self):
+        tx = self._create_transaction("redirect", state="done")
+        tx._try_post_process()
+        self.assertEqual(self.post_process_mock.call_count, 1)
+
+    def test_try_post_process_post_includes_source_transaction(self):
+        source_tx = self._create_transaction("redirect", state="done")
+        child_tx = source_tx._create_child_transaction(source_tx.amount)
+        child_tx._try_post_process()
+        self.assertEqual(self.post_process_mock.call_args[0][0], child_tx + source_tx)
+
+    @mute_logger("odoo.addons.payment.models.payment_transaction")
+    def test_try_post_process_rolls_back_on_failure(self):
+
+        def fail_post_process(txs):
+            txs.is_post_processed = True  # Have something to roll back
+            raise ValidationError
+
+        tx = self._create_transaction("redirect", state="done")
+        self.post_process_mock.side_effect = fail_post_process
+        tx._try_post_process()
+        self.assertFalse(tx.is_post_processed)
+
+    @mute_logger("odoo.addons.payment.models.payment_transaction")
+    def test_try_post_process_defers_to_cron_on_failure(self):
+        tx = self._create_transaction("redirect", state="done")
+        post_processing_cron = self.env.ref("payment.post_processing_cron")
+        post_processing_cron.active = True  # Allow triggering the cron
+        trigger_count = self.env["ir.cron.trigger"].search_count([
+            ("cron_id", "=", post_processing_cron.id)
+        ])
+        self.post_process_mock.side_effect = Exception
+        tx._try_post_process()
+        new_trigger_count = self.env["ir.cron.trigger"].search_count([
+            ("cron_id", "=", post_processing_cron.id)
+        ])
+        self.assertEqual(new_trigger_count, trigger_count + 1)
+
+    def test_try_post_process_notifies_client_on_success(self):
+        tx = self._create_transaction("redirect", state="done")
+        with patch.object(self.PaymentTransaction, "_notify_status") as notify_status_mock:
+            tx._try_post_process()
+        self.assertEqual(notify_status_mock.call_count, 1)
+
+    @mute_logger("odoo.addons.payment.models.payment_transaction")
+    def test_try_post_process_notifies_client_on_failure(self):
+        tx = self._create_transaction("redirect", state="done")
+        self.post_process_mock.side_effect = Exception
+        with patch.object(self.PaymentTransaction, "_notify_status") as notify_status_mock:
+            tx._try_post_process()
+        self.assertEqual(notify_status_mock.call_count, 1)
+
+    def test_post_process_with_lock_skips_post_processed_transactions(self):
+        tx = self._create_transaction("redirect", state="done", is_post_processed=True)
+        tx._post_process_with_lock()
+        self.assertFalse(self.post_process_mock.call_args.args[0])
+
+    def test_post_process_with_lock_acquires_lock(self):
+        tx = self._create_transaction("redirect", state="done")
+        with patch.object(
+            self.PaymentTransaction, "try_lock_for_update"
+        ) as try_lock_for_update_mock:
+            tx._post_process_with_lock()
+        self.assertEqual(try_lock_for_update_mock.call_count, 1)

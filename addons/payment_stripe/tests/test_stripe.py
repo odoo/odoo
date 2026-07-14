@@ -40,6 +40,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
     def test_tx_state_after_send_capture_request(self):
+        self._disable_process_patcher()
         self.provider.payment_method_ids.active = False  # TODO VCHU: remove in master
         self.provider.capture_manually = True
         tx = self._create_transaction("direct", state="authorized")
@@ -60,6 +61,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
     def test_tx_state_after_send_void_request(self):
+        self._disable_process_patcher()
         self.provider.payment_method_ids.active = False  # TODO VCHU: remove in master
         self.provider.capture_manually = True
         tx = self._create_transaction("redirect", state="authorized")
@@ -83,6 +85,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_stripe.controllers.main")
     def test_webhook_notification_confirms_transaction(self):
         """Test the processing of a webhook notification."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         url = self._build_url(StripeController._webhook_url)
         with patch(
@@ -137,6 +140,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_stripe.controllers.main")
     def test_webhook_notification_tokenizes_payment_method(self):
         """Test the processing of a webhook notification."""
+        self._disable_process_patcher()
         self.amount = 0.0
         self._create_transaction("dummy", operation="validation", tokenize=True)
         url = self._build_url(StripeController._webhook_url)

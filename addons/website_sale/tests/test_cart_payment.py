@@ -71,12 +71,13 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
 
     def test_payment_confirmation_mail(self):
         """Check that a salesperson gets assigned when sending payment confirmation mails."""
+        self._disable_post_process_patcher()
         salesperson = self.env.ref("base.user_admin")
         self.website.salesperson_id = salesperson
         self.cart.user_id = False
         self._update_transaction(self.tx, state="pending")
         with patch.object(self.env.registry["sale.order"], "_send_order_notification_mail") as mock:
-            self._run_post_processing(self.tx)
+            self._run_post_processing()
             self.assertEqual(mock.call_count, 1, "One payment confirmation mail should be sent")
             self.assertEqual(
                 self.cart.user_id,

@@ -157,6 +157,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
     def test_apply_updates_tokenizes_transaction(self):
         """Test that the transaction is tokenized when a charge request is successfully made on a
         transaction that saves payment details."""
+        self._disable_process_patcher()
         tx = self._create_transaction("direct", tokenize=True)
         with (
             patch(

@@ -3,7 +3,6 @@
 import logging
 
 from odoo import http
-from odoo.exceptions import LockError
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
 
@@ -17,7 +16,7 @@ class PaymentStatus(http.Controller):
     """Controller for the payment status page.
 
     It keeps track of the transaction being monitored via the user's session and exposes routes to
-    display it and trigger the immediate processing and post-processing of the transaction.
+    display it and trigger its immediate processing.
     """
 
     MONITORED_TX_ID_KEY = "__payment_monitored_tx_id__"
@@ -80,33 +79,6 @@ class PaymentStatus(http.Controller):
             return
 
         self.env["payment.transaction"]._run_processing()
-
-    @http.route("/payment/post_process", type="jsonrpc", auth="public")
-    def payment_post_process(self, **_kwargs):
-        """Fetch the transaction and run its post-processing.
-
-        :return: The post-processing values of the transaction.
-        :rtype: dict
-        """
-        monitored_tx = self._get_monitored_transaction()
-        if monitored_tx and not monitored_tx.is_post_processed:
-            post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
-            try:
-                post_processing_cron.lock_for_update(allow_referencing=True)
-            except LockError:  # The cron is already running.
-                # Schedule it to run ASAP in case it missed the current tx.
-                post_processing_cron.sudo()._trigger()
-            else:
-                post_processing_cron.sudo().method_direct_trigger()  # Run synchronously.
-                # Commit to see the updated values as cron runs in a separate cursor.
-                self.env.cr.commit()
-
-        return {
-            "state": monitored_tx.state,
-            "provider_code": monitored_tx.provider_code,
-            "is_post_processed": monitored_tx.is_post_processed,
-            "landing_route": monitored_tx.landing_route,
-        }
 
     @classmethod
     def monitor_transaction(cls, transaction):

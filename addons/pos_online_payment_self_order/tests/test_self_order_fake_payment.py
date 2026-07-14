@@ -31,6 +31,7 @@ class TestSelfOrderFakePayment(TestSelfOrderMobile):
         self.assertEqual(order.state, 'paid')
 
     def test_online_payment_mobile_no_confirmation_page(self):
+        self._disable_post_process_patcher()
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
@@ -68,6 +69,7 @@ class TestSelfOrderFakePayment(TestSelfOrderMobile):
         self.assertEqual(order.state, 'paid')
 
     def test_online_payment_kiosk_no_confirmation_page(self):
+        self._disable_post_process_patcher()
         self.pos_config.write({
             'self_ordering_mode': 'kiosk',
             'self_ordering_service_mode': 'counter',

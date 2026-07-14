@@ -4,6 +4,7 @@ from . import (
     common,
     http_common,
     test_flows,
+    test_ir_websocket,
     test_multicompany_flows,
     test_payment_capture_wizard,
     test_payment_data,

@@ -7,51 +7,49 @@ export class PaymentStatus extends Interaction {
     static selector = "div[name='o_payment_status']";
 
     setup() {
-        // Create a bus listener to trigger post-processing
-        this.notificationType = "payment.notify_transaction_processed";
+        // Create a bus listener to be notified when the transaction processing is complete
+        this.notificationType = "payment.transaction_status";
         this.notificationChannel = this.el.dataset.notificationChannel;
         this.onProcessingCompleteBind = this.onProcessingComplete.bind(this);
         this.busService = this.services.bus_service;
         this.busService.addChannel(this.notificationChannel);
         this.busService.subscribe(this.notificationType, this.onProcessingCompleteBind);
 
-        // Redirect automatically after 10 seconds to avoid waiting for post-processing forever.
+        // Redirect automatically after 10 seconds in case the channel subscription fails
         this.redirectTimeout = this.waitForTimeout(() => {
             this.redirectToLandingPage(this.el.dataset.landingRoute);
         }, 10000);
     }
 
     async willStart() {
-        // Trigger immediate processing instead of waiting for the next scheduled cron run
+        // Trigger immediate processing instead of waiting for the next triggered cron run
         await rpc("/payment/process");
-
-        // Trigger immediate post-processing as fallback for the case where the bus notification was
-        // sent before we had time to subscribe to the channel
-        await this.onProcessingComplete();
     }
 
     /**
-     * Run the post-processing and wait for it to redirect the user when a final state is reached.
+     * Redirect the user to the landing route when a final state is reached.
      *
-     * @returns {Promise<void>}
+     * @param {Object} statusData - The status values of the transaction
+     * @returns {void}
      */
-    async onProcessingComplete() {
-        const postProcessingData = await rpc(
-            "/payment/post_process", { csrf_token: odoo.csrf_token }
-        );
-        const { provider_code, state, is_post_processed, landing_route } = postProcessingData;
-        if (is_post_processed && PaymentStatus.getFinalStates(provider_code).has(state)) {
+    onProcessingComplete(statusData) {
+        const { reference, provider_code, state, landing_route } = statusData;
+        if (reference !== this.el.dataset.transactionReference) {  // Old notification replay
+            return;  // Ignore notifications for other transactions than the one being monitored
+        }
+        if (PaymentStatus.getFinalStates(provider_code).has(state)) {
             this.redirectToLandingPage(landing_route);
         }
     }
 
     /**
      * Clean up bus subscriptions and the timer and redirect to the landing route.
-     * @param {string} landingRoute - The landing route to be redirected to.
+     *
+     * @param {string} landingRoute - The landing route to be redirected to
      * @returns {void}
      */
     redirectToLandingPage(landingRoute) {
-        // Cleanup before leaving the page, make sure bus listener is disposed properly on redirect.
+        // Cleanup before leaving the page; make sure bus listener is disposed properly on redirect
         clearTimeout(this.redirectTimeout);
         this.busService.unsubscribe(this.notificationType, this.onProcessingCompleteBind);
         this.busService.deleteChannel(this.notificationChannel);

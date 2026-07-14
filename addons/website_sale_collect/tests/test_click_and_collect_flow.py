@@ -41,6 +41,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         Verify that when `Pick Up In Store` is the only active delivery method with the only wh,
         the checkout flow automatically sets the default store location.
         """
+        self._disable_process_patcher()
         self.env["delivery.carrier"].search([]).active = False
         self.in_store_dm.active = True
         self.in_store_dm.is_published = True

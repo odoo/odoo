@@ -44,6 +44,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     @mute_logger("odoo.addons.payment_buckaroo.models.payment_transaction")
     def test_feedback_processing(self):
+        self._disable_process_patcher()
         payment_data = BuckarooController._normalize_data_keys(self.sync_payment_data)
         tx = self._create_transaction(flow="redirect")
         tx.with_context(payment_safe_write=True)._process(payment_data)
@@ -69,6 +70,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_buckaroo.controllers.main")
     def test_webhook_notification_confirms_transaction(self):
         """Test the processing of a webhook notification."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         url = self._build_url(BuckarooController._webhook_url)
         with patch("odoo.addons.payment.utils.verify_signature"):
