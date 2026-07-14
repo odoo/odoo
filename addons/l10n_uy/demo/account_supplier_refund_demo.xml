@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="True">
+
+    <!-- Create draft refund for supplier invoice 1 -->
+    <record id="demo_sup_refund_invoice_3" model="account.move.reversal" context="{'allowed_company_ids': [ref('base.demo_company_uy')]}">
+        <field name="reason">Mercadería defectuosa</field>
+        <field name="l10n_latam_document_number">BB0123456</field>
+        <field name="move_ids" eval="[Command.link(ref('account.%s_demo_sup_invoice_1' % ref('base.demo_company_uy')))]"/>
+        <field name="l10n_latam_document_type_id" ref="l10n_uy.dc_cn_e_inv"/>
+        <field name="journal_id" search="[('company_id', '=', ref('base.demo_company_uy')), ('type', '=', 'purchase')]"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <function model="account.move.reversal" name="refund_moves" eval="[ref('demo_sup_refund_invoice_3')]"/>
+
+    <!-- Create draft refund for supplier invoice 2 -->
+    <record id="demo_sup_refund_invoice_2" model="account.move.reversal" context="{'allowed_company_ids': [ref('base.demo_company_uy')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="l10n_latam_document_number">BB0123457</field>
+        <field name="move_ids" eval="[Command.link(ref('account.%s_demo_sup_invoice_2' % ref('base.demo_company_uy')))]"/>
+        <field name="l10n_latam_document_type_id" ref="l10n_uy.dc_cn_e_inv_exp"/>
+        <field name="journal_id" search="[('company_id', '=', ref('base.demo_company_uy')), ('type', '=', 'purchase')]"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <function model="account.move.reversal" name="refund_moves" eval="[ref('demo_sup_refund_invoice_2')]"/>
+
+    <!-- Create draft refund for supplier invoice 7 -->
+    <record id="demo_sup_refund_invoice_1" model="account.move.reversal" context="{'allowed_company_ids': [ref('base.demo_company_uy')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="l10n_latam_document_number">BB0123458</field>
+        <field name="move_ids" eval="[Command.link(ref('account.%s_demo_sup_invoice_7' % ref('base.demo_company_uy')))]"/>
+        <field name="l10n_latam_document_type_id" ref="l10n_uy.dc_cn_e_ticket"/>
+        <field name="journal_id" search="[('company_id', '=', ref('base.demo_company_uy')), ('type', '=', 'purchase')]"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <function model="account.move.reversal" name="refund_moves" eval="[ref('demo_sup_refund_invoice_1')]"/>
+
+</odoo>

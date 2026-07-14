@@ -40,22 +40,6 @@ class AccountChartTemplate(models.AbstractModel):
             except (UserError, ValidationError):
                 _logger.exception('Error while posting invoices')
 
-        # Post the reversal moves
-        invoices_to_revert = (
-            self.ref('demo_refund_invoice_1')
-            + self.ref('demo_refund_invoice_2')
-            + self.ref('demo_refund_invoice_3')
-            + self.ref('demo_refund_invoice_4')
-            + self.ref('demo_sup_refund_invoice_3')
-            + self.ref('demo_sup_refund_invoice_2')
-            + self.ref('demo_sup_refund_invoice_1')
-        )
-        for reversal in invoices_to_revert:
-            try:
-                self.env['account.move'].browse(reversal.refund_moves().get('res_id')).action_post()
-            except (UserError, ValidationError):
-                _logger.exception('Error while posting reversal moves')
-
     @template(model='account.move', demo=True)
     def _get_demo_data_move(self, template_code):
         if template_code != 'uy':
@@ -370,68 +354,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template(model='mail.activity', demo=True)
     def _get_demo_data_mail_activity(self, template_code):
         return {} if template_code == 'uy' else super()._get_demo_data_mail_activity(template_code)
-
-    @template(template='uy', model='account.move.reversal', demo=True)
-    def _l10n_uy_get_demo_data_move_reversal(self, company=False):
-        return {
-            # Account Customer Refund
-
-            # Create draft refund for invoice 3
-            self.company_xmlid('demo_refund_invoice_1'): {
-                'reason': 'Venta Cancelada',
-                'move_ids': 'demo_invoice_1',
-                'journal_id': 'sale',
-                'date': time.strftime('%Y-%m') + '-01'
-            },
-            # Create draft refund for invoice 4
-            self.company_xmlid('demo_refund_invoice_2'): {
-                'reason': 'Venta Cancelada',
-                'move_ids': 'demo_invoice_4',
-                'l10n_latam_document_type_id': 'l10n_uy.dc_cn_e_ticket',
-                'journal_id': 'sale',
-                'date': time.strftime('%Y-%m') + '-01'
-            },
-            self.company_xmlid('demo_refund_invoice_3'): {
-                'reason': 'Venta Cancelada',
-                'move_ids': 'demo_invoice_5',
-                'l10n_latam_document_type_id': 'l10n_uy.dc_cn_e_inv_exp',
-                'journal_id': 'sale',
-                'date': time.strftime('%Y-%m') + '-01'
-            },
-            self.company_xmlid('demo_refund_invoice_4'): {
-                'reason': 'Venta Cancelada',
-                'move_ids': 'demo_invoice_6',
-                'l10n_latam_document_type_id': 'l10n_uy.dc_cn_e_ticket',
-                'journal_id': 'sale',
-                'date': time.strftime('%Y-%m') + '-01'
-            },
-
-            # Account supplier refund
-            self.company_xmlid('demo_sup_refund_invoice_3'): {
-                'reason': 'Mercadería defectuosa',
-                'l10n_latam_document_number': 'BB0123456',
-                'move_ids': 'demo_sup_invoice_1',
-                'l10n_latam_document_type_id': 'l10n_uy.dc_cn_e_inv',
-                'journal_id': 'purchase',
-                'date': time.strftime('%Y-%m') + '-01'
-            },
-            self.company_xmlid('demo_sup_refund_invoice_2'): {
-                'reason': 'Venta cancelada',
-                'l10n_latam_document_number': 'BB0123457',
-                'move_ids': 'demo_sup_invoice_2',
-                'l10n_latam_document_type_id': 'l10n_uy.dc_cn_e_inv_exp',
-                'journal_id': 'purchase',
-                'date': time.strftime('%Y-%m') + '-01'
-            },
-            self.company_xmlid('demo_sup_refund_invoice_1'): {
-                'reason': 'Venta cancelada',
-                'l10n_latam_document_number': 'BB0123458',
-                'move_ids': 'demo_sup_invoice_7',
-                'l10n_latam_document_type_id': 'l10n_uy.dc_cn_e_ticket',
-                'journal_id': 'purchase',
-                'date': time.strftime('%Y-%m') + '-01'
-            },
-        }
 
     @template(template='uy', model='res.partner', demo=True)
     def _l10n_uy_get_demo_data_res_partner(self, company=False):
