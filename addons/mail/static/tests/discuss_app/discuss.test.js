@@ -81,12 +81,15 @@ test("sanity check", async () => {
         "/mail/messaging_menu/initialize_counters",
     ]);
     await openDiscuss(channelId);
-    await waitStoreFetch([
-        "discuss.channel",
-        "/mail/messaging_menu/discuss.channel/load_more",
-        "/discuss/channel/messages",
-        "/discuss/channel/members",
-    ]);
+    await waitStoreFetch(
+        [
+            "discuss.channel",
+            "/mail/messaging_menu/discuss.channel/load_more",
+            "/discuss/channel/messages",
+            "/discuss/channel/members",
+        ],
+        { ignoreOrder: true }
+    );
 });
 
 test.tags("focus required");

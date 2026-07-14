@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, computed, props, proxy, signal, types } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
@@ -11,6 +10,7 @@ import { Composer } from "@mail/core/common/composer";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
 import { attClassObjectToString } from "@mail/utils/common/format";
+import { useOnChange } from "@mail/utils/common/hooks";
 
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
@@ -44,9 +44,9 @@ export class DiscussContent extends Component {
         this.selfGuestName = computed(() => this.store.self_guest?.name);
         this.threadDisplayName = computed(() => this.thread?.displayName);
         this.threadDescription = computed(() => this.thread?.description);
-        useLayoutEffect(
-            () => this.actionPanelAutoOpenFn(),
-            () => [this.thread]
+        useOnChange(
+            () => [this.thread],
+            () => this.actionPanelAutoOpenFn()
         );
         useDynamicInterval(() => {
             const formatted = formatLocalDateTime(
