@@ -14,6 +14,21 @@ def get_random_ui_color_from_seed(seed: str):
     return avatar_bg_colors[num % len(avatar_bg_colors)]
 
 
+def get_light_ui_color_from_seed(seed: str):
+    """Return a stable pair of HSL colors derived from ``seed``.
+
+    The background is a very light pastel and the foreground a darker shade of
+    the same hue, so text stays readable while the avatar stays visually quiet.
+    The hue only depends on ``seed``, so a given seed always yields the same pair.
+
+    :param str seed: value the colors are derived from (stays constant per subject).
+    :return: a ``(background, foreground)`` pair of ``hsl(...)`` color strings.
+    :rtype: tuple[str, str]
+    """
+    hue = int(sha512(seed.encode()).hexdigest(), 16) % 360
+    return f"hsl({hue}, 70%, 90%)", f"hsl({hue}, 45%, 35%)"
+
+
 class AvatarMixin(models.AbstractModel):
     _name = 'avatar.mixin'
     _inherit = ['image.mixin']

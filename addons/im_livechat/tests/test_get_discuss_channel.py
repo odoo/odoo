@@ -2,12 +2,15 @@
 
 from datetime import timedelta
 from freezegun import freeze_time
+from io import BytesIO
+from PIL import Image
 from unittest.mock import patch, PropertyMock
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import new_test_user
+from odoo.tools import BinaryBytes
 
 
 class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
@@ -22,6 +25,37 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 channel_info["first_agent_id"] for channel_info in discuss_channels
             ]
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
+
+    def test_livechat_avatar_uses_lang_shortcode(self):
+        lang = self.env["res.lang"].search([("code", "=", "en_US")], limit=1)
+        channel = self.env["discuss.channel"].create({
+            "name": "Visitor 1",
+            "channel_type": "livechat",
+            "livechat_channel_id": self.livechat_channel.id,
+            "livechat_lang_id": lang.id,
+            "channel_member_ids": [Command.create({"partner_id": self.operators[0].partner_id.id})],
+        })
+        # a photo-less visitor: the avatar shows the language short code (e.g. "EN"), seeded by the channel
+        self.assertEqual(
+            channel.avatar_128.content,
+            channel._generate_text_avatar("EN", str(channel.id)).content,
+        )
+
+        # a visitor with a real photo: defer to that photo instead of the language short code
+        image = BytesIO()
+        Image.new("RGB", (1, 1)).save(image, format="PNG")
+        visitor = self.env["res.partner"].create({"name": "Rajesh", "image_1920": BinaryBytes(image.getvalue())})
+        channel_with_photo = self.env["discuss.channel"].create({
+            "name": "Visitor 2",
+            "channel_type": "livechat",
+            "livechat_channel_id": self.livechat_channel.id,
+            "livechat_lang_id": lang.id,
+            "channel_member_ids": [
+                Command.create({"partner_id": self.operators[0].partner_id.id}),
+                Command.create({"partner_id": visitor.id, "livechat_member_type": "visitor"}),
+            ],
+        })
+        self.assertFalse(channel_with_photo.avatar_128)
 
     def test_channel_get_livechat_visitor_info(self):
         self.maxDiff = None

@@ -274,6 +274,29 @@ class DiscussChannel(models.Model):
             start = record.create_date or fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
 
+    @api.depends("livechat_lang_id", "channel_member_ids.livechat_member_type")
+    def _compute_avatar_128(self):
+        # extend the base dependencies so the avatar refreshes when the visitor
+        # language or the visitor themselves change
+        super()._compute_avatar_128()
+
+    def _generate_avatar(self):
+        """Show the visitor's language short code (e.g. ``"EN"``) for live chats.
+
+        This is only a fallback: when the visitor has a real avatar (an uploaded
+        partner photo) or the visitor language is unknown, ``False`` is returned
+        so the visitor's own avatar is shown instead.
+
+        :return: the SVG avatar bytes, or ``False`` to defer to another avatar.
+        :rtype: odoo.tools.BinaryBytes | bool
+        """
+        if self.channel_type == "livechat":
+            visitor = self.channel_member_ids.filtered(lambda member: member.livechat_member_type == "visitor")
+            if self.livechat_lang_id and not visitor.partner_id.image_128:
+                return self._generate_text_avatar(self.livechat_lang_id.code.split("_")[0].upper(), str(self.id))
+            return False
+        return super()._generate_avatar()
+
     @api.depends("livechat_end_dt")
     def _compute_livechat_status(self):
         for channel in self.filtered(lambda c: c.livechat_end_dt):
