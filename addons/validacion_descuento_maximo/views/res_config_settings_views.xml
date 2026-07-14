@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="res_config_settings_view_form_discount_limit" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.discount.limit</field>
         <field name="model">res.config.settings</field>
-        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
-
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//block[@name='companies_setting_container']" position="inside">
-                <setting string="Límite de descuento permitido"
-                         help="Define el porcentaje máximo de descuento permitido antes de requerir aprobación.">
-                    <field name="discount_limit_percentage"/>
-                </setting>
+            <xpath expr="//app[@name='sale_management']" position="inside">
+                <block title="Control de Descuentos" name="discount_limit_block">
+                    <setting string="Límite de descuento (%)" help="Establece el porcentaje máximo de descuento permitido por línea de pedido sin requerir aprobación.">
+                        <field name="discount_limit_percentage"/>
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>
-
 </odoo>
