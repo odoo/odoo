@@ -17,7 +17,7 @@
                     <tr t-foreach="lot_values" t-as="snln_line">
                         <td class="ps-1"><t t-out="snln_line['product_name']">Bacon</t></td>
                         <td class="text-end pe-1">
-                            <t t-out="snln_line['quantity']">6.00</t><t groups="uom.group_uom">&#160;<t t-out="snln_line['uom_name']">units</t></t>
+                            <t t-out="float(snln_line['quantity'])" t-options="{'widget': 'float', 'min_precision': 0}">6</t><t groups="uom.group_uom">&#160;<t t-out="snln_line['uom_name']">units</t></t>
                         </td>
                         <td class="text-end pe-1"><t t-out="snln_line['lot_name']">BC46282798</t></td>
                     </tr>

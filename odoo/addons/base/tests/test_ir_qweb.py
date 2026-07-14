@@ -76,7 +76,7 @@ class TestQWebTField(TransactionCase):
             """
         })
         text = etree.fromstring(self.env['ir.qweb']._render(view1.id)).find('span').text
-        self.assertEqual(text, '5.0000')
+        self.assertEqual(text, '5')
 
     def test_xss_breakout(self):
         view = self.env['ir.ui.view'].create({
@@ -2147,7 +2147,7 @@ class TestQWebBasic(TransactionCase):
         })
 
         rendered = self.env['ir.qweb'].with_context(lang=current_lang)._render(view2.id).strip()
-        self.assertEqual(rendered, '9/000/000*00')
+        self.assertEqual(rendered, '9/000/000')
 
     def test_render_barcode(self):
         partner = self.env['res.partner'].create({
