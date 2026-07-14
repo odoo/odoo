@@ -1,6 +1,8 @@
+import { rpc } from "@web/core/network/rpc";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
+
 import { WebClient } from "@web/webclient/webclient";
 import { onWillDestroy, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -100,19 +102,9 @@ patch(WebClient.prototype, {
             kwargs.vapid_public_key = this._arrayBufferToBase64(
                 subscription.options.applicationServerKey
             );
-            // Use the dedicated HTTP route (instead of a plain ORM call) so the server
+            // Use the dedicated JSON-RPC route (instead of a plain ORM call) so the server
             // can set the refresh token as an HttpOnly cookie in the same response.
-            const resp = await fetch("/web/push/device/register", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(kwargs),
-            });
-            // Guard JSON parsing: a 500 error may return an HTML body, not JSON.
-            let result = {};
-            try {
-                result = await resp.json();
-            } catch {}
+            const result = await rpc("/web/push/device/register", kwargs);
             // Forward the access token to the service worker for session-independent
             // subscription renewal (pushsubscriptionchange without an active session).
             if (result?.token && navigator.serviceWorker?.controller) {
@@ -121,11 +113,10 @@ patch(WebClient.prototype, {
                     payload: { token: result.token },
                 });
             }
-            if (!resp.ok) {
+            if (result?.error) {
                 // Mimic the RPC error shape so the InvalidVapidError retry check below works.
-                const serverError = result?.error || "registration_failed";
-                const err = new Error(serverError);
-                err.data = { name: serverError };
+                const err = new Error(result.error);
+                err.data = { name: result.error };
                 throw err;
             }
         } catch (e) {
