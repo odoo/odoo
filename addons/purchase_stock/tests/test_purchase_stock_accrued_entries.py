@@ -316,3 +316,26 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
             {'account_id': stock_price_diff_acc_id.id, 'debit': 300, 'credit': 0},
             {'account_id': account_stock_variation.id, 'debit': 0, 'credit': 300},
         ])
+
+    def test_purchase_stock_accruals_ordered_quantities_no_receipt(self):
+        """Test that accrued expense entries are created from the ordered quantity for
+        a storable product with ordered-quantity control."""
+        self.purchase_order.order_line.product_id.update({
+            'is_storable': True,
+            'purchase_method': 'purchase',
+        })
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order',
+            'active_ids': self.purchase_order.ids,
+        }).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.context_today(self),
+        })
+        self.assertRecordValues(self.env['account.move'].search(wizard.create_entries()['domain']).line_ids, [
+            # reverse move lines
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 300},
+            {'account_id': wizard.account_id.id, 'debit': 300, 'credit': 0},
+            # move lines
+            {'account_id': self.account_expense.id, 'debit': 300, 'credit': 0},
+            {'account_id': wizard.account_id.id, 'debit': 0, 'credit': 300},
+        ])
