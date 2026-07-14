@@ -128,6 +128,10 @@ class AccountMove(models.Model):
         copy=False,
         init_storage=lambda model: None,  # avoid timeout on large databases
     )
+    l10n_it_available_document_type_ids = fields.Many2many(
+        comodel_name='l10n_it.document.type',
+        compute='_compute_l10n_it_available_document_type_ids',
+    )
 
     l10n_it_convention_code = fields.Char(
         string="Order/Convention Code",
@@ -180,6 +184,20 @@ class AccountMove(models.Model):
                 continue
 
             move.l10n_it_document_type = document_type.get(move._l10n_it_edi_get_document_type())
+
+    @api.depends('move_type', 'debit_origin_id')
+    def _compute_l10n_it_available_document_type_ids(self):
+        document_types = self.env['l10n_it.document.type'].search([])
+        for move in self:
+            if move.debit_origin_id:
+                if move.is_sale_document(include_receipts=True):
+                    move_type = 'sale_debit_note'
+                else:
+                    move_type = 'purchase_debit_note'
+            else:
+                move_type = move.move_type
+            available_document_type_ids = document_types.filtered(lambda doc_type: move_type in doc_type.move_types or [])
+            move.l10n_it_available_document_type_ids = available_document_type_ids or document_types
 
     @api.depends('commercial_partner_id.l10n_it_pa_index', 'company_id')
     def _compute_l10n_it_partner_pa(self):

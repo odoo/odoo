@@ -8,13 +8,7 @@ class L10n_ItDocumentType(models.Model):
 
     name = fields.Char(required=True, help='The document type name', translate=True)
     code = fields.Char(required=True)
-    # not used, to be removed in master
-    type = fields.Selection(
-        selection=[
-            ('sale', "Sale"),
-            ('purchase', "Purchase"),
-        ],
-    )
+    move_types = fields.Json()
 
     def _compute_display_name(self):
         for document_type in self:
