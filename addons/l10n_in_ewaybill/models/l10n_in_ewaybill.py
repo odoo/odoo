@@ -667,7 +667,7 @@ class L10nInEwaybill(models.Model):
                         "Addr1": lambda p: p.street and p.street[:120] or "",
                         "Addr2": lambda p: p.street2 and p.street2[:120] or "",
                         "Place": lambda p: p.city and p.city[:50] or "",
-                        "Pincode": lambda p: int(p.zip) if p.country_id.code == "IN" else 999999,
+                        "Pincode": lambda p: p.zip and int(p.zip) if p.country_id.code == "IN" else 999999,
                     }.items(),
                     partner_detail={'from': self.partner_ship_from_id, 'to': self.partner_ship_to_id}.items()
                 ),
