@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { ShareTargetDialog } from "@web/webclient/share_target/share_target_dialog";
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const shareTargetService = {
     dependencies: ["dialog"],
     /**

@@ -55,6 +55,7 @@ class DefaultFooter extends Component {
     }
 }
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const commandService = {
     dependencies: ["dialog", "hotkey", "ui"],
     start(env, { dialog, hotkey: hotkeyService, ui }) {

@@ -82,16 +82,10 @@ class TestTypeScript(BaseCase):
             cmd = [tsc, "-p", f.name]
             return subprocess.run(cmd, capture_output=True, encoding="utf-8", check=False)
 
-    def _filter_error_output(self, module: str, tsc_output: str):
-        all_errors = tsc_output.splitlines()
-        module_errors = [error for error in all_errors if f"{module}/static/src" in error]
-        return "\n".join(module_errors)
-
     def test_typescript(self):
         for module in MODULES_TO_CHECK:
             with self.subTest(module=module):
                 ts_config = self._build_ts_config_for_module(module)
                 tsc_result = self._run_typescript_for_ts_config(ts_config)
-                errors = self._filter_error_output(module, tsc_result.stdout)
-                if errors:
-                    self.fail(errors)
+                if tsc_result.returncode != 0:
+                    self.fail(tsc_result.stdout)
