@@ -52,6 +52,39 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
         'odoo.addons.payment_stripe.controllers.main',
         'odoo.addons.payment_stripe.models.payment_transaction',
     )
+    def test_refund_webhook_notification_matches_refund_of_capture_child(self):
+        """ Test that refund webhooks match refunds created from capture transactions. """
+        source_tx = self._create_transaction('direct', state='done')
+        capture_tx = source_tx._create_child_transaction(
+            source_tx.amount, state='done', provider_reference='pi_capture'
+        )
+        refund_tx = capture_tx._create_child_transaction(
+            capture_tx.amount,
+            is_refund=True,
+            state='done',
+            provider_reference=self.refund_object['id'],
+        )
+        url = self._build_url(StripeController._webhook_url)
+        payload = dict(self.refund_payment_data)
+        payload['data'] = dict(payload['data'])
+        payload['data']['object'] = dict(payload['data']['object'], captured=True)
+        with patch(
+            'odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature'
+        ), patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
+        ) as process_mock:
+            self._make_json_request(url, data=payload)
+        refund_txs = self.env['payment.transaction'].search([
+            ('operation', '=', 'refund'),
+            ('source_transaction_id', 'in', (source_tx | capture_tx).ids),
+        ])
+        self.assertEqual(process_mock.call_count, 0)
+        self.assertEqual(refund_txs, refund_tx)
+
+    @mute_logger(
+        'odoo.addons.payment_stripe.controllers.main',
+        'odoo.addons.payment_stripe.models.payment_transaction',
+    )
     def test_void_webhook_notification_does_not_trigger_processing(self):
         self.provider.capture_manually = True
         tx = self._create_transaction('direct', state='authorized')
