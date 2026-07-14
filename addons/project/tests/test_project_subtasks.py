@@ -162,6 +162,18 @@ class TestProjectSubtasks(TestProjectCommon):
             self.assertFalse(orphan_subtask.project_id, "The project should be removed as expected.")
             self.assertFalse(orphan_subtask.project_id, "The Parent should be removed as expected.")
 
+    def test_subtask_partner_follows_parent_not_project(self):
+        """ A subtask's customer follows its parent task, not its own project. """
+        project = self.env['project.project'].create({
+            'name': 'Project with partner',
+            'partner_id': self.partner_2.id,
+        })
+        with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
+            with task_form.child_ids.new() as child_form:
+                child_form.name = 'Subtask'
+                child_form.project_id = project
+        self.assertEqual(self.task_1.child_ids.partner_id, self.task_1.partner_id)
+
     def test_subtask_stage(self):
         """
             The stage of the new child must be the default one of the project
