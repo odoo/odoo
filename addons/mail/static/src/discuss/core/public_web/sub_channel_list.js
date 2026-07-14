@@ -36,6 +36,17 @@ export class SubChannelList extends Component {
     }
 
     /**
+     * Sub channels to display. In browse mode the full list is read straight
+     * from the record: the hook's `results` only settles back to it one render
+     * after `searchTerm` is cleared (its reset runs in a layout effect), and
+     * that lag would briefly expose the load-more sentinel next to the short
+     * filtered list, triggering a spurious extra page load.
+     */
+    get subChannels() {
+        return this.search.searchTerm ? this.search.results : this.props.channel.sub_channel_ids;
+    }
+
+    /**
      * @type {ReturnType<typeof import("@mail/discuss/core/public_web/sub_channel_preview").subChannelPreviewOnClickType>["type"]}
      */
     async onClickSubChannel(ev, { channelAtRender }) {
