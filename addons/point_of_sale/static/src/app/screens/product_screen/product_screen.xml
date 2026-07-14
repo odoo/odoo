@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductScreen">
-        <div class="product-screen d-flex h-100">
-            <div t-att-class="{'flex-grow-1 w-100 mw-100': this.ui.isSmall, 'flex-shrink-0': !this.ui.isSmall, 'd-none': this.ui.isSmall and this.pos.mobile_pane !== 'left'}"
-                class="leftpane d-flex flex-column pb-2 border-end bg-view">
+        <div class="product-screen d-flex h-100" t-att-class="{'flex-row-reverse': this.pos.isLayoutReversed and !this.ui.isSmall}">
+            <div t-att-class="{'flex-grow-1 w-100 mw-100': this.ui.isSmall, 'flex-shrink-0': !this.ui.isSmall, 'd-none': this.ui.isSmall and this.pos.mobile_pane !== 'left', 'border-start': this.pos.isLayoutReversed and !this.ui.isSmall, 'border-end': !this.pos.isLayoutReversed or this.ui.isSmall}"
+                class="leftpane d-flex flex-column pb-2 bg-view">
                 <OrderSummary />
                 <div class="pads px-2">
                     <div class="control-buttons d-flex justify-content-between gap-2 w-100 py-2">
