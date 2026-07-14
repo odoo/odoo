@@ -83,4 +83,4 @@ class TestRegistry(TransactionCase):
             self.fail('\n'.join(info))
 
     def test_setup_models_field_leak_partial(self):
-        self.test_setup_models_field_leak(('res.users', 'res.company'))
+        self.test_setup_models_field_leak(('test_orm.users', 'test_orm.business'))
