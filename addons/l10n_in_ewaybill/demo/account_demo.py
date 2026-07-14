@@ -39,8 +39,9 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             f'ewaybill_{invoice}': {
                 **default_ewaybill_vals,
-                'account_move_id': invoice,
+                'account_move_id': invoice_id,
                 'company_id': self.env.company.id,
             }
             for invoice in invoices
+            if (invoice_id := self.env['ir.model.data']._xmlid_to_res_id(self.company_xmlid(invoice), raise_if_not_found=False))
         }
