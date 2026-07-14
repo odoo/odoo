@@ -197,7 +197,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                         account = stock_variation_account if stock_variation_account else self._get_computed_account(order, order_line.product_id, is_purchase)
                         if any(tax.price_include for tax in order_line.tax_ids):
                             # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
-                            qty_to_invoice = order_line.qty_received_at_date - order_line.qty_invoiced_at_date
+                            qty_to_invoice = order_line._get_qty_to_invoice_at_date()
                             price_subtotal = order_line.tax_ids.compute_all(
                                 price_unit,
                                 currency=order_line.order_id.currency_id,
@@ -205,7 +205,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                                 product=order_line.product_id,
                                 partner=order_line.order_id.partner_id)['total_excluded']
                         else:
-                            price_subtotal = (order_line.qty_received_at_date - order_line.qty_invoiced_at_date) * price_unit
+                            price_subtotal = order_line._get_qty_to_invoice_at_date() * price_unit
                         amount_currency = order_line.currency_id.round(price_subtotal)
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         label = _(
