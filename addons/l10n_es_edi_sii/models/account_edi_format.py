@@ -474,6 +474,7 @@ class AccountEdiFormat(models.Model):
             serv._binding_options['address'] = connection_vals['test_url']
 
         error_msg = None
+        blocking_lvl = None
         try:
             if cancel:
                 if invoices[0].is_sale_document():
@@ -487,6 +488,10 @@ class AccountEdiFormat(models.Model):
                     res = serv.SuministroLRFacturasRecibidas(header, info_list)
         except requests.exceptions.SSLError as error:
             error_msg = _("The SSL certificate could not be validated.")
+        # If the receiver intentionally rejects the message, he migth return a Fault
+        except zeep.exceptions.Fault as soapfault:
+            blocking_lvl = 'error'
+            error_msg = self.env._("Fault error:\n[%(code)s] %(message)s", code=soapfault.code, message=soapfault.message)
         except (zeep.exceptions.Error, requests.exceptions.ConnectionError) as error:
             error_msg = _("Networking error:\n%s", error)
         except Exception as error:
@@ -495,7 +500,7 @@ class AccountEdiFormat(models.Model):
         if error_msg:
             return {inv: {
                 'error': error_msg,
-                'blocking_level': 'warning',
+                'blocking_level': blocking_lvl or 'warning',
             } for inv in invoices}
 
         # Process response.
