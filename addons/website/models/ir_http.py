@@ -323,11 +323,12 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _serve_redirect(cls):
         req_page = request.httprequest.path
+        req_page_noslug = ir_http._UNSLUG_RE.sub(r'\2', req_page)
         req_page_with_qs = request.httprequest.environ['REQUEST_URI']
         domain = (
             Domain('redirect_type', 'in', ('301', '302'))
             # trailing / could have been removed by server_page
-            & Domain('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
+            & Domain('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/', req_page_noslug])
             & request.website.website_domain()
         )
         return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
@@ -350,10 +351,15 @@ class IrHttp(models.AbstractModel):
 
         redirect = cls._serve_redirect()
         if redirect:
+            redirect_to = redirect.url_to
+            if redirect_to.startswith('/') and ir_http._UNSLUG_RE.search(redirect_to):
+                # rewrite the url to add or fix the slug
+                redirect_to = request.env['ir.http']._url_localized(redirect_to, request.lang.code)
             return request.redirect(
-                _build_url_w_params(redirect.url_to, request.params),
+                _build_url_w_params(redirect_to, request.params),
                 code=redirect.redirect_type,
-                local=False)  # safe because only designers can specify redirects
+                local=False,  # safe because only designers can specify redirects
+            )
 
     @classmethod
     def _get_exception_code_values(cls, exception):
