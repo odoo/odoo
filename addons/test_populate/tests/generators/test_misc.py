@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 from odoo.tests import TransactionCase
+from odoo.tools import frozendict
 
 from odoo.addons.populate.generators import Counter, Cycle, Eval
 
@@ -179,13 +180,25 @@ class TestEvalGenerator(TransactionCase):
         value = generator.next({'first': name, 'second': category})
         self.assertEqual(value, name.lower() + ' ' + category.upper())
 
-    def test_eval_generator_rejects_unsafe_kwargs(self):
+    def test_eval_generator_validates_kwargs(self):
         generator = Eval(
             target=self.price_field,
             env=self.env,
             expr='price',
             valid_targets=['price'],
         )
+
+        model = self.env['test_populate.product']
+        safe_values = (
+            {1, 2},
+            frozenset({1, 2}),
+            {model: 'recordset key'},
+            {frozendict({'frozen': True}): 'frozendict key'},
+            frozendict({frozenset({1, 2}): model}),
+        )
+        for value in safe_values:
+            with self.subTest(value=value):
+                self.assertIs(generator.evaluation(price=value), value)
 
         with self.assertRaises(TypeError):
             generator.evaluation(price=object())

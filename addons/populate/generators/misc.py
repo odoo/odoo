@@ -3,7 +3,7 @@ from itertools import count, cycle
 from odoo import Command
 from odoo.tools.safe_eval import safe_eval
 
-from ..utils.expression import check_eval_kwargs, get_undefined_names
+from ..utils.expression import check_eval_args, get_undefined_names
 from .generator import Generator
 
 
@@ -144,7 +144,7 @@ class Eval(Generator):
 
         if callable(evaluation):
             def checked(**eval_kwargs):
-                check_eval_kwargs(eval_kwargs)
+                check_eval_args(**eval_kwargs)
                 return evaluation(**eval_kwargs)
 
             self.evaluation = checked

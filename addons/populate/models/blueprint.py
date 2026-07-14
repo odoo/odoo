@@ -6,6 +6,7 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from ..utils import loading, xml
+from ..utils.orm import get_model_method
 
 DEFINITION_PREFETCH_GROUP = 'Definitions'
 
@@ -76,7 +77,7 @@ class Blueprint(models.Model):
                     fail(blueprint, block, self.env._("Missing 'type'."))
                     continue  # The operation type decides which id/ref/domain rules apply.
 
-                if block_type not in ('create', 'write'):
+                if block_type not in ('create', 'write', 'function'):
                     fail(blueprint, block, self.env._("Unknown block type '%(type)s'.", type=block_type))
                     continue  # Unknown operations have no validation rules.
 
@@ -86,8 +87,23 @@ class Blueprint(models.Model):
                 if block_type == 'write' and 'id' in block:
                     fail(blueprint, block, self.env._("Write blocks use 'ref', not 'id'."))
 
-                if block_type == 'write' and not block.get('ref') and not block.get('domain'):
-                    fail(blueprint, block, self.env._("Write blocks require 'ref' or 'domain'."))
+                if block_type == 'function' and 'id' in block:
+                    fail(blueprint, block, self.env._("Function blocks use 'ref', not 'id'."))
+
+                if block_type == 'create' and 'batched' in block:
+                    fail(blueprint, block, self.env._("Create blocks cannot define 'batched'."))
+
+                if block_type == 'function' and not block.get('name'):
+                    fail(blueprint, block, self.env._("Function blocks require 'name'."))
+
+                if block_type == 'function' and block.get('fields'):
+                    fail(blueprint, block, self.env._("Function blocks use 'arg', not 'field'."))
+
+                if block_type in ('create', 'write') and block.get('args'):
+                    fail(blueprint, block, self.env._(
+                        "%(type)s blocks cannot define 'arg'.",
+                        type=block_type.capitalize(),
+                    ))
 
                 if 'model' not in block:
                     fail(blueprint, block, self.env._("Missing 'model'."))
@@ -111,11 +127,40 @@ class Blueprint(models.Model):
                         fields=', '.join(repr(field) for field in unknown_fields),
                     ))
 
-                duplicate_names: set[str] = block.get('fields', {}).keys() & block.get('values', {}).keys()
+                if block_type == 'function':
+                    method_name = block.get('name')
+                    method = get_model_method(self.env[model_name], method_name)
+                    if method is None:
+                        fail(blueprint, block, self.env._(
+                            "Unknown or non-callable method '%(method)s' on '%(model)s'.",
+                            method=method_name,
+                            model=model_name,
+                        ))
+
+                target_names_by_kind = {
+                    'fields': set(block.get('fields', {})),
+                    'values': set(block.get('values', {})),
+                    'args': set(block.get('args', {})),
+                }
+                duplicate_names = (
+                    target_names_by_kind['fields'] & target_names_by_kind['values']
+                    | target_names_by_kind['fields'] & target_names_by_kind['args']
+                    | target_names_by_kind['values'] & target_names_by_kind['args']
+                )
                 if duplicate_names:
                     fail(blueprint, block, self.env._(
-                        "Names used as both field and value: %(names)s.",
+                        "Names used for multiple generated targets: %(names)s.",
                         names=', '.join(repr(name) for name in sorted(duplicate_names)),
+                    ))
+
+                positional_arg_indexes = sorted(
+                    int(name)
+                    for name in target_names_by_kind['args']
+                    if name.isdecimal()
+                )
+                if positional_arg_indexes and positional_arg_indexes != list(range(len(positional_arg_indexes))):
+                    fail(blueprint, block, self.env._(
+                        "Positional arg names must be contiguous indexes from '0'.",
                     ))
         if exceptions:
             # The module doesn't have a webclient interface, so it's ok to not raise an explicit ValidationError

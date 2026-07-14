@@ -61,8 +61,8 @@ def parse(xml):
 
         if block_type == 'create' and block_elem.get('ref'):
             raise ValueError("<create> cannot define a 'ref' attribute. Use 'id' for create references.")
-        if block_type == 'write' and block_elem.get('id'):
-            raise ValueError("<write> cannot define an 'id' attribute. Use 'ref' for write targets.")
+        if block_type in ('write', 'function') and block_elem.get('id'):
+            raise ValueError(f"<{block_type}> cannot define an 'id' attribute. Use 'ref' for targets.")
 
         block_data = {
             'type': block_type,
@@ -70,10 +70,16 @@ def parse(xml):
             'fields': {},
             'values': {},
         }
+        if block_type == 'function':
+            block_data['args'] = {}
+            if name := block_elem.get('name'):
+                block_data['name'] = name
         if count := block_elem.get('count'):
             block_data['count'] = int(count)
         if scale := block_elem.get('scale'):
             block_data['scale'] = str2bool(scale)
+        if batched := block_elem.get('batched'):
+            block_data['batched'] = str2bool(batched)
         if block_type == 'create':
             if ref := block_elem.get('id'):
                 block_data['id'] = ref
@@ -109,27 +115,45 @@ def parse(xml):
             continue
 
         block_type = etree.QName(block_elem).localname
-        if block_type not in ('create', 'write'):
-            raise ValueError(f"Unsupported populate operation <{block_type}>. Expected <create> or <write>.")
+        if block_type not in ('create', 'write', 'function'):
+            raise ValueError(f"Unsupported populate operation <{block_type}>. Expected <create>, <write> or <function>.")
 
         block_data = parse_block(block_elem)
+        arg_index = 0
 
         for child_elem in block_elem:
             if not isinstance(child_elem.tag, str):
                 continue
 
             child_type = etree.QName(child_elem).localname
-            if child_type not in ('field', 'value'):
+            if child_type not in ('field', 'value', 'arg'):
                 continue
 
             target_name = child_elem.get('name')
             if not target_name:
+                if child_type == 'arg':
+                    target_name = str(arg_index)
+                    arg_index += 1
+                else:
+                    raise ValueError(
+                        f"Missing required 'name' attribute on <{child_type}> element "
+                        f"in block for model '{block_data['model']}'. Each <{child_type}> must have a 'name'.",
+                    )
+            elif child_type == 'arg' and target_name.isdecimal():
+                arg_index = max(arg_index, int(target_name) + 1)
+
+            target = {
+                'field': 'fields',
+                'value': 'values',
+                'arg': 'args',
+            }[child_type]
+            block_data.setdefault(target, {})
+            if target_name in block_data[target]:
                 raise ValueError(
-                    f"Missing required 'name' attribute on <{child_type}> element "
-                    f"in block for model '{block_data['model']}'. Each <{child_type}> must have a 'name'.",
+                    f"Duplicate <{child_type}> name '{target_name}' "
+                    f"in block for model '{block_data['model']}'.",
                 )
 
-            target = 'fields' if child_type == 'field' else 'values'
             block_data[target][target_name] = parse_target(child_elem)
 
         json.append(block_data)

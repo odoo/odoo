@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class TestPopulateProduct(models.Model):
@@ -69,7 +69,23 @@ class TestPopulateCustomer(models.Model):
         ('home', 'Home & Garden'),
     ], string="Preferred Category")
     total_spent = fields.Float("Total Spent")
-    notes = fields.Text("Customer Notes")
+    notes = fields.Text("Customer Notes", default=lambda self: self.env.context.get('populate_default_notes'))
+
+    def populate_set_notes_from_args(self, first='', second='', flag=False):
+        for customer in self:
+            customer.notes = f"{first}|{second}|{flag}|{len(self)}"
+
+    def populate_set_notes_from_context(self):
+        for customer in self:
+            customer.notes = self.env.context.get('populate_context_notes')
+
+    @api.model
+    def populate_create_customer_from_model(self, name, email, notes=False):
+        return self.create({
+            'name': name,
+            'email': email,
+            'notes': notes or f'model-method|{len(self)}',
+        })
 
 
 class TestPopulateOrder(models.Model):

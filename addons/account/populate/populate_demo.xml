@@ -78,11 +78,11 @@
             </create>
 
             <!-- Create journals -->
-            <create model="account.journal" count="80" id="all_journals">
+            <create model="account.journal" count="200" id="all_journals">
                 <field name="name" generator="fake.catch_phrase"/>
                 <value name="counter" generator="misc.counter" start="1"/>
                 <field name="code" eval="f'J{counter:03}'" unique="True"/>
-                <field name="type" values="{'sale': 3, 'purchase': 3, 'general': 2, 'bank': 2, 'cash': 1}"/>
+                <field name="type" values="{'sale': 3, 'purchase': 3, 'general': 2, 'bank': 5, 'cash': 2}"/>
                 <field name="sequence" start="1" end="100"/>
                 <field name="color" start="1" end="10" null_ratio="0.7"/>
             </create>
@@ -156,6 +156,13 @@
                 <field name="tax_ids" ref="taxes" domain="[('type_tax_use', '=', 'sale')]" count="2" std="1" null_ratio="0.2"/>
             </create>
 
+            <!-- Post customer invoices after their invoice lines are present -->
+            <!-- parallel=False because of the sequence locking on the invoice's name -> DEADLOCKS -->
+            <function model="account.move" name="_post" ref="customer_invoices" batched="True" parallel="False"
+                      domain="[('line_ids.display_type', 'not in', ('line_section', 'line_subsection', 'line_note'))]">
+                <arg name="soft" eval="False"/>
+            </function>
+
             <!-- Create invoice lines for vendor bills -->
             <create model="account.move.line" count="24000" id="vendor_bill_lines" context="{'check_move_validity': False}">
                 <field name="move_id" ref="vendor_bills" partition="True"/>
@@ -167,6 +174,13 @@
                 <field name="discount" start="0.0" end="30.0" distribution="exponential(rate=0.3)" null_ratio="0.7"/>
                 <field name="tax_ids" ref="taxes" domain="[('type_tax_use', '=', 'purchase')]" count="2" std="1" null_ratio="0.2"/>
             </create>
+
+            <!-- Post vendor bills after their invoice lines are present -->
+            <!-- parallel=False because of the sequence locking on the invoice's name -> DEADLOCKS -->
+            <function model="account.move" name="_post" ref="vendor_bills" batched="True" parallel="False"
+                      domain="[('line_ids.display_type', 'not in', ('line_section', 'line_subsection', 'line_note'))]">
+                <arg name="soft" eval="False"/>
+            </function>
 
             <!-- Create payments -->
             <create model="account.payment" count="12000" id="customer_payments">
@@ -193,7 +207,7 @@
             <!-- Create reconciliation models -->
             <create model="account.reconcile.model" count="10" id="reconcile_models">
                 <field name="name" generator="fake.catch_phrase"/>
-                <field name="trigger" values="{'manual': 5, 'auto_reconcile': 5}"/>
+                <field name="trigger" eval="'manual'"/>  <!-- Avoid auto-reconciliation during creation -->
                 <field name="match_label" values="{'contains': 4, 'not_contains': 2, 'match_regex': 1}"/>
                 <value name="label_param" generator="fake.word" null_ratio="0.5"/>
                 <value name="random_regex" generator="textual.char" length="12"/>
