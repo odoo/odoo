@@ -518,6 +518,13 @@
                         <field name="name@es">[30] Resultado a ingresar</field>
                         <field name="code">aeat_mod_111_30</field>
                         <field name="aggregation_formula">aeat_mod_111_28.balance + aeat_mod_111_29.balance</field>
+                        <field name="expression_ids">
+                            <record id="mod_111_casilla_30_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">aeat_mod_111_30.balance</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>

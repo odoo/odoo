@@ -23,6 +23,7 @@
             <record id="l10n_mk_vat_1" model="account.report.line">
                 <field name="name">Trade of goods and services</field>
                 <field name="name@mk">ПРОМЕТ НА ДОБРА И УСЛУГИ</field>
+                <field name="code">l10n_mk_20</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="l10n_mk_vat_1_tax" model="account.report.expression">
@@ -293,7 +294,7 @@
                         <field name="expression_ids">
                             <record id="l10n_mk_tr_2_5_tax" model="account.report.expression">
                                 <field name="label">tax</field>
-                                <field name="engine">external</field>
+                                <field name="engine">aggregation</field>
                                 <field name="formula">l10n_mk_21_22.tax + l10n_mk_23_24.tax + l10n_mk_25_26.tax + l10n_mk_27_28.tax</field>
                             </record>
                         </field>
@@ -318,8 +319,13 @@
                         <field name="expression_ids">
                             <record id="l10n_mk_tr_2_7_tax" model="account.report.expression">
                                 <field name="label">tax</field>
-                                <field name="engine">external</field>
+                                <field name="engine">aggregation</field>
                                 <field name="formula">l10n_mk_20.tax - l10n_mk_29.tax + l10n_mk_30.tax</field>
+                            </record>
+                            <record id="l10n_mk_tr_2_7_tax_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_mk_31.tax</field>
                             </record>
                         </field>
                     </record>

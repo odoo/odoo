@@ -861,6 +861,12 @@ line 1 (sk_01) and its VAT label,
                                 <field name="engine">aggregation</field>
                                 <field name="formula">-sk_33.calcul</field>
                             </record>
+                            <record id="sk_final_33_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_33.vat</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="sk_final_34" model="account.report.line">
@@ -886,6 +892,12 @@ line 1 (sk_01) and its VAT label,
                                 <field name="label">vat</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">sk_32.vat - sk_34.vat</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="sk_final_35_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_35.vat</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
                         </field>

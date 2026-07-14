@@ -498,6 +498,14 @@
                 <field name="name">VAT Due</field>
                 <field name="name@tr">KDV Ödenmesi</field>
                 <field name="hierarchy_level">0</field>
+                <field name="code">VAT_DUE</field>
+                <field name="expression_ids">
+                    <record id="vat_due_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SAL_VAT_PAID_TOTAL.tax - PUR_VAT_PAID_TOTAL.tax</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="vat_due_line_p" model="account.report.line">
                         <field name="name">Total Purchase Taxes Paid</field>

@@ -188,6 +188,14 @@
                 <field name="name">Net VAT to be Paid/Reclaimed</field>
                 <field name="aggregation_formula">ET_PURCHASE_VAT.balance + ET_SALES_VAT.balance</field>
                 <field name="hierarchy_level">0</field>
+                <field name="code">ET_NET_VAT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_net_vat_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ET_NET_VAT.balance</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="account_tax_report_purch_vat" model="account.report.line">
                         <field name="name">Purchase VAT</field>

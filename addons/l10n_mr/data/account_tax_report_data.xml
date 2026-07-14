@@ -321,6 +321,12 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">mr_vat_net_gross.tax_18 - mr_vat_net_deductable.tax_18</field>
                             </record>
+                            <record id="tax_report_vat_net_total_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_vat_net_total.tax_18</field>
+                                <field name="subformula">if_above(MUR(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="tax_report_vat_net_carry_forward" model="account.report.line">
@@ -332,6 +338,12 @@
                                 <field name="label">tax_18</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">mr_vat_net_deductable.tax_18 - mr_vat_net_gross.tax_18</field>
+                            </record>
+                            <record id="tax_report_vat_net_carry_forward_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_vat_net_carry_forward.tax_18</field>
+                                <field name="subformula">if_above(MUR(0))</field>
                             </record>
                         </field>
                     </record>
