@@ -1,6 +1,11 @@
 import gc
+import time
 import weakref
+from types import SimpleNamespace
+from unittest.mock import patch
 
+import odoo.orm.registry
+from odoo.modules.registry import Registry
 from odoo.tests.common import TransactionCase, tagged
 
 
@@ -84,3 +89,42 @@ class TestRegistry(TransactionCase):
 
     def test_setup_models_field_leak_partial(self):
         self.test_setup_models_field_leak(('res.users', 'res.company'))
+
+
+@tagged('post_install')
+class TestRegistryGC(TransactionCase):
+    def _add_fake_registry(self, name, *, ready, last_used):
+        """ Register a lightweight stand-in registry and ensure it is removed
+        after the test, whatever the outcome. ``_gc_registries`` only reads
+        ``ready`` and ``_last_used``, so a namespace is enough.
+        """
+        Registry.registries[name] = SimpleNamespace(ready=ready, _last_used=last_used)
+        self.addCleanup(Registry.registries.pop, name, None)
+
+    def test_gc_collects_only_idle_ready_registries(self):
+        now = time.monotonic()
+        self._add_fake_registry("__gc_idle__", ready=True, last_used=now - 10_000)
+        self._add_fake_registry("__gc_fresh__", ready=True, last_used=now)
+        self._add_fake_registry("__gc_loading__", ready=False, last_used=now - 10_000)
+
+        with patch.object(odoo.orm.registry, '_REGISTRY_GC_TIMEOUT', 60):
+            Registry._gc_registries()
+
+        self.assertNotIn("__gc_idle__", Registry.registries, "an idle registry should be collected")
+        self.assertIn("__gc_fresh__", Registry.registries, "a recently used registry should be kept")
+        self.assertIn("__gc_loading__", Registry.registries, "a registry still loading should never be collected")
+
+    def test_gc_disabled_when_timeout_not_positive(self):
+        self._add_fake_registry("__gc_idle__", ready=True, last_used=time.monotonic() - 10_000)
+
+        with patch.object(odoo.orm.registry, '_REGISTRY_GC_TIMEOUT', 0):
+            Registry._gc_registries()
+
+        self.assertIn("__gc_idle__", Registry.registries,"GC must be a no-op when the timeout is not positive")
+
+    def test_access_refreshes_last_used(self):
+        registry = self.registry
+        registry._last_used = 0.0
+        # fetching the registry again must stamp it as freshly used
+        self.assertIs(Registry(registry.db_name), registry)
+        self.assertGreater(registry._last_used, 0.0)

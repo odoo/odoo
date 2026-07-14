@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import functools
 import logging
+import os
 import threading
 import time
 import typing
@@ -71,6 +72,8 @@ _CACHES_BY_KEY = {
 
 _REPLICA_RETRY_TIME = 20 * 60  # 20 minutes
 
+# drop registries unused for this many seconds (0 disables GC)
+_REGISTRY_GC_TIMEOUT = int(os.environ.get('ODOO_REGISTRY_MAX_IDLE_TIMEOUT', '0'))
 
 def _unaccent(x: SQL | str | psycopg2.sql.Composable) -> SQL | str | psycopg2.sql.Composed:
     if isinstance(x, SQL):
@@ -100,7 +103,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         current_thread.dbname = db_name
         with cls._lock:
             try:
-                return cls.registries[db_name]
+                registry = cls.registries[db_name]
+                registry._last_used = time.monotonic()
+                return registry
             except KeyError:
                 return cls.new(db_name)
 
@@ -246,6 +251,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         registry.ready = True
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
+        cls._gc_registries()
         return registry
 
     def init(self, db_name: str, models_to_check: OrderedSet[str] | None = None) -> None:
@@ -276,6 +282,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.uninstalling_modules: set[str] = set()  # modules being uninstalled
 
         self.db_name = db_name
+        self._last_used = time.monotonic()
         self._db: Connection = sql_db.db_connect(db_name, readonly=False)
         self._db_readonly: Connection | None = None
         self._db_readonly_failed_time: float | None = None
@@ -331,6 +338,19 @@ class Registry(Mapping[str, type["BaseModel"]]):
     def delete_all(cls):
         """ Delete all the registries. """
         cls.registries.clear()
+
+    @classmethod
+    @locked
+    def _gc_registries(cls) -> None:
+        """ Drop registries that have not been used for a while. """
+        if _REGISTRY_GC_TIMEOUT <= 0:
+            return
+        now = time.monotonic()
+        for db_name, registry in cls.registries.snapshot.items():
+            # keep registries still loading, and those recently used
+            if registry.ready and now - registry._last_used > _REGISTRY_GC_TIMEOUT:
+                _logger.info("Garbage-collecting unused registry for %s", db_name)
+                cls.delete(db_name)
 
     #
     # Mapping abstract methods implementation

@@ -1181,6 +1181,9 @@ class WebsocketConnectionHandler:
                 _logger.exception("Exception occurred during websocket request handling")
             finally:
                 wsrequest_var.reset(req_reset)
+                # Free the request object to avoid keeping a reference to the env / registry
+                # while waiting for the next message. Useful for registry GC.
+                del req
 
 
 def _kick_all(code=CloseCode.GOING_AWAY):
