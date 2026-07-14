@@ -678,7 +678,7 @@ registry.category("web_tour.tours").add("test_settle_so_custom_attribute_value",
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            Order.hasLine({ productName: "Inscription: Custom: Value" }),
+            Order.hasLine({ productName: "Gift Wrap, Inscription: Custom: Value" }),
         ].flat(),
 });
 

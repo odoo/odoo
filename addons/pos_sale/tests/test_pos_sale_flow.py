@@ -2257,6 +2257,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         """When settling a sale order (e.g. from the website) in POS, free-text custom
         attribute values must appear in the orderline's product name via
         constructFullProductName, not just the placeholder (e.g. 'Custom').
+        Also verifies that no-variant attribute values are preserved on the POS order line.
         """
         attr = self.env['product.attribute'].create({
             'name': 'Inscription',
@@ -2267,18 +2268,31 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'attribute_id': attr.id,
             'is_custom': True,
         })
+        attr_addon = self.env['product.attribute'].create({'name': 'Addon', 'create_variant': 'no_variant'})
+        attr_addon_val = self.env['product.attribute.value'].create({'name': 'Gift Wrap', 'attribute_id': attr_addon.id})
         product_tmpl = self.env['product.template'].create({
             'name': 'Custom Product',
             'available_in_pos': True,
             'type': 'service',
             'list_price': 10.0,
             'taxes_id': [],
-            'attribute_line_ids': [Command.create({
-                'attribute_id': attr.id,
-                'value_ids': [Command.link(attr_value.id)],
-            })],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attr.id,
+                    'value_ids': [Command.link(attr_value.id)],
+                }),
+                Command.create({
+                    'attribute_id': attr_addon.id,
+                    'value_ids': [Command.set([attr_addon_val.id])]
+                }),
+            ],
         })
-        ptav = product_tmpl.attribute_line_ids.product_template_value_ids
+        ptav = product_tmpl.attribute_line_ids.filtered(
+            lambda l: l.attribute_id == attr
+        ).product_template_value_ids
+        addon_ptav = product_tmpl.attribute_line_ids.filtered(
+            lambda l: l.attribute_id == attr_addon
+        ).product_template_value_ids
         product = product_tmpl.product_variant_ids[0]
 
         sale_order = self.env['sale.order'].create({
@@ -2287,7 +2301,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': product.id,
                 'product_uom_qty': 1,
                 'price_unit': 10.0,
-                'product_no_variant_attribute_value_ids': [Command.link(ptav.id)],
+                'product_no_variant_attribute_value_ids': [Command.set(addon_ptav.ids)],
                 'product_custom_attribute_value_ids': [Command.create({
                     'custom_product_template_attribute_value_id': ptav.id,
                     'custom_value': 'Value',
