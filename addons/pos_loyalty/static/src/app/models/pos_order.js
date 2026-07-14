@@ -855,10 +855,15 @@ patch(PosOrder.prototype, {
                 if (points < reward.required_points) {
                     continue;
                 }
-                // Skip if the reward program is of type 'coupons' and there is already an reward orderline linked to the current reward to avoid multiple reward apply
+                // Skip already applied rewards: 'coupons' programs, and non-payment
+                // discounts when auto-claiming, to avoid stacking them
+                const isPaymentProgram = ["ewallet", "gift_card"].includes(
+                    reward.program_id.program_type
+                );
                 if (
-                    reward.program_id.program_type === "coupons" &&
-                    this.lines.find((rewardline) => rewardline.reward_id?.id === reward.id)
+                    (reward.program_id.program_type === "coupons" ||
+                        (auto && reward.reward_type === "discount" && !isPaymentProgram)) &&
+                    this.lines.some((rewardline) => rewardline.reward_id?.id === reward.id)
                 ) {
                     continue;
                 }

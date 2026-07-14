@@ -2,7 +2,10 @@ import { test, describe, expect } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { addProductLineToOrder } from "@pos_loyalty/../tests/unit/utils";
+import {
+    addProductLineToOrder,
+    deactivateAllProgramsExcept,
+} from "@pos_loyalty/../tests/unit/utils";
 
 definePosModels();
 
@@ -378,6 +381,28 @@ describe("pos.order - loyalty", () => {
         expect(order.getOrderlines().length).toBe(2);
         const rewardLine = order._get_reward_lines()[0];
         expect(rewardLine.prices.total_included).toBe(-10);
+    });
+
+    test("already applied discount reward is not claimable again", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [8]);
+
+        // 2 units grant 2 points, the reward costs 1
+        await addProductLineToOrder(store, order, { qty: 2 });
+        await store.updateRewards();
+        await tick();
+        expect(order._get_reward_lines()).toHaveLength(1);
+
+        await addProductLineToOrder(store, order, { templateId: 5, productId: 5 });
+        await store.updateRewards();
+        await tick();
+        expect(order._get_reward_lines()).toHaveLength(1);
+        // Not claimable again automatically, still claimable manually
+        expect(
+            order.getClaimableRewards(false, false, true).filter(({ reward }) => reward.id === 4)
+        ).toHaveLength(0);
+        expect(order.getClaimableRewards().filter(({ reward }) => reward.id === 4)).toHaveLength(1);
     });
 
     test("_getRewardLineValuesDiscount - gift card payment uses full amount tax-free", async () => {
