@@ -23,7 +23,7 @@ class TestAttendanceManager(TransactionCase):
         })
         cls.marc_employee.attendance_manager_id = cls.marc
 
-        cls.ryan = new_test_user(cls.env, login='ryan', groups='hr_attendance.group_hr_attendance_own_reader')
+        cls.ryan = new_test_user(cls.env, login='ryan', groups='base.group_user')
 
         # Create another employee
         cls.abigail_employee, cls.ryan_employee = cls.env['hr.employee'].create([
@@ -85,11 +85,18 @@ class TestAttendanceManager(TransactionCase):
         self.assertTrue(self.ryan_employee.with_user(self.ryan).display_attendances)
 
         # No attendance-related group
-        self.ryan.group_ids = [Command.unlink(self.env.ref('hr_attendance.group_hr_attendance_own_reader').id)]
+        self.ryan.group_ids = [
+            Command.unlink(self.env.ref('hr_attendance.group_hr_attendance_own_reader').id),
+            Command.unlink(self.env.ref('base.group_user').id),
+        ]
         self.assertFalse(self.marc_employee.with_user(self.ryan).display_attendances)
         self.assertFalse(self.ryan_employee.with_user(self.ryan).display_attendances)
 
         # Attendance Officer
-        self.ryan.group_ids = [Command.link(self.env.ref('hr_attendance.group_hr_attendance_officer').id)]
+        self.ryan.group_ids = [
+            Command.link(self.env.ref('hr_attendance.group_hr_attendance_officer').id),
+            Command.link(self.env.ref('base.group_user').id),
+        ]
+        self.marc_employee.attendance_manager_id = self.ryan.id
         self.assertTrue(self.marc_employee.with_user(self.ryan).display_attendances)
         self.assertTrue(self.ryan_employee.with_user(self.ryan).display_attendances)

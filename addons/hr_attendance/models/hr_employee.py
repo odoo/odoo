@@ -113,6 +113,23 @@ class HrEmployee(models.Model):
             })
         return res
 
+    @api.depends_context('uid')
+    @api.depends('user_id', 'user_id.group_ids')
+    def _compute_display_attendances(self):
+        current_user = self.env.user
+        if not current_user:
+            self.display_attendances = False
+            return
+
+        is_attendance_officer = current_user.has_group('hr_attendance.group_hr_attendance_officer')
+        has_attendance_user_group = current_user.has_group('hr_attendance.group_hr_attendance_user')  # manager implies user
+        has_attendance_own_reader_group = current_user.has_group('hr_attendance.group_hr_attendance_own_reader')
+
+        for employee in self:
+            is_approver = is_attendance_officer and employee.attendance_manager_id and employee.attendance_manager_id == current_user
+            is_users_employee = has_attendance_own_reader_group and employee in current_user.employee_ids
+            employee.display_attendances = has_attendance_user_group or is_approver or is_users_employee
+
     @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')
     def _compute_total_overtime(self):
         mapped_validated_overtimes = dict(
@@ -206,17 +223,6 @@ class HrEmployee(models.Model):
         for employee in self:
             att = employee.last_attendance_id.sudo()
             employee.attendance_state = att and not att.check_out and 'checked_in' or 'checked_out'
-
-    @api.depends_context('uid')
-    @api.depends('user_id', 'user_id.group_ids')
-    def _compute_display_attendances(self):
-        current_user = self.env.user
-        for employee in self:
-            if current_user.has_group('hr_attendance.group_hr_attendance_officer'):
-                employee.display_attendances = True
-            else:
-                employee.display_attendances = current_user.has_group('hr_attendance.group_hr_attendance_own_reader') \
-                                                and employee in current_user.employee_ids
 
     def _notify_employee_presence_status(self):
         self.ensure_one()
