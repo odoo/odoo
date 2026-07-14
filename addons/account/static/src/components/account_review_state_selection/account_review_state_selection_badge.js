@@ -53,7 +53,7 @@ export class AccountReviewStateSelectionBadge extends Component {
             editableOptions.push(false);
         }
 
-        if (!this.props.record.model.useSampleModel && await user.checkAccessRight(this.props.record.resModel, "write", this.props.record.resId)) {
+        if (!this.props.record.model.useSampleModel && this.props.record.resId && await user.checkAccessRight(this.props.record.resModel, "write", this.props.record.resId)) {
             for (let [key, value] of Object.entries(this.props.options)) {
                 if (
                     [true, undefined].includes(value.can_edit)
