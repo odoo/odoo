@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { uniqueId } from "@web/core/utils/functions";
 import { isZWS } from "@html_editor/utils/dom_info";
+import { groupElements } from "@html_builder/core/save_utils";
 import { _t } from "@web/core/l10n/translation";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
@@ -10,7 +10,6 @@ import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
  * @typedef { Object } SaveShared
  * @property { SavePlugin['save'] } save
  * @property { SavePlugin['ignoreDirty'] } ignoreDirty
- * @property { SavePlugin['groupElements'] } groupElements
  */
 
 /**
@@ -31,7 +30,7 @@ import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "ignoreDirty", "groupElements"];
+    static shared = ["save", "ignoreDirty"];
     static dependencies = ["history", "domReferenceMap"];
 
     /** @type {import("plugins").BuilderResources} */
@@ -67,30 +66,12 @@ export class SavePlugin extends Plugin {
         this.canObserve = false;
     }
 
-    groupElements(toGroupEls) {
-        return Object.groupBy(toGroupEls, (toGroupEl) => {
-            const model = toGroupEl.dataset.oeModel;
-            const recordId = toGroupEl.dataset.oeId;
-            const field = toGroupEl.dataset.oeField;
-
-            // There are elements which have no linked model as something
-            // special is to be done "to save them". In that case, do not group
-            // those elements.
-            if (!model) {
-                return uniqueId("special-element-to-save-");
-            }
-
-            // Group elements which are from the same field of the same record.
-            return `${model}::${recordId}::${field}`;
-        });
-    }
-
     async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
         let skipAfterSaveHandlers;
         try {
             // Get elements to save, then group them if possible.
             const dirtyEls = this.getResource("dirty_els_providers").flatMap((p) => [...p()]);
-            const groupedElements = this.groupElements(dirtyEls);
+            const groupedElements = groupElements(dirtyEls);
             await Promise.all(
                 this.trigger("on_will_save_handlers", this.editable, groupedElements)
             );

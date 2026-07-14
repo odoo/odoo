@@ -914,4 +914,22 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_seo_multilang_alt_check(self):
         self.add_fr_language_to_website()
+
+        # Leave a delayed translation on the footer
+        footer = self.env.ref('website.footer_custom')
+        footer.update_field_translations('arch_db', {'fr_FR': {'Useful Links': 'Liens utiles'}})
+        footer.with_context(delay_translations=True).arch = footer.arch.replace(
+            'Useful Links', 'Handy Links'
+        )
+        self.assertIn(
+            'o_delay_translation',
+            footer.with_context(lang='fr_FR', edit_translations=True).arch,
+            "the footer should hold a delayed translation before the tour",
+        )
         self.start_tour(self.env['website'].get_client_action_url("/", True), "seo_multilang_alt_check", login="admin")
+        self.assertNotIn(
+            'o_delay_translation',
+            footer.with_context(lang='fr_FR', edit_translations=True).arch,
+            "saving the SEO dialog should confirm the delayed translations of the page",
+        )
+        self.assertIn('Handy Links', footer.with_context(lang='fr_FR').arch)
