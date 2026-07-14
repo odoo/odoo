@@ -1140,7 +1140,9 @@ class WebsocketConnectionHandler:
                     websocket.close(CloseCode.TRY_LATER)
                 except Exception:
                     _logger.exception("Exception occurred during websocket request handling")
-
+                # Free the request object to avoid keeping a reference to the env / registry
+                # while waiting for the next message. Useful for registry GC.
+                del req
 
 def _kick_all(code=CloseCode.GOING_AWAY):
     """ Disconnect all the websocket instances. """
