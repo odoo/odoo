@@ -85,7 +85,7 @@
             </div>
             <div t-if="this.linkPreview.videoURL" class="o-mail-LinkPreviewVideo-container mx-3 mb-2">
                 <div t-if="!this.state.videoLoaded" class="o-mail-LinkPreviewVideo-videoWrap h-100 w-100" t-on-click="() => this.state.startVideo = true"><t t-call="mail.LinkPreviewVideo.preview"/></div>
-                <iframe t-if="this.state.startVideo" t-att-src="this.linkPreview.videoURL" class="h-100 w-100 rounded" t-att-class="{'d-none': !this.state.videoLoaded}" allow="autoplay" frameborder="0" allowFullScreen="true" t-custom-ref="video"/>
+                <iframe t-if="this.state.startVideo" t-att-src="this.linkPreview.videoURL" class="h-100 w-100 rounded" t-att-class="{'d-none': !this.state.videoLoaded}" allow="autoplay" frameborder="0" allowFullScreen="true" t-ref="this.videoRef"/>
             </div>
             <t t-call="mail.LinkPreview.aside"
                 className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>

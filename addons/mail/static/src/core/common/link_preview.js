@@ -1,10 +1,11 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Gif } from "@mail/core/common/gif";
 import { LinkPreviewConfirmDelete } from "@mail/core/common/link_preview_confirm_delete";
 
-import { Component, props, proxy, types } from "@odoo/owl";
+import { Component, props, proxy, signal, types } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
+import { useOnChange } from "@mail/utils/common/hooks";
 
 export class LinkPreview extends Component {
     static components = { Gif };
@@ -19,15 +20,15 @@ export class LinkPreview extends Component {
         this.dialogService = useService("dialog");
         this.ui = useService("ui");
         this.state = proxy({ startVideo: false, videoLoaded: false });
-        this.videoRef = useRef("video");
+        this.videoRef = signal.ref();
         this.imageRef = useRef("image");
-        useLayoutEffect(
+        useOnChange(
+            () => [this.videoRef()],
             (el) => {
                 if (el) {
                     el.onload = () => (this.state.videoLoaded = true);
                 }
-            },
-            () => [this.videoRef.el]
+            }
         );
     }
 
