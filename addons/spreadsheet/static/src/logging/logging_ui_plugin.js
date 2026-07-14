@@ -69,7 +69,7 @@ export class LoggingUIPlugin extends OdooUIPlugin {
             ...this.getters
                 .getOdooChartIds()
                 .map((chartId) => this.getters.getChartDataSource(chartId))
-                .filter((ds) => ds.isReady())
+                .filter((ds) => ds.isValid())
                 .map((ds) => ds.source)
         );
         datasources.push(
@@ -83,7 +83,7 @@ export class LoggingUIPlugin extends OdooUIPlugin {
             ...this.getters
                 .getListIds()
                 .map((listId) => this.getters.getListDataSource(listId))
-                .filter((ds) => ds.isReady())
+                .filter((ds) => ds.isValid())
                 .map((ds) => ds.source)
         );
         return datasources;
