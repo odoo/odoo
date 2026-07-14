@@ -8,18 +8,16 @@
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='google_address_autocomplete']" position="inside">
                 <div invisible="not module_google_address_autocomplete">
-                    <field name="google_places_api_key" placeholder="Paste your API key"/>
-                    <div class="mt8">
-                        <a target="_blank" href="https://console.cloud.google.com/getting-started">
-                            <i class="oi" data-icon="east"/>
-                            Create a Google Project and get a key
-                        </a>
-                        <br/>
-                        <a target="_blank" href="https://console.cloud.google.com/billing">
-                            <i class="oi" data-icon="east"/>
-                            Enable billing on your Google Project
-                        </a>
-                    </div>
+                    <a target="_blank" href="https://console.cloud.google.com/getting-started" class="fw-bold">
+                        <i class="oi" data-icon="east"/>
+                        Create a Google Project and get a key
+                    </a>
+                    <br/>
+                    <a target="_blank" href="https://console.cloud.google.com/billing" class="fw-bold d-block">
+                        <i class="oi" data-icon="east"/>
+                        Enable billing on your Google Project
+                    </a>
+                    <field name="google_places_api_key" class="mt8" placeholder="Paste your API key"/>
                 </div>
             </xpath>
             <xpath expr="//div[@id='google_address_autocomplete_warning']" position="replace" />
