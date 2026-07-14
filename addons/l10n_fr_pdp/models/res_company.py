@@ -274,7 +274,7 @@ class ResCompany(models.Model):
             'object_uuid': self.pdp_authentication_uuid,
         })
         kyc_status = response.get('kyc_status')
-        if kyc_status in {'success', 'fail'}:
+        if kyc_status == 'success':
             self.pdp_kyc_status = kyc_status
             if not send_bus:  # If called manually from the wizard we do not need the JS to handle it
                 return
