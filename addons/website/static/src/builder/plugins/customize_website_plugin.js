@@ -922,7 +922,12 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
                 return el.style.getPropertyValue("background-image");
             }
         }
-        return getCSSVariableValue(color, style);
+        const colorValue = getCSSVariableValue(color, style);
+        const combinationValue = combinationColor && getCSSVariableValue(combinationColor, style);
+        if (!colorValue && combinationValue) {
+            return `o_cc${combinationValue}`;
+        }
+        return colorValue;
     }
     async apply({
         params: { mainParam: color, colorType, gradientColor, combinationColor, nullValue },
