@@ -547,6 +547,11 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TAX_3.balance+TAX_31.balance+TAX_32.balance+TAX_33.balance+TAX_81.balance+TAX_82.balance+TAX_83.balance+TAX_84.balance+TAX_86.balance+TAX_87.balance+TAX_88.balance+TAX_89.balance+TAX_91.balance+TAX_92.balance-TAX_1.balance-TAX_11.balance-TAX_12.balance-TAX_13.balance-TAX_14.balance-TAX_15.balance</field>
                             </record>
+                            <record id="tax_report_line_to_be_paid_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SUM.balance</field>
+                            </record>
                         </field>
                     </record>
                 </field>

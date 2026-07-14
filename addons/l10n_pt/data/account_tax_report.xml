@@ -443,6 +443,7 @@
                     <record id="trp_tax_favor_state_total_93" model="account.report.line">
                         <field name="name">[93] Tax to be paid to the State</field>
                         <field name="name@pt">[93] Imposto a entragar ao Estado</field>
+                        <field name="code">trp_tax_favor_state_total_93</field>
                         <field name="expression_ids">
                             <record id="trp_tax_favor_state_total_93_formula" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -450,16 +451,29 @@
                                 <field name="formula">trp_tax_favor_state_total_92.balance - trp_tax_favor_company_total_91.balance</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
+                            <record id="trp_tax_favor_state_total_93_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">trp_tax_favor_state_total_93.balance</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="trp_tax_favor_state_total_94" model="account.report.line">
                         <field name="name">[94] Credit to be recovered</field>
                         <field name="name@pt">[94] Crédito a recuperar</field>
+                        <field name="code">trp_tax_favor_state_total_94</field>
                         <field name="expression_ids">
                             <record id="trp_tax_favor_state_total_94_formula" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">trp_tax_favor_company_total_91.balance - trp_tax_favor_state_total_92.balance</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="trp_tax_favor_state_total_94_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">trp_tax_favor_state_total_94.balance</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
                         </field>
