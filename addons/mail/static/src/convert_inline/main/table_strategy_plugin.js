@@ -21,6 +21,9 @@ const VERTICAL_ALIGN = {
     "flex-end": "bottom",
 };
 
+// TODO EGGMAIL: should it be completed?
+const ILLEGAL_TABLE_STRATEGY_NODES = new Set(["TABLE", "TBODY", "TR", "THEAD", "TFOOT"]);
+
 export class TableStrategyPlugin extends Plugin {
     static id = "tableStrategy";
     static dependencies = [
@@ -51,6 +54,7 @@ export class TableStrategyPlugin extends Plugin {
             this.analyzeElementLayout.bind(this),
             this.addBottomUpConstraintsForTables.bind(this),
         ],
+        should_discard_reference_node_predicates: this.isUnsupportedTableElement.bind(this),
         synthetic_email_node_processors: (emailNode) => {
             if (!emailNode.analysis.facts.isTableContainer) {
                 return emailNode;
@@ -85,6 +89,15 @@ export class TableStrategyPlugin extends Plugin {
         this.backgroundStyleRules = new Rules();
         this.cellMarginStyleRules = new Rules();
         this.provideStyleRules();
+    }
+
+    isUnsupportedTableElement(referenceNode) {
+        if (!referenceNode) {
+            return;
+        }
+        if (referenceNode.nodeName === "COLGROUP") {
+            return true;
+        }
     }
 
     provideStyleRules() {
@@ -276,7 +289,11 @@ export class TableStrategyPlugin extends Plugin {
             referenceNode,
             this.backgroundStyleRules
         );
-        if (borderStyleInfo.size === 0 && backgroundStyleInfo.size === 0) {
+        if (
+            (borderStyleInfo.size === 0 && backgroundStyleInfo.size === 0) ||
+            // HR should not generate a table strategy report (they should keep their border)
+            referenceNode.nodeName === "HR"
+        ) {
             return defaultEmailNodeArguments;
         }
         const cleanupStyleInfo = (sourceStyleInfo, referenceNode, emailNode) => {
@@ -502,7 +519,7 @@ export class TableStrategyPlugin extends Plugin {
         const { layout, analysis } = defaultEmailNodeArguments;
         const div = this.config.referenceDocument.createElement("DIV");
         if (
-            referenceNode.nodeName === "TR" ||
+            ILLEGAL_TABLE_STRATEGY_NODES.has(referenceNode.nodeName) ||
             analysis.facts.isMainTable ||
             !isAllowedContent(referenceNode, [div]) ||
             !this.detectTableLayout(referenceNode)

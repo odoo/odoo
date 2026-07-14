@@ -56,8 +56,8 @@ export class Rule {
         if (!isName && effect === "require") {
             throw new TypeError(`Rule "require" must specify a string "key"`);
         }
-        if (typeof how !== "function" && effect === "fix") {
-            throw new TypeError(`Rule "fix" must specify a function "how"`);
+        if (typeof how !== "function" && (effect === "fix" || effect === "require")) {
+            throw new TypeError(`Rule "fix" and "require" must specify a function "how"`);
         }
         this.pluginId = pluginId;
         this.key = key;
@@ -184,18 +184,16 @@ export class Rules {
         }
     }
     require(name, options = {}) {
-        const { when, otherwise, pluginId } = options;
+        const { how, when, pluginId } = options;
         const rule = new Rule({
             key: name,
             effect: "require",
+            how,
             when,
             matcherCache: this.matcherCache,
             pluginId,
         });
         this.requiringNameRules.concat([rule], name);
-        if (when) {
-            this.addOtherwise(rule, otherwise, options);
-        }
     }
     processData(
         dataMap,
@@ -260,12 +258,24 @@ export class Rules {
             }
         }
         for (const [name, value] of missing) {
-            const requiringRules = this.getRequiringRules(name);
-            if (
-                requiringRules.length > 0 &&
-                this.checkRules(requiringRules, ...getRuleArgs(name, value))
-            ) {
-                onMiss(name, value);
+            let requiringRule;
+            try {
+                const requiringRules = this.getRequiringRules(name);
+                if (
+                    requiringRules.length > 0 &&
+                    (requiringRule = this.findFixingRule(
+                        requiringRules,
+                        ...getRuleArgs(name, value)
+                    ))
+                ) {
+                    _onPass(name, value, requiringRule.howResult);
+                } else {
+                    onMiss(name, value);
+                }
+            } finally {
+                if (requiringRule) {
+                    requiringRule.howResult = undefined;
+                }
             }
         }
     }
@@ -283,7 +293,11 @@ export class Rules {
         }
     }
     addOtherwise(rule, otherwise, options = {}) {
-        if (!otherwise || otherwise === rule.effect) {
+        if (
+            !otherwise ||
+            otherwise === rule.effect ||
+            (rule.effect === "fix" && otherwise === "require")
+        ) {
             return;
         }
         let when = (...args) => {
@@ -311,6 +325,8 @@ export class Rules {
         return results.length ? results.some(Boolean) : undefined;
     }
     findFixingRule(fixingRules, ...args) {
+        // TODO EGGMAIL: currently the first registered fixing rules wins.
+        // evaluate if we need a more complex resolution mechanism.
         return fixingRules.find(
             (fixingRule) =>
                 fixingRule.checkConditions(...args) && fixingRule.how(...args) !== undefined
@@ -349,7 +365,7 @@ export class Rules {
      * (verification that a specific rule would apply or not) for a specific
      * processing case.
      * WARNINGS:
-     * - fixing rules "how" is not applied
+     * - fixing or require rules "how" is not applied
      * - requiring rules are evaluated even if not applicable in practice
      */
     getRulesChecks(name, value, getRuleArgs) {

@@ -134,8 +134,12 @@ export class ImageStrategyPlugin extends Plugin {
     }
 
     buildImageRef({ imageNode, shouldBeBlock }) {
-        const forcedStyleInfo = this.getForcedImageStyle({ shouldBeBlock });
         const dimensions = this.extractImageDimensions(imageNode);
+        if (shouldBeBlock === undefined && dimensions.style.width === "100%") {
+            // 100% extracted width removes the ambiguity for display: block
+            shouldBeBlock = true;
+        }
+        const forcedStyleInfo = this.getForcedImageStyle({ shouldBeBlock });
         const styleInfo = this.getStyleInfo(imageNode)
             .merge(StyleInfo.from(dimensions.style))
             .merge(forcedStyleInfo);
@@ -293,6 +297,12 @@ export class ImageStrategyPlugin extends Plugin {
         }
     }
 
+    /**
+     * @param {Element} referenceNode
+     * @returns {Boolean | undefined} a boolean if block status can be
+     * determined with certainty, undefined if block status should depend on
+     * email dimensions of the image @see extractImageDimensions
+     */
     shouldBeBlock(referenceNode) {
         if (this.isBlock(referenceNode)) {
             return true;
@@ -301,11 +311,15 @@ export class ImageStrategyPlugin extends Plugin {
         const prevSibling = referenceNode.previousSibling;
         const nextSibling = referenceNode.nextSibling;
         const parent = referenceNode.parentElement;
-        return (
-            this.isBlock(parent) &&
+        if (!this.isBlock(parent)) {
+            return false;
+        }
+        const isIsolatedAmongBlocks =
             (!prevSibling || isVisibleBlock(prevSibling)) &&
-            (!nextSibling || isVisibleBlock(nextSibling))
-        );
+            (!nextSibling || isVisibleBlock(nextSibling));
+        if (!isIsolatedAmongBlocks) {
+            return false;
+        }
     }
 
     extractImageDimensions(referenceNode) {

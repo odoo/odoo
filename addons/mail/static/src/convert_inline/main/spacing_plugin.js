@@ -291,6 +291,16 @@ export class SpacingPlugin extends Plugin {
                 this.validateSpacingValue.bind(this),
             ],
         });
+        // HR can have a userAgent style which needs to be countered
+        const isHR = ({ referenceNode }) => referenceNode.nodeName === "HR";
+        // block HR margin no matter what, to make it "fail".
+        rules.block(/^margin(-(top|right|bottom|left))?$/, { when: isHR });
+        // HR margin is handled separately from the inline style by the spacing
+        // plugin, but its inline style margin must be forced to 0.
+        rules.require("margin", {
+            when: isHR,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
     }
 }
 

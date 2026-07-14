@@ -87,7 +87,10 @@ export class RulesPlugin extends Plugin {
                 },
             ],
             onPass: (attributeName, attributeValue, fixedArgs = {}) => {
-                filteredAttributes[attributeName] = fixedArgs.attributeValue ?? attributeValue;
+                const value = fixedArgs.attributeValue ?? attributeValue;
+                if (value !== undefined) {
+                    filteredAttributes[attributeName] = value;
+                }
             },
             onFail: (attributeName) => {
                 delete filteredAttributes[attributeName];
@@ -144,18 +147,21 @@ export class RulesPlugin extends Plugin {
             getRuleArgs: (propertyName, propertyInfo) => [
                 {
                     propertyName,
-                    propertyValue: propertyInfo.value,
-                    propertyPriority: propertyInfo.priority,
+                    propertyValue: propertyInfo?.value,
+                    propertyPriority: propertyInfo?.priority ?? "",
                     referenceNode,
                 },
             ],
             onPass: (propertyName, propertyInfo, fixedArgs = {}) => {
-                filteredStyleInfo.setProperty(
-                    propertyName,
-                    fixedArgs.propertyValue ?? propertyInfo.value,
-                    fixedArgs.propertyPriority ?? propertyInfo.priority,
-                    propertyInfo.sequence
-                );
+                const value = fixedArgs.propertyValue ?? propertyInfo?.value;
+                if (value !== undefined) {
+                    filteredStyleInfo.setProperty(
+                        propertyName,
+                        value,
+                        fixedArgs.propertyPriority ?? propertyInfo?.priority ?? "",
+                        propertyInfo.sequence
+                    );
+                }
             },
             onMiss: (propertyName) => {
                 // TODO EGGMAIL: special values like unset, inherit, ... must
