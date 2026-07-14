@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='mojeracun']" position="inside">
+                <setting string="Fiscalization credentials" company_dependent="1">
+                    <div class="row my-1">
+                        <label string="Fiscalization Operating Mode" for="l10n_hr_fiscalization_mode" class="col-lg-6 o_light_label"/>
+                        <field name="l10n_hr_fiscalization_mode"/>
+                    </div>
+                    <div class="row mb-1">
+                        <label string="Fiscalization Certificate" for="l10n_hr_fiscalization_certificate" class="col-lg-6 o_light_label"/>
+                        <field name="l10n_hr_fiscalization_certificate"/>
+                    </div>
+                    <div class="row mb-1">
+                        <label string="Sequence Level Indicator" for="l10n_hr_fiscalization_sequence_identifier" class="col-lg-6 o_light_label"/>
+                        <field name="l10n_hr_fiscalization_sequence_identifier"/>
+                    </div>
+                    <div class="row mb-1">
+                        <label string="Intermediate CA Certificate (PEM)" for="l10n_hr_fiscalization_ca_intermediate_pem" class="col-lg-6 o_light_label"/>
+                        <field name="l10n_hr_fiscalization_ca_intermediate_pem" filename="l10n_hr_fiscalization_ca_intermediate_pem_filename"/>
+                    </div>
+                    <div class="row mb-1">
+                        <label string="Root CA Certificate (PEM)" for="l10n_hr_fiscalization_ca_root_pem" class="col-lg-6 o_light_label"/>
+                        <field name="l10n_hr_fiscalization_ca_root_pem" filename="l10n_hr_fiscalization_ca_root_pem_filename"/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

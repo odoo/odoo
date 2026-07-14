@@ -65,8 +65,8 @@ class AccountMove(models.Model):
     l10n_hr_business_document_status = fields.Selection(related='l10n_hr_edi_addendum_id.business_document_status')
     l10n_hr_business_status_reason = fields.Char(related='l10n_hr_edi_addendum_id.business_status_reason')
     l10n_hr_fiscalization_number = fields.Char(related='l10n_hr_edi_addendum_id.fiscalization_number')
-    l10n_hr_fiscalization_status = fields.Selection(related='l10n_hr_edi_addendum_id.fiscalization_status')
-    l10n_hr_fiscalization_error = fields.Char(related='l10n_hr_edi_addendum_id.fiscalization_error')
+    l10n_hr_fiscalization_status = fields.Selection(related='l10n_hr_edi_addendum_id.fiscalization_status', readonly=False)
+    l10n_hr_fiscalization_error = fields.Char(related='l10n_hr_edi_addendum_id.fiscalization_error', readonly=False)
     l10n_hr_fiscalization_request = fields.Char(related='l10n_hr_edi_addendum_id.fiscalization_request')
     l10n_hr_fiscalization_channel_type = fields.Selection(related='l10n_hr_edi_addendum_id.fiscalization_channel_type')
     # Payment reporting
@@ -75,7 +75,7 @@ class AccountMove(models.Model):
         currency_field='currency_id',
     )
     l10n_hr_payment_unreported = fields.Boolean(compute='_compute_l10n_hr_payment_unreported', search='_search_l10n_hr_payment_unreported')
-    l10n_hr_payment_method_type = fields.Selection(related='l10n_hr_edi_addendum_id.payment_method_type', readonly=False)
+    l10n_hr_payment_method_type = fields.Selection(related='l10n_hr_edi_addendum_id.payment_method_type', readonly=False, store=True)
     # MojEracun integration fields
     l10n_hr_mer_document_eid = fields.Char(related='l10n_hr_edi_addendum_id.mer_document_eid')
     l10n_hr_mer_document_status = fields.Selection(related='l10n_hr_edi_addendum_id.mer_document_status')
