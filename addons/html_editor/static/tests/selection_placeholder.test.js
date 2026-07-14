@@ -7,6 +7,8 @@ import { getContent } from "./_helpers/selection";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isTableCell } from "@html_editor/utils/dom_info";
 import { parseHTML } from "@html_editor/utils/html";
+import { isBlock } from "@html_editor/utils/blocks";
+import { Plugin } from "@html_editor/plugin";
 
 const pressArrowKey = async (editor, key) => {
     const selection = editor.shared.selection.getSelectionData().deepEditableSelection;
@@ -631,4 +633,21 @@ test("selection placeholder margins remain correct when an element gets added", 
     });
     // Comment this to make it easier to debug visually.
     style.remove();
+});
+
+test("should not insert a selection placeholder around an inline element", async () => {
+    class SelectionBlockerPlugin extends Plugin {
+        id = "selectionBlockerPlugin";
+        resources = {
+            is_selection_blocker_predicates: (node) => node.nodeName === "i",
+        };
+    }
+    await testEditor({
+        includePlugins: [SelectionBlockerPlugin],
+        contentBefore: '<div contenteditable="true"><i>xyz</i></div>',
+        stepFunction: (editor) => {
+            expect(isBlock(editor.editable.querySelector("i"))).toBe(false);
+        },
+        contentAfterEdit: '<div contenteditable="true" class="o-paragraph"><i>xyz</i></div>',
+    });
 });

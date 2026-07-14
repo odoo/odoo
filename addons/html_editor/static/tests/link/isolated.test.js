@@ -9,6 +9,7 @@ import { animationFrame, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom
 import { dispatchNormalize } from "../_helpers/dispatch";
 import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "../_helpers/ui_expectations";
+import { isBlock } from "@html_editor/utils/blocks";
 
 test("should pad a link with ZWNBSPs and add visual indication", async () => {
     await testEditor({
@@ -36,6 +37,22 @@ test("should pad a link with ZWNBSPs and add visual indication (2)", async () =>
         contentAfterEdit:
             '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff<span class="a">[]b</span>\ufeff</a>\ufeff</p>',
         contentAfter: '<p>a<a href="http://test.test/"><span class="a">[]b</span></a></p>',
+    });
+});
+
+test("should use ZWNBSPS rather than selection placeholders around a link", async () => {
+    await testEditor({
+        contentBefore: '<div contenteditable="true"><a>xyz</a></div>',
+        stepFunction: (editor) => {
+            const anchor = editor.editable.querySelector("a");
+            // These are the conditions that make links special with regards to
+            // selection placeholders. They are included here so that, should
+            // they change, we can review the test.
+            expect(editor.shared.split.isUnsplittable(anchor)).toBe(true);
+            expect(isBlock(anchor)).toBe(false);
+        },
+        contentAfterEdit:
+            '<div contenteditable="true" class="o-paragraph">\ufeff<a>\ufeffxyz\ufeff</a>\ufeff</div>',
     });
 });
 
