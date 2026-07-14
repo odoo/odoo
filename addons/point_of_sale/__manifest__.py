@@ -130,6 +130,8 @@
             "web/static/lib/odoo_ui_icons/*",
             "point_of_sale/static/src/utils.js",
             'bus/static/src/services/bus_service.js',
+            'bus/static/src/services/bus_monitoring_service.js',
+            'bus/static/src/services/bus_fallback_service.js',
             'bus/static/src/services/worker_service.js',
             'bus/static/src/bus_parameters_service.js',
             'bus/static/src/legacy_multi_tab_service.js',
