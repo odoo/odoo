@@ -1723,6 +1723,15 @@
         <field name="count_as">absence</field>
     </record>
 
+    <record id="l10n_be_work_entry_type_flexi_attendance" model="hr.work.entry.type">
+        <field name="name">Flexi Attendance</field>
+        <field name="code">WORK100_FLX</field>
+        <field name="color">0</field>
+        <field name="display_code">A</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
 <!-- BD : Bangladesh -->
     <record id="bd_work_entry_type_attendance" model="hr.work.entry.type">
         <field name="name">Attendance</field>
