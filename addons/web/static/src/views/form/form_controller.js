@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -40,6 +40,7 @@ import {
     effect,
     onError,
     onMounted,
+    onPatched,
     onWillDestroy,
     onWillUnmount,
     plugin,
@@ -315,24 +316,33 @@ export class FormController extends Component {
 
         const { disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
-            useLayoutEffect(
-                (isInEdition) => {
-                    if (
-                        !isInEdition &&
-                        !this.rootRef.el
-                            .querySelector(".o_content")
-                            .contains(document.activeElement)
-                    ) {
-                        const elementToFocus = this.rootRef.el.querySelector(
-                            ".o_content button.btn-primary"
-                        );
-                        if (elementToFocus) {
-                            elementToFocus.focus();
-                        }
+            const focusPrimaryButton = () => {
+                if (
+                    !this.model.root.isInEdition &&
+                    !this.rootRef.el
+                        .querySelector(".o_content")
+                        .contains(document.activeElement)
+                ) {
+                    const elementToFocus = this.rootRef.el.querySelector(
+                        ".o_content button.btn-primary"
+                    );
+                    if (elementToFocus) {
+                        elementToFocus.focus();
                     }
-                },
-                () => [this.model.root.isInEdition]
-            );
+                }
+            };
+            let lastIsInEdition;
+            onMounted(() => {
+                lastIsInEdition = this.model.root.isInEdition;
+                focusPrimaryButton();
+            });
+            onPatched(() => {
+                const isInEdition = this.model.root.isInEdition;
+                if (isInEdition !== lastIsInEdition) {
+                    lastIsInEdition = isInEdition;
+                    focusPrimaryButton();
+                }
+            });
         }
 
         if (this.env.inDialog) {
