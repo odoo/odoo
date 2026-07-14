@@ -77,7 +77,7 @@
             </create>
 
             <!-- Auto-generate variants now that all attribute lines are in place -->
-            <write model="product.template" ref="product_templates">
+            <write model="product.template" ref="product_templates" batched="True">
                 <field name="attribute_line_ids" eval="[]"/>
             </write>
 

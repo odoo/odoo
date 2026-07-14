@@ -1,11 +1,14 @@
 import ast
+from collections.abc import Set as AbstractSet
 from contextlib import contextmanager
+from itertools import chain
+from types import MappingProxyType
 
 from odoo.models import BaseModel
 from odoo.tools import BinaryBytes
 from odoo.tools.safe_eval import _BUILTINS as _SAFE_EVAL_BUILTINS
 
-_ALLOWED_EVAL_KWARG_TYPES = (
+_ALLOWED_EVAL_ARG_TYPES = (
     type(None),
     bool,
     int,
@@ -154,30 +157,31 @@ def get_undefined_names(expr: str) -> set[str]:
     return collector.undefined_names
 
 
-def check_eval_kwargs(kwargs) -> None:
-    """Validate kwargs passed to safe-eval-generated callables.
+def check_eval_args(*args, **kwargs) -> None:
+    """Validate arguments passed across a safe-eval boundary.
 
-    :param kwargs: Keyword arguments that will be passed into an evaluated callable.
+    :param args: Positional arguments to validate.
+    :param kwargs: Keyword arguments to validate.
     :raise TypeError: If a value is not part of the safe, expected value set.
     """
 
     def is_safe(val) -> bool:
-        if isinstance(val, _ALLOWED_EVAL_KWARG_TYPES):
+        if isinstance(val, _ALLOWED_EVAL_ARG_TYPES):
             return True
 
-        if isinstance(val, (list, tuple)):
+        if isinstance(val, (list, tuple, AbstractSet)):
             return all(is_safe(item) for item in val)
 
-        if isinstance(val, dict):
-            return all(
-                isinstance(key, str) and is_safe(item)
-                for key, item in val.items()
+        if isinstance(val, (dict, MappingProxyType)):
+            return (
+                all(map(is_safe, val.keys()))
+                and all(map(is_safe, val.values()))
             )
 
         return False
 
-    for name, value in kwargs.items():
+    for value in chain(args, kwargs.values()):
         if not is_safe(value):
             raise TypeError(
-                f"Unsafe eval kwarg {name!r}: {type(value).__name__}",
+                f"Unsafe eval argument: {type(value).__name__}",
             )

@@ -58,17 +58,30 @@ code will be imported, allowing for custom generators, if needed.
 ### XML Structure
 
 A blueprint definition is a list of typed operation blocks. Use
-`<create>` to create records and `<write>` to update records.
+`<create>` to create records, `<write>` to update records, and
+`<function>` to call a method on targeted records.
 `<field>` declarations are persisted through ORM `create`/`write`;
 `<value>` declarations are generated local variables available to later
-fields and values in the same block.
+fields, values, and function arguments in the same block. Function
+blocks use `<arg>` declarations for generated method arguments.
 
 ```xml
 <create model="res.partner" count="500" id="my_partners">
+    <value name="email_domain" eval="'example.com'"/>
     <field name="name" generator="fake.company" null_ratio="0"/>
-    <field name="email" generator="fake.company_email"/>
+    <field name="email" eval="name.lower().replace(' ', '-') + '@' + email_domain"/>
     <field name="active" eval="True"/>
 </create>
+
+<write model="res.partner" ref="my_partners" batched="True">
+    <value name="suffix" eval="'imported by populate'"/>
+    <field name="comment" eval="suffix"/>
+</write>
+
+<function model="res.partner" name="message_subscribe" ref="my_partners" batched="True">
+    <value name="current_partner" eval="env.user.partner_id.id"/>
+    <arg eval="[current_partner]"/>
+</function>
 ```
 
 ### JSON Structure
@@ -84,10 +97,12 @@ directly:
         "model": "res.partner",
         "count": 500,
         "id": "my_partners",
-        "values": {},
+        "values": {
+            "email_domain": { "eval": "'example.com'" }
+        },
         "fields": {
             "name":   { "generator": "fake.company", "null_ratio": "0" },
-            "email":  { "generator": "fake.company_email" },
+            "email":  { "eval": "name.lower().replace(' ', '-') + '@' + email_domain" },
             "active": { "eval": "True" }
         }
     },
@@ -95,16 +110,33 @@ directly:
         "type": "write",
         "model": "res.partner",
         "ref": "my_partners",
+        "batched": true,
+        "values": {
+            "suffix": { "eval": "'imported by populate'" }
+        },
         "fields": {
-            "phone": { "generator": "fake.phone_number" }
+            "comment": { "eval": "suffix" }
+        }
+    },
+    {
+        "type": "function",
+        "model": "res.partner",
+        "name": "message_subscribe",
+        "ref": "my_partners",
+        "batched": true,
+        "values": {
+            "current_partner": { "eval": "env.user.partner_id.id" }
+        },
+        "args": {
+            "0": { "eval": "[current_partner]" }
         }
     }
 ]
 ```
 
 The top-level array maps to the ordered list of operation blocks. Each
-object's `"fields"` and `"values"` keys map names to their attribute
-dictionaries – the same keys you would write as XML attributes
+object's optional `"fields"`, `"values"` and `"args"` keys map names to their
+attribute dictionaries – the same keys you would write as XML attributes
 (`generator`, `eval`, `null_ratio`, `domain`, `ref`, etc.).
 
 > **Note:** If both `definition_xml` and `definition_json` are set on
@@ -112,16 +144,18 @@ dictionaries – the same keys you would write as XML attributes
 
 #### Operation Attributes
 
-| Attribute  | Required     | Description                                                          |
-|------------|--------------|----------------------------------------------------------------------|
-| `model`    | yes          | Odoo model technical name (e.g. `res.partner`)                       |
-| `count`    | for `create` | Number of records to create                                          |
-| `id`       |              | Reference tag - lets later blocks target these records               |
-| `ref`      | for `write`  | Reference to a previously created batch (its `id`)                   |
-| `domain`   |              | ORM domain selecting target records; not allowed on create blocks    |
-| `scale`    |              | `True` (default) / `False` - whether `--scale` applies to this block |
-| `parallel` |              | `True` (default) / `False` - whether the job can run in parallel     |
-| `context`  |              | Python dict literal merged into the ORM context                      |
+| Attribute  | Required                | Description                                                                                                |
+|------------|-------------------------|------------------------------------------------------------------------------------------------------------|
+| `model`    | yes                     | Odoo model technical name (e.g. `res.partner`)                                                             |
+| `name`     | for `function`          | Method name to call                                                                                        |
+| `count`    | for `create`            | Number of records to create                                                                                |
+| `id`       |                         | Reference tag - lets later blocks target these records                                                     |
+| `ref`      |                         | Reference to a previously created batch (its `id`) for `write` and `function` blocks                       |
+| `domain`   |                         | ORM domain selecting target records; not allowed on create blocks; defaults to all records                 |
+| `scale`    |                         | `True` (default) / `False` - whether `--scale` applies to this block                                       |
+| `parallel` |                         | `True` (default) / `False` - whether the job can run in parallel                                           |
+| `batched`  | for write/function only | `True` / `False` (default) - generate one value set and perform one write/function call per executable job |
+| `context`  |                         | Python dict literal merged into the ORM context                                                            |
 
 #### `<field>` Attributes
 
@@ -544,11 +578,75 @@ Targeting rules:
 | `ref` only       | Records created under that populate reference               |
 | `domain` only    | Records of the job model matching the domain                |
 | `ref` + `domain` | Intersection: referenced records that also match the domain |
+| neither          | All records of the job model                                |
 
 Domains on `write` jobs are evaluated once to select the target
-records. They are not dynamic per generated record. Write jobs must
-define `ref` or `domain`. Create jobs cannot define a top-level
-`domain`; they don't target existing records.
+records. They are not dynamic per generated record. If neither `ref`
+nor `domain` is provided, the write job targets all records of the job
+model. Create jobs cannot define a top-level `domain`; they don't
+target existing records.
+
+By default, generated values are produced once per target record and
+written record by record. With `batched="True"`, values are generated
+once for the whole executable job or subjob, and a single ORM `write`
+is performed on that recordset:
+
+```xml
+<write model="res.partner" ref="customers" batched="True">
+    <field name="active" eval="True"/>
+</write>
+```
+
+`batched` is only valid on write and function jobs. Create jobs do not
+accept it, because ORM `create` already receives a list of generated
+values. Large jobs may still be split according to
+`MAX_RECORD_COMMIT_SIZE`.
+
+## Function Jobs
+
+Use `<function>` to call a model method after records have been 
+created. This is useful for models that cannot be created directly
+in their final business state and must go through a transition method.
+For example, `account.move` invoices are created as drafts and posted
+by calling `_post`:
+
+```xml
+<function model="account.move" name="_post" ref="moves" batched="True">
+    <arg name="soft" eval="False"/>
+</function>
+```
+
+Function jobs use the same targeting rules as write jobs:
+
+| Attributes       | Target records                                              |
+|------------------|-------------------------------------------------------------|
+| `ref` only       | Records created under that populate reference               |
+| `domain` only    | Records of the job model matching the domain                |
+| `ref` + `domain` | Intersection: referenced records that also match the domain |
+| neither          | All records of the job model                                |
+
+The `name` attribute is the method name. The method is resolved like
+XML data loading function calls: `@api.model` methods are called on the
+empty model recordset, while regular record methods are called on the
+target records.
+
+Function arguments are declared with `<arg>` and support the same
+generation attributes as `<value>`. Named args are passed as keyword
+arguments. Unnamed XML args are passed as positional arguments in XML
+order and appear as `"0"`, `"1"`, ... in JSON:
+
+```xml
+<function model="x.model" name="action" ref="records">
+    <arg eval="'first positional'"/>
+    <arg eval="42"/>
+    <arg name="flag" eval="True"/>
+</function>
+```
+
+With `batched="False"` (the default), arguments are generated and the
+method is called once per target record. With `batched="True"`, one
+argument set is generated and the method is called once on the target
+recordset of each executable job or subjob.
 
 ## Blueprint Inheritance
 

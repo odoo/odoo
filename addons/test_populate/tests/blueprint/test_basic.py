@@ -188,6 +188,133 @@ class TestBlueprintDefinition(TransactionCase):
 
         self.assertIn('name', str(ctx.exception.exceptions[0]))
 
+    def test_function_job_instantiation(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Function Job Instantiation Test',
+            'definition_json': [
+                {
+                    'type': 'create',
+                    'model': 'test_populate.customer',
+                    'id': 'customers',
+                    'count': 2,
+                    'fields': {
+                        'name': {'eval': '"Customer"'},
+                        'email': {'eval': '"customer@example.com"'},
+                    },
+                },
+                {
+                    'type': 'function',
+                    'model': 'test_populate.customer',
+                    'name': 'populate_set_notes_from_args',
+                    'ref': 'customers',
+                    'batched': True,
+                    'args': {
+                        '0': {'eval': '"first"'},
+                        'flag': {'eval': 'True'},
+                    },
+                },
+            ],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        function_job = session.job_ids.filtered(lambda job: job.type == 'function')
+
+        self.assertEqual(function_job.model_name, 'test_populate.customer')
+        self.assertEqual(function_job.method_name, 'populate_set_notes_from_args')
+        self.assertEqual(function_job.ref, 'customers')
+        self.assertEqual(function_job.record_count, 2)
+        self.assertTrue(function_job.batched)
+        self.assertEqual(function_job.instructions['args']['0'], {'eval': '"first"'})
+        self.assertEqual(function_job.instructions['args']['flag'], {'eval': 'True'})
+
+    def test_function_validation_rejects_invalid_shapes(self):
+        invalid_blocks = [
+            ("function block is missing the required method name", {
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'ref': 'customers',
+            }),
+            ("function block uses field declarations instead of arg declarations", {
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'name': 'populate_set_notes_from_args',
+                'fields': {
+                    'notes': {'eval': '"wrong"'},
+                },
+                'domain': '[]',
+            }),
+            ("create block cannot define function arguments", {
+                'type': 'create',
+                'model': 'test_populate.customer',
+                'count': 1,
+                'args': {
+                    '0': {'eval': '"wrong"'},
+                },
+                'fields': {
+                    'name': {'eval': '"Customer"'},
+                    'email': {'eval': '"customer@example.com"'},
+                },
+            }),
+            ("create block cannot use batched because ORM create already receives a list of vals", {
+                'type': 'create',
+                'model': 'test_populate.customer',
+                'count': 1,
+                'batched': True,
+                'fields': {
+                    'name': {'eval': '"Customer"'},
+                    'email': {'eval': '"customer@example.com"'},
+                },
+            }),
+            ("function block points to an unknown method", {
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'name': 'does_not_exist',
+                'domain': '[]',
+            }),
+            ("function block points to a dunder method", {
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'name': '__class__',
+                'domain': '[]',
+            }),
+            ("positional argument indexes must start at 0 without gaps", {
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'name': 'populate_set_notes_from_args',
+                'domain': '[]',
+                'args': {
+                    '1': {'eval': '"gap"'},
+                },
+            }),
+        ]
+
+        for reason, block in invalid_blocks:
+            with self.subTest(reason=reason), self.assertRaises(ExceptionGroup):
+                self.env['populate.blueprint'].create({
+                    'name': f'Invalid Function Test: {reason}',
+                    'definition_json': [block],
+                })
+
+    def test_duplicate_value_arg_name_raises(self):
+        with self.assertRaises(ExceptionGroup) as ctx:
+            self.env['populate.blueprint'].create({
+                'name': 'Duplicate Value Arg Test',
+                'definition_json': [{
+                    'type': 'function',
+                    'model': 'test_populate.customer',
+                    'name': 'populate_set_notes_from_args',
+                    'domain': '[]',
+                    'values': {
+                        'first': {'eval': '"helper"'},
+                    },
+                    'args': {
+                        'first': {'eval': '"arg"'},
+                    },
+                }],
+            })
+
+        self.assertIn('first', str(ctx.exception.exceptions[0]))
+
     def test_multiple_invalid_orm_fields_all_reported(self):
         with self.assertRaises(ExceptionGroup) as ctx:
             self.env['populate.blueprint'].create({

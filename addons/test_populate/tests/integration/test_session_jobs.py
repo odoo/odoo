@@ -174,6 +174,33 @@ class TestSessionFieldGeneration(PopulateTestCase):
         products = self.env['test_populate.product'].browse(product_ids)
         self.assertTrue(all(p.name == 'Fixed' for p in products))
 
+    def test_create_job_applies_context(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Create Context Test',
+            'definition_json': [{
+                'type': 'create',
+                'model': 'test_populate.customer',
+                'count': 1,
+                'context': {
+                    'populate_default_notes': 'Created from context',
+                },
+                'fields': {
+                    'name': {'eval': '"Context Customer"'},
+                    'email': {'eval': '"context@example.com"'},
+                },
+            }],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        customer_id = self.env['populate.model.data'].search([
+            ('session_id', '=', session.id),
+            ('res_model', '=', 'test_populate.customer'),
+        ]).res_id
+        customer = self.env['test_populate.customer'].browse(customer_id)
+        self.assertEqual(customer.notes, 'Created from context')
+
 
 class TestWriteJobTargeting(PopulateTestCase):
 
@@ -322,6 +349,28 @@ class TestWriteJobTargeting(PopulateTestCase):
         self.assertEqual(us_supplier.notes, "Domain update")
         self.assertFalse(ca_supplier.notes)
 
+    def test_write_job_without_ref_or_domain_updates_all_records(self):
+        suppliers = self.env['test_populate.supplier'].create([
+            {'name': 'Implicit Domain Supplier 1'},
+            {'name': 'Implicit Domain Supplier 2'},
+        ])
+
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Write Implicit Empty Domain Blueprint',
+            'definition_json': [{
+                'type': 'write',
+                'model': 'test_populate.supplier',
+                'fields': {
+                    'notes': {'eval': '"Implicit empty domain"'},
+                },
+            }],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        self.assertTrue(all(supplier.notes == 'Implicit empty domain' for supplier in suppliers))
+
     def test_write_job_with_ref_and_domain_updates_intersection(self):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Write Ref Domain Blueprint',
@@ -380,6 +429,300 @@ class TestWriteJobTargeting(PopulateTestCase):
         ca_supplier = suppliers.filtered(lambda supplier: supplier.country_code == 'CA')
         self.assertEqual(us_supplier.notes, "Intersection update")
         self.assertFalse(ca_supplier.notes)
+
+    def test_batched_write_generates_one_value_set_for_recordset(self):
+        customers = self.env['test_populate.customer'].create([
+            {
+                'name': 'Batched Write Customer 1',
+                'email': 'batched-write-1@example.com',
+            },
+            {
+                'name': 'Batched Write Customer 2',
+                'email': 'batched-write-2@example.com',
+            },
+        ])
+
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Batched Write Blueprint',
+            'definition_json': [{
+                'type': 'write',
+                'model': 'test_populate.customer',
+                'domain': f"[('id', 'in', {customers.ids})]",
+                'batched': True,
+                'fields': {
+                    'age': {
+                        'generator': 'misc.counter',
+                        'start': 50,
+                    },
+                },
+            }],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        self.assertEqual(set(customers.mapped('age')), {50})
+
+
+class TestFunctionJobExecution(PopulateTestCase):
+
+    def test_function_job_calls_each_record_with_generated_args(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Per Record Function Blueprint',
+            'definition_json': [
+                {
+                    'type': 'create',
+                    'model': 'test_populate.customer',
+                    'id': 'function_customers',
+                    'count': 3,
+                    'fields': {
+                        'name': {'eval': '"Customer"'},
+                        'email': {'eval': '"customer@example.com"'},
+                    },
+                },
+                {
+                    'type': 'function',
+                    'model': 'test_populate.customer',
+                    'name': 'populate_set_notes_from_args',
+                    'ref': 'function_customers',
+                    'args': {
+                        'first': {
+                            'generator': 'misc.counter',
+                            'start': 1,
+                        },
+                        'second': {'eval': 'f"generated-for-{first}"'},
+                        'flag': {'eval': 'True'},
+                    },
+                },
+            ],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        customer_ids = self.env['populate.model.data'].search([
+            ('session_id', '=', session.id),
+            ('res_model', '=', 'test_populate.customer'),
+            ('ref', '=', 'function_customers'),
+        ]).mapped('res_id')
+        customers = self.env['test_populate.customer'].browse(customer_ids).sorted('id')
+
+        self.assertEqual(customers.mapped('notes'), [
+            '1|generated-for-1|True|1',
+            '2|generated-for-2|True|1',
+            '3|generated-for-3|True|1',
+        ])
+
+    def test_batched_function_job_calls_recordset_with_one_generated_arg_set(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Batched Function Blueprint',
+            'definition_json': [
+                {
+                    'type': 'create',
+                    'model': 'test_populate.customer',
+                    'id': 'batched_function_customers',
+                    'count': 3,
+                    'fields': {
+                        'name': {'eval': '"Customer"'},
+                        'email': {'eval': '"customer@example.com"'},
+                    },
+                },
+                {
+                    'type': 'function',
+                    'model': 'test_populate.customer',
+                    'name': 'populate_set_notes_from_args',
+                    'ref': 'batched_function_customers',
+                    'batched': True,
+                    'args': {
+                        '0': {
+                            'generator': 'misc.counter',
+                            'start': 10,
+                        },
+                        '1': {
+                            'generator': 'misc.counter',
+                            'start': 110,
+                        },
+                        'flag': {'eval': 'True'},
+                    },
+                },
+            ],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        customer_ids = self.env['populate.model.data'].search([
+            ('session_id', '=', session.id),
+            ('res_model', '=', 'test_populate.customer'),
+            ('ref', '=', 'batched_function_customers'),
+        ]).mapped('res_id')
+        customers = self.env['test_populate.customer'].browse(customer_ids)
+
+        self.assertEqual(set(customers.mapped('notes')), {'10|110|True|3'})
+
+    def test_model_function_job_does_not_require_target_records(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Model Function Blueprint',
+            'definition_json': [{
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'name': 'populate_create_customer_from_model',
+                'domain': "[('email', '=', 'no-target@example.com')]",
+                'args': {
+                    '0': {'eval': '"Model Function Customer"'},
+                    'email': {'eval': '"model-function@example.com"'},
+                    'notes': {'eval': '"created from model method"'},
+                },
+            }],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        customer = self.env['test_populate.customer'].search([
+            ('email', '=', 'model-function@example.com'),
+        ])
+
+        self.assertEqual(len(customer), 1)
+        self.assertEqual(customer.name, 'Model Function Customer')
+        self.assertEqual(customer.notes, 'created from model method')
+
+    def test_function_job_targets_domain_intersection(self):
+        matching, non_matching = self.env['test_populate.customer'].create([
+            {
+                'name': 'Function Domain Match',
+                'email': 'match@example.com',
+                'age': 30,
+            },
+            {
+                'name': 'Function Domain Skip',
+                'email': 'skip@example.com',
+                'age': 10,
+            },
+        ])
+
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Function Domain Blueprint',
+            'definition_json': [{
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'name': 'populate_set_notes_from_args',
+                'domain': "[('name', '=', 'Function Domain Match')]",
+                'args': {
+                    '0': {'eval': '"domain"'},
+                },
+            }],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        self.assertEqual(matching.notes, 'domain||False|1')
+        self.assertFalse(non_matching.notes)
+
+    def test_function_job_without_ref_or_domain_targets_all_records(self):
+        customers = self.env['test_populate.customer'].create([
+            {
+                'name': 'Implicit Function Customer 1',
+                'email': 'implicit-function-1@example.com',
+            },
+            {
+                'name': 'Implicit Function Customer 2',
+                'email': 'implicit-function-2@example.com',
+            },
+        ])
+
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Function Implicit Empty Domain Blueprint',
+            'definition_json': [{
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'name': 'populate_set_notes_from_args',
+                'args': {
+                    '0': {'eval': '"implicit"'},
+                },
+            }],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        function_job = session.job_ids.filtered(lambda job: job.type == 'function')
+        self.assertEqual(function_job.record_count, len(customers))
+
+        start_populate(session)
+
+        self.assertEqual(set(customers.mapped('notes')), {'implicit||False|1'})
+
+    def test_function_job_applies_context(self):
+        customer = self.env['test_populate.customer'].create({
+            'name': 'Function Context Customer',
+            'email': 'function-context@example.com',
+        })
+
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Function Context Blueprint',
+            'definition_json': [{
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'name': 'populate_set_notes_from_context',
+                'domain': f"[('id', '=', {customer.id})]",
+                'context': {
+                    'populate_context_notes': 'Function context applied',
+                },
+            }],
+        })
+
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        self.assertEqual(customer.notes, 'Function context applied')
+
+    def test_function_job_rejects_dunder_method_at_execution(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Function Dunder Execution Blueprint',
+            'definition_json': [{
+                'type': 'function',
+                'model': 'test_populate.customer',
+                'name': 'populate_set_notes_from_args',
+                'domain': '[]',
+            }],
+        })
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        function_job = session.job_ids.filtered(lambda job: job.type == 'function')
+
+        # Blueprint validation already rejects dunder methods. Change the instantiated
+        # job directly to verify that execution cannot bypass that validation.
+        function_job.method_name = '__class__'
+
+        with self.assertRaisesRegex(ValueError, "Unknown or non-callable method '__class__'"):
+            function_job._execute({})
+
+    def test_function_job_rejects_unsafe_generated_args(self):
+        customer = self.env['test_populate.customer'].create({
+            'name': 'Unsafe Function Argument Customer',
+            'email': 'unsafe-function-argument@example.com',
+        })
+
+        # Decimal argument names are positional; other names are keyword arguments.
+        for arg_name, arg_kind in (('0', 'positional'), ('first', 'keyword')):
+            with self.subTest(arg_kind=arg_kind):
+                blueprint = self.env['populate.blueprint'].create({
+                    'name': f'Unsafe {arg_kind.title()} Argument Blueprint',
+                    'definition_json': [{
+                        'type': 'function',
+                        'model': 'test_populate.customer',
+                        'name': 'populate_set_notes_from_args',
+                        'domain': f"[('id', '=', {customer.id})]",
+                        'args': {
+                            arg_name: {'eval': 'env.cr'},
+                        },
+                    }],
+                })
+                session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+                function_job = session.job_ids.filtered(lambda job: job.type == 'function')
+
+                with self.assertRaisesRegex(TypeError, "Unsafe eval argument:"):
+                    function_job._execute()
+                self.assertFalse(customer.notes)
 
 
 class TestWriteJobRecordCount(PopulateTestCase):
@@ -804,7 +1147,7 @@ class TestSubjobs(PopulateTestCase):
             "Subjobs record counts should sum up to parent's record_count",
         )
 
-    def test_write_subjobs_apply_offset_and_limit_after_domain(self):
+    def test_write_subjobs_hash_partition_is_stable_when_domain_changes(self):
         create_count = 1205
         self.assertGreater(create_count, MAX_RECORD_COMMIT_SIZE)
 
@@ -826,6 +1169,7 @@ class TestSubjobs(PopulateTestCase):
                 'domain': "[('age', '>=', 20)]",
                 'fields': {
                     'notes': {'eval': '"Domain split update"'},
+                    'age': {'eval': '10'},
                 },
             }],
         })
@@ -839,9 +1183,23 @@ class TestSubjobs(PopulateTestCase):
         self.assertTrue(write_job.child_ids, "The domain-targeted write job should be split into subjobs")
         self.assertEqual(sum(write_job.child_ids.mapped('record_count')), len(matching_customers))
 
+        target_ids_by_subjob = [
+            set(subjob._get_target_records().ids)
+            for subjob in write_job.child_ids
+        ]
+        all_target_ids = set().union(*target_ids_by_subjob)
+        self.assertEqual(all_target_ids, set(matching_customers.ids))
+        self.assertEqual(
+            sum(map(len, target_ids_by_subjob)),
+            len(all_target_ids),
+            "Hash partitions should not overlap",
+        )
+
+        write_job.child_ids[0]._execute()
         start_populate(session)
 
         self.assertTrue(all(customer.notes == "Domain split update" for customer in matching_customers))
+        self.assertTrue(all(customer.age == 10 for customer in matching_customers))
         self.assertFalse(any(customer.notes for customer in non_matching_customers))
 
 

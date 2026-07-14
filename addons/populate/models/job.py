@@ -12,9 +12,16 @@ from typing import TYPE_CHECKING, Self
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.tools import SQL
 
 from ..generators import DEFAULT_GENERATORS, Generator, generate_values
-from ..utils.orm import ValueTarget, drop_pending_update, get_ref_domain
+from ..utils.expression import check_eval_args
+from ..utils.orm import (
+    ValueTarget,
+    drop_pending_update,
+    get_model_method,
+    get_ref_domain,
+)
 from ..utils.profiling import profiled_execution_scope
 from ..utils.seed import derive_seed_from
 
@@ -59,23 +66,27 @@ class Job(models.Model):
 
     ref = fields.Char(help="""Reference the batch of records used by the job.
     If the job type is 'create' -> Annotates the records for referencing.
-    If the job type is 'write' -> Refers to records with said reference.
+    If the job type is 'write' or 'function' -> Refers to records with said reference.
     """)
     domain = fields.Char(help="Domain selecting target records for jobs that update existing records.")
     model_name = fields.Char(required=True)
+    method_name = fields.Char(help="Method called by function jobs.")
     record_count = fields.Integer(default=1)  # Semantics: 0 <-> None
     type = fields.Selection([
         ('create', "Create"),
         ('write', "Write"),
+        ('function', "Function"),
     ], default='create', required=True)
     parallel = fields.Boolean(help="Can the job be executed in parallel?", default=True)
+    batched = fields.Boolean(help="For write/function jobs: generate one value set and perform one call per executable job.")
     context = fields.Json()
     instructions = fields.Json()
 
     _record_count_invariant = models.Constraint(
-        "CHECK (record_count > 0 OR (type = 'write' AND record_count = 0))",
+        "CHECK (record_count > 0 OR (type IN ('write', 'function') AND record_count = 0))",
         "A job's record_count needs to be a non-zero positive integer. "
-        "Only write jobs are allowed to have no record_count, whose cardinality is unknown at creation time.",
+        "Only write and function jobs are allowed to have no record_count, "
+        "whose cardinality is unknown at creation time.",
     )
     _create_job_without_domain = models.Constraint(
         "CHECK (type != 'create' OR domain IS NULL OR domain = '')",
@@ -209,6 +220,8 @@ class Job(models.Model):
                         self._execute_create(generators)
                     case 'write':
                         self._execute_write(generators)
+                    case 'function':
+                        self._execute_function(generators)
             else:
                 for subjob in self.pending_subjobs:
                     subjob._execute(generators, seed=seed)
@@ -249,22 +262,104 @@ class Job(models.Model):
         self.ensure_one()
         assert self.type == 'write'
 
-        domain = self._get_target_domain()
+        records = self._get_target_records()
+        if not records:
+            return
 
-        slice_kwargs = {}
-        if self.parent_id:
-            preceding_siblings = self.parent_id.child_ids.filtered(lambda job: job.id < self.id)
-            slice_kwargs['offset'] = sum(job.record_count for job in preceding_siblings)
-            slice_kwargs['limit'] = self.record_count
-
-        records = self.env[self.model_name].with_context(active_test=False).search(domain, **slice_kwargs)
-
-        for record in records:
+        def write_vals():
             generated = generate_values(generators)
-            record.write({
+            return {
                 name: generated[name]
                 for name in self.instructions['fields']
-            })
+            }
+
+        if self.batched:
+            records.write(write_vals())
+        else:
+            for record in records:
+                record.write(write_vals())
+
+    def _execute_function(self, generators: Mapping[str, Generator]):
+        """Call a method on the records targeted by this job.
+
+        If the method is decorated with @api.model, it's called on an empty recordset.
+
+        :param generators: Generators are keyed by the target name.
+        """
+        self.ensure_one()
+        assert self.type == 'function'
+
+        model = self.env[self.model_name].with_context(active_test=False)
+        if context := self.context:
+            model = model.with_context(**context)
+
+        def get_method(target):
+            method = get_model_method(target, self.method_name)
+            if method is None:
+                raise ValueError(self.env._(
+                    "Unknown or non-callable method '%(method)s' on '%(model)s'.",
+                    method=self.method_name,
+                    model=self.model_name,
+                ))
+            return method
+
+        def call(target):
+            generated = generate_values(generators)
+            positional = []
+            kwargs = {}
+            for name in self.instructions.get('args', {}):
+                if name.isdecimal():
+                    positional.append((int(name), generated[name]))
+                else:
+                    kwargs[name] = generated[name]
+
+            args = [value for _, value in sorted(positional)]
+            check_eval_args(*args, **kwargs)
+            get_method(target)(*args, **kwargs)
+
+        method = get_method(model)
+        if getattr(method, '_api_model', False):
+            call(model)
+            return
+
+        records = self._get_target_records()
+        if not records:
+            return
+
+        if self.batched:
+            call(records)
+        else:
+            for record in records:
+                call(record)
+
+    def _get_target_records(self) -> Self:
+        """Return the target records selected by this write/function job."""
+        self.ensure_one()
+
+        domain = self._get_target_domain()
+
+        if self.parent_id:
+            preceding_siblings = self.parent_id.child_ids.filtered(lambda job: job.id < self.id)
+            start = sum(job.record_count for job in preceding_siblings)
+            # A subjob may make its records leave the domain, shifting later OFFSET slices:
+            #   OFFSET: [A B | C D] -> remove A,B -> [C D | ]  (C,D skipped)
+            # Hashing IDs keeps every record assigned to the same subjob:
+            #   HASH:   {A B} {C D} -> remove A,B -> {   } {C D}
+            domain &= Domain.custom(to_sql=lambda table: SQL(
+                'MOD(ABS(hashint8(%s)::bigint), %s) BETWEEN %s AND %s',
+                table.id,
+                self.parent_id.record_count,
+                start,
+                start + self.record_count - 1,
+            ))
+
+        model = self.env[self.model_name].with_context(active_test=False)
+        if context := self.context:
+            model = model.with_context(**context)
+
+        # Order needs to be stable regardless of mutations to the record fields,
+        # which might be part of the model's default order.
+        return model.search(domain, order='id')
 
     def _get_target_domain(self) -> Domain:
         """Build the ORM domain matching records selected by this job's ``domain`` (+ optional ``ref``)."""
@@ -288,7 +383,8 @@ class Job(models.Model):
         model = self.env[self.model_name]
         field_instructions = self.instructions.get('fields', {})
         value_instructions = self.instructions.get('values', {})
-        valid_targets = field_instructions.keys() | value_instructions.keys()
+        arg_instructions = self.instructions.get('args', {})
+        valid_targets = field_instructions.keys() | value_instructions.keys() | arg_instructions.keys()
         random = Random(seed)
         target_instructions = itertools.chain(
             (
@@ -298,6 +394,10 @@ class Job(models.Model):
             (
                 (ValueTarget(self.model_name, value_name), attrs)
                 for value_name, attrs in value_instructions.items()
+            ),
+            (
+                (ValueTarget(self.model_name, arg_name), attrs)
+                for arg_name, attrs in arg_instructions.items()
             ),
         )
         for target, attrs in target_instructions:
@@ -341,7 +441,11 @@ class Job(models.Model):
         ref_info = f' [{self.ref}]' if self.ref else ''
 
         if self.is_executable:
-            action = 'Creating' if self.type == 'create' else 'Writing on'
+            action = {
+                'create': 'Creating',
+                'write': 'Writing on',
+                'function': f'Calling {self.method_name} on',
+            }[self.type]
             count = f' {self.record_count}' if self.record_count else ''
 
             if self.parent_id:

@@ -138,6 +138,43 @@ class TestXMLParse(TransactionCase):
         self.assertEqual(field_data['count'], 4)
         self.assertEqual(field_data['std'], 2)
 
+    def test_parse_function_with_args(self):
+        xml_str = '''
+        <data>
+            <function model="test_populate.customer" name="populate_set_notes_from_args" ref="customers" batched="True">
+                <value name="helper" eval="'suffix'"/>
+                <arg eval="'first'"/>
+                <arg eval="helper"/>
+                <arg name="flag" eval="True"/>
+            </function>
+        </data>
+        '''
+
+        result = xml.parse(xml_str)
+
+        self.assertEqual(result[0]['type'], 'function')
+        self.assertEqual(result[0]['model'], 'test_populate.customer')
+        self.assertEqual(result[0]['name'], 'populate_set_notes_from_args')
+        self.assertEqual(result[0]['ref'], 'customers')
+        self.assertTrue(result[0]['batched'])
+        self.assertEqual(result[0]['args']['0'], {'eval': "'first'"})
+        self.assertEqual(result[0]['args']['1'], {'eval': 'helper'})
+        self.assertEqual(result[0]['args']['flag'], {'eval': 'True'})
+        self.assertEqual(result[0]['values']['helper'], {'eval': "'suffix'"})
+
+    def test_parse_function_implicit_arg_collision_raises(self):
+        xml_str = '''
+        <data>
+            <function model="test_populate.customer" name="populate_set_notes_from_args" ref="customers">
+                <arg eval="'first'"/>
+                <arg name="0" eval="'duplicate'"/>
+            </function>
+        </data>
+        '''
+
+        with self.assertRaises(ValueError):
+            xml.parse(xml_str)
+
 
 class TestStaticPopulateXMLFiles(TestCase):
 

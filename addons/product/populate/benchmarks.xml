@@ -101,7 +101,7 @@
             </create>
 
             <!-- Trigger variant creation that all ptal are assigned -->
-            <write model="product.template" ref="var_templates">
+            <write model="product.template" ref="var_templates" batched="True">
                 <field name="attribute_line_ids" eval="[]"/>
             </write>
 
@@ -286,7 +286,7 @@
             </create>
 
             <!-- Trigger variant creation -->
-            <write model="product.template" ref="bulk_templates">
+            <write model="product.template" ref="bulk_templates" batched="True">
                 <field name="attribute_line_ids" eval="[]"/>
             </write>
 
