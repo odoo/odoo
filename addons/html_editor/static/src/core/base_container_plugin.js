@@ -110,7 +110,8 @@ export class BaseContainerPlugin extends Plugin {
         if (
             anchorNode === closestEditable(node) ||
             !SUPPORTED_BASE_CONTAINER_NAMES.includes(anchorNode.nodeName) ||
-            this.getResource("unremovable_node_predicates").some((p) => p(anchorNode))
+            this.getResource("unremovable_node_predicates").some((p) => p(anchorNode)) ||
+            node.classList.contains("oe_structure")
         ) {
             return;
         }

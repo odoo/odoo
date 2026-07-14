@@ -261,4 +261,22 @@ describe("Adjust base container on delete", () => {
             `),
         });
     });
+
+    test("should not remove `oe_structure`", async () => {
+        await testEditor({
+            contentBefore: unformat(
+                `<div>
+                    <div class="o-paragraph oe_structure">[]<br></div>
+                </div>`
+            ),
+            stepFunction: async (editor) => {
+                deleteBackward(editor);
+            },
+            contentAfterEdit: unformat(
+                `<div>
+                    <div class="o-paragraph oe_structure o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
+                </div>`
+            ),
+        });
+    });
 });
