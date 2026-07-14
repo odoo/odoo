@@ -13,7 +13,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('fr_FR')
-        cls.test1 = cls.env['test_orm.related_translation_1'].with_context(lang='en_US').create({
+        cls.test1 = cls.env['test_translation.related_translation_1'].with_context(lang='en_US').create({
             'name': 'Knife',
             'html': '<p>Knife</p><p>Fork</p><p>Spoon</p>',
         })
@@ -25,7 +25,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             'Fork': 'Fourchette',
             'Spoon': 'Cuiller',
         }})
-        cls.test12 = cls.env['test_orm.related_translation_1'].with_context(lang='en_US').create({
+        cls.test12 = cls.env['test_translation.related_translation_1'].with_context(lang='en_US').create({
             'name': 'Knife 2',
             'html': '<p>Knife 2</p><p>Fork 2</p><p>Spoon 2</p>',
         })
@@ -37,10 +37,10 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             'Fork 2': 'Fourchette 2',
             'Spoon 2': 'Cuiller 2',
         }})
-        cls.test2 = cls.env['test_orm.related_translation_2'].with_context(lang='en_US').create({
+        cls.test2 = cls.env['test_translation.related_translation_2'].with_context(lang='en_US').create({
             'related_id': cls.test1.id,
         })
-        cls.test3 = cls.env['test_orm.related_translation_3'].with_context(lang='en_US').create({
+        cls.test3 = cls.env['test_translation.related_translation_3'].with_context(lang='en_US').create({
             'related_id': cls.test2.id,
         })
 
@@ -128,8 +128,8 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         self.assertEqual(self.test2.with_context(lang='fr_FR').name, 'Couteau')
         test1_xml_id = self.test1.export_data(['id']).get('datas')[0][0]
         po_string = '''
-                #. module: test_orm
-                #: model:test_orm.related_translation_1,name:%s
+                #. module: test_translation
+                #: model:test_translation.related_translation_1,name:%s
                 msgid "Knife"
                 msgstr "Nouveau couteau"
                 ''' % test1_xml_id
@@ -281,7 +281,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
 
     def test_new_records(self):
         self.env['res.lang']._activate_lang('nl_NL')
-        model = self.env['test_orm.related_translation_1']
+        model = self.env['test_translation.related_translation_1']
 
         # The value in env lang should persist after reading the second lang value
         record_en = model.new({'name': 'en'})
@@ -326,16 +326,16 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         self.assertEqual(record_fr.name, 'fr')
 
         # check with computed field
-        child_en = self.env['test_orm.related_translation_2'].new({'related_id': record_en.id})
+        child_en = self.env['test_translation.related_translation_2'].new({'related_id': record_en.id})
         child_fr = child_en.with_context(lang='fr_FR')
         self.assertEqual(child_fr.name, 'fr')
         self.assertEqual(child_en.name, 'en')
         self.assertEqual(child_fr.computed_name, 'fr')
         self.assertEqual(child_en.computed_name, 'en')
 
-        record_real = self.env['test_orm.related_translation_1'].create({'name': 'en'})
+        record_real = self.env['test_translation.related_translation_1'].create({'name': 'en'})
         record_real.with_context(lang='fr_FR').name = 'fr'
-        result = self.env['test_orm.related_translation_2'].with_context(lang='fr_FR').onchange({
+        result = self.env['test_translation.related_translation_2'].with_context(lang='fr_FR').onchange({
             'name': 'new fr',  # updated from 'fr' to 'new fr'
             'related_id': record_real.id,
             'computed_name': 'fr',
@@ -344,7 +344,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         self.assertEqual(result['value'], {})
 
     def test_new_records_html(self):
-        model = self.env['test_orm.related_translation_1']
+        model = self.env['test_translation.related_translation_1']
 
         record_en = model.create({'html': '<p>Knife</p><p>Fork</p><p>Spoon</p>'})
         record_fr = record_en.with_context(lang='fr_FR')
@@ -374,7 +374,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
 
     def test_create_translated_dict(self):
         self.env['res.lang']._activate_lang('nl_NL')
-        model = self.env['test_orm.related_translation_1'].with_context(lang='en_US')
+        model = self.env['test_translation.related_translation_1'].with_context(lang='en_US')
         record = model.create({
             'name': {
                 'en_US': 'Knife',
@@ -401,7 +401,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
 
     def test_create_related_translated_dict(self):
         self.env['res.lang']._activate_lang('nl_NL')
-        model = self.env['test_orm.related_translation_4'].with_context(lang='en_US')
+        model = self.env['test_translation.related_translation_4'].with_context(lang='en_US')
         record = model.create({
             'related_id': self.test1.id,
             'name': {
