@@ -8,7 +8,6 @@ import {
     parseFloat,
     parseFloatTime,
     parseInteger,
-    parseMonetary,
     parsePercentage,
 } from "@web/views/fields/parsers";
 
@@ -108,13 +107,13 @@ test("parseFloat", () => {
     expect(parseFloat("1.5")).toBe(1.5);
     expect(parseFloat("1,5")).toBe(1.5);
 
-    // Letters are stripped, not rejected
+    // Letters are stripped, not rejected, including trailing noise after a valid number
     expect(parseFloat("abbc")).toBe(0);
     expect(parseFloat("a2v3c4")).toBe(234);
+    expect(parseFloat("123eee")).toBe(123);
 
-    // ...but "eee" still throws (safe invalid input for validation tests)
-    expect(() => parseFloat("eee")).toThrow();
-    expect(() => parseFloat("123eee")).toThrow();
+    // ...but "-" alone still throws (safe invalid input for validation tests)
+    expect(() => parseFloat("-")).toThrow();
 });
 
 test("parseFloatTime", () => {
@@ -196,10 +195,10 @@ test("parseInteger", () => {
     // Same permissive letter-stripping as parseFloat
     expect(parseInteger("abbc")).toBe(0);
     expect(parseInteger("a2v3c4")).toBe(234);
+    expect(parseInteger("123eee")).toBe(123);
 
-    // ...but "eee" still throws
-    expect(() => parseInteger("eee")).toThrow();
-    expect(() => parseInteger("123eee")).toThrow();
+    // ...but "-" alone still throws
+    expect(() => parseInteger("-")).toThrow();
 });
 
 test("parsePercentage", () => {
@@ -230,74 +229,74 @@ test("parsers fallback on english localisation", () => {
     expect(parseFloat("1,234.567")).toBe(1234.567);
 });
 
-test("parseMonetary", () => {
-    expect(parseMonetary("")).toBe(0);
-    expect(parseMonetary("0")).toBe(0);
-    expect(parseMonetary("100.00\u00a0€")).toBe(100);
-    expect(parseMonetary("-100.00")).toBe(-100);
-    expect(parseMonetary("1,000.00")).toBe(1000);
-    expect(parseMonetary(".1")).toBe(0.1);
-    expect(parseMonetary("1,000,000.00")).toBe(1000000);
-    expect(parseMonetary("$\u00a0125.00")).toBe(125);
-    expect(parseMonetary("1,000.00\u00a0€")).toBe(1000);
+test("monetary (parseFloat)", () => {
+    expect(parseFloat("")).toBe(0);
+    expect(parseFloat("0")).toBe(0);
+    expect(parseFloat("100.00\u00a0€")).toBe(100);
+    expect(parseFloat("-100.00")).toBe(-100);
+    expect(parseFloat("1,000.00")).toBe(1000);
+    expect(parseFloat(".1")).toBe(0.1);
+    expect(parseFloat("1,000,000.00")).toBe(1000000);
+    expect(parseFloat("$\u00a0125.00")).toBe(125);
+    expect(parseFloat("1,000.00\u00a0€")).toBe(1000);
 
-    expect(parseMonetary("\u00a0")).toBe(0);
-    expect(parseMonetary("1\u00a0")).toBe(1);
-    expect(parseMonetary("\u00a01")).toBe(1);
+    expect(parseFloat("\u00a0")).toBe(0);
+    expect(parseFloat("1\u00a0")).toBe(1);
+    expect(parseFloat("\u00a01")).toBe(1);
 
-    expect(parseMonetary("12.00 €")).toBe(12);
-    expect(parseMonetary("$ 12.00")).toBe(12);
-    expect(parseMonetary("1\u00a0$")).toBe(1);
-    expect(parseMonetary("$\u00a01")).toBe(1);
+    expect(parseFloat("12.00 €")).toBe(12);
+    expect(parseFloat("$ 12.00")).toBe(12);
+    expect(parseFloat("1\u00a0$")).toBe(1);
+    expect(parseFloat("$\u00a01")).toBe(1);
 
-    expect(parseMonetary("1$\u00a01")).toBe(11);
-    expect(parseMonetary("$\u00a012.00\u00a034")).toBe(12.0034);
+    expect(parseFloat("1$\u00a01")).toBe(11);
+    expect(parseFloat("$\u00a012.00\u00a034")).toBe(12.0034);
 
-    expect(parseMonetary("1 2345:50 kr")).toBe(1234550);
-    expect(parseMonetary("€ 50,-")).toBe(50);
+    expect(parseFloat("1 2345:50 kr")).toBe(1234550);
+    expect(parseFloat("€ 50,-")).toBe(50);
 
     // nbsp as thousands separator
     patchWithCleanup(localization, { thousandsSep: "\u00a0", decimalPoint: "," });
-    expect(parseMonetary("1\u00a0000,06\u00a0€")).toBe(1000.06);
-    expect(parseMonetary("$\u00a01\u00a0000,07")).toBe(1000.07);
-    expect(parseMonetary("1000000,08")).toBe(1000000.08);
-    expect(parseMonetary("$ -1\u00a0000,09")).toBe(-1000.09);
+    expect(parseFloat("1\u00a0000,06\u00a0€")).toBe(1000.06);
+    expect(parseFloat("$\u00a01\u00a0000,07")).toBe(1000.07);
+    expect(parseFloat("1000000,08")).toBe(1000000.08);
+    expect(parseFloat("$ -1\u00a0000,09")).toBe(-1000.09);
 
     // symbol not separated from the value
-    expect(parseMonetary("1\u00a0000,08€")).toBe(1000.08);
-    expect(parseMonetary("€1\u00a0000,09")).toBe(1000.09);
-    expect(parseMonetary("$1\u00a0000,10")).toBe(1000.1);
-    expect(parseMonetary("$-1\u00a0000,11")).toBe(-1000.11);
+    expect(parseFloat("1\u00a0000,08€")).toBe(1000.08);
+    expect(parseFloat("€1\u00a0000,09")).toBe(1000.09);
+    expect(parseFloat("$1\u00a0000,10")).toBe(1000.1);
+    expect(parseFloat("$-1\u00a0000,11")).toBe(-1000.11);
 
     // any symbol
-    expect(parseMonetary("1\u00a0000,11EUROS")).toBe(1000.11);
-    expect(parseMonetary("EUR1\u00a0000,12")).toBe(1000.12);
-    expect(parseMonetary("DOL1\u00a0000,13")).toBe(1000.13);
-    expect(parseMonetary("1\u00a0000,14DOLLARS")).toBe(1000.14);
-    expect(parseMonetary("DOLLARS+1\u00a0000,15")).toBe(1000.15);
-    expect(parseMonetary("EURO-1\u00a0000,16DOGE")).toBe(-1000.16);
+    expect(parseFloat("1\u00a0000,11EUROS")).toBe(1000.11);
+    expect(parseFloat("EUR1\u00a0000,12")).toBe(1000.12);
+    expect(parseFloat("DOL1\u00a0000,13")).toBe(1000.13);
+    expect(parseFloat("1\u00a0000,14DOLLARS")).toBe(1000.14);
+    expect(parseFloat("DOLLARS+1\u00a0000,15")).toBe(1000.15);
+    expect(parseFloat("EURO-1\u00a0000,16DOGE")).toBe(-1000.16);
 
     // comma as decimal point and dot as thousands separator
     patchWithCleanup(localization, { thousandsSep: ".", decimalPoint: "," });
-    expect(parseMonetary("10,08")).toBe(10.08);
-    expect(parseMonetary("")).toBe(0);
-    expect(parseMonetary("0")).toBe(0);
-    expect(parseMonetary("100,12\u00a0€")).toBe(100.12);
-    expect(parseMonetary("-100,12")).toBe(-100.12);
-    expect(parseMonetary("1.000,12")).toBe(1000.12);
-    expect(parseMonetary(",1")).toBe(0.1);
-    expect(parseMonetary("1.000.000,12")).toBe(1000000.12);
-    expect(parseMonetary("$\u00a0125,12")).toBe(125.12);
-    expect(parseMonetary("1.000,00\u00a0€")).toBe(1000);
-    expect(parseMonetary(",")).toBe(0);
-    expect(parseMonetary("1\u00a0")).toBe(1);
-    expect(parseMonetary("\u00a01")).toBe(1);
-    expect(parseMonetary("12,34 €")).toBe(12.34);
-    expect(parseMonetary("$ 12,34")).toBe(12.34);
+    expect(parseFloat("10,08")).toBe(10.08);
+    expect(parseFloat("")).toBe(0);
+    expect(parseFloat("0")).toBe(0);
+    expect(parseFloat("100,12\u00a0€")).toBe(100.12);
+    expect(parseFloat("-100,12")).toBe(-100.12);
+    expect(parseFloat("1.000,12")).toBe(1000.12);
+    expect(parseFloat(",1")).toBe(0.1);
+    expect(parseFloat("1.000.000,12")).toBe(1000000.12);
+    expect(parseFloat("$\u00a0125,12")).toBe(125.12);
+    expect(parseFloat("1.000,00\u00a0€")).toBe(1000);
+    expect(() => parseFloat(",")).toThrow();
+    expect(parseFloat("1\u00a0")).toBe(1);
+    expect(parseFloat("\u00a01")).toBe(1);
+    expect(parseFloat("12,34 €")).toBe(12.34);
+    expect(parseFloat("$ 12,34")).toBe(12.34);
 
     // Can evaluate expression
-    expect(parseMonetary("=1.000,1 + 2.000,2")).toBe(3000.3);
-    expect(parseMonetary("=1.000,00 + 11.121,00")).toBe(12121);
-    expect(parseMonetary("=1000,00 + 11122,00")).toBe(12122);
-    expect(parseMonetary("=1000 + 11123")).toBe(12123);
+    expect(parseFloat("=1.000,1 + 2.000,2")).toBe(3000.3);
+    expect(parseFloat("=1.000,00 + 11.121,00")).toBe(12121);
+    expect(parseFloat("=1000,00 + 11122,00")).toBe(12122);
+    expect(parseFloat("=1000 + 11123")).toBe(12123);
 });

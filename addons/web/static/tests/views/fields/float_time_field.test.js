@@ -130,7 +130,7 @@ test("FloatTimeField with formula", async () => {
     await press("enter");
     expect(".o_field_float_time.o_field_invalid").toHaveCount(1);
 
-    await contains(".o_field_float_time[name=qux] input").edit("=2eee");
+    await contains(".o_field_float_time[name=qux] input").edit("=2-");
     expect(".o_duration_popover").toHaveCount(0);
     await press("enter");
     expect(".o_field_float_time.o_field_invalid").toHaveCount(1);

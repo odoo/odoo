@@ -1,8 +1,6 @@
 import { parseDate, parseDateTime } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { escapeRegExp } from "@web/core/utils/strings";
 import { ArithmeticOperation } from "@web/model/relational_model/operation";
 import { durationUnitsRegex, normalizeTimeStr } from "@web/core/l10n/time";
 
@@ -62,6 +60,7 @@ function parseNumber(value, options = {}) {
         return Number(value);
     }
 
+    let hasUnambiguousDecimalPoint = false;
     if (!options.integer) {
         const dp = value.match(DECIMAL_SEPARATOR_REGEX)?.[1];
 
@@ -71,12 +70,21 @@ function parseNumber(value, options = {}) {
                 const cleanupRegex = new RegExp(`[^\\deE\\-${dp}]`, "g");
                 value = value.replace(cleanupRegex, "");
                 value = value.replace(dp, ".");
-                return Number(value);
+                hasUnambiguousDecimalPoint = true;
             }
         }
     }
+    if (!hasUnambiguousDecimalPoint) {
+        value = value.replace(/[^\deE-]/g, "");
+    }
 
-    value = value.replace(/[^\deE-]/g, "");
+    // A stray e/E isn't a real exponent marker unless flanked by a digit before and an
+    // optionally-signed digit after (e.g. the E in "EUR"/"EUROS" gets removed).
+    value = value.replace(/(?<!\d)[eE]|[eE](?![-+]?\d)/g, "");
+    // A "-" is only meaningful as a leading sign or an exponent sign (after e/E); anywhere
+    // else it's noise (e.g. the trailing "-" in "50,-").
+    value = value.replace(/(?<!^)(?<![eE])-/g, "");
+
     return Number(value);
 }
 
@@ -256,35 +264,6 @@ export function parsePercentage(value) {
     return parseFloat(value) / 100;
 }
 
-/**
- * Try to extract a monetary value from a string. The localization is considered in the process.
- * This is a very lenient function such that it ignores everything before we encounter a substring consisting of either
- * - a sign (- or +)
- * - an equals sign (signaling the start of a mathematical expression)
- * - a decimal point
- * - a number
- * We then remove any non-numeric characters at the end
- *
- *
- * @param {string} value
- * @returns {number}
- */
-export function parseMonetary(value, { allowOperation = false } = {}) {
-    const operation = allowOperation ? ArithmeticOperation.parse(value, parseMonetary) : null;
-    if (operation) {
-        return operation;
-    }
-    value = value.trim();
-    const startMatch = value.match(
-        new RegExp(`[\\d\\-+=]|${escapeRegExp(localization.decimalPoint)}`)
-    );
-    if (startMatch) {
-        value = value.substring(startMatch.index);
-    }
-    value = value.replace(/\D*$/, "");
-    return parseFloat(value);
-}
-
 registry
     .category("parsers")
     .add("date", parseDate)
@@ -293,5 +272,5 @@ registry
     .add("float_time", parseFloatTime)
     .add("integer", parseInteger)
     .add("many2one_reference", parseInteger)
-    .add("monetary", parseMonetary)
+    .add("monetary", parseFloat)
     .add("percentage", parsePercentage);
