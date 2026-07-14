@@ -146,7 +146,7 @@ export class Navbar extends Component {
 
     onTicketButtonClick() {
         // select default selected order and apply paid filter while editing paid order payments
-        if (this.pos.router.state.current == "PaymentScreen" && this.pos.getOrder()?.finalized) {
+        if (this.pos.router.currentScreen() == "PaymentScreen" && this.pos.getOrder()?.finalized) {
             return this.pos.openFinalizedOrders();
         }
         return this.pos.navigate("TicketScreen");
@@ -156,7 +156,7 @@ export class Navbar extends Component {
     }
     onClickScan() {
         if (!this.pos.scanning) {
-            const screenName = this.pos.router.state.current;
+            const screenName = this.pos.router.currentScreen();
             if (["ProductScreen", "TicketScreen"].includes(screenName)) {
                 const params =
                     screenName === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
@@ -215,7 +215,7 @@ export class Navbar extends Component {
 
     get mainButton() {
         const screens = ["ProductScreen", "PaymentScreen", "TipScreen"];
-        return screens.includes(this.pos.router.state.current) ? "register" : "order";
+        return screens.includes(this.pos.router.currentScreen()) ? "register" : "order";
     }
     get showOderTrackerDropdown() {
         return false;

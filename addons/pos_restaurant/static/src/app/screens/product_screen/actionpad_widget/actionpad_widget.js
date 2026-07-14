@@ -24,7 +24,7 @@ patch(ActionpadWidget.prototype, {
     get swapButton() {
         return (
             this.pos.config.module_pos_restaurant &&
-            this.pos.router.state.current !== "TicketScreen"
+            this.pos.router.currentScreen() !== "TicketScreen"
         );
     },
     get displayOrderButton() {

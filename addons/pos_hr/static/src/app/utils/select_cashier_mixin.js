@@ -113,7 +113,7 @@ export class CashierSelector {
             this.pos.setCashier(employee);
         }
 
-        const currentScreen = this.pos.router.state.current;
+        const currentScreen = this.pos.router.currentScreen();
         if (currentScreen === "LoginScreen" && login && employee) {
             const selectedScreen = this.pos.defaultPage;
             const props = {

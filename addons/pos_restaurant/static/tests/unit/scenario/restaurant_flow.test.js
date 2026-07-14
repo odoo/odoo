@@ -20,8 +20,8 @@ async function setupFloorTest() {
 }
 
 async function mountFloorScreen(store) {
-    store.router.state.current = "FloorScreen";
-    store.router.state.params = {};
+    store.router.currentScreen.set("FloorScreen");
+    store.router.currentScreenParams.set({});
     const screen = await mountWithCleanup(FloorScreen);
     await animationFrame();
     return screen;
@@ -299,7 +299,7 @@ test("test_preset_timing_restaurant: select takeaway preset, name popup, pick ti
 test("test_open_default_register_screen_config: starts on FloorScreen with tables mode", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    expect(store.router.state.current).toBe("FloorScreen");
+    expect(store.router.currentScreen()).toBe("FloorScreen");
     expect(document.querySelector(".floor-screen")).not.toBe(null);
 });
 
@@ -349,11 +349,11 @@ test("Full flow: select table, add product, pay with cash", async () => {
     await Utils.clickValidatePayment();
 
     expect(order.state).toBe("paid");
-    expect(store.router.state.current).toBe("FeedbackScreen");
+    expect(store.router.currentScreen()).toBe("FeedbackScreen");
 
     await Utils.clickNextOrder();
 
-    expect(store.router.state.current).toBe("FloorScreen");
+    expect(store.router.currentScreen()).toBe("FloorScreen");
 });
 
 test("test_transfering_orders: create floating and table orders, verify 4 orders exist", async () => {
@@ -425,7 +425,7 @@ test("test_guest_count_bank_payment: guest popup on open, add product, pay, go b
     await contains(".payment-screen .back-button").click();
     await animationFrame();
 
-    expect(store.router.state.current).toBe("ProductScreen");
+    expect(store.router.currentScreen()).toBe("ProductScreen");
     expect(store.getOrder().getCustomerCount()).toBe(5);
 });
 
@@ -508,7 +508,7 @@ test("ControlButtonsTour: transfer, notes, guest count, cancel, cross-floor tran
     await Utils.clickControlButton("Cancel Order");
     await waitFor(".modal");
     await Utils.confirmDialog();
-    expect(store.router.state.current).toBe("FloorScreen");
+    expect(store.router.currentScreen()).toBe("FloorScreen");
 
     await Utils.clickTable("1");
     await Utils.clickDisplayedProduct("TEST");
@@ -860,7 +860,7 @@ test("test_name_preset_skip_screen: partner set skips name popup, pay succeeds",
     await waitFor(".feedback-screen");
     await Utils.clickNextOrder();
 
-    expect(store.router.state.current).toBe("FloorScreen");
+    expect(store.router.currentScreen()).toBe("FloorScreen");
 });
 
 test("test_preset_delivery_restaurant: cancel order with preset returns to floor", async () => {
@@ -889,13 +889,13 @@ test("test_preset_delivery_restaurant: cancel order with preset returns to floor
     await contains(".modal .btn-secondary").click();
     await animationFrame();
 
-    expect(store.router.state.current).toBe("ProductScreen");
+    expect(store.router.currentScreen()).toBe("ProductScreen");
 
     await Utils.clickControlButton("Cancel Order");
     await waitFor(".modal");
     await Utils.confirmDialog();
 
-    expect(store.router.state.current).toBe("FloorScreen");
+    expect(store.router.currentScreen()).toBe("FloorScreen");
 });
 
 test("test_open_register_with_preset_takeaway: timing popup on table, cancel removes order", async () => {
@@ -935,7 +935,7 @@ test("test_open_register_with_preset_takeaway: timing popup on table, cancel rem
     await waitFor(".modal");
     await Utils.confirmDialog();
 
-    expect(store.router.state.current).toBe("FloorScreen");
+    expect(store.router.currentScreen()).toBe("FloorScreen");
 
     await Utils.clickOrders();
     await waitFor(".ticket-screen");
@@ -958,12 +958,12 @@ test("RestaurantPresetEatInTour: eat-in table order, pay, receipt has no preset 
     await Utils.clickValidatePayment();
     await waitFor(".feedback-screen");
 
-    expect(store.router.state.current).toBe("FeedbackScreen");
+    expect(store.router.currentScreen()).toBe("FeedbackScreen");
     expect(document.querySelector(".feedback-screen .preset-info")).toBe(null);
 
     await Utils.clickNextOrder();
 
-    expect(store.router.state.current).toBe("FloorScreen");
+    expect(store.router.currentScreen()).toBe("FloorScreen");
 });
 
 test("test_combo_apply_after_preparation: apply combo groups standalone lines, persists after reload", async () => {
@@ -1051,7 +1051,7 @@ test("test_multiple_preparation_printer_different_categories: both printers trig
     await Utils.clickPaymentMethod("Card");
     await Utils.clickValidatePayment();
 
-    expect(store.router.state.current).toBe("FeedbackScreen");
+    expect(store.router.currentScreen()).toBe("FeedbackScreen");
 });
 
 test("test_combo_synchronisation: combo links persist after partner change, course transfer moves entire combo", async () => {
@@ -1232,15 +1232,15 @@ test("Full flow: mount PosApp, return to the same floor, select table, add produ
 
     await contains(".floor-selector .button-floor:contains(Patio)").click();
     await contains(".o_fp_table[data-table_id='14']").click();
-    expect(store.router.state.current).toBe("ProductScreen");
+    expect(store.router.currentScreen()).toBe("ProductScreen");
     expect(store.getOrder().table_id.id).toBe(14);
 
     await Utils.clickPlanButton();
-    expect(store.router.state.current).toBe("FloorScreen");
+    expect(store.router.currentScreen()).toBe("FloorScreen");
     expect(queryOne(".floor-selector .button-floor.active").textContent.trim()).toBe("Patio");
 
     await contains(".o_fp_table[data-table_id='14']").click();
-    expect(store.router.state.current).toBe("ProductScreen");
+    expect(store.router.currentScreen()).toBe("ProductScreen");
 
     await Utils.clickDisplayedProduct("TEST");
     const order = store.getOrder();
@@ -1254,11 +1254,11 @@ test("Full flow: mount PosApp, return to the same floor, select table, add produ
 
     await Utils.clickValidatePayment();
     expect(order.state).toBe("paid");
-    expect(store.router.state.current).toBe("FeedbackScreen");
+    expect(store.router.currentScreen()).toBe("FeedbackScreen");
 
     await contains(".feedback-screen .validation").click();
     await animationFrame();
-    expect(store.router.state.current).toBe("FloorScreen");
+    expect(store.router.currentScreen()).toBe("FloorScreen");
 });
 
 test("test_add_new_table_number_with_multi_floor: table numbers increment per floor", async () => {

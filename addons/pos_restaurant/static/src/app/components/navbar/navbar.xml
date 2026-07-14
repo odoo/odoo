@@ -5,12 +5,12 @@
            <FloorPlanEditorNavBar  t-if="this.floorPlanStore?.isEditToolbarVisible()"/>
        </xpath>
         <xpath expr="//DropdownItem/i[@data-icon='chevron_left']/.." position="before">
-            <t t-if="this.pos.router.state.current == 'FloorScreen' and this.ui.isSmall">
+            <t t-if="this.pos.router.currentScreen() == 'FloorScreen' and this.ui.isSmall">
                 <DropdownItem t-if="this.showEditPlanButton and this.pos.config.floor_ids.length" onSelected="() => this.floorPlanStore.startEditMode()">
                     <i class="oi oi-fw" data-icon="edit_square" aria-hidden="true" /> Edit Plan
                 </DropdownItem>
             </t>
-            <DropdownItem t-if="this.pos.router.state.current == 'FloorScreen'" onSelected="() => this.onSwitchButtonClick()">
+            <DropdownItem t-if="this.pos.router.currentScreen() == 'FloorScreen'" onSelected="() => this.onSwitchButtonClick()">
                 <i class="oi oi-fw" data-icon="visibility" aria-hidden="true" /> Switch Floor View
             </DropdownItem>
         </xpath>

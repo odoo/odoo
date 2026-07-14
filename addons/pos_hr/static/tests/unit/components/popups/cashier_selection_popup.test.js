@@ -38,7 +38,7 @@ test("lock", async () => {
         },
     });
     await comp.lock();
-    expect(store.router.state.current).toBe("LoginScreen");
+    expect(store.router.currentScreen()).toBe("LoginScreen");
 });
 test("selectEmployee", async () => {
     const store = await setupPosEnv();
