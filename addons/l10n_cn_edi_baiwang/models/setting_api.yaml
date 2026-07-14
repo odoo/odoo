@@ -1,0 +1,385 @@
+openapi: 3.0.3
+info:
+  title: Baiwang API Specifications
+  version: 1.0.0
+  [cite_start]description: "OpenAPI specification for the Order Activation Notification webhook and the User Center Add Open Org Rel API. [cite: 1, 69]"
+paths:
+  /router/rest:
+    post:
+      summary: "Add Open Org Rel API"
+      [cite_start]description: "添加关联企业_appkey他用定制 (Add associated enterprise - appkey tailored). [cite: 72]"
+      operationId: addOpenOrgRelApi
+      parameters:
+        - name: method
+          in: query
+          required: true
+          schema:
+            type: string
+          [cite_start]description: "接口名称。 (Interface name) [cite: 74]"
+        - name: appKey
+          in: query
+          required: true
+          schema:
+            type: string
+          [cite_start]description: "给开发者颁发的key。 (Key issued to the developer) [cite: 74]"
+        - name: sign
+          in: query
+          required: true
+          schema:
+            type: string
+          [cite_start]description: "请求签名,使用MD5,用于安全控制。 (Request signature, using MD5, for security control) [cite: 74]"
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+          [cite_start]description: "token 用于调用接口前授权检查。 (Token used for authorization check before calling the interface) [cite: 74]"
+        - name: timestamp
+          in: query
+          required: true
+          schema:
+            type: string
+          [cite_start]description: "Unix时间戳,例如 : 1506304524000。 (Unix timestamp) [cite: 74]"
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            default: json
+          description: "响应格式。默认为json格式 可选值:xml, json. (Response format. Default is json) [cite: 74]"
+        - name: version
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "7.0"
+          [cite_start]description: "API协议版本,当前版本号 7.0 (API protocol version, current version 7.0) [cite: 74]"
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            default: sync
+          [cite_start]description: "请求类型,默认 sync,可选值asyn, sync。 (Request type, default sync) [cite: 74]"
+        - name: requestId
+          in: query
+          required: false
+          schema:
+            type: string
+          [cite_start]description: "请求唯一标识,标识唯一请求,默认UUID。 (Unique request identifier) [cite: 74]"
+        - name: signType
+          in: query
+          required: false
+          schema:
+            type: string
+            default: MD5
+          [cite_start]description: "签名类型,可选:SHA256、SM3、MD5,默认值:MD5 (Signature type) [cite: 74]"
+        - name: encryptType
+          in: query
+          required: true
+          schema:
+            type: string
+          [cite_start]description: "报文加密类型,可选:NONE、AES、DES、DES3 SM4 (Message encryption type) [cite: 74]"
+        - name: encryptScope
+          in: query
+          required: true
+          schema:
+            type: string
+          [cite_start]description: "报文加密范围,00(请求、响应报文都不加密)、10(请求报文加密)、11(请求、响应报文都加密)、01(响应报文加密) (Message encryption scope) [cite: 74, 75]"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddOpenOrgRelRequest'
+      responses:
+        '200':
+          [cite_start]description: "Successful or failed response wrapper [cite: 80, 155]"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddOpenOrgRelResponse'
+
+  /webhook/order-activation:
+    post:
+      summary: "Order Activation Notification Webhook"
+      [cite_start]description: "通过推送中心推送开通信息,报文结构如下 (Pushing activation information via Push Center). [cite: 1]"
+      operationId: receiveOrderActivationNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderActivationNotification'
+      responses:
+        '200':
+          description: "Successfully received notification"
+
+components:
+  schemas:
+    AddOpenOrgRelRequest:
+      type: object
+      required:
+        - taxCode
+        - toTaxCode
+        - relTypes
+        - authTypes
+        - creater
+        - sourceFlag
+      properties:
+        taxCode:
+          type: string
+          maxLength: 17
+          [cite_start]description: "发起邀请的税号 (Tax code initiating the invitation) [cite: 77]"
+        toTaxCode:
+          type: string
+          maxLength: 17
+          [cite_start]description: "被邀请的企业税号 (Invited enterprise tax code) [cite: 77]"
+        relTypes:
+          type: array
+          items:
+            type: integer
+          [cite_start]description: "List<Long>,关系类型 企业类型3.供应商 4.代理商人5.经销商 6.加盟伙伴7.服务对象8.控股子公司9.其他 (List of relationship types) [cite: 77]"
+        relTypeExt:
+          type: string
+          [cite_start]description: "其他企业类型描述 (Other enterprise type descriptions) [cite: 77]"
+        authTypes:
+          type: array
+          items:
+            type: integer
+          [cite_start]description: "List<Long>,授权业务 1.开放平台接口2.三方应用授权 (Authorized business list) [cite: 77]"
+        creater:
+          type: string
+          [cite_start]description: "创建人 (Creator) [cite: 77]"
+        sourceFlag:
+          type: integer
+          [cite_start]description: "来源1.用户中心2.订单中心3.供应链4.开放平台,5三方ISV (Source flag) [cite: 77]"
+        relUrlType:
+          type: integer
+          default: 1
+          [cite_start]description: "邮件/出参url类型:1.通用2.三方应用定制url 默认1 (Mail/output URL type) [cite: 77]"
+
+    AddOpenOrgRelResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          [cite_start]description: "接口调用成功或失败的标志true:成功,false:失败 [cite: 80]"
+        method:
+          type: string
+          [cite_start]description: "接口的唯一标识 [cite: 80]"
+        requestId:
+          type: string
+          [cite_start]description: "请求唯一标识,与调用接口时传入的 request_id一致 [cite: 80]"
+        response:
+          type: array
+          [cite_start]description: "业务接口调用成功后返回的具体响应信息 [cite: 81]"
+          items:
+            type: object
+            properties:
+              relUrl:
+                type: string
+                [cite_start]description: "relUrl [cite: 83]"
+        errorResponse:
+          type: object
+          [cite_start]description: "错误响应信息 [cite: 81]"
+          properties:
+            code:
+              type: integer
+              [cite_start]description: "调用失败后,返回的错误码(开放平台错误码) [cite: 81]"
+            message:
+              type: string
+              [cite_start]description: "调用失败后,返回的错误信息(开放平台错误信息) [cite: 81]"
+            subCode:
+              type: string
+              [cite_start]description: "调用失败后,返回的错误码(业务端返回错误码) [cite: 81]"
+            subMessage:
+              type: string
+              [cite_start]description: "调用失败后,返回的错误信息(业务端返回错误信息) [cite: 81]"
+
+    OrderActivationNotification:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: "订阅 id. 唯一id(业务方可根据此字段做幂等处理) [cite: 2]"
+        msgType:
+          type: string
+          [cite_start]description: "推送消息类型: INIT(初始化), OPENED(开通完成), RENEW(续费), FREEZE(冻结), UNFREEZE(解冻), EXPIRED(过期) [cite: 2]"
+        orgId:
+          type: integer
+          format: int64
+          [cite_start]description: "机构id [cite: 2]"
+        topOrgId:
+          type: integer
+          format: int64
+          description: "顶级机构 id. 按租户计价时才会返回 [cite: 2]"
+        taxCode:
+          type: string
+          [cite_start]description: "税号 [cite: 2]"
+        accountNo:
+          type: string
+          [cite_start]description: "用户账号 [cite: 2]"
+        tenantId:
+          type: integer
+          format: int64
+          [cite_start]description: "租户id [cite: 2]"
+        userId:
+          type: string
+          [cite_start]description: "个人用户id [cite: 2]"
+        skuId:
+          type: string
+          [cite_start]description: "sku 编码 [cite: 2]"
+        cloudProductCode:
+          type: string
+          [cite_start]description: "应用编码 [cite: 2]"
+        childCloudProductCode:
+          type: string
+          [cite_start]description: "子应用编码 [cite: 4]"
+        productLine:
+          type: string
+          [cite_start]description: "产品线 [cite: 4]"
+        priceEntityType:
+          type: string
+          description: "计价主体类型. TAX_NO(1, 税号), TENANT_ID(5, 租户) [cite: 4]"
+        packageId:
+          type: string
+          [cite_start]description: "套餐 id [cite: 4]"
+        packageName:
+          type: string
+          [cite_start]description: "套餐名称 [cite: 4]"
+        goodsId:
+          type: string
+          [cite_start]description: "商品 id [cite: 4]"
+        goodsName:
+          type: string
+          [cite_start]description: "商品名称 [cite: 4]"
+        openingTime:
+          type: string
+          [cite_start]description: "开通时间 [cite: 4]"
+        validStartTime:
+          type: string
+          [cite_start]description: "有效期开始时间 [cite: 4]"
+        validEndTime:
+          type: string
+          [cite_start]description: "有效期结束时间 [cite: 4]"
+        status:
+          type: string
+          [cite_start]description: "状态: WAIT_OPEN(待开通), WAIT_VALID(待生效), VALID(有效), FREEZE(冻结), OVERDUE(过期), INVALID(失效) [cite: 5]"
+        channelId:
+          type: string
+          [cite_start]description: "指定服务单位 id [cite: 5]"
+        channelName:
+          type: string
+          [cite_start]description: "指定服务单位名称 [cite: 5]"
+        firstChannelId:
+          type: string
+          [cite_start]description: "首次下单服务单位 id [cite: 5]"
+        freezeOperator:
+          type: string
+          [cite_start]description: "冻结操作人 [cite: 5]"
+        freezeTime:
+          type: string
+          [cite_start]description: "冻结时间 (yyyy-MM-dd HH:mm:ss) [cite: 5]"
+        freezeReason:
+          type: string
+          [cite_start]description: "冻结原因 [cite: 5]"
+        outId:
+          type: string
+          [cite_start]description: "外部订单 id [cite: 5]"
+        productInfoList:
+          type: array
+          [cite_start]description: "产品应用列表 [cite: 5]"
+          items:
+            $ref: '#/components/schemas/ProductInfo'
+        tradeItemList:
+          type: array
+          [cite_start]description: "关联订单项信息 (以下为订单项信息 sku维度) [cite: 6]"
+          items:
+            $ref: '#/components/schemas/TradeItem'
+
+    ProductInfo:
+      type: object
+      properties:
+        productSelfId:
+          type: integer
+          format: int64
+          [cite_start]description: "产品 ID [cite: 5]"
+        productSelfName:
+          type: string
+          [cite_start]description: "产品名称 [cite: 6]"
+        productId:
+          type: integer
+          format: int64
+          [cite_start]description: "应用 id [cite: 6]"
+        productName:
+          type: string
+          [cite_start]description: "应用名称 [cite: 6]"
+
+    TradeItem:
+      type: object
+      properties:
+        price:
+          type: number
+          format: double
+          [cite_start]description: "单价 [cite: 6]"
+        quantity:
+          type: integer
+          [cite_start]description: "购买数量 [cite: 6]"
+        orderNo:
+          type: string
+          [cite_start]description: "订单编号 [cite: 6]"
+        contractNo:
+          type: string
+          [cite_start]description: "合同编号 [cite: 6]"
+        validStartTime:
+          type: string
+          [cite_start]description: "该订单的有效期开始时间 (yyyy-MM-dd HH:mm:ss) [cite: 6]"
+        validEndTime:
+          type: string
+          [cite_start]description: "该订单的有效期结束时间 (yyyy-MM-dd HH:mm:ss) [cite: 6]"
+        validTimeUnit:
+          type: string
+          [cite_start]description: "有效期时长单位: 1-天、2-月、3-年 [cite: 6]"
+        validTime:
+          type: integer
+          format: int64
+          [cite_start]description: "有效期时长 [cite: 6]"
+        termQuantity:
+          type: integer
+          [cite_start]description: "商品的周期购买数据量 [cite: 7]"
+        priceEntityType:
+          type: string
+          [cite_start]description: "计价主体类型: 1-税号 2-盘号 3-渠道+税号(电商) 4-appkey(开放平台) 5-租户 [cite: 7]"
+        channelId:
+          type: string
+          [cite_start]description: "渠道 id [cite: 7]"
+        channelName:
+          type: string
+          [cite_start]description: "渠道名称 [cite: 7]"
+        productLine:
+          type: string
+          [cite_start]description: "产品线 [cite: 7]"
+        tenantId:
+          type: integer
+          format: int64
+          [cite_start]description: "下单租户 id [cite: 7]"
+        userId:
+          type: string
+          [cite_start]description: "下单用户 id [cite: 7]"
+        userName:
+          type: string
+          [cite_start]description: "下单用户名称 [cite: 7]"
+        tollType:
+          type: integer
+          [cite_start]description: "产品收费类型: 1-一次性收费、2-包年包月、3-按量计费 [cite: 7]"
+        sourceId:
+          type: string
+          [cite_start]description: "订单来源 [cite: 7]"
+        chargeFactor:
+          type: string
+          [cite_start]description: "计费因子 [cite: 7]"
+        createTime:
+          type: string
+          [cite_start]description: "创建时间 [cite: 7]"
