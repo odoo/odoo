@@ -1,5 +1,5 @@
 from odoo.tests.common import tagged, TransactionCase
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo import Command
 
 
@@ -143,3 +143,42 @@ class TestMergePartner(TransactionCase):
         ])
         self.assertEqual(self.attachment_bank1.res_id, self.bank1.id, "Bank attachment should remain linked to the correct bank account")
         self.assertEqual(self.attachment_bank3.res_id, self.bank1.id, "Bank attachment should be reassigned to the correct bank account")
+
+    def test_merge_partner_archived(self):
+        partner = self.env['res.partner']
+
+        p1 = partner.create({'name': 'test1'})
+        p2 = partner.create({'name': 'test2'})
+        p3 = partner.create({'name': 'test3', 'active': False})
+        partners_ids = (p1 + p2 + p3)
+
+        wizard = self.env['base.partner.merge.automatic.wizard'].with_context(active_ids=partners_ids.ids, active_model='res.partner').create({})
+
+        self.assertEqual(wizard.partner_ids, partners_ids)
+        self.assertEqual(wizard.dst_partner_id, p2)
+
+        wizard.action_merge()
+
+        self.assertFalse(p1.exists())
+        self.assertTrue(p2.exists())
+        self.assertFalse(p3.exists())
+
+    def test_partner_merge_wizard_more_than_one_user_error(self):
+        """ Test that partners cannot be merged if linked to more than one user even if only one is active. """
+        p1, p2, dst_partner = self.env['res.partner'].create([{'name': f'test{idx + 1}'} for idx in range(3)])
+        u1, u2 = self.env['res.users'].create([{'name': 'test1', 'login': 'test1', 'partner_id': p1.id},
+                                               {'name': 'test2', 'login': 'test2', 'partner_id': p2.id}])
+        MergeWizard_with_context = self.env['base.partner.merge.automatic.wizard'].with_context(
+            active_ids=(u1.partner_id + u2.partner_id + dst_partner).ids, active_model='res.partner')
+
+        with self.assertRaises(UserError):
+            MergeWizard_with_context.create({}).action_merge()
+
+        u2.action_archive()
+        with self.assertRaises(UserError):
+            MergeWizard_with_context.create({}).action_merge()
+
+        u2.unlink()
+        MergeWizard_with_context.create({}).action_merge()
+        self.assertTrue(dst_partner.exists())
+        self.assertEqual(u1.partner_id.id, dst_partner.id)

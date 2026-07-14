@@ -1,5 +1,5 @@
 from odoo import Command
-from odoo.exceptions import MissingError, UserError
+from odoo.exceptions import MissingError
 
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 
@@ -168,45 +168,6 @@ class One2manyCase(TransactionExpressionCase):
         self.assertEqual(model1.pArTneR_321_id, p1)
         self.assertTrue(model2.exists())
         self.assertEqual(model2.pArTneR_321_id, p1)
-
-    def test_merge_partner_archived(self):
-        partner = self.env['res.partner']
-
-        p1 = partner.create({'name': 'test1'})
-        p2 = partner.create({'name': 'test2'})
-        p3 = partner.create({'name': 'test3', 'active': False})
-        partners_ids = (p1 + p2 + p3)
-
-        wizard = self.env['base.partner.merge.automatic.wizard'].with_context(active_ids=partners_ids.ids, active_model='res.partner').create({})
-
-        self.assertEqual(wizard.partner_ids, partners_ids)
-        self.assertEqual(wizard.dst_partner_id, p2)
-
-        wizard.action_merge()
-
-        self.assertFalse(p1.exists())
-        self.assertTrue(p2.exists())
-        self.assertFalse(p3.exists())
-
-    def test_partner_merge_wizard_more_than_one_user_error(self):
-        """ Test that partners cannot be merged if linked to more than one user even if only one is active. """
-        p1, p2, dst_partner = self.env['res.partner'].create([{'name': f'test{idx + 1}'} for idx in range(3)])
-        u1, u2 = self.env['res.users'].create([{'name': 'test1', 'login': 'test1', 'partner_id': p1.id},
-                                               {'name': 'test2', 'login': 'test2', 'partner_id': p2.id}])
-        MergeWizard_with_context = self.env['base.partner.merge.automatic.wizard'].with_context(
-            active_ids=(u1.partner_id + u2.partner_id + dst_partner).ids, active_model='res.partner')
-
-        with self.assertRaises(UserError):
-            MergeWizard_with_context.create({}).action_merge()
-
-        u2.action_archive()
-        with self.assertRaises(UserError):
-            MergeWizard_with_context.create({}).action_merge()
-
-        u2.unlink()
-        MergeWizard_with_context.create({}).action_merge()
-        self.assertTrue(dst_partner.exists())
-        self.assertEqual(u1.partner_id.id, dst_partner.id)
 
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
