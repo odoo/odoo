@@ -1140,6 +1140,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'state_code': self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cbc:CountrySubentityCode', tree),
         }
 
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        # EXTENDS account.edi.common
+        res = super()._import_invoice_ubl_cii(invoice, file_data, new=new)
+        # The invoice_origin has been guessed from the line descriptions, flag it to clean it if no PO is matched.
+        file_data['invoice_origin_from_description'] = bool(
+            not res and invoice.invoice_origin and not file_data['xml_tree'].findtext('./{*}OrderReference/{*}ID'),
+        )
+        return res
+
     def _import_fill_invoice(self, invoice, tree, qty_factor):
         logs = []
         invoice_values = {}
