@@ -518,8 +518,10 @@ class FleetVehicle(models.Model):
         if xml_id:
 
             res = self.env['ir.actions.act_window']._for_xml_id('fleet.%s' % xml_id)
+            env_context = dict(self.env.context)
+            env_context.pop('list_view_ref', None)
             res.update(
-                context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
+                context=dict(env_context, default_vehicle_id=self.id, group_by=False),
                 domain=[('vehicle_id', '=', self.id)]
             )
             return res
