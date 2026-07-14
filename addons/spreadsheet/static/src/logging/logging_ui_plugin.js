@@ -74,7 +74,7 @@ export class LoggingUIPlugin extends UIPlugin {
 
     getLoadedDataSources() {
         return this.getDatasources()
-            .filter((ds) => ds.isReady())
+            .filter((ds) => ds.isValid())
             .map((ds) => ds.source);
     }
 }
