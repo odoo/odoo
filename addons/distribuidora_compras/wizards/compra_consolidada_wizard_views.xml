@@ -1,0 +1,30 @@
+<odoo>
+    <record id="view_compra_consolidada_wizard_form" model="ir.ui.view">
+        <field name="name">distribuidora.compra.consolidada.wizard.form</field>
+        <field name="model">distribuidora.compra.consolidada.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Consolidación de compra">
+                <group>
+                    <field name="fecha_entrega"/>
+                </group>
+                <footer>
+                    <button name="action_generar_lista" string="Generar lista" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_compra_consolidada_wizard" model="ir.actions.act_window">
+        <field name="name">Consolidación de compra</field>
+        <field name="res_model">distribuidora.compra.consolidada.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_compra_consolidada"
+              name="Consolidación de compra"
+              parent="purchase.menu_purchase_root"
+              action="action_compra_consolidada_wizard"
+              sequence="100"/>
+</odoo>

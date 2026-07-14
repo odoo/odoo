@@ -44,3 +44,7 @@ class CompraConsolidadaWizard(models.TransientModel):
             {'product': product, 'qty': qty, 'uom': uom_by_product[product]}
             for product, qty in totals.items()
         ]
+
+    def action_generar_lista(self):
+        self.ensure_one()
+        return self.env.ref('distribuidora_compras.action_report_compra_consolidada').report_action(self)
