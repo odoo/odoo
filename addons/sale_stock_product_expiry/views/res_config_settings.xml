@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.stock.account.product.expiry</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="stock_account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//setting[@id='group_lot_on_invoice']" position="after">
+                    <setting invisible="not group_lot_on_invoice" id="group_exp_date_on_invoice" help="Expiration dates will appear on the invoice">
+                        <field name="group_exp_date_on_invoice"/>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
