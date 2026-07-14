@@ -1567,6 +1567,9 @@ def preload_registries(dbnames):
     if registries_size:
         Registry.registries.count = registries_size
 
+    if registry_idle_timeout := os.environ.get("ODOO_REGISTRY_MAX_IDLE_TIMEOUT"):
+        Registry.idle_timeout = int(registry_idle_timeout)
+
     for dbname in dbnames:
         if os.environ.get('ODOO_PROFILE_PRELOAD'):
             interval = float(os.environ.get('ODOO_PROFILE_PRELOAD_INTERVAL', '0.1'))
