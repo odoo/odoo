@@ -1,5 +1,6 @@
 from .test_project_base import TestProjectCommon
 from odoo import Command
+from odoo.tests import Form
 from odoo.addons.mail.tests.common import MailCase
 from odoo.exceptions import AccessError
 
@@ -481,3 +482,31 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         self.assertFalse(task1.user_ids)
         self.assertEqual(self.user_projectuser + self.user_projectmanager, task_2.user_ids)
         self.assertEqual(self.user_projectuser, task_3.user_ids)
+
+    def test_partner_follows_project_change_on_new_task(self):
+        """ Selecting the project of a new task should set the customer to that
+        project's customer. """
+        project = self.env['project.project'].create({
+            'name': 'Project with partner',
+            'partner_id': self.partner_2.id,
+        })
+        task_form = Form(self.env['project.task'])
+        task_form.project_id = self.project_pigs
+        task_form.project_id = project
+        self.assertEqual(task_form.partner_id, self.partner_2)
+
+    def test_partner_kept_on_existing_task_project_change(self):
+        """ Changing the project of an existing task should keep its customer,
+        which may already carry linked records. """
+        project = self.env['project.project'].create({
+            'name': 'Project with partner',
+            'partner_id': self.partner_2.id,
+        })
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': self.project_pigs.id,
+            'partner_id': self.partner_1.id,
+        })
+        with Form(task) as task_form:
+            task_form.project_id = project
+        self.assertEqual(task.partner_id, self.partner_1)
