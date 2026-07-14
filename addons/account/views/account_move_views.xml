@@ -347,7 +347,7 @@
                     <filter name="not_secured" string="Not Secured" domain="[('move_id.secured', '=', False), ('move_id.state', '=', 'posted')]"
                             groups="account.group_account_secured,base.group_no_one"/>
                     <separator/>
-                    <filter string="To Review" name="to_check" domain="[('move_id.review_state', 'in', ('todo', 'anomaly'))]"/>
+                    <filter string="To Review" name="to_check" domain="[('move_id.review_state', 'in', ('todo', 'anomaly')), ('move_id.state', '=', 'posted')]"/>
                     <separator/>
                     <filter string="Unreconciled"
                             domain="[('balance', '!=', 0), ('account_id.reconcile', '=', True), '|', ('matching_number', '=', False), ('matching_number', '=like', 'P%')]"
@@ -1835,7 +1835,7 @@
                             domain="[('move_type', '=', 'out_refund')]"
                     />
                     <separator/>
-                    <filter string="To Review" name="to_check" domain="[('review_state', 'in', ('todo', 'anomaly'))]"/>
+                    <filter string="To Review" name="to_check" domain="[('review_state', 'in', ('todo', 'anomaly')), ('state', '=', 'posted')]"/>
                     <separator/>
                     <!-- not_paid & partial -->
                     <filter name="open" string="To pay" domain="[('state', '!=', 'cancel'), ('payment_state', 'in', ('not_paid', 'partial')), ('move_type', '!=', 'entry')]"/>
