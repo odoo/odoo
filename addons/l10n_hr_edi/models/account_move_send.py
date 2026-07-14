@@ -76,7 +76,9 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
         for move in moves:
-            if move.country_code == 'HR' and move.is_sale_document():
+            partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
+            # continue for B2B customer; B2C invoices are fiscalized separately.
+            if move.country_code == 'HR' and move.is_sale_document() and partner.vat:
                 if not move.l10n_hr_edi_addendum_id:
                     move.l10n_hr_edi_addendum_id = self.env['l10n_hr_edi.addendum'].create({'move_id': move.id})
                 move.l10n_hr_edi_addendum_id.write({

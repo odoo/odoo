@@ -418,3 +418,10 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                 return (original_document_id, reason_node)
             return 'not_found'
         return False
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        invoice = vals['invoice']
+        document_node.update({
+            'cbc:TaxPointDate': {'_text': invoice.taxable_supply_date or invoice.date},
+        })
+        super()._add_invoice_header_nodes(document_node, vals)
