@@ -249,13 +249,13 @@ export class WebsiteForum extends Interaction {
         const forumId = parseInt(this.el.ownerDocument.getElementById("wrapwrap").dataset.forum_id);
         let message = _t("%(score)s karma is required to perform this action.", { score: karma });
         if (forumId) {
-            message = htmlJoin(
+            message = htmlJoin([
                 message,
                 _t("%(link_start)sRead the guidelines to know how to gain karma.%(link_end)s", {
                     link_start: markup`<br><a class="alert-link" href="/forum/${forumId}/faq">`,
                     link_end: markup`</a>`,
-                })
-            );
+                }),
+            ]);
         }
         this.services.notification.add(message, {
             type: "warning",
