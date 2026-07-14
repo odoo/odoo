@@ -27,9 +27,11 @@ Que la persona que factura pueda, sobre un pedido ya confirmado (Fase 1):
 
 ## 3. Diseño
 
-### 3.1 `product.template` — facturar por cantidad pedida
+### 3.1 `product.template` — facturar por cantidad pedida (nativo, sin código nuevo)
 
-Se extiende `product.template` (ya en el addon `distribuidora_ventas`) para que el campo nativo `invoice_policy` tenga como valor por defecto `'order'` ("Cantidades pedidas") en vez del `'delivery'` que trae Odoo de fábrica para bienes. Esto aplica solo a productos que se creen de aquí en adelante — no se tocan los productos de demostración ya existentes en la base, que no son parte del catálogo real de la empresa.
+Verificado directamente contra este Odoo (`odoo shell`, ver evidencia en el plan de implementación): un producto nuevo de tipo "Goods" (`consu`) — el tipo que usan los productos de fruta/verdura — obtiene `invoice_policy = 'order'` ("Cantidades pedidas") automáticamente al crearlo, mientras no se fije explícitamente `'delivery'`. Es el cómputo nativo `product.template._compute_invoice_policy()` de Odoo (`addons/sale/models/product_template.py`), no algo que dependa de este addon. Lo que se había visto como `'delivery'` en la base son datos de demostración que lo fijan a mano, no el comportamiento por defecto real.
+
+No hace falta ningún código nuevo para este punto — solo dejar un test que deje constancia de que un producto nuevo, sin tocar el campo, efectivamente queda en `'order'`.
 
 Con `invoice_policy = 'order'`, Odoo factura por la cantidad que esté en `sale.order.line.product_uom_qty` al momento de crear la factura — que es exactamente el campo que la persona corrige a mano siguiendo la hoja de papel.
 
