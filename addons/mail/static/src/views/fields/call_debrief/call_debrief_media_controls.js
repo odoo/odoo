@@ -5,27 +5,27 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class CallDebriefMediaControls extends Component {
     static template = "mail.CallDebriefMediaControls";
+    props = useProps({
+        isPlaying: t.boolean(),
+        volume: t.number(),
+        isMuted: t.boolean(),
+        playbackRate: t.number(),
+        playbackRates: t.array(),
+        currentTime: t.number(),
+        totalDuration: t.number(),
+        mediaUrl: t.string().optional(),
+        onTogglePlay: t.function(),
+        onSeek: t.function(),
+        onSetPlaybackRate: t.function(),
+        onSetVolume: t.function(),
+        onToggleMute: t.function(),
+        hasVideo: t.boolean().optional(),
+        isFullscreen: t.boolean().optional(),
+        onToggleFullscreen: t.function().optional(),
+    });
+
     setup() {
         super.setup();
-        this.props = useProps({
-            isPlaying: t.boolean(),
-            volume: t.number(),
-            isMuted: t.boolean(),
-            playbackRate: t.number(),
-            playbackRates: t.array(),
-            currentTime: t.number(),
-            totalDuration: t.number(),
-            mediaUrl: t.string().optional(),
-            onTogglePlay: t.function(),
-            onSeek: t.function(),
-            onSetPlaybackRate: t.function(),
-            onSetVolume: t.function(),
-            onToggleMute: t.function(),
-            feedback: t.object().optional(),
-            hasVideo: t.boolean().optional(),
-            isFullscreen: t.boolean().optional(),
-            onToggleFullscreen: t.function().optional(),
-        });
         this.isMobileOS = isMobileOS();
     }
 
