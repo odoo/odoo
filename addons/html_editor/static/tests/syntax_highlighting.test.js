@@ -1310,7 +1310,11 @@ test("should focus textarea when creating new code block inside a new list", asy
     await insertPre(editor);
     await compareHighlightedContent(
         getContent(editor.editable),
-        "<ol><li>" + highlightedPre({ value: "", textareaRange: 0 }) + "</li></ol>",
+        "<ol><li>" +
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "", textareaRange: 0 }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>' +
+            "</li></ol>",
         "The syntax highlighting wrapper was inserted, and the selection is inside the textarea.",
         editor
     );

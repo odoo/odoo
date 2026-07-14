@@ -212,6 +212,11 @@ export class ListPlugin extends Plugin {
                 );
             }
         },
+        selection_placeholder_container_predicates: (container) => {
+            if (isListItemElement(container)) {
+                return true;
+            }
+        },
     };
 
     setup() {
