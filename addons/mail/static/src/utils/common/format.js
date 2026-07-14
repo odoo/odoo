@@ -53,7 +53,6 @@ export function prettifyMessageText(rawBody, { validMentions = {}, thread, trim 
         return rawBody;
     }
     let body = trim ? htmlTrim(rawBody) : htmlJoin([rawBody]);
-    body = htmlReplace(body, /(\r|\n){2,}/g, () => markup`<br/><br/>`);
     body = htmlReplace(body, /(\r|\n)/g, () => markup`<br/>`);
     body = htmlReplace(body, /&nbsp;/g, () => " ");
     body = trim ? htmlTrim(body) : htmlJoin([body]);
@@ -65,6 +64,7 @@ export function prettifyMessageText(rawBody, { validMentions = {}, thread, trim 
     // the current design makes this quite hard to do.
     body = generateMentionsLinks(body, { ...validMentions, thread });
     body = parseAndTransform(body, addLink);
+    body = convertWhitespaceToNbsp(body);
     return body;
 }
 
@@ -387,13 +387,38 @@ export function convertBrToLineBreak(str, { trim = true } = {}) {
     const regex = trim ? /<br\s*\/?>/gi : /<br\/?>/gi;
     str = htmlReplace(str, regex, () => "\n");
     if (!trim) {
-        str = htmlReplace(str, /\s/g, () => markup`&nbsp;`);
+        str = htmlReplace(str, / /g, () => markup`&nbsp;`);
     }
-    return createDocumentFragmentFromContent(str).body.textContent.replaceAll(" ", " ");
+    return createDocumentFragmentFromContent(str).body.textContent.replaceAll(nbsp, " ");
 }
 
 export function convertLineBreakToBr(str) {
     return htmlReplace(str, /(\r|\n)/g, () => markup`<br/>`);
+}
+
+/**
+ * @param {string|ReturnType<markup>} content
+ * @returns {ReturnType<markup>}
+ */
+function convertWhitespaceToNbsp(content) {
+    const body = createDocumentFragmentFromContent(content).body;
+
+    /** @param {Node | null} node */
+    const replaceWhitespaceInNodes = (node) => {
+        while (node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                node.nodeValue = node.nodeValue.replace(/\s{2}/g, ` ${nbsp}`);
+            } else if (
+                node.nodeType === Node.ELEMENT_NODE &&
+                ![...MENTION_CLASSNAMES].some((cls) => node.classList.contains(cls))
+            ) {
+                replaceWhitespaceInNodes(node.firstChild);
+            }
+            node = node.nextSibling;
+        }
+    };
+    replaceWhitespaceInNodes(body.firstChild);
+    return getInnerHtml(body);
 }
 
 /**
@@ -407,6 +432,7 @@ export function trimEmptyBlocksAround(content) {
     const body = createDocumentFragmentFromContent(content).body;
     let changed = false;
 
+    /** @param {ChildNode} node */
     const removeNode = (node) => {
         node.remove();
         changed = true;
@@ -429,53 +455,37 @@ export function trimEmptyBlocksAround(content) {
     /**
      * @param {Element | null | undefined} element
      * @param {BoundarySide} side
-     * @returns {Element | null}
      */
-    const getBoundaryElement = (element, side) => {
-        if (!element) {
-            return null;
-        }
-        return side === "start" ? element.firstElementChild : element.lastElementChild;
-    };
-
     const trimTextNodes = (element, side) => {
-        let node = getBoundaryChild(element, side);
-        while (node?.nodeType === Node.TEXT_NODE && !node.textContent.trim()) {
-            removeNode(node);
-            node = getBoundaryChild(element, side);
-        }
-    };
-
-    const trimEmptyParagraphs = (side) => {
-        trimTextNodes(body, side);
-        let paragraph = getBoundaryElement(body, side);
-        while (["P", "DIV"].includes(paragraph?.tagName) && isHtmlEmpty(paragraph.innerHTML)) {
-            removeNode(paragraph);
-            trimTextNodes(body, side);
-            paragraph = getBoundaryElement(body, side);
-        }
-    };
-
-    const trimBoundaryParagraph = (side) => {
-        trimEmptyParagraphs(side);
-        const paragraph = getBoundaryElement(body, side);
-        if (!paragraph || !["P", "DIV"].includes(paragraph.tagName)) {
+        const node = getBoundaryChild(element, side);
+        if (!node) {
             return;
         }
-        trimTextNodes(paragraph, side);
-        let node = getBoundaryChild(paragraph, side);
-        while (node?.nodeName === "BR") {
-            removeNode(node);
-            trimTextNodes(paragraph, side);
-            node = getBoundaryChild(paragraph, side);
-        }
-        trimEmptyParagraphs(side);
-        if (getBoundaryElement(body, side) !== paragraph) {
-            trimBoundaryParagraph(side);
+        if (node.nodeType === Node.TEXT_NODE) {
+            const trimmed =
+                side === "start" ? node.textContent.trimStart() : node.textContent.trimEnd();
+            if (!trimmed) {
+                removeNode(node);
+                return trimTextNodes(element, side);
+            }
+            if (trimmed !== node.textContent) {
+                node.textContent = trimmed;
+                changed = true;
+            }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.nodeName === "PRE") {
+                // whitespaces are preserved in PRE tag
+                return;
+            }
+            trimTextNodes(node, side);
+            if (isHtmlEmpty(node.innerHTML)) {
+                removeNode(node);
+                return trimTextNodes(element, side);
+            }
         }
     };
-    trimBoundaryParagraph("start");
-    trimBoundaryParagraph("end");
+    trimTextNodes(body, "start");
+    trimTextNodes(body, "end");
     return changed ? getInnerHtml(body) : content;
 }
 
