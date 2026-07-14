@@ -169,7 +169,7 @@
 <t t-name="mail.Composer.extraActions">
     <div class="o-mail-Composer-extraActions" t-attf-class="{{ actionsContainerClass }}" t-ref="this.extraActionsRef">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
-            <ActionList actions="partitionedActions.other" inline="true"/>
+            <ActionList actions="[partitionedActions.other, ...partitionedActions.group.slice().reverse()]" inline="true"/>
         </div>
     </div>
 </t>
