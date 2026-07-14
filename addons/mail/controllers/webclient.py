@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import json
 from collections import defaultdict
 
 from odoo import http
@@ -205,29 +204,24 @@ class WebclientController(ThreadController):
         record = request.env[model].with_context(**context).search([("id", "=", id)])
         store.add(record, "_store_avatar_card_fields")
 
-    @http.route("/web/push/device/register", methods=["POST"], type="http", auth="user", csrf=False)
-    def push_device_register(self):
+    @http.route("/web/push/device/register", methods=["POST"], type="jsonrpc", auth="user")
+    def push_device_register(self, **kwargs):
         """Register (or update) a push subscription for the logged-in user.
 
-        Replaces the JSON-RPC ORM call previously used by webclient.js so that
-        the server can set the refresh token as an HttpOnly cookie in the same
-        HTTP response that returns the short-lived access token.
+        Uses a JSON-RPC route (instead of a plain ORM call) so that the server can
+        set the refresh token as an HttpOnly cookie, via ``request.future_response``,
+        in the same response that returns the short-lived access token.
 
-        Expects a JSON body with the fields from PushSubscription.toJSON() plus
-        ``vapid_public_key`` and optionally ``previousEndpoint``.
+        Expects the fields from PushSubscription.toJSON() plus ``vapid_public_key``
+        and optionally ``previous_endpoint``.
         """
-        data = json.loads(request.httprequest.data or b'{}')
         try:
-            result = request.env["mail.push.device"].register_devices(**data)
+            result = request.env["mail.push.device"].register_devices(**kwargs)
         except InvalidVapidError:
-            return request.make_json_response(
-                {'error': 'odoo.addons.mail.tools.jwt.InvalidVapidError'},
-                status=400,
-            )
+            return {'error': 'odoo.addons.mail.tools.jwt.InvalidVapidError'}
         if not result:
-            return request.make_json_response({'error': 'registration_failed'}, status=400)
-        response = request.make_json_response({'token': result['token']})
-        response.set_cookie(
+            return {'error': 'registration_failed'}
+        request.future_response.set_cookie(
             _PUSH_REFRESH_COOKIE,
             result['refresh_token'],
             httponly=True,
@@ -236,10 +230,10 @@ class WebclientController(ThreadController):
             max_age=_PUSH_REFRESH_COOKIE_MAX_AGE,
             path='/web/push/device/',
         )
-        return response
+        return {'token': result['token']}
 
-    @http.route("/web/push/device/token/rotate", methods=["POST"], type="http", auth="public", csrf=False)
-    def push_device_token_rotate(self):
+    @http.route("/web/push/device/token/rotate", methods=["POST"], type="jsonrpc", auth="public")
+    def push_device_token_rotate(self, previousEndpoint=None, **kwargs):
         """Exchange a valid refresh token for a new access + refresh token pair.
 
         The service worker calls this route (with ``credentials: "include"``) when
@@ -247,22 +241,20 @@ class WebclientController(ThreadController):
         attaches the HttpOnly refresh token cookie automatically; JavaScript cannot
         read it.
 
-        On success a new refresh token is set as a replacement HttpOnly cookie and
-        the new access token is returned in the JSON body for storage in IndexedDB.
+        On success a new refresh token is set as a replacement HttpOnly cookie (via
+        ``request.future_response``) and the new access token is returned in the JSON
+        body for storage in IndexedDB.
         """
         refresh_token = request.httprequest.cookies.get(_PUSH_REFRESH_COOKIE)
         if not refresh_token:
-            return request.make_json_response({'error': 'no_refresh_token'}, status=401)
-        data = json.loads(request.httprequest.data or b'{}')
-        previous_endpoint = data.get('previousEndpoint')
+            return {'error': 'no_refresh_token'}
         result = request.env["mail.push.device"].sudo()._rotate_tokens(
             refresh_token=refresh_token,
-            previous_endpoint=previous_endpoint,
+            previous_endpoint=previousEndpoint,
         )
         if not result:
-            return request.make_json_response({'error': 'invalid_token'}, status=401)
-        response = request.make_json_response({'token': result['access_token']})
-        response.set_cookie(
+            return {'error': 'invalid_token'}
+        request.future_response.set_cookie(
             _PUSH_REFRESH_COOKIE,
             result['refresh_token'],
             httponly=True,
@@ -271,7 +263,7 @@ class WebclientController(ThreadController):
             max_age=_PUSH_REFRESH_COOKIE_MAX_AGE,
             path='/web/push/device/',
         )
-        return response
+        return {'token': result['access_token']}
 
     @http.route("/web/push/device/refresh", methods=["POST"], type="jsonrpc", auth="public")
     def push_device_refresh(self, token, endpoint, keys, vapid_public_key,
