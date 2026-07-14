@@ -1,35 +1,54 @@
-import { Component, onWillDestroy } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { Component, computed, onWillDestroy, t, useProps } from "@odoo/owl";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { formatDateTime, formatFloatTime } from "@web/views/fields/formatters";
 
 export class KioskGreetings extends Component {
     static template = "hr_attendance.public_kiosk_greetings";
-    static props = {
-        employeeData: { type: Object },
-        kioskReturn: { type: Function },
-    };
+    props = useProps({
+        employeeData: t.object(),
+        kioskReturn: t.function(),
+        kioskContinueBreak: t.function().optional(() => () => {}),
+    });
 
     setup() {
-        this.formatDateTime = registry.category("formatters").get("datetime");
-        this.formatFloatTime = registry.category("formatters").get("float_time");
-        this.employeeName = this.props.employeeData.employee_name;
-        this.employeeAvatar = this.props.employeeData.employee_avatar;
-        this.hoursToday = this.formatFloatTime(this.props.employeeData.hours_today);
-        this.attendance = this.props.employeeData.attendance;
-        this.check_in_time = this.formatDateTime(
-            this.attendance.check_in && deserializeDateTime(this.attendance.check_in)
-        );
-        this.check_out_time = this.formatDateTime(
-            this.attendance.check_out && deserializeDateTime(this.attendance.check_out)
-        );
-        this.isEmployeeSingleCheckIn = this.props.employeeData.is_employee_single_checkin;
-        this.kiosk_delay = setTimeout(() => {
+        this.kioskDelay = setTimeout(() => {
             this.props.kioskReturn(true);
         }, this.props.employeeData.kiosk_delay);
-        if (this.props.employeeData.display_overtime) {
-            this.overtimeToday = this.formatFloatTime(this.props.employeeData.overtime_today);
-            this.totalOvertime = this.formatFloatTime(this.props.employeeData.total_overtime);
-        }
-        onWillDestroy(() => clearTimeout(this.kiosk_delay));
+        onWillDestroy(() => this.clearKioskDelay());
+    }
+
+    get attendance() {
+        return this.props.employeeData.attendance;
+    }
+
+    get isCheckOut() {
+        return Boolean(this.attendance.check_out);
+    }
+
+    checkInTime = computed(() =>
+        this.attendance.check_in ? formatDateTime(deserializeDateTime(this.attendance.check_in)) : ""
+    );
+    checkOutTime = computed(() =>
+        this.attendance.check_out ? formatDateTime(deserializeDateTime(this.attendance.check_out)) : ""
+    );
+    hoursToday = computed(() => formatFloatTime(this.props.employeeData.hours_today));
+    overtimeToday = computed(
+        () =>
+            this.props.employeeData.display_overtime &&
+            formatFloatTime(this.props.employeeData.overtime_today)
+    );
+    totalOvertime = computed(
+        () =>
+            this.props.employeeData.display_overtime &&
+            formatFloatTime(this.props.employeeData.total_overtime)
+    );
+
+    clearKioskDelay() {
+        clearTimeout(this.kioskDelay);
+    }
+
+    continueBreak() {
+        this.clearKioskDelay();
+        this.props.kioskContinueBreak();
     }
 }
