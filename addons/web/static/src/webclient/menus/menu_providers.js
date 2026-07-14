@@ -41,9 +41,10 @@ commandProviderRegistry.add("menu", {
         if (options.searchValue !== "") {
             apps = fuzzyLookup(options.searchValue, apps, (menu) => menu.label);
 
-            fuzzyLookup(options.searchValue, menuItems, (menu) =>
-                (menu.parents + " / " + menu.label).split("/").reverse().join("/")
-            ).forEach((menu) => {
+            fuzzyLookup(options.searchValue, menuItems, (menu) => {
+                const breadcrumb = `${menu.parents} / ${menu.label}`;
+                return [breadcrumb, breadcrumb.split("/").reverse().join("/")];
+            }).forEach((menu) => {
                 result.push({
                     action() {
                         menuService.selectMenu(menu);
