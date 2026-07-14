@@ -21,6 +21,7 @@ import { childNodes } from "@html_editor/utils/dom_traversal";
 export class RenderPlugin extends Plugin {
     static id = "render";
     static dependencies = ["measurementSnapshot", "referenceNode", "rules"];
+    static shared = ["isDiscarded"];
     resources = {
         on_build_render_tree_handlers: this.buildRenderTree.bind(this),
         on_render_email_template_handlers: this.renderEmailHtml.bind(this),
@@ -31,10 +32,18 @@ export class RenderPlugin extends Plugin {
         this.syntheticEmailNodeContainers = new Set();
     }
 
+    isDiscarded(referenceNode) {
+        return (
+            !referenceNode ||
+            (this.config.reference.contains(referenceNode) &&
+                this.discardedNodes.has(referenceNode))
+        );
+    }
+
     buildRenderTree() {
         this.discardIrrelevantNodes();
         const reference = this.config.reference;
-        if (!this.isAllowedReferenceNode(reference) || this.discardedNodes.has(reference)) {
+        if (!this.isAllowedReferenceNode(reference) || this.isDiscarded(reference)) {
             return;
         }
         this.renderTree = this.createEmailNode(reference);

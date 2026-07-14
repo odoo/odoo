@@ -10,7 +10,6 @@ export class MainTableStrategyPlugin extends Plugin {
     static id = "mainTableStrategy";
     static dependencies = [
         "contextStyle",
-        "filterContent",
         "measurementSnapshot",
         "rules",
         "spacing",

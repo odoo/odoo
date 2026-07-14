@@ -8,11 +8,11 @@ import { Rules } from "../core/rules_models";
 export class ImageStrategyPlugin extends Plugin {
     static id = "imageStrategy";
     static dependencies = [
-        "filterContent",
         "measurementSnapshot",
         "responsiveBlock",
         "rules",
         "referenceNode",
+        "render",
         "style",
     ];
     resources = {
@@ -271,7 +271,7 @@ export class ImageStrategyPlugin extends Plugin {
         if (referenceNode.nodeName === "A") {
             const visibleChildNodes = this.processChildNodes(
                 referenceNode,
-                (node) => !this.isInvisible(node)
+                (node) => !this.isDiscarded(node)
             );
             if (
                 visibleChildNodes.length === 1 &&
@@ -307,13 +307,26 @@ export class ImageStrategyPlugin extends Plugin {
         if (this.isBlock(referenceNode)) {
             return true;
         }
-        const isVisibleBlock = (node) => this.isBlock(node) && !this.isInvisible(node);
-        const prevSibling = referenceNode.previousSibling;
-        const nextSibling = referenceNode.nextSibling;
         const parent = referenceNode.parentElement;
         if (!this.isBlock(parent)) {
             return false;
         }
+        let prevSibling, nextSibling;
+        let current = referenceNode;
+        while ((current = current.previousSibling)) {
+            if (!this.isDiscarded(current)) {
+                prevSibling = current;
+                break;
+            }
+        }
+        current = referenceNode;
+        while ((current = current.nextSibling)) {
+            if (!this.isDiscarded(current)) {
+                nextSibling = current;
+                break;
+            }
+        }
+        const isVisibleBlock = (node) => this.isBlock(node) && !this.isDiscarded(node);
         const isIsolatedAmongBlocks =
             (!prevSibling || isVisibleBlock(prevSibling)) &&
             (!nextSibling || isVisibleBlock(nextSibling));
