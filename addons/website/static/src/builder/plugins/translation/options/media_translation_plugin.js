@@ -45,13 +45,12 @@ export class MediaTranslationPlugin extends Plugin {
             const newParams = this.getMediaDialogProps({ mediaEl: params.node });
             return Object.assign(params, newParams);
         },
+        on_media_replaced_handlers: ({ newMediaEl }) => {
+            if (newMediaEl.classList.contains("data-oe-translation-state")) {
+                newMediaEl.classList.add("oe_translated");
+            }
+        },
     };
-
-    setup() {
-        this.savingMap = {
-            images: this.saveImage.bind(this),
-        };
-    }
 
     async onWillSaveMediaDialogHandlers(elements, { node }) {
         for (const toProcessEl of elements) {
@@ -64,14 +63,21 @@ export class MediaTranslationPlugin extends Plugin {
             // those options should also be adaptable. We should have
             // translation options to handle the new image exactly like what is
             // possible in the builder.
-            const dataAttrsToCopy = ["oeTranslationState"];
+            const attrsToCopy = [
+                "data-oe-translation-state",
+                "alt",
+                "title",
+                ...node
+                    .getAttributeNames()
+                    .filter((n) => n.startsWith("data-translated-attribute-info-")),
+            ];
             const mimetype = await getMimetypeBeforeShape(toProcessEl);
             if (await isImageSupportedForProcessing(toProcessEl, mimetype)) {
-                dataAttrsToCopy.push("glFilter", "resizeWidth");
+                attrsToCopy.push("data-gl-filter", "data-resize-width");
             }
-            for (const dataAttr of dataAttrsToCopy) {
-                if (node.dataset[dataAttr]) {
-                    toProcessEl.dataset[dataAttr] = node.dataset[dataAttr];
+            for (const attr of attrsToCopy) {
+                if (node.hasAttribute(attr)) {
+                    toProcessEl.setAttribute(attr, node.getAttribute(attr));
                 }
             }
         }
@@ -84,15 +90,6 @@ export class MediaTranslationPlugin extends Plugin {
             noImages: mediaType !== "images",
             visibleTabs: [mediaType.toUpperCase()],
             node: mediaEl,
-            save:
-                mediaType === "documents"
-                    ? null
-                    : (newMediaEl) => {
-                          this.savingMap[mediaType](mediaEl, newMediaEl);
-                          mediaEl.classList.add("oe_translated");
-                          this.trigger("on_media_replaced_handlers", { newMediaEl: mediaEl });
-                          this.dependencies.history.commit(); // Needed for the dblclick
-                      },
         };
     }
 
@@ -121,26 +118,11 @@ export class MediaTranslationPlugin extends Plugin {
             onClose.then(resolve);
         });
     }
-
-    saveImage(editingElement, newImgEl) {
-        // Replicate all attributes from the new image to the current element,
-        // so that the translations are linked to the original element on save.
-        const attributesToKeep = ["alt", "title"];
-        for (const attr of [...editingElement.attributes]) {
-            if (!attributesToKeep.includes(attr.name)) {
-                editingElement.removeAttribute(attr.name);
-            }
-        }
-        for (const attr of newImgEl.attributes) {
-            if (!attributesToKeep.includes(attr.name)) {
-                editingElement.setAttribute(attr.name, attr.value);
-            }
-        }
-    }
 }
 
 registry.category("translation-plugins").add(MediaTranslationPlugin.id, MediaTranslationPlugin);
 
+// TODO: why not use the existing action `replaceMedia`
 export class TranslateMediaSrcAction extends BuilderAction {
     static id = "translateMediaSrc";
     static dependencies = ["mediaTranslation"];
