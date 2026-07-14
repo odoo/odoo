@@ -1847,3 +1847,33 @@ test("composer should not restore sent content when unmounted during pending pos
     expect(await getIndexedDB("composer", thread.composer.localId)).toBe(undefined);
     resolvePost();
 });
+
+test("Post message trims outer whitespaces and newlines", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step(args.post_data.body);
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(
+        ".o-mail-Composer-input",
+        "   \n\n   \n     I am  the    night\n\n\n\nI am  Batman     \n   \n\n    "
+    );
+    await click(".o-mail-Composer button:enabled[aria-label='Send']");
+    await expect.waitForSteps([
+        "I am \u00a0the \u00a0 \u00a0night<br><br><br><br>I am \u00a0Batman",
+    ]);
+    await contains(".o-mail-Message[data-persistent]");
+    expect(".o-mail-Message-richBody").toHaveInnerHTML(
+        "I am &nbsp;the &nbsp; &nbsp;night<br><br><br><br>I am &nbsp;Batman"
+    );
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await contains(".o-mail-Message .o-mail-Composer-input", {
+        value: "I am  the    night\n\n\n\nI am  Batman",
+    });
+});

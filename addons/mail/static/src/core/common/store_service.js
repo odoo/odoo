@@ -20,6 +20,7 @@ import { debounce } from "@web/core/utils/timing";
 import { getOrigin } from "@web/core/utils/urls";
 import { session } from "@web/session";
 import { isMarkup, createDocumentFragmentFromContent } from "@web/core/utils/html";
+import { nbsp } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -693,7 +694,7 @@ export class Store extends BaseStore {
                 ...thread.getFetchParams(),
                 fetch_params: {
                     is_notification,
-                    search_term: await prettifyMessageText(searchTerm), // formatted like message_post
+                    search_term: (await prettifyMessageText(searchTerm)).replaceAll(nbsp, " "), // formatted like message_post
                     before,
                 },
             },
