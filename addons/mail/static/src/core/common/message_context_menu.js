@@ -21,6 +21,7 @@ export class MessageContextMenu extends Component {
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
         });
         this.messageActions = useMessageActions({
+            env: this.env,
             message: () => this.props.message,
             reactionAnchorRef: computed(() => this.props.anchorRef()),
             thread: () => this.props.thread,

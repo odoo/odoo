@@ -956,7 +956,7 @@ export class Composer extends Component {
                 })
             );
         } else {
-            this.props.composer.message.showDeleteConfirm(this, this.rootRef);
+            this.props.composer.message.showDeleteConfirm(this.env, this.rootRef);
         }
         this.suggestion?.clearRawMentions();
     }

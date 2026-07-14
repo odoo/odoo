@@ -17,7 +17,10 @@ export const messageActionsRegistry = registry.category("mail.message/actions");
 /** @typedef {import("models").Thread} Thread */
 /**
  * @typedef {Object} MessageActionSpecificParams
+ * @property {import("@web/env").OdooEnv} [env]
  * @property {Message} message
+ * @property {import("@odoo/owl").Signal<boolean>} [messageActive]
+ * @property {import("@web/core/dropdown/dropdown_hooks").DropdownState} [optionsDropdown]
  * @property {import("@odoo/owl").Signal<HTMLElement>} [reactionAnchorRef] when set, the anchor element for reactions
  * @property {Thread} [thread] when set, the thread the message is being viewed
  */
@@ -34,23 +37,23 @@ export function registerMessageAction(id, definition) {
 
 registerMessageAction("reaction", {
     component: QuickReactionMenu,
-    componentProps: ({ action, message, owner }) => ({
+    componentProps: ({ action, message, messageActive }) => ({
         action,
         message,
-        messageActive: owner.isActive?.(),
+        messageActive: messageActive?.(),
     }),
     componentCondition: ({ reactionAnchorRef }) => !isMobileOS() && !reactionAnchorRef,
     condition: ({ message }) => message.canAddReaction,
     icon: "oi oi-smile-add",
     name: _t("Add a Reaction"),
-    onSelected({ owner, reactionAnchorRef, rootRef }) {
+    onSelected({ reactionAnchorRef, rootRef }) {
         const anchorEl = reactionAnchorRef
             ? reactionAnchorRef()
             : rootRef?.()?.querySelector(`[name="${this.id}"]`);
-        return owner.reactionPicker.open({ el: anchorEl });
+        return this.reactionPicker.open({ el: anchorEl });
     },
-    setup: ({ message, owner, thread }) =>
-        (owner.reactionPicker = useEmojiPicker(undefined, {
+    setup({ message, thread }) {
+        this.reactionPicker = useEmojiPicker(undefined, {
             onSelect: (emoji) => {
                 const reaction = message.reactions.find(
                     ({ content, personas }) =>
@@ -60,12 +63,13 @@ registerMessageAction("reaction", {
                     message.react(emoji);
                 }
             },
-        })),
+        });
+    },
     sequence: 10,
 });
 registerMessageAction("reply-to", {
-    condition: ({ channel, message, owner }) => {
-        if (owner.env.inMessagingMenu) {
+    condition: ({ channel, env, message }) => {
+        if (env?.inMessagingMenu) {
             return false;
         }
         if (message.canReplyTo) {
@@ -75,7 +79,7 @@ registerMessageAction("reply-to", {
     },
     icon: "fa fa-reply",
     name: _t("Reply"),
-    onSelected: ({ message, owner, thread }) => {
+    onSelected: ({ env, message, thread }) => {
         const composer = thread.composer;
         if (message.eq(composer.replyToMessage)) {
             composer.replyToMessage = undefined;
@@ -88,7 +92,7 @@ registerMessageAction("reply-to", {
         if (!message.isSelfAuthored && message.model !== "discuss.channel" && message.author) {
             composer.insertReplyFromNote(message);
         }
-        owner.env.inChatter?.toggleComposer("note", { force: true });
+        env?.inChatter?.toggleComposer("note", { force: true });
         composer.restoredFromFullComposer = false;
         if (!composer.isFocused) {
             composer.autofocus++;
@@ -108,7 +112,7 @@ registerMessageAction("remove-bookmark", {
     condition: ({ message }) => message.canToggleBookmark && message.is_bookmarked,
     icon: "fa fa-bookmark",
     name: _t("Remove from Bookmarks"),
-    onSelected: ({ message, owner }) => message.removeBookmark(owner.env),
+    onSelected: ({ env, message }) => message.removeBookmark(env),
     sequence: 80,
 });
 registerMessageAction("mark-as-read", {
@@ -135,19 +139,19 @@ registerMessageAction("reactions", {
     sequence: 60,
 });
 registerMessageAction("unfollow", {
-    condition: ({ message, owner }) => owner.env.inMessagingMenu && message.thread?.selfFollower,
+    condition: ({ env, message }) => env?.inMessagingMenu && message.thread?.selfFollower,
     icon: "fa fa-user-times",
     name: _t("Unfollow"),
     onSelected: ({ message }) => message.unfollow(),
     sequence: 110,
 });
 registerMessageAction("edit", {
-    condition: ({ owner, message }) => !owner.env.inMessagingMenu && message.editable,
+    condition: ({ env, message }) => !env?.inMessagingMenu && message.editable,
     icon: "fa fa-pencil",
     name: _t("Edit"),
-    onSelected: ({ message, owner }) => {
+    onSelected: ({ message, optionsDropdown }) => {
         message.enterEditMode();
-        owner.optionsDropdown?.close();
+        optionsDropdown?.close();
     },
     sequence: ({ message }) => (message.isSelfAuthored ? 20 : 115),
 });
@@ -155,7 +159,7 @@ registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
     icon: "fa fa-trash",
     name: _t("Delete"),
-    onSelected: ({ message, owner, rootRef }) => message.showDeleteConfirm(owner, rootRef),
+    onSelected: ({ env, message, rootRef }) => message.showDeleteConfirm(env, rootRef),
     sequence: 120,
     tags: ACTION_TAGS.DANGER,
 });
@@ -210,21 +214,33 @@ registerMessageAction("end-poll", {
 });
 
 export class MessageAction extends Action {
+    /** @type {import("@web/env").OdooEnv} */
+    env;
     /** @type {() => Message} */
     messageFn;
+    /** @type {import("@odoo/owl").Signal<boolean>} */
+    messageActive;
+    /** @type {import("@web/core/dropdown/dropdown_hooks").DropdownState} */
+    optionsDropdown;
     /** @type {import("@odoo/owl").Signal<HTMLElement>} */
     reactionAnchorRef;
     /** @type {() => Thread} */
     threadFn;
     /**
      * @param {Object} param0
+     * @param {import("@web/env").OdooEnv} [param0.env]
      * @param {Message|() => Message} param0.message
+     * @param {import("@odoo/owl").Signal<boolean>} [param0.messageActive]
+     * @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} [param0.optionsDropdown]
      * @param {import("@odoo/owl").Signal<HTMLElement>} [param0.reactionAnchorRef]
      * @param {Thread|() => Thread} [param0.thread]
      */
-    constructor({ message, reactionAnchorRef, thread }) {
+    constructor({ env, message, messageActive, optionsDropdown, reactionAnchorRef, thread }) {
         super(...arguments);
+        this.env = env;
         this.messageFn = typeof message === "function" ? message : () => message;
+        this.messageActive = messageActive;
+        this.optionsDropdown = optionsDropdown;
         this.reactionAnchorRef = reactionAnchorRef;
         this.threadFn = typeof thread === "function" ? thread : () => thread;
     }
@@ -232,8 +248,11 @@ export class MessageAction extends Action {
     get params() {
         const thread = this.threadFn();
         return Object.assign(super.params, {
+            env: this.env,
             message: this.messageFn(),
             channel: thread?.channel,
+            messageActive: this.messageActive,
+            optionsDropdown: this.optionsDropdown,
             reactionAnchorRef: this.reactionAnchorRef,
             thread,
         });
@@ -246,14 +265,26 @@ class UseMessageActions extends UseActions {
 }
 
 /**
- * @param {import("@mail/core/common/action").ActionRootRefParam & {message?: Message|() => Message, reactionAnchorRef?: import("@odoo/owl").Signal<HTMLElement>, thread?: Thread|() => Thread}} [params0={}]
- *   `reactionAnchorRef`: when set, the anchor element for reactions. `thread`: when set, the thread the
- *   message is being viewed.
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {env?: import("@web/env").OdooEnv, message?: Message|() => Message, messageActive?: import("@odoo/owl").Signal<boolean>, optionsDropdown?: import("@web/core/dropdown/dropdown_hooks").DropdownState, reactionAnchorRef?: import("@odoo/owl").Signal<HTMLElement>, thread?: Thread|() => Thread}} [params0={}]
+ *   `env`: when set, the env the message is viewed in. `messageActive`: when set, whether the message row is
+ *   active. `optionsDropdown`: when set, the message's options dropdown. `reactionAnchorRef`: when set, the
+ *   anchor element for reactions. `thread`: when set, the thread the message is being viewed.
  * @returns {UseMessageActions_Def}
  */
-export function useMessageActions({ message, thread, reactionAnchorRef, rootRef } = {}) {
+export function useMessageActions({
+    env,
+    message,
+    messageActive,
+    optionsDropdown,
+    reactionAnchorRef,
+    rootRef,
+    thread,
+} = {}) {
     return useAction(messageActionsRegistry, UseMessageActions, MessageAction, {
+        env,
         message,
+        messageActive,
+        optionsDropdown,
         reactionAnchorRef,
         rootRef,
         thread,
