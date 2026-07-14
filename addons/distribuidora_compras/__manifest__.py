@@ -7,6 +7,8 @@
     'depends': ['sale', 'purchase'],
     'data': [
         'security/ir.model.access.csv',
+        'wizards/compra_consolidada_wizard_views.xml',
+        'report/compra_consolidada_report.xml',
     ],
     'license': 'LGPL-3',
     'installable': True,
