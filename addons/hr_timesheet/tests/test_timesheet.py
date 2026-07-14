@@ -895,3 +895,19 @@ class TestTimesheet(TestCommonTimesheet):
             'user_id': self.user_manager.id,
         })
         self.assertEqual(timesheet.company_id, self.env.company)
+
+    def test_task_removed_on_project_change(self):
+        """ Test that changing the timesheet's project removes the task if they no longer match. """
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Timesheet Project Change',
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'unit_amount': 1.0,
+            'employee_id': self.empl_employee.id,
+        })
+
+        timesheet.write({
+            'project_id': self.project.id
+        })
+
+        self.assertFalse(timesheet.task_id)
