@@ -259,6 +259,7 @@ class AccountJournal(models.Model):
             'account.action_account_cashflow_analysis',
             raise_if_not_found=False,
         )
+        invoice_layout_action = self.env.ref('account.action_base_document_layout_configurator')
 
         def build_profit_and_loss_card(kpi_id, name, amount):
             return {
@@ -328,6 +329,18 @@ class AccountJournal(models.Model):
                 'action_id': cashflow_analysis_action.id if cashflow_analysis_action else False,
             },
         ]
+        if (
+            self.env.user.has_group('account.group_account_basic')
+            and not self.env.company.external_report_layout_id
+        ):
+            cards.append({
+                'id': 'invoice_layout',
+                'name': self.env._('Invoice Layout'),
+                'has_total': False,
+                'is_invoice_layout_card': True,
+                'image': '/web/static/img/mimetypes/document.svg',
+                'action_id': invoice_layout_action.id,
+            })
 
         return cards
 
