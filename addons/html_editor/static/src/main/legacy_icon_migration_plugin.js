@@ -6,6 +6,7 @@ export const MODIFIER_SUFFIXES = new Set([
     "fw",
     "lg",
     "spin",
+    "stack",
     "pulse",
     "1x",
     "2x",
