@@ -113,6 +113,13 @@
                         <field name="name">Box 8 - Equals : Net GST to be paid to IRAS</field>
                         <field name="code">BOX_8</field>
                         <field name="aggregation_formula">BOX6.balance - BOX7.balance</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_total_gst_paid_iras_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BOX_8.balance</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>

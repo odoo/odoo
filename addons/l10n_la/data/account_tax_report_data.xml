@@ -453,6 +453,11 @@
                                 <field name="formula">LA_04_06.tax + LA_16.tax - LA_12.tax - LA_14.tax - LA_15.tax</field>
                                 <field name="subformula">if_above(LAK(0))</field>
                             </record>
+                            <record id="l10n_la_tax_report_la_19_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_04_06.tax + LA_16.tax - LA_12.tax - LA_14.tax - LA_15.tax</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_la_tax_report_la_20" model="account.report.line">

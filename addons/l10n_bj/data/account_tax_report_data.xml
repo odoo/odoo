@@ -115,6 +115,7 @@
                                 <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
+                                <field name="subformula">closing_account_id=receivable</field>
                                 <field name="date_scope">previous_return_period</field>
                             </record>
                         </field>
@@ -223,6 +224,11 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">BJ_GROSS.balance - BJ_VAT_DEDUCTIBLE.balance</field>
                                 <field name="subformula">if_above(XOF(0))</field>
+                            </record>
+                            <record id="account_tax_report_line_bj_net_to_pay_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BJ_GROSS.balance - BJ_VAT_DEDUCTIBLE.balance</field>
                             </record>
                         </field>
                     </record>

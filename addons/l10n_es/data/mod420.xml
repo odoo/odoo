@@ -401,7 +401,7 @@
                                     <field name="label">tax</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
-                                    <field name="subformula">editable;rounding=2</field>
+                                    <field name="subformula">editable;rounding=2;closing_account_id=receivable</field>
                                 </record>
                             </field>
                         </record>
@@ -427,6 +427,11 @@
                                     <field name="label">tax</field>
                                     <field name="engine">aggregation</field>
                                     <field name="formula">atc_mod_420_diff.tax + atc_mod_420_reg_art.tax - atc_mod_420_igic_comp.tax - atc_mod_420_to_deduct_compl.tax</field>
+                                </record>
+                                <record id="mod_420_casilla_45_closing_amount" model="account.report.expression">
+                                    <field name="label">_closing_amount</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">atc_mod_420_result.tax</field>
                                 </record>
                             </field>
                         </record>
