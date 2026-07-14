@@ -1813,9 +1813,11 @@ class ResUsersApikeysDescription(models.TransientModel):
             raise AccessError(_("Only internal users can create API keys"))
 
 
-class ResUsersApikeysShow(models.AbstractModel):
+class ResUsersApikeysShow(models.Model):
     _name = 'res.users.apikeys.show'
     _description = 'Show API Key'
+    _auto = False  # no table
+    _table_query = '0'
 
     # the field 'id' is necessary for the onchange that returns the value of 'key'
     id = fields.Id()

@@ -4282,6 +4282,7 @@ class BaseModel(metaclass=MetaModel):
     def _create(self, data_list: list[ValuesType]) -> Self:
         """ Create records from the stored field values in ``data_list``. """
         assert data_list
+        assert not self._abstract, f"Cannot create records for abstract model {self._name}"
         cr = self.env.cr
         self.env.transaction._wrote__ = True
 
@@ -5895,6 +5896,7 @@ class BaseModel(metaclass=MetaModel):
         One can also pass a ``ref`` value to identify the record among other new
         records. The reference is encapsulated in the ``id`` of the record.
         """
+        assert not self._abstract, f"Cannot instantiate abstract model {self._name}"
         if values is None:
             values = {}
         if origin is not None:
