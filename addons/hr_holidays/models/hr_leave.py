@@ -376,6 +376,10 @@ class HrLeave(models.Model):
 
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_resource_calendar_id(self):
+        # Avoid recomputing the calendar in `_check_contracts`
+        # before the correct calendar is written to the version
+        if self.env.context.get('leave_skip_calendar_recompute', False):
+            return
         leaves_without_emp_or_date = self.filtered(
             lambda leave: not (leave.employee_id and leave.request_date_from and leave.request_date_to)
         )
@@ -413,16 +417,18 @@ class HrLeave(models.Model):
 
     def _get_overlapping_contracts(self):
         self.ensure_one()
+        dt_from = self.date_from.replace(tzinfo=UTC).astimezone(ZoneInfo(self.tz))
+        dt_to = self.date_to.replace(tzinfo=UTC).astimezone(ZoneInfo(self.tz))
         domain = Domain.AND([
             Domain('employee_id', '=', self.employee_id.id),
-            Domain('contract_date_start', '<=', self.date_to),
+            Domain('contract_date_start', '<=', dt_to),
             Domain.OR([
-                Domain('contract_date_end', '>=', self.date_from),
+                Domain('contract_date_end', '>=', dt_from),
                 Domain('contract_date_end', '=', False),
             ])
         ])
         versions = self.env['hr.version'].sudo().search(domain)
-        return versions.filtered(lambda v: v._is_overlapping_period(self.date_from.date(), self.date_to.date()))
+        return versions.filtered(lambda v: v._is_overlapping_period(dt_from.date(), dt_to.date()))
 
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):
