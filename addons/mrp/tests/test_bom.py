@@ -413,7 +413,7 @@ class TestBoM(TestMrpCommon):
         # the kit `product_7_3`. `product_2` and `product_3` gets protected at the first call of the compute method,
         # ending the recurse call to not call the compute method and just left the Falsy value `0.0`
         # for the components available qty.
-        kit_product_qty, _, _ = (self.product_7_3 + self.product_2 + self.product_3).mapped("qty_available")
+        kit_product_qty, _, _ = (self.product_7_3 + self.product_2 + self.product_3).with_company(self.stock_location.company_id).mapped("qty_available")
         self.assertEqual(kit_product_qty, 8)
 
     def test_14_bom_kit_qty_multi_uom(self):
