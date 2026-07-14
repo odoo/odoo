@@ -713,6 +713,12 @@
                         <field name="formula">LV_P.balance - LV_S.balance</field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
+                    <record id="vat_report_line_70_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_70.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
                 </field>
                 <field name="aggregation_formula"></field>
             </record>
@@ -731,6 +737,12 @@
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">LV_S.balance - LV_P.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                    <record id="vat_report_line_80_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_80.balance</field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
                 </field>

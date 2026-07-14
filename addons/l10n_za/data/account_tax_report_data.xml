@@ -17,6 +17,14 @@
                 <field name="name">[20] VAT PAYABLE/REFUNDABLE (Total A - Total B)</field>
                 <field name="aggregation_formula">TotalA.balance - TotalB.balance</field>
                 <field name="hierarchy_level">0</field>
+                <field name="code">VAT20</field>
+                <field name="expression_ids">
+                    <record id="total_vat_payable_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">VAT20.balance</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="total_output_tax" model="account.report.line">
                         <field name="name">[13] Total A: TOTAL OUTPUT TAX (4 + 4A + 9 + 11 + 12)</field>

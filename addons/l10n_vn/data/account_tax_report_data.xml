@@ -613,6 +613,12 @@
                                         <field name="engine">aggregation</field>
                                         <field name="formula">40a.balance - 40b.balance</field>
                                     </record>
+                                    <record id="form_01_gtgt_report_C_VI_3_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">40.balance</field>
+                                        <field name="subformula">if_above(CUR(0))</field>
+                                    </record>
                                 </field>
                             </record>
                             <record id="form_01_gtgt_report_C_VI_4" model="account.report.line">
@@ -679,6 +685,11 @@
                                                 <field name="engine">aggregation</field>
                                                 <field name="formula">43.balance</field>
                                                 <field name="carryover_target">22._applied_carryover_balance</field>
+                                            </record>
+                                            <record id="form_01_gtgt_report_C_VI_4-2_closing_amount" model="account.report.expression">
+                                                <field name="label">_closing_amount</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">43.balance</field>
                                             </record>
                                         </field>
                                     </record>

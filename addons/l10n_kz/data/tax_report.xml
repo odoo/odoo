@@ -711,6 +711,11 @@
                                         <field name="formula">sum</field>
                                         <field name="subformula">editable;rounding=2</field>
                                     </record>
+                                    <record id="l10n_kz_tr_line_300_00_030_1_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">L10N_KZ_300_00_030_1.tax</field>
+                                    </record>
                                 </field>
                             </record>
                             <record id="l10n_kz_tr_line_300_00_030_2" model="account.report.line">
@@ -723,6 +728,11 @@
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
                                         <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                    <record id="l10n_kz_tr_line_300_00_030_2_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">L10N_KZ_300_00_030_2.tax</field>
                                     </record>
                                 </field>
                             </record>

@@ -163,6 +163,14 @@
                 <field name="name@es_419">III LIQUIDACION</field>
                 <field name="aggregation_formula">III_21.balance + III_25.balance</field>
                 <field name="hierarchy_level">0</field>
+                <field name="code">III_SETTLEMENT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_3_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">III_SETTLEMENT.balance</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="account_tax_report_3_21_total" model="account.report.line">
                         <field name="name">III.21 TOTAL ITBIS COLLECTED (Add Boxes 16+17+18+19+20)</field>

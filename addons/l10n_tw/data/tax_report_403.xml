@@ -1065,6 +1065,11 @@ Year-end adjustment of tax refund (see attached table)</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TW_403_106.balance - TW_403_110.balance</field>
                             </record>
+                            <record id="l10n_tw_tax_report_403_tw_403_111_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_403_111.balance</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_tw_tax_report_403_tw_403_112" model="account.report.line">

@@ -329,6 +329,16 @@
                         <field name="subformula">if_above(EUR(0))</field>
                         <field name="carryover_target">PLTAXC_39._applied_carryover_balance</field>
                     </record>
+                    <record id="account_tax_report_line_do_przeniesienia_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PLTAX.balance</field>
+                    </record>
+                    <record id="account_tax_report_line_do_przeniesienia_closing_amount_2" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PLTAX.balance</field>
+                    </record>
                 </field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_podatek_razem_c" model="account.report.line">

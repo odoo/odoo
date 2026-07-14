@@ -191,6 +191,12 @@
                                 <field name="formula">8_TAX_PAYABLE.balance - 10_EXCESS_CARRIED_FORWARD.balance</field>
                                 <field name="subformula">if_above(THB(0))</field>
                             </record>
+                            <record id="tax_report_net_vat_payable_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">11_NET_TAX_PAYABLE_IF_8_IS_GREATER_THAN_10.balance</field>
+                                <field name="subformula">if_above(THB(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="tax_report_net_vat_excess" model="account.report.line">
@@ -223,6 +229,11 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">12_NET_VAT_EXCESS.balance</field>
                                 <field name="carryover_target">10_EXCESS_CARRIED_FORWARD._applied_carryover_balance</field>
+                            </record>
+                            <record id="tax_report_net_vat_excess_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">12_NET_VAT_EXCESS.balance</field>
                             </record>
                         </field>
                     </record>
