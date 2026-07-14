@@ -21,12 +21,14 @@
             <button name="action_open_versions" position="before">
                 <field name="attendance_state" invisible="1"/>
                 <field name="hours_last_month" groups="hr_attendance.group_hr_attendance_officer" invisible="1"/>
+                <field name="display_attendances" invisible="1"/>
                 <button name="action_open_last_month_attendances"
                         class="oe_stat_button"
                         icon="fa-clock-o"
                         type="object"
                         groups="hr_attendance.group_hr_attendance_officer"
-                        help="Worked hours this month">
+                        help="Worked hours this month"
+                        invisible="not display_attendances">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="hours_last_month" widget="float_time"/>
@@ -48,7 +50,7 @@
                         type="object"
                         groups="!hr_attendance.group_hr_attendance_officer,hr_attendance.group_hr_attendance_own_reader"
                         help="Worked hours this month"
-                        invisible="user_id != uid">
+                        invisible="user_id != uid or not display_attendances">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="hours_last_month" widget="float_time"/>
