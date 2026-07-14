@@ -11,11 +11,11 @@ from dateutil.relativedelta import MO, SU, relativedelta
 from dateutil.rrule import DAILY, rrule
 
 from odoo import _, api, exceptions, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import convert, float_is_zero, format_datetime, format_duration, format_time
-from odoo.tools.date_utils import float_to_time, sum_intervals
+from odoo.tools import convert, float_compare, float_is_zero, format_datetime, format_duration, format_time
+from odoo.tools.date_utils import float_to_time, sum_intervals, time_to_float
 from odoo.tools.intervals import Intervals
 
 
@@ -89,6 +89,7 @@ class HrAttendance(models.Model):
         selection=[('0', "Monday"), ('1', "Tuesday"), ('2', "Wednesday"), ('3', "Thursday"), ('4', "Friday"), ('5', "Saturday"), ('6', "Sunday")],
     )
     resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
+    break_duration = fields.Float(string="Break Duration", tracking=True, help="Extra unpaid break duration (hours)")
 
     @api.depends('date')
     def _compute_day_of_date(self):
@@ -184,16 +185,32 @@ class HrAttendance(models.Model):
         self.ensure_one()
         return self.employee_id.resource_calendar_id or self.employee_id.company_id.resource_calendar_id
 
-    @api.depends('check_in', 'check_out')
+    @api.depends('check_in', 'check_out', 'break_duration')
     def _compute_worked_hours(self):
         """ Computes the worked hours of the attendance record.
             The worked hours of resource with flexible calendar is computed as the difference
             between check_in and check_out, without taking into account the lunch_interval"""
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
-                attendance.worked_hours = (attendance.check_out - attendance.check_in).total_seconds() / 3600
+                attendance.worked_hours = (
+                    time_to_float(attendance.check_out - attendance.check_in)
+                ) - attendance.break_duration
             else:
                 attendance.worked_hours = False
+
+    @api.constrains('break_duration', 'check_in', 'check_out')
+    def _check_break_duration(self):
+        for attendance in self:
+            if float_compare(attendance.break_duration, 0.0, precision_digits=4) < 0:
+                raise ValidationError(self.env._("Break duration cannot be negative."))
+            if not attendance.check_out and not float_is_zero(attendance.break_duration, precision_digits=4):
+                raise ValidationError(self.env._(
+                    "You can only set a break duration once the employee has checked out."
+                ))
+            if attendance.check_in and attendance.check_out and attendance.break_duration:
+                total_hours = time_to_float(attendance.check_out - attendance.check_in)
+                if float_compare(attendance.break_duration, total_hours, precision_digits=4) > 0:
+                    raise ValidationError(self.env._("Break duration cannot exceed the attendance duration."))
 
     @api.constrains('check_in', 'check_out')
     def _check_validity_check_in_check_out(self):
@@ -366,7 +383,7 @@ class HrAttendance(models.Model):
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
         domain_pre = self._get_overtimes_to_update_domain()
         result = super().write(vals)
-        if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
+        if any(field in vals for field in ['employee_id', 'check_in', 'check_out', 'break_duration']):
             # Merge attendance dates before and after write to recompute the
             # overtime if the attendances have been moved to another day
             domain_post = self._get_overtimes_to_update_domain()
@@ -726,6 +743,24 @@ class HrAttendance(models.Model):
             localized_start, localized_end = attendance._get_localized_times()
             result[attendance] = list(rrule(DAILY, dtstart=localized_start.date(), until=localized_end.date()))
         return result
+
+    def _get_break_duration_within_period(self, start, stop):
+        attendances = self.filtered(lambda attendance: attendance.check_out and attendance.break_duration)
+        if not attendances:
+            return 0.0
+
+        attendance_intervals = Intervals([
+            (*attendance._get_localized_times(), attendance)
+            for attendance in attendances
+        ], keep_distinct=True)
+        period_interval = Intervals([(start, stop, self.env['resource.calendar'])])
+        break_duration = 0.0
+        for start, stop, attendance in attendance_intervals & period_interval:
+            attendance_duration = time_to_float(attendance.check_out - attendance.check_in)
+            break_duration += (
+                time_to_float(stop - start) / attendance_duration
+            ) * attendance.break_duration
+        return break_duration
 
     def _get_attendance_by_periods_by_employee(self):
         attendance_by_employee_by_day = defaultdict(lambda: defaultdict(lambda: Intervals([], keep_distinct=True)))

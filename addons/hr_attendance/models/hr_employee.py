@@ -9,6 +9,7 @@ from odoo.tools.intervals import Intervals
 from odoo import SUPERUSER_ID, models, fields, api, exceptions, _
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes
+from odoo.tools.date_utils import sum_intervals
 
 
 class HrEmployee(models.Model):
@@ -175,7 +176,7 @@ class HrEmployee(models.Model):
                 employee.hours_last_month_display = "%g" % employee.hours_last_month
                 employee.hours_last_month_overtime = round(overtime_hours, 2)
 
-    @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out')
+    @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.break_duration')
     def _compute_hours_today(self):
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=datetime.UTC)
@@ -184,6 +185,10 @@ class HrEmployee(models.Model):
             tz = ZoneInfo(timezone or 'UTC')
             start_tz = now_utc.astimezone(tz) + relativedelta(hour=0, minute=0)  # day start in the employee's timezone
             start_naive = start_tz.astimezone(datetime.UTC).replace(tzinfo=None)
+            end_naive = (start_tz + relativedelta(days=1)).astimezone(datetime.UTC).replace(tzinfo=None)
+            start_local = start_tz.replace(tzinfo=None)
+            now_local = now_utc.astimezone(tz).replace(tzinfo=None)
+            today_interval = Intervals([(start_tz, now_utc, self.env['resource.calendar'])])
 
             attendances_by_employee = dict(self.env['hr.attendance']._read_group(
                 [
@@ -202,8 +207,13 @@ class HrEmployee(models.Model):
                 worked_hours = 0
                 attendance_worked_hours = 0
                 for attendance in attendances:
-                    delta = (attendance.check_out or now) - max(attendance.check_in, start_naive)
-                    attendance_worked_hours = delta.total_seconds() / 3600.0
+                    check_in = attendance.check_in.replace(tzinfo=datetime.UTC)
+                    check_out = (attendance.check_out or now).replace(tzinfo=datetime.UTC)
+                    attendance_interval = Intervals([(check_in, check_out, attendance)]) & today_interval
+                    attendance_worked_hours = (
+                        sum_intervals(attendance_interval)
+                        - attendance._get_break_duration_within_period(start_local, now_local)
+                    )
                     worked_hours += attendance_worked_hours
                     hours_previously_today += attendance_worked_hours
                 employee.last_attendance_worked_hours = attendance_worked_hours

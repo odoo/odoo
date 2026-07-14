@@ -429,6 +429,88 @@ class TestHrAttendanceOvertime(HttpCase):
         attendance.check_out = datetime(2021, 1, 4, 18, 0)
         self.assertEqual(self.employee.total_overtime, 1, 'There should be overtime since the employee worked through the lunch period.')
 
+    def test_break_duration_reduces_overtime_hours(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 2, 8, 0),
+            'check_out': datetime(2023, 1, 2, 18, 0),
+        })
+        self.assertAlmostEqual(attendance.worked_hours, 10.0, 2)
+        self.assertAlmostEqual(attendance.overtime_hours, 2.0, 2)
+
+        attendance.break_duration = 2.0
+
+        self.assertAlmostEqual(attendance.worked_hours, 8.0, 2)
+        self.assertAlmostEqual(attendance.overtime_hours, 0.0, 2)
+        self.assertFalse(self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2023, 1, 2)),
+        ]))
+
+    def test_break_duration_is_aggregated_for_quantity_overtime(self):
+        attendances = self.env['hr.attendance'].create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2023, 1, 2, 8, 0),
+                'check_out': datetime(2023, 1, 2, 14, 0),
+                'break_duration': 1.0,
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2023, 1, 2, 14, 0),
+                'check_out': datetime(2023, 1, 2, 20, 0),
+                'break_duration': 1.0,
+            },
+        ])
+
+        self.assertAlmostEqual(sum(attendances.mapped('worked_hours')), 10.0, 2)
+        self.assertAlmostEqual(sum(attendances.mapped('overtime_hours')), 2.0, 2)
+
+    def test_cross_midnight_break_duration_is_split_proportionally_between_quantity_periods(self):
+        self.employee.ruleset_id = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Ruleset zero quantity',
+            'rule_ids': [Command.create({
+                'name': 'Rule zero quantity',
+                'base_off': 'quantity',
+                'expected_hours_from_contract': False,
+                'expected_hours': 0.5,
+                'quantity_period': 'day',
+            })],
+        })
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 2, 20, 0),
+            'check_out': datetime(2023, 1, 3, 2, 0),
+            'break_duration': 3.0,
+        })
+
+        overtime_by_date = {
+            overtime.date: overtime.duration
+            for overtime in self.env['hr.attendance.overtime.line'].search([
+                ('employee_id', '=', self.employee.id),
+                ('date', 'in', [date(2023, 1, 2), date(2023, 1, 3)]),
+            ])
+        }
+        self.assertAlmostEqual(overtime_by_date[date(2023, 1, 2)], 1.5, 2)
+        self.assertAlmostEqual(overtime_by_date[date(2023, 1, 3)], 0.5, 2)
+
+    def test_break_duration_does_not_reduce_timing_overtime_hours(self):
+        self.employee.ruleset_id.rule_ids.write({
+            'base_off': 'timing',
+            'timing_type': 'work_days',
+            'timing_start': 17.0,
+            'timing_stop': 21.0,
+        })
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 2, 17, 0),
+            'check_out': datetime(2023, 1, 2, 21, 0),
+            'break_duration': 1.0,
+        })
+
+        self.assertAlmostEqual(attendance.worked_hours, 3.0, 2)
+        self.assertAlmostEqual(attendance.overtime_hours, 4.0, 2)
+
     def test_overtime_hours_inside_attendance(self):
         # 1 Attendance case
         _, attendance = self.env['hr.attendance'].create([

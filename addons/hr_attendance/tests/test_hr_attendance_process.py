@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 from odoo import fields
+from odoo.addons.hr_attendance.controllers.main import HrAttendance
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, new_test_user
 from odoo.tests.common import HttpCase, tagged, TransactionCase, freeze_time
 
@@ -129,6 +131,99 @@ class TestHrAttendance(HttpCase, TransactionCase):
             self.assertEqual(test_attendance.check_out, fields.Datetime.now())
             self.assertEqual(test_attendance.worked_hours, 8.0)
 
+    def test_break_duration_updates_worked_hours(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': '2024-01-01 08:00:00',
+            'check_out': '2024-01-01 17:00:00',
+        })
+        initial_hours = attendance.worked_hours
+        attendance.break_duration = 1.0
+        self.assertAlmostEqual(attendance.worked_hours, max(initial_hours - 1.0, 0.0))
+        with patch.object(fields.Datetime, 'now', lambda: datetime(2024, 1, 1, 18, 0, 0)):
+            self.assertAlmostEqual(self.test_employee.hours_today, attendance.worked_hours)
+        with self.assertRaises(ValidationError):
+            attendance.break_duration = -1
+        with self.assertRaises(ValidationError):
+            attendance.break_duration = 12
+
+    def test_hours_today_splits_break_proportionally_across_cross_midnight_attendance(self):
+        employee = self.env['hr.employee'].create({'name': 'Cross Midnight', 'tz': 'UTC'})
+        self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': datetime(2024, 1, 1, 20),
+            'check_out': datetime(2024, 1, 2, 2),
+            'break_duration': 3,
+        })
+
+        with patch.object(fields.Datetime, 'now', lambda: datetime(2024, 1, 2, 3)):
+            employee.invalidate_recordset(['hours_today'])
+            self.assertAlmostEqual(employee.hours_today, 1, places=6)
+
+    def test_hours_today_keeps_full_break_before_midnight_checkout(self):
+        employee = self.env['hr.employee'].create({'name': 'Midnight Checkout', 'tz': 'UTC'})
+        self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': datetime(2024, 1, 1, 22),
+            'check_out': datetime(2024, 1, 2),
+            'break_duration': 2,
+        })
+
+        with patch.object(fields.Datetime, 'now', lambda: datetime(2024, 1, 1, 23)):
+            employee.invalidate_recordset(['hours_today'])
+            self.assertAlmostEqual(employee.hours_today, 0, places=6)
+
+    def test_break_duration_normalization(self):
+        self.assertEqual(HrAttendance._normalize_break_duration(0), 0.0)
+        self.assertEqual(HrAttendance._normalize_break_duration("0.5"), 0.5)
+        for duration in (None, False, True, "", "invalid", -1, float("inf"), float("nan")):
+            with self.subTest(duration=duration):
+                self.assertIsNone(HrAttendance._normalize_break_duration(duration))
+
+    @freeze_time("2024-01-02 12:00:00")
+    def test_user_attendance_details_are_opt_in(self):
+        now = fields.Datetime.now()
+        self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': datetime(2024, 1, 1, 22),
+            'check_out': datetime(2024, 1, 2, 2),
+            'break_duration': 1,
+        })
+        future_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': now + timedelta(hours=2),
+            'check_out': now + timedelta(hours=3),
+        })
+        tomorrow_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': now + timedelta(days=1),
+            'check_out': now + timedelta(days=1, hours=1),
+        })
+        future_open_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': now + timedelta(hours=4),
+        })
+
+        public_payload = HrAttendance._get_user_attendance_data(self.test_employee)
+        self.assertNotIn('last_attendance', public_payload)
+        self.assertNotIn('break_today', public_payload)
+        self.assertNotIn('in_location', public_payload['today_attendance_ids'][0])
+        self.assertNotIn('can_edit', public_payload['today_attendance_ids'][0])
+        self.assertEqual(public_payload['hours_today'], 1.5)
+        self.assertEqual(public_payload['hours_previously_today'], 0)
+
+        user_payload = HrAttendance._get_user_attendance_data(
+            self.test_employee,
+            include_attendance_details=True,
+        )
+        self.assertNotIn('last_attendance', user_payload)
+        self.assertAlmostEqual(user_payload['break_today'], 0.5, places=6)
+        self.assertIn('in_location', user_payload['today_attendance_ids'][0])
+        self.assertIn('can_edit', user_payload['today_attendance_ids'][0])
+        attendance_ids = [attendance['id'] for attendance in user_payload['today_attendance_ids']]
+        self.assertIn(future_attendance.id, attendance_ids)
+        self.assertIn(future_open_attendance.id, attendance_ids)
+        self.assertNotIn(tomorrow_attendance.id, attendance_ids)
     # @freeze_time("2024-02-1")
     # def test_change_in_out_mode_when_manual_modification(self):
     #     TODO naja: cron should work eventually when the adjustment feature is back

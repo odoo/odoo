@@ -170,7 +170,8 @@ class HrAttendanceOvertimeRule(models.Model):
                 period_schedule = schedule & Intervals([(start, stop, self.env['resource.calendar'])])
                 expected_duration = sum_intervals(period_schedule)
 
-        overtime_amount = sum_intervals(Intervals(attendances_interval)) - expected_duration
+        break_duration = attendances._get_break_duration_within_period(start, stop)
+        overtime_amount = sum_intervals(Intervals(attendances_interval)) - break_duration - expected_duration
         company = self.company_id or employee.company_id
         if company.absence_management and float_compare(overtime_amount, -self.employee_tolerance, 5) == -1:
             if not intervals_attendance_by_attendance:
@@ -194,6 +195,8 @@ class HrAttendanceOvertimeRule(models.Model):
                 interval_overtime_duration = interval_duration
                 if remaining_duration != 0:
                     interval_overtime_duration = interval_duration - remaining_duration
+                # Breaks reduce the overtime quantity, not the source attendance intervals.
+                interval_overtime_duration = min(interval_overtime_duration, remanining_overtime_amount)
                 new_start = stop - timedelta(hours=interval_overtime_duration)
                 remaining_duration = 0
                 overtime_intervals[attendance].append((new_start, stop, self))
