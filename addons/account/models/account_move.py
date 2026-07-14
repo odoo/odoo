@@ -7075,7 +7075,10 @@ class AccountMove(models.Model):
 
     def _get_action_with_base_document_layout_configurator(self, report_action):
         if (
-            self.env.is_admin()
+            (
+                self.env.is_admin()
+                or self.env.user.has_group('account.group_account_basic')
+            )
             and not self.env.company.external_report_layout_id
             and not self.env.context.get('discard_logo_check')
         ):

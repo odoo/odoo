@@ -53,9 +53,22 @@
     }
 }
 
+.o_account_dashboard_kpi_invoice_layout_card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: map-get($spacers, 3);
+}
+
 .o_account_dashboard_kpi_content {
     display: flex;
     flex-direction: column;
+}
+
+.o_account_dashboard_kpi_image {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
 }
 
 .o_account_dashboard_kpi_name {

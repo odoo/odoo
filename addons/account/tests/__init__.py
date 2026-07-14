@@ -22,6 +22,7 @@ from . import test_account_invoice_report
 from . import test_account_move_line_tax_details
 from . import test_account_journal_dashboard_common
 from . import test_account_journal_dashboard
+from . import test_base_document_layout
 from . import test_account_lock_exception
 from . import test_audit_trail
 from . import test_chart_template

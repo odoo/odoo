@@ -37,9 +37,20 @@ export class AccountDashboardKpis extends Component {
     }
 
     onClickCard(card) {
-        if (card.action_id) {
-            this.action.doAction(card.action_id);
+        if (!card.action_id) {
+            return;
         }
+
+        if (card.is_invoice_layout_card) {
+            this.action.doAction(card.action_id, {
+                onClose: async () => {
+                    await this.loadCards();
+                },
+            });
+            return;
+        }
+
+        this.action.doAction(card.action_id);
     }
 
     hideKpis() {

@@ -5,6 +5,7 @@
         <button
             type="button"
             class="o_card o_account_dashboard_kpi_card btn text-start"
+            t-att-class="{'o_account_dashboard_kpi_invoice_layout_card': this.props.card.is_invoice_layout_card}"
             t-att-disabled="!this.props.card.action_id"
             t-on-click="this.onClick"
         >
@@ -16,6 +17,13 @@
                     t-out="this.props.card.value"
                 />
             </span>
+
+            <img
+                t-if="this.props.card.image"
+                class="o_account_dashboard_kpi_image"
+                t-att-src="this.props.card.image"
+                alt=""
+            />
 
             <span t-if="this.props.card.values" class="o_account_dashboard_kpi_values">
                 <span
