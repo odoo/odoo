@@ -73,6 +73,7 @@ const NOT_A_NUMBER = /[^\d]/g;
  *
  * @typedef {((node: Node, formatName: string, options: { applyStyle: boolean, formatProps: object }) => Node | undefined)[]} formattable_node_providers
  * @typedef {((selection: EditorSelection) => boolean | undefined)[]} can_format_content_predicates
+ * @typedef {((selection: EditorSelection) => boolean | undefined)[]} should_defer_format_predicates
  * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_formattable_node_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} can_remove_format_predicates
@@ -269,6 +270,11 @@ export class FormatPlugin extends Plugin {
                 return false;
             }
         },
+        should_defer_format_predicates: (sel) => {
+            if (sel.isCollapsed) {
+                return true;
+            }
+        },
     };
 
     setup() {
@@ -353,7 +359,7 @@ export class FormatPlugin extends Plugin {
     removeAllFormats() {
         const sel = this.dependencies.selection.getEditableSelection();
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        if (sel.isCollapsed) {
+        if (this.checkPredicates("should_defer_format_predicates", sel) ?? true) {
             this.activeFormats = {}; // discard pending "apply" intents
             for (const spec of this.formatSpecs) {
                 if (spec.removeStyle && this.hasFormat(spec.id, targetedNodes)) {
@@ -465,7 +471,7 @@ export class FormatPlugin extends Plugin {
      */
     requestFormat(formatName, options) {
         const sel = this.dependencies.selection.getEditableSelection();
-        if (!sel.isCollapsed) {
+        if (!(this.checkPredicates("should_defer_format_predicates", sel) ?? true)) {
             this.formatSelection(formatName, options);
             return;
         }

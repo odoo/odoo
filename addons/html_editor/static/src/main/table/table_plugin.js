@@ -211,6 +211,11 @@ export class TablePlugin extends Plugin {
                 return true;
             }
         },
+        should_defer_format_predicates: () => {
+            if (this.editable.querySelector(".o_selected_td")) {
+                return false;
+            }
+        },
         is_selection_blocker_predicates: (node) => {
             if (node.nodeName === "TABLE") {
                 return true;
