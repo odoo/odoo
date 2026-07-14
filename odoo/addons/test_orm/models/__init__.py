@@ -8,6 +8,7 @@ from . import (
     test_ir_qweb_fields,
     test_orm,
     test_performance,
+    test_properties,
     test_read_group,
     test_schema,
     test_search,

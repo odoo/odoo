@@ -120,10 +120,10 @@ class PropertiesCase(TestPropertiesMixin):
     @mute_logger('odoo.sql_db')
     def test_base_properties_model_access(self):
         with self.assertRaises(AccessError):
-            self.env['res.partner'].with_user(self.test_user).create({
+            self.env['test_orm.properties'].with_user(self.test_user).create({
                 'name': 'test', 'properties': [{'name': 'test', 'type': 'char', 'definition_changed': True}]})
 
-        definition_record = self.env['properties.base.definition']._get_definition_for_property_field('res.partner', 'properties')
+        definition_record = self.env['properties.base.definition']._get_definition_for_property_field('test_orm.properties', 'properties')
         self.assertEqual(definition_record.properties_definition, [])
 
         field = self.env["ir.model.fields"].sudo()._get('test_orm.emailmessage', 'properties')
@@ -137,7 +137,7 @@ class PropertiesCase(TestPropertiesMixin):
         with self.assertRaises(AccessError):
             definition_record.with_user(self.test_user).unlink()
 
-        record_0 = self.env['res.partner'].create([{'properties': [{'name': 'test', 'type': 'char', 'definition_changed': True, 'value': 'test'}], 'name': 'test'}, {'name': 'test'}])[0]
+        record_0 = self.env['test_orm.properties'].create([{'properties': [{'name': 'test', 'type': 'char', 'definition_changed': True, 'value': 'test'}], 'name': 'test'}, {'name': 'test'}])[0]
         self.assertEqual(record_0.properties_base_definition_id, definition_record)
         self.assertEqual(definition_record.properties_definition, [{'name': 'test', 'type': 'char'}])
 
@@ -148,7 +148,7 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(definition_record.properties_definition, [{'name': 'test', 'type': 'char'}])
 
         with self.assertRaises(AccessError):
-            self.env['res.partner'].with_user(self.test_user).create({
+            self.env['test_orm.properties'].with_user(self.test_user).create({
                 'name': 'test', 'properties': [{'name': 'test', 'type': 'char', 'definition_deleted': True}]})
 
     def test_properties_field(self):
@@ -842,11 +842,11 @@ class PropertiesCase(TestPropertiesMixin):
             self.assertEqual(value[1]['comodel'], 'test_orm.partner')
 
         # many2one properties in a default value
-        partner = self.env['res.partner'].create({'name': 'test unlink'})
+        partner = self.env['test_orm.partner'].create({'name': 'test unlink'})
         self.message_2.attributes = [{
             'name': 'moderator_partner_id',
             'type': 'many2one',
-            'comodel': 'res.partner',
+            'comodel': 'test_orm.partner',
             'default': [partner.id, 'Bob'],
             'definition_changed': True,
         }]
@@ -855,7 +855,7 @@ class PropertiesCase(TestPropertiesMixin):
             [{
                 'name': 'moderator_partner_id',
                 'type': 'many2one',
-                'comodel': 'res.partner',
+                'comodel': 'test_orm.partner',
                 'default': (partner.id, partner.display_name),
             }],
         )
@@ -865,7 +865,7 @@ class PropertiesCase(TestPropertiesMixin):
             [{
                 'name': 'moderator_partner_id',
                 'type': 'many2one',
-                'comodel': 'res.partner',
+                'comodel': 'test_orm.partner',
                 'default': False,
             }],
         )
@@ -1920,11 +1920,11 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
 
     def test_properties_field_search_many2many(self):
         self.messages.discussion = self.discussion_1
-        partners = self.env['res.partner'].create([{'name': 'A'}, {'name': 'B'}, {'name': 'C'}])
+        partners = self.env['test_orm.partner'].create([{'name': 'A'}, {'name': 'B'}, {'name': 'C'}])
         self.message_1.attributes = [{
             'name': 'mymany2many',
             'type': 'many2many',
-            'comodel': 'res.partner',
+            'comodel': 'test_orm.partner',
             'value': partners.ids,
             'definition_changed': True,
         }]
@@ -1956,7 +1956,7 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
         self.message_1.attributes = [{
             'name': 'mypartner',
             'type': 'many2one',
-            'comodel': 'res.partner',
+            'comodel': 'test_orm.partner',
             'value': self.partner.id,
             'definition_changed': True,
         }]
