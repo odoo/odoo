@@ -1687,12 +1687,19 @@ test("Long labels are only truncated in the axis callback, not in the data given
     expect(scaleCallback("Guy with a very very very long name")).toBe("Guy with a very very…");
 });
 
-test("can change chart granularity", async () => {
+test("changing chart granularity updates the groupBy and preserves the domain", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "bar",
         definition: {
             dataSource: {
                 type: "odoo",
+                searchParams: {
+                    comparison: null,
+                    context: {},
+                    domain: [["date", ">=", "2020-01-01"]],
+                    groupBy: [],
+                    orderBy: [],
+                },
                 metaData: {
                     groupBy: ["date:month"],
                     measure: "probability",
@@ -1707,9 +1714,9 @@ test("can change chart granularity", async () => {
         chartId,
         granularity: "year",
     });
-    expect(model.getters.getChartDefinition(chartId).dataSource.metaData.groupBy).toEqual([
-        "date:year",
-    ]);
+    const definition = model.getters.getChartDefinition(chartId);
+    expect(definition.dataSource.metaData.groupBy).toEqual(["date:year"]);
+    expect(definition.dataSource.searchParams.domain).toEqual([["date", ">=", "2020-01-01"]]);
 });
 
 test("changing chart granularity reloads data source once with global filter", async () => {

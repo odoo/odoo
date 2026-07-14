@@ -102,7 +102,7 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
                     ...definition.dataSource,
                     // I don't know why it's in both searchParams and metaData.
                     searchParams: {
-                        ...definition.searchParams,
+                        ...definition.dataSource.searchParams,
                         groupBy: newGroupBy,
                     },
                     metaData: {
