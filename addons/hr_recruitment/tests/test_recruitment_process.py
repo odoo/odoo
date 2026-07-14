@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools.misc import file_open
@@ -37,8 +38,20 @@ class TestRecruitmentProcess(TestHrCommon):
         # In Order to test process of Recruitment so giving HR officer's rights
         with file_open('hr_recruitment/tests/resume.eml', 'rb') as request_file:
             request_message = request_file.read()
-        self.env['mail.thread'].with_user(self.res_users_hr_recruitment_officer).message_process(
-            'hr.applicant', request_message, custom_values={"job_id": self.job_developer.id})
+
+        alias_domain = self.env['mail.alias.domain'].create({
+            'name': 'mycompany.com',  # Based on the to email in hr_recruitment/tests/resume.eml
+        })
+        alias_model = self.env['ir.model'].search([('model', '=', 'hr.applicant')], limit=1)
+        alias = self.env['mail.alias'].create({
+            'alias_name': 'hr',  # Based on the to email in hr_recruitment/tests/resume.eml
+            'alias_model_id': alias_model.id,
+            'alias_domain_id': alias_domain.id,
+            'alias_defaults': json.dumps({'job_id': self.job_developer.id}),
+        })
+        alias.alias_status = 'valid'
+
+        self.env['mail.thread'].with_user(self.res_users_hr_recruitment_officer).message_process(None, request_message)
 
         # After getting the mail, I check the details of the new applicant.
         applicant = self.env['hr.applicant'].search([('email_from', 'ilike', 'Richard_Anderson@yahoo.com')], limit=1)
