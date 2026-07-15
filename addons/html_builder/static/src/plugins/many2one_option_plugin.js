@@ -9,7 +9,7 @@ export class Many2OneOptionPlugin extends Plugin {
         builder_actions: {
             Many2OneAction,
         },
-        content_not_editable_selectors: "[data-oe-field][data-oe-many2one-id]",
+        content_not_editable_selectors: "[data-oe-field][data-oe-many2one-model]",
         on_replicated_handlers: ({ sourceEl, targetEl }) => {
             if (
                 sourceEl.hasAttribute("data-oe-many2one-model") &&
