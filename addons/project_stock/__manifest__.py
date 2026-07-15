@@ -8,6 +8,7 @@
     'data': [
         'views/stock_picking_views.xml',
         'views/project_project_views.xml',
+        'views/stock_views.xml',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',
