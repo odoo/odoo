@@ -109,9 +109,9 @@ class AccountMoveLine(models.Model):
             *(extra_tax_fields or []),
         ]))
         if selected_lines is None:
-            selected_lines = self.search_fetch(domain, line_fields, offset=offset, limit=limit, order=order)
+            selected_lines = self.search_fetch(domain, ['move_id'], offset=offset, limit=limit, order=order)
         else:
-            selected_lines.fetch(line_fields)
+            selected_lines.fetch(['move_id'])
         move_lines = selected_lines.move_id.line_ids
         move_lines.fetch(line_fields)
         selected_lines.move_id.fetch(move_fields)
