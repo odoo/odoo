@@ -20,7 +20,7 @@ import {
     RPCErrorDialog,
     standardErrorDialogProps,
 } from "@web/core/errors/error_dialogs";
-import { UncaughtPromiseError } from "@web/core/errors/error_service";
+import { UncaughtPromiseError } from "@web/core/errors/error_plugin";
 import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 

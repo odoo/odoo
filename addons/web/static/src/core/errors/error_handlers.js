@@ -9,12 +9,12 @@ import {
     RequestEntityTooLargeErrorDialog,
     RPCErrorDialog,
 } from "./error_dialogs";
-import { UncaughtClientError, ThirdPartyScriptError, UncaughtPromiseError } from "./error_service";
+import { UncaughtClientError, ThirdPartyScriptError, UncaughtPromiseError } from "./error_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {import("../../env").OdooEnv} OdooEnv
- * @typedef {import("./error_service").UncaughtError} UncaughError
+ * @typedef {import("./error_plugin").UncaughtError} UncaughError
  */
 
 const errorHandlerRegistry = registry.category("error_handlers");
