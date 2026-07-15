@@ -12,6 +12,7 @@ import {
 } from "@web_tour/js/tour_recorder/tour_recorder_state";
 import { redirect } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 class OnboardingItem extends Component {
     static components = { DropdownItem };
@@ -374,11 +375,12 @@ registry.category("services").add("tour_service", {
 
 registry.category("command_provider").add("tour_recorder", {
     provide: (env, options) => {
+        const tour = useService("tour_service");
         const result = [];
         if (options.searchValue.toLowerCase() === "record") {
             result.push({
                 action() {
-                    env.services["tour_service"].startTourRecorder();
+                    tour.startTourRecorder();
                 },
                 name: _t("Enable the tour recorder"),
             });

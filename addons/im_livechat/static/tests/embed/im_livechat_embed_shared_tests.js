@@ -7,14 +7,14 @@ import {
 import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { expect } from "@odoo/hoot";
 import { _makeUser, user } from "@web/core/user";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 export async function openClosePersistedChannel() {
     await startServer();
     await loadDefaultEmbedConfig();
-    const env = await start({ authenticateAs: false, waitUntilSubscribe: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     patchWithCleanup(user, _makeUser({ user_companies: undefined }));
-    env.services.bus_service.subscribe("discuss.channel/new_message", () =>
+    getService("bus_service").subscribe("discuss.channel/new_message", () =>
         expect.step("discuss.channel/new_message")
     );
     await click(".o-livechat-LivechatButton");

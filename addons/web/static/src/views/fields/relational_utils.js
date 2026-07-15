@@ -844,7 +844,7 @@ export class X2ManyFieldDialog extends Component {
     }
 }
 
-async function getFormViewInfo({ list, context, activeField, viewService, env }) {
+async function getFormViewInfo({ list, context, activeField, viewService, isSmall }) {
     let formArchInfo = activeField.views.form;
     let fields = activeField.fields;
     const comodel = list.resModel;
@@ -872,7 +872,7 @@ async function getFormViewInfo({ list, context, activeField, viewService, env })
         {}, // context
         comodel,
         viewService,
-        env.services.ui.isSmall
+        isSmall
     );
 
     return { archInfo: formArchInfo, fields };
@@ -903,6 +903,7 @@ export function useOpenX2ManyRecord({
     isMany2Many,
 }) {
     const viewService = useService("view");
+    const ui = useService("ui");
     const env = useEnv();
     const component = useComponent();
 
@@ -921,7 +922,7 @@ export function useOpenX2ManyRecord({
             context,
             activeField,
             viewService,
-            env,
+            isSmall: ui.isSmall,
         });
         if (!component.props.record.isInEdition) {
             archInfo.activeActions.edit = false;

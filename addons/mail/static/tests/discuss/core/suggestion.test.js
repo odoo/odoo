@@ -195,8 +195,8 @@ test("Sort partner suggestions by recent chats", async () => {
         },
     ]);
 
-    const env = await start();
-    env.services.bus_service.subscribe("discuss.channel/new_message", () =>
+    await start();
+    getService("bus_service").subscribe("discuss.channel/new_message", () =>
         // Message notification holds the last_interest_dt update. We must wait for it to
         // ensure the suggestion service sort is deterministic.
         expect.step("new_message")

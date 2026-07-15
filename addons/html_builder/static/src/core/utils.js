@@ -1,6 +1,5 @@
-import { useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
+import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
 import {
     onMounted,
     onWillDestroy,
@@ -11,10 +10,11 @@ import {
     toRaw,
     useEffect,
 } from "@odoo/owl";
-import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
 import { localization } from "@web/core/l10n/localization";
-import { useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { useDebounced } from "@web/core/utils/timing";
+import { useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { BuilderAction } from "./builder_action";
 
 // Selectors for special cases where snippet options are bound to parent
@@ -770,9 +770,10 @@ export function useClickableBuilderComponent() {
 }
 export function useOperationWithReload(callApply, reload) {
     const env = useEnv();
+    const ui = useService("ui");
     return async (...args) => {
         const { editingElement } = args[0][0];
-        env.services.ui.block();
+        ui.block();
         try {
             const applyResults = await callApply(...args);
             if (!applyResults.includes(BuilderAction.cancelReload)) {
@@ -782,7 +783,7 @@ export function useOperationWithReload(callApply, reload) {
                 await env.editor.config.reloadEditor({ url, editingElement });
             }
         } finally {
-            env.services.ui.unblock();
+            ui.unblock();
         }
     };
 }

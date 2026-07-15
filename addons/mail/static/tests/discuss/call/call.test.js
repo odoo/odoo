@@ -239,13 +239,13 @@ test("starting a plain call from the Discuss app stays inline (no meeting view)"
     const pyEnv = await startServer();
     onRpc("/mail/rtc/session/notify_call_members", () => true);
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const env = await start();
-    patchWithCleanup(env.services["mail.sound_effects"], {
+    await start();
+    mockService("mail.sound_effects", {
         play(name) {
             expect.step(`play - ${name}`);
         },
     });
-    const rtc = env.services["discuss.rtc"];
+    const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await contains(".o-discuss-Call");
@@ -687,8 +687,8 @@ test("Minimize button leaves the meeting view like pressing Escape", async () =>
     const fullscreen = mockBrowserFullscreen();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const env = await start();
-    const rtc = env.services["discuss.rtc"];
+    await start();
+    const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await click(".o-discuss-CallActionList button[title='More']");
@@ -1770,8 +1770,8 @@ test("Adjust view: switching between Tiled and Spotlight changes the meeting gri
 test("Change layout dialog closes when the call is removed by the server", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const env = await start();
-    const rtc = env.services["discuss.rtc"];
+    await start();
+    const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await click(".o-discuss-CallActionList button[title='More']");
