@@ -270,7 +270,7 @@ test("don't show dialog for errors in third-party scripts", async () => {
     error.name = "Script error.";
 
     mockService("dialog", {
-        add(_dialogClass, props) {
+        add() {
             throw new Error("should not pass here");
         },
     });
@@ -329,7 +329,7 @@ test("lazy loaded handlers", async () => {
 let unhandledRejectionCb;
 let errorCb;
 
-describe("Error Service Logs", () => {
+describe("Error Plugin Logs", () => {
     beforeEach(() => {
         patchWithCleanup(browser, {
             addEventListener: (type, cb) => {
@@ -414,11 +414,11 @@ describe("Error Service Logs", () => {
             },
             { sequence: 0 }
         );
-        // We want to assert that the error_service code does the preventDefault.
+        // We want to assert that the error plugin code does the preventDefault.
         patchWithCleanup(console, {
             error(errorMessage) {
                 expect(errorMessage).toMatch(
-                    /^@web\/core\/error_service: handler "__test_handler__" failed with "Error: Boom in handler" while trying to handle:\nError: Genuine Business Boom.*/
+                    /^@web\/core\/error_plugin: handler "__test_handler__" failed with "Error: Boom in handler" while trying to handle:\nError: Genuine Business Boom.*/
                 );
                 expect.step("error logged");
             },
