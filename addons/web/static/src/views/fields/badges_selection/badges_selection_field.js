@@ -10,6 +10,7 @@ export class BadgesSelectionField extends Component {
         ...standardFieldProps,
         iconMapping: t.object().optional({}),
         allowedSelectionField: t.string().optional(),
+        excludedSelectionField: t.string().optional(),
         badgeLimit: t.number().optional(),
         defaultIcon: t.string().optional(),
         canDeselect: t.boolean().optional(),
@@ -19,12 +20,16 @@ export class BadgesSelectionField extends Component {
     };
 
     get options() {
-        const { record, name, allowedSelectionField } = this.props;
+        const { record, name, allowedSelectionField, excludedSelectionField } = this.props;
         let options = record.fields[name].selection;
 
         if (allowedSelectionField) {
             const allowedOptions = record.data[allowedSelectionField] || [];
             options = options.filter(([value]) => allowedOptions.includes(value));
+        }
+        if (excludedSelectionField) {
+            const excludedOptions = record.data[excludedSelectionField] || [];
+            options = options.filter(([value]) => !excludedOptions.includes(value));
         }
 
         // Map icons to options
@@ -89,6 +94,7 @@ export const badgesSelectionField = {
         canDeselect: !dynamicInfo.required,
         iconMapping: options.icon_mapping,
         allowedSelectionField: options.allowed_selection_field,
+        excludedSelectionField: options.excluded_selection_field,
     }),
 };
 
