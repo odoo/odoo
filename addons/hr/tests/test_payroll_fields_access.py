@@ -73,7 +73,6 @@ class TestPayrollFieldsAccess(TransactionCase):
             'currency_id',
             'lang',
             'registration_number',
-            'standard_calendar_id',
             'distance_home_work',
             'distance_home_work_unit',
             'show_billable_time_target',
