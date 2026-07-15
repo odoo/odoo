@@ -388,13 +388,6 @@ class RepairOrder(models.Model):
             for item in value
         )
 
-    @api.onchange('uom_id')
-    def onchange_uom_id(self):
-        res = {}
-        if not self.product_id or not self.uom_id:
-            return res
-        return res
-
     @api.onchange('location_id', 'picking_id')
     def _onchange_location_picking(self):
         location_warehouse = self.location_id.warehouse_id
