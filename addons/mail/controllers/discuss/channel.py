@@ -225,7 +225,9 @@ class ChannelController(http.Controller):
     def discuss_channel_notify_typing(self, channel_id, is_typing):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
-            raise request.not_found()
+            # Ignore if the conversation was deleted in the meantime (e.g. composer
+            # still notifies stop-typing after an empty chat was unlinked on close).
+            return
         # Do not create member automatically when setting typing to `False`
         # as it could be resulting from the user leaving.
         if is_typing:

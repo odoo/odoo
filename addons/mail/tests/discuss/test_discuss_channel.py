@@ -1193,3 +1193,17 @@ class TestChannelInternals(MailCommon, HttpCase):
         result = self.make_jsonrpc_request("/discuss/search", {"term": "test"})
         channel_ids = [c["id"] for c in result.get("discuss.channel", [])]
         self.assertEqual(channel_ids[0], favorite.id, "Favorite channel should come first")
+
+    def test_notify_typing_channel_not_found_should_not_crash(self):
+        """channel can be deleted while someone is still typing in it.
+        When that happens, notify_typing must not crash for the missing channel.
+        """
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        self.make_jsonrpc_request(
+            "/discuss/channel/notify_typing",
+            {"channel_id": 999999999, "is_typing": False},
+        )
+        self.make_jsonrpc_request(
+            "/discuss/channel/notify_typing",
+            {"channel_id": 999999999, "is_typing": True},
+        )
