@@ -556,7 +556,7 @@ test("statusbar with dynamic domain", async () => {
     await animationFrame();
     expect(".o_statusbar_status button:disabled").toHaveCount(5);
     expect(rpcCount).toBe(2, { message: "should have done 1 more search_read rpc" });
-    await edit("-hey", { confirm: "enter" });
+    await edit("hey", { confirm: "enter" });
     await animationFrame();
     expect(rpcCount).toBe(2, { message: "should not have done 1 more search_read rpc" });
 });

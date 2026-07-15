@@ -12082,7 +12082,7 @@ test(`editable list view: multi edition error and cancellation handling`, async 
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
     expect(`.o_list_record_selector input:enabled`).toHaveCount(0);
 
-    await contains(`.o_selected_row [name=int_field] input`).edit("-", { confirm: "blur" });
+    await contains(`.o_selected_row [name=int_field] input`).edit("hahaha", { confirm: "blur" });
     expect(`.o_notification`).toHaveCount(1);
     await contains(`.o_notification_close`).click();
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "10"], {
@@ -12554,7 +12554,7 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
 
     // edit the numeric field with an invalid value
     await contains(`.o_data_row:eq(0) .o_data_cell`).click();
-    await contains(`.o_data_row:eq(0) .o_data_cell input`).edit("-", { confirm: false });
+    await contains(`.o_data_row:eq(0) .o_data_cell input`).edit("oof", { confirm: false });
 
     // mousedown on Discard and then mouseup also on Discard
     await contains(`.o_list_button_discard`).click();
@@ -12563,7 +12563,7 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
 
     // edit again with an invalid value
     await contains(`.o_data_row:eq(0) .o_data_cell`).click();
-    await contains(`.o_data_row:eq(0) .o_data_cell input`).edit("-", { confirm: false });
+    await contains(`.o_data_row:eq(0) .o_data_cell input`).edit("abc", { confirm: false });
 
     // mousedown on Discard (simulate a mousemove) and mouseup somewhere else
     await pointerDown(".o_list_button_discard");

@@ -89,7 +89,10 @@ test("parseFloat", () => {
     expect(parseFloat("1e-3")).toBe(0.001);
     expect(parseFloat("1,3e3")).toBe(1300);
     expect(parseFloat("1.3e-3")).toBe(0.0013);
-    expect(() => parseFloat("12e22222")).toThrow();
+    expect(parseFloat("1,3e3e2")).toBe(1.332);
+    expect(parseFloat("e22")).toBe(22);
+    expect(parseFloat("-e22")).toBe(-22);
+    expect(parseFloat("1.3e-3e2")).toBe(1.332);
 
     // Mixed separators: the singular one is the decimal separator
     expect(parseFloat("1,2,3,4,5,6.1,2,3,5")).toBe(1234561235);
@@ -109,12 +112,12 @@ test("parseFloat", () => {
     expect(parseFloat("1,5")).toBe(1.5);
 
     // Letters are stripped, not rejected, including trailing noise after a valid number
-    expect(parseFloat("abbc")).toBe(0);
     expect(parseFloat("a2v3c4")).toBe(234);
     expect(parseFloat("123eee")).toBe(123);
 
-    // ...but "-" alone still throws (safe invalid input for validation tests)
+    expect(() => parseFloat("abbc")).toThrow();
     expect(() => parseFloat("-")).toThrow();
+    expect(() => parseFloat("12e22222")).toThrow(); // Too big
 });
 
 test("parseFloatTime", () => {
@@ -194,13 +197,12 @@ test("parseInteger", () => {
     expect(parseInteger("1000000")).toBe(1000000);
 
     // Same permissive letter-stripping as parseFloat
-    expect(parseInteger("abbc")).toBe(0);
     expect(parseInteger("a2v3c4")).toBe(234);
     expect(parseInteger("123eee")).toBe(123);
 
-    // ...but "-" alone still throws
+    expect(() => parseInteger("abbc")).toThrow();
     expect(() => parseInteger("-")).toThrow();
-    expect(() => parseInteger("12e22222")).toThrow();
+    expect(() => parseInteger("12e22222")).toThrow(); // Too big
 });
 
 test("parsePercentage", () => {

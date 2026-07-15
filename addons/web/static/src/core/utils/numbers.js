@@ -235,7 +235,7 @@ export function formatFloat(value, options = {}) {
     } else {
         precision = 2;
     }
-    const intDigitsCount = (value !== 0) ? Math.floor(Math.log10(Math.abs(value))) + 1 : 1;
+    const intDigitsCount = value !== 0 ? Math.floor(Math.log10(Math.abs(value))) + 1 : 1;
     // Within 15 digits, we have a float with no parasite digits.
     // 14 is chosen here, as roundPrecision will add a digit when performing its computations.
     const maxDecDigits = Math.max(14 - intDigitsCount, 0);
@@ -246,7 +246,7 @@ export function formatFloat(value, options = {}) {
     if (floatIsZero(value, precision)) {
         value = 0.0;
     }
-    if (options.humanReadable) {
+    if (options.humanReadable || value.toString().includes("e")) {
         return humanNumber(value, options);
     }
     const grouping = options.grouping || l10n.grouping;

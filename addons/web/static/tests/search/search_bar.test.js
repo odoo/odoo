@@ -914,14 +914,14 @@ test("many2one_reference fields are supported in search view", async () => {
     await removeFacet("Resource ID 12");
     expect(searchBar.env.searchModel.domain).toEqual([]);
 
-    await editSearch("-");
+    await editSearch("abc");
     expect(queryAllTexts`.o_searchview_autocomplete .o-dropdown-item`).toEqual([
-        "Search Foo for: -",
+        "Search Foo for: abc",
         "Custom Filter...",
     ]);
 
     await validateSearch();
-    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "-"]]);
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "abc"]]);
 });
 
 test("check kwargs of a rpc call with a domain", async () => {

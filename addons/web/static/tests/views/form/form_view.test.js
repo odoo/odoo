@@ -2483,7 +2483,7 @@ test(`two occurrences of invalid integer fields in form view`, async () => {
             </form>
         `,
     });
-    await contains(`.a input`).edit("-");
+    await contains(`.a input`).edit("abc");
     expect(`.o_form_label.o_field_invalid`).toHaveCount(2);
     expect(`.o_field_integer.o_field_invalid`).toHaveCount(2);
 
@@ -5409,9 +5409,9 @@ test(`discard invalid value`, async () => {
         arch: `<form><field name="int_field"></field></form>`,
         resId: 1,
     });
-    await contains(`.o_field_widget[name=int_field] input`).edit("-");
+    await contains(`.o_field_widget[name=int_field] input`).edit("tralala");
     expect(`.o_field_invalid`).toHaveCount(1);
-    expect(`.o_field_widget[name=int_field] input`).toHaveValue("-");
+    expect(`.o_field_widget[name=int_field] input`).toHaveValue("tralala");
 
     await contains(`.o_form_button_cancel`).click();
     expect(`.o_field_invalid`).toHaveCount(0);
@@ -7005,7 +7005,7 @@ test(`onchanges are not sent for invalid values`, async () => {
 
     // enter an invalid value in a float, and check that no onchange has
     // been applied
-    await contains(`.o_field_widget[name="int_field"] input`).edit("-");
+    await contains(`.o_field_widget[name="int_field"] input`).edit("abc");
     expect(`.o_field_widget[name="foo"] input`).toHaveValue("123");
     expect.verifySteps(["onchange"]);
 
@@ -10385,10 +10385,10 @@ test(`saving with invalid uncommitted changes`, async () => {
     });
     expect.verifySteps(["get_views", "onchange"]);
 
-    await contains(`.o_field_widget[name=float_field] input`).edit("-some float_field value");
+    await contains(`.o_field_widget[name=float_field] input`).edit("some float_field value");
     await contains(`.o_form_button_save`).click();
     expect(`.o_form_editable`).toHaveCount(1);
-    expect(`.o_form_view .o_form_editable input`).toHaveValue("-some float_field value");
+    expect(`.o_form_view .o_form_editable input`).toHaveValue("some float_field value");
     expect(`[name=float_field]`).toHaveClass("o_field_invalid");
     expect(`.o_notification_bar.bg-danger`).toHaveCount(1);
     expect(`.o_form_editable .o_field_invalid[name=float_field]`).toHaveCount(1);
