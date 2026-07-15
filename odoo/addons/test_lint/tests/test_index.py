@@ -4,7 +4,7 @@ import functools
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
-from odoo.tests import TransactionCase, tagged
+from odoo.tests.common import TransactionCase, tagged, no_retry
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -89,6 +89,7 @@ BTREE_INDEX_IGNORE_FIELDS = {
 
 
 @tagged('post_install', '-at_install')
+@no_retry
 class TestIndexMeta(TransactionCase):
 
     def test_ignore_list(self):
@@ -129,6 +130,7 @@ class TestIndexMeta(TransactionCase):
 
 
 @tagged('post_install', '-at_install')
+@no_retry
 class TestTableObjects(TransactionCase):
 
     def test_declared_table_objects_are_installed(self):
