@@ -46,6 +46,7 @@ class SurveyUser_Input(models.Model):
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Contact', readonly=True, index='btree_not_null')
     create_uid = fields.Many2one('res.users', string='Created by', index=True)
+    certification_number = fields.Char('Certification n°', compute='_compute_certification_number', store=True)
     email = fields.Char('Email', readonly=True)
     nickname = fields.Char('Nickname', help="Attendee nickname, mainly used to identify them in the survey session leaderboard.")
     # questions / answers
@@ -63,6 +64,14 @@ class SurveyUser_Input(models.Model):
         'UNIQUE (access_token)',
         'An access token must be unique!',
     )
+
+    @api.depends('scoring_success', 'survey_id.certification')
+    def _compute_certification_number(self):
+        for user_input in self:
+            if user_input.survey_id.certification and user_input.scoring_success:
+                user_input.certification_number = str(user_input.id).rjust(10, '0')
+            else:
+                user_input.certification_number = False
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id', 'predefined_question_ids.answer_score')
     def _compute_scoring_values(self):

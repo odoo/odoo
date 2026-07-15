@@ -31,7 +31,7 @@
                                     <div class="mb-3 text-center">
                                         <t t-if="user_input.scoring_success">
                                             <p class="mb-0">Certification:</p>
-                                            <p class="mb-0 fw-semibold">n°<span t-out="str(user_input.id).rjust(10, '0')">0000000010</span></p>
+                                            <p class="mb-0 fw-semibold">n°<span t-field="user_input.certification_number">0000000010</span></p>
                                         </t>
                                         <t t-else="">
                                             <p class="mb-0 fw-semibold text-danger">Certification failed</p>
@@ -67,7 +67,7 @@
                                         <div class="text-center">
                                             <t t-if="user_input.scoring_success">
                                                 <p class="mb-0">Certification:</p>
-                                                <p class="mb-0 fw-semibold">n°<span t-out="str(user_input.id).rjust(10, '0')">0000000010</span></p>
+                                                <p class="mb-0 fw-semibold">n°<span t-field="user_input.certification_number">0000000010</span></p>
                                             </t>
                                             <t t-else="">
                                                 <p class="mb-0 fw-semibold text-danger">Certification failed</p>
@@ -101,7 +101,7 @@
                                 </td>
                                 <td t-if="user_input.scoring_success" class="px-5 align-middle">
                                     <div class="oe_structure"/>
-                                    <p class="border-bottom border-secondary pb-2 mb-2 fw-semibold">#<span t-out="str(user_input.id).rjust(10, '0')">0000000010</span></p>
+                                    <p class="border-bottom border-secondary pb-2 mb-2 fw-semibold">#<span t-field="user_input.certification_number">0000000010</span></p>
                                     <p class="mb-0">Certification</p>
                                 </td>
                                 <td t-else="" class="px-5 align-middle">
@@ -125,7 +125,7 @@
                                     <p class="mb-0">Date: <span t-field="user_input.create_date" t-options='{"widget": "date"}' class="fw-semibold">2023-08-18</span></p>
                                 </td>
                                 <td t-if="user_input.scoring_success" class="align-middle">
-                                    <p class="mb-0">Certification: n°<span t-out="str(user_input.id).rjust(10, '0')" class="fw-semibold">0000000010</span></p>
+                                    <p class="mb-0">Certification: n°<span t-field="user_input.certification_number" class="fw-semibold">0000000010</span></p>
                                 </td>
                                 <td t-else="" class="align-middle">
                                     <p class="mb-0 fw-semibold text-danger">Certification failed</p>
