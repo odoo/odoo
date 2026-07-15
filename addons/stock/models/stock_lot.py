@@ -41,6 +41,7 @@ class StockLot(models.Model):
 
     name = fields.Char('Lot/Serial Number', required=True, compute='_compute_name', store=True, readonly=False, help="Unique Lot/Serial Number", index='trigram', precompute=True)
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
+    active = fields.Boolean(default=True)
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
         domain=("[('tracking', '!=', 'none'), ('is_storable', '=', True)] +"
@@ -101,7 +102,7 @@ class StockLot(models.Model):
                 return self.env['stock.lot'].generate_lot_names(last_serial.name, 2)[1]['lot_name']
         return False
 
-    @api.constrains('name', 'product_id', 'company_id')
+    @api.constrains('name', 'product_id', 'company_id', 'active')
     def _check_unique_lot(self):
         domain = [('product_id', 'in', self.product_id.ids),
                   ('name', 'in', self.mapped('name'))]
@@ -109,15 +110,19 @@ class StockLot(models.Model):
         if any(not lot.company_id for lot in self):
             # We need to check across other companies to not have duplicates between 'no-company' and a company.
             self = self.sudo()
-        records = self.with_context(skip_preprocess_gs1=True)._read_group(domain, groupby, ['__count'], order='company_id DESC')
+        records = self.with_context(active_test=False, skip_preprocess_gs1=True)._read_group(domain, groupby, ['__count', 'active:bool_and'], order='company_id DESC')
         error_message_lines = set()
         cross_lots = {}
-        for company, product, name, count in records:
+        for company, product, name, count, all_active in records:
+            cross_count, cross_all_active = cross_lots.get((product, name), (0, True))
             if not company:
-                cross_lots[(product, name)] = count
+                cross_lots[product, name] = (count, all_active)
             # For company-specific lots, we check that there is no duplicate with 'no-company' lots, but NOT between specific-company ones.
-            if (company and (cross_lots.get((product, name), 0) + count) > 1) or count > 1:
-                error_message_lines.add(_(" - Product: %(product)s, Lot/Serial Number: %(lot)s", product=product.display_name, lot=name))
+            if (company and (cross_count + count) > 1) or count > 1:
+                if all_active and cross_all_active:
+                    error_message_lines.add(_(" - Product: %(product)s, Lot/Serial Number: %(lot)s", product=product.display_name, lot=name))
+                else:
+                    error_message_lines.add(_(" - Product: %(product)s, Lot/Serial Number: %(lot)s is archived. Please unarchive it if you want to use it.", product=product.display_name, lot=name))
         if error_message_lines:
             raise ValidationError(
                 _(
@@ -214,9 +219,14 @@ class StockLot(models.Model):
                 vals['name'] = _("(copy of) %s", lot.name)
         return vals_list
 
-    @api.depends('quant_ids', 'quant_ids.quantity')
+    @api.depends('active', 'quant_ids', 'quant_ids.quantity')
     @api.depends_context('owner_id', 'package_id', 'to_date', 'location', 'warehouse_id', 'allowed_company_ids')
     def _product_qty(self):
+        inactive_lots = self.filtered(lambda lot: not lot.active)
+        inactive_lots.product_qty = 0
+        self -= inactive_lots
+        if not self:
+            return
         domain_quant_loc, _, _, domain_move_in_loc, domain_move_out_loc = self.env['product.product']._get_domain_locations()
         owner_id = self.env.context.get('owner_id')
         package_id = self.env.context.get('package_id')
@@ -251,6 +261,7 @@ class StockLot(models.Model):
             value = float(value)
         domain = [
             ('lot_id', '!=', False),
+            ('lot_id.active', '=', True),
             '|', ('location_id.usage', '=', 'internal'),
             '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', 'in', self.env.companies.ids)
         ]

@@ -9,6 +9,7 @@
                 <sheet>
                 <field name="company_id" invisible="1"/>
                 <field name="display_complete" invisible="1"/>
+                <field name="active" invisible="1"/>
                 <div class="oe_button_box" name="button_box"
                      invisible="not display_complete">
                         <button class="oe_stat_button" name="action_lot_open_transfers"
@@ -32,6 +33,7 @@
                             </div>
                         </button>
                 </div>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                 <div class="oe_title">
                     <label for="name"/>
                     <h1>
@@ -114,6 +116,8 @@
                 <filter string="At Customer" name="at_customer" domain="[('quant_ids.location_id.usage','=','customer'), ('quant_ids.quantity', '>', 0)]"/>
                 <filter string="On Hand" name="on_hand" domain="[('product_qty', '>', 0)]"/>
                 <filter string="Creation Date" name="creation_date" date="create_date"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <group>
                     <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter name="group_by_location" string="Location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
