@@ -15,12 +15,9 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(selection_add=[("payu", "PayU")], ondelete={"payu": "set default"})
-    payu_key_id = fields.Char(string="PayU Key Id", required_if_provider="payu", copy=False)
+    payu_key_id = fields.Char(string="PayU Key Id", copy=False)
     payu_merchant_salt = fields.Char(
-        string="PayU Merchant Salt",
-        required_if_provider="payu",
-        copy=False,
-        groups="base.group_system",
+        string="PayU Merchant Salt", copy=False, groups="base.group_system"
     )
 
     # === CONSTRAINT METHODS === #
