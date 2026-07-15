@@ -91,7 +91,7 @@ describe("Differences between pie & non-pie charts", () => {
         ).click();
         await animationFrame();
         expect(
-            ".o_hb_sliding_panel [data-label='Dataset Color'] button.o_we_color_preview"
+            ".o_hb_sliding_panel [data-label='Fill Color'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgb(74, 123, 140)",
         });
@@ -115,12 +115,12 @@ describe("Differences between pie & non-pie charts", () => {
         ).click();
         await animationFrame();
         expect(
-            ".o_hb_sliding_panel [data-label='Dataset Color'] button.o_we_color_preview"
+            ".o_hb_sliding_panel [data-label='Fill Color'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgba(255, 255, 255, 0)",
         });
         expect(
-            ".o_hb_sliding_panel [data-label='Dataset Border'] button.o_we_color_preview"
+            ".o_hb_sliding_panel [data-label='Border Color'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgb(255, 127, 80)",
         });
@@ -143,11 +143,11 @@ describe("Differences between pie & non-pie charts", () => {
             ".o_hb_sliding_panel table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
         ).click();
         await animationFrame();
-        expect(".o_hb_sliding_panel [data-label='Data Color'] button.o_we_color_preview").toHaveStyle(
-            {
-                backgroundColor: "rgb(74, 123, 140)",
-            }
-        );
+        expect(
+            ".o_hb_sliding_panel [data-label='Fill Color'] button.o_we_color_preview"
+        ).toHaveStyle({
+            backgroundColor: "rgb(74, 123, 140)",
+        });
         expect(
             ".o_hb_sliding_panel table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
         ).toHaveStyle({
@@ -167,13 +167,13 @@ describe("Differences between pie & non-pie charts", () => {
             ".o_hb_sliding_panel table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
         ).click();
         await animationFrame();
-        expect(".o_hb_sliding_panel [data-label='Data Color'] button.o_we_color_preview").toHaveStyle(
-            {
-                backgroundColor: "rgba(255, 255, 255, 0)",
-            }
-        );
         expect(
-            ".o_hb_sliding_panel [data-label='Data Border'] button.o_we_color_preview"
+            ".o_hb_sliding_panel [data-label='Fill Color'] button.o_we_color_preview"
+        ).toHaveStyle({
+            backgroundColor: "rgba(255, 255, 255, 0)",
+        });
+        expect(
+            ".o_hb_sliding_panel [data-label='Border Color'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgb(255, 127, 80)",
         });
@@ -509,23 +509,23 @@ test("Pasting on row labels uses text and can add rows", async () => {
     expect(".o_hb_sliding_panel table tbody tr").toHaveCount(5);
 });
 
-test("Focusing input displays related data color/data border colorpickers", async () => {
+test("Focusing input displays colorpicker labels for the selected chart type", async () => {
     const type = "bar";
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    expect(".o_hb_sliding_panel [data-label='Data Color']").not.toHaveCount();
-    expect(".o_hb_sliding_panel [data-label='Data Border']").not.toHaveCount();
-    expect(".o_hb_sliding_panel [data-label='Dataset Color']").toBeVisible();
-    expect(".o_hb_sliding_panel [data-label='Dataset Border']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Point Color']").not.toHaveCount();
+    expect(".o_hb_sliding_panel [data-label='Line Color']").not.toHaveCount();
+    expect(".o_hb_sliding_panel [data-label='Fill Color']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Border Color']").toBeVisible();
     await closeChartSlidingPanel();
     await contains(".o_hb_options_container [data-label='Type'] button.o-dropdown").click();
-    await contains(".o_popover [data-action-id='setChartType'][data-action-value='pie']").click();
+    await contains(".o_popover [data-action-id='setChartType'][data-action-value='line']").click();
     await openChartSlidingPanel();
-    expect(".o_hb_sliding_panel [data-label='Data Color']").toBeVisible();
-    expect(".o_hb_sliding_panel [data-label='Data Border']").toBeVisible();
-    expect(".o_hb_sliding_panel [data-label='Dataset Color']").not.toHaveCount();
-    expect(".o_hb_sliding_panel [data-label='Dataset Border']").not.toHaveCount();
+    expect(".o_hb_sliding_panel [data-label='Point Color']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Line Color']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Fill Color']").not.toHaveCount();
+    expect(".o_hb_sliding_panel [data-label='Border Color']").not.toHaveCount();
 });
 
 test("CSS colors and CSS custom variables are correctly computed", async () => {
@@ -541,10 +541,10 @@ test("CSS colors and CSS custom variables are correctly computed", async () => {
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
     await contains(".o_hb_sliding_panel table tbody input:eq(1)").click();
-    expect(".o_hb_sliding_panel [data-label='Dataset Color'] .o_we_color_preview").toHaveStyle({
+    expect(".o_hb_sliding_panel [data-label='Fill Color'] .o_we_color_preview").toHaveStyle({
         "background-color": "rgb(255, 0, 0)",
     });
-    expect(".o_hb_sliding_panel [data-label='Dataset Border'] .o_we_color_preview").toHaveStyle({
+    expect(".o_hb_sliding_panel [data-label='Border Color'] .o_we_color_preview").toHaveStyle({
         "background-color": "rgb(255, 127, 80)",
     });
 });
@@ -565,26 +565,27 @@ test("Adding a new column/row displays the color pickers of the cell in new colu
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    expect(".o_hb_sliding_panel [data-label='Data Color']").toBeVisible();
-    const prevColor = queryFirst(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview")
-        .style.backgroundColor;
+    expect(".o_hb_sliding_panel [data-label='Fill Color']").toBeVisible();
+    const prevColor = queryFirst(
+        ".o_hb_sliding_panel [data-label='Fill Color'] .o_we_color_preview"
+    ).style.backgroundColor;
 
     await contains(".o_hb_sliding_panel button.add_column").click();
-    expect(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
+    expect(".o_hb_sliding_panel [data-label='Fill Color'] .o_we_color_preview").not.toHaveStyle({
         backgroundColor: prevColor,
     });
     const columnColor = queryFirst(
-        ".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview"
+        ".o_hb_sliding_panel [data-label='Fill Color'] .o_we_color_preview"
     ).style.backgroundColor;
     expect(".o_hb_sliding_panel table tbody tr:first-child td:nth-child(4) input").toHaveStyle({
         border: `2px solid ${columnColor}`,
     });
 
     await contains(".o_hb_sliding_panel button.add_row").click();
-    expect(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
+    expect(".o_hb_sliding_panel [data-label='Fill Color'] .o_we_color_preview").not.toHaveStyle({
         backgroundColor: columnColor,
     });
-    const rowColor = queryFirst(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview")
+    const rowColor = queryFirst(".o_hb_sliding_panel [data-label='Fill Color'] .o_we_color_preview")
         .style.backgroundColor;
     expect(".o_hb_sliding_panel table tbody tr:nth-child(4) td:nth-child(2) input").toHaveStyle({
         border: `2px solid ${rowColor}`,
@@ -596,15 +597,15 @@ test("Removing a row with the current cell resets the current cell", async () =>
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    expect(".o_hb_sliding_panel [data-label='Data Color']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Fill Color']").toBeVisible();
 
     const defaultColor = queryFirst(
-        ".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview"
+        ".o_hb_sliding_panel [data-label='Fill Color'] .o_we_color_preview"
     ).style.backgroundColor;
 
     await contains(".o_hb_sliding_panel table tbody tr:nth-child(1) td:nth-child(3) input").click();
     const focusedCellColor = queryFirst(
-        ".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview"
+        ".o_hb_sliding_panel [data-label='Fill Color'] .o_we_color_preview"
     ).style.backgroundColor;
     expect(".o_hb_sliding_panel table tbody tr:nth-child(1) td:nth-child(3) input").toHaveStyle({
         border: `2px solid ${focusedCellColor}`,
@@ -615,7 +616,7 @@ test("Removing a row with the current cell resets the current cell", async () =>
     ).click();
     // After removal, the current cell should reset to default (first dataset, first data point)
     // The color picker should now reflect the default cell's color
-    expect(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview").toHaveStyle({
+    expect(".o_hb_sliding_panel [data-label='Fill Color'] .o_we_color_preview").toHaveStyle({
         backgroundColor: defaultColor,
     });
 });
