@@ -392,14 +392,14 @@ export class Composer extends Component {
         return { composer: () => this.props.composer };
     }
 
-    /** @param {import("@mail/core/common/action").PartitionedActions} partitionedActions */
+    /** @param {import("@mail/core/common/action").PartitionedActions<import("@mail/core/common/composer_actions").ComposerAction>} partitionedActions */
     computeMoreActions(partitionedActions) {
         if (this.props.mode === "extended" || partitionedActions.other.length === 0) {
             this.moreActions = undefined;
             return;
         }
         this.moreActions = this.composerActions.more(this.composerActionsParams, {
-            actions: partitionedActions.other,
+            actions: [partitionedActions.other, ...partitionedActions.group],
             disabledCondition: this.areAllActionsDisabled,
             dropdownPosition: "top-start",
             icon: "fa fa-plus-circle",
