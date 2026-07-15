@@ -98,27 +98,23 @@ class CalendarAlarm_Manager(models.AbstractModel):
         }
         return result
 
-    def do_check_alarm_for_one_date(self, one_date, event, event_maxdelta, in_the_next_X_seconds, alarm_type, after=False, missing=False):
+    def do_check_alarm_for_one_date(self, one_date, event, in_the_next_X_seconds, alarm_type, after=False):
         """ Search for some alarms in the interval of time determined by some parameters (after, in_the_next_X_seconds, ...)
             :param one_date: date of the event to check (not the same that in the event browse if recurrent)
             :param event: Event browse record
-            :param event_maxdelta: biggest duration from alarms for this event
             :param in_the_next_X_seconds: looking in the future (in seconds)
             :param after: if not False: will return alert if after this date (date as string - todo: change in master)
-            :param missing: if not False: will return alert even if we are too late
             :param notif: Looking for type notification
             :param mail: looking for type email
         """
         result = []
-        # TODO: remove event_maxdelta and if using it
-        past = one_date - timedelta(minutes=(missing * event_maxdelta))
+        past = one_date
         future = fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds)
         if future <= past:
             return result
         for alarm in event.alarm_ids:
             if alarm.alarm_type != alarm_type:
                 continue
-            past = one_date - timedelta(minutes=(missing * alarm.duration_minutes))
             if future <= past:
                 continue
             if after and past <= fields.Datetime.from_string(after):
@@ -212,10 +208,9 @@ class CalendarAlarm_Manager(models.AbstractModel):
         all_meetings = self._get_next_potential_limit_alarm('notification', partners=partner)
         time_limit = 3600 * 24  # return alarms of the next 24 hours
         for event_id in all_meetings:
-            max_delta = all_meetings[event_id]['max_duration']
             meeting = self.env['calendar.event'].browse(event_id)
             in_date_format = fields.Datetime.from_string(meeting.start)
-            last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, time_limit, 'notification', after=partner.calendar_last_notif_ack)
+            last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, time_limit, 'notification', after=partner.calendar_last_notif_ack)
             if last_found:
                 for alert in last_found:
                     all_notif.append(self.do_notif_reminder(alert))
