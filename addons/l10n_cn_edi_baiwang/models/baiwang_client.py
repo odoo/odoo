@@ -116,9 +116,9 @@ class BaiwangClient:
         self._ensure_proxy_user()
         result = self.proxy_user._l10n_cn_baiwang_poll_red_form_list(self.company, filters)
         if not result.get('success'):
-            raise UserError(
-                f"Baiwang red form list query failed: {result.get('error', 'Unknown error')}",
-            )
+            # Fetch proxy error, OR fallback to the nested Baiwang API errorResponse
+            err = result.get('error') or result.get('response', {}).get('errorResponse', {}).get('message', 'Unknown API error')
+            raise UserError(f"Baiwang red form list query failed: {err}")
         return result.get('response', {})
 
     def query_red_form_detail(self, red_confirm_uuid: str):
