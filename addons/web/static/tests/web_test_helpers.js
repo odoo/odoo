@@ -50,6 +50,7 @@ export {
     mockOffline,
     mockService,
     restoreRegistry,
+    runTestScope,
 } from "./_framework/app_test_helpers";
 export {
     findComponent,

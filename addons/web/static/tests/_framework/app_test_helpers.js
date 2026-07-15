@@ -7,7 +7,7 @@ import {
     registerDebugInfo,
 } from "@odoo/hoot";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { App } from "@odoo/owl";
+import { App, Scope } from "@odoo/owl";
 import { startRouter } from "@web/core/browser/router";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -33,8 +33,16 @@ import { patchWithCleanup } from "./patch_test_helpers";
 // Internals
 //-----------------------------------------------------------------------------
 
+class TestScope extends Scope {}
+
 class TestApp extends App {
     test = true;
+    scope = new TestScope(this);
+
+    destroy() {
+        this.scope.finalize(() => {});
+        super.destroy();
+    }
 }
 
 /**
@@ -56,7 +64,7 @@ const registerRegistryForCleanup = (registry) => {
 const registriesContent = new WeakMap();
 /**
  * Current main test App instance.
- * @type {App | null}
+ * @type {TestApp | null}
  */
 let currentApp = null;
 let testEnv = {};
@@ -275,6 +283,16 @@ export function restoreRegistry(registry) {
     for (const subRegistry of Object.values(registry.subRegistries)) {
         restoreRegistry(subRegistry);
     }
+}
+
+/**
+ * @template [T=void]
+ * @param {() => T} fn
+ * @returns {Promise<T>}
+ */
+export async function runTestScope(fn) {
+    const app = getTestApp() || (await makeTestApp());
+    return app.scope.run(fn);
 }
 
 /**
