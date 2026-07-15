@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from odoo import api
 from odoo.cli import Command
-from odoo.modules import initialize_sys_path
 from odoo.modules.registry import Registry
 from odoo.tools import config
 
@@ -38,7 +37,6 @@ class Populate(Command):
             sys.exit(1)
 
         _logger.info("Connecting to database '%s'...", dbname)
-        initialize_sys_path()
         with Registry(dbname).cursor() as cr:
             env = api.Environment(cr, api.SUPERUSER_ID, {})
             populate_is_installed = bool(env['ir.module.module'].search_count(

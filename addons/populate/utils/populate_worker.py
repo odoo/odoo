@@ -25,9 +25,7 @@ def initialize(dbname: str, options: dict):
     initializes the addons' path, and loads the registry so regular populate job
     execution can safely import and use addon code.
     """
-    from odoo.modules import initialize_sys_path  # noqa: PLC0415
     from odoo.modules.registry import Registry  # noqa: PLC0415
-    from odoo.netsvc import init_logger  # noqa: PLC0415
     from odoo.tools import config, mute_logger  # noqa: PLC0415
 
     # Only 'spawn' is supported. With 'fork', the child inherits the
@@ -45,9 +43,8 @@ def initialize(dbname: str, options: dict):
 
     # Initialize addons' path to ensure all installed modules
     # are discovered when loading the Registry.
-    config.options.update(options)
-    initialize_sys_path()
-    init_logger()
+    config.options = config.options.new_child(options)
+    config.parse_config(setup_logging=True)
 
     with mute_logger('odoo.registry', 'odoo.modules.loading'):
         Registry(dbname)
