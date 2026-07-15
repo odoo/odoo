@@ -1993,13 +1993,13 @@ def _optimize_x2m_in_operator(condition, model):
     ids = condition.value
     # rewrite condition (field_expr, 'in', ids), then negate in the case 'not in'
     domain = Domain.FALSE
+    comodel = model.env[condition._field(model).comodel_name]
     if False in ids:
         # x2m in {False, ...} => x2m not any! (Domain.TRUE) or x2m in {...}
-        domain |= Domain(field_expr, 'not any!', Domain.TRUE)
+        domain |= Domain(field_expr, 'not any!', Query(comodel))
         ids = ids - {False}
     if ids:
         # x2m in ids => x2m any! (ids_as_query)
-        comodel = model.env[condition._field(model).comodel_name]
         domain |= Domain(field_expr, 'any!', comodel.browse(ids)._as_query(ordered=False))
     return domain if condition.operator == 'in' else ~domain
 

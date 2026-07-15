@@ -2735,6 +2735,18 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "test_orm_partner"."id"
             FROM "test_orm_partner"
+            WHERE ("test_orm_partner"."active" IS TRUE AND NOT EXISTS (
+                SELECT 1 FROM "test_orm_partner_test_orm_partner_category_rel" AS "test_orm_partner__category_id"
+                WHERE "test_orm_partner__category_id"."partner_id" = "test_orm_partner"."id"
+            ))
+            ORDER BY "test_orm_partner"."id"
+        ''']):
+            # check with a comodel that has an active field
+            self.Partner.with_context(active_test=True).search([('category_id', '=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "test_orm_partner"."id"
+            FROM "test_orm_partner"
             WHERE EXISTS (
                 SELECT 1 FROM "test_orm_partner_test_orm_partner_category_rel" AS "test_orm_partner__category_id"
                 WHERE "test_orm_partner__category_id"."partner_id" = "test_orm_partner"."id"
