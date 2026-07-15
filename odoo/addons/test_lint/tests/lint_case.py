@@ -4,12 +4,13 @@ import os
 from collections.abc import Iterable
 from typing import Generic, TypeVar
 
+from odoo.modules import get_modules, get_module_path
+from odoo.tests.common import BaseCase, no_retry
+
 j = os.path.join
 
-from odoo.modules import get_modules, get_module_path
-from odoo.tests import BaseCase
 
-
+@no_retry
 class LintCase(BaseCase):
     """ Utility method for lint-type cases
     """
