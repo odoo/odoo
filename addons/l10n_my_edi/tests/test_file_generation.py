@@ -633,6 +633,44 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         )
 
     @freeze_time("2024-07-15 10:00:00")
+    def test_19_classification_code_004_requires_general_public(self):
+        """
+        Classification code '004' (Consolidated e-Invoice) is reserved for invoices issued to MyInvois'
+        generic buyer TIN 'EI00000000010'. Using it for a regular customer must be caught here instead of
+        round-tripping to MyInvois as a confusing raw validation error.
+        """
+        self.product_a.l10n_my_edi_classification_code = "004"
+        invoice = self.init_invoice('out_invoice', products=self.product_a, partner=self.partner_a, post=True)
+        myinvois_document = invoice._create_myinvois_document()
+
+        _file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertTrue(any('EI00000000010' in error for error in errors))
+
+        # Using the same code for the actual general public buyer should not raise this constraint.
+        self.partner_a.write({'vat': 'EI00000000010', 'l10n_my_identification_number': 'NA'})
+        _file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertFalse(any('EI00000000010' in error for error in errors))
+
+    @freeze_time("2024-07-15 10:00:00")
+    def test_20_general_public_requires_classification_code_004(self):
+        """
+        The inverse of test_19: TIN 'EI00000000010' (General Public / Consolidated e-Invoice) is reserved for
+        code '004' - using it with any other classification code must also be caught here.
+        """
+        self.product_a.l10n_my_edi_classification_code = "001"
+        self.partner_a.write({'vat': 'EI00000000010', 'l10n_my_identification_number': 'NA'})
+        invoice = self.init_invoice('out_invoice', products=self.product_a, partner=self.partner_a, post=True)
+        myinvois_document = invoice._create_myinvois_document()
+
+        _file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertTrue(any('requires classification code' in error for error in errors))
+
+        # Using code '004' for the actual general public buyer should not raise this constraint.
+        invoice.invoice_line_ids.l10n_my_edi_classification_code = "004"
+        _file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertFalse(any('requires classification code' in error for error in errors))
+
+    @freeze_time("2024-07-15 10:00:00")
     def test_15_none_tax(self):
         invoice = self.init_invoice(
             'out_invoice',
