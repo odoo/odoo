@@ -99,7 +99,7 @@ class MrpProduction(models.Model):
 
     def _post_labour(self):
         for mo in self:
-            production_location = self.product_id.with_company(self.company_id).property_stock_production
+            production_location = mo.product_id.with_company(mo.company_id).property_stock_production
             if mo.with_company(mo.company_id).product_id.valuation != 'real_time' or not production_location.valuation_account_id:
                 continue
 
