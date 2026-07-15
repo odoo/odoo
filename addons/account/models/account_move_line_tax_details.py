@@ -41,6 +41,10 @@ class AccountMoveLine(models.Model):
         return True
 
     @api.model
+    def _get_python_tax_details_extra_line_fields(self):
+        return []
+
+    @api.model
     def _get_python_tax_details_from_domain(self, domain, fallback=True):
         """Return tax details rows for the account.move.line domain.
 
@@ -72,6 +76,7 @@ class AccountMoveLine(models.Model):
         limit=None,
         order='move_id, id',
     ):
+        extra_python_line_fields = self._get_python_tax_details_extra_line_fields()
         line_fields = list(dict.fromkeys([
             'move_id',
             'display_type',
@@ -87,6 +92,7 @@ class AccountMoveLine(models.Model):
             'company_currency_id',
             'analytic_distribution',
             'tax_ids',
+            *extra_python_line_fields,
             *(extra_line_fields or []),
         ]))
         move_fields = list(dict.fromkeys([
@@ -147,6 +153,7 @@ class AccountMoveLine(models.Model):
         include_currency_amounts=True,
     ):
         selected_line_ids = set(selected_lines.ids)
+        extra_python_line_fields = self._get_python_tax_details_extra_line_fields()
 
         snapshot = {
             'lines_by_move_id': defaultdict(list),
@@ -179,12 +186,13 @@ class AccountMoveLine(models.Model):
                 'company_currency_id',
                 'analytic_distribution',
                 'tax_ids',
+                *extra_python_line_fields,
             )
         }
 
         for line_id in move_lines.ids:
             move_id = line_cache['move_id'][line_id]
-            snapshot['lines_by_move_id'][move_id].append({
+            line_values = {
                 'id': line_id,
                 'move_id': move_id,
                 'display_type': line_cache['display_type'][line_id],
@@ -204,7 +212,10 @@ class AccountMoveLine(models.Model):
                 'always_tax_exigible': move_cache['always_tax_exigible'][move_id],
                 'selected': line_id in selected_line_ids,
                 'tax_ids': self._raw_ids_from_rel_cache(line_cache['tax_ids'].get(line_id)),
-            })
+            }
+            for field_name in extra_python_line_fields:
+                line_values[field_name] = line_cache[field_name].get(line_id)
+            snapshot['lines_by_move_id'][move_id].append(line_values)
 
         tax_fields = self.env['account.tax']._fields
         tax_cache = {
@@ -377,6 +388,7 @@ class AccountMoveLine(models.Model):
                     or (is_null(base_line['analytic_distribution']) and is_null(tax_line['analytic_distribution']))
                     or base_line['analytic_distribution'] == tax_line['analytic_distribution']
                 )
+                or not self._is_python_base_tax_line_mapping_allowed(base_line, tax_line)
             )
 
         def build_base_tax_line_mapping():

@@ -38,7 +38,16 @@ class AccountMoveLine(models.Model):
         super(AccountMoveLine, self - expenses)._compute_totals()
 
     @api.model
+    def _get_python_tax_details_extra_line_fields(self):
+        return super()._get_python_tax_details_extra_line_fields() + ['expense_id']
+
+    @api.model
     def _is_python_base_tax_line_mapping_allowed(self, base_line, tax_line):
+        if isinstance(base_line, dict):
+            return (
+                super()._is_python_base_tax_line_mapping_allowed(base_line, tax_line)
+                and (not base_line.get('expense_id') or tax_line.get('expense_id') == base_line.get('expense_id'))
+            )
         return (
             super()._is_python_base_tax_line_mapping_allowed(base_line, tax_line)
             and (not base_line.expense_id or tax_line.expense_id == base_line.expense_id)
