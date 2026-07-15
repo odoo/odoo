@@ -6453,6 +6453,7 @@ class AccountMove(models.Model):
         self.sending_data = False
 
         self._detach_attachments()
+        return True
 
     def action_reset_selected_to_draft(self):
         if not self:
