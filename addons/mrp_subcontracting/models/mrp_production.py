@@ -5,7 +5,8 @@ from datetime import timedelta
 from collections import defaultdict
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.float_utils import float_is_zero
+from odoo.tools.misc import OrderedSet
 
 
 class MrpProduction(models.Model):
@@ -121,50 +122,52 @@ class MrpProduction(models.Model):
     def _update_finished_move(self):
         """ After producing, set the move line on the subcontract picking. """
         self.ensure_one()
-        subcontract_move_id = self._get_subcontract_move().filtered(lambda m: m.state not in ('done', 'cancel'))
-        if subcontract_move_id:
-            quantity = self.qty_producing
-            if self.lot_producing_id:
-                move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and ml.lot_id == self.lot_producing_id or not ml.lot_id)
+        subcontract_move = self._get_subcontract_move().filtered(lambda m: m.state not in ('done', 'cancel'))
+        if not subcontract_move:
+            return
+        move_uom = subcontract_move.product_uom
+        lot_name = self.lot_producing_id.name
+        qty_to_reserve, recorded_lot_names = 0, set()
+        for production in self | subcontract_move._get_recorded_subcontract_production():
+            production_lot_name = production.lot_producing_id.name
+            if production_lot_name:
+                recorded_lot_names.add(production_lot_name)
+            if production_lot_name == lot_name:
+                qty_to_reserve += production.product_uom_id._compute_quantity(
+                    production.qty_producing, move_uom, rounding_method='HALF-UP')
+        # Reservations for other recorded lots are left untouched others are obsolete.
+        sml_to_update, reserved_qty, obsolete_sml_ids = self.env['stock.move.line'], 0, OrderedSet()
+        for sml in subcontract_move.move_line_ids:
+            sml_lot_name = sml.lot_id.name or sml.lot_name or False
+            if sml_lot_name != lot_name:
+                if sml_lot_name not in recorded_lot_names:
+                    obsolete_sml_ids.add(sml.id)
+                continue
+            sml_to_update = sml
+            reserved_qty = min(sml.product_uom_id._compute_quantity(sml.quantity, move_uom, rounding_method='HALF-UP'), qty_to_reserve)
+            qty_to_reserve -= reserved_qty
+            if float_is_zero(reserved_qty, precision_rounding=move_uom.rounding):
+                obsolete_sml_ids.add(sml.id)
             else:
-                move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and not ml.lot_id)
-            # Update reservation and quantity done
-            for ml in move_lines:
-                rounding = ml.product_uom_id.rounding
-                if float_compare(quantity, 0, precision_rounding=rounding) <= 0:
-                    break
-                quantity_to_process = min(quantity, ml.quantity)
-                quantity -= quantity_to_process
-
-                # on which lot of finished product
-                if float_compare(quantity_to_process, ml.quantity, precision_rounding=rounding) >= 0:
-                    ml.write({
-                        'quantity': quantity_to_process,
-                        'picked': True,
-                        'lot_id': self.lot_producing_id and self.lot_producing_id.id,
-                    })
-                else:
-                    ml.write({
-                        'quantity': quantity_to_process,
-                        'picked': True,
-                        'lot_id': self.lot_producing_id and self.lot_producing_id.id,
-                    })
-
-            if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) > 0:
-                self.env['stock.move.line'].create({
-                    'move_id': subcontract_move_id.id,
-                    'picking_id': subcontract_move_id.picking_id.id,
-                    'product_id': self.product_id.id,
-                    'location_id': subcontract_move_id.location_id.id,
-                    'location_dest_id': subcontract_move_id.location_dest_id.id,
-                    'product_uom_id': self.product_uom_id.id,
-                    'quantity': quantity,
-                    'picked': True,
-                    'lot_id': self.lot_producing_id and self.lot_producing_id.id,
+                sml.quantity = move_uom._compute_quantity(reserved_qty, sml.product_uom_id, rounding_method='HALF-UP')
+        if not float_is_zero(qty_to_reserve, precision_rounding=move_uom.rounding):
+            # Reuse sml to keep ids, prefering the one with the appropriate lot or none at all
+            sml_to_update = sml_to_update or self.env['stock.move.line'].browse(obsolete_sml_ids).sorted(lambda ml: bool(ml.lot_id or ml.lot_name))[:1]
+            obsolete_sml_ids.difference_update(sml_to_update.ids)
+            if sml_to_update:
+                sml_to_update.write({
+                    'lot_id': self.lot_producing_id.id,
+                    'lot_name': self.lot_producing_id.name,
+                    'quantity': move_uom._compute_quantity(reserved_qty + qty_to_reserve, sml_to_update.product_uom_id, rounding_method='HALF-UP'),
                 })
-            if not self._get_quantity_to_backorder():
-                subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked).unlink()
-                subcontract_move_id._recompute_state()
+            else:
+                product_qty = move_uom._compute_quantity(qty_to_reserve, self.product_id.uom_id, rounding_method='HALF-UP')
+                self.env['stock.move.line'].create({
+                    **subcontract_move._prepare_move_line_vals(quantity=product_qty),
+                    'lot_id': self.lot_producing_id.id,
+                })
+        self.env['stock.move.line'].browse(obsolete_sml_ids).unlink()
+        subcontract_move._recompute_state()
 
     def _subcontracting_filter_to_done(self):
         """ Filter subcontracting production where composant is already recorded and should be consider to be validate """
