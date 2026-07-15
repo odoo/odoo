@@ -1103,6 +1103,8 @@ class PosOrder(models.Model):
             for aml_values in aml_values_list:
                 aml_values['balance'] = -aml_values['balance']
                 aml_values['amount_currency'] = -aml_values['amount_currency']
+                if 'tax_base_amount' in aml_values:
+                    aml_values['tax_base_amount'] = -aml_values['tax_base_amount']
                 move_lines.append(aml_values)
 
         # Make a move with all the lines.
