@@ -99,14 +99,12 @@
     <t t-if="tags">
         <div t-if="not hide_title and categ_title" class="text-muted mb-1 h6" t-out="categ_title"/>
         <t t-foreach="tags" t-as="tag">
-            <t t-if="tag.post_ids">
-                <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
-                    <i class="oi me-2" data-icon="label"/>
-                    <t t-out="tag.name"/>
-                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'">×</a>
-                </span>
-                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate text-decoration-none o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-out="tag.name"/>
-            </t>
+            <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
+                <i class="oi me-2" data-icon="label"/>
+                <t t-out="tag.name"/>
+                <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'">×</a>
+            </span>
+            <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate text-decoration-none o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-out="tag.name"/>
         </t>
     </t>
 </template>
@@ -261,7 +259,7 @@ Options:
                 <t t-foreach="tag_category" t-as="nav_tag_category">
                     <t t-call="website_blog.tags_list"
                         categ_title="nav_tag_category.name"
-                        tags="nav_tag_category.tag_ids"
+                        tags="tags_by_category.get(nav_tag_category.id, [])"
                         showInactive="True"/>
                 </t>
                 <t t-call="website_blog.tags_list"

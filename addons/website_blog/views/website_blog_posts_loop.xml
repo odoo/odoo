@@ -56,7 +56,7 @@ according to the enabled options.
                 <t t-if="tag">
                     <!-- Show active tags with a category set -->
                     <t t-foreach="tag_category" t-as="nav_tag_category">
-                        <t t-call="website_blog.tags_list" tags="nav_tag_category.tag_ids" dismissibleBtn="True"/>
+                        <t t-call="website_blog.tags_list" tags="tags_by_category.get(nav_tag_category.id, [])" dismissibleBtn="True"/>
                     </t>
 
                     <!-- Show active tags without a category set -->
