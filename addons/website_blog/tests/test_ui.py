@@ -127,6 +127,42 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
 
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_tags_with_date", login="admin")
 
+    def test_sidebar_tags_are_filtered_by_blog_scope(self):
+        Blog = self.env['blog.blog']
+        Post = self.env['blog.post']
+        Tag = self.env['blog.tag']
+        TagCategory = self.env['blog.tag.category']
+
+        category = TagCategory.create({'name': 'Scoped Category'})
+        used_tag = Tag.create({'name': 'Scoped Used Tag', 'category_id': category.id})
+        unused_tag = Tag.create({'name': 'Scoped Unused Tag', 'category_id': category.id})
+        other_blog_tag = Tag.create({'name': 'Scoped Other Blog Tag', 'category_id': category.id})
+
+        blog = Blog.create({'name': 'Scoped Blog'})
+        other_blog = Blog.create({'name': 'Scoped Other Blog'})
+        Post.create({
+            'name': 'Scoped Blog Post',
+            'blog_id': blog.id,
+            'author_id': self.env.user.partner_id.id,
+            'tag_ids': [(4, used_tag.id)],
+            'is_published': True,
+        })
+        Post.create({
+            'name': 'Scoped Other Blog Post',
+            'blog_id': other_blog.id,
+            'author_id': self.env.user.partner_id.id,
+            'tag_ids': [(4, other_blog_tag.id)],
+            'is_published': True,
+        })
+
+        self.env.ref('website_blog.opt_blog_sidebar_show').active = True
+        response = self.url_open(blog.website_url)
+
+        self.assertIn(category.name, response.text)
+        self.assertIn(used_tag.name, response.text)
+        self.assertNotIn(unused_tag.name, response.text)
+        self.assertNotIn(other_blog_tag.name, response.text)
+
     def test_blog_access_rights(self):
         group_website_blog_manager_id = self.ref("website_blog.group_website_blog_manager")
         group_website_designer_id = self.ref("website.group_website_designer")
