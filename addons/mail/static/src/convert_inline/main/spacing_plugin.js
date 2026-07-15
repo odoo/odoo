@@ -1,4 +1,9 @@
-import { isPhrasingContent, paragraphRelatedElements } from "@html_editor/utils/dom_info";
+import {
+    isListElement,
+    isListItemElement,
+    isPhrasingContent,
+    paragraphRelatedElements,
+} from "@html_editor/utils/dom_info";
 import { DIMENSIONS } from "../hooks";
 import { Plugin } from "../plugin";
 import { StyleInfo } from "../core/style_models";
@@ -158,7 +163,11 @@ export class SpacingPlugin extends Plugin {
         );
         if (
             !this.isBlock(contextNode, { evaluateDisconnected: true }) ||
-            isPhrasingContent(renderNode)
+            isPhrasingContent(renderNode) ||
+            // TODO EGGMAIL: are there cases where LI and UL elements have
+            // necessary custom spacing? (list-group is already handled in list_strategy)
+            isListElement(renderNode) ||
+            isListItemElement(renderNode)
         ) {
             return layout;
         }
