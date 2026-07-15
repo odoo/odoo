@@ -64,4 +64,5 @@ class ResConfigSettings(models.TransientModel):
 
     def _inverse_l10n_fr_pdp_pilot_phase(self):
         for record in self:
-            record.company_id._l10n_fr_pdp_update_pilot_phase(record.l10n_fr_pdp_pilot_phase)
+            if record.l10n_fr_pdp_pilot_phase != record.company_id.l10n_fr_pdp_pilot_phase:
+                record.company_id._l10n_fr_pdp_update_pilot_phase(record.l10n_fr_pdp_pilot_phase)
