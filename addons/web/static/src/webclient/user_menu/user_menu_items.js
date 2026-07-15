@@ -1,4 +1,4 @@
-import { Component, markup } from "@odoo/owl";
+import { Component, markup, plugin } from "@odoo/owl";
 import { isDisplayStandalone, isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -9,8 +9,10 @@ import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 import { post } from "@web/core/network/http_service";
 import { redirect } from "@web/core/utils/urls";
+import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 
-function supportItem(env) {
+function supportItem() {
     const url = session.support_url;
     return {
         type: "item",
@@ -34,18 +36,21 @@ class ShortcutsFooterComponent extends Component {
     }
 }
 
-function shortCutsItem(env) {
+function shortCutsItem() {
+    const command = useService("command");
+    const ui = useService("ui");
+
     return {
         type: "item",
         id: "shortcuts",
-        hide: env.services.ui.isSmall,
+        hide: ui.isSmall,
         description: markup`
             <div class="d-flex align-items-center justify-content-between p-0 w-100">
                 <span>${_t("Shortcuts")}</span>
                 <span class="fw-bold">${isMacOS() ? "CMD" : "CTRL"}+K</span>
             </div>`,
         callback: () => {
-            env.services.command.openMainPalette({ FooterComponent: ShortcutsFooterComponent });
+            command.openMainPalette({ FooterComponent: ShortcutsFooterComponent });
         },
         sequence: 30,
     };
@@ -58,21 +63,24 @@ function separator() {
     };
 }
 
-export function preferencesItem(env) {
+export function preferencesItem() {
+    const action = useService("action");
+    const orm = plugin(ORM);
+
     return {
         type: "item",
         id: "preferences",
         description: _t("My Preferences"),
         callback: async function () {
-            const actionDescription = await env.services.orm.call("res.users", "action_get");
+            const actionDescription = await orm.call("res.users", "action_get");
             actionDescription.res_id = user.userId;
-            env.services.action.doAction(actionDescription);
+            action.doAction(actionDescription);
         },
         sequence: 50,
     };
 }
 
-export function odooAccountItem(env) {
+export function odooAccountItem() {
     return {
         type: "item",
         id: "account",
@@ -90,11 +98,14 @@ export function odooAccountItem(env) {
     };
 }
 
-function installPWAItem(env) {
+function installPWAItem() {
+    const pwa = useService("pwa");
+    const menu = useService("menu");
+
     let description = _t("Install App");
-    let callback = () => env.services.pwa.show();
-    let hide = !env.services.pwa.isAvailable || isDisplayStandalone();
-    const currentApp = env.services.menu.getCurrentApp();
+    let callback = () => pwa.show();
+    let hide = !pwa.isAvailable || isDisplayStandalone();
+    const currentApp = menu.getCurrentApp();
     if (currentApp && ["barcode", "field-service", "shop-floor"].includes(currentApp.actionPath)) {
         // While the feature could work with all apps, we have decided to only
         // support the installation of the apps contained in this list
@@ -107,7 +118,7 @@ function installPWAItem(env) {
                 )}`
             );
         };
-        hide = env.services.pwa.isScopedApp;
+        hide = pwa.isScopedApp;
     }
     return {
         type: "item",
@@ -119,10 +130,11 @@ function installPWAItem(env) {
     };
 }
 
-function logOutItem(env) {
+function logOutItem() {
+    const pwa = useService("pwa");
     let route = "/web/session/logout";
-    if (env.services.pwa.isScopedApp) {
-        route += `?redirect=${encodeURIComponent(env.services.pwa.startUrl)}`;
+    if (pwa.isScopedApp) {
+        route += `?redirect=${encodeURIComponent(pwa.startUrl)}`;
     }
     return {
         type: "item",
@@ -137,10 +149,11 @@ function logOutItem(env) {
     };
 }
 
-export function shareUrlMenuItem(env) {
+export function shareUrlMenuItem() {
+    const ui = useService("ui");
     return {
         type: "item",
-        hide: !router.shareUrl || env.services.ui.isSmall || !isDisplayStandalone(),
+        hide: !router.shareUrl || ui.isSmall || !isDisplayStandalone(),
         id: "share_url",
         description: markup`
             <div class="d-flex align-items-center justify-content-between w-100">
