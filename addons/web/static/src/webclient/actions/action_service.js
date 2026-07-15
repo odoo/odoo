@@ -28,6 +28,7 @@ import {
     status,
     plugin,
     xml,
+    useScope,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { zip } from "@web/core/utils/arrays";
@@ -136,7 +137,9 @@ const EMBEDDED_ACTIONS_CTX_KEYS = [
 const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
 
 export function makeActionManager(env, router = _router) {
+    const scope = useScope();
     const offlinePlugin = plugin(OfflinePlugin);
+    const { dialog: dialogService, effect: effectService, notification, title, ui } = env.services;
 
     const breadcrumbCache = {};
     const keepLast = new KeepLast();
@@ -910,7 +913,7 @@ export function makeActionManager(env, router = _router) {
             controller.displayName = displayName;
             if (controller === _getCurrentController()) {
                 // if not mounted yet, will be done in "mounted"
-                env.services.title.setParts({ action: controller.displayName });
+                title.setParts({ action: controller.displayName });
             }
             if (action.target !== "new") {
                 // This is a hack to force the reactivity when a new displayName is set
@@ -1096,7 +1099,7 @@ export function makeActionManager(env, router = _router) {
             actionDialogProps.footer = action.context.footer ?? actionDialogProps.footer;
             const onClose = dialog?.onClose;
             delete dialog?.onClose;
-            removeDialogFn = env.services.dialog.add(ActionDialog, actionDialogProps, {
+            removeDialogFn = dialogService.add(ActionDialog, actionDialogProps, {
                 onClose: (closeParams) => _removeDialog(closeParams),
             });
             if (nextDialog) {
@@ -1166,7 +1169,7 @@ export function makeActionManager(env, router = _router) {
             Component: ControllerComponent,
             componentProps: controller.props,
         };
-        env.services.dialog.closeAll({ noReload: true });
+        dialogService.closeAll({ noReload: true });
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         await currentActionProm;
     }
@@ -1181,7 +1184,7 @@ export function makeActionManager(env, router = _router) {
             const msg = _t(
                 "A popup window has been blocked. You may need to change your browser settings to allow popup windows for this page. You can also copy the link and paste it in a new tab."
             );
-            env.services.notification.add(msg, {
+            notification.add(msg, {
                 sticky: true,
                 type: "warning",
                 buttons: [
@@ -1265,7 +1268,7 @@ export function makeActionManager(env, router = _router) {
         }
 
         let view = (options.viewType && views.find((v) => v.type === options.viewType)) || views[0];
-        if (env.services.ui.isSmall) {
+        if (ui.isSmall) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
         }
         if (
@@ -1353,7 +1356,7 @@ export function makeActionManager(env, router = _router) {
             controller.displayName ||= clientAction.displayName?.toString() || "";
             return _updateUI(controller, options);
         } else {
-            const next = await clientAction(env, action, options);
+            const next = await scope.run(() => clientAction(env, action, options));
             if (next) {
                 return doAction(next, options);
             }
@@ -1393,7 +1396,7 @@ export function makeActionManager(env, router = _router) {
     async function _executeReportAction(action, options) {
         const handlers = registry.category("ir.actions.report handlers").getAll();
         for (const handler of handlers) {
-            const result = await handler(action, options, env);
+            const result = await scope.run(() => handler(action, options, env));
             if (result) {
                 const { onClose } = options;
                 if (action.close_on_report_download) {
@@ -1417,7 +1420,7 @@ export function makeActionManager(env, router = _router) {
                 type = "pdf";
             }
             let success, message;
-            env.services.ui.block();
+            ui.block();
             try {
                 const downloadContext = { ...user.context };
                 if (action.context) {
@@ -1431,10 +1434,10 @@ export function makeActionManager(env, router = _router) {
                     engineName
                 ));
             } finally {
-                env.services.ui.unblock();
+                ui.unblock();
             }
             if (message) {
-                env.services.notification.add(message, {
+                notification.add(message, {
                     sticky: true,
                     title: _t("Report"),
                 });
@@ -1532,7 +1535,7 @@ export function makeActionManager(env, router = _router) {
             default: {
                 const handler = actionHandlersRegistry.get(action.type, null);
                 if (handler !== null) {
-                    return handler({ env, action, options });
+                    return scope.run(() => handler({ env, action, options }));
                 }
                 throw new Error(
                     `The ActionManager service can't handle actions of type ${action.type}`
@@ -1570,7 +1573,7 @@ export function makeActionManager(env, router = _router) {
         const context = makeContext([params.context, params.buttonContext]);
         const blockUi = exprToBoolean(params["block-ui"]);
         if (blockUi) {
-            env.services.ui.block();
+            ui.block();
         }
         if (params.special) {
             action = { type: "ir.actions.act_window_close", infos: { special: true } };
@@ -1610,7 +1613,7 @@ export function makeActionManager(env, router = _router) {
             action = await keepLast.add(_loadAction(params.name, context));
         } else {
             if (blockUi) {
-                env.services.ui.unblock();
+                ui.unblock();
             }
             throw new InvalidButtonParamsError("Missing type for doActionButton request");
         }
@@ -1691,10 +1694,10 @@ export function makeActionManager(env, router = _router) {
             await _executeCloseAction();
         }
         if (blockUi) {
-            env.services.ui.unblock();
+            ui.unblock();
         }
         if (effect) {
-            env.services.effect.add(effect);
+            effectService.add(effect);
         }
     }
 
