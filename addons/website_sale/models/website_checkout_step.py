@@ -60,10 +60,7 @@ class WebsiteCheckoutStep(models.Model):
         :return: The incomplete or invalid step href if any; otherwise, None.
         :rtype: str | None
         """
-        website = kwargs.get("website") or self.env.website
-        kwargs.setdefault("website", website)
-
-        current_step_sudo = self.sudo()._get_step_by_href(step_href, website)
+        current_step_sudo = self.sudo()._get_step_by_href(step_href, self.env.website)
         previous_steps_sudo = current_step_sudo._get_previous_steps()
 
         for previous_step_sudo in previous_steps_sudo.sorted("sequence"):
@@ -91,8 +88,7 @@ class WebsiteCheckoutStep(models.Model):
             case "/shop/payment":
                 return self._check_shop_payment_completion(order_sudo, **kwargs)
 
-    @api.model
-    def _check_shop_cart_completion(self, order_sudo, **kwargs):
+    def _check_shop_cart_completion(self, order_sudo, **_kwargs):
         """Check whether the `/shop/cart` step is valid and complete, and return the incomplete page
         otherwise.
 
@@ -105,14 +101,12 @@ class WebsiteCheckoutStep(models.Model):
             return const.SHOP_PATH
 
         # Check that public orders are allowed.
-        website = kwargs.get("website") or self.env.website
-        if self.env.user._is_public() and website.account_on_checkout == "mandatory":
+        if self.env.user._is_public() and self.website_id.account_on_checkout == "mandatory":
             return "/web/login?redirect=/shop/checkout"
 
         if not order_sudo._is_cart_ready_for_checkout():
             return "/shop/cart"
 
-    @api.model
     def _check_shop_address_completion(self, order_sudo, **_kwargs):
         """Check whether the `/shop/address` step is valid and complete, and return the incomplete
         page otherwise.
@@ -154,7 +148,6 @@ class WebsiteCheckoutStep(models.Model):
             )
             return f"/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing"
 
-    @api.model
     def _check_shop_checkout_completion(self, order_sudo, **_kwargs):
         """Check whether the `/shop/checkout` step is valid and complete, and return the incomplete
         page otherwise.
@@ -167,7 +160,6 @@ class WebsiteCheckoutStep(models.Model):
         if not order_sudo._is_cart_ready_for_payment():
             return "/shop/checkout"
 
-    @api.model
     def _check_shop_payment_completion(self, order_sudo, **_kwargs):
         """Check whether the `/shop/payment` step is valid and complete, and return the incomplete
         page otherwise.

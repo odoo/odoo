@@ -29,8 +29,6 @@ class TestUi(HttpCase):
         })
         website.company_id.account_fiscal_country_id = website.company_id.country_id = self.env.ref('base.tw')
         website.company_id.country_id.enforce_cities = False
-        self.env.ref('l10n_tw_edi_ecpay_website_sale.checkout_step_invoicing').website_id = website
-        self.env.ref('l10n_tw_edi_ecpay_website_sale.checkout_step_invoicing').is_published = True
 
     def test_validate_customer_info_error(self):
         with patch(CALL_API_METHOD, new=self._test_validation_mock):

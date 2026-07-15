@@ -14,23 +14,6 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class WebsiteSaleL10nTW(WebsiteSale):
-    def _l10n_tw_is_extra_info_needed(self):
-        order_sudo = request.cart
-
-        invoicing_step = self.env.website._get_checkout_step(
-            '/shop/l10n_tw_invoicing_info'
-        )
-        invoicing_info_needed = invoicing_step.sudo().is_published = (
-            order_sudo.company_id._is_ecpay_enabled() and not order_sudo.partner_id.l10n_tw_edi_require_paper_format
-        )
-        return invoicing_info_needed
-
-    @route()
-    def shop_checkout(self, try_skip_step=False, **query_params):
-        if self._l10n_tw_is_extra_info_needed() and try_skip_step:
-            try_skip_step = False
-        return super().shop_checkout(try_skip_step=try_skip_step, query_params=query_params)
-
     def _is_valid_mobile_barcode(self, carrier_number, order):
         json_data = {
             "MerchantID": order.company_id.l10n_tw_edi_ecpay_merchant_id,
@@ -73,6 +56,11 @@ class WebsiteSaleL10nTW(WebsiteSale):
     @route('/shop/l10n_tw_invoicing_info', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
     def l10n_tw_invoicing_info_get(self, **kw):
         order_sudo = request.cart
+        if redirect := self.env['website.checkout.step'].validate_checkout_progress(
+            '/shop/l10n_tw_invoicing_info', order_sudo
+        ):
+            return request.redirect(redirect)
+
         default_vals = {
             'is_donate': "on" if order_sudo.l10n_tw_edi_love_code else False,
             'love_code': order_sudo.l10n_tw_edi_love_code,
@@ -81,7 +69,9 @@ class WebsiteSaleL10nTW(WebsiteSale):
             'carrier_number_2': order_sudo.l10n_tw_edi_carrier_number_2,
         }
         values = self._get_render_context(order_sudo, default_vals)
-        values.update(self.env.website._get_checkout_step_values('/shop/l10n_tw_invoicing_info'))
+        values.update(
+            self.env.website._get_checkout_step_values('/shop/l10n_tw_invoicing_info', order_sudo)
+        )
         return request.render('l10n_tw_edi_ecpay_website_sale.l10n_tw_edi_invoicing_info', values)
 
     @route('/shop/l10n_tw_invoicing_info/submit', type='http', auth='public', methods=['POST'], website=True, sitemap=False)
@@ -135,11 +125,15 @@ class WebsiteSaleL10nTW(WebsiteSale):
 
         if not errors:
             return request.redirect(
-                self.env.website._get_next_breadcrumb_step_href('/shop/l10n_tw_invoicing_info')
+                self.env.website._get_next_breadcrumb_step_href(
+                    '/shop/l10n_tw_invoicing_info', order_sudo
+                )
             )
 
         values = self._get_render_context(order_sudo, default_vals, errors)
-        values.update(self.env.website._get_checkout_step_values('/shop/l10n_tw_invoicing_info'))
+        values.update(
+            self.env.website._get_checkout_step_values('/shop/l10n_tw_invoicing_info', order_sudo)
+        )
         return request.render('l10n_tw_edi_ecpay_website_sale.l10n_tw_edi_invoicing_info', values)
 
     @http.route("/payment/ecpay/check_mobile_barcode/<int:sale_order_id>", type="jsonrpc", auth="public")
