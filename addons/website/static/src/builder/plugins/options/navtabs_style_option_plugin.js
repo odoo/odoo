@@ -1,5 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { getContrastingColor } from "@html_builder/utils/utils_css";
+import { normalizeColor } from "@html_builder/utils/utils_css";
 import { COLOR_COMBINATION_CLASSES } from "@html_editor/main/font/color_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
@@ -7,7 +7,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
-import { convertCSSColorToRgba } from "@web/core/utils/colors";
+import { convertCSSColorToRgba, getContrastingColor } from "@web/core/utils/colors";
 
 /**
  * @typedef { Object } NavTabsStyleOptionShared
@@ -141,7 +141,7 @@ export class NavTabsStyleOptionPlugin extends Plugin {
                 .getPropertyValue("--tabs-link-color");
         }
         const contrastColor = convertCSSColorToRgba(
-            getContrastingColor(linksColor, getHtmlStyle(this.document))
+            getContrastingColor(normalizeColor(linksColor, getHtmlStyle(this.document)))
         );
         editingElement.style.setProperty(
             "--tabs-active-bg-color",
@@ -161,7 +161,7 @@ export class NavTabsStyleOptionPlugin extends Plugin {
             if (!value.startsWith("o_cc")) {
                 // Defaults on a link color that contrasts with the background.
                 const contrastColor = convertCSSColorToRgba(
-                    getContrastingColor(bgColor, getHtmlStyle(this.document))
+                    getContrastingColor(normalizeColor(bgColor, getHtmlStyle(this.document)))
                 );
                 const linksColor = `rgba(${contrastColor.red}, ${contrastColor.green}, ${contrastColor.blue})`;
                 for (const tabLinkEl of editingElement.querySelectorAll(".s_tabs_nav .nav-link")) {
