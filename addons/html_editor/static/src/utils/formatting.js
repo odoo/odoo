@@ -1,6 +1,6 @@
 import { normalizeCSSColor } from "@web/core/utils/colors";
 import { removeClass } from "./dom";
-import { isBold, isDirectionSwitched, isItalic, isStrikeThrough, isUnderline } from "./dom_info";
+import { isBold, isItalic, isStrikeThrough, isUnderline } from "./dom_info";
 import { closestElement, closestPath, findNode } from "./dom_traversal";
 import { isBlock } from "./blocks";
 
@@ -111,9 +111,6 @@ export const formatsSpecs = {
             removeStyle(node, "font-size");
             removeClass(node, ...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES);
         },
-    },
-    switchDirection: {
-        isFormatted: (node, props) => isDirectionSwitched(node, props.editable),
     },
 };
 

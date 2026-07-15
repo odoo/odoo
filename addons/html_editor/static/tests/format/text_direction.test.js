@@ -30,6 +30,38 @@ test("should not switch direction of non-editable elements", async () => {
     });
 });
 
+test("should switch direction of an empty block", async () => {
+    await testEditor({
+        contentBefore: `<p>[]<br></p>`,
+        stepFunction: switchDirection,
+        contentAfter: `<p dir="rtl">[]<br></p>`,
+    });
+});
+
+test("should switch direction of an empty block (rtl)", async () => {
+    await testEditor({
+        contentBefore: `<p dir="rtl">[]<br></p>`,
+        stepFunction: switchDirection,
+        contentAfter: `<p>[]<br></p>`,
+    });
+});
+
+test("should switch direction of multiple empty blocks", async () => {
+    await testEditor({
+        contentBefore: `<p>[<br></p><h1>]<br></h1>`,
+        stepFunction: switchDirection,
+        contentAfter: `<p dir="rtl">[<br></p><h1 dir="rtl">]<br></h1>`,
+    });
+});
+
+test("should switch direction of multiple empty blocks (rtl)", async () => {
+    await testEditor({
+        contentBefore: `<p dir="rtl">[<br></p><h1 dir="rtl">]<br></h1>`,
+        stepFunction: switchDirection,
+        contentAfter: `<p>[<br></p><h1>]<br></h1>`,
+    });
+});
+
 test("should properly switch the direction of the single level list (ltr). (1)", async () => {
     await testEditor({
         contentBefore: `<ul><li>a</li><li>b[]</li><li>c</li></ul>`,
