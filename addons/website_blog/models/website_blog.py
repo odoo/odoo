@@ -104,7 +104,7 @@ class BlogBlog(models.Model):
 
         return tag_by_blog
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         self.ensure_one()
         base_url = self.get_base_url()
         blog_url = f'{base_url}{self.website_url}'
@@ -362,7 +362,7 @@ class BlogPost(models.Model):
     def _get_customer_portal_message_types(self):
         return ["comment", "email"]
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         self.ensure_one()
         base_url = self.get_base_url()
         post_url = f'{base_url}{self.website_url}'

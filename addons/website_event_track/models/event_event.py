@@ -63,8 +63,8 @@ class EventEvent(models.Model):
         self.ensure_one()
         return bool(self.track_ids.filtered('is_published'))
 
-    def _prepare_jsonld_vals(self):
-        vals = super()._prepare_jsonld_vals()
+    def _prepare_jsonld_vals(self, price=None):
+        vals = super()._prepare_jsonld_vals(price=price)
         if not vals:
             return vals
         performers = {

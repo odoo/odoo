@@ -208,7 +208,7 @@ class EventSponsor(models.Model):
         """As website_id is not defined on this record, we rely on event website_id for base URL."""
         return self.event_id.get_base_url()
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         self.ensure_one()
         base_url = self.get_base_url()
         schema_type = 'Organization' if self.partner_id.is_company else 'Person'

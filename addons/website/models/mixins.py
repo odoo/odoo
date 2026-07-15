@@ -273,7 +273,7 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
     _name = 'website.structured_data.mixin'
     _description = 'Website Structured Data Mixin'
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         """Build the Schema.org property dictionary for this record.
         Subclasses must override this to return a dict containing at least
         the ``@type`` key.

@@ -540,7 +540,7 @@ class SlideSlide(models.Model):
     def _compute_website_absolute_url(self):
         super()._compute_website_absolute_url()
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         self.ensure_one()
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = website.get_base_url()

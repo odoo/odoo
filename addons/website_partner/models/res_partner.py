@@ -26,7 +26,7 @@ class ResPartner(models.Model):
             return self.env.ref('website_partner.mt_partner_unpublished', raise_if_not_found=False) or super()._track_log_get_default_subtype(track_init_values)
         return super()._track_log_get_default_subtype(track_init_values)
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         self.ensure_one()
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = website.get_base_url()

@@ -2524,7 +2524,7 @@ class Website(models.CachedModel):
     # Structured Data (JSON-LD)
     # ----------------------------------------------------------------------
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         """Base Organization payload for the website."""
         self.ensure_one()
         base_url = self.get_base_url()

@@ -105,7 +105,7 @@ class EventEvent(models.Model):
         """Fall back on the website_url to share the event."""
         for event in self:
             event.event_share_url = event.event_url or tools.urls.urljoin(event.get_base_url(), event.website_url)
- 
+
     @api.depends('registration_ids')
     @api.depends_context('uid')
     def _compute_is_participating(self):
@@ -669,7 +669,7 @@ class EventEvent(models.Model):
             data['image_url'] = event._get_image_url()
         return results_data
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         self.ensure_one()
         # An event is either physical (address_id) or online (event_share_url);
         # the two are mutually exclusive. Skip events that are either past, or

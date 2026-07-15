@@ -174,7 +174,7 @@ spirit. To be successful, you will have solid solving problem skills.''')
             items.append((self.name, self.website_url))
         return items
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         self.ensure_one()
         is_remote = not self.address_id
         company_country = self.company_id.country_id

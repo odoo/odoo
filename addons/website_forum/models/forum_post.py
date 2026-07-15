@@ -830,7 +830,7 @@ class ForumPost(models.Model):
         ])
         return items
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         self.ensure_one()
         if self.parent_id:
             return self._prepare_reply_jsonld_vals()

@@ -124,19 +124,24 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _prepare_jsonld_vals(self):
+    def _prepare_jsonld_vals(self, price=None):
         """JSON-LD payload describing the variant as a https://schema.org/Product."""
         self.ensure_one()
 
         website = self.env.website or self.env["website"].browse(self.env.context.get("host_id"))
         base_url = website.get_base_url()
-        product_price = request.pricelist._get_product_price(
-            self, quantity=1, currency=website.currency_id
-        )
+        if price is None:
+            product_price = request.pricelist._get_product_price(
+                self, quantity=1, currency=website.currency_id
+            )
+        else:
+            product_price = price
         # Use sudo to access cross-company taxes.
-        price = self._apply_taxes_to_price(product_price, website.currency_id, website=website)
+        taxed_price = self._apply_taxes_to_price(
+            product_price, website.currency_id, website=website
+        )
 
-        offer = {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name}
+        offer = {"@type": "Offer", "price": taxed_price, "priceCurrency": website.currency_id.name}
         if self.is_product_variant and self.is_storable:
             offer["availability"] = (
                 "https://schema.org/OutOfStock"
