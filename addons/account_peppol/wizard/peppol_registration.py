@@ -352,7 +352,7 @@ class PeppolRegistration(models.TransientModel):
             'partner_id': self.env.user.partner_id.id,
             'create_at': str(fields.Datetime.now()),
         }
-        payload = tools.hash_sign(self.sudo().env, 'account_peppol_connect', msg, expiration_hours=1)
+        payload = tools.hash_sign(self.sudo().env, 'account_peppol_connect', msg, expiration_hours=24 * 7 * 2)
         return payload
 
     @api.model
