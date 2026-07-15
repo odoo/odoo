@@ -734,6 +734,58 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(report_values['lines']['components'][0]['bom_cost'], 25)
         self.assertEqual(report_values['lines']['components'][1]['bom_cost'], 5)
 
+    def test_backorder_with_subcontracting(self):
+        """
+        Test that a subcontracted move is not marked as picked when its quantity is updated.
+        """
+        self.bom.consumption = 'warning'  # required, otherwise setting the received quantity doesn't record the production
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [
+                Command.create({
+                    'name': self.finished.name,
+                    'product_id': self.finished.id,
+                    'product_uom_qty': 5.0,
+                }),
+                Command.create({
+                    'name': self.comp1.name,
+                    'product_id': self.comp1.id,
+                    'product_uom_qty': 5.0,
+                }),
+            ]
+        })
+        receipt.action_confirm()
+        self.assertRecordValues(receipt.move_ids, [
+            {'is_subcontract': True, 'quantity': 5.0, 'picked': False},
+            {'is_subcontract': False, 'quantity': 5.0, 'picked': False},
+        ])
+        receipt.move_ids[0].quantity = 2
+        receipt.move_ids[1].quantity = 4
+        self.assertRecordValues(receipt.move_ids, [
+            {'quantity': 2.0, 'picked': False},
+            {'quantity': 4.0, 'picked': False},
+        ])
+        backorder_wizard = Form.from_action(self.env, receipt.button_validate()).save()
+        backorder_wizard.process()
+        self.assertRecordValues(receipt.move_ids, [
+            {'quantity': 2.0, 'picked': True, 'state': 'done'},
+            {'quantity': 4.0, 'picked': True, 'state': 'done'},
+        ])
+        backorder = receipt.backorder_ids
+        self.assertRecordValues(backorder.move_ids, [
+            {'quantity': 3.0, 'picked': False},
+            {'quantity': 1.0, 'picked': False},
+        ])
+        backorder.button_validate()
+        self.assertEqual(backorder.state, 'done')
+        self.assertRecordValues(backorder.move_ids, [
+            {'quantity': 3.0, 'picked': True, 'state': 'done'},
+            {'quantity': 1.0, 'picked': True, 'state': 'done'},
+        ])
+
     def test_several_backorders(self):
         def process_picking(picking, qty):
             picking.move_ids.quantity = qty
@@ -1623,6 +1675,65 @@ class TestSubcontractingTracking(TransactionCase):
 
             self.assertEqual(picking_receipt.state, 'done')
 
+    def test_record_productions_of_the_same_lot(self):
+        """
+        Check that receiving the same lot from several productions keeps a single
+        reception for the total quantity produced.
+        """
+        self.comp1_sn.tracking = 'none'
+        self.bom_tracked.consumption = 'warning'  # required, otherwise an untracked BoM can't be recorded from the receipt
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'name': self.finished_product.name,
+                'product_id': self.finished_product.id,
+                'product_uom_qty': 4,
+            })],
+        })
+        receipt.action_confirm()
+        lot_finished = self.env['stock.lot'].create({
+            'name': 'lot_finished',
+            'product_id': self.finished_product.id,
+        })
+        for qty in [3, 1]:
+            mo_form = Form.from_action(self.env, receipt.action_record_components())
+            mo_form.qty_producing = qty
+            mo_form.lot_producing_id = lot_finished
+            mo_form.save().subcontracting_record_component()
+
+        self.assertRecordValues(receipt.move_line_ids, [
+            {'lot_id': lot_finished.id, 'quantity': 4.0},
+        ])
+
+    def test_record_components_on_received_quantity_change(self):
+        """
+        Check that updating the receipt adapts the subcontracted productions accordingly.
+        """
+        self.comp1_sn.tracking = 'none'
+        self.finished_product.tracking = 'serial'
+        self.bom_tracked.consumption = 'warning'
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'name': self.finished_product.name,
+                'product_id': self.finished_product.id,
+                'product_uom_qty': 5,
+            })],
+        })
+        receipt.action_confirm()
+        receipt.move_ids.quantity = 3
+
+        recorded_subcontracted_mos = self.env['mrp.production'].search([
+            ('bom_id', '=', self.bom_tracked.id),
+            ('subcontracting_has_been_recorded', '=', True),
+        ])
+        self.assertEqual(len(recorded_subcontracted_mos), 3)
+        self.assertEqual(len(recorded_subcontracted_mos.lot_producing_id), 3)
+        self.assertRecordValues(receipt.move_line_ids, [{'quantity': 1.0}] * 3)
+        self.assertEqual(receipt.move_line_ids.lot_id, recorded_subcontracted_mos.lot_producing_id)
+
     def test_flow_backorder_production(self):
         """ Test subcontracted MO backorder (i.e. through record production window, NOT through
         picking backorder). Finished product is serial tracked to ensure subcontracting MO window
@@ -2059,7 +2170,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
                 move.quantity = 5.0
         self.assertTrue(receipt.move_ids.show_subcontracting_details_visible)
         self.assertRecordValues(receipt.move_line_ids, [
-            {'quantity': 5.0, 'state': 'partially_available', 'picked': True}
+            {'quantity': 5.0, 'state': 'partially_available', 'picked': False}
         ])
         receipt.button_validate()
         backorder = receipt.backorder_ids
@@ -2069,7 +2180,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
                 move.quantity = 3.0
         self.assertTrue(backorder.move_ids.show_subcontracting_details_visible)
         self.assertRecordValues(backorder.move_line_ids, [
-            {'quantity': 3.0, 'state': 'partially_available', 'picked': True}
+            {'quantity': 3.0, 'state': 'partially_available', 'picked': False}
         ])
         backorder.button_validate()
         backorder_backorder = backorder.backorder_ids
@@ -2077,7 +2188,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             with picking_form.move_ids_without_package.edit(0) as move:
                 move.quantity = 1.0
         self.assertRecordValues(backorder_backorder.move_line_ids, [
-            {'quantity': 1.0, 'state': 'partially_available', 'picked': True}
+            {'quantity': 1.0, 'state': 'partially_available', 'picked': False}
         ])
         backorder_backorder.button_validate()
         self.assertEqual(subcontracted_produt.qty_available, 9.0)
