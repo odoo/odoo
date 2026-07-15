@@ -161,8 +161,8 @@ class SmsSms(models.Model):
         records = self.search(domain, limit=batch_size, order='id').try_lock_for_update()
         if not records:
             return
-
-        records._send(unlink_failed=False, unlink_sent=True, raise_exception=False)
+        for sms_api, sms in records._split_by_api():
+            sms.with_context(sms_api=sms_api)._send(unlink_failed=False, unlink_sent=True, raise_exception=False)
         self.env['ir.cron']._commit_progress(len(records), remaining=self.search_count(domain) if len(records) == batch_size else 0)
 
     def _get_send_batch_size(self):
@@ -180,7 +180,7 @@ class SmsSms(models.Model):
         sms_api = self.env.context.get('sms_api')
         if not sms_api:
             company = self._get_sms_company()
-            company.ensure_one()  # This should always be the case since the grouping is done in `send`
+            company.ensure_one()  # should always be the case since the grouping is done in `send` or `_process_queue`
             sms_api = company._get_sms_api_class()(self.env)
 
         return self._send_with_api(
