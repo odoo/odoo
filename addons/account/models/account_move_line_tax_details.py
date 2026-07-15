@@ -61,8 +61,18 @@ class AccountMoveLine(models.Model):
         return self._get_query_tax_details_from_domain(domain, fallback=fallback)
 
     @api.model
-    def _warm_tax_details_cache(self, domain):
-        selected_lines = self.search_fetch(domain, [
+    def _warm_tax_details_cache(
+        self,
+        domain=None,
+        selected_lines=None,
+        extra_line_fields=None,
+        extra_move_fields=None,
+        extra_tax_fields=None,
+        offset=0,
+        limit=None,
+        order='move_id, id',
+    ):
+        line_fields = list(dict.fromkeys([
             'move_id',
             'display_type',
             'tax_repartition_line_id',
@@ -77,48 +87,37 @@ class AccountMoveLine(models.Model):
             'company_currency_id',
             'analytic_distribution',
             'tax_ids',
-        ], order='move_id, id')
+            *(extra_line_fields or []),
+        ]))
+        move_fields = list(dict.fromkeys([
+            'move_type',
+            'tax_cash_basis_rec_id',
+            'always_tax_exigible',
+            'line_ids',
+            *(extra_move_fields or []),
+        ]))
+        tax_fields = list(dict.fromkeys([
+            'sequence',
+            'amount',
+            'amount_type',
+            'is_base_affected',
+            'include_base_amount',
+            'tax_exigibility',
+            'cash_basis_transition_account_id',
+            'analytic',
+            'children_tax_ids',
+            *(extra_tax_fields or []),
+        ]))
+        if selected_lines is None:
+            selected_lines = self.search_fetch(domain, line_fields, offset=offset, limit=limit, order=order)
+        else:
+            selected_lines.fetch(line_fields)
         move_lines = selected_lines.move_id.line_ids
-        move_lines.fetch([
-            'move_id',
-            'display_type',
-            'tax_repartition_line_id',
-            'tax_line_id',
-            'group_tax_id',
-            'balance',
-            'amount_currency',
-            'quantity',
-            'account_id',
-            'partner_id',
-            'currency_id',
-            'company_currency_id',
-            'analytic_distribution',
-            'tax_ids',
-        ])
-        selected_lines.move_id.fetch(['move_type', 'tax_cash_basis_rec_id', 'always_tax_exigible', 'line_ids'])
+        move_lines.fetch(line_fields)
+        selected_lines.move_id.fetch(move_fields)
         taxes = move_lines.tax_ids | move_lines.tax_line_id | move_lines.group_tax_id
-        taxes.fetch([
-            'sequence',
-            'amount',
-            'amount_type',
-            'is_base_affected',
-            'include_base_amount',
-            'tax_exigibility',
-            'cash_basis_transition_account_id',
-            'analytic',
-            'children_tax_ids',
-        ])
-        taxes.children_tax_ids.fetch([
-            'sequence',
-            'amount',
-            'amount_type',
-            'is_base_affected',
-            'include_base_amount',
-            'tax_exigibility',
-            'cash_basis_transition_account_id',
-            'analytic',
-            'children_tax_ids',
-        ])
+        taxes.fetch(tax_fields)
+        taxes.children_tax_ids.fetch(tax_fields)
         move_lines.tax_repartition_line_id.fetch(['tax_id', 'account_id', 'factor_percent', 'use_in_tax_closing'])
         (move_lines.currency_id | move_lines.company_currency_id).fetch(['decimal_places'])
         return selected_lines, move_lines, taxes
@@ -136,6 +135,10 @@ class AccountMoveLine(models.Model):
     @api.model
     def _get_python_tax_details_from_cache_domain(self, domain, fallback=True):
         selected_lines, move_lines, taxes = self._warm_tax_details_cache(domain)
+        return self._get_python_tax_details_from_prefetched_lines(selected_lines, move_lines, taxes, fallback=fallback)
+
+    @api.model
+    def _get_python_tax_details_from_prefetched_lines(self, selected_lines, move_lines, taxes, fallback=True):
         selected_line_ids = set(selected_lines.ids)
 
         snapshot = {
