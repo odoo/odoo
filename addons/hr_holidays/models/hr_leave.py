@@ -417,6 +417,7 @@ class HrLeave(models.Model):
         self.ensure_one()
         domain = Domain.AND([
             Domain('employee_id', '=', self.employee_id.id),
+            Domain('active', '=', True),
             Domain('contract_date_start', '<=', self.date_to),
             Domain.OR([
                 Domain('contract_date_end', '>=', self.date_from),
