@@ -1,5 +1,6 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 class LivechatChannelCommand extends Component {
     static template = "im_livechat.LivechatChannelCommand";
@@ -13,11 +14,8 @@ class LivechatChannelCommand extends Component {
 }
 
 registry.category("command_provider").add("im_livechat.channel_join_leave", {
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     */
-    async provide(env) {
-        const store = env.services["mail.store"];
+    async provide() {
+        const store = useService("mail.store");
         if (!store?.has_access_livechat) {
             return [];
         }

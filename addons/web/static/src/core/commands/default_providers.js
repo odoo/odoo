@@ -7,6 +7,7 @@ import { getVisibleElements } from "@web/core/utils/ui";
 import { DefaultCommandItem } from "./command_palette";
 
 import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 const commandSetupRegistry = registry.category("command_setup");
 commandSetupRegistry.add("default", {
@@ -37,7 +38,8 @@ const commandCategoryRegistry = registry.category("command_categories");
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("command", {
     provide: (env, options = {}) => {
-        const commands = env.services.command
+        const commandService = useService("command");
+        const commands = commandService
             .getCommands(options.activeElement)
             .map((cmd) => {
                 cmd.category = commandCategoryRegistry.contains(cmd.category)
@@ -47,12 +49,11 @@ commandProviderRegistry.add("command", {
             })
             .filter((command) => command.isAvailable === undefined || command.isAvailable());
         // Filter out same category dupplicate commands
-        const uniqueCommands = commands.filter((obj, index) => {
-            return (
+        const uniqueCommands = commands.filter(
+            (obj, index) =>
                 index ===
                 commands.findIndex((o) => obj.name === o.name && obj.category === o.category)
-            );
-        });
+        );
         return uniqueCommands.map((command) => ({
             Component: command.hotkey ? HotkeyCommandItem : DefaultCommandItem,
             action: command.action,
