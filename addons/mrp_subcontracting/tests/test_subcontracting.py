@@ -602,6 +602,55 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(report_values['lines']['components'][0]['bom_cost'], 25)
         self.assertEqual(report_values['lines']['components'][1]['bom_cost'], 5)
 
+    def test_backorder_with_subcontracting(self):
+        """
+        Test that a subcontracted move is not marked as picked when its quantity is updated.
+        """
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.finished.id,
+                    'product_uom_qty': 5.0,
+                }),
+                Command.create({
+                    'product_id': self.comp1.id,
+                    'product_uom_qty': 5.0,
+                }),
+            ]
+        })
+        receipt.action_confirm()
+        self.assertRecordValues(receipt.move_ids, [
+            {'is_subcontract': True, 'quantity': 5.0, 'picked': False},
+            {'is_subcontract': False, 'quantity': 5.0, 'picked': False},
+        ])
+        receipt.move_ids[0].quantity = 2
+        receipt.move_ids[1].quantity = 4
+        self.assertRecordValues(receipt.move_ids, [
+            {'quantity': 2.0, 'picked': False},
+            {'quantity': 4.0, 'picked': False},
+        ])
+        backorder_wizard = Form.from_action(self.env, receipt.button_validate()).save()
+        backorder_wizard.process()
+        self.assertRecordValues(receipt.move_ids, [
+            {'quantity': 2.0, 'picked': True, 'state': 'done'},
+            {'quantity': 4.0, 'picked': True, 'state': 'done'},
+        ])
+        backorder = receipt.backorder_ids
+        self.assertRecordValues(backorder.move_ids, [
+            {'quantity': 3.0, 'picked': False},
+            {'quantity': 1.0, 'picked': False},
+        ])
+        backorder.button_validate()
+        self.assertEqual(backorder.state, 'done')
+        self.assertRecordValues(backorder.move_ids, [
+            {'quantity': 3.0, 'picked': True, 'state': 'done'},
+            {'quantity': 1.0, 'picked': True, 'state': 'done'},
+        ])
+
     def test_several_backorders(self):
         def process_picking(picking, qty):
             picking.move_ids.quantity = qty
