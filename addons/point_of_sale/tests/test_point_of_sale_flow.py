@@ -564,7 +564,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'lines': [[0, 0, {
                 'discount': 0,
                 'id': 42,
-                'pack_lot_ids': [],
                 'price_unit': 450.0,
                 'product_id': self.product.id,
                 'price_subtotal': 450.0,
@@ -619,7 +618,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'lines': [[0, 0, {
                 'discount': 0,
                 'id': 43,
-                'pack_lot_ids': [],
                 'price_unit': 450.0,
                 'product_id': self.product.id,
                 'price_subtotal': 450.0,
