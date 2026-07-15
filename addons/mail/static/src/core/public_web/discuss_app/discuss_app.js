@@ -1,5 +1,5 @@
-import { useMessageScrolling } from "@mail/utils/common/hooks";
-import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useMessageScrolling, useOnChange } from "@mail/utils/common/hooks";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 
 import { Component, computed, onMounted, onWillUnmount, props, t, useListener } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -52,7 +52,8 @@ export class Discuss extends Component {
             { capture: true }
         );
         if (this.store.inPublicPage) {
-            useLayoutEffect(
+            useOnChange(
+                () => [this.thread, this.ui.isSmall],
                 (thread, isSmall) => {
                     if (!thread) {
                         return;
@@ -64,8 +65,7 @@ export class Discuss extends Component {
                     } else {
                         this.chatWindow?.close();
                     }
-                },
-                () => [this.thread, this.ui.isSmall]
+                }
             );
         }
         onMounted(() => {
