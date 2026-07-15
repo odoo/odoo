@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import collections
 import logging
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 from odoo.addons.base.tests.files import PNG_RAW
@@ -78,26 +78,24 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
     def _check_url_hot_query(self, url, expected_query_count, select_tables_perf=None, insert_tables_perf=None, nocache=False):
         query_count, sql_queries = self._get_url_hot_query(url, query_list=True, nocache=nocache)
 
-        sql_from_tables = {}
-        sql_into_tables = {}
+        sql_from_tables = collections.defaultdict(int)
+        sql_into_tables = collections.defaultdict(int)
         query_separator = '\n' + '-' * 100 + '\n'
         queries = query_separator.join(sql_queries)
 
         for query in sql_queries:
             query_type, table = categorize_query(query)
             if query_type == 'into':
-                log_target = sql_into_tables
+                sql_into_tables[table] += 1
             elif query_type == 'from':
-                log_target = sql_from_tables
+                sql_from_tables[table] += 1
             else:
                 _logger.warning("Query type %s for query %s is not supported by _check_url_hot_query", query_type, query)
-            log_target.setdefault(table, 0)
-            log_target[table] = log_target[table] + 1
 
         if not select_tables_perf:
             select_tables_perf = {}
         select = {}
-        for key in (set(sql_from_tables) | set(select_tables_perf)):
+        for key in (sql_from_tables.keys() | select_tables_perf.keys()):
             value = sql_from_tables.get(key, 0) - select_tables_perf.get(key, 0)
             if value:
                 select[key] = value
@@ -105,7 +103,7 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         if not insert_tables_perf:
             insert_tables_perf = {}
         insert = {}
-        for key in (set(sql_into_tables) | set(insert_tables_perf)):
+        for key in (sql_into_tables.keys() | insert_tables_perf.keys()):
             value = sql_into_tables.get(key, 0) - insert_tables_perf.get(key, 0)
             if value:
                 insert[key] = value
