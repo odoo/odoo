@@ -598,11 +598,26 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 if tax_category['cbc:ID']['_text'] == 'E' and not tax_category['cbc:TaxExemptionReason']['_text']:
                     self._l10n_my_edi_make_validation_error(constraints, 'tax_exemption_required', line_vals['cbc:ID']['_text'], line_item['cbc:Name']['_text'])
 
-            myinvois_document = vals["myinvois_document"]
-            if myinvois_document._is_consolidated_invoice() or myinvois_document._is_consolidated_invoice_refund():
-                customer_vat = vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cac:PartyIdentification'][0]['cbc:ID']['_text']
-                if customer_vat != 'EI00000000010':
-                    self._l10n_my_edi_make_validation_error(constraints, 'missing_general_public', vals['customer'].id, vals['customer'].name)
+        # Code '004' (Consolidated e-Invoice) requires the General Public TIN + identification number, and
+        # vice-versa: that TIN + identification number requires every line to use code '004'.
+        invoice_type_code = vals['document_node']['cbc:InvoiceTypeCode']['_text']
+        if invoice_type_code in ("11", "12", "13", "14"):  # For self billed, we validate the supplier
+            party_identification_nodes = vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cac:PartyIdentification']
+        else:
+            party_identification_nodes = vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cac:PartyIdentification']
+        vat = party_identification_nodes[0]['cbc:ID']['_text']
+        identification_number = party_identification_nodes[1]['cbc:ID']['_text'] if len(party_identification_nodes) > 1 else None
+        is_general_public = vat == 'EI00000000010' and identification_number == 'NA'
+
+        line_classification_codes = [
+            line_vals['cac:Item'].get('cac:CommodityClassification', {}).get('cbc:ItemClassificationCode', {}).get('_text')
+            for line_vals in vals['document_node']['cac:InvoiceLine']
+        ]
+
+        if any(code == '004' for code in line_classification_codes) and not is_general_public:
+            self._l10n_my_edi_make_validation_error(constraints, 'missing_general_public', vals['customer'].id, vals['customer'].name)
+        if is_general_public and any(code != '004' for code in line_classification_codes):
+            self._l10n_my_edi_make_validation_error(constraints, 'general_public_requires_004', vals['customer'].id, vals['customer'].name)
 
         return constraints
 
@@ -668,7 +683,12 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 "You must set a Tax Exemption Reason on each tax exempt taxes in order to use them in a Myinvois Document.",
             ),
             'missing_general_public': self.env._(
-                "You must have a commercial partner named 'General Public' with a VAT number set to 'EI00000000010' in order to proceed.",
+                "Classification code '004' can only be used for consolidated e-invoice issued to general public "
+                "(TIN of 'EI00000000010', BRN/NRIC of 'NA')"
+            ),
+            'general_public_requires_004': self.env._(
+                "TIN 'EI00000000010' (General Public / Consolidated e-Invoice) with BRN/NRIC of 'NA' requires "
+                "classification code '004' on every invoice line."
             ),
         }
 
