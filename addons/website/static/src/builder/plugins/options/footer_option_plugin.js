@@ -1,4 +1,3 @@
-import { proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
@@ -81,21 +80,11 @@ export class FooterOptionPlugin extends Plugin {
         return restore;
     }
 
-    getFooterTemplates() {
-        const templates = proxy([]);
-
-        // we don't wait for all promises to resolve and show the ones available
-        // as soon as they are (and keep them in the order of the providers)
-        const templatesByProvider = this.getResource("footer_templates_providers").map((p) => {
-            const provided = [];
-            Promise.resolve(p()).then((t) => {
-                provided.push(...t);
-                templates.splice(0, Infinity, ...templatesByProvider.flat());
-            });
-            return provided;
-        });
-
-        return templates;
+    async getFooterTemplates() {
+        const templatesByProvider = await Promise.all(
+            this.getResource("footer_templates_providers").map((provider) => provider())
+        );
+        return templatesByProvider.flat();
     }
 }
 

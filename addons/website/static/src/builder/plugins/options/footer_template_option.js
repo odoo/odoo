@@ -1,6 +1,6 @@
-import { proxy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { registry } from "@web/core/registry";
+import { onWillStart } from "@odoo/owl";
 
 export class FooterTemplateOption extends BaseOptionComponent {
     static id = "footer_template_option";
@@ -9,7 +9,9 @@ export class FooterTemplateOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        this.footerTemplates = proxy(this.dependencies.footerOption.getFooterTemplates());
+        onWillStart(async () => {
+            this.footerTemplates = await this.dependencies.footerOption.getFooterTemplates();
+        });
     }
 }
 registry.category("website-options").add(FooterTemplateOption.id, FooterTemplateOption);
