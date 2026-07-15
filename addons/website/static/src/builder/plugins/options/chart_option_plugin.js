@@ -57,7 +57,7 @@ export class BaseChartAction extends BuilderAction {
     getMaxValue(editingElement) {
         const datasets = this.getData(editingElement).datasets;
         let dataValues;
-        if (!editingElement.dataset.stacked) {
+        if (editingElement.dataset.stacked !== "true") {
             dataValues = datasets.flatMap((set) => set.data.map((data) => parseInt(data) || 0));
         } else {
             dataValues = datasets.reduce((acc, set) => {
@@ -258,10 +258,10 @@ export class setMinMaxAction extends BaseChartAction {
     static id = "setMinMax";
     getValue({ editingElement, params: { mainParam: type } }) {
         if (type === "min") {
-            return parseInt(editingElement.dataset.ticksMin) || "";
+            return parseFloat(editingElement.dataset.ticksMin) || "";
         }
         if (type === "max") {
-            return parseInt(editingElement.dataset.ticksMax) || "";
+            return parseFloat(editingElement.dataset.ticksMax) || "";
         }
     }
     apply({ editingElement, value, params: { mainParam: type } }) {
@@ -269,12 +269,12 @@ export class setMinMaxAction extends BaseChartAction {
         let noMin = false;
         let noMax = false;
         if (type === "min") {
-            minValue = parseInt(value);
-            maxValue = parseInt(editingElement.dataset.ticksMax);
+            minValue = parseFloat(value);
+            maxValue = parseFloat(editingElement.dataset.ticksMax);
         }
         if (type === "max") {
-            maxValue = parseInt(value);
-            minValue = parseInt(editingElement.dataset.ticksMin);
+            maxValue = parseFloat(value);
+            minValue = parseFloat(editingElement.dataset.ticksMin);
         }
         if (isNaN(minValue)) {
             noMin = true;
