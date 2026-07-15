@@ -16,7 +16,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_np_res_company(self):
         return {
             self.env.company.id: {
-                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.np',
                 'bank_account_code_prefix': '1014',
                 'cash_account_code_prefix': '1015',
@@ -25,5 +24,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'payable_account_id': 'l10n_np_2110',
                 'income_account_id': 'l10n_np_4000',
                 'expense_account_id': 'l10n_np_6000',
+                'account_default_pos_receivable_account_id': 'l10n_np_1210',
             },
         }
