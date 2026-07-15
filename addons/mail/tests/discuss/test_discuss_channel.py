@@ -1194,3 +1194,17 @@ class TestChannelInternals(MailCommon, HttpCase):
                 },
             },
         )
+
+    def test_notify_typing_channel_not_found_should_not_crash(self):
+        """channel can be deleted while someone is still typing in it.
+        When that happens, notify_typing must not crash for the missing channel.
+        """
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        self.make_jsonrpc_request(
+            "/discuss/channel/notify_typing",
+            {"channel_id": 999999999, "is_typing": False},
+        )
+        self.make_jsonrpc_request(
+            "/discuss/channel/notify_typing",
+            {"channel_id": 999999999, "is_typing": True},
+        )
