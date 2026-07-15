@@ -1778,7 +1778,7 @@ def get_diff(data_from, data_to, custom_style=False, dark_color_scheme=False):
     return handle_style(diff, custom_style, dark_color_scheme)
 
 
-def hmac(env, scope, message, hash_function=hashlib.sha256):
+def hmac(env, scope, message, hash_function=hashlib.sha256, *, secret=None):
     """Compute HMAC with `database.secret` config parameter as key.
 
     :param env: sudo environment to use for retrieving config parameter
@@ -1786,20 +1786,30 @@ def hmac(env, scope, message, hash_function=hashlib.sha256):
     :param scope: scope of the authentication, to have different signature for the same
         message in different usage
     :param hash_function: hash function to use for HMAC (default: SHA-256)
+    :param secret: secret used for sign, falls back to database.secret when no explicit secret is provided
     """
     if not scope:
         raise ValueError('Non-empty scope required')
 
-    secret = env['ir.config_parameter'].get_param('database.secret')
+    if secret is None:
+        secret = env['ir.config_parameter'].get_param('database.secret')
+    if isinstance(secret, str):
+        secret = secret.encode()
+
+    if not isinstance(secret, bytes):
+        raise TypeError("secret must be a str or bytes")
+    if not secret:
+        raise ValueError("Non-empty secret required")
+
     message = repr((scope, message))
     return hmac_lib.new(
-        secret.encode(),
+        secret,
         message.encode(),
         hash_function,
     ).hexdigest()
 
 
-def hash_sign(env, scope, message_values, expiration=None, expiration_hours=None):
+def hash_sign(env, scope, message_values, expiration=None, expiration_hours=None, *, secret=None):
     """ Generate an urlsafe payload signed with the HMAC signature for an iterable set of data.
     This feature is very similar to JWT, but in a more generic implementation that is inline with out previous hmac implementation.
 
@@ -1809,6 +1819,7 @@ def hash_sign(env, scope, message_values, expiration=None, expiration_hours=None
     :param message_values: values to be encoded inside the payload
     :param expiration: optional, a datetime or timedelta
     :param expiration_hours: optional, a int representing a number of hours before expiration. Cannot be set at the same time as expiration
+    :param secret: secret used for sign, falls back to database.secret when no explicit secret is provided
     :return: the payload that can be used as a token
     """
     assert not (expiration and expiration_hours)
@@ -1821,18 +1832,19 @@ def hash_sign(env, scope, message_values, expiration=None, expiration_hours=None
             expiration = datetime.datetime.now() + expiration
     expiration_timestamp = 0 if not expiration else int(expiration.timestamp())
     message_strings = json.dumps(message_values)
-    hash_value = hmac(env, scope, f'1:{message_strings}:{expiration_timestamp}', hash_function=hashlib.sha256)
+    hash_value = hmac(env, scope, f'1:{message_strings}:{expiration_timestamp}', hash_function=hashlib.sha256, secret=secret)
     token = b"\x01" + expiration_timestamp.to_bytes(8, 'little') + bytes.fromhex(hash_value) + message_strings.encode()
     return base64.urlsafe_b64encode(token).decode().rstrip('=')
 
 
-def verify_hash_signed(env, scope, payload):
+def verify_hash_signed(env, scope, payload, *, secret=None):
     """ Verify and extract data from a given urlsafe  payload generated with hash_sign()
 
     :param env: sudo environment to use for retrieving config parameter
     :param scope: scope of the authentication, to have different signature for the same
         message in different usage
     :param payload: the token to verify
+    :param secret: secret used to verify signature, falls back to database.secret when no explicit secret is provided
     :return: The payload_values if the check was successful, None otherwise.
     """
 
@@ -1843,7 +1855,7 @@ def verify_hash_signed(env, scope, payload):
 
     expiration_value, hash_value, message = token[1:9], token[9:41].hex(), token[41:].decode()
     expiration_value = int.from_bytes(expiration_value, byteorder='little')
-    hash_value_expected = hmac(env, scope, f'1:{message}:{expiration_value}', hash_function=hashlib.sha256)
+    hash_value_expected = hmac(env, scope, f'1:{message}:{expiration_value}', hash_function=hashlib.sha256, secret=secret)
 
     if consteq(hash_value, hash_value_expected) and (expiration_value == 0 or datetime.datetime.now().timestamp() < expiration_value):
         message_values = json.loads(message)
