@@ -11,7 +11,7 @@ import {
     ThirdPartyScriptError,
     UncaughtClientError,
     UncaughtPromiseError,
-} from "@web/core/errors/error_service";
+} from "@web/core/errors/error_plugin";
 import { RequestEntityTooLargeError, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -20,7 +20,7 @@ import { session } from "@web/session";
 
 /**
  * @typedef {import("../../env").OdooEnv} OdooEnv
- * @typedef {import("./error_service").UncaughtError} UncaughError
+ * @typedef {import("./error_plugin").UncaughtError} UncaughError
  */
 
 const errorHandlerRegistry = registry.category("error_handlers");
