@@ -11,7 +11,7 @@ export class Many2OneOptionPlugin extends Plugin {
         builder_actions: {
             Many2OneAction,
         },
-        content_not_editable_selectors: "[data-oe-field][data-oe-many2one-id]",
+        content_not_editable_selectors: "[data-oe-field][data-oe-many2one-model]",
         after_replication_handlers: ({ sourceEl, targetEl }) => {
             if (
                 sourceEl.hasAttribute("data-oe-many2one-model") &&
@@ -24,6 +24,13 @@ export class Many2OneOptionPlugin extends Plugin {
             }
         },
     };
+    setup() {
+        this.editable
+            .querySelectorAll(
+                '[data-oe-model="hr.job"][data-oe-field="address_id"][data-oe-type="contact"].o_not_editable'
+            )
+            .forEach((el) => el.classList.remove("o_not_editable"));
+    }
 }
 
 export class Many2OneAction extends BuilderAction {
