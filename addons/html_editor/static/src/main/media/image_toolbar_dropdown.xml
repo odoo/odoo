@@ -8,11 +8,13 @@
                 <t t-if="this.state &amp;&amp; this.state.displayName" t-out="this.state.displayName"/>
             </button>
             <t t-set-slot="content">
-                <t t-foreach="this.items" t-as="item" t-key="item_index">
-                    <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(item)">
-                        <t t-out="item.name"/>
-                    </DropdownItem>
-                </t>
+                <div data-prevent-closing-overlay="true">
+                    <t t-foreach="this.items" t-as="item" t-key="item_index">
+                        <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(item)">
+                            <t t-out="item.name"/>
+                        </DropdownItem>
+                    </t>
+                </div>
             </t>
         </Dropdown>
     </t>
