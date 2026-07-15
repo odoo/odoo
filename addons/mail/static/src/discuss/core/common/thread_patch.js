@@ -1,15 +1,23 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Thread } from "@mail/core/common/thread";
+
+import { useListener } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { useOnChange } from "@mail/utils/common/hooks";
 
 /** @type {Thread} */
 const threadPatch = {
     setup() {
         super.setup(...arguments);
-        useLayoutEffect(
-            (loadNewer, mountedAndLoaded) => {
+        useListener(
+            this.scrollableRef,
+            "scrollend",
+            () => (this.state.scrollTop = this.scrollableRef().scrollTop)
+        );
+        useOnChange(
+            () => [this.props.thread.loadNewer, this.state.mountedAndLoaded, this.state.scrollTop],
+            (loadNewer, mountedAndLoaded, scrollTop) => {
                 if (
                     loadNewer ||
                     !mountedAndLoaded ||
@@ -18,12 +26,16 @@ const threadPatch = {
                 ) {
                     return;
                 }
-                const el = this.scrollableRef();
-                if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1) {
+                if (
+                    Math.abs(
+                        scrollTop +
+                            this.scrollableRef().clientHeight -
+                            this.scrollableRef().scrollHeight
+                    ) <= 1
+                ) {
                     this.channel.self_member_id.hideUnreadBanner = true;
                 }
-            },
-            () => [this.props.thread.loadNewer, this.state.mountedAndLoaded, this.state.scrollTop]
+            }
         );
     },
     /** @override */

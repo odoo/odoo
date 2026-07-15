@@ -23,7 +23,6 @@ import {
     signal,
     t,
     untrack,
-    useListener,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
@@ -120,11 +119,6 @@ export class Thread extends Component {
          * scrollable (in other cases).
          */
         this.scrollableRef = computed(() => this.props.scrollRef?.() ?? this.rootRef());
-        useListener(
-            this.scrollableRef,
-            "scrollend",
-            () => (this.state.scrollTop = this.scrollableRef().scrollTop)
-        );
         this.loadOlderState = useVisible(
             this.loadOlderRef,
             async () => {
