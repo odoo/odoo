@@ -276,6 +276,17 @@ export class ChannelInvitation extends Component {
         this.props.close?.();
     }
 
+    get inviteTitle() {
+        const name = this.props.channel?.displayName;
+        if (this.props.channel?.default_display_mode === "video_full_screen") {
+            return _t('Invite people to "%(name)s"', { name });
+        }
+        if (this.props.channel?.channel_type === "channel") {
+            return _t('Invite people to the channel "%(name)s"', { name });
+        }
+        return _t("Invite people");
+    }
+
     get invitationButtonText() {
         if (!this.props.channel) {
             return _t("Create Chat");

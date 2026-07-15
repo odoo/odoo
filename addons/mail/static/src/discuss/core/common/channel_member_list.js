@@ -17,6 +17,23 @@ const SEARCH_RESULT_LIMIT = 100;
  * @property {(channel: import("models").DiscussChannel) => import("models").ChannelMember[]} getMembers
  * @property {string} label
  * @property {boolean} [showCount=true] whether to append the member count to the label.
+ * @property {number} [sequenceGroup] categories sharing this key are rendered inside a common container.
+ * @property {string} [icon] class of an icon shown before the section label.
+ * @property {string} [headerClass] extra class applied to the section header.
+ */
+
+/**
+ * A {@link MemberCategory} resolved against a search term: the definition fields
+ * are carried over (minus the source-only `getMembers`/`sequence`) and enriched
+ * with the members it matched.
+ *
+ * @typedef {Omit<MemberCategory, "getMembers" | "sequence"> & ResolvedMembers} ComputedMemberCategory
+ */
+
+/**
+ * @typedef {Object} ResolvedMembers
+ * @property {import("models").ChannelMember[]} matching members whose name matches the search term.
+ * @property {import("models").ChannelMember[]} filtered `matching` capped to the search-result limit; the members actually rendered.
  */
 
 /** @type {MemberCategory[]} */
@@ -61,7 +78,7 @@ export class ChannelMemberList extends Component {
         );
     }
 
-    /** @param {ReturnType<typeof ChannelMemberList.prototype.computeCategories>} categories */
+    /** @param {ComputedMemberCategory[]} categories */
     hasFilteredMembers(categories) {
         return categories.some((c) => c.filtered.length > 0);
     }
@@ -81,20 +98,48 @@ export class ChannelMemberList extends Component {
         });
     }
 
-    /** @param {string} searchTerm */
+    /**
+     * @param {string} searchTerm
+     */
     computeCategories(searchTerm) {
         const term = searchTerm.toLowerCase();
         let remaining = SEARCH_RESULT_LIMIT;
+        const shownMemberIds = new Set();
         return [...MEMBER_CATEGORIES]
             .sort((a, b) => a.sequence - b.sequence)
-            .map(({ getMembers, label, showCount = true }) => {
-                const all = getMembers(this.props.channel);
+            .map(({ getMembers, label, showCount = true, sequenceGroup, icon, headerClass }) => {
+                const all = getMembers(this.props.channel).filter((m) => {
+                    if (shownMemberIds.has(m.id)) {
+                        return false;
+                    }
+                    shownMemberIds.add(m.id);
+                    return true;
+                });
                 const matching = term
                     ? all.filter((m) => m.name?.toLowerCase().includes(term))
                     : all;
                 const filtered = term ? matching.slice(0, Math.max(0, remaining)) : matching;
                 remaining -= filtered.length;
-                return { label, matching, filtered, showCount };
+                return { label, matching, filtered, showCount, sequenceGroup, icon, headerClass };
             });
+    }
+
+    /**
+     * Bundle consecutive categories sharing a `sequenceGroup` key so they can be
+     * rendered inside a common container. Categories without one each stand alone.
+     *
+     * @param {ComputedMemberCategory[]} categories
+     */
+    groupedCategories(categories) {
+        const groups = [];
+        for (const category of categories) {
+            const last = groups.at(-1);
+            if (category.sequenceGroup && last?.sequenceGroup === category.sequenceGroup) {
+                last.categories.push(category);
+            } else {
+                groups.push({ sequenceGroup: category.sequenceGroup, categories: [category] });
+            }
+        }
+        return groups;
     }
 }

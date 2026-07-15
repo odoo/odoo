@@ -923,8 +923,10 @@ export class Rtc extends Record {
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
      * @param {boolean} [initialState.camera]
+     * @param {boolean} [initialState.fullscreen=false] open the fullscreen meeting view once joined,
+     *  reusing the last chosen layout.
      */
-    async toggleCall(channel, { audio = true, camera } = {}) {
+    async toggleCall(channel, { audio = true, camera, fullscreen = false } = {}) {
         if (channel.id === this._remotelyHostedChannelId) {
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.LEAVE });
             this.clear();
@@ -948,6 +950,9 @@ export class Rtc extends Record {
                 joinCallOpts.audio = false;
             }
             await this.joinCall(channel, joinCallOpts);
+            if (fullscreen && this.selfSession) {
+                this.enterFullscreen();
+            }
         }
     }
 

@@ -34,14 +34,15 @@ export class MeetingSideActions extends Component {
             );
             return;
         }
-        const quickThreadActionIds = this.ui.isSmall ? [] : ["invite-people", "meeting-chat"];
+        const quickThreadActionIds = this.ui.isSmall ? [] : ["member-list", "meeting-chat"];
+        const hiddenActionIds = ["advanced-settings", "leave"];
+        const actionsInMore = (action) =>
+            !quickThreadActionIds.includes(action.id) && !hiddenActionIds.includes(action.id);
         const { quick, other, group } = threadActions.partition;
         const partitionedActions = {
-            quick: quick.filter((action) => !quickThreadActionIds.includes(action.id)),
-            other: other.filter((action) => !quickThreadActionIds.includes(action.id)),
-            group: group
-                .map((group) => group.filter((action) => !quickThreadActionIds.includes(action.id)))
-                .filter((g) => g.length > 0),
+            quick: quick.filter(actionsInMore),
+            other: other.filter(actionsInMore),
+            group: group.map((group) => group.filter(actionsInMore)).filter((g) => g.length > 0),
         };
         const actions = threadActions.actions.filter((action) =>
             quickThreadActionIds.includes(action.id)

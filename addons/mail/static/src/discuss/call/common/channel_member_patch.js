@@ -1,49 +1,32 @@
-import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
-import { fields } from "@mail/model/export";
+import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 
-import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
-ChannelMember.CANCEL_CALL_INVITE_DELAY = 30000;
-/** @type {import("models").ChannelMember} */
+/** @type {ChannelMember} */
 const ChannelMemberPatch = {
-    setup() {
-        super.setup(...arguments);
-        this.rtc_inviting_session_id = fields.One("discuss.channel.rtc.session", {
-            /** @this {import("models").ChannelMember} */
-            onAdd(r) {
-                if (!this.channel_id) {
-                    return;
-                }
-                this.channel_id.rtc_session_ids.add(r);
-                this.store.ringingChannels.add(this.channel_id);
-                this.startInvitationTimeout();
-            },
-            /** @this {import("models").ChannelMember} */
-            onDelete() {
-                if (!this.channel_id) {
-                    return;
-                }
-                this.cancelInvitationTimeout();
-                this.store.ringingChannels.delete(this.channel_id);
-            },
-        });
-        this.rtcSession = fields.One("discuss.channel.rtc.session");
-    },
-    cancelInvitationTimeout() {
-        if (this.channel_id?.cancelRtcInvitationTimeout) {
-            browser.clearTimeout(this.channel_id.cancelRtcInvitationTimeout);
-            this.channel_id.cancelRtcInvitationTimeout = undefined;
+    /**
+     * The member's live call session, or undefined when the member has only been invited (ringing)
+     * and has not joined yet. `rtc_inviting_session_id` is only sent for the current user, so a
+     * pending invitee is detected through the channel's invited list instead.
+     */
+    get callSession() {
+        const member = this.member();
+        if (member.in(member.channel_id?.invited_member_ids)) {
+            return undefined;
         }
+        return member.rtcSession;
     },
-    startInvitationTimeout() {
-        if (this.channel_id.cancelRtcInvitationTimeout) {
-            return;
-        }
-        this.channel_id.cancelRtcInvitationTimeout = browser.setTimeout(() => {
-            this.store.rtc.leaveCall(this.channel_id);
-            this.channel_id.cancelRtcInvitationTimeout = undefined;
-        }, ChannelMember.CANCEL_CALL_INVITE_DELAY);
+    /**
+     * Highlight the avatar while the member is actively talking, mirroring the
+     * sidebar call participants indicator.
+     */
+    get avatarClass() {
+        return {
+            ...super.avatarClass,
+            "o-isTalking": Boolean(
+                this.member().channel_id?.isSelfInCall && this.callSession?.isActuallyTalking
+            ),
+        };
     },
 };
 patch(ChannelMember.prototype, ChannelMemberPatch);

@@ -1,6 +1,7 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
+import { attClassObjectToString } from "@mail/utils/common/format";
 import { propComputed } from "@mail/utils/common/hooks";
 
 import { Component, t } from "@odoo/owl";
@@ -17,6 +18,7 @@ export class ChannelMember extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.attClassObjectToString = attClassObjectToString;
         this.member = propComputed(
             "member",
             t.instanceOf(this.store["discuss.channel.member"].Class)
@@ -35,6 +37,11 @@ export class ChannelMember extends Component {
             "cursor-pointer": this.isClickable(this.member()),
             "o-offline": this.member().imStatusUI === "offline",
         };
+    }
+
+    /** Class object applied to the member's avatar, extensible by patches. */
+    get avatarClass() {
+        return {};
     }
 
     /** @param {import("models").ChannelMember} member */
