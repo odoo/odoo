@@ -26,9 +26,7 @@ class ProductTemplate(models.Model):
     @api.model
     def _get_buy_route(self):
         buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
-        if buy_route:
-            return self.env['stock.route'].search([('id', '=', buy_route.id)]).ids
-        return []
+        return buy_route.ids if buy_route else []
 
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
 
