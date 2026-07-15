@@ -129,15 +129,14 @@ class L10nCnEdiDocument(models.Model):
 
     @api.model
     def _pull_inbound_red_forms(self):
-        """Poll Baiwang for inbound red forms awaiting our approval (Buyer role)."""
+        """Poll Baiwang for inbound red forms awaiting our action or already approved (Buyer role)."""
         companies = self.env['res.company'].search([('l10n_cn_baiwang_subscription_status', '=', 'authorized')])
         for company in companies:
             client = BaiwangClient(company)
             try:
-                # buySelSelector: 1=Buyer role, confirmState: 02=Waiting Buyer Approval
+                # Query without a strict confirmState to pull both pending (02) and auto-confirmed (01/04)
                 res = client.query_red_form_list({
                     'buySelSelector': '1',
-                    'confirmState': '02',
                     'entryIdentity': '02',
                     'buyerTaxNo': company.vat,
                     'sellerTaxNo': '',
@@ -148,8 +147,14 @@ class L10nCnEdiDocument(models.Model):
 
                 for form in form_list:
                     uuid = form.get('redConfirmUuid')
-                    amt_total = float(form.get('invoiceTotalPrice', 0.0))
-                    amt_tax = float(form.get('invoiceTotalTax', 0.0))
+                    confirm_state = form.get('confirmState')
+
+                    # We only care about:
+                    # - '02': Pending confirmation
+                    # - '01', '04': No need confirmation / already approved
+                    if confirm_state not in ('01', '02', '04'):
+                        continue
+
                     if not uuid or self.search_count([('baiwang_uuid', '=', uuid)]):
                         continue
 
@@ -163,22 +168,26 @@ class L10nCnEdiDocument(models.Model):
                     if not blue_move:
                         continue
 
+                    is_pending = confirm_state == '02'
+
                     self.create({
                         'move_id': blue_move.id,
-                        'state': 'red_form_pending',
+                        'state': 'red_form_pending' if is_pending else 'red_form_confirmed',
                         'baiwang_uuid': uuid,
                         'baiwang_red_form_number': form.get('redConfirmNo'),
-                        'baiwang_confirm_state': '02',
+                        'baiwang_confirm_state': confirm_state,
                         'baiwang_red_form_amount_total': float(form.get('invoiceTotalPrice', 0.0)),
                         'baiwang_red_form_amount_tax': float(form.get('invoiceTotalTax', 0.0)),
                     })
 
+                    if is_pending:
+                        summary = self.env._("Inbound Red Form %s requires approval", form.get('redConfirmNo'))
+                    else:
+                        summary = self.env._("Inbound Red Form %s is approved/issued. Please draft Credit Note.", form.get('redConfirmNo'))
+
                     blue_move.activity_schedule(
                         'mail.mail_activity_data_todo',
-                        summary=self.env._(
-                            "Inbound Red Form %(number)s requires approval (Price: %(price)s, Tax: %(tax)s)",
-                            number=form.get('redConfirmNo'), price=amt_total, tax=amt_tax,
-                        ),
+                        summary=summary,
                         user_id=blue_move.create_uid.id,
                     )
             except Exception as e:
