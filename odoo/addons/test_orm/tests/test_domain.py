@@ -11,7 +11,6 @@ from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpress
 
 
 class TestDomain(TransactionExpressionCase):
-
     def _search(self, model, domain, init_domain=Domain.TRUE, test_complement=False):
         # just overwrite the defaults here, because we test complements manually
         return super()._search(model, domain, init_domain, test_complement)
@@ -828,10 +827,16 @@ class TestDomainOptimize(TransactionCase):
 
     def test_condition_optimize_access(self):
         model = self.env['test_orm.mixed']
+        model_id = self.env['ir.model']._get_id(model._name)
+
+        comodel = self.env['test_orm.mixed_relations']
+        comodel_id = self.env['ir.model']._get_id(comodel._name)
+
+        record = comodel.create({'name': 'bar'})
         records = model.create([
             {'numeric': 11},
             {'numeric': 22},
-            {'numeric': 23, 'currency_id': self.env.ref('base.USD').id},
+            {'numeric': 23, 'many2one_id': record.id},
         ])
         user_group = self.ref('base.group_user')
         elevated_group = self.ref('base.group_allow_export')
@@ -848,42 +853,40 @@ class TestDomainOptimize(TransactionCase):
             'login': 'test_portal',
             'group_ids': [(6, 0, [self.ref('base.group_portal')])],
         }])
-        self.env['ir.access'].search(
-            [('model_id.name', 'in', [model._name, 'res.currency'])],
-        ).unlink()
+        self.env['ir.access'].search([('model_id', 'in', [model_id, comodel_id])]).unlink()
         self.env['ir.access'].create([{
             'name': f"{model._name} user group",
-            'model_id': self.env['ir.model']._get_id(model._name),
+            'model_id': model_id,
             'group_id': user_group,
             'operation': 'crud',
             'domain': str([('numeric', '>', 20)]),
         }, {
             'name': f"{model._name} elevated group",
-            'model_id': self.env['ir.model']._get_id(model._name),
+            'model_id': model_id,
             'group_id': elevated_group,
             'operation': 'crud',
             'domain': str([]),
         }, {
-            'name': 'res.currency user read',
-            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'name': 'test_orm.mixed_relations user read',
+            'model_id': comodel_id,
             'group_id': user_group,
             'operation': 'r',
         }, {
-            'name': 'res.currency user update',
-            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'name': 'test_orm.mixed_relations user update',
+            'model_id': comodel_id,
             'group_id': user_group,
-            'domain': str([('name', '=', 'EUR')]),
+            'domain': str([('name', '=', 'foo')]),
             'operation': 'u',
         }, {
-            'name': 'res.currency elevated read',
-            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'name': 'test_orm.mixed_relations elevated read',
+            'model_id': comodel_id,
             'group_id': elevated_group,
             'operation': 'r',
         }, {
-            'name': 'res.currency elevated updates',
-            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'name': 'test_orm.mixed_relations elevated updates',
+            'model_id': comodel_id,
             'group_id': elevated_group,
-            'domain': str([('name', 'in', ['EUR', 'USD'])]),
+            'domain': str([('name', 'in', ['foo', 'bar'])]),
             'operation': 'cud',
         }])
 
@@ -898,8 +901,8 @@ class TestDomainOptimize(TransactionCase):
                     self._test_condition_optimize_access(records.with_env(env))
 
         self.assertEqual(
-            Domain('currency_id', 'access', 'read').optimize_dynamic(model),
-            Domain('currency_id', '!=', False).optimize_dynamic(model),
+            Domain('many2one_id', 'access', 'read').optimize_dynamic(model),
+            Domain('many2one_id', '!=', False).optimize_dynamic(model),
         )
 
     def _test_condition_optimize_access(self, records):
@@ -916,14 +919,14 @@ class TestDomainOptimize(TransactionCase):
             access_rule = Domain.FALSE
         self.assertEqual(domain_full, access_rule)
 
-        domain = Domain('currency_id', 'access', 'write')
-        self.assertLessEqual(records.filtered_domain(domain), records.sudo().filtered('currency_id'), "Cannot return records without a currency")
+        domain = Domain('many2one_id', 'access', 'write')
+        self.assertLessEqual(records.filtered_domain(domain), records.sudo().filtered('many2one_id'), "Cannot return records without a many2one_id")
 
         domain_full = domain.optimize_full(model)
-        currency_model = model.env['res.currency']
-        if currency_model.sudo(False).has_access('write'):
-            comodel_rule = currency_model.sudo(False)._access_domain('write')
-            access_rule = Domain('currency_id', 'any!', comodel_rule).optimize_full(model)
+        relation_model = model.env['test_orm.mixed_relations']
+        if relation_model.sudo(False).has_access('write'):
+            comodel_rule = relation_model.sudo(False)._access_domain('write')
+            access_rule = Domain('many2one_id', 'any!', comodel_rule).optimize_full(model)
         else:
             access_rule = Domain.FALSE
         self.assertEqual(domain_full, access_rule)
@@ -931,7 +934,7 @@ class TestDomainOptimize(TransactionCase):
         with self.assertRaises(ValueError):
             Domain('number', 'access', 'read').optimize_dynamic(model)
         with self.assertRaises(ValueError):
-            Domain('currency_id', 'access', 'blabla').optimize_dynamic(model)
+            Domain('many2one_id', 'access', 'blabla').optimize_dynamic(model)
 
     def test_not_optimize(self):
         # optimizations are tested with nary

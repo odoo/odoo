@@ -73,6 +73,7 @@ class TestOrmMixedRelations(models.Model):
     _name = 'test_orm.mixed_relations'
     _description = 'Test ORM Mixed Relations'
 
+    name = fields.Char()
     many2one_id = fields.Many2one('test_orm.mixed')
     one2many_ids = fields.One2many('test_orm.mixed', 'many2one_id')
     many2many_ids = fields.Many2many('test_orm.mixed')
