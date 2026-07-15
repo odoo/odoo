@@ -365,7 +365,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 # bugs when users leave spaces around them
                 value = (value or "").strip() or False
             elif field.type in ('integer', 'float'):
-                value = repr(value) if value else False
+                value = repr(value)
             elif field.type == 'many2one':
                 # value is a (possibly empty) recordset
                 value = value.id
