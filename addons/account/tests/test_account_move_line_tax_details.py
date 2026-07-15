@@ -34,48 +34,36 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             x.get('src_line_id') or 0,
         ))
 
-    def assertPythonTaxDetailsMatchSql(self, sql_tax_details, python_tax_details):
-        sql_tax_details = self._sort_tax_details(sql_tax_details)
+    def assertTaxDetailsMatch(self, tax_details, python_tax_details):
+        tax_details = self._sort_tax_details(tax_details)
         python_tax_details = self._sort_tax_details(python_tax_details)
-        self.assertEqual(len(sql_tax_details), len(python_tax_details))
+        self.assertEqual(len(tax_details), len(python_tax_details))
 
-        for sql_row, python_row in zip(sql_tax_details, python_tax_details):
-            self.assertEqual(sql_row.keys(), python_row.keys())
-            for key, sql_value in sql_row.items():
+        for row, python_row in zip(tax_details, python_tax_details):
+            self.assertEqual(row.keys(), python_row.keys())
+            for key, value in row.items():
                 python_value = python_row[key]
-                if isinstance(sql_value, Number) and isinstance(python_value, Number):
-                    self.assertAlmostEqual(float(sql_value), float(python_value), places=6, msg=key)
+                if isinstance(value, Number) and isinstance(python_value, Number):
+                    self.assertAlmostEqual(float(value), float(python_value), places=6, msg=key)
                 else:
-                    self.assertEqual(sql_value, python_value, key)
+                    self.assertEqual(value, python_value, key)
 
-    def _get_tax_details(self, fallback=False, extra_domain=None, use_simplified_query=False):
+    def _get_tax_details(self, fallback=False, extra_domain=None):
         domain = [('company_id', '=', self.env.company.id)] + (extra_domain or [])
-        if use_simplified_query:
-            tax_details_query = self.env['account.move.line']._get_query_tax_details_from_domain(
-                domain,
-                fallback=fallback,
-                use_simplified_query=use_simplified_query,
-            )
-            self.env['account.move.line'].flush_model()
-            self.cr.execute(tax_details_query)
-            tax_details_res = self.cr.dictfetchall()
-        else:
-            tax_details_res = self.env['account.move.line']._get_tax_details_from_domain(
-                domain,
-                fallback=fallback,
-            )
+        tax_details_res = self.env['account.move.line']._get_tax_details_from_domain(
+            domain,
+            fallback=fallback,
+        )
         python_tax_details = self.env['account.move.line']._get_python_tax_details_from_domain(
             domain,
             fallback=fallback,
-            use_simplified_query=use_simplified_query,
         )
-        self.assertPythonTaxDetailsMatchSql(tax_details_res, python_tax_details)
-        if not use_simplified_query:
-            snapshot_tax_details = self.env['account.move.line']._get_python_tax_details_from_snapshot_domain(
-                domain,
-                fallback=fallback,
-            )
-            self.assertPythonTaxDetailsMatchSql(tax_details_res, snapshot_tax_details)
+        self.assertTaxDetailsMatch(tax_details_res, python_tax_details)
+        snapshot_tax_details = self.env['account.move.line']._get_python_tax_details_from_snapshot_domain(
+            domain,
+            fallback=fallback,
+        )
+        self.assertTaxDetailsMatch(tax_details_res, snapshot_tax_details)
         return self._sort_tax_details(tax_details_res)
 
     def assertTaxDetailsValues(self, tax_details, expected_values_list):
@@ -97,7 +85,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                                      if (x['group_tax_id'] or x['tax_id']) == tax.id)
             self.assertAlmostEqual(tax_amount, tax_details_amount)
 
-    def test_simplified_python_tax_details_match_sql(self):
+    def test_basic_python_tax_details(self):
         tax_20 = self.env['account.tax'].create({
             'name': "tax_20",
             'amount_type': 'percent',
@@ -127,7 +115,6 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
 
         tax_details = self._get_tax_details(
             extra_domain=[('move_id', '=', invoice.id)],
-            use_simplified_query=True,
         )
         self.assertTaxDetailsValues(tax_details, [
             {
