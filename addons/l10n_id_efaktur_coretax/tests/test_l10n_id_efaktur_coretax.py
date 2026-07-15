@@ -67,7 +67,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '07',
         })
@@ -112,7 +112,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1})
             ],
         })
         vendor_bill.action_post()
@@ -127,7 +127,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1})
             ],
         })
 
@@ -141,7 +141,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': []})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': []})
             ],
         })
         out_invoice_no_tax.action_post()
@@ -162,7 +162,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id]})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id]})
             ],
         })
         out_invoice_with_new_tax_group_and_no_ppn_taxes.action_post()
@@ -180,7 +180,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id, self.non_luxury_tax.id]})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id, self.non_luxury_tax.id]})
             ],
         })
         out_invoice_luxury_non_luxury.action_post()
@@ -198,7 +198,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id, self.stlg_tax.id]})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id, self.stlg_tax.id]})
             ],
         })
         out_invoice_stlg_non_luxury.action_post()
@@ -216,7 +216,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.zero_tax.id]})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.zero_tax.id]})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -232,7 +232,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]})
             ],
             'l10n_id_kode_transaksi': '07',
         })
@@ -255,7 +255,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1})
             ],
         })
         out_invoice.action_post()
@@ -280,7 +280,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '07',
         })
@@ -296,7 +296,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '08',
         })
@@ -327,7 +327,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -366,7 +366,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -390,7 +390,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                Command.create({'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000})
+                Command.create({'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -418,7 +418,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]})
             ],
             'l10n_id_kode_transaksi': '01',
         })
@@ -463,7 +463,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.zero_tax.id]})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.zero_tax.id]})
             ],
             'l10n_id_kode_transaksi': '07',
             'l10n_id_coretax_add_info_07': 'TD.00505',
@@ -519,7 +519,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -530,7 +530,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -594,7 +594,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         Expected to see multiple <GoodService> within <ListOfGoodService> tag and the
         line should be excluded from the XML description
         """
-        product_2 = self.env['product.product'].create({'name': "Product B"})
+        product_2 = self.env['product.product'].create({'name': "Product B", "description_sale": "test description\ntest next line"})
 
         out_invoice = self.env["account.move"].create({
             'move_type': 'out_invoice',
@@ -602,9 +602,9 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1}),
                 (0, 0, {'name': 'description', 'display_type': 'line_note'}),
-                (0, 0, {'product_id': product_2.id, 'name': 'line2', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': product_2.id, 'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -619,7 +619,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <GoodService>
                     <Opt>A</Opt>
                     <Code>000000</Code>
-                    <Name>Product B</Name>
+                    <Name>Product B test description test next line</Name>
                     <Unit>UM.0018</Unit>
                     <Price>100000.00</Price>
                     <Qty>1.0</Qty>
@@ -637,6 +637,40 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         self.assertXmlTreeEqual(result_tree, expected_tree)
 
+    def test_efaktur_xml_missing_product_name_and_uom_code(self):
+        """ Test that an invoice line without a product still produces a valid <GoodService>:
+        with no product there is neither a product name nor a mapped UoM code, so the <Name> falls
+        back to the invoice line label and the <Unit> falls back to the default UoM code (UM.0018)
+        instead of being left empty (which Coretax rejects). """
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'name': 'manual line label', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.tax_sale_a.id]})
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        # <Name> falls back to the line label; <Unit> falls back to UM.0018 (same as the sample value)
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//Name" position="replace">
+                <Name>manual line label</Name>
+            </xpath>
+            <xpath expr="//Unit" position="replace">
+                <Unit>UM.0018</Unit>
+            </xpath>
+            '''
+        )
+
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
     def test_efaktur_xml_luxury_goods(self):
         """ Test that when selling product that involves the luxury good tax"""
 
@@ -646,7 +680,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -683,7 +717,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id, self.stlg_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id, self.stlg_tax.id]}),
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -766,7 +800,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -798,7 +832,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 111000, 'quantity': 1, 'tax_ids': [self.tax_incl.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 111000, 'quantity': 1, 'tax_ids': [self.tax_incl.id]}),
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -827,7 +861,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 111000, 'quantity': 1, 'tax_ids': [self.tax_incl.id], 'discount': 10}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 111000, 'quantity': 1, 'tax_ids': [self.tax_incl.id], 'discount': 10}),
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -970,7 +1004,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             "invoice_date": "2019-05-01",
             "date": "2019-05-01",
             "invoice_line_ids": [
-                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_sale_a.ids}),
+                Command.create({"price_unit": 110.0, "tax_ids": self.tax_sale_a.ids}),
             ],
             "l10n_id_kode_transaksi": "01",
         } for i in range(3)])
@@ -1028,7 +1062,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id, self.luxury_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id, self.luxury_tax.id]}),
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -1084,8 +1118,8 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1}),
-                (0, 0, {'product_id': product_2.id, 'name': 'line2', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id]})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1}),
+                (0, 0, {'product_id': product_2.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id]})
             ],
             'l10n_id_kode_transaksi': '04',
         })

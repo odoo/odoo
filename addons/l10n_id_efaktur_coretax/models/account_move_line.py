@@ -50,8 +50,8 @@ class AccountMoveLine(models.Model):
         line_val = {
             "Opt": "B" if product.type == "service" else "A",  # A: goods, B: service
             "Code": product.l10n_id_product_code.code or self.env.ref('l10n_id_efaktur_coretax.product_code_000000_goods').code,
-            "Name": product.name,
-            "Unit": self.product_uom_id.l10n_id_uom_code.code,
+            "Name": (self.name or '').replace('\n', ' '),
+            "Unit": self.product_uom_id.l10n_id_uom_code.code or self.env.ref('l10n_id_efaktur_coretax.uom_code_0018').code,
             "Price": idr.round(tax_res['total_excluded']),
             "Qty": self.quantity,
             "TotalDiscount": idr.round(self.discount * tax_res['total_excluded'] * self.quantity / 100),
