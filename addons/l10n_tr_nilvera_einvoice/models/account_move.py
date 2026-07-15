@@ -88,7 +88,7 @@ class AccountMove(models.Model):
                 move.message_post(body=_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
             elif move.l10n_tr_nilvera_send_status != 'not_sent':
                 raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
-        super().button_draft()
+        return super().button_draft()
 
     def _post(self, soft=True):
         for move in self:
