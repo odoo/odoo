@@ -1,7 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, props, t, useListener } from "@odoo/owl";
+import { Component, onMounted, props, t, useListener, useEffect, untrack } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -22,12 +21,10 @@ export class MessageReactionMenu extends Component {
             message: t.instanceOf(this.store["mail.message"].Class),
         });
         this.ui = useService("ui");
-        useLayoutEffect(
-            (closeFn) => {
-                closeFn?.();
-            },
-            () => [this.props.message.reactions.length === 0 ? this.props.close : null]
-        );
+        useEffect(() => {
+            const closeFn = this.props.message.reactions.length === 0 ? this.props.close : null;
+            untrack(() => closeFn?.());
+        });
         useListener(document, "keydown", (ev) => this.onKeydown(ev));
         onExternalClick(this.tabsRef, () => this.props.close());
         onMounted(useLoadEmoji());
