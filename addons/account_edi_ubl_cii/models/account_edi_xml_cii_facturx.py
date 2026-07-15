@@ -410,7 +410,7 @@ class AccountEdiXmlCii(models.AbstractModel):
         if move_type_code.text == '381':
             return 'refund', 1
         if move_type_code.text == '380':
-            amount_node = tree.find('.//{*}SpecifiedTradeSettlementHeaderMonetarySummation/{*}TaxBasisTotalAmount')
+            amount_node = tree.find('.//{*}SpecifiedTradeSettlementHeaderMonetarySummation/{*}GrandTotalAmount')
             if amount_node is not None and float(amount_node.text) < 0:
                 return 'refund', -1
             return 'invoice', 1
