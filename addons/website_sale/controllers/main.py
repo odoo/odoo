@@ -1237,7 +1237,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ):
                     order_sudo._set_delivery_method(delivery_method, rate=rate)
 
-        checkout_page_values.update(self.env.website._get_checkout_step_values("/shop/checkout"))
+        checkout_page_values.update(
+            self.env.website._get_checkout_step_values("/shop/checkout", order_sudo)
+        )
         if try_skip_step and can_skip_delivery:
             return request.redirect(checkout_page_values["next_website_checkout_step_href"])
 
@@ -1310,7 +1312,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             use_delivery_as_billing=use_delivery_as_billing,
             **query_params,
         )
-        address_form_values.update(self.env.website._get_checkout_step_values("/shop/address"))
+        address_form_values.update(
+            self.env.website._get_checkout_step_values("/shop/address", order_sudo)
+        )
         return request.render("website_sale.address", address_form_values)
 
     def _prepare_address_form_values(self, *args, callback="", order_sudo=False, **kwargs):
@@ -1711,9 +1715,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def extra_info(self, **post):
         order_sudo = request.cart
         extra_step = self.env.website.viewref("website_sale.extra_info")
-        if not extra_step.active or not self.env.website._cart_has_extra_step_category():
+        if not extra_step.active or not self.env.website._cart_has_extra_step_category(order_sudo):
             return request.redirect(
-                self.env.website._get_next_breadcrumb_step_href("/shop/extra_info")
+                self.env.website._get_next_breadcrumb_step_href("/shop/extra_info", order_sudo)
             )
 
         if redirect := self.env["website.checkout.step"].validate_checkout_progress(
@@ -1729,7 +1733,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "order": order_sudo,
         }
 
-        values.update(self.env.website._get_checkout_step_values("/shop/extra_info"))
+        values.update(self.env.website._get_checkout_step_values("/shop/extra_info", order_sudo))
 
         return request.render("website_sale.extra_info", values)
 
@@ -1743,7 +1747,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "partner": order.partner_invoice_id,
             "order": order,
             "only_services": order.only_services,
-            **self.env.website._get_checkout_step_values("/shop/payment"),
+            **self.env.website._get_checkout_step_values("/shop/payment", order),
             "payment_tracking_info": (
                 order._get_order_tracking_info() if self.env.website.google_analytics_key else {}
             ),
