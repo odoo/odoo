@@ -523,9 +523,7 @@ class IrHttp(models.AbstractModel):
         device = get_device(request.session, request)
         if device.get('trusted', False):
             return {}
-        # If it is not an internal user or the feature is not activated, trust the device
-        must_check_device = request.env['ir.config_parameter'].sudo().get_bool('base.session_check_device')
-        if not request.env.user._is_internal() or not must_check_device:
+        if not request.env.user._must_check_session_device():
             device['trusted'] = True
             request.session.is_dirty = True
             return {}

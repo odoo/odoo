@@ -95,7 +95,7 @@ class IrHttp(models.AbstractModel):
 
         device_salt = (
             request.session.get('_device_salt', False)  # TODO (v20): remove backward compatibility
-            if IrConfigSudo.get_bool('base.session_check_device') and session_uid
+            if session_uid and user._must_check_session_device()
             else False
         )
 
