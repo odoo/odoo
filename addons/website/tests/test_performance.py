@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import collections
 import logging
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
@@ -80,8 +80,8 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
     def _check_url_hot_query(self, url, expected_query_count, select_tables_perf=None, insert_tables_perf=None):
         query_count, sql_queries = self._get_url_hot_query(url, query_list=True)
 
-        sql_from_tables = {}
-        sql_into_tables = {}
+        sql_from_tables = collections.defaultdict(int)
+        sql_into_tables = collections.defaultdict(int)
 
         query_separator = '\n' + '-' * 100 + '\n'
         queries = query_separator.join(sql_queries)
@@ -89,13 +89,12 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         for query in sql_queries:
             query_type, table = categorize_query(query)
             if query_type == 'into':
-                log_target = sql_into_tables
+                sql_into_tables[table] += 1
             elif query_type == 'from':
-                log_target = sql_from_tables
+                sql_from_tables[table] += 1
             else:
                 _logger.warning("Query type %s for query %s is not supported by _check_url_hot_query", query_type, query)
-            log_target.setdefault(table, 0)
-            log_target[table] = log_target[table] + 1
+
         if query_count != expected_query_count:
             msq = f"Expected {expected_query_count} queries but {query_count} where ran: {query_separator}{queries}{query_separator}"
             self.fail(msq)
