@@ -313,3 +313,77 @@ describe("selected cell color in toolbar", () => {
         });
     });
 });
+
+describe("normalize table structure", () => {
+    test("should create a tbody and move table styles to it", async () => {
+        // Tables containing only a caption have no tbody. Normalize the table
+        // structure so a tbody is created and table styles can be moved to it.
+        const { el, editor } = await setupEditor(
+            `<table class="table table-bordered o_table" style="width: 500px;"><caption>c</caption></table>`
+        );
+        expect(editor.isDestroyed).toBe(false);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <caption>c</caption>
+                    <tbody style="width: 500px;">
+                        <tr>
+                            <td><div class="o-paragraph"><br></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should convert thead to tbody", async () => {
+        const { el } = await setupEditor(
+            `<table style="width: 500px;"><thead><tr><th>1</th><th>2</th></tr></thead></table>`
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table>
+                    <tbody style="width: 500px;">
+                        <tr>
+                            <th>1</th>
+                            <th>2</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder=""><br></p>
+            `)
+        );
+    });
+
+    test("should move thead rows into the existing tbody", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table style="width: 500px;">
+                    <thead><tr><th>1</th><th>2</th></tr></thead>
+                    <tbody><tr><td>3</td><td>4</td></tr></tbody>
+                </table>`
+            )
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table>
+                    <tbody style="width: 500px;">
+                        <tr>
+                            <th>1</th>
+                            <th>2</th>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder=""><br></p>
+            `)
+        );
+    });
+});
