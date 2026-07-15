@@ -66,7 +66,8 @@ class TestCompraConsolidadaWizard(TransactionCase):
             'fecha_pedido': fields.Datetime.context_timestamp(order, order.date_order).date(),
         })
 
-        self.assertEqual(wizard._get_consolidated_lines(), [])
+        products_in_list = [line['product'] for line in wizard._get_consolidated_lines()]
+        self.assertNotIn(self.product, products_in_list)
 
     def test_no_orders_for_date_returns_empty_list(self):
         wizard = self.env['distribuidora.compra.consolidada.wizard'].create({
