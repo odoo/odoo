@@ -423,6 +423,7 @@ class Website(models.Model):
     def _prepare_sale_order_values(self, partner_sudo):
         self.ensure_one()
         addr = partner_sudo.address_get(['delivery', 'invoice'])
+        fiscal_position = self.fiscal_position_id
         if not request.website.is_public_user():
             last_sale_order = self.env['sale.order'].sudo().search(
                 [('partner_id', '=', partner_sudo.id), ('website_id', '=', self.id)],
@@ -442,6 +443,7 @@ class Website(models.Model):
                     and partner_invoice.commercial_partner_id == partner_sudo
                 ):
                     addr['invoice'] = partner_invoice.id
+                fiscal_position = self.env['account.fiscal.position']
 
         affiliate_id = request.session.get('affiliate_id')
         salesperson_user_sudo = self.env['res.users'].sudo().browse(affiliate_id).exists()
@@ -451,7 +453,6 @@ class Website(models.Model):
         values = {
             'company_id': self.company_id.id,
 
-            'fiscal_position_id': self.fiscal_position_id.id,
             'partner_id': partner_sudo.id,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
@@ -463,6 +464,9 @@ class Website(models.Model):
             'user_id': salesperson_user_sudo.id,
             'website_id': self.id,
         }
+
+        if fiscal_position:
+            values['fiscal_position_id'] = fiscal_position.id
 
         return values
 
