@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class AccountMove(models.Model):
@@ -60,7 +60,7 @@ class AccountMove(models.Model):
         if peppol_moves:
             return {
                 'type': 'ir.actions.act_window',
-                'name': self.env._("Reject Peppol Document"),
+                'name': _("Reject Peppol Document"),
                 'view_mode': 'form',
                 'res_model': 'account.peppol.rejection.wizard',
                 'target': 'new',
@@ -70,7 +70,7 @@ class AccountMove(models.Model):
     def action_open_peppol_reponses(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': self.env._("Peppol Responses"),
+            'name': _("Peppol Responses"),
             'view_mode': 'list',
             'res_model': 'account.peppol.response',
             'domain': [('id', 'in', self.peppol_response_ids.ids)],

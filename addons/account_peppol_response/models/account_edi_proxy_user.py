@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from lxml import etree
 from markupsafe import Markup
 
-from odoo import api, models
+from odoo import _, api, models
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools import format_list
 from odoo.exceptions import UserError, ValidationError
@@ -26,7 +26,7 @@ class AccountEdiProxyClientUser(models.Model):
             not clarifications
             or not any(clarification['list_identifier'] == 'OPStatusReason' for clarification in clarifications)
         ):
-            raise ValidationError(self.env._('At least one reason must be given when rejecting a Peppol invoice.'))
+            raise ValidationError(_('At least one reason must be given when rejecting a Peppol invoice.'))
 
         try:
             response = self._call_peppol_proxy(
@@ -38,7 +38,7 @@ class AccountEdiProxyClientUser(models.Model):
                 },
             )
         except UserError as e:
-            log_message = self.env._(
+            log_message = _(
                 "An error occurred while responding to this invoice's expeditor.%(br)sStatus: %(status)s - %(error)s",
                 br=Markup('<br/>'),
                 status=status,
@@ -56,9 +56,9 @@ class AccountEdiProxyClientUser(models.Model):
                 }
                 for message, move in zip(response.get('messages'), reference_moves)
             ])
-            log_message = self.env._(
+            log_message = _(
                 "A Peppol response was sent to the Peppol Access Point declaring you %(status)s this document.",
-                status=self.env._('received') if status == 'AB' else self.env._('accepted') if status == 'AP' else self.env._('rejected'),
+                status=_('received') if status == 'AB' else _('accepted') if status == 'AP' else _('rejected'),
             )
             reference_moves._message_log_batch(bodies={move.id: log_message for move in reference_moves})
 
@@ -87,17 +87,17 @@ class AccountEdiProxyClientUser(models.Model):
         rejection_message = ''
         if clarification_messages['OPStatusReason']:
             rejection_message = Markup('<b>{title}</b><br>{reasons}').format(
-                title=self.env._("Reasons:"),
+                title=_("Reasons:"),
                 reasons=format_list(self.env, clarification_messages['OPStatusReason']),
             )
         if clarification_messages['OPStatusAction']:
             rejection_message += (Markup('<br/>') if rejection_message else '') + Markup('<b>{title}</b><br>{actions}').format(
-                title=self.env._("Suggested actions:"),
+                title=_("Suggested actions:"),
                 actions=format_list(self.env, clarification_messages['OPStatusAction']),
             )
         if clarification_messages['other']:
             rejection_message += (Markup('<br/>') if rejection_message else '') + Markup('<b>{title}</b><br>{other}').format(
-                title=self.env._('Miscellaneous:'),
+                title=_('Miscellaneous:'),
                 other=format_list(self.env, clarification_messages['other']),
             )
 
@@ -130,7 +130,7 @@ class AccountEdiProxyClientUser(models.Model):
                     if content['state'] == 'done':
                         if blr_status == 'RE':
                             move._message_log(
-                                body=self.env._(
+                                body=_(
                                     "The Peppol receiver of this document has rejected it with the following information:%(br)s%(rejection_message)s",
                                     br=Markup("<br/>"),
                                     rejection_message=rejection_message,
@@ -138,9 +138,9 @@ class AccountEdiProxyClientUser(models.Model):
                             )
                         elif blr_status in {'AB', 'AP'}:
                             move._message_log(
-                                body=self.env._(
+                                body=_(
                                     "The Peppol receiver of this document replied that he has received it.",
-                                ) if blr_status == 'AB' else self.env._(
+                                ) if blr_status == 'AB' else _(
                                     "The Peppol receiver of this document replied that he has accepted it.",
                                 ),
                             )
@@ -192,7 +192,7 @@ class AccountEdiProxyClientUser(models.Model):
                 else:
                     peppol_response.peppol_state = 'error'
                     peppol_response.move_id._message_log(
-                        body=self.env._("Peppol business response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
+                        body=_("Peppol business response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
                     )
                 processed_message_uuids.append(uuid)
                 continue

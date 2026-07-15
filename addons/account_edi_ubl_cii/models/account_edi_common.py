@@ -452,6 +452,15 @@ class AccountEdiCommon(models.AbstractModel):
             invoice.partner_id = self.env['res.partner'].create(partner_vals)
             if vat and self.env['res.partner']._run_vat_test(vat, country, invoice.partner_id.is_company):
                 invoice.partner_id.vat = vat
+        # TODO:
+        if invoice.partner_id and peppol_eas and peppol_endpoint:
+            invoice.partner_id.write({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
+        if invoice.partner_id and not invoice.partner_id.ubl_cii_format:
+            for (ubl_cii_format, _label) in invoice.partner_id._fields['ubl_cii_format'].selection:
+                edi_builder = self.env['res.partner'].new({'ubl_cii_format': ubl_cii_format})._get_edi_builder()
+                if isinstance(edi_builder, models.AbstractModel) and self._name == edi_builder._name:
+                    invoice.partner_id.ubl_cii_format = ubl_cii_format
+                    break
 
     def _import_retrieve_and_fill_partner_bank_details(self, invoice, bank_details):
         """ Retrieve the bank account, if no matching bank account is found, create it

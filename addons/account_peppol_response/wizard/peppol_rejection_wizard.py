@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -31,7 +31,7 @@ class PeppolRejectionWizard(models.TransientModel):
 
     def button_send(self):
         if not self.reason_ids:
-            raise ValidationError(self.env._('At least one reason must be given when rejecting a Peppol invoice.'))
+            raise ValidationError(_('At least one reason must be given when rejecting a Peppol invoice.'))
         clarifications = [{
             'list_identifier': clarification.list_identifier,
             'code': clarification.code,
