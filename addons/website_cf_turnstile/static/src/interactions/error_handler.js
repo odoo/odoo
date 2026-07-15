@@ -1,10 +1,12 @@
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 function turnstileErrorHandler(env, error) {
+    const dialog = useService("dialog");
     if (error.message.includes("Turnstile Error")) {
-        env.services.dialog.add(ErrorDialog, {
+        dialog.add(ErrorDialog, {
             name: _t("Cloudflare Turnstile Error"),
             traceback: _t(
                 `There was an error with Cloudflare Turnstile, the captcha system.\n` +

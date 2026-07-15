@@ -10,6 +10,7 @@ import {
     RPCErrorDialog,
 } from "./error_dialogs";
 import { UncaughtClientError, ThirdPartyScriptError, UncaughtPromiseError } from "./error_service";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {import("../../env").OdooEnv} OdooEnv
@@ -34,6 +35,10 @@ export function rpcErrorHandler(env, error, originalError) {
     if (!(error instanceof UncaughtPromiseError)) {
         return false;
     }
+
+    const notification = useService("notification");
+    const dialog = useService("dialog");
+
     if (originalError instanceof RPCError) {
         // When an error comes from the server, it can have an exeption name.
         // (or any string truly). It is used as key in the error dialog from
@@ -48,7 +53,7 @@ export function rpcErrorHandler(env, error, originalError) {
         if (!ErrorComponent && exceptionName) {
             if (errorNotificationRegistry.contains(exceptionName)) {
                 const notif = errorNotificationRegistry.get(exceptionName);
-                env.services.notification.add(notif.message || originalError.data.message, notif);
+                notification.add(notif.message || originalError.data.message, notif);
                 return true;
             }
             if (errorDialogRegistry.contains(exceptionName)) {
@@ -62,7 +67,7 @@ export function rpcErrorHandler(env, error, originalError) {
             }
         }
 
-        env.services.dialog.add(ErrorComponent || RPCErrorDialog, {
+        dialog.add(ErrorComponent || RPCErrorDialog, {
             traceback: error.traceback,
             message: originalError.message,
             name: originalError.name,
@@ -94,12 +99,17 @@ export function requestEntityTooLargeHandler(env, error, originalError) {
     if (!(error instanceof UncaughtPromiseError)) {
         return false;
     }
+
+    const dialog = useService("dialog");
+
     if (originalError instanceof RequestEntityTooLargeError) {
-        env.services.dialog.add(RequestEntityTooLargeErrorDialog);
+        dialog.add(RequestEntityTooLargeErrorDialog);
         return true;
     }
 }
-errorHandlerRegistry.add("requestEntityTooLargeHandler", requestEntityTooLargeHandler, { sequence: 99 });
+errorHandlerRegistry.add("requestEntityTooLargeHandler", requestEntityTooLargeHandler, {
+    sequence: 99,
+});
 
 // -----------------------------------------------------------------------------
 // Default handler
@@ -120,8 +130,9 @@ const defaultDialogs = new Map([
  * @returns {boolean}
  */
 export function defaultHandler(env, error) {
+    const dialog = useService("dialog");
     const DialogComponent = defaultDialogs.get(error.constructor) || ErrorDialog;
-    env.services.dialog.add(DialogComponent, {
+    dialog.add(DialogComponent, {
         traceback: error.traceback,
         message: error.message,
         name: error.name,

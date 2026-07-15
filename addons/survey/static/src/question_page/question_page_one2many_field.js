@@ -1,11 +1,12 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { QuestionPageListRenderer } from "./question_page_list_renderer";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { useSubEnv } from "@web/owl2/utils";
 import { useOpenX2ManyRecord, useX2ManyCrud } from "@web/views/fields/relational_utils";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { QuestionPageListRenderer } from "./question_page_list_renderer";
 
 /**
  * For convenience, we'll prevent closing the question form dialog and
@@ -16,8 +17,9 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 
 class SurveySaveError extends Error {}
 function SurveySaveErrorHandler(env, error, originalError) {
+    const notification = useService("notification");
     if (originalError instanceof SurveySaveError) {
-        env.services.notification.add(originalError.message, {
+        notification.add(originalError.message, {
             title: _t("Validation Error"),
             type: "danger",
         });
