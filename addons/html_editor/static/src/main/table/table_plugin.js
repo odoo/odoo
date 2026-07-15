@@ -158,7 +158,7 @@ export class TablePlugin extends Plugin {
         on_will_split_block_handlers: this.resetTableSelection.bind(this),
 
         /** Processors */
-        before_insert_processors: this.handleTableInsert.bind(this),
+        before_insert_processors: this.normalizeTableStructure.bind(this),
         clean_for_save_processors: (root) => {
             this.deselectTable(root);
             return root;
@@ -241,6 +241,8 @@ export class TablePlugin extends Plugin {
             }
         });
         this.onMousemove = this.onMousemove.bind(this);
+
+        this.normalizeTableStructure(this.editable);
     }
 
     processTableResizeTargets(item, neighbor, position) {
@@ -1910,25 +1912,43 @@ export class TablePlugin extends Plugin {
         });
     }
 
-    handleTableInsert(insertContainer) {
-        const theads = insertContainer.querySelectorAll("THEAD");
-        for (const thead of theads) {
-            const tbody = thead.nextElementSibling;
-            if (tbody) {
-                const thChildren = thead.querySelectorAll("TH");
-                thChildren.forEach((element) => {
-                    element.classList.add("o_table_header");
-                });
-                // If a <tbody> already exists, move all rows from
-                // <thead> into the start of <tbody>.
-                tbody.prepend(...thead.children);
-                thead.remove();
-            } else {
-                // Otherwise, replace the <thead> with <tbody>
-                this.dependencies.dom.setTagName(thead, "TBODY");
+    /**
+     * Normalize the structure of all tables contained in `container`.
+     *
+     * Ensures every table has a `<tbody>` and merges or converts `<thead>`
+     * elements when necessary. Table operations rely on the presence of a
+     * `<tbody>`, so every table must contain one.
+     *
+     * @param {HTMLElement | DocumentFragment} container
+     * @returns {HTMLElement | DocumentFragment}
+     */
+    normalizeTableStructure(container) {
+        container.querySelectorAll("table").forEach((table) => {
+            let tbody = table.tBodies[0];
+            const thead = table.tHead;
+
+            if (thead) {
+                const thChildren = thead.querySelectorAll("th");
+                thChildren.forEach((th) => th.classList.add("o_table_header"));
+
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...thead.rows);
+                    thead.remove();
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    tbody = this.dependencies.dom.setTagName(thead, "TBODY");
+                }
             }
-        }
-        return insertContainer;
+
+            if (!tbody) {
+                tbody = table.ownerDocument.createElement("tbody");
+                tbody.innerHTML = `<tr><td><div class="o-paragraph"><br></div></td></tr>`;
+                table.append(tbody);
+            }
+        });
+        return container;
     }
 
     /**
