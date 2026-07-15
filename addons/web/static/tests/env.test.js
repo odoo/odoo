@@ -11,7 +11,7 @@ import {
 import { LegacyServiceStarterPlugin, startServices } from "@web/core/legacy_service_starter";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
-import { makeEnv, mountComponent } from "@web/env";
+import { mountComponent } from "@web/env";
 
 describe.current.tags("headless");
 
@@ -169,7 +169,7 @@ test(`can start two independant asynchronous services in parallel`, async () => 
 });
 
 test(`startServices: throws if all dependencies are not met in the same microtick as the call`, async () => {
-    const env = makeEnv();
+    const env = {};
     registerService("b", ["a"], () => "b");
 
     const serviceStartingPromise = startServices(env, (fn) => fn());
@@ -184,7 +184,7 @@ test(`startServices: throws if all dependencies are not met in the same microtic
 });
 
 test(`startServices: waits for all synchronous code before attempting to start services`, async () => {
-    const env = makeEnv();
+    const env = {};
     registerService("b", ["a"], () => "b");
 
     const serviceStartingPromise = startServices(env, (fn) => fn());

@@ -9,8 +9,6 @@ import { session } from "@web/session";
  * @typedef {{
  *  bus: EventBus;
  *  debug: string;
- *  services: import("services").ServiceFactories;
- *  readonly isSmall: boolean;
  * }} OdooEnv
  */
 
@@ -23,7 +21,6 @@ export function makeEnv() {
     const bus = new EventBus();
     return {
         bus,
-        services: {},
         debug: odoo.debug,
     };
 }

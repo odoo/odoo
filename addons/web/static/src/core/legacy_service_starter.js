@@ -55,6 +55,7 @@ export async function startServices(env, runScope) {
             await _startServices(env, toStart, runScope);
         }
     });
+    env.services = {};
     await _startServices(env, toStart, runScope);
 }
 
