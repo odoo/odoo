@@ -24,6 +24,10 @@ class HrEmployee(models.Model):
         if vals.get('active'):
             inactive_emp = self.filtered(lambda e: not e.active)
         result = super().write(vals)
+        if self.env.context.get('salary_simulation'):
+            # We don't want to deal with future public holiday timesheets when simulating a salary offer
+            # The unlink done in _delete_future_public_holidays_timesheets invalidates the cache which causes issues on the offer itself
+            return result
         self_company = self.with_context(allowed_company_ids=self.company_id.ids)
         if 'active' in vals:
             if vals.get('active'):
