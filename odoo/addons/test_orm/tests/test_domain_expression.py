@@ -2579,6 +2579,18 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
+            WHERE ("res_users"."active" IS TRUE AND NOT EXISTS (
+                SELECT 1 FROM "res_company_users_rel" AS "res_users__company_ids"
+                WHERE "res_users__company_ids"."user_id" = "res_users"."id"
+            ))
+            ORDER BY "res_users"."id"
+        ''']):
+            # check with a comodel that has an active field
+            self.User.with_context(active_test=True).search([('company_ids', '=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users"."id"
+            FROM "res_users"
             WHERE EXISTS (
                 SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
                 WHERE "res_users__group_ids"."uid" = "res_users"."id"
