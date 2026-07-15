@@ -12,6 +12,9 @@
             <xpath expr="//field[@name='timesheet_ids']" position="attributes">
                 <attribute name="readonly">not analytic_account_active or is_timeoff_task</attribute>
             </xpath>
+            <xpath expr="//group[@name='project_hours']" position="attributes">
+                <attribute name="invisible">is_timeoff_task</attribute>
+            </xpath>
         </field>
     </record>
 

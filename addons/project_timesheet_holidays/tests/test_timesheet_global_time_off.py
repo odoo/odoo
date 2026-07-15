@@ -103,7 +103,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         # The standard calendar is for 8 hours/day from 8 to 12 and from 13 to 17.
         # So we need to check that the timesheets don't have more than 8 hours per day.
-        self.assertEqual(leave_task.effective_hours, 80)
+        self.assertEqual(sum(leave_task.timesheet_ids.mapped('unit_amount')), 80)
+        self.assertEqual(leave_task.effective_hours, 0, "effective_hours should be 0 since timesheets linked to holidays are skipped inside the compute effective_hours")
 
         # Now we delete the global time off. The timesheets should be deleted too.
         global_time_off.unlink()
@@ -197,7 +198,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # The total number of hours for the timesheet created should be equal to the
         # hours_per_day of the calendar
         leave_task = self.test_company.leave_timesheet_task_id
-        self.assertEqual(leave_task.effective_hours, 4 * self.part_time_calendar.hours_per_day)
+        self.assertEqual(sum(leave_task.timesheet_ids.mapped('unit_amount')), 4 * self.part_time_calendar.hours_per_day)
+        self.assertEqual(leave_task.effective_hours, 0, "effective_hours should be 0 since timesheets linked to holidays are skipped inside the compute effective_hours")
 
         # No timesheet should have been created on the day off
         timesheet = self.env['account.analytic.line'].search([('date', '=', day_off), ('task_id', '=', leave_task.id)])
@@ -235,7 +237,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         # The standard calendar is for 8 hours/day from 8 to 12 and from 13 to 17.
         # So we need to check that the timesheets don't have more than 8 hours per day.
-        self.assertEqual(leave_task.effective_hours, 80)
+        self.assertEqual(sum(leave_task.timesheet_ids.mapped('unit_amount')), 80)
+        self.assertEqual(leave_task.effective_hours, 0, "effective_hours should be 0 since timesheets linked to holidays are skipped inside the compute effective_hours")
 
     def test_timeoff_task_creation_with_global_leave(self):
         """ Test the search method on is_timeoff_task"""
@@ -272,7 +275,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.assertEqual(timesheets_by_employee.get(self.full_time_employee_2.id), 5)
         # 8 hours/day for full time calendar employees and 6 hours/day for part time calendar employees.
         # So it should add to 2(full time employees)*5(leave days)*8(hours per day) + 2(part time employees)*4(leave days)*6(hours per day).
-        self.assertEqual(leave_task.effective_hours, 128)
+        self.assertEqual(sum(leave_task.timesheet_ids.mapped('unit_amount')), 128)
+        self.assertEqual(leave_task.effective_hours, 0, "effective_hours should be 0 since timesheets linked to holidays are skipped inside the compute effective_hours")
 
 
         # Now we set the calendar_id. The timesheets should be deleted from other calendars.
@@ -283,7 +287,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.assertFalse(timesheets_by_employee.get(self.part_time_employee2.id, False))
         self.assertEqual(timesheets_by_employee.get(self.full_time_employee.id), 5)
         self.assertEqual(timesheets_by_employee.get(self.full_time_employee_2.id), 5)
-        self.assertEqual(leave_task.effective_hours, 80)
+        self.assertEqual(sum(leave_task.timesheet_ids.mapped('unit_amount')), 80)
+        self.assertEqual(leave_task.effective_hours, 0, "effective_hours should be 0 since timesheets linked to holidays are skipped inside the compute effective_hours")
 
     def test_timesheet_creation_for_global_time_off_in_differant_company(self):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0)  # This is a monday
@@ -332,7 +337,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.assertEqual(timesheets_by_employee.get(self.full_time_employee.id), 2)
         self.assertEqual(timesheets_by_employee.get(self.full_time_employee_2.id), 2)
         # Total hours should be 2(part time employees)*6(hour per day)*2(leaves days) + 2(full time employees)*8(hour per day)*2(leaves days)
-        self.assertEqual(leave_task.effective_hours, 56)
+        self.assertEqual(sum(leave_task.timesheet_ids.mapped('unit_amount')), 56)
+        self.assertEqual(leave_task.effective_hours, 0, "effective_hours should be 0 since timesheets linked to holidays are skipped inside the compute effective_hours")
 
     def test_timesheet_creation_and_deletion_for_calendar_update(self):
         """
