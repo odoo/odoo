@@ -1049,10 +1049,10 @@ class ProjectTask(models.Model):
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
-        attributes_per_field_name = super().fields_get(allfields, attributes)
-        if not attributes_per_field_name.get('project_id', {}).get('readonly', True) and self.env.user._is_portal():
-            attributes_per_field_name['project_id']['readonly'] = True
-        return attributes_per_field_name
+        context = dict(self.env.context)
+        context.pop('project_sharing_create', False)
+        self_ctx = self.with_context(context)
+        return super(ProjectTask, self_ctx).fields_get(allfields, attributes)
 
     def _has_field_access(self, field, operation):
         if not super()._has_field_access(field, operation):
@@ -1063,7 +1063,7 @@ class ProjectTask(models.Model):
             if operation == 'read':
                 return field.name in readable
             if operation == 'write':
-                return field.name in writeable or (field.name == 'project_id' and not self)
+                return field.name in writeable or (field.name == 'project_id' and self.env.context.get('project_sharing_create'))
         return True
 
     def _ensure_fields_write(self, vals, defaults=False):
@@ -1079,6 +1079,7 @@ class ProjectTask(models.Model):
 
         for fname, value in vals.items():
             field = self._fields.get(fname)
+            self._check_field_access(field, "write")
             if field and field.type == 'many2one':
                 self.env[field.comodel_name].browse(value).check_access('read')
 
@@ -1107,14 +1108,10 @@ class ProjectTask(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        # Some values are determined by this override and must be written as
-        # sudo for portal users, because they do not have access to these
-        # fields. Other values must not be written as sudo.
-        additional_vals_list = [{} for _ in vals_list]
-
         new_context = dict(self.env.context)
         default_personal_stage = new_context.pop('default_personal_stage_type_ids', False)
-        default_project_id = new_context.get('default_project_id', False)
+        default_project_id = new_context.pop('default_project_id', False)
+        new_context.pop('project_sharing_create', False)
         if not default_project_id:
             parent_task = self.browse({parent_id for vals in vals_list if (parent_id := vals.get('parent_id'))})
             if len(parent_task) == 1:
@@ -1122,11 +1119,15 @@ class ProjectTask(models.Model):
         if not self._has_field_access(self._fields['user_ids'], 'write'):
             # remove user_ids if we have no access to it
             new_context.pop('default_user_ids', False)
+        self_ctx = self.with_context(new_context)
+        # Some values are determined by this override and must be written as
+        # sudo for portal users, because they do not have access to these
+        # fields. Other values must not be written as sudo.
         is_portal_user = self.env.user._is_portal()
+        additional_vals_list = [{} for vals in vals_list if not is_portal_user or self.env.su or self_ctx._ensure_fields_write(vals, defaults=True)]
         if 'default_project_id' not in new_context and default_project_id:
             # when subtask is created in form view of task in project sharing
-            new_context['default_project_id'] = default_project_id
-        self_ctx = self.with_context(new_context)
+            self_ctx = self_ctx.with_context(default_project_id=default_project_id, project_sharing_create=is_portal_user)
 
         self_ctx.browse().check_access('create')
         default_stage = dict()
@@ -1143,9 +1144,6 @@ class ProjectTask(models.Model):
                 additional_vals['personal_stage_type_id'] = default_personal_stage[0]
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
-
-            if is_portal_user and not self_ctx.env.su:
-                self_ctx._ensure_fields_write(vals, defaults=True)
 
             if project_id and not "company_id" in vals:
                 additional_vals["company_id"] = self_ctx.env["project.project"].browse(
