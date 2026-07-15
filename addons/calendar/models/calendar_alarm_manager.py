@@ -15,12 +15,11 @@ class CalendarAlarm_Manager(models.AbstractModel):
 
     def _get_next_potential_limit_alarm(self, alarm_type, partners):
         if not partners:
-            return {}
+            return self.env['calendar.event']
         # flush models before making queries
         for model_name in ('calendar.alarm', 'calendar.event', 'calendar.recurrence'):
             self.env[model_name].flush_model()
 
-        result = {}
         delta_request = """
             SELECT
                 rel.calendar_event_id,
@@ -36,11 +35,8 @@ class CalendarAlarm_Manager(models.AbstractModel):
             SELECT
                 cal.id,
                 cal.start - interval '1' minute * calcul_delta.max_delta AS first_alarm,
-                cal.stop - interval '1' minute * calcul_delta.min_delta AS last_alarm,
-                cal.start AS first_meeting,
-                cal.stop AS last_meeting,
-                calcul_delta.min_delta,
-                calcul_delta.max_delta
+                cal.stop - interval '1' minute * calcul_delta.min_delta AS last_alarm
+
             FROM
                 calendar_event AS cal
             INNER JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
@@ -73,30 +69,17 @@ class CalendarAlarm_Manager(models.AbstractModel):
         self.env.flush_all()
         self.env.cr.execute("""
             WITH calcul_delta AS (%s)
-            SELECT *
+            SELECT id
                 FROM ( %s ) AS ALL_EVENTS
             WHERE ALL_EVENTS.first_alarm < %s
                 AND ALL_EVENTS.last_alarm > (%%(now)s)
         """ % (delta_request, base_request, first_alarm_max_value), params)
 
-        for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration in self.env.cr.fetchall():
-            result[event_id] = {
-                'event_id': event_id,
-                'first_alarm': first_alarm,
-                'last_alarm': last_alarm,
-                'first_meeting': first_meeting,
-                'last_meeting': last_meeting,
-                'min_duration': min_duration,
-                'max_duration': max_duration,
-            }
+        event_ids = [event_id for (event_id,) in self.env.cr.fetchall()]
 
         # determine accessible events
-        events = self.env['calendar.event'].browse(result)
-        result = {
-            key: result[key]
-            for key in events._filtered_access('read').ids
-        }
-        return result
+        events = self.env['calendar.event'].browse(event_ids)._filtered_access('read')
+        return events
 
     def do_check_alarm_for_one_date(self, one_date, event, in_the_next_X_seconds, alarm_type, after=False):
         """ Search for some alarms in the interval of time determined by some parameters (after, in_the_next_X_seconds, ...)
@@ -207,8 +190,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
 
         all_meetings = self._get_next_potential_limit_alarm('notification', partners=partner)
         time_limit = 3600 * 24  # return alarms of the next 24 hours
-        for event_id in all_meetings:
-            meeting = self.env['calendar.event'].browse(event_id)
+        for meeting in all_meetings:
             in_date_format = fields.Datetime.from_string(meeting.start)
             last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, time_limit, 'notification', after=partner.calendar_last_notif_ack)
             if last_found:
