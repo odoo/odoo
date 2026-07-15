@@ -585,6 +585,7 @@ class HrVersion(models.Model):
 
         all_versions = self.search_fetch([
             ('employee_id', 'in', self.employee_id.ids),
+            ('active', '=', True),
             ('date_version', '>', min(self.mapped('date_start'), default=date.today())),
         ], ['employee_id', 'date_version'], order='date_version').grouped('employee_id')
         for version in self:
