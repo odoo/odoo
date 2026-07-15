@@ -168,6 +168,71 @@ class TestLotSerial(TestStockCommon):
                 'company_id': self.env.company.id,
             })
 
+    def test_archived_lot_uniqueness(self):
+        lot = self.LotObj.create({
+            'name': 'archived_unique',
+            'product_id': self.productB.id,
+        })
+        lot.action_archive()
+
+        other_lot, same_lot = self.LotObj.create([{
+            'name': 'other_lot',
+            'product_id': self.productB.id,
+        }, {
+            'name': 'archived_unique',
+            'product_id': self.productB.id,
+        }])
+        self.assertEqual(same_lot, lot, "Creating an archived lot should unarchive it instead")
+        self.assertTrue(lot.active)
+        self.assertNotEqual(other_lot, lot)
+
+        lot.action_archive()
+        with self.assertRaises(ValidationError):
+            other_lot.name = 'archived_unique'
+
+    def test_archived_lot_reused_only_with_same_company(self):
+        lot = self.LotObj.create({
+            'name': 'archived_company',
+            'product_id': self.productB.id,
+            'company_id': self.env.company.id,
+        })
+        lot.action_archive()
+
+        same_lot = self.LotObj.create({
+            'name': 'archived_company',
+            'product_id': self.productB.id,
+            'company_id': self.env.company.id,
+        })
+        self.assertEqual(same_lot, lot, "An archived lot should be reused when product, name and company match")
+        self.assertTrue(lot.active)
+
+        lot.action_archive()
+        with self.assertRaises(ValidationError):
+            self.LotObj.create({
+                'name': 'archived_company',
+                'product_id': self.productB.id,
+                'company_id': False,
+            })
+
+    def test_archived_lot_product_qty(self):
+        lot = self.LotObj.create({
+            'name': 'archive_lot_qty_test',
+            'product_id': self.productA.id,
+        })
+        self.StockQuantObj.create({
+            'product_id': self.productA.id,
+            'location_id': self.stock_location.id,
+            'quantity': 5.0,
+            'lot_id': lot.id,
+        })
+
+        self.assertEqual(lot.product_qty, 5.0)
+
+        lot.action_archive()
+        self.assertFalse(lot.active)
+        self.assertEqual(lot.product_qty, 5.0)
+        self.assertIn(lot, self.LotObj.with_context(active_test=False).search([('product_qty', '>', 0)]))
+
     def test_bypass_reservation(self):
         """
         Check that the reservation of is bypassed when a stock move is added after the picking is done

@@ -41,6 +41,7 @@ class StockLot(models.Model):
 
     name = fields.Char('Lot/Serial Number', required=True, compute='_compute_name', store=True, readonly=False, help="Unique Lot/Serial Number", index='trigram', precompute=True)
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
+    active = fields.Boolean(default=True)
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
         domain=("[('tracking', '!=', False), ('is_storable', '=', True)] +"
@@ -121,7 +122,7 @@ class StockLot(models.Model):
         if any(not lot.company_id for lot in self):
             # We need to check across other companies to not have duplicates between 'no-company' and a company.
             self = self.sudo()
-        records = self.with_context(skip_preprocess_gs1=True)._read_group(domain, groupby, ['__count'], order='company_id DESC')
+        records = self.with_context(active_test=False, skip_preprocess_gs1=True)._read_group(domain, groupby, ['__count'], order='company_id DESC')
         error_message_lines = set()
         cross_lots = {}
         for company, product, name, count in records:
@@ -193,7 +194,26 @@ class StockLot(models.Model):
     def create(self, vals_list):
         lot_product_ids =  {val.get('product_id') for val in vals_list} | {self.env.context.get('default_product_id')}
         self.with_context(lot_product_ids=lot_product_ids)._check_create()
-        return super(StockLot, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        archived_lots = self._get_matching_archived_lots(vals_list)
+        self.browse().union(archived_lots).action_unarchive()
+        new_lots = iter(super(StockLot, self.with_context(mail_create_nosubscribe=True)).create(
+            [vals for vals, lot in zip(vals_list, archived_lots) if not lot]
+        ))
+        return self.browse([lot.id or next(new_lots).id for lot in archived_lots])
+
+    def _get_matching_archived_lots(self, vals_list):
+        """ Return, for each vals of vals_list, the archived lot it would duplicate (or an empty recordset). """
+        default_product_id = self.env.context.get('default_product_id')
+        archived_lots = self.with_context(active_test=False, skip_preprocess_gs1=True).search([
+            ('active', '=', False),
+            ('product_id', 'in', [vals.get('product_id', default_product_id) for vals in vals_list]),
+            ('name', 'in', [vals['name'] for vals in vals_list if vals.get('name')]),
+        ])
+        archived_lot_by_key = {(lot.product_id.id, lot.name, lot.company_id.id): lot for lot in archived_lots}
+        return [
+            archived_lot_by_key.pop((vals.get('product_id', default_product_id), vals.get('name'), vals.get('company_id', False)), self.browse())
+            for vals in vals_list
+        ]
 
     def write(self, vals):
         if 'company_id' in vals:
