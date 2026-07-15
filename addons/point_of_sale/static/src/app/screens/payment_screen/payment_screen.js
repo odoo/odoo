@@ -275,7 +275,7 @@ export class PaymentScreen extends Component {
         try {
             // 1. Save order to server.
             syncOrderResult = await this.pos.push_single_order(this.currentOrder);
-            if (!syncOrderResult) {
+            if (!syncOrderResult || !syncOrderResult.length) {
                 return;
             }
             // 2. Invoice.
