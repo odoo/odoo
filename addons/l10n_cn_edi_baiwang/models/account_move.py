@@ -106,6 +106,14 @@ class AccountMove(models.Model):
         string="Red Form Status",
         compute='_compute_l10n_cn_baiwang_latest_edi_data',
     )
+    l10n_cn_baiwang_red_form_amount_total = fields.Float(
+        string="Inbound Credit Price",
+        compute='_compute_l10n_cn_baiwang_latest_edi_data',
+    )
+    l10n_cn_baiwang_red_form_amount_tax = fields.Float(
+        string="Inbound Credit Tax",
+        compute='_compute_l10n_cn_baiwang_latest_edi_data',
+    )
 
     @api.depends('l10n_cn_baiwang_red_form_required', 'l10n_cn_baiwang_red_form_status')
     def _compute_hide_post_button(self):
@@ -656,3 +664,67 @@ class AccountMove(models.Model):
                     "currently pending on the Baiwang platform.\n\n"
                     "Please revoke the Red Form first.",
                 ))
+
+    def action_approve_inbound_red_form(self):
+        """Approve a Red Form initiated by the buyer."""
+        self.ensure_one()
+        latest_doc = self.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending')[:1]
+        if not latest_doc:
+            return
+
+        # ponytail: bypass API call for local testing
+        if not latest_doc.baiwang_uuid.startswith('mock-'):
+            client = BaiwangClient(self.company_id)
+            try:
+                client.operate_red_confirmation(latest_doc.baiwang_uuid, latest_doc.baiwang_red_form_number, '01')
+            except UserError as e:
+                raise UserError(self.env._("Failed to approve Red Form on Baiwang: %s", e))
+
+        latest_doc.write({'state': 'red_form_confirmed', 'baiwang_confirm_state': '01'})
+        self.message_post(body=self.env._("Inbound Red Form approved. Please draft a Credit Note."))
+
+    def action_reject_inbound_red_form(self):
+        """Reject a Red Form initiated by the buyer."""
+        self.ensure_one()
+        latest_doc = self.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending')[:1]
+        if not latest_doc:
+            return
+
+        # ponytail: bypass API call for local testing
+        if not latest_doc.baiwang_uuid.startswith('mock-'):
+            client = BaiwangClient(self.company_id)
+            try:
+                client.operate_red_confirmation(latest_doc.baiwang_uuid, latest_doc.baiwang_red_form_number, '02')  # 02=Deny
+            except UserError as e:
+                raise UserError(self.env._("Failed to reject Red Form on Baiwang: %s", e))
+
+        latest_doc.write({'state': 'failed', 'error_message': self.env._("Rejected by user.")})
+        self.message_post(body=self.env._("Inbound Red Form %s rejected.", latest_doc.baiwang_red_form_number))
+
+    @api.depends(
+        'l10n_cn_edi_document_ids.state',
+        'l10n_cn_edi_document_ids.baiwang_uuid',
+        'l10n_cn_edi_document_ids.baiwang_red_form_number',
+        'l10n_cn_edi_document_ids.baiwang_red_form_amount_total',
+        'l10n_cn_edi_document_ids.baiwang_red_form_amount_tax',
+    )
+    def _compute_l10n_cn_baiwang_latest_edi_data(self):
+        for move in self:
+            uuid_val = number_val = status_val = False
+            amt_total = amt_tax = 0.0
+
+            if move.l10n_cn_edi_document_ids:
+                docs = move.l10n_cn_edi_document_ids.sorted(key=lambda d: d.create_date or fields.Datetime.now(), reverse=True)
+                if docs:
+                    latest = docs[0]
+                    uuid_val = latest.baiwang_uuid
+                    number_val = latest.baiwang_red_form_number
+                    status_val = latest.state
+                    amt_total = latest.baiwang_red_form_amount_total
+                    amt_tax = latest.baiwang_red_form_amount_tax
+
+            move.l10n_cn_baiwang_red_form_uuid = uuid_val
+            move.l10n_cn_baiwang_red_form_number = number_val
+            move.l10n_cn_baiwang_red_form_status = status_val
+            move.l10n_cn_baiwang_red_form_amount_total = amt_total
+            move.l10n_cn_baiwang_red_form_amount_tax = amt_tax

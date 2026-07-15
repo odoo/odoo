@@ -236,9 +236,16 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
 
         with patch(
             'odoo.addons.l10n_cn_edi_baiwang.models.account_edi_proxy_user.AccountEdiProxyClientUser._l10n_cn_baiwang_contact_proxy',
-            return_value={'success': True, 'response': approved_response},
+            return_value={
+                'success': True,
+                'response': [{
+                    'redConfirmUuid': 'mock-inbound-123',
+                    'redConfirmNo': 'mock-inbound-no-456',
+                    'originalInvoiceNo': bill.l10n_cn_baiwang_invoice_no,  # Must match the bill
+                }],
+            },
         ):
-            self.env['l10n_cn_edi.document']._cron_check_red_form_status()
+            self.env['l10n_cn_edi.document']._pull_inbound_red_forms()
 
         # Assert UI state fully resolved and Fapiao number populated
         self.assertEqual(edi_doc.state, 'red_form_confirmed')
