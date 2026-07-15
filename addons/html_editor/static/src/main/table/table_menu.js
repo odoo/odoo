@@ -1,13 +1,13 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
-import { useCrossDocumentListener } from "../../utils/hooks";
+import { getBaseContainerSelector } from "@html_editor/utils/base_container";
+import { getIframeAdjustedBoundingRect, isEmpty, isTableCell } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillUnmount, props, signal, t } from "@odoo/owl";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
+import { Component, onMounted, onWillUnmount, props, signal, t, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { getIframeAdjustedBoundingRect, isEmpty, isTableCell } from "@html_editor/utils/dom_info";
-import { getBaseContainerSelector } from "@html_editor/utils/base_container";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../../utils/hooks";
 
 export class TableMenu extends Component {
     static template = "html_editor.TableMenu";
@@ -53,7 +53,7 @@ export class TableMenu extends Component {
         onWillUnmount(() => {
             this.menuRef()?.removeEventListener("pointerdown", onPointerDown);
         });
-        useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp);
+        useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp.bind(this));
         useLayoutEffect(
             () => {
                 const { type, target } = this.props;
@@ -73,10 +73,10 @@ export class TableMenu extends Component {
             () => [this.props.target]
         );
         if (this.props.document.defaultView.frameElement) {
-            useExternalListener(this.props.document, "scroll", () => {
+            useListener(this.props.document, "scroll", () => {
                 this.updatePosition();
             });
-            useExternalListener(this.props.document, "pointerdown", (ev) => {
+            useListener(this.props.document, "pointerdown", (ev) => {
                 if (!this.overlayEl.contains(ev.target)) {
                     this.props.close();
                 }
@@ -269,41 +269,43 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: this.props.removeColumn.bind(this),
             },
-            this.props.resetColumnWidth && this.hasCustomColumnWidth && {
-                name: "reset_column_size",
-                icon: "fa-table",
-                text: _t("Reset column size"),
-                action: (target) => {
-                    const cell = closestElement(target, isTableCell);
-                    const table = closestElement(cell, "table");
-                    const colgroup = table.querySelector("colgroup");
-                    if (!colgroup) {
-                        return;
-                    }
-                    const colIndex = this.tableGrid[0].indexOf(cell);
-                    const targetCols = [...colgroup.children].slice(
-                        colIndex,
-                        colIndex + cell.colSpan
-                    );
-                    const layoutContainer = closestElement(cell, "table");
-                    targetCols.forEach((col) => {
-                        this.props.resetColumnWidth(col, {
-                            layoutContainer,
-                            hasProxyElements: true,
+            this.props.resetColumnWidth &&
+                this.hasCustomColumnWidth && {
+                    name: "reset_column_size",
+                    icon: "fa-table",
+                    text: _t("Reset column size"),
+                    action: (target) => {
+                        const cell = closestElement(target, isTableCell);
+                        const table = closestElement(cell, "table");
+                        const colgroup = table.querySelector("colgroup");
+                        if (!colgroup) {
+                            return;
+                        }
+                        const colIndex = this.tableGrid[0].indexOf(cell);
+                        const targetCols = [...colgroup.children].slice(
+                            colIndex,
+                            colIndex + cell.colSpan
+                        );
+                        const layoutContainer = closestElement(cell, "table");
+                        targetCols.forEach((col) => {
+                            this.props.resetColumnWidth(col, {
+                                layoutContainer,
+                                hasProxyElements: true,
+                            });
                         });
-                    });
+                    },
                 },
-            },
-            this.props.resetSize && this.hasCustomTableSize && {
-                name: "reset_table_size",
-                icon: "fa-table",
-                text: _t("Reset table size"),
-                action: (target) =>
-                    this.props.resetSize(closestElement(target, "table"), {
-                        proxyElementSelector: "colgroup",
-                        heightElementsSelector: "tr",
-                    }),
-            },
+            this.props.resetSize &&
+                this.hasCustomTableSize && {
+                    name: "reset_table_size",
+                    icon: "fa-table",
+                    text: _t("Reset table size"),
+                    action: (target) =>
+                        this.props.resetSize(closestElement(target, "table"), {
+                            proxyElementSelector: "colgroup",
+                            heightElementsSelector: "tr",
+                        }),
+                },
             this.hasContent && {
                 name: "clear_content",
                 icon: "fa-times-circle",
@@ -394,26 +396,28 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: (target) => this.props.removeRow(target.parentElement),
             },
-            this.props.resetRowHeight && this.hasCustomRowHeight && {
-                name: "reset_row_size",
-                icon: "fa-table",
-                text: _t("Reset row size"),
-                action: (target) =>
-                    this.props.resetRowHeight(closestElement(target, "tr"), {
-                        layoutContainer: closestElement(target, "table"),
-                        elementsSelector: "tr",
-                    }),
-            },
-            this.props.resetSize && this.hasCustomTableSize && {
-                name: "reset_table_size",
-                icon: "fa-table",
-                text: _t("Reset table size"),
-                action: (target) =>
-                    this.props.resetSize(closestElement(target, "table"), {
-                        proxyElementSelector: "colgroup",
-                        heightElementsSelector: "tr",
-                    }),
-            },
+            this.props.resetRowHeight &&
+                this.hasCustomRowHeight && {
+                    name: "reset_row_size",
+                    icon: "fa-table",
+                    text: _t("Reset row size"),
+                    action: (target) =>
+                        this.props.resetRowHeight(closestElement(target, "tr"), {
+                            layoutContainer: closestElement(target, "table"),
+                            elementsSelector: "tr",
+                        }),
+                },
+            this.props.resetSize &&
+                this.hasCustomTableSize && {
+                    name: "reset_table_size",
+                    icon: "fa-table",
+                    text: _t("Reset table size"),
+                    action: (target) =>
+                        this.props.resetSize(closestElement(target, "table"), {
+                            proxyElementSelector: "colgroup",
+                            heightElementsSelector: "tr",
+                        }),
+                },
             this.hasContent && {
                 name: "clear_content",
                 icon: "fa-times-circle",

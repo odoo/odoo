@@ -1,13 +1,13 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { asyncComputed, onWillStart, props, signal, t, useListener } from "@odoo/owl";
-import { user } from "@web/core/user";
-import { useService } from "@web/core/utils/hooks";
-import { useOperation } from "../core/operation_plugin";
-import { BaseOptionComponent } from "../core/base_option_component";
-import { useApplyVisibility, useGetItemValue, useVisibilityObserver } from "../core/utils";
-import { uniqueId } from "@web/core/utils/functions";
 import { browser } from "@web/core/browser/browser";
+import { user } from "@web/core/user";
+import { uniqueId } from "@web/core/utils/functions";
+import { useService } from "@web/core/utils/hooks";
+import { useRef } from "@web/owl2/utils";
+import { BaseOptionComponent } from "../core/base_option_component";
+import { useOperation } from "../core/operation_plugin";
+import { useApplyVisibility, useGetItemValue, useVisibilityObserver } from "../core/utils";
 
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
@@ -41,7 +41,7 @@ export class OptionsContainer extends BaseOptionComponent {
         this.titleRef = useRef("title");
         useListener(browser, "focusin", this.updateOverlayPreview.bind(this));
         useListener(browser, "pointermove", this.updateOverlayPreview.bind(this));
-        useExternalListener(this.document, "pointermove", this.updateOverlayPreview);
+        useListener(this.document, "pointermove", this.updateOverlayPreview.bind(this));
         this.showingOverlayPreview = false;
 
         this.callOperation = useOperation();

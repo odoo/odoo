@@ -1,7 +1,7 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
-import { onWillUnmount, proxy } from "@odoo/owl";
-import { useThrottleForAnimation } from "./timing";
+import { onWillUnmount, proxy, useListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { makeDraggableHook as nativeMakeDraggableHook } from "./draggable_hook_builder";
+import { useThrottleForAnimation } from "./timing";
 
 /**
  * Set of default `makeDraggableHook` setup hooks that makes use of Owl lifecycle
@@ -15,7 +15,7 @@ export function makeDraggableHook(params) {
     return nativeMakeDraggableHook({
         ...params,
         setupHooks: {
-            addListener: useExternalListener,
+            addListener: useListener,
             setup: useLayoutEffect,
             teardown: onWillUnmount,
             throttle: useThrottleForAnimation,

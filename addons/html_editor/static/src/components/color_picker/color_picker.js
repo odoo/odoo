@@ -1,16 +1,16 @@
-import { onWillRender, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
-import { Component, props, proxy, signal, t } from "@odoo/owl";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
+import { Component, props, proxy, signal, t, useListener } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
-import { POSITION_BUS } from "@web/core/position/position_hook";
-import { registry } from "@web/core/registry";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { POSITION_BUS } from "@web/core/position/position_hook";
+import { registry } from "@web/core/registry";
+import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export const DEFAULT_COLORS = [
@@ -116,7 +116,7 @@ export class ColorPicker extends Component {
             }),
         ].map((w) => w.document);
         for (const doc of documents) {
-            useExternalListener(doc, "keydown", this.onKeyDown.bind(this), {
+            useListener(doc, "keydown", this.onKeyDown.bind(this), {
                 capture: true,
             });
         }

@@ -1,16 +1,23 @@
-import { useExternalListener } from "@web/owl2/utils";
 import {
     activateCropper,
+    cropperDataFieldsWithAspectRatio,
     loadImage,
     loadImageInfo,
-    cropperDataFieldsWithAspectRatio,
 } from "@html_editor/utils/image_processing";
-import { _t } from "@web/core/l10n/translation";
-import { Component, onMounted, onWillDestroy, markup, signal, status } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
-import { useActiveElement } from "@web/core/ui/ui_service";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillDestroy,
+    signal,
+    status,
+    useListener,
+} from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
+import { useActiveElement } from "@web/core/ui/ui_service";
+import { useService } from "@web/core/utils/hooks";
+import { closestScrollableY, scrollTo } from "@web/core/utils/scrolling";
 
 export const cropperAspectRatios = {
     "0/0": { label: _t("Flexible"), value: 0 },
@@ -48,7 +55,7 @@ export class ImageCrop extends Component {
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
         // We need to add event listeners to the owner document of the widget.
-        useExternalListener(this.document, "mousedown", this.onDocumentMousedown, {
+        useListener(this.document, "mousedown", this.onDocumentMousedown.bind(this), {
             capture: true,
         });
 
@@ -56,7 +63,7 @@ export class ImageCrop extends Component {
         useHotkey("Backspace", () => this.closeCropper());
         useHotkey("Escape", () => this.closeCropper());
 
-        useExternalListener(
+        useListener(
             this.document,
             "selectionchange",
             () => {

@@ -1,4 +1,3 @@
-import { useExternalListener } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import {
     Component,
@@ -45,12 +44,12 @@ export class ImagePositionOverlay extends Component {
 
         // Discard when clicking anywhere on the page
         const editableDocument = this.props.editable.ownerDocument;
-        useExternalListener(editableDocument, "pointerdown", this.discard.bind(this));
+        useListener(editableDocument, "pointerdown", this.discard.bind(this));
         useListener(document, "pointerdown", this.discard.bind(this));
 
         useListener(window, "resize", this._dimensionOverlay.bind(this));
-        useExternalListener(this.iframeEl.contentWindow, "resize", this._dimensionOverlay);
-        useExternalListener(this.iframeEl.contentWindow, "scroll", this._dimensionOverlay);
+        useListener(this.iframeEl.contentWindow, "resize", this._dimensionOverlay.bind(this));
+        useListener(this.iframeEl.contentWindow, "scroll", this._dimensionOverlay.bind(this));
 
         onWillStart(async () => {
             const position = this.props
@@ -171,6 +170,10 @@ export class ImagePositionOverlay extends Component {
     }
 
     dimensionOverlay() {
+        if (!this.overlayRef()) {
+            return;
+        }
+
         const iframeRect = this.iframeEl.getBoundingClientRect();
         const targetContainerRect = this.props.targetEl.getBoundingClientRect();
         const scale = this.getIframeContainerScale();

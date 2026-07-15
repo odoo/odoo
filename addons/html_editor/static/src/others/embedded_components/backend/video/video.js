@@ -1,15 +1,14 @@
-import { useExternalListener } from "@web/owl2/utils";
+import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 import {
     getEmbeddedProps,
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
+import { ReadonlyEmbeddedVideoComponent } from "@html_editor/others/embedded_components/core/video/readonly_video";
 import { Component, onMounted, onWillDestroy, onWillUnmount, signal, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { ReadonlyEmbeddedVideoComponent } from "@html_editor/others/embedded_components/core/video/readonly_video";
-import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 
 export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
     static template = "html_editor.EmbeddedVideo";
@@ -65,7 +64,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
             closeOnPointerdown: false,
         });
 
-        useExternalListener(this.videoBlock, "pointerenter", () => {
+        useListener(this.videoBlock, "pointerenter", () => {
             this.videoSettingsOverlay.open({
                 target: this.videoBlock,
                 props: {
@@ -86,7 +85,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
             });
         });
 
-        useExternalListener(this.videoBlock, "pointerleave", (e) => {
+        useListener(this.videoBlock, "pointerleave", (e) => {
             if (this.dropdown.isOpen || e.relatedTarget?.closest(".video-overlay")) {
                 return;
             }

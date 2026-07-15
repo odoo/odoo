@@ -1,11 +1,11 @@
-import { useExternalListener, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { useCrossDocumentListener } from "../utils/hooks";
-import { Component, onWillDestroy, props, proxy, signal, t, xml } from "@odoo/owl";
+import { Component, onWillDestroy, props, proxy, signal, t, useListener, xml } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { useService } from "@web/core/utils/hooks";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../utils/hooks";
 
 export class EditorOverlay extends Component {
     static template = xml`
@@ -51,7 +51,7 @@ export class EditorOverlay extends Component {
             getTarget = this.getSelectionTarget.bind(this);
         }
 
-        useExternalListener(this.props.bus, "updatePosition", () => {
+        useListener(this.props.bus, "updatePosition", () => {
             position.unlock();
         });
 
@@ -92,7 +92,7 @@ export class EditorOverlay extends Component {
             // rangeElement is a sibling of the editable, so position_hook's scroll
             // listener won't detect editable.contains(rangeElement) as true. Listen
             // directly so scrolling within the editable still triggers repositioning.
-            useExternalListener(editable, "scroll", () => position.unlock());
+            useListener(editable, "scroll", () => position.unlock());
         }
         const positionOptions = {
             position: "bottom-start",

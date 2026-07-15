@@ -1,11 +1,10 @@
-import { useExternalListener } from "@web/owl2/utils";
 import {
     getEditableDescendants,
     getEmbeddedProps,
     useEditableDescendants,
 } from "@html_editor/others/embedded_component_utils";
+import { Component, onMounted, onPatched, proxy, useListener } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { Component, onMounted, onPatched, proxy } from "@odoo/owl";
 
 const sessionStorage = browser.sessionStorage;
 export class EmbeddedToggleBlockComponent extends Component {
@@ -22,7 +21,7 @@ export class EmbeddedToggleBlockComponent extends Component {
         });
         this.neutralRestoreSelection = () => {};
         this.restoreSelection = this.neutralRestoreSelection;
-        useExternalListener(this.props.host, "forceToggle", this.onToggle);
+        useListener(this.props.host, "forceToggle", this.onToggle.bind(this));
         const restoreSelection = () => {
             this.restoreSelection();
             this.restoreSelection = this.neutralRestoreSelection;

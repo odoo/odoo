@@ -1,5 +1,4 @@
-import { useExternalListener } from "@web/owl2/utils";
-import { Component, onPatched, signal, useEffect } from "@odoo/owl";
+import { Component, onPatched, signal, useEffect, useListener } from "@odoo/owl";
 
 /**
  * @todo @phoenix i think that most of the "control" code in this component
@@ -27,7 +26,7 @@ export class Powerbox extends Component {
 
         this.mouseSelectionActive = false;
         const onMouseMove = () => (this.mouseSelectionActive = true);
-        useExternalListener(this.props.document, "mousemove", onMouseMove);
+        useListener(this.props.document, "mousemove", onMouseMove);
 
         // If necessary attach the same listener on the document on which
         // the powerbox is mounted, serving the same purpose:

@@ -1,6 +1,5 @@
-import { useExternalListener } from "@web/owl2/utils";
 import { removeClass } from "@html_editor/utils/dom";
-import { markup, onMounted, props, t } from "@odoo/owl";
+import { markup, onMounted, props, t, useListener } from "@odoo/owl";
 import { BASIC_PLUGINS, FULL_EDIT_PLUGINS } from "../../plugins/plugin_sets";
 import { useResizer } from "./resizer_hook";
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -39,7 +38,7 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
             form.querySelectorAll(".o-wysiwyg button").forEach((btn) => (btn.type = "button"))
         );
         this.submitButton = form.querySelector("button[type=submit]");
-        useExternalListener(this.submitButton, "click", this.onSubmitButtonClick.bind(this));
+        useListener(this.submitButton, "click", this.onSubmitButtonClick.bind(this));
         this.readyToSubmit = false;
 
         const postReplyWrapper = form.closest("#post_reply");
@@ -51,12 +50,12 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
             // Clear the selection to close any overlay dependent on an uncollapsed
             // selection (like the toolbar).
             const discardButton = postReplyWrapper.querySelector(".o_wforum_discard_btn");
-            useExternalListener(discardButton, "click", clearSelection);
+            useListener(discardButton, "click", clearSelection);
 
             // Expanding to full view changes the editable's position.
             // Clear the selection to close overlays.
             const toggleExpandButton = postReplyWrapper.querySelector(".o_wforum_expand_toggle");
-            useExternalListener(toggleExpandButton, "click", clearSelection);
+            useListener(toggleExpandButton, "click", clearSelection);
         }
     }
 

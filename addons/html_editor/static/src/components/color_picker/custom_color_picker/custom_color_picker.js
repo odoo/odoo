@@ -1,4 +1,5 @@
-import { useExternalListener } from "@web/owl2/utils";
+import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
+import { Component, onMounted, props, proxy, signal, t, useEffect, useListener } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -11,9 +12,6 @@ import {
 import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-
-import { Component, onMounted, props, proxy, signal, t, useEffect } from "@odoo/owl";
-import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 
 const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];
 const SLIDER_KEYS = [...ARROW_KEYS, "pageup", "pagedown", "home", "end"];
@@ -78,8 +76,8 @@ export class CustomColorPicker extends Component {
         });
 
         for (const doc of documents) {
-            useExternalListener(doc, "pointermove", this.throttleOnPointerMove);
-            useExternalListener(doc, "pointerup", this.onPointerUp.bind(this));
+            useListener(doc, "pointermove", this.throttleOnPointerMove);
+            useListener(doc, "pointerup", this.onPointerUp.bind(this));
         }
         // Apply the previewed custom color when the popover is closed.
         this.props.setOnCloseCallback?.(() => {

@@ -23,12 +23,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { useExternalListener } from "@web/owl2/utils";
-import { useCrossDocumentListener } from "../../utils/hooks";
-import { Component, onMounted, props, signal, t } from "@odoo/owl";
 import { usePositionHook } from "@html_editor/position_hook";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 import { removeStyle } from "@html_editor/utils/dom";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { Component, onMounted, props, signal, t, useListener } from "@odoo/owl";
+import { useCrossDocumentListener } from "../../utils/hooks";
 
 const rad = Math.PI / 180;
 const MIN_IMAGE_SIZE = 20;
@@ -59,14 +58,14 @@ export class ImageTransformation extends Component {
             this.props.onComponentMounted();
         });
         const iframeWindow = this.document.defaultView;
-        useCrossDocumentListener(iframeWindow, "mousemove", this.mouseMove);
-        useCrossDocumentListener(iframeWindow, "mouseup", this.mouseUp);
+        useCrossDocumentListener(iframeWindow, "mousemove", this.mouseMove.bind(this));
+        useCrossDocumentListener(iframeWindow, "mouseup", this.mouseUp.bind(this));
         // When a character key is pressed and the image gets deleted,
         // close the image transform via selectionchange.
-        useExternalListener(this.document, "selectionchange", () => this.destroy());
+        useListener(this.document, "selectionchange", () => this.destroy());
         // Backspace/Delete don’t trigger selectionchange on image
         // delete in Chrome, so we use keydown event.
-        useExternalListener(this.document, "keydown", (ev) => {
+        useListener(this.document, "keydown", (ev) => {
             if (["Backspace", "Delete"].includes(ev.key)) {
                 this.destroy();
             }

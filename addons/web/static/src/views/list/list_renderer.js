@@ -1,10 +1,9 @@
-import { onWillRender, render, useExternalListener } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { localization } from "@web/core/l10n/localization";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -13,6 +12,7 @@ import { useAutofocus, useBus, useChildRef, useService } from "@web/core/utils/h
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
 import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
+import { onWillRender, render } from "@web/owl2/utils";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import {
@@ -33,25 +33,26 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillStart,
+    onWillUnmount,
     plugin,
     props,
+    proxy,
     signal,
     status,
-    proxy,
     t,
     useListener,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { getCurrencyRates } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
+import { odoomark } from "@web/core/utils/html";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";
 import { ActionHelper } from "@web/views/action_helper";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
-import { odoomark } from "@web/core/utils/html";
 
 /**
  * @typedef {import('@web/model/relational_model/dynamic_list').DynamicList} DynamicList
@@ -149,7 +150,9 @@ export class ListRenderer extends Component {
         this.keyDebugOpenView = `debug_open_view,${key}`;
         this.cellClassByColumn = {};
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
-        useExternalListener(window, "click", this.onGlobalClick.bind(this), { capture: true });
+        const onGlobalClick = this.onGlobalClick.bind(this);
+        onMounted(() => window.addEventListener("click", onGlobalClick, { capture: true }));
+        onWillUnmount(() => window.removeEventListener("click", onGlobalClick, { capture: true }));
         this.tableRef = signal(null);
         this.optionalColumnsDropdownRef = useChildRef();
         this.odoomark = odoomark;

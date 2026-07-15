@@ -46,8 +46,8 @@ export class TableDragDrop extends Component {
                 ? [...this.tableElement.rows].map((r) => getIframeAdjustedBoundingRect(r))
                 : [...this.props.tableGrid[0]].map((c) => getIframeAdjustedBoundingRect(c));
 
-        useCrossDocumentListener(this.props.document, "pointermove", this.onPointerMove);
-        useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp);
+        useCrossDocumentListener(this.props.document, "pointermove", this.onPointerMove.bind(this));
+        useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp.bind(this));
 
         onMounted(() => {
             this.props.editable.classList.add("o-we-table-dragging");

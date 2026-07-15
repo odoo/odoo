@@ -1,21 +1,31 @@
-import { useExternalListener, useSubEnv } from "@web/owl2/utils";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { rpc } from "@web/core/network/rpc";
-import { renderToElement } from "@web/core/utils/render";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
-import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
-import { useDebounced } from "@web/core/utils/timing";
-import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { useMatrixKeyNavigation } from "@html_builder/utils/keyboard_navigation";
 import { Switch } from "@html_editor/components/switch/switch";
 import {
+    Component,
+    onMounted,
+    onWillStart,
+    props,
+    proxy,
+    signal,
+    status,
+    t,
+    useListener,
+} from "@odoo/owl";
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { renderToElement } from "@web/core/utils/render";
+import { useDebounced } from "@web/core/utils/timing";
+import { useSubEnv } from "@web/owl2/utils";
+import { WebsiteDialog } from "@website/components/dialog/dialog";
+import {
     applyTextHighlight,
-    removeTextHighlight,
     getObservedEls,
+    removeTextHighlight,
 } from "@website/js/highlight_utils";
-import { Component, onWillStart, onMounted, props, signal, status, proxy, t } from "@odoo/owl";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 const NO_OP = () => {};
@@ -389,7 +399,7 @@ class AddPageTemplates extends Component {
                 }
             }
         };
-        useExternalListener(window, "resize", useDebounced(onResize, 100));
+        useListener(window, "resize", useDebounced(onResize, 100));
 
         onWillStart(() => {
             this.preparePages().then((pages) => {

@@ -1,31 +1,30 @@
-import { useExternalListener } from "@web/owl2/utils";
-import { registry } from "@web/core/registry";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { getNextTabableElement, getPreviousTabableElement } from "@web/core/utils/ui";
-import { usePosition } from "@web/core/position/position_hook";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { shallowEqual } from "@web/core/utils/arrays";
-import { roundDecimals } from "@web/core/utils/numbers";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
-import { useRecordObserver } from "@web/model/relational_model/utils";
-
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
-import { formatPercentage } from "@web/views/fields/formatters";
-
-import { Record } from "@web/model/record";
-import { Field } from "@web/views/fields/field";
 import {
     Component,
-    onWillStart,
+    onMounted,
     onPatched,
+    onWillStart,
+    onWillUnmount,
     proxy,
     signal,
     useListener,
 } from "@odoo/owl";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { _t } from "@web/core/l10n/translation";
+import { usePosition } from "@web/core/position/position_hook";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { shallowEqual } from "@web/core/utils/arrays";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { roundDecimals } from "@web/core/utils/numbers";
+import { getNextTabableElement, getPreviousTabableElement } from "@web/core/utils/ui";
+import { Record } from "@web/model/record";
+import { useRecordObserver } from "@web/model/relational_model/utils";
+import { Field } from "@web/views/fields/field";
+import { formatPercentage } from "@web/views/fields/formatters";
+import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class AnalyticDistribution extends Component {
     static template = "analytic.AnalyticDistribution";
@@ -74,7 +73,9 @@ export class AnalyticDistribution extends Component {
         onWillStart(this.willStart);
         onPatched(this.patched);
 
-        useExternalListener(window, "click", this.onWindowClick.bind(this), true);
+        const onWindowClick = this.onWindowClick.bind(this);
+        onMounted(() => window.addEventListener("click", onWindowClick, { capture: true }));
+        onWillUnmount(() => window.removeEventListener("click", onWindowClick, { capture: true }));
         useListener(window, "resize", this.onWindowResized.bind(this));
         useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
             detail.proms.push(this.commitChanges())

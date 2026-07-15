@@ -1,7 +1,6 @@
-import { useExternalListener } from "@web/owl2/utils";
 import { Meter } from "@auth_password_policy/password_meter";
 import { ConcretePolicy, recommendations } from "@auth_password_policy/password_policy";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useListener } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class PasswordMeter extends Component {
@@ -13,7 +12,7 @@ class PasswordMeter extends Component {
 
     setup() {
         const inputEl = document.querySelector(this.props.selector);
-        useExternalListener(inputEl, "input", (e) => {
+        useListener(inputEl, "input", (e) => {
             this.state.password = e.target.value || "";
         });
 

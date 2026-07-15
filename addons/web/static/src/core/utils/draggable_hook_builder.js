@@ -60,7 +60,7 @@ function pointerInsideElementOffset(pointer, elementRect) {
  * @property {Record<string, any>} [defaultParams]
  * Setup hooks
  * @property {{
- *  addListener: typeof import("@odoo/owl")["useExternalListener"];
+ *  addListener: typeof import("@odoo/owl")["useListener"];
  *  setup: typeof import("@odoo/owl")["useLayoutEffect"];
  *  teardown: typeof import("@odoo/owl")["onWillUnmount"];
  *  throttle: typeof import("./timing")["useThrottleForAnimation"];
