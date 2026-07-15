@@ -9,7 +9,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged("post_install", "-at_install")
@@ -806,3 +806,39 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self.assertIsNotNone(
                 json.loads(res).get("redirectUrl"), "We should get a 'redirectUrl' in the response"
             )
+
+    def test_website_order_fiscal_position_is_based_on_shipping_address(self):
+        self.env["account.fiscal.position"].create({
+            "name": "Fiscal Position FR",
+            "auto_apply": True,
+            "country_id": self.env.ref("base.fr").id,
+        })
+        de_fp = self.env["account.fiscal.position"].create({
+            "name": "Fiscal Position DE",
+            "auto_apply": True,
+            "country_id": self.env.ref("base.de").id,
+        })
+        partner_portal = self.user_portal.partner_id
+        partner_portal.country_id = self.env.ref("base.fr")
+        shipping_partner = self.env["res.partner"].create({
+            "name": "Portal Delivery Address",
+            "type": "delivery",
+            "parent_id": partner_portal.id,
+            "country_id": self.env.ref("base.de").id,
+        })
+        self.env["sale.order"].create({
+            "partner_id": partner_portal.id,
+            "partner_invoice_id": partner_portal.id,
+            "partner_shipping_id": shipping_partner.id,
+            "website_id": self.website.id,
+        }).action_confirm()
+
+        website = self.website.with_user(self.user_portal)
+        with MockRequest(self.env(user=self.user_portal), website=website):
+            so = website._create_cart()
+
+        self.assertEqual(
+            so.fiscal_position_id.country_id,
+            de_fp.country_id,
+            "The fiscal position should be based on the shipping address",
+        )
