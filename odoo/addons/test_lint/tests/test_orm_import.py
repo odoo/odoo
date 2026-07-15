@@ -10,7 +10,7 @@ from . import lint_case
 import re
 _logger = logging.getLogger(__name__)
 
-import_orm_re = re.compile(r'^(from|import)\s+odoo\.orm')
+import_orm_re = re.compile(r'^(from|import)\s+odoo\.orm', flags=re.MULTILINE)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -22,6 +22,5 @@ class TestDunderinit(lint_case.LintCase):
         for manifest in Manifest.all_addon_manifests():
             module_path = Path(manifest.path)
             for path in module_path.rglob("**/*.py"):
-                for line in path.read_text().splitlines():
-                    if import_orm_re.match(line):
-                        self.fail(f"Do not import directly from odoo.orm, use odoo.(api,fields,models): {path}")
+                if import_orm_re.search(path.read_text()):
+                    self.fail(f"Do not import directly from odoo.orm, use odoo.(api,fields,models): {path}")
