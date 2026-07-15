@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 from ast import literal_eval
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from functools import cached_property
 from pathlib import Path
 from typing import TYPE_CHECKING, Self
@@ -50,6 +50,7 @@ PG_EXCEPTIONS_TO_RETRY = (
 )
 POPULATE_SESSION_LOCK_NAMESPACE = 'odoo.populate.session.running'
 
+_logger = logging.getLogger(__name__)
 _worker_logger = logging.getLogger('odoo.addons.populate.worker')
 
 
@@ -479,8 +480,30 @@ def start_populate(session: Session, *, profile: bool = False):
             with executor:
                 executor.execute(session.pending_jobs)
 
+            vacuum_analyze(session)  # Update statistics
+
     except LockError as exc:
         raise UserError(session.env._("Session %(session_id)s is already running.", session_id=session.id)) from exc
+
+
+def vacuum_analyze(session: Session):
+    """Run PostgreSQL maintenance after a successful populate session."""
+    if modules.module.current_test:
+        _logger.info("Skipping VACUUM ANALYZE after populate session %d during tests", session.id)
+        return
+
+    start_time = time.time()
+
+    _logger.info("Running VACUUM ANALYZE after populate session %d", session.id)
+    with closing(session.env.registry.cursor()) as cr:
+        # PostgreSQL forbids VACUUM inside a transaction block.
+        cr._cnx.autocommit = True
+        cr.execute("VACUUM ANALYZE")
+
+    _logger.info(
+        "VACUUM ANALYZE after populate session %(session_id)d completed in %(time).2fs",
+        {'session_id': session.id, 'time': time.time() - start_time},
+    )
 
 
 @contextmanager
