@@ -5,6 +5,7 @@ import re
 from collections import defaultdict
 
 from odoo import models, fields, api, _
+from odoo.fields import Domain
 from odoo.exceptions import UserError, RedirectWarning
 from odoo.tools import SQL
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
@@ -86,7 +87,11 @@ class ProjectTask(models.Model):
             for task in self:
                 task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
             return
-        timesheet_read_group = self.env['account.analytic.line']._read_group([('task_id', 'in', self.ids)], ['task_id'], ['unit_amount:sum'])
+        domain = Domain.AND([
+            [('task_id', 'in', self.ids)],
+            self.env['account.analytic.line']._get_effective_timesheets_domain(),
+        ])
+        timesheet_read_group = self.env['account.analytic.line']._read_group(domain, ['task_id'], ['unit_amount:sum'])
         timesheets_per_task = {task.id: amount for task, amount in timesheet_read_group}
         for task in self:
             task.effective_hours = timesheets_per_task.get(task.id, 0.0)

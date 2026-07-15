@@ -52,9 +52,9 @@ class AccountAnalyticLine(models.Model):
             raise UserError(_('You cannot create timesheets for a task that is linked to a time off type. Please use the Time Off application to request new time off instead.'))
         return  super()._check_can_create()
 
-    def _get_favorite_project_id_domain(self, employee_id=False):
+    def _get_effective_timesheets_domain(self):
         return Domain.AND([
-            super()._get_favorite_project_id_domain(employee_id),
+            super()._get_effective_timesheets_domain(),
             Domain('holiday_id', '=', False),
             Domain('global_leave_id', '=', False),
         ])
