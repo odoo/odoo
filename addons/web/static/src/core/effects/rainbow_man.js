@@ -1,7 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 
-import { Component, proxy, useListener } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy, useListener } from "@odoo/owl";
 
 /**
  * @typedef Common
@@ -48,15 +47,13 @@ export class RainbowMan extends Component {
         this.state = proxy({ isFading: false });
         this.delay = RainbowMan.rainbowFadeouts[this.props.fadeout];
         if (this.delay) {
-            useLayoutEffect(
-                () => {
-                    const timeout = browser.setTimeout(() => {
-                        this.state.isFading = true;
-                    }, this.delay);
-                    return () => browser.clearTimeout(timeout);
-                },
-                () => []
-            );
+            let timeout;
+            onMounted(() => {
+                timeout = browser.setTimeout(() => {
+                    this.state.isFading = true;
+                }, this.delay);
+            });
+            onWillUnmount(() => browser.clearTimeout(timeout));
         }
     }
 

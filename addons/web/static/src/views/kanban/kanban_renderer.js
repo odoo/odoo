@@ -1,5 +1,14 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onPatched, onWillDestroy, props, proxy, t } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillDestroy,
+    onWillUnmount,
+    props,
+    proxy,
+    t,
+} from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -241,19 +250,16 @@ export class KanbanRenderer extends Component {
         const handleAltKeyUp = () => {
             this.state.selectionAvailable = false;
         };
-        useLayoutEffect(
-            () => {
-                window.addEventListener("keydown", handleAltKeyDown);
-                window.addEventListener("keyup", handleAltKeyUp);
-                window.addEventListener("blur", handleAltKeyUp);
-                return () => {
-                    window.removeEventListener("keydown", handleAltKeyDown);
-                    window.removeEventListener("keyup", handleAltKeyUp);
-                    window.removeEventListener("blur", handleAltKeyUp);
-                };
-            },
-            () => []
-        );
+        onMounted(() => {
+            window.addEventListener("keydown", handleAltKeyDown);
+            window.addEventListener("keyup", handleAltKeyUp);
+            window.addEventListener("blur", handleAltKeyUp);
+        });
+        onWillUnmount(() => {
+            window.removeEventListener("keydown", handleAltKeyDown);
+            window.removeEventListener("keyup", handleAltKeyUp);
+            window.removeEventListener("blur", handleAltKeyUp);
+        });
 
         // After a group is unfolded through onGroupClick, we want to scroll towards
         // the next group if it exists and is folded, and to the unfolded group

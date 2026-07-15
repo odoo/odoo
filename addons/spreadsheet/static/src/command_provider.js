@@ -1,4 +1,5 @@
-import { useEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useEnv } from "@web/owl2/utils";
+import { onMounted, onWillUnmount } from "@odoo/owl";
 import { registries } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { DefaultCommandItem } from "@web/core/commands/command_palette";
@@ -13,14 +14,11 @@ const commandCategoryRegistry = registry.category("command_categories");
  */
 export function useSpreadsheetCommandPalette() {
     const env = useEnv();
-    useLayoutEffect(
-        () => {
-            setupSpreadsheetCategories(env);
-            setupSpreadsheetCommandProvider(env);
-            return () => commandProviderRegistry.remove("spreadsheet_provider");
-        },
-        () => []
-    );
+    onMounted(() => {
+        setupSpreadsheetCategories(env);
+        setupSpreadsheetCommandProvider(env);
+    });
+    onWillUnmount(() => commandProviderRegistry.remove("spreadsheet_provider"));
 }
 
 function setupSpreadsheetCategories(spreadsheetEnv) {

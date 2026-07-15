@@ -1,5 +1,5 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
-import { onMounted, useListener } from "@odoo/owl";
+import { useComponent } from "@web/owl2/utils";
+import { onMounted, onWillUnmount, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export const scrollSymbol = Symbol("scroll");
@@ -41,13 +41,10 @@ export class CallbackRecorder {
  */
 export function useCallbackRecorder(callbackRecorder, callback) {
     const component = useComponent();
-    useLayoutEffect(
-        () => {
-            callbackRecorder.add(component, callback);
-            return () => callbackRecorder.remove(component);
-        },
-        () => []
-    );
+    onMounted(() => {
+        callbackRecorder.add(component, callback);
+    });
+    onWillUnmount(() => callbackRecorder.remove(component));
 }
 
 /**

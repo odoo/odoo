@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillStart, plugin, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, plugin, proxy } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
@@ -46,13 +45,10 @@ export function useSearchBarToggler() {
     }
 
     const onResize = useDebounced(updateState, 200);
-    useLayoutEffect(
-        () => {
-            browser.addEventListener("resize", onResize);
-            return () => browser.removeEventListener("resize", onResize);
-        },
-        () => []
-    );
+    onMounted(() => {
+        browser.addEventListener("resize", onResize);
+    });
+    onWillUnmount(() => browser.removeEventListener("resize", onResize));
 
     return {
         state,

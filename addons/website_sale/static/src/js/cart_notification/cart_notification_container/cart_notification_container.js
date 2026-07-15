@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy } from '@odoo/owl';
+import { Component, onMounted, onWillUnmount, proxy } from '@odoo/owl';
 import { useService } from "@web/core/utils/hooks";
 import { ItemAddedNotification } from '@website_sale/js/cart_notification/item_added_notification/item_added_notification';
 import { WarningNotification } from '@website_sale/js/cart_notification/warning_notification/warning_notification';
@@ -19,16 +18,14 @@ export class CartNotificationContainer extends Component {
         this.website_menus = useService('website_menus');
 
         // Ensure the notification is never on top of any header.
-        useLayoutEffect(
-            () => {
-                this._adaptToHeaderChange();
-                const cleanup = this.website_menus.registerCallback(
-                    this._adaptToHeaderChange.bind(this)
-                );
-                return cleanup;
-            },
-            () => []
-        );
+        let cleanup;
+        onMounted(() => {
+            this._adaptToHeaderChange();
+            cleanup = this.website_menus.registerCallback(
+                this._adaptToHeaderChange.bind(this)
+            );
+        });
+        onWillUnmount(() => cleanup?.());
     }
 
     /**

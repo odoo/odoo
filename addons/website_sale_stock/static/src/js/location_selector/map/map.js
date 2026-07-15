@@ -1,7 +1,7 @@
 /*global L*/
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, signal } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
 import { renderToString } from '@web/core/utils/render';
 
 export class Map extends Component {
@@ -47,24 +47,21 @@ export class Map extends Component {
         this.markers = [];
 
         // Create the map.
-        useLayoutEffect(
-            () => {
-                this.leafletMap = L.map(this.mapRef(), {
-                    zoom: 13,
-                });
-                this.leafletMap.attributionControl.setPrefix(
-                    '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'
-                );
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
-                }).addTo(this.leafletMap);
-                return () => {
-                    this.leafletMap.remove();
-                }
-            },
-            () => []
-        );
+        onMounted(() => {
+            this.leafletMap = L.map(this.mapRef(), {
+                zoom: 13,
+            });
+            this.leafletMap.attributionControl.setPrefix(
+                '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'
+            );
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+            }).addTo(this.leafletMap);
+        });
+        onWillUnmount(() => {
+            this.leafletMap.remove();
+        });
 
         // Update the size of the map.
         useLayoutEffect(
