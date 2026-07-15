@@ -3,8 +3,8 @@ import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_m
 import { fields } from "@mail/model/export";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 const unread_store = (() => {
@@ -197,6 +197,7 @@ const StorePatch = {
 patch(Store.prototype, StorePatch);
 
 registry.category("actions").add("mail.store_insert", function storeInsertAction(env, action) {
-    env.services["mail.store"].insert(action.params.store_values);
+    const store = useService("mail.store");
+    store.insert(action.params.store_values);
     return action.params.next_action;
 });

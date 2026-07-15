@@ -1,7 +1,10 @@
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { plugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
+import { ORM } from "@web/core/orm_plugin";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 function jsonToFormData(params) {
     if (params instanceof FormData) {
@@ -33,9 +36,12 @@ async function initLNA(notification) {
     }
 }
 
-async function actionGetDrive(env, action, type) {
-    const { drive_id, sign_host: host } = action.params;
-    const { orm, notification, dialog, action: actionService } = env.services;
+async function actionGetDrive(env, actionDescr, type) {
+    const { drive_id, sign_host: host } = actionDescr.params;
+    const orm = plugin(ORM);
+    const notification = useService("notification");
+    const dialog = useService("dialog");
+    const action = useService("action");
 
     let route = host;
     let key, method;
@@ -56,7 +62,7 @@ async function actionGetDrive(env, action, type) {
         result = await browser.fetch(route, {
             method: "POST",
             targetAddressSpace: useLna ? "local" : undefined,
-            body: jsonToFormData(action.params),
+            body: jsonToFormData(actionDescr.params),
         });
         result = await result.json();
     } catch {
@@ -90,7 +96,7 @@ async function actionGetDrive(env, action, type) {
                 body: _t("Error trying to connect to Odoo. Check your internet connection"),
             });
         });
-        actionService.doAction({
+        action.doAction({
             type: "ir.actions.client",
             tag: "reload",
         });

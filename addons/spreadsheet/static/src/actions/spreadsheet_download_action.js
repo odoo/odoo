@@ -1,17 +1,19 @@
+import { createSpreadsheetModel, waitForDataLoaded } from "@spreadsheet/helpers/model";
+import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import { createSpreadsheetModel, waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { user } from "@web/core/user";
-import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @param {import("@web/env").OdooEnv} env
  * @param {object} action
  */
 async function downloadSpreadsheet(env, action) {
+    const notification = useService("notification");
     const canExport = await user.hasGroup("base.group_allow_export");
     if (!canExport) {
-        env.services.notification.add(
+        notification.add(
             _t("You don't have the rights to export data. Please contact an Administrator."),
             {
                 title: _t("Access Error"),

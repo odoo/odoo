@@ -1,8 +1,10 @@
-import { registry } from "@web/core/registry";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 async function posQrStands(env, action) {
+    const dialog = useService("dialog");
     const user_data = action.params.data;
 
     function addInputToForm(form, name, value) {
@@ -30,7 +32,7 @@ async function posQrStands(env, action) {
         form.submit();
         document.body.removeChild(form);
     } else {
-        env.services.dialog.add(WarningDialog, {
+        dialog.add(WarningDialog, {
             title: _t("Get QR codes"),
             message: _t(
                 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."

@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { loadBundle } from "@web/core/assets";
+import { useService } from "@web/core/utils/hooks";
 
 const actionRegistry = registry.category("actions");
 
@@ -28,8 +29,9 @@ export function addSpreadsheetActionLazyLoader(actionName, path, displayName) {
             actionRegistry.add(
                 actionName,
                 () => {
+                    const notification = useService("notification");
                     const msg = _t("%s couldn't be loaded", actionName);
-                    env.services.notification.add(msg, { type: "danger" });
+                    notification.add(msg, { type: "danger" });
                 },
                 { force: true }
             );
