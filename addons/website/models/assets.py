@@ -8,6 +8,13 @@ from werkzeug.urls import url_parse
 
 from odoo import api, models
 
+GOOGLE_FONT_METRIC_OVERRIDES = {
+    'Borel': {
+        'ascent-override': '90%',
+        'descent-override': '30%',
+    },
+}
+
 
 class Assets(models.AbstractModel):
     _inherit = 'web_editor.assets'
@@ -101,6 +108,15 @@ class Assets(models.AbstractModel):
                         )
 
                     font_content = re.sub(r'src: url\(.+\)', fetch_google_font, font_content)
+
+                    overrides = GOOGLE_FONT_METRIC_OVERRIDES.get(font_name)
+                    if overrides:
+                        descriptors = ''.join(f'{prop}:{val};' for prop, val in overrides.items())
+                        font_content = re.sub(
+                            r'(@font-face\s*\{[^}]*)\}',
+                            lambda m, d=descriptors: m.group(1) + d + '}',
+                            font_content,
+                        )
 
                     attach_font = IrAttachment.create({
                         'name': f'{font_name} (google-font)',

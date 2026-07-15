@@ -3,6 +3,7 @@ import re
 
 import odoo.tests
 
+from unittest.mock import patch, Mock
 from odoo.tools import config
 
 
@@ -135,6 +136,62 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         self.assertTrue(website_attach.exists())
         no_website_bundle.css()
         self.assertTrue(website_attach.exists(), 'attachment for website should still exist after generating attachment for no website')
+
+    def _fake_requests_get(url, timeout=5, headers=None):
+        """Return fake CSS for the Google Fonts CSS endpoint, and fake binary
+        content for anything that looks like a font file request."""
+        FAKE_GOOGLE_CSS = """
+        @font-face {
+        font-family: 'Borel';
+        font-style: normal;
+        font-weight: 300;
+        src: url(https://fonts.gstatic.com/s/borel/v1/fake300.woff2) format('woff2');
+        }
+        @font-face {
+        font-family: 'Borel';
+        font-style: normal;
+        font-weight: 400;
+        src: url(https://fonts.gstatic.com/s/borel/v1/fake400.woff2) format('woff2');
+        }
+        """.strip()
+
+        FAKE_GOOGLE_CSS_OTHER_FONT = """
+        @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        src: url(https://fonts.gstatic.com/s/roboto/v1/fakeRoboto.woff2) format('woff2');
+        }
+        """.strip()
+        response = Mock()
+        response.status_code = 200
+        if 'fonts.googleapis.com/css' in url:
+            if 'family=Borel' in url:
+                response.content = FAKE_GOOGLE_CSS.encode()
+            else:
+                response.content = FAKE_GOOGLE_CSS_OTHER_FONT.encode()
+        else:
+            # Font binary fetch (fonts.gstatic.com/...)
+            response.content = b'FAKE_FONT_BINARY_DATA'
+        return response
+
+    @patch('odoo.addons.website.models.assets.requests.get', side_effect=_fake_requests_get)
+    def test_font_metric_overrides_injected_for_known_font(self, mock_get):
+        """Borel's @font-face blocks should get ascent/descent/line-gap
+        overrides injected so text isn't vertically misaligned."""
+        self.env['web_editor.assets'].make_scss_customization(
+            '/website/static/src/scss/options/user_values.scss',
+            {'google-local-fonts': "('Borel': '')"},
+        )
+
+        attachment = self.env['ir.attachment'].search([
+            ('name', '=', 'Borel (google-font)'),
+        ], limit=1)
+        self.assertTrue(attachment, "Expected a 'Borel (google-font)' attachment to be created")
+
+        content = attachment.raw.decode()
+        self.assertIn('ascent-override:90%;', content)
+        self.assertIn('descent-override:30%;', content)
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
