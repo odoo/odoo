@@ -533,7 +533,7 @@ export const datetimePickerService = {
                     // Note: this `onPatched` callback must be called after the `useEffect` since
                     // the effect may change input values that will be selected by the patch callback.
                     onPatched(function focusIfNeeded() {
-                        if (isOpen() && shouldFocus) {
+                        if (isOpen() && shouldFocus && !isBottomSheet()) {
                             focusActiveInput();
                         }
                     });

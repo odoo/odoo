@@ -5,6 +5,7 @@ import {
     Deferred,
     edit,
     press,
+    queryOne,
     queryAll,
     queryAllProperties,
     queryAllTexts,
@@ -185,7 +186,9 @@ test("Datetime field - interaction with the datepicker (same initial dates)", as
     expect("input[data-field=datetime]").toBeFocused();
     await contains(getPickerCell("8").at(0)).click();
     await animationFrame();
-    expect("input[data-field=datetime_end]").toBeFocused();
+    if (!queryOne(".o_datetime_picker").matches(".o_bottom_sheet *")) {
+        expect("input[data-field=datetime_end]").toBeFocused();
+    }
     await contains(getPickerCell("10").at(0)).click();
     await animationFrame();
     expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:30:00");
@@ -587,8 +590,14 @@ test("Datetime field - open datepicker and toggle range with optional start date
     // Range mode: on (add a end date)
     await contains(".o_toggle_range").click();
     await animationFrame();
-    expect("input[data-field=datetime]").toHaveValue("03/12/2017 23:00:00");
-    expect("button[data-field=datetime_end]").toHaveValue("03/13/2017 00:00:00");
+
+    if (queryOne(".o_datetime_picker").matches(".o_bottom_sheet *")) {
+        expect("button[data-field=datetime]").toHaveValue("03/12/2017 23:00:00");
+        expect("input[data-field=datetime_end]").toHaveValue("03/13/2017 00:00:00");
+    } else {
+        expect("input[data-field=datetime]").toHaveValue("03/12/2017 23:00:00");
+        expect("button[data-field=datetime_end]").toHaveValue("03/13/2017 00:00:00");
+    }
 
     // Range mode: off
     await contains(".o_toggle_range").click();
@@ -1342,7 +1351,11 @@ test("update the selected input date after removing the existing date", async ()
     await contains(getPickerCell("12")).click();
     await animationFrame();
 
-    expect("button[data-field=date]").toHaveValue("02/12/2017");
+    if (queryOne(".o_datetime_picker").matches(".o_bottom_sheet *")) {
+        expect("input[data-field=date]").toHaveValue("02/12/2017");
+    } else {
+        expect("button[data-field=date]").toHaveValue("02/12/2017");
+    }
 });
 
 test("daterange with inverted start date and end date", async () => {
