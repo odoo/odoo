@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.fields import Domain
 from odoo.tools import float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -46,6 +47,7 @@ class SurveyUser_Input(models.Model):
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Contact', readonly=True, index='btree_not_null')
     create_uid = fields.Many2one('res.users', string='Created by', index=True)
+    certification_number = fields.Char('Certification n°', compute='_compute_certification_number', search='_search_certification_number')
     email = fields.Char('Email', readonly=True)
     nickname = fields.Char('Nickname', help="Attendee nickname, mainly used to identify them in the survey session leaderboard.")
     # questions / answers
@@ -63,6 +65,32 @@ class SurveyUser_Input(models.Model):
         'UNIQUE (access_token)',
         'An access token must be unique!',
     )
+
+    @api.depends('scoring_success', 'survey_id')
+    def _compute_certification_number(self):
+        for user_input in self:
+            if user_input.survey_id.certification and user_input.scoring_success:
+                user_input.certification_number = str(user_input.id).rjust(10, '0')
+            else:
+                user_input.certification_number = False
+
+    def _search_certification_number(self, operator, value):
+        # Supported operators: '=', '!=', 'in', 'not in'
+        # '=' normalised to 'in' and negative operators are domain inversed.
+        if operator != 'in':
+            return NotImplemented
+        try:
+            ids = [int(v) for v in value if v is not False]
+        except ValueError:
+            raise UserError(self.env._("The certification number must consist only of digits."))
+        except TypeError:
+            return Domain.FALSE
+
+        is_certified = Domain('scoring_success', '=', True) & Domain('survey_id.certification', '=', True)
+        domain = Domain('id', 'in', ids) & is_certified
+        if False in value:
+            domain |= ~is_certified
+        return domain
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id', 'predefined_question_ids.answer_score')
     def _compute_scoring_values(self):

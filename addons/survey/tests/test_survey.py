@@ -9,6 +9,7 @@ from freezegun import freeze_time
 from odoo import _, Command, fields
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.survey.tests import common
+from odoo.exceptions import UserError
 from odoo.tests.common import tagged, users
 
 
@@ -308,6 +309,71 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             question_fail.validate_question(answer='', comment='This comment is not enough.'),
             {question_fail.id: 'TestError'}
         )
+
+    @users('survey_manager')
+    def test_survey_certification_number(self):
+        """ Check that the survey user input 'certification_number' field is
+        correctly computed and its search method works as intended.
+        """
+        test_survey = self.env['survey.survey'].create({
+            'scoring_type': 'scoring_without_answers',
+            'title': 'Test Survey',
+        })
+        question = self.env['survey.question'].create({
+            'answer_numerical_box': 2,
+            'answer_score': 10,
+            'is_scored_question': True,
+            'question_type': 'numerical_box',
+            'survey_id': test_survey.id,
+            'title': 'Question',
+        })
+        user_input_1 = self._add_answer(test_survey, self.survey_manager.partner_id)
+        user_input_2 = self._add_answer(test_survey, self.survey_user.partner_id)
+        self._add_answer_line(question, user_input_1, 1)
+        self._add_answer_line(question, user_input_2, 2)
+        self.assertFalse(user_input_1.scoring_success)
+        self.assertTrue(user_input_2.scoring_success)
+        # If the survey is not a certification, there shouldn't be any certification number whatever the scoring.
+        self.assertFalse(test_survey.certification)
+        self.assertFalse(user_input_1.certification_number)
+        self.assertFalse(user_input_2.certification_number)
+        # If the survey is a certification, only the succeeded inputs have a certification number.
+        test_survey.certification = True
+        (user_input_1 + user_input_2).invalidate_recordset(['certification_number'])
+        self.assertFalse(user_input_1.certification_number)
+        self.assertEqual(user_input_2.certification_number, str(user_input_2.id).rjust(10, '0'))
+        # Searching on the certification number should work.
+        cases = [
+            ('in', [False], user_input_1),
+            ('in', [user_input_2.id], user_input_2),
+            ('in', ['000' + str(user_input_2.id)], user_input_2),
+            ('in', [False, user_input_2.id], user_input_1 + user_input_2),
+            # '=' operator is normalized into 'in'
+            ('=', False, user_input_1),
+            ('=', user_input_2.certification_number, user_input_2),
+            # negative operators inversed to 'in' and '='
+            ('not in', [user_input_2.id], user_input_1),
+            ('!=', user_input_2.certification_number, user_input_1),
+            # Other operators not supported
+            ('like', user_input_2.certification_number, UserError),
+            ('ilike', user_input_2.certification_number, UserError),
+            ('=like', user_input_2.certification_number, UserError),
+            ('>', user_input_2.certification_number, UserError),
+            # Weird values should work as expected
+            ('in', ['not_a_number'], UserError),
+            ('in', [None], self.env['survey.user_input']),
+        ]
+        search = self.env['survey.user_input'].search
+        for operator, value, expected_result in cases:
+            with self.subTest(operator=operator, value=value, expected_result=expected_result):
+                domain = [
+                    ('certification_number', operator, value),
+                    ('survey_id', '=', test_survey.id),
+                ]
+                if expected_result is UserError:
+                    self.assertRaises(UserError, search, domain)
+                else:
+                    self.assertEqual(search(domain), expected_result)
 
     def test_partial_scores_simple_choice(self):
         """" Check that if partial scores are given for partially correct answers, in the case of a multiple
