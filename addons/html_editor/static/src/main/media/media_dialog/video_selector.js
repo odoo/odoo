@@ -182,7 +182,7 @@ export class VideoSelector extends Component {
             if (option.id === optionId) {
                 // used "0" here, to set the initial "startAt" value if option is toggled on,
                 // for other option it works as truthy value.
-                return { ...option, value: !option.value && "00:00" };
+                return { ...option, value: !option.value ? "00:00" : "" };
             }
             return option;
         });
@@ -349,7 +349,7 @@ export class VideoSelector extends Component {
                     value = urlParams.get("startTime") || urlParams.get("start");
                     break;
                 default:
-                    value = this.state.urlInput.includes(urlParameter);
+                    value = this.state.urlInput.includes(urlParameter) ? "00:00" : "";
             }
             if (option.id === "start_from" && value === "0") {
                 return { ...option, value: "00:00" };

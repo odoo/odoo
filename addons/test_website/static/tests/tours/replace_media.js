@@ -27,11 +27,29 @@ registerWebsitePreviewTour('test_replace_media', {
             patch(VideoSelector.prototype, {
                 async _getVideoURLData(src, options) {
                     if (src === VIDEO_URL || src === 'about:blank') {
-                        return {platform: 'youtube', embed_url: 'about:blank'};
+                        let resultUrl = 'about:blank'
+                        // Only autoplay handled here for simplicity
+                        if(options.autoplay) {
+                            resultUrl += "?autoplay=1"
+                        }
+                        return {platform: 'youtube', embed_url: resultUrl};
+                    }
+                    if (src === 'about:blank?autoplay=1') {
+                        return {platform: 'youtube', embed_url: src};
                     }
                     return super._getVideoURLData(...arguments);
                 },
             });
+            // Prevents the VideoSelector from adding 'https:' before
+            // 'about:blank', which makes the URL invalid for URL.canParse
+            patch(VideoSelector.prototype, {
+                async syncOptionsWithUrl() {
+                    if(this.state.urlInput.startsWith("https:about:blank")) {
+                        this.state.urlInput = this.state.urlInput.substring(6);
+                    }
+                    super.syncOptionsWithUrl();
+                }
+            })
         },
     },
     ...insertSnippet({
@@ -127,6 +145,11 @@ registerWebsitePreviewTour('test_replace_media', {
         trigger: ".o_select_media_dialog div.media_iframe_video [src='about:blank']:iframe body",
     },
     {
+        content: "enable auto-play",
+        trigger: ".o_video_dialog_options label.o_switch",
+        run: "click",
+    },
+    {
         content: "confirm selection",
         trigger: ".o_select_media_dialog .modal-footer .btn-primary",
         run: "click",
@@ -139,6 +162,16 @@ registerWebsitePreviewTour('test_replace_media', {
         content: "replace image",
         trigger: ".btn-success[data-action-id='replaceMedia']",
         run: "click",
+    },
+    {
+        content: "check that autoplay is still enabled",
+        trigger: ".o_video_dialog_options label.o_switch",
+        run: () => {
+            const input = document.querySelector(".o_video_dialog_options label.o_switch input");
+            if(!input.value) {
+                throw new Error("Autoplay should be enabled");
+            }
+        },
     },
     {
         content: "go to pictogram tab",
