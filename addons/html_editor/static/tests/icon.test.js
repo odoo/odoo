@@ -1,9 +1,9 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, press, test } from "@odoo/hoot";
 import { click, queryAll, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
-import { splitBlock, undo } from "./_helpers/user_actions";
+import { insertText, splitBlock, undo } from "./_helpers/user_actions";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
@@ -417,4 +417,27 @@ test("icon toolbar when only an icon is selected", async () => {
     expect(queryAll(".o-we-toolbar .btn-group[name='image_link'] button[name='link']")).toHaveCount(
         1
     );
+});
+
+test("should remove empty inline attribute when it contains visible content", async () => {
+    await testEditor({
+        contentBefore: `<p><font style="color: rgb(255, 0, 0);">[abc]</font></p>`,
+        stepFunction: async (editor) => {
+            await insertText(editor, "/icon");
+            await expectElementCount(".o-we-powerbox", 1);
+            expect(".active .o-we-command-name").toHaveText("Media");
+            await press("enter");
+
+            await expectElementCount("main.modal-body", 1);
+            expect("main.modal-body button.nav-link.active").toHaveText("Icons");
+            expect("font").toHaveAttribute("data-oe-zws-empty-inline");
+
+            await contains("main.modal-body span[data-icon='search']").click();
+            await expectElementCount("main.modal-body", 0);
+            expect("span.oi[data-icon='search']").toHaveCount(1);
+            // A font with visible content should not have the empty inline attribute.
+            expect("font").not.toHaveAttribute("data-oe-zws-empty-inline");
+        },
+        contentAfter: `<p><font style="color: rgb(255, 0, 0);"><span class="oi" data-icon="search"></span>[]</font></p>`,
+    });
 });
