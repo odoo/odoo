@@ -700,3 +700,37 @@ ERROR during find trigger:
 Failed to execute 'querySelectorAll' on 'Element': '.button1:brol(:machin)' is not a valid selector.`,
     ]);
 });
+
+test("Tour redirect to given url", async () => {
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <button class="button0">Button 0</button>
+                <button class="button1">Button 1</button>
+                <button class="button2">Button 2</button>
+            </t>
+        `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Root);
+    tourRegistry.add("tour_redirect", {
+        steps: () => [
+            {
+                content: "content",
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                content: "content",
+                trigger: ".button1",
+                run: "click",
+            },
+        ],
+    });
+    expect(browser.location.pathname).toBe("/");
+    await odoo.startTour("tour_redirect", { mode: "auto", url: "/odoo" });
+    await waitForMacro();
+    expect(browser.location.pathname).toBe("/odoo");
+});
