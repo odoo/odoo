@@ -1,7 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
-export function manageMessages({ component, env }) {
+export function manageMessages({ component }) {
+    const action = useService("action");
     const resId = component.model.root.resId;
     if (!resId) {
         return null; // No record
@@ -11,7 +13,7 @@ export function manageMessages({ component, env }) {
         type: "item",
         description,
         callback: () => {
-            env.services.action.doAction({
+            action.doAction({
                 res_model: "mail.message",
                 name: description,
                 views: [

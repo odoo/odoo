@@ -1,9 +1,10 @@
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, plugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
+import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
@@ -21,16 +22,20 @@ function runUnitTestsItem() {
     };
 }
 
-export function openViewItem({ env }) {
+export function openViewItem() {
+    const action = useService("action");
+    const orm = plugin(ORM);
+    const dialog = useService("dialog");
+
     async function onSelected(records) {
-        const views = await env.services.orm.searchRead(
+        const views = await orm.searchRead(
             "ir.ui.view",
             [["id", "=", records[0]]],
             ["name", "model", "type"],
             { limit: 1 }
         );
         const view = views[0];
-        env.services.action.doAction({
+        action.doAction({
             type: "ir.actions.act_window",
             name: view.name,
             res_model: view.model,
@@ -42,7 +47,7 @@ export function openViewItem({ env }) {
         type: "item",
         description: _t("Open View"),
         callback: () => {
-            env.services.dialog.add(SelectCreateDialog, {
+            dialog.add(SelectCreateDialog, {
                 resModel: "ir.ui.view",
                 title: _t("Select a view"),
                 multiSelect: false,
@@ -131,15 +136,16 @@ class ClocReport extends Component {
     }
 }
 
-function clocReport({ env }) {
+function clocReport() {
     if (user.isAdmin) {
+        const dialog = useService("dialog");
         return {
             type: "item",
             description: _t("Count LoC"),
             sequence: 541,
             section: "tools",
             callback: () => {
-                env.services.dialog.add(ClocReport, {});
+                dialog.add(ClocReport, {});
             },
         };
     }

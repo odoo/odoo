@@ -3,8 +3,10 @@ import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { plugin } from "@odoo/owl";
+import { ORM } from "@web/core/orm_plugin";
 
-function activateTestsAssetsDebugging({ env }) {
+function activateTestsAssetsDebugging() {
     if (String(router.current.debug).includes("tests")) {
         return;
     }
@@ -20,12 +22,13 @@ function activateTestsAssetsDebugging({ env }) {
     };
 }
 
-export function regenerateAssets({ env }) {
+export function regenerateAssets() {
+    const orm = plugin(ORM);
     return {
         type: "item",
         description: _t("Regenerate Assets"),
         callback: async () => {
-            await env.services.orm.call("ir.attachment", "regenerate_assets_bundles");
+            await orm.call("ir.attachment", "regenerate_assets_bundles");
             browser.location.reload();
         },
         sequence: 550,
@@ -33,7 +36,7 @@ export function regenerateAssets({ env }) {
     };
 }
 
-export function becomeSuperuser({ env }) {
+export function becomeSuperuser() {
     const becomeSuperuserURL = browser.location.origin + "/web/become";
     if (!user.isAdmin) {
         return false;

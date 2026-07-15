@@ -1,4 +1,4 @@
-import { config, onWillDestroy, plugin, Plugin, providePlugins } from "@odoo/owl";
+import { config, onWillDestroy, plugin, Plugin, providePlugins, useScope } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { user } from "@web/core/user";
@@ -21,6 +21,7 @@ const getAccessRights = async () => {
 
 class DebugContextPlugin extends Plugin {
     categories = config("categories") ?? new Map();
+    scope = useScope();
 
     activateCategory(category, context) {
         const contexts = this.categories.get(category) || new Set();
@@ -42,7 +43,11 @@ class DebugContextPlugin extends Plugin {
                 debugRegistry
                     .category(category)
                     .getAll()
-                    .map((factory) => factory(Object.assign({ env, accessRights }, ...contexts)))
+                    .map((factory) =>
+                        this.scope.run(() =>
+                            factory(Object.assign({ env, accessRights }, ...contexts))
+                        )
+                    )
             )
             .filter(Boolean)
             .sort((x, y) => {

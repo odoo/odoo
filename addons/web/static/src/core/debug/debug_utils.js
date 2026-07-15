@@ -1,5 +1,5 @@
-export function editModelDebug(env, title, model, id) {
-    return env.services.action.doAction({
+export function editModelDebug(actionService, title, model, id) {
+    return actionService.doAction({
         res_model: model,
         res_id: id,
         name: title,

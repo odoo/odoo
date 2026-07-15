@@ -1,10 +1,14 @@
 import { _t } from "@web/core/l10n/translation";
 import { editModelDebug } from "@web/core/debug/debug_utils";
 import { registry } from "@web/core/registry";
+import { plugin } from "@odoo/owl";
+import { ORM } from "@web/core/orm_plugin";
+import { useService } from "@web/core/utils/hooks";
 
 const debugRegistry = registry.category("debug");
 
-function editAction({ action, env }) {
+function editAction({ action }) {
+    const actionService = useService("action");
     if (!action.id) {
         return null;
     }
@@ -13,14 +17,17 @@ function editAction({ action, env }) {
         type: "item",
         description,
         callback: () => {
-            editModelDebug(env, description, action.type, action.id);
+            editModelDebug(actionService, description, action.type, action.id);
         },
         sequence: 220,
         section: "ui",
     };
 }
 
-function viewFields({ action, env }) {
+function viewFields({ action }) {
+    const actionService = useService("action");
+    const orm = plugin(ORM);
+
     if (!action.res_model) {
         return null;
     }
@@ -30,11 +37,11 @@ function viewFields({ action, env }) {
         description,
         callback: async () => {
             const modelId = (
-                await env.services.orm.search("ir.model", [["model", "=", action.res_model]], {
+                await orm.search("ir.model", [["model", "=", action.res_model]], {
                     limit: 1,
                 })
             )[0];
-            env.services.action.doAction({
+            actionService.doAction({
                 res_model: "ir.model.fields",
                 name: description,
                 views: [
@@ -53,7 +60,10 @@ function viewFields({ action, env }) {
     };
 }
 
-function ViewModel({ action, env }) {
+function ViewModel({ action }) {
+    const actionService = useService("action");
+    const orm = plugin(ORM);
+
     if (!action.res_model) {
         return null;
     }
@@ -63,18 +73,19 @@ function ViewModel({ action, env }) {
         description: _t("Model: %s", modelName),
         callback: async () => {
             const modelId = (
-                await env.services.orm.search("ir.model", [["model", "=", modelName]], {
+                await orm.search("ir.model", [["model", "=", modelName]], {
                     limit: 1,
                 })
             )[0];
-            editModelDebug(env, modelName, "ir.model", modelId);
+            editModelDebug(actionService, modelName, "ir.model", modelId);
         },
         sequence: 210,
         section: "ui",
     };
 }
 
-function manageFilters({ action, env }) {
+function manageFilters({ action }) {
+    const actionService = useService("action");
     if (!action.res_model) {
         return null;
     }
@@ -84,7 +95,7 @@ function manageFilters({ action, env }) {
         description,
         callback: () => {
             // manage_filters
-            env.services.action.doAction({
+            actionService.doAction({
                 res_model: "ir.filters",
                 name: description,
                 views: [
@@ -103,7 +114,10 @@ function manageFilters({ action, env }) {
     };
 }
 
-function viewAccessRights({ accessRights, action, env }) {
+function viewAccessRights({ accessRights, action }) {
+    const actionService = useService("action");
+    const orm = plugin(ORM);
+
     if (!action.res_model || !accessRights.canSeeAccess) {
         return null;
     }
@@ -113,11 +127,11 @@ function viewAccessRights({ accessRights, action, env }) {
         description,
         callback: async () => {
             const modelId = (
-                await env.services.orm.search("ir.model", [["model", "=", action.res_model]], {
+                await orm.search("ir.model", [["model", "=", action.res_model]], {
                     limit: 1,
                 })
             )[0];
-            env.services.action.doAction({
+            actionService.doAction({
                 res_model: "ir.access",
                 name: description,
                 views: [
@@ -142,4 +156,4 @@ debugRegistry
     .add("viewFields", viewFields)
     .add("ViewModel", ViewModel)
     .add("manageFilters", manageFilters)
-    .add("viewAccessRights", viewAccessRights)
+    .add("viewAccessRights", viewAccessRights);
