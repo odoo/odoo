@@ -13,6 +13,7 @@
                     ('email', 'ilike', self)]"/>
                 <field name="partner_id"/>
                 <field name="survey_id"/>
+                <field name="certification_number" operator="="/>
                 <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
                 <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
                 <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
@@ -122,6 +123,7 @@
                 <field name="nickname" optional="hide"/>
                 <field name="partner_id" optional="show"/>
                 <field name="email" optional="show"/>
+                <field name="certification_number" optional="hide"/>
                 <field name="attempts_number"/>
                 <field name="deadline"/>
                 <field name="test_entry" column_invisible="True"/>
