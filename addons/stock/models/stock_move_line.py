@@ -641,10 +641,10 @@ class StockMoveLine(models.Model):
             elif not ml.is_inventory:
                 ml_ids_to_delete.add(ml.id)
 
-        for (product, _company), mls in ml_ids_to_check.items():
+        for (product, company), mls in ml_ids_to_check.items():
             mls = self.env['stock.move.line'].browse(mls)
             lots = self.env['stock.lot'].search([
-                '|', ('company_id', '=', False), ('company_id', '=', ml.company_id.id),
+                '|', ('company_id', '=', False), ('company_id', '=', company.id),
                 ('product_id', '=', product.id),
                 ('name', 'in', mls.mapped('lot_name')),
             ])
