@@ -148,14 +148,14 @@ class TestPaymentTransaction(RazorpayCommon):
         """ Test that only one token is created when notification data of a given transaction are
         processed multiple times. """
         tx1 = self._create_transaction('direct', reference='tx1', tokenize=True)
-        tx1._process_notification_data(self.tokenize_payment_data)
+        tx1._process_notification_data(self.tokenize_payment_data | {'description': 'tx1'})
         with patch(
             'odoo.addons.payment_razorpay.models.payment_transaction.PaymentTransaction'
             '._razorpay_tokenize_from_notification_data'
         ) as tokenize_mock:
             # Create the second transaction with the first transaction's token.
             tx2 = self._create_transaction('token', reference='tx2', token_id=tx1.token_id.id)
-            tx2._process_notification_data(self.tokenize_payment_data)
+            tx2._process_notification_data(self.tokenize_payment_data | {'description': 'tx2'})
             self.assertEqual(
                 tokenize_mock.call_count,
                 0,
