@@ -80,11 +80,21 @@ function parseNumber(value, options = {}) {
 
     // A stray e/E isn't a real exponent marker unless flanked by a digit before and an
     // optionally-signed digit after (e.g. the E in "EUR"/"EUROS" gets removed).
-    value = value.replace(/(?<!\d)[eE]|[eE](?![-+]?\d)/g, "");
-    // A "-" is only meaningful as a leading sign or an exponent sign (after e/E); anywhere
-    // else it's noise (e.g. the trailing "-" in "50,-").
-    value = value.replace(/(?<!^)(?<![eE])-/g, "");
+    if (/[eE]/.test(value) && !/^-?(\d+(\.\d+)?|\.\d+)[eE]-?\d+$/.test(value)) {
+        value = value.replace(/[eE]/g, "");
+    }
+    // A "-" is only meaningful as a leading sign or an exponent sign (right after e/E);
+    // anywhere else it's noise (e.g. the trailing "-" in "50,-"). Checked positionally
+    // instead of with a lookbehind assertion, unsupported in Safari < 16.4.
+    value = value.replace(/-/g, (match, offset) => {
+        const isLeadingSign = offset === 0;
+        const isExponentSign = offset > 0 && /[eE]/.test(value[offset - 1]);
+        return isLeadingSign || isExponentSign ? match : "";
+    });
 
+    if (value === "") {
+        return NaN;
+    }
     return Number(value);
 }
 

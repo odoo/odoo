@@ -42,6 +42,8 @@ test("formatFloat", () => {
     expect(formatFloat(false)).toBe("");
     expect(formatFloat(200)).toBe("200.00");
     expect(formatFloat(200, { trailingZeros: false })).toBe("200");
+    expect(formatFloat(223e22)).toBe("2e+24");
+    expect(formatFloat(2230000000000000000000000)).toBe("2e+24");
 });
 
 test("formatFloatFactor", () => {
