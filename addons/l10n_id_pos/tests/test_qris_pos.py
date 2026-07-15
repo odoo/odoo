@@ -1,16 +1,16 @@
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
-from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
+from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from unittest.mock import patch
 from freezegun import freeze_time
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestPosQris(AccountTestInvoicingHttpCommon):
+class TestPosQris(TestPointOfSaleHttpCommon):
     """ Testing QRIS payment via PoS """
 
     @classmethod
-    @AccountTestInvoicingHttpCommon.setup_chart_template('id')
+    @TestPointOfSaleHttpCommon.setup_chart_template('id')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].qr_code = True
@@ -37,10 +37,10 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
         })
 
         # Create user.
-        cls.pos_user = cls.env['res.users'].create({
+        cls.qris_pos_user = cls.env['res.users'].create({
             'name': 'A simple PoS man!',
-            'login': 'pos_user',
-            'password': 'pos_user',
+            'login': 'qris_pos_user',
+            'password': 'qris_pos_user',
             'group_ids': [
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
@@ -100,8 +100,8 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
     def test_qris_link_with_pos_order(self):
         """ Test whether it's possible to link QRIS transaction with a pos.order record through
         UUID field instead of id """
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        pos_order = self.env['pos.order'].with_user(self.pos_user).create({
+        self.main_pos_config.with_user(self.qris_pos_user).open_ui()
+        pos_order = self.env['pos.order'].with_user(self.qris_pos_user).create({
             'company_id': self.env.company.id,
             'session_id': self.main_pos_config.current_session_id.id,
             'partner_id': self.partner_a.id,
@@ -154,9 +154,9 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
                     }
                 }
 
-        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.main_pos_config.with_user(self.qris_pos_user).open_ui()
         with patch('odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', side_effect=_patched_make_qris_request):
-            self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenQRISPaymentFail', login="pos_user")
+            self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenQRISPaymentFail', login="qris_pos_user")
 
     def test_tour_qris_payment_success(self):
         """ Successful fetching status should proceed next to go to receipt screen"""
@@ -181,9 +181,9 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
                     },
                     "qris_api_version_code": "2206091709"
                 }
-        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.main_pos_config.with_user(self.qris_pos_user).open_ui()
         with patch('odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', side_effect=_patched_make_qris_request):
-            self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenQRISPaymentSuccess', login="pos_user")
+            self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenQRISPaymentSuccess', login="qris_pos_user")
 
     @freeze_time("2024-02-27 04:15:00")
     def test_only_call_api_call_once(self):
@@ -210,9 +210,9 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
                     },
                     "qris_api_version_code": "2206091709"
                 }
-        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.main_pos_config.with_user(self.qris_pos_user).open_ui()
         with patch('odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', side_effect=_patched_make_qris_request) as patched:
-            self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PayementScreenQRISFetchQR', login="pos_user")
+            self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PayementScreenQRISFetchQR', login="qris_pos_user")
             self.assertEqual(patched.call_count, 1)
 
     @freeze_time("2024-02-27 04:15:00")
@@ -230,8 +230,8 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
                         "qris_nmid": "ID1020021181745"
                     }
                 }
-        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.main_pos_config.with_user(self.qris_pos_user).open_ui()
         self.main_pos_config.current_session_id.set_opening_control(0, 'notes')
         with patch('odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', side_effect=_patched_make_qris_request) as patched:
-            self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PayementScreenQRISChangeAmount', login="pos_user")
+            self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PayementScreenQRISChangeAmount', login="qris_pos_user")
             self.assertEqual(patched.call_count, 3)
