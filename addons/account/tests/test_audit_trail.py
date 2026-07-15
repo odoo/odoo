@@ -350,7 +350,7 @@ class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.company.restrictive_audit_trail = True
-        cls.document_installed = 'documents_account' in cls.env['ir.module.module']._installed()
+        cls.document_installed = cls._is_module_installed('documents_account')
         if cls.document_installed:
             folder_test = cls.env['documents.document'].create({
                 'name': 'folder_test',

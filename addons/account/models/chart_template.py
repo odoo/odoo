@@ -199,8 +199,8 @@ class AccountChartTemplate(models.AbstractModel):
             company.country_id = chart_template_mapping.get('country_id')
 
         module_name = chart_template_mapping.get('module')
-        module = self.env['ir.module.module'].search([('name', '=', module_name), ('state', '=', 'uninstalled')])
-        if module:
+        module = self.env['ir.module.module']._get(module_name)
+        if module and module.state == 'uninstalled':
             module.button_immediate_install()
             self = self.env()['account.chart.template']  # noqa: PLW0642 create a new env with the new registry
         # To be able to use code translation we load everything in 'en_US'

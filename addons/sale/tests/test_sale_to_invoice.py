@@ -1350,10 +1350,7 @@ class TestSaleToInvoice(TestSaleCommon):
         change the 'Invoicing Switch Threshold' such that the invoice date of 'A' is before the new
         threshold, the SO should still take invoice 'A' into account.
         """
-        if not self.env["ir.module.module"].search([
-            ("name", "=", "account_accountant"),
-            ("state", "=", "installed"),
-        ]):
+        if not self._is_module_installed('account_accountant'):
             self.skipTest("This test requires the installation of the account_account module")
 
         sale_order = self.env["sale.order"].create({

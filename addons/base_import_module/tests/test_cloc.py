@@ -270,7 +270,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
         self.assertEqual(cl.code.get('test_imported_module', 0), 0)
 
         # Uninstall data module
-        self.env['ir.module.module'].search([('name', '=', 'test_imported_module')]).module_uninstall()
+        self.env['ir.module.module']._get('test_imported_module').module_uninstall()
 
         # Check that the database is cleaned after uninstallation
         attachments = self.env['ir.attachment'].search([('url', 'ilike', 'test_imported_module/static/src/js/test_js')])

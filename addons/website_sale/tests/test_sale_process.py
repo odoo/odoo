@@ -75,7 +75,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         cls.env.ref("base.partner_admin").write(cls.dummy_partner_address_values)
         cls.partner_website_user.write(cls.dummy_partner_address_values)
 
-        if cls.env["ir.module.module"]._get("payment_custom").state == "installed":
+        if cls._is_module_installed('payment_custom'):
             transfer_provider = cls.env.ref("payment.payment_provider_transfer")
             transfer_provider.is_published = True
 

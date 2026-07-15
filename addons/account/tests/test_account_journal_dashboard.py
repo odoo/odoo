@@ -14,7 +14,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
     @freeze_time("2019-01-22")
     def test_customer_invoice_dashboard(self):
         # This test is defined in the account_3way_match module with different values, so we skip it when the module is installed
-        if self.env['ir.module.module'].search([('name', '=', 'account_3way_match')]).state == 'installed':
+        if self._is_module_installed('account_3way_match'):
             self.skipTest("This test won't work if account_3way_match is installed")
 
         journal = self.company_data['default_journal_sale']
@@ -130,7 +130,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             5) Journal in company currency, bills in foreign currency -> dashboard data should be displayed in company currency
         """
         # This test is defined in the account_3way_match module with different values, so we skip it when the module is installed
-        if self.env['ir.module.module'].search([('name', '=', 'account_3way_match')]).state == 'installed':
+        if self._is_module_installed('account_3way_match'):
             self.skipTest("This test won't work if account_3way_match is installed")
 
         foreign_currency = self.other_currency
@@ -167,7 +167,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
 
     def test_sale_purchase_journal_for_multi_currency_sale(self):
         # This test is defined in the account_3way_match module with different values, so we skip it when the module is installed
-        if self.env['ir.module.module'].search([('name', '=', 'account_3way_match')]).state == 'installed':
+        if self._is_module_installed('account_3way_match'):
             self.skipTest("This test won't work if account_3way_match is installed")
 
         currency = self.other_currency
@@ -207,7 +207,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
     @freeze_time("2023-03-15")
     def test_purchase_journal_numbers_and_sums(self):
         # This test is defined in the account_3way_match module with different values, so we skip it when the module is installed
-        if self.env['ir.module.module'].search([('name', '=', 'account_3way_match')]).state == 'installed':
+        if self._is_module_installed('account_3way_match'):
             self.skipTest("This test won't work if account_3way_match is installed")
 
         company_currency = self.company_data['currency']

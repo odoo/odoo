@@ -642,7 +642,7 @@ class IrModuleModule(models.Model):
                 ('name', '=', f"{module}_{lang_}.po"),
                 ('url', '=', f"/{module}/i18n/{lang_}.po"),
                 ('res_model', '=', 'ir.module.module'),
-                ('res_id', '=', self._get_id(module)),
+                ('res_id', '=', self._id_by_name[module]),
                 ('type', '=', 'binary'),
             ], limit=1)
             if attachment.raw:

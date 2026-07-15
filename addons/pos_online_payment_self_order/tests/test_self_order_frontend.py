@@ -51,7 +51,7 @@ class TestSelfOrderOnlinePayment(TestUi):
         self.start_pos_tour('OnlinePaymentWithMultiTables', login="pos_admin")
 
     def test_02_online_payment_with_multi_website_company(self):
-        if not self.env["ir.module.module"].search([("name", "=", "website"), ("state", "=", "installed")]):
+        if not self._is_module_installed('website'):
             self.skipTest("The 'website' module is required for this test.")
 
         # Setup another company and related POS configuration

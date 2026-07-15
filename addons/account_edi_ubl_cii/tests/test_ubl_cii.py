@@ -525,7 +525,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         code = xml_tree.find('.//ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode', self.namespaces)
         self.assertEqual(code.text, '42')
 
-        if self.env['ir.module.module']._get('account_sepa_direct_debit').state == 'installed':
+        if self._is_module_installed('account_sepa_direct_debit'):
             company = self.env.company
             company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
             company_bank_journal = self.company_data['default_journal_bank']

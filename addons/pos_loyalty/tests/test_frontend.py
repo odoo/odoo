@@ -734,7 +734,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         - Test that customer get correct loyalty points after discount
         """
 
-        if not self.env["ir.module.module"].search([("name", "=", "pos_discount"), ("state", "=", "installed")]):
+        if not self._is_module_installed('pos_discount'):
             self.skipTest("pos_discount module is required for this test")
         LoyaltyProgram = self.env['loyalty.program']
         (LoyaltyProgram.search([])).write({'pos_ok': False})
@@ -2913,7 +2913,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         Tests that when settling an order that has been partially paid, it does not give the loyalty
         points again. All of them should be given during the first transaction.
         """
-        if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
+        if not self._is_module_installed('pos_settle_due'):
             self.skipTest("pos_settle_due module is required for this test")
         if self.main_pos_config.current_session_id:
             self.main_pos_config.current_session_id.close_session_from_ui()

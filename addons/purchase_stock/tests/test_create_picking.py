@@ -866,7 +866,7 @@ class TestCreatePicking(ProductVariantsCommon):
         """
         Test that the pol description is correctly propagated to the move description
         """
-        product_matrix_installed = 'purchase_product_matrix' in self.env['ir.module.module']._installed()
+        product_matrix_installed = self._is_module_installed('purchase_product_matrix')
         # product with all description items: vendor product name, vendor product code, receipt description, purchase description, attribute variant value, attribute no variant value
         attribute_vals = [{
             'attribute_id': self.color_attribute.id,

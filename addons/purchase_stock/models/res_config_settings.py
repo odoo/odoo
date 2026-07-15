@@ -10,12 +10,13 @@ class ResConfigSettings(models.TransientModel):
     module_stock_dropshipping = fields.Boolean("Dropshipping")
     days_to_purchase = fields.Integer(
         related='company_id.days_to_purchase', readonly=False)
+    # TODO use the `module_` prefix feature instead
     is_installed_sale = fields.Boolean(string="Is the Sale Module Installed")
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         res.update(
-            is_installed_sale=self.env['ir.module.module'].search([('name', '=', 'sale'), ('state', '=', 'installed')]).id,
+            is_installed_sale=self.env['ir.module.module']._get('sale') == 'installed',
         )
         return res

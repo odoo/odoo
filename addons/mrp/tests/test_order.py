@@ -38,7 +38,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
     def _handle_workorder_compatibility(self):
         # Once `mrp_workorder` is installed, an employee is required for a lot of workorder usecases.
         # To avoid issues when running these tests post-install, we add an employee if that module is installed.
-        if self.env['ir.module.module']._get('mrp_workorder').state == 'installed':
+        if self._is_module_installed('mrp_workorder'):
             self.env['hr.employee'].create({
                 'name': 'Current User Employee',
                 'user_id': self.env.user.id,

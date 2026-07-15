@@ -24,7 +24,7 @@ from odoo.http import request
 from odoo.modules.module import Manifest, MissingDependency
 from odoo.tools import SQL, BinaryBytes, config
 from odoo.tools.business_data import get_flag
-from odoo.tools.misc import file_open, topological_sort
+from odoo.tools.misc import file_open, frozendict, topological_sort
 from odoo.tools.parse_version import parse_version
 from odoo.tools.translate import (
     TranslationImporter,
@@ -157,7 +157,7 @@ XML_DECLARATION = (
 )
 
 
-class IrModuleModule(models.Model):
+class IrModuleModule(models.CachedModel):
     _name = 'ir.module.module'
     _rec_name = "shortdesc"
     _rec_names_search = ('name', 'shortdesc', 'summary')
@@ -166,6 +166,7 @@ class IrModuleModule(models.Model):
     _allow_sudo_commands = False
     _clear_cache_name = 'stable'      # cache to clear on create/write/update
     _clear_cache_on_fields = ('name', 'state')
+    _cached_data_fields = ('name', 'state')
 
     @classmethod
     def get_module_info(cls, name):
@@ -908,24 +909,12 @@ class IrModuleModule(models.Model):
         """ Return the (sudoed) `ir.module.module` record with the given name.
         The result may be an empty recordset if the module is not found.
         """
-        model_id = self._get_id(name) if name else False
+        model_id = self._id_by_name()[name] if name else False
         return self.browse(model_id).sudo()
 
-    @api.ormcache('name', cache='stable')
-    def _get_id(self, name):
-        self.flush_model(['name'])
-        self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
-        result = self.env.cr.fetchone()
-        return result and result[0]
-
-    @api.model
     @api.ormcache(cache='stable')
-    def _installed(self):
-        """ Return the set of installed modules as a dictionary {name: id} """
-        return {
-            module.name: module.id
-            for module in self.sudo().search([('state', '=', 'installed')])
-        }
+    def _id_by_name(self) -> frozendict:
+        return frozendict((module.name, module.id) for module in self.sudo().get_all())
 
     @api.model
     def search_panel_select_range(self, field_name, **kwargs):
@@ -1029,14 +1018,8 @@ class IrModuleModuleDependency(models.Model):
 
     @api.depends('name')
     def _compute_depend(self):
-        # retrieve all modules corresponding to the dependency names
-        names = {dep.name for dep in self}
-        mods = self.env['ir.module.module'].search([('name', 'in', names)])
-
-        # index modules by name, and assign dependencies
-        name_mod = {mod.name: mod for mod in mods}
         for dep in self:
-            dep.depend_id = name_mod.get(dep.name)
+            dep.depend_id = self.env['ir.module.module']._get(dep.name)
 
     def _search_depend(self, operator, value):
         if operator not in ('in', 'any'):
@@ -1089,14 +1072,8 @@ class IrModuleModuleExclusion(models.Model):
 
     @api.depends('name')
     def _compute_exclusion(self):
-        # retrieve all modules corresponding to the exclusion names
-        names = {excl.name for excl in self}
-        mods = self.env['ir.module.module'].search([('name', 'in', names)])
-
-        # index modules by name, and assign dependencies
-        name_mod = {mod.name: mod for mod in mods}
         for excl in self:
-            excl.exclusion_id = name_mod.get(excl.name)
+            excl.exclusion_id = self.env['ir.module.module']._get(excl.name)
 
     def _search_exclusion(self, operator, value):
         if operator not in ('in', 'any'):

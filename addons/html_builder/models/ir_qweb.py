@@ -116,7 +116,7 @@ class IrQweb(models.AbstractModel):
         label = el.attrib.pop('label', None)
         name = el.attrib.pop('string', 'Snippet')
         if self.env.user.has_group('base.group_system'):
-            module = self.env['ir.module.module'].search([('name', '=', key)])
+            module = self.env['ir.module.module']._get(key)
             if not module or module.state == 'installed':
                 return []
             div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s %s %s><section/></div>') % (

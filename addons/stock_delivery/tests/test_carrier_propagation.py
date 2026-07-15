@@ -332,7 +332,7 @@ class TestCarrierPropagationPostInstall(TestCarrierPropagation):
         different carriers does not crash when the push rule (Input → Stock)
         has propagate_carrier enabled, and that no carrier is set on the
         resulting internal transfer."""
-        if 'purchase_stock' not in self.env['ir.module.module']._installed():
+        if self.env['ir.module.module']._get('purchase_stock').state != 'installed':
             self.skipTest('purchase_stock not installed')
 
         self.warehouse.reception_steps = 'two_steps'

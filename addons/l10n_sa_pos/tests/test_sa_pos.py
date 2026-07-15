@@ -13,7 +13,7 @@ class TestGenericSA(TestGenericLocalization):
     @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(cls):
         super().setUpClass()
-        if cls.env['ir.module.module']._get('l10n_sa_edi').state == 'installed':
+        if cls._is_module_installed('l10n_sa_edi'):
             cls.skipTest(cls, "l10n_sa_edi should not be installed")
         cls.main_pos_config.company_id.name = 'Generic SA'
         cls.company.write({
@@ -68,7 +68,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         Tests that the Saudi Arabia's timezone is applied on the QR code generated at the
         end of an order.
         """
-        if self.env['ir.module.module']._get('l10n_sa_edi').state == 'installed':
+        if self._is_module_installed('l10n_sa_edi'):
             self.skipTest("The needed configuration for e-invoices is not available")
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_sa_qr_is_shown', login="pos_admin")

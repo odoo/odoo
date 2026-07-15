@@ -46,8 +46,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
                 )
             ]).website_published = False
 
-        cls.installed_modules = cls.env["ir.module.module"]._installed()
-
         # Avoid additional queries when uoms are enabled
         cls._disable_uom()
 
@@ -84,11 +82,11 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
         })
         if self._has_demo_data():
             res["res_company"] += 1
-            if "website_sale_stock" in self.installed_modules:
+            if self._is_module_installed("website_sale_stock"):
                 res["product_template"] += 1
                 # Out of Stock Ribbon in demo data
                 res["product_ribbon"] += 1
-        if "website_helpdesk" in self.installed_modules:
+        if self._is_module_installed("website_helpdesk"):
             # Additional query used to check whether "Helpdesk" menu should be visible
             res["helpdesk_team"] += 1
         return res
@@ -132,7 +130,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
         })
         if self._has_demo_data():
             res["res_company"] += 1
-        if "website_helpdesk" in self.installed_modules:
+        if self._is_module_installed("website_helpdesk"):
             # Additional query used to check whether "Helpdesk" menu should be visible
             res["helpdesk_team"] += 1
         return res
@@ -150,7 +148,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
         no_product_change_query_count = 30
         if self._has_demo_data():
             no_product_change_query_count += 1
-        if "website_sale_stock" in self.installed_modules:
+        if self._is_module_installed("website_sale_stock"):
             no_product_change_query_count += 1
         with self.assertQueryCount(no_product_change_query_count):
             res = self.make_jsonrpc_request(
@@ -169,7 +167,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
         product_change_query_count = 42
         if self._has_demo_data():
             product_change_query_count += 1
-        if "website_sale_stock" in self.installed_modules:
+        if self._is_module_installed("website_sale_stock"):
             product_change_query_count += 1
         with self.assertQueryCount(product_change_query_count):
             res = self.make_jsonrpc_request(
@@ -256,7 +254,7 @@ class TestWebsiteSalePerformanceWithPricelist(TestWebsiteSalePerformanceWithPric
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
         res["product_pricelist_item"] += 1
-        if "website_sale_subscription" not in self.installed_modules:
+        if not self._is_module_installed("website_sale_subscription"):
             # FIXME VFE magic comeback when sub is installed makes no **** sense
             # Seems to come from the `website_sale` template, not the sub override strangely
             # The rules are fixed, product currency (through _get_main_company) does not have to be
@@ -336,7 +334,7 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
 
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
-        if "website_sale_stock" in self.installed_modules:
+        if self._is_module_installed("website_sale_stock"):
             res["stock_warehouse"] += 2
             res["stock_move"] += 2
             res["stock_quant"] += 1
@@ -344,10 +342,10 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
             res["product_product"] += 1
             res["sale_order_line"] += 1
 
-        if "website_sale_mrp" in self.installed_modules:
+        if self._is_module_installed("website_sale_mrp"):
             res["mrp_bom"] += 1
 
-        if "product_expiry" in self.installed_modules:
+        if self._is_module_installed("product_expiry"):
             res["stock_quant"] += 1
         return res
 
@@ -359,7 +357,7 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
 
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
-        if "website_sale_stock" in self.installed_modules:
+        if self._is_module_installed("website_sale_stock"):
             res["stock_warehouse"] += 2
             res["stock_move"] += 2
             res["stock_quant"] += 1
@@ -367,13 +365,13 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
             res["product_product"] += 1
             res["sale_order_line"] += 1
 
-        if "website_sale_mrp" in self.installed_modules:
+        if self._is_module_installed("website_sale_mrp"):
             res["mrp_bom"] += 1
 
-        if "website_sale_collect" in self.installed_modules:
+        if self._is_module_installed("website_sale_collect"):
             res["delivery_carrier"] += 1
 
-        if "product_expiry" in self.installed_modules:
+        if self._is_module_installed("product_expiry"):
             res["stock_quant"] += 1
         return res
 

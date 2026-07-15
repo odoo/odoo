@@ -48,7 +48,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(num_of_regular_invoices, 2)
 
     def test_l10n_es_pos_reconcile(self):
-        if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
+        if not self._is_module_installed('pos_settle_due'):
             self.skipTest("pos_settle_due module is required for this test")
 
         # create customer account payment method

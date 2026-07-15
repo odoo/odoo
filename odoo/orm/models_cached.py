@@ -8,9 +8,15 @@ from .models import api, Model
 
 
 class CachedModel(Model):
-    """ The abstract model 'ir.cached.data' is used as a mixin to provide a stable
-    cache for some fields of the model's records.  It uses the cache named
-    ``'stable'`` and automatically invalidates it based on ``_clear_cache_name``.
+    """ Base class to transparently cache some fields of a model's records in
+    an ormcache, instead of fetching them from the database on every access.
+    Models that rarely change and are read very often (e.g. ``res.lang``,
+    ``res.currency``, ``res.country``) should derive from it to avoid repeated
+    queries.
+
+    To use it, subclass it and set ``_cached_data_domain`` and
+    ``_cached_data_fields`` to, respectively, the domain of the records to cache
+    and the fields to cache for them.
     """
     _register: bool = False  # not visible in ORM registry, meant to be Python-inherited only
 
@@ -19,7 +25,7 @@ class CachedModel(Model):
     _cached_data_domain = []
     """domain of the records to cache"""
 
-    _cached_data_fields: tuple[str] = ()
+    _cached_data_fields: tuple[str, ...] = ()
     """the fields to cache for the records to cache. Please promise all these
     fields don't depend on other models and context and are not translated."""
 

@@ -37,7 +37,7 @@ class TestAccountMoveDE(AccountTestInvoicingCommon):
 
     def test_out_invoice_custom_currency_rate_with_missing_delivery_date(self):
 
-        if not self.env['ir.module.module'].search([('name', '=', 'l10n_hu_edi'), ('state', '=', 'installed')]):
+        if not self._is_module_installed('l10n_hu_edi'):
             self.skipTest("This test requires the installation of the l10n_hu_edi module.")
 
         move = self.env['account.move'].create({
