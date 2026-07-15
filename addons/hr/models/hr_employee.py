@@ -699,7 +699,11 @@ class HrEmployee(models.Model):
     def _compute_current_version_id(self):
         for employee in self:
             version = self.env['hr.version'].search(
-                [('employee_id', 'in', employee.ids), ('date_version', '<=', fields.Date.today())],
+                [
+                    ('employee_id', 'in', employee.ids),
+                    ('date_version', '<=', fields.Date.today()),
+                    ('active', '=', True),
+                ],
                 order='date_version desc',
                 limit=1,
             )
@@ -764,7 +768,10 @@ class HrEmployee(models.Model):
 
         version_to_copy = self._get_version(date)
         if not version_to_copy:
-            version_to_copy = self.env['hr.version'].search([('employee_id', '=', self.id)], limit=1)
+            version_to_copy = self.env['hr.version'].search([
+                ('employee_id', '=', self.id),
+                ('active', '=', True),
+            ], limit=1)
         if version_to_copy.date_version == date:
             return version_to_copy
 
@@ -781,6 +788,7 @@ class HrEmployee(models.Model):
         if contract_date_start == date_from and contract_date_end != date_to:
             versions_sudo_to_sync = self.env['hr.version'].with_context(sync_contract_dates=True).sudo().search([
                 ('employee_id', '=', employee_id),
+                ('active', '=', True),
                 ('contract_date_start', '=', date_from),
             ])
             if versions_sudo_to_sync:
@@ -2006,7 +2014,10 @@ class HrEmployee(models.Model):
     def _get_unusual_days(self, date_from, date_to=None):
         date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
         date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
-        employee_versions = self.env['hr.version'].sudo().search([('employee_id', '=', self.id)]).filtered(
+        employee_versions = self.env['hr.version'].sudo().search([
+            ('employee_id', '=', self.id),
+            ('active', '=', True),
+        ]).filtered(
             lambda v: v._is_overlapping_period(date_from_date, date_to_date))
         if not employee_versions:
             # Checking the calendar directly allows to not grey out the leaves taken
