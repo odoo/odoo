@@ -1375,8 +1375,6 @@ class AccountAccount(models.Model):
         many2one_reference_fields = self.env['ir.model.fields'].search([
             ('ttype', '=', 'many2one_reference'),
             ('store', '=', True),
-            '!', '&', ('model', '=', 'studio.approval.request'),  # A weird Many2oneReference which doesn't have its model field on the model.
-                      ('name', '=', 'res_id'),
         ])
         for field_to_update in many2one_reference_fields:
             model = field_to_update.model

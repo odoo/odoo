@@ -76,6 +76,16 @@ class Many2oneReference(Integer):
 
     _description_model_field = property(attrgetter('model_field'))
 
+    def setup_related(self, model):
+        super().setup_related(model)
+        assert self.model_field in model._fields, \
+            "Field %s with unknown model_field %r" % (self, self.model_field)
+
+    def setup_nonrelated(self, model):
+        super().setup_nonrelated(model)
+        assert self.model_field in model._fields, \
+            "Field %s with unknown model_field %r" % (self, self.model_field)
+
     def convert_to_cache(self, value, records, validate=True):
         # cache format: id or None
         if isinstance(value, BaseModel):
