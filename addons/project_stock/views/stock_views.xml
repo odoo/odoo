@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_move_line_view_search" model="ir.ui.view">
+        <field name="name">stock.move.line.search.inherit.project.stock</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/group" position="inside">
+                <filter string="Project" name="by_project" context="{'group_by': 'project_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_search" model="ir.ui.view">
+        <field name="name">stock.move.search.inherit.project.stock</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/group" position="inside">
+                <filter string="Project" name="by_project" context="{'group_by': 'project_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
