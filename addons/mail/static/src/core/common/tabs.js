@@ -1,5 +1,10 @@
-import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
-import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
+import { useChildSubEnv } from "@web/owl2/utils";
+import {
+    useChildRefs,
+    useForwardRefsToParent,
+    useOnChange,
+    useScrollState,
+} from "@mail/utils/common/hooks";
 import { Component, props, signal, t, useEffect, xml } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
@@ -99,13 +104,13 @@ export class TabPanel extends Component {
             id: t.any(),
             onBecameVisible: t.function([]).optional(),
         });
-        useLayoutEffect(
+        useOnChange(
+            () => [this.env.tabsContext.isActive(this.props.id)],
             (active) => {
                 if (active) {
                     this.props.onBecameVisible?.();
                 }
-            },
-            () => [this.env.tabsContext.isActive(this.props.id)]
+            }
         );
     }
 }
