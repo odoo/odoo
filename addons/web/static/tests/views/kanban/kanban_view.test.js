@@ -79,6 +79,7 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 import { onRendered, onWillRender } from "@web/owl2/utils";
+import { onMounted, onPatched } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -6583,6 +6584,54 @@ test("sample server: _mockWebReadGroup API", async () => {
     expect(".o_kanban_group").toHaveCount(1);
     expect(".o_kanban_group .o_column_title").toHaveText("December 2022");
     expect(".o_kanban_group .o_kanban_record").toHaveCount(16);
+});
+
+test.tags("desktop");
+test("unfold group and apply new groupby, simultaneously", async () => {
+    Product._records[1].fold = true;
+
+    const def = Promise.withResolvers();
+    onRpc("web_search_read", () => def.promise);
+
+    patchWithCleanup(KanbanRenderer.prototype, {
+        setup() {
+            super.setup();
+            onMounted(() => expect.step("mounted"));
+            onPatched(() => expect.step("patched"));
+        },
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">Record</t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+        searchViewArch: `
+            <search>
+                <filter name="groupby_id" string="Ids" context="{'group_by': 'id'}"/>
+            </search>`,
+    });
+
+    expect(".o_kanban_group").toHaveCount(2);
+    await contains(getKanbanColumn(1)).click();
+    await toggleSearchBarMenu();
+
+    // The kanban renderer will have 2 simultaneous rendering requests:
+    // - one for the group that we opened and that is now loaded
+    // - one for the new groupby
+    // A single rendering will be done, so the renderer will be patched once.
+    // However, we don't want it to crash when trying to scroll to display the
+    // group that is no longer there
+    toggleMenuItem("Ids");
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_group").toHaveCount(4);
+    expect.verifySteps(["mounted", "patched"]); // a single patch ensures that the test is relevant
 });
 
 test.tags("desktop");
