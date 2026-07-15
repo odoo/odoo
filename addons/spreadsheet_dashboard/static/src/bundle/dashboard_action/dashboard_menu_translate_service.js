@@ -7,8 +7,7 @@ const { urlRegistry } = spreadsheet.registries;
 
 export const dashboardMenuTranslateService = {
     dependencies: ["spreadsheet_dashboard_loader", "spreadsheetLinkMenuCell"],
-    start(env) {
-        const dashboardLoader = env.services.spreadsheet_dashboard_loader;
+    start(env, { spreadsheet_dashboard_loader: dashboardLoader }) {
         for (const key of urlRegistry.getKeys()) {
             const linkSpec = urlRegistry.get(key);
 

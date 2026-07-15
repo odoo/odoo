@@ -19,7 +19,8 @@ export class MailFullscreen extends Component {
 }
 
 export const fullscreenService = {
-    start(env) {
+    dependencies: ["overlay"],
+    start(env, { overlay }) {
         const state = proxy({
             enter,
             exit,
@@ -84,11 +85,7 @@ export const fullscreenService = {
             state.closeOverlay?.();
             state.id = id;
             state.onExitBrowserFullscreen = onExitBrowserFullscreen;
-            state.closeOverlay = env.services.overlay.add(
-                MailFullscreen,
-                { component, props },
-                { rootId }
-            );
+            state.closeOverlay = overlay.add(MailFullscreen, { component, props }, { rootId });
             const el = document.body;
             if (!browserFullscreen) {
                 await leaveBrowserFullscreen();

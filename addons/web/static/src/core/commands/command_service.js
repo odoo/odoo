@@ -71,7 +71,7 @@ export const commandService = {
 
         /**
          * @param {CommandPaletteConfig} config command palette config merged with default config
-         * @param {Function} onClose called when the command palette is closed
+         * @param {Function} [onClose] called when the command palette is closed
          * @returns the actual command palette config if the command palette is already open
          */
         function openMainPalette(config = {}, onClose) {
@@ -125,7 +125,7 @@ export const commandService = {
 
         /**
          * @param {CommandPaletteConfig} config
-         * @param {Function} onClose called when the command palette is closed
+         * @param {Function} [onClose] called when the command palette is closed
          */
         function openPalette(config, onClose) {
             if (isPaletteOpened) {
@@ -181,10 +181,9 @@ export const commandService = {
             }
             if (registration.hotkey) {
                 const action = async () => {
-                    const commandService = env.services.command;
                     const config = await command.action();
                     if (!isPaletteOpened && config) {
-                        commandService.openPalette(config);
+                        openPalette(config);
                     }
                 };
                 registration.removeHotkey = hotkeyService.add(registration.hotkey, action, {

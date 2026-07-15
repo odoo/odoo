@@ -1,11 +1,11 @@
-import { session } from "@web/session";
-import { browser } from "../../core/browser/browser";
-import { registry } from "../../core/registry";
+import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 import { IndexedDB } from "@web/core/utils/indexed_db";
+import { session } from "@web/session";
 
 export const menuService = {
     dependencies: ["action"],
-    async start(env) {
+    async start(env, { action }) {
         let currentAppId;
         let menusData;
         const menuDB = new IndexedDB("webclient_menu", session.registry_hash);
@@ -82,7 +82,7 @@ export const menuService = {
                 if (!menu.actionID) {
                     return;
                 }
-                await env.services.action.doAction(menu.actionID, {
+                await action.doAction(menu.actionID, {
                     clearBreadcrumbs: true,
                     onActionReady: () => {
                         setCurrentMenu(menu);

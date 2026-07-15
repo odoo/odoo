@@ -300,8 +300,8 @@ export class DashboardLoader {
 
 const dashboardLoaderService = {
     dependencies: ["orm", "geo_json_service"],
-    start(env) {
-        const loader = new DashboardLoader(env, env.services.orm, env.services.geo_json_service);
+    start(env, { orm, geo_json_service }) {
+        const loader = new DashboardLoader(env, orm, geo_json_service);
         env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => {
             loader.clear();
         });

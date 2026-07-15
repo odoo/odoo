@@ -2635,7 +2635,7 @@ export const rtcService = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        const store = env.services["mail.store"];
+        const store = services["mail.store"];
         const rtc = store.rtc;
         rtc.pipService = services["discuss.pip_service"];
         rtc.registerOnChange(rtc.pipService.state, "active", () => {

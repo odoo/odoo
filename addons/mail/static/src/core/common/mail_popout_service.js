@@ -30,7 +30,8 @@ export const mailPopoutService = {
      */
     async addAssets(window) {},
 
-    start(env) {
+    dependencies: ["hotkey"],
+    start(env, { hotkey }) {
         /**
          * @type {Map<any, {
          *  externalWindow: Window | null;
@@ -149,7 +150,7 @@ export const mailPopoutService = {
                 props: { component, componentProps: props },
             });
             popout.root.mount(externalWindow.document.body);
-            env.services.hotkey.registerWindow(externalWindow);
+            hotkey.registerWindow(externalWindow);
             return externalWindow;
         }
 

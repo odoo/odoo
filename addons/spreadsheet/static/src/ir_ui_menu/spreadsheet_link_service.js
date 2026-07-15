@@ -29,9 +29,9 @@ class BadOdooLinkError extends EvaluationError {
 
 export const spreadsheetLinkMenuCellService = {
     dependencies: ["menu"],
-    start(env) {
+    start(env, { menu: menuService }) {
         function _getIrMenuByXmlId(xmlId) {
-            const menu = env.services.menu.getAll().find((menu) => menu.xmlid === xmlId);
+            const menu = menuService.getAll().find((menu) => menu.xmlid === xmlId);
             if (!menu) {
                 throw new BadOdooLinkError(xmlId);
             }
@@ -44,7 +44,7 @@ export const spreadsheetLinkMenuCellService = {
                 match: isMarkdownIrMenuIdUrl,
                 createLink(url, label) {
                     const menuId = parseIrMenuIdLink(url);
-                    const menu = env.services.menu.getMenu(menuId);
+                    const menu = menuService.getMenu(menuId);
                     if (!menu) {
                         throw new BadOdooLinkError(menuId);
                     }
@@ -57,11 +57,11 @@ export const spreadsheetLinkMenuCellService = {
                 },
                 urlRepresentation(url) {
                     const menuId = parseIrMenuIdLink(url);
-                    return env.services.menu.getMenu(menuId).name;
+                    return menuService.getMenu(menuId).name;
                 },
                 open(url, env, newWindow) {
                     const menuId = parseIrMenuIdLink(url);
-                    const menu = env.services.menu.getMenu(menuId);
+                    const menu = menuService.getMenu(menuId);
                     env.services.action.doAction(menu.actionID, { newWindow });
                 },
             })
@@ -81,12 +81,12 @@ export const spreadsheetLinkMenuCellService = {
                 urlRepresentation(url) {
                     const xmlId = parseIrMenuXmlUrl(url);
                     const menuId = _getIrMenuByXmlId(xmlId).id;
-                    return env.services.menu.getMenu(menuId).name;
+                    return menuService.getMenu(menuId).name;
                 },
                 open(url, env, newWindow) {
                     const xmlId = parseIrMenuXmlUrl(url);
                     const menuId = _getIrMenuByXmlId(xmlId).id;
-                    const menu = env.services.menu.getMenu(menuId);
+                    const menu = menuService.getMenu(menuId);
                     env.services.action.doAction(menu.actionID, { newWindow });
                 },
             })

@@ -8,8 +8,8 @@ import { effect, EventBus, proxy } from "@odoo/owl";
 const systrayRegistry = registry.category("systray");
 
 export const profilingService = {
-    dependencies: ["orm"],
-    start(env, { orm }) {
+    dependencies: ["action", "orm"],
+    start(env, { action, orm }) {
         // Only set up profiling when in debug mode
         if (!env.debug) {
             return;
@@ -50,7 +50,7 @@ export const profilingService = {
             const resp = await orm.call("ir.profile", "set_profiling", [], kwargs);
             if (resp.type) {
                 // most likely an "ir.actions.act_window"
-                env.services.action.doAction(resp);
+                action.doAction(resp);
             } else {
                 state.session = resp.session;
                 state.collectors = resp.collectors;
