@@ -225,7 +225,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             file_data['xml_tree'] = self.env['account.move']._get_xml_tree(file_data)
 
         # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
-        # In this case, the invoice needs to be created as an out_invoice in a sale journal.
+        # In this case, the invoice needs to be created as an out_invoice in a self-billing sale journal.
+        # If no self-billing sale journal was found, the invoice will be created in a regular sale journal.
         # 329/527: Self-billing invoice; 261: Self-billing credit note
         is_self_billed = False
         if file_data['xml_tree'].findtext('.//{*}InvoiceTypeCode') in ['389', '527'] or file_data['xml_tree'].findtext('.//{*}CreditNoteTypeCode') == '261':
@@ -238,15 +239,20 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 return {}
 
         else:
+            sale_journal_domain = [
+                *self.env['account.journal']._check_company_domain(self.company_id),
+                ('type', '=', 'sale'),
+            ]
             journal = (
                 journal
                 or self.env['account.journal'].search(
                     [
-                        *self.env['account.journal']._check_company_domain(self.company_id),
-                        ('type', '=', 'sale'),
+                        *sale_journal_domain,
+                        ('is_self_billing', '=', True),
                     ],
-                    limit=1
+                    limit=1,
                 )
+                or self.env['account.journal'].search(sale_journal_domain, limit=1)
             )
             move_type = 'out_invoice'
             if not journal:
