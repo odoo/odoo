@@ -781,6 +781,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         # Set up the 21% VAT sale tax which should be put on the invoice line
         tax_21 = self.percent_tax(21.0, type_tax_use='sale')
 
+        # Set up the self-billing reception journal
+        self_billing_sale_journal = self.env['account.journal'].create({
+            'name': "Self-Billing sales journal",
+            'type': 'sale',
+            'is_self_billing': True,
+        })
+
         # Receive the self-billed invoice (using existing mock data)
         # The mock data already includes a document that will be processed
         with mock_documents_retrieval([{'uuid': self.MESSAGE_UUID, 'direction': 'incoming', 'filename': 'incoming_self_billed_invoice'}], identifier='0208:0477472701'), mock_ack():
@@ -791,6 +798,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertRecordValues(move, [{
             'peppol_move_state': 'done',
             'move_type': 'out_invoice',
+            'journal_id': self_billing_sale_journal.id,
         }])
 
         self.assertRecordValues(move.line_ids, [
