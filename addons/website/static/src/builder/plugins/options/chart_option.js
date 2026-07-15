@@ -23,22 +23,19 @@ export class ChartOption extends BaseOptionComponent {
 
         this.domState = useDomState((editingElement) => ({
             data: this.getData(editingElement),
-            isPieChart: this.isPieChart(editingElement),
+            isLineChart: editingElement.dataset.type === "line",
+            isPieChart: this.dependencies.chartOptionPlugin.isPieChart(editingElement),
+            isRadarChart: editingElement.dataset.type === "radar",
+            optionLabels: this.getOptionLabels(editingElement),
         }));
         this.setDefaultState();
     }
 
     /**
-     * Resets the current cell to the topleft cell
-     * and sets the colorpicker labels based on chart type.
+     * Resets the current cell to the top-left cell.
      */
     setDefaultState() {
-        const { backgroundLabel, borderLabel } = this.getColorpickersLabels(
-            this.domState.isPieChart
-        );
         this.updateCurrentCell({
-            backgroundLabel,
-            borderLabel,
             datasetIndex: 0,
             dataIndex: 0,
         });
@@ -67,20 +64,19 @@ export class ChartOption extends BaseOptionComponent {
         });
         return data;
     }
-    isPieChart(editingElement) {
-        const isPieChart = this.dependencies.chartOptionPlugin.isPieChart(editingElement);
-        if (!this.domState || this.domState.isPieChart !== isPieChart) {
-            // Pie charts set color on a data cell basis, whereas the
-            // other ones set it on a dataset basis
-            const { backgroundLabel, borderLabel } = this.getColorpickersLabels(isPieChart);
-            this.updateCurrentCell({ backgroundLabel, borderLabel });
+    getOptionLabels(editingElement) {
+        if (editingElement.dataset.type === "line") {
+            return {
+                backgroundColorLabel: _t("Point Color"),
+                borderColorLabel: _t("Line Color"),
+                borderWidthLabel: _t("Line Width"),
+            };
         }
-        return isPieChart;
-    }
-    getColorpickersLabels(isPieChart) {
-        const backgroundLabel = isPieChart ? _t("Data Color") : _t("Dataset Color");
-        const borderLabel = isPieChart ? _t("Data Border") : _t("Dataset Border");
-        return { backgroundLabel, borderLabel };
+        return {
+            backgroundColorLabel: _t("Fill Color"),
+            borderColorLabel: _t("Border Color"),
+            borderWidthLabel: _t("Border Width"),
+        };
     }
     getColor(color) {
         return getColor(color, this.window, this.document);
@@ -96,7 +92,7 @@ export class ChartOption extends BaseOptionComponent {
         const data = this.getData(editingElement);
         const colorSet = new Set();
         for (const dataset of data.datasets) {
-            if (this.isPieChart(editingElement)) {
+            if (this.domState.isPieChart) {
                 dataset.backgroundColor.forEach((color) => colorSet.add(this.getColor(color)));
                 dataset.borderColor.forEach((color) => colorSet.add(this.getColor(color)));
             } else {
@@ -112,8 +108,6 @@ export class ChartOption extends BaseOptionComponent {
      * @param {Object} updatedCellInfo
      * @param {Number} [updatedCellInfo.dataIndex]
      * @param {Number} [updatedCellInfo.datasetIndex]
-     * @param {String} [updatedCellInfo.backgroundLabel]
-     * @param {String} [updatedCellInfo.borderLabel]
      */
     updateCurrentCell(updatedCellInfo) {
         for (const key in updatedCellInfo) {
@@ -339,7 +333,7 @@ export class ChartOption extends BaseOptionComponent {
         this.dependencies.operation.next(async () => {
             const editingElement = this.env.getEditingElement();
             const data = this.prepareData(editingElement);
-            const isPieChart = this.isPieChart(editingElement);
+            const isPieChart = this.dependencies.chartOptionPlugin.isPieChart(editingElement);
 
             const maxTargetRow = startRow + clipRows.length - 1;
             const maxTargetCol = startCol + maxPastedColumnCount - 1;
