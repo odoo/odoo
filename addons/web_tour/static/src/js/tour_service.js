@@ -320,8 +320,8 @@ export class TourService {
         tourState.setCurrentTour(name);
         tourState.setCurrentIndex(0);
 
-        if (tourConfig.mode === "manual" && tour.url && tourConfig.redirect) {
-            redirect(tour.url);
+        if (tourConfig.url && tourConfig.redirect) {
+            redirect(tourConfig.url);
         } else {
             await this.resumeTour();
         }
