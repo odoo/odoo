@@ -5,6 +5,7 @@ from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.product.tests.common import ProductCommon
+from odoo.addons.website.tools import MockRequest
 
 
 @tagged('post_install', '-at_install')
@@ -129,4 +130,39 @@ class TestWebsiteSaleFiscalPosition(ProductCommon, HttpCaseWithUserPortal):
             cart.order_line.tax_id,
             tax_15_incl,
             "Tax should no longer change after order confirmation",
+        )
+
+    def test_website_order_fiscal_position_is_based_on_shipping_address(self):
+        self.env['account.fiscal.position'].create({
+            'name': "Fiscal Position FR",
+            'auto_apply': True,
+            'country_id': self.env.ref('base.fr').id,
+        })
+        de_fp = self.env['account.fiscal.position'].create({
+            'name': "Fiscal Position DE",
+            'auto_apply': True,
+            'country_id': self.env.ref('base.de').id,
+        })
+        self.partner_portal.country_id = self.env.ref('base.fr')
+        shipping_partner = self.env['res.partner'].create({
+            'name': "Portal Delivery Address",
+            'type': 'delivery',
+            'parent_id': self.partner_portal.id,
+            'country_id': self.env.ref('base.de').id,
+        })
+        self.env['sale.order'].create({
+            'partner_id': self.partner_portal.id,
+            'partner_invoice_id': self.partner_portal.id,
+            'partner_shipping_id': shipping_partner.id,
+            'website_id': self.website.id,
+        })
+
+        website = self.website.with_user(self.user_portal)
+        with MockRequest(self.env(user=self.user_portal), website=website):
+            so = website.sale_get_order(force_create=True)
+
+        self.assertEqual(
+            so.fiscal_position_id,
+            de_fp,
+            "The fiscal position should be based on the shipping address",
         )
