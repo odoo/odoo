@@ -138,7 +138,14 @@ class AccountMoveLine(models.Model):
         return self._get_python_tax_details_from_prefetched_lines(selected_lines, move_lines, taxes, fallback=fallback)
 
     @api.model
-    def _get_python_tax_details_from_prefetched_lines(self, selected_lines, move_lines, taxes, fallback=True):
+    def _get_python_tax_details_from_prefetched_lines(
+        self,
+        selected_lines,
+        move_lines,
+        taxes,
+        fallback=True,
+        include_currency_amounts=True,
+    ):
         selected_line_ids = set(selected_lines.ids)
 
         snapshot = {
@@ -257,7 +264,12 @@ class AccountMoveLine(models.Model):
 
         tax_details = []
         for move_id in sorted(snapshot['lines_by_move_id']):
-            tax_details += self._get_python_tax_details_from_snapshot_move(snapshot, snapshot['lines_by_move_id'][move_id], fallback=fallback)
+            tax_details += self._get_python_tax_details_from_snapshot_move(
+                snapshot,
+                snapshot['lines_by_move_id'][move_id],
+                fallback=fallback,
+                include_currency_amounts=include_currency_amounts,
+            )
         return tax_details
 
     @api.model
@@ -298,7 +310,13 @@ class AccountMoveLine(models.Model):
         return sorted(rows, key=lambda row: (row['tax_line_id'], row['base_line_id'], row['src_line_id'])), timings
 
     @api.model
-    def _get_python_tax_details_from_snapshot_move(self, snapshot, move_lines, fallback=True):
+    def _get_python_tax_details_from_snapshot_move(
+        self,
+        snapshot,
+        move_lines,
+        fallback=True,
+        include_currency_amounts=True,
+    ):
         def sign(value):
             return (value > 0) - (value < 0)
 
@@ -448,39 +466,44 @@ class AccountMoveLine(models.Model):
                     base_value(row['base_line'], row['base_amount'], row['tax'])
                     for row in dispatch_rows
                 )
-                total_base_amount_currency = sum(
-                    base_value(row['base_line'], row['base_amount_currency'], row['tax'])
-                    for row in dispatch_rows
-                )
-                cumulated_base_amount = cumulated_base_amount_currency = 0.0
-                previous_base_amount = previous_base_amount_currency = 0.0
+                if include_currency_amounts:
+                    total_base_amount_currency = sum(
+                        base_value(row['base_line'], row['base_amount_currency'], row['tax'])
+                        for row in dispatch_rows
+                    )
+                    cumulated_base_amount_currency = 0.0
+                    previous_base_amount_currency = 0.0
+                cumulated_base_amount = 0.0
+                previous_base_amount = 0.0
                 for row in dispatch_rows:
                     tax_line = row['tax_line']
                     base_line = row['base_line']
                     tax = row['tax']
                     cumulated_base_amount += base_value(base_line, row['base_amount'], tax)
-                    cumulated_base_amount_currency += base_value(base_line, row['base_amount_currency'], tax)
                     base_amount = prorata_amount(
                         cumulated_base_amount,
                         total_base_amount,
                         row['total_tax_amount'],
                         snapshot['currencies'][tax_line['company_currency_id']]['decimal_places'],
                     )
-                    base_amount_currency = prorata_amount(
-                        cumulated_base_amount_currency,
-                        total_base_amount_currency,
-                        row['total_tax_amount_currency'],
-                        snapshot['currencies'][tax_line['currency_id']]['decimal_places'],
-                    )
-                    rows.append({
+                    dispatch_row = {
                         'tax_line': tax_line,
                         'base_line': base_line,
                         'src_line': row['src_line'],
                         'base_amount': base_amount - previous_base_amount,
-                        'base_amount_currency': base_amount_currency - previous_base_amount_currency,
-                    })
+                    }
+                    if include_currency_amounts:
+                        cumulated_base_amount_currency += base_value(base_line, row['base_amount_currency'], tax)
+                        base_amount_currency = prorata_amount(
+                            cumulated_base_amount_currency,
+                            total_base_amount_currency,
+                            row['total_tax_amount_currency'],
+                            snapshot['currencies'][tax_line['currency_id']]['decimal_places'],
+                        )
+                        dispatch_row['base_amount_currency'] = base_amount_currency - previous_base_amount_currency
+                        previous_base_amount_currency = base_amount_currency
+                    rows.append(dispatch_row)
                     previous_base_amount = base_amount
-                    previous_base_amount_currency = base_amount_currency
             return rows
 
         base_tax_line_mapping = build_base_tax_line_mapping()
@@ -506,32 +529,27 @@ class AccountMoveLine(models.Model):
             tax_line = rows[0]['tax_line']
             tax = snapshot['taxes'][tax_line['tax_line_id']]
             total_base_amount = sum(base_value(row['base_line'], row['base_amount'], tax) for row in rows)
-            total_base_amount_currency = sum(
-                base_value(row['base_line'], row['base_amount_currency'], tax)
-                for row in rows
-            )
-            cumulated_base_amount = cumulated_base_amount_currency = 0.0
-            previous_tax_amount = previous_tax_amount_currency = 0.0
+            if include_currency_amounts:
+                total_base_amount_currency = sum(
+                    base_value(row['base_line'], row['base_amount_currency'], tax)
+                    for row in rows
+                )
+                cumulated_base_amount_currency = 0.0
+                previous_tax_amount_currency = 0.0
+            cumulated_base_amount = 0.0
+            previous_tax_amount = 0.0
             for row in rows:
                 base_line = row['base_line']
                 src_line = row['src_line']
                 cumulated_base_amount += base_value(base_line, row['base_amount'], tax)
-                cumulated_base_amount_currency += base_value(base_line, row['base_amount_currency'], tax)
                 company_precision_digits = snapshot['currencies'][tax_line['company_currency_id']]['decimal_places']
-                currency_precision_digits = snapshot['currencies'][tax_line['currency_id']]['decimal_places']
                 tax_amount = prorata_amount(
                     cumulated_base_amount,
                     total_base_amount,
                     tax_line['balance'],
                     company_precision_digits,
                 )
-                tax_amount_currency = prorata_amount(
-                    cumulated_base_amount_currency,
-                    total_base_amount_currency,
-                    tax_line['amount_currency'],
-                    currency_precision_digits,
-                )
-                results.append({
+                result = {
                     'id': f"{tax_line['id']}-{base_line['id']}-{src_line['id']}",
                     'base_line_id': base_line['id'],
                     'tax_line_id': tax_line['id'],
@@ -552,11 +570,23 @@ class AccountMoveLine(models.Model):
                     'tax_repartition_line_id': tax_line['tax_repartition_line_id'],
                     'base_amount': row['base_amount'],
                     'tax_amount': round_digits(tax_amount - previous_tax_amount, company_precision_digits),
-                    'base_amount_currency': row['base_amount_currency'],
-                    'tax_amount_currency': round_digits(tax_amount_currency - previous_tax_amount_currency, currency_precision_digits),
-                })
+                }
+                if include_currency_amounts:
+                    cumulated_base_amount_currency += base_value(base_line, row['base_amount_currency'], tax)
+                    currency_precision_digits = snapshot['currencies'][tax_line['currency_id']]['decimal_places']
+                    tax_amount_currency = prorata_amount(
+                        cumulated_base_amount_currency,
+                        total_base_amount_currency,
+                        tax_line['amount_currency'],
+                        currency_precision_digits,
+                    )
+                    result.update({
+                        'base_amount_currency': row['base_amount_currency'],
+                        'tax_amount_currency': round_digits(tax_amount_currency - previous_tax_amount_currency, currency_precision_digits),
+                    })
+                    previous_tax_amount_currency = tax_amount_currency
+                results.append(result)
                 previous_tax_amount = tax_amount
-                previous_tax_amount_currency = tax_amount_currency
         return results
 
     def _get_python_tax_details(self, filtered_lines, fallback=True):
