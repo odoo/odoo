@@ -451,24 +451,32 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
                 (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
             ],
         })
+        test_emp = self.env['hr.employee'].create({
+            'name': 'Test Emp',
+            'tz': 'Europe/Brussels',
+            'contract_date_start': date(2019, 10, 1),
+            'date_version': date(2019, 10, 1),
+            'contract_date_end': date(2019, 10, 31),
+            'resource_calendar_id': calendar_20h.id,
+            'wage': 1000,
+        })
         self.work_entry_type_leave.requires_allocation = False
         self.work_entry_type_leave.request_unit = 'day'
-        self.contract_cdi.resource_calendar_id = calendar_20h
         leave = self.env['hr.leave'].create({
             'name': 'Holiday!!',
-            'employee_id': self.jules_emp.id,
+            'employee_id': test_emp.id,
             'work_entry_type_id': self.work_entry_type_leave.id,
             'request_date_from': date(2019, 10, 10),
             'request_date_to': date(2019, 10, 10),
         })
-        work_entries_vals = self.contract_cdi.generate_work_entries(date(2019, 10, 10), date(2019, 10, 10))
+        work_entries_vals = test_emp.version_id.generate_work_entries(date(2019, 10, 10), date(2019, 10, 10))
         self.assertEqual(len(work_entries_vals), 1)
         self.assertEqual(work_entries_vals[0]['leave_ids'], leave)
         self.assertEqual(work_entries_vals[0]['work_entry_type_id'], self.work_entry_type_leave)
         self.assertEqual(work_entries_vals[0]['duration'], 4.0)
         self.assertEqual(work_entries_vals[0]['date'], date(2019, 10, 10))
-        self.contract_cdi.resource_calendar_id = self.calendar_40h
-        work_entries_vals = self.contract_cdi.generate_work_entries(date(2019, 10, 10), date(2019, 10, 10))
+        test_emp.version_id.resource_calendar_id = self.calendar_40h
+        work_entries_vals = test_emp.version_id.generate_work_entries(date(2019, 10, 10), date(2019, 10, 10))
         self.assertEqual(len(work_entries_vals), 1)
         self.assertEqual(work_entries_vals[0]['leave_ids'], leave)
         self.assertEqual(work_entries_vals[0]['work_entry_type_id'], self.work_entry_type_leave)
