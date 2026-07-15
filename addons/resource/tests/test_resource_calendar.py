@@ -79,6 +79,23 @@ class TestResourceCalendar(TransactionCase):
         self.assertTrue(start_dt <= result_per_resource_id[0]._items[0][0], "First attendance interval should not start before start_dt")
         self.assertTrue(end_dt >= result_per_resource_id[0]._items[4][1], "Last attendance interval should not end after end_dt")
 
+    def test_flexible_calendar_weekdays(self):
+        """
+        Test that flexible calendar attendances only contain weekdays
+        """
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'flexible_hours': True,
+            'tz': 'UTC',
+        })
+        start_dt = datetime(2026, 8, 1, 0, 0, 0).astimezone(pytz.UTC)
+        end_dt = datetime(2026, 8, 31, 23, 59, 59).astimezone(pytz.UTC)
+        result_per_resource_id = flexible_calendar._attendance_intervals_batch(
+            start_dt, end_dt
+        )
+        attendance_days = {start.weekday() for start, _end, _attendance in result_per_resource_id[0]}
+        self.assertFalse(attendance_days & {5, 6}, "Weekend days shouldn't belong to the expected attendances")
+
     def test_public_holiday_calendar_no_company(self):
         self.env['resource.calendar.leaves'].create([{
             'name': "Public Holiday for company",
