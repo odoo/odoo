@@ -1,19 +1,8 @@
+import { onMounted, onPatched, onWillUnmount, props, proxy, t, toRaw, useScope } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-
-import {
-    onMounted,
-    onPatched,
-    onWillUnmount,
-    props,
-    proxy,
-    t,
-    toRaw,
-    useEnv,
-    useScope,
-} from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { useChildEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 
 /**
  * This file contains various custom hooks.
@@ -165,7 +154,7 @@ export const SERVICES_METADATA = {};
  * @returns {import("services").ServiceFactories[K]}
  */
 export function useService(serviceName) {
-    const { services } = useEnv();
+    const { services } = useChildEnv();
     if (!(serviceName in services)) {
         throw new Error(`Service ${serviceName} is not available`);
     }
