@@ -39,7 +39,7 @@ class StockMove(models.Model):
             productions = move._get_subcontract_production()
             if not productions or (productions[:1].consumption == 'strict' and not productions[:1]._has_tracked_component()):
                 continue
-            move.show_subcontracting_details_visible = move.picked or any(p.subcontracting_has_been_recorded and p.state != 'done' for p in productions)
+            move.show_subcontracting_details_visible = move.state == 'done' or any(prod.subcontracting_has_been_recorded and prod.state != 'done' for prod in productions)
 
     def _compute_show_details_visible(self):
         """ If the move is subcontract and the components are tracked. Then the
@@ -77,7 +77,9 @@ class StockMove(models.Model):
         to_set_moves = self
         for move in self:
             if move.is_subcontract and move._subcontracting_possible_record():
-                move_line_quantities = sum(move.move_line_ids.filtered(lambda ml: ml.picked).mapped('quantity'))
+                move_line_quantities = sum(
+                    prod.product_uom_id._compute_quantity(prod.qty_producing, move.product_uom, rounding_method='HALF-UP')
+                    for prod in move._get_recorded_subcontract_production())
                 delta_qty = move.quantity - move_line_quantities
                 if float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
                     move._auto_record_components(delta_qty)
@@ -195,6 +197,11 @@ class StockMove(models.Model):
             'context': ctx
         }
 
+    def _action_done(self, cancel_backorder=False):
+        # A subcontracted move is processed as soon as one of its productions has been recorded.
+        self.filtered(lambda move: move._get_recorded_subcontract_production()).move_line_ids.picked = True
+        return super()._action_done(cancel_backorder=cancel_backorder)
+
     def _action_cancel(self):
         productions_to_cancel_ids = OrderedSet()
         for move in self:
@@ -283,6 +290,10 @@ class StockMove(models.Model):
 
     def _get_subcontract_production(self):
         return self.filtered(lambda m: m.is_subcontract).move_orig_ids.production_id
+
+    def _get_recorded_subcontract_production(self):
+        return self._get_subcontract_production().filtered(
+            lambda prod: prod.state not in ('done', 'cancel') and prod.subcontracting_has_been_recorded)
 
     # TODO: To be deleted, use self._get_subcontract_production()._has_tracked_component() instead
     def _has_tracked_subcontract_components(self):

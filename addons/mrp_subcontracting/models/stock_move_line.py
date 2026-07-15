@@ -21,7 +21,7 @@ class StockMoveLine(models.Model):
 
     def write(self, vals):
         for move_line in self:
-            if vals.get('lot_id') and move_line.move_id.is_subcontract and move_line.location_id.is_subcontracting_location:
+            if vals.get('lot_id') and move_line.lot_id and move_line.move_id.is_subcontract and move_line.location_id.is_subcontracting_location:
                 # Update related subcontracted production to keep consistency between production and reception.
                 subcontracted_production = move_line.move_id._get_subcontract_production().filtered(lambda p: p.state not in ('done', 'cancel') and p.lot_producing_id == move_line.lot_id)
                 if subcontracted_production:
