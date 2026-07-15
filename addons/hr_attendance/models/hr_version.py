@@ -43,6 +43,7 @@ class HrVersion(models.Model):
         date_to = max(all_dates)
         all_versions = self.env['hr.version'].search([
             ('employee_id', 'in', employees.ids),
+            ('active', '=', True),
             ('date_version', '<=', date_to),
             # note: no check on date_from because we don't store the version date end
         ])
