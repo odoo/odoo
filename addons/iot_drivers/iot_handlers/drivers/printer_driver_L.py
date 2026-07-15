@@ -125,10 +125,11 @@ class PrinterDriver(PrinterDriverBase):
 
     def print_status_receipt(self, data=None):
         """Prints the status ticket of the IoT Box on the current printer."""
-        title, body = self._printer_status_content()
         if data and data.get('printer_name'):
             title = b""
-            body = b"Test print for " + data['printer_name'].encode()
+            body = b"Test print for " + data['printer_name'].encode() + b"\n"
+        else:
+            title, body = self._printer_status_content()
         commands = self.RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         title = commands['title'] % title
         self.print_raw(commands['center'] + title + b'\n' + body + commands['cut'])
