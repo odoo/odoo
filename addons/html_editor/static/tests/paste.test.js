@@ -4539,8 +4539,8 @@ ${"        "}
                         <table class="table table-bordered o_table">
                             <tbody>
                                 <tr>
-                                    <th>1</th>
-                                    <th>2[]</th>
+                                    <th class="o_table_header">1</th>
+                                    <th class="o_table_header">2[]</th>
                                 </tr>
                             </tbody>
                         </table>
