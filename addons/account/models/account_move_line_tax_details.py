@@ -118,14 +118,34 @@ class AccountMoveLine(models.Model):
             selected_lines = self.search_fetch(domain, ['move_id'], offset=offset, limit=limit, order=order)
         else:
             selected_lines.fetch(['move_id'])
-        move_lines = selected_lines.move_id.line_ids
-        move_lines.fetch(line_fields)
-        selected_lines.move_id.fetch(move_fields)
+        moves = selected_lines.move_id
+        if self.env.context.get('parallel_fetch_tax_details'):
+            max_workers = self.env.context.get('parallel_fetch_max_workers', 4)
+            self.parallel_fetch([
+                (moves, move_fields),
+            ], max_workers=max_workers)
+            move_lines = moves.line_ids
+            self.parallel_fetch([
+                (move_lines, line_fields),
+            ], max_workers=max_workers)
+        else:
+            move_lines = moves.line_ids
+            move_lines.fetch(line_fields)
+            moves.fetch(move_fields)
         taxes = move_lines.tax_ids | move_lines.tax_line_id | move_lines.group_tax_id
-        taxes.fetch(tax_fields)
-        taxes.children_tax_ids.fetch(tax_fields)
-        move_lines.tax_repartition_line_id.fetch(['tax_id', 'account_id', 'factor_percent', 'use_in_tax_closing'])
-        (move_lines.currency_id | move_lines.company_currency_id).fetch(['decimal_places'])
+        if self.env.context.get('parallel_fetch_tax_details'):
+            max_workers = self.env.context.get('parallel_fetch_max_workers', 4)
+            self.parallel_fetch([
+                (taxes, tax_fields),
+                (taxes.children_tax_ids, tax_fields),
+                (move_lines.tax_repartition_line_id, ['tax_id', 'account_id', 'factor_percent', 'use_in_tax_closing']),
+                (move_lines.currency_id | move_lines.company_currency_id, ['decimal_places']),
+            ], max_workers=max_workers)
+        else:
+            taxes.fetch(tax_fields)
+            taxes.children_tax_ids.fetch(tax_fields)
+            move_lines.tax_repartition_line_id.fetch(['tax_id', 'account_id', 'factor_percent', 'use_in_tax_closing'])
+            (move_lines.currency_id | move_lines.company_currency_id).fetch(['decimal_places'])
         return selected_lines, move_lines, taxes
 
     @api.model
