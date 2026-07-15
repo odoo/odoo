@@ -1894,7 +1894,7 @@ class PosSession(models.Model):
             raise AccessError(_("You cannot delete a cash move that is not linked to this session."))
         cashier_name = absl.partner_id.name
         amount = absl.amount
-        action = cashier_name + ': ' + str(amount)
+        action = (cashier_name + ': ' if cashier_name else '') + str(amount)
         absl.unlink()
         self.log_partner_message(partner_id, action, "CASH_IN_OUT_UNLINK")
 
