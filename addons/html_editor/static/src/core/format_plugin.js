@@ -21,6 +21,7 @@ import {
     isStrikeThrough,
     isTextNode,
     isUnderline,
+    isVisible,
     isVisibleTextNode,
     isZWS,
     paragraphRelatedElementsSelector,
@@ -37,7 +38,6 @@ import { FORMATTABLE_TAGS, removeStyle } from "../utils/formatting";
 import { boundariesIn, leftPos, rightPos } from "../utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
-const allWhitespaceRegex = /^[\s\u200b]*$/;
 const NOT_A_NUMBER = /[^\d]/g;
 
 /**
@@ -670,7 +670,7 @@ export class FormatPlugin extends Plugin {
 
     normalize(root) {
         for (const el of selectElements(root, "[data-oe-zws-empty-inline]")) {
-            if (!allWhitespaceRegex.test(el.textContent)) {
+            if (isVisible(el)) {
                 // The element has some meaningful text. Remove the ZWS in it.
                 delete el.dataset.oeZwsEmptyInline;
                 this.cleanZWS(el);
@@ -710,7 +710,7 @@ export class FormatPlugin extends Plugin {
     }
 
     cleanElement(element, { preserveSelection }) {
-        if (!allWhitespaceRegex.test(element.textContent)) {
+        if (isVisible(element)) {
             // The element has some meaningful text. Remove the ZWS in it.
             delete element.dataset.oeZwsEmptyInline;
             this.cleanZWS(element, { preserveSelection });
