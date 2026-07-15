@@ -1,8 +1,9 @@
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import { GUEST_TOKEN_STORAGE_KEY } from "@im_livechat/embed/common/store_service_patch";
 import { livechatRoutingMap } from "@im_livechat/embed/cors/livechat_routing_map";
+import { ErrorPlugin } from "@web/core/errors/error_plugin";
 import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { session } from "@web/session";
 
 (async function boot() {
@@ -34,8 +35,8 @@ import { session } from "@web/session";
         }
         return originalRPC(route, params, settings);
     };
-    // Remove the error service: it fails to identify issues within the shadow
+    // Remove the error plugin: it fails to identify issues within the shadow
     // DOM of the live chat and causes disruption for pages that embed it by
     // displaying pop-ups for errors outside of its scope.
-    registry.category("services").remove("error");
+    services.delete(ErrorPlugin);
 })();

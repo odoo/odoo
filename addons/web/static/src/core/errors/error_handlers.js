@@ -18,11 +18,6 @@ import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 
-/**
- * @typedef {import("../../env").OdooEnv} OdooEnv
- * @typedef {import("./error_plugin").UncaughtError} UncaughError
- */
-
 const errorHandlerRegistry = registry.category("error_handlers");
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorNotificationRegistry = registry.category("error_notifications");
