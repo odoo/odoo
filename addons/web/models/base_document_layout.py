@@ -69,6 +69,8 @@ class BaseDocumentLayout(models.TransientModel):
     # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
 
+    folder_layout_custom_header_height = fields.Integer(related='company_id.folder_layout_custom_header_height', readonly=False)
+
     external_report_layout_id = fields.Many2one(related='company_id.external_report_layout_id', readonly=False)
 
     font = fields.Selection(related='company_id.font', readonly=False)
@@ -119,7 +121,7 @@ class BaseDocumentLayout(models.TransientModel):
                 wizard_for_image = wizard
             wizard.logo_primary_color, wizard.logo_secondary_color = wizard.extract_image_primary_secondary_colors(wizard_for_image.logo)
 
-    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details')
+    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details', 'folder_layout_custom_header_height')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
         styles = self._get_asset_style()
