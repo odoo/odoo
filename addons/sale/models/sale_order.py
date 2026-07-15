@@ -2242,14 +2242,12 @@ class SaleOrder(models.Model):
         payment_utils.check_rights_on_recordset(self)
 
         # In sudo mode to bypass the checks on the rights on the transactions.
-        return self.sudo().transaction_ids.action_capture()
-
-    def payment_action_void(self):
-        """Void all transactions linked to this sale order."""
-        payment_utils.check_rights_on_recordset(self)
-
-        # In sudo mode to bypass the checks on the rights on the transactions.
-        self.sudo().authorized_transaction_ids.action_void()
+        return (
+            self
+            .sudo()
+            .transaction_ids.with_context(reference_amount=self.amount_total)
+            .action_capture()
+        )
 
     def get_portal_last_transaction(self):
         self.ensure_one()
