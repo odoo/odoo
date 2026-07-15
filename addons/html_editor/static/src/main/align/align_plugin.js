@@ -118,6 +118,11 @@ export class AlignPlugin extends Plugin {
                 if (textAlign !== mode) {
                     block.style.textAlign = mode;
                     isAlignmentUpdated = true;
+                    // If a class overrides the inline style (e.g. with !important),
+                    // apply !important so the selected alignment takes effect.
+                    if (mode && getComputedStyle(block).textAlign !== mode) {
+                        block.style.setProperty("text-align", mode, "important");
+                    }
                 }
                 visitedBlocks.add(block);
             }
