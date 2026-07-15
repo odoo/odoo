@@ -673,7 +673,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                         ],
                     })
                 # If it is, it will work
-                self.invoicing_customer.vat = 'EI00000000010'
+                self.invoicing_customer.write({'vat': 'EI00000000010', 'l10n_my_identification_number': 'NA'})
                 self._create_order({
                     'pos_order_ui_args': {
                         'is_refund': True,
