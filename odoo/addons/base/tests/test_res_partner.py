@@ -964,3 +964,23 @@ class TestPartnerRecursion(TransactionCase):
         self.p1.parent_id = self.p2
         with self.assertRaises(ValidationError):
             (self.p3|self.p2).write({'parent_id': self.p1.id})
+
+    def test_portal_user_can_access_itself(self):
+        """ Test that changing commercial_partner_id does not remove user access to its partner """
+        new_parent = self.env['res.partner'].create({'name': 'unrelated'})
+        partners = self.p1 + self.p2 + self.p3 + new_parent
+        user2 = self.env['res.users'].create({
+            'login': 'user2', 'partner_id': self.p2.id,
+            'groups_id': [self.env.ref('base.group_portal').id],
+        })
+        p2_accessible_partners = self.p2.with_user(user2).search([('id', 'in', partners.ids)])
+        self.assertEqual(p2_accessible_partners, self.p1 + self.p2 + self.p3)
+
+        self.p2.parent_id = new_parent
+        p2_accessible_partners = self.p2.with_user(user2).search([('id', 'in', partners.ids)])
+        # because of outdated ir.rule domain p1 is present and p3, new_partner are absent
+        self.assertEqual(p2_accessible_partners, self.p1 + self.p2)
+
+        self.env.registry.clear_cache()
+        p2_accessible_partners = self.p2.with_user(user2).search([('id', 'in', partners.ids)])
+        self.assertEqual(p2_accessible_partners, self.p2 + self.p3 + new_parent)

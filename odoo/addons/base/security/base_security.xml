@@ -22,7 +22,8 @@
         <record model="ir.rule" id="res_partner_portal_public_rule">
             <field name="name">res_partner: portal/public: read access on my commercial partner</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">[('id', 'child_of', user.commercial_partner_id.id)]</field>
+            <!-- give partner read access to itself in case of outdated ir.rule domain cache -->
+            <field name="domain_force">['|', ('id', 'child_of', user.commercial_partner_id.id), ('id', '=', user.partner_id.id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
