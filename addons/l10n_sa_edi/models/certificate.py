@@ -89,13 +89,13 @@ class Certificate(models.Model):
     def _l10n_sa_validate_csr_vals(self, journal):
         error_fields = set()
         for data in self._l10n_sa_get_csr_vals(journal).values():
-            if len(str(data['value'])) > MAX_ALLOWED_CSR_VALUE_LENGTH:
+            if len(str(data['value']).encode('utf-8')) > MAX_ALLOWED_CSR_VALUE_LENGTH:
                 error_fields.add(data['name'])
         if error_fields:
             company_fields = [_("Company Name"), _("Parent Company Name")]
             company_msg = _("<br/><br/>Once the journal is onboarded, please update the company name to match the one listed on the VAT Registration Certificate.") if any(field in error_fields for field in company_fields) else ""
             raise UserError(_(
-                "Please make sure the following fields are shorter than %(max_length)d characters: %(error_fields_msg)s",
+                "Please make sure the following fields are shorter than %(max_length)d bytes (note that Arabic or special characters take more space): %(error_fields_msg)s",
                 max_length=MAX_ALLOWED_CSR_VALUE_LENGTH,
                 error_fields_msg=" <br/>- " + " <br/>- ".join(error_fields) + company_msg
             ))
