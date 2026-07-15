@@ -6,7 +6,7 @@ from subprocess import run, PIPE
 from textwrap import dedent
 
 from odoo import tools
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, no_retry
 
 try:
     import pylint
@@ -19,6 +19,7 @@ except IOError:
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 @unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
+@no_retry
 class TestSqlLint(TransactionCase):
     def check(self, testtext):
         with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', delete=False) as f:

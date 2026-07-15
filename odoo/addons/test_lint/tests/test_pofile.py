@@ -4,10 +4,11 @@
 from collections import Counter
 
 from odoo.modules import get_modules, get_resource_path
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, no_retry
 from odoo.tools.translate import TranslationFileReader
 
 
+@no_retry
 class PotLinter(TransactionCase):
     def test_pot_duplicate_entries(self):
         def format(entry):

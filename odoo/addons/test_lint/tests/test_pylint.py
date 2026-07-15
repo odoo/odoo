@@ -12,7 +12,7 @@ except ImportError:
     pylint = None
 import subprocess
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, no_retry
 from odoo import tools
 from odoo.modules import get_modules, get_module_path
 
@@ -21,6 +21,7 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 _logger = logging.getLogger(__name__)
 
 
+@no_retry
 class TestPyLint(TransactionCase):
     def _skip_test(self, reason):
         _logger.warning(reason)
