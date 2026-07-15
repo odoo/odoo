@@ -77,7 +77,7 @@ class TestL10nPtSaleHashing(TestL10nPtSaleCommon):
             return l10n_pt_document_number
 
         with patch(
-            'odoo.addons.l10n_pt_sale.models.sale_order.SaleOrder._get_l10n_pt_sale_document_number',
+            'odoo.addons.l10n_pt_sale.models.sale_order.SaleOrder._l10n_pt_get_document_number',
             _get_l10n_pt_document_number_patched,
         ):
             for (l10n_pt_document_number, date_order, l10n_pt_hashed_on, amount, expected_hash) in [
@@ -87,7 +87,7 @@ class TestL10nPtSaleHashing(TestL10nPtSaleCommon):
                 with self.subTest(date_order=date_order, l10n_pt_hashed_on=l10n_pt_hashed_on, amount=amount, expected_hash=expected_hash):
                     so = self.create_sales_order(date_order, l10n_pt_hashed_on, amount, self.tax_sale_0, do_hash=True)
                     so.flush_recordset()
-                    self.assertEqual(so.l10n_pt_sale_inalterable_hash.split("$")[2], expected_hash)
+                    self.assertEqual(so.l10n_pt_inalterable_hash.split("$")[2], expected_hash)
 
     def test_l10n_pt_sale_hash_inalterability(self):
         expected_error_msg = "This document is protected by a hash. Therefore, you cannot edit the following fields:*"
@@ -95,7 +95,7 @@ class TestL10nPtSaleHashing(TestL10nPtSaleCommon):
         so = self.create_sales_order('2024-01-01', do_hash=True)
         so.flush_recordset()
         with self.assertRaisesRegex(UserError, expected_error_msg):
-            so.l10n_pt_sale_inalterable_hash = 'fake_hash'
+            so.l10n_pt_inalterable_hash = 'fake_hash'
         with self.assertRaisesRegex(UserError, expected_error_msg):
             so.date_order = fields.Date.from_string('2000-01-01')
         with self.assertRaisesRegex(UserError, expected_error_msg):
@@ -141,9 +141,9 @@ class TestL10nPtSaleHashing(TestL10nPtSaleCommon):
             f'Corrupted data on sales order with id {sales_order1.id} ({sales_order1.l10n_pt_document_number}).',
         )
 
-        # Let's try with the l10n_pt_sale_inalterable_hash field itself
+        # Let's try with the l10n_pt_inalterable_hash field itself
         Model.write(sales_order1, {'date_order': fields.Date.from_string("2024-01-03")})  # Revert the previous change
-        Model.write(sales_order3, {'l10n_pt_sale_inalterable_hash': 'fake_hash'})
+        Model.write(sales_order3, {'l10n_pt_inalterable_hash': 'fake_hash'})
         integrity_check = self.company_pt._l10n_pt_sale_check_hash_integrity()['results'][1]
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on sales order with id {sales_order3.id} ({sales_order3.l10n_pt_document_number}).')
@@ -165,12 +165,12 @@ class TestL10nPtSaleMiscRequirements(TestL10nPtSaleCommon):
         so2.action_cancel()  # shouldn't change the document number
         so3 = self.create_sales_order('2024-01-03', do_hash=True)
 
-        self.assertEqual(so1.quotation_id._get_l10n_pt_sale_document_number(), 'OR 2024/00001')
-        self.assertEqual(so1._get_l10n_pt_sale_document_number(), 'NE 2024/00001')
-        self.assertEqual(quotation._get_l10n_pt_sale_document_number(), 'OR 2024/00002')
-        self.assertEqual(so2._get_l10n_pt_sale_document_number(), 'NE 2024/00002')
-        self.assertEqual(so3.quotation_id._get_l10n_pt_sale_document_number(), 'OR 2024/00003')
-        self.assertEqual(so3._get_l10n_pt_sale_document_number(), 'NE 2024/00003')
+        self.assertEqual(so1.quotation_id._l10n_pt_get_document_number(), 'OR 2024/00001')
+        self.assertEqual(so1._l10n_pt_get_document_number(), 'NE 2024/00001')
+        self.assertEqual(quotation._l10n_pt_get_document_number(), 'OR 2024/00002')
+        self.assertEqual(so2._l10n_pt_get_document_number(), 'NE 2024/00002')
+        self.assertEqual(so3.quotation_id._l10n_pt_get_document_number(), 'OR 2024/00003')
+        self.assertEqual(so3._l10n_pt_get_document_number(), 'NE 2024/00003')
 
     def test_l10n_pt_sale_lines(self):
         """

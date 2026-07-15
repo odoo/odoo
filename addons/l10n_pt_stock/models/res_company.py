@@ -39,7 +39,7 @@ class ResCompany(models.Model):
                 domain=[
                     ('l10n_pt_at_series_id', '=', at_series.id),
                     ('picking_type_code', '=', at_series.document_type),
-                    ('l10n_pt_stock_inalterable_hash', '!=', False),
+                    ('l10n_pt_inalterable_hash', '!=', False),
                 ],
                 order="name",
             )
@@ -65,7 +65,7 @@ class ResCompany(models.Model):
                 for picking in pickings:
                     if corrupted_picking:
                         continue
-                    if not self._verify_hashed_picking(picking, last_picking.l10n_pt_stock_inalterable_hash, versioning_list, current_versioning_index):
+                    if not self._verify_hashed_picking(picking, last_picking.l10n_pt_inalterable_hash, versioning_list, current_versioning_index):
                         corrupted_picking = picking
                         continue
                     first_picking = first_picking or picking
@@ -91,11 +91,11 @@ class ResCompany(models.Model):
                     'msg_cover': _("Delivery orders are correctly hashed"),
                     'first_picking': first_picking,
                     'last_picking': last_picking,
-                    'first_hash': first_picking.l10n_pt_stock_inalterable_hash,
+                    'first_hash': first_picking.l10n_pt_inalterable_hash,
                     'first_name': first_picking.name,
                     'first_document_number': first_picking.l10n_pt_document_number,
                     'first_date': first_picking.date_done,
-                    'last_hash': last_picking.l10n_pt_stock_inalterable_hash,
+                    'last_hash': last_picking.l10n_pt_inalterable_hash,
                     'last_name': last_picking.name,
                     'last_document_number': last_picking.l10n_pt_document_number,
                     'last_date': last_picking.date_done,
@@ -110,10 +110,10 @@ class ResCompany(models.Model):
         previous_hash = previous_hash.split("$")[2] if previous_hash else ""
         try:
             message = pt_hash_utils.get_message_to_hash(
-                picking.date_done, picking.l10n_pt_hashed_on, picking._get_l10n_pt_stock_document_number(), 0, previous_hash,
+                picking.date_done, picking.l10n_pt_hashed_on, picking._l10n_pt_get_document_number(), 0, previous_hash,
             )
             return pt_hash_utils.verify_integrity(
-                message, picking.l10n_pt_stock_inalterable_hash, versioning_list[current_versioning_index],
+                message, picking.l10n_pt_inalterable_hash, versioning_list[current_versioning_index],
             )
         except AccessError as e:
             raise UserError(

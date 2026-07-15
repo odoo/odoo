@@ -38,7 +38,7 @@ class ResCompany(models.Model):
             query = self.env['sale.order'].sudo()._search(
                 domain=[
                     ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('l10n_pt_sale_inalterable_hash', '!=', False),
+                    ('l10n_pt_inalterable_hash', '!=', False),
                 ],
                 order="name",
             )
@@ -67,7 +67,7 @@ class ResCompany(models.Model):
                 for order in orders:
                     if corrupted_order:
                         continue
-                    if not self._verify_hashed_sales_order(order, last_order.l10n_pt_sale_inalterable_hash, versioning_list, current_versioning_index):
+                    if not self._verify_hashed_sales_order(order, last_order.l10n_pt_inalterable_hash, versioning_list, current_versioning_index):
                         corrupted_order = order
                         continue
                     first_order = first_order or order
@@ -97,11 +97,11 @@ class ResCompany(models.Model):
                     ),
                     'first_order': first_order,
                     'last_order': last_order,
-                    'first_hash': first_order.l10n_pt_sale_inalterable_hash,
+                    'first_hash': first_order.l10n_pt_inalterable_hash,
                     'first_name': first_order.name,
                     'first_document_number': first_order.l10n_pt_document_number,
                     'first_date': first_order.date_order,
-                    'last_hash': last_order.l10n_pt_sale_inalterable_hash,
+                    'last_hash': last_order.l10n_pt_inalterable_hash,
                     'last_name': last_order.name,
                     'last_document_number': last_order.l10n_pt_document_number,
                     'last_date': last_order.date_order,
@@ -118,12 +118,12 @@ class ResCompany(models.Model):
             message = pt_hash_utils.get_message_to_hash(
                 order.date_order,
                 order.l10n_pt_hashed_on,
-                order._get_l10n_pt_sale_document_number(),
+                order._l10n_pt_get_document_number(),
                 order.amount_total,
                 previous_hash,
             )
             return pt_hash_utils.verify_integrity(
-                message, order.l10n_pt_sale_inalterable_hash, versioning_list[current_versioning_index],
+                message, order.l10n_pt_inalterable_hash, versioning_list[current_versioning_index],
             )
         except AccessError as e:
             raise UserError(

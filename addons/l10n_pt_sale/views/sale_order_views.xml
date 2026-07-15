@@ -63,7 +63,7 @@
                 <xpath expr="//group[@name='order_details']" position="inside">
                     <field name="l10n_pt_global_discount"
                            invisible="country_code != 'PT'"
-                           readonly="l10n_pt_sale_inalterable_hash"/>
+                           readonly="l10n_pt_inalterable_hash"/>
                 </xpath>
                 <!-- Add line discount in sale order line -->
                 <xpath expr="//field[@name='order_line']//list//field[@name='discount']" position="attributes">
@@ -83,10 +83,9 @@
                     <group string="Portugal" name="portuguese_info_group" invisible="country_code != 'PT'">
                         <field name="l10n_pt_at_series_id"
                                readonly="l10n_pt_document_number"
-                               required="country_code == 'PT'"
-                               domain="[('active', '=', True)]"/>
+                               required="country_code == 'PT'"/>
                         <field name="l10n_pt_atcud"/>
-                        <field name="l10n_pt_sale_inalterable_hash" groups="base.group_no_one"/>
+                        <field name="l10n_pt_inalterable_hash" groups="base.group_no_one"/>
                         <field name="l10n_pt_cancel_reason"
                                invisible="state != 'cancel'"
                                required="state == 'cancel' and l10n_pt_document_number"/>

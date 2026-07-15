@@ -156,10 +156,10 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         l10n_pt_stock_document_number = ''
         amount = 0.0
 
-        def _get_l10n_pt_stock_document_number_patched(stock_picking):
+        def _l10n_pt_get_document_number_patched(stock_picking):
             return l10n_pt_stock_document_number
 
-        def _get_l10n_pt_stock_gross_total_patched(stock_picking):
+        def _l10n_pt_get_gross_total_patched(stock_picking):
             return amount
 
         self.picking_type_out.l10n_pt_stock_at_series_id = self.series_2017
@@ -171,13 +171,13 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
             (False, self.picking_type_in, 666, '2017-12-17T08:00:56', False)
         ]:
             with (
-                patch('odoo.addons.l10n_pt_stock.models.stock_picking.StockPicking._get_l10n_pt_stock_document_number', _get_l10n_pt_stock_document_number_patched),
-                patch('odoo.addons.l10n_pt_stock.models.stock_picking.StockPicking._get_l10n_pt_stock_gross_total', _get_l10n_pt_stock_gross_total_patched)
+                patch('odoo.addons.l10n_pt_stock.models.stock_picking.StockPicking._l10n_pt_get_document_number', _l10n_pt_get_document_number_patched),
+                patch('odoo.addons.l10n_pt_stock.models.stock_picking.StockPicking._l10n_pt_get_gross_total', _l10n_pt_get_gross_total_patched)
             ):
                 with freeze_time(l10n_pt_hashed_on):
                     picking = self.create_picking(picking_type, l10n_pt_hashed_on=l10n_pt_hashed_on, validate=True)  # No previous record
                     picking._l10n_pt_compute_missing_hashes(self.company_pt)
-                    actual_hash = picking.l10n_pt_stock_inalterable_hash.split("$")[2] if picking.l10n_pt_stock_inalterable_hash else picking.l10n_pt_stock_inalterable_hash
+                    actual_hash = picking.l10n_pt_inalterable_hash.split("$")[2] if picking.l10n_pt_inalterable_hash else picking.l10n_pt_inalterable_hash
                     self.assertEqual(actual_hash, expected_hash)
 
     def test_l10n_pt_stock_hash_inalterability(self):
@@ -187,7 +187,7 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         expected_error_msg = "This document is protected by a hash. Therefore, you cannot edit the following fields:*"
 
         with self.assertRaisesRegex(UserError, f"{expected_error_msg} Inalterability Hash."):
-            picking.l10n_pt_stock_inalterable_hash = 'fake_hash'
+            picking.l10n_pt_inalterable_hash = 'fake_hash'
         with self.assertRaisesRegex(UserError, f"{expected_error_msg} Date of Transfer"):
             picking.date_done = fields.Date.from_string('2000-01-01')
         with self.assertRaisesRegex(UserError, expected_error_msg):
@@ -219,9 +219,9 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on delivery order with id {picking3.id} ({picking3.l10n_pt_document_number}).')
 
-        # Let's try with the l10n_pt_stock_inalterable_hash field itself
+        # Let's try with the l10n_pt_inalterable_hash field itself
         Model.write(picking3, {'date_done': fields.Date.from_string("2023-01-03")})  # Revert the previous change
-        Model.write(picking4, {'l10n_pt_stock_inalterable_hash': 'fake_hash'})
+        Model.write(picking4, {'l10n_pt_inalterable_hash': 'fake_hash'})
         integrity_check = next(filter(lambda r: r['series_at_code'] == at_series_out._get_at_code(), self.company_pt._l10n_pt_stock_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on delivery order with id {picking4.id} ({picking4.l10n_pt_document_number}).')

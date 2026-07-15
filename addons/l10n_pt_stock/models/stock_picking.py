@@ -1,10 +1,5 @@
-import urllib.parse
-
 from odoo import _, api, models, fields
 from odoo.exceptions import RedirectWarning, UserError
-from odoo.tools import float_repr
-
-from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
 
 
 SAFT_PT_MOVEMENT_TYPE_MAP = {
@@ -52,26 +47,14 @@ class PickingType(models.Model):
 
 
 class StockPicking(models.Model):
-    _inherit = "stock.picking"
+    _name = "stock.picking"
+    _inherit = ["stock.picking", "l10n.pt.hashed.document.mixin"]
 
-    l10n_pt_stock_qr_code_str = fields.Char(string="Portuguese QR Code", compute='_compute_l10n_pt_stock_qr_code_str')
-    l10n_pt_stock_inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
-    l10n_pt_inalterable_hash_short = fields.Char(
-        string="Short version of the Portuguese hash",
-        compute='_compute_l10n_pt_stock_inalterable_hash_info',
-    )
-    l10n_pt_stock_inalterable_hash_version = fields.Integer(
-        string="Portuguese hash version",
-        compute='_compute_l10n_pt_stock_inalterable_hash_info',
-    )
-    l10n_pt_stock_atcud = fields.Char(string="Portuguese ATCUD", readonly=True, copy=False)
     l10n_pt_document_number = fields.Char(
-        string="Unique Document Number",
         compute='_compute_l10n_pt_document_number', store=True,
         help="Unique identifier made up of the internal document type code, the series name, "
              "and the number of the document within the series.",
     )
-    l10n_pt_hashed_on = fields.Datetime(string="Hashed On", readonly=True)
     # Document type is used in the template (when printed, documents have to present the document type on each page)
     l10n_pt_document_type = fields.Selection(
         string="Portuguese Document Type",
@@ -102,19 +85,6 @@ class StockPicking(models.Model):
     # OVERRIDES
     ####################################
 
-    def write(self, vals):
-        if not vals:
-            return True
-        for picking in self.filtered(lambda p: p.country_code == 'PT'):
-            violated_fields = set(vals).intersection(picking._get_integrity_hash_fields() + ['l10n_pt_stock_inalterable_hash'])
-            if violated_fields and picking.l10n_pt_stock_inalterable_hash:
-                raise UserError(_(
-                    "This document is protected by a hash. "
-                    "Therefore, you cannot edit the following fields: %s.",
-                    ', '.join(f['string'] for f in self.fields_get(violated_fields).values())
-                ))
-        return super().write(vals)
-
     def button_validate(self):
         picking = super().button_validate()
         for picking in self.filtered(lambda p: p.country_code == 'PT' and p.state == 'done'):
@@ -141,13 +111,6 @@ class StockPicking(models.Model):
                 'target': 'new',
             }
         return self.env.ref('stock.action_report_delivery').report_action(self)
-
-    def update_l10n_pt_print_version(self):
-        for picking in self.filtered(lambda o: o.country_code == 'PT'):
-            if not picking.l10n_pt_print_version:
-                picking.l10n_pt_print_version = 'original'
-            else:
-                picking.l10n_pt_print_version = 'reprint'
 
     def _l10n_pt_check_date(self):
         """
@@ -186,105 +149,63 @@ class StockPicking(models.Model):
     # HASH AND QR CODE
     ####################################
 
+    def _l10n_pt_get_document_date(self):
+        self.ensure_one()
+        return self.date_done
+
+    def _l10n_pt_get_document_number(self):
+        """ Allows patching in tests """
+        self.ensure_one()
+        return self.l10n_pt_document_number
+
+    def _l10n_pt_get_gross_total(self):
+        """ Returns 0 (transfers have no monetary total). Split out to allow patching in tests. """
+        return 0
+
+    def _l10n_pt_get_saft_doc_type(self):
+        self.ensure_one()
+        return SAFT_PT_MOVEMENT_TYPE_MAP[self.picking_type_id.code]
+
+    def _l10n_pt_series_document_types(self):
+        return ('outgoing', 'internal', 'incoming')
+
     def _get_integrity_hash_fields(self):
         if self.company_id.account_fiscal_country_id.code != 'PT':
             return []
         return ['date_done', 'l10n_pt_hashed_on', 'name', 'l10n_pt_document_number']
 
-    def _get_l10n_pt_stock_document_number(self):
-        """ Allows patching in tests """
-        self.ensure_one()
-        return self.l10n_pt_document_number
-
-    def _get_l10n_pt_stock_gross_total(self):
-        """ Allows patching in tests """
-        return 0
-
     def _calculate_hashes(self, previous_hash=None):
-        if self.company_id.account_fiscal_country_id.code != 'PT':
-            return {}
-        self.l10n_pt_hashed_on = fields.Datetime.now()
-        docs_to_sign = [{
-            'id': picking.id,
-            'date': picking.date_done.strftime('%Y-%m-%d'),
-            'sorting_key': picking.date_done.isoformat(),
-            'system_entry_date': picking.l10n_pt_hashed_on.isoformat(timespec='seconds'),
-            'name': picking._get_l10n_pt_stock_document_number(),
-            'gross_total': float_repr(picking._get_l10n_pt_stock_gross_total(), precision_digits=2),
-            'previous_signature': previous_hash,
-        } for picking in self]
         try:
-            return pt_hash_utils.sign_records(self.env, docs_to_sign, 'stock.picking')
+            return super()._calculate_hashes(previous_hash=previous_hash)
         except UserError as e:
             self._message_log_batch(bodies={p.id: e.args[0] for p in self})
             return {}
 
-    @api.depends('l10n_pt_stock_inalterable_hash')
-    def _compute_l10n_pt_stock_inalterable_hash_info(self):
-        for picking in self:
-            if picking.l10n_pt_stock_inalterable_hash:
-                hash_version, hash_str = picking.l10n_pt_stock_inalterable_hash.split("$")[1:]
-                picking.l10n_pt_stock_inalterable_hash_version = int(hash_version)
-                picking.l10n_pt_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
-            else:
-                picking.l10n_pt_stock_inalterable_hash_version = False
-                picking.l10n_pt_inalterable_hash_short = False
-
     @api.model
-    def _find_last_picking(self, at_series):
+    def _l10n_pt_find_last_hashed(self, at_series):
         return self.sudo().search([
             ('l10n_pt_at_series_id', '=', at_series.id),
             ('picking_type_code', '=', at_series.document_type),
-            ('l10n_pt_stock_inalterable_hash', '!=', False),
+            ('l10n_pt_inalterable_hash', '!=', False),
         ], order='date_done desc', limit=1)
 
-    def _l10n_pt_compute_missing_hashes(self, company=None):
-        """
-        Compute the hash/atcud for all records that do not have one yet
-        (because they were not printed/previewed yet)
-        """
-        company = company or self.env.company
-
-        # Get all AT series that apply to stock.pickings to find unhashed pickings per series
-        at_series_records = self.env['l10n_pt.at.series'].search([
-            '|',
-            '&',
-            ('company_id', '=', company.id),
-            ('company_exclusive_series', '=', True),
-            '&',
-            ('company_id', 'in', company.parent_ids.ids),
-            ('company_exclusive_series', '=', False),
-            ('document_type', 'in', ('outgoing', 'internal', 'incoming')),
-        ])
-        unhashed_pickings = self.sudo().search([
-            ('l10n_pt_at_series_id', 'in', at_series_records.ids),
+    def _l10n_pt_get_unhashed_records(self, at_series):
+        return self.sudo().search([
+            ('l10n_pt_at_series_id', '=', at_series.id),
+            ('picking_type_code', '=', at_series.document_type),
             ('state', '=', 'done'),
-            ('l10n_pt_stock_inalterable_hash', '=', False),
+            ('l10n_pt_inalterable_hash', '=', False),
         ], order='date_done')
 
-        # Group unhashed pickings by AT series and picking type. This allows matching pickings with their AT Series
-        pickings_grouped = unhashed_pickings.grouped(lambda p: (p.l10n_pt_at_series_id.id, p.picking_type_code))
-        for at_series in at_series_records:
-            pickings = pickings_grouped.get((at_series.id, at_series.document_type))
-            if not pickings:
-                continue
+    def _l10n_pt_validate_before_hash(self):
+        for picking in self:
+            if not picking.l10n_pt_document_number:
+                raise UserError(_("Transfer %s does not have a Unique Document Number. "
+                                  "Verify that its operation type has an AT Series.", picking.name))
 
-            previous_picking = self._find_last_picking(at_series)
-            try:
-                previous_hash = previous_picking.l10n_pt_stock_inalterable_hash.split("$")[2] if previous_picking.l10n_pt_stock_inalterable_hash else ""
-            except IndexError:  # hash is not correctly formatted (it has been altered!)
-                previous_hash = "invalid_hash"  # will never be a valid hash
-            for picking in pickings:
-                if not picking.l10n_pt_document_number:
-                    raise UserError(_("Transfer %s does not have a Unique Document Number. "
-                                      "Verify that its operation type has an AT Series.", picking.name))
-                current_atcud_number = int(picking.l10n_pt_document_number.split('/')[-1])
-                picking.l10n_pt_stock_atcud = f"{at_series._get_at_code()}-{current_atcud_number}"
-
-            pickings_hashes = pickings._calculate_hashes(previous_hash)
-            for picking, l10n_pt_stock_inalterable_hash in pickings_hashes.items():
-                picking.l10n_pt_stock_inalterable_hash = l10n_pt_stock_inalterable_hash
-                picking.message_post(body=_("The delivery order was successfully signed."))
+    def _l10n_pt_post_hash_hook(self):
+        for picking in self:
+            picking.message_post(body=_("The delivery order was successfully signed."))
 
     def _cron_l10n_pt_stock_compute_missing_hashes(self):
         for company in self.env['res.company'].search([
@@ -292,30 +213,3 @@ class StockPicking(models.Model):
         ]):
             self._l10n_pt_compute_missing_hashes(company)
 
-    def l10n_pt_verify_prerequisites_qr_code(self):
-        self.ensure_one()
-        if self.country_code == 'PT':
-            return pt_hash_utils.verify_prerequisites_qr_code(self, self.l10n_pt_stock_inalterable_hash, self.l10n_pt_stock_atcud)
-
-    @api.depends('l10n_pt_stock_atcud')
-    def _compute_l10n_pt_stock_qr_code_str(self):
-        """ Generate the informational QR code for Portugal
-        E.g.: A:509445535*B:123456823*C:BE*D:GT*E:N*F:20220103*G:GT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
-        """
-        for picking in self.filtered(lambda p: (
-            not p.l10n_pt_stock_qr_code_str  # Skip if already computed
-        )):
-            if picking.country_code != "PT" or not picking.l10n_pt_stock_inalterable_hash:
-                picking.l10n_pt_stock_qr_code_str = False
-                continue
-
-            picking.l10n_pt_verify_prerequisites_qr_code()
-            # Most of the values needed for the QR Code string are filled in pt_hash_utils
-            qr_code_dict, _tax_letter = pt_hash_utils.l10n_pt_common_qr_code_str(picking, self.env, picking.date_done)
-            qr_code_dict['D:'] = f"{SAFT_PT_MOVEMENT_TYPE_MAP[picking.picking_type_id.code]}*"
-            qr_code_dict['H:'] = f"{picking.l10n_pt_stock_atcud}*"
-            qr_code_dict['N:'] = "0.00*"
-            qr_code_dict['O:'] = "0.00*"
-            qr_code_dict['Q:'] = f"{picking.l10n_pt_inalterable_hash_short}*"
-            qr_code_str = ''.join(f"{key}{value}" for key, value in sorted(qr_code_dict.items()))
-            picking.l10n_pt_stock_qr_code_str = urllib.parse.quote_plus(qr_code_str)

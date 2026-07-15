@@ -36,7 +36,7 @@ class IrActionsReport(models.Model):
         """
         records = self.env[model].browse(res_ids)
         if compute_hash:
-            self.env[model]._l10n_pt_compute_missing_hashes()
+            records._l10n_pt_compute_missing_hashes()
             for record in records:
                 record.l10n_pt_verify_prerequisites_qr_code()
         if update_print_version:

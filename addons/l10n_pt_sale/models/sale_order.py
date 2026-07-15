@@ -1,11 +1,7 @@
-import re
-import urllib.parse
-
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools import float_repr
 
-from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
 from odoo.addons.l10n_pt_sale.models.l10n_pt_at_series import AT_SERIES_SALES_DOCUMENT_TYPES
 
 AT_SERIES_WORKING_DOCUMENT_SAFT_TYPE_MAP = {
@@ -96,55 +92,27 @@ class SaleOrderLine(models.Model):
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _name = 'sale.order'
+    _inherit = ['sale.order', 'l10n.pt.hashed.document.mixin']
 
-    l10n_pt_qr_code_str = fields.Char('Portuguese QR Code', compute='_compute_l10n_pt_qr_code_str', store=True)
-    l10n_pt_sale_inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
-    l10n_pt_inalterable_hash_short = fields.Char(
-        'Short version of the Portuguese hash',
-        compute='_compute_l10n_pt_inalterable_hash_info',
-    )
-    l10n_pt_inalterable_hash_version = fields.Integer(
-        'Portuguese hash version',
-        compute='_compute_l10n_pt_inalterable_hash_info',
-    )
-    l10n_pt_atcud = fields.Char(
-        string='Portuguese ATCUD',
-        compute='_compute_l10n_pt_atcud',
+    l10n_pt_at_series_id = fields.Many2one(
+        compute='_compute_l10n_pt_at_series_id',
+        readonly=False,
         store=True,
-        help="Unique document code formed by the AT series validation code and the number of the document.",
+        domain="[('active', '=', True), ('document_type', 'in', ('quotation', 'sales_order'))]",
     )
     l10n_pt_document_number = fields.Char(
-        string="Unique Document Number",
-        copy=False,
         readonly=True,
         help="Internal identifier for Portuguese documents, made up of the document type code, "
              "the series name, and the number of the document within the series.",
     )
     l10n_pt_show_future_date_warning = fields.Boolean(compute='_compute_l10n_pt_show_future_date_warning')
-    l10n_pt_hashed_on = fields.Datetime(string="Hashed On", readonly=True)
-    l10n_pt_at_series_id = fields.Many2one(
-        comodel_name="l10n_pt.at.series",
-        string="AT Series",
-        compute='_compute_l10n_pt_at_series_id',
-        readonly=False,
-        store=True,
-        domain="[('document_type', 'in', ('quotation', 'sales_order'))]",
-    )
     # Document type used in invoice template (when printed, documents have to present the document type on each page)
     l10n_pt_document_type = fields.Selection(
         selection=AT_SERIES_SALES_DOCUMENT_TYPES,
         string="Portuguese Document Type",
         compute='_compute_l10n_pt_document_type',
         store=True,
-    )
-    l10n_pt_print_version = fields.Selection(
-        selection=[
-            ('original', 'Original print'),
-            ('reprint', 'Reprint'),
-        ],
-        string="Version of Printed Document",
-        copy=False,
     )
     l10n_pt_cancel_reason = fields.Char(
         string="Cancellation Reason",
@@ -177,21 +145,6 @@ class SaleOrder(models.Model):
     # OVERRIDES
     ####################################
 
-    def write(self, vals):
-        if not vals:
-            return True
-        for order in self.filtered(lambda o: o.country_code == 'PT'):
-            violated_fields = set(vals).intersection(
-                order._get_integrity_hash_fields() + ['l10n_pt_at_series_id', 'l10n_pt_sale_inalterable_hash']
-            )
-            if violated_fields and order.l10n_pt_sale_inalterable_hash:
-                raise UserError(_(
-                    "This document is protected by a hash. "
-                    "Therefore, you cannot edit the following fields: %s.",
-                    ', '.join(f['string'] for f in self.fields_get(violated_fields).values())
-                ))
-        return super().write(vals)
-
     def action_quotation_send(self):
         if not self.env.context.get('has_reprint_reason'):
             self._check_l10n_pt_dates()
@@ -216,7 +169,7 @@ class SaleOrder(models.Model):
             self._check_l10n_pt_dates()
             orders = self.sudo().search([
                 ('company_id', '=', self.env.company.id),
-                ('l10n_pt_sale_inalterable_hash', '=', False),
+                ('l10n_pt_inalterable_hash', '=', False),
                 ('l10n_pt_document_number', '=', False),
             ], order='date_order')
             orders._l10n_pt_check_at_series()
@@ -309,26 +262,6 @@ class SaleOrder(models.Model):
         for order in self.filtered(lambda o: o.country_code == 'PT'):
             if order.l10n_pt_global_discount < 0.0 or order.l10n_pt_global_discount > 100.0:
                 raise ValidationError(_("Discount amounts should be between 0% and 100%."))
-
-    def update_l10n_pt_print_version(self):
-        for order in self.filtered(lambda o: o.country_code == 'PT'):
-            if not order.l10n_pt_print_version:
-                order.l10n_pt_print_version = 'original'
-            else:
-                order.l10n_pt_print_version = 'reprint'
-
-    def _check_l10n_pt_document_number(self):
-        for order in self.filtered(lambda o: (
-            o.country_code == 'PT'
-            and o.l10n_pt_at_series_id
-        )):
-            if order.l10n_pt_document_number and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', order.l10n_pt_document_number):
-                raise ValidationError(_(
-                    "The document number (%s) is invalid. It must start with the internal code "
-                    "of the document type, a space, the name of the series followed by a slash and the number of the "
-                    "document within the series (e.g. NE 2025A/1). Please check if the series selected fulfill these "
-                    "requirements.", order.l10n_pt_document_number
-                ))
 
     @api.depends('state', 'date_order', 'country_code')
     def _compute_l10n_pt_show_future_date_warning(self):
@@ -479,6 +412,7 @@ class SaleOrder(models.Model):
                     ('company_id', 'in', company.parent_ids.ids),
                     ('company_exclusive_series', '=', False),
                     ('active', '=', True),
+                    ('document_type', 'in', self._l10n_pt_series_document_types()),
                 ], limit=1)
 
     def _set_l10n_pt_document_number(self):
@@ -495,165 +429,106 @@ class SaleOrder(models.Model):
             elif order.state == 'sale':
                 order.l10n_pt_document_type = 'sales_order'
 
-    @api.depends('l10n_pt_document_number')
-    def _compute_l10n_pt_atcud(self):
-        for order in self:
-            if order.country_code == 'PT' and not order.l10n_pt_atcud and order.l10n_pt_document_number:
-                current_seq_number = int(order.l10n_pt_document_number.split('/')[-1])
-                order.l10n_pt_atcud = f"{order.l10n_pt_at_series_id._get_at_code()}-{current_seq_number}"
-
     ####################################
     # HASH AND QR CODE
     ####################################
+
+    def _l10n_pt_get_document_date(self):
+        self.ensure_one()
+        return self.date_order
+
+    def _l10n_pt_get_document_number(self):
+        """ Allows patching in tests """
+        self.ensure_one()
+        return self.l10n_pt_document_number
+
+    def _l10n_pt_get_gross_total(self):
+        self.ensure_one()
+        return self.amount_total
+
+    def _l10n_pt_get_saft_doc_type(self):
+        self.ensure_one()
+        return AT_SERIES_WORKING_DOCUMENT_SAFT_TYPE_MAP[self.l10n_pt_document_type]
+
+    def _l10n_pt_series_document_types(self):
+        return ('sales_order', 'quotation')
+
+    def _l10n_pt_protected_fields(self):
+        return super()._l10n_pt_protected_fields() + ['l10n_pt_at_series_id']
 
     def _get_integrity_hash_fields(self):
         if self.company_id.account_fiscal_country_id.code != 'PT':
             return []
         return ['date_order', 'l10n_pt_hashed_on', 'name', 'l10n_pt_document_number', 'amount_total', 'partner_id', 'company_id', 'sale_order_option_ids']
 
-    def _get_l10n_pt_sale_document_number(self):
-        """ Allows patching in tests """
-        self.ensure_one()
-        return self.l10n_pt_document_number
-
-    def _calculate_hashes(self, previous_hash=None):
-        if self.company_id.account_fiscal_country_id.code != 'PT':
-            return {}
-        self.l10n_pt_hashed_on = fields.Datetime.now()
-        docs_to_sign = [{
-            'id': order.id,
-            'date': order.date_order.strftime('%Y-%m-%d'),
-            'sorting_key': order.date_order.isoformat(),
-            'system_entry_date': order.l10n_pt_hashed_on.isoformat(timespec='seconds'),
-            'name': order._get_l10n_pt_sale_document_number(),
-            'gross_total': float_repr(order.amount_total, precision_digits=2),
-            'previous_signature': previous_hash,
-        } for order in self]
-        return pt_hash_utils.sign_records(self.env, docs_to_sign, 'sale.order')
-
-    @api.depends('l10n_pt_sale_inalterable_hash')
-    def _compute_l10n_pt_inalterable_hash_info(self):
-        for order in self:
-            if order.l10n_pt_sale_inalterable_hash:
-                hash_version, hash_str = order.l10n_pt_sale_inalterable_hash.split("$")[1:]
-                order.l10n_pt_inalterable_hash_version = int(hash_version)
-                order.l10n_pt_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
-            else:
-                order.l10n_pt_inalterable_hash_version = False
-                order.l10n_pt_inalterable_hash_short = False
-
     @api.model
-    def _find_last_order(self, at_series):
+    def _l10n_pt_find_last_hashed(self, at_series):
         return self.sudo().search([
             ('l10n_pt_at_series_id', '=', at_series.id),
-            ('l10n_pt_sale_inalterable_hash', '!=', False),
+            ('l10n_pt_inalterable_hash', '!=', False),
         ], order='date_order desc, l10n_pt_document_number desc', limit=1)
 
-    def _l10n_pt_compute_missing_hashes(self, company=None, check_at_series=False):
+    def _l10n_pt_get_unhashed_records(self, at_series):
+        return self.sudo().search([
+            ('l10n_pt_at_series_id', '=', at_series.id),
+            ('l10n_pt_inalterable_hash', '=', False),
+        ], order='date_order')
+
+    def _l10n_pt_post_hash_hook(self):
+        self.locked = True
+
+    def _l10n_pt_compute_missing_hashes(self, company=None):
         """
         Compute the hash/atcud for all records that do not have one yet
         (because they were not printed/previewed yet)
         """
-        company = company or self.env.company
-
         # When printing an order before previewing or creating an invoice from it, at series may not be set yet
-        if active_ids := self.env.context.get('active_ids'):
-            orders_to_check = self.browse(active_ids).filtered(lambda so: not so.l10n_pt_at_series_id)
-            orders_to_check._l10n_pt_check_at_series()
-            orders_to_check._set_l10n_pt_document_number()
+        orders_to_check = self.filtered(lambda so: not so.l10n_pt_at_series_id)
+        orders_to_check._l10n_pt_check_at_series()
+        orders_to_check._set_l10n_pt_document_number()
+        return super()._l10n_pt_compute_missing_hashes(company=company)
 
-        # Get all AT series that apply to sale.order to find unhashed orders per series
-        at_series_records = self.env['l10n_pt.at.series'].search([
-            '|',
-            '&',
-            ('company_id', '=', company.id),
-            ('company_exclusive_series', '=', True),
-            '&',
-            ('company_id', 'in', company.parent_ids.ids),
-            ('company_exclusive_series', '=', False),
-            ('document_type', 'in', ('sales_order', 'quotation')),
-        ])
-        for at_series in at_series_records:
-            orders = self.sudo().search([
-                ('l10n_pt_at_series_id', '=', at_series.id),
-                ('l10n_pt_sale_inalterable_hash', '=', False),
-            ], order='date_order')
-
-            orders._set_l10n_pt_document_number()
-            previous_order = self._find_last_order(at_series)
-            try:
-                previous_hash = previous_order.l10n_pt_sale_inalterable_hash.split("$")[2] if previous_order.l10n_pt_sale_inalterable_hash else ""
-            except IndexError:  # hash is not correctly formatted (it has been altered!)
-                previous_hash = "invalid_hash"  # will never be a valid hash
-
-            orders_hashes = orders._calculate_hashes(previous_hash)
-            for order, l10n_pt_sale_inalterable_hash in orders_hashes.items():
-                order.l10n_pt_sale_inalterable_hash = l10n_pt_sale_inalterable_hash
-                order.locked = True
-
-    def l10n_pt_verify_prerequisites_qr_code(self):
+    def _l10n_pt_qr_add_tax_details(self, qr_code_dict, tax_letter):
         self.ensure_one()
-        if self.country_code == 'PT':
-            return pt_hash_utils.verify_prerequisites_qr_code(self, self.l10n_pt_sale_inalterable_hash, self.l10n_pt_atcud)
+        details_by_tax_group = self._l10n_pt_get_details_by_tax_category()
+        if details_by_tax_group.get('E'):
+            qr_code_dict[f'{tax_letter}2:'] = f"{details_by_tax_group.get('E')['base']}*"
+        for i, tax_category in enumerate(('R', 'I', 'N')):
+            if details_by_tax_group.get(tax_category):
+                qr_code_dict[f'{tax_letter}{i * 2 + 3}:'] = f"{details_by_tax_group.get(tax_category)['base']}*"
+                qr_code_dict[f'{tax_letter}{i * 2 + 4}:'] = f"{details_by_tax_group.get(tax_category)['vat']}*"
 
-    @api.depends('l10n_pt_sale_inalterable_hash')
-    def _compute_l10n_pt_qr_code_str(self):
+    def _l10n_pt_qr_get_totals(self):
+        self.ensure_one()
+        return self._l10n_pt_qr_format_amount(self.amount_tax), self._l10n_pt_qr_format_amount(self.amount_total)
+
+    def _l10n_pt_qr_format_amount(self, amount):
         """
-        Generate the informational QR code for Portugal invoicing.
-        E.g.: A:509445535*B:123456823*C:BE*D:OR*E:N*F:20220103*G:OR 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
+        Convert amount to EUR based on the rate of the order's date.
+        Format amount to 2 decimals as per SAF-T (PT) requirements.
         """
+        self.ensure_one()
+        amount_eur = self.currency_id._convert(amount, self.env.ref('base.EUR'), self.company_id, self.date_order)
+        return float_repr(amount_eur, 2)
 
-        def format_amount(order, amount):
-            """
-            Convert amount to EUR based on the rate of a given account_move's date
-            Format amount to 2 decimals as per SAF-T (PT) requirements
-            """
-            amount_eur = order.currency_id._convert(amount, self.env.ref('base.EUR'), order.company_id, order.date_order)
-            return float_repr(amount_eur, 2)
-
-        def get_details_by_tax_category(order):
-            """
-            :return: {tax_category : {'base': base, 'vat': vat}}
-            """
-            res = {}
-            tax_groups = order.tax_totals['subtotals'][0]['tax_groups']
-
-            for group in tax_groups:
-                tax_group = self.env['account.tax.group'].browse(group['id'])
-                if (
-                    tax_group.l10n_pt_tax_region == 'PT-ALL'
-                    or (
-                        tax_group.l10n_pt_tax_region
-                        and tax_group.l10n_pt_tax_region == order.company_id.l10n_pt_region_code
-                    )
-                ):
-                    res[tax_group.l10n_pt_tax_category] = {
-                        'base': format_amount(order, group['base_amount']),
-                        'vat': format_amount(order, group['tax_amount']),
-                    }
-            return res
-
-        for order in self.filtered(lambda o: (
-            o.country_code == "PT"
-            and o.l10n_pt_sale_inalterable_hash
-            and not o.l10n_pt_qr_code_str  # Skip if already computed
-        )):
-            details_by_tax_group = get_details_by_tax_category(order)
-
-            order.l10n_pt_verify_prerequisites_qr_code()
-            # Most of the values needed to create the QR code string are filled in pt_hash_utils, also used by pt_pos and pt_stock
-            qr_code_dict, tax_letter = pt_hash_utils.l10n_pt_common_qr_code_str(order, self.env, order.date_order)
-            qr_code_dict['D:'] = f"{AT_SERIES_WORKING_DOCUMENT_SAFT_TYPE_MAP[order.l10n_pt_document_type]}*"
-            qr_code_dict['H:'] = f"{order.l10n_pt_atcud}*"
-            if details_by_tax_group.get('E'):
-                qr_code_dict[f'{tax_letter}2:'] = f"{details_by_tax_group.get('E')['base']}*"
-            for i, tax_category in enumerate(('R', 'I', 'N')):
-                if details_by_tax_group.get(tax_category):
-                    qr_code_dict[f'{tax_letter}{i * 2 + 3}:'] = f"{details_by_tax_group.get(tax_category)['base']}*"
-                    qr_code_dict[f'{tax_letter}{i * 2 + 4}:'] = f"{details_by_tax_group.get(tax_category)['vat']}*"
-            qr_code_dict['N:'] = f"{format_amount(order, order.amount_tax)}*"
-            qr_code_dict['O:'] = f"{format_amount(order, order.amount_total)}*"
-            qr_code_dict['Q:'] = f"{order.l10n_pt_inalterable_hash_short}*"
-            # Create QR code string from dictionary
-            qr_code_str = ''.join(f"{key}{value}" for key, value in sorted(qr_code_dict.items()))
-            order.l10n_pt_qr_code_str = urllib.parse.quote_plus(qr_code_str)
+    def _l10n_pt_get_details_by_tax_category(self):
+        """
+        :return: {tax_category : {'base': base, 'vat': vat}}
+        """
+        self.ensure_one()
+        res = {}
+        tax_groups = self.tax_totals['subtotals'][0]['tax_groups']
+        for group in tax_groups:
+            tax_group = self.env['account.tax.group'].browse(group['id'])
+            if (
+                tax_group.l10n_pt_tax_region == 'PT-ALL'
+                or (
+                    tax_group.l10n_pt_tax_region
+                    and tax_group.l10n_pt_tax_region == self.company_id.l10n_pt_region_code
+                )
+            ):
+                res[tax_group.l10n_pt_tax_category] = {
+                    'base': self._l10n_pt_qr_format_amount(group['base_amount']),
+                    'vat': self._l10n_pt_qr_format_amount(group['tax_amount']),
+                }
+        return res

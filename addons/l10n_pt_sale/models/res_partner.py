@@ -16,7 +16,7 @@ class ResPartner(models.Model):
                 and re.sub(r"[^0-9]", "", partner.vat) != "999999990"
                 and self.env['sale.order'].search_count([
                     ('partner_id', '=', partner.id),
-                    ('l10n_pt_sale_inalterable_hash', '!=', False),
+                    ('l10n_pt_inalterable_hash', '!=', False),
                 ], limit=1)
             ):
                 raise UserError(_("You cannot change the VAT number of a partner that already has issued documents"))

@@ -1,29 +1,20 @@
-import re
-
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 from odoo.addons.l10n_pt_certification.models.l10n_pt_at_series import AT_SERIES_ACCOUNTING_DOCUMENT_TYPES
 
 
 class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+    _name = 'account.payment'
+    _inherit = ['account.payment', 'l10n.pt.document.mixin']
 
-    l10n_pt_atcud = fields.Char(
-        string='Portuguese ATCUD',
-        compute='_compute_l10n_pt_atcud', store=True,
-        help="Unique document code formed by the AT series validation code and the number of the document.",
-    )
     l10n_pt_document_number = fields.Char(
-        string="Unique Document Number",
         compute='_compute_l10n_pt_document_number', store=True,
         help="Unique identifier for Portuguese documents, made up of the internal document type code, the series name, "
              "and the number of the document within the series.",
     )
     l10n_pt_show_future_date_warning = fields.Boolean(compute='_compute_l10n_pt_show_future_date_warning')
     l10n_pt_at_series_id = fields.Many2one(
-        comodel_name="l10n_pt.at.series",
-        string="AT Series",
         compute='_compute_l10n_pt_at_series_id',
         readonly=False, store=True,
     )
@@ -34,14 +25,6 @@ class AccountPayment(models.Model):
         compute='_compute_l10n_pt_document_type',
         store=True,
     )
-    l10n_pt_print_version = fields.Selection(
-        selection=[
-            ('original', 'Original print'),
-            ('reprint', 'Reprint'),
-        ],
-        string="Version of Printed Document",
-        copy=False,
-    )
     l10n_pt_cancel_reason = fields.Char(
         string="Reason for Cancellation",
         copy=False,
@@ -51,6 +34,14 @@ class AccountPayment(models.Model):
 
     def is_pt_inbound(self):
         return self.country_code == 'PT' and self.payment_type == 'inbound'
+
+    def _l10n_pt_country_ok(self):
+        self.ensure_one()
+        return self.is_pt_inbound()
+
+    def _l10n_pt_get_document_date(self):
+        self.ensure_one()
+        return self.date
 
     ####################################
     # OVERRIDES
@@ -79,13 +70,6 @@ class AccountPayment(models.Model):
     ####################################
     # MISC REQUIREMENTS
     ####################################
-
-    def update_l10n_pt_print_version(self):
-        for payment in self.filtered(lambda p: p.country_code == 'PT'):
-            if not payment.l10n_pt_print_version:
-                payment.l10n_pt_print_version = 'original'
-            else:
-                payment.l10n_pt_print_version = 'reprint'
 
     @api.depends('state', 'date', 'country_code')
     def _compute_l10n_pt_show_future_date_warning(self):
@@ -172,16 +156,6 @@ class AccountPayment(models.Model):
             else:
                 payment.l10n_pt_document_number = False
 
-    def _check_l10n_pt_document_number(self):
-        for payment in self.filtered(lambda p: p.is_pt_inbound() and p.l10n_pt_at_series_id):
-            if payment.l10n_pt_document_number and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', payment.l10n_pt_document_number):
-                raise ValidationError(_(
-                    "The document number (%s) is invalid. It must start with the internal "
-                    "of the document type, a space, the name of the series followed by a slash and the number of the "
-                    "document within the series (e.g. RG 2025A/1). Please check if the series selected fulfill these "
-                    "requirements.", payment.l10n_pt_document_number
-                ))
-
     @api.depends('country_code', 'payment_type')
     def _compute_l10n_pt_document_type(self):
         for payment in self:
@@ -189,10 +163,3 @@ class AccountPayment(models.Model):
                 payment.l10n_pt_document_type = 'payment_receipt'
             else:
                 payment.l10n_pt_document_type = False
-
-    @api.depends('l10n_pt_document_number')
-    def _compute_l10n_pt_atcud(self):
-        for payment in self:
-            if payment.is_pt_inbound() and not payment.l10n_pt_atcud and payment.state in ('in_process', 'paid'):
-                current_seq_number = int(payment.l10n_pt_document_number.split('/')[-1])
-                payment.l10n_pt_atcud = f"{payment.l10n_pt_at_series_id._get_at_code()}-{current_seq_number}"
