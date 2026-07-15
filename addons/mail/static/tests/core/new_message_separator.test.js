@@ -13,10 +13,17 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { Thread } from "@mail/core/common/thread_model";
+import { describe, expect, test } from "@odoo/hoot";
 import { click as hootClick, press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -377,4 +384,82 @@ test("only show new message separator in its thread", async () => {
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('@Mitchell Admin'))", {
         count: 0,
     });
+});
+
+test("pending mark as read does not revert a later mark as unread", async () => {
+    // Regression test for the discuss.meeting_view tour flake (runbot 941491).
+    // A mark as read requested while another one is still in flight is queued
+    // with its guards only evaluated at request time. It used to execute after
+    // the user clicked "Mark as Unread", reverting that explicit action.
+    const firstMarkAsReadDef = Promise.withResolvers();
+    let markAsReadCount = 0;
+    onRpc("/discuss/channel/mark_as_read", async () => {
+        markAsReadCount++;
+        if (markAsReadCount === 1) {
+            // Keep the first request in flight, like under CI load. Skip its
+            // server effects on release: the mock has no request serialization,
+            // executing them after the mark as unread cannot happen in practice.
+            await firstMarkAsReadDef.promise;
+            return true;
+        }
+    });
+    onRpc("/discuss/channel/set_new_message_separator", () =>
+        expect.step("set_new_message_separator")
+    );
+    patchWithCleanup(Thread.prototype, {
+        handleMarkAsRead() {
+            expect.step("handle_mark_as_read");
+            return super.handleMarkAsRead(...arguments);
+        },
+        markAsReadRpc() {
+            expect.step("mark_as_read_rpc");
+            return super.markAsReadRpc(...arguments);
+        },
+    });
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "group",
+        name: "Meeting",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: bobPartnerId,
+        body: "Hello everyone!",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    // freshly added member: landing at the latest message, nothing seen yet
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message:has(:text('Hello everyone!'))");
+    // Opening the thread at the bottom with the focused composer requests the
+    // first mark as read (nothing seen yet), kept in flight.
+    await expect.waitForSteps(["handle_mark_as_read", "mark_as_read_rpc"]);
+    // Focusing the composer again requests a second mark as read: it is queued
+    // until the first one completes.
+    queryFirst(".o-mail-Composer-input").blur();
+    await click(".o-mail-Composer-input");
+    await click("[title='Expand']", {
+        parent: [".o-mail-Message:has(:text('Hello everyone!'))"],
+    });
+    await click(".o-dropdown-item:contains('Mark as Unread')");
+    await expect.waitForSteps(["set_new_message_separator"]);
+    await contains(".o-mail-Thread-newMessage");
+    // The first mark as read completes: the queued one is now outdated by the
+    // mark as unread and must not do its RPC.
+    firstMarkAsReadDef.resolve();
+    await expect.waitForSteps(["handle_mark_as_read"]);
+    expect.verifySteps([]);
+    const [member] = pyEnv["discuss.channel.member"].search_read([["id", "=", memberId]]);
+    expect(member.new_message_separator).toBe(messageId);
 });
