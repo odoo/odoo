@@ -4,7 +4,7 @@
         <field name="model">distribuidora.compra.consolidada.wizard</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">distribuidora_compras.report_compra_consolidada_document</field>
-        <field name="print_report_name">'Lista de compra %s' % (object.fecha_entrega)</field>
+        <field name="print_report_name">'Lista de compra %s' % (object.fecha_pedido)</field>
     </record>
 
     <template id="report_compra_consolidada_document">
@@ -13,7 +13,7 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <h2>Lista de compra consolidada</h2>
-                        <p>Fecha de entrega: <span t-esc="doc.fecha_entrega"/></p>
+                        <p>Fecha de pedidos: <span t-esc="doc.fecha_pedido"/></p>
                         <table class="table table-sm">
                             <thead>
                                 <tr>
@@ -25,7 +25,7 @@
                             <tbody>
                                 <t t-set="lineas" t-value="doc._get_consolidated_lines()"/>
                                 <tr t-if="not lineas">
-                                    <td colspan="3">No hay pedidos confirmados para esta fecha de entrega.</td>
+                                    <td colspan="3">No hay pedidos confirmados para esta fecha.</td>
                                 </tr>
                                 <tr t-foreach="lineas" t-as="linea">
                                     <td><span t-esc="linea['product'].display_name"/></td>
