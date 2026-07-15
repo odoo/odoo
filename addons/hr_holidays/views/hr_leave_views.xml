@@ -376,6 +376,11 @@
                 </div>
                 <field name="dashboard_warning_message" class="alert alert-danger d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not dashboard_warning_message"/>
                 <field name="work_entry_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not work_entry_type_increases_duration"/>
+                <div class="alert alert-info d-flex mt-2"
+                        role="alert"
+                        invisible="state in ['validate', 'refuse', 'cancel'] or not work_entry_type_support_document">
+                    A supporting document is required for this type of time type.
+                </div>
                 <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>

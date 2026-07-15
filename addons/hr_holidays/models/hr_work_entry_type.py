@@ -97,7 +97,7 @@ class HrWorkEntryType(models.Model):
     include_public_holidays_in_duration = fields.Boolean('Ignore Public Holidays', default=False, tracking=True, help="Public holidays should be counted in the leave duration when applying for leaves")
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', tracking=True, default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', tracking=True, default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
-    support_document = fields.Boolean(string='Supporting Document', tracking=True)
+    support_document = fields.Boolean(string='Supporting Document Expected', tracking=True, help="When enabled, employees will see a notice that this leave type requires a supporting document.")
     allow_request_on_top = fields.Boolean(string='Allow Request on Top', default=False,
         tracking=True,
         help="If checked, users can request another leave on top of the ones of this type.")
