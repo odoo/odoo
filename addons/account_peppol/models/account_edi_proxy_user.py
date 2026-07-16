@@ -35,7 +35,7 @@ class AccountEdiProxyClientUser(models.Model):
         if self.proxy_type not in peppol_proxy_types:
             proxy_type_map = dict(self._fields['proxy_type']._description_selection(self.env))
             proxy_types = [proxy_type_map[proxy_type] for proxy_type in peppol_proxy_types]
-            raise UserError(self.env._('EDI user should be of one of the following types: %s', format_list(self.env, proxy_types, 'or')))
+            raise UserError(_('EDI user should be of one of the following types: %s', format_list(self.env, proxy_types, 'or')))
         return super()._make_request(url, params)
 
     def _call_peppol_proxy(self, endpoint, params=None):

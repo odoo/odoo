@@ -449,3 +449,15 @@ class ResConfigSettings(models.TransientModel):
     def _get_peppol_proxy_type(self):
         self.ensure_one()
         return self.account_peppol_edi_user.proxy_type
+
+    def action_open_peppol_form(self):
+        # There is no form / wizard for peppol registration in 17.0 (only in 18.0+)
+        return self.button_create_peppol_proxy_user()
+
+    def button_peppol_reregister(self):
+        self.ensure_one()
+        if self.country_code == 'FR' and self.env['ir.module.module']._get('l10n_fr_pdp').state != 'installed':
+            raise UserError(_("Please install the 'France - E-Invoicing (Approved Platform)' module (l10n_fr_pdp) first"))
+        self.button_deregister_peppol_participant()
+        self.company_id._reset_peppol_configuration()
+        return self.action_open_peppol_form()
