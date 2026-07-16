@@ -5,6 +5,10 @@ from odoo.addons.account.controllers.portal import PortalAccount
 
 class L10nMYPortalAccount(PortalAccount):
 
+    def _is_malaysian_company(self):
+        return self.env.company.account_fiscal_country_id.code == "MY"
+
+    # Todo: Fix me master, it should only add those values for MY company
     def _prepare_address_form_values(self, *args, **kwargs):
         rendering_values = super()._prepare_address_form_values(*args, **kwargs)
 
@@ -19,6 +23,8 @@ class L10nMYPortalAccount(PortalAccount):
             'l10n_my_edi_industrial_classifications': request.env['l10n_my_edi.industry_classification'].sudo().search([]),
             'default_industrial_classification_id': default_classification.id if default_classification else False,
         })
+        if self._is_malaysian_company():
+            rendering_values["vat_label"] = self.env._("Tax Identification Number")
         return rendering_values
 
     def _parse_form_data(self, form_data):
