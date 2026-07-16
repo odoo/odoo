@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, float_round
@@ -117,66 +119,23 @@ class PdpResponseWizard(models.TransientModel):
             wizard.available_statuses = ','.join(statuses)
 
     @api.model
-    def _get_base_lines(self, move):
-        move.ensure_one()
-        company = move.company_id
+    def _get_tax_details(self, move):
 
-        base_amls = move.line_ids.filtered(lambda x: x.display_type == 'product')
-        base_lines = [move._prepare_product_base_line_for_taxes_computation(aml) for aml in base_amls]
-        epd_amls = move.line_ids.filtered(lambda line: line.display_type == 'epd')
-        base_lines += [move._prepare_epd_base_line_for_taxes_computation(line) for line in epd_amls]
-        cash_rounding_amls = move.line_ids \
-            .filtered(lambda line: line.display_type == 'rounding' and not line.tax_repartition_line_id)
-        base_lines += [move._prepare_cash_rounding_base_line_for_taxes_computation(line) for line in cash_rounding_amls]
-        tax_amls = move.line_ids.filtered('tax_repartition_line_id')
-        tax_lines = [move._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
+        def grouping_key_generator(base_line, tax_values):
+            tax = tax_values['tax_repartition_line'].tax_id
 
-        AccountTax = self.env['account.tax']
-        AccountTax._add_tax_details_in_base_lines(base_lines, company)
-        AccountTax._round_base_lines_tax_details(base_lines, company, tax_lines=tax_lines)
-
-        return base_lines
-
-    @api.model
-    def _get_tax_details(self, base_lines):
-
-        def tax_details_grouping_function(base_line, tax_data):
-            if not tax_data:
-                return None
-            tax = tax_data['tax']
             return {
                 'amount': tax.amount,
             }
 
-        # Tax details
-        AccountTax = self.env['account.tax']
-        base_lines_aggregated_values_for_tax_details = AccountTax._aggregate_base_lines_tax_details(base_lines, tax_details_grouping_function)
-        return AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values_for_tax_details)
-
-    @api.model
-    def _get_early_payment_discount_tax_details(self, base_lines):
-
-        def tax_details_grouping_function(base_line, tax_data):
-            if not tax_data or base_line['special_type'] != 'early_payment':
-                return None
-
-            tax = tax_data['tax']
-            return {
-                'amount': tax.amount,
-            }
-
-        # Tax details
-        AccountTax = self.env['account.tax']
-        base_lines_aggregated_values_for_tax_details = AccountTax._aggregate_base_lines_tax_details(base_lines, tax_details_grouping_function)
-        return AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values_for_tax_details)
+        return move._prepare_invoice_aggregated_taxes(
+            grouping_key_generator=grouping_key_generator,
+        )['tax_details']
 
     @api.model
     def _get_payments_data_fully_paid(self, move):
         move.ensure_one()
-        base_lines = self._get_base_lines(move)
-
-        full_tax_details = self._get_tax_details(base_lines)
-        epd_tax_details = self._get_early_payment_discount_tax_details(base_lines)
+        full_tax_details = self._get_tax_details(move)
 
         collected = [
             {
@@ -188,14 +147,23 @@ class PdpResponseWizard(models.TransientModel):
             } for key, tax_details in full_tax_details.items() if key
         ]
 
+        if move.invoice_payment_term_id.early_pay_discount_computation != 'mixed':
+            return collected
+
+        tax_to_discount = defaultdict(lambda: 0)
+        sign = -1 if move.move_type == 'out_refund' else 1
+        for line in move.line_ids.filtered(lambda l: l.display_type == 'epd'):
+            for tax in line.tax_ids:
+                tax_to_discount[tax.amount] += line.amount_currency * sign
+
         discounted = [
             {
                 "amount_changed": False,
                 "type_code": "ESC",
-                "amount": self._round_format_number_2(move.direction_sign * (tax_details['base_amount'] + tax_details['tax_amount'])),
+                "amount": self._round_format_number_2(amount),
                 "currency": "EUR",
-                "tax_percent": self._round_format_number_2(key['amount']),
-            } for key, tax_details in epd_tax_details.items() if key
+                "tax_percent": self._round_format_number_2(tax_percent),
+            } for tax_percent, amount in tax_to_discount
         ]
 
         return collected + discounted
@@ -210,8 +178,7 @@ class PdpResponseWizard(models.TransientModel):
         collected_amount = forced_amount or move.pdp_lifecycle_residual
         collected_sign = -1 if collected_amount < 0 else 1
 
-        base_lines = self._get_base_lines(move)
-        tax_details = self._get_tax_details(base_lines)
+        tax_details = self._get_tax_details(move)
 
         to_pay = {
             key['amount']: move.direction_sign * (tax_details['base_amount'] + tax_details['tax_amount'])

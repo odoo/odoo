@@ -122,6 +122,15 @@ class AccountEdiProxyClientUser(models.Model):
         }
         return urls
 
+    def _get_peppol_proxy_endpoint(self, endpoint, proxy_type=None):
+        """The `endpoint` should include the number; be like `2/participant_status`"""
+        if not proxy_type:
+            self.ensure_one()
+            proxy_type = self.proxy_type
+        if proxy_type == 'pdp' and endpoint == '1/participant_status':
+            endpoint = '2/participant_status'
+        return f"/api/{proxy_type}/{endpoint}"
+
     @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
         if (

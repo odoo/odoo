@@ -227,6 +227,9 @@ class AccountEdiProxyClientUser(models.Model):
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_new_documents')._trigger()
 
+    def _peppol_get_filetype(self, content):
+        return "xml", "application/xml"
+
     def _peppol_get_decoded_document(self, content):
         enc_key = content["enc_key"]
         document_content = content["document"]
@@ -238,12 +241,13 @@ class AccountEdiProxyClientUser(models.Model):
         processed_uuids = []
         moves = self.env['account.move']
         for uuid, content in messages.items():
+            fileextension, mimetype = self._peppol_get_filetype(content)
             filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
             attachment_vals = {
-                'name': f'{filename}.xml',
+                'name': f'{filename}.{fileextension}',
                 'raw': self._peppol_get_decoded_document(content),
                 'type': 'binary',
-                'mimetype': 'application/xml',
+                'mimetype': mimetype,
             }
 
             try:
@@ -280,7 +284,8 @@ class AccountEdiProxyClientUser(models.Model):
                         default_journal_id=journal.id,
                     )\
                     ._create_document_from_attachment(attachment.id)
-                move._message_log(body=_('Peppol document has been received successfully'))
+                move._message_log(body=_('%(proxy_type)s document has been received successfully',
+                                         proxy_type=dict(self._fields['proxy_type']._description_selection(self.env))[self.proxy_type]))
                 moves += move
             # pylint: disable=broad-except
             except Exception:  # noqa: BLE001
@@ -379,6 +384,24 @@ class AccountEdiProxyClientUser(models.Model):
         for disabled_company in disabled_companies:
             self._try_recover_peppol_proxy_users(disabled_company)
 
+    def _peppol_process_participant_status(self, proxy_user):
+        self.ensure_one()
+
+        local_state = {
+            'draft': 'not_registered',
+            'active': 'active',
+            'sender': 'sender',
+            'verified': 'pending',
+            'rejected': 'rejected',
+        }.get(proxy_user.get('peppol_state'))
+
+        if local_state == 'not_registered':
+            self.sudo().company_id._reset_peppol_configuration()
+        elif local_state:
+            self.company_id.account_peppol_proxy_state = local_state
+        else:
+            _logger.warning("Received unknown Peppol state '%s' for EDI proxy user id=%s", proxy_user.get('peppol_state'), self.id)
+
     def _peppol_get_participant_status(self):
         for edi_user in self:
             try:
@@ -394,20 +417,7 @@ class AccountEdiProxyClientUser(models.Model):
                     _logger.error('Error while updating Peppol participant status: %s', e)
                 continue
 
-            local_state = {
-                'draft': 'not_registered',
-                'active': 'active',
-                'sender': 'sender',
-                'verified': 'pending',
-                'rejected': 'rejected',
-            }.get(proxy_user.get('peppol_state'))
-
-            if local_state == 'not_registered':
-                edi_user.sudo().company_id._reset_peppol_configuration()
-            elif local_state:
-                edi_user.company_id.account_peppol_proxy_state = local_state
-            else:
-                _logger.warning("Received unknown Peppol state '%s' for EDI proxy user id=%s", proxy_user.get('peppol_state'), edi_user.id)
+            edi_user._peppol_process_participant_status(proxy_user)
 
     def _get_company_details(self):
         self.ensure_one()

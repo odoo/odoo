@@ -2,7 +2,6 @@ import requests
 from unittest import mock
 from urllib.parse import parse_qs
 
-from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from .common import TestL10nFrPdpCommon
@@ -76,16 +75,6 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'peppol_eas': '0225',
         }])
 
-    def test_pdp_edi_formats(self):
-        partner = self.partner_a
-        partner.invoice_sending_method = 'peppol'
-        self.assertEqual(partner._get_pdp_receiver_identification_info()[0], 'pdp')
-        with self.assertRaises(UserError):
-            partner.ubl_cii_format = 'ubl_bis3'
-
-        partner.invoice_sending_method = 'email'
-        partner.ubl_cii_format = 'ubl_bis3'
-
     def test_validate_partner_be_invalid_format(self):
         partner = self.partner_b
         self.assertRecordValues(partner, [{
@@ -111,10 +100,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         ):
             partner.ubl_cii_format = 'xrechnung'  # this should trigger a verification state update
 
-        self.assertRecordValues(partner, [{
-            'account_peppol_verification_label': 'not_valid_format',
-            'pdp_verification_display_state': 'peppol_not_valid_format',
-        }])
+            self.assertRecordValues(partner, [{
+                'account_peppol_verification_label': 'not_valid_format',
+                'pdp_verification_display_state': 'peppol_not_valid_format',
+            }])
 
     def test_validate_partner_be(self):
         partner = self.partner_b
@@ -141,10 +130,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         ):
             partner.button_account_peppol_check_partner_endpoint()
 
-        self.assertRecordValues(partner, [{
-            'account_peppol_verification_label': 'not_valid_format',
-            'pdp_verification_display_state': 'peppol_not_valid_format',
-        }])
+            self.assertRecordValues(partner, [{
+                'account_peppol_verification_label': 'not_valid_format',
+                'pdp_verification_display_state': 'peppol_not_valid_format',
+            }])
 
         def _request_handler_2(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
             self.assertEqual(r.method, "GET")
@@ -153,18 +142,16 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
             return self._get_peppol_lookup_response(peppol_identifier, "0208:0239843188")
 
-        partner.invoice_sending_method = False
         with (
                 mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
                 mock.patch.object(requests.sessions.Session, 'send', _request_handler_2),
         ):
             partner.button_account_peppol_check_partner_endpoint()
 
-        self.assertRecordValues(partner, [{
-            'account_peppol_verification_label': 'valid',
-            'pdp_verification_display_state': 'peppol_valid',
-            'invoice_sending_method': False,
-        }])
+            self.assertRecordValues(partner, [{
+                'account_peppol_verification_label': 'valid',
+                'pdp_verification_display_state': 'peppol_valid',
+            }])
 
     def test_validate_partner_fr(self):
         partner = self.partner_a
@@ -188,15 +175,13 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
                 return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
 
-        partner.invoice_sending_method = False
         with (
                 mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
                 mock.patch.object(requests.sessions.Session, 'send', _request_handler),
         ):
             partner.button_account_peppol_check_partner_endpoint()
 
-        self.assertRecordValues(partner, [{
-            'account_peppol_verification_label': 'valid',
-            'pdp_verification_display_state': 'pdp_valid',
-            'invoice_sending_method': False,
-        }])
+            self.assertRecordValues(partner, [{
+                'account_peppol_verification_label': 'valid',
+                'pdp_verification_display_state': 'pdp_valid',
+            }])

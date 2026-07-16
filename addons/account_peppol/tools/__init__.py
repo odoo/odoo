@@ -3,6 +3,6 @@
 from . import demo_utils
 
 
-# TODO: clean up / do in accou
 def format_list(env, lst):
+    """Simplified version of `odoo.tools.format_list` from 18.0 to backport the 18.0 code more easily / safely"""
     return ", ".join(lst)

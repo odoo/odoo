@@ -105,6 +105,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
         response = requests.Response()
         response.status_code = 200
         json = {}
+
         if r.path_url.startswith('/api/peppol/1/lookup') or r.path_url.startswith('/api/pdp/1/lookup'):
             json = {
                 "error": {
