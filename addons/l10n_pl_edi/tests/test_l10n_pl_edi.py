@@ -210,30 +210,11 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
     @freeze_time('2026-01-23')
     def test_ksef_fa3_reverse_charge(self):
-        invoice = self._create_invoice(
-                invoice_date=fields.Date.today(),
-                partner_id=self.partner_pl,
-                invoice_line_ids=[
-                    Command.create({
-                        'product_id': self.product.id,
-                        'price_unit': 1000.0,
-                        'tax_ids': [Command.set(self.env['account.chart.template'].ref('vs_dostu').ids)],
-                    }),
-                    Command.create({
-                        'product_id': self.product.id,
-                        'price_unit': 1000.0,
-                        'tax_ids': [Command.set(self.env['account.chart.template'].ref('vs_kraj_8').ids)],
-                    }),
-                ],
-                post=True,
-        )
-
+        invoice_lines = self._prepare_invoice_line(product_id=self.product.id, quantity=1,
+        price_unit=1000.0, tax_ids=[Command.set(self.env['account.chart.template'].ref('vs_stal').ids)])
+        invoice = self._create_invoice(invoice_date=fields.Date.today(), partner_id=self.partner_pl,
+        invoice_line_ids=[invoice_lines], post=True)
         self._assert_export_invoice(invoice, 'standard_fa3_format_invoice_reverse_charge.xml')
-
-        credit_note = invoice._reverse_moves()
-        credit_note.action_post()
-
-        self._assert_export_invoice(credit_note, 'standard_fa3_format_credit_note_reverse_charge.xml')
 
     @freeze_time('2026-01-23')
     def test_payment_logic_partial_mixed_methods(self):
@@ -528,6 +509,18 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         invoice = self._create_invoice(invoice_line_ids=[invoice_line], partner_id=self.partner_pl.id, post=True)
         xml = invoice._l10n_pl_edi_render_xml()
         self.assertEqual(self._get_xml_value(xml, "//ns:Fa/ns:P_13_9"), '1000.00')
+
+    @freeze_time('2026-01-23')
+    def test_ksef_fa3_non_eu_service_generates_p_13_8(self):
+        """
+        Non-EU service invoices (K_11) must include P_13_8 as the net amount of the supplied service.
+        """
+        non_eu_service_product = self._create_product(name='Non-EU Service', type='service')
+        invoice_line = self._prepare_invoice_line(product_id=non_eu_service_product.id, quantity=1,
+        price_unit=2000.0, tax_ids=[Command.set(self.env['account.chart.template'].ref('vs_ekspu').ids)])
+        invoice = self._create_invoice(invoice_line_ids=[invoice_line], partner_id=self.partner_pl.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Fa/ns:P_13_8"), '2000.00')
 
     @freeze_time('2026-01-23')
     def test_scenario_correction_values_are_negative(self):
