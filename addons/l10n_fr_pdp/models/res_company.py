@@ -127,7 +127,7 @@ class ResCompany(models.Model):
             return
         account_ids = self.env['account.account'].search([
             ('account_type', 'in', ['asset_receivable', 'liability_payable']),
-            # ('company_ids', 'in', companies.ids),  # TODO: FIXME:
+            ('company_id', 'in', companies.ids),
         ]).ids
         date_company_conditions = SQL(
             '(%s)',

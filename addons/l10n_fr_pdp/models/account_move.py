@@ -331,12 +331,13 @@ class AccountMove(models.Model):
             )
         else:
             flow_label = _("None")
-        body = (
-            Markup('<ul>')
-            + Markup('<li><span class="fw-bold">') + _("E-reporting Flow:")
-            + Markup('</span> ') + flow_label + Markup('</li>')
-            + Markup('<li><span class="fw-bold">') + _("E-reporting Status:")
-            + Markup('</span> ') + status_label + Markup('</li>')
+        body = Markup(
+            '<ul>'
+            '<li><span class="fw-bold">%s</span> %s</li>'
+            '<li><span class="fw-bold">%s</span> %s</li>'
+        ) % (
+            _("E-reporting Flow:"), flow_label,
+            _("E-reporting Status:"), status_label,
         )
         if (errors := (
             self.l10n_fr_pdp_last_flow_id.state == 'error'
@@ -348,10 +349,9 @@ class AccountMove(models.Model):
                 for error in errors
                 if error
             )
-            body += (
-                Markup('<li><span class="fw-bold">') + _("E-reporting Errors:")
-                + Markup('</span><ul>') + error_lines + Markup('</ul></li>')
-            )
+            body += Markup(
+                '<li><span class="fw-bold">%s</span><ul>%s</ul></li>'
+            ) % (_("E-reporting Errors:"), error_lines)
         body += Markup('</ul>')
         self._message_log(body=body)
 

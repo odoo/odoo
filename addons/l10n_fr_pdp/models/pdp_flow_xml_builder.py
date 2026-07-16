@@ -2,7 +2,7 @@ from collections import defaultdict
 from lxml import etree
 import base64
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
 from odoo.tools import float_is_zero, float_round, frozendict, html2plaintext, ormcache
@@ -419,7 +419,9 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             base_amount = line.price_unit * line.quantity
             amount = float_round(abs(base_amount * (line.discount / 100.0)), 2)  # G1.14
             for tax in line.tax_ids or [False]:
-                tax_code, _exemption_reason_code, _exemption_reason = self._get_tax_codes_and_exemption(buyer, seller, tax)
+                tax_code, _exemption_reason_code, _exemption_reason = self._get_tax_codes_and_exemption(
+                    buyer, seller, tax, move,
+                )
                 invoice['AllowanceCharge'].append({
                     'Amount': {'_text': amount},
                     'TaxCategoryCode': {'_text': tax_code},
@@ -445,6 +447,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         If agregation_function is given, summary is returned grouped by the value returned
         by the agregation function.
         '''
+        move = move_lines.move_id.ensure_one() if buyer and seller else None
         summaries = defaultdict(lambda: {
             'taxable_amount_total': 0,
             'tax_total': 0,
@@ -466,7 +469,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             summary = summaries[agregation_function(line) if agregation_function else None]
 
             if line.move_id.move_type == 'entry':
-                price_unit = abs(line.amount_currency)
+                price_unit = self._get_entry_line_price_unit(line)
                 quantity = 1.0
             else:
                 price_unit = line.price_unit * (1 - line.discount / 100.0)
@@ -490,7 +493,9 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 summary['tax_total'] += tax_amount
             if buyer and seller:
                 for tax, values in summary['subtotals'].items():
-                    tax_code, exemption_code, exemption_reason = self._get_tax_codes_and_exemption(buyer, seller, tax)
+                    tax_code, exemption_code, exemption_reason = self._get_tax_codes_and_exemption(
+                        buyer, seller, tax, move,
+                    )
                     values['tax_category_code'] = tax_code
                     values['exemption_code'] = exemption_code
                     values['exemption_reason'] = exemption_reason
@@ -499,6 +504,10 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 summary['subtotals'][None]['tax_category_code'] = 'E'
 
         return summaries if agregation_function else summaries[None]
+
+    @api.model
+    def _get_entry_line_price_unit(self, line):
+        return abs(line.amount_currency)
 
     @api.model
     def _is_line_for_payment_reporting(self, line):
@@ -532,7 +541,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             res = {
                 'BilledQuantity': {
                     '_text': line.quantity,
-                    'UnitCode': self._get_uom_unece_code(line.product_uom_id),
+                    'UnitCode': self._get_uom_unece_code(line),
                 },
             }
             if sale_line_ids_in_fields:
@@ -568,14 +577,72 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             invoice['Line'].append(res)
 
     @api.model
-    def _get_tax_codes_and_exemption(self, buyer, seller, tax):
-        res = self._get_tax_unece_codes(buyer, seller, tax or self.env['account.tax'])  # TODO: FIXME:
+    def _get_tax_codes_and_exemption(self, buyer, seller, tax, move):
+        tax = tax or self.env['account.tax']
+        if tax and tax.ubl_cii_tax_category_code:
+            # Keep the values configured by account_edi_ubl_cii_tax_extension.
+            res = self._get_tax_unece_codes(move, tax)
+        else:
+            res = self._get_tax_codes_from_partners(buyer, seller, tax, move)
         tax_code = res.get('tax_category_code')
         if tax_code not in VALID_TAX_CODES:
             return 'S', None, None  # default to standard rate if tax code is not valid
         exemption_reason_code = res.get('tax_exemption_reason_code')
         exemption_reason = res.get('tax_exemption_reason')
         return tax_code, exemption_reason_code, exemption_reason
+
+    @api.model
+    def _get_tax_codes_from_partners(self, buyer, seller, tax, move):
+        def create_dict(tax_category_code=None, tax_exemption_reason_code=None, tax_exemption_reason=None):
+            return {
+                'tax_category_code': tax_category_code,
+                'tax_exemption_reason_code': tax_exemption_reason_code,
+                'tax_exemption_reason': tax_exemption_reason,
+            }
+
+        if buyer.country_id.code == 'ES' and buyer.zip:
+            if buyer.zip[:2] in ('35', '38'):
+                return create_dict(tax_category_code='L')
+            if buyer.zip[:2] in ('51', '52'):
+                return create_dict(tax_category_code='M')
+
+        if (
+            not tax.amount
+            and (cocontractant_note := self._get_belgian_cocontractant_note(move, buyer))
+        ):
+            return create_dict(
+                tax_category_code='AE',
+                tax_exemption_reason_code='VATEX-EU-AE',
+                tax_exemption_reason=cocontractant_note,
+            )
+
+        if seller.country_id == buyer.country_id:
+            if not tax or tax.amount == 0:
+                return create_dict(tax_category_code='E')
+            if self._is_reverse_charge_tax(tax):
+                return create_dict(tax_category_code='AE')
+            return create_dict(tax_category_code='S')
+
+        european_economic_area = self.env.ref('base.europe').country_ids.mapped('code') + ['NO', 'IS', 'LI']
+        if seller.country_id.code in european_economic_area and seller.vat:
+            if tax.amount != 0 and not self._is_reverse_charge_tax(tax):
+                return create_dict(tax_category_code='S')
+            if buyer.country_id.code not in european_economic_area:
+                return create_dict(
+                    tax_category_code='G',
+                    tax_exemption_reason_code='VATEX-EU-G',
+                    tax_exemption_reason=_('Export outside the EU'),
+                )
+            if buyer.country_id.code in european_economic_area:
+                return create_dict(
+                    tax_category_code='K',
+                    tax_exemption_reason_code='VATEX-EU-IC',
+                    tax_exemption_reason=_('Intra-Community supply'),
+                )
+
+        if tax.amount != 0:
+            return create_dict(tax_category_code='S')
+        return create_dict(tax_category_code='E')
 
     @api.model
     def _get_move_business_process_id(self, move):
