@@ -5,6 +5,7 @@ import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { defineModels, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { user } from "@web/core/user";
 import { IrUiView, ResCompany } from "@mass_mailing/../tests/mass_mailing_test_helpers";
+import { escapeTextNodes } from "@html_builder/utils/escaping";
 
 defineMailModels();
 
@@ -77,7 +78,11 @@ describe("mailing snippet model", () => {
         ).content;
         snippetEl.querySelector("p").innerText = "This is our custom snippet text!";
         snippetEl.dataset.name = "Snippet Named Bob";
-        await snippetService.saveSnippet(snippetEl, []);
+        await snippetService.saveSnippet(snippetEl, (el) => {
+            const cloneEl = el.cloneNode(true);
+            escapeTextNodes(cloneEl);
+            return cloneEl;
+        });
         expect.verifySteps(["mailing snippet info"]);
 
         // Check that the custom snippet exists and that its content is equivalent to the snippet we just saved
