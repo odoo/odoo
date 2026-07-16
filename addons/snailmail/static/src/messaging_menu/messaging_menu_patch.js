@@ -22,7 +22,7 @@ const messagingMenuPatch = {
                 res_model: failure.resModel,
                 domain: [["message_ids.snailmail_error", "=", true]],
             },
-            { newWindow: options.isMiddleClick }
+            { newWindow: options?.isMiddleClick }
         );
         this.close?.();
     },

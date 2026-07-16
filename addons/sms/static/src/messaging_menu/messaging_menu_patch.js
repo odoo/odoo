@@ -23,7 +23,7 @@ const messagingMenuPatch = {
                 domain: [["message_has_sms_error", "=", true]],
                 context: { create: false },
             },
-            { newWindow: options.isMiddleClick }
+            { newWindow: options?.isMiddleClick }
         );
         this.close?.();
     },
