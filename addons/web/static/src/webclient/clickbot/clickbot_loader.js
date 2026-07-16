@@ -10,18 +10,18 @@ async function _waitForEnv() {
     return odoo.__WOWL_DEBUG__.root.env;
 }
 
-export async function startClickEverywhere(xmlId, light, currentState) {
+export async function startClickEverywhere(options) {
     await loadBundle("web.assets_clickbot");
     const { Clickbot } = odoo.loader.modules.get("@web/webclient/clickbot/clickbot");
     const env = await _waitForEnv();
-    return new Clickbot(env, { xmlId, light, currentState }).start();
+    return new Clickbot(env, options).start();
 }
 
 export function runClickTestItem() {
     return {
         type: "item",
         description: _t("Run Click Everywhere"),
-        callback: () => startClickEverywhere(),
+        callback: () => startClickEverywhere({}),
         sequence: 460,
         section: "testing",
     };
@@ -29,7 +29,12 @@ export function runClickTestItem() {
 
 const currentState = JSON.parse(browser.localStorage.getItem("running.clickbot"));
 if (currentState) {
-    startClickEverywhere(currentState.xmlId, currentState.light, currentState);
+    startClickEverywhere({
+        xmlId: currentState.xmlId,
+        light: currentState.light,
+        logger: currentState.logger,
+        currentState,
+    });
 }
 
 registry.category("debug").category("default").add("runClickTestItem", runClickTestItem);
