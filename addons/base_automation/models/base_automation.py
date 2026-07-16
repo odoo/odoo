@@ -120,6 +120,10 @@ TIME_TRIGGERS = [
     'on_time_updated',
 ]
 
+# which fields have an impact on the registry and the cron
+CRITICAL_FIELDS = ('model_id', 'active', 'trigger', 'on_change_field_ids')
+RANGE_FIELDS = ('trg_date_range', 'trg_date_range_type')
+
 
 def get_webhook_request_payload():
     if not request:
@@ -260,10 +264,6 @@ class BaseAutomation(models.Model):
         compute='_compute_trigger_field_ids', readonly=False, store=True,
         help="The automation rule will be triggered if and only if one of these fields is updated."
              "If empty, all fields are watched.")
-
-    # which fields have an impact on the registry and the cron
-    CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_field_ids']
-    RANGE_FIELDS = ['trg_date_range', 'trg_date_range_type']
 
     @api.constrains('model_id', 'action_server_ids')
     def _check_action_server_model(self):
@@ -516,14 +516,14 @@ class BaseAutomation(models.Model):
     def write(self, vals: dict):
         clear_templates = self._has_trigger_onchange()
         res = super().write(vals)
-        if set(vals).intersection(self.CRITICAL_FIELDS):
+        if set(vals).intersection(CRITICAL_FIELDS):
             self._update_cron()
             self._update_registry()
             clear_templates |= self._has_trigger_onchange()
             if clear_templates and any(self._ids):
                 # Invalidate templates cache to update on_change attributes if needed
                 self.env.transaction.invalidate_ormcache('templates')
-        elif set(vals).intersection(self.RANGE_FIELDS):
+        elif set(vals).intersection(RANGE_FIELDS):
             self._update_cron()
         return res
 
