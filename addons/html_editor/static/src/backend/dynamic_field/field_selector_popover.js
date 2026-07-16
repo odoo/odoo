@@ -1,11 +1,11 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { useAutofocus } from "@web/core/utils/hooks";
 
 export class FieldSelectorPopover extends Component {
     static template = "html_editor.FieldSelectorPopover";
-    static components = { ModelFieldSelector };
     static props = {
         resModel: String,
         validate: Function,
@@ -29,55 +29,64 @@ export class FieldSelectorPopover extends Component {
             path: this.props.path || "",
             label: this.props.label || "",
             modelName: this.props.resModel,
+            fieldInfo: null,
         });
 
-        this.fieldService = useService("field");
+        this.fieldSelectorPopover = usePopover(ModelFieldSelectorPopover, {
+            popoverClass: "o_popover_field_selector",
+        });
         useHotkey("Enter", () => this.validate(), { bypassEditableProtection: true });
         useHotkey("Escape", () => this.props.close(), { bypassEditableProtection: true });
-
-        onWillStart(async () => {
-            this.state.modelName = this.props.resModel;
-            if (this.state.path) {
-                const fieldInfo = await this.getFieldInfo(this.state.path);
-                this.fieldType = fieldInfo.type;
-                this.state.fieldName = fieldInfo.string;
-            }
-        });
     }
 
     get resModel() {
         return this.props.resModel;
     }
 
-    async getFieldInfo(path) {
-        return (await this.fieldService.loadFieldInfo(this.resModel, path)).fieldDef;
-    }
-
     onLabelInput(ev) {
         this.state.label = ev.target.value;
     }
 
-    setPath(path, { fieldDef }) {
+    get isValid() {
+        // select a field, or just update the default
+        return this.state.fieldInfo || this.state.path === this.props.path;
+    }
+
+    openFieldSelector(ev) {
+        this.fieldSelectorPopover.open(ev.currentTarget, {
+            close: () => this.fieldSelectorPopover.close(),
+            filter: this.props.filter,
+            followRelations: this.props.followRelations,
+            isDebugMode: !!this.env.debug,
+            path: this.state.path,
+            readProperty: true,
+            resModel: this.resModel,
+            showDebugInput: false,
+            showSearchInput: true,
+            update: this.setPath.bind(this),
+        });
+    }
+
+    setPath(path, fieldDef) {
         this.state.path = path;
         this.state.fieldName = fieldDef?.string;
-        this.fieldType = fieldDef?.type;
+        this.state.fieldInfo = fieldDef;
 
         if (fieldDef?.string) {
             this.state.label = fieldDef?.string;
         }
     }
 
-    async validate() {
-        const fieldInfo = await this.getFieldInfo(this.state.path);
-        if (!fieldInfo) {
+    validate() {
+        if (!this.state.path || !this.isValid) {
             return;
         }
         this.props.validate({
             path: this.state.path,
             label: this.state.label || "",
-            fieldInfo,
-            relation: fieldInfo.relation,
-            relationName: fieldInfo.string,
+            fieldInfo: this.state.fieldInfo,
+            relation: this.state.fieldInfo?.relation,
+            relationName: this.state.fieldInfo?.string,
         });
         this.props.close();
     }
