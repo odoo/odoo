@@ -540,9 +540,9 @@ class AccountAccount(models.Model):
         ]
         if journal_id:
             domain += ['|', ('account_id.allowed_journal_ids', '=', journal_id), ('account_id.allowed_journal_ids', '=', False)]
-        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
+        if move_type in self.env['account.move'].get_sale_types(include_receipts=True):
             domain.append(('account_id.internal_group', '=', 'income'))
-        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
+        elif move_type in self.env['account.move'].get_purchase_types(include_receipts=True):
             domain.append(('account_id.internal_group', '=', 'expense'))
 
         query = self.env['account.move.line']._where_calc(domain)
