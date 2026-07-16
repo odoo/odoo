@@ -11,7 +11,7 @@ class AccountMove(models.Model):
     # Note: We depend on 'line_ids.balance' instead of 'amount_total_signed' directly.
     # Otherwise the field is recomputed when the 'state' changes (since 'amount_total_signed' depends on it);
     # the recomputation would i.e. happen when confirming the invoice and override any manual edits of the field.
-    @api.depends('partner_id', 'line_ids.balance')
+    @api.depends('partner_id', 'line_ids.balance', 'reversed_entry_id')
     def _compute_l10n_es_is_simplified(self):
         simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
         for move in self:
@@ -24,6 +24,7 @@ class AccountMove(models.Model):
                     and currency_id.compare_amounts(abs(move.amount_total_signed), move.company_id.l10n_es_simplified_invoice_limit) <= 0
                     and move.commercial_partner_id.country_id in self.env.ref('base.europe').country_ids
                 )
+                or move.reversed_entry_id.l10n_es_is_simplified
             )
 
     def _l10n_es_is_dua(self):
