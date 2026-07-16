@@ -81,16 +81,18 @@ class StockAllocationReport(models.AbstractModel):
 
         # Update incoming product lines' quantities.
         for product, moves in moves.grouped('product_id').items():
-            assigned_qty, free_qty = 0, 0
+            assigned_qty, free_qty, total_qty = 0, 0, 0
             for move in moves:
                 if move.state == 'draft':
                     continue  # Draft quantities can't be allocated.
+                incoming_qty = move.quantity if move.picked else max(move.product_qty, move.quantity)
+                total_qty += incoming_qty
                 if move.move_dest_ids:
                     already_assigned_qty = sum(move.move_dest_ids.mapped('product_qty'))
-                    assigned_qty += min(already_assigned_qty, move.product_qty)
-                    free_qty += max(move.product_qty - already_assigned_qty, 0)
+                    assigned_qty += min(already_assigned_qty, incoming_qty)
+                    free_qty += max(incoming_qty - already_assigned_qty, 0)
                 else:
-                    free_qty += move.product_qty
+                    free_qty += incoming_qty
 
             product_lines[product.id] = {
                 'assigned_qty': assigned_qty,
@@ -101,7 +103,7 @@ class StockAllocationReport(models.AbstractModel):
                 'name': product.name,
                 'display_name': product.display_name,
                 'needs': [self._get_out_move_values(move_out) for move_out in moves.move_dest_ids],
-                'total_qty': sum(move.product_qty for move in moves),
+                'total_qty': total_qty,
                 'uom': product.uom_id.read(['display_name', 'factor'])[0],
             }
 
