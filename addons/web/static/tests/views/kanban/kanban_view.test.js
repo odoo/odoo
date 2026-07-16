@@ -29,6 +29,7 @@ import {
     test,
     tick,
 } from "@odoo/hoot";
+import { onMounted, onPatched } from "@odoo/owl";
 import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     MockServer,
@@ -78,16 +79,14 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { onRendered, onWillRender } from "@web/owl2/utils";
-import { onMounted, onPatched } from "@odoo/owl";
-
 import { browser } from "@web/core/browser/browser";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { FileInput } from "@web/core/file_input/file_input";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { SampleServer } from "@web/model/sample_server";
+import { onWillRender } from "@web/owl2/utils";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
@@ -369,14 +368,11 @@ test("Hide tooltip when user click inside a kanban headers item", async () => {
 
 test.tags("desktop");
 test("basic grouped rendering", async () => {
-    expect.assertions(14);
-
     patchWithCleanup(KanbanRenderer.prototype, {
         setup() {
-            super.setup(...arguments);
-            onRendered(() => {
-                expect.step("rendered");
-            });
+            super.setup();
+
+            onPatched(() => expect.step("patched"));
         },
     });
 
@@ -400,7 +396,7 @@ test("basic grouped rendering", async () => {
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
-    expect.verifySteps(["rendered"]);
+    expect.verifySteps([]);
 
     await toggleKanbanColumnActions(0);
 
@@ -421,7 +417,7 @@ test("basic grouped rendering", async () => {
     // changing its result.
     await validateSearch();
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
-    expect.verifySteps(["rendered"]);
+    expect.verifySteps(["patched"]);
 });
 
 test("basic grouped rendering with no record", async () => {
@@ -5412,8 +5408,6 @@ test("set cover image", async () => {
 
 test.tags("desktop");
 test("open file explorer if no cover image", async () => {
-    expect.assertions(2);
-
     Partner._fields.displayed_image_id = fields.Many2one({
         string: "Cover",
         relation: "ir.attachment",

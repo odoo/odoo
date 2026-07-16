@@ -1,7 +1,4 @@
-import { onRendered } from "@web/owl2/utils";
-import { expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, expect, mockDate, queryAllTexts, test } from "@odoo/hoot";
 import {
     contains,
     defineModels,
@@ -46,6 +43,7 @@ import {
     setupChartJsForTests,
 } from "./graph_test_helpers";
 
+import { onPatched } from "@odoo/owl";
 import { DEFAULT_BG, getBorderWhite, getColors, lightenColor } from "@web/core/colors/colors";
 import { Domain } from "@web/core/domain";
 import { SampleServer } from "@web/model/sample_server";
@@ -2831,7 +2829,7 @@ test("single chart rendering on search", async () => {
         setup() {
             super.setup();
 
-            onRendered(() => expect.step("rendering"));
+            onPatched(() => expect.step("patched"));
         },
     });
 
@@ -2840,11 +2838,11 @@ test("single chart rendering on search", async () => {
         resModel: "foo",
     });
 
-    expect.verifySteps(["rendering"]);
+    expect.verifySteps([]);
 
     await validateSearch();
 
-    expect.verifySteps(["rendering"]);
+    expect.verifySteps(["patched"]);
 });
 
 test("missing property field definition is fetched", async function () {

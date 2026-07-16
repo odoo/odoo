@@ -1,4 +1,3 @@
-import { onRendered } from "@web/owl2/utils";
 import { Component, onMounted, onWillDestroy, onWillStart, t, useProps, xml } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
@@ -12,30 +11,31 @@ export class DropdownPopover extends Component {
         </t>
         <t t-call-slot="content" />
     `;
+
     props = useProps({
         // Popover service
         close: t.function().optional(),
         // Events & Handlers
-        beforeOpen: t.function().optional(),
-        onOpened: t.function().optional(),
-        onClosed: t.function().optional(),
+        beforeOpen: t.function([], t.promise()).optional(),
+        onOpened: t.function([]).optional(),
+        onClosed: t.function([]).optional(),
         // Rendering & Context
-        refresher: t.object(),
-        slots: t.object(),
-        items: t.array().optional(),
+        items: t
+            .array(
+                t.object({
+                    label: t.string(),
+                    onSelected: t.function(),
+                    class: t.any().optional(),
+                })
+            )
+            .optional(),
+        slots: t.object({
+            default: t.any().optional(),
+            content: t.any().optional(),
+        }),
     });
 
     setup() {
-        onRendered(() => {
-            // Note that the Dropdown component and the DropdownPopover component
-            // are not in the same context.
-            // So when the Dropdown component is re-rendered, the DropdownPopover
-            // component must also re-render itself.
-            // This is why we subscribe to this reactive, which is changed when
-            // the Dropdown component is re-rendered.
-            this.props.refresher.token;
-        });
-
         onWillStart(async () => {
             await this.props.beforeOpen?.();
         });

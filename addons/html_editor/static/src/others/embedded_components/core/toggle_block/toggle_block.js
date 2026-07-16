@@ -3,19 +3,20 @@ import {
     getEmbeddedProps,
     useEditableDescendants,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, onMounted, onPatched, proxy, useListener } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, t, useListener, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 const sessionStorage = browser.sessionStorage;
 export class EmbeddedToggleBlockComponent extends Component {
     static template = "html_editor.EmbeddedToggleBlock";
-    static props = {
-        host: { type: Object },
-        toggleBlockId: { type: String },
-    };
+
+    props = useProps({
+        host: t.object(), // cannot use HTMLElement because of cross-realm compatibility
+        toggleBlockId: t.string(),
+    });
 
     setup() {
-        useEditableDescendants(this.props.host);
+        this.descendantRefs = useEditableDescendants().refs;
         this.state = proxy({
             showContent: sessionStorage.getItem(this.toggleStorageKey) === "true",
         });

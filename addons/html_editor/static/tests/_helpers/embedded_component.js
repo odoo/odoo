@@ -1,11 +1,11 @@
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
+    StateChangeManager,
     useEditableDescendants,
     useEmbeddedState,
-    StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, signal, xml, proxy } from "@odoo/owl";
+import { Component, proxy, signal, xml } from "@odoo/owl";
 
 export class Counter extends Component {
     static props = ["*"];
@@ -22,31 +22,31 @@ export class Counter extends Component {
 
 export const EmbeddedWrapperMixin = (editableDescendantName) =>
     class extends Component {
-        static props = ["*"];
-        static template = xml`<t><div class="${editableDescendantName}" t-ref="this.editableDescendantRefs.${editableDescendantName}"/></t>`;
+        static template = xml`<t><div class="${editableDescendantName}" t-ref="this.descendantRefs.${editableDescendantName}"/></t>`;
 
         setup() {
-            useEditableDescendants(this.props.host);
+            this.descendantRefs = useEditableDescendants().refs;
         }
     };
 
 export class EmbeddedWrapper extends Component {
-    static props = ["*"];
     static template = xml`
         <t>
-            <div t-if="this.editableDescendants.shallow" class="shallow" t-ref="this.editableDescendantRefs.shallow"/>
+            <div t-if="this.editableDescendants.shallow" class="shallow" t-ref="this.descendantRefs.shallow"/>
             <div t-if="!this.state.switch">
-                <div class="deep" t-ref="this.editableDescendantRefs.deep"/>
+                <div class="deep" t-ref="this.descendantRefs.deep"/>
             </div>
             <div t-else="">
                 <div class="switched">
-                    <div class="deep" t-ref="this.editableDescendantRefs.deep"/>
+                    <div class="deep" t-ref="this.descendantRefs.deep"/>
                 </div>
             </div>
         </t>`;
 
     setup() {
-        this.editableDescendants = useEditableDescendants(this.props.host);
+        const { descendants, refs } = useEditableDescendants();
+        this.editableDescendants = descendants;
+        this.descendantRefs = refs;
         this.state = proxy({
             switch: false,
         });

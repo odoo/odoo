@@ -208,12 +208,14 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (getStateChangeManager) {
             env.getStateChangeManager = this.getStateChangeManager.bind(this);
         }
+        const selectionManager = { restoreSelection: null };
         if (getEditableDescendants) {
             env.getEditableDescendants = getEditableDescendants;
             // Enable the automatic selection restoration feature in @see useEditableDescendants
             Object.assign(env.editorShared, {
                 selection: { ...this.dependencies.selection },
             });
+            env.selectionManager = selectionManager;
         }
         this.trigger("on_will_mount_component_handlers", { name, env, props });
         // If a pending operation should be executed after the first mount of
@@ -221,6 +223,13 @@ export class EmbeddedComponentPlugin extends Plugin {
         // callbacks, in the same call stack as the DOM insertion.
         const onComponentInserted = this.extractOnComponentInserted(host);
         const { root } = mountComponent(this.app, Component, host, props, env, {
+            onBeforeComplete: () => {
+                if (!getEditableDescendants) {
+                    return;
+                }
+                selectionManager.restoreSelection =
+                    this.dependencies.selection.preserveSelection().restore;
+            },
             onAfterComplete: () => {
                 onComponentInserted?.();
                 this.trigger("on_component_mounted_handlers");

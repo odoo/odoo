@@ -1,50 +1,49 @@
-import { onMounted, proxy, signal, t, useListener } from "@odoo/owl";
-import { Dialog, dialogProps } from "@web/core/dialog/dialog";
+import { onMounted, proxy, signal, t, useEffect, useListener, useProps } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDebounced } from "@web/core/utils/timing";
-import { onRendered } from "@web/owl2/utils";
 
 const ZOOM_STEP = 0.1;
 const TOUCHMOVE_STEP = 96;
 
-const productImageViewerProps = {
-    ...dialogProps,
-    images: t.instanceOf(Array),
-    selectedImageIdx: t.number().optional(),
-    imageRatio: t.string().optional("auto"),
-    imageRatioMobile: t.string().optional("auto"),
-    close: t.function(),
-};
-delete productImageViewerProps.slots;
-
 export class ProductImageViewer extends Dialog {
     static template = "website_sale.ProductImageViewer";
-    static props = productImageViewerProps;
+
+    viewerProps = useProps({
+        images: t.array(t.instanceOf(HTMLImageElement)),
+        selectedImageIdx: t.number().optional(0),
+        imageRatio: t.string().optional("auto"),
+        imageRatioMobile: t.string().optional("auto"),
+    });
 
     imageContainerRef = signal.ref();
+    /**
+     * This is intentionally NOT reactive: this is to not render the whole component
+     * just to update the style of {@link imageContainerRef}. It should be only
+     * updated by {@link updateImageTranslate}.
+     */
+    imageTranslate = { x: 0, y: 0 };
 
     setup() {
         super.setup();
-        this.images = this.props.images.map((image) => ({
+
+        this.images = this.viewerProps.images.map((image) => ({
             src: image.dataset.zoomImage || image.src,
             thumbnailSrc: image.src.replace("/image_1024/", "/image_256/"),
         }));
         this.state = proxy({
-            selectedImageIdx: this.props.selectedImageIdx || 0,
+            selectedImageIdx: this.viewerProps.selectedImageIdx,
             imageScale: 1,
             carouselOffset: 0,
         });
         this.isDragging = false;
         this.dragStartPos = { x: 0, y: 0 };
-        // Doing a full render for the translate is too slow.
-        this.imageTranslate = { x: 0, y: 0 };
         useHotkey("arrowleft", this.previousImage.bind(this));
         useHotkey("arrowright", this.nextImage.bind(this));
         useHotkey("r", () => {
-            this.imageTranslate = { x: 0, y: 0 };
             this.isDragging = false;
             this.state.imageScale = 1;
-            this.updateImage();
+            this.updateImageTranslate({ x: 0, y: 0 });
         });
 
         // Debounce update in line with `ease-out` animation.
@@ -61,9 +60,13 @@ export class ProductImageViewer extends Dialog {
                 .querySelector(".o_wsale_image_viewer_carousel li:last-of-type img")
                 ?.addEventListener("load", this.updateCarousel.bind(this), { once: true });
         });
-        // For some reason the styling does not always update properly.
-        onRendered(() => {
-            this.updateImage();
+
+        /**
+         * Reacts to reference changes
+         * @see {@link imageTranslate}
+         */
+        useEffect(() => {
+            this.updateImageTranslate();
         });
     }
 
@@ -73,9 +76,9 @@ export class ProductImageViewer extends Dialog {
 
     set selectedImage(image) {
         this.state.imageScale = 1;
-        this.imageTranslate = { x: 0, y: 0 };
         this.state.selectedImageIdx = this.images.indexOf(image);
         this.updateCarousel();
+        this.updateImageTranslate({ x: 0, y: 0 });
     }
 
     get imageStyle() {
@@ -99,11 +102,17 @@ export class ProductImageViewer extends Dialog {
         this.selectedImage = this.images[(this.state.selectedImageIdx + 1) % this.images.length];
     }
 
-    updateImage() {
-        if (!this.imageContainerRef()) {
-            return;
+    /**
+     * Method meant to be called to update {@link imageTranslate} to avoid a complete
+     * render to assign its style attribute.
+     *
+     * @param {typeof this.imageTranslate} [nextImageTranslate]
+     */
+    updateImageTranslate(nextImageTranslate) {
+        if (nextImageTranslate) {
+            this.imageTranslate = nextImageTranslate;
         }
-        this.imageContainerRef().style = this.imageContainerStyle;
+        this.imageContainerRef()?.setAttribute("style", this.imageContainerStyle);
     }
 
     /**
@@ -182,9 +191,10 @@ export class ProductImageViewer extends Dialog {
         if (!this.isDragging) {
             return;
         }
-        this.imageTranslate.x = ev.clientX - this.dragStartPos.x;
-        this.imageTranslate.y = ev.clientY - this.dragStartPos.y;
-        this.updateImage();
+        this.updateImageTranslate({
+            x: ev.clientX - this.dragStartPos.x,
+            y: ev.clientY - this.dragStartPos.y,
+        });
     }
 
     _onTouchstartCarousel(ev) {
