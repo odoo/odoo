@@ -1,21 +1,17 @@
 import { waitForChannels } from "@bus/../tests/bus_test_helpers";
-import { onWebsocketEvent } from "@bus/../tests/mock_websocket";
-import { WebsocketWorker } from "@bus/workers/websocket_worker";
-
 import {
     click,
     contains,
     defineMailModels,
-    insertText,
     openDiscuss,
     setupChatHub,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { describe, edit, expect, mockDate, press, test } from "@odoo/hoot";
 
-import { describe, edit, expect, mockDate, press, runAllTimers, test } from "@odoo/hoot";
-
-import { Command, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Command, getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 
@@ -76,38 +72,42 @@ test("bus subscription updated when joining locally pinned thread", async () => 
 });
 
 test("bus subscription is refreshed when channel is joined", async () => {
-    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 10 });
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
+    pyEnv["discuss.channel"].create([
+        { name: "General" },
+        { name: "Sales", channel_member_ids: [] },
+    ]);
     const later = luxon.DateTime.now().plus({ seconds: 2 });
-    mockDate(
-        `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
-    );
+    mockDate(later.toUTC().toFormat("yyyy-MM-dd HH:mm:ss"));
     await start();
     await openDiscuss();
-    await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
-    onWebsocketEvent("subscribe", () => expect.step("subscribe"));
-    await click("input[placeholder='Search']");
-    await insertText(
-        ".o_command_palette_search input[placeholder='Search conversations']",
-        "new channel"
-    );
-    await expect.waitForSteps(["subscribe"]);
+    await triggerHotkey("control+k");
+    patchWithCleanup(getService("mail.store"), {
+        updateBusSubscription: () => expect.step("update_bus_subscription"),
+    });
+    await click(".o-mail-DiscussCommand:has(:text('Sales'))");
+    await contains(".o-mail-DiscussContent-threadName[title='Sales']");
+    await click("button:text('Add People')");
+    await click("[name='selectablePartnerName']:text('Mitchell Admin')");
+    await click("button:text('Invite')");
+    await expect.waitForSteps(["update_bus_subscription"]);
 });
 
 test("bus subscription is refreshed when channel is left", async () => {
-    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 10 });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const later = luxon.DateTime.now().plus({ seconds: 2 });
-    mockDate(
-        `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
-    );
+    mockDate(later.toUTC().toFormat("yyyy-MM-dd HH:mm:ss"));
     await start();
     await openDiscuss();
-    await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
-    onWebsocketEvent("subscribe", () => expect.step("subscribe"));
+    patchWithCleanup(getService("mail.store"), {
+        updateBusSubscription: () => expect.step("update_bus_subscription"),
+    });
+    await contains(".o-mail-DiscussSidebarChannel");
+    await contains(".o-mail-DiscussSidebarChannel:has(:text('General'))");
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
-    await expect.waitForSteps(["subscribe"]);
+    await click("button:text('Leave Conversation')");
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
+    await expect.waitForSteps(["update_bus_subscription"]);
 });
