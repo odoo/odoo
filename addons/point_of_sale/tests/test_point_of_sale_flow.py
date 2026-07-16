@@ -138,6 +138,139 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(parent_partner.pos_order_count, 2, "Parent partner should see 2 orders including child’s")
         self.assertEqual(child_partner.pos_order_count, 1, "Child partner should see only their own order")
 
+<<<<<<< 838417d32ae8cf9d8ed38d9887a76611c9d3b04f
+||||||| 3f00ca77980bbfdb81fa9ab1f7d0bb99486f5dd9
+    def test_order_to_payment_currency(self):
+        """
+            In order to test the Point of Sale in module, I will do a full flow
+            from the sale to the payment and invoicing. I will use two products,
+            one with price including a 10% tax, the other one with 5% tax
+            excluded from the price.
+
+            The order will be in a different currency than the company currency.
+        """
+        self.env.cr.execute(
+            "UPDATE res_company SET currency_id = %s WHERE id = %s",
+            [self.env.ref('base.USD').id, self.env.company.id])
+
+        # Demo data are crappy, clean-up the rates
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': '2010-01-01',
+            'rate': 2.0,
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_mobt.id,
+                'pricelist_id': self.partner_mobt.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_no_tax.product_variant_id.id},
+                {'product_id': self.twenty_dollars_no_tax.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 10},
+                {'payment_method_id': self.bank_payment_method.id},
+            ],
+            'pos_config': self.pos_config_eur,
+        })
+
+        self.assertEqual(order.amount_total, 30)
+        self.assertEqual(order.amount_paid, 30)
+        self.assertEqual(order.state, 'paid')
+        current_session = self.pos_config_eur.current_session_id
+        current_session.action_pos_session_validate()
+        self.assertTrue(current_session.move_id)
+        debit_lines = current_session.move_id.mapped('line_ids.debit')
+        credit_lines = current_session.move_id.mapped('line_ids.credit')
+        amount_currency_lines = current_session.move_id.mapped('line_ids.amount_currency')
+        for a, b in zip(sorted(debit_lines), [0.0, 15.0]):
+            self.assertAlmostEqual(a, b)
+        for a, b in zip(sorted(credit_lines), [0.0, 15.0]):
+            self.assertAlmostEqual(a, b)
+        for a, b in zip(sorted(amount_currency_lines), [-30, 30]):
+            self.assertAlmostEqual(a, b)
+
+=======
+    def test_backend_order_refund_flow(self):
+        """ The purpose of this test is to test the basic flow of
+        refunding orders from the backend. More precisely making sure:
+        - We do not refund more than the initial order's quantity"""
+        self.pos_config_usd.open_ui()
+
+        order, _ = self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+            ]
+        })
+
+        refund_action = order.refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+
+        with Form(refund) as refund_form:
+            with refund_form.lines.edit(0) as line:
+                with self.assertRaises(ValidationError, msg="You cannot refund more than the original order."):
+                    line.qty = -3
+
+    def test_order_to_payment_currency(self):
+        """
+            In order to test the Point of Sale in module, I will do a full flow
+            from the sale to the payment and invoicing. I will use two products,
+            one with price including a 10% tax, the other one with 5% tax
+            excluded from the price.
+
+            The order will be in a different currency than the company currency.
+        """
+        self.env.cr.execute(
+            "UPDATE res_company SET currency_id = %s WHERE id = %s",
+            [self.env.ref('base.USD').id, self.env.company.id])
+
+        # Demo data are crappy, clean-up the rates
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': '2010-01-01',
+            'rate': 2.0,
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_mobt.id,
+                'pricelist_id': self.partner_mobt.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_no_tax.product_variant_id.id},
+                {'product_id': self.twenty_dollars_no_tax.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 10},
+                {'payment_method_id': self.bank_payment_method.id},
+            ],
+            'pos_config': self.pos_config_eur,
+        })
+
+        self.assertEqual(order.amount_total, 30)
+        self.assertEqual(order.amount_paid, 30)
+        self.assertEqual(order.state, 'paid')
+        current_session = self.pos_config_eur.current_session_id
+        current_session.action_pos_session_validate()
+        self.assertTrue(current_session.move_id)
+        debit_lines = current_session.move_id.mapped('line_ids.debit')
+        credit_lines = current_session.move_id.mapped('line_ids.credit')
+        amount_currency_lines = current_session.move_id.mapped('line_ids.amount_currency')
+        for a, b in zip(sorted(debit_lines), [0.0, 15.0]):
+            self.assertAlmostEqual(a, b)
+        for a, b in zip(sorted(credit_lines), [0.0, 15.0]):
+            self.assertAlmostEqual(a, b)
+        for a, b in zip(sorted(amount_currency_lines), [-30, 30]):
+            self.assertAlmostEqual(a, b)
+
+>>>>>>> 678e5f8bd0817bce598398ee63e03befcff16cda
     def test_order_to_invoice_no_tax(self):
         order, _ = self.create_backend_pos_order({
             'order_data': {
