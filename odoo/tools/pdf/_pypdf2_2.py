@@ -13,6 +13,30 @@ __all__ = [
 
 
 class PdfWriter(_Writer):
+    def getPage(self, pageNumber):
+        return self.pages[pageNumber]
+
+    def getNumPages(self):
+        return len(self.pages)
+
+    def addPage(self, page):
+        return self.add_page(page)
+
+    def appendPagesFromReader(self, reader):
+        return self.append_pages_from_reader(reader)
+
+    def addBlankPage(self, width=None, height=None):
+        return self.add_blank_page(width=width, height=height)
+
+    def addAttachment(self, fname, data):
+        return self.add_attachment(fname, data)
+
+    def addMetadata(self, infos):
+        return self.add_metadata(infos)
+
+    def cloneReaderDocumentRoot(self, reader):
+        return self.clone_reader_document_root(reader)
+
     def getFields(self, *args, **kwargs):
         return self.get_fields(*args, **kwargs)
 
