@@ -1796,3 +1796,56 @@ class TestHrAttendanceOvertime(HttpCase):
         ])
         self.assertEqual(sum(attendances.mapped('worked_hours')), 40)
         self.assertEqual(sum(attendances.mapped('overtime_hours')), 8)
+
+    def test_overtime_lines_on_regenerate_overtimes(self):
+        """
+        Regenerating overtime entries used to duplicate the overtime
+        line for an attendance ending shortly after the employee's
+        local midnight (00:00-01:42 Brussels time), doubling the
+        reported overtime hours instead of leaving them unchanged.
+        """
+        self.europe_employee.version_id.contract_date_start = False
+        self.ruleset.rule_ids.write({
+            'expected_hours_from_contract': False,
+        })
+
+        def assert_no_duplication_on_regenerate(check_in, check_out):
+            attendance = self.env['hr.attendance'].create({
+                'employee_id': self.europe_employee.id,
+                'check_in': check_in,
+                'check_out': check_out,
+            })
+            expected_hours = (check_out - check_in).total_seconds() / 3600
+
+            overtimes = attendance._linked_overtimes()
+            self.assertEqual(len(overtimes), 1,
+                "Exactly one overtime line should be linked after creation.")
+            self.assertAlmostEqual(attendance.overtime_hours, expected_hours, places=4,
+                msg="Overtime hours should equal worked hours after creation.")
+
+            # Regenerating overtime entries must find and replace the
+            # existing line, not create a duplicate one alongside it.
+            self.ruleset.action_regenerate_overtimes()
+
+            overtimes = attendance._linked_overtimes()
+            self.assertEqual(len(overtimes), 1,
+                "Regenerating overtime must not create a duplicate overtime line.")
+            self.assertAlmostEqual(attendance.overtime_hours, expected_hours, places=4,
+                msg="Overtime hours must not double after regeneration.")
+
+            attendance.unlink()
+
+        # Europe/Brussels is UTC+2 (CEST) on these dates.
+        # 01:00-01:40 local -> inside the old 1h42 blind spot
+        assert_no_duplication_on_regenerate(
+            check_in=datetime(2026, 7, 13, 23, 0, 0),
+            check_out=datetime(2026, 7, 13, 23, 40, 0),
+        )
+
+        # 01:45-02:30 local -> just past the blind spot: control case, always
+        # worked correctly, confirms the boundary and that the fix doesn't
+        # break normal regeneration.
+        assert_no_duplication_on_regenerate(
+            check_in=datetime(2026, 7, 13, 23, 45, 0),
+            check_out=datetime(2026, 7, 14, 0, 30, 0),
+        )
