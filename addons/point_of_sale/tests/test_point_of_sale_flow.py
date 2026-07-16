@@ -233,6 +233,29 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(parent_partner.pos_order_count, 2, "Parent partner should see 2 orders including child’s")
         self.assertEqual(child_partner.pos_order_count, 1, "Child partner should see only their own order")
 
+    def test_backend_order_refund_flow(self):
+        """ The purpose of this test is to test the basic flow of
+        refunding orders from the backend. More precisely making sure:
+        - We do not refund more than the initial order's quantity"""
+        self.pos_config_usd.open_ui()
+
+        order, _ = self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+            ]
+        })
+
+        refund_action = order.refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+
+        with Form(refund) as refund_form:
+            with refund_form.lines.edit(0) as line:
+                with self.assertRaises(ValidationError, msg="You cannot refund more than the original order."):
+                    line.qty = -3
+
     def test_order_to_picking(self):
         """
             In order to test the Point of Sale in module, I will do three orders
