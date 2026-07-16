@@ -9,6 +9,12 @@ import { _t } from "@web/core/l10n/translation";
  * @property { Function } preview
  * @property { Function } revert
  */
+/**
+ * @template [T=any]
+ * @typedef { Object } CustomOperation<T>
+ * @property { () => T } apply
+ * @property { () => void } revert
+ */
 
 /**
  * @typedef { Object } HistoryShared
@@ -76,6 +82,7 @@ export class HistoryPlugin extends Plugin {
         "redo",
         "canUndo",
         "canRedo",
+        "stage",
         "getCommits",
         "reset",
         "createSnapshotCommit",
@@ -139,10 +146,43 @@ export class HistoryPlugin extends Plugin {
             this.reset();
         },
         on_will_reset_history_handlers: this.resetAuthorTimestamp.bind(this),
-        on_committed_to_history_handlers: this.resetAuthorTimestamp.bind(this),
+        on_committed_to_history_handlers: () => {
+            this.resetAuthorTimestamp();
+            this.currentStage = [];
+        },
+
+        // Stage
+
+        pending_history_commit_data_processors: this.addStagedData.bind(this),
+        save_point_history_commit_data_processors: this.addStagedData.bind(this),
+        // Custom callbacks can depend on attributes restored by the DOM
+        // observer. Make sure to apply/revert them after those.
+        on_apply_history_commit_handlers: withSequence(20, (commit) => {
+            commit.data.custom?.forEach(this.stage.bind(this));
+        }),
+        on_revert_history_commit_handlers: withSequence(20, (commit) => {
+            commit.data.custom?.toReversed().forEach(({ apply, revert }) =>
+                // Redo reverts the undo commit, so record the inverse operation.
+                this.stage({ apply: revert, revert: apply })
+            );
+        }),
+        on_will_invalidate_pending_changes_handlers: () => {
+            this.currentStage.toReversed().forEach(({ revert }) => revert());
+            this.currentStage = [];
+        },
+        on_savepoint_restored_handlers: (savePoint) => {
+            savePoint.data.custom?.forEach(this.stage.bind(this));
+        },
+        has_history_commit_changes_predicates: (commit) => {
+            if (commit.data.custom?.length) {
+                return true;
+            }
+        },
     };
 
     setup() {
+        /** @type { CustomOperation[] } */
+        this.currentStage = [];
         this.resetAuthorTimestamp();
         this._onKeyupResetContenteditableNodes = [];
         this.addDomListener(this.document, "beforeinput", this.onDocumentBeforeInput.bind(this));
@@ -242,6 +282,21 @@ export class HistoryPlugin extends Plugin {
     }
 
     /**
+     * Apply and stage an operation to be included in the next commit. Its
+     * `apply` callback is immediately called and will be called when applying
+     * the commit, and its `revert` callback will be called when reverting the
+     * commit. The return value of `apply` is returned.
+     *
+     * @template T
+     * @param { CustomOperation<T> } operation
+     * @returns {T}
+     */
+    stage({ apply = () => {}, revert = () => {} }) {
+        this.currentStage.push({ apply, revert });
+        return apply();
+    }
+
+    /**
      * Return a copy of the list of commits recorded in history.
      *
      * @returns { HistoryCommit[] }
@@ -277,6 +332,20 @@ export class HistoryPlugin extends Plugin {
      */
     resetAuthorTimestamp() {
         this.authorTimestamp = Date.now();
+    }
+
+    /**
+     * Add the current staged data to the given data object's `custom` property.
+     *
+     * @param {HistoryCommitData} data
+     * @returns {HistoryCommitData}
+     */
+    addStagedData(data = {}) {
+        if (this.currentStage.length) {
+            data.custom ??= [];
+            data.custom.push(...this.currentStage);
+        }
+        return data;
     }
 
     // =======================
@@ -788,6 +857,7 @@ export class HistoryPlugin extends Plugin {
  *   authorTimestamp?: number,
  *   commitTimestamp?: number,
  *   previousCommitId?: HistoryCommitId,
+ *   custom?: CustomOperation,
  * } & (
  *   T extends "savePoint" | "restore" | "stash"
  *     ? {}

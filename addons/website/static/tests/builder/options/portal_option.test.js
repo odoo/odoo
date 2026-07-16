@@ -1,9 +1,13 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
+import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
+import { patch } from "@web/core/utils/patch";
+import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 
 defineWebsiteModels();
 
@@ -61,4 +65,40 @@ test("reorder and toggle portal cards before saving", async () => {
 
     await contains(".o_hb_snippets_top_actions [data-action='save']").click();
     expect.verifySteps(["save portal cards"]);
+});
+
+test("should undo and redo portal card gaps", async () => {
+    patch(WebsiteBuilderClientAction.prototype, {
+        onIframeLoad(ev) {
+            super.onIframeLoad(ev);
+            // Artificially set the is-ready attribute to trick the rest of the
+            // code into thinking that it has been loaded.
+            this.websiteContent().contentDocument.body.setAttribute("is-ready", "true");
+        },
+    });
+    const { getEditor } = await setupWebsiteBuilder(
+        `<main><div class="o_portal_wrap"><div class="o_portal_cards">
+            <div class="o_portal_index_card" data-id="1"><a href="#">First</a></div>
+        </div></div></main>`,
+        // Set an initial gap.
+        { styleContent: ":root { font-size: 16px; --portal-card-gap: 1rem; }" }
+    );
+    const editor = getEditor();
+    const builderActions = editor.shared.builderActions;
+    const setPortalGapAction = builderActions.getAction("setPortalCardGap");
+    const getGap = setPortalGapAction.getValue.bind(setPortalGapAction);
+    // Change the gap.
+    expect(getGap()).toBe("1rem");
+    await builderActions.applyAction("setPortalCardGap", { value: "2rem" });
+    expect(getGap()).toBe("2rem");
+
+    // Restore the initial gap.
+    undo(editor);
+    await animationFrame();
+    expect(getGap()).toBe("1rem");
+
+    // Restore the changed gap.
+    redo(editor);
+    await animationFrame();
+    expect(getGap()).toBe("2rem");
 });

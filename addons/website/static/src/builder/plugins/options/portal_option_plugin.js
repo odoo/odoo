@@ -5,7 +5,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class PortalOptionPlugin extends Plugin {
     static id = "portalOption";
-    static dependencies = ["customizeWebsite", "domObserver"];
+    static dependencies = ["customizeWebsite", "history"];
     static shared = ["getPortalCards", "loadPortalCards", "updatePortalCards"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -49,10 +49,7 @@ export class PortalOptionPlugin extends Plugin {
     async updatePortalCards(entries) {
         const previousEntries = this.portalCards;
         const hadPendingChanges = this.hasPendingChanges;
-        this.portalCards = entries;
-        this.hasPendingChanges = true;
-        this.applyPortalCardsToDOM(entries);
-        this.dependencies.domObserver.stageCustomMutation({
+        this.dependencies.history.stage({
             apply: () => {
                 this.portalCards = entries;
                 this.hasPendingChanges = true;
@@ -115,7 +112,7 @@ export class PortalOptionPlugin extends Plugin {
 
 export class SetPortalCardGapAction extends BuilderAction {
     static id = "setPortalCardGap";
-    static dependencies = ["customizeWebsite", "domObserver"];
+    static dependencies = ["customizeWebsite", "history"];
 
     getValue() {
         return (
@@ -126,9 +123,10 @@ export class SetPortalCardGapAction extends BuilderAction {
 
     apply({ isPreviewing, value }) {
         const previousValue = this.getValue();
-        this.setGap(value);
-        if (!isPreviewing) {
-            this.dependencies.domObserver.stageCustomMutation({
+        if (isPreviewing) {
+            this.setGap(value);
+        } else {
+            this.dependencies.history.stage({
                 apply: () => this.setGap(value),
                 revert: () => this.setGap(previousValue),
             });
