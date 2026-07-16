@@ -17,7 +17,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         if not partners:
             return self.env['calendar.event']
         # flush models before making queries
-        for model_name in ('calendar.alarm', 'calendar.event', 'calendar.recurrence'):
+        for model_name in ('calendar.alarm', 'calendar.event'):
             self.env[model_name].flush_model()
 
         params = {
@@ -25,60 +25,40 @@ class CalendarAlarm_Manager(models.AbstractModel):
             'partner_ids': tuple(partners.ids),
             'now': self.env.cr.now(),
         }
-        delta_request = SQL("""
+
+        query = SQL("""
+        WITH event_alarmable_window AS (
             SELECT
-                rel.calendar_event_id,
-                max(alarm.duration_minutes) AS max_delta,
-                min(alarm.duration_minutes) AS min_delta
-            FROM
-                calendar_alarm_calendar_event_rel AS rel
-            LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
-            WHERE alarm.alarm_type = %(alarm_type)s
-            GROUP BY rel.calendar_event_id
+                    event.id,
+                    event.start - INTERVAL '1' MINUTE * MAX(alarm.duration_minutes) AS first_alarm,
+                    event.stop - INTERVAL '1' MINUTE * MIN(alarm.duration_minutes) AS last_alarm
+              FROM calendar_event AS event
+              JOIN calendar_alarm_calendar_event_rel AS rel
+                ON rel.calendar_event_id = event.id
+              JOIN calendar_alarm AS alarm
+                ON alarm.id = rel.calendar_alarm_id
+              JOIN calendar_event_res_partner_rel AS part_rel
+                ON part_rel.calendar_event_id = event.id
+             WHERE alarm.alarm_type = %(alarm_type)s
+               AND part_rel.res_partner_id IN %(partner_ids)s
+               AND event.active = TRUE
+          GROUP BY event.id, event.start, event.stop
+        ),
+        next_alarm AS (
+            SELECT MIN(first_alarm) AS alarm_time
+              FROM event_alarmable_window
+             WHERE first_alarm > %(now)s
+        )
+        SELECT id
+          FROM event_alarmable_window
+         WHERE last_alarm > %(now)s
+           AND first_alarm < COALESCE(
+                (SELECT alarm_time FROM next_alarm) + INTERVAL '3 MINUTE',
+                %(now)s
+            )
         """, **params)
-        base_request = SQL("""
-            SELECT
-                cal.id,
-                cal.start - interval '1' minute * calcul_delta.max_delta AS first_alarm,
-                cal.stop - interval '1' minute * calcul_delta.min_delta AS last_alarm
 
-            FROM
-                calendar_event AS cal
-            INNER JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-            INNER JOIN calendar_event_res_partner_rel AS part_rel
-                ON part_rel.calendar_event_id = cal.id
-                AND part_rel.res_partner_id IN %(partner_ids)s
-            WHERE cal.active = True
-        """, **params)
-
-        # Upper bound on first_alarm of requested events
-        # first alarm in the future + 3 minutes if there is one, now otherwise
-        first_alarm_max_value = SQL("""
-            COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
-            FROM calendar_event cal
-            RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-            INNER JOIN calendar_event_res_partner_rel AS part_rel
-                ON part_rel.calendar_event_id = cal.id
-                AND part_rel.res_partner_id IN %(partner_ids)s
-            WHERE cal.active = True
-                AND cal.start - interval '1' minute  * calcul_delta.max_delta > %(now)s
-        ) + interval '3' minute, %(now)s)""", **params)
-
-        self.env.flush_all()
-        self.env.cr.execute(SQL("""
-            WITH calcul_delta AS (%(delta_request)s)
-            SELECT id
-                FROM ( %(base_request)s ) AS ALL_EVENTS
-            WHERE ALL_EVENTS.first_alarm < %(first_alarm_max_value)s
-                AND ALL_EVENTS.last_alarm > %(now)s
-        """,
-            delta_request=delta_request,
-            base_request=base_request,
-            first_alarm_max_value=first_alarm_max_value,
-            now=params['now'],
-        ))
-
-        event_ids = [event_id for (event_id,) in self.env.cr.fetchall()]
+        event_ids = [event_id for (event_id,) in self.env.execute_query(query)]
 
         # determine accessible events
         events = self.env['calendar.event'].browse(event_ids)._filtered_access('read')
