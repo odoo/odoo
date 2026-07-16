@@ -5,7 +5,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class PortalOptionPlugin extends Plugin {
     static id = "portalOption";
-    static dependencies = ["customizeWebsite", "domObserver"];
+    static dependencies = ["customizeWebsite", "history"];
     static shared = ["getPortalCards", "loadPortalCards", "updatePortalCards"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -52,18 +52,18 @@ export class PortalOptionPlugin extends Plugin {
         this.portalCards = entries;
         this.hasPendingChanges = true;
         this.applyPortalCardsToDOM(entries);
-        this.dependencies.domObserver.stageCustomMutation({
-            apply: () => {
+        this.dependencies.history.stage(
+            () => {
                 this.portalCards = entries;
                 this.hasPendingChanges = true;
                 this.applyPortalCardsToDOM(entries);
             },
-            revert: () => {
+            () => {
                 this.portalCards = previousEntries;
                 this.hasPendingChanges = hadPendingChanges;
                 this.applyPortalCardsToDOM(previousEntries);
-            },
-        });
+            }
+        );
     }
 
     applyPortalCardsToDOM(entries) {
@@ -115,7 +115,7 @@ export class PortalOptionPlugin extends Plugin {
 
 export class SetPortalCardGapAction extends BuilderAction {
     static id = "setPortalCardGap";
-    static dependencies = ["customizeWebsite", "domObserver"];
+    static dependencies = ["customizeWebsite", "history"];
 
     getValue() {
         return (
@@ -128,10 +128,14 @@ export class SetPortalCardGapAction extends BuilderAction {
         const previousValue = this.getValue();
         this.setGap(value);
         if (!isPreviewing) {
-            this.dependencies.domObserver.stageCustomMutation({
-                apply: () => this.setGap(value),
-                revert: () => this.setGap(previousValue),
-            });
+            this.dependencies.history.stage(
+                () => {
+                    this.setGap(value);
+                },
+                () => {
+                    this.setGap(previousValue);
+                }
+            );
         }
     }
 

@@ -176,7 +176,7 @@ export class ForceVisibleAction extends BuilderAction {
 }
 export class ToggleDeviceVisibilityAction extends BuilderAction {
     static id = "toggleDeviceVisibility";
-    static dependencies = ["visibility", "domObserver"];
+    static dependencies = ["visibility", "history"];
 
     apply({ editingElement, params: { mainParam: visibility } }) {
         // Clean first as the widget is not part of a group
@@ -196,12 +196,12 @@ export class ToggleDeviceVisibilityAction extends BuilderAction {
         const isMobile = this.services.website.context.isMobile;
         const show = visibility !== (isMobile ? "no_mobile" : "no_desktop");
         this.dependencies.visibility.onOptionVisibilityUpdate(editingElement, show);
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {},
-            revert: () => {
+        this.dependencies.history.stage(
+            () => {},
+            () => {
                 editingElement.classList.remove("o_snippet_override_invisible");
-            },
-        });
+            }
+        );
         this.trigger("on_visibility_toggled_handlers", editingElement);
     }
     clean({ editingElement }) {
@@ -215,12 +215,13 @@ export class ToggleDeviceVisibilityAction extends BuilderAction {
         const style = getComputedStyle(editingElement);
         const display = style["display"];
         editingElement.classList.remove(`d-md-${display}`, `d-lg-${display}`);
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {
+        editingElement.classList.remove("o_snippet_override_invisible");
+        this.dependencies.history.stage(
+            () => {
                 editingElement.classList.remove("o_snippet_override_invisible");
             },
-            revert: () => {},
-        });
+            () => {}
+        );
         this.trigger("on_visibility_toggled_handlers", editingElement);
     }
     isApplied({ editingElement, params: { mainParam: visibilityParam } }) {

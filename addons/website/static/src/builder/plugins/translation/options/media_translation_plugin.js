@@ -15,14 +15,7 @@ export const translateDocumentOptionSelector = ".o_file_box";
 
 export class MediaTranslationPlugin extends Plugin {
     static id = "mediaTranslation";
-    static dependencies = [
-        "domObserver",
-        "history",
-        "imagePostProcess",
-        "media",
-        "media_website",
-        "translation",
-    ];
+    static dependencies = ["history", "imagePostProcess", "media", "media_website", "translation"];
     static shared = ["translateMedia"];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -171,15 +164,15 @@ export class MediaTranslationPlugin extends Plugin {
      * @param {string} attribute - attribute to update in the translation map
      */
     handleTranslationMapHistory(el, translation, originalText, attribute) {
-        const updateTranslationMap = this.dependencies.translation.updateTranslationMap;
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {
-                updateTranslationMap(el, translation, attribute);
+        this.dependencies.translation.updateTranslationMap(el, translation, attribute);
+        this.dependencies.history.stage(
+            () => {
+                this.dependencies.translation.updateTranslationMap(el, translation, attribute);
             },
-            revert: () => {
-                updateTranslationMap(el, originalText, attribute);
-            },
-        });
+            () => {
+                this.dependencies.translation.updateTranslationMap(el, originalText, attribute);
+            }
+        );
     }
 
     saveImage(editingElement, newImgEl) {
